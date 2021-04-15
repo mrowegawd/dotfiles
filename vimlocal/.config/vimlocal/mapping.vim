@@ -201,8 +201,6 @@ inoremap <C-h> <esc><left>a
 " keymap: [insert][cursor] move next word
 inoremap <C-l> <esc><right>a
 
-let g:AutoPairsMapBS = 0
-
 " keymap: [insert][cursor] go down
 " inoremap <C-j> <C-\><C-o>j
 
@@ -241,13 +239,13 @@ nnoremap <silent> <TAB>           :bnext<cr>zz
 nnoremap <silent> <S-TAB>         :bprev<cr>zz
 
 " keymap: [tab] next
-nnoremap <silent> 2               :tabn<cr>
+nnoremap <silent> <c-w>l              :tabn<cr>
 " keymap: [tab] last next
-nnoremap <silent> <leader>2       :tablast<cr>
+nnoremap <silent> <c-w><s-l>          :tablast<cr>
 " keymap: [tab] prev
-nnoremap <silent> 1               :tabp<cr>
+nnoremap <silent> <c-w>h              :tabp<cr>
 " keymap: [tab] first prev
-nnoremap <silent> <leader>1       :tabfirst<cr>
+nnoremap <silent> <c-w><s-h>          :tabfirst<cr>
 " keymap: [tab] move tab to the next
 " nnoremap <silent> <c-@>              <c-a>:+tabmove<cr>
 " keymap: [tab] move tab to the next
@@ -264,8 +262,6 @@ function! s:maximazeWindow()
     tabclose
   endif
 endfunction
-
-
 
 if !has('nvim')
   nnoremap <silent> <c-w>m :call <sid>maximazeWindow()<cr>

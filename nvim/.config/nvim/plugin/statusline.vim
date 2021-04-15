@@ -14,6 +14,8 @@ augroup MyAuGrup
     au FileType ToggleTerm setlocal nonumber norelativenumber
   end
 
+  au FileType vista setlocal winhl=Normal:ColorColumn
+
   " Disable tabline when enter startify
   " au FileType startify,dashboard set showtabline=0 | au WinLeave <buffer> set showtabline=2
 

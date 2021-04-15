@@ -134,6 +134,12 @@ let g:obvious_resize_run_tmux = 1
 let g:tmux_navigator_disable_when_zoomed = 1
 "
 " }}}
+" Auto-pairs ----------------------------------------------------------- {{{
+"
+" Plugin 'jiangmiao/auto-pairs'
+let g:AutoPairsMapBS = 0
+"
+" }}}
 
 command! Pomotoggle lua require'modules._tools'.pomorun('toggle')
 command! PomotogglePause lua require'modules._tools'.pomorun('pausetoggle')

@@ -131,7 +131,8 @@ Plug 'tyru/open-browser.vim', {'for' : ['plantuml', 'pu']} " -- Open browser
 " Plug 'chaoren/vim-wordmotion'
 
 " Quickfix and locationlist
-Plug 'kevinhwang91/nvim-bqf' " -- Better quickfix: open(o,t,T,c-x,c-v),close-preview(zp,p,P)
+" Plug 'kevinhwang91/nvim-bqf' " -- Better quickfix: open(o,t,T,c-x,c-v),close-preview(zp,p,P)
+Plug 'romainl/vim-qf'
 
 " Plug 'mvanderkamp/worklist.vim' " -- testing
 

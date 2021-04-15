@@ -62,12 +62,14 @@ require("lspsaga").init_lsp_saga({
     sign_priority = 20,
     virtual_text = false,
   },
-  finder_definition_icon = "  ",
-  finder_reference_icon = "  ",
-  definition_preview_icon = "  ",
+
+  finder_action_keys = {
+    open = 'o', vsplit = 'v',split = 's',quit = 'q',
+    scroll_down = '<C-j>',scroll_up = '<C-k>'
+  },
 
   -- 1: thin border | 2: rounded border | 3: thick border
-  border_style = 2,
+  border_style = "round",
 })
 
 
