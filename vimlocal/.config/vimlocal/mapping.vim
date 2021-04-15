@@ -232,33 +232,26 @@ map <silent> <c-w>o               :BufOnly!<cr>
 
 " keymap: [tab][window] create new
 nnoremap <silent> <c-w>t          :<C-U>tabnew<Space><CR>
-
-" keymap: [tab][window] convert split to tab
+" keymap: [tab][window] convert window to new tab
 nnoremap <silent> <c-w>b          :<C-U>tabedit %<CR>
 
 " keymap: [buffer] next
-nnoremap <silent> <TAB>           :bnext<cr>
-
+nnoremap <silent> <TAB>           :bnext<cr>zz
 " keymap: [buffer] prev
-nnoremap <silent> <S-TAB>         :bprev<cr>
+nnoremap <silent> <S-TAB>         :bprev<cr>zz
 
 " keymap: [tab] next
-nnoremap <silent> <leader>tl      :tabn<cr>
-
+nnoremap <silent> 2               :tabn<cr>
 " keymap: [tab] last next
-nnoremap <silent> <leader>t<s-l>  :tablast<cr>
-
+nnoremap <silent> <leader>2       :tablast<cr>
 " keymap: [tab] prev
-nnoremap <silent> <leader>th      :tabp<cr>
-
+nnoremap <silent> 1               :tabp<cr>
 " keymap: [tab] first prev
-nnoremap <silent> <leader>t<s-h>  :tabfirst<cr>
-
+nnoremap <silent> <leader>1       :tabfirst<cr>
 " keymap: [tab] move tab to the next
-nnoremap <silent> <leader>t]      <c-a>:+tabmove<cr>
-
+" nnoremap <silent> <c-@>              <c-a>:+tabmove<cr>
 " keymap: [tab] move tab to the next
-nnoremap <silent> <leader>t[      <c-a>:-tabmove<cr>
+" nnoremap <silent> <c-!>              <c-a>:-tabmove<cr>
 
 " keymap: [window] size balance
 nnoremap <leader>=                <C-w>=
@@ -272,22 +265,9 @@ function! s:maximazeWindow()
   endif
 endfunction
 
-if has('nvim')
-  if exists('$TMUX')
-    " nnoremap <silent> <c-w>m :call <sid>maximazeWindow()<cr>
 
-    " You need a plugin: `szw/vim-maximizer`
-    nnoremap <silent> <c-w>m :MaximizerToggle!<cr>
-  else
-    nnoremap <silent> <c-w>m :MaximizerToggle!<cr>
-    nnoremap <C-j> <C-W>j
-    nnoremap <C-k> <C-W>k
-    nnoremap <C-h> <C-W>h
-    nnoremap <C-l> <C-W>l
 
-    " Using plugin obvious-resize
-  endif
-else
+if !has('nvim')
   nnoremap <silent> <c-w>m :call <sid>maximazeWindow()<cr>
   nnoremap <C-j> <C-W>j
   nnoremap <C-k> <C-W>k
@@ -299,6 +279,20 @@ else
   nnoremap <silent> <A-S-k> :execute "resize +5"<Return>
   nnoremap <silent> <A-S-h> :execute "resize -5"<Return>
 
+  nnoremap <silent> <c-p> :call <sid>maximazeWindow()<cr>
+else
+  nnoremap <C-j> <C-W>j
+  nnoremap <C-k> <C-W>k
+  nnoremap <C-h> <C-W>h
+  nnoremap <C-l> <C-W>l
+
+  if PluginLoaded('vim-maximizer')
+    " You need a plugin: `szw/vim-maximizer`
+    nnoremap <silent> <c-p> :MaximizerToggle!<cr>
+  else
+
+    nnoremap <silent> <c-p> :call <sid>maximazeWindow()<cr>
+  endif
 endif
 
 " }}}
@@ -375,26 +369,21 @@ function! ToggleList(bufname, pfx)
 endfunction
 
 " keymap: [quickfix][toggle] open
-nnoremap <silent> <leader>q :call ToggleList("Quickfix List", 'c')<CR>
-
+nnoremap <silent> <leader>q   :call ToggleList("Quickfix List", 'c')<CR>
 " keymap: [quickfix] next
-nnoremap <silent> <leader>j :cnext<CR>zz
-
+nnoremap <silent> <leader>j   :cnext<CR>zz
 " keymap: [quickfix] prev
-nnoremap <silent> <leader>k :cprev<CR>zz
+nnoremap <silent> <leader>k   :cprev<CR>zz
 
 " keymap: [locationlist][toggle] open
-nnoremap <silent> <leader>Q :call ToggleList("Quickfix List", 'l')<CR>
-
+nnoremap <silent> <leader>Q   :call ToggleList("Quickfix List", 'l')<CR>
 " keymap: [locationlist] next
-nnoremap <silent> <a-j> :lnext<cr>zz
-
+nnoremap <silent> <a-j>       :lnext<cr>zz
 " keymap: [locationlist] prev
-nnoremap <silent> <a-k> :lprev<cr>zz
+nnoremap <silent> <a-k>       :lprev<cr>zz
 
 " keymap: [browser] open browser from under cursor
 nmap <silent> <leader>ob :call <SID>handleURL(expand('<cword>'),0)<cr>gv
-
 " keymap: [browser][visual] open broser
 xmap <silent> <leader>ob "gy:call <SID>handleURL(@g, 0)<cr>gv
 
@@ -525,6 +514,7 @@ augroup MysetTerm
   autocmd BufEnter term://* startinsert
 augroup END
 
+
 " taken from: https://github.com/Shougo/shougo-s-github
 if exists(':tnoremap')
   if has('nvim')
@@ -550,13 +540,13 @@ if exists(':tnoremap')
       nnoremap <silent> <leader>tt :Terminal<cr>
 
       " keymap: [terminal] open vertical
-      nnoremap <silent> <leader>tv :TerminalV<cr>
+      nnoremap <silent> <leader>tv  :TerminalV<cr>
 
       " keymap: [terminal] exit terminal
-      tnoremap <silent> <leader>tt <C-\><C-n>:q<cr>
+      tnoremap <silent> <leader>tt  <C-\><C-n>:q<cr>
 
       " keymap: [terminal] exit to normal mode
-      tnoremap   <ESC>          <C-\><C-n>
+      tnoremap   <ESC>              <C-\><C-n>
 
     endif
 
@@ -572,6 +562,20 @@ if exists(':tnoremap')
   " tnoremap   j<Space>   j
   " tnoremap <expr> ;  vimrc#sticky_func()
 endif
+
+tmap <c-t>v <c-a><CR>:vsplit term://zsh<CR>i
+tmap <c-t>x <c-a><CR>:split term://zsh<CR>i
+tmap <c-t>] <c-a>:+tabmove<cr>
+tmap <c-t>[ <c-a>:-tabmove<cr>
+tmap <a-h> <c-t><CR><c-w>h
+tmap <a-j> <c-t><CR><c-w>j
+tmap <a-k> <c-t><CR><C-w>k
+tmap <a-l> <c-t><CR><c-w>l
+tmap <c-t>J <c-t><CR><c-w>J
+tmap <c-t>K <c-t><CR><c-w>K
+tmap <c-t>H <c-t><CR><c-w>H
+tmap <c-t>L <c-t><CR><c-w>L
+
 "
 " }}}
 " folding -------------------- {{{
