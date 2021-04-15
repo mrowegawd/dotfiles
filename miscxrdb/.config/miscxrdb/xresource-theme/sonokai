@@ -1,0 +1,40 @@
+! vim: ft=xdefaults
+! hybrid-material colorscheme
+! special
+
+*foreground: #e3e1e4
+*background: #1a181a
+
+! #f85e84
+
+! black
+*color0:  #1a181a
+*color8:  #2d2a2e
+
+! red
+*color1:  #f85e84
+*color9:  #f85e84
+
+! green
+*color2:  #9ecd6f
+*color10: #9ecd6f
+
+! yellow
+*color3:  #e5c463
+*color11: #e5c463
+
+! blue
+*color4:  #7accd7
+*color12: #7accd7
+
+! magenta
+*color5:  #ab9df2
+*color13: #ab9df2
+
+! cyan
+*color6:  #ef9062
+*color14: #ef9062
+
+! white
+*color7:  #e3e1e4
+*color15: #e3e1e4

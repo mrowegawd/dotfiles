@@ -1,0 +1,330 @@
+# vim: foldmethod=marker foldlevel=0
+
+# ░░░░▀█▀░▀▀█░█▀▀░█▀█░█▀█░█▀▀░▀█▀░█▀▀
+# ░░░░░█░░░▀▄░█░░░█░█░█░█░█▀▀░░█░░█░█
+# ░▀░░▀▀▀░▀▀░░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀░▀▀▀
+
+##############################################
+# BASE -------------------------------------- {{{
+# mod1 = alt kiri
+# mod4 = tombol window kiri
+set $mod Mod4
+
+# tombol mod untuk kedua
+set $modSecond Mod1
+
+set $term --no-startup-id st
+# set $term --no-startup-id alacritty
+
+# set $term2 --no-startup-id urxvt
+set $term2 --no-startup-id st
+
+# font pango:Inconsolata Nerd Font Mono 8
+font pango:Tamsyn 8
+
+gaps inner 5
+gaps outer 5
+#smart_gaps on
+#smart_borders on
+
+border_radius 8
+
+# remove title bar
+# new_window pixel 10
+
+# disable auto focus with mouse
+focus_follows_mouse no
+
+# for floating window, use mouse and mod to move the window
+floating_modifier $mod
+
+hide_edge_borders both
+# }}}
+
+##############################################
+# BASIC KEYBINDING WINOOW & MOVEMENT
+# ------------------------------------------- {{{
+# drag floating windows to their wanted position
+# focusing window to the left, right, down, up
+bindsym $mod+h            focus left
+bindsym $mod+j            focus down
+bindsym $mod+k            focus up
+bindsym $mod+l            focus right
+
+# move focused window
+bindsym $mod+Shift+h      move left
+bindsym $mod+Shift+j      move down
+bindsym $mod+Shift+k      move up
+bindsym $mod+Shift+l      move right
+
+bindsym $mod+b            split horizontal; exec notify-send "split kesamping"
+bindsym $mod+v            split vertical; exec notify-send "split kebawah"
+bindsym $mod+f            fullscreen
+
+# layouts
+# toggle tiling / floating
+bindsym $mod+Shift+space  floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space        focus mode_toggle
+
+# bindsym $mod+q            split toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s            layout stacking
+bindsym $mod+w            layout tabbed
+bindsym $mod+e            layout toggle split
+
+# toggle sticky
+bindsym $mod+Shift+s      sticky toggle
+
+# focus the parent container
+bindsym $mod+a            focus parent
+
+bindsym $mod+F9           reload
+
+# bindsym $mod+Shift+c exec --no-startup-id ~/.config/i3/i3-scripts/restart
+bindsym $mod+Shift+q      kill
+bindsym $mod+Shift+semicolon exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# bindsym $mod+Shift+b      exec --no-startup-id i3mox -t border
+
+# increase and decrease gaps
+# bindsym $mod++            gaps inner current plus 5
+# bindsym $mod+Shift+-      gaps inner current minus 5
+
+bindsym $mod+Ctrl+l       workspace next
+bindsym $mod+Ctrl+h       workspace prev
+# }}}
+
+##############################################
+# VARIABLE WORKSPACE
+# ------------------------------------------- {{{
+# basic terminal, vim, ranger, curse app spesific
+set $ws1 "1.Term"
+
+# open browser from here
+set $ws2 "2.Web"
+
+# open Intellij, android studio, or visual code -- workspace: ide khusus coding
+# (but not vim and dkk)
+set $ws3 "3.Files"
+
+# open gimp, -- workspace: edit image, gif
+set $ws4 "4.Canvas"
+
+# open edit video, sound
+set $ws5 "5.Cloud"
+
+# open chatting
+set $ws6 "6.Chat"
+
+# others.. like virtualbox, zahtura, etc
+set $ws7 "7.Virtual"
+
+# for aplikasi yg membuat output window baru seperti virtualbox machine, or etc
+set $ws8 "8.Xmod"
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+bindsym Shift+Mod4+Right  resize shrink width   2 px or 2 ppt
+bindsym Shift+Mod4+Up     resize grow   height  2 px or 2 ppt
+bindsym Shift+Mod4+Down   resize shrink height  2 px or 2 ppt
+bindsym Shift+Mod4+Left   resize grow   width   2 px or 2 ppt
+
+# switch to workspace with urgent window automatically
+for_window [urgent=latest] focus
+
+# bindsym Shift+Mod4+e resize grow height 2 px or 2 ppt
+# bindsym Shift+Mod4+h resize grow width 2 px or 2 ppt
+# bindsym Shift+Mod4+i resize shrink width 2 px or 2 ppt
+# bindsym Shift+Mod4+n resize shrink height 2 px or 2 ppt
+# }}}
+
+##############################################
+# RUN AT STARTUP
+# ------------------------------------------- {{{
+exec --no-startup-id ~/moxconf/exbin/for-local-bin/fehbg
+# exec --no-startup-id ~/.config/conky/start-conky
+exec --no-startup-id ~/.config/dunst/rundust.sh
+exec --no-startup-id ~/.config/rofi/reset-rofi.sh
+# exec --no-startup-id systemctl enable pulseaudio.service --user
+exec --no-startup-id ~/moxconf/exbin/for-local-bin/tilingstartup
+exec --no-startup-id ~/.config/polybar/runpolybar.sh
+exec --no-startup-id "killall -q mpd; mpd"
+exec --no-startup-id "killall -q compton; compton -b --config ~/.config/compton.conf"
+exec --no-startup-id /usr/bin/firefox
+exec --no-startup-id "killall -q dropbox; ~/.config/i3/appbox.sh"
+
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl -- set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume  exec --no-startup-id pactl -- set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp   exec --no-startup-id xbacklight -inc 20 # increase screen brightness
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 20 # decrease screen brightness
+
+# when login to i3, open these programs and then assign them to their workspaces.
+assign [class="Google-chrome"] → $ws2
+assign [class="Firefox"] → $ws2
+# assign [class="^VirtualBox"] → $ws7
+# }}}
+
+# ############################################
+# SHORTCUTS KEYBINDING PROGRAM
+# ------------------------------------------- {{{
+# open terminal
+bindsym $mod+Return             exec $term
+bindsym $modsecond+h            exec ~/moxconf/exbin/rofi_call
+
+bindsym $modSecond+t            exec Thunar
+bindsym $modSecond+r            exec $term -e ranger
+bindsym $modSecond+Shift+m      exec $term -e alsamixer
+# bindsym $modSecond+b            exec --no-startup-id qutebrowser; exec notify-send "open qutebrowser..."
+bindsym $modSecond+m            exec $term2 -e ncmpcpp
+bindsym $modSecond+u            exec $term2 -e calcurse
+bindsym $modSecond+y            exec --no-startup-id ~/moxconf/exbin/for-local-bin/mytodo
+bindsym $modSecond+Print        exec --no-startup-id ~/moxconf/exbin/for-local-bin/takescreenshot
+bindsym $modSecond+End          exec --no-startup-id ~/.config/i3/lockme.sh
+bindsym $modSecond+Home         exec --no-startup-id ~/moxconf/exbin/for-local-bin/fehbg
+# }}}
+
+# ############################################
+# ALOKASI WINDOW, ENABLE FLOAT, MOVE CENTER, ETC
+# ------------------------------------------- {{{
+# Note:
+# untuk mengecek class, `xprop | grep WM_CLASS`, lalu klik `target`
+
+# st    -> St
+# urxvt -> URxvt
+
+# set default for all window class
+for_window [class="^.*"] border pixel 0
+# for_window [class="^.*"] border normal
+# for_window [class="^.*"] title_format "<span size='smaller'> %class - %title - %instance</span>"
+
+for_window [class="Thunar"] resize shrink width 10000px; resize grow width 200px
+# for_window [class="(?i)Firefox"] border pixel 1
+for_window [class="Peek"] floating toggle
+
+# floating mode only ---- {{{
+# calcurse
+for_window [class="St" title="(?i)calcurse$"] floating enable
+for_window [class="St" title="(?i)calcurse$"] resize set 1500 500
+for_window [class="St" title="(?i)calcurse$"] move to position center
+# for_window [class="alacritty" title="calcurse$"] floating enable
+# for_window [class="alacritty" title="calcurse$"] resize set 1500 500
+# for_window [class="alacritty" title="calcurse$"] move to position center
+
+# mp3
+for_window [class="St" title="ncmpcpp"] floating enable
+for_window [class="St" title="ncmpcpp"] resize set 1500 500
+for_window [class="St" title="ncmpcpp"] move to position center
+
+# mutt
+for_window [class="St" title="mutt"] floating enable
+for_window [class="St" title="mutt"] resize set 1000 500
+for_window [class="St" title="mutt"] move to position center
+
+for_window [class="St" title="(?i)mutt"] move to position center
+
+# sxiv
+for_window [class="Sxiv"] floating enable
+for_window [class="Sxiv"] resize set 1000 1000
+for_window [class="Sxiv"] move to position center
+
+# mpv
+for_window [class="mpv"] floating enable
+
+# alsamixer
+for_window [class="St" title="(?i)alsamixer$"] floating enable
+for_window [class="St" title="(?i)alsamixer$"] resize set 1000 500
+for_window [class="St" title="(?i)alsamixer$"] move to position center
+
+# }}}
+
+# move workspace window - {{{
+# ------------------------
+# postman
+for_window [class="(?i)postman"] move to workspace $ws3
+
+# mysql workbench
+for_window [class="(?i)mysql"] move to workspace $ws3
+
+# gimp
+for_window [class="(?i)Gimp"] move to workspace $ws4
+
+# jetbrains
+for_window [class="(?i)jetbrains-idea-ce"] move to workspace $ws4
+
+# vscode
+# for_window [class="(?i)Code"] move to workspace $ws5
+
+# execl linux
+for_window [class="(?i)libreoffice"] move to workspace $ws5
+
+# zahtura
+for_window [class="(?i)Zathura"] move to workspace $ws5
+
+# telegram
+for_window [class="(?i)Telegram"] move to workspace $ws6
+
+# virtualbox
+for_window [class="(?i)VirtualBox"] move to workspace $ws7
+
+# VirtualBox machine
+for_window [class="VirtualBox Machine"] move to workspace $ws8
+# }}}
+
+# }}}
+
+##############################################
+# THEMES I3
+# ------------------------------------------- {{{
+# working with xresources, but got error, so disabled
+# set_from_resource $bg i3wm.background #282C34
+# set_from_resource $border i3wm.background #282A36
+
+set $bg_              #282a36
+set $fg_              #eff0eb
+
+set $bg_fc            #57c7ff
+set $fg_fc            #eff0eb
+
+set $indic_           #282a36
+set $indic_fc         #ff5c57
+
+set $bg_border        #eff0eb
+set $bg_border_urg    #ff5c57
+
+
+# child_border yg diubah utk mengetahui status focused client
+# class                 border  backgr.  text     indicator     child_border
+client.focused_inactive $bg_    $bg_     $fg_     $indic_       $bg_
+client.unfocused        $bg_    $bg_     $fg_     $indic_       $bg_
+client.focused          $bg_    $bg_fc   $fg_fc   $indic_fc     $bg_border
+client.urgent           $bg_    $bg_     $fg_     $indic_       $bg_border_urg
+# }}}

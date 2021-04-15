@@ -1,0 +1,117 @@
+/* -*- mode: css; -*- */
+configuration {
+    columns: 5;
+    lines: 1;
+    padding: 50;
+    font: "Iosevka Term 30";
+}
+
+* {
+    active-background: #98c379;
+    active-foreground: @foreground;
+    normal-background: @background;
+    normal-foreground: #e5e9f0;
+    urgent-background: #e06c75;
+    urgent-foreground: @foreground;
+
+    alternate-active-background: @background;
+    alternate-active-foreground: @foreground;
+    alternate-normal-background: @background;
+    alternate-normal-foreground: #e5e9f0;
+    alternate-urgent-background: @background;
+    alternate-urgent-foreground: @foreground;
+
+    selected-active-background: #e06c75;
+    selected-active-foreground: @foreground;
+    selected-normal-background: #d08770;
+    selected-normal-foreground: @foreground;
+    selected-urgent-background: #e5c07b;
+    selected-urgent-foreground: @foreground;
+
+    background-color: @background;
+    background: #2e3440;
+    foreground: #2e3440;
+    border-color: @background;
+    spacing: 2;
+}
+
+window {
+    transparency: "real";
+    background-color: @background;
+    border: 5;
+    border-color: @background;
+    padding: 2.5ch;
+}
+
+
+#mainbox {
+    border: 0;
+    padding: 0;
+    children: [ listview ];
+}
+
+#message {
+    border: 2px 0px 0px;
+    border-color: @border-color;
+    padding: 1px;
+}
+
+
+#listview {
+    fixed-height: 0;
+    border: 0px 0px 0px;
+    border-color: @border-color;
+    spacing: 2px;
+    scrollbar: true;
+    padding: 0px 0px 0px;
+}
+
+#element {
+    border: 0;
+    padding: 10px 40px 10px;
+}
+
+#element.normal.normal {
+    background-color: @normal-background;
+    text-color: @normal-foreground;
+}
+
+#element.normal.urgent {
+    background-color: @urgent-background;
+    text-color: @urgent-foreground;
+}
+
+#element.normal.active {
+    background-color: @active-background;
+    text-color: @active-foreground;
+}
+
+#element.selected.normal {
+    background-color: @selected-normal-background;
+    text-color: @selected-normal-foreground;
+}
+
+#element.selected.urgent {
+    background-color: @selected-urgent-background;
+    text-color: @selected-urgent-foreground;
+}
+
+#element.selected.active {
+    background-color: @selected-active-background;
+    text-color: @selected-active-foreground;
+}
+
+#element.alternate.normal {
+    background-color: @alternate-normal-background;
+    text-color: @alternate-normal-foreground;
+}
+
+#element.alternate.urgent {
+    background-color: @alternate-urgent-background;
+    text-color: @alternate-urgent-foreground;
+}
+
+#element.alternate.active {
+    background-color: @alternate-active-background;
+    text-color: @alternate-active-foreground;
+}

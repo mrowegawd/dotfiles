@@ -1,0 +1,8 @@
+# zoom: out, fontsize
+ctrl+-
+
+# zoom: in, fontsize
+ctrl+shift+equal
+
+# zoom: reset, fontsize
+ctrl+=

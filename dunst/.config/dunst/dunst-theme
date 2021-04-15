@@ -1,0 +1,16 @@
+[urgency_low]
+    # IMPORTANT: colors have to be defined in quotation marks.
+    # Otherwise the "#" and following would be interpreted as a comment.
+    background = "#222222"
+    foreground = "#888888"
+    timeout = 8
+
+[urgency_normal]
+    background = "%%normal_bg%%"
+    foreground = "%%normal_fore_bg%%"
+    timeout = 8
+
+[urgency_critical]
+    background = "%%critical_bg%%"
+    foreground = "%%critical_fore_bg%%"
+    timeout = 0

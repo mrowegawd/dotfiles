@@ -1,0 +1,557 @@
+# vim: foldmethod=marker foldlevel=0 ft=dosini
+# ░█▀█░█▀█░█░░░█░█░█▀▄░█▀█░█▀▄
+# ░█▀▀░█░█░█░░░░█░░█▀▄░█▀█░█▀▄
+# ░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀
+# #########################################
+# BARSET ---------------------------------- {{{
+# ------------------------ [global/wm]
+[global/wm]
+margin-bottom       = 0
+margin-top          = 0
+
+[colors]
+iconfg              = ${xrdb:color4}
+warnfg              = ${xrdb:color3}
+redfg               = ${xrdb:color9}
+nofg                = ${xrdb:color5}
+foreground          = #adb1b9
+
+
+[section/bar]
+monitor             = DP-2
+
+font-0              = mononoki Nerd Font:size=9:style=regular;1
+font-1              = TerminessTTF Nerd Font:size=10:style=bold;1
+font-2              = Siji:size=10:fontformat=truetype;style=regular;1
+font-3              = Wucon Siji:size=1:style=regular;1
+
+override-redirect   = false
+wm-restack          = bspwm
+
+[bar/top]
+tray-position       = right
+
+inherit             = section/bar
+width               = 100%
+bottom              = false
+fixed-center        = true
+height              = 20
+padding-left        = 1
+padding-right       = 0
+override-redirect   = false
+line-size           = 2
+
+border-top-size     = 6
+border-bottom-size  = 6
+border-top-color    = ${xrdb:background}
+border-bottom-color = ${xrdb:background}
+
+; background        = #5a000000
+background          = ${xrdb:background}
+foreground          = ${colors.foreground}
+
+; modules-right     = pomo pulseaudio updates network memory filesystem powermenu
+modules-left        = appmenu round-left bspwm round-right round-left mpd round-right
+modules-right       = pomo pulseaudio round-left updates custom-network temperature memory filesystem uptime round-right round-left time round-right powermenu
+#
+# }}}
+
+# #########################################
+# X - WINDOW ------------------------------ {{{
+[module/xwindow]
+type = internal/xwindow
+format-prefix = ": "
+format-prefix-foreground = ${colors.iconfg}
+format = %{A1:rofi -show drun:}<label>%{A}
+; format-foreground = ${xrdb:color15}
+label = "%title:0:38:...%"
+label-empty =
+
+# }}}
+
+# #########################################
+# SYS ------------------------------------- {{{
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 70
+format-warn = <ramp> <label-warn>
+format-warn-background = ${colors.redfg}
+
+format = <ramp> <label>
+format-foreground = #a4ebf3
+format-background = #2b2f37
+format-padding = 1
+
+label = %temperature-c%
+label-warn = %temperature-c%
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-3 = 
+ramp-4 = 
+
+[module/filesystem]
+type = internal/fs
+interval = 3600
+
+mount-0 = /
+
+format-mounted-prefix = %{T2} %{T-}
+format-mounted-prefix-foreground = ${colors.iconfg}
+; format-mounted-overline = ${colors.redfg}
+format-mounted-padding = 1
+format-mounted-background = #2b2f37
+
+label-mounted = %percentage_used%%
+label-mounted-foreground = ${colors.iconfg}
+
+; label-mounted = %{T2} %percentage_used%%
+; label-unmounted = %mountpoint% not mounted
+; label-unmounted-foreground = ${colors.nofg}
+
+[module/memory]
+type = internal/memory
+; type = custom/script
+; exec = free -m | sed -n 's/^Mem:\s\+[0-9]\+\s\+\([0-9]\+\)\s.\+/\1/p'
+
+; format = <label>
+; format-prefix = %{T2}﬙ %{T-}
+; format-prefix-foreground = #d19a66
+; format-foreground = #d19a66
+; format-background = #2b2f37
+; format-padding = 1
+
+; label = %output% MB
+
+interval = 2
+
+format = <label>
+format-prefix = %{T2}﬙ %{T-}
+; format-prefix-foreground = ${colors.nofg}
+format-foreground = #d19a66
+format-background = #2b2f37
+format-padding = 1
+
+label = %percentage_used%%
+; label = %gb_used%/%gb_total%
+
+[module/powermenu]
+type = custom/menu
+
+expand-right = true
+
+format-spacing = 0
+
+label-open = %{T2}%{T-}
+label-open-foreground = ${xrdb:color3}
+label-open-padding = 1
+
+label-close = %{T2}ﰸ%{T-}
+label-close-foreground = ${xrdb:color7}
+label-close-padding = 1
+
+menu-0-0 = %{T2}%{T-}
+menu-0-0-exec = menu-open-1
+menu-0-0-padding = 1
+
+menu-0-1 = %{T2}⏼%{T-}
+menu-0-1-exec = menu-open-2
+menu-0-1-padding = 1
+
+menu-1-0 = %{T2}%{T-}
+menu-1-0-exec = systemctl reboot
+menu-1-0-padding = 1
+
+menu-1-1 = %{T2}%{T-}
+menu-1-1-exec = menu-open-0
+menu-1-1-padding = 1
+
+menu-2-0 = %{T2}%{T-}
+menu-2-0-exec = menu-open-0
+menu-2-0-padding = 1
+
+menu-2-1 = %{T2}⏼%{T-}
+menu-2-1-exec = systemctl poweroff
+menu-2-1-padding = 1
+
+[module/backlight]
+type = internal/backlight
+
+card = intel_backlight
+format = <ramp> <label>
+ramp-foreground = #ff89beba
+label-foreground = #ff89beba
+label = %percentage%%
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+
+# }}}
+
+# #########################################
+# WINDOW MANAGER -------------------------- {{{
+[module/bspwm]
+type           = internal/bspwm
+pin-workspaces = true
+enable-click   = true
+enable-scroll  = true
+reverse-scroll = false
+inline-mode    = false
+format         = <label-state>
+
+; label-focused          = 綠
+; label-occupied         = 祿
+;
+; ws-icon-0              = "Browser;"
+; ws-icon-1              = "Terminal;"
+; ws-icon-2              = "Code;"
+; ws-icon-3              = "Messaging;"
+; ws-icon-4              = "Mail;"
+; ws-icon-5              = "Music;"
+; ws-icon-6              = "Games;"
+; ws-icon-7              = "Reader;"
+
+label-separator-background = #2b2f37
+; ws-icon-0 = 1;%{F#F9DE8F}﬑
+; ws-icon-1 = 2;%{F#ff9b93}
+; ws-icon-2 = 3;%{F#95e1d3}
+
+ws-icon-0 = 1;﬑
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-4 = 5;
+
+label-focused = %icon%
+label-focused-foreground = ${colors.redfg}
+label-focused-background = #2b2f37
+label-focused-underline =  ${colors.iconfg}
+label-focused-padding = 1
+
+label-occupied = %icon%
+label-occupied-foreground = ${colors.iconfg}
+label-occupied-background = #2b2f37
+label-occupied-padding = 1
+
+label-urgent = %icon%
+label-urgent-background = ${colors.warnfg}
+label-urgent-padding = 1
+
+label-empty = %icon%
+label-empty-foreground = ${colors.foreground}
+label-empty-background = #2b2f37
+label-empty-padding = 1
+
+; [module/i3]
+; type = internal/i3
+; format = <label-state><label-mode>
+; index-sort = true
+; enable-click = false
+; enable-scroll = false
+; content-padding = 1
+;
+; ws-icon-0 = 1;
+; ws-icon-1 = 2;
+; ws-icon-2 = 3;
+; ws-icon-3 = 4;
+; ws-icon-4 = 5;
+; ws-icon-5 = 6;
+; ws-icon-6 = 7;
+; ws-icon-7 = 8;
+; ws-icon-8 = 9;
+; ws-icon-default = I
+;
+; ; Only show workspaces on the same output as the bar
+; pin-workspaces = true
+;
+; ; focused = Active workspace on focused monitor
+; label-focused = " 綠 "
+; label-focused-background =
+; label-focused-foreground = ${xrdb:color6}
+; label-focused-underline =
+; ; label-focused-padding = 1
+;
+; ; unfocused = Inactive workspace on any monitor
+; ; label-unfocused =
+; label-unfocused = " 祿 "
+; label-unfocused-foreground = ${xrdb:color6}
+; label-unfocused-underline =
+; ; label-unfocused-padding = 1
+;
+; ; visible = Active workspace on unfocused monitor
+; label-visible =
+; label-visible-background = ${xrdb:color5}
+; label-visible-underline = ${xrdb:color5}
+; ; label-visible-padding = 1
+;
+; ; urgent = Workspace with urgency hint set
+; label-urgent = "  "
+; label-urgent-foreground= ${xrdb:color3}
+; ; label-urgent-padding = 1
+# }}}
+
+# #########################################
+# MULTIMEDIA ------------------------------ {{{
+; [module/mpd]
+; type = internal/mpd
+; format-online = <toggle>
+; format-offline =
+; label-song = %artist% - %title%
+; label-song-padding = 4
+; label-time = (%elapsed%/%total%)
+; icon-play-foreground = ${xrdb:color8}
+; icon-play = 
+; icon-pause = 
+[module/mpd]
+type = internal/mpd
+
+host = 127.0.0.1
+port = 6600
+;
+; format-online = <icon-prev> <toggle> <icon-next> <label-time> | <label-song>
+;
+; label-song = %artist:0:30:...% - %title:0:30:...%
+;
+; format-offline-foreground = ${xrdb:color15}
+; label-offline =  mpd is offline
+;
+; icon-play = 
+; icon-pause = 
+; icon-stop = 
+; icon-prev = 
+; icon-next = 
+; icon-seekb = 
+; icon-seekf = 
+; icon-random = 
+; icon-repeat = 
+;
+; ; Only applies if <bar-progress> is used
+; bar-progress-width = 10
+; bar-progress-indicator = |
+; bar-progress-fill = ─
+; bar-progress-empty = ─
+
+; format-online = %{T2}<icon-prev> <toggle> <icon-next> <label-time>%{T-} <label-song>
+format-online = %{T2}<icon-prev> <toggle> <icon-next>%{T-} <label-song>
+format-online-padding = 1
+format-online-background = #2b2f37
+
+label-song = | %artist:0:10:...% - %title:0:10:...%
+
+icon-prev = 
+icon-play = 
+icon-pause = 
+icon-next =  
+
+toggle-on-foreground = ${xrdb:color3}
+toggle-off-foreground = ${xrdb:color10}
+label-offline = no sound
+
+[module/pulseaudio]
+type = internal/pulseaudio
+; ; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+; ; If not, uses default sink
+sink = alsa_output.pci-0000_00_1f.3.analog-stereo
+
+format-volume-prefix = %{T2}墳 %{T-}
+format-volume = %{T1}<label-volume>%{T-}
+format-volume-padding = 1
+; format-volume-background = ${xrdb:color3}
+
+; label = <format-volume>
+; label-volume-background = ${xrdb:color3}
+; label-volume-padding = 1
+
+format-muted-prefix = %{T2}奄 %{T-}
+format-muted-prefix-foreground = ${colors.nofg}
+; format-muted-background = ${xrdb:color3}
+format-muted-padding = 1
+
+label-muted = muted
+label-muted-foreground = ${colors.nofg}
+; label-muted-padding = 1
+
+# }}}
+
+# #########################################
+# INTERNET -------------------------------- {{{
+; [module/network]
+; type = internal/network
+; interface = enp0s31f6
+
+; format-disconnected = <label-disconnected>
+; format-packageloss = <label-packageloss>
+; format-connected = <label-connected>
+
+; format-connected-prefix = %{T2}
+; format-connected-prefix-foreground = ${colors.iconfg}
+; format-padding = 1
+
+; label-connected = %{T1} %downspeed:7%%{T-}
+; ; label-padding-left = 1
+
+; label-disconnected = disconnected
+; label-disconnected-foreground = ${colors.redfg}
+
+; label-packageloss = !
+; label-packageloss-foreground = ${colors.redfg}
+
+# }}}
+
+# #########################################
+# TIME ------------------------------------ {{{
+[module/time]
+type = internal/date
+interval = 60
+; interval = 5
+; date = %a, %d %B %Y
+; date-alt  = %H:%M %p
+; time = %H:%M
+; label = " %{T4}%time% %date%%{T-} "
+; label-foreground = ${xrdb:color3}
+; time-alt = %H:%M
+; label-background = ${colors.background-alt}
+
+; format-prefix = "  :"
+; format-prefix-foreground = ${xrdb:color0}
+; format-prefix-background = ${xrdb:color8}
+; label-background = ${xrdb:color0}
+; format = <label>
+format-background = #2b2f37
+format-foreground = ${xrdb:color15}
+format-padding = 1
+
+; date-alt = " %d-%m-%Y"
+date-alt = " %b %d %Y"
+
+time = %{T2} %{T-} %H:%M
+time-alt = " %H:%M "
+
+; time-alt = %{F#61afef}󰃭 %a, %b %d%{F-}
+
+label = %date%%time%
+
+
+# }}}
+
+# #########################################
+# MISC ------------------------------------ {{{
+; [section/batterymodule]
+; type = internal/battery
+; poll-interval = 5
+; time-format = %H:%M
+; format-charging = <ramp-capacity> 
+; format-discharging = <ramp-capacity>
+; format-full = 
+; ramp-capacity-0-foreground = ${xrdb:color1}
+; ramp-capacity-0 = 
+; ramp-capacity-1 = 
+; ramp-capacity-2 = 
+; ramp-capacity-3 = 
+; ramp-capacity-4 = 
+; ramp-capacity-5 = 
+; ramp-capacity-6 = 
+; ramp-capacity-7 = 
+; ramp-capacity-8 = 
+; ramp-capacity-9 = 
+
+# }}}
+
+# #########################################
+# CUSTOM SCRIPT --------------------------- {{{
+# ------------------------
+[module/custom-network]
+type = custom/script
+exec = ~/.config/polybar/scripts/check-network
+tail = true
+interval = 5
+
+format = <label>
+format-padding = 1
+format-background = #2b2f37
+format-foreground = #cceabb
+label = %{T2}%output% %{T-}
+
+click-left = st -e nmtui-connect
+click-right = st -e nmtui-edit
+
+[module/pomo]
+type = custom/script
+exec = ~/.local/bin/pomo status
+interval = 3
+
+format = <label>
+format-padding = 1
+label =%{T2}祥%{T-} %output%
+; label-padding = 1
+
+[module/updates]
+type = custom/script
+exec = ~/.config/polybar/scripts/checkupdates.sh
+interval = 4600
+
+format = <label>
+format-background = #2b2f37
+
+label =%{T2} %{T-}%output%
+label-padding = 1
+label-foreground = #BF616A
+
+; [module/spotify]
+; type = custom/script
+; interval = 1
+; format-prefix = " : "
+; format = <label>
+; exec = python3 ~/.config/polybar/scripts/spotify-status.py -f '{artist} - {song}'
+; format-prefix-foreground = ${colors.iconfg}
+; format-padding = 1
+
+[module/appmenu]
+type = custom/text
+content = %{T2} %{T-}
+content-padding = 1
+content-foreground = ${colors.iconfg}
+; content-background = ${xrdb:color6}
+
+click-left = rofi -show window
+click-middle = rofi -show ssh
+click-right = rofi -show drun
+
+[module/uptime]
+;https://github.com/jaagr/polybar/wiki/User-contributed-modules#uptime
+type = custom/script
+exec = uptime | awk -F, '{sub(".*up ",x,$1);print $1}'
+interval = 100
+label = %output%
+
+format-foreground = #C15D3E
+; format-background = ${colors.nofg}
+format-background = #2b2f37
+format-prefix = " "
+; format-prefix-foreground = #C15D3E
+format-padding = 1
+
+; format-underline = #C15D3E
+
+# }}}
+
+# #########################################
+# SEPARATOR ------------------------------- {{{
+# ------------------------
+; [module/separator]
+; type = custom/text
+; content = "WINDOW:"
+[module/round-left]
+type = custom/text
+content = %{T2}%{T-}
+content-foreground = #2b2f37
+
+[module/round-right]
+type = custom/text
+content = %{T2}%{T-}
+content-foreground = #2b2f37
+
+# }}}

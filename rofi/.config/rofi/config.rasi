@@ -1,0 +1,35 @@
+/* test configuration rofi run command: rofi -dump-config > /tmp/testconf.rofi */
+
+configuration {
+    font:                       "mononoki Nerd Font 12";
+    show-icons:                 true;
+
+    modi:                       "ssh,window,drun,run";
+    width:                      60;
+    columns:                    1;
+    bw:                         0;
+
+    theme:                      "colors-rofi-dark";
+
+    scroll-method:              0;
+    case-sensitive:             false;
+    sidebar-mode:               false;
+    eh:                         1;
+    line-margin:                1;
+    fullscreen:                 false;
+    window-format:              "{w} {c} {n} {r}";
+
+    kb-clear-line:              "Control+w";
+    kb-move-end:                "Shift+Page_Up";
+    kb-remove-char-back:        "BackSpace,Shift+End";
+
+    kb-remove-to-eol:           "";
+    kb-accept-entry:            "!Alt-Tab,Return";
+
+    kb-row-left:                "Control+l";
+    kb-row-right:               "Control+h";
+    kb-row-up:                  "Control+k";
+    kb-row-up:                  "Control+p";
+    kb-row-down:                "Control+j";
+    kb-row-down:                "Control+n";
+}

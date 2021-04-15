@@ -1,0 +1,134 @@
+# vim: set ft:conf
+
+auto-reload                 yes
+browser                     firefox
+datetime-format             "%F"  # ISO 8601
+refresh-on-startup          yes
+player                      "mpv"
+download-path               "~/Downloads/%n"
+save-path                   "~/Downloads"
+reload-threads              2
+cleanup-on-quit             yes
+text-width                  80
+external-url-viewer         "urlview"
+
+# cache-file ~/.cache/newsboat/cache.db
+
+notify-format               "%d new articles"
+notify-program              "/usr/bin/notify-send"
+
+
+feedlist-title-format       "—[%u feeds with new articles]——%>——(%N %V)—"
+feedlist-format             "%4i  %t (%c)"
+articlelist-title-format    "—[%T]——(%u unread, %t total)——%>——(%U)—"
+articlelist-format          "%4i  %D  %t %T"
+searchresult-title-format   "Search result (%u unread, %t total)"
+filebrowser-title-format    "%?O?Open File&Save File? - %f"
+help-title-format           "Help"
+selecttag-title-format      "Select Tag"
+selectfilter-title-format   "Select Filter"
+itemview-title-format       "%T"
+urlview-title-format        "URLs"
+dialogs-title-format        "Dialogs"
+
+# proxy-type                socks5
+# proxy                     localhost:73
+
+# COLORTHEME ------------------------------------------------------------------
+
+color article               red black
+color info                  default default
+color listnormal_unread     color244 default
+
+color listfocus             yellow default standout
+color listfocus_unread      default black standout bold
+
+color article               white black dim
+history-limit               0
+# max-items                   50
+
+# FEEDLIST --------------------------------------------------------------------
+
+highlight feedlist "[║│]" yellow default bold
+highlight feedlist "^(Feed|Local News|METHOD)" blue black
+highlight feedlist "^ *[0-9]+ *N " color156 default
+
+# highlight feedlist "(Tech News|Linux News|Distro News|Subreddits)" green black
+# highlight feedlist "(Real Estate|Other News)" blue black
+
+# ARTICLELIST -----------------------------------------------------------------
+
+highlight article "^(Feed|Author|Link|Date|Linux|METHOD):.*" blue default
+highlight article "^Title:.*" yellow default
+highlight article "\\[[0-9][0-9]*\\]" color66 default bold
+highlight article "\\[image [0-9][0-9]*\\]" color109 default bold
+highlight article "\\[embedded flash: [0-9][0-9]*\\]" color66 default bold
+highlight article ":.*\\(link\\)$" color74 default
+highlight article ":.*\\(image\\)$" color73 default
+highlight article ":.*\\(embedded flash\\)$" color74 default
+
+highlight articlelist "^ *[0-9]+ *N " color156 default
+
+# KEYMAPPING ------------------------------------------------------------------
+
+# ctrl-e    to set flags
+# press t   to check flags
+
+# move: down
+bind-key j down
+
+# move: up
+bind-key k up
+
+# articlelist: next feed
+bind-key J next-feed articlelist
+
+# articlelist: prev feed
+bind-key K prev-feed articlelist
+
+# articlelist: open
+bind-key l open
+
+# end
+bind-key e end
+
+# basic: pageup
+bind-key g pageup
+
+# basic: pagedown
+bind-key G pagedown
+
+# basic: open in browser and mark as read
+bind-key b open-in-browser-and-mark-read
+
+# basic: open in browser
+bind-key B open-in-browser
+
+# basic: quit
+bind-key h quit
+
+# basic: reload current select
+bind-key r reload
+
+# basic: reload all
+bind-key R reload-all
+
+# basic: show urls
+bind-key u show-urls
+
+# basic: pb download
+bind-key D pb-download
+
+# basic: delete from database
+bind-key x pb-delete
+
+# toggle: source view
+bind-key w toggle-source-view
+
+# toggle: toggle article read
+bind-key v toggle-article-read
+
+# MACRO -----------------------------------------------------------------------
+
+macro m set browser "/usr/bin/mpv -ontop -no-border -force-window --autofit=700x300 --geometry=-15-60 %u > /dev/null &"; open-in-browser ; set browser "/usr/bin/w3m %u"
+macro f set browser "/usr/bin/firefox %u > /dev/null &"; open-in-browser-and-mark-read ; open-in-browser ; set browser "/usr/bin/w3m %u"

@@ -1,0 +1,182 @@
+# vim: ft=conf
+#
+########################################
+# wm independent hotkeys #
+########################################
+
+# base: terminal emulator
+super + Return
+        st
+
+# base: reload sxhkd
+super + shift + F8
+        pkill -USR1 -x sxhkd && SLEEP=2 notify-send "Reload sxhkd config"
+
+# base: restart/reload bspwm
+super + shift + F12
+        bspc wm -r && SLEEP=2 notify-send "Reload bspwm config"
+
+# base: kill/close window
+super + Tab
+        xdo close
+
+########################################
+# States and flags
+########################################
+
+# state: fullscreen
+super + f
+        bspc node -t {fullscreen,tiled}
+
+# state: tiled
+super + shift + t
+        bspc node -t {pseudo_tiled,tiled}
+
+# stage: floating
+super + {Up,Down}
+        bspc node -t {floating,tiled}
+
+########################################
+# Focus and swap windows
+########################################
+
+# focus: change focus window
+# super + {h,j,k,l}
+#         bspc node -{f} {west,south,north,east}
+#
+
+# focus: the next/previous node
+# super + {_,shift + }c
+#     bspc node -f {next,prev}
+
+# focus: next/previous node/window
+super + {l,h}
+    bspc node -f {next,prev}
+
+# focus: parent,brother,first,second
+super + {p,b,comma,period}
+        bspc node -f @{parent,brother,first,second}
+
+# focus: move current node to the next/previous workspaces
+super + shift + bracket{left,right}
+        DIR={prev,next}; \
+        bspc node -d "$DIR"; \
+        bspc desktop -f "$DIR"
+
+# swap: window
+super + ctrl + {h,j,k,l}
+        bspc node -s {west,south,north,east}
+
+# swap: focus the older or newer node in the focus history
+super + {o,i}
+        bspc wm -h off; \
+        bspc node {older,newer} -f; \
+        bspc wm -h on
+
+
+########################################
+# Preselection
+########################################
+
+# preselection: enter preselection mode
+# super + alt + {h,j,k,l}
+#         bspc node -p {west,south,north,east}
+
+# preselection: resize current preselection mode
+# super + alt + {1-9}
+#         bspc node -o 0.{1-9}
+
+# preselection: cancel the preselection mode
+# super + alt + space
+#         bspc node -p cancel
+
+# preselection: cancel the preselection for the focused desktop
+# super + ctrl + shift + space
+#         bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+########################################
+# Move and resize windows
+########################################
+
+# resize: to grow window
+super + alt + shift + {Left,Down,Up,Right}
+        bspc node -z {left -20 0 || bspc node -z right -20 0, \
+                      bottom 0 20 || bspc node -z top 0 20,\
+                      top 0 -20 || bspc node -z bottom 0 -20,\
+                      right 20 0 || bspc node -z left 20 0}
+
+# resize: to shrink window
+super + alt + {Right,Up,Down,Left}
+    bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# resize: window gap
+super + {minus,equal}
+        bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+# move: moving floating window to the left/up/right/down
+super + shift + {Left,Down,Up,Right}
+        bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# move: move node to the given desktop
+super + {_,shift + }{1-9,0}
+        bspc {desktop -f,node -d} '^{1-9,10}'
+
+########################################
+# Brightness
+########################################
+
+# brightness: Increase brightness
+# XF86MonBrightnessUp
+#         xbacklight -inc 5
+
+# brightness: Decrease brightness
+# XF86MonBrightnessDown
+#         xbacklight -dec 5
+
+########################################
+# Volume and media
+########################################
+
+# volume: Increase volume
+super + shift + equal
+        amixer -q sset Master 3%+
+
+# volume: Decrease volume
+super + shift + minus
+        amixer -q sset Master 3%-
+
+# volume: Mute/Unmute
+super + shift + m
+        amixer -q sset Master toggle
+
+########################################
+# Misc
+########################################
+
+# misc: run takescreenshot
+super + shift + Print
+        $HOME/Dropbox/exbin/for-local-bin/takescreenshot
+
+# misc: run change background img
+super + shift + Home
+        $HOME/Dropbox/exbin/for-local-bin/fehbg
+
+# misc: run rofi_call
+super + u
+        $HOME/Dropbox/exbin/rofi_call
+
+# misc: run ncmpcpp
+super + shift + n
+        $HOME/Dropbox/exbin/for-local-bin/bspwmfloat ncmpcpp
+
+# misc: run clipmenu (copy paste cache)
+super + shift + c
+        clipmenu
+
+# misc: run calcurse
+super + shift + l
+        $HOME/.config/rofi/scripts/lock.sh
+
+# misc: quit window
+ctrl + shift + q
+        $HOME/.config/rofi/scripts/poweroff.sh

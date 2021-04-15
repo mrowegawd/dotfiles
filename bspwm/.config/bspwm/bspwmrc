@@ -1,0 +1,67 @@
+#! /bin/sh
+
+sxhkd &
+
+"$HOME/.config/bspwm/autostart.sh"
+# bspc monitor -d I II III IV V VI VII VIII IX X
+# bspc monitor -d term web todo pdfile code docs music misc
+bspc monitor -d 1 2 3 4 5
+
+bspc config border_width 3
+bspc config window_gap 10
+bspc config split_ratio 0.52
+# bspc config borderless_monocle true
+# bspc config gapless_monocle true
+# bspc config swallow_first_click true
+# bspc config click_to_focus button1
+bspc config pointer_follows_focus false
+
+bspc config external_rules_command "$HOME/Dropbox/exbin/for-local-bin/bspc-external-rules"
+
+desk_code="1"
+desk_web="2"
+desk_doc="3"
+
+# term
+bspc rule -a URxvt:ncmpcpp state=floating
+bspc rule -a st:ncmpcpp state=floating
+# bspc rule -a mpv state=floating rectangle=WidthxHeight+Xoffset+Yoffset
+# bspc rule -a URxvt:urxvt_keys_help state=floating center=true rectangle=500x300+0+0
+bspc rule -a "Firefox-esr" desktop=$desk_web follow=on
+
+bspc rule -a jetbrains-idea-ce desktop=$desk_code # intellij 'did you know' popup
+bspc rule -a jetbrains-idea-c desktop=$desk_code  # the rest of intellij
+
+# bspc rule -a libreofficedev-calc state=tiled desktop='docs'
+# bspc rule -a '*:libreofficedev' desktop='docs'
+bspc rule -a '*:soffice' state=tiled desktop=$desk_doc
+
+# bspc rule -a Chromium desktop='web'
+# bspc rule -a Nautilus desktop='file'
+# bspc rule -a Peek state=floating follow=on focus=on
+# bspc rule -a Sxiv state=floating follow=on focus=on
+# bspc rule -a 'Thunar' desktop='file' follow=on focus=on
+# bspc rule -a mpv state=floating follow=on focus=on
+# bspc rule -a 'Gimp' desktop='misc' follow=on
+# bspc rule -a Screenkey manage=off
+# bspc rule -a Spotify desktop='music' follow=on
+# bspc rule -a 'Zathura' desktop='file' follow=on state=tiled
+
+bspc wm --record-history on
+
+xsetroot -cursor_name left_ptr &
+
+# launch auto start application
+
+startup_lock_file=/tmp/bspwm-startup.lock
+if [ ! -f $startup_lock_file ]; then
+  echo "dummy" >$startup_lock_file
+  sleep 2
+  st &
+  sleep 2
+  firefox &
+  sleep 2
+  "/home/mr00x/.local/bin/Todoist" &
+  # "/home/mr00x/.local/bin/Notions" &
+  clipmenud &
+fi

@@ -1,0 +1,35 @@
+
+! # vim: foldmethod=marker foldlevel=0 ft=xdefaults
+
+! --------------------------------------------
+!░░░░█░█░█▀▄░█▀▀░█▀▀░█▀█░█░█░█▀▄░█▀▀░█▀▀░█▀▀ +
+!░░░░▄▀▄░█▀▄░█▀▀░▀▀█░█░█░█░█░█▀▄░█░░░█▀▀░▀▀█ +
+!░▀░░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀ +
+! --------------------------------------------
+!
+
+! themes
+#include ".config/miscxrdb/xresource-theme/base16-gruvbox-dark-medium"
+
+! --------------
+! XFT SETTINGS
+! --------------
+Xft.dpi:                    96
+Xft.antialias:              true
+! Xft.antialias:              0
+Xft.rgba:                   rgb
+Xft.hinting:                true
+Xft.hintstyle:              hintmedium
+Xft.lcdfilter:              lcddefault
+Xft.autohint:               0
+
+! Transparancy (0 - 255)
+! sudah dihandle sama compton
+! *.alpha:    245
+
+! ------------------------------------------------------------
+! TERMINAL MODE
+! ------------------------------------------------------------
+
+#include ".config/miscxrdb/terminal/st"
+#include ".config/miscxrdb/terminal/urxvt"

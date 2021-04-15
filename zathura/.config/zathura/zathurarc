@@ -1,0 +1,109 @@
+set adjust-open "best-fit"
+set font "FiraMono Nerd Font 8"
+set zoom-min 10
+
+set recolor "true"
+set first-page-column     1:2
+set scroll-page-aware "true"
+set selection-clipboard   clipboard
+set statusbar-home-tilde true
+
+# base: zoom in
+map + zoom in
+
+# base: zoom out
+map - zoom out
+
+# base: quit (q)
+map [index] q quit
+
+# toggle: statusbar
+map b toggle_statusbar
+
+# toggle: fullscreen toggle
+
+# map <c-f> toggle_fullscreen
+
+# toggle: recolor black/white bg
+map i recolor
+
+# scroll: up
+map k scroll up
+
+# scroll: down
+map j scroll down
+
+# scroll: left
+map h scroll left
+
+# scroll: right
+map l scroll right
+
+# scroll: half up
+map K scroll half-up
+
+# scroll: half down
+map J scroll half-down
+
+# normal: search next (n)
+map [normal] n search forward
+
+# normal: search prev (N)
+map [normal] N search backward
+
+# fullscreen: fullscreen (f)
+map [fullscreen] f toggle_fullscreen
+
+# fullscreen: zoom (=)
+map [fullscreen] = zoom in
+
+# fullscreen: up (k)
+map [fullscreen] k scroll up
+
+# fullscreen: left (j)
+map [fullscreen] j scroll down
+
+# fullscreen: right (h)
+map [fullscreen] h scroll left
+
+# fullscreen: right (l)
+map [fullscreen] l scroll right
+
+# fullscreen: half up (K)
+map [fullscreen] K scroll half-up
+
+# fullscreen: half down (J)
+map [fullscreen] J scroll half-down
+
+### THEME ###
+
+set default-bg "#282828"
+set default-fg "#d5c4a1"
+
+set statusbar-bg "#202020"
+set statusbar-fg "#eee4e5"
+
+set inputbar-bg "#b8bb26"
+set inputbar-fg "#202020"
+
+set highlight-color "#fb4934"
+set highlight-active-color "#6A9FB5" #0D
+
+set completion-highlight-fg "#151515" #02
+set completion-highlight-bg "#90A959" #0C
+
+set notification-bg "#282828"
+set notification-fg "#d5c4a1"
+
+set notification-error-bg "#AC4142" #08
+set notification-error-fg "#151515" #00
+
+set notification-warning-bg "#AC4142" #08
+set notification-warning-fg "#151515" #00
+
+set recolor-lightcolor "#282828"
+set recolor-darkcolor "#E0E0E0" #06
+set recolor-reverse-video "true"
+set recolor-keephue "false"
+
+# vim: ft=conf

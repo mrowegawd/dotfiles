@@ -1,0 +1,17 @@
+-- Modules
+require("modules._util")
+require("modules._mappings")
+require("modules._misc")
+
+-- Plugins
+require("plugins._compe")
+require("plugins._nvim-tree")
+require("plugins._vsnip")
+require("plugins._treesitter")
+require("plugins._telescope")
+require("plugins._nvim-toggleterm")
+
+require("plugins._dap")
+
+-- Update lsp
+require("modules.lsp")

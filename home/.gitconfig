@@ -1,0 +1,187 @@
+[user]
+  email=[7404751+mrowegawd@users.noreply.github.com](mailto:7404751+mrowegawd@users.noreply.github.com)
+  name = mrowegawd
+
+[core]
+  pager = diff-so-fancy | less --tabs=4 -RFX
+  autocrlf = input
+  excludesfile = ~/.gitignore-global
+
+[color]
+  ui = true
+
+[branch]
+  autoSetupMerge = true
+  autoSetupRebase = always
+
+[credential]
+  helper = cache
+
+[status]
+  short = true
+  branch = true
+  showStash = true
+  submoduleSummary = true
+
+[log]
+  abbrevCommit = true
+  decorate = short
+  date = format:%a, %Y-%m-%d %R (%z)
+  graphColors = 1,2,3,4,5,6,8,166,9,10,11,12,13,14,15,208
+  showRoot = true
+  mailmap = true
+
+[column]
+  ui = auto,column
+
+[pretty]
+  lo = tformat:%C(auto)%h%C(reset)%C(auto)%d%C(reset) %s %C(blue)%ad%C(reset) %C(241)%aN%C(reset)
+  lt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(blue)%aD%C(reset) %C(cyan)(%ad)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n
+  lf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C%H%C%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(blue)%aD%C(reset) %C( cyan)(%ad)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(blue)%cD%C(reset) %C(cyan)(%cd)%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+  rlo = tformat:%C(auto)%h%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset)%C(auto)%d%C(reset) %s %C(italic blue)%ad%C(reset) %C(241)%aN%C(reset)
+  rlt =  format:%C(auto)%h%C(reset) %C(white)-%C(reset) %C(italic blue)%aD%C(reset) %C(italic cyan)(%ad)%C(reset)%C(auto)%d%C(reset)%n %C(white)⤷%C(reset) %s %C(241)- %aN <%aE>%C(reset)%n %C(white)⤷%C(reset) %C(bold yellow)(%C(red)%gd%C(bold yellow))%C(reset) %gs %C(241)- %gN <%gE>%C(reset)%n
+  rlf =  format:%C(auto)%h%C(reset)%C(auto)%d%C(reset)%n%C(white)SHA-1:%C(reset)    %C(italic)%H%C(reset)%n%C(white)Author:%C(reset)   %aN %C(241)<%aE>%C(reset)%n          %C(italic blue)%aD%C(reset) %C(italic cyan)(%ad)%C(reset)%n%C(white)Commit:%C(reset)   %cN %C(241)<%cE>%C(reset)%n          %C(italic blue)%cD%C(reset) %C(italic cyan)(%cd)%C(reset)%n%C(white)Reflog:%C(reset)   %gN %C(241)<%gE>%C(reset)%n          %C(italic)%gs%C(reset)%w(0,4,4)%n%+C(bold)%s%C(reset)%n%+b%n
+  lg1 = format:%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset) --all
+
+[alias]
+  alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t\t => \\2/' | less
+
+  po = !git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
+  d = diff --ignore-space-change
+  type  = cat-file -t
+
+  gpushf  = push origin -f master
+
+  # Open github repo on browser
+  # ex: git open [<remote>]
+  openurl = "!f() { URL=$(git config remote.\"${1:-origin}\".url); firefox \"${URL%%.git}\"; }; f"
+
+  # Update submodule
+  sub   = submodule update --init --recursive
+
+  # Hard reset and clean (unrecoverable)
+  reset = !"git reset --hard HEAD && git clean -fd"
+
+  # From https://gist.github.com/492227
+  # head = log -n1
+  # heads = !"git log origin/master.. --format='%Cred%h%Creset;%C(yellow)%an%Creset;%H;%Cblue%f%Creset' | git name-rev --stdin --always --name-only | column -t -s';'"
+  # lost = !"git fsck | awk '/dangling commit/ {print $3}' | git show --format='SHA1: %C(yellow)%h%Creset %f' --stdin | awk '/SHA1/ {sub(\"SHA1: \", \"\"); print}'"
+
+  #### CHECKING ####
+
+  which-branch = branch --all --contains
+  which-tag = describe --always --contains
+  which-who = shortlog --summary --numbered --no-merges
+  which-whoami = !"git config --get user.name && git config --get user.email"
+
+
+  #### Diff ####
+
+  diff-all = !"for name in $(git diff --name-only $1); do git difftool $1 $name & done"
+  diff-changes = diff --name-status -r
+  diff-stat = diff --stat --ignore-space-change -r
+  diff-staged = diff --cached
+
+
+  #### REMOVE ####
+
+  # Remove branch hard
+  rm-branch = branch -d
+  rm-branch-hard = branch -D
+
+  # Remove branch on git server
+  rm-branch-remotely = push origin --delete
+  # if not work, try with this command
+  # git branch -r --merged | grep origin | grep -v -e master | sed s/origin\\/// |  xargs -I{} git push origin --delete {}
+
+
+  #### LOGGING ####
+
+  l = log --graph --abbrev-commit --decorate --format=lg1
+  ll = "log --pretty=rlf"
+
+  log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
+  log-timeline = log --format='%h %an %ar - %s'
+  log-local = log --oneline origin..HEAD
+  log-fetched = log --oneline HEAD..origin/master
+
+  # Show a specific format string and its number of log entries
+  log-of-format-and-count = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort; }; f"
+  log-of-count-and-format = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+
+  # Show the number of log entries by a specific format string and date format string
+  log-of-format-and-count-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort -r; }; f"
+  log-of-count-and-format-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+
+  # Show the number of log items by email
+  log-of-email-and-count         = "!f() { git log-of-format-and-count \"%aE\" $@; }; f"
+  log-of-count-and-email         = "!f() { git log-of-count-and-format \"%aE\" $@; }; f"
+
+  # Show the number of log items by hour
+  log-of-hour-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+  log-of-count-and-hour          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+
+  # Show the number of log items by day
+  log-of-day-and-count           = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+  log-of-count-and-day           = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+
+  # Show the number of log items by week
+  log-of-week-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+  log-of-count-and-week          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+
+  # Show the number of log items by month
+  log-of-month-and-count         = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+  log-of-count-and-month         = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+
+  # Show the number of log items by year
+  log-of-year-and-count          = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y\" $@ ; }; f"
+  log-of-count-and-year          = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y\" $@ ; }; f"
+
+  # Show the number of log items by hour of day
+  log-of-hour-of-day-and-count   = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%H\" $@; }; f"
+  log-of-count-and-hour-of-day   = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%H\" $@; }; f"
+
+  # Show the number of log items by day of week
+  log-of-day-of-week-and-count   = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%u\" $@; }; f"
+  log-of-count-and-day-of-week   = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%u\" $@; }; f"
+
+  # Show the number of log items by week of year
+  log-of-week-of-year-and-count  = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%V\" $@; }; f"
+  log-of-count-and-week-of-year  = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%V\" $@; }; f"
+
+
+  #### XCDCX ####
+
+  churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
+
+  # summary: print a helpful summary of some typical metrics
+  summary = "!f() { \
+    printf \"Summary of this branch...\n\"; \
+    printf \"%s\n\" $(git rev-parse --abbrev-ref HEAD); \
+    printf \"%s first commit timestamp\n\" $(git log --date-order --format=%cI | tail -1); \
+    printf \"%s latest commit timestamp\n\" $(git log -1 --date-order --format=%cI); \
+    printf \"%d commit count\n\" $(git rev-list --count HEAD); \
+    printf \"%d date count\n\" $(git log --format=oneline --format=\"%ad\" --date=format:\"%Y-%m-%d\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+    printf \"%d tag count\n\" $(git tag | wc -l); \
+    printf \"%d author count\n\" $(git log --format=oneline --format=\"%aE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+    printf \"%d committer count\n\" $(git log --format=oneline --format=\"%cE\" | awk '{a[$0]=1}END{for(i in a){n++;} print n}'); \
+    printf \"%d local branch count\n\" $(git branch | grep -v \" -> \" | wc -l); \
+    printf \"%d remote branch count\n\" $(git branch -r | grep -v \" -> \" | wc -l); \
+    printf \"\nSummary of this directory...\n\"; \
+    printf \"%s\n\" $(pwd); \
+    printf \"%d file count via git ls-files\n\" $(git ls-files | wc -l); \
+    printf \"%d file count via find command\n\" $(find . | wc -l); \
+    printf \"%d disk usage\n\" $(du -s | awk '{print $1}'); \
+    printf \"\nMost-active authors, with commit count and %%...\n\"; git log-of-count-and-email | head -7; \
+    printf \"\nMost-active dates, with commit count and %%...\n\"; git log-of-count-and-day | head -7; \
+    printf \"\nMost-active files, with churn count\n\"; git churn | head -7; \
+  }; f"
+
+[svn]
+  rmdir = true
+
+[include]
+  path = ~/.gitconfig-local
+
+[commit]
+  template = ~/.gitmessage
