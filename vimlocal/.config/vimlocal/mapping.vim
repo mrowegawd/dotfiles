@@ -175,6 +175,10 @@ nnoremap ZZ :qa<cr>
 
 " keymap: [misc] show/check path current file
 nnoremap <leader>p :echo expand('%')<CR>
+" nnoremap <leader>P :echo expand('%:p:h:t')<CR>
+nnoremap <leader>P :echo expand('%:p:h')<CR>
+
+nnoremap <localleader>p :echo expand('%:t')<CR>
 
 " keymap: [misc] open MYVIMRC
 " noremap <leader>e :e $MYVIMRC<cr>

@@ -78,8 +78,8 @@ Plug 'sonph/onehalf', { 'rtp': 'vim' }
 " GENERAL ---------------------------------------------------------------------
 Plug 'vimwiki/vimwiki', {'branch': 'dev', 'on': ['VimwikiIndex', 'VimwikiDiaryIndex'] } " -- Local vimwiki
   " Plug 'tbabej/taskwiki' " -- Handling taskwarrior with vimwiki
+  " Plug 'michal-h21/vim-zettel', { 'for': ['vimwiki'] } " -- FZF for Zettelkasten method [vimwiki]
 
-Plug 'michal-h21/vim-zettel', { 'for': ['vimwiki'] } " -- FZF for Zettelkasten method [vimwiki]
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' } " -- Distraction-free writing in Vim, :Goyo
 Plug 'antoinemadec/FixCursorHold.nvim'  " -- Fix CursorHold Performance
 Plug 'szw/vim-maximizer'  " -- :MaximizerToggle! window
@@ -132,9 +132,8 @@ Plug 'tyru/open-browser.vim', {'for' : ['plantuml', 'pu']} " -- Open browser
 
 " Quickfix and locationlist
 " Plug 'kevinhwang91/nvim-bqf' " -- Better quickfix: open(o,t,T,c-x,c-v),close-preview(zp,p,P)
-Plug 'romainl/vim-qf'
-
 " Plug 'mvanderkamp/worklist.vim' " -- testing
+Plug 'romainl/vim-qf'
 
 " Hail Master Tpope :D
 Plug 'tpope/vim-commentary'
@@ -230,7 +229,7 @@ if &loadplugins
     " Personal plugins ^_^V
     packadd! nvim-cekdulu
     packadd! nvim-relative
-    packadd! nvim-cektest
+    packadd! nvim-cektmpl
 
   endif
 endif

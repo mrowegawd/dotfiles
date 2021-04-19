@@ -11,7 +11,7 @@ autocmd BufWritePost *.txt helptags %:h
 " add mappings otherwise do not
 if &l:buftype == 'help' || expand('%') =~# '^'.$VIMRUNTIME
   nnoremap <buffer> q :<c-u>q<cr>
-  nnoremap <silent><buffer> <c-p> :Helptags<cr>
+  " nnoremap <silent><buffer> <c-p> :Helptags<cr>
   " keymap: [help] easy to jump on help filetype
   nmap <buffer> gd <C-]>
   nnoremap <buffer> <BS> <C-T>

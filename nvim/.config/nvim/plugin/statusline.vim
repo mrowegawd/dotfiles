@@ -49,12 +49,12 @@ augroup MyAuGrup
 
     " Like the autocmd described in `:h last-position-jump` but we add `:foldopen!`.
     autocmd BufWinEnter * if line("'\"") > 1 && line("'\"") <= line('$') |
-          \ execute "normal! g`\"" |
+          \ execute "normal! g`\"^" |
           \ execute 'silent! ' . line("'\"") . 'foldopen!' |
           \ endif
   else
     autocmd BufWinEnter * if line("'\"") > 1 && line("'\"") <= line('$') |
-          \ execute "normal! g`\"" |
+          \ execute "normal! g`\"^" |
           \ endif
   endif
 

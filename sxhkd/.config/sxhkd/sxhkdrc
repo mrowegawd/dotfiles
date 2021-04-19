@@ -177,6 +177,10 @@ super + shift + c
 super + shift + l
         $HOME/.config/rofi/scripts/lock.sh
 
+# misc: run obsidian
+super + shift + o
+        obsidian --no-sandbox
+
 # misc: quit window
 ctrl + shift + q
         $HOME/.config/rofi/scripts/poweroff.sh

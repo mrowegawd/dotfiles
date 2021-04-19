@@ -16,7 +16,7 @@ local blank = " "
 
 local trimdirectory = function()
   local basename = fn.fnamemodify(fn.expand("%:h"), ":p:~:.")
-  local width_window = math.floor(0.3 * vim.fn.winwidth(0))
+  local width_window = math.floor(0.3 * fn.winwidth(0))
 
   if basename == "" or basename == "." then
     return ""
