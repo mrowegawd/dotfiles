@@ -5,16 +5,20 @@ if !has_key(g:plugs, 'vim-signify')
 endif
 
 let g:signify_vcs_list               = ['git']
-" let g:signify_sign_change            = 'm'
-" let g:signify_sign_add               = '＋'
-" let g:signify_sign_delete            = '～'
-" let g:signify_sign_delete_first_line = g:signify_sign_delete
+let g:signify_sign_change            = 'm'
+let g:signify_sign_add               = '＋'
+let g:signify_sign_delete            = '～'
+let g:signify_sign_delete_first_line = g:signify_sign_delete
 " let g:signify_sign_show_count        = 0
 
-let g:signify_sign_add = '▋'
-let g:signify_sign_change = '▋'
-let g:signify_sign_delete = '▋'
-let g:signify_sign_delete_first_line = '▘'
+" let g:signify_sign_add          = '│'
+" let g:signify_sign_change       = '│'
+" let g:signify_sign_changedelete = '│'
+
+" let g:signify_sign_add = '▋'
+" let g:signify_sign_change = '▋'
+" let g:signify_sign_delete = '▋'
+" let g:signify_sign_delete_first_line = '▘'
 let g:signify_sign_show_count = 0
 
 " keymap: [plugin][git][signify] show hunk git

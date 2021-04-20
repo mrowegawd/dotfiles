@@ -594,20 +594,20 @@ tmap <c-t>L <c-t><CR><c-w>L
 " nnoremap <silent> zj :call fold#NextClosedFold('j')<cr>
 " nnoremap <silent> zk :call fold#NextClosedFold('k')<cr>zo[z
 
-" let s:folded = 1
+let s:folded = 1
 
-" function! s:toggleFold()
-"     if( s:folded == 0 )
-"         exec 'normal! zM'
-"         let s:folded = 1
-"     else
-"         exec 'normal! zR'
-"         let s:folded = 0
-"     endif
-" endfunction
+function! s:toggleFold()
+    if( s:folded == 0 )
+        exec 'normal! zM'
+        let s:folded = 1
+    else
+        exec 'normal! zR'
+        let s:folded = 0
+    endif
+endfunction
 
 " keymap: [fold][toggle] open/close all folds
-" nnoremap <silent> <space>f :call <SID>toggleFold()<CR>
+nmap <silent> 1 :call <SID>toggleFold()<CR>
 
 "
 " }}}

@@ -10,12 +10,16 @@ margin-bottom       = 0
 margin-top          = 0
 
 [colors]
-iconfg              = ${xrdb:color4}
+iconfg              = ${xrdb:color5}
 warnfg              = ${xrdb:color3}
 redfg               = ${xrdb:color9}
-nofg                = ${xrdb:color5}
-foreground          = #adb1b9
+nofg                = ${xrdb:color2}
 
+foreground          = ${xrdb:foreground}
+background-bubble   = #2b2f37
+; background-bubble   = #363c4a
+; background-bubble   = ${xrdb:color11}
+background          = ${xrdb:background}
 
 [section/bar]
 monitor             = DP-2
@@ -43,16 +47,16 @@ line-size           = 2
 
 border-top-size     = 6
 border-bottom-size  = 6
-border-top-color    = ${xrdb:background}
-border-bottom-color = ${xrdb:background}
+border-top-color    = ${colors.background}
+border-bottom-color = ${colors.background}
 
 ; background        = #5a000000
-background          = ${xrdb:background}
+background          = ${colors.background}
 foreground          = ${colors.foreground}
 
 ; modules-right     = pomo pulseaudio updates network memory filesystem powermenu
 modules-left        = appmenu round-left bspwm round-right round-left mpd round-right
-modules-right       = pomo pulseaudio round-left updates custom-network temperature memory filesystem uptime round-right round-left time round-right powermenu
+modules-right       = pomo pulseaudio round-left updates network temperature memory filesystem uptime round-right round-left time round-right powermenu
 #
 # }}}
 
@@ -63,7 +67,6 @@ type = internal/xwindow
 format-prefix = ": "
 format-prefix-foreground = ${colors.iconfg}
 format = %{A1:rofi -show drun:}<label>%{A}
-; format-foreground = ${xrdb:color15}
 label = "%title:0:38:...%"
 label-empty =
 
@@ -79,8 +82,8 @@ format-warn = <ramp> <label-warn>
 format-warn-background = ${colors.redfg}
 
 format = <ramp> <label>
-format-foreground = #a4ebf3
-format-background = #2b2f37
+format-foreground = ${colors.foreground}
+format-background = ${colors.background-bubble}
 format-padding = 1
 
 label = %temperature-c%
@@ -99,13 +102,13 @@ interval = 3600
 mount-0 = /
 
 format-mounted-prefix = %{T2} %{T-}
-format-mounted-prefix-foreground = ${colors.iconfg}
+format-mounted-prefix-foreground = ${colors.foreground}
 ; format-mounted-overline = ${colors.redfg}
 format-mounted-padding = 1
-format-mounted-background = #2b2f37
+format-mounted-background = ${colors.background-bubble}
 
 label-mounted = %percentage_used%%
-label-mounted-foreground = ${colors.iconfg}
+label-mounted-foreground = ${colors.foreground}
 
 ; label-mounted = %{T2} %percentage_used%%
 ; label-unmounted = %mountpoint% not mounted
@@ -130,8 +133,8 @@ interval = 2
 format = <label>
 format-prefix = %{T2}﬙ %{T-}
 ; format-prefix-foreground = ${colors.nofg}
-format-foreground = #d19a66
-format-background = #2b2f37
+format-foreground = ${colors.foreground}
+format-background = ${colors.background-bubble}
 format-padding = 1
 
 label = %percentage_used%%
@@ -145,7 +148,7 @@ expand-right = true
 format-spacing = 0
 
 label-open = %{T2}%{T-}
-label-open-foreground = ${xrdb:color3}
+label-open-foreground = ${colors.redfg}
 label-open-padding = 1
 
 label-close = %{T2}ﰸ%{T-}
@@ -181,8 +184,8 @@ type = internal/backlight
 
 card = intel_backlight
 format = <ramp> <label>
-ramp-foreground = #ff89beba
-label-foreground = #ff89beba
+ramp-foreground = ${colors.foreground}
+label-foreground = ${colors.foreground}
 label = %percentage%%
 
 ramp-0 = 
@@ -214,7 +217,7 @@ format         = <label-state>
 ; ws-icon-6              = "Games;"
 ; ws-icon-7              = "Reader;"
 
-label-separator-background = #2b2f37
+label-separator-background = ${colors.background-bubble}
 ; ws-icon-0 = 1;%{F#F9DE8F}﬑
 ; ws-icon-1 = 2;%{F#ff9b93}
 ; ws-icon-2 = 3;%{F#95e1d3}
@@ -226,14 +229,14 @@ ws-icon-3 = 4;
 ws-icon-4 = 5;
 
 label-focused = %icon%
-label-focused-foreground = ${colors.redfg}
-label-focused-background = #2b2f37
-label-focused-underline =  ${colors.iconfg}
+label-focused-foreground = ${colors.nofg}
+label-focused-background = ${colors.background-bubble}
+label-focused-underline =  ${colors.nofg}
 label-focused-padding = 1
 
 label-occupied = %icon%
-label-occupied-foreground = ${colors.iconfg}
-label-occupied-background = #2b2f37
+label-occupied-foreground = ${colors.nofg}
+label-occupied-background = ${colors.background-bubble}
 label-occupied-padding = 1
 
 label-urgent = %icon%
@@ -242,7 +245,8 @@ label-urgent-padding = 1
 
 label-empty = %icon%
 label-empty-foreground = ${colors.foreground}
-label-empty-background = #2b2f37
+label-empty-background = ${colors.background-bubble}
+
 label-empty-padding = 1
 
 ; [module/i3]
@@ -337,7 +341,7 @@ port = 6600
 ; format-online = %{T2}<icon-prev> <toggle> <icon-next> <label-time>%{T-} <label-song>
 format-online = %{T2}<icon-prev> <toggle> <icon-next>%{T-} <label-song>
 format-online-padding = 1
-format-online-background = #2b2f37
+format-online-background = ${colors.background-bubble}
 
 label-song = | %artist:0:10:...% - %title:0:10:...%
 
@@ -346,8 +350,8 @@ icon-play = 
 icon-pause = 
 icon-next =  
 
-toggle-on-foreground = ${xrdb:color3}
-toggle-off-foreground = ${xrdb:color10}
+toggle-on-foreground = ${colors.foreground}
+toggle-off-foreground = ${colors.foreground}
 label-offline = no sound
 
 [module/pulseaudio]
@@ -378,26 +382,33 @@ label-muted-foreground = ${colors.nofg}
 
 # #########################################
 # INTERNET -------------------------------- {{{
-; [module/network]
-; type = internal/network
-; interface = enp0s31f6
+[module/network]
+type = internal/network
+interface = enp0s31f6
+interval = 3
 
-; format-disconnected = <label-disconnected>
-; format-packageloss = <label-packageloss>
-; format-connected = <label-connected>
+format-disconnected = <label-disconnected>
+format-packageloss = <label-packageloss>
+format-connected = <label-connected>
 
-; format-connected-prefix = %{T2}
-; format-connected-prefix-foreground = ${colors.iconfg}
+format = <label>
 ; format-padding = 1
+; format-background = ${colors.background-bubble}
+; format-foreground = ${colors.foreground}
 
-; label-connected = %{T1} %downspeed:7%%{T-}
-; ; label-padding-left = 1
+label-connected = %{T2} %{T-}%{T1}%downspeed:7%%{T-}
+label-connected-background = ${colors.background-bubble}
+label-connected-padding = 1
 
-; label-disconnected = disconnected
-; label-disconnected-foreground = ${colors.redfg}
+label-disconnected = 
+label-disconnected-foreground = ${colors.redfg}
+label-disconnected-background = ${colors.background-bubble}
+label-disconnected-padding = 1
 
-; label-packageloss = !
-; label-packageloss-foreground = ${colors.redfg}
+label-packageloss = 
+label-packageloss-foreground = ${colors.redfg}
+label-packageloss-background = ${colors.background-bubble}
+label-packageloss-padding = 1
 
 # }}}
 
@@ -420,8 +431,8 @@ interval = 60
 ; format-prefix-background = ${xrdb:color8}
 ; label-background = ${xrdb:color0}
 ; format = <label>
-format-background = #2b2f37
-format-foreground = ${xrdb:color15}
+format-background = ${colors.background-bubble}
+format-foreground = ${colors.warnfg}
 format-padding = 1
 
 ; date-alt = " %d-%m-%Y"
@@ -467,12 +478,12 @@ label = %date%%time%
 type = custom/script
 exec = ~/.config/polybar/scripts/check-network
 tail = true
-interval = 5
+interval = 3
 
 format = <label>
 format-padding = 1
-format-background = #2b2f37
-format-foreground = #cceabb
+format-background = ${colors.background-bubble}
+format-foreground = ${colors.foreground}
 label = %{T2}%output% %{T-}
 
 click-left = st -e nmtui-connect
@@ -494,11 +505,11 @@ exec = ~/.config/polybar/scripts/checkupdates.sh
 interval = 4600
 
 format = <label>
-format-background = #2b2f37
+format-background = ${colors.background-bubble}
 
 label =%{T2} %{T-}%output%
 label-padding = 1
-label-foreground = #BF616A
+label-foreground = ${colors.foreground}
 
 ; [module/spotify]
 ; type = custom/script
@@ -527,14 +538,11 @@ exec = uptime | awk -F, '{sub(".*up ",x,$1);print $1}'
 interval = 100
 label = %output%
 
-format-foreground = #C15D3E
-; format-background = ${colors.nofg}
-format-background = #2b2f37
+format-foreground = ${colors.nofg}
+format-background = ${colors.background-bubble}
 format-prefix = " "
-; format-prefix-foreground = #C15D3E
 format-padding = 1
 
-; format-underline = #C15D3E
 
 # }}}
 
@@ -547,11 +555,11 @@ format-padding = 1
 [module/round-left]
 type = custom/text
 content = %{T2}%{T-}
-content-foreground = #2b2f37
+content-foreground = ${colors.background-bubble}
 
 [module/round-right]
 type = custom/text
 content = %{T2}%{T-}
-content-foreground = #2b2f37
+content-foreground = ${colors.background-bubble}
 
 # }}}

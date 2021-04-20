@@ -142,10 +142,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-eunuch' " -- Delete, :Unlink: :Move: :Rename: :Move, :Chmod: :Mkdir:
 
 " GIT -------------------------------------------------------------------------
-Plug 'mhinz/vim-signify' " -- +/-/~ Signs in the gutter
-Plug 'TimUntersberger/neogit' " -- Same as vim-fugitive, but its lua..
+" Plug 'mhinz/vim-signify' " -- +/-/~ Signs in the gutter
+" Plug 'TimUntersberger/neogit' " -- Same as vim-fugitive, but its lua..
+Plug 'lewis6991/gitsigns.nvim'
 Plug 'rhysd/committia.vim'
-Plug 'rhysd/git-messenger.vim' " -- Floating windows are awesome :)
+" Plug 'rhysd/git-messenger.vim' " -- Floating windows are awesome :)
 
 " TMUX ------------------------------------------------------------------------
 Plug 'christoomey/vim-tmux-navigator', Cond(exists('$TMUX'))

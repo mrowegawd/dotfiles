@@ -158,11 +158,11 @@ set linebreak                   " Break long lines at 'breakat'
 set breakat=\ \	;:,!?           " Long lines break chars
 set nostartofline               " Cursor in same column for few commands
 set whichwrap+=h,l,<,>,[,],~    " Move to following line on certain keys
-set splitbelow splitright       " Splits open bottom right
+set splitbelow splitright     " Splits open bottom right
 set switchbuf=useopen,usetab    " Jump to the first open window in any tab
-set switchbuf+=vsplit           " Switch buffer behavior to vsplit
+set switchbuf+=uselast          " Switch buffer behavior to vsplit or uselast
 set backspace=indent,eol,start  " Intuitive backspacing in insert mode
-" set diffopt=filler,iwhite       " Diff mode: show fillers, ignore white
+" set diffopt=filler,iwhite     " Diff mode: show fillers, ignore white
 " set diffopt=horizontal,iwhite       " Diff mode: show fillers, ignore white
 set diffopt=internal,filler,vertical,context:5,foldcolumn:1,indent-heuristic,algorithm:patience
 
