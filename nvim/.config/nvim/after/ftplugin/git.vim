@@ -5,4 +5,3 @@ setlocal comments+=fb:-,fb:*
 setlocal formatoptions+=q
 setlocal formatoptions+=2
 setlocal formatoptions+=n
-setlocal spell

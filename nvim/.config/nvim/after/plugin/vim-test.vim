@@ -7,18 +7,24 @@ if has('nvim')
 else
   let test#strategy = "vimterminal"
 endif
+
 let test#neovim#term_position = "vert botright"
 
-" keymap: [plugin][vim-test] TestFile
-nnoremap <silent> <localleader>tf :TestFile<CR>
+" keymap: [plugin][vim-test] Run a test nearest to the cursor
+nmap <silent> <localleader>tf :TestFile<CR>
 
-" keymap: [plugin][vim-test] TestNearest
-nnoremap <silent> <localleader>tn :TestNearest<CR>
+" keymap: [plugin][vim-test] Run tests for the current file
+nmap <silent> <localleader>tn :TestNearest<CR>
 
-" keymap: [plugin][vim-test] TestSuite --verbose
-nnoremap <silent> <localleader>ts :TestSuite<CR>
+" keymap: [plugin][vim-test] Run all test for all projects command
+nmap <silent> <localleader>ts :TestSuite<CR>
 
-" Vim-test
+" keymap: [plugin][vim-test] Run the last test command
+nmap <silent> <localleader>tl :TestLast<CR>
+
+" keymap: [plugin][vim-test] Open the last run test in the current buffer
+nmap <silent> <localleader>tg :TestVisit<CR>
+
 " nnoremap <silent> t<C-n> :w <BAR> TestNearest<CR>
 
 " nnoremap <silent> t<C-f> :w <BAR> TestFile<CR>

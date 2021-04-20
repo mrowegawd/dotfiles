@@ -35,6 +35,7 @@ nnoremap <silent> <localleader>gbl   :Gblame<CR>
 vnoremap <silent> <localleader>gbv   :Gblame --date=short<CR>
 
 " command! -bang FzfGitStatus  call fzf#vim#gitfiles('?', { "placeholder": "", "options": ["--preview-window", "right:60%"] }, <bang>0)
+
 command! GpushF :Gpush --force-with-lease
 command! -nargs=0 Gcm :G checkout master
 command! -nargs=1 Gcb :G checkout -b <q-args>

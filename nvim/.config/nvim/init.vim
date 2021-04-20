@@ -1,10 +1,12 @@
-set encoding=UTF-8      " Default encoding. (vim-only)
 scriptencoding UTF-8    " Default encoding for current script.
-set fileformats=unix    " Only use Unix end-of-line format.
 
 if v:progname ==? 'vi'
   set noloadplugins
 endif
+
+" set encoding=UTF-8      " Default encoding. (vim-only)
+" set fileformats=unix    " Only use Unix end-of-line format.
+
 
 let g:mytheme = 'base16-gruvbox-dark-medium'
 let g:myguibg_active = '#282828'

@@ -10,6 +10,7 @@ let g:ColorColumnFileTypeBlacklist = [
         \ 'dashboard',
         \ 'diff',
         \ 'fugitiveblame',
+        \ 'fugitive',
         \ 'gitcommit',
         \ 'help',
         \ 'list',

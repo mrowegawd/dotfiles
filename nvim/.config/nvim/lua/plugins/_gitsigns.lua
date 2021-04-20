@@ -49,7 +49,7 @@ gitsigns.setup({
       "&diff ? '<A-Up' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'",
     },
 
-    ["n <localleader>gs"] = "<cmd>lua require\"gitsigns\".stage_hunk()<CR>",
+    ["n <localleader>ga"] = "<cmd>lua require\"gitsigns\".stage_hunk()<CR>",
     ["n <localleader>gU"] = "<cmd>lua require\"gitsigns\".undo_stage_hunk()<CR>",
     ["n <localleader>gr"] = "<cmd>lua require\"gitsigns\".reset_hunk()<CR>",
     ["n <localleader>gR"] = "<cmd>lua require\"gitsigns\".reset_buffer()<CR>",

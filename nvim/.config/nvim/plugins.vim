@@ -93,7 +93,7 @@ Plug 'kyazdani42/nvim-web-devicons' " -- File icons support
 
 Plug 'akinsho/nvim-toggleterm.lua' " -- easly to manage terminal windows in lua
 
-Plug 'brooth/far.vim' " -- Find and replace with vim,
+" Plug 'brooth/far.vim' " -- Find and replace with vim,
                       " :Far {pattern} {replace-with} {file-mask} [params],
                       " :F {pattern} {file-mask} [params]
                       " :Fardo
@@ -115,7 +115,7 @@ Plug 'liuchengxu/vista.vim', {'on': ['Vista', 'Vista!!']} " -- Hey I got a tagba
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'} " -- Lets undo, :MundoToggle
 Plug 'mg979/vim-visual-multi', {'branch': 'master'} " -- Multiple cursor?!
 Plug 'godlygeek/tabular'
-Plug 'dhruvasagar/vim-table-mode' " -- VIM Table Mode for instant table creation
+Plug 'dhruvasagar/vim-table-mode', {'for': ['markdown', 'vimwiki', 'md']} " -- VIM Table Mode for instant table creation
 Plug 'tyru/open-browser.vim', {'for' : ['plantuml', 'pu']} " -- Open browser
 
 " Plug 'mtth/scratch.vim' " -- A temporary scratch buffer to add notes, :Scratch
@@ -144,9 +144,9 @@ Plug 'tpope/vim-eunuch' " -- Delete, :Unlink: :Move: :Rename: :Move, :Chmod: :Mk
 " GIT -------------------------------------------------------------------------
 " Plug 'mhinz/vim-signify' " -- +/-/~ Signs in the gutter
 " Plug 'TimUntersberger/neogit' " -- Same as vim-fugitive, but its lua..
+Plug 'tpope/vim-fugitive'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'rhysd/committia.vim'
-" Plug 'rhysd/git-messenger.vim' " -- Floating windows are awesome :)
 
 " TMUX ------------------------------------------------------------------------
 Plug 'christoomey/vim-tmux-navigator', Cond(exists('$TMUX'))
