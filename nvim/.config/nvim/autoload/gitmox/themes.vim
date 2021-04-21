@@ -2,6 +2,7 @@ scriptencoding UTF-8    " Default encoding for current script.
 
 let s:ColorColumnBufferNameBlacklist = ['__LanguageClient__']
 let g:ColorColumnFileTypeBlacklist = [
+        \ 'LspTrouble',
         \ 'LuaTree',
         \ 'NvimTree',
         \ 'cekdulu',
@@ -9,8 +10,8 @@ let g:ColorColumnFileTypeBlacklist = [
         \ 'command-t',
         \ 'dashboard',
         \ 'diff',
-        \ 'fugitiveblame',
         \ 'fugitive',
+        \ 'fugitiveblame',
         \ 'gitcommit',
         \ 'help',
         \ 'list',

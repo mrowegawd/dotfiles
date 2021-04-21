@@ -1,4 +1,5 @@
 local get = require("modules._tools")
+-- local fn = vim.fn
 local api = vim.api
 
 local magenta = get.xresources("magenta")
@@ -51,6 +52,7 @@ M.current_mode = setmetatable({
 })
 
 M.redraw_color = function(mode)
+
   if mode == "n" then
     vim.api.nvim_command(
       "hi Mode guibg=" .. red .. " guifg=" .. red .. " gui=bold"
@@ -61,10 +63,7 @@ M.redraw_color = function(mode)
       )
     else
       vim.api.nvim_command(
-        "hi ModeSeparator guifg="
-          .. red
-          .. " guibg="
-          .. col_active_statusline
+        "hi ModeSeparator guifg=" .. red .. " guibg=" .. col_active_statusline
       )
     end
   end
@@ -87,9 +86,11 @@ M.redraw_color = function(mode)
   --   vim.api.nvim_command('hi Mode guibg=' .. blue .. ' guifg=' .. blue .. ' gui=' .. blue)
   --   vim.api.nvim_command('hi ModeSeparator guifg='.. blue)
   -- end
+
 end
 
 M.start_custom_hi = function()
+
   local hi_custom = {
     ["SeparatorGit"] = {
       ["guibg"] = col_active_statusline,
@@ -221,8 +222,45 @@ M.start_custom_hi = function()
     end
   end
   return true
+
 end
 
 M.start_custom_hi()
+
+-- M.color_qf_bufenter = function()
+
+--   api.nvim_command("hi CursorLine guibg=" .. white .. " guifg=" .. black)
+--   -- api.nvim_command("hi QuickFixLine guibg=" .. black .. " guifg=NONE")
+
+-- end
+
+-- M.color_qf_reset = function()
+
+--   api.nvim_command("hi CursorLine guibg=" .. col_lineNr .. " guifg=NONE" )
+
+-- end
+
+-- M.color_qf = function()
+
+--   local filetype = api.nvim_buf_get_option(0, "filetype")
+
+--   if filetype ~= "qf" then
+--     return
+--   end
+
+--   if #fn.getqflist() == 0 then
+--     return
+--   end
+
+--   -- autocmd CursorMoved <buffer> lua require'cekdulu.qf'.move_cursor()
+--   api.nvim_exec([[
+--           augroup ColorQf_CustomHi
+--               autocmd! BufLeave,WinLeave,CursorMoved,TabEnter,BufHidden,VimResized <buffer>
+--               autocmd! BufEnter,QuitPre <buffer>
+--               autocmd BufLeave <buffer> lua require'modules._highlight'.color_qf_reset()
+--               autocmd BufReadPost,BufEnter <buffer> lua require'modules._highlight'.color_qf_bufenter()
+--           augroup END
+--       ]],false)
+-- end
 
 return M

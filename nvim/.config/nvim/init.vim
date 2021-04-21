@@ -8,9 +8,9 @@ endif
 " set fileformats=unix    " Only use Unix end-of-line format.
 
 
-let g:mytheme = 'sonokai'
-let g:myguibg_active = '#222022'
-let g:myguibg_non = '#1a181a'
+let g:mytheme = 'base16-gruvbox-dark-medium'
+let g:myguibg_active = '#282828'
+let g:myguibg_non = '#1f1f1f'
 let g:vim_dir                                = $HOME . '/.config/nvim'
 let g:mycache_dir                            = $HOME . '/.cache'
 

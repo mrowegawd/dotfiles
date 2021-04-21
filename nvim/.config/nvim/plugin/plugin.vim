@@ -137,9 +137,25 @@ let g:tmux_navigator_disable_when_zoomed = 1
 " Auto-pairs ----------------------------------------------------------- {{{
 "
 " Plugin 'jiangmiao/auto-pairs'
-let g:AutoPairsMapBS = 0
+" let g:AutoPairsMapBS = 0
 "
 " }}}
+" Floaterm ----------------------------------------------------------- {{{
+"
+" let test#strategy = "neovim"
+" let test#strategy = {
+"   \ 'nearest': 'floaterm',
+"   \ 'file':    'dispatch',
+"   \ 'suite':   'basic',
+" \}
+
+let g:floaterm_width        = 0.8
+let g:floaterm_height       = 0.8
+let g:floaterm_open_in_root = 0
+
+"
+" }}}
+
 
 command! Pomotoggle lua require'modules._tools'.pomorun('toggle')
 command! PomotogglePause lua require'modules._tools'.pomorun('pausetoggle')

@@ -17,10 +17,12 @@ M.lsp_mappings = function()
 
   local mappings = {
     -- LSP
-    ["<C-g>"] = signature.signature_help,
+    --
+    ["<C-s>"] = ":Lspsaga signature_help<CR>",
     ["K"] = hover.render_hover_doc,
-    ["gD"] = provider.preview_definition,
+    ["gP"] = provider.preview_definition,
     ["gd"] = vim.lsp.buf.definition,
+    ["gD"] = "<cmd>lua vim.lsp.buf.implementation()<CR>",
     ["gr"] = require("telescope.builtin").lsp_references,
     ["gR"] = rename.rename,
     ["gh"] = provider.lsp_finder,
@@ -43,5 +45,11 @@ M.lsp_mappings = function()
   inoremap({ "<C-g>", signature.signature_help, { silent = true } })
 
 end
+
+-- scroll down hover doc or scroll in definition preview
+-- nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
+-- scroll up hover doc
+-- nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
+
 
 return M

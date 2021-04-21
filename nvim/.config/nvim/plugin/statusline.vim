@@ -16,6 +16,8 @@ augroup MyAuGrup
 
   au FileType vista setlocal winhl=Normal:ColorColumn
 
+  " au Filetype qf lua require('modules._highlight').color_qf()
+
   " Disable tabline when enter startify
   " au FileType startify,dashboard set showtabline=0 | au WinLeave <buffer> set showtabline=2
 
@@ -34,6 +36,10 @@ augroup MyAuGrup
 
   " Open help window auto vertical
   au BufEnter *.txt if &buftype == 'help' | wincmd L | endif
+
+  " au BufEnter * if &ft == "qf" |
+  "       \  hi CursorLine   term=bold guibg=Yellow gui=bold guifg=black |
+  "       \  endif
 
   " Update filetype on save if empty
   au BufWritePost * nested

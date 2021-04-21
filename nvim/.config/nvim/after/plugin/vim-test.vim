@@ -14,7 +14,7 @@ let test#neovim#term_position = "vert botright"
 nmap <silent> <localleader>tf :TestFile<CR>
 
 " keymap: [plugin][vim-test] Run tests for the current file
-nmap <silent> <localleader>tn :TestNearest<CR>
+nmap <silent> <localleader>tn :TestNearest -strategy=ToggleTerm<CR>
 
 " keymap: [plugin][vim-test] Run all test for all projects command
 nmap <silent> <localleader>ts :TestSuite<CR>

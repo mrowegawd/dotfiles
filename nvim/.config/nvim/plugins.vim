@@ -62,6 +62,8 @@ Plug 'nvim-lua/plenary.nvim' " -- more stdlib for lua functions
 
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'tjdevries/nlua.nvim'
+Plug 'folke/lsp-trouble.nvim' " -- A pretty lsp diagnostic loc list
+      "\ that help you to solve err/warn code
 
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -91,6 +93,7 @@ Plug 'kyazdani42/nvim-tree.lua' " -- File manager
 Plug 'kyazdani42/nvim-web-devicons' " -- File icons support
 " Plug 'yamatsum/nvim-nonicons' " NOTE: this not work on me, why lols
 
+Plug 'voldikss/vim-floaterm'
 Plug 'akinsho/nvim-toggleterm.lua' " -- easly to manage terminal windows in lua
 
 " Plug 'brooth/far.vim' " -- Find and replace with vim,
@@ -134,7 +137,6 @@ Plug 'tyru/open-browser.vim', {'for' : ['plantuml', 'pu']} " -- Open browser
 " Plug 'kevinhwang91/nvim-bqf' " -- Better quickfix: open(o,t,T,c-x,c-v),close-preview(zp,p,P)
 " Plug 'mvanderkamp/worklist.vim' " -- testing
 " Plug 'romainl/vim-qf' " -- Tame the quickfix window
-
 " Hail Master Tpope :D
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
@@ -165,7 +167,7 @@ Plug 'mfussenegger/nvim-dap'
   Plug 'mfussenegger/nvim-dap-python'
   Plug 'theHamsta/nvim-dap-virtual-text'
 
-Plug 'vim-test/vim-test', {'on': ['TestFile', 'TestNearest', 'TestLatest']}
+Plug 'vim-test/vim-test'
 
 " Profiling output for startup.
 " :Messages <- view messages in quickfix list

@@ -14,7 +14,8 @@ local blank = " "
 --                             StatusLine                             --
 ------------------------------------------------------------------------
 
-local trimdirectory = function()
+local statline_trimdir = function()
+
   local basename = fn.fnamemodify(fn.expand("%:h"), ":p:~:.")
   local width_window = math.floor(0.3 * fn.winwidth(0))
 
@@ -30,7 +31,7 @@ local trimdirectory = function()
 
 end
 
-local showErrorLinter = function(statusline)
+local statline_errlinter = function(statusline)
 
   if #vim.lsp.buf_get_clients() == 0 then
     return statusline
@@ -39,7 +40,8 @@ local showErrorLinter = function(statusline)
   return statusline .. lsp_status.status()
 end
 
-local testFileModified = function(mystatusline)
+local statline_fmodiefied = function(mystatusline)
+
   local statusline = mystatusline
   if bo.readonly == true then
     statusline = statusline .. "%#MyModified#" .. "  "
@@ -48,9 +50,10 @@ local testFileModified = function(mystatusline)
     statusline = statusline .. "%#MyModified#" .. " ..✘"
   end
   return statusline
+
 end
 
-local setfiletype = function()
+local statline_filetype = function()
 
   local has_devicons, web_devicons = pcall(require, "nvim-web-devicons")
 
@@ -71,42 +74,9 @@ local setfiletype = function()
 
 end
 
--- local git = function()
---   local ignore_ft = {
---     "dashboard",
---     "fzf",
---     "NvimTree",
---     "vimwiki",
---     "markdown",
---     "fugitive",
---   }
-
---   for i = 1, #ignore_ft do
---     local filetype = api.nvim_buf_get_option(0, "filetype")
-
---     if filetype ~= ignore_ft[i] then
---       local git = vim.call("sy#repo#get_stats") or { 0, 0, 0 }
-
---       if git[1] > 0 then
-
---         local sign_added = git[1]
---         local sign_changes = git[2]
---         local sign_deleted = git[3]
---         return string.format(
---           " +%s ~%s -%s ",
---           sign_added,
---           sign_changes,
---           sign_deleted
---         ) or ""
---       end
---       return ""
-
---     end
---   end
--- end
-
 -- Taken from and thanks to: https://github.com/wincent/wincent
-local get_line_col = function()
+local statline_lineCol = function()
+
   local rhs = " "
 
   if fn.winwidth(0) > 80 then
@@ -141,9 +111,11 @@ local get_line_col = function()
   end
 
   return rhs
+
 end
 
 function M.activeLine()
+
   local statusline = ""
 
   -- Component: Mode
@@ -166,38 +138,40 @@ function M.activeLine()
   end
 
   -- Component: Working Directory
-  statusline = statusline .. "%#ActiveStatusline# " .. trimdirectory() .. "%*"
+  statusline = statusline .. "%#ActiveStatusline# " .. statline_trimdir() .. "%*"
 
   statusline = statusline .. "%#FileNamePath#" .. "%t" .. blank .. "%*"
 
   -- Component: Filetype
   statusline = statusline
     .. "%#ActiveStatusline#"
-    .. setfiletype()
+    .. statline_filetype()
     .. blank
     .. "%*"
 
   -- Check file is readonly or modifiable
-  statusline = testFileModified(statusline) .. "%#ActiveStatusline#" .. "%*"
+  statusline = statline_fmodiefied(statusline) .. "%#ActiveStatusline#" .. "%*"
 
   -- Alignment to left
   statusline = statusline .. "%#ActiveStatusline#" .. "%="
 
   -- Show error linter
-  statusline = showErrorLinter(statusline)
+  statusline = statline_errlinter(statusline)
 
   statusline = statusline
     .. "%#InActiveStatusline#"
-    .. get_line_col()
+    .. statline_lineCol()
     .. "%#EndOfBuffer#"
     .. "%*"
 
   return statusline
+
 end
 
 function M.inActiveLine()
 
   return "" .. "%#InActiveStatusline# %{expand(\"%:.\")}"
+
 end
 
 return M

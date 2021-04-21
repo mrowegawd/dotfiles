@@ -13,3 +13,5 @@ cab Q q
 cab bD bd
 cab w@ up!
 cab W@ up!
+
+iab <expr> :time: strftime("%c")

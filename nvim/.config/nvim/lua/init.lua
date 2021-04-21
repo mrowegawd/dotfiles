@@ -1,7 +1,9 @@
 -- Modules
-require("modules._util")
 require("modules._mappings")
 require("modules._misc")
+require("modules._util")
+
+-- pcall(require, "modules._util") -- some useful utils
 
 -- Plugins
 require("plugins._compe")

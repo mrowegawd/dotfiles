@@ -37,6 +37,8 @@ function s:set_custom_highlight()
   execute 'hi! link SignifySignChange DiffChange'
   execute 'hi! SignifySignDelete guibg='. g:myguibg_non
 
+  " execute 'hi QuickFixLine cterm=None ctermbg=256 guifg=black guibg=#ffff00'
+
   highlight! link ALEErrorSign DiffDelete
   execute 'hi ALEWarningSign guibg='. g:myguibg_non
 
