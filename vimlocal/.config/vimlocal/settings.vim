@@ -60,10 +60,6 @@ if has('nvim')
     " auto nohl when enter or saving files
     " au BufWritePre,BufEnter * :call feedkeys(":nohls\n")
 
-    " TODO: conflict with lua tree and dashboard
-    " au CmdLineEnter * set norelativenumber | redraw
-    " au CmdlineLeave * set relativenumber
-
     " au CmdlineEnter /,\? :set hlsearch
     " au CmdlineLeave /,\? :set nohlsearch
   augroup END

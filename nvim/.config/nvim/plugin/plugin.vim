@@ -143,3 +143,5 @@ let g:AutoPairsMapBS = 0
 
 command! Pomotoggle lua require'modules._tools'.pomorun('toggle')
 command! PomotogglePause lua require'modules._tools'.pomorun('pausetoggle')
+
+command! Gentab lua require'modules._tools'.gentab('newtab')

@@ -106,7 +106,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'jiangmiao/auto-pairs' " -- Auto close tags
 Plug 'windwp/nvim-autopairs' " -- Autopairs but its in lua
 Plug 'AndrewRadev/splitjoin.vim' " -- Switch between single-line and multiline, gS,gJ
-Plug 'itchyny/calendar.vim', {'on': 'Calendar'} " -- Calendar on vim, :Calendar
+" Plug 'itchyny/calendar.vim', {'on': 'Calendar'} " -- Calendar on vim, :Calendar
 Plug 'talek/obvious-resize' " -- The easy way to resizing vim windows/splits
 Plug 'Yggdroot/indentLine', {'on': 'IndentLinesToggle'} " -- Show me the block indent line
 Plug 'nathanaelkane/vim-indent-guides' " -- Show me indent level block only
@@ -133,7 +133,7 @@ Plug 'tyru/open-browser.vim', {'for' : ['plantuml', 'pu']} " -- Open browser
 " Quickfix and locationlist
 " Plug 'kevinhwang91/nvim-bqf' " -- Better quickfix: open(o,t,T,c-x,c-v),close-preview(zp,p,P)
 " Plug 'mvanderkamp/worklist.vim' " -- testing
-Plug 'romainl/vim-qf'
+" Plug 'romainl/vim-qf' " -- Tame the quickfix window
 
 " Hail Master Tpope :D
 Plug 'tpope/vim-commentary'

@@ -3,7 +3,16 @@ local fn = vim.fn
 
 local M = {}
 
+M.clear_prompt = function()
+
+  api.nvim_command("normal :esc<CR>")
+  print("aborting..")
+  return
+
+end
+
 M.xresources = function(color)
+
   local col = fn.systemlist(
     "grep -i "
       .. color
@@ -13,26 +22,34 @@ M.xresources = function(color)
     return col[1]
   end
   return nil
+
 end
 
 M.mygit = function()
+
   local gitnm = fn.systemlist("git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'")
   return gitnm[1]
+
 end
 
 M.vimbg = function(name)
+
   local idnum = api.nvim_call_function("hlID", { name })
   local col = api.nvim_call_function("synIDattr", { idnum, "bg" })
   return col
+
 end
 
 M.vimfg = function(name)
+
   local idnum = api.nvim_call_function("hlID", { name })
   local col = api.nvim_call_function("synIDattr", { idnum, "fg" })
   return col
+
 end
 
 local modepomo_pause = 0
+
 M.pomorun = function(keymap)
 
   local is_in_tmux = api.nvim_call_function("exists", { "$TMUX" })
@@ -44,11 +61,17 @@ M.pomorun = function(keymap)
       if check_pomo_tmuxwindow[1] == nil then
 
         local ans_duration = fn.input("how much duration you need ([h]our/[m]inute ex 60m/1h)? ")
-          or "25m"
+          or nil
+
         local ans_interval = fn.input("how much interval you need 3/2 or more? ")
-          or "5"
+          or nil
 
         fn.systemlist("rm -rf $HOME/.pomo/pomo.sock")
+
+        if #ans_duration == 0 or #ans_interval == 0 then
+          M.clear_prompt()
+          return
+        end
 
         local pomo_cmd = "tmux new-windo && tmux rename-window 'mypomo'"
         pomo_cmd = pomo_cmd .. " && " .. "notify-send \"Pomo started..\""
@@ -88,15 +111,36 @@ M.pomorun = function(keymap)
   end
 
   print("Pomodoro will not run if you run outside tmux!!")
+
+end
+
+M.gentab = function(mode)
+
+  -- print(vim.inspect(api.nvim_list_wins()))
+
+  local winlayout = fn.winlayout()
+
+  for k,v in pairs(winlayout) do
+    print(k,v )
+  end
+
+  -- local cur_buf = api.nvim_buf_get_name(api.nvim_get_current_buf())
+
+  -- if mode == "newtab" then
+  --   api.nvim_command(string.format("tabnew %s", cur_buf))
+  -- end
+
 end
 
 M.map = function(mode, key, result, opts)
+
   api.nvim_set_keymap(mode, key, result, {
     noremap = true,
     silent = opts.silent or false,
     expr = opts.expr or false,
     script = opts.script or false,
   })
+
 end
 
 return M

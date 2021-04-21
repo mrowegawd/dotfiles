@@ -6,52 +6,44 @@ clickable_url = on
 cursor_blink = off
 font = mononoki Nerd Font 9
 
+# sonokai
+
 [colors]
-# Base16 Gruvbox dark, medium
-# Author: Dawid Kurek (dawikur@gmail.com), morhetz (https://github.com/morhetz/gruvbox)
 
-foreground          = #d5c4a1
-foreground_bold     = #d5c4a1
-cursor              = #d5c4a1
-cursor_foreground   = #282828
-background          = #282828
+# special
+cursor          = #e3e1e4
+foreground_bold = #e3e1e4
+foreground      = #e3e1e4
+background      = #1a181a
 
-# 16 color space
+# black
+color0  = #1a181a
+color8  = #2d2a2e
 
-# Black, Gray, Silver, White
-color0  = #282828
-color8  = #665c54
-color7  = #d5c4a1
-color15 = #fbf1c7
+# red
+color1  = #f85e84
+color9  = #f85e84
 
-# Red
-color1  = #fb4934
-color9  = #fb4934
+# green
+color2  = #9ecd6f
+color10 = #9ecd6f
 
-# Green
-color2  = #b8bb26
-color10 = #b8bb26
+# yellow
+color3  = #e5c463
+color11 = #e5c463
 
-# Yellow
-color3  = #fabd2f
-color11 = #fabd2f
+# blue
+color4  = #7accd7
+color12 = #7accd7
 
-# Blue
-color4  = #83a598
-color12 = #83a598
+# magenta
+color5  = #ab9df2
+color13 = #ab9df2
 
-# Purple
-color5  = #d3869b
-color13 = #d3869b
+# cyan
+color6  = #ef9062
+color14 = #ef9062
 
-# Teal
-color6  = #8ec07c
-color14 = #8ec07c
-
-# Extra colors
-color16 = #fe8019
-color17 = #d65d0e
-color18 = #3c3836
-color19 = #504945
-color20 = #bdae93
-color21 = #ebdbb2
+# white
+color7  = #e3e1e4
+color15 = #e3e1e4

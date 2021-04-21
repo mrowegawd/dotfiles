@@ -230,33 +230,33 @@ imap <left> <nop>
 imap <right> <nop>
 
 " keymap: [buffer] kill all buffers but not the current
-map <silent> <c-w>o               :BufOnly!<cr>
+map <silent> <c-w>o           :BufOnly!<cr>
 
 " keymap: [tab][window] create new
-nnoremap <silent> <c-w>t          :<C-U>tabnew<Space><CR>
+nnoremap <silent> <c-w>t      :<C-U>tabnew<Space><CR>
 " keymap: [tab][window] convert window to new tab
-nnoremap <silent> <c-w>b          :<C-U>tabedit %<CR>
+nnoremap <silent> <c-w>b      <C-w><S-t>
 
 " keymap: [buffer] next
-nnoremap <silent> <TAB>           :bnext<cr>zz
+nnoremap <silent> <TAB>       :bnext<cr>zz
 " keymap: [buffer] prev
-nnoremap <silent> <S-TAB>         :bprev<cr>zz
+nnoremap <silent> <S-TAB>     :bprev<cr>zz
 
 " keymap: [tab] next
-nnoremap <silent> <c-w>l              :tabn<cr>
+nnoremap <silent> <c-w>l      :tabn<cr>
 " keymap: [tab] last next
-nnoremap <silent> <c-w><s-l>          :tablast<cr>
+nnoremap <silent> <c-w><s-l>  :tablast<cr>
 " keymap: [tab] prev
-nnoremap <silent> <c-w>h              :tabp<cr>
+nnoremap <silent> <c-w>h      :tabp<cr>
 " keymap: [tab] first prev
-nnoremap <silent> <c-w><s-h>          :tabfirst<cr>
+nnoremap <silent> <c-w><s-h>  :tabfirst<cr>
 " keymap: [tab] move tab to the next
 " nnoremap <silent> <c-@>              <c-a>:+tabmove<cr>
 " keymap: [tab] move tab to the next
 " nnoremap <silent> <c-!>              <c-a>:-tabmove<cr>
 
 " keymap: [window] size balance
-nnoremap <leader>=                <C-w>=
+nnoremap <leader>=            <C-w>=
 
 function! s:maximazeWindow()
   if winnr('$') > 1

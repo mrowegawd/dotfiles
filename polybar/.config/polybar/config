@@ -229,9 +229,9 @@ ws-icon-3 = 4;
 ws-icon-4 = 5;
 
 label-focused = %icon%
-label-focused-foreground = ${colors.nofg}
+label-focused-foreground = ${colors.redfg}
 label-focused-background = ${colors.background-bubble}
-label-focused-underline =  ${colors.nofg}
+label-focused-underline =  ${colors.redfg}
 label-focused-padding = 1
 
 label-occupied = %icon%
@@ -492,7 +492,7 @@ click-right = st -e nmtui-edit
 [module/pomo]
 type = custom/script
 exec = ~/.local/bin/pomo status
-interval = 3
+interval = 1
 
 format = <label>
 format-padding = 1

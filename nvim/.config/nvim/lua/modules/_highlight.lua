@@ -53,16 +53,16 @@ M.current_mode = setmetatable({
 M.redraw_color = function(mode)
   if mode == "n" then
     vim.api.nvim_command(
-      "hi Mode guibg=" .. green .. " guifg=" .. green .. " gui=bold"
+      "hi Mode guibg=" .. red .. " guifg=" .. red .. " gui=bold"
     )
     if M.git_status ~= nil then
       vim.api.nvim_command(
-        "hi ModeSeparator guifg=" .. green .. " guibg=" .. black
+        "hi ModeSeparator guifg=" .. red .. " guibg=" .. black
       )
     else
       vim.api.nvim_command(
         "hi ModeSeparator guifg="
-          .. green
+          .. red
           .. " guibg="
           .. col_active_statusline
       )
@@ -71,9 +71,9 @@ M.redraw_color = function(mode)
 
   if mode == "i" then
     vim.api.nvim_command(
-      "hi Mode guibg=" .. red .. " guifg=" .. red .. " gui=bold"
+      "hi Mode guibg=" .. green .. " guifg=" .. green .. " gui=bold"
     )
-    vim.api.nvim_command("hi ModeSeparator guifg=" .. red)
+    vim.api.nvim_command("hi ModeSeparator guifg=" .. green)
   end
 
   if mode == "v" or mode == "V" or mode == "^V" then
@@ -198,7 +198,7 @@ M.start_custom_hi = function()
     },
     ["Mygit"] = {
       ["guibg"] = black,
-      ["guifg"] = green,
+      ["guifg"] = red,
       ["gui"] = "bold",
     },
   }

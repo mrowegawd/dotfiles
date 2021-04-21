@@ -122,6 +122,7 @@ local custom_vimgrep_arguments = {
 M.grep_prompt = function()
   require("telescope.builtin").grep_string({
     vimgrep_arguments = custom_vimgrep_arguments,
+    word_match = "-w",
     shorten_path = true,
     search = fn.input("Grep String > "),
   })
@@ -130,6 +131,7 @@ end
 M.grep_prompt_word = function()
   require("telescope.builtin").grep_string({
     vimgrep_arguments = custom_vimgrep_arguments,
+    word_match = "-w",
     shorten_path = true,
     search = fn.expand("<cword>"),
   })
@@ -152,8 +154,18 @@ M.findWikis = function()
   })
 end
 
+local custom_vimgrepwikis = {
+  "rg",
+  "--line-number",
+  "--column",
+  "\"python\"",
+}
+
+-- rg --no-heading --line-number --column "test" ~/Dropbox/vimwiki
+
 M.grepWikisPrompt = function()
   require("telescope.builtin").grep_string({
+    vimgrep_arguments = custom_vimgrepwikis,
     shorten_path = true,
     search_dirs = { g.wiki_path },
     search = fn.input("Grep Wikis > "),
