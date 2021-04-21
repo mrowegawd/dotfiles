@@ -1,4 +1,5 @@
 local dap = require("dap")
+local g = vim.g
 
 local k = require("astronauta.keymap")
 local nnoremap = k.nnoremap
@@ -36,7 +37,7 @@ local function debugJest(testName, filename)
   })
 end
 
-vim.g.dap_virtual_text = true
+g.dap_virtual_text = true
 
 local attachDebug = function()
   print("Debugger nvim-dap launched..")

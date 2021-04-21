@@ -103,7 +103,7 @@ Plug 'akinsho/nvim-toggleterm.lua' " -- easly to manage terminal windows in lua
 Plug 'editorconfig/editorconfig-vim'
 " Plug 'myusuf3/numbers.vim'
 
-Plug 'jiangmiao/auto-pairs' " -- Auto close tags
+" Plug 'jiangmiao/auto-pairs' " -- Auto close tags
 Plug 'windwp/nvim-autopairs' " -- Autopairs but its in lua
 Plug 'AndrewRadev/splitjoin.vim' " -- Switch between single-line and multiline, gS,gJ
 " Plug 'itchyny/calendar.vim', {'on': 'Calendar'} " -- Calendar on vim, :Calendar

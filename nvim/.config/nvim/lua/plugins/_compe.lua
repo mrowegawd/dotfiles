@@ -1,4 +1,14 @@
 local remap = vim.api.nvim_set_keymap
+local has_npairs, npairs = pcall(require, "nvim-autopairs")
+
+if not has_npairs then
+  print("warn: dont forget to install nvim-autopairs!!")
+  return
+end
+
+npairs.setup({
+  disable_filetype = { "TelescopePrompt", "fzf" },
+})
 
 vim.g.vsnip_snippet_dir = os.getenv("HOME")
   .. "/Dropbox/data.programming.forprivate/vsnip"
@@ -59,47 +69,24 @@ require("compe").setup({
   },
 })
 
--- TODO: make this function work
--- local npairs = require('nvim-autopairs')
--- Util.trigger_completion = function()
---   if vim.fn.pumvisible() ~= 0  then
---     if vim.fn.complete_info()["selected"] ~= -1 then
---       return vim.fn["compe#confirm"]()
---     end
-
---     vim.fn.nvim_select_popupmenu_item(0 , false , false ,{})
---     P(vim.fn["compe#confirm"]())
---     return vim.fn["compe#confirm"]()
---   end
-
---   return npairs.check_break_line_char()
--- end
-
 Util.trigger_completion = function()
   if vim.fn.pumvisible() ~= 0 then
     if vim.fn.complete_info()["selected"] ~= -1 then
-      return vim.fn["compe#confirm"]()
+      vim.fn["compe#confirm"]()
+      return npairs.esc("<c-y>")
+
+    else
+      vim.defer_fn(
+        function()
+          vim.fn["compe#confirm"]("<cr>")
+        end,
+        20
+      )
+      return npairs.esc("<c-n>")
     end
+  else
+    return npairs.check_break_line_char()
   end
-
-  local prev_col, next_col = vim.fn.col(".") - 1, vim.fn.col(".")
-  local prev_char = vim.fn.getline("."):sub(prev_col, prev_col)
-  local next_char = vim.fn.getline("."):sub(next_col, next_col)
-
-  -- minimal autopairs-like behaviour
-  if prev_char == "{" and next_char == "" then
-    return Util.t("<CR>}<C-o>O")
-  end
-  if prev_char == "[" and next_char == "" then
-    return Util.t("<CR>]<C-o>O")
-  end
-  if prev_char == "(" and next_char == "" then
-    return Util.t("<CR>)<C-o>O")
-  end
-  if prev_char == ">" and next_char == "<" then
-    return Util.t("<CR><C-o>O")
-  end -- html indents
-  return Util.t("<CR>")
 end
 
 -- keymap: [plugin][compe][completion][insert] confirm selected completion

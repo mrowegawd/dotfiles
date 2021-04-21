@@ -114,24 +114,6 @@ M.pomorun = function(keymap)
 
 end
 
-M.gentab = function(mode)
-
-  -- print(vim.inspect(api.nvim_list_wins()))
-
-  local winlayout = fn.winlayout()
-
-  for k,v in pairs(winlayout) do
-    print(k,v )
-  end
-
-  -- local cur_buf = api.nvim_buf_get_name(api.nvim_get_current_buf())
-
-  -- if mode == "newtab" then
-  --   api.nvim_command(string.format("tabnew %s", cur_buf))
-  -- end
-
-end
-
 M.map = function(mode, key, result, opts)
 
   api.nvim_set_keymap(mode, key, result, {
