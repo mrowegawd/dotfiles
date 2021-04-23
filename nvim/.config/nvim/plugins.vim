@@ -64,6 +64,7 @@ Plug 'nvim-lua/lsp-status.nvim'
 Plug 'tjdevries/nlua.nvim'
 Plug 'folke/lsp-trouble.nvim' " -- A pretty lsp diagnostic loc list
       "\ that help you to solve err/warn code
+" Plug 'folke/lsp-colors.nvim'
 
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}

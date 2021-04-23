@@ -5,6 +5,7 @@ let g:ColorColumnFileTypeBlacklist = [
         \ 'LspTrouble',
         \ 'LuaTree',
         \ 'NvimTree',
+        \ 'TelescopePrompt',
         \ 'cekdulu',
         \ 'coc-explorer',
         \ 'command-t',

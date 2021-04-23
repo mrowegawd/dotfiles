@@ -5,7 +5,7 @@
   > Some codes is not my original..they all belongs to credits people.
   > I just make some configs/refactoring for my needs
 
- ![moxax](./img/13apr21-monitor.gif)
+ ![moxax](./img/24apr21-monitor.gif)
  artwork credits [olesyaspitz](https://www.instagram.com/olesyaspitz)
 
 ## Installation

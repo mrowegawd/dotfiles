@@ -33,7 +33,7 @@ M.lsp_mappings = function()
     ["<leader>wl"] = "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
 
     -- Diagnostic
-    ["<leader>D"] = diagnostic.show_line_diagnostics,
+    -- ["<leader>D"] = diagnostic.show_line_diagnostics,
     ["<S-DOWN>"] = diagnostic.lsp_jump_diagnostic_next,
     ["<S-UP>"] = diagnostic.lsp_jump_diagnostic_prev,
   }

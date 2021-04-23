@@ -60,10 +60,10 @@ M.pomorun = function(keymap)
 
       if check_pomo_tmuxwindow[1] == nil then
 
-        local ans_duration = fn.input("how much duration you need ([h]our/[m]inute ex 60m/1h)? ")
+        local ans_duration = fn.input("how much duration do you need ([h]our/[m]inute ex 60m/1h)? ")
           or nil
 
-        local ans_interval = fn.input("how much interval you need 3/2 or more? ")
+        local ans_interval = fn.input("how much interval do you need 3/2 or more? ")
           or nil
 
         fn.systemlist("rm -rf $HOME/.pomo/pomo.sock")

@@ -3,7 +3,7 @@ if !PluginLoaded('vim-test')
 endif
 
 if has('nvim')
-  let test#strategy = "neovim"
+  let test#strategy = "floaterm"  " -- neovim
 else
   let test#strategy = "vimterminal"
 endif
@@ -14,15 +14,15 @@ let test#neovim#term_position = "vert botright"
 nmap <silent> <localleader>tf :TestFile<CR>
 
 " keymap: [plugin][vim-test] Run tests for the current file
-nmap <silent> <localleader>tn :TestNearest -strategy=ToggleTerm<CR>
+nmap <silent> <localleader>tn :TestNearest -strategy=floaterm<CR>
 
 " keymap: [plugin][vim-test] Run all test for all projects command
-nmap <silent> <localleader>ts :TestSuite<CR>
+nmap <silent> <localleader>ts :TestSuite --verbose<CR>
 
 " keymap: [plugin][vim-test] Run the last test command
 nmap <silent> <localleader>tl :TestLast<CR>
 
-" keymap: [plugin][vim-test] Open the last run test in the current buffer
+" keymap: [plugin][vim-test] Open the lasthttps://www.youtube.com/watch?v=x_N4qAFsCrs run test in the current buffer
 nmap <silent> <localleader>tg :TestVisit<CR>
 
 " nnoremap <silent> t<C-n> :w <BAR> TestNearest<CR>

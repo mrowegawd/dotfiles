@@ -435,11 +435,12 @@ format-background = ${colors.background-bubble}
 format-foreground = ${colors.warnfg}
 format-padding = 1
 
-; date-alt = " %d-%m-%Y"
-date-alt = " %b %d %Y"
-
 time = %{T2} %{T-} %H:%M
-time-alt = " %H:%M "
+
+; date-alt = " %d-%m-%Y"
+; date-alt = " %b %d %Y"
+date-alt = %A, %d %B %Y
+; time-alt = " %H:%M "
 
 ; time-alt = %{F#61afef}󰃭 %a, %b %d%{F-}
 
