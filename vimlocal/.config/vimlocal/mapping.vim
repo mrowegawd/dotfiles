@@ -648,8 +648,8 @@ endfunction
 command! -bang Profiling call s:profiling(<bang>0)
 
 " keymap: [visual] select content
-xnoremap <silent> ie gg0oG$
-onoremap <silent> ie :<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>
+" xnoremap <silent> ie gg0oG$
+" onoremap <silent> ie :<C-U>execute "normal! m`"<Bar>keepjumps normal! ggVG<CR>
 
 " keymap: [visual] don't make mistake
 xnoremap <silent> il <Esc>^vg_

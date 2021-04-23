@@ -17,17 +17,18 @@ M.lsp_mappings = function()
 
   local mappings = {
     -- LSP
-    --
     ["<C-s>"] = ":Lspsaga signature_help<CR>",
     ["K"] = hover.render_hover_doc,
     ["gP"] = provider.preview_definition,
     ["gd"] = vim.lsp.buf.definition,
-    ["gD"] = "<cmd>lua vim.lsp.buf.implementation()<CR>",
+    ["gD"] = "<cmd>lua vim.lsp.buf.declaration()<CR>",
     ["gr"] = require("telescope.builtin").lsp_references,
     ["gR"] = rename.rename,
     ["gh"] = provider.lsp_finder,
     ["gf"] = "<cmd>lua vim.lsp.buf.formatting()<CR>",
     ["ga"] = require("plugins._telescope").code_actions,
+    -- ["*"] =  ":<C-u>lua require(\"core.funcs.search\").visual_selection(\"/\")<CR>/<C-r>=@/<CR><CR>",
+    -- ["#"] =  ":<C-u>lua require(\"core.funcs.search\").visual_selection(\"?\")<CR>?<C-r>=@/<CR><CR>",
 
     -- Workspace
     ["<leader>wl"] = "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
@@ -42,7 +43,7 @@ M.lsp_mappings = function()
     nnoremap({ j, v, { silent = true } })
   end
 
-  inoremap({ "<C-g>", signature.signature_help, { silent = true } })
+  inoremap({ "<C-s>", signature.signature_help, { silent = true } })
 
 end
 
@@ -50,6 +51,5 @@ end
 -- nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
 -- scroll up hover doc
 -- nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
-
 
 return M

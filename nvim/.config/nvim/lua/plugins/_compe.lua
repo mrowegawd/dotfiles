@@ -22,15 +22,6 @@ npairs.setup({
   disable_filetype = { "TelescopePrompt", "fzf" },
 })
 
-local check_back_space = function()
-  local col = fn.col(".") - 1
-  if col == 0 or fn.getline("."):sub(col, col):match("%s") then
-    return true
-  else
-    return false
-  end
-end
-
 vim.g.vsnip_snippet_dir = os.getenv("HOME")
   .. "/Dropbox/data.programming.forprivate/vsnip"
 
@@ -88,7 +79,7 @@ Util.tab_complete = function()
     return utils("<C-n>")
   elseif fn.call("vsnip#available", { 1 }) == 1 then
     return utils("<Plug>(vsnip-expand-or-jump)")
-  elseif check_back_space() then
+  elseif Util.check_back_space() then
     return utils("<Tab>")
   else
     return fn["compe#complete"]()

@@ -40,6 +40,7 @@ ts_config.setup({
     enable = true,
   },
 
+  -- taken from: https://github.com/nvim-treesitter/nvim-treesitter-textobjects#text-objects-select
   textobjects = {
     select = {
       enable = true,

@@ -18,6 +18,7 @@ let g:ColorColumnFileTypeBlacklist = [
         \ 'list',
         \ 'qf',
         \ 'sagahover',
+        \ 'sagasignature',
         \ 'startify',
         \ 'tagbar',
         \ 'undotree',

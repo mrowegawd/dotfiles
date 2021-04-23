@@ -68,6 +68,10 @@ Plug 'folke/lsp-trouble.nvim' " -- A pretty lsp diagnostic loc list
 
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+  Plug 'windwp/nvim-ts-autotag'
+  Plug 'JoosepAlviste/nvim-ts-context-commentstring'
+  " Plug 'theHamsta/nvim-treesitter-pairs'
 
 " COLORS ----------------------------------------------------------------------
 Plug 'rafi/awesome-vim-colorschemes'
@@ -129,11 +133,6 @@ Plug 'tyru/open-browser.vim', {'for' : ['plantuml', 'pu']} " -- Open browser
 " Plug 'nvim-lua/completion-nvim'
 " Plug 'steelsojka/completion-buffers'
 
-" Text obj
-" Plug 'justinmk/vim-ipmotion'                " improve paragraph motion
-" Plug 'tommcdo/vim-exchange'
-" Plug 'chaoren/vim-wordmotion'
-
 " Quickfix and locationlist
 " Plug 'kevinhwang91/nvim-bqf' " -- Better quickfix: open(o,t,T,c-x,c-v),close-preview(zp,p,P)
 " Plug 'mvanderkamp/worklist.vim' " -- testing
@@ -183,6 +182,8 @@ Plug 'dstein64/vim-startuptime'
 " =============================================================================
 Plug 'aklt/plantuml-syntax', {'for' : ['plantuml', 'pu']} " -- Syntax highlight plantUML
 Plug 'weirongxu/plantuml-previewer.vim', {'for' : ['plantuml', 'pu']} " -- preview plantUML
+
+Plug 'kkoomen/vim-doge', {'do': { -> doge#install({ 'headless': 1 }) }}
 
 Plug 'Rican7/php-doc-modded', {'for': ['php'] } " -- Function to generate PHP document
 Plug 'tpope/vim-dadbod' " -- Modern database interface for vim
