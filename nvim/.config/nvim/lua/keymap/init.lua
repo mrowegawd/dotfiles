@@ -16,12 +16,12 @@ local plug_map = {
     ["n|<leader>pu"]     = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait();
     ["n|<leader>pi"]     = map_cr("PackerInstall"):with_silent():with_noremap():with_nowait();
     ["n|<leader>pc"]     = map_cr("PackerCompile"):with_silent():with_noremap():with_nowait();
-    -- Lsp mapp work when insertenter and lsp start
+    -- Lsp map work when insertenter and lsp start
     ["n|<leader>li"]     = map_cr("LspInfo"):with_noremap():with_silent():with_nowait(),
     ["n|<leader>ll"]     = map_cr("LspLog"):with_noremap():with_silent():with_nowait(),
     ["n|<leader>lr"]     = map_cr("LspRestart"):with_noremap():with_silent():with_nowait(),
-    --  ["n|<C-f>"]          = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>"):with_silent():with_noremap():with_nowait(),
-    --  ["n|<C-b>"]          = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap():with_nowait(),
+    ["n|<C-UP>"]         = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>"):with_silent():with_noremap():with_nowait(),
+    ["n|<C-DOWN>"]       = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap():with_nowait(),
     ["n|<S-DOWN>"]       = map_cr('Lspsaga diagnostic_jump_next'):with_noremap():with_silent(),
     ["n|<S-UP>"]         = map_cr('Lspsaga diagnostic_jump_prev'):with_noremap():with_silent(),
     ["n|K"]              = map_cr("Lspsaga hover_doc"):with_noremap():with_silent(),
@@ -53,10 +53,10 @@ local plug_map = {
     ["n|<Leader>fz"]     = map_cr('Farf'):with_noremap():with_silent();
     ["v|<Leader>fz"]     = map_cr('Farf'):with_noremap():with_silent();
     -- Plugin Telescope
+    ["n|<Leader>ff"]     = map_cmd('<cmd>lua require("telescope._custom").files()<CR>'):with_noremap():with_silent(),
     ["n|<Leader>bb"]     = map_cu('Telescope buffers'):with_noremap():with_silent(),
     ["n|<Leader>fa"]     = map_cu('DashboardFindWord'):with_noremap():with_silent(),
     ["n|<Leader>fb"]     = map_cu('Telescope file_browser'):with_noremap():with_silent(),
-    ["n|<Leader>ff"]     = map_cu('DashboardFindFile'):with_noremap():with_silent(),
     ["n|<Leader>fg"]     = map_cu('Telescope git_files'):with_noremap():with_silent(),
     ["n|<Leader>fw"]     = map_cu('Telescope grep_string'):with_noremap():with_silent(),
     ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),

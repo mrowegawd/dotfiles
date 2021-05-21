@@ -1,6 +1,6 @@
-st.font:          CaskaydiaCove Nerd Font:Regular:pixelsize=12:antialias=true:autohint=true
-st.boldFont:      CaskaydiaCove Nerd Font:Bold:pixelsize=12:antialias=true:autohint=true
-st.italicFont:    CaskaydiaCove Nerd Font:Italic:pixelsize=12:antialias=true:autohint=true
+st.font:          CaskaydiaCove Nerd Font:Regular:pixelsize=11:antialias=true:autohint=true
+st.boldFont:      CaskaydiaCove Nerd Font:Bold:pixelsize=11:antialias=true:autohint=true
+st.italicFont:    CaskaydiaCove Nerd Font:Italic:pixelsize=11:antialias=true:autohint=true
 
 st.borderpx: 10
 

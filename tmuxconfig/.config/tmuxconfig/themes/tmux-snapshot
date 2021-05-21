@@ -4,7 +4,7 @@ WINDOW_NONACTIVE_BG="#282828"
 COL_WHITE="#626262"
 
 BG_STATUSLINE="#2e2e2e"
-BG_ACTIVE_STATUSLINE="#fb4934"
+BG_ACTIVE_STATUSLINE="#d3869b"
 
 left_separator=''
 left_separator_black=''

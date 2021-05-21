@@ -15,7 +15,7 @@
 
     selected-active-background: #e06c75;
     selected-active-foreground: @foreground;
-    selected-normal-background: #8ec07c;
+    selected-normal-background: #d3869b;
     selected-normal-foreground: @foreground;
     selected-urgent-background: #e5c07b;
     selected-urgent-foreground: @foreground;
