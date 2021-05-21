@@ -1,4 +1,4 @@
-# Messy personal dotfiles (mrawegawd) [[[ GOINT TO LUA CONFIG!!! ]]]
+# [[[ MOVING TO LUA CONFIG!!! ]]]
 
   My Lovely :heart: Debian configs,
 
