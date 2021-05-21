@@ -1,4 +1,4 @@
-# Messy personal dotfiles (mrawegawd)
+# Messy personal dotfiles (mrawegawd) [[[ GOINT TO LUA CONFIG!!! ]]]
 
   My Lovely :heart: Debian configs,
 
@@ -35,9 +35,6 @@
 
 ## Credits/Thanks (inspiration and taken from..)
 
-- [wincent](https://github.com/wincent/wincent)
-- [sainnhe](https://github.com/sainnhe/dotfiles)
+- [glepnir](https://github.com/glepnir/nvim)
 - [elianiva](https://github.com/elianiva/dotfiles)
-- [tjdevries](https://github.com/tjdevries/config_manager)
-- [zchee](https://github.com/zchee/.nvim)
 - ...and the others (can't remember their name/account)

@@ -13,7 +13,7 @@ margin-top          = 0
 iconfg              = ${xrdb:color5}
 warnfg              = ${xrdb:color3}
 redfg               = ${xrdb:color9}
-nofg                = ${xrdb:color2}
+nofg                = ${xrdb:color4}
 
 foreground          = ${xrdb:foreground}
 background-bubble   = #2b2f37
@@ -41,7 +41,7 @@ bottom              = false
 fixed-center        = true
 height              = 20
 padding-left        = 1
-padding-right       = 0
+padding-right       = 1
 override-redirect   = false
 line-size           = 2
 
@@ -227,6 +227,7 @@ ws-icon-1 = 2;
 ws-icon-2 = 3;
 ws-icon-3 = 4;
 ws-icon-4 = 5;
+ws-icon-5 = 6;+
 
 label-focused = %icon%
 label-focused-foreground = ${colors.redfg}
