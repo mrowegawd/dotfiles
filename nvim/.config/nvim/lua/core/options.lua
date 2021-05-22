@@ -134,9 +134,35 @@ local function load_options()
     vim.o[name] = value
   end
   bind_option(bw_local)
+
+end
+
+
+local load_customplug = function()
+
+    vim.g.vimwiki_list           = {{
+      path= global.home .. '/Dropbox/vimwiki',
+      index= 'home',
+      auto_diary_index= 1,
+      automatic_nested_syntaxes=  1,
+      syntax= 'markdown',
+      template_default= 'markdown',
+      ext= '.md'
+    }}
+
+    -- Disable ALL Vimwiki key mappings
+    -- let g:vimwiki_listsyms          = '✗○◐●✓'
+    vim.g.vimwiki_key_mappings      = { all_maps = 0}
+    vim.g.vimwiki_table_mappings    = 0
+    vim.g.vimwiki_folding           = 'expr'
+    vim.g.vimwiki_global_ext        = 0
+    vim.g.vimwiki_hl_cb_checked     = 1
+    vim.g.vimwiki_hl_headers        = 1
+    vim.g.vimwiki_markdown_link_ext = 1
 end
 
 load_options()
+load_customplug()
 
 
 -- TODO: todo ini mesti ditaruh di mana?

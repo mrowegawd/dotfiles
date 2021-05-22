@@ -52,6 +52,19 @@ function autocmd.load_autocmds()
     yank = {
       {"TextYankPost", [[* silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=400})]]};
     };
+
+    window_dim = {
+      { "BufEnter", "*", "lua require'core.autocmds'.buf_enter()" },
+      { "InsertEnter", "*", "lua require'core.autocmds'.insert_enter()" },
+      { "InsertLeave", "*", "lua require'core.autocmds'.insert_leave()" },
+      { "FocusGained", "*", "lua require'core.autocmds'.focus_gained()" },
+      { "FocusLost", "*", "lua require'core.autocmds'.focus_lost()" },
+      { "WinEnter", "*", "lua require'core.autocmds'.win_enter()" },
+      { "WinLeave", "*", "lua require'core.autocmds'.win_leave()" },
+--       { "BufWritePost", "*", "lua require'core.autocmds'.win_enter()" },
+--       { "BufWritePost", "*", "lua require'core.autocmds'.win_leave()" },
+    }
+
   }
 
   autocmd.nvim_create_augroups(definitions)
