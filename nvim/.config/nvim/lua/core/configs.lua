@@ -3,15 +3,15 @@ local api = vim.api
 
 local M = {}
 
-Folding = 0
+SETFolding = 0
 
 M.fold_toggle = function()
-  if Folding == 1 then
+  if SETFolding == 1 then
     api.nvim_command("exec 'normal! zM'")
-    Folding = 0
+    SETFolding = 0
   else
     api.nvim_command("exec 'normal! zR'")
-    Folding = 1
+    SETFolding = 1
   end
 end
 

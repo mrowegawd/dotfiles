@@ -34,9 +34,6 @@ tools['iamcco/markdown-preview.nvim'] = {
   end
 }
 
-tools['vimwiki/vimwiki'] = {
-  cmd = {'VimwikiIndex'},
-  config = conf.vimwiki
-}
+
 
 return tools

@@ -49,6 +49,7 @@ function config.dashboard()
   }
 end
 
+
 function config.nvim_tree()
   -- On Ready Event for Lazy Loading work
   require("nvim-tree.events").on_nvim_tree_ready(
@@ -62,6 +63,7 @@ function config.nvim_tree()
   vim.g.nvim_tree_follow = 1
   vim.g.nvim_tree_hide_dotfiles = 0
   vim.g.nvim_tree_indent_markers = 1
+
   vim.g.nvim_tree_bindings = {
     -- ["<CR>"] = ":YourVimFunction()<cr>",
     -- ["u"] = ":lua require'some_module'.some_function()<cr>",
@@ -126,8 +128,8 @@ function config.gitsigns()
        noremap = true,
        buffer = true,
 
-       ['n ]g'] = { expr = true, "&diff ? ']g' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'"},
-       ['n [g'] = { expr = true, "&diff ? '[g' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'"},
+       ['n <A-DOWN>'] = { expr = true, "&diff ? ']g' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'"},
+       ['n <A-UP>'] = { expr = true, "&diff ? '[g' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'"},
 
        ['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
        ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',

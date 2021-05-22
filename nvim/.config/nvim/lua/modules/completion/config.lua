@@ -56,6 +56,9 @@ function config.telescope()
   require('telescope').load_extension('fzy_native')
   require'telescope'.load_extension('dotfiles')
   require'telescope'.load_extension('gosource')
+  require'telescope'.load_extension('grep_myprompt')
+  require'telescope'.load_extension('grep_mypromptword')
+  require'telescope'.load_extension('find_myfiles')
 end
 
 function config.vim_sonictemplate()

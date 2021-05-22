@@ -6,10 +6,6 @@ editor['Raimondi/delimitMate'] = {
   config = conf.delimimate,
 }
 
-editor['rhysd/accelerated-jk'] = {
-  opt = true
-}
-
 editor['norcalli/nvim-colorizer.lua'] = {
   ft = { 'html','css','sass','vim','typescript','typescriptreact'},
   config = conf.nvim_colorizer
@@ -42,6 +38,34 @@ editor['rhysd/vim-operator-surround'] = {
 
 editor['kana/vim-niceblock']  = {
   opt = true
+}
+
+editor['vimwiki/vimwiki'] = {
+  cmd = {'VimwikiIndex'},
+  config = function()
+    local wiki_path = os.getenv("HOME") .. '/Dropbox/vimwiki'
+
+    vim.g.vimwiki_list           = {{
+      path= wiki_path,
+      index= 'home',
+      auto_diary_index= 1,
+      automatic_nested_syntaxes=  1,
+      syntax= 'markdown',
+      template_default= 'markdown',
+      ext= '.md'
+    }}
+
+    -- Disable ALL Vimwiki key mappings
+    -- let g:vimwiki_listsyms          = '✗○◐●✓'
+    vim.g.vimwiki_key_mappings      = { all_maps = 0}
+    vim.g.vimwiki_table_mappings    = 0
+    vim.g.vimwiki_folding           = 'expr'
+    vim.g.vimwiki_global_ext        = 0
+    vim.g.vimwiki_hl_cb_checked     = 1
+    vim.g.vimwiki_hl_headers        = 1
+    vim.g.vimwiki_markdown_link_ext = 1
+  end
+
 }
 
 return editor

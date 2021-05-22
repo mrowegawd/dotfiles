@@ -56,19 +56,19 @@ function config.vim_vista()
   }
 end
 
-function config.vimwiki()
+function config.vim_wiki()
 
-  vim.g.wiki_path = os.getenv("HOME") .. '/Dropbox/vimwiki'
+  local wiki_path = os.getenv("HOME") .. '/Dropbox/vimwiki'
 
   vim.g.vimwiki_list           = {{
-       path= vim.g.wiki_path,
-       index= 'home',
-       auto_diary_index= 1,
-       automatic_nested_syntaxes=  1,
-       syntax= 'markdown',
-       template_default= 'markdown',
-       ext= '.md'
-      }}
+    path= wiki_path,
+    index= 'home',
+    auto_diary_index= 1,
+    automatic_nested_syntaxes=  1,
+    syntax= 'markdown',
+    template_default= 'markdown',
+    ext= '.md'
+  }}
 
   -- Disable ALL Vimwiki key mappings
   -- let g:vimwiki_listsyms          = '✗○◐●✓'
@@ -80,7 +80,5 @@ function config.vimwiki()
   vim.g.vimwiki_hl_headers        = 1
   vim.g.vimwiki_markdown_link_ext = 1
 end
-
-print(vim.g.wiki_path)
 
 return config
