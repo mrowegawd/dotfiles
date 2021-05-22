@@ -42,6 +42,8 @@ function autocmd.load_autocmds()
       {"VimLeave", "*", [[if has('nvim') | wshada! | else | wviminfo! | endif]]};
       -- Check if file changed when its window is focus, more eager than 'autoread'
       {"FocusGained", "* checktime"};
+      -- Disable paste mode on leaving insert mode.
+      {"InsertLeave", "* set nopaste"};
     };
 
     ft = {
@@ -54,15 +56,15 @@ function autocmd.load_autocmds()
     };
 
     window_dim = {
-      { "BufEnter", "*", "lua require'core.autocmds'.buf_enter()" },
-      { "InsertEnter", "*", "lua require'core.autocmds'.insert_enter()" },
-      { "InsertLeave", "*", "lua require'core.autocmds'.insert_leave()" },
-      { "FocusGained", "*", "lua require'core.autocmds'.focus_gained()" },
-      { "FocusLost", "*", "lua require'core.autocmds'.focus_lost()" },
-      { "WinEnter", "*", "lua require'core.autocmds'.win_enter()" },
-      { "WinLeave", "*", "lua require'core.autocmds'.win_leave()" },
---       { "BufWritePost", "*", "lua require'core.autocmds'.win_enter()" },
---       { "BufWritePost", "*", "lua require'core.autocmds'.win_leave()" },
+      { "BufEnter", "*", "lua require'core.window-dim'.buf_enter()" },
+      { "InsertEnter", "*", "lua require'core.window-dim'.insert_enter()" },
+      { "InsertLeave", "*", "lua require'core.window-dim'.insert_leave()" },
+      { "FocusGained", "*", "lua require'core.window-dim'.focus_gained()" },
+      { "FocusLost", "*", "lua require'core.window-dim'.focus_lost()" },
+      { "WinEnter", "*", "lua require'core.window-dim'.win_enter()" },
+      { "WinLeave", "*", "lua require'core.window-dim'.win_leave()" },
+      { "BufNewFile", "*", "lua require'core.window-dim'.focus_gained()" },
+      { "BufReadPost", "*", "lua require'core.window-dim'.focus_gained()" },
     }
 
   }

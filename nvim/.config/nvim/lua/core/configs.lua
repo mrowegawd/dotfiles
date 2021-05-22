@@ -42,6 +42,12 @@ M.handleURL = function()
   --   local lines = fn.getpos("'<")
   --   print(vim.inspect(lines))
   --   print(vim.inspect(lines[2]), lines[3])
+  --
+  local first_line, last_line = fn.getpos("'<")[2], fn.getpos("'>")[2]
+  local lines = fn.getline(first_line, last_line)
+
+  print(vim.inspect(lines))
+
 
   local uri = fn.matchstr(fn.getline("."), [[[a-z]*:\/\/[^ >,;")]*]])
   local expand_word = fn.expand("<cword>")

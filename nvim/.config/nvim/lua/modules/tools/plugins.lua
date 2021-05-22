@@ -27,6 +27,12 @@ tools['brooth/far.vim'] = {
   end
 }
 
+tools['tpope/vim-fugitive'] = {
+  config = function ()
+--     vim.g['far#source'] = 'rg'
+  end
+}
+
 tools['iamcco/markdown-preview.nvim'] = {
   ft = 'markdown',
   config = function ()
@@ -34,6 +40,12 @@ tools['iamcco/markdown-preview.nvim'] = {
   end
 }
 
+tools['vimwiki/vimwiki'] = {
+  cmd = {'VimwikiIndex'},
+}
 
+tools['tooldstein64/vim-startuptime'] = {
+  cmd = {'Startuptime'},
+}
 
 return tools

@@ -12,21 +12,83 @@ function config.nvim_compe()
     preselect = 'always';
     allow_prefix_unmatch = false;
     source = {
-      path = true;
-      buffer = true;
-      calc = true;
-      vsnip = true;
-      nvim_lsp = true;
-      nvim_lua = true;
-      spell = true;
-      tags = true;
-      snippets_nvim = false;
+      path = { kind = " " },
+      buffer = { kind = " " },
+      calc = { kind = "  " },
+      vsnip = { kind = "S " },
+      nvim_lsp = { kind = " " },
+      nvim_lua = { kind = " " },
+      spell = { kind = " " },
+      treesitter = { kind = " " },
+      tags = false,
+      snippets_nvim = false, -- { kind = " " },
+      -- emoji = { kind = " ﲃ " },
+      -- for emoji press : (idk how make this work?)
     };
   }
+
+  vim.lsp.protocol.CompletionItemKind = {
+    " text",
+    " method",
+    " function",
+    " constructor",
+    "ﰠ field",
+    " variable",
+    " class",
+    " interface",
+    " module",
+    " property",
+    " unit",
+    " value",
+    " enum",
+    " key",
+    "﬌ snippet",
+    " color",
+    " file",
+    " reference",
+    " folder",
+    " enum member",
+    " constant",
+    " struct",
+    "⌘ event",
+    " operator",
+    "♛ type",
+  }
+
 end
 
 function config.vim_vsnip()
-  vim.g.vsnip_snippet_dir = os.getenv('HOME') .. '/.config/nvim/snippets'
+  vim.g.vsnip_snippet_dir = os.getenv('HOME') .. '/Dropbox/data.programming.forprivate/vsnip'
+  --   vim.g.vsnip_filetypes = {}
+  --   vim.g.vsnip_filetypes['typescript'] = ['javascript']
+  --   vim.g.vsnip_filetypes['svelte'] = ['javascript', 'typescript', 'html']
+  --
+  local remap = vim.api.nvim_set_keymap
+
+  remap(
+    "i",
+    "<C-f>",
+    "vsnip#jumpable(1) ? \"<Plug>(vsnip-jump-next)\" : \"<C-f>\"",
+    { silent = true, expr = true }
+  )
+  remap(
+    "s",
+    "<C-f>",
+    "vsnip#jumpable(1) ? \"<Plug>(vsnip-jump-next)\" : \"<C-f>\"",
+    { silent = true, expr = true }
+  )
+  remap(
+    "i",
+    "<C-b>",
+    "vsnip#jumpable(-1) ? \"<Plug>(vsnip-jump-prev)\" : \"<C-b>\"",
+    { silent = true, expr = true }
+  )
+  remap(
+    "s",
+    "<C-b>",
+    "vsnip#jumpable(-1) ? \"<Plug>(vsnip-jump-prev)\" : \"<C-b>\"",
+    { silent = true, expr = true }
+  )
 end
 
 function config.telescope()
@@ -47,10 +109,10 @@ function config.telescope()
       qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
     },
     extensions = {
-        fzy_native = {
-            override_generic_sorter = false,
-            override_file_sorter = true,
-        }
+      fzy_native = {
+        override_generic_sorter = false,
+        override_file_sorter = true,
+      }
     }
   }
   require('telescope').load_extension('fzy_native')

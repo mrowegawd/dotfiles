@@ -10,6 +10,7 @@ gls.left[1] = {
     highlight = {colors.blue,colors.bg}
   },
 }
+
 gls.left[2] = {
   ViMode = {
     provider = function()
@@ -27,6 +28,7 @@ gls.left[2] = {
     end,
   },
 }
+
 gls.left[3] = {
   FileSize = {
     provider = 'FileSize',

@@ -72,6 +72,7 @@ local function load_options()
     foldlevelstart = 99;
     ruler          = false;
     list           = true;
+    --     fillchars      = vim.o.fillchars .. "vert:│"; -- make vertical split sign better
     showtabline    = 2;
     winwidth       = 30;
     winminwidth    = 10;
@@ -135,35 +136,36 @@ local function load_options()
   end
   bind_option(bw_local)
 
+  vim.wo.wrap = false
+
 end
 
 
 local load_customplug = function()
 
-    vim.g.vimwiki_list           = {{
-      path= global.home .. '/Dropbox/vimwiki',
-      index= 'home',
-      auto_diary_index= 1,
-      automatic_nested_syntaxes=  1,
-      syntax= 'markdown',
-      template_default= 'markdown',
-      ext= '.md'
-    }}
+  vim.g.vimwiki_list           = {{
+    path= global.home .. '/Dropbox/vimwiki',
+    index= 'home',
+    auto_diary_index= 1,
+    automatic_nested_syntaxes=  1,
+    syntax= 'markdown',
+    template_default= 'markdown',
+    ext= '.md'
+  }}
 
-    -- Disable ALL Vimwiki key mappings
-    -- let g:vimwiki_listsyms          = '✗○◐●✓'
-    vim.g.vimwiki_key_mappings      = { all_maps = 0}
-    vim.g.vimwiki_table_mappings    = 0
-    vim.g.vimwiki_folding           = 'expr'
-    vim.g.vimwiki_global_ext        = 0
-    vim.g.vimwiki_hl_cb_checked     = 1
-    vim.g.vimwiki_hl_headers        = 1
-    vim.g.vimwiki_markdown_link_ext = 1
+  -- Disable ALL Vimwiki key mappings
+  -- let g:vimwiki_listsyms          = '✗○◐●✓'
+  vim.g.vimwiki_key_mappings      = { all_maps = 0}
+  vim.g.vimwiki_table_mappings    = 0
+  vim.g.vimwiki_folding           = 'expr'
+  vim.g.vimwiki_global_ext        = 0
+  vim.g.vimwiki_hl_cb_checked     = 1
+  vim.g.vimwiki_hl_headers        = 1
+  vim.g.vimwiki_markdown_link_ext = 1
+
+  vim.g.tmux_navigator_disable_when_zoomed = 1
+  vim.g.maximizer_set_default_mapping = 0
 end
 
 load_options()
 load_customplug()
-
-
--- TODO: todo ini mesti ditaruh di mana?
-vim.wo.wrap = false

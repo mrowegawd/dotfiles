@@ -19,9 +19,9 @@ function config.dashboard()
   local home = os.getenv('HOME')
   vim.g.dashboard_footer_icon = '🐬 '
   vim.g.dashboard_preview_command = 'cat'
-  vim.g.dashboard_preview_pipeline = 'lolcat -F 0.3'
+  vim.g.dashboard_preview_pipeline = 'lolcat -F 0.2'
   vim.g.dashboard_preview_file = home .. '/.config/nvim/static/neovim.cat'
-  vim.g.dashboard_preview_file_height = 12
+  vim.g.dashboard_preview_file_height = 15
   vim.g.dashboard_preview_file_width = 80
   vim.g.dashboard_default_executive = 'telescope'
   vim.g.dashboard_custom_section = {
@@ -43,9 +43,6 @@ function config.dashboard()
     find_dotfiles = {
      description = {'  Open Personal dotfiles                  SPC f d'},
      command = 'Telescope dotfiles path=' .. home ..'/.dotfiles'},
-    go_source = {
-     description = {'  Find Go Source Code                     SPC f s'},
-     command = 'Telescope gosource'},
   }
 end
 
@@ -131,7 +128,7 @@ function config.gitsigns()
        ['n <A-DOWN>'] = { expr = true, "&diff ? ']g' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'"},
        ['n <A-UP>'] = { expr = true, "&diff ? '[g' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'"},
 
-       ['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
+       ['n <leader>ha'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
        ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
        ['n <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
        ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',

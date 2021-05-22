@@ -63,4 +63,6 @@ local load_core =function()
   pack.load_compile()
 end
 
+print(global.cache_dir)
+
 load_core()

@@ -31,8 +31,8 @@ local plug_map = {
   ["n|gd"]             = map_cr('<cmd>lua vim.lsp.buf.definition()<CR>'):with_noremap():with_silent(),
   ["n|gD"]             = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
   ["n|gs"]             = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
-  ["n|gr"]             = map_cr('Lspsaga rename'):with_noremap():with_silent(),
-  ["n|gh"]             = map_cr('Lspsaga lsp_finder'):with_noremap():with_silent(),
+  ["n|gR"]             = map_cr('Lspsaga rename'):with_noremap():with_silent(),
+  ["n|gr"]             = map_cr('Lspsaga lsp_finder'):with_noremap():with_silent(),
   ["n|gt"]             = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
   ["n|<Leader>cw"]     = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
   ["n|<Leader>ce"]     = map_cr('Lspsaga show_line_diagnostics'):with_noremap():with_silent(),
@@ -56,7 +56,7 @@ local plug_map = {
   ["n|<Leader>ff"]     = map_cu('Telescope find_myfiles'):with_noremap():with_silent(),
   ["n|<Leader>bb"]     = map_cu('Telescope buffers'):with_noremap():with_silent(),
   ["n|<Leader>fa"]     = map_cu('DashboardFindWord'):with_noremap():with_silent(),
-  ["n|<Leader>fb"]     = map_cu('Telescope file_browser'):with_noremap():with_silent(),
+  ["n|<Leader>fT"]     = map_cu('Telescope builtin'):with_noremap():with_silent(),
   ["n|<Leader>fg"]     = map_cu('Telescope git_files'):with_noremap():with_silent(),
   ["n|<Leader>fw"]     = map_cu('Telescope grep_myprompt'):with_noremap():with_silent(),
   ["n|<Leader>fW"]     = map_cu('Telescope grep_mypromptword'):with_noremap():with_silent(),
@@ -75,9 +75,18 @@ local plug_map = {
   --     ["n|k"]              = map_cmd('v:lua.enhance_jk_move("k")'):with_silent():with_expr(),
   -- Plugin QuickRun
   ["n|<Leader>r"]      = map_cr("<cmd> lua require'internal.quickrun'.run_command()"):with_noremap():with_silent(),
+  -- Plugin Fugitive
+  ["n|<leader>hs"]     = map_cr("Gstatus"):with_noremap():with_silent(),
+  ["n|<leader>hq"]     = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
+  ["n|<leader>hl"]     = map_cr("Gclog"):with_noremap():with_silent(),
+  ["n|<leader>hc"]     = map_cr("Gclog -- %"):with_noremap():with_silent(),
+  ["n|<leader>hb"]     = map_cr("Gblame"):with_noremap():with_silent(),
+  ["n|<leader>hf"]     = map_cr("0Gclog"):with_noremap():with_silent(),
+  -- Plugin Maximizer
+  ["n|<c-p>"]          = map_cr("MaximizerToggle"):with_noremap():with_silent(),
   -- Plugin Vista
   ["n|<Leader>v"]      = map_cu('Vista'):with_noremap():with_silent(),
-  -- Plugin vim-operator-surround
+  -- Plugin Vim-operator-surround
   ["n|sa"]             = map_cmd("<Plug>(operator-surround-append)"):with_silent(),
   ["n|sd"]             = map_cmd("<Plug>(operator-surround-delete)"):with_silent(),
   ["n|sr"]             = map_cmd("<Plug>(operator-surround-replace)"):with_silent(),
@@ -90,7 +99,7 @@ local plug_map = {
   ["n|F"]              = map_cmd("v:lua.enhance_ft_move('F')"):with_expr(),
   ["x|F"]              = map_cmd("v:lua.enhance_ft_move('F')"):with_expr(),
   ["o|F"]              = map_cmd("v:lua.enhance_ft_move('F')"):with_expr(),
-  -- Plugin vim_niceblock
+  -- Plugin Vim_niceblock
   ["x|I"]              = map_cmd("v:lua.enhance_nice_block('I')"):with_expr(),
   ["x|gI"]             = map_cmd("v:lua.enhance_nice_block('gI')"):with_expr(),
   ["x|A"]              = map_cmd("v:lua.enhance_nice_block('A')"):with_expr(),

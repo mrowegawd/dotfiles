@@ -12,7 +12,7 @@ local def_map = {
   ["n|J"]               = map_cmd('mzJ`z'):with_noremap(),
   ["n|<space><space>"]  = map_cmd('<c-^>'):with_noremap(),
   ["n|<c-f>"]           = map_cmd('/\\v'):with_noremap(),
-  ["v|<c-f>"]           = map_cmd('<Esc>/\\%V'):with_noremap(),
+--   ["v|<c-f>"]           = map_cmd('<Esc>/\\%V'):with_noremap(),
   ["n|]w"]              = map_cu('WhitespaceNext'):with_noremap(),
   ["n|[w"]              = map_cu('WhitespacePrev'):with_noremap(),
   ["n|<S-TAB>"]         = map_cu('bp'):with_noremap():with_silent(),
@@ -43,7 +43,6 @@ local def_map = {
   ["v|<Leader>u"]       = map_cmd('gu$a'):with_noremap(),
   -- Insert
   ["i|hh"]              = map_cmd('<Esc>'):with_noremap(),
-  ["i|<C-w>"]           = map_cmd('<C-[>diwa'):with_noremap(),
   ["i|<C-d>"]           = map_cmd('<Del>'):with_noremap(),
   ["i|<C-u>"]           = map_cmd('<C-G>u<C-U>'):with_noremap(),
   ["i|<C-h>"]           = map_cmd('<Left>'):with_noremap(),

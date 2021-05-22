@@ -1,6 +1,7 @@
 local config = {}
 
 function config.tmux_navigator()
+--   vim.g.tmux_navigator_disable_when_zoomed = 1
 end
 
 function config.obvious_resize()

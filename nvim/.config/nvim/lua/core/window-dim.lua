@@ -1,6 +1,6 @@
--- TODO: pindahkan ini ke event.lua
+-- Taken from and modified: https://github.com/wincent/wincent
 
-local focused_flag = 'wincent_focused'
+local focused_flag = 'gitmox_focused'
 
 local autocmds = {}
 
@@ -67,6 +67,7 @@ local focus_window = function()
       --       end
       vim.api.nvim_win_set_option(0, 'list', true)
       vim.api.nvim_win_set_option(0, 'conceallevel', 1)
+--       vim.api.nvim_command("hi! link EndOfBuffer ColorColumn")
     end)
     vim.api.nvim_win_set_var(0, focused_flag, true)
   end
