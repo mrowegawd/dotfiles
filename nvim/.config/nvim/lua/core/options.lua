@@ -80,7 +80,7 @@ local function load_options()
     helpheight     = 12;
     previewheight  = 12;
     showcmd        = false;
-    cmdheight      = 2;
+    cmdheight      = 1;
     cmdwinheight   = 5;
     equalalways    = false;
     laststatus     = 2;
@@ -163,7 +163,6 @@ local load_customplug = function()
   vim.g.vimwiki_hl_headers        = 1
   vim.g.vimwiki_markdown_link_ext = 1
 
-  vim.g.tmux_navigator_disable_when_zoomed = 1
   vim.g.maximizer_set_default_mapping = 0
 end
 

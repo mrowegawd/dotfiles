@@ -29,17 +29,17 @@ vim.cmd('command! -nargs=0 LspLog call v:lua.open_lsp_log()')
 vim.cmd('command! -nargs=0 LspRestart call v:lua.reload_lsp()')
 
 vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- Enable underline, use default values
-    underline = true,
-    -- Enable virtual text, override spacing to 4
-    virtual_text = true,
-    signs = {
-      enable = true,
-      priority = 20
-    },
-    -- Disable a feature
-    update_in_insert = false,
+vim.lsp.diagnostic.on_publish_diagnostics, {
+  -- Enable underline, use default values
+  underline = true,
+  -- Enable virtual text, override spacing to 4
+  virtual_text = true,
+  signs = {
+    enable = true,
+    priority = 20
+  },
+  -- Disable a feature
+  update_in_insert = false,
 })
 
 local enhance_attach = function(client,bufnr)
@@ -47,6 +47,13 @@ local enhance_attach = function(client,bufnr)
     format.lsp_before_save()
   end
   api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+  require "lsp_signature".on_attach({
+    bind = true, -- This is mandatory, otherwise border config won't get registered.
+    handler_opts = {
+      border = "single"
+    }
+  })
 end
 
 lspconfig.gopls.setup {

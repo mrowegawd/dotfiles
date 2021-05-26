@@ -31,6 +31,7 @@ local plug_map = {
   ["n|gd"]             = map_cr('<cmd>lua vim.lsp.buf.definition()<CR>'):with_noremap():with_silent(),
   ["n|gD"]             = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
   ["n|gs"]             = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
+--   ["i|<c-s>"]          = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
   ["n|gR"]             = map_cr('Lspsaga rename'):with_noremap():with_silent(),
   ["n|gr"]             = map_cr('Lspsaga lsp_finder'):with_noremap():with_silent(),
   ["n|gt"]             = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
@@ -48,7 +49,6 @@ local plug_map = {
   -- Plugin Floaterm
   ["n|<leader>tt"]     = map_cu('Lspsaga open_floaterm'):with_noremap():with_silent(),
   ["t|<leader>tt"]     = map_cu([[<C-\><C-n>:Lspsaga close_floaterm<CR>]]):with_noremap():with_silent(),
-  --     ["n|<Leader>g"]      = map_cu("Lspsaga open_floaterm lazygit"):with_noremap():with_silent(),
   -- Far.vim
   ["n|<Leader>fz"]     = map_cr('Farf'):with_noremap():with_silent();
   ["v|<Leader>fz"]     = map_cr('Farf'):with_noremap():with_silent();
@@ -58,25 +58,27 @@ local plug_map = {
   ["n|<Leader>fa"]     = map_cu('DashboardFindWord'):with_noremap():with_silent(),
   ["n|<Leader>fT"]     = map_cu('Telescope builtin'):with_noremap():with_silent(),
   ["n|<Leader>fg"]     = map_cu('Telescope git_files'):with_noremap():with_silent(),
+  ["n|<Leader>fh"]     = map_cu('Telescope oldfiles'):with_noremap():with_silent(),
   ["n|<Leader>fw"]     = map_cu('Telescope grep_myprompt'):with_noremap():with_silent(),
   ["n|<Leader>fW"]     = map_cu('Telescope grep_mypromptword'):with_noremap():with_silent(),
-  ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
+  -- ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
   ["n|<Leader>fl"]     = map_cu('Telescope loclist'):with_noremap():with_silent(),
   ["n|<Leader>fc"]     = map_cu('Telescope git_commits'):with_noremap():with_silent(),
   ["n|<Leader>ft"]     = map_cu('Telescope help_tags'):with_noremap():with_silent(),
   ["n|<Leader>fd"]     = map_cu('Telescope dotfiles path='..os.getenv("HOME")..'/moxconf/dotfiles'):with_noremap():with_silent(),
   --     ["n|<Leader>fs"]     = map_cu('Telescope gosource'):with_noremap():with_silent(),
   -- prodoc
-  ["n|gcc"]            = map_cu('ProComment'):with_noremap():with_silent(),
-  ["x|gcc"]            = map_cr('ProComment'),
-  ["n|gcj"]            = map_cu('ProDoc'):with_silent():with_silent(),
+--   ["n|gcc"]            = map_cu('ProComment'):with_noremap():with_silent(),
+--   ["x|gcc"]            = map_cr('ProComment'),
+--   ["n|gcj"]            = map_cu('ProDoc'):with_silent():with_silent(),
   -- Plugin acceleratedjk
   --     ["n|j"]              = map_cmd('v:lua.enhance_jk_move("j")'):with_silent():with_expr(),
   --     ["n|k"]              = map_cmd('v:lua.enhance_jk_move("k")'):with_silent():with_expr(),
   -- Plugin QuickRun
   ["n|<Leader>r"]      = map_cr("<cmd> lua require'internal.quickrun'.run_command()"):with_noremap():with_silent(),
   -- Plugin Fugitive
-  ["n|<leader>hs"]     = map_cr("Gstatus"):with_noremap():with_silent(),
+  ["n|<leader>hs"]     = map_cr("Git"):with_noremap():with_silent(),
+  ["n|<leader>hS"]     = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
   ["n|<leader>hq"]     = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
   ["n|<leader>hl"]     = map_cr("Gclog"):with_noremap():with_silent(),
   ["n|<leader>hc"]     = map_cr("Gclog -- %"):with_noremap():with_silent(),

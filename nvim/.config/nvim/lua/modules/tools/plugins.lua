@@ -11,8 +11,9 @@ tools['editorconfig/editorconfig-vim'] = {
   ft = { 'go','typescript','javascript','vim','rust','zig','c','cpp' }
 }
 
-tools['glepnir/prodoc.nvim'] = {
-  event = 'BufReadPre'
+tools['windwp/nvim-autopairs'] = {
+  event = 'BufReadPre',
+  requires = 'tpope/vim-commentary'
 }
 
 tools['liuchengxu/vista.vim'] = {
@@ -21,16 +22,16 @@ tools['liuchengxu/vista.vim'] = {
 }
 
 tools['brooth/far.vim'] = {
-  cmd = {'Far','Farp'},
+  cmd = {'Far','Farp', 'Farf', 'Farr'},
   config = function ()
     vim.g['far#source'] = 'rg'
+    vim.g['far#enable_undo'] = 1
   end
 }
 
 tools['tpope/vim-fugitive'] = {
-  config = function ()
---     vim.g['far#source'] = 'rg'
-  end
+  -- config = function ()
+  -- end
 }
 
 tools['iamcco/markdown-preview.nvim'] = {
@@ -44,8 +45,13 @@ tools['vimwiki/vimwiki'] = {
   cmd = {'VimwikiIndex'},
 }
 
-tools['tooldstein64/vim-startuptime'] = {
+tools['dstein64/vim-startuptime'] = {
   cmd = {'Startuptime'},
 }
+
+tools['szw/vim-maximizer'] = {
+  event = {'BufRead','BufNewFile'},
+}
+
 
 return tools

@@ -1,9 +1,9 @@
-WINDOW_ACTIVE_BG="#1f1f1f"
-WINDOW_NONACTIVE_BG="#282828"
+WINDOW_ACTIVE_BG="#282828"
+WINDOW_NONACTIVE_BG="#3c3836"
 
 COL_WHITE="#626262"
 
-BG_STATUSLINE="#2e2e2e"
+BG_STATUSLINE="#504945"
 BG_ACTIVE_STATUSLINE="#d3869b"
 
 left_separator=''
@@ -15,11 +15,11 @@ session_symbol=''
 window_status_current_fg=colour16 # black
 window_status_current_bg=colour4 # blue
 
-set -g pane-border-style bg=$WINDOW_ACTIVE_BG,fg=$WINDOW_NONACTIVE_BG
-setw -g pane-active-border-style bg=$WINDOW_ACTIVE_BG,fg=$WINDOW_NONACTIVE_BG
+set -g pane-border-style bg=$WINDOW_NONACTIVE_BG,fg=$WINDOW_ACTIVE_BG
+setw -g pane-active-border-style bg=$WINDOW_NONACTIVE_BG,fg=$WINDOW_ACTIVE_BG
 
-setw -g window-style bg=$WINDOW_ACTIVE_BG
-setw -g window-active-style bg=$WINDOW_NONACTIVE_BG
+setw -g window-style bg=$WINDOW_NONACTIVE_BG
+setw -g window-active-style bg=$WINDOW_ACTIVE_BG
 
 set -g status-fg colour8
 set -g status-bg $BG_STATUSLINE

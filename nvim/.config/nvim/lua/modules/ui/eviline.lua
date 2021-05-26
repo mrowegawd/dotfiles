@@ -1,7 +1,8 @@
 local gl = require('galaxyline')
-local colors = require('galaxyline.theme').default
+local colors = require('modules.ui._colors').gruvbox
 local condition = require('galaxyline.condition')
 local gls = gl.section
+
 gl.short_line_list = {'NvimTree','vista','dbui','packer'}
 
 gls.left[1] = {
@@ -16,14 +17,16 @@ gls.left[2] = {
     provider = function()
       -- auto change color according the vim mode
       local mode_color = {n = colors.red, i = colors.green,v=colors.blue,
-                          [''] = colors.blue,V=colors.blue,
-                          c = colors.magenta,no = colors.red,s = colors.orange,
-                          S=colors.orange,[''] = colors.orange,
-                          ic = colors.yellow,R = colors.violet,Rv = colors.violet,
-                          cv = colors.red,ce=colors.red, r = colors.cyan,
-                          rm = colors.cyan, ['r?'] = colors.cyan,
-                          ['!']  = colors.red,t = colors.red}
+      [''] = colors.blue,V=colors.blue,
+      c = colors.magenta,no = colors.red,s = colors.orange,
+      S = colors.orange,[''] = colors.orange,
+      ic = colors.yellow,R = colors.violet,Rv = colors.violet,
+      cv = colors.red,ce=colors.red, r = colors.cyan,
+      rm = colors.cyan, ['r?'] = colors.cyan,
+      ['!']  = colors.red,t = colors.red}
       vim.api.nvim_command('hi GalaxyViMode guifg='..mode_color[vim.fn.mode()] ..' guibg='..colors.bg)
+      --       vim.api.nvim_command('hi ColorColumn guibg=#504945')
+      --       vim.api.nvim_command('hi LineNr guibg=#504945')
       return '  '
     end,
   },

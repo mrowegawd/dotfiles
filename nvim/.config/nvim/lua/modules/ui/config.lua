@@ -46,6 +46,40 @@ function config.dashboard()
   }
 end
 
+function config.startify()
+  local startify_header = {
+      '  ██████╗ ██╗████████╗███╗   ███╗ ██████╗ ██╗  ██╗',
+      ' ██╔════╝ ██║╚══██╔══╝████╗ ████║██╔═══██╗╚██╗██╔╝',
+      ' ██║  ███╗██║   ██║   ██╔████╔██║██║   ██║ ╚███╔╝',
+      ' ██║   ██║██║   ██║   ██║╚██╔╝██║██║   ██║ ██╔██╗',
+      ' ╚██████╔╝██║   ██║   ██║ ╚═╝ ██║╚██████╔╝██╔╝ ██╗',
+      '  ╚═════╝ ╚═╝   ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝'
+  }
+
+  vim.g.startify_files_number           = 5
+  vim.g.startify_update_oldfiles        = 1
+  vim.g.startify_session_autoload       = 1
+  vim.g.startify_session_persistence    = 1 -- autoupdate sessions
+  vim.g.startify_session_delete_buffers = 1 -- delete all buffers when loading or closing a session, ignore unsaved buffers
+  vim.g.startify_change_to_dir          = 0 -- when opening a file or bookmark, change to its directory
+  vim.g.startify_fortune_use_unicode    = 1 -- beautiful symbols
+  vim.g.startify_padding_left           = 3 --the number of spaces used for left padding
+  vim.g.startify_session_remove_lines   = {'setlocal', 'winheight'} -- lines matching any of the patterns in this list, will be removed from the session file
+  vim.g.startify_session_sort           = 1 -- sort sessions by alphabet or modification time
+
+  vim.g.startify_custom_indices         = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'} -- MRU indices
+
+  vim.g.startify_custom_header          = startify_header
+
+  vim.g.startify_session_dir            = os.getenv("HOME") .. '/.cache/vim/sessions/'
+
+--   vim.g.startify_commands = {
+--        {'pu'= {'Update plugins',':PlugUpdate | PlugUpgrade'}},
+--        {'ps'= {'Plugins status', ':PlugStatus'}},
+--        {'h'=  {'Help', ':help'}}
+--       }
+
+end
 
 function config.nvim_tree()
   -- On Ready Event for Lazy Loading work

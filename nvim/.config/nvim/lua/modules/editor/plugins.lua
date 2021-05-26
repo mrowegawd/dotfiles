@@ -42,6 +42,6 @@ editor['kana/vim-niceblock']  = {
 
 editor['mg979/vim-visual-multi']  = { }
 
-editor['dhruvasagar/vim-dotoo'] = {  }
+editor['dhruvasagar/vim-dotoo'] = { }
 
 return editor
