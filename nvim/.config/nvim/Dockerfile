@@ -1,5 +1,5 @@
 FROM alpine:latest
-MAINTAINER RaphaelHuan
+# MAINTAINER RaphaelHuan
 
 RUN apk add --virtual build-deps --update \
   autoconf \

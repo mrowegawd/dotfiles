@@ -298,7 +298,7 @@ set foldtext=NeatFoldText()
 
 if has('folding')
   if has('windows')
-    " NOTE: by default vertical split dibatasi dengan line or dot-line,
+    " By default vertical split dibatasi dengan line or dot-line,
     "       but you can set your own.
     " - how to:
     " check example:

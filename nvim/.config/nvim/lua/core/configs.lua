@@ -38,15 +38,15 @@ M.copenloc_toggle = function(prefix)
 end
 
 M.handleURL = function()
-  --  TODO: buatkan nanti untuk grab word under selected cursor from visualline
+  --  TODO: we need grab words under visual-line mode
   --   local lines = fn.getpos("'<")
   --   print(vim.inspect(lines))
   --   print(vim.inspect(lines[2]), lines[3])
   --
-  local first_line, last_line = fn.getpos("'<")[2], fn.getpos("'>")[2]
-  local lines = fn.getline(first_line, last_line)
+--   local first_line, last_line = fn.getpos("'<")[2], fn.getpos("'>")[2]
+--   local lines = fn.getline(first_line, last_line)
 
-  print(vim.inspect(lines))
+--   print(vim.inspect(lines))
 
 
   local uri = fn.matchstr(fn.getline("."), [[[a-z]*:\/\/[^ >,;")]*]])

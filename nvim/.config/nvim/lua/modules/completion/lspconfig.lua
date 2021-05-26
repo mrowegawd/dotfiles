@@ -29,24 +29,52 @@ vim.cmd('command! -nargs=0 LspLog call v:lua.open_lsp_log()')
 vim.cmd('command! -nargs=0 LspRestart call v:lua.reload_lsp()')
 
 vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- Enable underline, use default values
-    underline = true,
-    -- Enable virtual text, override spacing to 4
-    virtual_text = true,
-    signs = {
-      enable = true,
-      priority = 20
-    },
-    -- Disable a feature
-    update_in_insert = false,
+vim.lsp.diagnostic.on_publish_diagnostics, {
+  -- Enable underline, use default values
+  underline = true,
+  -- Enable virtual text, override spacing to 4
+  virtual_text = true,
+  signs = {
+    enable = true,
+    prefix = "»",
+    spacing = 4,
+    priority = 20
+  },
+  -- Disable a feature
 })
+
+vim.fn.sign_define(
+  "LspDiagnosticsSignError",
+  { text = "", texthl = "LspDiagnosticsDefaultError" }
+)
+vim.fn.sign_define(
+  "LspDiagnosticsSignWarning",
+  { text = "", texthl = "LspDiagnosticsDefaultWarning" }
+)
+vim.fn.sign_define(
+  "LspDiagnosticsSignInformation",
+  { text = "", texthl = "LspDiagnosticsDefaultInformation" }
+)
+vim.fn.sign_define(
+  "LspDiagnosticsSignHint",
+  { text = "", texthl = "LspDiagnosticsDefaultHint" }
+)
 
 local enhance_attach = function(client,bufnr)
   if client.resolved_capabilities.document_formatting then
     format.lsp_before_save()
   end
   api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+  require "lsp_signature".on_attach({
+    bind = true, -- This is mandatory, otherwise border config won't get registered.
+    handler_opts = {
+      border = "double"
+    }
+  })
+
+  -- require("null-ls").setup {}
+  require("lsp-colors").setup()
 end
 
 lspconfig.gopls.setup {
@@ -100,6 +128,78 @@ lspconfig.clangd.setup {
 
 lspconfig.rust_analyzer.setup {
   capabilities = capabilities,
+}
+
+lspconfig.yamlls.setup {
+  settings = {
+    yaml = {
+      schemas = {
+        ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
+        ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
+        ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+        ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
+        ["http://json.schemastore.org/eslintrc"] = ".eslintrc.{yml,yaml}",
+        ["http://json.schemastore.org/babelrc"] = ".babelrc.{yml,yaml}",
+        ["http://json.schemastore.org/stylelintrc"] = ".stylelintrc.{yml,yaml}",
+        ["http://json.schemastore.org/circleciconfig"] = ".circleci/**/*.{yml,yaml}",
+        ["https://json.schemastore.org/kustomization"] = "kustomization.{yml,yaml}",
+        ["https://json.schemastore.org/cloudbuild"] = "*cloudbuild.{yml,yaml}",
+      },
+    },
+  }
+}
+
+lspconfig.jsonls.setup {
+  settings = {
+    json = {
+      schemas = {
+        {
+          description = "TypeScript compiler configuration file",
+          fileMatch = { "tsconfig.json", "tsconfig.*.json" },
+          url = "http://json.schemastore.org/tsconfig",
+        },
+        {
+          description = "Lerna config",
+          fileMatch = { "lerna.json" },
+          url = "http://json.schemastore.org/lerna",
+        },
+        {
+          description = "Babel configuration",
+          fileMatch = { ".babelrc.json", ".babelrc", "babel.config.json" },
+          url = "http://json.schemastore.org/lerna",
+        },
+        {
+          description = "ESLint config",
+          fileMatch = { ".eslintrc.json", ".eslintrc" },
+          url = "http://json.schemastore.org/eslintrc",
+        },
+        {
+          description = "Bucklescript config",
+          fileMatch = { "bsconfig.json" },
+          url = "https://bucklescript.github.io/bucklescript/docson/build-schema.json",
+        },
+        {
+          description = "Prettier config",
+          fileMatch = { ".prettierrc", ".prettierrc.json", "prettier.config.json" },
+          url = "http://json.schemastore.org/prettierrc",
+        },
+        {
+          description = "Vercel Now config",
+          fileMatch = { "now.json", "vercel.json" },
+          url = "http://json.schemastore.org/now",
+        },
+        {
+          description = "Stylelint config",
+          fileMatch = {
+            ".stylelintrc",
+            ".stylelintrc.json",
+            "stylelint.config.json",
+          },
+          url = "http://json.schemastore.org/stylelintrc",
+        },
+      },
+    },
+  },
 }
 
 local servers = {

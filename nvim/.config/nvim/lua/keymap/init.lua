@@ -16,7 +16,7 @@ local plug_map = {
   ["n|<leader>pu"]     = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait();
   ["n|<leader>pi"]     = map_cr("PackerInstall"):with_silent():with_noremap():with_nowait();
   ["n|<leader>pc"]     = map_cr("PackerCompile"):with_silent():with_noremap():with_nowait();
-  -- Lsp map work when insertenter and lsp start
+  -- LSP map work when insertenter and lsp start
   ["n|<leader>li"]     = map_cr("LspInfo"):with_noremap():with_silent():with_nowait(),
   ["n|<leader>ll"]     = map_cr("LspLog"):with_noremap():with_silent():with_nowait(),
   ["n|<leader>lr"]     = map_cr("LspRestart"):with_noremap():with_silent():with_nowait(),
@@ -37,10 +37,14 @@ local plug_map = {
   ["n|<Leader>cw"]     = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
   ["n|<Leader>ce"]     = map_cr('Lspsaga show_line_diagnostics'):with_noremap():with_silent(),
   ["n|<Leader>ct"]     = map_args("Template"),
-  ["n|<Leader>tf"]     = map_cu('DashboardNewFile'):with_noremap():with_silent(),
+  -- Plugin vim-dap
+  ["n|<Leader>da"]      = map_cr("<cmd>lua require'modules.editor._dap'.attachDebug()<CR>"):with_noremap():with_silent(),
+  ["n|<Leader>db"]      = map_cr("<cmd>lua require'dap'.toggle_breakpoint()<CR>"):with_noremap():with_silent(),
   -- Plugin nvim-tree
   ["n|<Leader>e"]      = map_cr('NvimTreeToggle'):with_noremap():with_silent(),
   ["n|<Leader>E"]      = map_cr('NvimTreeFindFile'):with_noremap():with_silent(),
+  -- Plugin todo-comments
+  ["n|<Leader>D"]      = map_cr('TodoQuickFix'):with_noremap():with_silent(),
   -- Plugin MarkdownPreview
   ["n|<Leader>om"]     = map_cu('MarkdownPreview'):with_noremap():with_silent(),
   -- Plugin DadbodUI
@@ -48,7 +52,6 @@ local plug_map = {
   -- Plugin Floaterm
   ["n|<leader>tt"]     = map_cu('Lspsaga open_floaterm'):with_noremap():with_silent(),
   ["t|<leader>tt"]     = map_cu([[<C-\><C-n>:Lspsaga close_floaterm<CR>]]):with_noremap():with_silent(),
-  --     ["n|<Leader>g"]      = map_cu("Lspsaga open_floaterm lazygit"):with_noremap():with_silent(),
   -- Far.vim
   ["n|<Leader>fz"]     = map_cr('Farf'):with_noremap():with_silent();
   ["v|<Leader>fz"]     = map_cr('Farf'):with_noremap():with_silent();
@@ -58,25 +61,36 @@ local plug_map = {
   ["n|<Leader>fa"]     = map_cu('DashboardFindWord'):with_noremap():with_silent(),
   ["n|<Leader>fT"]     = map_cu('Telescope builtin'):with_noremap():with_silent(),
   ["n|<Leader>fg"]     = map_cu('Telescope git_files'):with_noremap():with_silent(),
+  ["n|<Leader>fh"]     = map_cu('Telescope oldfiles'):with_noremap():with_silent(),
   ["n|<Leader>fw"]     = map_cu('Telescope grep_myprompt'):with_noremap():with_silent(),
   ["n|<Leader>fW"]     = map_cu('Telescope grep_mypromptword'):with_noremap():with_silent(),
-  ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
-  ["n|<Leader>fl"]     = map_cu('Telescope loclist'):with_noremap():with_silent(),
+  -- ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
+  ["n|<Leader>fQ"]     = map_cu('Telescope loclist'):with_noremap():with_silent(),
+  ["n|<Leader>fq"]     = map_cu('Telescope quickfix'):with_noremap():with_silent(),
   ["n|<Leader>fc"]     = map_cu('Telescope git_commits'):with_noremap():with_silent(),
   ["n|<Leader>ft"]     = map_cu('Telescope help_tags'):with_noremap():with_silent(),
   ["n|<Leader>fd"]     = map_cu('Telescope dotfiles path='..os.getenv("HOME")..'/moxconf/dotfiles'):with_noremap():with_silent(),
-  --     ["n|<Leader>fs"]     = map_cu('Telescope gosource'):with_noremap():with_silent(),
+  -- Plugin vim-projectionist
+  ["n|,av"]            = map_cu('AV'):with_noremap():with_silent(),
+  ["n|,aa"]            = map_cu('A'):with_noremap():with_silent(),
+  -- Plugin vim-test
+  ["n|tf"]             = map_cu('TestFile'):with_noremap():with_silent(),
+  ["n|tn"]             = map_cu('TestNearest -strategy=basic'):with_noremap():with_silent(),
+  ["n|ts"]             = map_cu('TestNearest --verbose'):with_noremap():with_silent(),
+  ["n|tl"]             = map_cu('TestLast'):with_noremap():with_silent(),
+  ["n|tg"]             = map_cu('TestVisit'):with_noremap():with_silent(),
   -- prodoc
-  ["n|gcc"]            = map_cu('ProComment'):with_noremap():with_silent(),
-  ["x|gcc"]            = map_cr('ProComment'),
-  ["n|gcj"]            = map_cu('ProDoc'):with_silent():with_silent(),
+  -- ["n|gcc"]            = map_cu('ProComment'):with_noremap():with_silent(),
+  -- ["x|gcc"]            = map_cr('ProComment'),
+  -- ["n|gcj"]            = map_cu('ProDoc'):with_silent():with_silent(),
   -- Plugin acceleratedjk
-  --     ["n|j"]              = map_cmd('v:lua.enhance_jk_move("j")'):with_silent():with_expr(),
-  --     ["n|k"]              = map_cmd('v:lua.enhance_jk_move("k")'):with_silent():with_expr(),
+  -- ["n|j"]              = map_cmd('v:lua.enhance_jk_move("j")'):with_silent():with_expr(),
+  -- ["n|k"]              = map_cmd('v:lua.enhance_jk_move("k")'):with_silent():with_expr(),
   -- Plugin QuickRun
   ["n|<Leader>r"]      = map_cr("<cmd> lua require'internal.quickrun'.run_command()"):with_noremap():with_silent(),
   -- Plugin Fugitive
-  ["n|<leader>hs"]     = map_cr("Gstatus"):with_noremap():with_silent(),
+  ["n|<leader>hs"]     = map_cr("Git"):with_noremap():with_silent(),
+  ["n|<leader>hS"]     = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
   ["n|<leader>hq"]     = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
   ["n|<leader>hl"]     = map_cr("Gclog"):with_noremap():with_silent(),
   ["n|<leader>hc"]     = map_cr("Gclog -- %"):with_noremap():with_silent(),
@@ -108,7 +122,7 @@ local plug_map = {
   ["n|<A-S-j>"]        = map_cu("ObviousResizeDown"):with_silent(),
   ["n|<A-S-h>"]        = map_cu("ObviousResizeLeft"):with_silent(),
   ["n|<A-S-l>"]        = map_cu("ObviousResizeRight"):with_silent(),
-  -- Wiki and Todo
+  -- Plugin Vimwiki
   ["n|,ww"]            = map_cu("VimwikiIndex"):with_silent()
 
 };

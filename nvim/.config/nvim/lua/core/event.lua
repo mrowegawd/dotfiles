@@ -30,7 +30,17 @@ function autocmd.load_autocmds()
       {"BufWritePre","*.bak","setlocal noundofile"};
       {"BufWritePre","*.tsx","lua vim.api.nvim_command('Format')"};
       {"BufWritePre","*.go","lua require('internal.golines').golines_format()"};
+      -- Forcing color for unwanted spaces
+      -- {"BufNewFile,BufRead,InsertLeave", "*","silent! match RedrawDebugRecompose /\\s\\+$/"};
+
+      -- Remember last position of file
+      {"BufWinEnter", "*", [[if line("'\"") > 1 && line("'\"") <= line('$') | execute "normal! g`\"^" | execute 'silent! ' . line("'\"") . 'foldopen!' | endif]]};
+
     };
+
+    -- " Highlight TODO, FIXME, NOTE, etc.
+    -- au Syntax * call matchadd('Todo', '\W\zs\(TODO\|FIXME\|CHANGED\|BUG\|HACK\)')
+    -- au Syntax * call matchadd('Debug', '\W\zs\(NOTE\|INFO\|IDEA\)')
 
     wins = {
       -- Highlight current line only on focused window
@@ -49,6 +59,10 @@ function autocmd.load_autocmds()
     ft = {
       {"FileType", "dashboard", "set showtabline=0 | autocmd WinLeave <buffer> set showtabline=2"};
       {"BufNewFile,BufRead","*.toml"," setf toml"},
+      {"BufNewFile,BufRead","*.org"," setf dotoo"},
+      {"TermOpen","*"," setf bufhidden=hide | :startinsert"},
+      {"TermOpen","*"," setf nonumber norelativenumber"},
+
     };
 
     yank = {

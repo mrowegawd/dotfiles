@@ -2,11 +2,20 @@ local ui = {}
 local conf = require('modules.ui.config')
 
 ui['glepnir/zephyr-nvim'] = {
-  config = [[vim.cmd('colorscheme zephyr')]]
+  config = [[vim.cmd('colorscheme base16-gruvbox-dark-hard')]],
+  requires = {
+    {"rafi/awesome-vim-colorschemes", opt=true},
+    {"chriskempson/base16-vim", opt=true},
+    {"flazz/vim-colorschemes", opt=true}
+  }
 }
 
-ui['glepnir/dashboard-nvim'] = {
-  config = conf.dashboard
+-- ui['glepnir/dashboard-nvim'] = {
+--   config = conf.dashboard
+-- }
+
+ui['mhinz/vim-startify'] = {
+  config = conf.startify
 }
 
 ui['glepnir/galaxyline.nvim'] = {
@@ -27,7 +36,7 @@ ui['akinsho/nvim-bufferline.lua'] = {
 }
 
 ui['kyazdani42/nvim-tree.lua'] = {
-  cmd = {'NvimTreeToggle','NvimTreeOpen', 'NvimTreeFindFile'},
+  -- cmd = {'NvimTreeToggle','NvimTreeOpen', 'NvimTreeFindFile'},
   config = conf.nvim_tree,
   requires = 'kyazdani42/nvim-web-devicons'
 }
@@ -36,10 +45,6 @@ ui['lewis6991/gitsigns.nvim'] = {
   event = {'BufRead','BufNewFile'},
   config = conf.gitsigns,
   requires = {'nvim-lua/plenary.nvim',opt=true}
-}
-
-ui['szw/vim-maximizer'] = {
-  event = {'BufRead','BufNewFile'},
 }
 
 

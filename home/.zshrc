@@ -13,7 +13,7 @@ echo "----------------------------"
 
 # If you want to debug zsh shell, you can use `zprof`
 #
-# NOTE: to debug, set PROFILE_CONFIG to `true`
+# To debug, set PROFILE_CONFIG to `true`
 PROFILE_CONFIG=false
 [[ $PROFILE_CONFIG == true ]] && zmodload zsh/zprof
 

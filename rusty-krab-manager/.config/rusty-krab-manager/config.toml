@@ -3,7 +3,7 @@
 task_filepath = "/home/mr00x/Dropbox/todo"
 
 # path to notification sound
-sound_filepath = "/home/mr00x/.config/rusty-krab-manager/google_tone.mp3" #NOTE: Ocean_man.mp3 is included in repo!
+sound_filepath = "/home/mr00x/.config/rusty-krab-manager/google_tone.mp3" #Ocean_man.mp3 is included in repo!
 
 # put tags for each assignment. Order dictates the rest
 tags = [ "todo", "job", "nvim", "postpone" ]

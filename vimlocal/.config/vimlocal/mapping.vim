@@ -675,7 +675,7 @@ if !has('nvim')
   " augroup DeleteTrailing
   "   autocmd!
   "   " Remove any leading spaces (not including tabs)
-  "   " NOTE: -- make vim slow
+  "   " WARN: Attention this au make vim slow
   "   autocmd BufWritePre,FileAppendPre,FileWritePre,FilterWritePre * :call CleanTrailingWhites('%s/\\s\\+$//e')
   " augroup END
 endif

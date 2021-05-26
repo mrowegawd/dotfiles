@@ -1,5 +1,5 @@
 
-# NOTE: file `.exports.zsh` ONLY for default export zsh
+# file `.exports.zsh` ONLY for default export zsh
 # if you want to set another export, use path: ~/.dotfiles/variables.sh
 
 export XDG_CONFIG_HOME="$HOME/.config"

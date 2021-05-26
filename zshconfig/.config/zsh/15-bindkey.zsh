@@ -1,5 +1,5 @@
 ###############################################################################
-# NOTE: Enter bindkey run :$bindkey -v
+# Enter bindkey run :$bindkey -v
 # and run `bindkey` again, you will get all list commands zsh
 # vim: ft=zsh sw=2 ts=2 et
 ###############################################################################
@@ -12,8 +12,9 @@ bindkey -M viins 'hh' vi-cmd-mode     # Changing <Esc> to mine bindkey
 # bindkey '^[[Z' reverse-menu-complete
 # bindkey '\ev' slash-backward-kill-word
 
-# NOTE: kalau fzf aktif, bindkey ini akan teroverwrite
+# If fzf activated this mapping will overwrited
 bindkey '^r'    history-incremental-pattern-search-backward
+
 bindkey '^s'    history-incremental-pattern-search-forward
 
 # bindkey "^[+" up-one-dir
