@@ -73,11 +73,22 @@ function config.startify()
 
   vim.g.startify_session_dir            = os.getenv("HOME") .. '/.cache/vim/sessions/'
 
---   vim.g.startify_commands = {
---        {'pu'= {'Update plugins',':PlugUpdate | PlugUpgrade'}},
---        {'ps'= {'Plugins status', ':PlugStatus'}},
---        {'h'=  {'Help', ':help'}}
---       }
+  vim.g.startify_commands = {
+    {['pu'] = {'Update plugins',':PackerSync'}},
+    {['ps'] = {'Plugins status', ':PackerStatus'}},
+    {['h'] =  {'Help', ':help'}}
+  }
+
+  -- vim.g.startify_lists = {
+  --   {
+  --     ['type'] = 'dir',
+  --     ['header'] = {" \uf0f3 Current Files in ", vim.fn.getcwd()}
+  --   }
+    -- {['type'] = 'files',    ['header'] = {" \uf059 History"},
+    -- {['type'] = 'sessions', ['header'] = {" \ue62e Sessions"}
+    -- {['type'] = 'bookmarks', ['header'] = {" \uf5c2 Bookmarks"}
+    -- {['type'] = 'commands', ['header'] = {" \uf085 Commands"},
+  -- }
 
 end
 

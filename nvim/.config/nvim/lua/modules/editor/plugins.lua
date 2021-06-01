@@ -66,7 +66,6 @@ editor['tpope/vim-projectionist'] = {
   config = conf.vim_projectionist
 }
 
-
 editor['mg979/vim-visual-multi']  = { }
 
 return editor

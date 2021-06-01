@@ -13,9 +13,9 @@ completion['neovim/nvim-lspconfig'] = {
 }
 
 completion['glepnir/lspsaga.nvim'] = {
-  cmd = 'Lspsaga',
+  cmd = 'Lspsaga'
 }
-
+--
 -- completion['jose-elias-alvarez/null-ls.nvim'] = {
 --   config = function()
 --     require("null-ls").setup {}

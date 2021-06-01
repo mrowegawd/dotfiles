@@ -66,7 +66,6 @@ tools['folke/todo-comments.nvim'] = {
   require = {
     {'nvim-lua/plenary.nvim',opt = true},
   }
-
 }
 
 

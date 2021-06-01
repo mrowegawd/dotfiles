@@ -31,6 +31,7 @@ local plug_map = {
   ["n|gd"]             = map_cr('<cmd>lua vim.lsp.buf.definition()<CR>'):with_noremap():with_silent(),
   ["n|gD"]             = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
   ["n|gs"]             = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
+  --   ["i|<c-s>"]          = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
   ["n|gR"]             = map_cr('Lspsaga rename'):with_noremap():with_silent(),
   ["n|gr"]             = map_cr('Lspsaga lsp_finder'):with_noremap():with_silent(),
   ["n|gt"]             = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
@@ -38,8 +39,9 @@ local plug_map = {
   ["n|<Leader>ce"]     = map_cr('Lspsaga show_line_diagnostics'):with_noremap():with_silent(),
   ["n|<Leader>ct"]     = map_args("Template"),
   -- Plugin vim-dap
-  ["n|<Leader>da"]      = map_cr("<cmd>lua require'modules.editor._dap'.attachDebug()<CR>"):with_noremap():with_silent(),
-  ["n|<Leader>db"]      = map_cr("<cmd>lua require'dap'.toggle_breakpoint()<CR>"):with_noremap():with_silent(),
+  ["n|<Leader>da"]     = map_cr("<cmd>lua require'modules.editor._dap'.attachDebug()<CR>"):with_noremap():with_silent(),
+  ["n|<Leader>db"]     = map_cr("<cmd>lua require'dap'.toggle_breakpoint()<CR>"):with_noremap():with_silent(),
+  ["n|<Leader>dn"]     = map_cr("<cmd>lua require'dap'.continue()<CR>"):with_noremap():with_silent(),
   -- Plugin nvim-tree
   ["n|<Leader>e"]      = map_cr('NvimTreeToggle'):with_noremap():with_silent(),
   ["n|<Leader>E"]      = map_cr('NvimTreeFindFile'):with_noremap():with_silent(),

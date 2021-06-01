@@ -41,6 +41,7 @@ vim.lsp.diagnostic.on_publish_diagnostics, {
     priority = 20
   },
   -- Disable a feature
+  update_in_insert = false,
 })
 
 vim.fn.sign_define(
@@ -69,12 +70,9 @@ local enhance_attach = function(client,bufnr)
   require "lsp_signature".on_attach({
     bind = true, -- This is mandatory, otherwise border config won't get registered.
     handler_opts = {
-      border = "double"
+      border = "single"
     }
   })
-
-  -- require("null-ls").setup {}
-  require("lsp-colors").setup()
 end
 
 lspconfig.gopls.setup {
