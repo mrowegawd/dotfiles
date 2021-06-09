@@ -89,6 +89,7 @@ function config.vim_dotoo()
     'TODO',
     'NEXT',
     'SOMEDAY',
+    'FIX',
     'WAITING',
     'HOLD',
     '|',
@@ -96,7 +97,7 @@ function config.vim_dotoo()
     'DONE',
   }
 
-  vim.g.org_state_keywords = { 'TODO', 'NEXT', 'SOMEDAY', 'DONE', 'CANCELLED' }
+  vim.g.org_state_keywords = { 'TODO', 'NEXT', 'SOMEDAY', 'DONE', 'CANCELLED', 'FIX' }
   vim.g.dotoo_headline_highlight_colors = {
     'Title',
     'Identifier',

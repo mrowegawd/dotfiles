@@ -66,8 +66,8 @@ local function load_options()
     backspace      = {"indent","eol","start"};
     -- diffopt        = {"filler","iwhite","internal",algorithm="patience"};
     diffopt        = {"internal","filler","vertical",context=5,foldcolumn=1,"indent-heuristic",algorithm="patience"};
-    -- completeopt    = { "menu", "menuone", "noselect", "noinsert" };
-    completeopt    = { "menuone", "noselect" };
+    completeopt    = { "menu", "menuone", "noselect", "noinsert" };
+    -- completeopt    = { "menuone", "noselect" };
     jumpoptions    = "stack";
     showmode       = false;
     shortmess      = "aoOTIcF";
