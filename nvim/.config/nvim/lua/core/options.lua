@@ -31,7 +31,7 @@ local function load_options()
     backup         = false;
     writebackup    = false;
     swapfile       = false;
-    undofile       = false;
+    undofile       = true;
     directory      = global.cache_dir .. "swag/";
     undodir        = global.cache_dir .. "undo/";
     backupdir      = global.cache_dir .. "backup/";
@@ -67,7 +67,6 @@ local function load_options()
     -- diffopt        = {"filler","iwhite","internal",algorithm="patience"};
     diffopt        = {"internal","filler","vertical",context=5,foldcolumn=1,"indent-heuristic",algorithm="patience"};
     completeopt    = { "menu", "menuone", "noselect", "noinsert" };
-    -- completeopt    = { "menuone", "noselect" };
     jumpoptions    = "stack";
     showmode       = false;
     shortmess      = "aoOTIcF";

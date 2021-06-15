@@ -26,34 +26,42 @@ function config.dashboard()
   vim.g.dashboard_default_executive = 'telescope'
   vim.g.dashboard_custom_section = {
     last_session = {
-      description = {'  Recently laset session                  SPC s l'},
+      description = {'  Recently laset session                 SPC s l'},
       command =  'SessionLoad'},
     find_history = {
-      description = {'  Recently opened files                   SPC f h'},
+      description = {'  Recently opened files                  SPC f h'},
       command =  'DashboardFindHistory'},
     find_file  = {
-      description = {'  Find  File                              SPC f f'},
+      description = {'  Find  File                             SPC f f'},
       command = 'Telescope find_files find_command=rg,--hidden,--files'},
     new_file = {
-     description = {'  File Browser                            SPC f b'},
-     command =  'Telescope file_browser'},
+      description = {'  File Browser                           SPC f b'},
+      command =  'Telescope file_browser'},
     find_word = {
-     description = {'  Find  word                              SPC f w'},
-     command = 'DashboardFindWord'},
+      description = {'  Find  word                             SPC f w'},
+      command = 'DashboardFindWord'},
     find_dotfiles = {
-     description = {'  Open Personal dotfiles                  SPC f d'},
-     command = 'Telescope dotfiles path=' .. home ..'/.dotfiles'},
+      description = {'  Open Personal dotfiles                 SPC f d'},
+      command = 'Telescope dotfiles path=' .. home ..'/.dotfiles'},
   }
 end
 
 function config.startify()
   local startify_header = {
-      '  ██████╗ ██╗████████╗███╗   ███╗ ██████╗ ██╗  ██╗',
-      ' ██╔════╝ ██║╚══██╔══╝████╗ ████║██╔═══██╗╚██╗██╔╝',
-      ' ██║  ███╗██║   ██║   ██╔████╔██║██║   ██║ ╚███╔╝',
-      ' ██║   ██║██║   ██║   ██║╚██╔╝██║██║   ██║ ██╔██╗',
-      ' ╚██████╔╝██║   ██║   ██║ ╚═╝ ██║╚██████╔╝██╔╝ ██╗',
-      '  ╚═════╝ ╚═╝   ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝'
+      '',
+      '      ▐▀▄      ▄▀▌   ▄▄▄▄▄▄▄',
+      '      ▌▒▒▀▄▄▄▄▄▀▒▒▐▄▀▀▒██▒██▒▀▀▄',
+      '     ▐▒▒▒▒▀▒▀▒▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄',
+      '     ▌▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▒▒▒▒▒▒▒▒▒▒▒▒▀▄',
+      '   ▀█▒▒▒█▌▒▒█▒▒▐█▒▒▒▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▌',
+      '   ▀▌▒▒▒▒▒▒▀▒▀▒▒▒▒▒▒▀▀▒▒▒▒▒▒▒▒▒▒▒▒▒▒▐   ▄▄',
+      '   ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▌▄█▒█',
+      '   ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█▒█▀',
+      '   ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒█▀',
+      '   ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▌',
+      '    ▌▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▐',
+      '     ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▌',
+      '      ▐▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▄▌',
   }
 
   vim.g.startify_files_number           = 5
@@ -70,7 +78,6 @@ function config.startify()
   vim.g.startify_custom_indices         = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18'} -- MRU indices
 
   vim.g.startify_custom_header          = startify_header
-
   vim.g.startify_session_dir            = os.getenv("HOME") .. '/.cache/vim/sessions/'
 
   vim.g.startify_commands = {
@@ -79,16 +86,28 @@ function config.startify()
     {['h'] =  {'Help', ':help'}}
   }
 
-  -- vim.g.startify_lists = {
-  --   {
-  --     ['type'] = 'dir',
-  --     ['header'] = {" \uf0f3 Current Files in ", vim.fn.getcwd()}
-  --   }
-    -- {['type'] = 'files',    ['header'] = {" \uf059 History"},
-    -- {['type'] = 'sessions', ['header'] = {" \ue62e Sessions"}
-    -- {['type'] = 'bookmarks', ['header'] = {" \uf5c2 Bookmarks"}
-    -- {['type'] = 'commands', ['header'] = {" \uf085 Commands"},
-  -- }
+  vim.g.startify_lists = {
+    {
+      ['type'] = 'dir',
+      ['header'] = { string.format("   Current Files in %s", vim.fn.getcwd())},
+    },
+    {
+      ['type'] = 'files',
+      ['header'] = {[[   History]]}
+    },
+    {
+      ['type'] = 'sessions',
+      ['header'] = {[[   Sessions]]}
+    },
+    {
+      ['type'] = 'bookmarks',
+      ['header'] = {[[   Bookmarks]]}
+    },
+    {
+      ['type'] = 'commands',
+      ['header'] = {[[ גּ  Commands]]}
+    }
+  }
 
 end
 
@@ -106,6 +125,7 @@ function config.nvim_tree()
   vim.g.nvim_tree_hijack_netrw = 1
   vim.g.nvim_tree_indent_markers = 1
   vim.g.nvim_tree_disable_keybindings = 0
+  vim.g.nvim_tree_ignore = { '.git', 'node_modules', '.cache' }
 
   local tree_cb = require("nvim-tree.config").nvim_tree_callback
 
@@ -178,7 +198,7 @@ function config.gitsigns()
        ['n <leader>ha'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
        ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
        ['n <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
-       ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
+       ['n <leader>hP'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
        ['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line()<CR>',
 
        -- Text objects

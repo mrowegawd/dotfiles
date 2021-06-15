@@ -46,13 +46,23 @@ editor['rhysd/vim-operator-surround'] = {
 -- }
 
 editor['mfussenegger/nvim-dap'] = {
+  -- event = 'BufReadPre',
+  -- opt = true,
+  requires = {
+    {'mfussenegger/nvim-dap-python'},
+  }
+
+}
+
+editor['rcarriga/nvim-dap-ui'] = {
   event = 'BufReadPre',
   config = conf.nvim_dap,
-  opt = true,
   requires = {
-    {'mfussenegger/nvim-dap-python', opt=true},
+    {'nvim-telescope/telescope-dap.nvim'},
     {'theHamsta/nvim-dap-virtual-text', opt= true},
+    {'rcarriga/nvim-dap-ui', opt= true},
   }
+
 }
 
 editor['vim-test/vim-test'] = {
@@ -67,5 +77,13 @@ editor['tpope/vim-projectionist'] = {
 }
 
 editor['mg979/vim-visual-multi']  = { }
+
+editor['gabrielpoca/replacer.nvim'] = {
+  ft = 'qf',
+  -- opt = true,
+  config = function()
+    vim.api.nvim_set_keymap('n', '<Leader>h', ':lua require("replacer").run()<cr>', { silent = true })
+  end
+}
 
 return editor

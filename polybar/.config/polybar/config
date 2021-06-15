@@ -6,8 +6,8 @@
 # BARSET ---------------------------------- {{{
 # ------------------------ [global/wm]
 [global/wm]
-margin-bottom       = 0
-margin-top          = 0
+margin-bottom       = 2
+margin-top          = 2
 
 [colors]
 iconfg              = ${xrdb:color5}
@@ -29,17 +29,16 @@ font-1              = TerminessTTF Nerd Font:size=10:style=bold;1
 font-2              = Siji:size=10:fontformat=truetype;style=regular;1
 font-3              = Wucon Siji:size=1:style=regular;1
 
-override-redirect   = false
-wm-restack          = bspwm
+; override-redirect   = true
 
 [bar/top]
-tray-position       = right
 
 inherit             = section/bar
 width               = 100%
 bottom              = false
-fixed-center        = true
+fixed-center        = false
 height              = 20
+enable-ipc          = true
 padding-left        = 1
 padding-right       = 1
 override-redirect   = false
@@ -56,7 +55,12 @@ foreground          = ${colors.foreground}
 
 ; modules-right     = pomo pulseaudio updates network memory filesystem powermenu
 modules-left        = appmenu round-left bspwm round-right round-left mpd round-right
-modules-right       = pomo pulseaudio round-left updates network temperature memory filesystem uptime round-right round-left time round-right powermenu
+modules-right       = pulseaudio round-left updates network temperature memory filesystem uptime round-right round-left time round-right powermenu
+
+tray-position       = right
+tray-padding        = 3
+
+wm-restack          = i3
 #
 # }}}
 
@@ -241,6 +245,7 @@ label-occupied-background = ${colors.background-bubble}
 label-occupied-padding = 1
 
 label-urgent = %icon%
+label-urgent-foreground = ${colors.background}
 label-urgent-background = ${colors.warnfg}
 label-urgent-padding = 1
 

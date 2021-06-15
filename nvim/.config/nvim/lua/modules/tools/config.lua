@@ -171,4 +171,9 @@ function config.todo_comments()
   }
 end
 
+
+function config.diffview()
+  -- body
+end
+
 return config

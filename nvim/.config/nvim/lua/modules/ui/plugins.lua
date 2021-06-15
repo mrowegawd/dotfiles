@@ -1,6 +1,18 @@
 local ui = {}
 local conf = require('modules.ui.config')
 
+ui['akinsho/nvim-bufferline.lua'] = {
+  config = conf.nvim_bufferline,
+  requires = 'kyazdani42/nvim-web-devicons'
+}
+
+ui['andymass/vim-matchup'] = {
+  opt = true,
+  config = function()
+    vim.g.loaded_matchit = 1
+  end
+}
+
 ui['glepnir/zephyr-nvim'] = {
   config = [[vim.cmd('colorscheme base16-gruvbox-dark-hard')]],
   requires = {
@@ -28,11 +40,6 @@ ui['lukas-reineke/indent-blankline.nvim'] = {
   event = 'BufRead',
   branch = 'lua',
   config = conf.indent_blakline
-}
-
-ui['akinsho/nvim-bufferline.lua'] = {
-  config = conf.nvim_bufferline,
-  requires = 'kyazdani42/nvim-web-devicons'
 }
 
 ui['kyazdani42/nvim-tree.lua'] = {

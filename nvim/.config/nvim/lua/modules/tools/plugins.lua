@@ -68,5 +68,10 @@ tools['folke/todo-comments.nvim'] = {
   }
 }
 
+tools['sindrets/diffview.nvim'] = {
+  cmd = { "DiffviewOpen" },
+  opt = true,
+  config = conf.diffview,
+}
 
 return tools

@@ -1,5 +1,44 @@
 local dap = require("dap")
+
 local g = vim.g
+local fn = vim.fn
+local api = vim.api
+
+fn.sign_define(
+  "DapBreakpoint",
+  { text = "綠", texthl = "", linehl = "", numhl = "" }
+)
+
+fn.sign_define(
+  "DapStopped",
+  { text = "->", texthl = "", linehl = "", numhl = "" }
+)
+
+local function gmap(mode, key, result, opts)
+  api.nvim_set_keymap(mode, key, result, opts)
+end
+
+local debug_mappings = {
+  ["<a-w>"] = "<cmd>lua require'dap'.step_out()<CR>",
+  ["<a-s>"] = "<cmd>lua require'dap'.step_over()<CR>",
+  ["<a-d>"] = "<cmd>lua require'dap'.step_into()<CR>",
+  ["<leader>dk"] = "<cmd>lua require'dap'.up()<CR>",
+  ["<leader>dj"] = "<cmd>lua require'dap'.down()<CR>",
+  ["<leader>d_"] = "<cmd>lua require'dap'.run_last<CR>",
+  ["<leader>dP"] = "<cmd>lua require'dap.ui.widgets'.hover()<CR>",
+  ["<leader>dA"] = "<cmd>lua require'dapui'.toggle()<CR>",
+  ["<leader>ds"] = "<cmd>lua local widgets=require'dap.ui.widgets';widgets.centered_float(widgets.scopes)<CR>",
+  ["<leader>de"] = "<cmd>lua require'dap'.set_exception_breakpoints({'all'})<CR>",
+  ["<leader>dr"] = "<cmd>lua require'dap'.repl.open({}, 'vsplit')<CR><C-w>l",
+
+  ["<leader>df"] = ":Telescope dap frames<CR>",
+  ["<leader>dB"] = ":Telescope dap list_breakpoints<CR>",
+  ["<leader>dc"] = ":Telescope dap commands<CR>",
+}
+
+for map_name,map_desc in pairs(debug_mappings) do
+  gmap("n", map_name, map_desc, { silent = true })
+end
 
 local debugJest = function(testName, filename)
   print("starting " .. testName .. " with file " .. filename)
@@ -27,7 +66,7 @@ end
 g.dap_virtual_text = true
 
 local attachDebug = function()
-  print("Debugger nvim-dap launched..")
+  print("Debugger dap launched..")
   -- PYTHON --------------------------------------------------------------- {{{
   require("dap-python").setup(
     os.getenv("HOME") .. "/.config/debugpy/bin/python",
