@@ -6,15 +6,10 @@ ui['akinsho/nvim-bufferline.lua'] = {
   requires = 'kyazdani42/nvim-web-devicons'
 }
 
-ui['andymass/vim-matchup'] = {
-  opt = true,
-  config = function()
-    vim.g.loaded_matchit = 1
-  end
-}
+ui['andymass/vim-matchup'] = { }
 
 ui['glepnir/zephyr-nvim'] = {
-  config = [[vim.cmd('colorscheme base16-gruvbox-dark-hard')]],
+  config = conf.set_colorscheme,
   requires = {
     {"rafi/awesome-vim-colorschemes", opt=true},
     {"chriskempson/base16-vim", opt=true},
@@ -36,11 +31,11 @@ ui['glepnir/galaxyline.nvim'] = {
   requires = 'kyazdani42/nvim-web-devicons'
 }
 
-ui['lukas-reineke/indent-blankline.nvim'] = {
-  event = 'BufRead',
-  branch = 'lua',
-  config = conf.indent_blakline
-}
+-- ui['lukas-reineke/indent-blankline.nvim'] = {
+--   event = 'BufRead',
+--   branch = 'lua',
+--   config = conf.indent_blakline
+-- }
 
 ui['kyazdani42/nvim-tree.lua'] = {
   -- cmd = {'NvimTreeToggle','NvimTreeOpen', 'NvimTreeFindFile'},

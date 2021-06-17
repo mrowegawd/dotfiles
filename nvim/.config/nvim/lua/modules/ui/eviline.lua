@@ -1,5 +1,5 @@
 local gl = require('galaxyline')
-local colors = require('modules.ui._colors').gruvbox
+local colors = require('modules.ui._colors').nm
 local condition = require('galaxyline.condition')
 local gls = gl.section
 
@@ -25,8 +25,6 @@ gls.left[2] = {
       rm = colors.cyan, ['r?'] = colors.cyan,
       ['!']  = colors.red,t = colors.red}
       vim.api.nvim_command('hi GalaxyViMode guifg='..mode_color[vim.fn.mode()] ..' guibg='..colors.bg)
-      vim.api.nvim_command(string.format('hi QuickFixLine guibg=%s gui=bold', "#334659"))
-      --       vim.api.nvim_command('hi LineNr guibg=#504945')
       return '  '
     end,
   },

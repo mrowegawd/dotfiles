@@ -75,7 +75,7 @@ local function load_options()
     foldlevelstart = 99;
     ruler          = false;
     list           = true;
-    --     fillchars      = vim.o.fillchars .. "vert:│"; -- make vertical split sign better
+    fillchars      = { vert="|",diff=" "};
     showtabline    = 2;
     winwidth       = 30;
     winminwidth    = 10;

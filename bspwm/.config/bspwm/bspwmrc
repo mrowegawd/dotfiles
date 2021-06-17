@@ -61,7 +61,7 @@ if [ ! -f $startup_lock_file ]; then
   sleep 2
   firefox &
   sleep 2
-  "/home/mr00x/.local/bin/Todoist" &
+  # "/home/mr00x/.local/bin/Todoist" &
   # "/home/mr00x/.local/bin/Notions" &
   clipmenud &
 fi

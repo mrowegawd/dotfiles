@@ -69,17 +69,21 @@ function autocmd.load_autocmds()
       {"TextYankPost", [[* silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=400})]]};
     };
 
-    -- window_dim = {
-    --   { "BufEnter", "*", "lua require'core.window-dim'.buf_enter()" },
-    --   { "InsertEnter", "*", "lua require'core.window-dim'.insert_enter()" },
-    --   { "InsertLeave", "*", "lua require'core.window-dim'.insert_leave()" },
-    --   { "FocusGained", "*", "lua require'core.window-dim'.focus_gained()" },
-    --   { "FocusLost", "*", "lua require'core.window-dim'.focus_lost()" },
-    --   { "WinEnter", "*", "lua require'core.window-dim'.win_enter()" },
-    --   { "WinLeave", "*", "lua require'core.window-dim'.win_leave()" },
-    --   { "BufNewFile", "*", "lua require'core.window-dim'.focus_gained()" },
-    --   { "BufReadPost", "*", "lua require'core.window-dim'.focus_gained()" },
-    -- }
+    window_dim = {
+      { "BufEnter", "*", "lua require'core.window-dim'.buf_enter()" },
+      { "InsertEnter", "*", "lua require'core.window-dim'.insert_enter()" },
+      { "InsertLeave", "*", "lua require'core.window-dim'.insert_leave()" },
+      { "FocusGained", "*", "lua require'core.window-dim'.focus_gained()" },
+      { "FocusLost", "*", "lua require'core.window-dim'.focus_lost()" },
+      { "WinEnter", "*", "lua require'core.window-dim'.win_enter()" },
+      { "WinLeave", "*", "lua require'core.window-dim'.win_leave()" },
+      { "BufNewFile", "*", "lua require'core.window-dim'.focus_gained()" },
+      { "BufReadPost", "*", "lua require'core.window-dim'.focus_gained()" },
+    },
+
+    color_update = {
+      {"ColorScheme", "*", [[lua require("modules.ui._colors").custom_hi()]]}
+    }
 
   }
 

@@ -46,6 +46,10 @@ function config.dashboard()
   }
 end
 
+function config.set_colorscheme()
+  vim.cmd('colorscheme base16-gruvbox-dark-hard')
+end
+
 function config.startify()
   local startify_header = {
       '',
