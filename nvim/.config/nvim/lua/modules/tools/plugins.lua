@@ -68,10 +68,10 @@ tools["iamcco/markdown-preview.nvim"] = {
     end
 }
 
-tools["vimwiki/vimwiki"] = {
-    cmd = {"VimwikiIndex"},
-    opt = true
-}
+-- tools["vimwiki/vimwiki"] = {
+--     cmd = {"VimwikiIndex"},
+--     opt = true
+-- }
 
 tools["tweekmonster/startuptime.vim"] = {
     cmd = {"StartupTime"}
@@ -83,10 +83,10 @@ tools["szw/vim-maximizer"] = {
     end
 }
 
-tools["dhruvasagar/vim-dotoo"] = {
-    event = {"BufRead", "BufNewFile"},
-    config = conf.vim_dotoo
-}
+-- tools["dhruvasagar/vim-dotoo"] = {
+--     event = {"BufRead", "BufNewFile"},
+--     config = conf.vim_dotoo
+-- }
 
 tools["folke/todo-comments.nvim"] = {
     cmd = {"TodoQuickFix"},

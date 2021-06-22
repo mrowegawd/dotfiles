@@ -117,4 +117,11 @@ M.diffview = function()
     end
 end
 
+M.zettel = function()
+    -- [[
+    -- cara menjalankan lua
+    vim.cmd([[au BufReadPre * ++once lua require('config.session').start()]])
+    -- ]]
+end
+
 return M

@@ -99,6 +99,7 @@ function config.telescope()
     require "telescope".load_extension("gosource")
     require "telescope".load_extension("grep_myprompt")
     require "telescope".load_extension("grep_mypromptword")
+    require "telescope".load_extension("grep_myprompt_live")
     require "telescope".load_extension("find_myfiles")
 
     -- Dap extensions

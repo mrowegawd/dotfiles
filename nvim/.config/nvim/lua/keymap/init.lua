@@ -16,6 +16,7 @@ local plug_map = {
 
     ),
     ["n|gb"] = map_cr("BufferLinePick"):with_noremap():with_silent(),
+    ["n|<leader>O"] = map_cmd("<cmd> lua require('internal.bufonly').buf_only()<CR>"):with_noremap():with_silent(),
     -- Packer
     ["n|<leader>pu"] = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait(),
     ["n|<leader>pi"] = map_cr("PackerInstall"):with_silent():with_noremap():with_nowait(),
@@ -27,24 +28,22 @@ local plug_map = {
     ["n|<C-UP>"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>"):with_silent():with_noremap(
 
     ):with_nowait(),
-    ["n|<C-DOWN>"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap(
-
-    ):with_nowait(),
-    ["n|<S-UP>"] = map_cr("Lspsaga diagnostic_jump_prev"):with_noremap():with_silent(),
-    ["n|<S-DOWN>"] = map_cr("Lspsaga diagnostic_jump_next"):with_noremap():with_silent(),
     ["n|K"] = map_cr("Lspsaga hover_doc"):with_noremap():with_silent(),
     ["n|ga"] = map_cr("Lspsaga code_action"):with_noremap():with_silent(),
     ["v|ga"] = map_cu("Lspsaga range_code_action"):with_noremap():with_silent(),
+    ["n|gA"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap():with_nowait(
+
+    ),
     ["n|gP"] = map_cr("Lspsaga preview_definition"):with_noremap():with_silent(),
-    ["n|gd"] = map_cr("<cmd>lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
-    ["n|gD"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
     ["n|gs"] = map_cr("Lspsaga signature_help"):with_noremap():with_silent(),
-    --   ["i|<c-s>"]          = map_cr('Lspsaga signature_help'):with_noremap():with_silent(),
     ["n|gR"] = map_cr("Lspsaga rename"):with_noremap():with_silent(),
-    ["n|gr"] = map_cr("Lspsaga lsp_finder"):with_noremap():with_silent(),
+    ["n|gd"] = map_cr("<cmd>lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
+    ["n|gr"] = map_cmd("<cmd>Telescope lsp_references<cr>"):with_noremap():with_silent(),
+    ["n|gD"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
     ["n|gt"] = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>cw"] = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
-    ["n|<Leader>ce"] = map_cr("Lspsaga show_line_diagnostics"):with_noremap():with_silent(),
+    ["n|<S-UP>"] = map_cr("Lspsaga diagnostic_jump_prev"):with_noremap():with_silent(),
+    ["n|<S-DOWN>"] = map_cr("Lspsaga diagnostic_jump_next"):with_noremap():with_silent(),
     ["n|<Leader>ct"] = map_args("Template"),
     -- Plugin vim-dap
     ["n|<Leader>da"] = map_cr("<cmd>lua require'modules.editor._dap'.attachDebug()<CR>"):with_noremap():with_silent(),
@@ -63,9 +62,6 @@ local plug_map = {
     -- Plugin Vim-floaterm
     ["n|<leader>tt"] = map_cu("FloatermToggle"):with_noremap():with_silent(),
     ["t|<leader>tt"] = map_cu([[<C-\><C-n>:FloatermToggle<CR>]]):with_noremap():with_silent(),
-    -- Far.vim
-    ["n|<Leader>fz"] = map_cr("Farf"):with_noremap():with_silent(),
-    ["v|<Leader>fz"] = map_cr("Farf"):with_noremap():with_silent(),
     -- Plugin Telescope
     ["n|<Leader>ff"] = map_cu("Telescope find_myfiles"):with_noremap():with_silent(),
     ["n|<Leader>bb"] = map_cu("Telescope buffers"):with_noremap():with_silent(),
@@ -74,6 +70,8 @@ local plug_map = {
     -- ["n|<Leader>fg"]     = map_cu('Telescope git_files'):with_noremap():with_silent(),
     ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
     ["n|<Leader>fw"] = map_cu("Telescope grep_myprompt"):with_noremap():with_silent(),
+    -- add ini sebagai search tags or words in vimwiki
+    ["n|<Leader>fG"] = map_cu("Telescope grep_myprompt_live"):with_noremap():with_silent(),
     ["n|<Leader>fW"] = map_cu("Telescope grep_mypromptword"):with_noremap():with_silent(),
     -- ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
     ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
