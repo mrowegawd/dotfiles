@@ -18,8 +18,9 @@ function config.nvim_compe()
             vsnip = {kind = "S "},
             nvim_lsp = {kind = " "},
             nvim_lua = {kind = " "},
-            spell = {kind = " "},
             treesitter = {kind = " "},
+            -- spell = {kind = " "},
+            spell = false,
             tags = false,
             snippets_nvim = false -- { kind = " " },
             -- emoji = { kind = " ﲃ " },
@@ -101,6 +102,9 @@ function config.telescope()
     require "telescope".load_extension("grep_mypromptword")
     require "telescope".load_extension("grep_myprompt_live")
     require "telescope".load_extension("find_myfiles")
+
+    -- Grep zettelkasten
+    require "telescope".load_extension("grep_zettel")
 
     -- Dap extensions
     require "telescope".load_extension("dap")

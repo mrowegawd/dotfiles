@@ -156,7 +156,11 @@ colors.custom_hi = function()
     )
 
     hi(string.format("hi VertSplit guibg=%s", colorcolumn))
-    hi("hi QuickFixLine guibg=#334659 gui=bold")
+    hi("hi! link QuickFixLine PmenuSel")
+
+    hi("hi link TelescopeSelection PmenuSel")
+    hi("hi link TelescopePreviewLine PmenuSel")
+    hi(string.format("highlight TelescopeMatching guifg=%s", colors.nm.red))
 end
 
 return colors

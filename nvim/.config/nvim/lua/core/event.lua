@@ -33,16 +33,17 @@ function autocmd.load_autocmds()
             {"BufWritePre", "*.tmp", "setlocal noundofile"},
             {"BufWritePre", "*.bak", "setlocal noundofile"},
             {"BufWritePre", "*.tsx", "lua vim.api.nvim_command('Format')"},
-            {"BufWritePre", "*.go", "lua require('internal.golines').golines_format()"},
+            {"BufWritePre", "*.go", "lua require('internal.golines').golines_format()"}
             -- Forcing color for unwanted spaces
             -- {"BufNewFile,BufRead,InsertLeave", "*","silent! match RedrawDebugRecompose /\\s\\+$/"};
 
+            -- We use plugin :)
             -- Remember last position of file
-            {
-                "BufWinEnter",
-                "*",
-                [[if line("'\"") > 1 && line("'\"") <= line('$') | execute "normal! g`\"^" | execute 'silent! ' . line("'\"") . 'foldopen!' | endif]]
-            }
+            -- {
+            --     "BufWinEnter",
+            --     "*",
+            --     [[if line("'\"") > 1 && line("'\"") <= line('$') | execute "normal! g`\"^" | execute 'silent! ' . line("'\"") . 'foldopen!' | endif]]
+            -- }
         },
         -- " Highlight TODO, FIXME, NOTE, etc.
         -- au Syntax * call matchadd('Todo', '\W\zs\(TODO\|FIXME\|CHANGED\|BUG\|HACK\)')

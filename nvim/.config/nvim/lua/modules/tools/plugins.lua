@@ -22,6 +22,7 @@ tools["simrat39/symbols-outline.nvim"] = {
     end
 }
 
+-- find and replace plugin, similar with 'Far' plugin
 tools["windwp/nvim-spectre"] = {
     module = "spectre",
     wants = {"plenary.nvim", "popup.nvim"},
@@ -63,6 +64,9 @@ tools["voldikss/vim-floaterm"] = {
 
 tools["iamcco/markdown-preview.nvim"] = {
     ft = "markdown",
+    run = function()
+        vim.fn["mkdp#util#install"]()
+    end,
     config = function()
         vim.g.mkdp_auto_start = 0
     end
@@ -72,6 +76,20 @@ tools["iamcco/markdown-preview.nvim"] = {
 --     cmd = {"VimwikiIndex"},
 --     opt = true
 -- }
+
+tools["fcpg/vim-waikiki"] = {
+    ft = "markdown"
+}
+
+tools["ethanholz/nvim-lastplace"] = {
+    config = function()
+        require "nvim-lastplace".setup {
+            lastplace_ignore_buftype = {"quickfix", "nofile", "help", "Outline"},
+            lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit", "NvimTree"},
+            lastplace_open_folds = true
+        }
+    end
+}
 
 tools["tweekmonster/startuptime.vim"] = {
     cmd = {"StartupTime"}

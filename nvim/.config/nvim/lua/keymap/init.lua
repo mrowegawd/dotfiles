@@ -11,6 +11,7 @@ local plug_map = {
     ["i|<CR>"] = map_cmd([[compe#confirm({ 'keys': "\<Plug>delimitMateCR", 'mode': '' })]]):with_noremap():with_expr():with_nowait(
 
     ),
+    ["i|<c-space>"] = map_cmd([[compe#complete()]]):with_noremap():with_expr():with_nowait(),
     -- person keymap
     ["n|mf"] = map_cr("<cmd>lua require('internal.fsevent').file_event()<CR>"):with_silent():with_nowait():with_noremap(
 
@@ -73,9 +74,10 @@ local plug_map = {
     -- add ini sebagai search tags or words in vimwiki
     ["n|<Leader>fG"] = map_cu("Telescope grep_myprompt_live"):with_noremap():with_silent(),
     ["n|<Leader>fW"] = map_cu("Telescope grep_mypromptword"):with_noremap():with_silent(),
+    ["n|<Leader>fq"] = map_cu("Telescope grep_zettel"):with_noremap():with_silent(),
     -- ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
     ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
-    ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
+    -- ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
     ["n|<Leader>fg"] = map_cu("Telescope git_status"):with_noremap():with_silent(),
     ["n|<Leader>fc"] = map_cu("Telescope git_commits"):with_noremap():with_silent(),
     ["n|<Leader>ft"] = map_cu("Telescope help_tags"):with_noremap():with_silent(),
