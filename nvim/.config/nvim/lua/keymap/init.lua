@@ -39,8 +39,9 @@ local plug_map = {
     ["n|gs"] = map_cr("Lspsaga signature_help"):with_noremap():with_silent(),
     ["n|gR"] = map_cr("Lspsaga rename"):with_noremap():with_silent(),
     ["n|gd"] = map_cr("<cmd>lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
-    ["n|gr"] = map_cmd("<cmd>Telescope lsp_references<cr>"):with_noremap():with_silent(),
-    ["n|gD"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
+    ["n|gD"] = map_cr("<cmd>vsplit | lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
+    ["n|gr"] = map_cmd("<cmd>Telescope lsp_references<CR>"):with_noremap():with_silent(),
+    ["n|gi"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
     ["n|gt"] = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>cw"] = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
     ["n|<S-UP>"] = map_cr("Lspsaga diagnostic_jump_prev"):with_noremap():with_silent(),
@@ -72,9 +73,10 @@ local plug_map = {
     ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
     ["n|<Leader>fw"] = map_cu("Telescope grep_myprompt"):with_noremap():with_silent(),
     -- add ini sebagai search tags or words in vimwiki
-    ["n|<Leader>fG"] = map_cu("Telescope grep_myprompt_live"):with_noremap():with_silent(),
+    ["n|<Leader>fn"] = map_cu("Telescope grep_myprompt_live"):with_noremap():with_silent(),
     ["n|<Leader>fW"] = map_cu("Telescope grep_mypromptword"):with_noremap():with_silent(),
-    ["n|<Leader>fq"] = map_cu("Telescope grep_zettel"):with_noremap():with_silent(),
+    ["n|<Leader>fz"] = map_cu("Telescope grep_zettel"):with_noremap():with_silent(),
+    ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
     -- ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
     ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
     -- ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
@@ -138,7 +140,8 @@ local plug_map = {
     -- Plugin Spectre
     ["n|,f"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
     ["v|,f"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent(),
-    ["n|,fw"] = map_cr("viw<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
+    ["n|,fw"] = map_cr("viw<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent(),
+    ["n|<leader>l"] = map_cr("<cmd>lua require('internal.qf_mode').keep()"):with_noremap():with_silent()
 }
 
 bind.nvim_load_mapping(plug_map)

@@ -1,7 +1,11 @@
 local config = {}
 
 function config.galaxyline()
-    require("modules.ui.eviline")
+    require("modules.ui.galaxyline")
+end
+
+function config.lualine()
+    require("modules.ui.lualine")
 end
 
 function config.nvim_bufferline()
@@ -147,7 +151,7 @@ function config.nvim_tree()
         end
     )
 
-    vim.g.nvim_tree_follow = 1
+    vim.g.nvim_tree_follow = 0
     vim.g.nvim_tree_hide_dotfiles = 0
     vim.g.nvim_tree_disable_netrw = 1
     vim.g.nvim_tree_hijack_netrw = 1

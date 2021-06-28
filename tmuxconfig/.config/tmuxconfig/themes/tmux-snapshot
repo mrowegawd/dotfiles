@@ -4,10 +4,11 @@ WINDOW_NONACTIVE_BG="#3c3836"
 COL_WHITE="#626262"
 
 BG_STATUSLINE="#504945"
-BG_ACTIVE_STATUSLINE="#d3869b"
+BG_ACTIVE_STATUSLINE="#d5c4a1"
 
 left_separator=''
-left_separator_black=''
+# left_separator_black=''
+left_separator_black=''
 right_separator=''
 right_separator_black=''
 session_symbol=''

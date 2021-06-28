@@ -8,15 +8,16 @@ function config.nvim_compe()
     require "compe".setup {
         enabled = true,
         debug = false,
+        autocomplete = true,
         min_length = 1,
+        allow_prefix_unmatch = true,
         preselect = "always",
-        allow_prefix_unmatch = false,
         source = {
+            vsnip = {kind = "S ", priority = 1, sort = true, fuzzy = true},
             path = {kind = " "},
             buffer = {kind = " "},
             calc = {kind = "  "},
-            vsnip = {kind = "S "},
-            nvim_lsp = {kind = " "},
+            nvim_lsp = {kind = " ", priority = 2, sort = true},
             nvim_lua = {kind = " "},
             treesitter = {kind = " "},
             -- spell = {kind = " "},
@@ -75,8 +76,51 @@ function config.telescope()
     if not packer_plugins["plenary.nvim"].loaded then
         vim.cmd [[packadd plenary.nvim]]
         vim.cmd [[packadd popup.nvim]]
-        vim.cmd [[packadd telescope-fzy-native.nvim]]
+        vim.cmd [[packadd telescope-fzf-native.nvim]]
     end
+    local action_state = require("telescope.actions.state")
+    local actions = require("telescope.actions")
+    local global_state = require("telescope.state")
+
+    local entry_to_qf = function(entry)
+        return {
+            bufnr = entry.bufnr,
+            filename = entry.filename,
+            lnum = entry.lnum,
+            col = entry.col,
+            text = entry.text or entry.value.text or entry.value
+        }
+    end
+
+    local calltest = function(prompt_bufnr, mode, target)
+        local picker = action_state.get_current_picker(prompt_bufnr)
+        local manager = picker.manager
+
+        local qf_entries = {}
+        for entry in manager:iter() do
+            table.insert(qf_entries, entry_to_qf(entry))
+        end
+
+        actions.close(prompt_bufnr)
+
+        local title = global_state.get_global_key("current_line")
+
+        if title == "" then
+            title = "Yo"
+        end
+
+        if target == "loclist" then
+            vim.fn.setloclist(picker.original_win_id, qf_entries, mode)
+        else
+            vim.fn.setqflist({}, " ", {title = title, id = "$", items = qf_entries})
+        end
+    end
+
+    local testcalltest = function(prompt_bufnr)
+        calltest(prompt_bufnr, "r")
+        vim.api.nvim_command("copen")
+    end
+
     require("telescope").setup {
         defaults = {
             prompt_prefix = "🔭 ",
@@ -86,16 +130,24 @@ function config.telescope()
             results_width = 0.6,
             file_previewer = require "telescope.previewers".vim_buffer_cat.new,
             grep_previewer = require "telescope.previewers".vim_buffer_vimgrep.new,
-            qflist_previewer = require "telescope.previewers".vim_buffer_qflist.new
+            qflist_previewer = require "telescope.previewers".vim_buffer_qflist.new,
+            mappings = {
+                i = {
+                    ["<F1>"] = testcalltest
+                }
+            }
         },
         extensions = {
-            fzy_native = {
-                override_generic_sorter = false,
-                override_file_sorter = true
+            fzf = {
+                fuzzy = false, -- false will only do exact matching
+                override_generic_sorter = false, -- override the generic sorter
+                override_file_sorter = true, -- override the file sorter
+                case_mode = "smart_case" -- or "ignore_case" or "respect_case"
+                -- the default case_mode is "smart_case"
             }
         }
     }
-    require "telescope".load_extension("fzy_native")
+    require "telescope".load_extension("fzf")
     require "telescope".load_extension("dotfiles")
     require "telescope".load_extension("gosource")
     require "telescope".load_extension("grep_myprompt")

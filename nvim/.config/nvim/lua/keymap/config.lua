@@ -66,3 +66,16 @@ _G.enhance_nice_block = function(key)
     }
     return t(map[key])
 end
+
+-- taken from: https://forum.zettelkasten.de/discussion/875/vim-users-how-did-you-set-up-vim-for-zettelkasten
+_G.nZettel = function(name)
+    name = name or "todo"
+
+    local zettel_path = os.getenv("HOME") .. "/MrKampang/vimwiki/daily/"
+    return zettel_path
+end
+
+-- vim.cmd [[command! -range -nargs=* Nzettel call v:lua.nZettel(<f-args>)]]
+--
+-- vim.cmd [[command! -nargs=1 Keep :execute ":" nZettel() . strftime("%Y%m%d%H%M") . " <args>.md"]]
+vim.cmd [[command! -nargs=1 NewZettel :execute ":e" v:lua.nZettel() . strftime("%Y%m%d%H%M") . " <args>.md"]]

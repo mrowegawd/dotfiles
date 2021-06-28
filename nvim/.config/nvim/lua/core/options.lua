@@ -24,7 +24,7 @@ local function load_options()
         virtualedit = "block",
         encoding = "utf-8",
         viewoptions = {"folds", "cursor", "curdir", "slash", "unix"},
-        sessionoptions = {"curdir", "help", "tabpages", "winsize"},
+        sessionoptions = {"curdir", "globals", "help", "tabpages", "winsize"},
         clipboard = "unnamedplus",
         wildignorecase = true,
         wildignore = {
@@ -54,16 +54,23 @@ local function load_options()
         viewdir = global.cache_dir .. "view/",
         spellfile = global.cache_dir .. "spell/en.uft-8.add",
         history = 2000,
+        --  ShaDa/viminfo:
+        --   ' - Maximum number of previously edited files marks
+        --   < - Maximum number of lines saved for each register
+        --   @ - Maximum number of items in the input-line history to be
+        --   s - Maximum size of an item contents in KiB
+        --   h - Disable the effect of 'hlsearch' when loading the shada
+        -- shada = !,'300,<50,@100,s10,h"
         shada = "!,'300,<50,@100,s10,h",
         backupskip = {"/tmp/*", "$TMPDIR/*", "$TMP/*", "$TEMP/*", "*/shm/*", "/private/var/*", ".vault.vim"},
         smarttab = true,
         shiftround = true,
         timeout = true,
         ttimeout = true,
-        timeoutlen = 500,
+        timeoutlen = 400,
         ttimeoutlen = 10,
         updatetime = 100,
-        redrawtime = 1500,
+        redrawtime = 600,
         ignorecase = true,
         smartcase = true,
         infercase = true,
@@ -72,7 +79,7 @@ local function load_options()
         complete = {".", "w", "b", "k"},
         inccommand = "split",
         -- grepformat     = "%f:%l:%c:%m";
-        -- grepprg        = 'rg --hidden --vimgrep --smart-case --';
+        grepprg = "rg --hidden --vimgrep --smart-case --",
         -- breakat        = [[\ \	;:,!?]];
         startofline = false,
         -- whichwrap      = "h,l,<,>,[,],~";
@@ -80,27 +87,18 @@ local function load_options()
         splitright = true,
         switchbuf = "useopen",
         backspace = {"indent", "eol", "start"},
-        -- diffopt        = {"filler","iwhite","internal",algorithm="patience"};
-        diffopt = {
-            "internal",
-            "filler",
-            "vertical",
-            context = 5,
-            foldcolumn = 1,
-            "indent-heuristic",
-            algorithm = "patience"
-        },
-        -- completeopt    = { "menu", "menuone", "noselect", "noinsert" };
-        completeopt = {"menuone,noselect"},
+        diffopt = {"filler", "iwhite", "internal", algorithm = "patience"},
+        completeopt = {"menu,menuone,noselect,noinsert"},
         jumpoptions = "stack",
         showmode = false,
-        shortmess = "aoOTIcF",
+        -- shortmess = "aoOTIcF",
+        shortmess = "filnxtToOFc",
         scrolloff = 2,
         sidescrolloff = 5,
         foldlevelstart = 99,
         ruler = false,
         list = true,
-        fillchars = {vert = "|", diff = " "},
+        fillchars = {vert = "|"},
         showtabline = 2,
         winwidth = 30,
         winminwidth = 10,
@@ -126,8 +124,10 @@ local function load_options()
         wrap = false,
         foldenable = true,
         linebreak = true,
-        formatoptions = "1jcroql",
+        -- formatoptions = "1jcroql",
+        formatoptions = "cqornj2",
         number = true,
+        numberwidth = 4,
         conceallevel = 2,
         signcolumn = "yes" -- enable sign column all the time, 4 column
     }

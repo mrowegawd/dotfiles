@@ -7,6 +7,9 @@
   autocrlf = input
   excludesfile = ~/.gitignore-global
 
+[interactive]
+  diffFilter = delta --color-only
+
 [color]
   ui = true
 

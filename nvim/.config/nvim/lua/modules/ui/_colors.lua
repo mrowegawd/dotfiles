@@ -120,6 +120,60 @@ end
 
 local colors = {}
 
+colors.icon = {
+    slant = {
+        -- Right = "",
+        Right = "",
+        -- "",
+        -- Left = ""
+        Left = ""
+    },
+    diagnostic = {
+        error = "",
+        warn = "",
+        info = "!"
+    },
+    diff = {
+        Add = "",
+        Modified = "",
+        Remove = ""
+    },
+    git = "",
+    mode = {
+        c = "🅒",
+        i = "🅘",
+        n = "🅝",
+        r = "🅡",
+        s = "🅢",
+        t = "🅣",
+        v = "🅥"
+    },
+    bullet = "•"
+}
+
+colors.num = {
+    "❶",
+    "❷",
+    "❸",
+    "❹",
+    "❺",
+    "❻",
+    "❼",
+    "❽",
+    "❾",
+    "❿",
+    "⓫",
+    "⓬",
+    "⓭",
+    "⓮",
+    "⓯",
+    "⓰",
+    "⓱",
+    "⓲",
+    "⓳",
+    "⓴"
+}
+
 colors.nm = test_name[theme_colors[theme_name]]
 
 -- au ColorScheme * ..updates custom hi
@@ -161,6 +215,12 @@ colors.custom_hi = function()
     hi("hi link TelescopeSelection PmenuSel")
     hi("hi link TelescopePreviewLine PmenuSel")
     hi(string.format("highlight TelescopeMatching guifg=%s", colors.nm.red))
+
+    -- hi(string.format("hi LspDiagnosticsSignError guibg=%s guifg=%s", colors.nm.bg, colorcolumn))
+    hi(string.format("hi LspDiagnosticsDefaultWarning guibg=%s guifg=%s", colorcolumn, colors.nm.yellow))
+    hi(string.format("hi LspDiagnosticsDefaultError guibg=%s guifg=%s", colorcolumn, colors.nm.red))
+    hi(string.format("hi LspDiagnosticsDefaultInformation guibg=%s guifg=%s", colorcolumn, colors.nm.fg))
+    hi(string.format("hi LspDiagnosticsDefaultHint guibg=%s guifg=%s", colorcolumn, colors.nm.fg))
 end
 
 return colors

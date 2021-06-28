@@ -1,23 +1,23 @@
 local telescope = require("telescope")
 local conf = require("telescope._extensions._configs")
 
--- this code not well btw..
--- local api = vim.api
+local api = vim.api
 
--- local function is_qf_window()
---     local filetype = api.nvim_buf_get_option(0, "filetype")
+local function is_qf_window()
+    local filetype = api.nvim_buf_get_option(0, "filetype")
 
---     if filetype ~= "qf" then
---         print("[!] Current window not in the quickfix window..")
---         return false
---     end
+    if filetype ~= "qf" then
+        return false
+    end
 
---     return true
--- end
+    print("[!] you still inside quickfix morron..~_~")
+    return true
+end
 
 local function removeDuplicates(arr)
     local newArray = {}
     local checkerTbl = {}
+    -- TODO: use async? :QUESTION:
     for _, element in ipairs(arr) do
         -- [[if there is not yet a value at the index of element, then it will
         -- be nil, which will operate like false in an if statement
@@ -32,15 +32,15 @@ end
 
 -- TODO: create telescope zettel :DONE:
 local grep_zettel = function(opts)
-    -- if is_qf_window() == false then
-    --     return
-    -- end
+    if is_qf_window() then
+        return
+    end
 
     local path = {}
 
     local _qf = vim.fn.getqflist()
 
-    -- The able 'path' still contains duplicate elements
+    -- the table 'path' still contains duplicate elements
     for i = 1, #_qf do
         table.insert(path, vim.fn.bufname(_qf[i].bufnr))
     end
@@ -49,7 +49,6 @@ local grep_zettel = function(opts)
         return
     end
 
-    -- TODO: use async? maybe coroutine? :QUESTION:
     opts =
         {
         vimgrep_arguments = conf.custom_vimgrep_arguments,

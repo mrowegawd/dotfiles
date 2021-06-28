@@ -27,9 +27,14 @@ ui["mhinz/vim-startify"] = {
     config = conf.startify
 }
 
-ui["glepnir/galaxyline.nvim"] = {
-    branch = "main",
-    config = conf.galaxyline,
+-- ui["glepnir/galaxyline.nvim"] = {
+--     branch = "main",
+--     config = conf.galaxyline,
+--     requires = "kyazdani42/nvim-web-devicons"
+-- }
+
+ui["hoob3rt/lualine.nvim"] = {
+    config = conf.lualine,
     requires = "kyazdani42/nvim-web-devicons"
 }
 
