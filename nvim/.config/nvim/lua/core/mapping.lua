@@ -46,6 +46,8 @@ local def_map = {
     ["n|<Leader>Q"] = map_cr('lua require("core.configs").copenloc_toggle("l")'):with_noremap():with_silent(),
     ["v|<Leader>U"] = map_cmd("gU$a"):with_noremap(),
     ["v|<Leader>u"] = map_cmd("gu$a"):with_noremap(),
+    ["v|<"] = map_cmd("<gv"):with_noremap(),
+    ["v|>"] = map_cmd(">gv"):with_noremap(),
     -- Insert
     ["i|hh"] = map_cmd("<Esc>"):with_noremap(),
     ["i|<C-d>"] = map_cmd("<Del>"):with_noremap(),
