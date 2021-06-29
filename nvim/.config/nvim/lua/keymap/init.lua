@@ -38,7 +38,7 @@ local plug_map = {
     ["n|gd"] = map_cr("<cmd>lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
     ["n|gD"] = map_cr("<cmd>vsplit | lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
     ["n|gr"] = map_cmd("<cmd>Telescope lsp_references<CR>"):with_noremap():with_silent(),
-    ["n|gi"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
+    ["n|gI"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
     ["n|gt"] = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>cw"] = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
     ["n|<S-UP>"] = map_cr("<cmd>lua vim.lsp.diagnostic.goto_prev { popup_opts = {show_header = false} }<CR>"):with_noremap(

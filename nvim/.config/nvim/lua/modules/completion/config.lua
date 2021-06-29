@@ -13,11 +13,11 @@ function config.nvim_compe()
         allow_prefix_unmatch = true,
         preselect = "always",
         source = {
-            vsnip = {kind = "S ", priority = 1, sort = true, fuzzy = true},
+            vsnip = {kind = "S ", priority = 2000, sort = true, fuzzy = false},
             path = {kind = " "},
             buffer = {kind = " "},
             calc = {kind = "  "},
-            nvim_lsp = {kind = " ", priority = 2, sort = true},
+            nvim_lsp = {kind = " "},
             nvim_lua = {kind = " "},
             treesitter = {kind = " "},
             -- spell = {kind = " "},
@@ -155,7 +155,7 @@ function config.telescope()
     require "telescope".load_extension("grep_myprompt_live")
     require "telescope".load_extension("find_myfiles")
 
-    -- Grep zettelkasten
+    -- Grep zettel
     require "telescope".load_extension("grep_zettel")
 
     -- Dap extensions
