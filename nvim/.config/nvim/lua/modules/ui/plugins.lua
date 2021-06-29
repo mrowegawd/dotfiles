@@ -6,7 +6,9 @@ ui["akinsho/nvim-bufferline.lua"] = {
     requires = "kyazdani42/nvim-web-devicons"
 }
 
+-- matching tag even better
 ui["andymass/vim-matchup"] = {
+    cmd = {"DoMatchParen"},
     event = {"BufRead", "BufNewFile"}
 }
 

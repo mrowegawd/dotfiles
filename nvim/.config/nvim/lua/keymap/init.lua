@@ -26,26 +26,27 @@ local plug_map = {
     ["n|<leader>li"] = map_cr("LspInfo"):with_noremap():with_silent():with_nowait(),
     ["n|<leader>ll"] = map_cr("LspLog"):with_noremap():with_silent():with_nowait(),
     ["n|<leader>lr"] = map_cr("LspRestart"):with_noremap():with_silent():with_nowait(),
-    ["n|<C-UP>"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>"):with_silent():with_noremap(
-
-    ):with_nowait(),
-    ["n|K"] = map_cr("Lspsaga hover_doc"):with_noremap():with_silent(),
+    ["n|K"] = map_cmd("<cmd>lua vim.lsp.buf.hover()<CR>"):with_noremap():with_silent(),
     ["n|ga"] = map_cr("Lspsaga code_action"):with_noremap():with_silent(),
     ["v|ga"] = map_cu("Lspsaga range_code_action"):with_noremap():with_silent(),
     ["n|gA"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap():with_nowait(
 
     ),
-    ["n|gP"] = map_cr("Lspsaga preview_definition"):with_noremap():with_silent(),
-    ["n|gs"] = map_cr("Lspsaga signature_help"):with_noremap():with_silent(),
-    ["n|gR"] = map_cr("Lspsaga rename"):with_noremap():with_silent(),
+    ["n|gP"] = map_cmd("<cmd>lua require('keymap._test').preview_definition()<cr>"):with_noremap():with_silent(),
+    ["n|gs"] = map_cmd("<cmd>lua vim.lsp.buf.signature_help()<CR>"):with_noremap():with_silent(),
+    ["n|gR"] = map_cmd("<cmd>lua vim.lsp.buf.rename()<CR>"):with_noremap():with_silent(),
     ["n|gd"] = map_cr("<cmd>lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
     ["n|gD"] = map_cr("<cmd>vsplit | lua vim.lsp.buf.definition()<CR>"):with_noremap():with_silent(),
     ["n|gr"] = map_cmd("<cmd>Telescope lsp_references<CR>"):with_noremap():with_silent(),
     ["n|gi"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
     ["n|gt"] = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>cw"] = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
-    ["n|<S-UP>"] = map_cr("Lspsaga diagnostic_jump_prev"):with_noremap():with_silent(),
-    ["n|<S-DOWN>"] = map_cr("Lspsaga diagnostic_jump_next"):with_noremap():with_silent(),
+    ["n|<S-UP>"] = map_cr("<cmd>lua vim.lsp.diagnostic.goto_prev { popup_opts = {show_header = false} }<CR>"):with_noremap(
+
+    ):with_silent(),
+    ["n|<S-DOWN>"] = map_cr("<cmd>lua vim.lsp.diagnostic.goto_next { popup_opts = {show_header = false} }<CR>"):with_noremap(
+
+    ):with_silent(),
     ["n|<Leader>ct"] = map_args("Template"),
     -- Plugin vim-dap
     ["n|<Leader>da"] = map_cr("<cmd>lua require'modules.editor._dap'.attachDebug()<CR>"):with_noremap():with_silent(),

@@ -88,4 +88,6 @@ function pbind.nvim_load_mapping(mapping)
     end
 end
 
+-- pbind.preview_definition = require("keymap._test").preview_definition
+
 return pbind

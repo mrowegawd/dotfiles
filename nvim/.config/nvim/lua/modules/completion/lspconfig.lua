@@ -1,38 +1,28 @@
 local api = vim.api
+local lsp = vim.lsp
 local lspconfig = require "lspconfig"
 local global = require "core.global"
 -- local format = require("modules.completion.format")
 
-if not packer_plugins["lspsaga.nvim"].loaded then
-    vim.cmd [[packadd lspsaga.nvim]]
-end
-
-local saga = require "lspsaga"
-saga.init_lsp_saga(
-    {
-        code_action_icon = "💡"
-    }
-)
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+local capabilities = lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 function _G.reload_lsp()
-    vim.lsp.stop_client(vim.lsp.get_active_clients())
+    lsp.stop_client(lsp.get_active_clients())
     vim.cmd [[edit]]
 end
 
 function _G.open_lsp_log()
-    local path = vim.lsp.get_log_path()
+    local path = lsp.get_log_path()
     vim.cmd("edit " .. path)
 end
 
 vim.cmd("command! -nargs=0 LspLog call v:lua.open_lsp_log()")
 vim.cmd("command! -nargs=0 LspRestart call v:lua.reload_lsp()")
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] =
-    vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics,
+lsp.handlers["textDocument/publishDiagnostics"] =
+    lsp.with(
+    lsp.diagnostic.on_publish_diagnostics,
     {
         -- Enable underline, use default values
         underline = true,
@@ -51,13 +41,13 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
 )
 
 -- taken from: https://gist.github.com/tjdevries/ccbe3b79bd918208f2fa8dfe15b95793
-vim.lsp.diagnostic.get_virtual_text_chunks_for_line = function(bufnr, line, line_diagnostics)
+lsp.diagnostic.get_virtual_text_chunks_for_line = function(bufnr, line, line_diagnostics)
     if #line_diagnostics == 0 then
         return nil
     end
 
     local line_length = #(vim.api.nvim_buf_get_lines(bufnr, line, line + 1, false)[1] or "")
-    local get_highlight = vim.lsp.diagnostic._get_severity_highlight_name
+    local get_highlight = lsp.diagnostic._get_severity_highlight_name
 
     -- Create a little more space between virtual text and contents
     local virt_texts = {{string.rep(" ", 80 - line_length)}}

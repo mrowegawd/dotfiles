@@ -214,7 +214,7 @@ colors.custom_hi = function()
 
     hi("hi link TelescopeSelection PmenuSel")
     hi("hi link TelescopePreviewLine PmenuSel")
-    hi(string.format("highlight TelescopeMatching guifg=%s", colors.nm.red))
+    hi(string.format("hi TelescopeMatching guifg=%s", colors.nm.red))
 
     -- hi(string.format("hi LspDiagnosticsSignError guibg=%s guifg=%s", colors.nm.bg, colorcolumn))
     hi(string.format("hi LspDiagnosticsDefaultWarning guibg=%s guifg=%s", colorcolumn, colors.nm.yellow))

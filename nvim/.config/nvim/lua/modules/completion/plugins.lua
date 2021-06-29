@@ -14,56 +14,6 @@ completion["neovim/nvim-lspconfig"] = {
     }
 }
 
-completion["glepnir/lspsaga.nvim"] = {
-    cmd = "Lspsaga"
-}
-
--- completion["dense-analysis/ale"] = {
---     event = "InsertEnter"
---     config = function()
---         -- These settings need to load first,
---         vim.g.ale_fixers = {
---             ["css"] = {"prettier"},
---             ["dart"] = {"dartfmt"},
---             ["javascript"] = {"prettier-standard"},
---             ["typescript"] = {"prettier", "eslint"},
---             ["json"] = {"prettier"},
---             ["ruby"] = {"standardrb"},
---             ["scss"] = {"prettier"},
---             ["yml"] = {"prettier"},
---             ["lua"] = {"luafmt"}
---         }
---         vim.g.ale_linters = {
---             ["css"] = {"csslint"},
---             ["eruby"] = {"erb"},
---             ["javascript"] = {"standard"},
---             ["typescript"] = {"eslint"},
---             ["json"] = {"jsonlint"},
---             ["markdown"] = {"mdl"},
---             ["ruby"] = {"standardrb"},
---             ["scss"] = {"sasslint"},
---             ["yaml"] = {"yamllint"}
---         }
---         vim.g.ale_completion_enabled = 0
---         vim.g.ale_fix_on_save = 1
---         vim.g.ale_hover_cursor = 0
---         vim.g.ale_lint_on_enter = 0
---         vim.g.ale_lint_on_filetype_changed = 0
---         vim.g.ale_lint_on_insert_leave = 0
---         vim.g.ale_lint_on_save = 1
---         vim.g.ale_lint_on_text_changed = "never"
---         vim.g.ale_linters_explicit = 1
---         vim.g.ale_open_list = 0
---         vim.g.ale_sign_error = "▶"
---         vim.g.ale_sign_warning = "▶"
---         vim.g.ale_sign_info = "▶"
---         vim.g.ale_sign_priority = 9
---         vim.g.ale_echo_cursor = 0
---         vim.g.ale_virtualtext_cursor = 1
---         vim.g.ale_virtualtext_prefix = " ▶ "
---     end
--- }
-
 completion["hrsh7th/nvim-compe"] = {
     event = "InsertEnter",
     config = conf.nvim_compe

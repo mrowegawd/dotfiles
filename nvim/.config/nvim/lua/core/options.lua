@@ -48,6 +48,7 @@ local function load_options()
         writebackup = false,
         swapfile = false,
         undofile = true,
+        guicursor = "a:block",
         directory = global.cache_dir .. "swag/",
         undodir = global.cache_dir .. "undo/",
         backupdir = global.cache_dir .. "backup/",

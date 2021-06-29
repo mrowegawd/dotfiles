@@ -94,42 +94,6 @@ function config.vim_floaterm()
     vim.g.floaterm_height = 0.9
 end
 
-function config.vim_dotoo()
-    -- vim.g['dotoo#agenda#files']    = {'~/Dropbox/vimwiki/org/*.org'}
-    -- vim.g.org_refile                = '~/Dropbox/vimwiki/org/refile.org'
-
-    vim.g["dotoo#agenda#files"] = {"~/MrKampang/vimwiki/org/*.org"}
-    vim.g.org_refile = "~/MrKampang/vimwiki/org/refile.org"
-    vim.g["dotoo#parser#todo_keywords"] = {
-        "TODO",
-        "NEXT",
-        "SOMEDAY",
-        "FIX",
-        "WAITING",
-        "HOLD",
-        "|",
-        "CANCELLED",
-        "DONE"
-    }
-
-    vim.g.org_state_keywords = {"TODO", "NEXT", "SOMEDAY", "DONE", "CANCELLED", "FIX"}
-    vim.g.dotoo_headline_highlight_colors = {
-        "Title",
-        "Identifier",
-        "Statement",
-        "PreProc",
-        "Type",
-        "Special",
-        "Constant"
-    }
-    vim.g["dotoo#agenda#warning_days"] = "30d"
-    -- hi dotoo_shade_stars ctermfg=NONE guifg='#000000'
-    -- hi link orgHeading2 Normal
-    vim.g.org_time = "%H:%M"
-    vim.g.org_date = "%Y-%m-%d %a"
-    vim.g.org_date_format = vim.g.org_date .. vim.g.org_time
-end
-
 function config.todo_comments()
     require("todo-comments").setup {
         signs = true, -- show icons in the signs column

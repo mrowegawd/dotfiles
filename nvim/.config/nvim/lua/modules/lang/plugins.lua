@@ -4,7 +4,10 @@ local conf = require("modules.lang.config")
 lang["nvim-treesitter/nvim-treesitter"] = {
     event = "BufRead",
     after = "telescope.nvim",
-    config = conf.nvim_treesitter
+    config = conf.nvim_treesitter,
+    require = {
+        "nvim-treesitter/playground"
+    }
 }
 
 lang["nvim-treesitter/nvim-treesitter-textobjects"] = {

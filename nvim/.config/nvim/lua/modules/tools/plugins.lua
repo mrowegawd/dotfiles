@@ -101,11 +101,6 @@ tools["szw/vim-maximizer"] = {
     end
 }
 
--- tools["dhruvasagar/vim-dotoo"] = {
---     event = {"BufRead", "BufNewFile"},
---     config = conf.vim_dotoo
--- }
-
 tools["folke/todo-comments.nvim"] = {
     cmd = {"TodoQuickFix"},
     config = conf.todo_comments,
