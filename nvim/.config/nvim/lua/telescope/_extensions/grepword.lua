@@ -1,9 +1,9 @@
 local telescope = require("telescope")
-local conf = require("telescope._extensions._configs")
+local conf = require("telescope._extensions.conf")
 
 local fn = vim.fn
 
-local grep_myprompt = function(opts)
+local grepword = function(opts)
     opts = opts or {}
     require("telescope.builtin").grep_string(
         {
@@ -15,4 +15,4 @@ local grep_myprompt = function(opts)
     )
 end
 
-return telescope.register_extension {exports = {grep_myprompt = grep_myprompt}}
+return telescope.register_extension {exports = {grepword = grepword}}

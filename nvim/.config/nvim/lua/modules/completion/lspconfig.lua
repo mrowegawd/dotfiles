@@ -89,6 +89,17 @@ local enhance_attach = function(client, bufnr)
 
     require("modules.completion._null_ls").setup()
 
+    local enable = false
+    -- if nls.has_formatter(ft) then
+    --     enable = client.name == "null-ls"
+    -- elseif efm_formatted[ft] then
+    --     enable = client.name == "efm"
+    -- else
+    --     enable = not (client.name == "efm" or client.name == "null-ls")
+    -- end
+
+    client.resolved_capabilities.document_formatting = enable
+
     require "lsp_signature".on_attach(
         {
             bind = true, -- This is mandatory, otherwise border config won't get registered.

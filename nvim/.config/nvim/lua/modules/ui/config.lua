@@ -213,11 +213,37 @@ function config.gitsigns()
     end
     require("gitsigns").setup {
         signs = {
-            add = {hl = "GitGutterAdd", text = "▋"},
-            change = {hl = "GitGutterChange", text = "▋"},
-            delete = {hl = "GitGutterDelete", text = "▋"},
-            topdelete = {hl = "GitGutterDeleteChange", text = "▔"},
-            changedelete = {hl = "GitGutterChange", text = "▎"}
+            -- add = {hl = "GitGutterAdd", text = "▋"},
+            -- change = {hl = "GitGutterChange", text = "▋"},
+            -- delete = {hl = "GitGutterDelete", text = "▋"},
+            -- topdelete = {hl = "GitGutterDeleteChange", text = "▔"},
+            -- changedelete = {hl = "GitGutterChange", text = "▎"}
+
+            add = {hl = "GitSignsAdd", text = "▍", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn"},
+            change = {
+                hl = "GitSignsChange",
+                text = "▍",
+                numhl = "GitSignsChangeNr",
+                linehl = "GitSignsChangeLn"
+            },
+            delete = {
+                hl = "GitSignsDelete",
+                text = "▸",
+                numhl = "GitSignsDeleteNr",
+                linehl = "GitSignsDeleteLn"
+            },
+            topdelete = {
+                hl = "GitSignsDelete",
+                text = "▾",
+                numhl = "GitSignsDeleteNr",
+                linehl = "GitSignsDeleteLn"
+            },
+            changedelete = {
+                hl = "GitSignsChange",
+                text = "▍",
+                numhl = "GitSignsChangeNr",
+                linehl = "GitSignsChangeLn"
+            }
         },
         keymaps = {
             -- Default keymap options

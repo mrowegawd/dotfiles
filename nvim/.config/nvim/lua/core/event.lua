@@ -98,8 +98,12 @@ function autocmd.load_autocmds()
         color_update = {
             {"ColorScheme", "*", [[lua require("modules.ui._colors").custom_hi()]]}
         }
+        -- mapping_au = {
+        --     {"FileType", "ft", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"}
+        -- }
     }
 
+    vim.cmd [[autocmd! FileType qf nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L]]
     autocmd.nvim_create_augroups(definitions)
 end
 

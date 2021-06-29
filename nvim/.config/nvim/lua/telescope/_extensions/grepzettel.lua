@@ -1,5 +1,5 @@
 local telescope = require("telescope")
-local conf = require("telescope._extensions._configs")
+local conf = require("telescope._extensions.conf")
 
 local api = vim.api
 
@@ -31,7 +31,7 @@ local function removeDuplicates(arr)
 end
 
 -- TODO: create telescope zettel :DONE:
-local grep_zettel = function(opts)
+local grepzettel = function(opts)
     if is_qf_window() then
         return
     end
@@ -60,4 +60,4 @@ local grep_zettel = function(opts)
     require("telescope.builtin").live_grep(opts)
 end
 
-return telescope.register_extension {exports = {grep_zettel = grep_zettel}}
+return telescope.register_extension {exports = {grepzettel = grepzettel}}

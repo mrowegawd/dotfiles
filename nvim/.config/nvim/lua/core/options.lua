@@ -82,6 +82,7 @@ local function load_options()
         inccommand = "split",
         -- grepformat     = "%f:%l:%c:%m";
         grepprg = "rg --hidden --vimgrep --smart-case --",
+        -- grepprg = "rg --vimgrep --glob --smart-case '!*{.git,node_modules,build,bin,obj,README.md,tags}'",
         -- breakat        = [[\ \	;:,!?]];
         startofline = false,
         -- whichwrap      = "h,l,<,>,[,],~";
@@ -93,8 +94,7 @@ local function load_options()
         completeopt = {"menu,menuone,noselect,noinsert"},
         jumpoptions = "stack",
         showmode = false,
-        -- shortmess = "aoOTIcF",
-        shortmess = "filnxtToOFc",
+        shortmess = vim.o.shortmess .. "c",
         scrolloff = 2,
         sidescrolloff = 5,
         foldlevelstart = 99,
@@ -189,6 +189,12 @@ local function load_options()
     vim.g.vimwiki_hl_headers = 1
     vim.g.vimwiki_markdown_link_ext = 1
     --- END
+
+    -- vsnip
+    vim.g.vsnip_filetypes = {
+        ["typescript"] = {"javascript"},
+        ["svelte"] = {"javascript", "typescript", "html"}
+    }
 end
 
 load_options()

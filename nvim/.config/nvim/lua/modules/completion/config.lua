@@ -76,6 +76,7 @@ function config.telescope()
     if not packer_plugins["plenary.nvim"].loaded then
         vim.cmd [[packadd plenary.nvim]]
         vim.cmd [[packadd popup.nvim]]
+        vim.cmd [[packadd cfilter]] -- for filter quickfix, :h cfilter-plugin
         vim.cmd [[packadd telescope-fzf-native.nvim]]
     end
     local action_state = require("telescope.actions.state")
@@ -92,7 +93,7 @@ function config.telescope()
         }
     end
 
-    local calltest = function(prompt_bufnr, mode, target)
+    local send_allqf = function(prompt_bufnr, mode, target)
         local picker = action_state.get_current_picker(prompt_bufnr)
         local manager = picker.manager
 
@@ -116,8 +117,8 @@ function config.telescope()
         end
     end
 
-    local testcalltest = function(prompt_bufnr)
-        calltest(prompt_bufnr, "r")
+    local send_to_allqf = function(prompt_bufnr)
+        send_allqf(prompt_bufnr, "r")
         vim.api.nvim_command("copen")
     end
 
@@ -133,14 +134,14 @@ function config.telescope()
             qflist_previewer = require "telescope.previewers".vim_buffer_qflist.new,
             mappings = {
                 i = {
-                    ["<F1>"] = testcalltest
+                    ["<F1>"] = send_to_allqf
                 }
             }
         },
         extensions = {
             fzf = {
                 fuzzy = false, -- false will only do exact matching
-                override_generic_sorter = false, -- override the generic sorter
+                override_generic_sorter = true, -- override the generic sorter
                 override_file_sorter = true, -- override the file sorter
                 case_mode = "smart_case" -- or "ignore_case" or "respect_case"
                 -- the default case_mode is "smart_case"
@@ -150,15 +151,15 @@ function config.telescope()
     require "telescope".load_extension("fzf")
     require "telescope".load_extension("dotfiles")
     require "telescope".load_extension("gosource")
-    require "telescope".load_extension("grep_myprompt")
-    require "telescope".load_extension("grep_mypromptword")
-    require "telescope".load_extension("grep_myprompt_live")
+    require "telescope".load_extension("grepword")
+    require "telescope".load_extension("grepcword")
+    require "telescope".load_extension("notes")
     require "telescope".load_extension("find_myfiles")
 
-    -- Grep zettel
-    require "telescope".load_extension("grep_zettel")
+    -- zettel
+    require "telescope".load_extension("grepzettel")
 
-    -- Dap extensions
+    -- dap
     require "telescope".load_extension("dap")
 end
 

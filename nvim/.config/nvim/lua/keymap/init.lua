@@ -17,15 +17,15 @@ local plug_map = {
 
     ),
     ["n|gb"] = map_cr("BufferLinePick"):with_noremap():with_silent(),
-    ["n|<leader>O"] = map_cmd("<cmd> lua require('internal.bufonly').buf_only()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>O"] = map_cmd("<cmd> lua require('internal.bufonly').buf_only()<CR>"):with_noremap():with_silent(),
     -- Packer
-    ["n|<leader>pu"] = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait(),
-    ["n|<leader>pi"] = map_cr("PackerInstall"):with_silent():with_noremap():with_nowait(),
-    ["n|<leader>pc"] = map_cr("PackerCompile"):with_silent():with_noremap():with_nowait(),
+    ["n|<Leader>pu"] = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait(),
+    ["n|<Leader>pi"] = map_cr("PackerInstall"):with_silent():with_noremap():with_nowait(),
+    ["n|<Leader>pc"] = map_cr("PackerCompile"):with_silent():with_noremap():with_nowait(),
     -- LSP map work when insertenter and lsp start
-    ["n|<leader>li"] = map_cr("LspInfo"):with_noremap():with_silent():with_nowait(),
-    ["n|<leader>ll"] = map_cr("LspLog"):with_noremap():with_silent():with_nowait(),
-    ["n|<leader>lr"] = map_cr("LspRestart"):with_noremap():with_silent():with_nowait(),
+    ["n|<Leader>li"] = map_cr("LspInfo"):with_noremap():with_silent():with_nowait(),
+    ["n|<Leader>ll"] = map_cr("LspLog"):with_noremap():with_silent():with_nowait(),
+    ["n|<Leader>lr"] = map_cr("LspRestart"):with_noremap():with_silent():with_nowait(),
     ["n|K"] = map_cmd("<cmd>lua vim.lsp.buf.hover()<CR>"):with_noremap():with_silent(),
     ["n|ga"] = map_cr("Lspsaga code_action"):with_noremap():with_silent(),
     ["v|ga"] = map_cu("Lspsaga range_code_action"):with_noremap():with_silent(),
@@ -40,7 +40,7 @@ local plug_map = {
     ["n|gr"] = map_cmd("<cmd>Telescope lsp_references<CR>"):with_noremap():with_silent(),
     ["n|gI"] = map_cmd("<cmd>lua vim.lsp.buf.implementation()<CR>"):with_noremap():with_silent(),
     ["n|gt"] = map_cmd("<cmd>lua vim.lsp.buf.type_definition()<CR>"):with_noremap():with_silent(),
-    ["n|<Leader>cw"] = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
+    ["n|gw"] = map_cmd("<cmd>lua vim.lsp.buf.workspace_symbol()<CR>"):with_noremap():with_silent(),
     ["n|<S-UP>"] = map_cr("<cmd>lua vim.lsp.diagnostic.goto_prev { popup_opts = {show_header = false} }<CR>"):with_noremap(
 
     ):with_silent(),
@@ -66,24 +66,19 @@ local plug_map = {
     ["n|<leader>tt"] = map_cu("FloatermToggle"):with_noremap():with_silent(),
     ["t|<leader>tt"] = map_cu([[<C-\><C-n>:FloatermToggle<CR>]]):with_noremap():with_silent(),
     -- Plugin Telescope
-    ["n|<Leader>ff"] = map_cu("Telescope find_myfiles"):with_noremap():with_silent(),
-    ["n|<Leader>bb"] = map_cu("Telescope buffers"):with_noremap():with_silent(),
-    ["n|<Leader>fa"] = map_cu("DashboardFindWord"):with_noremap():with_silent(),
     ["n|<Leader>fT"] = map_cu("Telescope builtin"):with_noremap():with_silent(),
-    -- ["n|<Leader>fg"]     = map_cu('Telescope git_files'):with_noremap():with_silent(),
-    ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
-    ["n|<Leader>fw"] = map_cu("Telescope grep_myprompt"):with_noremap():with_silent(),
-    -- add ini sebagai search tags or words in vimwiki
-    ["n|<Leader>fn"] = map_cu("Telescope grep_myprompt_live"):with_noremap():with_silent(),
-    ["n|<Leader>fW"] = map_cu("Telescope grep_mypromptword"):with_noremap():with_silent(),
-    ["n|<Leader>fz"] = map_cu("Telescope grep_zettel"):with_noremap():with_silent(),
-    ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
-    -- ["n|<Leader>fh"]     = map_cu('DashboardFindHistory'):with_noremap():with_silent(),
-    ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
-    -- ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
+    ["n|<Leader>fb"] = map_cu("Telescope buffers"):with_noremap():with_silent(),
+    ["n|<Leader>fk"] = map_cu("Telescope keymaps"):with_noremap():with_silent(),
+    ["n|<Leader>ff"] = map_cu("Telescope find_myfiles"):with_noremap():with_silent(),
     ["n|<Leader>fg"] = map_cu("Telescope git_status"):with_noremap():with_silent(),
-    ["n|<Leader>fc"] = map_cu("Telescope git_commits"):with_noremap():with_silent(),
+    ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
+    ["n|<Leader>fn"] = map_cu("Telescope notes"):with_noremap():with_silent(),
+    ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
+    ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
     ["n|<Leader>ft"] = map_cu("Telescope help_tags"):with_noremap():with_silent(),
+    ["n|<Leader>fW"] = map_cu("Telescope grepcword"):with_noremap():with_silent(),
+    ["n|<Leader>fw"] = map_cu("Telescope grepword"):with_noremap():with_silent(),
+    ["n|<Leader>fz"] = map_cu("Telescope grepzettel"):with_noremap():with_silent(),
     ["n|<Leader>fd"] = map_cu("Telescope dotfiles path=" .. os.getenv("HOME") .. "/moxconf/dotfiles"):with_noremap():with_silent(
 
     ),
@@ -102,14 +97,14 @@ local plug_map = {
     -- Plugin QuickRun
     ["n|<Leader>r"] = map_cr("<cmd> lua require'internal.quickrun'.run_command()"):with_noremap():with_silent(),
     -- Plugin Fugitive
-    ["n|<leader>hs"] = map_cr("Git"):with_noremap():with_silent(),
-    ["n|<leader>hS"] = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
-    ["n|<leader>hq"] = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
-    ["n|<leader>hl"] = map_cr("Gclog"):with_noremap():with_silent(),
+    ["n|<Leader>hs"] = map_cr("Git"):with_noremap():with_silent(),
+    ["n|<Leader>hS"] = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
+    ["n|<Leader>hq"] = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
+    ["n|<Leader>hl"] = map_cr("Gclog"):with_noremap():with_silent(),
     ["n|<Leader>hv"] = map_cr([[lua require("core.configs").diffview()]]):with_noremap():with_silent(),
-    ["n|<leader>hc"] = map_cr("Gclog -- %"):with_noremap():with_silent(),
-    ["n|<leader>hb"] = map_cr("Gblame"):with_noremap():with_silent(),
-    ["n|<leader>hf"] = map_cr("0Gclog"):with_noremap():with_silent(),
+    ["n|<Leader>hc"] = map_cr("Gclog -- %"):with_noremap():with_silent(),
+    ["n|<Leader>hb"] = map_cr("Gblame"):with_noremap():with_silent(),
+    ["n|<Leader>hf"] = map_cr("0Gclog"):with_noremap():with_silent(),
     -- Plugin Maximizer
     ["n|<c-p>"] = map_cr("MaximizerToggle"):with_noremap():with_silent(),
     -- Plugin SymbolsOutline
@@ -141,8 +136,7 @@ local plug_map = {
     -- Plugin Spectre
     ["n|,f"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
     ["v|,f"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent(),
-    ["n|,fw"] = map_cr("viw<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent(),
-    ["n|<leader>l"] = map_cr("<cmd>lua require('internal.qf_mode').keep()"):with_noremap():with_silent()
+    ["n|,fw"] = map_cr("viw<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
 }
 
 bind.nvim_load_mapping(plug_map)
