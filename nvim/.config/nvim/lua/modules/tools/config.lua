@@ -42,7 +42,6 @@ function config.vim_dadbod_ui()
 end
 
 function config.nvim_spectre()
-
     require("spectre").setup(
         {
             find_engine = {
@@ -175,10 +174,6 @@ function config.todo_comments()
             -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
         }
     }
-end
-
-function config.diffview()
-    -- body
 end
 
 return config

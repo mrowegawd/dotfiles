@@ -27,11 +27,9 @@ local plug_map = {
     ["n|<Leader>ll"] = map_cr("LspLog"):with_noremap():with_silent():with_nowait(),
     ["n|<Leader>lr"] = map_cr("LspRestart"):with_noremap():with_silent():with_nowait(),
     ["n|K"] = map_cmd("<cmd>lua vim.lsp.buf.hover()<CR>"):with_noremap():with_silent(),
-    ["n|ga"] = map_cr("Lspsaga code_action"):with_noremap():with_silent(),
-    ["v|ga"] = map_cu("Lspsaga range_code_action"):with_noremap():with_silent(),
-    ["n|gA"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap():with_nowait(
-
-    ),
+    -- ["n|ga"] = map_cr("Lspsaga code_action"):with_noremap():with_silent(),
+    -- ["v|ga"] = map_cu("Lspsaga range_code_action"):with_noremap():with_silent(),
+    -- ["n|gA"] = map_cmd("<cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>"):with_silent():with_noremap():with_nowait(),
     ["n|gP"] = map_cmd("<cmd>lua require('keymap._test').preview_definition()<cr>"):with_noremap():with_silent(),
     ["n|gs"] = map_cmd("<cmd>lua vim.lsp.buf.signature_help()<CR>"):with_noremap():with_silent(),
     ["n|gR"] = map_cmd("<cmd>lua vim.lsp.buf.rename()<CR>"):with_noremap():with_silent(),

@@ -351,7 +351,25 @@ end
 
 autocmds.buf_enter = function()
     focus_window()
+
+    -- local has_lsp, _ = pcall(require, "gitsigns.nvim")
+    -- if not has_lsp then
+    --     return
+    -- else
+    --     print("loaded gitsigns")
+    --     vim.cmd("Gitsigns refresh")
+    -- end
 end
+
+-- autocmds.buf_read = function()
+--     local has_lsp, _ = pcall(require, "gitsigns.nvim")
+--     if not has_lsp then
+--         return
+--     end
+
+--     print("loaded gitsigns")
+--     vim.cmd("Gitsigns refresh")
+-- end
 
 autocmds.focus_gained = function()
     focus_window()
