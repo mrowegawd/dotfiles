@@ -31,23 +31,20 @@ require("lualine").setup(
         sections = {
             lualine_a = {"mode"},
             lualine_b = {"branch"},
-            -- lualine_c = {{"filename", path = 0, color = {fg = "#fff"}}, {"diff", colored = false}},
             lualine_c = {{"diagnostics", sources = {"nvim_lsp"}}, "filename"},
-            -- lualine_x = {"encoding", "fileformat", "filetype"},
             lualine_x = {"filetype", lsp_progress},
-            -- lualine_x = {"encoding", "fileformat", lsp_progress, "filetype"},
             lualine_y = {"progress"},
             lualine_z = {"location", clock}
         },
         inactive_sections = {
             lualine_a = {},
             lualine_b = {},
-            lualine_c = {{"filename", path = 1}},
+            lualine_c = {{"filename", path = 0}},
             lualine_x = {"location"},
             lualine_y = {},
             lualine_z = {}
         },
         tabline = {},
-        extensions = {}
+        extensions = {"quickfix", "nvim-tree", "fugitive"}
     }
 )
