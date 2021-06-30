@@ -53,7 +53,7 @@ ui["kyazdani42/nvim-tree.lua"] = {
 }
 
 ui["lewis6991/gitsigns.nvim"] = {
-    event = {"BufRead", "BufNewFile"},
+    event = "BufRead",
     config = conf.gitsigns,
     requires = {"nvim-lua/plenary.nvim", opt = true}
 }

@@ -32,8 +32,32 @@ tools["windwp/nvim-spectre"] = {
     }
 }
 
-tools["tpope/vim-fugitive"] = {
-    event = "BufRead"
+-- tools["tpope/vim-fugitive"] = {
+--     event = "BufRead"
+-- }
+
+tools["TimUntersberger/neogit"] = {
+    event = "BufRead",
+    config = function()
+        require("neogit").setup {
+            disable_signs = false,
+            disable_context_highlighting = true,
+            signs = {
+                -- { CLOSED, OPENED }
+                section = {"", ""},
+                item = {"+", "-"},
+                hunk = {"", ""}
+            },
+            integrations = {
+                diffview = true
+            }
+        }
+    end,
+    requires = {
+        "sindrets/diffview.nvim",
+        cmd = {"DiffViewOpen"},
+        module = "diffview"
+    }
 }
 
 tools["voldikss/vim-floaterm"] = {
@@ -90,10 +114,10 @@ tools["folke/todo-comments.nvim"] = {
     }
 }
 
-tools["sindrets/diffview.nvim"] = {
-    cmd = {"DiffviewOpen"},
-    opt = true,
-    config = conf.diffview
-}
+-- tools["sindrets/diffview.nvim"] = {
+--     cmd = {"DiffviewOpen"},
+--     opt = true,
+--     config = conf.diffview
+-- }
 
 return tools

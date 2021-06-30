@@ -335,6 +335,7 @@ autocmds.colorcolumn_filetype_blacklist = {
     ["fugitiveblame"] = true,
     ["undotree"] = true,
     ["dashboard"] = true,
+    ["NeogitStatus"] = true,
     ["qf"] = true
 }
 
