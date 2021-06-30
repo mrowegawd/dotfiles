@@ -319,7 +319,6 @@ local blur_window = function()
         vim.api.nvim_win_set_option(0, "winhighlight", winhighlight_blurred)
         when_supports_blur_and_focus(
             function()
-                --       print(filetype)
                 vim.api.nvim_win_set_option(0, "list", false)
                 vim.api.nvim_win_set_option(0, "conceallevel", 0)
             end
