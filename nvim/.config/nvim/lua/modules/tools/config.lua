@@ -41,6 +41,33 @@ function config.vim_dadbod_ui()
     vim.g.dbs = load_dbs()
 end
 
+function config.nvim_spectre()
+
+    require("spectre").setup(
+        {
+            find_engine = {
+                -- rg is map with finder_cmd
+                ["rg"] = {
+                    cmd = "rg",
+                    -- default args
+                    args = {
+                        "--hidden",
+                        "--follow",
+                        "--no-ignore-vcs",
+                        "-g",
+                        "!{node_modules,.git,__pycache__,.pytest_cache}",
+                        "--no-heading",
+                        "--with-filename",
+                        "--line-number",
+                        "--column",
+                        "--smart-case"
+                    }
+                }
+            }
+        }
+    )
+end
+
 -- function config.nvim_toggleterm ()
 --   local stats = vim.api.nvim_list_uis()[1]
 --   local width = stats.width

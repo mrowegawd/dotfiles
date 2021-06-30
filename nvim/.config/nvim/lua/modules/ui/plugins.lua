@@ -25,9 +25,9 @@ ui["glepnir/zephyr-nvim"] = {
 --   config = conf.dashboard
 -- }
 
-ui["mhinz/vim-startify"] = {
-    config = conf.startify
-}
+-- ui["mhinz/vim-startify"] = {
+--     config = conf.startify
+-- }
 
 -- ui["glepnir/galaxyline.nvim"] = {
 --     branch = "main",

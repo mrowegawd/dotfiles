@@ -26,6 +26,7 @@ local function load_options()
         viewoptions = {"folds", "cursor", "curdir", "slash", "unix"},
         sessionoptions = {"curdir", "globals", "help", "tabpages", "winsize"},
         clipboard = "unnamedplus",
+        -- colorscheme = "base16-gruvbox-dark-hard",
         wildignorecase = true,
         wildignore = {
             ".git",

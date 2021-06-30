@@ -12,7 +12,7 @@ editor["norcalli/nvim-colorizer.lua"] = {
 }
 
 editor["itchyny/vim-cursorword"] = {
-    event = {"BufReadPre", "BufNewFile"},
+    event = {"BufRead", "BufNewFile"},
     config = conf.vim_cursorwod
 }
 
@@ -52,8 +52,9 @@ editor["mfussenegger/nvim-dap"] = {
 }
 
 editor["rcarriga/nvim-dap-ui"] = {
-    event = "BufReadPre",
+    event = "BufRead",
     config = conf.nvim_dap,
+    disable = not true,
     requires = {
         "nvim-telescope/telescope-dap.nvim",
         {"theHamsta/nvim-dap-virtual-text", opt = true},
@@ -82,6 +83,8 @@ editor["tpope/vim-projectionist"] = {
     config = conf.vim_projectionist
 }
 
-editor["mg979/vim-visual-multi"] = {}
+editor["mg979/vim-visual-multi"] = {
+    event = "BufRead"
+}
 
 return editor

@@ -12,49 +12,29 @@ tools["editorconfig/editorconfig-vim"] = {
 }
 
 tools["windwp/nvim-autopairs"] = {
-    event = "BufReadPre",
+    event = "BufRead",
     requires = "tpope/vim-commentary"
 }
 
 tools["simrat39/symbols-outline.nvim"] = {
     cmd = "SymbolsOutline",
-    config = function()
-    end
+    opt = true
 }
 
--- find and replace plugin, similar with 'Far' plugin
 tools["windwp/nvim-spectre"] = {
     module = "spectre",
     wants = {"plenary.nvim", "popup.nvim"},
-    requires = {"nvim-lua/popup.nvim", "nvim-lua/plenary.nvim"},
-    config = function()
-        require("spectre").setup(
-            {
-                find_engine = {
-                    -- rg is map with finder_cmd
-                    ["rg"] = {
-                        cmd = "rg",
-                        -- default args
-                        args = {
-                            "--hidden",
-                            "--follow",
-                            "--no-ignore-vcs",
-                            "-g",
-                            "!{node_modules,.git,__pycache__,.pytest_cache}",
-                            "--no-heading",
-                            "--with-filename",
-                            "--line-number",
-                            "--column",
-                            "--smart-case"
-                        }
-                    }
-                }
-            }
-        )
-    end
+    config = conf.nvim_spectre,
+    requires = {
+        "nvim-lua/popup.nvim",
+        "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope.nvim"
+    }
 }
 
-tools["tpope/vim-fugitive"] = {}
+tools["tpope/vim-fugitive"] = {
+    event = "BufRead"
+}
 
 tools["voldikss/vim-floaterm"] = {
     cmd = "FloatermToggle",

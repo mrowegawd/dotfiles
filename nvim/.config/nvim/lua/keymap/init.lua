@@ -83,8 +83,8 @@ local plug_map = {
 
     ),
     -- Plugin vim-projectionist
-    ["n|,av"] = map_cu("AV"):with_noremap():with_silent(),
-    ["n|,aa"] = map_cu("A"):with_noremap():with_silent(),
+    ["n|<Localleader>av"] = map_cu("AV"):with_noremap():with_silent(),
+    ["n|<Localleader>aa"] = map_cu("A"):with_noremap():with_silent(),
     -- Plugin vim-test
     ["n|tf"] = map_cu("TestFile"):with_noremap():with_silent(),
     ["n|tn"] = map_cu("TestNearest -strategy=basic"):with_noremap():with_silent(),
@@ -132,11 +132,10 @@ local plug_map = {
     ["n|<A-S-h>"] = map_cu("ObviousResizeLeft"):with_silent(),
     ["n|<A-S-l>"] = map_cu("ObviousResizeRight"):with_silent(),
     -- Plugin Vimwiki
-    ["n|,ww"] = map_cu("VimwikiIndex"):with_silent(),
+    ["n|<Localleader>ww"] = map_cu("VimwikiIndex"):with_silent(),
     -- Plugin Spectre
-    ["n|,f"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
-    ["v|,f"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent(),
-    ["n|,fw"] = map_cr("viw<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
+    ["n|<Localleader>f"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
+    ["v|<Localleader>f"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
 }
 
 bind.nvim_load_mapping(plug_map)

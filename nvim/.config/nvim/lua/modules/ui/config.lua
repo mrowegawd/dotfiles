@@ -14,7 +14,7 @@ function config.nvim_bufferline()
             modified_icon = "✥",
             buffer_close_icon = "",
             mappings = true,
-            always_show_bufferline = false
+            always_show_bufferline = true
         }
     }
 end
@@ -245,6 +245,8 @@ function config.gitsigns()
                 linehl = "GitSignsChangeLn"
             }
         },
+        numhl = false,
+        linehl = false,
         keymaps = {
             -- Default keymap options
             noremap = true,
@@ -257,9 +259,14 @@ function config.gitsigns()
             ["n <leader>hP"] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
             ["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line()<CR>',
             -- Text objects
-            ["o ih"] = ':<C-U>lua require"gitsigns".text_object()<CR>',
-            ["x ih"] = ':<C-U>lua require"gitsigns".text_object()<CR>'
-        }
+            ["o ih"] = ':<C-U>lua require"gitsigns".text_object()<CR>zz',
+            ["x ih"] = ':<C-U>lua require"gitsigns".text_object()<CR>zz'
+        },
+        watch_index = {interval = 1000},
+        sign_priority = 6,
+        update_debounce = 200,
+        status_formatter = nil, -- Use default
+        use_decoration_api = false
     }
 end
 

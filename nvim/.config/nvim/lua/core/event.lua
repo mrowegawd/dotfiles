@@ -91,19 +91,18 @@ function autocmd.load_autocmds()
             -- { "BufNewFile", "*", "lua require'core.window-dim'.focus_gained()" },
             -- { "BufReadPost", "*", "lua require'core.window-dim'.focus_gained()" },
 
-            {"BufEnter,FocusGained,VimEnter,WinEnter", "*", "set winhighlight="},
+            -- {"BufEnter,FocusGained,VimEnter,WinEnter", "*", "set winhighlight="},
             {"BufEnter,FocusGained,VimEnter,WinEnter", "*", "lua require'core.window-dim'.buf_enter()"},
             {"FocusLost,WinLeave", "*", "lua require'core.window-dim'.focus_lost()"}
         },
         color_update = {
             {"ColorScheme", "*", [[lua require("modules.ui._colors").custom_hi()]]}
+        },
+        mapping_au = {
+            {"FileType", "qf", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"}
         }
-        -- mapping_au = {
-        --     {"FileType", "ft", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"}
-        -- }
     }
 
-    vim.cmd [[autocmd! FileType qf nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L]]
     autocmd.nvim_create_augroups(definitions)
 end
 

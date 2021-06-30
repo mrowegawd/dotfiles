@@ -2,15 +2,15 @@ local completion = {}
 local conf = require("modules.completion.config")
 
 completion["neovim/nvim-lspconfig"] = {
-    event = "BufReadPre",
+    event = "BufRead",
     config = conf.nvim_lsp,
     opt = true,
     wants = {"null-ls.nvim"},
     requires = {
         "ray-x/lsp_signature.nvim",
         "jose-elias-alvarez/nvim-lsp-ts-utils",
-        "jose-elias-alvarez/null-ls.nvim"
-        -- {'folke/lsp-colors.nvim', opt=true}
+        "jose-elias-alvarez/null-ls.nvim",
+        "folke/lsp-colors.nvim"
     }
 }
 
@@ -24,13 +24,20 @@ completion["hrsh7th/vim-vsnip"] = {
     config = conf.vim_vsnip
 }
 
+completion["nvim-lua/plenary.nvim"] = {
+    event = "BufRead"
+}
+
+completion["nvim-telescope/telescope-fzf-native.nvim"] = {
+    event = "BufRead",
+    run = "make"
+}
+
 completion["nvim-telescope/telescope.nvim"] = {
     cmd = "Telescope",
     config = conf.telescope,
     requires = {
-        {"nvim-lua/popup.nvim", opt = true},
-        {"nvim-lua/plenary.nvim", opt = true},
-        {"nvim-telescope/telescope-fzf-native.nvim", opt = true, run = "make"}
+        {"nvim-lua/popup.nvim", opt = true}
     }
 }
 
