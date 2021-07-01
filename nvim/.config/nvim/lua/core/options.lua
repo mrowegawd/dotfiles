@@ -29,7 +29,7 @@ local function load_options()
         -- colorscheme = "base16-gruvbox-dark-hard",
         wildignorecase = true,
         foldmethod = "indent",
-        foldtext = "NewFoldText()",
+        foldtext = "v:lua.FoldText()",
         -- foldmethod = "expr",
         -- foldexpr = "nvim_treesitter#foldexpr()",
         wildignore = {
@@ -99,7 +99,7 @@ local function load_options()
         completeopt = {"menu,menuone,noselect,noinsert"},
         jumpoptions = "stack",
         showmode = false,
-        shortmess = vim.o.shortmess .. "c",
+        shortmess = vim.o.shortmess .. "cA",
         scrolloff = 2,
         sidescrolloff = 5,
         foldlevelstart = 99,

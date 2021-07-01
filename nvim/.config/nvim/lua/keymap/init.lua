@@ -17,7 +17,7 @@ local plug_map = {
 
     ),
     ["n|gb"] = map_cr("BufferLinePick"):with_noremap():with_silent(),
-    ["n|<Leader>O"] = map_cmd("<cmd> lua require('internal.bufonly').buf_only()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>O"] = map_cmd("<cmd>lua require('internal.util').buf_only()<CR>"):with_noremap():with_silent(),
     -- Packer
     ["n|<Leader>pu"] = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait(),
     ["n|<Leader>pi"] = map_cr("PackerInstall"):with_silent():with_noremap():with_nowait(),
@@ -104,7 +104,7 @@ local plug_map = {
     ["n|<Leader>hS"] = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
     ["n|<Leader>hq"] = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
     ["n|<Leader>hl"] = map_cr("Gclog"):with_noremap():with_silent(),
-    ["n|<Leader>hv"] = map_cr([[lua require("core.configs").diffview()]]):with_noremap():with_silent(),
+    ["n|<Leader>hv"] = map_cr([[lua require("internal.util").diffview()]]):with_noremap():with_silent(),
     ["n|<Leader>hc"] = map_cr("Gclog -- %"):with_noremap():with_silent(),
     ["n|<Leader>hb"] = map_cr("Gblame"):with_noremap():with_silent(),
     ["n|<Leader>hf"] = map_cr("0Gclog"):with_noremap():with_silent(),

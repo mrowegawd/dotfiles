@@ -1,18 +1,6 @@
 local telescope = require("telescope")
 local conf = require("telescope._extensions.conf")
-
-local api = vim.api
-
-local function is_qf_window()
-    local filetype = api.nvim_buf_get_option(0, "filetype")
-
-    if filetype ~= "qf" then
-        return false
-    end
-
-    print("[!] you still inside quickfix morron..~_~")
-    return true
-end
+local util = require("internal.util")
 
 local function removeDuplicates(arr)
     local newArray = {}
@@ -32,7 +20,7 @@ end
 
 -- TODO: create telescope zettel :DONE:
 local grepzettel = function(opts)
-    if is_qf_window() then
+    if util.is_qf_window() then
         return
     end
 
