@@ -28,6 +28,10 @@ local function load_options()
         clipboard = "unnamedplus",
         -- colorscheme = "base16-gruvbox-dark-hard",
         wildignorecase = true,
+        foldmethod = "indent",
+        foldtext = "NewFoldText()",
+        -- foldmethod = "expr",
+        -- foldexpr = "nvim_treesitter#foldexpr()",
         wildignore = {
             ".git",
             ".hg",

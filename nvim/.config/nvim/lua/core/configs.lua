@@ -3,16 +3,29 @@ local api = vim.api
 
 local M = {}
 
+SETFoldingAll = 1
 SETFolding = 1
 
-M.fold_toggle = function()
-    if SETFolding == 1 then
-        api.nvim_command("exec 'normal! zM'")
-        SETFolding = 0
-    else
-        api.nvim_command("exec 'normal! zR'")
-        SETFolding = 1
+M.fold_toggle = function(key)
+    if key == "a" then
+        if SETFolding == 1 then
+            api.nvim_command("exec 'normal! zM'")
+            SETFolding = 0
+        else
+            api.nvim_command("exec 'normal! zR'")
+            SETFolding = 1
+        end
+        return
     end
+
+    if SETFoldingAll == 1 then
+        api.nvim_command("exec 'normal! za'")
+        SETFoldingAll = 0
+    else
+        api.nvim_command("exec 'normal! za'")
+        SETFoldingAll = 1
+    end
+    return
 end
 
 -- Toggle quicfix and location list
