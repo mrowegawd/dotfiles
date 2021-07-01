@@ -57,7 +57,7 @@ function config.dashboard()
 end
 
 function config.set_colorscheme()
-    vim.cmd("colorscheme base16-onedark")
+    vim.cmd("colorscheme base16-gruvbox-dark-medium")
 end
 
 function config.startify()

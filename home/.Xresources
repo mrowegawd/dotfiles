@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/base16-onedark"
+#include ".config/miscxrdb/xresource-theme/base16-gruvbox-dark-medium"
 
 ! --------------
 ! XFT SETTINGS
@@ -31,5 +31,6 @@ Xft.autohint:               0
 ! TERMINAL MODE
 ! ------------------------------------------------------------
 
-#include ".config/miscxrdb/terminal/st"
-#include ".config/miscxrdb/terminal/urxvt"
+#include ".config/miscxrdb/terminal/st/st"
+
+! #include ".config/miscxrdb/terminal/urxvt"

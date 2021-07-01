@@ -1,0 +1,29 @@
+st.background:  #282828
+st.foreground:  #d5c4a1
+st.cursorcolor: #d5c4a1
+
+st.color0  : #d5c4a1
+st.color8  : #d5c4a1
+st.color7  : #d5c4a1
+st.color15 : #d5c4a1
+st.color1  : #d5c4a1 
+st.color9  : #d5c4a1 
+st.color2  : #d5c4a1 
+st.color10 : #d5c4a1 
+st.color3  : #fabd2f
+st.color11 : #fabd2f
+
+!#83a598 
+st.color4:  #665c54
+st.color12: #83a598
+
+st.color5  : #d3869b
+st.color13 : #d3869b
+st.color6  : #8ec07c
+st.color14 : #8ec07c
+st.color16 : #fe8019
+st.color17 : #d65d0e
+st.color18 : #3c3836
+st.color19 : #504945
+st.color20 : #bdae93
+st.color21 : #ebdbb2

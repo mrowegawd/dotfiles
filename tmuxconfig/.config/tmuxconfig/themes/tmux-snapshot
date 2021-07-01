@@ -1,10 +1,10 @@
-WINDOW_ACTIVE_BG="#21252b"
-WINDOW_NONACTIVE_BG="#3B4252"
+WINDOW_ACTIVE_BG="#282828"
+WINDOW_NONACTIVE_BG="#3c3836"
 
 COL_WHITE="#626262"
 
-BG_STATUSLINE="#2c313a"
-BG_ACTIVE_STATUSLINE="#abb2bf"
+BG_STATUSLINE="#504945"
+BG_ACTIVE_STATUSLINE="#ebdbb2"
 
 left_separator=''
 # left_separator_black=''
@@ -13,7 +13,7 @@ right_separator=''
 right_separator_black=''
 session_symbol=''
 
-window_status_current_fg=colour16 # black
+window_status_current_fg=colour3 # black
 window_status_current_bg=colour4 # blue
 
 set -g pane-border-style bg=$WINDOW_NONACTIVE_BG,fg=$WINDOW_ACTIVE_BG
@@ -40,7 +40,7 @@ set -g status-bg $BG_STATUSLINE
 ## NON/ACTIVE WINDOW
   set -g window-status-format "#[fg=$COL_WHITE] #I #W"
   set -g window-status-current-format "#[fg=$BG_STATUSLINE,bg=$BG_ACTIVE_STATUSLINE]$left_separator_black\
-#[fg=$window_status_current_fg,bg=$BG_ACTIVE_STATUSLINE,bold] #I \
+#[fg=$WINDOW_ACTIVE_BG,bg=$BG_ACTIVE_STATUSLINE,bold] #I \
 $left_separator #W #[fg=$BG_ACTIVE_STATUSLINE,bg=$BG_STATUSLINE,nobold]$left_separator_black\
 #[bg=$WINDOW_NONACTIVE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM ,}"
 

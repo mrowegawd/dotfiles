@@ -7,7 +7,9 @@ editor["Raimondi/delimitMate"] = {
 }
 
 editor["norcalli/nvim-colorizer.lua"] = {
-    ft = {"html", "css", "sass", "vim", "typescript", "typescriptreact"},
+    -- ft = {"html", "css", "sass", "vim", "typescript", "typescriptreact", "xdefaults"},
+    cmd = "ColorizerToggle",
+    opt = true,
     config = conf.nvim_colorizer
 }
 

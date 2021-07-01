@@ -46,7 +46,7 @@ local function load_options()
             "**/bower_modules/**"
         },
         backup = false,
-        backupcopy = "yes",
+        -- backupcopy = "yes",
         writebackup = false,
         swapfile = false,
         undofile = true,
