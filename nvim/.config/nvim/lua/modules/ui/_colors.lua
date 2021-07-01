@@ -201,6 +201,8 @@ colors.custom_hi = function()
     hi(string.format("hi LspDiagnosticsDefaultError guibg=%s guifg=%s", colorcolumn, colors.nm.red))
     hi(string.format("hi LspDiagnosticsDefaultInformation guibg=%s guifg=%s", colorcolumn, colors.nm.fg))
     hi(string.format("hi LspDiagnosticsDefaultHint guibg=%s guifg=%s", colorcolumn, colors.nm.fg))
+
+    hi("hi! link OrgTODO ErrorMsg")
 end
 
 return colors

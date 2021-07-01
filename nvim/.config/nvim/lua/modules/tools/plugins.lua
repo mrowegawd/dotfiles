@@ -114,10 +114,28 @@ tools["folke/todo-comments.nvim"] = {
     }
 }
 
--- tools["sindrets/diffview.nvim"] = {
---     cmd = {"DiffviewOpen"},
---     opt = true,
---     config = conf.diffview
--- }
+tools["kristijanhusak/orgmode.nvim"] = {
+    event = "BufRead",
+    config = function()
+        local mynotes = string.format("%s/MrKampang/vimwiki", os.getenv("HOME"))
+
+        require("orgmode").setup(
+            {
+                org_agenda_file = {mynotes .. "/org/todo.org"},
+                org_default_notes_file = mynotes .. "/org/refile.org",
+                mappings = {
+                    -- disable_all = true,
+                    global = {
+                        org_agenda = "gA",
+                        org_capture = "gC"
+                    }
+                }
+            }
+        )
+
+        -- map <silent>gO :e ~/Dropbox/vimwiki/org/todo.org<CR>
+        vim.cmd([[command! -nargs=0 NGrep grep! ".*" ~/MrKampang/vimwiki/org/*]])
+    end
+}
 
 return tools
