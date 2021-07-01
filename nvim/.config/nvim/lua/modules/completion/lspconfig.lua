@@ -284,6 +284,9 @@ local servers = {
 
 for _, server in ipairs(servers) do
     lspconfig[server].setup {
-        on_attach = enhance_attach
+        on_attach = enhance_attach,
+        flags = {
+            debounce_text_changes = 150
+        }
     }
 end
