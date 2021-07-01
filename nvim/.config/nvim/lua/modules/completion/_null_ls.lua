@@ -9,7 +9,7 @@ local sources = {
             command = "./node_modules/.bin/prettier"
         }
     ),
-    b.formatting.trim_whitespace.with({filetypes = {"tmux", "fish", "teal"}}),
+    b.formatting.trim_whitespace.with({filetypes = {"tmux", "fish", "teal", "org"}}),
     b.formatting.black,
     b.formatting.isort,
     b.formatting.lua_format.with(
