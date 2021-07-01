@@ -24,3 +24,5 @@ st.color12 : #81a1c1
 st.color13 : #b48ead
 st.color14 : #8fbcbb
 st.color15 : #eceff4
+
+! # vim: foldmethod=marker foldlevel=0 ft=xdefaults

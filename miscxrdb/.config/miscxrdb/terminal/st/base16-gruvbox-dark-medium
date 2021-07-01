@@ -27,3 +27,5 @@ st.color18 : #3c3836
 st.color19 : #504945
 st.color20 : #bdae93
 st.color21 : #ebdbb2
+
+! # vim: foldmethod=marker foldlevel=0 ft=xdefaults

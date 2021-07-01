@@ -4,7 +4,7 @@ browser = firefox
 allow_bold = on
 clickable_url = on
 cursor_blink = off
-font = mononoki Nerd Font 8
+font = mononoki Nerd Font 9
 
 [colors]
 # Base16 Gruvbox dark, medium
