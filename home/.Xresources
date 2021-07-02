@@ -27,10 +27,12 @@ Xft.autohint:               0
 ! sudah dihandle sama compton
 ! *.alpha:    245
 
+xterm*font: fixed
+xterm*boldFont: fixed
+
 ! ------------------------------------------------------------
 ! TERMINAL MODE
 ! ------------------------------------------------------------
 
 #include ".config/miscxrdb/terminal/st/st"
-
-! #include ".config/miscxrdb/terminal/urxvt"
+#include ".config/miscxrdb/terminal/urxvt/urxvt"

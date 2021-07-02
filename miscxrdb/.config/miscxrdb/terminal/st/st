@@ -1,8 +1,31 @@
 st.font:          CaskaydiaCove Nerd Font:Regular:pixelsize=11:antialias=true:autohint=true
-st.boldFont:      CaskaydiaCove Nerd Font:Bold:pixelsize=11:antialias=true:autohint=true
-st.italicFont:    CaskaydiaCove Nerd Font:Italic:pixelsize=11:antialias=true:autohint=true
+/* st.font:          CaskaydiaCove Nerd Font:Regular:pixelsize=11 */
+! st.boldFont:      CaskaydiaCove Nerd Font:Bold:pixelsize=11:antialias=true:autohint=true */
+! st.italicFont:    CaskaydiaCove Nerd Font:Italic:pixelsize=11:antialias=true:autohint=true */
 
 st.borderpx: 10
+
+st.cursorshape:       2
+
+! thickness of underline and bar cursors
+st.cursorthickness:   2
+
+/* st.disablebold:       0 */
+/* st.disableitalics:    0 */
+/* st.disableroman:      0 */
+
+! Amount of lines scrolled
+st.scrollrate:  1
+
+st.boxdraw_bold: 0
+
+st.boxdraw_braille: 0
+
+st.depth: 0
+
+st.opacity:      255
+
+st.disable_alpha_correction: 0
 
 
 !t*font  : -*-tamzenforpowerline-medium-*-*-*-12-*-*-*-*-*-*-*
@@ -13,8 +36,7 @@ st.borderpx: 10
 !t*font5 : -*-tamzenforpowerline-medium-*-*-*-16-*-*-*-*-*-*-*
 !t*font6 : -*-tamzenforpowerline-medium-*-*-*-20-*-*-*-*-*-*-*
 
-! #include "./base16-gruvbox-dark-medium"
+#include "./base16-gruvbox-dark-medium"
 ! #include "./base16-nord"
-
 
 ! # vim: foldmethod=marker foldlevel=0 ft=xdefaults

@@ -12,7 +12,6 @@ tools["editorconfig/editorconfig-vim"] = {
 }
 
 tools["windwp/nvim-autopairs"] = {
-    cmd = "ColorizerToggle",
     requires = "tpope/vim-commentary"
 }
 
