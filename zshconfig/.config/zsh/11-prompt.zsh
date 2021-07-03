@@ -1,11 +1,7 @@
 # vim: ft=zsh sw=2 ts=2 et
 
-# _newline=$'\n'
-# _lineup=$'\e[1A'
-# _linedown=$'\e[1B '
-
 autoload -U colors && colors
-setopt PROMPT_SUBST
+setopt prompt_subst
 
 # vcs_info git
 autoload -Uz vcs_info

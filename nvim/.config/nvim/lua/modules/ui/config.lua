@@ -157,7 +157,7 @@ function config.nvim_tree()
     vim.g.nvim_tree_hijack_netrw = 1
     vim.g.nvim_tree_indent_markers = 1
     vim.g.nvim_tree_disable_keybindings = 0
-    vim.g.nvim_tree_ignore = {".git", "node_modules", ".cache"}
+    vim.g.nvim_tree_ignore = {".git", "node_modules", ".cache", ".venv", ".mypy_cache"}
 
     local tree_cb = require("nvim-tree.config").nvim_tree_callback
 

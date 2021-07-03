@@ -14,10 +14,57 @@ echo "----------------------------"
 # If you want to debug zsh shell, you can use `zprof`
 #
 # To debug, set PROFILE_CONFIG to `true`
-PROFILE_CONFIG=false
-[[ $PROFILE_CONFIG == true ]] && zmodload zsh/zprof
+# PROFILE_CONFIG=false
+# [[ $PROFILE_CONFIG == true ]] && zmodload zsh/zprof
 
-source "$HOME/.config/zsh/01-init.zsh"
+unsetopt correct
+
+setopt interactive_comments
+setopt long_list_jobs
+setopt notify
+
+# setopt hup
+
+unsetopt mail_warning
+unsetopt bg_nice
+unsetopt hup
+unsetopt check_jobs
+
+###################
+# directory
+###################
+setopt auto_cd
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushd_silent
+setopt pushd_to_home
+setopt cdable_vars
+setopt multios
+setopt correct
+setopt extended_glob
+unsetopt clobber
+
+
+###################
+# history
+###################
+setopt append_history
+setopt bang_hist
+setopt extended_history
+setopt share_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_find_no_dups
+setopt hist_ignore_space
+setopt hist_save_no_dups
+setopt hist_verify
+setopt hist_beep
+setopt inc_append_history
+setopt extended_history
+
+
+# source "$HOME/.config/zsh/01-init.zsh"
 source "$HOME/.config/zsh/03-exports.zsh"            # base exports for zsh
 source "$ZSH_CONFIG/05-completion.zsh"
 
@@ -28,7 +75,6 @@ source "$ZSH_CONFIG/15-bindkey.zsh"
 source "$ZSH_CONFIG/20-aliases.zsh"
 
 typeset -ga sources
-sources+="$ZSH_CONFIG/zshload/fzf.zsh"
 sources+="$ZSH_CONFIG/zshload/asdf.zsh"
 
 foreach file (`echo $sources`)
@@ -37,12 +83,57 @@ foreach file (`echo $sources`)
   fi
 end
 
-[[ ${PROFILE_CONFIG} == true ]] && zprof
+# [[ ${PROFILE_CONFIG} == true ]] && zprof
+
+SAVEHIST=5000
+HISTSIZE=5000               #How many lines of history to keep in memory
+if (( ! EUID )); then
+  HISTFILE=$HOME/.cache/zsh/history_root
+
+else
+  HISTFILE=$HOME/.cache/zsh/history
+fi
+
+
+export LESSCHARSET=UTF-8
+export PAGER=less
+export LESS='-R -f -X --tabs=4 --ignore-case --SILENT -P --LESS-- ?f%f:(stdin). ?lb%lb?L/%L.. [?eEOF:?pb%pb\%..]'
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[38;5;246m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[04;38;5;146m'
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 export MANPAGER="/bin/sh -c \"col -b | \
     nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
+
+###########################################
+# ZSH-SYNTAX-HIGHLIGHTING
+###########################################
+
+[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
+  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+###########################################
+# FZF
+###########################################
+[ -f $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh ] \
+  && source $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ~/.config/miscxrdb/fzf/fzf.config ] && source ~/.config/miscxrdb/fzf/fzf.config
+
+FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/fzf-marks"
+FZF_MARKS_COMMAND="fzf"
+FZF_MARKS_COLOR_RHS="249"
+
+bindkey '^Y' fzm
 
 ###########################################
 # AUTO SSH-ADD (for git master)
