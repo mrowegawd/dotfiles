@@ -57,7 +57,7 @@ startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
   echo "dummy" >$startup_lock_file
   sleep 2
-  xterm &
+  tilix &
   sleep 2
   firefox &
   sleep 2
