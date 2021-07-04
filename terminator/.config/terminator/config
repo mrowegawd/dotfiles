@@ -1,0 +1,45 @@
+# Symlink this to ~/.config/terminator:
+# rm -f ~/.config/terminator/config && mkdir -p ~/.config/terminator && ln -sf ~/git/dotfiles/terminator ~/.config/terminator/config
+
+[global_config]
+  enabled_plugins = LaunchpadCodeURLHandler, APTURLHandler, LaunchpadBugURLHandler
+  extra_styling = False
+  inactive_color_offset = 1.0
+[keybindings]
+  go_next = None
+  switch_to_tab_1 = <Alt>1
+  switch_to_tab_2 = <Alt>2
+  switch_to_tab_3 = <Alt>3
+  switch_to_tab_4 = <Alt>4
+  switch_to_tab_5 = <Alt>5
+  switch_to_tab_6 = <Alt>6
+  switch_to_tab_7 = <Alt>7
+  switch_to_tab_8 = <Alt>8
+  switch_to_tab_9 = <Alt>9
+  switch_to_tab_10 = <Alt>0
+  hide_window = None
+  new_window = <Primary><Shift>n
+  broadcast_off = None
+  broadcast_group = None
+  broadcast_all = None
+  edit_tab_title = None
+  layout_launcher = None
+[profiles]
+  [[default]]
+    cursor_color = "#aaaaaa"
+    font = Monospace 9
+    show_titlebar = False
+    scrollback_lines = 10000
+    login_shell = True
+    bold_is_bright = True
+    copy_on_selection = True
+[layouts]
+  [[default]]
+    [[[child1]]]
+      parent = window0
+      profile = default
+      type = Terminal
+    [[[window0]]]
+      parent = ""
+      type = Window
+[plugins]

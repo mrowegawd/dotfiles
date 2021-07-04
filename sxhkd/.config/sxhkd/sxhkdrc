@@ -6,7 +6,7 @@
 
 # base: terminal emulator
 super + Return
-        termite
+        xterm
 
 # base: reload sxhkd
 super + shift + F8

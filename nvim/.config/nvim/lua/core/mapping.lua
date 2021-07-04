@@ -64,12 +64,12 @@ local def_map = {
     ["c|<C-a>"] = map_cmd("<Home>"):with_noremap(),
     ["c|<C-e>"] = map_cmd("<End>"):with_noremap(),
     ["c|<C-d>"] = map_cmd("<Del>"):with_noremap(),
-    ["c|<C-h>"] = map_cmd("<Left>"):with_noremap(),
-    ["c|<C-l>"] = map_cmd("<Right>"):with_noremap(),
+    ["c|<C-b>"] = map_cmd("<Left>"):with_noremap(),
+    ["c|<C-f>"] = map_cmd("<Right>"):with_noremap(),
     ["c|<C-p>"] = map_cmd("<Up>"):with_noremap(),
     ["c|<C-n>"] = map_cmd("<Down>"):with_noremap(),
-    ["c|<C-w>"] = map_cmd("<S-Right>"):with_noremap(),
-    ["c|<C-b>"] = map_cmd("<S-Left>"):with_noremap(),
+    -- ["c|<C-w>"] = map_cmd("<S-Right>"):with_noremap(),
+    -- ["c|<C-b>"] = map_cmd("<S-Left>"):with_noremap(),
     ["c|<C-t>"] = map_cmd([[<C-R>=expand("%:p:h") . "/" <CR>]]):with_noremap()
 }
 

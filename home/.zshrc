@@ -64,10 +64,8 @@ setopt inc_append_history
 setopt extended_history
 
 
-# source "$HOME/.config/zsh/01-init.zsh"
 source "$HOME/.config/zsh/03-exports.zsh"            # base exports for zsh
 source "$ZSH_CONFIG/05-completion.zsh"
-
 source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
 source "$ZSH_CONFIG/10-ohmyzsh.zsh"
 source "$ZSH_CONFIG/11-prompt.zsh"
@@ -113,27 +111,27 @@ export MANPAGER="/bin/sh -c \"col -b | \
     nvim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 
-###########################################
-# ZSH-SYNTAX-HIGHLIGHTING
-###########################################
-
-[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
-  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+# autoload -Uz compinit && compinit
 ###########################################
 # FZF
 ###########################################
-[ -f $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh ] \
-  && source $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.config/miscxrdb/fzf/fzf.config ] && source ~/.config/miscxrdb/fzf/fzf.config
+
+[ -f $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh ] \
+  && source $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh
 
 FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/fzf-marks"
 FZF_MARKS_COMMAND="fzf"
 FZF_MARKS_COLOR_RHS="249"
 
-bindkey '^Y' fzm
+###########################################
+# ZSH-SYNTAX-HIGHLIGHTING
+###########################################
+
+# [ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
+#   && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
 
 ###########################################
 # AUTO SSH-ADD (for git master)
@@ -174,3 +172,5 @@ if [ ! -f /tmp/auto-ssh  ]; then
   touch /tmp/auto-ssh
 
 fi
+
+# export TERM=screen-256color-bce

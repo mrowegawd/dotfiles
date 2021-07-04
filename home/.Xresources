@@ -23,6 +23,24 @@ Xft.hintstyle:              hintmedium
 Xft.lcdfilter:              lcddefault
 Xft.autohint:               0
 
+xterm*iconName:Terminal
+xterm*eightBitInput:    false
+xterm*cursorBlink:      false
+xterm*faceName: mononoki Nerd Font
+xterm*cursorOffTime:    300
+xterm*metaSendsEscape:  true
+xterm*faceSize: 9
+xterm*title:    Terminal
+xterm*cursorOnTime:     300
+xterm*utf8:     1
+xterm*geometry: 110x31
+!xterm*cursorUnderLine:  true
+XTerm*scaleHeight: 0.80
+xterm*saveLines:	0
+xterm*termName:		xterm-256color
+xterm*bellIsUrgent:	true
+xterm*decTerminalID	:	vt340
+
 ! Transparancy (0 - 255)
 ! sudah dihandle sama compton
 ! *.alpha:    245
