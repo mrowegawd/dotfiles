@@ -298,20 +298,20 @@ local win_get_var = function(handle, name)
 end
 
 local focus_window = function()
-    if win_get_var(0, focused_flag) ~= true then
-        vim.api.nvim_win_set_option(0, "winhighlight", "")
-        when_supports_blur_and_focus(
-            function()
-                vim.api.nvim_win_set_option(0, "colorcolumn", focused_colorcolumn)
-                --       if filetype ~= '' then
-                --         ownsyntax(true)
-                --       end
-                vim.api.nvim_win_set_option(0, "list", true)
-                vim.api.nvim_win_set_option(0, "conceallevel", 1)
-            end
-        )
-        vim.api.nvim_win_set_var(0, focused_flag, true)
-    end
+    -- if win_get_var(0, focused_flag) ~= true then
+    vim.api.nvim_win_set_option(0, "winhighlight", "")
+    when_supports_blur_and_focus(
+        function()
+            vim.api.nvim_win_set_option(0, "colorcolumn", focused_colorcolumn)
+            --       if filetype ~= '' then
+            --         ownsyntax(true)
+            --       end
+            vim.api.nvim_win_set_option(0, "list", true)
+            vim.api.nvim_win_set_option(0, "conceallevel", 1)
+        end
+    )
+    vim.api.nvim_win_set_var(0, focused_flag, true)
+    -- end
 end
 
 local blur_window = function()
