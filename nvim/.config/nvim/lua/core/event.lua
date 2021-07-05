@@ -101,7 +101,8 @@ function autocmd.load_autocmds()
             {"ColorScheme", "*", [[lua require("modules.ui._colors").custom_hi()]]}
         },
         mapping_au = {
-            {"FileType", "qf", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"}
+            {"FileType", "qf", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"},
+            {"FileType", "org", "nnoremap <buffer> q :bd!<CR>"}
         }
     }
 
