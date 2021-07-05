@@ -315,16 +315,16 @@ local focus_window = function()
 end
 
 local blur_window = function()
-    if win_get_var(0, focused_flag) ~= false then
-        vim.api.nvim_win_set_option(0, "winhighlight", winhighlight_blurred)
-        when_supports_blur_and_focus(
-            function()
-                vim.api.nvim_win_set_option(0, "list", false)
-                vim.api.nvim_win_set_option(0, "conceallevel", 0)
-            end
-        )
-        vim.api.nvim_win_set_var(0, focused_flag, false)
-    end
+    -- if win_get_var(0, focused_flag) ~= false then
+    vim.api.nvim_win_set_option(0, "winhighlight", winhighlight_blurred)
+    when_supports_blur_and_focus(
+        function()
+            vim.api.nvim_win_set_option(0, "list", false)
+            vim.api.nvim_win_set_option(0, "conceallevel", 0)
+        end
+    )
+    vim.api.nvim_win_set_var(0, focused_flag, false)
+    -- end
 end
 
 autocmds.colorcolumn_filetype_blacklist = {
@@ -335,7 +335,8 @@ autocmds.colorcolumn_filetype_blacklist = {
     ["undotree"] = true,
     ["dashboard"] = true,
     ["NeogitStatus"] = true,
-    ["qf"] = true
+    ["qf"] = true,
+    ["orgagenda"] = true
 }
 
 autocmds.cursorline_blacklist = {
