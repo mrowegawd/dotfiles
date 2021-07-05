@@ -280,22 +280,28 @@ local winhighlight_blurred =
 )
 
 local when_supports_blur_and_focus = function(callback)
-    local filetype = vim.bo.filetype
+    local filetype = vim.api.nvim_buf_get_option(0, "filetype")
     local listed = vim.bo.buflisted
     if autocmds.colorcolumn_filetype_blacklist[filetype] ~= true and listed then
         callback(filetype)
+        return
+    end
+
+    -- TODO: forcing ft orgagenda to respect our rules!! :TODAY: :POSTPONE:
+    if autocmds.colorcolumn_filetype_blacklist[filetype] == true then
+        vim.api.nvim_win_set_option(0, "colorcolumn", "0")
     end
 end
 
-local win_get_var = function(handle, name)
-    local result
-    pcall(
-        function()
-            result = vim.api.nvim_win_get_var(handle, name)
-        end
-    )
-    return result
-end
+-- local win_get_var = function(handle, name)
+--     local result
+--     pcall(
+--         function()
+--             result = vim.api.nvim_win_get_var(handle, name)
+--         end
+--     )
+--     return result
+-- end
 
 local focus_window = function()
     -- if win_get_var(0, focused_flag) ~= true then
@@ -337,6 +343,7 @@ autocmds.colorcolumn_filetype_blacklist = {
     ["NeogitStatus"] = true,
     ["qf"] = true,
     ["orgagenda"] = true
+    -- ["TelescopePrompt"] = true
 }
 
 autocmds.cursorline_blacklist = {

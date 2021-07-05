@@ -81,15 +81,9 @@ function autocmd.load_autocmds()
             {"TextYankPost", [[* silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=400})]]}
         },
         window_dim = {
-            -- {"BufEnter,FocusGained,VimEnter,WinEnter", "*", "set winhighlight="},
-            -- {"BufEnter,FocusGained,VimEnter,WinEnter", "*", "lua require'core.window-dim'.buf_enter()"},
-            -- {"FocusLost,WinLeave", "*", "lua require'core.window-dim'.focus_lost()"},
-            -- {"InsertEnter", "*", "lua require'core.window-dim'.insert_enter()"},
-            -- {"InsertLeave", "*", "lua require'core.window-dim'.insert_leave()"},
             --
             {"BufEnter", "*", "lua require'core.window-dim'.buf_enter()"},
             -- {"BufWinEnter", "*", "lua require'core.window-dim'.buf_enter()"},
-            -- {"BufEnter", "*", "lua require'core.window-dim'.buf_read()"},
             {"FocusGained", "*", "lua require'core.window-dim'.focus_gained()"},
             {"VimEnter", "*", "lua require'core.window-dim'.vim_enter()"},
             {"WinEnter", "*", "lua require'core.window-dim'.win_enter()"},
