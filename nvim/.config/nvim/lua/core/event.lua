@@ -75,7 +75,8 @@ function autocmd.load_autocmds()
             {"BufNewFile,BufRead", "*.toml", " setf toml"},
             {"BufNewFile,BufRead", "*.org", " setf dotoo"},
             {"TermOpen", "*", " setf bufhidden=hide | :startinsert"},
-            {"TermOpen", "*", " setf nonumber norelativenumber"}
+            {"TermOpen", "*", " setf nonumber norelativenumber"},
+            {"FileType", "qf", "wincmd J"}
         },
         yank = {
             {"TextYankPost", [[* silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=400})]]}
@@ -96,7 +97,8 @@ function autocmd.load_autocmds()
         },
         mapping_au = {
             {"FileType", "qf", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"},
-            {"FileType", "org", "nnoremap <buffer> q :bd!<CR>"}
+            -- {"FileType", "org", "nnoremap <buffer> q :bd!<CR>"},
+            {"BufWritePost", "*", [[if &filetype == '^\(org\)' | execute 'TrimSpace' | endif]]}
         }
     }
 
