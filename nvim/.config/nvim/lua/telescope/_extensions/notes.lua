@@ -7,7 +7,7 @@ local notes = function(opts)
     opts =
         {
         vimgrep_arguments = conf.custom_vimgrep_arguments,
-        shorten_path = true,
+        path_display = {"tail"},
         search_dirs = {wiki_path},
         prompt_title = "Find Notes",
         results_title = "My Notes"
