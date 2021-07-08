@@ -130,5 +130,8 @@ bind-key v toggle-article-read
 
 # MACRO -----------------------------------------------------------------------
 
+# macro: open vidoe mpv
 macro m set browser "/usr/bin/mpv -ontop -no-border -force-window --autofit=700x300 --geometry=-15-60 %u > /dev/null &"; open-in-browser ; set browser "/usr/bin/w3m %u"
+
+# macro: open w3m
 macro f set browser "/usr/bin/firefox %u > /dev/null &"; open-in-browser-and-mark-read ; open-in-browser ; set browser "/usr/bin/w3m %u"
