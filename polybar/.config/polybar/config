@@ -60,7 +60,7 @@ modules-right       = pulseaudio round-left updates network temperature memory f
 tray-position       = right
 tray-padding        = 3
 
-wm-restack          = i3
+; wm-restack          = i3
 #
 # }}}
 
