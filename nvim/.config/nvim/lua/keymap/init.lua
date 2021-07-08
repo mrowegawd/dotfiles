@@ -16,7 +16,6 @@ local plug_map = {
     ["n|mf"] = map_cr("<cmd>lua require('internal.fsevent').file_event()<CR>"):with_silent():with_nowait():with_noremap(
 
     ),
-    ["n|gb"] = map_cr("BufferLinePick"):with_noremap():with_silent(),
     ["n|<Leader>O"] = map_cmd("<cmd>lua require('internal.util').buf_only()<CR>"):with_noremap():with_silent(),
     -- Packer
     ["n|<Leader>pu"] = map_cr("PackerUpdate"):with_silent():with_noremap():with_nowait(),
@@ -46,6 +45,8 @@ local plug_map = {
 
     ):with_silent(),
     ["n|<Leader>ct"] = map_args("Template"),
+    -- Plugin nvim-bufferline.nvim
+    ["n|gb"] = map_cr("BufferLinePick"):with_noremap():with_silent(),
     -- Plugin vim-dap
     ["n|<Leader>da"] = map_cr("<cmd>lua require'modules.editor._dap'.attachDebug()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>db"] = map_cr("<cmd>lua require'dap'.toggle_breakpoint()<CR>"):with_noremap():with_silent(),
@@ -135,7 +136,7 @@ local plug_map = {
     ["n|<A-S-h>"] = map_cu("ObviousResizeLeft"):with_silent(),
     ["n|<A-S-l>"] = map_cu("ObviousResizeRight"):with_silent(),
     -- Plugin Vimwiki
-    ["n|<Localleader>ww"] = map_cu("VimwikiIndex"):with_silent(),
+    -- ["n|<Localleader>ww"] = map_cu("VimwikiIndex"):with_silent(),
     -- Plugin Spectre
     ["n|<Localleader>f"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
     ["v|<Localleader>f"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
