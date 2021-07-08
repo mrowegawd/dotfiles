@@ -1,4 +1,5 @@
 local telescope = require("telescope")
+local utils = require("telescope.utils")
 local conf = require("telescope._extensions.conf")
 
 local fn = vim.fn
@@ -9,8 +10,8 @@ local grepcword = function(opts)
         {
             vimgrep_arguments = conf.custom_vimgrep_arguments,
             word_match = "-w",
-            shorten_path = true,
             search = fn.expand("<cword>"),
+            path_display = utils.get_default(opts.path_display, "hidden"),
             prompt_title = "Find Current Word"
         }
     )

@@ -1,4 +1,5 @@
 local telescope = require("telescope")
+local telescope_utils = require("telescope.utils")
 local conf = require("telescope._extensions.conf")
 local util = require("internal.util")
 
@@ -40,7 +41,7 @@ local grepzettel = function(opts)
     opts =
         {
         vimgrep_arguments = conf.custom_vimgrep_arguments,
-        shorten_path = true,
+        path_display = telescope_utils.get_default(opts.path_display, "hidden"),
         search_dirs = removeDuplicates(path), -- much better, unique path
         prompt_title = "Find Zettel"
     } or {}
