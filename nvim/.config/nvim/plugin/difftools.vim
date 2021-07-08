@@ -69,4 +69,16 @@ function! NeatFoldText() "{{{
   return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 
+function! s:trimSpace()
+  if !&binary && &filetype != 'diff' && &filetype != 'markdown'
+    normal mz
+    normal Hmy
+    %s/\s\+$//e
+    normal 'yz<CR>
+    normal `z
+  endif
+endfunction
+
+command! TrimSpace call s:trimSpace()
+
 " vim: set ts=2 sw=2 tw=80 noet :
