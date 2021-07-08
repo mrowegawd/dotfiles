@@ -4,13 +4,16 @@
     background = "#222222"
     foreground = "#888888"
     timeout = 8
+    icon = /home/mr00x/.config/dunst/bell.png
 
 [urgency_normal]
     background = "%%normal_bg%%"
     foreground = "%%normal_fore_bg%%"
     timeout = 8
+    icon = /home/mr00x/.config/dunst/warning.png
 
 [urgency_critical]
     background = "%%critical_bg%%"
     foreground = "%%critical_fore_bg%%"
     timeout = 0
+    icon = /home/mr00x/.config/dunst/critical.png

@@ -21,7 +21,7 @@
     #   %I  iconname (without its path)
     #   %p  progress value if set ([  0%] to [100%]) or nothing
     # Markup is allowed
-    format = "<b>%s</b>\n%b%p"
+    format = "<b>%s</b>\n%b"
     # format = "%b%p"
     # format = "<b>%s</b>\n%b"
     # format = "<b>%s</b>\n%b"
@@ -50,7 +50,9 @@
 
     # Split notifications into multiple lines if they don't fit into
     # geometry.
-    word_wrap = no
+    word_wrap = yes
+
+    max_icon_size = 40
 
     # Ignore newlines '\n' in notifications.
     ignore_newline = no
@@ -153,13 +155,15 @@
 
     # Paths to default icons.
     # icon_folders = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+    # icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
     icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
     # Define the corner radius of the notification window
     # in pixel size. If the radius is 0, you have no rounded
     # corners.
     # The radius will be automatically lowered if it exceeds half of the
     # notification height to avoid clipping text and/or icons.
-    corner_radius = 5
+    corner_radius = 10
+
 
 [shortcuts]
     # Shortcuts are specified as [modifier+][modifier+]...key
@@ -181,20 +185,29 @@
     # Context menu.
     context = ctrl+shift+period
 
-# vim: ft=conf
+[taskwarrior]
+    category = taskwarrior
+    background = "#fe8019"
+    foreground = "#888888"
+    timeout = 9
+    icon = /home/mr00x/.config/dunst/bell.png
+
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#222222"
     foreground = "#888888"
     timeout = 8
+    icon = /home/mr00x/.config/dunst/bell.png
 
 [urgency_normal]
     background = "#282828"
     foreground = "#d5c4a1"
     timeout = 8
+    icon = /home/mr00x/.config/dunst/warning.png
 
 [urgency_critical]
     background = "#fe8019"
     foreground = "#fbf1c7"
     timeout = 0
+    icon = /home/mr00x/.config/dunst/critical.png
