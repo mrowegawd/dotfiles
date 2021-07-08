@@ -19,6 +19,9 @@ function config.nvim_bufferline()
     }
 end
 
+function config.barbar_nvim()
+end
+
 function config.dashboard()
     local home = os.getenv("HOME")
     vim.g.dashboard_footer_icon = "🐬 "
