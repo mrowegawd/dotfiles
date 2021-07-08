@@ -179,18 +179,21 @@ end
 function config.orgmode_nvim()
     require("orgmode").setup(
         {
-            org_agenda_files = {"~/MrKampang/vimwiki/org/*"},
-            org_default_notes_file = "~/MrKampang/vimwiki/org/refile.org",
-            org_todo_keywords = {"TODO", "NEXT", "|", "DONE", "DELEGATED"},
+            org_agenda_files = {"~/Dropbox/org/*", "~/Dropbox/org/org/*"},
+            org_default_notes_file = "~/Dropbox/org/org/refile.org",
+            org_todo_keywords = {"TODO", "CANCELED", "DELEGATED", "NEXT", "|", "DONE"},
+            org_hide_emphasis_markers = true,
+            org_log_done = nil,
             org_todo_keyword_faces = {
                 NEXT = ":background #0000ff :weight bold",
-                DELEGATED = ":background #FFFFFF :slant italic :underline on"
+                DELEGATED = ":background #FFFFFF :slant italic :underline on",
+                CANCELED = ":foreground yellow :underline on"
             },
             mappings = {
                 disable_all = false,
                 global = {
-                    org_agenda = "<Leader>oa",
-                    org_capture = "<Leader>oc"
+                    org_agenda = ",ww",
+                    org_capture = ",wc"
                 },
                 agenda = {
                     org_agenda_later = "f",
