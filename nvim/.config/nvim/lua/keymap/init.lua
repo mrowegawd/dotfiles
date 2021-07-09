@@ -73,7 +73,7 @@ local plug_map = {
     ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
     ["n|<Leader>fn"] = map_cu("Telescope notes"):with_noremap():with_silent(),
     ["n|<Leader>fN"] = map_cr(
-        [[<cmd>lua require('telescope.builtin').file_browser({cwd="~/MrKampang/vimwiki", prompt_title="Browse Notes"})<CR>]]
+        [[<cmd>lua require('telescope.builtin').file_browser({cwd="~/Dropbox/org", prompt_title="Browse Notes"})<CR>]]
     ):with_noremap():with_silent(),
     ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
     ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
@@ -98,17 +98,19 @@ local plug_map = {
     -- ["n|k"]              = map_cmd('v:lua.enhance_jk_move("k")'):with_silent():with_expr(),
     -- Plugin QuickRun
     ["n|<Leader>r"] = map_cr("<cmd> lua require'internal.quickrun'.run_command()"):with_noremap():with_silent(),
-    -- Plugin Neogit
-    ["n|<Leader>hs"] = map_cu("Neogit"):with_noremap():with_silent(),
-    -- Plugin Fugitive
-    -- ["n|<Leader>hs"] = map_cr("Git"):with_noremap():with_silent(),
-    ["n|<Leader>hS"] = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
-    ["n|<Leader>hq"] = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
-    ["n|<Leader>hl"] = map_cr("Gclog"):with_noremap():with_silent(),
+    -- Plugin Diffview
     ["n|<Leader>hv"] = map_cr([[lua require("internal.diffview").diffview()]]):with_noremap():with_silent(),
-    ["n|<Leader>hc"] = map_cr("Gclog -- %"):with_noremap():with_silent(),
+    -- Plugin Neogit
+    -- ["n|<Leader>hs"] = map_cu("Neogit"):with_noremap():with_silent(),
+    -- Plugin Fugitive
+    ["n|<Leader>hs"] = map_cr("Git"):with_noremap():with_silent(),
+    ["n|<Leader>hq"] = map_cmd("<c-w>h<c-w>c"):with_noremap():with_silent(),
+    ["n|<Leader>hll"] = map_cr("Gclog"):with_noremap():with_silent(),
+    ["n|<Leader>hlc"] = map_cr("Gclog -- %"):with_noremap():with_silent(),
+    ["n|<Leader>hlF"] = map_cr("0Gclog"):with_noremap():with_silent(),
     ["n|<Leader>hb"] = map_cr("Gblame"):with_noremap():with_silent(),
-    ["n|<Leader>hf"] = map_cr("0Gclog"):with_noremap():with_silent(),
+    ["n|<Leader>hD"] = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
+    ["n|<Leader>hd"] = map_cmd(":Gdiff HEAD~"):with_noremap():with_silent(),
     -- Plugin Maximizer
     ["n|<c-p>"] = map_cr("MaximizerToggle"):with_noremap():with_silent(),
     -- Plugin SymbolsOutline

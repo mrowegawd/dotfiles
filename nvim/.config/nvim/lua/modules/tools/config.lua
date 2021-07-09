@@ -114,6 +114,9 @@ end
 --   }
 -- end
 
+function config.fugitive()
+end
+
 function config.vim_floaterm()
     vim.g.floaterm_wintype = "float"
     vim.g.floaterm_width = 0.8

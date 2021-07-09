@@ -31,34 +31,45 @@ tools["windwp/nvim-spectre"] = {
     }
 }
 
--- tools["tpope/vim-fugitive"] = {
---     event = "BufRead"
--- }
-
-tools["TimUntersberger/neogit"] = {
+tools["tpope/vim-fugitive"] = {
     event = "BufRead",
-    config = function()
-        require("neogit").setup {
-            disable_signs = false,
-            disable_context_highlighting = true,
-            signs = {
-                -- { CLOSED, OPENED }
-                section = {"", ""},
-                item = {"+", "-"},
-                hunk = {"", ""}
-            },
-            integrations = {
-                diffview = true
-            }
-        }
-    end,
+    opt = true,
+    config = conf.fugitive,
     requires = {
-        "sindrets/diffview.nvim",
-        cmd = {"DiffViewOpen"},
-        opt = true,
-        module = "diffview"
+        {"tpope/vim-rhubarb", opt = true}
     }
 }
+
+tools["sindrets/diffview.nvim"] = {
+    event = "BufRead",
+    cmd = "DiffviewOpen",
+    opt = true
+}
+
+-- tools["TimUntersberger/neogit"] = {
+--     event = "BufRead",
+--     config = function()
+--         require("neogit").setup {
+--             disable_signs = false,
+--             disable_context_highlighting = true,
+--             signs = {
+--                 -- { CLOSED, OPENED }
+--                 section = {"", ""},
+--                 item = {"+", "-"},
+--                 hunk = {"", ""}
+--             },
+--             integrations = {
+--                 diffview = true
+--             }
+--         }
+--     end,
+--     requires = {
+--         "sindrets/diffview.nvim",
+--         cmd = {"DiffViewOpen"},
+--         opt = true,
+--         module = "diffview"
+--     }
+-- }
 
 tools["voldikss/vim-floaterm"] = {
     cmd = "FloatermToggle",
@@ -75,11 +86,6 @@ tools["iamcco/markdown-preview.nvim"] = {
         vim.g.mkdp_auto_start = 0
     end
 }
-
--- tools["vimwiki/vimwiki"] = {
---     cmd = {"VimwikiIndex"},
---     opt = true
--- }
 
 tools["fcpg/vim-waikiki"] = {
     ft = "markdown"

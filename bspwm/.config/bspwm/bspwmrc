@@ -61,6 +61,7 @@ if [ ! -f $startup_lock_file ]; then
   sleep 2
   firefox &
   sleep 2
+  rem -az | while read SPAM_OUT; do notify-send -t 5000 "$SPAM_OUT"; done &
   # "/home/mr00x/.local/bin/Todoist" &
   # "/home/mr00x/.local/bin/Notions" &
   clipmenud &
