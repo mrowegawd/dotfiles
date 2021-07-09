@@ -1,5 +1,6 @@
 local global = require("core.global")
 
+local root = vim.env.USER == "root"
 -- local function bind_option(options)
 --   for k, v in pairs(options) do
 --     if v == true or v == false then
@@ -14,9 +15,9 @@ local global = require("core.global")
 local function load_options()
     local global_local = {
         termguicolors = true,
-        -- mouse          = "nv";
         rnu = true,
         errorbells = true,
+        synmaxcol = 200,
         visualbell = true,
         hidden = true,
         fileformats = {"unix", "mac", "dos"},
@@ -26,12 +27,11 @@ local function load_options()
         viewoptions = {"folds", "cursor", "curdir", "slash", "unix"},
         sessionoptions = {"curdir", "globals", "help", "tabpages", "winsize"},
         clipboard = "unnamedplus",
-        -- colorscheme = "base16-gruvbox-dark-hard",
         wildignorecase = true,
         foldmethod = "indent",
         foldtext = "v:lua.FoldText()",
-        -- foldmethod = "expr",
-        -- foldexpr = "nvim_treesitter#foldexpr()",
+        wildmenu = true,
+        wildmode = "longest:full,full",
         wildignore = {
             ".git",
             ".hg",
@@ -50,14 +50,10 @@ local function load_options()
             "**/bower_modules/**"
         },
         backup = false,
-        -- backupcopy = "yes",
+        backupcopy = "yes",
         writebackup = false,
         swapfile = false,
-        undofile = true,
         guicursor = "a:block",
-        directory = global.cache_dir .. "swag/",
-        undodir = global.cache_dir .. "undo/",
-        backupdir = global.cache_dir .. "backup/",
         viewdir = global.cache_dir .. "view/",
         spellfile = global.cache_dir .. "spell/en.uft-8.add",
         history = 2000,
@@ -77,20 +73,22 @@ local function load_options()
         timeoutlen = 400,
         ttimeoutlen = 10,
         updatetime = 100,
+        updatecount = 80, -- update swapfiles every 80 typed chars,
         redrawtime = 600,
         ignorecase = true,
         smartcase = true,
-        infercase = true,
+        lazyredraw = true,
         incsearch = true,
         wrapscan = true,
         complete = {".", "w", "b", "k"},
         inccommand = "split",
+        spellcapcheck = "",
         -- grepformat     = "%f:%l:%c:%m";
         grepprg = "rg --hidden --vimgrep --smart-case --",
         -- grepprg = "rg --vimgrep --glob --smart-case '!*{.git,node_modules,build,bin,obj,README.md,tags}'",
         -- breakat        = [[\ \	;:,!?]];
         startofline = false,
-        -- whichwrap      = "h,l,<,>,[,],~";
+        whichwrap = "b,h,l,s,<,>,[,],~",
         splitbelow = true,
         splitright = true,
         switchbuf = "useopen",
@@ -100,13 +98,14 @@ local function load_options()
         completeopt = {"menuone,noselect"},
         jumpoptions = "stack",
         showmode = false,
-        shortmess = vim.o.shortmess .. "cA",
+        -- shortmess = vim.o.shortmess .. "cA", -- "AIOTWacot"
+        shortmess = "AIOTWacot",
         scrolloff = 2,
         sidescrolloff = 5,
         foldlevelstart = 99,
         ruler = false,
         list = true,
-        fillchars = {vert = "|"},
+        fillchars = {vert = "|", eob = " "},
         showtabline = 2,
         winwidth = 30,
         winminwidth = 10,
@@ -132,36 +131,29 @@ local function load_options()
         wrap = false,
         foldenable = true,
         linebreak = true,
-        -- formatoptions = "1jcroql",
         formatoptions = "cqornj2",
         number = true,
         numberwidth = 4,
         conceallevel = 2,
-        signcolumn = "yes" -- enable sign column all the time, 4 column
+        signcolumn = "yes"
     }
 
-    -- if global.is_mac then
-    --   vim.g.clipboard = {
-    --     name = "macOS-clipboard",
-    --     copy = {
-    --       ["+"] = "pbcopy",
-    --       ["*"] = "pbcopy",
-    --     },
-    --     paste = {
-    --       ["+"] = "pbpaste",
-    --       ["*"] = "pbpaste",
-    --     },
-    --     cache_enabled = 0
-    --   }
-    -- end
+    -- taken from https://github.com/wincent/wincent, awesome guy!
+    if root then
+        vim.opt.undofile = false -- don't create root-owned files
+    else
+        vim.opt.undodir = global.cache_dir .. "undo//" -- keep undo files out of the way
+        vim.opt.undodir = vim.opt.undodir + "." -- fallback
+        vim.opt.undofile = true -- actually use undo files
+    end
 
-    -- local bw_local  = {
-    --   synmaxcol      = 2500;
+    vim.opt.backupdir = global.cache_dir .. "backup//" -- keep backup files out of the way (ie. if 'backup' is ever set)
+    vim.opt.backupdir = vim.opt.backupdir + "." -- fallback
 
-    --   breakindentopt = "shift:2,min:20";
-    --   colorcolumn    = "80";
-    --   concealcursor  = "niv";
-    -- }
+    vim.opt.backupskip = vim.opt.backupskip + "*.re,*.rei" -- prevent bsb's watch mode from getting confused (if 'backup' is ever set)
+
+    vim.opt.directory = global.cache_dir .. "swap//" -- keep swap files out of the way
+    vim.opt.directory = vim.opt.directory + "." -- fallback
 
     vim.g.python_host_prog = global.home .. "/.config/neovim2/bin/python"
     vim.g.python3_host_prog = global.home .. "/.config/neovim3/bin/python"
@@ -170,31 +162,7 @@ local function load_options()
         vim.opt[name] = value
     end
 
-    -- Vimwiki
-    local wiki_path = os.getenv("HOME") .. "/Dropbox/org"
-
-    vim.g.vimwiki_list = {
-        {
-            path = wiki_path,
-            index = "home",
-            auto_diary_index = 1,
-            automatic_nested_syntaxes = 1,
-            syntax = "markdown",
-            template_default = "markdown",
-            ext = ".md"
-        }
-    }
-
-    -- Disable ALL Vimwiki key mappings
-    -- let g:vimwiki_listsyms          = '✗○◐●✓'
-    vim.g.vimwiki_key_mappings = {all_maps = 0}
-    vim.g.vimwiki_table_mappings = 0
-    vim.g.vimwiki_folding = "expr"
-    vim.g.vimwiki_global_ext = 0
-    vim.g.vimwiki_hl_cb_checked = 1
-    vim.g.vimwiki_hl_headers = 1
-    vim.g.vimwiki_markdown_link_ext = 1
-    --- END
+    vim.g.wiki_path = os.getenv("HOME") .. "/Dropbox/org"
 
     -- vsnip
     vim.g.vsnip_filetypes = {
