@@ -129,11 +129,10 @@ end
 
 Util.handleURL = function(isVisual)
     if isVisual then
-        local uri = fn.matchstr(fn.getline("."), '[a-z]*:\\/\\/[^ >,;")]*')
-        local expand_word = fn.expand("<cword>")
+        -- local uri = fn.matchstr(fn.getline("."), '[a-z]*:\\/\\/[^ >,;")]*') or ""
+        local uri = fn.matchstr(fn.getline("."), [[http[s]\?:\/\/[[:alnum:]%\/_#.-]*]]) or ""
 
-        -- local ustr = uri:gsub("]", "")
-        -- print(ustr)
+        local expand_word = fn.expand("<cword>")
 
         if uri ~= "" then
             print("open URL: " .. uri)
