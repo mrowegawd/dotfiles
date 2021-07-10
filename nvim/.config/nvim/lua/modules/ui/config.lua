@@ -194,8 +194,8 @@ function config.nvim_tree()
         {key = "-", cb = tree_cb("dir_up")},
         {key = "q", cb = tree_cb("close")},
         {key = "g?", cb = tree_cb("toggle_help")},
-        {key = "<A-UP>", cb = tree_cb("prev_git_item")},
-        {key = "<A-DOWN>", cb = tree_cb("next_git_item")}
+        {key = "<A-p>", cb = tree_cb("prev_git_item")},
+        {key = "<A-n>", cb = tree_cb("next_git_item")}
         -- ["<CR>"] = ":YourVimFunction()<cr>",
         -- ["u"] = ":lua require'some_module'.some_function()<cr>",
     }
