@@ -124,7 +124,7 @@ function config.vim_floaterm()
 end
 
 function config.todo_comments()
-    require("todo-comments").setup {
+    local opt = {
         signs = true, -- show icons in the signs column
         -- keywords recognized as todo comments
         keywords = {
@@ -177,6 +177,13 @@ function config.todo_comments()
             -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
         }
     }
+
+    local status_ok, todo_comments = pcall(require, "todo-comments")
+    if not status_ok then
+        print("+ todo_comments not active")
+        return
+    end
+    todo_comments.setup(opt)
 end
 
 function config.orgmode_nvim()

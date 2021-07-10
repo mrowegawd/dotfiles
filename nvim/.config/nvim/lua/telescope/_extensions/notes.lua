@@ -1,14 +1,12 @@
 local telescope = require("telescope")
 local conf = require("telescope._extensions.conf")
 
-local wiki_path = vim.g.vimwiki_list[1]["path"]
-
 local notes = function(opts)
     opts =
         {
         vimgrep_arguments = conf.custom_vimgrep_arguments,
         path_display = {"tail"},
-        search_dirs = {wiki_path},
+        search_dirs = {vim.g.wiki_path},
         prompt_title = "Find Notes",
         results_title = "My Notes"
     } or opts

@@ -10,6 +10,7 @@ editor["norcalli/nvim-colorizer.lua"] = {
     -- ft = {"html", "css", "sass", "vim", "typescript", "typescriptreact", "xdefaults"},
     cmd = "ColorizerToggle",
     opt = true,
+    event = "BufWinEnter",
     config = conf.nvim_colorizer
 }
 
