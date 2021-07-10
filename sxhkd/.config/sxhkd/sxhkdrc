@@ -6,7 +6,7 @@
 
 # base: terminal emulator
 super + Return
-        tilix
+        st
 
 # base: reload sxhkd
 super + shift + F8

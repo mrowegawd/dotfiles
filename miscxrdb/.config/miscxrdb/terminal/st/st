@@ -1,32 +1,16 @@
-st.font:          CaskaydiaCove Nerd Font:Regular:pixelsize=11:antialias=true:autohint=true
-/* st.font:          CaskaydiaCove Nerd Font:Regular:pixelsize=11 */
-! st.boldFont:      CaskaydiaCove Nerd Font:Bold:pixelsize=11:antialias=true:autohint=true */
-! st.italicFont:    CaskaydiaCove Nerd Font:Italic:pixelsize=11:antialias=true:autohint=true */
+st.font:          Iosevka Nerd Font:Regular:pixelsize=12:antialias=true:autohint=true
+st.boldFont:      Iosevka Nerd Font:Bold:pixelsize=12:antialias=true:autohint=true
+st.italicFont:    Iosevka Nerd Font:Italic:pixelsize=12:antialias=true:autohint=true
 
-st.borderpx: 10
-
-st.cursorshape:       2
-
-! thickness of underline and bar cursors
-st.cursorthickness:   2
-
-/* st.disablebold:       0 */
-/* st.disableitalics:    0 */
-/* st.disableroman:      0 */
-
-! Amount of lines scrolled
-st.scrollrate:  1
-
-st.boxdraw_bold: 0
-
-st.boxdraw_braille: 0
-
-st.depth: 0
-
-st.opacity:      255
-
-st.disable_alpha_correction: 0
-
+st.borderpx:                  10
+st.cursorshape:               2
+st.cursorthickness:           2
+st.scrollrate:                1
+st.boxdraw_bold:              0
+st.boxdraw_braille:           0
+st.depth:                     0
+st.opacity:                   255
+st.disable_alpha_correction:  0
 
 !t*font  : -*-tamzenforpowerline-medium-*-*-*-12-*-*-*-*-*-*-*
 !t*font1 : -*-tamzenforpowerline-medium-*-*-*-9-*-*-*-*-*-*-*
