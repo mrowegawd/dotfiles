@@ -1,7 +1,6 @@
 local api = vim.api
 local lsp = vim.lsp
 local lspconfig = require "lspconfig"
-local global = require "core.global"
 -- local format = require("modules.completion.format")
 
 local capabilities = lsp.protocol.make_client_capabilities()
@@ -9,7 +8,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 function _G.reload_lsp()
     lsp.stop_client(lsp.get_active_clients())
-    vim.cmd [[edit]]
+    vim.cmd([[edit]])
 end
 
 function _G.open_lsp_log()
@@ -161,11 +160,11 @@ lspconfig.gopls.setup {
 lspconfig.sumneko_lua.setup {
     on_attach = enhance_attach,
     cmd = {
-        global.home .. "/Downloads/lua-language-server/bin/Linux/lua-language-server",
+        O.default.home .. "/Downloads/lua-language-server/bin/Linux/lua-language-server",
         "-E",
         "-e",
         "LANG=en",
-        global.home .. "/Downloads/lua-language-server/main.lua"
+        O.default.home .. "/Downloads/lua-language-server/main.lua"
     },
     settings = {
         Lua = {

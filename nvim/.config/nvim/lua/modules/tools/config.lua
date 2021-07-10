@@ -1,6 +1,4 @@
 local config = {}
--- local global = require('core.global')
--- print(global.home)
 
 local function load_env_file()
     local env_file = os.getenv("HOME") .. "/.env"
@@ -31,7 +29,7 @@ end
 
 function config.vim_dadbod_ui()
     if packer_plugins["vim-dadbod"] and not packer_plugins["vim-dadbod"].loaded then
-        vim.cmd [[packadd vim-dadbod]]
+        vim.cmd([[packadd vim-dadbod]])
     end
     vim.g.db_ui_show_help = 0
     vim.g.db_ui_win_position = "left"

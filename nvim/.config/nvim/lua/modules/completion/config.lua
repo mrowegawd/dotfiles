@@ -20,15 +20,15 @@ function config.neoformat()
     -- vim.g.neoformat_enabled_python = {"autopep8", "yapf", "docformatter"}
     -- vim.g.neoformat_enabled_javascript = {"prettier"}
     -- -- if not O.format_on_save then
-    -- vim.cmd [[if exists('#autoformat#BufWritePre')
+    -- vim.cmd([[if exists('#autoformat#BufWritePre')
     --     :autocmd! autoformat
     --     endif]]
-    -- -- end
+    -- -- end)
 end
 
 function config.nvim_compe()
     local opt = {
-        enabled = true,
+        enabled = O.plugin.lsp.completion,
         debug = false,
         autocomplete = true,
         min_length = 1,
@@ -158,10 +158,10 @@ end
 
 function config.telescope()
     if not packer_plugins["popup.nvim"].loaded then
-        vim.cmd [[packadd plenary.nvim]]
-        vim.cmd [[packadd popup.nvim]]
-        vim.cmd [[packadd cfilter]] -- for filter quickfix, :h cfilter-plugin
-        vim.cmd [[packadd telescope-fzf-native.nvim]]
+        vim.cmd([[packadd plenary.nvim]])
+        vim.cmd([[packadd popup.nvim]])
+        vim.cmd([[packadd cfilter]]) -- for filter quickfix, :h cfilter-plugin
+        vim.cmd([[packadd telescope-fzf-native.nvim]])
     end
     local action_state = require("telescope.actions.state")
     local actions = require("telescope.actions")

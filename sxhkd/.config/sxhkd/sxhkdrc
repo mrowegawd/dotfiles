@@ -72,7 +72,6 @@ super + {o,i}
         bspc node {older,newer} -f; \
         bspc wm -h on
 
-
 ########################################
 # Preselection
 ########################################
@@ -173,10 +172,10 @@ super + shift + c
         clipmenu
 
 # misc: run calcurse
-# super + shift + l
-#         $HOME/.config/rofi/scripts/lock.sh
+super + shift + l
+        $HOME/.config/rofi/scripts/lock.sh
 
-# misc: run obsidian
+misc: run obsidian
 super + shift + o
         obsidian --no-sandbox
 

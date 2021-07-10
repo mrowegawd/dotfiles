@@ -23,8 +23,6 @@ function config.barbar_nvim()
 end
 
 function config.dashboard()
-    local global = require("core.global")
-
     vim.g.dashboard_disable_at_vimenter = 0
     -- NOTE: to create ascii check -> https://lachlanarthur.github.io/Braille-ASCII-Art/
     vim.g.dashboard_custom_header = {
@@ -62,7 +60,7 @@ function config.dashboard()
     -- vim.g.dashboard_preview_file_height = 15
     -- vim.g.dashboard_preview_file_width = 80
     -- vim.g.dashboard_default_executive = "telescope"
-    vim.g.dashboard_session_directory = global.cache_dir .. "session"
+    vim.g.dashboard_session_directory = O.default.cache_dir .. "session"
     vim.g.dashboard_custom_section = {
         last_session = {
             description = {"  Recently laset session                 SPC s l"},
@@ -88,7 +86,7 @@ function config.dashboard()
 end
 
 function config.set_colorscheme()
-    vim.cmd("colorscheme base16-gruvbox-dark-medium")
+    vim.cmd(string.format("colorscheme %s", O.default.colorscheme))
 end
 
 function config.startify()
@@ -243,7 +241,7 @@ end
 
 function config.gitsigns()
     if not packer_plugins["plenary.nvim"].loaded then
-        vim.cmd [[packadd plenary.nvim]]
+        vim.cmd([[packadd plenary.nvim]])
     end
     require("gitsigns").setup {
         signs = {

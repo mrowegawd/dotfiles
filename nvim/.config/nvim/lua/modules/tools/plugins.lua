@@ -23,6 +23,7 @@ tools["simrat39/symbols-outline.nvim"] = {
 
 tools["windwp/nvim-spectre"] = {
     module = "spectre",
+    event = "WinEnter",
     wants = {"plenary.nvim", "popup.nvim"},
     config = conf.nvim_spectre,
     requires = {

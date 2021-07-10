@@ -1,5 +1,3 @@
-local global = require("core.global")
-
 local root = vim.env.USER == "root"
 -- local function bind_option(options)
 --   for k, v in pairs(options) do
@@ -54,8 +52,8 @@ local function load_options()
         writebackup = false,
         swapfile = false,
         guicursor = "a:block",
-        viewdir = global.cache_dir .. "view/",
-        spellfile = global.cache_dir .. "spell/en.uft-8.add",
+        viewdir = O.default.cache_dir .. "view/",
+        spellfile = O.default.cache_dir .. "spell/en.uft-8.add",
         history = 2000,
         --  ShaDa/viminfo:
         --   ' - Maximum number of previously edited files marks
@@ -142,51 +140,47 @@ local function load_options()
     if root then
         vim.opt.undofile = false -- don't create root-owned files
     else
-        vim.opt.undodir = global.cache_dir .. "undo//" -- keep undo files out of the way
+        vim.opt.undodir = O.default.cache_dir .. "undo//" -- keep undo files out of the way
         vim.opt.undodir = vim.opt.undodir + "." -- fallback
         vim.opt.undofile = true -- actually use undo files
     end
 
-    vim.opt.backupdir = global.cache_dir .. "backup//" -- keep backup files out of the way (ie. if 'backup' is ever set)
+    vim.opt.backupdir = O.default.cache_dir .. "backup//" -- keep backup files out of the way (ie. if 'backup' is ever set)
     vim.opt.backupdir = vim.opt.backupdir + "." -- fallback
 
     vim.opt.backupskip = vim.opt.backupskip + "*.re,*.rei" -- prevent bsb's watch mode from getting confused (if 'backup' is ever set)
 
-    vim.opt.directory = global.cache_dir .. "swap//" -- keep swap files out of the way
+    vim.opt.directory = O.default.cache_dir .. "swap//" -- keep swap files out of the way
     vim.opt.directory = vim.opt.directory + "." -- fallback
 
-    vim.g.python_host_prog = global.home .. "/.config/neovim2/bin/python"
-    vim.g.python3_host_prog = global.home .. "/.config/neovim3/bin/python"
+    vim.g.python_host_prog = O.default.home .. "/.config/neovim2/bin/python"
+    vim.g.python3_host_prog = O.default.home .. "/.config/neovim3/bin/python"
 
     for name, value in pairs(global_local) do
         vim.opt[name] = value
     end
-
-    vim.g.wiki_path = os.getenv("HOME") .. "/Dropbox/org"
 
     -- vsnip
     vim.g.vsnip_filetypes = {
         ["typescript"] = {"javascript"},
         ["svelte"] = {"javascript", "typescript", "html"}
     }
+
+    vim.cmd([[cab Wq wq]])
+    vim.cmd([[cab Q! q!]])
+    vim.cmd([[cab Q!! q!]])
+    vim.cmd([[cab q!! q!]])
+    vim.cmd([[cab WQ wq]])
+    vim.cmd([[cab Q1 q!]])
+    vim.cmd([[cab W1 up!]])
+    vim.cmd([[cab W! up!]])
+    vim.cmd([[cab w; up!]])
+    vim.cmd([[cab W; up!]])
+    vim.cmd([[cab W up]])
+    vim.cmd([[cab Q q]])
+    vim.cmd([[cab bD bd]])
+    vim.cmd([[cab w@ up!]])
+    vim.cmd([[cab W@ up!]])
 end
-
--- cab Wq wq
--- cab Q! q!
--- cab Q!! q!
--- cab q!! q!
--- cab WQ wq
--- cab Q1 q!
--- cab W1 up!
--- cab W! up!
--- cab w; up!
--- cab W; up!
--- cab W up
--- cab Q q
--- cab bD bd
--- cab w@ up!
--- cab W@ up!
-
--- iab <expr> :time: strftime("%c")
 
 load_options()

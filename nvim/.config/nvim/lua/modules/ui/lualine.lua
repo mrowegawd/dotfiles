@@ -17,7 +17,20 @@ local function lsp_progress()
     return table.concat(status, " | ") .. " " .. spinners[frame + 1]
 end
 
-vim.cmd [[autocmd User LspProgressUpdate let &ro = &ro]]
+local filename_dir = function()
+    local basename = vim.fn.expand("%:t")
+
+    if vim.bo.readonly == true then
+        basename = basename .. "%#WarningMsg#" .. " "
+    end
+    if vim.bo.modified == true then
+        basename = basename .. " ..✘"
+    end
+
+    return basename
+end
+
+vim.cmd([[autocmd User LspProgressUpdate let &ro = &ro]])
 
 require("lualine").setup(
     {
@@ -31,7 +44,7 @@ require("lualine").setup(
         sections = {
             lualine_a = {"mode"},
             lualine_b = {"branch"},
-            lualine_c = {{"diagnostics", sources = {"nvim_lsp"}}, "filename"},
+            lualine_c = {{"diagnostics", sources = {"nvim_lsp"}}, filename_dir},
             lualine_x = {"filetype", lsp_progress},
             lualine_y = {"progress"},
             lualine_z = {"location", clock}
@@ -39,7 +52,7 @@ require("lualine").setup(
         inactive_sections = {
             lualine_a = {},
             lualine_b = {},
-            lualine_c = {{"filename", path = 0}},
+            lualine_c = {{filename_dir, path = 0}},
             lualine_x = {"location"},
             lualine_y = {},
             lualine_z = {}

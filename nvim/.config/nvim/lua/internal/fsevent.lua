@@ -164,7 +164,7 @@ function fs:render_window()
     api.nvim_buf_set_option(self.input_cb, "buftype", "prompt")
     vim.fn.prompt_setprompt(self.input_cb, self.prompt_prefix)
     api.nvim_buf_add_highlight(self.input_cb, file_input_prefix, "FileInputPrefix", 0, 0, #self.prompt_prefix)
-    vim.cmd [[startinsert!]]
+    vim.cmd([[startinsert!]])
     api.nvim_command('inoremap <buffer><nowait><silent> <cr> <cmd>lua require("internal.fsevent").do_file_action()<CR>')
     api.nvim_command(
         'inoremap <buffer><nowait><silent> <C-c> <cmd>lua require("internal.fsevent").quit_fs_window()<CR>'
@@ -174,7 +174,7 @@ end
 
 function fs:quit_fs_window()
     if vim.fn.mode() == "i" then
-        vim.cmd [[stopinsert]]
+        vim.cmd([[stopinsert]])
     end
     window.nvim_close_valid_window({self.input_cw, self.input_bw, self.hcw, self.hbw})
 end

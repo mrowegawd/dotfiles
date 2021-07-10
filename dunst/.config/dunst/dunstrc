@@ -154,7 +154,7 @@
     max_icon_size = 40
 
     # Paths to default icons.
-    icon_folders = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
 
     # Define the corner radius of the notification window
     # in pixel size. If the radius is 0, you have no rounded
