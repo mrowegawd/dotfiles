@@ -75,7 +75,8 @@ function autocmd.load_autocmds()
             {"BufNewFile,BufRead", "*.toml", " setf toml"},
             {"TermOpen", "*", " setf bufhidden=hide | :startinsert"},
             {"TermOpen", "*", " setf nonumber norelativenumber"},
-            {"FileType", "qf", "wincmd J"}
+            {"FileType", "qf", "wincmd J"},
+            {"BufWritePre", "*", [[try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry]]}
         },
         yank = {
             {"TextYankPost", [[* silent! lua vim.highlight.on_yank({higroup="IncSearch", timeout=400})]]}

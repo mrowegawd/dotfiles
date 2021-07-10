@@ -6,13 +6,6 @@ local map_args = bind.map_args
 require("keymap.config")
 
 local plug_map = {
-    ["i|<TAB>"] = map_cmd("v:lua.tab_complete()"):with_expr():with_silent(),
-    ["i|<S-TAB>"] = map_cmd("v:lua.s_tab_complete()"):with_silent():with_expr(),
-    ["i|<CR>"] = map_cmd([[compe#confirm({ 'keys': "\<Plug>delimitMateCR", 'mode': '' })]]):with_noremap():with_expr():with_nowait(
-
-    ),
-    ["i|<C-n>"] = map_cmd([[compe#complete()]]):with_noremap():with_expr():with_nowait(),
-    -- person keymap
     ["n|mf"] = map_cr("<cmd>lua require('internal.fsevent').file_event()<CR>"):with_silent():with_nowait():with_noremap(
 
     ),
@@ -133,8 +126,8 @@ local plug_map = {
     ["x|gI"] = map_cmd("v:lua.enhance_nice_block('gI')"):with_expr(),
     ["x|A"] = map_cmd("v:lua.enhance_nice_block('A')"):with_expr(),
     -- Plugin Dashboard
-    ["x|<localleader>ss"] = map_cmd("SessionSave"):with_expr(),
-    ["x|<localleader>sl"] = map_cmd("SessionLoad"):with_expr(),
+    ["n|<Localleader>ss"] = map_cu("SessionSave"):with_silent(),
+    ["n|<Localleader>sl"] = map_cu("SessionLoad"):with_silent(),
     -- Plugin Obvious
     ["n|<A-S-k>"] = map_cu("ObviousResizeUp"):with_silent(),
     ["n|<A-S-j>"] = map_cu("ObviousResizeDown"):with_silent(),
