@@ -132,6 +132,9 @@ local plug_map = {
     ["x|I"] = map_cmd("v:lua.enhance_nice_block('I')"):with_expr(),
     ["x|gI"] = map_cmd("v:lua.enhance_nice_block('gI')"):with_expr(),
     ["x|A"] = map_cmd("v:lua.enhance_nice_block('A')"):with_expr(),
+    -- Plugin Dashboard
+    ["x|<localleader>ss"] = map_cmd("SessionSave"):with_expr(),
+    ["x|<localleader>sl"] = map_cmd("SessionLoad"):with_expr(),
     -- Plugin Obvious
     ["n|<A-S-k>"] = map_cu("ObviousResizeUp"):with_silent(),
     ["n|<A-S-j>"] = map_cu("ObviousResizeDown"):with_silent(),

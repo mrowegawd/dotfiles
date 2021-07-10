@@ -5,13 +5,17 @@ completion["neovim/nvim-lspconfig"] = {
     event = "BufRead",
     config = conf.nvim_lsp,
     opt = true,
-    wants = {"null-ls.nvim"},
     requires = {
         "ray-x/lsp_signature.nvim",
-        "jose-elias-alvarez/nvim-lsp-ts-utils",
-        "jose-elias-alvarez/null-ls.nvim"
+        "jose-elias-alvarez/nvim-lsp-ts-utils"
+        -- "jose-elias-alvarez/null-ls.nvim"
         -- "folke/lsp-colors.nvim"
     }
+}
+
+completion["sbdchd/neoformat"] = {
+    event = "BufRead",
+    config = conf.neoformat
 }
 
 completion["hrsh7th/nvim-compe"] = {
