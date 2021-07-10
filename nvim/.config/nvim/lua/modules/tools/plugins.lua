@@ -12,6 +12,7 @@ tools["editorconfig/editorconfig-vim"] = {
 }
 
 tools["windwp/nvim-autopairs"] = {
+    event = "InsertEnter",
     requires = "tpope/vim-commentary"
 }
 
@@ -34,10 +35,7 @@ tools["windwp/nvim-spectre"] = {
 tools["tpope/vim-fugitive"] = {
     event = "BufRead",
     opt = true,
-    config = conf.fugitive,
-    requires = {
-        {"tpope/vim-rhubarb", opt = true}
-    }
+    config = conf.fugitive
 }
 
 tools["sindrets/diffview.nvim"] = {
@@ -112,12 +110,17 @@ tools["szw/vim-maximizer"] = {
 }
 
 tools["folke/todo-comments.nvim"] = {
-    cmd = {"TodoQuickFix"},
+    cmd = "TodoQuickFix",
     config = conf.todo_comments,
-    opt = true,
+    disable = not true,
     require = {
         {"nvim-lua/plenary.nvim", opt = true}
     }
+}
+
+tools["folke/trouble.nvim"] = {
+    cmd = "TroubleToggle",
+    disable = not true
 }
 
 tools["kristijanhusak/orgmode.nvim"] = {
