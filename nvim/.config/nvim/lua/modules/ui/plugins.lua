@@ -24,7 +24,8 @@ ui["glepnir/zephyr-nvim"] = {
 
 ui["glepnir/dashboard-nvim"] = {
     event = "BufWinEnter",
-    config = conf.dashboard
+    config = conf.dashboard,
+    disable = not true
 }
 
 -- ui["mhinz/vim-startify"] = {
