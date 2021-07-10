@@ -18,7 +18,8 @@
   autoSetupRebase = always
 
 [credential]
-  helper = cache
+    helper = store --file ~/.git-credentials
+    helper = cache --timeout 30000
 
 [status]
   short = true
