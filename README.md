@@ -1,6 +1,6 @@
 # [[[ MOVING TO LUA CONFIG!!!]]]
 
-My Lovely :heart: Debian configs
+My Lovely :heart: Debian configs,
 
 > Some codes is not my original..they all belongs to credits people.
 > I just make some configs/refactoring for my needs
