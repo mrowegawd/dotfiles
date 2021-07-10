@@ -7,9 +7,8 @@ completion["neovim/nvim-lspconfig"] = {
     opt = true,
     requires = {
         "ray-x/lsp_signature.nvim",
-        "jose-elias-alvarez/nvim-lsp-ts-utils"
-        -- "jose-elias-alvarez/null-ls.nvim"
-        -- "folke/lsp-colors.nvim"
+        "jose-elias-alvarez/nvim-lsp-ts-utils",
+        "jose-elias-alvarez/null-ls.nvim"
     }
 }
 

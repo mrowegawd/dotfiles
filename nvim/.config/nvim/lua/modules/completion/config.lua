@@ -4,32 +4,66 @@ function config.nvim_lsp()
     require("modules.completion.lspconfig")
 end
 
+function config.neoformat()
+    -- if O.format_on_save then
+    -- require("lv-utils").define_augroups {
+    --     autoformat = {
+    --         {
+    --             "BufWritePre",
+    --             "*",
+    --             [[try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry]]
+    --         }
+    --     }
+    -- }
+    vim.g.neoformat_basic_format_trim = 1 -- -- end
+    -- vim.g.neoformat_run_all_formatters = 0
+    -- vim.g.neoformat_enabled_python = {"autopep8", "yapf", "docformatter"}
+    -- vim.g.neoformat_enabled_javascript = {"prettier"}
+    -- -- if not O.format_on_save then
+    -- vim.cmd [[if exists('#autoformat#BufWritePre')
+    --     :autocmd! autoformat
+    --     endif]]
+    -- -- end
+end
+
 function config.nvim_compe()
-    require "compe".setup {
+    local opt = {
         enabled = true,
         debug = false,
         autocomplete = true,
         min_length = 1,
-        allow_prefix_unmatch = true,
-        preselect = "always",
+        preselect = "enable",
+        throttle_time = 80,
+        source_timeout = 200,
+        incomplete_delay = 400,
+        max_abbr_width = 100,
+        max_kind_width = 100,
+        max_menu_width = 100,
+        documentation = true,
         source = {
+            path = {kind = "   (Path)"},
+            buffer = {kind = "   (Buffer)"},
+            calc = {kind = "   (Calc)"},
             -- vsnip = {kind = "S ", priority = 2000, sort = true, fuzzy = false},
-            vsnip = {kind = "S ", fuzzy = false},
-            path = {kind = " "},
-            buffer = {kind = " "},
-            calc = {kind = "  "},
-            nvim_lsp = {kind = " "},
-            nvim_lua = {kind = " "},
-            treesitter = {kind = " "},
-            orgmode = true,
-            -- spell = {kind = " "},
+            vsnip = {kind = "   (Snippet)"},
+            nvim_lsp = {kind = "   (LSP)"},
+            treesitter = {kind = " (TreeSitter)"},
+            emoji = {kind = " ﲃ  (Emoji)", filetypes = {"markdown", "text"}},
+            orgmode = {kind = " + (Orgmode)"},
+            nvim_lua = false,
             spell = false,
             tags = false,
             snippets_nvim = false -- { kind = " " },
-            -- emoji = { kind = " ﲃ " },
-            -- for emoji press : (idk how make this work?)
         }
     }
+
+    local status_ok, compe = pcall(require, "compe")
+    if not status_ok then
+        print("+ compe not active")
+        return
+    end
+
+    compe.setup(opt)
 
     vim.lsp.protocol.CompletionItemKind = {
         " text",
@@ -58,6 +92,54 @@ function config.nvim_compe()
         " operator",
         "♛ type"
     }
+
+    local check_back_space = function()
+        local col = vim.fn.col "." - 1
+        if col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
+            return true
+        else
+            return false
+        end
+    end
+
+    local t = function(str)
+        return vim.api.nvim_replace_termcodes(str, true, true, true)
+    end
+
+    --- move to prev/next item in completion menuone
+    --- jump to prev/next snippet's placeholder
+    _G.tab_complete = function()
+        if vim.fn.pumvisible() == 1 then
+            return t "<C-n>"
+        elseif vim.fn.call("vsnip#available", {1}) == 1 then
+            return t "<Plug>(vsnip-expand-or-jump)"
+        elseif check_back_space() then
+            return t "<Tab>"
+        else
+            return vim.fn["compe#complete"]()
+        end
+    end
+
+    _G.s_tab_complete = function()
+        if vim.fn.pumvisible() == 1 then
+            return t "<C-p>"
+        elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+            return t "<Plug>(vsnip-jump-prev)"
+        else
+            return t "<S-Tab>"
+        end
+    end
+
+    vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+    vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+    vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+    vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+    vim.api.nvim_set_keymap("i", "<C-space>", "compe#complete()", {noremap = true, silent = true, expr = true})
+    vim.api.nvim_set_keymap("i", "<CR>", "compe#confirm('<CR>')", {noremap = true, silent = true, expr = true})
+    vim.api.nvim_set_keymap("i", "<C-e>", "compe#close('<C-e>')", {noremap = true, silent = true, expr = true})
+    vim.api.nvim_set_keymap("i", "<C-f>", "compe#scroll({ 'delta': +4 })", {noremap = true, silent = true, expr = true})
+    vim.api.nvim_set_keymap("i", "<C-b>", "compe#scroll({ 'delta': -4 })", {noremap = true, silent = true, expr = true})
 end
 
 function config.vim_vsnip()

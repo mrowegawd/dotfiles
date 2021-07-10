@@ -1,30 +1,12 @@
 local null_ls = require("null-ls")
 -- local h = require("null-ls.helpers")
 -- local methods = require("null-ls.methods")
-local b = null_ls.builtins
+-- local b = null_ls.builtins
 
 local sources = {
-    b.formatting.prettierd.with(
-        {
-            command = "./node_modules/.bin/prettier"
-        }
-    ),
-    b.formatting.trim_whitespace.with({filetypes = {"tmux", "fish", "teal", "org"}}),
-    b.formatting.black,
-    b.formatting.isort,
-    b.formatting.lua_format.with(
-        {
-            command = "luafmt",
-            args = {"--stdin"},
-            to_stdin = true
-        }
-    )
-
-    -- b.formatting.eslint_d,
-    -- b.diagnostics.teal,
-    -- b.code_actions.gitsigns
-    -- b.diagnostics.write_good,
-    -- b.diagnostics.markdownlint,
+    null_ls.builtins.diagnostics.shellcheck,
+    null_ls.builtins.diagnostics.markdownlint,
+    null_ls.builtins.diagnostics.selene
 }
 
 local M = {}
