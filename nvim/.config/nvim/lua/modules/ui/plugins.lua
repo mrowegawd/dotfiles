@@ -3,6 +3,7 @@ local conf = require("modules.ui.config")
 
 ui["akinsho/nvim-bufferline.lua"] = {
     config = conf.nvim_bufferline,
+    event = "BufWinEnter",
     requires = "kyazdani42/nvim-web-devicons"
 }
 
@@ -21,9 +22,10 @@ ui["glepnir/zephyr-nvim"] = {
     }
 }
 
--- ui['glepnir/dashboard-nvim'] = {
---   config = conf.dashboard
--- }
+ui["glepnir/dashboard-nvim"] = {
+    event = "BufWinEnter",
+    config = conf.dashboard
+}
 
 -- ui["mhinz/vim-startify"] = {
 --     config = conf.startify
