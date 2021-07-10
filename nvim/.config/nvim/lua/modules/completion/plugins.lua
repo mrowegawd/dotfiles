@@ -7,8 +7,18 @@ completion["neovim/nvim-lspconfig"] = {
     opt = true,
     requires = {
         "ray-x/lsp_signature.nvim",
-        "jose-elias-alvarez/nvim-lsp-ts-utils",
         "jose-elias-alvarez/null-ls.nvim"
+    }
+}
+
+completion["jose-elias-alvarez/nvim-lsp-ts-utils"] = {
+    ft = {
+        "javascript",
+        "javascriptreact",
+        "javascript.jsx",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx"
     }
 }
 

@@ -5,14 +5,12 @@ XAUTHORITY=/home/$USER/.Xauthority
 export XAUTHORITY
 
 pid=$(ps -C rem -o pid=)
-if [ -n "$pid" ]
-then
+if [ -n "$pid" ]; then
   #Remind is running so restart it
-  kill $pid
-  rem -az | while read SPAM_OUT; do notify-send -t 100000 "$SPAM_OUT" -i /home/$USER/.config/dunst/checklist.png; done &
+  kill "$pid"
 else
   #Remind is NOT running so start it
   # rem -az | while read SPAM_OUT; do notify-send -t 100000 "$SPAM_OUT"; done &
-  rem -az | while read SPAM_OUT; do notify-send -t 100000 "$SPAM_OUT" -i /home/$USER/.config/dunst/checklist.png; done &
+  rem -az | while read -r SPAM_OUT; do notify-send -t 100000 "$SPAM_OUT" -i "/home/$USER/.config/dunst/checklist.png"; done &
 fi
 exit

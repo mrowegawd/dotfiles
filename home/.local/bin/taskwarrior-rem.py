@@ -2,7 +2,7 @@
 import json
 import subprocess
 
-from tasklib import TaskWarrior   # pip install tasklib
+from tasklib import TaskWarrior  # pip install tasklib
 
 outfile = "/home/mr00x/.reminders"
 
