@@ -70,7 +70,7 @@ function config.session()
         log_level = "info",
         auto_session_enable_last_session = false,
         auto_session_root_dir = O.default.cache_dir .. "session/",
-        auto_session_enabled = true,
+        auto_session_enabled = O.plugin.common.auto_session,
         auto_save_enabled = true,
         auto_restore_enabled = nil,
         auto_session_suppress_dirs = nil
@@ -200,8 +200,8 @@ end
 function config.orgmode_nvim()
     require("orgmode").setup(
         {
-            org_agenda_files = {"~/Dropbox/org/*", "~/Dropbox/org/org/*"},
-            org_default_notes_file = "~/Dropbox/org/org/refile.org",
+            org_agenda_files = {O.plugin.common.wiki_path .. "/*", O.plugin.common.wiki_path .. "/org/*"},
+            org_default_notes_file = O.plugin.common.wiki_path .. "/org/refile.org",
             org_todo_keywords = {"TODO", "CANCELED", "DELEGATED", "NEXT", "|", "DONE"},
             org_hide_emphasis_markers = true,
             org_log_done = nil,

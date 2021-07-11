@@ -22,7 +22,8 @@ O = {
             completion = true
         },
         common = {
-            wiki_path = os.getenv("HOME") .. "/Dropbox/org"
+            wiki_path = os.getenv("HOME") .. "/Dropbox/org",
+            auto_session = false
         }
     }
 }
