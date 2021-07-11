@@ -44,8 +44,9 @@ editor["rhysd/vim-operator-surround"] = {
     requires = "kana/vim-operator-user"
 }
 
--- editor['kana/vim-niceblock']  = {
---   opt = true
+-- editor["kana/vim-niceblock"] = {
+--     event = "BufRead",
+--     opt = true
 -- }
 
 editor["mfussenegger/nvim-dap"] = {

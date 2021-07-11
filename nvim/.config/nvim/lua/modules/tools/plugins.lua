@@ -33,6 +33,20 @@ tools["windwp/nvim-spectre"] = {
     }
 }
 
+tools["rmagatti/auto-session"] = {
+    config = conf.session
+}
+
+tools["rmagatti/session-lens"] = {
+    cmd = "SearchSession",
+    config = function()
+        require("session-lens").setup {
+            shorten_path = true,
+            previewer = true
+        }
+    end
+}
+
 tools["tpope/vim-fugitive"] = {
     event = "BufRead",
     opt = true,

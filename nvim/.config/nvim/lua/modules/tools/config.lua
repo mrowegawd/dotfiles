@@ -65,6 +65,19 @@ function config.nvim_spectre()
     )
 end
 
+function config.session()
+    local opts = {
+        log_level = "info",
+        auto_session_enable_last_session = false,
+        auto_session_root_dir = O.default.cache_dir .. "session/",
+        auto_session_enabled = true,
+        auto_save_enabled = true,
+        auto_restore_enabled = nil,
+        auto_session_suppress_dirs = nil
+    }
+    require("auto-session").setup(opts)
+end
+
 -- function config.nvim_toggleterm ()
 --   local stats = vim.api.nvim_list_uis()[1]
 --   local width = stats.width
