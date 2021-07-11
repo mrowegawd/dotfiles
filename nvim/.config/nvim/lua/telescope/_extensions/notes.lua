@@ -1,12 +1,11 @@
 local telescope = require("telescope")
-local conf = require("telescope._extensions.conf")
 
 local notes = function(opts)
     opts =
         {
-        vimgrep_arguments = conf.custom_vimgrep_arguments,
+        vimgrep_arguments = O.default.vimgrep_arguments,
         path_display = {"tail"},
-        search_dirs = {O.plugin.common.wiki_path},
+        search_dirs = {O.plugin.common.wiki_path, O.plugin.common.wiki_path .. "/org"},
         prompt_title = "Find Notes",
         results_title = "My Notes"
     } or opts

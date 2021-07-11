@@ -15,7 +15,20 @@ O = {
         path_sep = path_sep,
         home = home,
         data_dir = string.format("%s/site/", vim.fn.stdpath("data")),
-        colorscheme = "base16-gruvbox-dark-medium"
+        colorscheme = "base16-gruvbox-dark-medium",
+        vimgrep_arguments = {
+            "rg",
+            "--hidden",
+            "--follow",
+            "--no-ignore-vcs",
+            "-g",
+            "!{node_modules,.git,__pycache__,.pytest_cache}",
+            "--no-heading",
+            "--with-filename",
+            "--line-number",
+            "--column",
+            "--smart-case"
+        }
     },
     plugin = {
         lsp = {

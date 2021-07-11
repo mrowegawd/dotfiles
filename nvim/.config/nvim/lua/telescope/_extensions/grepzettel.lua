@@ -1,5 +1,4 @@
 local telescope = require("telescope")
-local conf = require("telescope._extensions.conf")
 local util = require("internal.util")
 
 local function removeDuplicates(arr)
@@ -39,7 +38,7 @@ local grepzettel = function(opts)
 
     opts =
         {
-        vimgrep_arguments = conf.custom_vimgrep_arguments,
+        vimgrep_arguments = O.default.vimgrep_arguments,
         path_display = {"tail"},
         search_dirs = removeDuplicates(path), -- much better, unique path
         prompt_title = "Find Zettel"
