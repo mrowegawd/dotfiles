@@ -214,6 +214,20 @@ function config.orgmode_nvim()
                 HBD = ":foreground green :slant bold :underline on",
                 CANCELED = ":foreground yellow :underline on"
             },
+            org_agenda_templates = {
+                t = {description = "Task", template = "* TODO %?\n SCHEDULED: %t"},
+                l = {description = "Link", template = "* %?\n%a"},
+                j = {
+                    description = "Journal",
+                    template = "\n*** %<%Y-%m-%d> %<%A>\n**** %U\n\n%?",
+                    target = O.plugin.common.wiki_path .. "/journal.org"
+                },
+                p = {
+                    description = "Project Todo",
+                    template = "* TODO %? \nSCHEDULED: %t",
+                    target = O.plugin.common.wiki_path .. "/org/refile.org"
+                }
+            },
             mappings = {
                 disable_all = false,
                 global = {
