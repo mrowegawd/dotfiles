@@ -11,6 +11,9 @@ recurrence.confirmation=no
 uda.url.type=string
 uda.url.label=Url
 
+task rc.reserved.lines=2
+
+report.custom.filter=status:pending and +READY
 report.in.columns		= id,description
 report.in.description	= Inbox
 report.in.filter		= status:pending limit:page (+in)

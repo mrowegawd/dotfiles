@@ -4,6 +4,8 @@ XAUTHORITY=/home/$USER/.Xauthority
 
 export XAUTHORITY
 
+/home/mr00x/.asdf/shims/python /home/mr00x/.local/bin/taskwarrior-rem.py
+
 pid=$(ps -C rem -o pid=)
 if [ -n "$pid" ]; then
   #Remind is running so restart it
