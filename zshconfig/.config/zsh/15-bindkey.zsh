@@ -20,8 +20,8 @@ bindkey -M viins '^D' delete-char-or-list
 bindkey -M viins '^E' end-of-line
 bindkey -M viins '^F' forward-char
 bindkey -M viins '^K' kill-line
-bindkey -M viins '^P' history-beginning-search-backward-end
-bindkey -M viins '^N' history-beginning-search-forward-end
+# bindkey -M viins '^P' history-beginning-search-backward-end
+# bindkey -M viins '^N' history-beginning-search-forward-end
 bindkey -M viins '^e' edit-command-line
 bindkey -M viins '^[[Z' reverse-menu-complete
 
@@ -37,7 +37,7 @@ bindkey -M viins '^[[Z' reverse-menu-complete
 # bindkey "^[=" back-one-dir
 
 # bindkey " "     magic-space
-# bindkey '^p'    clear-screen
+bindkey '^p' clear-screen
 
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history

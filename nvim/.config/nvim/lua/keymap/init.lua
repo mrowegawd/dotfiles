@@ -121,10 +121,6 @@ local plug_map = {
     ["n|F"] = map_cmd("v:lua.enhance_ft_move('F')"):with_expr(),
     ["x|F"] = map_cmd("v:lua.enhance_ft_move('F')"):with_expr(),
     ["o|F"] = map_cmd("v:lua.enhance_ft_move('F')"):with_expr(),
-    -- Plugin Vim_niceblock
-    ["x|I"] = map_cmd("v:lua.enhance_nice_block('I')"):with_expr(),
-    ["x|gI"] = map_cmd("v:lua.enhance_nice_block('gI')"):with_expr(),
-    ["x|A"] = map_cmd("v:lua.enhance_nice_block('A')"):with_expr(),
     -- Plugin Dashboard
     ["n|<Localleader>ss"] = map_cu("SessionSave"):with_silent(),
     ["n|<Localleader>sl"] = map_cu("SessionLoad"):with_silent(),
