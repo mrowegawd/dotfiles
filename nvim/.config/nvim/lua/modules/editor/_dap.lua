@@ -5,7 +5,6 @@ local fn = vim.fn
 local api = vim.api
 
 fn.sign_define("DapBreakpoint", {text = "綠", texthl = "", linehl = "", numhl = ""})
-
 fn.sign_define("DapStopped", {text = "->", texthl = "", linehl = "", numhl = ""})
 
 local function gmap(mode, key, result, opts)
@@ -70,6 +69,8 @@ local attachDebug = function()
             request = "launch",
             name = "Launch file",
             program = "${file}",
+            console = "integratedTerminal",
+            justMyCode = false,
             pythonPath = function()
                 return "python"
             end

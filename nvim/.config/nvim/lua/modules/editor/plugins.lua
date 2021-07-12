@@ -49,20 +49,19 @@ editor["rhysd/vim-operator-surround"] = {
 --     opt = true
 -- }
 
-editor["mfussenegger/nvim-dap"] = {
-    requires = {
-        "mfussenegger/nvim-dap-python"
-    }
-}
-
 editor["rcarriga/nvim-dap-ui"] = {
     event = "BufRead",
     config = conf.nvim_dap,
-    disable = not true,
+    -- disable = not true,
     requires = {
         "nvim-telescope/telescope-dap.nvim",
-        {"theHamsta/nvim-dap-virtual-text", opt = true},
-        {"rcarriga/nvim-dap-ui", opt = true}
+        {
+            "mfussenegger/nvim-dap",
+            requires = {
+                "mfussenegger/nvim-dap-python"
+            }
+        },
+        {"theHamsta/nvim-dap-virtual-text", opt = true}
     }
 }
 

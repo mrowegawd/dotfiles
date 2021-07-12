@@ -66,7 +66,7 @@ local plug_map = {
     ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
     ["n|<Leader>fn"] = map_cu("Telescope notes"):with_noremap():with_silent(),
     ["n|<Leader>fN"] = map_cr(
-        [[<cmd>lua require('telescope.builtin').file_browser({cwd="~/Dropbox/org", prompt_title="Browse Notes"})<CR>]]
+        [[<cmd>lua require('telescope.builtin').file_browser({cwd="~/Dropbox/org", prompt_title="Browse Tree Notes"})<CR>]]
     ):with_noremap():with_silent(),
     ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
     ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),

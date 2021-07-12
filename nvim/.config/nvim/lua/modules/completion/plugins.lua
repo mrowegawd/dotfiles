@@ -41,16 +41,12 @@ completion["nvim-lua/plenary.nvim"] = {
     event = "BufRead"
 }
 
-completion["nvim-telescope/telescope-fzf-native.nvim"] = {
-    event = "BufRead",
-    run = "make"
-}
-
 completion["nvim-telescope/telescope.nvim"] = {
     cmd = "Telescope",
     config = conf.telescope,
     requires = {
-        {"nvim-lua/popup.nvim", opt = true}
+        {"nvim-lua/popup.nvim", opt = true},
+        {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
     }
 }
 
