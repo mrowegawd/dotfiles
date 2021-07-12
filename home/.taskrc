@@ -6,6 +6,8 @@ data.location=~/.task
 # include /home/mr00x/.config/miscxrdb/taskwarrior/antiglare.theme
 include /home/mr00x/.config/miscxrdb/taskwarrior/zenburn-256.theme
 
+recurrence.confirmation=no
+
 uda.url.type=string
 uda.url.label=Url
 
@@ -21,7 +23,7 @@ report.tagsonly.labels		= TagName
 
 report.next.description	= Most urgent tasks
 report.next.columns		= id,start.age,entry.age,urgency,depends,priority,project,tags,recur,scheduled.countdown,due.remaining,until.remaining,description.truncated_count,brainpower
-report.next.filter		= status:pending and +next and -no and -rnr 
+report.next.filter		= status:pending and +next and -no and -rnr
 report.next.labels		= ID,Active,Age,Urgency,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Brainpower
 report.next.sort		= priority-,urgency-
 
