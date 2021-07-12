@@ -202,12 +202,16 @@ function config.orgmode_nvim()
         {
             org_agenda_files = {O.plugin.common.wiki_path .. "/*", O.plugin.common.wiki_path .. "/org/*"},
             org_default_notes_file = O.plugin.common.wiki_path .. "/org/refile.org",
-            org_todo_keywords = {"TODO", "CANCELED", "DELEGATED", "NEXT", "|", "DONE"},
+            org_todo_keywords = {"TODO", "WAITING", "CANCELED", "HBD", "NEXT", "|", "DONE"},
             org_hide_emphasis_markers = true,
+            org_hide_leading_stars = true,
+            org_agenda_skip_scheduled_if_done = true,
+            org_agenda_skip_deadline_if_done = true,
             org_log_done = nil,
             org_todo_keyword_faces = {
                 NEXT = ":background #0000ff :weight bold",
-                DELEGATED = ":background #FFFFFF :slant italic :underline on",
+                WAITING = ":foreground #FFFFFF :slant italic :underline on",
+                HBD = ":foreground green :slant bold :underline on",
                 CANCELED = ":foreground yellow :underline on"
             },
             mappings = {
@@ -266,9 +270,6 @@ function config.orgmode_nvim()
             }
         }
     )
-
-    -- map <silent>gO :e ~/Dropbox/vimwiki/org/todo.org<CR>
-    vim.cmd([[command! -nargs=0 NGrep grep! ".*" ~/MrKampang/vimwiki/org/*]])
 end
 
 return config
