@@ -40,3 +40,12 @@ uda.estimate.type=numeric
 uda.estimate.label=Estimate
 uda.estimate.default=9993
 --force=log \/var\/taskd.log
+
+# task config uda.relativeRecurDue.type duration
+# task config uda.relativeRecurDue.label 'Rel. Rec. Due'
+# task config uda.relativeRecurWait.type duration
+# task config uda.relativeRecurWait.label 'Rel. Rec. Wait'
+uda.relativeRecurDue.type=duration
+uda.relativeRecurDue.label=Rel. Rec. Due
+uda.relativeRecurWait.type=duration
+uda.relativeRecurWait.label=Rel. Rec. Wait
