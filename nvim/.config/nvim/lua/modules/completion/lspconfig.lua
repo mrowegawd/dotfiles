@@ -208,7 +208,7 @@ lspconfig.yamlls.setup {
             schemas = {
                 ["http://json.schemastore.org/github-workflow"] = ".github/workflows/*.{yml,yaml}",
                 ["http://json.schemastore.org/github-action"] = ".github/action.{yml,yaml}",
-                ["http://json.schemastore.org/ansible-stable-2.9"] = "roles/tasks/*.{yml,yaml}",
+                ["http://json.schemastore.org/ansible-role-2.9"] = "roles/**/tasks/*.{yml,yaml}",
                 ["http://json.schemastore.org/prettierrc"] = ".prettierrc.{yml,yaml}",
                 ["http://json.schemastore.org/eslintrc"] = ".eslintrc.{yml,yaml}",
                 ["http://json.schemastore.org/babelrc"] = ".babelrc.{yml,yaml}",
