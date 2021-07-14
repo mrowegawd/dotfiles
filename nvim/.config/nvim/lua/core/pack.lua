@@ -37,7 +37,12 @@ function Packer:load_packer()
         {
             compile_path = packer_compiled,
             git = {clone_timeout = 120},
-            disable_commands = true
+            disable_commands = true,
+            display = {
+                open_fn = function()
+                    return require("packer.util").float {border = "single"}
+                end
+            }
         }
     )
     packer.reset()
