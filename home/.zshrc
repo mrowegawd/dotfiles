@@ -16,6 +16,8 @@ echo "----------------------------"
 # To debug, set PROFILE_CONFIG to `true`
 # PROFILE_CONFIG=false
 # [[ $PROFILE_CONFIG == true ]] && zmodload zsh/zprof
+#
+[[ $- == *i* ]] && stty -ixon
 
 unsetopt correct
 
