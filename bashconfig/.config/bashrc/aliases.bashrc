@@ -324,7 +324,7 @@ r_passkeygen() {
     printf "%s $PATHTEMP\n" "store pass path:"
   else
     clear
-    echo "whois package not found !, so lemme install.."
+    echo "package whois not found! let me install it.."
     sudo apt install whois -y
     sleep 1
     clear
