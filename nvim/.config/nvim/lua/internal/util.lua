@@ -130,7 +130,14 @@ end
 Util.handleURL = function(isVisual)
     if isVisual then
         -- local uri = fn.matchstr(fn.getline("."), '[a-z]*:\\/\\/[^ >,;")]*') or ""
-        local uri = fn.matchstr(fn.getline("."), [[http[s]\?:\/\/[[:alnum:]%\/_#.-]*]]) or ""
+        -- local uri = fn.matchstr(fn.getline("."), [[http[s]\?:\/\/[[:alnum:]%\/_#.-]*]]) or ""
+        -- local uri = fn.matchstr(fn.expand("<cWORD>"), '[a-z]*:\\/\\/[^ >,;")*') or ""
+        local uri = fn.matchstr(fn.expand("<cWORD>"), "[a-z]*:\\/\\/[^ >,;]*") or ""
+
+        local split_uri_braket = string.match(uri, "(.*)%]") or string.match(uri, "(.*)%)") or nil
+        if split_uri_braket ~= nil then
+            uri = split_uri_braket
+        end
 
         local expand_word = fn.expand("<cword>")
 
