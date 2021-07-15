@@ -1,31 +1,47 @@
 #!/bin/bash
 
+git submodule init
+git submodule update
 
-mkdir -p ~/.local/bin
-mkdir -p ~/.local/share/fonts
-mkdir -p ~/.local/share/gem
-mkdir -p ~/.local/share/nvim
-mkdir -p ~/.local/share/virtualenv
-mkdir -p ~/.local/share/virtualenvs
+PWD=$(pwd)
 
-mkdir -p ~/.cache
+copyhome() {
+  cd home
+  rsync -avz . ~
+}
 
-mkdir -p ~/.newsboat
+stowit() {
+  usr=$1
+  app=$2
+  # -v verbose
+  # -R recursive
+  # -t target
+  stow -v -R -t "${usr}" "${app}"
+}
 
-mkdir -p ~/.tmux/plugins
-mkdir -p ~/.tmux/resurrect
-mkdir -p ~/.tmux/scripts
-mkdir -p ~/.tmux/themes
+main() {
+  copyhome
+  cd $PWD
 
-mkdir -p ~/.w3m
+  for filename in *; do
 
-for d in */ ; do
-  if [ "$d" == "img/" ]; then
-    continue
-  fi
+    if [[ -d $filename ]]; then
 
-  stow --adopt -vt ~ "$d"
+      if [[ $filename == "home" ]]; then
+        continue
+      fi
 
-done
+      if [[ $filename == "img" ]]; then
+        continue
+      fi
 
-echo "Check your linking"
+      stowit "$HOME" "$filename"
+    fi
+  done
+
+}
+
+main
+
+echo ""
+echo "##### ALL DONE"
