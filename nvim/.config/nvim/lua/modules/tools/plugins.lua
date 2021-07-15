@@ -142,6 +142,7 @@ tools["kristijanhusak/orgmode.nvim"] = {
     event = "BufRead",
     config = conf.orgmode_nvim
 }
+
 tools["akinsho/org-bullets.nvim"] = {
     after = "orgmode.nvim",
     config = function()

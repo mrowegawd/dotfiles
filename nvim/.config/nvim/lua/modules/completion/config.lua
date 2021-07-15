@@ -208,6 +208,7 @@ function config.telescope()
 
     require("telescope").setup {
         defaults = {
+            vimgrep_arguments = O.default.vimgrep_arguments,
             prompt_prefix = "🔭 ",
             layout_config = {
                 prompt_position = "top",

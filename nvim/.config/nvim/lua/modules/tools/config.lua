@@ -207,6 +207,7 @@ function config.orgmode_nvim()
             org_hide_leading_stars = true,
             org_agenda_skip_scheduled_if_done = true,
             org_agenda_skip_deadline_if_done = true,
+            org_agenda_min_height = 5,
             org_log_done = nil,
             org_todo_keyword_faces = {
                 NEXT = ":background #0000ff :weight bold",

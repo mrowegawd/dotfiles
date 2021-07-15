@@ -72,7 +72,7 @@ local plug_map = {
     ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
     ["n|<Leader>ft"] = map_cu("Telescope help_tags"):with_noremap():with_silent(),
     ["n|<Leader>fW"] = map_cu("Telescope grepcword"):with_noremap():with_silent(),
-    -- ["n|<Leader>fw"] = map_cu("Telescope grepword"):with_noremap():with_silent(),
+    ["n|<Leader>fw"] = map_cu("Telescope live_grep"):with_noremap():with_silent(),
     ["n|<Leader>fz"] = map_cu("Telescope grepzettel"):with_noremap():with_silent(),
     ["n|<Leader>fd"] = map_cu("Telescope dotfiles path=" .. os.getenv("HOME") .. "/moxconf/dotfiles"):with_noremap():with_silent(
 
@@ -133,8 +133,8 @@ local plug_map = {
     -- ["n|<Localleader>ww"] = map_cu("VimwikiIndex"):with_silent(),
     -- Plugin Spectre
     -- ["n|<Localleader>f"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
-    ["n|<Leader>fw"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
-    ["v|<Leader>fw"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
+    ["n|<Localleader>fw"] = map_cr("<cmd>lua require('spectre').open()<CR>"):with_noremap():with_silent(),
+    ["v|<Localleader>fw"] = map_cr("<cmd>lua require('spectre').open_visual()<CR>"):with_noremap():with_silent()
 }
 
 bind.nvim_load_mapping(plug_map)
