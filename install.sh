@@ -6,7 +6,7 @@ git submodule update
 PWD=$(pwd)
 
 copyhome() {
-  cd home
+  cd home || return
   rsync -avz . ~
 }
 
@@ -21,7 +21,7 @@ stowit() {
 
 main() {
   copyhome
-  cd $PWD
+  cd ..
 
   for filename in *; do
 

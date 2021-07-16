@@ -160,7 +160,7 @@ set switchbuf=useopen,usetab    " Jump to the first open window in any tab
 set backspace=indent,eol,start  " Intuitive backspacing in insert mode
 " set diffopt=filler,iwhite     " Diff mode: show fillers, ignore white
 " set diffopt=horizontal,iwhite       " Diff mode: show fillers, ignore white
-set diffopt=internal,filler,vertical,context:5,foldcolumn:1,indent-heuristic,algorithm:patience
+" set diffopt=internal,filler,vertical,context:5,foldcolumn:1,indent-heuristic,algorithm:patience
 
 set showfulltag                 " Show tag and tidy search in completion
 set complete=.,w,b,u,t,k        " No wins, buffs, tags, include scanning
