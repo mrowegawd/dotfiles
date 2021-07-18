@@ -59,24 +59,44 @@ local plug_map = {
     ["t|<leader>tt"] = map_cu([[<C-\><C-n>:FloatermToggle<CR>]]):with_noremap():with_silent(),
     -- Plugin Telescope
     ["n|<Leader>fT"] = map_cu("Telescope builtin"):with_noremap():with_silent(),
-    ["n|<Leader>fb"] = map_cu("Telescope buffers"):with_noremap():with_silent(),
     ["n|<Leader>fk"] = map_cu("Telescope keymaps"):with_noremap():with_silent(),
-    ["n|<Leader>ff"] = map_cu("Telescope find_myfiles"):with_noremap():with_silent(),
-    ["n|<Leader>fg"] = map_cu("Telescope git_status"):with_noremap():with_silent(),
-    ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
+    -- ["n|<Leader>fb"] = map_cu("Telescope buffers"):with_noremap():with_silent(),
+    -- ["n|<Leader>ff"] = map_cu("Telescope find_myfiles"):with_noremap():with_silent(),
+    -- ["n|<Leader>fg"] = map_cu("Telescope git_status"):with_noremap():with_silent(),
+    -- ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
     ["n|<Leader>fn"] = map_cu("Telescope notes"):with_noremap():with_silent(),
     ["n|<Leader>fN"] = map_cr(
         [[<cmd>lua require('telescope.builtin').file_browser({cwd=O.plugin.common.wiki_path, prompt_title="Browse Tree Notes"})<CR>]]
     ):with_noremap():with_silent(),
+    -- ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
+    -- ["n|<Leader>ft"] = map_cu("Telescope help_tags"):with_noremap():with_silent(),
+    -- ["n|<Leader>fW"] = map_cu("Telescope grepcword"):with_noremap():with_silent(),
+    -- ["n|<Leader>fw"] = map_cu("Telescope live_grep"):with_noremap():with_silent(),
     ["n|<Leader>fQ"] = map_cu("Telescope loclist"):with_noremap():with_silent(),
-    ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
-    ["n|<Leader>ft"] = map_cu("Telescope help_tags"):with_noremap():with_silent(),
-    ["n|<Leader>fW"] = map_cu("Telescope grepcword"):with_noremap():with_silent(),
-    ["n|<Leader>fw"] = map_cu("Telescope live_grep"):with_noremap():with_silent(),
     ["n|<Leader>fz"] = map_cu("Telescope grepzettel"):with_noremap():with_silent(),
     ["n|<Leader>fd"] = map_cu("Telescope dotfiles path=" .. os.getenv("HOME") .. "/moxconf/dotfiles"):with_noremap():with_silent(
 
     ),
+    -- Plugin fzf-lua
+    -- ["n|<Leader>fN"] = map_cu(
+    --     "<cmd>lua require('fzf-lua').files({cwd=O.plugin.common.wiki_path, prompt='BrowseNotes> '})<CR>"
+    -- ):with_noremap():with_silent(),
+    -- ["n|<Leader>fn"] = map_cu(
+    --     "<cmd>lua require('fzf-lua').live_grep({cwd=O.plugin.common.wiki_path, prompt = 'Gnotes> '})<CR>"
+    -- ):with_noremap():with_silent(),
+    ["n|<Leader>ff"] = map_cu("<cmd>lua require('fzf-lua').files()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>fw"] = map_cu("<cmd>lua require('fzf-lua').live_grep()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>fW"] = map_cu("<cmd>lua require('fzf-lua').grep_cword({prompt='Gcword> '})<CR>"):with_noremap():with_silent(
+
+    ),
+    ["v|<Leader>fw"] = map_cu("<cmd>lua require('fzf-lua').grep_visual({prompt='Gvisual> '})<CR>"):with_noremap():with_silent(
+
+    ),
+    ["n|<Leader>fb"] = map_cu("<cmd>lua require('fzf-lua').buffers()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>ft"] = map_cu("<cmd>lua require('fzf-lua').help_tags()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>fg"] = map_cu("<cmd>lua require('fzf-lua').git_files()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>fh"] = map_cu("<cmd>lua require('fzf-lua').oldfiles()<CR>"):with_noremap():with_silent(),
+    ["n|<Leader>fq"] = map_cu("<cmd>lua require('fzf-lua').quickfix()<CR>"):with_noremap():with_silent(),
     -- Plugin vim-projectionist
     ["n|<Localleader>av"] = map_cu("AV"):with_noremap():with_silent(),
     ["n|<Localleader>aa"] = map_cu("A"):with_noremap():with_silent(),
@@ -105,7 +125,7 @@ local plug_map = {
     ["n|<Leader>hD"] = map_cmd(":Gvdiffsplit<CR><c-w>w"):with_noremap():with_silent(),
     ["n|<Leader>hd"] = map_cmd(":Gdiff HEAD~"):with_noremap():with_silent(),
     -- Plugin Maximizer
-    ["n|<c-p>"] = map_cr("MaximizerToggle"):with_noremap():with_silent(),
+    ["n|<Leader>p"] = map_cr("MaximizerToggle"):with_noremap():with_silent(),
     -- Plugin SymbolsOutline
     ["n|<Leader>v"] = map_cu("SymbolsOutline"):with_noremap():with_silent(),
     -- Plugin Vim-operator-surround

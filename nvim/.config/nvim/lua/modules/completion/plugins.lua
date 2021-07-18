@@ -50,6 +50,14 @@ completion["nvim-telescope/telescope.nvim"] = {
     }
 }
 
+completion["ibhagwan/fzf-lua"] = {
+    config = conf.fzf_lua,
+    requires = {
+        "vijaymarupudi/nvim-fzf" -- as backend
+        -- "ibhagwan/nvim-fzf"
+    }
+}
+
 -- completion['mattn/vim-sonictemplate'] = {
 --   cmd = 'Template',
 --   ft = {'go','typescript','lua','javascript','vim','rust','markdown'},

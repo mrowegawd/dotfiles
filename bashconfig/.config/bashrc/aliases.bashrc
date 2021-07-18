@@ -13,10 +13,31 @@ alias l="ls -CF --color=auto"
 alias grep="grep --color=auto"
 alias rg="rg --hidden"
 
+# misc: create and cd/go to folder <$NEW_NAMEFOLDER>
+mdg() {
+  mkdir -p "$@" && cd "$@" || return
+}
+
+# misc: create folder if not exist
+md() {
+  mkdir -p "$@"
+}
+
+alias r_m="tmux -2"
+alias r_mat="r_m a -t"
+
+# show size current dir
+alias s_ducks='sudo du -cks * | sort -rn | head -11'
+
+cl() {
+  last_dir="$(ls -Frt | grep '/$' | tail -n1)"
+  if [ -d "$last_dir" ]; then
+    cd "$last_dir" || return
+  fi
+}
+
 alias c="bat "
 alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
-
-sbs() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
 
 alias ls="/bin/ls -nphq --time-style=iso --color=auto\
   --group-directories-first --show-control-chars"
@@ -27,6 +48,8 @@ alias ll="exa -lhaa"
 #     alias ll="ls -lah -nphq --time-style=iso --color=auto\
 #         --group-directories-first --show-control-chars"
 # fi
+#
+alias mpv_c="mpv --no-osc --profile=low-latency --untimed --geometry=-50-50 --autofit=40% --no-resume-playback "
 
 alias :q!=exitq
 alias :Q!=exitq
@@ -60,16 +83,51 @@ if command -v emacs >/dev/null; then
   alias e="emacs --insecure"
 fi
 
-cl() {
-  last_dir="$(ls -Frt | grep '/$' | tail -n1)"
-  if [ -d "$last_dir" ]; then
-    cd "$last_dir"
+# check: get size of current directorys
+
+c_size_cd() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
+
+# check: size of the target path/file <$YOUR_PATH>
+c_size_tfile() {
+  if [ ! -z "$1" ]; then
+    sudo du -a "$1" 2>/dev/null | sort -n -r | head -n 20 | awk -F" " '{printf "%-15s %-10s\n",$1,$2}'
+  else
+    echo "warn - you need set path!!"
   fi
 }
 
-# check: check chkmyinstall
-c_myinstall() {
-  bash ~/moxconf/exbin/for-local-bin/chkmyinstall
+# check: sniff HTTP traffic (ngrep)
+c_sniff() {
+
+  sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'
+}
+
+# check: sniff HTTP traffic 2 (tcpdump)
+c_httpdump() {
+
+  sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\\: .* | GET \\/.*\"
+}
+
+# check: size of disks system
+c_size_disks() {
+  echo "╓───── m o u n t . p o i n t s"
+  echo "╙────────────────────────────────────── ─ ─ "
+  lsblk -a
+  echo ""
+  echo "╓───── d i s k . u s a g e"
+  echo "╙────────────────────────────────────── ─ ─ "
+  df -h
+  echo ""
+  echo "╓───── U.U.I.D.s"
+  echo "╙────────────────────────────────────── ─ ─ "
+  lsblk -f
+}
+
+# check: size memory usage
+c_size_memuse() {
+  ps -eo size,pid,user,command --sort -size |
+    awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |
+    cut -d "" -f2 | cut -d "-" -f1 | less
 }
 
 # check: boot message
@@ -77,22 +135,22 @@ c_bootmsg() {
   echo -n Boot Messages | pv -qL 10 && sudo journalctl -b | ccze -A
 }
 
-# check: check systemd boot-up performance statistic
+# check: systemd boot-up performance statistic
 c_blame() {
   systemd-analyze blame
 }
 
-# check: check units what they loaded
+# check: units what they loaded
 c_units() {
   echo -n '\e[1;32mListing Units:\e[0m ' | pv -qL 10 && systemctl list-units
 }
 
-# check: usage bencweb <url>
+# check: usage bencweb <URL>
 c_bencweb() {
   curl -s -w 'Testing Website Response Time for:%{url_effective}\n\nLookup Time:\t\t%{time_namelookup}\nConnect Time:\t\t%{time_connect}\nPre-transfer Time:\t%{time_pretransfer}\nStart-transfer Time:\t%{time_starttransfer}\n\nTotal Time:\t\t%{time_total}\n' -o /dev/null "$1"
 }
 
-# check: users getent passwd
+# check: users and their passwd
 c_user() {
   getent passwd | awk -F ':' '
     BEGIN {
@@ -104,7 +162,7 @@ c_user() {
   '
 }
 
-# check: octal permission current dir. ex: 633 /path
+# check: permission mode of current dir (ex: 755, 644, etc)
 c_lsmod() {
   ls -lah | awk -F ' ' '{print $NF}' | xargs stat -c "%a %n"
 }
@@ -123,24 +181,23 @@ c_ii() {
   NC='\033[0m' # No Color
 
   RED='\033[0;31m' # Red
-  echo -e "\n${RED}Kernel Information:$NC "
+  echo -e "\\n${RED}Kernel Information:$NC "
   uname -a
-  echo -e "\n${RED}Users logged on:$NC "
+  echo -e "\\n${RED}Users logged on:$NC "
   w -h
-  echo -e "\n${RED}Current date :$NC "
+  echo -e "\\n${RED}Current date :$NC "
   date
-  echo -e "\n${RED}Machine stats :$NC "
+  echo -e "\\n${RED}Machine stats :$NC "
   uptime
-  echo -e "\n${RED}Memory stats :$NC "
+  echo -e "\\n${RED}Memory stats :$NC "
   free
-  echo -e "\n${RED}Disk Usage :$NC "
+  echo -e "\\n${RED}Disk Usage :$NC "
   df -Th
-  echo -e "\n${RED}LAN Information :$NC"
-  c_lan
+  echo -e "\\n${RED}LAN Information :$NC"
+  mylan
 }
 
-# check: netinfo - check LAN network information for your system (part of ii)
-c_lan() {
+mylan() {
   if command -v ifconfig >/dev/null; then
     echo "---------------------------------------------------"
     /sbin/ifconfig enp0s31f6 | awk /'inet/ {print $2}'
@@ -158,16 +215,7 @@ c_lan() {
   fi
 }
 
-# check: check size file $1
-c_sizefile() {
-  if [ ! -z "$1" ]; then
-    sudo du -a "$1" 2>/dev/null | sort -n -r | head -n 20 | awk -F" " '{printf "%-15s %-10s\n",$1,$2}'
-  else
-    echo "warn - you need set path!!"
-  fi
-}
-
-# check: check os
+# check: version of OS
 c_os() {
   if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
@@ -202,53 +250,78 @@ c_os() {
 
 }
 
-# download: youtube $1
+# check: listening port
+c_port_listen() {
+  sudo netstat -nltn
+}
+
+# check: show listening port (verbose: name and pid)
+c_port_listenpid() {
+  sudo netstat -nltpna
+}
+
+# check: show established port (verbose: name and pid)
+c_port_establishidA() {
+  sudo netstat -ntpa | grep 'ESTABLISHED'
+}
+
+# check: show status ip firewall (by iptables)
+c_ipv() {
+  sudo iptables -L -n -v --line-numbers
+}
+
+# check: show status iptable -dnat (by iptables)
+c_ipvnat() {
+  sudo iptables -L -n -v --line-numbers -t nat
+}
+
+# check: error journalctl
+c_jurnalerr() {
+
+  echo -n '\e[1;32mJournal Errors:\e[0m ' | pv -qL 10 && journalctl -b -p err | ccze -A
+}
+
+# download: youtube <$URL_YOUTUBE>
 d_ytdl() {
   tsp youtube-dl --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" "$1"
 }
 
-# download: youtube mp3 $1
+# download: convert vidoutube to mp3 <$URL_YOUTUBE>
 d_ytmp3() {
   tsp youtube-dl --extract-audio --audio-format mp3 "$1"
 }
 
-# runtask: hapus file all $1
+# run: hapus file all <$1>
 r_hapus() {
   find "$1" -type f -name "*" -exec shred -v -n 25 -u -z {} \;
 }
 
-# runtask: open ranger
+# run: open ranger
 r_r() {
   ranger
 }
 
-# runtask: open tmux
-alias r_m="tmux -2"
-
-# runtask: tmux at
-alias r_mat="r_m a -t"
-
-# runtask: run calculator with python
+# run: run calculator by python
 r_calc() {
   python -ic "from __future__ import division; from math import *; from random import *"
 }
 
-# runtask: extract file $1
+# run: extract file <$YOUR_TAR_RAR_ZIP_7z_TAR_GZ_FILE>
 r_extract() {
   if [ -f "$1" ]; then
     case "$1" in
-    *.tar.bz2) tar xvjf $1 ;;
-    *.tar.gz) tar xvzf $1 ;;
-    *.tar.xz) tar xf $1 ;;
-    *.bz2) bunzip2 $1 ;;
-    *.rar) unrar e -r $1 ;;
-    *.gz) gunzip $1 ;;
-    *.tar) tar xvf $1 ;;
-    *.tbz2) tar xvjf $1 ;;
-    *.tgz) tar xvzf $1 ;;
-    *.zip) unzip $1 ;;
-    *.Z) uncompress $1 ;;
-    *.7z) 7z x $1 ;;
+    *.tar.bz2) tar xvjf "$1" ;;
+    *.tar.gz) tar xvzf "$1" ;;
+    *.tar.xz) tar xf "$1" ;;
+    *.bz2) bunzip2 "$1" ;;
+    *.rar) unrar e -r "$1" ;;
+    *.gz) gunzip "$1" ;;
+    *.tar) tar xvf "$1" ;;
+    *.tbz2) tar xvjf "$1" ;;
+    *.tgz) tar xvzf "$1" ;;
+    *.zip) unzip "$1" ;;
+    *.Z) uncompress "$1" ;;
+    *.7z) 7z x "$1" ;;
     *) echo "don't know how to extract '$1'..." ;;
     esac
   else
@@ -256,19 +329,28 @@ r_extract() {
   fi
 }
 
-# runtask: run newsboat
+# run: run newsboat
 r_news() {
-  if [ "$TERM" =~ "tmux".* ] || [ "$TERM" =~ "screen" ]; then
-    tmux new-window && tmux rename-window 'newsboat' &&
-      tmux send-keys 'newsboat && tmux kill-pane' enter
+  if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
+
+    test_proxychains=$(docker ps -a | grep -i up &>/dev/null)
+
+    if [ -z "$test_proxychains" ]; then
+      tmux new-window && tmux rename-window 'newsboat' &&
+        tmux send-keys 'proxychains newsboat && tmux kill-pane' enter
+    else
+      tmux new-window && tmux rename-window 'newsboat' &&
+        tmux send-keys 'newsboat && tmux kill-pane' enter
+    fi
   else
+
     newsboat
   fi
 }
 
-# runtask: multitail
+# run: multitail
 r_logsys() {
-  if [ "$TERM" =~ "tmux".* ] || [ "$TERM" =~ "screen" ]; then
+  if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
     if tmux list-window | grep logging >/dev/null; then
       tmuxWindowName=$(tmux list-windows | grep logging | cut -d: -f1)
       tmux kill-window -t "$tmuxWindowName"
@@ -280,7 +362,7 @@ r_logsys() {
   fi
 }
 
-# runtask: run generate password key
+# run: generate pass key
 r_passkeygen() {
   if command -v whois >/dev/null; then
     printf "##### GENERATE PASSWORD ###########\\n\\n"
@@ -303,7 +385,7 @@ r_passkeygen() {
   fi
 }
 
-# runtask: run generate ssh key
+# run: generate ssh key
 r_sshkeygen() {
   echo "##### GENERATE SSH ###########"
   echo ""
@@ -319,13 +401,28 @@ r_sshkeygen() {
     -f "$HOME/.ssh/$prefixfile$(date +%F)"
 }
 
-# runtask: remove comment string file.conf/else
+# run: remove comment of the file <$YOUR_FILE>
 r_uncommentfile() {
   sudo cat "$1" | sed '/^#.*$/d;/^;.*$/d'
 }
 
-# ps ls
-t_ps-ls() {
+# run: create minimal tmux pane split
+r_iide() {
+  # check if tmux ses exists
+  printf "..launch ide: "
+  if [ ! -z "$TMUX" ]; then
+    tmux split-window -v -p 34
+    tmux split-window -h -p 66
+    tmux split-window -h -p 34
+    tmux rename-window 'ide'
+    echo "Done"
+  else
+    echo "Tmux session off !!"
+  fi
+}
+
+# ps: tree ls system try
+ps_ls() {
   PROC_ID_ORIGIN=$(ps -alf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -333,8 +430,8 @@ t_ps-ls() {
   fi
 }
 
-# ps ls all
-t_ps-ls-all() {
+# ps: ls system try
+ps_ls_all() {
   PROC_ID_ORIGIN=$(ps -elf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -342,8 +439,8 @@ t_ps-ls-all() {
   fi
 }
 
-# ps info
-t_ps-info() {
+# ps: check with top command info selected
+ps_i() {
   PROC_ID_ORIGIN=$(ps -alf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -351,8 +448,8 @@ t_ps-info() {
   fi
 }
 
-# ps info all
-t_ps-info-all() {
+# ps: check with top all command
+ps_info_all() {
   PROC_ID_ORIGIN=$(ps -elf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -360,8 +457,8 @@ t_ps-info-all() {
   fi
 }
 
-# ps tree
-t_ps-tree() {
+# ps: tree
+ps_tree() {
   PROC_ID_ORIGIN=$(ps -alf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -369,8 +466,8 @@ t_ps-tree() {
   fi
 }
 
-# ps tree all
-t_ps-tree-all() {
+# ps: tree all
+ps_tree_all() {
   PROC_ID_ORIGIN=$(ps -elf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -378,8 +475,8 @@ t_ps-tree-all() {
   fi
 }
 
-# ps kill
-t_ps-kill() {
+# ps: kill
+ps_kill() {
   PROC_ID_ORIGIN=$(ps -alf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -387,8 +484,8 @@ t_ps-kill() {
   fi
 }
 
-# ps kill
-t_ps-kill-all() {
+# ps: kill
+ps_kill_all() {
   PROC_ID_ORIGIN=$(ps -elf | fzf)
   if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
     PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
@@ -396,40 +493,7 @@ t_ps-kill-all() {
   fi
 }
 
-# show size current dir
-alias s_ducks='sudo du -cks * | sort -rn | head -11'
-
-s_memuse() {
-  ps -eo size,pid,user,command --sort -size |
-    awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |
-    cut -d "" -f2 | cut -d "-" -f1 | less
-}
-
-# show  listening port
-alias s_netlist="sudo netstat -nltn"
-
-# show netstat with name and pid
-alias s_netlistpn="sudo netstat -nltpna"
-alias s_netlistssh="sudo netstat -tpn"
-alias s_netlistsshed="sudo netstat -ntpa | grep 'ESTABLISHED'"
-
-# show IPTABLES
-alias s_ipv="sudo iptables -L -n -v --line-numbers"
-alias s_ipvnat="sudo iptables -L -n -v --line-numbers -t nat"
-
-# check: interface inet
-s_ethoip() {
-  ifconfig -a | awk '/^[a-z]/ { iface=$1; mac=$NF; next }
-  /inet addr:/ { print iface, mac }'
-}
-
-# show system
-alias s_disks='echo "╓───── m o u n t . p o i n t s"; echo "╙────────────────────────────────────── ─ ─ "; lsblk -a; echo ""; echo "╓───── d i s k . u s a g e"; echo "╙────────────────────────────────────── ─ ─ "; df -h; echo ""; echo "╓───── U.U.I.D.s"; echo "╙────────────────────────────────────── ─ ─ "; lsblk -f;'
-
-# show errors jurnalrc
-alias s_jurnalerr="echo -n '\e[1;32mJournal Errors:\e[0m ' | pv -qL 10 && journalctl -b -p err | ccze -A"
-
-# watch mpv with args $1 or $1 $2 $3 ($1 $2 geometry)
+# watch: mpv with args $1 or $1 $2 $3 ($1 $2 geometry)
 w_mpv() {
 
   if [ "$#" -gt 1 ]; then
@@ -461,114 +525,6 @@ w_vlc() {
   fi
 }
 
-# misc: create folder if not exist and run 'cd' to it
-mdg() {
-  mkdir -p "$@" && cd "$@"
-}
-
-# misc: create folder if not exist
-md() {
-  mkdir -p "$@"
-}
-
-# misc: create minimal tmux split pane
-iide() {
-  # check if tmux ses exists
-  printf "..launch ide: "
-  if [ ! -z "$TMUX" ]; then
-    tmux split-window -v -p 34
-    tmux split-window -h -p 66
-    tmux split-window -h -p 34
-    tmux rename-window 'ide'
-    echo "Done"
-  else
-    echo "Tmux session off !!"
-  fi
-}
-
-# snippet code command
-# https://articles.engineers.my/golang-profiling-and-handling-http-disconnection/
-# snippet cpu usege for go-build
-
-# go: go mod init $1
-go_modinit() {
-  if [ ! -z "$1" ]; then
-    go mod init "$1"
-  else
-    echo "warn - [go init mod] need args, ex: go_modinit projectname | github.com/projectname "
-  fi
-}
-
-# go: go run $1
-go_run() {
-  if [ ! -z "$1" ]; then
-    go run "$1"
-  else
-    echo "warn - [go run] need args, ex: go_run main.go"
-  fi
-}
-
-# go: go build
-go_build() {
-  ps -A -o %cpu -o args | grep -i go-build
-}
-
-# go: go install
-go_install() {
-  go install
-}
-
-# go: go get $1
-go_get() {
-  if [ ! -z "$1" ]; then
-    go get "$1"
-  else
-    echo "warn - [go get ] need args, ex: go_get url_github"
-  fi
-}
-
-# go: go test
-go_test() {
-  go test
-}
-
-# go: go test -cover
-go_cover() {
-  go test -cover
-}
-
-# go: go test -coverprofile $1
-go_coverfile() {
-  if [ ! -z "$1" ]; then
-    go test -coverprofile="$1"
-  else
-    echo "warn - [go test coverprofile] need args, ex: go_coverfile cover.out"
-  fi
-}
-
-# go: go test -bench
-go_bench() {
-  go test -bench .
-}
-
-# go: go test -bench $1
-go_benchcpu() {
-  if [ ! -z "$1" ]; then
-    go test -bench . -benchmem -cpuprofile "$1"
-  else
-    echo "warn - [go test benchmark profiling cpu] need args, ex: go_benchcpu prof.cpu"
-  fi
-}
-
-# go: go test -benchmem $1
-go_benchmem() {
-  if [ ! -z "$1" ]; then
-    go test -bench . -bechmem -memprofile "$1"
-  else
-    echo "warn - [go test benchmark profiling mem] need args, ex: go_benchmem prof.mem"
-  fi
-}
-
 alias py_pipl="pip list --format=columns"
 alias py_pips="pip show"
 alias py_pudb="python -m pudb"
@@ -582,11 +538,6 @@ alias npm_inst="npm install --save-dev"
 
 # Info -> https://github.com/junegunn/fzf/wiki/examples#opening-files
 
-# fzf: call repeat history
-fz_his() {
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
-}
-
 # fzf: kill pid
 fz_kill() {
   local pid
@@ -598,7 +549,7 @@ fz_kill() {
 }
 
 # fzf: tmux session
-fz_sm() {
+fz_tmux_lses() {
   local -r fmt='#{session_id}:|#S|(#{session_attached} attached)'
   { tmux display-message -p -F "$fmt" && tmux list-sessions -F "$fmt"; } |
     awk '!seen[$1]++' |
@@ -608,7 +559,8 @@ fz_sm() {
     xargs tmux switch-client -t
 }
 
-fz_mx() {
+# fzf: create tmux session
+fz_tmux_cses() {
   SELECTED_PROJECTS=$(tmuxinator list -n |
     tail -n +2 |
     fzf --prompt="Project: " -m -1 -q "$1")
@@ -637,12 +589,12 @@ fz_mx() {
 # More guide, check
 # https://gist.github.com/bradtraversy/89fad226dc058a41b596d586022a9bd3
 
-# image: docker images
+# docker: show list of docker images
 doc_im_ls() {
   docker images
 }
 
-# image: check histroy docker image wiht id $1
+# docker: image: check histroy of docker image <$DOCKER_IMAGE_ID>
 doc_im_his_id() {
   if [ ! -z "$1" ]; then
     docker history "$1"
@@ -651,8 +603,8 @@ doc_im_his_id() {
   fi
 }
 
-# image: build images with id $1
-doc_im_build_tagname() {
+# docker: image: build images with <$YOUR_NEW_DOCKER_TAG>
+doc_im_buildtag() {
   if [ ! -z "$1" ]; then
     docker build -t "$1" .
   else
@@ -660,23 +612,22 @@ doc_im_build_tagname() {
   fi
 }
 
-# image: remove all images
+# docker: image: remove all images
 doc_im_rall() {
-  # remove all images
   docker rmi -f "$(docker images -q)"
 }
 
-# image: remove docker image only contain 'none' images
+# docker: image: remove images only contains the string 'none'
 doc_im_rnone() {
   docker rmi -f "$(docker images | grep '^<none>' | awk '{print $3}')"
 }
 
-# image: remove all dangling images
+# docker: image: remove all dangling images
 doc_im_rdang() {
   docker rmi -f "$(docker images -f 'dangling=true' -q)"
 }
 
-# image: remove docker image with id $1
+# docker: image: remove docker image <$ID_DOCKER_IMAGE>
 doc_im_rid() {
   if [ ! -z "$1" ]; then
     docker rmi -f "$1"
@@ -685,12 +636,12 @@ doc_im_rid() {
   fi
 }
 
-# container: show all list container
+# docker: container: show list or containers
 doc_con_ls() {
   docker ps -a
 }
 
-# container: docker run -it
+# docker: container: run container <$DOCKER_TARGET_IMAGE_ID> (run -it)
 doc_con_run_it() {
   if [ ! -z "$1" ]; then
     docker run -it "$1"
@@ -699,7 +650,7 @@ doc_con_run_it() {
   fi
 }
 
-# container: docker run -it --rm
+# docker: container: run container but destroy <$DOCKER_TARGET_IMAGE_ID> (run --rm)
 doc_con_run_rmit() {
   if [ ! -z "$1" ]; then
     docker run -it --rm "$1"
@@ -708,7 +659,7 @@ doc_con_run_rmit() {
   fi
 }
 
-# container: inspect container with id $1
+# docker: container: check inspect container <$DOCKER_CONTAINER_ID>
 doc_con_inspect_id() {
   if [ ! -z "$1" ]; then
     docker container inspect "$1"
@@ -717,12 +668,12 @@ doc_con_inspect_id() {
   fi
 }
 
-# container: show list container with contain 'exited'
+# docker: container: show list of containers with contains the string 'exited'
 doc_con_showex() {
   docker container ls -a --filter status=exited --filter status=created
 }
 
-# container: check log container with id $1
+# docker: container: check log container <$DOCKER_CONTAINER_ID>
 doc_con_log_id() {
   if [ ! -z "$1" ]; then
     docker container logs "$1"
@@ -731,7 +682,7 @@ doc_con_log_id() {
   fi
 }
 
-# container: start container with id $1
+# docker: container: start container <$DOCKER_CONTAINER_ID>
 doc_con_start_id() {
   if [ ! -z "$1" ]; then
     docker start "$1"
@@ -740,7 +691,7 @@ doc_con_start_id() {
   fi
 }
 
-# container: stop container with id $1
+# docker: container: stop container <$DOCKER_CONTAINER_ID>
 doc_con_stop_id() {
   if [ ! -z "$1" ]; then
     docker stop "$1"
@@ -749,7 +700,7 @@ doc_con_stop_id() {
   fi
 }
 
-# container: restart container with id $1
+# docker: container: restart container <$DOCKER_CONTAINER_ID>
 doc_con_restart_id() {
   if [ ! -z "$1" ]; then
     docker restart "$1"
@@ -758,12 +709,12 @@ doc_con_restart_id() {
   fi
 }
 
-# container: remove all container
+# docker: container: remove all containers
 doc_con_rall() {
   docker rm -f "$(docker ps -aq)"
 }
 
-# container: remove all container with id $1
+# docker: container: remove container by id <$DOCKER_CONTAINER_ID>
 doc_con_rid() {
   if [ ! -z "$1" ]; then
     docker rm "$1"
@@ -772,27 +723,27 @@ doc_con_rid() {
   fi
 }
 
-# container: remove container with contain 'exit'
+# docker: container: remove container with contains the string  'exit'
 doc_con_rallex() {
   docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
 }
 
-# container: enter to container
+# docker: container: enter/login the container <$DOCKER_CONTAINER_ID>
 doc_con_enter_id() {
   docker exec -it "$1" /bin/bash
 }
 
-# dvolume: check list of docker volume
+# docker: volume: show list of docker volumes
 doc_vol() {
   docker volume ls
 }
 
-# dvolume: remove all docker volume
+# docker: volume: remove all docker volumes
 doc_vol_rall() {
   docker volume rm "$(docker volume ls -qf dangling=true)"
 }
 
-# dvolume: remove docker volume with id $1
+# docker: volume: remove docker volume by <$DOCKER_VOLUME_ID>
 doc_vol_rid() {
   if [ ! -z "$1" ]; then
     docker volume rm "$1"
@@ -801,52 +752,135 @@ doc_vol_rid() {
   fi
 }
 
-# dvolume: remove dangling volumes
+# docker: volume: remove all dangling volumes
 doc_vol_rdang() {
   docker volume rm "$(docker volume ls -f dangling=true -q)"
 }
 
-# dvolume: inspect docker volume with id $1
+# docker: volume: inspect volume by id <$DOCKER_VOLUME_ID>
 doc_vol_inspect_id() {
   docker volume inspect "$1"
 }
 
-# dnetwork: show list docker network
+# docker: network: show list of docker network
 doc_net_ls() {
   docker network ls
 }
 
-# dnetwork: remove all docker network
+# docker: network: remove all docker network
 doc_net_rall() {
   docker network rm "$(docker network ls -q)"
 }
 
-# dcompose: list of docker compose
+# docker: compose: show list of docker compose
 doc_comp_ps() {
   docker-compose ps
 }
 
-# dcompose: docker compose up -d
+# docker: compose: docker compose up -d
 doc_comp_upd() {
   docker-compose up -d
 }
 
-# dcompose: docker compose down
+# docker: compose: stop service docker compose
 doc_comp_down() {
   docker-compose down
 }
 
-# dcompose: docker compose stop
+# docker: compose: stop service and remove the container
 doc_comp_stop() {
   docker-compose stop
 }
 
-# dcompose: docker compose run or start
+# docker: compose: run
 doc_comp_run() {
   docker-compose run
 }
 
-# dcompose: docker compose run or start --rm
+# docker: compose: run with flag --rm
 doc_comp_run_rm() {
   docker-compose run --rm
 }
+
+# # snippet code command
+# # https://articles.engineers.my/golang-profiling-and-handling-http-disconnection/
+# # snippet cpu usege for go-build
+
+# # go: go mod init $1
+# go_modinit() {
+#   if [ ! -z "$1" ]; then
+#     go mod init "$1"
+#   else
+#     echo "warn - [go init mod] need args, ex: go_modinit projectname | github.com/projectname "
+#   fi
+# }
+
+# # go: go run $1
+# go_run() {
+#   if [ ! -z "$1" ]; then
+#     go run "$1"
+#   else
+#     echo "warn - [go run] need args, ex: go_run main.go"
+#   fi
+# }
+
+# # go: go build
+# go_build() {
+#   ps -A -o %cpu -o args | grep -i go-build
+# }
+
+# # go: go install
+# go_install() {
+#   go install
+# }
+
+# # go: go get $1
+# go_get() {
+#   if [ ! -z "$1" ]; then
+#     go get "$1"
+#   else
+#     echo "warn - [go get ] need args, ex: go_get url_github"
+#   fi
+# }
+
+# # go: go test
+# go_test() {
+#   go test
+# }
+
+# # go: go test -cover
+# go_cover() {
+#   go test -cover
+# }
+
+# # go: go test -coverprofile $1
+# go_coverfile() {
+#   if [ ! -z "$1" ]; then
+#     go test -coverprofile="$1"
+#   else
+#     echo "warn - [go test coverprofile] need args, ex: go_coverfile cover.out"
+#   fi
+# }
+
+# # go: go test -bench
+# go_bench() {
+#   go test -bench .
+# }
+
+# # go: go test -bench $1
+# go_benchcpu() {
+#   if [ ! -z "$1" ]; then
+#     go test -bench . -benchmem -cpuprofile "$1"
+#   else
+#     echo "warn - [go test benchmark profiling cpu] need args, ex: go_benchcpu prof.cpu"
+#   fi
+# }
+
+# # go: go test -benchmem $1
+# go_benchmem() {
+#   if [ ! -z "$1" ]; then
+#     go test -bench . -bechmem -memprofile "$1"
+#   else
+#     echo "warn - [go test benchmark profiling mem] need args, ex: go_benchmem prof.mem"
+#   fi
+# }

@@ -1,18 +1,13 @@
-; vim: foldmethod=marker foldlevel=0 ft=dosini
-; ░█▀█░█▀█░█░░░█░█░█▀▄░█▀█░█▀▄
-; ░█▀▀░█░█░█░░░░█░░█▀▄░█▀█░█▀▄
-; ░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀
-; #########################################
-; BARSET ---------------------------------- {{{
-; ------------------------ [global/wm]
+# vim: foldmethod=marker foldlevel=0 ft=dosini
+# ░█▀█░█▀█░█░░░█░█░█▀▄░█▀█░█▀▄
+# ░█▀▀░█░█░█░░░░█░░█▀▄░█▀█░█▀▄
+# ░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀
+# #########################################
+# BARSET ---------------------------------- {{{
+# ------------------------ [global/wm]
 [global/wm]
-margin-bottom       = 0
-margin-top          = 0
-
-font-0              = mononoki Nerd Font:size=9:style=regular
-font-1              = TerminessTTF Nerd Font:size=10:style=bold
-font-2              = Siji:size=10:fontformat=truetype;style=regular
-font-3              = Wucon Siji:size=8:style=regular;0
+margin-bottom       = 2
+margin-top          = 2
 
 [colors]
 iconfg              = ${xrdb:color5}
@@ -22,21 +17,28 @@ nofg                = ${xrdb:color4}
 
 foreground          = ${xrdb:foreground}
 background-bubble   = #2b2f37
+; background-bubble   = #363c4a
+; background-bubble   = ${xrdb:color11}
 background          = ${xrdb:background}
+
+[section/bar]
+monitor             = DP-2
+
+font-0              = mononoki Nerd Font:size=9:style=regular;1
+font-1              = TerminessTTF Nerd Font:size=10:style=bold;1
+font-2              = Siji:size=10:fontformat=truetype;style=regular;1
+font-3              = Wucon Siji:size=1:style=regular;1
+
+; override-redirect   = true
 
 [bar/top]
 
-font-0              = Iosevka Nerd Font:size=8
-font-1              = TerminessTTF Nerd Font:size=3
-font-2              = Siji:size=10:fontformat=truetype
-font-3              = Wucon Siji:size=8;0
-
-
-; Number of spaces to add at the beginning/end of the bar
-; Individual side values can be defined using:
-;   padding-{left,right}
-padding-left = 2
-; padding-right       = 1
+inherit             = section/bar
+width               = 100%
+enable-ipc          = true
+padding-left        = 1
+padding-right       = 1
+line-size           = 2
 
 ; Use either of the following command to list available outputs:
 ; If unspecified, the application will pick the first one it finds.
@@ -62,148 +64,41 @@ bottom = false
 ; When false, the center position will be based on the size of the other blocks.
 fixed-center = true
 
-; radius = 5.0
-
 ; Dimension defined as pixel value (e.g. 35) or percentage (e.g. 50%),
 ; the percentage can optionally be extended with a pixel offset like so:
 ; 50%:-10, this will result in a width or height of 50% minus 10 pixels
 ; width = 2.2%
-width = 98%
-height = 25
+height = 35
 
 ; Offset defined as pixel value (e.g. 35) or percentage (e.g. 50%)
 ; the percentage can optionally be extended with a pixel offset like so:
 ; 50%:-10, this will result in an offset in the x or y direction
 ; of 50% minus 10 pixels
-offset-x = 1%
 ; offset-x = 2.95%
-offset-y = 1%
+; offset-y = 1%
 
-border-size         = 3
-border-color        = ${colors.background}
-
-; border-top-size     = 6
-; border-bottom-size  = 6
-; border-top-color    = ${colors.background}
-; border-bottom-color = ${colors.background}
+border-top-size     = 6
+border-bottom-size  = 6
+border-top-color    = ${colors.background}
+border-bottom-color = ${colors.background}
 
 ; background        = #5a000000
 background          = ${colors.background}
 foreground          = ${colors.foreground}
 
 ; modules-right     = pomo pulseaudio updates network memory filesystem powermenu
-modules-left        = appmenu round-left bspwm round-right round-left mpd  round-right
-modules-right       = cpu cpu-load pulseaudio round-left updates network temperature memory filesystem round-right round-left time round-right powermenu
+modules-left        = appmenu round-left bspwm round-right round-left mpd round-right
+modules-right       = pulseaudio round-left updates network temperature memory filesystem uptime round-right round-left time round-right powermenu
 
-; Value to be used to set the WM_NAME atom
-; If the value is empty or undefined, the atom value
-; will be created from the following template: polybar-[BAR]_[MONITOR]
-; NOTE: The placeholders are not available for custom values
-wm-name =
+tray-position       = right
+tray-padding        = 3
 
-; Position of the system tray window
-; If empty or undefined, tray support will be disabled
-; NOTE: A center aligned tray will cover center aligned modules
-;
-; Available positions:
-;   left
-;   center
-;   right
-;   none
-tray-position = right
-
-; If true, the bar will not shift its
-; contents when the tray changes
-tray-detached = false
-
-; Tray icon max size
-tray-maxsize = 16
-
-; DEPRECATED! Since 3.3.0 the tray always uses pseudo-transparency
-; Enable pseudo transparency
-; Will automatically be enabled if a fully transparent
-; background color is defined using `tray-background`
-
-; Background color for the tray container
-; ARGB color (e.g. #f00, #ff992a, #ddff1023)
-; By default the tray container will use the bar
-; background color.
-tray-background = ${root.background}
-
-; Tray offset defined as pixel value (e.g. 35) or percentage (e.g. 50%)
-tray-offset-x = 0
-tray-offset-y = 0
-
-; Pad the sides of each tray icon
-tray-padding = 0
-
-; Scale factor for tray clients
-tray-scale = 1.0
-
-; Restack the bar window and put it above the
-; selected window manager's root
-
-; Locale used to localize various module data (e.g. date)
-; Expects a valid libc locale, for example: sv_SE.UTF-8
-locale =
-
-; Fixes the issue where the bar is being drawn
-; on top of fullscreen window's
-;
-; Currently supported WM's:
-;   bspwm
-;   i3 (requires: `override-redirect = true`)
-wm-restack = bspwm
 ; wm-restack          = i3
+#
+# }}}
 
-; Set a DPI values used when rendering text
-; This only affects scalable fonts
-; dpi =
-
-; Enable support for inter-process messaging
-; See the Messaging wiki page for more details.
-enable-ipc = true
-
-; Fallback click handlers that will be called if
-; there's no matching module handler found.
-click-left =
-click-middle =
-click-right =
-scroll-up =
-scroll-down =
-double-click-left =
-double-click-middle =
-double-click-right =
-
-; Requires polybar to be built with xcursor support (xcb-util-cursor)
-; Possible values are:
-; - default   : The default pointer as before, can also be an empty string (default)
-; - pointer   : Typically in the form of a hand
-; - ns-resize : Up and down arrows, can be used to indicate scrolling
-cursor-click =
-cursor-scroll =
-
-;; WM Workspace Specific
-
-; bspwm
-;;scroll-up = bspwm-desknext
-;;scroll-down = bspwm-deskprev
-;;scroll-up = bspc desktop -f prev.local
-;;scroll-down = bspc desktop -f next.local
-
-;i3
-;;scroll-up = i3wm-wsnext
-;;scroll-down = i3wm-wsprev
-;;scroll-up = i3-msg workspace next_on_output
-;;scroll-down = i3-msg workspace prev_on_output
-
-;openbox
-;awesome
-;etc
-; }}}
-
-; #########################################
-; X - WINDOW ------------------------------ {{{
+# #########################################
+# X - WINDOW ------------------------------ {{{
 [module/xwindow]
 type = internal/xwindow
 format-prefix = ": "
@@ -212,10 +107,10 @@ format = %{A1:rofi -show drun:}<label>%{A}
 label = "%title:0:38:...%"
 label-empty =
 
-; }}}
+# }}}
 
-; #########################################
-; SYS ------------------------------------- {{{
+# #########################################
+# SYS ------------------------------------- {{{
 [module/temperature]
 type = internal/temperature
 thermal-zone = 0
@@ -223,7 +118,7 @@ warn-temperature = 70
 format-warn = <ramp> <label-warn>
 format-warn-background = ${colors.redfg}
 
-format = %{T4}<ramp>%{T-} <label>
+format = <ramp> <label>
 format-foreground = ${colors.foreground}
 format-background = ${colors.background-bubble}
 format-padding = 1
@@ -243,7 +138,7 @@ interval = 3600
 
 mount-0 = /
 
-format-mounted-prefix = %{T4} %{T-}
+format-mounted-prefix = %{T2} %{T-}
 format-mounted-prefix-foreground = ${colors.foreground}
 ; format-mounted-overline = ${colors.redfg}
 format-mounted-padding = 1
@@ -272,8 +167,8 @@ type = internal/memory
 
 interval = 2
 
-format = <ramp-used>%{T4}﬙ %{T-}<label>
-format-prefix =
+format = <label>
+format-prefix = %{T2}﬙ %{T-}
 ; format-prefix-foreground = ${colors.nofg}
 format-foreground = ${colors.foreground}
 format-background = ${colors.background-bubble}
@@ -282,13 +177,6 @@ format-padding = 1
 label = %percentage_used%%
 ; label = %gb_used%/%gb_total%
 
-ramp-used-0 =
-ramp-used-1 =
-ramp-used-2 =
-ramp-used-3 = %{F#FFAA00}
-ramp-used-4 = %{F#FF0000}
-ramp-used-5 = %{F#FF0000}
-
 [module/powermenu]
 type = custom/menu
 
@@ -296,31 +184,31 @@ expand-right = true
 
 format-spacing = 0
 
-label-open = %{T4}%{T-}
+label-open = %{T2}%{T-}
 label-open-foreground = ${colors.redfg}
 label-open-padding = 1
 
-label-close = %{T4}ﰸ%{T-}
+label-close = %{T2}ﰸ%{T-}
 label-close-foreground = ${xrdb:color7}
 label-close-padding = 1
 
-menu-0-0 = %{T4}%{T-}
+menu-0-0 = %{T2}%{T-}
 menu-0-0-exec = menu-open-1
 menu-0-0-padding = 1
 
-menu-0-1 = %{T4}⏼%{T-}
+menu-0-1 = %{T2}⏼%{T-}
 menu-0-1-exec = menu-open-2
 menu-0-1-padding = 1
 
-menu-1-0 = %{T4}%{T-}
+menu-1-0 = %{T2}%{T-}
 menu-1-0-exec = systemctl reboot
 menu-1-0-padding = 1
 
-menu-1-1 = %{T4}%{T-}
+menu-1-1 = %{T2}%{T-}
 menu-1-1-exec = menu-open-0
 menu-1-1-padding = 1
 
-menu-2-0 = %{T4}%{T-}
+menu-2-0 = %{T2}%{T-}
 menu-2-0-exec = menu-open-0
 menu-2-0-padding = 1
 
@@ -341,26 +229,10 @@ ramp-0 = 
 ramp-1 = 
 ramp-2 = 
 
+# }}}
 
-[module/cpu]
-type = custom/script
-exec = ~/.config/polybar/scripts/cpu-freq
-tail = true
-interval = 1
-click-left = ~/.config/polybar/scripts/cpu-load l
-click-middle = ~/.config/polybar/scripts/cpu-load m
-click-right = ~/.config/polybar/scripts/cpu-load h
-format-padding = 1
-
-[module/cpu-load]
-type = custom/script
-exec = ~/.config/polybar/scripts/cpu-load
-format-padding = 1
-
-; }}}
-
-; #########################################
-; WINDOW MANAGER -------------------------- {{{
+# #########################################
+# WINDOW MANAGER -------------------------- {{{
 [module/bspwm]
 type           = internal/bspwm
 pin-workspaces = true
@@ -368,7 +240,7 @@ enable-click   = true
 enable-scroll  = true
 reverse-scroll = false
 inline-mode    = false
-format         = %{T4}<label-state>%{T-}
+format         = <label-state>
 
 ; label-focused          = 綠
 ; label-occupied         = 祿
@@ -462,10 +334,10 @@ label-empty-padding = 1
 ; label-urgent = "  "
 ; label-urgent-foreground= ${xrdb:color3}
 ; ; label-urgent-padding = 1
-; }}}
+# }}}
 
-; #########################################
-; MULTIMEDIA ------------------------------ {{{
+# #########################################
+# MULTIMEDIA ------------------------------ {{{
 ; [module/mpd]
 ; type = internal/mpd
 ; format-online = <toggle>
@@ -506,7 +378,7 @@ port = 6600
 ; bar-progress-empty = ─
 
 ; format-online = %{T2}<icon-prev> <toggle> <icon-next> <label-time>%{T-} <label-song>
-format-online = %{T4}<icon-prev> <toggle> <icon-next>%{T-} <label-song>
+format-online = %{T2}<icon-prev> <toggle> <icon-next>%{T-} <label-song>
 format-online-padding = 1
 format-online-background = ${colors.background-bubble}
 
@@ -527,55 +399,28 @@ type = internal/pulseaudio
 ; ; If not, uses default sink
 sink = alsa_output.pci-0000_00_1f.3.analog-stereo
 
-;format-volume-prefix = %{T4}墳 %{T-}
-;format-volume = %{T4}<label-volume>%{T-}
-;format-volume-padding = 1
-;; format-volume-background = ${xrdb:color3}
+format-volume-prefix = %{T2}墳 %{T-}
+format-volume = %{T1}<label-volume>%{T-}
+format-volume-padding = 1
+; format-volume-background = ${xrdb:color3}
 
-;; label = <format-volume>
-;; label-volume-background = ${xrdb:color3}
-;; label-volume-padding = 1
+; label = <format-volume>
+; label-volume-background = ${xrdb:color3}
+; label-volume-padding = 1
 
-;format-muted-prefix = %{T4}奄 %{T-}
-;format-muted-prefix-foreground = ${colors.nofg}
-;; format-muted-background = ${xrdb:color3}
-;format-muted-padding = 1
+format-muted-prefix = %{T2}奄 %{T-}
+format-muted-prefix-foreground = ${colors.nofg}
+; format-muted-background = ${xrdb:color3}
+format-muted-padding = 1
 
-;label-muted = muted
-;label-muted-foreground = ${colors.nofg}
-;; label-muted-padding = 1
-;;
-format-volume=%{T4}<ramp-volume>%{T-} <label-volume>
-format-volume-padding= 1
-; Available tags:
-;   <label-muted> (default)
-;   <ramp-volume>
-;   <bar-volume>
-;format-muted = <label-muted>
-; format-padding = 10
-
-; Available tokens:
-;   %percentage% (default)
-label-volume =%{T1}%percentage%%%{T-}
-; label = "<format-volume>  "
-
-; Available tokens:
-;   %percentage% (default
-label-muted = 奄
+label-muted = muted
 label-muted-foreground = ${colors.nofg}
+; label-muted-padding = 1
 
-ramp-volume-0 = 奄
-ramp-volume-1 = 奄
-ramp-volume-2 = 奔
-ramp-volume-3 = 奔
-ramp-volume-4 = 墳
-ramp-volume-5 = 墳
-ramp-volume-6 = 墳
+# }}}
 
-; }}}
-
-; #########################################
-; INTERNET -------------------------------- {{{
+# #########################################
+# INTERNET -------------------------------- {{{
 [module/network]
 type = internal/network
 interface = enp0s31f6
@@ -590,7 +435,7 @@ format = <label>
 ; format-background = ${colors.background-bubble}
 ; format-foreground = ${colors.foreground}
 
-label-connected = %{T4} %{T-}%downspeed:7%
+label-connected = %{T2} %{T-}%{T1}%downspeed:7%%{T-}
 label-connected-background = ${colors.background-bubble}
 label-connected-padding = 1
 
@@ -604,10 +449,10 @@ label-packageloss-foreground = ${colors.redfg}
 label-packageloss-background = ${colors.background-bubble}
 label-packageloss-padding = 1
 
-; }}}
+# }}}
 
-; #########################################
-; TIME ------------------------------------ {{{
+# #########################################
+# TIME ------------------------------------ {{{
 [module/time]
 type = internal/date
 interval = 60
@@ -629,7 +474,7 @@ format-background = ${colors.background-bubble}
 format-foreground = ${colors.warnfg}
 format-padding = 1
 
-time = %{T4} %{T-}%H:%M
+time = %{T2} %{T-} %H:%M
 
 ; date-alt = " %d-%m-%Y"
 ; date-alt = " %b %d %Y"
@@ -641,10 +486,10 @@ date-alt = %A, %d %B %Y
 label = %date%%time%
 
 
-; }}}
+# }}}
 
-; #########################################
-; MISC ------------------------------------ {{{
+# #########################################
+# MISC ------------------------------------ {{{
 ; [section/batterymodule]
 ; type = internal/battery
 ; poll-interval = 5
@@ -664,11 +509,11 @@ label = %date%%time%
 ; ramp-capacity-8 = 
 ; ramp-capacity-9 = 
 
-; }}}
+# }}}
 
-; #########################################
-; CUSTOM SCRIPT --------------------------- {{{
-; ------------------------
+# #########################################
+# CUSTOM SCRIPT --------------------------- {{{
+# ------------------------
 [module/custom-network]
 type = custom/script
 exec = ~/.config/polybar/scripts/check-network
@@ -679,7 +524,7 @@ format = <label>
 format-padding = 1
 format-background = ${colors.background-bubble}
 format-foreground = ${colors.foreground}
-label = %{T4}%output% %{T-}
+label = %{T2}%output% %{T-}
 
 click-left = st -e nmtui-connect
 click-right = st -e nmtui-edit
@@ -691,7 +536,7 @@ interval = 1
 
 format = <label>
 format-padding = 1
-label =%{T4}祥%{T-} %output%
+label =%{T2}祥%{T-} %output%
 ; label-padding = 1
 
 [module/updates]
@@ -702,7 +547,7 @@ interval = 4600
 format = <label>
 format-background = ${colors.background-bubble}
 
-label =%{T4} %{T-}%output%
+label =%{T2} %{T-}%output%
 label-padding = 1
 label-foreground = ${colors.foreground}
 
@@ -717,7 +562,7 @@ label-foreground = ${colors.foreground}
 
 [module/appmenu]
 type = custom/text
-content = %{T4} %{T-}
+content = %{T2} %{T-}
 content-padding = 1
 content-foreground = ${colors.iconfg}
 ; content-background = ${xrdb:color6}
@@ -727,7 +572,7 @@ click-middle = rofi -show ssh
 click-right = rofi -show drun
 
 [module/uptime]
-; https://github.com/jaagr/polybar/wiki/User-contributed-modules#uptime
+;https://github.com/jaagr/polybar/wiki/User-contributed-modules#uptime
 type = custom/script
 exec = uptime | awk -F, '{sub(".*up ",x,$1);print $1}'
 interval = 100
@@ -735,25 +580,26 @@ label = %output%
 
 format-foreground = ${colors.nofg}
 format-background = ${colors.background-bubble}
-format-prefix = %{T4} %{T-}
+format-prefix = " "
 format-padding = 1
 
-; }}}
 
-; #########################################
-; SEPARATOR ------------------------------- {{{
-; ------------------------
+# }}}
+
+# #########################################
+# SEPARATOR ------------------------------- {{{
+# ------------------------
 ; [module/separator]
 ; type = custom/text
 ; content = "WINDOW:"
 [module/round-left]
 type = custom/text
-content = 
+content = %{T2}%{T-}
 content-foreground = ${colors.background-bubble}
 
 [module/round-right]
 type = custom/text
-content = 
+content = %{T2}%{T-}
 content-foreground = ${colors.background-bubble}
 
-; }}}
+# }}}

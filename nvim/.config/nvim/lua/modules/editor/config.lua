@@ -27,13 +27,30 @@ function config.nvim_colorizer()
 end
 
 function config.vim_cursorwod()
-    vim.api.nvim_command("augroup user_plugin_cursorword")
-    vim.api.nvim_command("autocmd!")
-    vim.api.nvim_command("autocmd FileType NvimTree,lspsagafinder,dashboard,vista,qf let b:cursorword = 0")
-    vim.api.nvim_command("autocmd WinEnter * if &diff || &pvw | let b:cursorword = 0 | endif")
-    vim.api.nvim_command("autocmd InsertEnter * let b:cursorword = 0")
-    vim.api.nvim_command("autocmd InsertLeave * let b:cursorword = 1")
-    vim.api.nvim_command("augroup END")
+    require("core.event").nvim_create_augroups {
+        au_cursorword = {
+            {
+                "FileType",
+                "NvimTree,lspsagafinder,dashboard,vista,qf",
+                [[let b:cursorword = 0]]
+            },
+            {
+                "WinEnter",
+                "*",
+                [[if &diff || &pvw | let b:cursorword = 0 | endif]]
+            },
+            {
+                "InsertEnter",
+                "*",
+                [[let b:cursorword = 0]]
+            },
+            {
+                "InsertLeave",
+                "*",
+                [[let b:cursorword = 1]]
+            }
+        }
+    }
 end
 
 function config.nvim_dap()

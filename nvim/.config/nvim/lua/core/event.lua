@@ -35,6 +35,7 @@ autocmd.nvim_create_augroups {
         {"BufWritePre", "*.bak", "setlocal noundofile"},
         {"BufWritePre", "*.tsx", "lua vim.api.nvim_command('Format')"},
         {"BufWritePre", "*.go", "lua require('internal.golines').golines_format()"}
+
         -- Forcing color for unwanted spaces
         -- {"BufNewFile,BufRead,InsertLeave", "*","silent! match RedrawDebugRecompose /\\s\\+$/"};
 
@@ -51,7 +52,6 @@ autocmd.nvim_create_augroups {
     -- au Syntax * call matchadd('Debug', '\W\zs\(NOTE\|INFO\|IDEA\)')
 
     wins = {
-        -- Highlight current line only on focused window
         {
             "WinEnter,BufEnter,InsertLeave",
             "*",
@@ -69,7 +69,9 @@ autocmd.nvim_create_augroups {
         -- Check if file changed when its window is focus, more eager than 'autoread'
         {"FocusGained", "* checktime"},
         -- Disable paste mode on leaving insert mode.
-        {"InsertLeave", "* set nopaste"}
+        {"InsertLeave", "* set nopaste"},
+        -- center buffer around cursor when opening files
+        {"BufRead", "*", "normal zz"}
     },
     ft = {
         {"FileType", "dashboard", "set showtabline=0 | autocmd WinLeave <buffer> set showtabline=2"},
@@ -97,7 +99,6 @@ autocmd.nvim_create_augroups {
     },
     mapping_au = {
         {"FileType", "qf", "nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L"},
-        -- {"FileType", "org", "nnoremap <buffer> q :bd!<CR>"},
         {"BufWritePost", "*", [[if &filetype == '^\(org\|text\)' | execute 'TrimSpace' | endif]]}
     }
 }

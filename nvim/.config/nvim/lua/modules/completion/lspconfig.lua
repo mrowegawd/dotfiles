@@ -115,10 +115,10 @@ local enhance_attach = function(client, bufnr)
         ts.setup_client(client)
     end
 
-    vim.api.nvim_command [[augroup Format]]
-    vim.api.nvim_command [[autocmd! * <buffer>]]
-    vim.api.nvim_command [[autocmd BufWritePost <buffer> lua vim.lsp.buf.formatting()]]
-    vim.api.nvim_command [[augroup END]]
+    -- vim.api.nvim_command [[augroup Format]]
+    -- vim.api.nvim_command [[autocmd! * <buffer>]]
+    -- vim.api.nvim_command [[autocmd BufWritePost <buffer> lua vim.lsp.buf.formatting()]]
+    -- vim.api.nvim_command [[augroup END]]
 end
 
 -- -- taken from: https://www.reddit.com/r/neovim/comments/jvisg5/lets_talk_formatting_again/

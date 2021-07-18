@@ -20,7 +20,7 @@ st.disable_alpha_correction:  0
 !t*font5 : -*-tamzenforpowerline-medium-*-*-*-16-*-*-*-*-*-*-*
 !t*font6 : -*-tamzenforpowerline-medium-*-*-*-20-*-*-*-*-*-*-*
 
-/* #include "./base16-gruvbox-dark-medium" */
-#include "./base16-nord"
+!#include "./base16-gruvbox-dark-medium"
+/* #include "./base16-nord" */
 
 ! # vim: foldmethod=marker foldlevel=0 ft=xdefaults

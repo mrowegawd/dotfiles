@@ -25,6 +25,25 @@ bindkey -M viins '^K' kill-line
 bindkey -M viins '^e' edit-command-line
 bindkey -M viins '^[[Z' reverse-menu-complete
 
+showalias() {
+  local selected num
+  setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
+
+  SELECT=$(awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
+    column -t -s $'\t' | fzf | cut -d" " -f1 | cut -d"(" -f1)
+
+  # note: https://doronbehar.com/articles/ZSH-FZF-completion/
+  # how to Programmatically Change the Line in Zle?
+  LBUFFER="${LBUFFER}$SELECT "
+  local ret=$?
+
+  zle reset-prompt
+
+  return $selected
+}
+zle -N showalias
+bindkey '\ej' showalias
+
 # bindkey '^[[Z' reverse-menu-complete
 # bindkey '\ev' slash-backward-kill-word
 
