@@ -139,7 +139,9 @@ tools["folke/trouble.nvim"] = {
 }
 
 tools["kristijanhusak/orgmode.nvim"] = {
-    event = "BufRead",
+    -- event = "BufRead",
+    -- do not use lazy loading, read this
+    -- https://github.com/kristijanhusak/orgmode.nvim#installation
     config = conf.orgmode_nvim
 }
 

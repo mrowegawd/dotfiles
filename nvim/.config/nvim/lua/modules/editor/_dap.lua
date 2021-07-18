@@ -1,11 +1,30 @@
 local dap = require("dap")
 
 local g = vim.g
-local fn = vim.fn
+-- local fn = vim.fn
 local api = vim.api
 
-fn.sign_define("DapBreakpoint", {text = "綠", texthl = "", linehl = "", numhl = ""})
-fn.sign_define("DapStopped", {text = "->", texthl = "", linehl = "", numhl = ""})
+-- fn.sign_define("DapBreakpoint", {text = "綠", texthl = "", linehl = "", numhl = ""})
+-- fn.sign_define("DapStopped", {text = "->", texthl = "", linehl = "", numhl = ""})
+
+vim.fn.sign_define(
+    "DapBreakpoint",
+    {
+        text = "綠",
+        texthl = "LspDiagnosticsDefaultError",
+        linehl = "",
+        numhl = ""
+    }
+)
+vim.fn.sign_define(
+    "DapStopped",
+    {
+        text = "->",
+        texthl = "LspDiagnosticsDefaultWarning",
+        linehl = "",
+        numhl = ""
+    }
+)
 
 local function gmap(mode, key, result, opts)
     api.nvim_set_keymap(mode, key, result, opts)

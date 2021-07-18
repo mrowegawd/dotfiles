@@ -14,10 +14,12 @@ alias grep="grep --color=auto"
 alias rg="rg --hidden"
 
 alias c="bat "
+alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+
+sbs() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
 
 alias ls="/bin/ls -nphq --time-style=iso --color=auto\
   --group-directories-first --show-control-chars"
-
 
 # if command -v exa > /dev/null; then
 alias ll="exa -lhaa"
@@ -33,7 +35,7 @@ alias :C=exit
 alias :c!=exit
 alias :C!=exit
 
-cdls() { cd "$@" && ll ; }
+cdls() { cd "$@" && ll; }
 
 if [ "${USER}" = "root" ]; then
   alias v="vim"
@@ -41,7 +43,7 @@ if [ "${USER}" = "root" ]; then
   alias ttext='vim /tmp/dump_text.txt'
   alias tbash='vim /tmp/dump_bash.sh'
 else
-  if command -v nvim > /dev/null; then
+  if command -v nvim >/dev/null; then
     alias v="nvim"
     alias svi="sudo nvim"
     alias ttext='nvim /tmp/dump_text.txt'
@@ -54,10 +56,16 @@ else
   fi
 fi
 
-
-if command -v emacs > /dev/null; then
+if command -v emacs >/dev/null; then
   alias e="emacs --insecure"
 fi
+
+cl() {
+  last_dir="$(ls -Frt | grep '/$' | tail -n1)"
+  if [ -d "$last_dir" ]; then
+    cd "$last_dir"
+  fi
+}
 
 # check: check chkmyinstall
 c_myinstall() {
@@ -79,7 +87,6 @@ c_units() {
   echo -n '\e[1;32mListing Units:\e[0m ' | pv -qL 10 && systemctl list-units
 }
 
-
 # check: usage bencweb <url>
 c_bencweb() {
   curl -s -w 'Testing Website Response Time for:%{url_effective}\n\nLookup Time:\t\t%{time_namelookup}\nConnect Time:\t\t%{time_connect}\nPre-transfer Time:\t%{time_pretransfer}\nStart-transfer Time:\t%{time_starttransfer}\n\nTotal Time:\t\t%{time_total}\n' -o /dev/null "$1"
@@ -87,7 +94,7 @@ c_bencweb() {
 
 # check: users getent passwd
 c_user() {
-  getent passwd | awk -F ':' '\
+  getent passwd | awk -F ':' '
     BEGIN {
       print "======================================================================================"
       printf "%-20s %-10s %-10s %-30s %-10s\n", "USER", "UID", "GUID", "HOME", "SHELL"
@@ -105,36 +112,43 @@ c_lsmod() {
 # check: we are chrooted?
 c_chroot() {
   if [ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]; then
-    echo "We are chrooted!";
+    echo "We are chrooted!"
   else
-    echo "Business as usual";
+    echo "Business as usual"
   fi
 }
 
 # check: current host related info
 c_ii() {
-  NC='\033[0m'              # No Color
+  NC='\033[0m' # No Color
 
-  RED='\033[0;31m'          # Red
-  echo -e "\n${RED}Kernel Information:$NC " ; uname -a
-  echo -e "\n${RED}Users logged on:$NC " ; w -h
-  echo -e "\n${RED}Current date :$NC " ; date
-  echo -e "\n${RED}Machine stats :$NC " ; uptime
-  echo -e "\n${RED}Memory stats :$NC " ; free
-  echo -e "\n${RED}Disk Usage :$NC " ; df -Th
-  echo -e "\n${RED}LAN Information :$NC" ; c_lan
+  RED='\033[0;31m' # Red
+  echo -e "\n${RED}Kernel Information:$NC "
+  uname -a
+  echo -e "\n${RED}Users logged on:$NC "
+  w -h
+  echo -e "\n${RED}Current date :$NC "
+  date
+  echo -e "\n${RED}Machine stats :$NC "
+  uptime
+  echo -e "\n${RED}Memory stats :$NC "
+  free
+  echo -e "\n${RED}Disk Usage :$NC "
+  df -Th
+  echo -e "\n${RED}LAN Information :$NC"
+  c_lan
 }
 
 # check: netinfo - check LAN network information for your system (part of ii)
 c_lan() {
-  if command -v ifconfig > /dev/null ; then
+  if command -v ifconfig >/dev/null; then
     echo "---------------------------------------------------"
     /sbin/ifconfig enp0s31f6 | awk /'inet/ {print $2}'
     /sbin/ifconfig enp0s31f6 | awk /'bcast/ {print $3}'
     /sbin/ifconfig enp0s31f6 | awk /'inet6 addr/ {print $1,$2,$3}'
     /sbin/ifconfig enp0s31f6 | awk /'HWaddr/ {print $4,$5}'
     echo "---------------------------------------------------"
-  elif command -v ip > /dev/null ; then
+  elif command -v ip >/dev/null; then
     echo "---------------------------------------------------"
     ip a show enp0s31f6 | awk /'inet/ {print $2}'
     ip a show enp0s31f6 | awk /'bcast/ {print $3}'
@@ -151,7 +165,6 @@ c_sizefile() {
   else
     echo "warn - you need set path!!"
   fi
-
 }
 
 # check: check os
@@ -191,7 +204,7 @@ c_os() {
 
 # download: youtube $1
 d_ytdl() {
-  tsp youtube-dl --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" "$1";
+  tsp youtube-dl --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" "$1"
 }
 
 # download: youtube mp3 $1
@@ -222,21 +235,21 @@ r_calc() {
 
 # runtask: extract file $1
 r_extract() {
-  if [ -f "$1" ] ; then
+  if [ -f "$1" ]; then
     case "$1" in
-      *.tar.bz2)   tar xvjf $1    ;;
-      *.tar.gz)    tar xvzf $1    ;;
-      *.tar.xz)    tar xf $1      ;;
-      *.bz2)       bunzip2 $1     ;;
-      *.rar)       unrar e -r $1  ;;
-      *.gz)        gunzip $1      ;;
-      *.tar)       tar xvf $1     ;;
-      *.tbz2)      tar xvjf $1    ;;
-      *.tgz)       tar xvzf $1    ;;
-      *.zip)       unzip $1       ;;
-      *.Z)         uncompress $1  ;;
-      *.7z)        7z x $1        ;;
-      *)           echo "don't know how to extract '$1'..." ;;
+    *.tar.bz2) tar xvjf $1 ;;
+    *.tar.gz) tar xvzf $1 ;;
+    *.tar.xz) tar xf $1 ;;
+    *.bz2) bunzip2 $1 ;;
+    *.rar) unrar e -r $1 ;;
+    *.gz) gunzip $1 ;;
+    *.tar) tar xvf $1 ;;
+    *.tbz2) tar xvjf $1 ;;
+    *.tgz) tar xvzf $1 ;;
+    *.zip) unzip $1 ;;
+    *.Z) uncompress $1 ;;
+    *.7z) 7z x $1 ;;
+    *) echo "don't know how to extract '$1'..." ;;
     esac
   else
     echo "'$1' is not a valid file!"
@@ -246,89 +259,47 @@ r_extract() {
 # runtask: run newsboat
 r_news() {
   if [ "$TERM" =~ "tmux".* ] || [ "$TERM" =~ "screen" ]; then
-    tmux new-window && tmux rename-window 'newsboat' \
-      && tmux send-keys 'newsboat && tmux kill-pane' enter
-        else
-          newsboat
-  fi
-}
-
-# runtask: run pomo $1
-r_pom() {
-  # to kill file sock use -S flag
-  if [ -S ~/.pomo/pomo.sock ]; then
-    rm -rf ~/.pomo/pomo.sock
-  fi
-  if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ]; then
-    # pomo start --tag myprokect --duration 5s --pomodoros 2 "write some commment"
-    echo "Error: [!] args kurang juragan.."
-    echo ""
-    echo "Example: r_pomo \"myproject web 1\" 2s 3 \"membersihkan bug di js\""
-    return
-  elif [ "$TERM" =~ "tmux".* ] || [ "$TERM" =~ "screen" ]; then
-    if tmux list-window | grep mypomo > /dev/null; then
-      tmuxWindowName=$(tmux list-windows | grep mypomo | cut -d: -f1)
-      tmux kill-window -t "$tmuxWindowName"
-    fi
-    tmux new-window && tmux rename-window 'mypomo' \
-      && tmux send-keys "pomo start --tag \"$1\" --duration \"$2\" --pomodoros \"$3\" \"$4\" && tmux kill-pane" enter
-        else
-          pomo start --tag "$1" --duration "$2" --pomodoros "$3" "$4"
+    tmux new-window && tmux rename-window 'newsboat' &&
+      tmux send-keys 'newsboat && tmux kill-pane' enter
+  else
+    newsboat
   fi
 }
 
 # runtask: multitail
 r_logsys() {
   if [ "$TERM" =~ "tmux".* ] || [ "$TERM" =~ "screen" ]; then
-    if tmux list-window | grep logging > /dev/null; then
+    if tmux list-window | grep logging >/dev/null; then
       tmuxWindowName=$(tmux list-windows | grep logging | cut -d: -f1)
       tmux kill-window -t "$tmuxWindowName"
     fi
-    tmux new-window && tmux rename-window "logging" \
-      && tmux send-keys "sudo multitail -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log && tmux kill-pane" enter
-        else
-          sudo multitail -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
+    tmux new-window && tmux rename-window "logging" &&
+      tmux send-keys "sudo multitail -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log && tmux kill-pane" enter
+  else
+    sudo multitail -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
   fi
-}
-
-
-# Use FZF to switch Tmux sessions:
-# bind-key s run "tmux new-window 'bash -ci fs'"
-fs() {
-  local -r fmt='#{session_id}:|#S|(#{session_attached} attached)'
-    { tmux display-message -p -F "$fmt" && tmux list-sessions -F "$fmt"; } \
-      | awk '!seen[$1]++' \
-      | column -t -s'|' \
-      | fzf -q '$' --reverse --prompt 'switch session: ' -1 \
-      | cut -d':' -f1 \
-      | xargs tmux switch-client -t
-    }
-
-# runtask: run for-local-bin/proj script
-r_proj() {
-  ~/moxconf/exbin/for-local-bin/proj
 }
 
 # runtask: run generate password key
 r_passkeygen() {
-  if command -v whois > /dev/null; then
-    printf "##### GENERATE PASSWORD ###########\n\n"
+  if command -v whois >/dev/null; then
+    printf "##### GENERATE PASSWORD ###########\\n\\n"
     PATHTEMP=$(mktemp -d)
     if [ ! -n "$TMUX" ]; then
-      read -p "your password? " getvar
-    else
-      read "getvar?your password? "
+      read -r -p "your password? " getvar
+      hlse
+      read -r "getvar?your password? "
     fi
-    mkpasswd -m sha-512 "$getvar" > "$PATHTEMP/mypass_SHA512_$(date +%F)"
-    echo "$getvar" > "$PATHTEMP/mypass_$(date +%F)"
-    printf "%s $PATHTEMP\n" "store pass path:"
+    mkpasswd -m sha-512 "$getvar" >"$PATHTEMP/mypass_SHA512_$(date +%F)"
+    echo "$getvar" >"$PATHTEMP/mypass_$(date +%F)"
+    printf "%s $PATHTEMP\\n" "store pass path:"
   else
     clear
     echo "package whois not found! let me install it.."
     sudo apt install whois -y
     sleep 1
     clear
-    echo "run 'r-passkeygen'"
+    echo "run 'r-passkeygen' again"
   fi
 }
 
@@ -337,114 +308,101 @@ r_sshkeygen() {
   echo "##### GENERATE SSH ###########"
   echo ""
   if [ ! -n "$TMUX" ]; then
-    read -p "some comments for new sshgen? " commentme
-    read -p "prefix ~/.ssh/_your_prefix? " prefixfile
+    read -r -p "some comments for new sshgen? " commentme
+    read -r -p "prefix ~/.ssh/_your_prefix? " prefixfile
   else
-    read "commentme?some comments for new sshgen? "
-    read "prefixfile?prefix ~/.ssh/_your_prefix? "
+    read -r "commentme?some comments for new sshgen? "
+    read -r "prefixfile?prefix ~/.ssh/_your_prefix? "
   fi
 
   ssh-keygen -t rsa -b 4096 -C "$commentme" \
     -f "$HOME/.ssh/$prefixfile$(date +%F)"
-  }
+}
 
 # runtask: remove comment string file.conf/else
 r_uncommentfile() {
-  sudo cat "$1" | sed '/^#.*$/d;/^;.*$/d';
-}
-
-# runtask: find string vimwiki file with $1
-r_vimwk() {
-  WIKIPATH="$HOME/moxconf/vimwiki"
-  [[ ! -d "$WIKIPATH" ]] && echo "no found $WIKIPATH" && exit 1
-  [[ ! "$#" -gt 0 ]] && echo "[!] sorry, can't find. you need a keyword bro !!" && exit 1
-  cd "$WIKIPATH"
-  address=$(rg --files-with-matches --no-messages "$1" |
-    fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}")
-
-  [[ -z "$address" ]] && echo "no found" && exit 1
-  nvim "$WIKIPATH/$address"
+  sudo cat "$1" | sed '/^#.*$/d;/^;.*$/d'
 }
 
 # ps ls
 t_ps-ls() {
-PROC_ID_ORIGIN=$(ps -alf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  echo "$PROC_ID_ORIGIN"
-fi
+  PROC_ID_ORIGIN=$(ps -alf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    echo "$PROC_ID_ORIGIN"
+  fi
 }
 
 # ps ls all
 t_ps-ls-all() {
-PROC_ID_ORIGIN=$(ps -elf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  echo "$PROC_ID_ORIGIN"
-fi
+  PROC_ID_ORIGIN=$(ps -elf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    echo "$PROC_ID_ORIGIN"
+  fi
 }
 
 # ps info
 t_ps-info() {
-PROC_ID_ORIGIN=$(ps -alf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  top -p "$PROC_ID"
-fi
+  PROC_ID_ORIGIN=$(ps -alf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    top -p "$PROC_ID"
+  fi
 }
 
 # ps info all
 t_ps-info-all() {
-PROC_ID_ORIGIN=$(ps -elf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  top -p "$PROC_ID"
-fi
+  PROC_ID_ORIGIN=$(ps -elf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    top -p "$PROC_ID"
+  fi
 }
 
 # ps tree
 t_ps-tree() {
-PROC_ID_ORIGIN=$(ps -alf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  pstree -p "$PROC_ID"
-fi
+  PROC_ID_ORIGIN=$(ps -alf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    pstree -p "$PROC_ID"
+  fi
 }
 
 # ps tree all
 t_ps-tree-all() {
-PROC_ID_ORIGIN=$(ps -elf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  pstree -p "$PROC_ID"
-fi
+  PROC_ID_ORIGIN=$(ps -elf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    pstree -p "$PROC_ID"
+  fi
 }
 
 # ps kill
 t_ps-kill() {
-PROC_ID_ORIGIN=$(ps -alf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  kill -9 "$PROC_ID"
-fi
+  PROC_ID_ORIGIN=$(ps -alf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    kill -9 "$PROC_ID"
+  fi
 }
 
 # ps kill
 t_ps-kill-all() {
-PROC_ID_ORIGIN=$(ps -elf | fzf )
-if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-  PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-  kill -9 "$PROC_ID"
-fi
+  PROC_ID_ORIGIN=$(ps -elf | fzf)
+  if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+    PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+    kill -9 "$PROC_ID"
+  fi
 }
 
 # show size current dir
 alias s_ducks='sudo du -cks * | sort -rn | head -11'
 
-s_memuse(){
-  ps -eo size,pid,user,command --sort -size | \
-      awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |\
-      cut -d "" -f2 | cut -d "-" -f1  | less
+s_memuse() {
+  ps -eo size,pid,user,command --sort -size |
+    awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |
+    cut -d "" -f2 | cut -d "-" -f1 | less
 }
 
 # show  listening port
@@ -471,21 +429,35 @@ alias s_disks='echo "╓───── m o u n t . p o i n t s"; echo "╙─�
 # show errors jurnalrc
 alias s_jurnalerr="echo -n '\e[1;32mJournal Errors:\e[0m ' | pv -qL 10 && journalctl -b -p err | ccze -A"
 
-# watch: mpv with args $1 or $1 $2 $3 ($1 $2 geometry)
-w_mpvlol() {
-
+# watch mpv with args $1 or $1 $2 $3 ($1 $2 geometry)
+w_mpv() {
 
   if [ "$#" -gt 1 ]; then
     tsp mpv -ontop -no-border -force-window \
       --autofit="$1"x"$2" --geometry=-15-60 "$3"
-        else
-          tsp mpv --ontop --no-border --force-window \
-            --autofit=700x300 --geometry=-15-60 "$1"
+  else
+    tsp mpv --ontop --no-border --force-window \
+      --autofit=700x300 --geometry=-15-60 "$1"
 
-          echo ""
-          echo "Example: w_mpvlol 1000 300 link_youtube"
-          echo "\t or w_mpvlol link_youtube"
-          echo ""
+    echo ""
+    echo "Example: w_mpvlol 1000 300 link_youtube"
+    printf "\\t or w_mpvlol link_youtube\\n"
+  fi
+}
+
+# watch vlc with args $1 or $1 $2 $3 ($1 $2 geometry)
+w_vlc() {
+
+  if [ "$#" -gt 1 ]; then
+    tsp vlc -ontop -no-border -force-window \
+      --autofit="$1"x"$2" --geometry=-15-60 "$3"
+  else
+    tsp vlc --ontop --no-border --force-window \
+      --autofit=700x300 --geometry=-15-60 "$1"
+
+    echo ""
+    echo "Example: w_mpvlol 1000 300 link_youtube"
+    printf "\\t or w_mpvlol link_youtube\\n"
   fi
 }
 
@@ -503,7 +475,7 @@ md() {
 iide() {
   # check if tmux ses exists
   printf "..launch ide: "
-  if [ ! -z $TMUX ]; then
+  if [ ! -z "$TMUX" ]; then
     tmux split-window -v -p 34
     tmux split-window -h -p 66
     tmux split-window -h -p 34
@@ -610,33 +582,6 @@ alias npm_inst="npm install --save-dev"
 
 # Info -> https://github.com/junegunn/fzf/wiki/examples#opening-files
 
-# fzf: open files
-fz_o() {
-  local files
-  IFS=$f'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
-  [[ -n "$files" ]] && ${EDITOR:-nvim} "${files[@]}"
-}
-
-# fzf: go to directory
-fz_d() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-    -o -type d -print 2> /dev/null | fzf +m) &&
-    cd "$dir"
-  }
-
-# fzf: open with vim everywhere
-fz_ov() {
-  local files
-  files=(${(f)"$(locate -Ai -0 "$@" | grep -z -vE '~$' | fzf --read0 -0 -1 -m)"})
-
-  if [[ -n $files ]]
-  then
-    nvim -- $files
-    print -l $files[1]
-  fi
-}
-
 # fzf: call repeat history
 fz_his() {
   eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
@@ -647,48 +592,47 @@ fz_kill() {
   local pid
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
 
-  if [ "x$pid" != "x" ]
-  then
+  if [ "x$pid" != "x" ]; then
     echo $pid | xargs kill -${1:-9}
   fi
 }
 
-
+# fzf: tmux session
 fz_sm() {
   local -r fmt='#{session_id}:|#S|(#{session_attached} attached)'
-    { tmux display-message -p -F "$fmt" && tmux list-sessions -F "$fmt"; } \
-      | awk '!seen[$1]++' \
-      | column -t -s'|' \
-      | fzf -q '$' --reverse --prompt 'switch session: ' -1 \
-      | cut -d':' -f1 \
-      | xargs tmux switch-client -t
-    }
+  { tmux display-message -p -F "$fmt" && tmux list-sessions -F "$fmt"; } |
+    awk '!seen[$1]++' |
+    column -t -s'|' |
+    fzf -q '$' --reverse --prompt 'switch session: ' -1 |
+    cut -d':' -f1 |
+    xargs tmux switch-client -t
+}
 
-  fz_mx() {
-    SELECTED_PROJECTS=$(tmuxinator list -n |
-      tail -n +2 |
-      fzf --prompt="Project: " -m -1 -q "$1")
+fz_mx() {
+  SELECTED_PROJECTS=$(tmuxinator list -n |
+    tail -n +2 |
+    fzf --prompt="Project: " -m -1 -q "$1")
 
-    if [ -n "$SELECTED_PROJECTS" ]; then
-      # Set the IFS to \n to iterate over \n delimited projects
-      IFS=$'\n'
+  if [ -n "$SELECTED_PROJECTS" ]; then
+    # Set the IFS to \n to iterate over \n delimited projects
+    IFS=$'\n'
 
-      # Start each project without attaching
-      for PROJECT in $SELECTED_PROJECTS; do
-        tmuxinator start "$PROJECT" --no-attach # force disable attaching
-      done
+    # Start each project without attaching
+    for PROJECT in $SELECTED_PROJECTS; do
+      tmuxinator start "$PROJECT" --no-attach # force disable attaching
+    done
 
-      # If inside tmux then select session to switch, otherwise just attach
-      if [ -n "$TMUX" ]; then
-        SESSION=$(tmux list-sessions -F "#S" | fzf --prompt="Session: ")
-        if [ -n "$SESSION" ]; then
-          tmux switch-client -t "$SESSION"
-        fi
-      else
-        tmux attach-session
+    # If inside tmux then select session to switch, otherwise just attach
+    if [ -n "$TMUX" ]; then
+      SESSION=$(tmux list-sessions -F "#S" | fzf --prompt="Session: ")
+      if [ -n "$SESSION" ]; then
+        tmux switch-client -t "$SESSION"
       fi
+    else
+      tmux attach-session
     fi
-  }
+  fi
+}
 
 # More guide, check
 # https://gist.github.com/bradtraversy/89fad226dc058a41b596d586022a9bd3
@@ -821,7 +765,7 @@ doc_con_rall() {
 
 # container: remove all container with id $1
 doc_con_rid() {
-  if [ ! -z "$1" ];then
+  if [ ! -z "$1" ]; then
     docker rm "$1"
   else
     echo "[warn] doc_con_rid: need container id"
@@ -905,20 +849,4 @@ doc_comp_run() {
 # dcompose: docker compose run or start --rm
 doc_comp_run_rm() {
   docker-compose run --rm
-}
-
-r_run(){
-  if cat package.json >/dev/null 2>&1; then
-    scripts=$(cat package.json | jq .scripts | sed '1d;$d' | fzf --height 40%)
-
-    if [[ -n $scripts ]]; then
-      script_name=$(echo $scripts | awk -F ': ' '{gsub(/"/, "", $1); print $1}')
-
-      yarn run "$script_name"
-    else
-      echo "Exit: You haven't selected any script"
-    fi
-  else
-    echo "Error: There's no package.json"
-  fi
 }

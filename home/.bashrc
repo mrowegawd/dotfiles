@@ -4,11 +4,11 @@
 #░▀▀░░▀░▀░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░░▀░▀░▀▀▀ +
 # ------------------------------------
 
-echo "----------------------------"
-echo "prefix: s_ cfg_ w_ r_ c_ t_ fz_ ii[codin] oo[git]"
-echo "prefix-prog: go_ py_ npm_"
-echo "docker: doc_im_(image), doc_con_(container) doc_vol_(volume) doc_net_(network) doc_comp_(compose)"
-echo "----------------------------"
+# echo "----------------------------"
+# echo "prefix: s_ cfg_ w_ r_ c_ t_ fz_ ii[codin] oo[git]"
+# echo "prefix-prog: go_ py_ npm_"
+# echo "docker: doc_im_(image), doc_con_(container) doc_vol_(volume) doc_net_(network) doc_comp_(compose)"
+# echo "----------------------------"
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return

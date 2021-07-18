@@ -5,11 +5,14 @@
 #░▀▀▀░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░░▀░▀░▀▀▀ +
 # --------------------------------
 
-echo "----------------------------"
-echo "prefix: s_ cfg_ w_ r_ c_ t_ fz_ ii[codin] oo[git]"
-echo "prefix-prog: go_ py_ npm_"
-echo "docker: doc_im_(image), doc_con_(container) doc_vol_(volume) doc_net_(network) doc_comp_(compose)"
-echo "----------------------------"
+# echo "----------------------------"
+# echo "prefix: s_ cfg_ w_ r_ c_ t_ fz_ ii[codin] oo[git]"
+# echo "prefix-prog: go_ py_ npm_"
+# printf "docker:\n"
+# printf "\tdoc_im_(image)\tdoc_con_(container)\tdoc_vol_(volume)\n"
+# printf "\tdoc_net_(network)\tdoc_comp_(compose)\n"
+# # echo "docker: doc_im_(image), doc_con_(container) doc_vol_(volume) doc_net_(network) doc_comp_(compose)"
+# echo "----------------------------"
 
 # If you want to debug zsh shell, you can use `zprof`
 #
