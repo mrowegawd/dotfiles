@@ -255,6 +255,29 @@ c_port_listen() {
   sudo netstat -nltn
 }
 
+# check: listing all the listening ports of tcp and udp connections
+c_port_listen_tcpupd() {
+  sudo netstat -a | more
+
+}
+# check: listening port by program
+c_port_listen_byprogram() {
+  sudo netstat -ap | grep -i http
+
+}
+
+# check: show statistic by protocol
+c_port_statistic() {
+  sudo netstat -s
+}
+
+# check: showing network interface packet transactions
+c_port_stransactions() {
+  sudo netstat -i
+  sudo netstat -g
+}
+
+
 # check: show listening port (verbose: name and pid)
 c_port_listenpid() {
   sudo netstat -nltpna
@@ -264,6 +287,7 @@ c_port_listenpid() {
 c_port_establishidA() {
   sudo netstat -ntpa | grep 'ESTABLISHED'
 }
+
 
 # check: show status ip firewall (by iptables)
 c_ipv() {
@@ -333,9 +357,9 @@ r_extract() {
 r_news() {
   if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
 
-    test_proxychains=$(docker ps -a | grep -i up &>/dev/null)
+    test_proxychains=$(docker ps -a | grep -i up)
 
-    if [ -z "$test_proxychains" ]; then
+    if [ ! -z "$test_proxychains" ]; then
       tmux new-window && tmux rename-window 'newsboat' &&
         tmux send-keys 'proxychains newsboat && tmux kill-pane' enter
     else
@@ -493,7 +517,7 @@ ps_kill_all() {
   fi
 }
 
-# watch: mpv with args $1 or $1 $2 $3 ($1 $2 geometry)
+# watch: mpv run with args <$GEOMETRY_X> <$GEOMETRY_Y> <$URL_OR_FILE_VID>
 w_mpv() {
 
   if [ "$#" -gt 1 ]; then
@@ -509,7 +533,7 @@ w_mpv() {
   fi
 }
 
-# watch vlc with args $1 or $1 $2 $3 ($1 $2 geometry)
+# watch: vlc run with args <$GEOMETRY_X> <$GEOMETRY_Y> <$URL_OR_FILE_VID>
 w_vlc() {
 
   if [ "$#" -gt 1 ]; then
@@ -849,12 +873,12 @@ doc_comp_run_rm() {
 # }
 
 # # go: go test -cover
-# go_cover() {
+# gocover() {
 #   go test -cover
 # }
 
 # # go: go test -coverprofile $1
-# go_coverfile() {
+# gocoverfile() {
 #   if [ ! -z "$1" ]; then
 #     go test -coverprofile="$1"
 #   else
@@ -863,24 +887,6 @@ doc_comp_run_rm() {
 # }
 
 # # go: go test -bench
-# go_bench() {
+# gobench() {
 #   go test -bench .
-# }
-
-# # go: go test -bench $1
-# go_benchcpu() {
-#   if [ ! -z "$1" ]; then
-#     go test -bench . -benchmem -cpuprofile "$1"
-#   else
-#     echo "warn - [go test benchmark profiling cpu] need args, ex: go_benchcpu prof.cpu"
-#   fi
-# }
-
-# # go: go test -benchmem $1
-# go_benchmem() {
-#   if [ ! -z "$1" ]; then
-#     go test -bench . -bechmem -memprofile "$1"
-#   else
-#     echo "warn - [go test benchmark profiling mem] need args, ex: go_benchmem prof.mem"
-#   fi
 # }

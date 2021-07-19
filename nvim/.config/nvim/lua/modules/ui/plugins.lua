@@ -14,13 +14,21 @@ ui["andymass/vim-matchup"] = {
 }
 
 ui["glepnir/zephyr-nvim"] = {
-    config = conf.set_colorscheme,
+    config = function()
+        vim.cmd(string.format("colorscheme %s", O.default.colorscheme))
+    end,
     requires = {
         {"rafi/awesome-vim-colorschemes", opt = true},
         {"chriskempson/base16-vim", opt = true},
         {"flazz/vim-colorschemes", opt = true}
     }
 }
+
+-- ui["nekonako/xresources-nvim"] = {
+--     config = function()
+--         vim.cmd([[colorscheme xresources]])
+--     end
+-- }
 
 ui["glepnir/dashboard-nvim"] = {
     event = "BufWinEnter",
@@ -57,8 +65,7 @@ ui["kyazdani42/nvim-tree.lua"] = {
 
 ui["lewis6991/gitsigns.nvim"] = {
     event = "BufRead",
-    config = conf.gitsigns,
-    requires = {"nvim-lua/plenary.nvim", opt = true}
+    config = conf.gitsigns
 }
 
 return ui

@@ -39,13 +39,14 @@ function config.nvim_compe()
         source = {
             path = {kind = "   (Path)"},
             buffer = {kind = "   (Buffer)"},
-            calc = {kind = "   (Calc)"},
             -- vsnip = {kind = "S ", priority = 2000, sort = true, fuzzy = false},
             vsnip = {kind = "   (Snippet)"},
             nvim_lsp = {kind = "   (LSP)"},
+            neorg = {kind = " + (Norg)"},
+            orgmode = {kind = " + (Orgmode)"},
+            calc = {kind = "   (Calc)"},
             treesitter = {kind = " (TreeSitter)"},
             emoji = {kind = " ﲃ  (Emoji)", filetypes = {"markdown", "text"}},
-            orgmode = {kind = " + (Orgmode)"},
             nvim_lua = false,
             spell = false,
             tags = false,
@@ -154,7 +155,6 @@ end
 
 function config.telescope()
     if not packer_plugins["popup.nvim"].loaded then
-        vim.cmd([[packadd plenary.nvim]])
         vim.cmd([[packadd popup.nvim]])
         vim.cmd([[packadd cfilter]]) -- for filter quickfix, :h cfilter-plugin
         vim.cmd([[packadd telescope-fzf-native.nvim]])
@@ -242,6 +242,7 @@ function config.telescope()
     require "telescope".load_extension("grepword")
     require "telescope".load_extension("grepcword")
     require "telescope".load_extension("notes")
+    require "telescope".load_extension("notes_browser")
     require "telescope".load_extension("find_myfiles")
 
     -- zettel
@@ -293,7 +294,8 @@ function config.fzf_lua()
         grep = {
             prompt = "Rg❯ ",
             input_prompt = "Grep For❯ ",
-            cmd = "rg --hidden --follow --no-ignore-vcs -g !{node_modules.git__pycache__.pytest_cache} --no-heading --with-filename --line-number --column --smart-case",
+            -- cmd = "rg --hidden --follow --no-ignore-vcs -g !{node_modules.git__pycache__.pytest_cache} --no-heading --with-filename --line-number --column --smart-case",
+            rg_opts = "--hidden --column --line-number --no-heading --color=always --smart-case -g '!{.git,node_modules}/*'",
             -- cmd = O.grep_concatstring,
             git_icons = true, -- show git icons?
             file_icons = true, -- show file icons?

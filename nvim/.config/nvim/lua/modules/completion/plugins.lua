@@ -28,8 +28,12 @@ completion["sbdchd/neoformat"] = {
 }
 
 completion["hrsh7th/nvim-compe"] = {
-    event = "InsertEnter",
-    config = conf.nvim_compe
+    -- event = "InsertEnter",
+    config = conf.nvim_compe,
+    requires = {
+        "nvim-lua/plenary.nvim",
+        "nvim-lua/popup.nvim"
+    }
 }
 
 completion["hrsh7th/vim-vsnip"] = {
@@ -37,17 +41,14 @@ completion["hrsh7th/vim-vsnip"] = {
     config = conf.vim_vsnip
 }
 
-completion["nvim-lua/plenary.nvim"] = {
-    event = "BufRead"
-}
-
 completion["nvim-telescope/telescope.nvim"] = {
     cmd = "Telescope",
-    config = conf.telescope,
-    requires = {
-        {"nvim-lua/popup.nvim", opt = true},
-        {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-    }
+    config = conf.telescope
+}
+
+completion["nvim-telescope/telescope-fzf-native.nvim"] = {
+    cmd = "Telescope",
+    run = "make"
 }
 
 completion["ibhagwan/fzf-lua"] = {

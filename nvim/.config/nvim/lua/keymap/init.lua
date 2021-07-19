@@ -64,11 +64,8 @@ local plug_map = {
     -- ["n|<Leader>ff"] = map_cu("Telescope find_myfiles"):with_noremap():with_silent(),
     -- ["n|<Leader>fg"] = map_cu("Telescope git_status"):with_noremap():with_silent(),
     -- ["n|<Leader>fh"] = map_cu("Telescope oldfiles"):with_noremap():with_silent(),
-    ["n|<Leader>fn"] = map_cu("Telescope notes"):with_noremap():with_silent(),
-    ["n|<Leader>fN"] = map_cr(
-        [[<cmd>lua require('telescope.builtin').file_browser({cwd=O.plugin.common.wiki_path, prompt_title="Browse Tree Notes"})<CR>]]
-    ):with_noremap():with_silent(),
-    -- ["n|<Leader>fq"] = map_cu("Telescope quickfix"):with_noremap():with_silent(),
+    -- ["n|<Leader>fn"] = map_cu("Telescope notes"):with_noremap():with_silent(),
+    -- ["n|<Leader>fN"] = map_cu("Telescope notes_browser"):with_noremap():with_silent(),
     -- ["n|<Leader>ft"] = map_cu("Telescope help_tags"):with_noremap():with_silent(),
     -- ["n|<Leader>fW"] = map_cu("Telescope grepcword"):with_noremap():with_silent(),
     -- ["n|<Leader>fw"] = map_cu("Telescope live_grep"):with_noremap():with_silent(),
@@ -78,17 +75,17 @@ local plug_map = {
 
     ),
     -- Plugin fzf-lua
-    -- ["n|<Leader>fN"] = map_cu(
-    --     "<cmd>lua require('fzf-lua').files({cwd=O.plugin.common.wiki_path, prompt='BrowseNotes> '})<CR>"
-    -- ):with_noremap():with_silent(),
-    -- ["n|<Leader>fn"] = map_cu(
-    --     "<cmd>lua require('fzf-lua').live_grep({cwd=O.plugin.common.wiki_path, prompt = 'Gnotes> '})<CR>"
-    -- ):with_noremap():with_silent(),
     ["n|<Leader>ff"] = map_cu("<cmd>lua require('fzf-lua').files()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>fw"] = map_cu("<cmd>lua require('fzf-lua').live_grep()<CR>"):with_noremap():with_silent(),
     ["n|<Leader>fW"] = map_cu("<cmd>lua require('fzf-lua').grep_cword({prompt='Gcword> '})<CR>"):with_noremap():with_silent(
 
     ),
+    ["n|<Leader>fN"] = map_cu(
+        "<cmd>lua require('fzf-lua').files({cwd=O.plugin.common.wiki_path, prompt='BrowseNotes> '})<CR>"
+    ):with_noremap():with_silent(),
+    ["n|<Leader>fn"] = map_cmd(
+        "<cmd>lua require('fzf-lua').live_grep({cwd=O.plugin.common.wiki_path, prompt = 'Gnotes> '})<CR>"
+    ):with_noremap():with_silent(),
     ["v|<Leader>fw"] = map_cu("<cmd>lua require('fzf-lua').grep_visual({prompt='Gvisual> '})<CR>"):with_noremap():with_silent(
 
     ),

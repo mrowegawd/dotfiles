@@ -6,6 +6,15 @@ editor["Raimondi/delimitMate"] = {
     config = conf.delimimate
 }
 
+editor["editorconfig/editorconfig-vim"] = {
+    ft = {"go", "typescript", "javascript", "vim", "rust", "zig", "c", "cpp"}
+}
+
+editor["windwp/nvim-autopairs"] = {
+    event = "InsertEnter",
+    requires = "tpope/vim-commentary"
+}
+
 editor["norcalli/nvim-colorizer.lua"] = {
     -- ft = {"html", "css", "sass", "vim", "typescript", "typescriptreact", "xdefaults"},
     cmd = "ColorizerToggle",
@@ -84,10 +93,6 @@ editor["vim-test/vim-test"] = {
 editor["tpope/vim-projectionist"] = {
     ft = {"html", "css", "sass", "typescript", "typescriptreact", "python", "golang"},
     config = conf.vim_projectionist
-}
-
-editor["mg979/vim-visual-multi"] = {
-    event = "BufRead"
 }
 
 return editor

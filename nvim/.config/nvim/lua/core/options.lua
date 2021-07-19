@@ -13,6 +13,7 @@ local root = vim.env.USER == "root"
 local function load_options()
     local global_local = {
         termguicolors = true,
+        mouse = "a",
         rnu = true,
         errorbells = true,
         synmaxcol = 200,
@@ -32,6 +33,8 @@ local function load_options()
         wildmode = "longest:full,full",
         wildignore = {
             ".git",
+            "*.class",
+            "*.toc",
             ".hg",
             ".svn",
             "*.pyc",
@@ -43,9 +46,16 @@ local function load_options()
             "*.gif",
             "*.zip",
             "**/tmp/**",
-            "*.DS_Store",
             "**/node_modules/**",
-            "**/bower_modules/**"
+            "**/bower_modules/**",
+            -- Temp/System
+            "*.*~",
+            "*~ ",
+            "*.swp",
+            ".lock",
+            ".DS_Store",
+            "*.DS_Store",
+            "tags.lock"
         },
         backup = false,
         backupcopy = "yes",
@@ -139,6 +149,9 @@ local function load_options()
     -- taken from https://github.com/wincent/wincent, awesome guy!
     if root then
         vim.opt.undofile = false -- don't create root-owned files
+
+        vim.opt.shada = ""
+        vim.opt.shadafile = "NONE"
     else
         vim.opt.undodir = O.default.cache_dir .. "undo//" -- keep undo files out of the way
         vim.opt.undodir = vim.opt.undodir + "." -- fallback
@@ -166,11 +179,11 @@ local function load_options()
         ["svelte"] = {"javascript", "typescript", "html"}
     }
 
-    vim.cmd([[cab Wq wq]])
+    vim.cmd([[cab Wq uw]])
     vim.cmd([[cab Q! q!]])
     vim.cmd([[cab Q!! q!]])
     vim.cmd([[cab q!! q!]])
-    vim.cmd([[cab WQ wq]])
+    vim.cmd([[cab WQ up]])
     vim.cmd([[cab Q1 q!]])
     vim.cmd([[cab W1 up!]])
     vim.cmd([[cab W! up!]])
@@ -178,9 +191,14 @@ local function load_options()
     vim.cmd([[cab W; up!]])
     vim.cmd([[cab W up]])
     vim.cmd([[cab Q q]])
-    vim.cmd([[cab bD bd]])
     vim.cmd([[cab w@ up!]])
     vim.cmd([[cab W@ up!]])
+
+    vim.cmd([[cab Bd bd!]])
+    vim.cmd([[cab BD bd!]])
+    vim.cmd([[cab bD bd!]])
+    vim.cmd([[cab Bd bd!]])
+    vim.cmd([[cab bd bd!]])
 end
 
 load_options()

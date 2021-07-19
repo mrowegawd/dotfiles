@@ -1,4 +1,4 @@
-local api = vim.api
+-- local api = vim.api
 local lsp = vim.lsp
 local lspconfig = require "lspconfig"
 -- local format = require("modules.completion.format")
@@ -54,6 +54,7 @@ lsp.diagnostic.get_virtual_text_chunks_for_line = function(bufnr, line, line_dia
     for i = 1, #line_diagnostics - 1 do
         table.insert(virt_texts, {"■", get_highlight(line_diagnostics[i].severity)})
     end
+
     local last = line_diagnostics[#line_diagnostics]
     -- TODO(ashkan) use first line instead of subbing 2 spaces?
 
@@ -83,9 +84,10 @@ local enhance_attach = function(client, bufnr)
     -- if client.resolved_capabilities.document_formatting then
     -- -- format.lsp_before_save()
     -- end
-
-    api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
+    local function buf_set_option(...)
+        vim.api.nvim_buf_set_option(bufnr, ...)
+    end
+    buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
     require("modules.completion._null_ls").setup()
 
     require "lsp_signature".on_attach(

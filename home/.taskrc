@@ -3,8 +3,8 @@ data.location=~/.task
 
 # Color theme (uncomment one to use)
 # include /home/mr00x/.config/miscxrdb/taskwarrior/solarized-light-256.theme
-include /home/mr00x/.config/miscxrdb/taskwarrior/antiglare.theme
-# include /home/mr00x/.config/miscxrdb/taskwarrior/zenburn-256.theme
+# include /home/mr00x/.config/miscxrdb/taskwarrior/antiglare.theme
+include /home/mr00x/.config/miscxrdb/taskwarrior/zenburn-256.theme
 
 recurrence.confirmation=no
 

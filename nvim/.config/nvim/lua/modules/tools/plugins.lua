@@ -7,15 +7,6 @@ tools["kristijanhusak/vim-dadbod-ui"] = {
     requires = {{"tpope/vim-dadbod", opt = true}}
 }
 
-tools["editorconfig/editorconfig-vim"] = {
-    ft = {"go", "typescript", "javascript", "vim", "rust", "zig", "c", "cpp"}
-}
-
-tools["windwp/nvim-autopairs"] = {
-    event = "InsertEnter",
-    requires = "tpope/vim-commentary"
-}
-
 tools["simrat39/symbols-outline.nvim"] = {
     cmd = "SymbolsOutline",
     opt = true
@@ -24,28 +15,63 @@ tools["simrat39/symbols-outline.nvim"] = {
 tools["windwp/nvim-spectre"] = {
     module = "spectre",
     event = "WinEnter",
-    wants = {"plenary.nvim", "popup.nvim"},
-    config = conf.nvim_spectre,
-    requires = {
-        "nvim-lua/popup.nvim",
-        "nvim-lua/plenary.nvim",
-        "nvim-telescope/telescope.nvim"
-    }
+    config = conf.nvim_spectre
 }
 
-tools["rmagatti/auto-session"] = {
-    config = conf.session
-}
-
-tools["rmagatti/session-lens"] = {
-    cmd = "SearchSession",
+tools["iamcco/markdown-preview.nvim"] = {
+    ft = "markdown",
+    run = function()
+        vim.fn["mkdp#util#install"]()
+    end,
     config = function()
-        require("session-lens").setup {
-            shorten_path = true,
-            previewer = true
+        vim.g.mkdp_auto_start = 0
+    end
+}
+
+tools["ethanholz/nvim-lastplace"] = {
+    config = function()
+        require "nvim-lastplace".setup {
+            lastplace_ignore_buftype = {"quickfix", "nofile", "help", "Outline"},
+            lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit", "NvimTree"},
+            lastplace_open_folds = true
         }
     end
 }
+
+tools["tweekmonster/startuptime.vim"] = {
+    cmd = {"StartupTime"}
+}
+
+tools["szw/vim-maximizer"] = {
+    config = function()
+        vim.g.maximizer_set_default_mapping = 0
+    end
+}
+
+tools["folke/todo-comments.nvim"] = {
+    cmd = "TodoQuickFix",
+    config = conf.todo_comments,
+    disable = not true
+}
+
+tools["folke/trouble.nvim"] = {
+    cmd = "TroubleToggle",
+    disable = not true
+}
+
+-------------------------------------------------------------------------------
+-- TERMINAL                                                                  --
+-------------------------------------------------------------------------------
+
+tools["voldikss/vim-floaterm"] = {
+    cmd = "FloatermToggle",
+    opt = true,
+    config = conf.vim_floaterm
+}
+
+-------------------------------------------------------------------------------
+-- GIT                                                                       --
+-------------------------------------------------------------------------------
 
 tools["tpope/vim-fugitive"] = {
     event = "BufRead",
@@ -84,63 +110,31 @@ tools["sindrets/diffview.nvim"] = {
 --     }
 -- }
 
-tools["voldikss/vim-floaterm"] = {
-    cmd = "FloatermToggle",
-    opt = true,
-    config = conf.vim_floaterm
+-------------------------------------------------------------------------------
+-- SESSIONS                                                                  --
+-------------------------------------------------------------------------------
+
+tools["rmagatti/auto-session"] = {
+    config = conf.session
 }
 
-tools["iamcco/markdown-preview.nvim"] = {
-    ft = "markdown",
-    run = function()
-        vim.fn["mkdp#util#install"]()
-    end,
+tools["rmagatti/session-lens"] = {
+    cmd = "SearchSession",
     config = function()
-        vim.g.mkdp_auto_start = 0
-    end
-}
-
-tools["fcpg/vim-waikiki"] = {
-    ft = "markdown"
-}
-
-tools["ethanholz/nvim-lastplace"] = {
-    config = function()
-        require "nvim-lastplace".setup {
-            lastplace_ignore_buftype = {"quickfix", "nofile", "help", "Outline"},
-            lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit", "NvimTree"},
-            lastplace_open_folds = true
+        require("session-lens").setup {
+            shorten_path = true,
+            previewer = true
         }
     end
 }
 
-tools["tweekmonster/startuptime.vim"] = {
-    cmd = {"StartupTime"}
-}
-
-tools["szw/vim-maximizer"] = {
-    config = function()
-        vim.g.maximizer_set_default_mapping = 0
-    end
-}
-
-tools["folke/todo-comments.nvim"] = {
-    cmd = "TodoQuickFix",
-    config = conf.todo_comments,
-    disable = not true,
-    require = {
-        {"nvim-lua/plenary.nvim", opt = true}
-    }
-}
-
-tools["folke/trouble.nvim"] = {
-    cmd = "TroubleToggle",
-    disable = not true
-}
+-------------------------------------------------------------------------------
+-- WIKI NOTES                                                                --
+-------------------------------------------------------------------------------
 
 tools["kristijanhusak/orgmode.nvim"] = {
     -- event = "BufRead",
-    -- do not use lazy loading, read this
+    -- do not use lazy loading read this
     -- https://github.com/kristijanhusak/orgmode.nvim#installation
     config = conf.orgmode_nvim
 }
@@ -155,6 +149,17 @@ tools["akinsho/org-bullets.nvim"] = {
             --   table.insert(default_list, "♥")
             --   return default_list
             -- end
+        }
+    end
+}
+
+tools["vhyrro/neorg"] = {
+    config = function()
+        require("neorg").setup {
+            load = {
+                ["core.defaults"] = {},
+                ["core.norg.concealer"] = {}
+            }
         }
     end
 }

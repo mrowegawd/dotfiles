@@ -85,10 +85,6 @@ function config.dashboard()
     }
 end
 
-function config.set_colorscheme()
-    vim.cmd(string.format("colorscheme %s", O.default.colorscheme))
-end
-
 function config.startify()
     local startify_header = {
         "",
@@ -240,9 +236,6 @@ function config.nvim_tree()
 end
 
 function config.gitsigns()
-    if not packer_plugins["plenary.nvim"].loaded then
-        vim.cmd([[packadd plenary.nvim]])
-    end
     require("gitsigns").setup {
         signs = {
             -- add = {hl = "GitGutterAdd", text = "▋"},
