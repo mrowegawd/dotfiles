@@ -67,8 +67,8 @@ local function setup_autocommands(client, buf)
 
     if client.server_capabilities[provider.CODELENS] then
         augroup(("LspCodeLens%d"):format(buf), {
-            -- event = { "BufEnter", "InsertLeave", "BufWritePost" },
-            event = { "BufEnter", "InsertLeave" },
+            event = { "BufEnter", "InsertLeave", "BufWritePost" },
+            -- event = { "BufEnter", "InsertLeave" },
             desc = "LSP: Code Lens",
             buffer = buf,
             -- call via vimscript so that errors are silenced

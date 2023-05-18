@@ -24,75 +24,6 @@ return {
         },
         config = function()
             local cmp = require "cmp"
-            local compare = require "cmp.config.compare"
-
-            local has_luasnip, luasnip = pcall(require, "luasnip")
-
-            local function rhs(strmsg)
-                return vim.api.nvim_replace_termcodes(strmsg, true, true, true)
-            end
-
-            -- Returns the current column number.
-            local column = function()
-                ---@diagnostic disable-next-line: unused-local
-                local _line, col = unpack(vim.api.nvim_win_get_cursor(0))
-                return col
-            end
-
-            -- Returns true if the cursor is in leftmost column or at a whitespace
-            -- character.
-            local in_whitespace = function()
-                local col = column()
-                return col == 0
-                    or vim.api.nvim_get_current_line():sub(col, col):match "%s"
-            end
-
-            local shift_width = function()
-                if vim.o.softtabstop <= 0 then
-                    return vim.fn.shiftwidth()
-                else
-                    return vim.o.softtabstop
-                end
-            end
-
-            -- In buffers where 'noexpandtab' is set (ie. hard tabs are in use), <Tab>:
-            --
-            --    - Inserts a tab on the left (for indentation).
-            --    - Inserts spaces everywhere else (for alignment).
-            --
-            -- For other buffers (ie. where 'expandtab' applies), we use spaces everywhere.
-            ---@diagnostic disable-next-line: unused-local
-            local smart_tab = function(opts)
-                local keys = nil
-                if vim.o.expandtab then
-                    keys = "<Tab>" -- Neovim will insert spaces.
-                else
-                    local col = column()
-                    local line = vim.api.nvim_get_current_line()
-                    local prefix = line:sub(1, col)
-                    local in_leading_indent = prefix:find "^%s*$"
-                    if in_leading_indent then
-                        keys = "<Tab>" -- Neovim will insert a hard tab.
-                    else
-                        -- virtcol() returns last column occupied, so if cursor is on a
-                        -- tab it will report `actual column + tabstop` instead of `actual
-                        -- column`. So, get last column of previous character instead, and
-                        -- add 1 to it.
-                        local sw = shift_width()
-                        local previous_char = prefix:sub(#prefix, #prefix)
-                        local previous_column = #prefix - #previous_char + 1
-                        local current_column = vim.fn.virtcol {
-                            vim.fn.line ".",
-                            previous_column,
-                        } + 1
-                        local remainder = (current_column - 1) % sw
-                        local move = remainder == 0 and sw or sw - remainder
-                        keys = (" "):rep(move)
-                    end
-                end
-
-                vim.api.nvim_feedkeys(rhs(keys), "nt", true)
-            end
 
             -- Based on (private) function in LuaSnip/lua/luasnip/init.lua.
             local in_snippet = function()
@@ -144,83 +75,97 @@ return {
                 },
 
                 mapping = {
-                    ["<C-n>"] = cmp.mapping(function()
-                        if cmp.visible() then
-                            -- If there is only one completion candidate, use it.
-                            if #cmp.get_entries() == 1 then
-                                cmp.confirm { select = true }
+                    ["<TAB>"] = cmp.mapping(function(fallback)
+                        local c_cmp = require "cmp"
+                        local has_luasnip, sp = pcall(require, "luasnip")
+
+                        local col = vim.fn.col "." - 1
+
+                        if c_cmp.visible() then
+                            if #c_cmp.get_entries() == 1 then
+                                c_cmp.confirm { select = false }
                             else
-                                cmp.select_next_item()
+                                c_cmp.select_next_item()
                             end
                         elseif
-                            has_luasnip and luasnip.expand_or_locally_jumpable()
+                            has_luasnip
+                            and sp.expand_or_locally_jumpable()
                         then
-                            luasnip.expand_or_jump()
+                            sp.expand_or_jump()
+                        elseif
+                            col == 0
+                            or vim.fn.getline("."):sub(col, col):match "%s"
+                        then
+                            fallback()
                         else
-                            cmp.complete()
+                            require("cmp").complete()
                         end
-                    end, {
-                        "i",
-                        "s",
-                        -- "c",
-                    }),
-                    ["<C-p>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
+                    end, { "i", "s", "c" }),
+                    ["<S-TAB>"] = cmp.mapping(function(fallback)
+                        local c_cmp = require "cmp"
+                        local has_luasnip, sp = pcall(require, "luasnip")
+
+                        if c_cmp.visible() then
+                            c_cmp.select_prev_item()
                         elseif
                             has_luasnip
                             and in_snippet()
-                            and luasnip.jumpable(-1)
+                            and sp.jumpable(-1)
                         then
-                            luasnip.jump(-1)
+                            sp.jump(-1)
                         else
                             fallback()
+                        end
+                    end, { "i", "s", "c" }),
+
+                    ["<C-u>"] = cmp.mapping(
+                        cmp.mapping.scroll_docs(-4),
+                        { "i", "s" }
+                    ),
+                    ["<C-d>"] = cmp.mapping(
+                        cmp.mapping.scroll_docs(4),
+                        { "i", "s" }
+                    ),
+
+                    ["<c-n>"] = cmp.mapping(function(_)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                            -- else
+                            --     fallback()
                         end
                     end, {
                         "i",
                         "s",
-                        -- "c",
+                        "c",
+                    }),
+                    ["<c-p>"] = cmp.mapping(function(_)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                            -- else
+                            --     fallback()
+                        end
+                    end, {
+                        "i",
+                        "s",
+                        "c",
                     }),
 
-                    ["<C-u>"] = cmp.mapping(
-                        cmp.mapping.scroll_docs(-4),
-                        { "i", "c" }
-                    ),
-                    ["<C-d>"] = cmp.mapping(
-                        cmp.mapping.scroll_docs(4),
-                        { "i", "c" }
-                    ),
                     ["<CR>"] = cmp.mapping.confirm { select = false },
-                    -- ["<CR>"] = cmp.mapping {
-                    --     i = function(fallback)
-                    --         if cmp.visible() and cmp.get_active_entry() then
-                    --             cmp.confirm { select = false }
-                    --         else
-                    --             fallback()
-                    --         end
-                    --     end,
-                    --     s = cmp.mapping.confirm {
-                    --         select = true,
-                    --         behavior = cmp.ConfirmBehavior.Replace,
-                    --     },
-                    --     c = cmp.mapping.confirm { select = true },
-                    -- },
-                    ---@diagnostic disable-next-line: unused-local
-                    ["<C-e>"] = cmp.mapping(function(fallback)
-                        cmp.mapping.abort()
-                        cmp.mapping.close()
+                    ["<c-space>"] = cmp.mapping.confirm { select = false },
 
-                        if callme == 0 then
+                    ["<C-e>"] = cmp.mapping(function(_)
+                        local c_cmp = require "cmp"
+                        if c_cmp.visible() then
+                            c_cmp.abort()
+                        elseif callme == 0 then
                             callme = 1
-                            cmp.complete {
+                            c_cmp.complete {
                                 config = {
                                     sources = {
                                         { name = "luasnip" },
                                     },
                                 },
                             }
-
-                            cmp.mapping.close()
                         elseif callme == 1 then
                             callme = 2
                             cmp.complete {
@@ -237,114 +182,25 @@ return {
                                     },
                                 },
                             }
-                            cmp.mapping.close()
                         else
-                            callme = 0
-                            cmp.complete {
-                                config = {
-                                    sources = {
-                                        { name = "nvim_lsp" },
+                            if callme == 2 then
+                                callme = 0
+                                cmp.complete {
+                                    config = {
+                                        sources = {
+                                            { name = "nvim_lsp" },
+                                        },
                                     },
-                                },
-                            }
-
-                            cmp.mapping.close()
+                                }
+                            end
                         end
                     end, {
                         "i",
                         "s",
-                        -- "c",
+                        "c",
                     }),
-                    ["<C-space>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.confirm { select = true }
-                        else
-                            fallback()
-                        end
-                    end, { "i", "s", "c" }),
 
                     ["<C-q>"] = cmp.mapping.abort(),
-                    ---@diagnostic disable-next-line: unused-local
-                    ["<TAB>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            -- If there is only one completion candidate, use it.
-                            if #cmp.get_entries() == 1 then
-                                cmp.confirm { select = true }
-                            else
-                                cmp.select_next_item()
-                            end
-                        elseif
-                            has_luasnip and luasnip.expand_or_locally_jumpable()
-                        then
-                            luasnip.expand_or_jump()
-                        elseif in_whitespace() then
-                            smart_tab()
-                        else
-                            cmp.complete()
-                        end
-                    end, {
-                        -- "i",
-                        -- "s",
-                        "c",
-                    }),
-                    ["<s-TAB>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif
-                            has_luasnip
-                            and in_snippet()
-                            and luasnip.jumpable(-1)
-                        then
-                            luasnip.jump(-1)
-                        else
-                            fallback()
-                        end
-                    end, {
-                        -- "i",
-                        -- "s",
-                        "c",
-                    }),
-                },
-                sources = cmp.config.sources {
-                    {
-                        name = "nvim_lsp",
-                        -- Remove snippet from lsp, use luasnip instead
-                        ---@diagnostic disable-next-line: unused-local
-                        entry_filter = function(entry, ctx)
-                            if entry:get_kind() == 15 then
-                                return false
-                            end
-                            return true
-                        end,
-                        group_index = 1,
-                    },
-                    {
-                        name = "luasnip",
-                        group_index = 1,
-                    },
-                    {
-                        name = "buffer",
-                        options = {
-                            get_bufnrs = function()
-                                return vim.api.nvim_list_bufs()
-                            end,
-                        },
-                        group_index = 2,
-                    },
-
-                    {
-                        name = "rg",
-                        keyword_length = 4,
-                        max_item_count = 10,
-                        option = { additional_arguments = "--max-depth 8" },
-                        group_index = 1,
-                    },
-                    {
-                        name = "path",
-                        group_index = 1,
-                    },
-                    { name = "neorg", group_index = 2 },
-                    { name = "nvim_lsp_signature_help" },
                 },
                 -- sorting = {
                 --     comparators = {
@@ -425,6 +281,47 @@ return {
                 --         hl_group = "LspCodeLens",
                 --     },
                 -- },
+                sources = cmp.config.sources {
+                    {
+                        name = "nvim_lsp",
+                        -- Remove snippet from lsp, use luasnip instead
+                        ---@diagnostic disable-next-line: unused-local
+                        entry_filter = function(entry, ctx)
+                            if entry:get_kind() == 15 then
+                                return false
+                            end
+                            return true
+                        end,
+                        group_index = 1,
+                    },
+                    {
+                        name = "luasnip",
+                        group_index = 1,
+                    },
+                    {
+                        name = "buffer",
+                        options = {
+                            get_bufnrs = function()
+                                return vim.api.nvim_list_bufs()
+                            end,
+                        },
+                        group_index = 2,
+                    },
+
+                    {
+                        name = "rg",
+                        keyword_length = 4,
+                        max_item_count = 10,
+                        option = { additional_arguments = "--max-depth 8" },
+                        group_index = 1,
+                    },
+                    {
+                        name = "path",
+                        group_index = 1,
+                    },
+                    { name = "neorg", group_index = 2 },
+                    { name = "nvim_lsp_signature_help" },
+                },
             }
 
             cmp.setup.filetype("markdown", {
@@ -438,25 +335,25 @@ return {
                 }),
             })
 
-            -- cmp.setup.filetype("norg", {
-            --     sources = cmp.config.sources({
-            --         { name = "neorg" },
-            --         { name = "luasnip" },
-            --         { name = "path" },
-            --     }, {
-            --         { name = "buffer" },
-            --     }),
-            -- })
-            --
-            -- cmp.setup.filetype("org", {
-            --     sources = cmp.config.sources({
-            --         { name = "orgmode" },
-            --         { name = "luasnip" },
-            --         { name = "path" },
-            --     }, {
-            --         { name = "buffer" },
-            --     }),
-            -- })
+            cmp.setup.filetype("norg", {
+                sources = cmp.config.sources({
+                    { name = "neorg" },
+                    { name = "luasnip" },
+                    { name = "path" },
+                }, {
+                    { name = "buffer" },
+                }),
+            })
+
+            cmp.setup.filetype("org", {
+                sources = cmp.config.sources({
+                    { name = "orgmode" },
+                    { name = "luasnip" },
+                    { name = "path" },
+                }, {
+                    { name = "buffer" },
+                }),
+            })
 
             cmp.setup.filetype("gitcommit", {
                 sources = cmp.config.sources({
