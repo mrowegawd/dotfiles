@@ -127,7 +127,7 @@ return {
                         { "i", "s" }
                     ),
 
-                    ["<c-n>"] = cmp.mapping(function(_)
+                    ["<c-n>"] = cmp.mapping(function()
                         if cmp.visible() then
                             cmp.select_next_item()
                             -- else
@@ -136,9 +136,8 @@ return {
                     end, {
                         "i",
                         "s",
-                        "c",
                     }),
-                    ["<c-p>"] = cmp.mapping(function(_)
+                    ["<c-p>"] = cmp.mapping(function()
                         if cmp.visible() then
                             cmp.select_prev_item()
                             -- else
@@ -147,7 +146,6 @@ return {
                     end, {
                         "i",
                         "s",
-                        "c",
                     }),
 
                     ["<CR>"] = cmp.mapping.confirm { select = false },
@@ -379,6 +377,35 @@ return {
             })
 
             cmp.setup.cmdline(":", {
+                mapping = {
+                    ["<c-q>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").abort()
+                            else
+                                fallback()
+                            end
+                        end,
+                    },
+                    ["<c-p>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").select_prev_item()
+                            else
+                                fallback()
+                            end
+                        end,
+                    },
+                    ["<c-n>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").select_next_item()
+                            else
+                                fallback()
+                            end
+                        end,
+                    },
+                },
                 sources = cmp.config.sources({
                     { name = "path" },
                 }, {

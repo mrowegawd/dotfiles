@@ -149,27 +149,10 @@ return {
     -- TREESJ
     {
         "Wansmer/treesj",
-        enabled = true,
-        dependencies = { "nvim-treesitter" },
-        opts = { use_default_keymaps = false },
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "gS",
-                            "<Cmd>TSJSplit<CR>",
-                            description = "Split Treesj: split expression to multiple lines",
-                        },
-                        {
-                            "gJ",
-                            "<Cmd>TSJJoin<CR>",
-                            description = "Split Treesj: join expression to single line",
-                        },
-                    },
-                },
-            }
+        keys = { "<space>m", "<space>j", "<space>s" },
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        config = function()
+            require("treesj").setup {}
         end,
     },
     -- HELPFUL.VIM
@@ -287,6 +270,7 @@ return {
     {
         "mbbill/undotree",
         cmd = "UndotreeToggle",
+        enabled = false,
         init = function()
             require("legendary").keymaps {
                 {
@@ -380,6 +364,7 @@ return {
             },
         },
     },
+
     -- {
     --     "kwkarlwang/bufjump.nvim",
     --     event = "BufRead",
