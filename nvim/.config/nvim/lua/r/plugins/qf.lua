@@ -62,7 +62,7 @@ return {
                     vim.keymap.set("n", "<c-d>", function()
                         local pvs = require "bqf.preview.session"
 
-                        if ft ~= "qf" then
+                        if ft == "qf" then
                             if pvs.validate() then
                                 return require("bqf.preview.handler").scroll(1)
                             else
@@ -86,7 +86,7 @@ return {
                     vim.keymap.set("n", "<c-u>", function()
                         local pvs = require "bqf.preview.session"
 
-                        if pvs.validate() then
+                        if ft == "qf" then
                             if pvs.validate() then
                                 return require("bqf.preview.handler").scroll(-1)
                             else
@@ -150,8 +150,8 @@ return {
                     ptoggleauto = "P",
 
                     ptoggleitem = "",
-                    pscrollup = "<a-u>",
-                    pscrolldown = "<a-d>",
+                    -- pscrollup = "<a-u>",
+                    -- pscrolldown = "<a-d>",
                     prevfile = "",
                     nextfile = "",
                     sclear = "z<Tab>",
