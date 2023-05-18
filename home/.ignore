@@ -1,0 +1,10 @@
+# file
+*.snippets
+.netrwhist
+tags
+*.log
+.gitignore
+
+# folder
+#.venv
+#.vim

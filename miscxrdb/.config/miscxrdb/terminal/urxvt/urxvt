@@ -1,0 +1,76 @@
+! --------------
+! URXVT settings
+! --------------
+URxvt*imLocale:             en_US.UTF-8
+
+! https://github.com/romainl/Apprentice/wiki/256-colors-and-you
+URxvt*termName:             rxvt-unicode-256color
+! URxvt*termName:             screen-256color
+
+/* Turn on/off hold window after exit support. If enabled, urwvt will not immediately
+   * destory its window when the program executed within it exits.
+   * It will wait till it is being killed or closed by the user */
+URxvt*hold: false
+
+URxvt.depth:                32
+URxvt.geometry: 96x32
+URxvt.transparent:          false
+URxvt.fading:               40
+
+URxvt.intensityStyles:      false
+URxvt.iso14755:             false
+
+! define variable
+#define termfont            xft:mononoki Nerd Font:style=regular:pixelsize=11:antialias=true:autohint=false
+#define termfontbold        xft:mononoki Nerd Font:style=bold:pixelsize=11:antialias=true:autohint=false
+#define termfontitalic      xft:mononoki Nerd Font:style=italic:pixelsize=11:antialias=true:autohint=false
+
+urxvt*font:                 termfont
+urxvt*boldFont:             termfontbold
+urxvt*italicFont:           termfontitalic
+
+! usage: -100 >= 100
+URxvt.letterSpace:          -1
+
+! jarak antara line atas dan line bawah
+URxvt.lineSpace:            0
+
+URxvt.scrollBar:            false
+URxvt.saveLines:            2000
+URxvt.cursorColor:          lightgrey
+URxvt.internalBorder:       10
+
+! ------------------------------------------------------------
+! URxvt plugins
+! ------------------------------------------------------------
+! Perl Extensions urxvt
+URxvt.perl-ext-common:          default,clipboard,keyboard-select,resize-font,url-select
+
+! Plugin->clipboard ( ctrl + shift + c/v )
+URxvt.clipboard.copycmd:        xclip -i -selection clipboard
+URxvt.clipboard.pastecmd:       xclip -o -selection clipboard
+! URxvt.clipboard.autocopy:     true
+URxvt.keysym.C-C:               perl:clipboard:copy
+URxvt.keysym.C-V:               perl:clipboard:paste
+
+! Plugin->Link ( ctrl+u )
+!   j/k:      Select next downward/upward URL (also with arrow keys)
+!   g/G:      Select first/last URL (also with home/end key)
+!   o/Return: Open selected URL in browser, Return: deactivate afterwards
+!   y:        Copy (yank) selected URL and deactivate selection mode
+!   q/Escape: Deactivate URL selection mode
+URxvt.url-select.launcher:      firefox
+! URxvt.underlineURLs:        true
+URxvt.keysym.C-u:               perl:url-select:select_next
+
+! Plugin->keybord-select ( ctrl + / )
+URxvt.keysym.C-/:               perl:keyboard-select:search
+
+! Plugin->resize-font ( ctrl + Up/Down/Left/Right )
+URxvt.keysym.C-equal:           resize-font:bigger
+URxvt.keysym.C-minus:           resize-font:smaller
+URxvt.keysym.C-0:               resize-font:reset
+/* URxvt.keysym.C-Right:    resize-font:reset */
+
+
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults

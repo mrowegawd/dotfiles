@@ -1,0 +1,117 @@
+set adjust-open "best-fit"
+set font "FiraMono Nerd Font 8"
+set zoom-min 10
+
+set recolor "true"
+set first-page-column     1:2
+set scroll-page-aware "true"
+set selection-clipboard   clipboard
+set statusbar-home-tilde true
+
+# disable default mapping for zoom in/out
+unmap +
+unmap -
+# unmap f
+
+# base: zoom in
+map <C-+> zoom in
+
+# base: zoom out
+map <C-_> zoom out
+
+map <c-f> search forward
+
+# base: quit (q)
+map [index] q quit
+
+# toggle: statusbar
+# map b toggle_statusbar
+
+# toggle: fullscreen toggle
+
+# map <c-f> toggle_fullscreen
+
+# toggle: recolor black/white bg
+map i recolor
+
+# scroll: up
+map k scroll up
+
+# scroll: down
+map j scroll down
+
+# scroll: left
+map h scroll left
+
+# scroll: right
+map l scroll right
+
+# scroll: half up
+map K scroll half-up
+
+# scroll: half down
+map J scroll half-down
+
+# normal: search next (n)
+map [normal] n search forward
+
+# normal: search prev (N)
+map [normal] N search backward
+
+
+# fullscreen: fullscreen (f)
+map [fullscreen] f toggle_fullscreen
+
+# fullscreen: zoom (=)
+map [fullscreen] = zoom in
+
+# fullscreen: up (k)
+map [fullscreen] k scroll up
+
+# fullscreen: left (j)
+map [fullscreen] j scroll down
+
+# fullscreen: right (h)
+map [fullscreen] h scroll left
+
+# fullscreen: right (l)
+map [fullscreen] l scroll right
+
+# fullscreen: half up (K)
+map [fullscreen] K scroll half-up
+
+# fullscreen: half down (J)
+map [fullscreen] J scroll half-down
+
+### THEME ###
+
+set default-bg "#222638"
+set default-fg "#c0caf5"
+
+set statusbar-bg "#202020"
+set statusbar-fg "#eee4e5"
+
+set inputbar-bg "#9ece6a"
+set inputbar-fg "#202020"
+
+set highlight-color "#f7768e"
+set highlight-active-color "#6A9FB5"
+
+set completion-highlight-fg "#151515"
+set completion-highlight-bg "#90A959"
+
+set notification-bg "#222638"
+set notification-fg "#c0caf5"
+
+set notification-error-bg "#AC4142"
+set notification-error-fg "#151515"
+
+set notification-warning-bg "#AC4142"
+set notification-warning-fg "#151515"
+
+set recolor-lightcolor "#222638"
+set recolor-darkcolor "#E0E0E0"
+set recolor-reverse-video "true"
+set recolor-keephue "false"
+
+# vim: ft=conf

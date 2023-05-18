@@ -1,0 +1,224 @@
+# vim: ft=conf
+
+########################################
+# States and flags
+########################################
+# alt, super, ctrl
+
+# state: fullscreen
+super + f
+        bspc node -t {fullscreen,tiled}
+
+# stage: toggle entering mode float
+super + t
+        bspc node -t {floating,tiled}
+
+# state: set the node flags (m)arked, (l)ocked, (s)ticky, (p)rivate
+# super + ctrl + {m,l,s,p}
+# 	      bspc node -g {marked,locked,sticky,private}
+
+# state: parent,brother,first,second
+super + {p,b}
+        bspc node -f @{parent,brother}
+
+# state: focus the older or newer node in the focus history
+# super + {o,i}
+#         bspc wm -h off; \
+#         bspc node {older,newer} -f; \
+#         bspc wm -h on
+
+########################################
+# workspaces
+########################################
+
+super + {l,h}
+        bspc node -f {next,prev}.!hidden.window
+
+# workspaces: move current node to the next/previous workspaces
+super + ctrl + {h,l}
+        DIR={prev,next}; \
+        bspc node -d "$DIR"; \
+        bspc desktop -f "$DIR"
+
+########################################
+# window
+########################################
+
+# window: change focus window
+# super + shift + {h,j,k,l}
+#         bspc node -{f,s} {west,south,north,east}
+
+# super + shift + {h,j,k,l}
+# 	      bspc node -{f,s} {west,south,north,east}
+
+# window: swap pane window
+# super + ctrl + {h,j,k,l}
+#         bspc node -s {west,south,north,east}
+
+# focus the next/previous node in the current desktop
+# super + {_,shift + }c
+# 	      bspc node -f {next,prev}.local
+
+# window: move node worspace to the given workspace number
+super + {_,shift + }{1-9,0}
+        bspc {desktop -f,node -d} '^{1-9,10}'
+
+# window: rotate split
+super + shift + {comma,period}
+        bspc node @/ -R {90,270}
+
+########################################
+# Preselection
+########################################
+
+# preselection: enter preselection mode
+# super + super + {h,j,k,l}
+#         bspc node -p {west,south,north,east}
+
+# preselection: resize current preselection mode
+# super + super + {1-9}
+#         bspc node -o 0.{1-9}
+
+# preselection: cancel the preselection mode
+# super + super + space
+#         bspc node -p cancel
+
+# preselection: cancel the preselection for the focused desktop
+# super + ctrl + shift + space
+#         bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+########################################
+# Move and resize windows
+########################################
+
+# window: move window left/right/up/down [if mode: float]
+super + {Left,Down,Up,Right}
+        bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# resize: to grow window (super+s _ +h/j/k/l)
+# super + ctrl + {h,j,k,l}
+#         STEP=20; SELECTION={1,2,3,4}; \
+#         bspc node -z $(echo "left -$STEP 0,bottom 0 $STEP,top 0 -$STEP,right $STEP 0" | cut -d',' -f$SELECTION) || \
+#         bspc node -z $(echo "right -$STEP 0,top 0 $STEP,bottom 0 -$STEP,left $STEP 0" | cut -d',' -f$SELECTION)
+
+# resize: shrink window size
+# super + shift + {h,j,k,l}
+#         STEP=20; SELECTION={1,2,3,4}; \
+#         bspc node -z $(echo "left $STEP 0,bottom 0 -$STEP,top 0 $STEP,right -$STEP 0" | cut -d',' -f$SELECTION) || \
+#         bspc node -z $(echo "right $STEP 0,top 0 -$STEP,bottom 0 $STEP,left -$STEP 0" | cut -d',' -f$SELECTION)
+
+# resize: to grow window (super+alt+shift+Up/Down/Left/Down)
+super + shift + {Left,Down,Up,Right}
+        bspc node -z {left -20 0 || bspc node -z right -20 0, \
+                      bottom 0 20 || bspc node -z top 0 20,\
+                      top 0 -20 || bspc node -z bottom 0 -20,\
+                      right 20 0 || bspc node -z left 20 0}
+
+# resize: to shrink window (super+alt+Up/Down/Left/Down)
+super + alt + {Right,Up,Down,Left}
+        bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# resize: window gap (super+=/-)
+super + shift + {minus,equal}
+        bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+########################################
+# Brightness
+########################################
+
+# misc: increase brightness
+# XF86MonBrightnessUp
+#         xbacklight -inc 5
+
+# misc: decrease brightness
+# XF86MonBrightnessDown
+#         xbacklight -dec 5
+
+########################################
+# misc
+########################################
+
+# misc: open rofi_call
+super + u
+        $HOME/.config/rofi/menu/menu.sh
+
+# misc: open terminal
+super + Return
+        st
+        # alacritty -e tmux
+        # kitty
+        # wezterm
+        # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty
+
+# misc: kill/close window
+super + Tab
+        xdo close
+
+# misc: increase volume
+super + shift + equal
+        amixer -q sset Master 3%+
+
+# misc: decrease volume
+super + shift + minus
+        amixer -q sset Master 3%-
+
+# misc: mute toggle
+super + shift + m
+        amixer -q sset Master toggle
+
+# misc: reload sxhkd
+super + shift + F8
+        pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
+
+# misc: restart/reload bspwm
+super + shift + F12
+        bspc wm -r && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
+
+# misc: change background img
+super + shift + Home
+        $HOME/Dropbox/exbin/for-local-bin/fehbg
+
+# misc: open tools
+super + shift + t
+        $HOME/.config/rofi/menu/_tools
+
+# misc: open ncmpcpp
+super + shift + n
+        $HOME/Dropbox/exbin/for-local-bin/bspwmfloat ncmpcpp
+
+# misc: run glinux
+super + shift + g
+        $HOME/.config/rofi/menu/_glinux
+
+# misc: run obsidian
+super + shift + o
+        bspc rule -a \* -o state=floating st && st
+
+# misc: panggill firefox lalu set di sisi kiri (side by side)
+super + F4
+        $HOME/Dropbox/exbin/for-local-bin/bspc_firefox
+
+# misc: run create note
+super + shift + u
+        bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
+        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && sh -e bash -c "/usr/local/bin/nvim --noplugin -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
+
+# misc: run websearch bookmark
+super + shift + p
+        ~/.local/bin/websearch
+
+# misc: poweroff
+super + shift + q
+        $HOME/.config/rofi/powermenu/poweroff.sh
+
+# misc: run mpv
+super + shift + y
+        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=400x300 --geometry=-15-60 "$3" $(xclip -o -sel clip)
+
+# misc: backward, below, normal window or z-index
+# super + shift + p
+# 	    $HOME/Dropbox/exbin/for-local-bin/switchLayer
+
+# misc: run clipmenu
+# super + shift + c
+#         clipmenu

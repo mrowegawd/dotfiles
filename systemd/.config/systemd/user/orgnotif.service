@@ -1,0 +1,10 @@
+[Unit]
+Description=Notify from Nvim-Org
+
+[Service]
+Type=oneshot
+Environment=DISPLAY=:0
+ExecStart=~/.local/bin/myorgnotif
+
+[Install]
+WantedBy=default.target

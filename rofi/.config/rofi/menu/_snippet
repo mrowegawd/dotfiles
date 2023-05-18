@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e -u
+
+SNIPPETS_MENU="aliases\ncalcurse\nncmpcpp\nnewsboat\nsurfingkeys\nsxhkdrc\nterm-alacritty\nterm-kitty\nterm-st\ntmux\nvimium\nzathura\n"
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/menuleft"
+rofi_command="rofi -theme $dir/$theme"
+
+SELECT="$(echo -e "$SNIPPETS_MENU" | $rofi_command -p "  " -dmenu -i)"
+
+(
+	[[ -z $SELECT ]] && exit
+
+	"$HOME/Dropbox/exbin/for-local-bin/showlinuxhelp" "$SELECT"
+
+	exit
+)

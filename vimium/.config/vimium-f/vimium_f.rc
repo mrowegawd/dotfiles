@@ -1,0 +1,173 @@
+unmapAll         # base: copy theses line to your add on vimium
+
+##############################
+#
+# Base
+#
+##############################
+
+# base: enter find mode
+/       enterFindMode
+
+# base: find next
+map n           performFind
+
+# base: find prev
+map N           performBackwardsFind
+
+# base: view source of the page
+map <c-v>       toggleViewSource
+
+# base: insert mode
+map i           enterInsertMode
+
+# base: visual mode
+map v           enterVisualMode
+
+# base: create mark
+map m           Marks.activateCreateMode
+
+# base: go to mode mark
+map '           Marks.activateGotoMode
+
+# base: help
+map ?           showHelp
+
+# base: scroll up
+map <c-y>       scrollUp count=8
+
+# base: scroll down
+map <c-e>       scrollDown count=8
+
+# base: scroll up (fast)
+map <c-b>       scrollUp count=20
+
+# base: scroll down (fast)
+map <c-d>       scrollDown count=20
+
+
+###############################
+#
+# Open
+#
+###############################
+
+# [tab]: open url in current tab (vomnibar)
+map o           Vomnibar.activate
+
+# [tab]: open url in new tab (vomnibar)
+map O           Vomnibar.activateInNewTab
+
+# [tab]: select tab buffer (vomnibar)
+map <space>fb   Vomnibar.activateTabSelection
+
+# [tab]: open copied url in current tab
+map <c-v>       openCopiedUrlInCurrentTab
+
+# [tab]: open copied url in new tab
+map V           openCopiedUrlInNewTab
+
+# [tab]: open bookmark url in current tab
+map b           Vomnibar.activateBookmarks
+
+# [tab]: open bookmark url in new tab
+map B           Vomnibar.activateBookmarksInNewTab
+
+
+##############################
+#
+# Link
+#
+##############################
+
+# link: follow a link in current tab
+map f           LinkHints.activateMode
+
+# link: follow the new link in new tab
+map F           LinkHints.activateModeToOpenInNewTabw
+
+# link: follow the link activate download
+# map O         LinkHints.activateModeToDownloadLink
+
+
+###############################
+#
+# Copy
+#
+###############################
+
+# copy: copy current url
+map yy          copyCurrentUrl
+
+# copy: copy activate link
+map c           LinkHints.activateModeToCopyLinkUrl
+
+
+###############################
+#
+# Tab
+#
+###############################
+
+# tab: next tab
+map gl          nextTab
+
+# tab: prev tab
+map gh          previousTab
+
+# tab: first tab
+map gH          firstTab
+
+# tab: last tab
+map gL          lastTab
+
+# tab: restore tab
+map U           restoreTab
+
+# tab: close current tab
+map w           removeTab
+
+# tab: go back prev tab (history)
+map S           goBack
+
+# tab: go forward next tab (history)
+map D           goForward
+
+# tab: move tab to the left
+map H           moveTabLeft
+
+# tab: move tab to the right
+map L           moveTabRight
+
+###############################
+#
+# Nav and scroll
+#
+###############################
+
+# scroll: down
+map j           scrollDown count=2
+
+# scroll: up
+map k           scrollUp count=2
+
+# scroll: left
+map h           scrollLeft
+
+# scroll: right
+map l           scrollRight
+
+# scroll: to bottom of the page
+map G           scrollToBottom
+
+# scroll: to top of the page
+map gg          scrollToTop
+
+# scroll: to left of the page
+map Y           scrollToLeft
+
+# scroll: to right of the page
+map P           scrollToRight
+
+# mapkey <c-n:o> <tab>
+# mapkey <c-p:o> <s-tab>

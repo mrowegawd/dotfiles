@@ -1,0 +1,16 @@
+* {
+
+    background:                     %%background%%;
+    foreground:                     %%foreground%%;
+    background-alt:                 %%normal-foreground%%;
+    border:               			    %%border%%;
+    border-alt:               		  #45E3FFff;
+    selected:               		    %%selected-normal-background%%;
+    selected-alt:               		%%selected-alt%%;
+    urgent:                         #DA4453FF;
+
+    green:                          %%green%%;
+    red:                            %%red%%;
+    blue:                           %%blue%%;
+    yellow:                         %%yellow%%;
+}

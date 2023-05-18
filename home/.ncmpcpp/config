@@ -1,0 +1,87 @@
+
+# execute_on_song_change="~/.config/ncmpcpp/ncmpcpp-ueberzug/ncmpcpp_cover_art.sh"
+mpd_music_dir = "~/moxconf/media_and_tuts/mp3"
+
+alternative_header_first_line_format = "$0$aqqu$/a$9 {%t}|{%f} $0$atqq$/a$9$/b"
+visualizer_output_name = "my_fifo"
+
+# song format
+# song_list_format = "{$3%a - $9}{$0%t$9}|{$0%f$9}$R{$3│%l$9}"
+song_list_format = "{$3%n $9}{$7%a - $9}{$5%t$9}|{$8%f$9}$R{$6  %b$9}{$3 │ %l$9}"
+song_columns_list_format = "(10)[blue]{l} (30)[green]{a} (30)[magenta]{b} (50)[yellow]{t}"
+
+# various settings
+autocenter_mode = "yes"
+#header_visibility = "no"
+
+progressbar_look = "▒▒░"
+#progressbar_look = "≈► "
+#progressbar_look = "◾◾◽"
+#progressbar_look =  "━━━"
+#progressbar_look = "___"
+#progressbar_look = "─╼ "
+#progressbar_look = "■  "
+#progressbar_look = "─- "
+#progressbar_look = "▒▒░"
+#progressbar_look = "▒▓░"
+#progressbar_look = "┅┅┄"
+#progressbar_look = "─⊙┄"
+#progressbar_look = "─➞─"
+#progressbar_look = "─┅─"
+#progressbar_look = "▪▪▪"
+#progressbar_look = "▪▪▫"
+#progressbar_look = "───"
+#progressbar_look = "▁▁▁"
+#progressbar_look = "‒‒‒"
+#progressbar_look = "▶ "
+#progressbar_look = "◈◆◇"
+#progressbar_look = "■◣ "
+#progressbar_look = "≈►·"
+#progressbar_look = "▃▃▃"
+#progressbar_look = "○•·"
+#progressbar_look = "───"
+#progressbar_look = "─╼·"
+#progressbar_look = "▤▦"
+#progressbar_look = "━■━"
+#progressbar_look = "━|━"
+
+# color definitions
+colors_enabled = "yes"
+header_window_color = "cyan"
+volume_color = "red"
+state_flags_color = "red"
+statusbar_color = "white"
+alternative_ui_separator_color = "green"
+progressbar_color = "black"
+progressbar_elapsed_color = "red"
+active_window_border = "blue"
+
+
+# selected_item_suffix = "$9"
+playlist_display_mode = "classic" # (classic/columns)
+browser_display_mode = "columns" #(classic/columns)
+user_interface = "classic" #(classic/alternative)
+header_visibility = "no"
+titles_visibility = "yes"
+statusbar_visibility = "yes"
+ignore_leading_the = "yes"
+selected_item_prefix = "* "
+discard_colors_if_item_is_selected = "no"
+
+now_playing_prefix = "ﱘ "
+song_status_format = " $2%a $4⟫$3⟫ $8%t $4⟫$3⟫ $5%b "
+
+visualizer_type = "wave" (spectrum/wave)
+cyclic_scrolling = "yes"
+header_text_scrolling = "yes"
+jump_to_now_playing_song_at_start = "yes"
+lines_scrolled = "2"
+
+incremental_seeking = "yes"
+# seek_time = "2"
+visualizer_look = "  "
+
+#display_bitrate = "no"
+
+system_encoding = "utf-8"
+regular_expressions = "extended"

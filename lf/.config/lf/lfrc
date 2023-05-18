@@ -1,0 +1,131 @@
+
+# Basic vars
+set shell bash
+set shellopts '-eu'
+set ifs "\n"
+set scrolloff 10
+# set color256
+set icons
+set period 1
+set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/cleaner
+
+# cmds/functions
+cmd open ${{
+    case $(file --mime-type $f -b) in
+	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
+	text/*|application/json) $EDITOR $fx;;
+	image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
+	image/*) sxiv $fx& 2>/dev/null ;;
+	audio/*) mpv --audio-display=no $f ;;
+	video/*) setsid -f mpv -ontop -no-border -force-window --autofit=400x300 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
+	application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
+	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
+    esac
+}}
+
+cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
+
+cmd delete ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "%s\n\t" "$fx"
+	printf "delete?[y/N]"
+	read ans
+	[ $ans = "y" ] && rm -rf $fx
+}}
+
+cmd moveto ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	clear; echo "Move to where?"
+	dest="$(cut -d'	' -f2- ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf | sed 's|~|$HOME|' )" &&
+	for x in $fx; do
+		eval mv -iv \"$x\" \"$dest\"
+	done &&
+	dunstify "🚚 File(s) moved." "File(s) moved to $dest."
+}}
+
+cmd copyto ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	clear; echo "Copy to where?"
+	dest="$(cut -d'	' -f2- ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf | sed 's|~|$HOME|' )" &&
+	for x in $fx; do
+		eval cp -ivr \"$x\" \"$dest\"
+	done &&
+	dunstify "📋 File(s) copied." "File(s) copies to $dest."
+}}
+
+cmd fzf_search ${{
+    res="$( \
+        RG_PREFIX="rg --column --line-number --no-heading --hidden --follow --color=always \
+            --smart-case "
+        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+            --ansi --layout=reverse --header 'Search in files' \
+            | cut -d':' -f1
+    )"
+    [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+}}
+
+
+# cmd setbg "$1"
+cmd bulkrename $vidir
+
+# Bindings ====================================================================
+# Remove defaults
+map "'"
+map '"'
+map c
+map d
+map e
+map f
+map m
+map n
+map o
+map p
+map r
+map u
+map y
+map g
+
+
+
+# map <enter> shell
+map <enter> $$EDITOR "$f"                           # enter with nvim/vim
+map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf)"
+map <c-f> $lf -remote "send $id select '$(fzf)'"    # search file and folders (fzf)
+map <c-g> fzf_search                                # search grep text (fzf)
+map <c-n> push :mkdir<space>
+map <f-5> reload
+map P set preview!
+
+map yy copy
+map dd cut
+
+map x $$f
+map X !$f
+map o &mimeopen $f
+map O $mimeopen --ask $f
+map H set hidden!
+map p paste
+map D delete
+map C copyto
+map M moveto
+map R bulkrename
+map r rename
+map V push :!nvim<space>
+
+# Basic Functions
+map cd push :cd<space>
+map gc cd ~/.config
+map gd cd ~/Downloads
+map gD cd ~/Documents
+map gv cd ~/Downloads/Video
+map gs cd ~/Downloads/screenshot
+map gt cd ~/moxconf/media_and_tuts/torrents           # path ini bisa dynamic
+map gm cd ~/moxconf/mobilebackup
+map gw cd ~/moxconf/media_and_tuts/walli3

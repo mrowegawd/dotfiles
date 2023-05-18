@@ -1,0 +1,11 @@
+[Unit]
+Description=Schedule a message every 4 hours
+
+[Timer]
+Persistent=true
+OnBootSec=120
+OnCalendar=*-*-* 03,6,11,17,20:00:00
+Unit=backupin.service
+
+[Install]
+WantedBy=timers.target

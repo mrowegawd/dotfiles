@@ -1,0 +1,1 @@
+vim.b.make = "python"

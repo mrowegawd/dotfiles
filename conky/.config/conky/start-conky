@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e -u
+
+# usage: flag -p -> untuk 'pause' detik/menit sekian
+
+pidof conky && killall conky
+source "$HOME/.config/conky/cfg_conky"
+conky -p 5 -c "$HOME/.config/conky/_p_clock_date" &
+
+# conky -p 24 -c "$HOME/.config/conky/_p_news_ytcombinator" &
+exit 0

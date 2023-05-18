@@ -1,0 +1,11 @@
+# zoom: in
+map <c-s-j>
+
+# zoom: out
+map <c-s-k>
+
+# misc: copy 
+map <c-s-c>
+
+# misc: paste
+map <c-s-v>

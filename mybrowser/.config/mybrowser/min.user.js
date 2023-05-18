@@ -1,0 +1,22 @@
+
+user_pref("browser.blink_allowed", false);
+user_pref("browser.chrome.favicons", false);
+user_pref("browser.chrome.site_icons", false);
+user_pref("browser.link.open_newwindow", 3);
+user_pref("browser.startup.homepage", "about:blank");
+user_pref("browser.tabs.autoHide", false);
+user_pref("browser.tabs.loadInBackground", false);
+user_pref("dom.disable_window_flip", true);
+user_pref("dom.disable_window_move_resize", true);
+user_pref("middlemouse.contentLoadURL", true);
+user_pref("pref.browser.homepage.disable_button.current_page", false);
+user_pref("pref.privacy.disable_button.clear_cache", false);
+user_pref("pref.privacy.disable_button.clear_cookies", false);
+user_pref("pref.privacy.disable_button.clear_formdata", false);
+user_pref("pref.privacy.disable_button.clear_history", false);
+user_pref("pref.privacy.disable_button.view_cookies", false);
+user_pref("security.warn_entering_secure", false);
+user_pref("security.warn_leaving_secure", false);
+user_pref("security.warn_submit_insecure", false);
+user_pref("security.warn_viewing_mixed", false);
+user_pref("signon.rememberSignons", false);

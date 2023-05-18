@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup my wiki and data (dropbox)
+
+[Service]
+Type=oneshot
+Environment=DISPLAY=:0
+ExecStart=~/.local/bin/backupin &
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,200 @@
+
+# Timeout for commands executed by starship (ms)
+command_timeout = 3000
+
+
+# Inserts a blank line between shell prompts
+add_newline = false
+
+[character]
+success_symbol = "[λ](bold cyan)"
+vicmd_symbol = "[V](bold green)"
+
+[git_branch]
+symbol = " "
+style = "bold #98c379"  #green
+
+[directory]
+format = "[$path]($style) [$read_only]($read_only_style)"
+style = "bold cyan"
+read_only = " "
+read_only_style = "red"
+truncate_to_repo = false
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = " ~"
+
+# [git_status]
+# format = '([\($all_status$ahead_behind\)]($style) )'
+# ahead = "⇡${count}"
+# behind = "⇣${count}"
+# diverged = "⇕⇡${ahead_count} ⇣${behind_count}"
+
+[git_status]
+# disabled = true
+format = '([$all_status]($style))'
+conflicted = "([⚠️ ${count}](bold red) )"
+ahead = "([⟫${count}])"
+behind = "([⟪${count}])"
+stashed = "([↪ ${count}](bold red)) "
+modified = "([柳${count}](bold yellow) )"
+staged = "([ ${count}](bold green) )"
+renamed = "([⇆ ${count}](vold blue) )"
+deleted = "([ ${count}](bold red) )"
+untracked ="([ ${count}](dimmed red) )"
+
+[custom.gittag]
+command = "echo \"(tag: $(git describe --tags --abbrev=0), commit: $(git rev-parse --short HEAD))\""
+when = "[ -d .git ] && echo .git || git rev-parse --git-dir > /dev/null 2>&1 && [ $(git tag | wc -l | tr -d '[:space:]') -gt 0 ]"
+ignore_timeout = true
+
+[cmd_duration]
+format = "[ $duration]($style)"
+style = "bold #586068"
+
+[aws]
+format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
+symbol = "  "
+
+[cmake]
+disabled = true
+
+[c]
+symbol = " "
+
+[conda]
+disabled = true
+
+[crystal]
+disabled = true
+
+[dart]
+symbol = " "
+
+[deno]
+disabled = false
+
+[docker_context]
+symbol = " "
+
+[dotnet]
+disabled = true
+
+[elixir]
+symbol = " "
+
+[elm]
+disabled = true
+
+[env_var]
+disabled = true
+
+[erlang]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[golang]
+symbol = " "
+
+[helm]
+disabled = true
+
+[hg_branch]
+disabled = true
+
+[java]
+disabled = true
+
+[jobs]
+disabled = true
+
+[julia]
+disabled = true
+
+[kotlin]
+disabled = true
+
+[kubernetes]
+disabled = true
+
+[lua]
+disabled = true
+
+[memory_usage]
+disabled = true
+
+[nim]
+disabled = true
+
+[nix_shell]
+disabled = true
+
+[nodejs]
+disabled = false
+
+[ocaml]
+disabled = true
+
+[openstack]
+disabled = true
+
+[package]
+symbol = " "
+# disabled = true
+
+[perl]
+disabled = true
+
+[php]
+disabled = false
+
+[purescript]
+disabled = true
+
+[python]
+symbol = " "
+disabled = false
+
+[red]
+disabled = true
+
+[ruby]
+symbol = " "
+
+[rust]
+symbol = " "
+
+[sudo]
+format = '\[[as $symbol]\]'
+
+[scala]
+disabled = true
+
+[shell]
+disabled = true
+
+[shlvl]
+disabled = true
+
+[singularity]
+disabled = true
+
+[status]
+disabled = false
+
+[swift]
+disabled = true
+
+[terraform]
+disabled = true
+
+[vlang]
+disabled = true
+
+[vagrant]
+disabled = false
+
+[zig]
+disabled = true

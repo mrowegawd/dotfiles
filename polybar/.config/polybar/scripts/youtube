@@ -1,0 +1,7 @@
+#! /bin/sh
+
+# example to load youtube acc
+~/.local/bin/checkyoutube
+
+# TODO:
+# - access youtube acc with python

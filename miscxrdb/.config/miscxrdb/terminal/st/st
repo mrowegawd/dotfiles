@@ -1,0 +1,26 @@
+st.font:          JetBrains Mono:Regular:pixelsize=10
+st.boldFont:      JetBrains Mono:Bold:pixelsize=10
+st.italicFont:    JetBrains Mono:Italic:pixelsize=10
+
+st.borderperc:              100
+st.cursorshape:               2
+st.cursorthickness:           2
+st.scrollrate:                1
+st.boxdraw_bold:              0
+st.boxdraw_braille:           0
+st.depth:                     0
+st.opacity:                   255
+st.disable_alpha_correction:  0
+
+!t*font  : -*-tamzenforpowerline-medium-*-*-*-12-*-*-*-*-*-*-*
+!t*font1 : -*-tamzenforpowerline-medium-*-*-*-9-*-*-*-*-*-*-*
+!t*font2 : -*-tamzenforpowerline-medium-*-*-*-12-*-*-*-*-*-*-*
+!t*font3 : -*-tamzenforpowerline-medium-*-*-*-13-*-*-*-*-*-*-*
+!t*font4 : -*-tamzenforpowerline-medium-*-*-*-15-*-*-*-*-*-*-*
+!t*font5 : -*-tamzenforpowerline-medium-*-*-*-16-*-*-*-*-*-*-*
+!t*font6 : -*-tamzenforpowerline-medium-*-*-*-20-*-*-*-*-*-*-*
+
+!#include "./base16-gruvbox-dark-medium"
+/* #include "./base16-nord" */
+
+! # vim: foldmethod=marker foldlevel=0 ft=xdefaults

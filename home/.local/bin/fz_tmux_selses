@@ -1,0 +1,32 @@
+#!/bin/bash
+
+fz_tmux_selses() {
+  local -r fmt='#{session_id}:|#S|(tmux-#{session_attached})'
+
+  # SELECTSESS=$(
+  #   { tmux display-message -p -F "$fmt" && tmux list-sessions -F "$fmt"; } |
+  #     fzf-tmux -p |
+  #     awk '!seen[$1]++' |
+  #     column -t -s'|' |
+  #     fzf -q '$' --reverse --prompt 'switch session: ' -1 |
+  #     cut -d':' -f1 |
+  # )
+
+  SELECTSESS=$(tmux list-sessions -F "$fmt" | sed 's/|(tmux-1)/ [attached]/g' |
+    sed 's/|(tmux-0)//g' |
+    sed 's/:|/ - /g' |
+    fzf-tmux -p |
+    cut -d"-" -f1)
+
+  [[ -z $SELECTSESS ]] && exit
+
+  if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
+    echo $SELECTSESS | xargs tmux switch-client -t
+  else
+    tmux a -t $SELECTSESS
+
+  fi
+
+}
+
+fz_tmux_selses

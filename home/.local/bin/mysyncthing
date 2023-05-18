@@ -1,0 +1,42 @@
+#!/bin/bash
+
+WIKI_SRC_PATH_LINUX="$HOME/Dropbox/wiki/"
+WIKI_DEST_PATH_LINUX="$HOME/moxconf/mobilebackup/Backuples2/wiki/"
+WIKI_DEST_PATH_WINDOW="$HOME/moxconf/media_and_tuts/wiki/"
+
+GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
+
+# Jika belum ada docker syncthing, run command ini
+# (NOTE: jangan lupa set PUID dan PGID, sesuaikan dengan user kamu (check /etc/passwd))
+# docker run --name mysyncthing -e PUID=1000 -e PGID=1000 -p 8384:8384 \
+#        -p 22000:22000/tcp \
+#        -p 22000:22000/udp \
+#        -v $HOME/moxconf/mobilebackup:/var/syncthing \
+#        --hostname=my-syncthing syncthing/syncthing:latest
+
+rsync_wikis() {
+  # rsync -aP --delete ~/Dropbox/wiki/ /media/programming/wiki/
+  # rsync -aP ~/Dropbox/wiki/ ~/Backuples/wiki/
+
+  if [[ -d $WIKI_DEST_PATH_LINUX ]]; then
+    rsync -aP "$WIKI_SRC_PATH_LINUX" "$WIKI_DEST_PATH_LINUX"
+  else
+    dunstify "path: $WIKI_SRC_PATH_LINUX not found"
+  fi
+
+  if [[ -d $WIKI_DEST_PATH_WINDOW ]]; then
+    rsync -aP "$WIKI_SRC_PATH_LINUX" "$WIKI_DEST_PATH_WINDOW"
+  else
+    dunstify "path: $WIKI_DEST_PATH_WINDOW not found"
+  fi
+
+  dunstify "Backup status:" "<b><span foreground='$GREEN'>re-sync...</span></b>"
+}
+
+CONTAINER_SYNCTHING_CHECK=$(docker ps -a | grep mysyncthing | grep Up)
+
+if [ -n "$CONTAINER_SYNCTHING_CHECK" ]; then
+  rsync_wikis
+else
+  docker start "$(docker ps -aqf "name=mysyncthing")"
+fi

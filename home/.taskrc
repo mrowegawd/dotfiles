@@ -1,0 +1,49 @@
+
+data.location=~/.task
+
+# Color theme (uncomment one to use)
+include ~/.config/miscxrdb/taskwarrior/zenburn-256.theme
+
+recurrence.confirmation=no
+
+uda.url.type=string
+uda.url.label=Url
+
+task rc.reserved.lines=2
+
+report.custom.filter=status:pending and +READY
+report.in.columns		= id,description
+report.in.description	= Inbox
+report.in.filter		= status:pending limit:page (+in)
+report.in.labels		= ID,Description
+
+report.tagsonly.columns		= tags
+report.tagsonly.description	= Tags
+report.tagsonly.filter		= status:pending
+report.tagsonly.labels		= TagName
+
+report.next.description	= Most urgent tasks
+report.next.columns		= id,start.age,entry.age,urgency,depends,priority,project,tags,recur,scheduled.countdown,due.remaining,until.remaining,description.truncated_count,brainpower
+report.next.filter		= status:pending and +next and -no and -rnr
+report.next.labels		= ID,Active,Age,Urgency,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Brainpower
+report.next.sort		= priority-,urgency-
+
+# UDA's
+uda.brainpower.type=string
+uda.brainpower.label=Brainpower
+uda.brainpower.values=H,M,L,S
+uda.brainpower.default=M
+
+uda.estimate.type=numeric
+uda.estimate.label=Estimate
+uda.estimate.default=9993
+--force=log \/var\/taskd.log
+
+# task config uda.relativeRecurDue.type duration
+# task config uda.relativeRecurDue.label 'Rel. Rec. Due'
+# task config uda.relativeRecurWait.type duration
+# task config uda.relativeRecurWait.label 'Rel. Rec. Wait'
+uda.relativeRecurDue.type=duration
+uda.relativeRecurDue.label=Rel. Rec. Due
+uda.relativeRecurWait.type=duration
+uda.relativeRecurWait.label=Rel. Rec. Wait

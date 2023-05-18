@@ -1,0 +1,21 @@
+#!/bin/bash
+
+checkgit() {
+
+	for VAR in "$(pwd)"/*; do
+		if [[ -d $VAR ]]; then
+			printf "====> \033[0;32m$(basename $VAR)\033[0m \n"
+			cd "$VAR" || exit
+			git fetch && git merge --no-ff --no-edit
+			git pull --rebase --prune
+			printf "\n"
+		fi
+		cd ..
+	done
+
+}
+
+BASECWD=$(basename "$(pwd)")
+[[ $BASECWD != "dotfilesxc" ]] && echo "not dotfilesxc" && exit 1
+
+checkgit

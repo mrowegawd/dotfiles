@@ -1,0 +1,13 @@
+#!/bin/bash
+
+fz_tmux_selwin() {
+
+  # SELECT=$(tmux list-windows -F "#I: #W #{pane_tty} #{pane_current_path} #T" | fzf-tmux -p | cut -d ":" -f 1)
+  SELECT=$(tmux list-windows -F "#I: #W" | fzf-tmux -p | cut -d ":" -f 1)
+
+  [[ -z $SELECT ]] && exit
+
+  echo $SELECT | xargs tmux select-window -t
+}
+
+fz_tmux_selwin

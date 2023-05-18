@@ -1,0 +1,263 @@
+#!/bin/bash
+
+set -e -u
+
+#shellcheck source=/dev/null
+. ~/Dropbox/exbin/for-local-bin/load-vars-rofi
+
+DOTFILES_PATH="$HOME/moxconf/development/dotfiles"
+MISCXRDB_PATH="$HOME/.config/miscxrdb"
+ERROR_MSG="[!] Sorry..we abort it"
+
+set_rofi() {
+
+	_ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
+
+	if [ ! -d "$_ROFI_PATH" ]; then
+		dunstify "$ERROR_MSG" "Path $_ROFI_PATH do not exists!" && exit 1
+	fi
+
+	cat "$_ROFI_PATH/colors/_nightly.rasi" >"$_ROFI_PATH/colors/nightly.rasi"
+
+	sed -i -e "s/%%background%%/$GET_BACKGROUND/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%foreground%%/$GET_BLACK/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%normal-foreground%%/$GET_FOREGROUND/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%selected-normal-background%%/$GET_CYAN/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%selected-alt%%/$GET_FZF_BG_SELECTION/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+	sed -i -e "s/%%green%%/$GET_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%red%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%blue%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%yellow%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
+	sed -i -e "s/%%border%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+}
+set_dunst() {
+	_DUNST_PATH="$DOTFILES_PATH/dunst/.config/dunst"
+
+	if [ ! -d "$_DUNST_PATH" ]; then
+		dunstify "$ERROR_MSG:<br>Path dunst: $_DUNST_PATH do not exists!" && exit 1
+	fi
+
+	getxrdb_color() {
+		GETCOLOR="$(xrdb -query | grep "$1" | head -n 1 | cut -d":" -f2 | xargs)"
+		sed -i -e "s/%%$2%%/$GETCOLOR/g" "$_DUNST_PATH/dunstrc"
+	}
+
+	getxrdb_colorbg() {
+		GETCOLOR="$(xrdb -query | grep "$1" | head -n 1 | cut -d":" -f2 | xargs |
+			cut -d" " -f1)"
+
+		sed -i -e "s/%%$2%%/$GETCOLOR/g" "$_DUNST_PATH/dunstrc"
+	}
+
+	NEW_FONTS="JetBrainsMono Nerd Font"
+	NEW_FONTS_SIZE=12
+	getxrdb_font() {
+		# set font
+		sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
+
+		# set fontsize
+		sed -i -e "s/%%font_size%%/$NEW_FONTS_SIZE/g" "$_DUNST_PATH/dunstrc"
+
+	}
+
+	(
+		cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
+
+		# background & foreground - normal
+		getxrdb_colorbg background normal_bg
+		getxrdb_colorbg foreground normal_fore_bg
+
+		# background & foreground - critical
+		getxrdb_color color9 critical_bg
+		getxrdb_color color15 critical_fore_bg
+
+		# border color
+		getxrdb_color background color_border
+		getxrdb_color background frame_color
+
+		# grab font && fontsize
+		getxrdb_font
+	)
+
+	"$HOME/.config/dunst/rundust.sh" >/dev/null
+}
+set_tmux() {
+	# TMUX_PATH="$DOTFILES_PATH/rofi/.config/rofi"
+	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot-2"
+
+	if [ -f "$_PATH_TMUX_THEMES" ]; then
+		sleep 1
+		sed -i -e "s/^WINDOW_STYLE_BG=.*$/WINDOW_STYLE_BG=\"$GET_BACKGROUND_ACTIVE_WINDOW\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^WINDOW_ACTIVE_STYLE_BG=.*$/WINDOW_ACTIVE_STYLE_BG=\"$GET_BACKGROUND_NON_ACTIVE_WINDOW\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BG_ACTIVE_STATUSLINE=.*$/BG_ACTIVE_STATUSLINE=\"$GET_MAGENTA\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^COL_RED=.*$/COL_RED=\"$GET_MAGENTA\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BG_STATUSLINE=.*$/BG_STATUSLINE=\"$GET_BACKGROUND_ACTIVE_STATUSLINE\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^COL_BORDER_SEPERATOR=.*$/COL_BORDER_SEPERATOR=\"$GET_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
+	else
+		dunstify "$_PATH_TMUX_THEMES not found"
+	fi
+
+}
+set_zathura() {
+	_ZATHURA_PATH="$DOTFILES_PATH/zathura/.config/zathura"
+
+	if [ ! -d "$_ZATHURA_PATH" ]; then
+		dunstify "$ERROR_MSG:<br>Path zathura: $_ZATHURA_PATH do not exists!" && exit 1
+	fi
+
+	sed -i -e "s/^set default-bg.*/set default-bg \"$GET_BACKGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+	sed -i -e "s/^set default-fg.*/set default-fg \"$GET_FOREGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+
+	sed -i -e "s/^set notification-bg.*/set notification-bg \"$GET_BACKGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+	sed -i -e "s/^set notification-fg.*/set notification-fg \"$GET_FOREGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+
+	sed -i -e "s/^set highlight-color.*/set highlight-color \"$GET_RED\"/g" "$_ZATHURA_PATH/zathurarc"
+	sed -i -e 's/^set highlight-fg.*/set highlight-fg "#0e0807"/g' ~/.config/zathura/zathurarc
+
+	sed -i -e "s/^set inputbar-bg.*/set inputbar-bg \"$GET_GREEN\"/g" "$_ZATHURA_PATH/zathurarc"
+	# sed -i -e "s/^set inputbar-fg.*/set inputbar-fg \"$GETFOREGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+
+	sed -i -e "s/^set recolor-lightcolor.*/set recolor-lightcolor \"$GET_BACKGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+}
+set_vim() {
+	_PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/utils/globals.lua"
+	if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
+		PATH_NVIM="base2tone_space_dark"
+	else
+		PATH_NVIM=$_PATH_NVIM
+	fi
+
+	sed -i -e "s/^as.colorscheme\s=.*/as.colorscheme = \"$1\"/" "$PATH_NVIM"
+}
+set_oomox() {
+	if command -v oomox-cli &>/dev/null; then
+		oomox-cli /opt/oomox/scripted_colors/xresources/xresources-reverse
+	fi
+
+	# NOTE: Change font lxappreance seharusnya lewat GUI lxappreance,
+	# but we to change with command line
+	FILE_INI_GTK3=~/.config/gtk-3.0/settings.ini
+	if [ -f $FILE_INI_GTK3 ]; then
+		size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
+
+		if [[ $size == "1024x768" ]]; then
+			FONTSIZETERM="10"
+		fi
+
+		sed -i -e "s/^gtk-font-name=.*$/gtk-font-name=$GET_FONT $FONTSIZETERM/g" $FILE_INI_GTK3
+
+	fi
+}
+set_terminal() {
+	size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
+
+	if [[ $size == "1024x768" ]]; then
+		FONTSIZETERM="9"
+	fi
+
+	# KITTY
+	# change colorscheme fpr spesific terminal (ex: kitty,st,alacritty)
+	# if [ "$TERMINAL" == "kitty" ]; then
+	FILES="$HOME/.config/kitty/colors/$1.conf"
+	if [ -f "$FILES" ]; then
+		KITTY="$HOME/.config/kitty/kitty.conf"
+
+		sed -i -e "s/^include\s~\\/.config\\/kitty\\/colors.*/include ~\\/.config\\/kitty\\/colors\\/$1.conf/g" "$KITTY"
+		dunstify "theme kitty [+]"
+	else
+		dunstify "theme kitty [-]"
+	fi
+
+	# ALACRITTY
+	if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
+		cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.yml"
+		cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.yml"
+		dunstify "theme alacritty [+]"
+	else
+		dunstify "theme alacritty [-]"
+	fi
+
+}
+wm_bspwm() {
+	~/.config/bspwm/bspwmrc &>/dev/null
+}
+wm_i3() {
+	cat ~/Dropbox/exbin/xfiles/cfg_i3/config ~/Dropbox/exbin/xfiles/cfg_i3/i3theme \
+		>~/.config/i3/config
+
+	sed -i -e "s/%%bg_%%/$GETBACKGROUND/g" "$HOME/.config/i3/config"
+	sed -i -e "s/%%fg_%%/$GETFOREGROUND/g" "$HOME/.config/i3/config"
+
+	sed -i -e "s/%%bg_fc%%/$GETBLUE/g" "$HOME/.config/i3/config"
+	sed -i -e "s/%%fg_fc%%/$GETFOREGROUND/g" "$HOME/.config/i3/config"
+
+	sed -i -e "s/%%indic_%%/$GETBACKGROUND/g" "$HOME/.config/i3/config"
+	sed -i -e "s/%%indic_fc%%/$GETRED/g" "$HOME/.config/i3/config"
+
+	sed -i -e "s/%%bg_border%%/$GETWHITE/g" "$HOME/.config/i3/config"
+	sed -i -e "s/%%bg_border_urg%%/$GETRED/g" "$HOME/.config/i3/config"
+
+	i3-msg restart
+
+}
+wm_awesome() {
+	echo "awesome.restart()" | awesome-client
+}
+
+dir="$HOME/.config/rofi/menu"
+theme="styles/big_center"
+rofi_command="rofi -theme $dir/$theme"
+
+(
+	[[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
+	_NAMETHEME=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_command -dmenu -p "  ")
+	[[ -z $_NAMETHEME ]] && exit 1
+
+	# # set new Xresources theme
+	if [ -n "$_NAMETHEME" ]; then
+		sed -i -e \
+			"s/^#include \\([^ ]*xresource-theme[^ ]*\\)/#include \"\\.config\\/miscxrdb\\/xresource-theme\\/$_NAMETHEME\"/g" \
+			"$DOTFILES_PATH/home/.Xresources"
+		xrdb ~/.Xresources
+		xrdb -merge ~/.Xresources
+		sleep 1
+	fi
+
+	# reload paintree before updating themes
+	~/Dropbox/exbin/for-local-bin/paintree
+	# shellcheck source=/dev/null
+	. ~/Dropbox/exbin/for-local-bin/get_var_paintee
+
+	sleep 1
+
+	set_rofi
+	_NOTIF_ROFI="Rofi        ✅"
+
+	set_dunst
+	_NOTIF_DUNST="Dunst       ✅"
+
+	set_tmux
+	_NOTIF_TMUX="Tmux        ✅"
+
+	set_zathura
+	_NOTIF_ZATHURA="Zathura     ✅"
+
+	set_vim "$_NAMETHEME"
+	_NOTIF_VIM="Vim         ✅"
+
+	set_terminal "$_NAMETHEME"
+	_NOTIF_TERMINAL="Terminal    ✅"
+
+	case "$XDG_SESSION_DESKTOP" in
+	"bspwm") wm_bspwm ;;
+	"i3") wm_i3 ;;
+	"awesome") wm_awesome ;;
+	esac
+
+	dunstify -i ~/Dropbox/mytodo/icons/hexagon.png "THEME RELOADED" "<b><span foreground='$GET_RED'>$_NAMETHEME</span></b>\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM"
+
+)
+
+# vim: filetype=sh
