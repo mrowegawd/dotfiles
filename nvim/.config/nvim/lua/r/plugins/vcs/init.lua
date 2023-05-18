@@ -367,9 +367,9 @@ return {
                     itemgroup = "Git",
                     keymaps = {
                         {
-                            "<Leader>hs",
+                            "<F2>",
                             "<CMD>Neogit<CR>",
-                            description = "Neogit: git status",
+                            description = "Neogit: open",
                         },
                         {
                             "<Leader>hC",

@@ -2,9 +2,9 @@ local M = {}
 
 local fmt, api, hg = string.format, vim.api, as.highlight
 
-local clock = function()
-    return " " .. os.date "%H:%M"
-end
+-- local clock = function()
+--     return " " .. os.date "%H:%M"
+-- end
 
 local function is_loclist()
     return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0

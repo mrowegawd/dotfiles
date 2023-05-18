@@ -272,6 +272,7 @@ M.location_mod = function()
 
             return rhs
         end,
+        cond = conditions.hide_in_width,
     }
 end
 M.progress = function()
@@ -338,6 +339,7 @@ M.clock = function()
             return " " .. os.date "%H:%M"
         end,
         color = { fg = "white", gui = "bold" },
+        cond = conditions.hide_in_width,
     }
 end
 M.sessions = function()
@@ -363,18 +365,18 @@ M.root_dir = function()
 
             local root_path = ""
             if not HAVE_GITSIGNS or status == nil or status["root"] == nil then
-                root_path = ""
+                root_path = fn.getcwd()
             else
                 root_path = status["root"]
             end
 
             if #root_path > 0 then
-                root_path = "[" .. vim.fs.basename(root_path) .. "]"
+                root_path = vim.fs.basename(root_path)
             end
 
             return root_path
         end,
-        cond = conditions.hide_in_width,
+        color = { fg = "#ff9e64", gui = "italic,bold" },
     }
 end
 M.get_lsp_client_notify = function()

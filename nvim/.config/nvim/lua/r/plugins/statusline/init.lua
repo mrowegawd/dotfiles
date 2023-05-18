@@ -94,10 +94,10 @@ return {
             ins_right(components.lazy_updates())
             ins_right(components.get_lsp_client_notify())
             ins_right(components.mixindent())
-            ins_right(components.root_dir())
-            ins_right(components.treesitter())
-            ins_right(components.filetype())
             ins_right(components.sessions())
+            ins_right(components.treesitter())
+            ins_right(components.root_dir())
+            ins_right(components.filetype())
             ins_right(components.location_mod())
             ins_right(components.clock())
 

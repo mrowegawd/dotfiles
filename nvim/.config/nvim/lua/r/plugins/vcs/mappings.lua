@@ -243,9 +243,15 @@ function M.signs(bufnr, gs)
 
                 -- FZFLUA
                 {
-                    "<Leader>hS",
+                    "<Leader>hs",
                     "<CMD>FzfLua git_status<CR>",
                     description = "Fzflua: git status",
+                    opts = { buffer = bufnr },
+                },
+                {
+                    "<Leader>hS",
+                    "<CMD>FzfLua git_stash<CR>",
+                    description = "Fzflua: stash",
                     opts = { buffer = bufnr },
                 },
                 {
