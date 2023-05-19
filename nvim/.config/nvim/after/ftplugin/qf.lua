@@ -32,7 +32,6 @@ keymap.set("n", "<c-p>", function()
         vim.cmd "wincmd p"
     end
 end, silent)
-
 keymap.set("n", "<c-n>", function()
     local ft, _ = as.get_bo_buft()
 
@@ -70,7 +69,6 @@ keymap.set("n", "gh", function()
         vim.cmd.BufferLineCyclePrev()
     end
 end, silent)
-
 keymap.set("n", "gl", function()
     local ft, _ = as.get_bo_buft()
     if ft == "qf" then
@@ -85,3 +83,34 @@ keymap.set("n", "gl", function()
         vim.cmd.BufferLineCycleNext()
     end
 end, silent)
+
+vim.keymap.set("n", "<c-d>", function()
+    local pvs = require "bqf.preview.session"
+
+    if pvs.validate() then
+        return require("bqf.preview.handler").scroll(1)
+    else
+        return vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes("<C-d>", true, true, true),
+            "n",
+            true
+        )
+    end
+end, {
+    silent = true,
+})
+vim.keymap.set("n", "<c-u>", function()
+    local pvs = require "bqf.preview.session"
+
+    if pvs.validate() then
+        return require("bqf.preview.handler").scroll(-1)
+    else
+        return vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes("<C-u>", true, true, true),
+            "n",
+            true
+        )
+    end
+end, {
+    silent = true,
+})

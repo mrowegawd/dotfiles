@@ -4,6 +4,7 @@ return {
     name = "Run Single",
     desc = "Build and run single file",
     tags = { overseer.TAG.BUILD },
+    strategy = { "toggleterm", open_on_start = true, close_on_exit = false },
     params = { save = { type = "boolean", default = true } },
     builder = function(params)
         return {

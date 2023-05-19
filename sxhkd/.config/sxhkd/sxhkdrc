@@ -144,8 +144,8 @@ super + u
 
 # misc: open terminal
 super + Return
-        st
-        # alacritty -e tmux
+        alacritty
+        # st -e tmux
         # kitty
         # wezterm
         # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty

@@ -111,26 +111,27 @@ return {
 
             overseer.setup {
                 -- strategy = "toggleterm",
+                strategy = { "toggleterm", open_on_start = true },
                 templates = { "builtin", "r" },
                 default_template_prompt = "avoid",
-                --     component_aliases = {
-                --         log = {
-                --             {
-                --                 type = "echo",
-                --                 level = vim.log.levels.WARN,
-                --             },
-                --             {
-                --                 type = "file",
-                --                 filename = "overseer.log",
-                --                 level = vim.log.levels.DEBUG,
-                --             },
-                --         },
-                --         default_neotest = {
-                --             "on_output_summarize",
-                --             "on_exit_set_status",
-                --             "on_complete_dispose",
-                --         },
-                --     },
+                component_aliases = {
+                    log = {
+                        {
+                            type = "echo",
+                            level = vim.log.levels.WARN,
+                        },
+                        {
+                            type = "file",
+                            filename = "overseer.log",
+                            level = vim.log.levels.DEBUG,
+                        },
+                    },
+                    --         default_neotest = {
+                    --             "on_output_summarize",
+                    --             "on_exit_set_status",
+                    --             "on_complete_dispose",
+                    --         },
+                },
                 --
                 --     task_editor = {
                 --         bindings = {

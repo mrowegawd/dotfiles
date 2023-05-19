@@ -46,70 +46,13 @@ return {
     {
 
         "kevinhwang91/nvim-bqf",
-        event = "VeryLazy",
+        ft = { "qf" },
         dependencies = {
             "junegunn/fzf",
             build = function()
                 vim.fn["fzf#install"]()
             end,
         },
-        init = function()
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "qf" },
-                callback = function()
-                    local ft, _ = as.get_bo_buft()
-
-                    vim.keymap.set("n", "<c-d>", function()
-                        local pvs = require "bqf.preview.session"
-
-                        if ft == "qf" then
-                            if pvs.validate() then
-                                return require("bqf.preview.handler").scroll(1)
-                            else
-                                return vim.api.nvim_feedkeys(
-                                    vim.api.nvim_replace_termcodes(
-                                        "<C-d>",
-                                        true,
-                                        true,
-                                        true
-                                    ),
-                                    "n",
-                                    true
-                                )
-                            end
-                        end
-                    end, {
-                        silent = true,
-                        buffer = vim.api.nvim_get_current_buf(),
-                    })
-
-                    vim.keymap.set("n", "<c-u>", function()
-                        local pvs = require "bqf.preview.session"
-
-                        if ft == "qf" then
-                            if pvs.validate() then
-                                return require("bqf.preview.handler").scroll(-1)
-                            else
-                                return vim.api.nvim_feedkeys(
-                                    vim.api.nvim_replace_termcodes(
-                                        "<C-u>",
-                                        true,
-                                        true,
-                                        true
-                                    ),
-                                    "n",
-                                    true
-                                )
-                            end
-                        end
-                    end, {
-                        silent = true,
-                        buffer = vim.api.nvim_get_current_buf(),
-                    })
-                end,
-            })
-        end,
-
         config = function()
             local bqf = require "bqf"
 
@@ -172,6 +115,20 @@ return {
                             "> ",
                         },
                     },
+                },
+            }
+        end,
+    },
+    ---------------------------------------------------------------------
+    -- MY PLUGINS
+    ---------------------------------------------------------------------
+    {
+        dir = "~/Downloads/qfsilet",
+        event = "BufRead",
+        config = function()
+            require("qfsilet").setup {
+                qf = {
+                    use_default_keymaps = true,
                 },
             }
         end,

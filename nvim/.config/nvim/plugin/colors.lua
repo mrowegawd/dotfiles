@@ -488,6 +488,12 @@ local function colorscheme_overrides()
                     },
                 },
             },
+
+            {
+                QuickFixLine = {
+                    bg = { from = "PmenuSel", attr = "bg", alter = 0.2 },
+                },
+            },
         },
     }
 

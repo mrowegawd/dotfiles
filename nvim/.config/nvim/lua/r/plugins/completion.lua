@@ -387,24 +387,24 @@ return {
                             end
                         end,
                     },
-                    ["<c-p>"] = {
-                        c = function(fallback)
-                            if require("cmp").visible() then
-                                require("cmp").select_prev_item()
-                            else
-                                fallback()
-                            end
-                        end,
-                    },
-                    ["<c-n>"] = {
-                        c = function(fallback)
-                            if require("cmp").visible() then
-                                require("cmp").select_next_item()
-                            else
-                                fallback()
-                            end
-                        end,
-                    },
+                    -- ["<c-p>"] = {
+                    --     c = function(fallback)
+                    --         if require("cmp").visible() then
+                    --             require("cmp").select_prev_item()
+                    --         else
+                    --             fallback()
+                    --         end
+                    --     end,
+                    -- },
+                    -- ["<c-n>"] = {
+                    --     c = function(fallback)
+                    --         if require("cmp").visible() then
+                    --             require("cmp").select_next_item()
+                    --         else
+                    --             fallback()
+                    --         end
+                    --     end,
+                    -- },
                 },
                 sources = cmp.config.sources({
                     { name = "path" },

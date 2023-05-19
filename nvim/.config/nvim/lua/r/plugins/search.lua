@@ -5,7 +5,7 @@ return {
     -- LEAP
     {
         "ggandor/leap.nvim",
-        enabled = false,
+        enabled = true,
         keys = { "s", "S" },
         config = function()
             require("leap").add_default_mappings()
@@ -14,6 +14,7 @@ return {
     {
         "phaazon/hop.nvim",
         event = "BufRead",
+        enabled = false,
         init = function()
             require("legendary").keymaps {
                 {
