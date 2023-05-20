@@ -22,20 +22,20 @@ return {
                     qflist_text = " Quickfix Note",
                 },
                 quickfix = {
-                    open = "<leader>qo",
-                    on_cursor = "<leader>qq", -- add current position to the list
-                    add_note = "<leader>qn", -- add current position with your note to the list
-                    clear = "<leader>qd", -- clear all items
-                    close = "<leader>qc",
+                    open = "<localleader>qo",
+                    on_cursor = "<localleader>qq", -- add current position to the list
+                    add_note = "<localleader>qn", -- add current position with your note to the list
+                    clear = "<localleader>qd", -- clear all items
+                    close = "<localleader>qc",
                     next = "]q",
                     prev = "[q",
                 },
                 locallist = {
-                    open = "<leader>wo",
-                    on_cursor = "<leader>ww",
-                    add_note = "<leader>wn",
-                    clear = "<leader>wd",
-                    close = "<leader>wc",
+                    open = "<localleader>wo",
+                    on_cursor = "<localleader>ww",
+                    add_note = "<localleader>wn",
+                    clear = "<localleader>wd",
+                    close = "<localleader>wc",
                     next = "]w",
                     prev = "[w",
                 },
@@ -125,6 +125,25 @@ return {
     {
         dir = "~/Downloads/qfsilet",
         event = "BufRead",
+        init = function()
+            require("legendary").keymaps {
+                {
+                    itemgroup = "Misc",
+                    keymaps = {
+                        {
+                            "<leader>QQ",
+                            "<CMD>QFSiletLoad<CR>",
+                            description = "QFSilet: load",
+                        },
+                        {
+                            "<localleader>qs",
+                            "<CMD>QFSiletSave<CR>",
+                            description = "QFSilet: save",
+                        },
+                    },
+                },
+            }
+        end,
         config = function()
             require("qfsilet").setup {
                 qf = {

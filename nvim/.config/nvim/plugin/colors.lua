@@ -64,7 +64,7 @@ local general_overrides = function()
         { Folded = { link = "Comment", italic = true, bold = true } },
         {
             QuickFixLine = {
-                bg = { from = "PmenuSel", attr = "bg", alter = -0.5 },
+                bg = { from = "Normal", attr = "bg", alter = -0.5 },
             },
         },
         { SpellRare = { undercurl = true } },
@@ -239,6 +239,14 @@ local general_overrides = function()
                 fg = { from = "Boolean", atrr = "fg", alter = 0.1 },
                 bg = { from = "Normal", alter = -0.1 },
             },
+        },
+
+        {
+            MyQuickFixLineLeave = { inherit = "QuickFixLine" },
+        },
+
+        {
+            MyQuickFixLineEnter = { bg = { from = "CursorLine", alter = 0.3 } },
         },
         -----------------------------------------------------------------------
         -- PLUGINS
@@ -478,6 +486,7 @@ local function colorscheme_overrides()
                     bg = { from = "PmenuSel", alter = 0.6 },
                 },
             },
+            { NormalFloat = { bg = { from = "Pmenu" } } },
             {
                 FoldColumn = {
                     bg = "NONE",
@@ -486,12 +495,6 @@ local function colorscheme_overrides()
                         attr = "bg",
                         alter = 0.3,
                     },
-                },
-            },
-
-            {
-                QuickFixLine = {
-                    bg = { from = "PmenuSel", attr = "bg", alter = 0.2 },
                 },
             },
         },

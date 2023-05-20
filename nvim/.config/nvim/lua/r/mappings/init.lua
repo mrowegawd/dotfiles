@@ -13,25 +13,18 @@ function M.default_commands()
             description = "Edit Snippets",
         },
 
-        -- {
-        --     ":Theme",
-        --     function()
-        --         om.ToggleTheme()
-        --     end,
-        --     description = "Toggle theme",
-        -- },
         {
             ":Uuid",
             function()
-                local uuid = vim.fn.system("uuidgen"):gsub("\n", ""):lower()
-                local line = vim.fn.getline "."
+                local uuid = fn.system("uuidgen"):gsub("\n", ""):lower()
+                local line = fn.getline "."
                 return vim.schedule(function()
-                    vim.fn.setline(
+                    fn.setline(
                         ---@diagnostic disable-next-line: param-type-mismatch
                         ".",
-                        vim.fn.strpart(line, 0, vim.fn.col ".")
+                        fn.strpart(line, 0, fn.col ".")
                             .. uuid
-                            .. vim.fn.strpart(line, vim.fn.col ".")
+                            .. fn.strpart(line, fn.col ".")
                     )
                 end)
             end,
@@ -124,10 +117,8 @@ function M.default_keymaps()
         {
             "<Leader>cd",
             function()
-                local filepath = vim.fn.expand "%:p:h" -- code
-
+                local filepath = fn.expand "%:p:h" -- code
                 cmd(fmt("cd %s", filepath))
-
                 vim.notify(fmt("ROOT CHANGED: %s", filepath))
             end,
             description = "Change cur pwd to curfile",
@@ -157,6 +148,20 @@ function M.default_keymaps()
             description = "Go to older positions in change list",
         },
         {
+            "<leader>q",
+            function()
+                return require("r.utils").toggle_qf()
+            end,
+            description = "Toggle open qf",
+        },
+        {
+            "<leader>w",
+            function()
+                return require("r.utils").toggle_loc()
+            end,
+            description = "Toggle open location list",
+        },
+        {
             "<Leader><TAB>",
             function()
                 local ft, _ = as.get_bo_buft()
@@ -181,7 +186,7 @@ function M.default_keymaps()
                     ["NeogitStatus"] = "q",
                     ["neo-tree"] = "NeoTreeShowToggle",
                     ["DiffviewFileHistory"] = "DiffviewClose",
-                    ["qf"] = require("r.utils").toggle_qf,
+                    ["qf"] = require("r.utils").toggle_kil_loc_qf,
                 }
 
                 for ft_i, exec_msg in pairs(buf_fts) do
@@ -377,7 +382,7 @@ function M.lsp_commands()
         {
             ":LspLog",
             function()
-                return vim.cmd("edit " .. vim.lsp.get_log_path())
+                return cmd("edit " .. vim.lsp.get_log_path())
             end,
             description = "LSP: show logs",
             -- opts = { buffer = bufnr },
@@ -678,22 +683,29 @@ function M.lsp_keymaps()
             },
 
             -- Diagnostic
+            -- {
+            --     "<leader>gQ",
+            --     "<CMD>Trouble workspace_diagnostics<CR>",
+            --     description = "Trouble: workspaces",
+            --     -- opts = { buffer = bufnr },
+            -- },
             {
-                "<leader>gQ",
-                "<CMD>Trouble workspace_diagnostics<CR>",
-                description = "Trouble: workspaces",
-                -- opts = { buffer = bufnr },
-            },
-            {
+                -- "<CMD>Trouble document_diagnostics<CR>",
                 "<leader>gq",
-                "<CMD>Trouble document_diagnostics<CR>",
-                description = "Trouble: document",
+                function()
+                    if #vim.diagnostic.get() > 0 then
+                        return vim.diagnostic.setqflist()
+                    else
+                        as.info("Document its clean..", "Diagnostic")
+                    end
+                end,
+                description = "Diagnostic: sending to qf",
                 -- opts = { buffer = bufnr },
             },
             {
                 "dP",
                 vim.diagnostic.open_float,
-                description = "Diagnostic: open preview",
+                description = "Diagnostic: open float preview",
                 -- opts = { buffer = bufnr },
             },
             {
@@ -707,6 +719,7 @@ function M.lsp_keymaps()
                 vim.diagnostic.goto_next,
                 description = "Diagnostic: next item",
                 -- opts = { buffer = bufnr },
+                --
             },
         },
     }

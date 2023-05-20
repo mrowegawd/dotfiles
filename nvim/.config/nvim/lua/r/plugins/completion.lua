@@ -17,7 +17,7 @@ return {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
             "rcarriga/cmp-dap",
-            "lukas-reineke/cmp-rg",
+            -- "lukas-reineke/cmp-rg",
             "saadparwaiz1/cmp_luasnip",
 
             -- "lukas-reineke/cmp-rg",
@@ -83,7 +83,7 @@ return {
 
                         if c_cmp.visible() then
                             if #c_cmp.get_entries() == 1 then
-                                c_cmp.confirm { select = false }
+                                c_cmp.confirm { select = true }
                             else
                                 c_cmp.select_next_item()
                             end
@@ -195,7 +195,6 @@ return {
                     end, {
                         "i",
                         "s",
-                        "c",
                     }),
 
                     ["<C-q>"] = cmp.mapping.abort(),
@@ -306,13 +305,13 @@ return {
                         group_index = 2,
                     },
 
-                    {
-                        name = "rg",
-                        keyword_length = 4,
-                        max_item_count = 10,
-                        option = { additional_arguments = "--max-depth 8" },
-                        group_index = 1,
-                    },
+                    -- {
+                    --     name = "rg",
+                    --     keyword_length = 4,
+                    --     max_item_count = 10,
+                    --     option = { additional_arguments = "--max-depth 8" },
+                    --     group_index = 1,
+                    -- },
                     {
                         name = "path",
                         group_index = 1,

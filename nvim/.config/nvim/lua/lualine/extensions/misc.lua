@@ -6,27 +6,24 @@ local fmt, api, hg = string.format, vim.api, as.highlight
 --     return " " .. os.date "%H:%M"
 -- end
 
-local function is_loclist()
-    return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0
-end
-
 local function qflabel()
-    return is_loclist() and "Location List" or "Quickfix List"
+    return as.is_loclist() and "Location List" or "Quickfix List"
 end
 
 local function title()
-    if vim.bo.filetype == "qf" then
-        if is_loclist() then
-            return vim.fn.getloclist(0, { title = 0 }).title
-        end
-        return fmt(
-            "ID: %s, List title: %s",
-            vim.fn.getqflist({ id = 0 }).id,
-            vim.fn.getqflist({ title = 0 }).title
-        )
-    else
+    if vim.bo.filetype ~= "qf" then
         return ""
     end
+
+    if as.is_loclist() then
+        return vim.fn.getloclist(0, { title = 0 }).title
+    end
+
+    return fmt(
+        "[ID %s] [Title %s]",
+        vim.fn.getqflist({ id = 0 }).id,
+        vim.fn.getqflist({ title = 0 }).title
+    )
 end
 
 local term_plugins = function()
