@@ -11,11 +11,13 @@ return {
         init = function()
             highlight.plugin("indentline", {
                 {
-                    IndentBlanklineContextChar = { fg = { from = "Directory" } },
+                    IndentBlanklineContextChar = {
+                        fg = { from = "Directory", alter = -0.5 },
+                    },
                 },
                 {
                     IndentBlanklineContextStart = {
-                        sp = { from = "Directory", attr = "fg" },
+                        sp = { from = "Directory", attr = "fg", alter = -0.5 },
                     },
                 },
             })
@@ -37,10 +39,10 @@ return {
             use_treesitter_scope = false,
             show_trailing_blankline_indent = false,
             show_foldtext = false,
-            context_char = "▎",
+            context_char = "▎", -- "▎",
             char_priority = 12,
             show_current_context = true,
-            show_current_context_start = true,
+            show_current_context_start = false,
             show_current_context_start_on_current_line = false,
             show_first_indent_level = true,
             buftype_exclude = { "terminal", "nofile" },
@@ -311,6 +313,7 @@ return {
         event = "BufReadPre",
         config = function()
             local builtin = require "statuscol.builtin"
+
             require("statuscol").setup {
                 -- hl = "FoldColumn", -- %# highlight group label, applies to each text element
                 relculright = true,
@@ -321,19 +324,39 @@ return {
                     -- },
                     {
                         text = { "%s" },
-                        hl = "FoldColumn", -- %# highlight group label
+                        -- hl = "FoldColumn", -- %# highlight group label
                         click = "v:lua.ScSa",
                     },
                     {
                         text = { builtin.lnumfunc, " " },
-                        hl = "FoldColumn",
+                        -- hl = "FoldColumn",
+                        -- hl = "Pmenu",
+                        condition = { true, builtin.not_empty },
                         click = "v:lua.ScLa",
                     },
                     {
                         text = { " ", builtin.foldfunc, " " },
-                        hl = "FoldColumn",
+                        -- hl = "FoldColumn",
                         click = "v:lua.ScFa",
                     },
+                },
+                clickhandlers = {
+                    Lnum = builtin.lnum_click,
+                    FoldClose = builtin.foldclose_click,
+                    FoldOpen = builtin.foldopen_click,
+                    FoldOther = builtin.foldother_click,
+                    DapBreakpointRejected = builtin.toggle_breakpoint,
+                    DapBreakpoint = builtin.toggle_breakpoint,
+                    DapBreakpointCondition = builtin.toggle_breakpoint,
+                    DiagnosticSignError = builtin.diagnostic_click,
+                    DiagnosticSignHint = builtin.diagnostic_click,
+                    DiagnosticSignInfo = builtin.diagnostic_click,
+                    DiagnosticSignWarn = builtin.diagnostic_click,
+                    GitSignsTopdelete = builtin.gitsigns_click,
+                    GitSignsUntracked = builtin.gitsigns_click,
+                    GitSignsAdd = builtin.gitsigns_click,
+                    GitSignsChangedelete = builtin.gitsigns_click,
+                    GitSignsDelete = builtin.gitsigns_click,
                 },
             }
         end,
@@ -346,6 +369,10 @@ return {
         -- https://github.com/kevinhwang91/nvim-ufo/issues/33#issuecomment-1478102255
         "kevinhwang91/nvim-ufo",
         event = "BufRead",
+        enabled = false,
+        dependencies = {
+            "kevinhwang91/promise-async",
+        },
         init = function()
             as.augroup("UfoSettings", {
                 event = "FileType",
@@ -365,7 +392,6 @@ return {
             })
 
             require("legendary").keymaps {
-
                 {
                     itemgroup = "Fold",
                     description = "Fold in nvim",
@@ -394,18 +420,34 @@ return {
                         {
                             "zM",
                             function()
-                                return require("ufo").closeAllFolds()
+                                -- Unwanted autofolding triggered by insert
+                                -- return require("ufo").closeAllFolds()
+
+                                -- Taken from https://github.com/kevinhwang91/nvim-ufo/issues/85
+                                local row, _ =
+                                    unpack(vim.api.nvim_win_get_cursor(0))
+
+                                vim.cmd "normal gg"
+
+                                for i = 1, vim.api.nvim_buf_line_count(0) do
+                                    vim.cmd(
+                                        "silent! normal "
+                                            .. tostring(i)
+                                            .. "GzC"
+                                    )
+                                end
+                                vim.cmd("normal " .. tostring(row) .. "G")
                             end,
                             description = "Ufo: close all folds",
                         },
 
-                        -- {
-                        --     "zm",
-                        --     function()
-                        --         return require("ufo").closeFoldsWith()
-                        --     end,
-                        --     description = "Ufo: close fold",
-                        -- },
+                        {
+                            "zm",
+                            function()
+                                return require("ufo").closeFoldsWith()
+                            end,
+                            description = "Ufo: close fold",
+                        },
 
                         {
                             "zR",
@@ -431,6 +473,21 @@ return {
                             description = "Ufo: open peek folds",
                         },
 
+                        {
+                            "zp",
+                            function()
+                                return require("ufo").goPreviousClosedFold()
+                            end,
+                            description = "Ufo: go prev closed fold",
+                        },
+                        {
+                            "zn",
+                            function()
+                                return require("ufo").goNextClosedFold()
+                            end,
+                            description = "Ufo: go next closed fold",
+                        },
+
                         -- FOLDCYCLE --------------------------------------------------
                         -- {
                         --     "<Localleader>z",
@@ -451,11 +508,13 @@ return {
                 },
             }
         end,
-        -- disabled = false,
-        dependencies = {
-            "kevinhwang91/promise-async",
-        },
+
         config = function()
+            vim.o.foldlevel = 99 -- feel free to decrease the value
+            vim.o.foldlevelstart = 99
+            vim.o.foldenable = true
+            vim.o.foldcolumn = "1"
+
             local function handler(
                 virt_text,
                 lnum,
@@ -517,11 +576,6 @@ return {
                 return result
             end
 
-            vim.o.foldlevel = 99 -- feel free to decrease the value
-            vim.o.foldlevelstart = 99
-            vim.o.foldenable = true
-            vim.o.foldcolumn = "1"
-
             local ufo = require "ufo"
 
             ufo.setup {
@@ -533,42 +587,6 @@ return {
                 provider_selector = function(bufnr, filetype, buftype)
                     return { "treesitter", "indent" }
                 end,
-                --     provider_selector = function(_, filetype, buftype)
-                --         local function handleFallbackException(
-                --             bufnr,
-                --             err,
-                --             providerName
-                --         )
-                --             if
-                --                 type(err) == "string"
-                --                 and err:match "UfoFallbackException"
-                --             then
-                --                 return require("ufo").getFolds(bufnr, providerName)
-                --             else
-                --                 return require("promise").reject(err)
-                --             end
-                --         end
-                --
-                --         return (filetype == "" or buftype == "nofile") and "indent" -- only use indent until a file is opened
-                --             or function(bufnr)
-                --                 return require("ufo")
-                --                     .getFolds(bufnr, "lsp")
-                --                     :catch(function(err)
-                --                         return handleFallbackException(
-                --                             bufnr,
-                --                             err,
-                --                             "treesitter"
-                --                         )
-                --                     end)
-                --                     :catch(function(err)
-                --                         return handleFallbackException(
-                --                             bufnr,
-                --                             err,
-                --                             "indent"
-                --                         )
-                --                     end)
-                --             end
-                --     end,
                 preview = {
                     win_config = {
                         winhighlight = "Normal:Normal,FloatBorder:Normal",
@@ -607,18 +625,23 @@ return {
             }
         end,
         config = function()
-            local col_selected_bg_attr = "Normal"
-            local col_selected_fg_attr = "Normal"
+            local col_base_bg_attr = "Normal"
+            local col_base_fg_attr = "Normal"
+
             local col_unselected_bg_attr = "bufferline_unselected"
+            local col_unselected_fg_attr = "Comment"
+
+            local col_selected_fg_attr = "Boolean"
+            local col_selected_bg_attr = "bufferline_unselected"
 
             local bufferline = require "bufferline"
             bufferline.setup {
                 options = {
-                    mode = "buffers",
+                    -- mode = "tabs",
                     modified_icon = "●",
                     show_buffer_close_icon = false,
                     buffer_close_icon = "",
-                    sort_by = "insert_after_current",
+                    -- sort_by = "insert_after_current",
                     show_close_icon = true,
                     diagnostics = "nvim_lsp",
                     diagnostics_update_in_insert = false,
@@ -743,18 +766,18 @@ return {
                     fill = {
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            highlight = col_base_bg_attr,
                         },
 
                         fg = {
                             attribute = "bg",
-                            highlight = col_selected_fg_attr,
+                            highlight = col_base_fg_attr,
                         },
                     },
                     background = {
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            highlight = col_base_bg_attr,
                         },
                     },
 
@@ -762,27 +785,58 @@ return {
                     tab = {
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            highlight = col_base_bg_attr,
                         },
                     },
                     tab_close = {
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            highlight = col_base_bg_attr,
                         },
                     },
+                    -- tab_visible = {
+                    --     fg = {
+                    --         attribute = "fg",
+                    --         highlight = col_unselected_fg_attr,
+                    --     },
+                    --     bg = {
+                    --         attribute = "bg",
+                    --         highlight = col_unselected_bg_attr,
+                    --     },
+                    -- },
                     tab_selected = {
                         fg = {
-                            attribute = "bg",
+                            attribute = "fg",
                             highlight = col_selected_fg_attr,
                         },
                         bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                         italic = false,
                     },
 
+                    -- INDICATOR ----------------------------------------------
+                    indicator_visible = {
+                        fg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
+                        },
+                    },
+                    indicator_selected = {
+                        fg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
+                        },
+                    },
                     -- SEPARATOR ----------------------------------------------
                     separator = {
                         fg = {
@@ -794,24 +848,24 @@ return {
                             highlight = "Normal",
                         },
                     },
-                    separator_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
                     separator_visible = {
                         fg = {
-                            attribute = "bg",
-                            highlight = "Normal",
+                            attribute = "fg",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_unselected_bg_attr,
+                        },
+                    },
+                    separator_selected = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = col_selected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                     },
 
@@ -819,25 +873,32 @@ return {
                     close_button = {
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_fg_attr,
+                            highlight = col_unselected_bg_attr,
                         },
                     },
                     close_button_visible = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = col_unselected_fg_attr,
+                        },
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_fg_attr,
+                            highlight = col_unselected_bg_attr,
                         },
                     },
                     close_button_selected = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = col_selected_fg_attr,
+                        },
                         bg = {
                             attribute = "bg",
-                            highlight = col_selected_fg_attr,
+                            highlight = col_selected_bg_attr,
                         },
                     },
 
                     -- BUFFER -------------------------------------------------
                     buffer = {
-
                         bg = {
                             attribute = "bg",
                             highlight = col_unselected_bg_attr,
@@ -847,7 +908,7 @@ return {
                         italic = true,
                         fg = {
                             attribute = "fg",
-                            highlight = "Boolean",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
@@ -855,15 +916,16 @@ return {
                         },
                     },
                     buffer_selected = {
+                        italic = false,
+
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
                             attribute = "fg",
                             highlight = col_selected_fg_attr,
                         },
-                        italic = false,
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
+                        },
                     },
 
                     -- PICK ---------------------------------------------------
@@ -876,20 +938,36 @@ return {
                     },
                     pick_selected = {
                         italic = false,
+                        fg = {
+                            attribute = "fg",
+                            highlight = col_unselected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_unselected_bg_attr,
+                        },
                     },
                     pick_visible = {
                         italic = false,
+                        fg = {
+                            attribute = "fg",
+                            highlight = col_selected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
+                        },
                     },
 
                     -- MODIFIED -----------------------------------------------
                     modified = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
                         fg = {
                             attribute = "fg",
                             highlight = "ErrorMsg",
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = "Normal",
                         },
                     },
                     modified_visible = {
@@ -908,7 +986,7 @@ return {
                             highlight = "ErrorMsg",
                         },
                         bg = {
-                            attribute = "fg",
+                            attribute = "bg",
                             highlight = col_selected_bg_attr,
                         },
                     },
@@ -924,7 +1002,7 @@ return {
                     duplicate_visible = {
                         fg = {
                             attribute = "fg",
-                            highlight = "boolean",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
@@ -934,11 +1012,11 @@ return {
                     },
                     duplicate_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            attribute = "fg",
+                            highlight = col_selected_fg_attr,
                         },
                         bg = {
-                            attribute = "fg",
+                            attribute = "bg",
                             highlight = col_selected_bg_attr,
                         },
                     },
@@ -947,7 +1025,12 @@ return {
                     offset_separator = {
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_selected_bg_attr,
+                        },
+
+                        fg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                     },
 
@@ -984,7 +1067,7 @@ return {
                         italic = true,
                         fg = {
                             attribute = "fg",
-                            highlight = "Boolean",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
@@ -993,19 +1076,23 @@ return {
                     },
                     warning_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
                             attribute = "fg",
                             highlight = col_selected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                         italic = false,
                     },
                     warning_diagnostic = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = "DiagnosticWarn",
+                        },
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_base_bg_attr,
                         },
                     },
                     warning_diagnostic_visible = {
@@ -1021,12 +1108,12 @@ return {
                     },
                     warning_diagnostic_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            attribute = "fg",
+                            highlight = "DiagnosticWarn",
                         },
                         bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                         italic = false,
                     },
@@ -1041,7 +1128,7 @@ return {
                     error_visible = {
                         fg = {
                             attribute = "fg",
-                            highlight = "Boolean",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
@@ -1051,20 +1138,24 @@ return {
                     },
                     error_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
                             attribute = "fg",
                             highlight = col_selected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
 
                         italic = false,
                     },
                     error_diagnostic = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = "DiagnosticError",
+                        },
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_base_bg_attr,
                         },
                     },
                     error_diagnostic_visible = {
@@ -1080,17 +1171,13 @@ return {
                     },
                     error_diagnostic_selected = {
                         fg = {
+                            attribute = "fg",
+                            highlight = "DiagnosticError",
+                        },
+                        bg = {
                             attribute = "bg",
                             highlight = col_selected_bg_attr,
                         },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        -- bg = {
-                        --     attribute = "bg",
-                        --     highlight = "Normal",
-                        -- },
                         italic = false,
                     },
 
@@ -1104,7 +1191,7 @@ return {
                     hint_visible = {
                         fg = {
                             attribute = "fg",
-                            highlight = "Boolean",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
@@ -1114,20 +1201,24 @@ return {
                     },
                     hint_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
                             attribute = "fg",
                             highlight = col_selected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
 
                         italic = false,
                     },
                     hint_diagnostic = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = "DiagnosticHint",
+                        },
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_base_bg_attr,
                         },
                     },
                     hint_diagnostic_visible = {
@@ -1143,12 +1234,12 @@ return {
                     },
                     hint_diagnostic_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            attribute = "fg",
+                            highlight = "DiagnosticHint",
                         },
                         bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                         italic = false,
                     },
@@ -1163,30 +1254,34 @@ return {
                     info_visible = {
                         fg = {
                             attribute = "fg",
-                            highlight = "Boolean",
+                            highlight = col_unselected_fg_attr,
                         },
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_unselected_bg_attr,
                         },
                         italic = true,
                     },
                     info_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
                             attribute = "fg",
                             highlight = col_selected_fg_attr,
+                        },
+                        bg = {
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
 
                         italic = false,
                     },
                     info_diagnostic = {
+                        fg = {
+                            attribute = "fg",
+                            highlight = "DiagnosticInfo",
+                        },
                         bg = {
                             attribute = "bg",
-                            highlight = "Normal",
+                            highlight = col_base_bg_attr,
                         },
                     },
                     info_diagnostic_visible = {
@@ -1202,12 +1297,12 @@ return {
                     },
                     info_diagnostic_selected = {
                         fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
+                            attribute = "fg",
+                            highlight = "DiagnosticInfo",
                         },
                         bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
+                            attribute = "bg",
+                            highlight = col_selected_bg_attr,
                         },
                         italic = false,
                     },

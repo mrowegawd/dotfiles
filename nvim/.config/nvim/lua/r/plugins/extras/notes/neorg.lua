@@ -7,9 +7,10 @@ return {
         ft = "norg",
         build = ":Neorg sync-parsers", -- This is the important bit!
         init = function()
-            vim.api.nvim_create_autocmd("FileType", {
+            as.augroup("ManageNotesNeorg", {
+                event = { "FileType" },
                 pattern = { "norg" },
-                callback = function()
+                command = function()
                     require("r.mappings.utils.notes").neorg_mappings_ft(
                         api.nvim_get_current_buf()
                     )
@@ -220,7 +221,6 @@ return {
                                 "<TAB>",
                                 "core.esupports.hop.hop-link"
                             )
-
                             keybinds.remap_event(
                                 "norg",
                                 "n",
@@ -228,41 +228,18 @@ return {
                                 "core.esupports.hop.hop-link",
                                 "vsplit"
                             )
-
-                            -- keybinds.remap_event(
-                            --     "norg",
-                            --     "n",
-                            --     "<localleader>ff",
-                            --     "core.integrations.telescope.find_linkable"
-                            -- )
-
-                            -- keybinds.remap_event(
-                            --     "norg",
-                            --     "i",
-                            --     "<c-l>",
-                            --     "core.integrations.telescope.insert_link"
-                            -- )
-
                             keybinds.remap_event(
                                 "norg",
                                 "n",
-                                ">",
+                                "<right>",
                                 "core.promo.promote"
                             )
-
                             keybinds.remap_event(
                                 "norg",
                                 "n",
-                                "<",
+                                "<left>",
                                 "core.promo.demote"
                             )
-
-                            -- keybinds.remap_event(
-                            --     "norg",
-                            --     "n",
-                            --     "<localleader>fm",
-                            --     "core.norg.concealer.toggle-markup"
-                            -- )
                         end,
                     },
                 },

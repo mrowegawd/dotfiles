@@ -122,9 +122,10 @@ return {
         cmd = { "ToggleTerm" },
         enabled = true,
         init = function()
-            vim.api.nvim_create_autocmd("FileType", {
+            as.augroup("ManageToggleTerm", {
+                event = { "FileType" },
                 pattern = { "*" },
-                callback = function()
+                command = function()
                     if vim.bo.filetype ~= "fzf" then
                         require("legendary").keymaps {
                             {
@@ -352,7 +353,7 @@ return {
                     itemgroup = "Git",
                     keymaps = {
                         {
-                            "<Leader>hl",
+                            "<F2>",
                             function()
                                 local Terminal =
                                     require("toggleterm.terminal").Terminal

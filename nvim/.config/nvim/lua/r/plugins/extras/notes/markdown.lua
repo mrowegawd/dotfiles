@@ -1,11 +1,11 @@
 return {
     -- MKDNFLOW (disabled)
     {
-        "jakewvincent/mkdnflow.nvim",
+        "jakewvincent/mkdnflow.nvim", -- a fluent navigation and management markdown notebooks
         ft = { "markdown" },
+        enabled = false,
         rocks = "luautf8",
         opts = {},
-        enabled = false,
     },
     -- NVIM FEMACO
     { "AckslD/nvim-FeMaco.lua", ft = { "markdown" }, opts = {} },
@@ -41,11 +41,11 @@ return {
     -- TELEKASTEN NVIM (disabled)
     {
         "renerocksai/telekasten.nvim",
+        enabled = false,
         dependencies = { "nvim-telescope/telescope.nvim" },
         opts = {
             home = vim.env.HOME .. "/zettelkasten",
         },
-        enabled = false,
         ft = { "markdown" },
     },
     -- OBSIDIAN NVIM (disabled)

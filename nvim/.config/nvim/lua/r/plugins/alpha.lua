@@ -195,10 +195,11 @@ return {
 
             alpha.setup(options)
 
-            -- Disable statusline in dashboard
-            -- vim.api.nvim_create_autocmd("FileType", {
-            --     pattern = "alpha",
-            --     callback = function()
+            -- TODO: need some investigate
+            -- as.augroup("DisableStatuslineAlpha", {
+            --     event = { "FileType" },
+            --     pattern = { "alpha" },
+            --     command = function()
             --         -- store current statusline value and use that
             --         local old_laststatus = vim.opt.laststatus
             --         vim.api.nvim_create_autocmd("BufUnload", {

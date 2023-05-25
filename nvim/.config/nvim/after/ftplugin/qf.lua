@@ -1,3 +1,5 @@
+vim.opt.buflisted = false
+
 local keymap, api = vim.keymap, vim.api
 
 -- Disable ctrl-i and ctrl-o
@@ -47,8 +49,6 @@ keymap.set("n", "<c-p>", function()
     end
 
     if ft ~= "qf" then
-        -- I got lazy convert this logic into lua, so I stole it yehahaa
-        -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
         vim.cmd [[
         try
             execute  "cprevious"
@@ -58,6 +58,8 @@ keymap.set("n", "<c-p>", function()
         endtry
             ]]
     else
+        -- I got lazy convert this logic into lua, so I stole it yehahaa
+        -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
         vim.cmd "wincmd p"
     end
 end, { silent = true })
@@ -124,9 +126,11 @@ as.augroup("ColorQuickFixLine", {
     event = { "BufRead", "WinEnter", "FocusGained", "VimEnter", "BufEnter" },
     command = function()
         if vim.bo.filetype ~= "qf" then
-            vim.cmd [[ execute 'hi! link QuickFixLine BufferOffset' ]]
+            vim.cmd [[ execute 'hi! link QuickFixLine MyQuickFixLineLeave' ]]
+            vim.cmd [[execute 'hi! link CursorLine MyCursorline' ]]
             return
         end
-        vim.cmd [[execute 'hi! link QuickFixLine MyQuickFixLineEnter' ]]
+        -- vim.cmd [[execute 'hi! link QuickFixLine MyQuickFixLineEnter' ]]
+        vim.cmd [[execute 'hi! link CursorLine MyQuickFixLineEnter' ]]
     end,
 })

@@ -51,7 +51,11 @@ local function is_vim_list_open()
 end
 
 -- Usage: toggle_list "quickfix" or "location"
-local function toggle_list(list_type)
+local function toggle_list(list_type, kill)
+    if kill then
+        return cmd [[q]]
+    end
+
     local is_location_target = list_type == "location"
     local cmd_ = is_location_target and { "lclose", "lopen" }
         or { "cclose", "copen" }
@@ -67,9 +71,9 @@ local function toggle_list(list_type)
     end
 
     local winnr = vim.fn.winnr()
-    vim.cmd[cmd_[2]]()
+    cmd[cmd_[2]]()
     if vim.fn.winnr() ~= winnr then
-        vim.cmd.wincmd "p"
+        cmd.wincmd "p"
     end
 end
 
@@ -79,6 +83,10 @@ end
 
 function utils.toggle_loc()
     toggle_list "location"
+end
+
+function utils.toggle_kil_loc_qf()
+    toggle_list("none", true)
 end
 
 --- Opens the given url in the default browser.
@@ -119,12 +127,14 @@ function utils.Buf_only()
 
     for _, n in ipairs(api.nvim_list_bufs()) do
         -- If the iter buffer is modified one, then don't do anything
+        ---@diagnostic disable-next-line: redundant-parameter
         if option(n, "modified") then
             modified = modified + 1
 
         -- iter is not equal to current buffer
         -- iter is modifiable or del_non_modifiable == true
         -- `modifiable` check is needed as it will prevent closing file tree ie. NERD_tree
+        ---@diagnostic disable-next-line: redundant-parameter
         elseif n ~= cur and (option(n, "modifiable") or del_non_modifiable) then
             api.nvim_buf_delete(n, {})
             deleted = deleted + 1
@@ -420,8 +430,6 @@ function utils.disable_ctrl_i_and_o(au_name, tbl_ft)
         pattern = tbl_ft,
         group = augroup,
         callback = function()
-            -- local ft, _ = as.get_bo_buft()
-
             vim.keymap.set("n", "<c-i>", "<Nop>", {
                 buffer = vim.api.nvim_get_current_buf(),
             })
@@ -432,7 +440,14 @@ function utils.disable_ctrl_i_and_o(au_name, tbl_ft)
     })
 end
 
-function utils.echo_base_colors_theme()
+function utils.YoungTest()
+    for i = 1, vim.api.nvim_buf_line_count(0) do
+        local line = vim.api.nvim_buf_get_lines(0, i - 1, i, true)[1]
+        print(line)
+    end
+end
+
+function utils.infoBaseColorsTheme()
     local normal = "Normal"
     local colorcolumn = "ColorColumn"
 
@@ -497,6 +512,35 @@ function utils.echo_base_colors_theme()
             cmpmatchabbrfuzzy_fg
         )
     )
+end
+
+function utils.infoFoldPreview()
+    vim.cmd "options"
+end
+
+local function bool2str(bool)
+    return bool and "on" or "off"
+end
+
+--- Toggle buffer semantic token highlighting for all language servers that support it
+---@param bufnr? number the buffer to toggle the clients on
+function utils.toggle_buffer_semantic_tokens(bufnr)
+    vim.b.semantic_tokens_enabled = vim.b.semantic_tokens_enabled == false
+
+    for _, client in ipairs(vim.lsp.get_active_clients()) do
+        if client.server_capabilities.semanticTokensProvider then
+            vim.lsp.semantic_tokens[vim.b.semantic_tokens_enabled and "start" or "stop"](
+                bufnr or 0,
+                client.id
+            )
+            as.info(
+                string.format(
+                    "Buffer lsp semantic highlighting %s",
+                    bool2str(vim.b.semantic_tokens_enabled)
+                )
+            )
+        end
+    end
 end
 
 return utils

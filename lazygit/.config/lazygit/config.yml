@@ -6,8 +6,20 @@ gui:
   expandFocusedSidePanel: false
   mainPanelSplitMode: "flexible" # one of 'horizontal' | 'flexible' | 'vertical'
   language: "auto" # one of 'auto' | 'en' | 'zh' | 'pl' | 'nl'
-  # theme:
-  #   lightTheme: false # For terminals with a light background
+  theme:
+    lightTheme: false # For terminals with a light background
+    activeBorderColor:
+      - "#89ddff"
+      - bold
+    inactiveBorderColor:
+      - "#565f89"
+    optionsTextColor:
+      - "#3d59a1"
+    selectedLineBgColor:
+      - "#495257"
+      - bold
+    selectedRangeBgColor:
+      - "#89ddff"
   #   activeBorderColor:
   #     - white
   #     - bold
@@ -55,7 +67,7 @@ git:
     order: "topo-order"
     # one of always, never, when-maximised
     # this determines whether the git graph is rendered in the commits panel
-    showGraph: "when-maximised"
+    showGraph: always
   skipHookPrefix: WIP
   autoFetch: true
   autoRefresh: true

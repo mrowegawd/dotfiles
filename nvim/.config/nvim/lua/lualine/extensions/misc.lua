@@ -20,7 +20,7 @@ local function title()
     end
 
     return fmt(
-        "[ID %s] [Title %s]",
+        "Id:%s Title:%s",
         vim.fn.getqflist({ id = 0 }).id,
         vim.fn.getqflist({ title = 0 }).title
     )
@@ -33,11 +33,7 @@ local term_plugins = function()
         local terms = require "toggleterm.terminal"
         local count_term = terms.get_all()
         if #count_term > 0 then
-            return fmt(
-                "   |   No.%s of ﬑ %s ",
-                as.toggle_number,
-                #count_term
-            )
+            return fmt("   |  ﬑  %s/%s ", as.toggle_number, #count_term)
         end
     elseif ft_buf == "BufTerm" then
         return "bufterm"
@@ -87,14 +83,13 @@ local function label()
         end
     end
 
-    fmt_string = "  " .. string.upper(fmt_string)
+    fmt_string = string.upper(fmt_string)
 
     return fmt_string
 end
 
 M.sections = {
-    lualine_c = {},
-    lualine_x = {
+    lualine_c = {
         {
             label,
             color = {
@@ -113,12 +108,12 @@ M.sections = {
         },
         -- { clock, color = { fg = "white", gui = "bold" } },
     },
+    lualine_x = {},
 }
 
 M.inactive_sections = {
     lualine_c = {},
     lualine_x = {
-
         {
             label,
             color = {

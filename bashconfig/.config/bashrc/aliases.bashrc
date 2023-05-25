@@ -26,7 +26,8 @@ md() {
 	mkdir -p "$@"
 }
 
-alias r_m="tmux -2"
+# alias r_m="tmux -2"
+alias r_m="tmux"
 alias r_mat="r_m a -t"
 
 # show size current dir

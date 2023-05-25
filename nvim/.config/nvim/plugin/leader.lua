@@ -1,15 +1,71 @@
 -- vim: foldmethod=marker foldlevel=0
+local keymap, api = vim.keymap, vim.api
+
 local silent = { silent = true }
 local nosilent = { silent = false }
-local keymap, api = vim.keymap, vim.api
--- local cmd = vim.cmd
+local opts = { noremap = true, unique = true }
 
 -- BASIC ---------------------------------------------------------------------- {{{
+
+-- Insert mode
 keymap.set("i", "hh", "<ESC>", silent)
 keymap.set("i", "<c-f>", "<Right>", silent)
 keymap.set("i", "<c-b>", "<Left>", silent)
+keymap.set("i", "<c-d>", "<c-O>dw", silent)
+keymap.set("i", "<c-a>", "<c-O>^", silent)
+keymap.set("i", "<c-e>", "<c-O>$", silent)
+keymap.set("i", "<c-j>", "<s-left>", silent)
+keymap.set("i", "<c-k>", "<s-right>", silent)
 
-keymap.set("n", "<leader>q", "<Nop>", silent)
+-- keymap.set("i", "<C-w>", "<C-o>E<C-o>l")
+-- keymap.set("i", "<C-b>", "<C-o>B")
+
+-- https://vim.fandom.com/wiki/Moving_lines_up_or_down
+-- keymap.set("n", "<A-j>", ":m .+1<CR>==", opts)
+-- keymap.set("n", "<A-k>", ":m .-2<CR>==", opts)
+-- keymap.set("i", "<A-j>", "<ESC>:m .+1<CR>==gi", opts)
+-- keymap.set("i", "<A-k>", "<ESC>:m .-2<CR>==gi", opts)
+-- keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
+-- keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
+
+-- Move across wrapped lines like regular lines
+-- Go to the first non-blank character of a line
+keymap.set("n", "0", "^", opts)
+-- Just in case you need to go to the very beginning of a line
+keymap.set("n", "^", "0", opts)
+
+-- Map gm to `. Instead of `a, hit gma. See :help mark-motions as to why we use backtick.
+keymap.set("n", "gm", "`", { noremap = false })
+-- Jump using marks to last change, left insert, jump.
+keymap.set("n", "<Leader>mc", ":norm `.<CR>", { noremap = true, unique = true })
+keymap.set("n", "<Leader>mi", ":norm `^<CR>", { noremap = true, unique = true })
+keymap.set("n", "<Leader>mj", ":norm `'<CR>", { noremap = true, unique = true })
+
+-- Evaluates whether there is a fold on the current line if so unfold it else return a normal space
+keymap.set(
+    "n",
+    "<space><space>",
+    [[@=(foldlevel('.')?'za':"\<Space>")<CR>]],
+    { noremap = true, desc = "toggle fold under cursor", silent = true }
+)
+-- Toggle open close fold (recursive)
+keymap.set(
+    "n",
+    "<c-space>",
+    [[@=(foldlevel('.')?'zA':"\<Space>")<CR>]],
+    { noremap = true, desc = "toggle fold recursive", silent = true }
+)
+-- Refocus folds
+keymap.set(
+    "n",
+    "<localleader>z",
+    [[zMzvzz]],
+    { desc = "center viewport", noremap = true }
+)
+
+-- Jump next/prev fold
+-- keymap.set("n", "zn", "zjzz", opts)
+-- keymap.set("n", "zp", "zkzz", opts)
 
 -- Alternate the file
 local ignore_alternate_ft = {
@@ -18,7 +74,7 @@ local ignore_alternate_ft = {
     ["neo-tree"] = true,
     ["OverseerList"] = true,
 }
-keymap.set("n", "<Leader><Leader>", function()
+keymap.set("n", "<Leader>b", function()
     local bufnr = vim.api.nvim_get_current_buf()
     local ft = vim.bo[bufnr].filetype
 
@@ -31,17 +87,6 @@ keymap.set("n", "<Leader><Leader>", function()
         true
     )
 end)
-
--- Better quit
--- keymap.set("n", "q", function()
---     local bufnr = vim.api.nvim_get_current_buf()
---     local ft = vim.bo[bufnr].filetype
---
---     if ft == "TelescopePromt" then
---         return
---     end
---     -- return cmd [[q]]
--- end, silent)
 
 -- Go to the last edit (juga center the window)
 keymap.set("n", "g,", "g,zvzz", silent)
@@ -71,8 +116,6 @@ keymap.set(
 keymap.set("v", "<localleader>fs", [["zy:%s/<C-r><C-o>"/]], nosilent)
 keymap.set("i", "<C-U>", "<ESC>b~hea", { noremap = true, silent = true }) -- Change case of word
 keymap.set("n", "Q", "<Nop>", {}) -- Disable Ex mode:
--- vim.keymap.set("i", "<C-r>", "<C-o>B") -- next jump per kata
--- vim.keymap.set("i", "<C-v>", "<C-o>E<C-o>l") -- prev jump perk kata
 
 -- Multiple Cursor Replacement
 -- http://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-byses-of-vimscript/
@@ -87,6 +130,14 @@ keymap.set("v", ">", ">gv", silent)
 keymap.set("v", "<", "<gv", silent)
 
 keymap.set("n", "~", "%", silent)
+
+-- Toggle top/center/bottom
+keymap.set(
+    "n",
+    "zz",
+    [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
+    { expr = true }
+)
 
 -- Set a mark when moving more than 5 lines upwards/downards
 -- this will populate the jumplist enabling us to jump back with Ctrl-O
@@ -112,13 +163,16 @@ keymap.set("n", "~", "%", silent)
 --
 -- }}}
 -- COMMANDLINE ---------------------------------------------------------------- {{{
-keymap.set("c", "hh", "<c-c>", { desc = "Cmdline <esc>" })
+keymap.set("c", "hh", "<c-c>", { desc = "Cmdline escape" })
 
 keymap.set("c", "<c-a>", "<Home>", { desc = "Cmdline go first" })
 keymap.set("c", "<c-e>", "<End>", { desc = "Cmdline go last" })
 
 keymap.set("c", "<c-f>", "<Right>", { desc = "Cmdline next word" })
 keymap.set("c", "<c-b>", "<Left>", { desc = "Cmdline prev word" })
+
+keymap.set("c", "<c-j>", "<S-Left>", { desc = "Cmdline back word" })
+keymap.set("c", "<c-k>", "<S-Right>", { desc = "Cmdline forward word" })
 
 keymap.set("c", "<c-n>", "<Down>", { desc = "Cmdline next hist" })
 keymap.set("c", "<c-p>", "<Up>", { desc = "Cmdline prev hist" })

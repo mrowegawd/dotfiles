@@ -29,6 +29,9 @@ else if command -v alacritty >/dev/null
 end
 
 export BROWSER="firefox"
+
+# export TERM="xterm-256color"
+# [[ -n $TMUX ]] && export TERM="screen-256color"
 # end
 
 # -----------------------------------------------------------------------------

@@ -17,7 +17,7 @@ return {
                             "<Leader>e",
                             function()
                                 require("r.utils.tiling").force_win_close(
-                                    { "OverseerList", "undotree" },
+                                    { "OverseerList", "undotree", "aerial" },
                                     false
                                 )
                                 for _, w in ipairs(vim.api.nvim_list_wins()) do

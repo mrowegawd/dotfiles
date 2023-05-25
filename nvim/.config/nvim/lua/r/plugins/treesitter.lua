@@ -11,7 +11,6 @@ return {
                     itemgroup = "Misc",
                     keymaps = {
                         {
-
                             "m",
                             [[:<C-U>lua require('tsht').nodes()<CR>]],
                             description = "Treesitter: jump nodes",
@@ -28,7 +27,7 @@ return {
         dependencies = {
             { "nvim-treesitter/nvim-treesitter-textobjects" },
             { "JoosepAlviste/nvim-ts-context-commentstring" },
-            { "mfussenegger/nvim-treehopper" },
+            -- { "mfussenegger/nvim-treehopper" },
             -- { "David-Kunz/markid" },
             -- { "HiPhish/nvim-ts-rainbow2" },
         },
@@ -37,6 +36,21 @@ return {
             if ok then
                 orgmode.setup_ts_grammar()
             end
+
+            local queries = require "nvim-treesitter.query"
+            local parsers = require "nvim-treesitter.parsers"
+            local disable_max_size = 2000000 -- 2MB
+
+            local function should_disable(lang, bufnr)
+                local size =
+                    vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr or 0))
+                -- size will be -2 if it doesn't fit into a number
+                if size > disable_max_size or size == -2 then
+                    return true
+                end
+                return false
+            end
+
             -- require("nvim-treesitter.install").compilers = { "gcc-12" }
             require("nvim-treesitter.configs").setup {
                 -- end,
@@ -94,9 +108,27 @@ return {
                 auto_install = true,
                 highlight = {
                     enable = true,
-                    additional_vim_regex_highlighting = { "orgmode" },
+                    disable = function(_, bufnr)
+                        return vim.api.nvim_buf_line_count(bufnr) > 10000
+                    end,
+                    -- additional_vim_regex_highlighting = { "orgmode" },
                 },
-                indent = { enable = true, disable = { "python", "org" } },
+
+                indent = {
+                    enable = true,
+                    disable = function(lang, bufnr)
+                        if
+                            vim.tbl_contains(
+                                { "python", "org" },
+                                vim.bo.buftype
+                            )
+                        then -- or lang == "python" then
+                            return true
+                        else
+                            return should_disable(lang, bufnr)
+                        end
+                    end,
+                },
                 context_commentstring = {
                     enable = true,
                     enable_autocmd = false,
@@ -119,6 +151,13 @@ return {
                         scope_incremental = ";gs",
                         node_decremental = ";gr",
                     },
+                },
+
+                -- vim-matchup
+                matchup = {
+                    enable = true, -- mandatory, false will disable the whole extension
+                    disable = { "c", "ruby", "orgagenda" }, -- optional, list of language that will be disabled
+                    -- [options]
                 },
 
                 -- rainbow = {
@@ -231,6 +270,62 @@ return {
             --     "python",
             --     "folds",
             --     [[[(class_definition)] @fold]]
+            -- )
+
+            -- local function set_ts_win_defaults()
+            --     local parser_name = parsers.get_buf_lang()
+            --     if
+            --         parsers.has_parser(parser_name)
+            --         and not should_disable(parser_name, 0)
+            --     then
+            --         local oky, has_folds =
+            --             pcall(queries.get_query, parser_name, "folds")
+            --         if
+            --             oky and has_folds
+            --             -- and vim.api.nvim_win_get_config(0).relative == ""
+            --         then
+            --             if vim.wo.foldmethod == "manual" then
+            --                 vim.api.nvim_win_set_var(
+            --                     0,
+            --                     "ts_prev_foldmethod",
+            --                     vim.wo.foldmethod
+            --                 )
+            --                 vim.api.nvim_win_set_var(
+            --                     0,
+            --                     "ts_prev_foldexpr",
+            --                     vim.wo.foldexpr
+            --                 )
+            --                 vim.wo.foldmethod = "expr"
+            --                 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+            --             end
+            --             return
+            --         end
+            --     end
+            --     if vim.wo.foldexpr == "nvim_treesitter#foldexpr()" then
+            --         local ok, prev_foldmethod =
+            --             pcall(vim.api.nvim_win_get_var, 0, "ts_prev_foldmethod")
+            --         if ok and prev_foldmethod then
+            --             vim.api.nvim_win_del_var(0, "ts_prev_foldmethod")
+            --             vim.wo.foldmethod = prev_foldmethod
+            --         end
+            --         local ok2, prev_foldexpr =
+            --             pcall(vim.api.nvim_win_get_var, 0, "ts_prev_foldexpr")
+            --         if ok2 and prev_foldexpr then
+            --             vim.api.nvim_win_del_var(0, "ts_prev_foldexpr")
+            --             vim.wo.foldexpr = prev_foldexpr
+            --         end
+            --     end
+            -- end
+            --
+            -- local aug = vim.api.nvim_create_augroup("moxTSConfig", {})
+            -- vim.api.nvim_create_autocmd(
+            --     { "WinEnter", "BufWinEnter", "BufReadPre" },
+            --     {
+            --         desc = "Set treesitter defaults on win enter",
+            --         pattern = "*",
+            --         callback = set_ts_win_defaults,
+            --         group = aug,
+            --     }
             -- )
         end,
     },

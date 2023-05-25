@@ -6,6 +6,10 @@ local highlight = as.highlight
 
 local fn, fmt, icons, cmd = vim.fn, string.format, as.ui.icons, vim.cmd
 
+local set_icons = function(icons_name)
+    return icons_name .. " "
+end
+
 return {
     -- NVIM-VTSLS (js/ts server)
     { "yioneko/nvim-vtsls" },
@@ -160,19 +164,6 @@ return {
             }
         end,
     },
-    -- NVIM-NAVIC
-    {
-        "SmiteshP/nvim-navic", -- show winbar
-        enabled = false,
-        opts = function()
-            require("nvim-navic").setup {
-                highlight = false,
-                -- icons = require("lspkind").symbol_map,
-                -- depth_limit_indicator = ui.icons.misc.ellipsis,
-                lsp = { auto_attach = true },
-            }
-        end,
-    },
     -- LSP-INLAYHINTS
     {
         "lvimuser/lsp-inlayhints.nvim",
@@ -199,9 +190,10 @@ return {
             },
         },
     },
-    -- TROUBLE.NVIM
+    -- TROUBLE.NVIM (disabled)
     {
         "folke/trouble.nvim",
+        enabled = false,
         cmd = { "TroubleToggle", "Trouble" },
         init = function()
             require("legendary").keymaps {
@@ -497,213 +489,31 @@ return {
             }
         end,
     },
-    -- NVIM-NAVBUDDY (disabled)
-    {
-        "SmiteshP/nvim-navbuddy",
-        event = "BufReadPre",
-        enabled = false,
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "LSP",
-                    keymaps = {
-                        {
-                            "gO",
-                            "<CMD>Navbuddy<CR>",
-                            description = "Navbuddy: open",
-                        },
-                    },
-                },
-            }
-        end,
-        dependencies = {
-            "neovim/nvim-lspconfig",
-            "SmiteshP/nvim-navic",
-            "MunifTanjim/nui.nvim",
-        },
-        config = function()
-            local navbuddy = require "nvim-navbuddy"
-            local actions = require "nvim-navbuddy.actions"
-            navbuddy.setup {
-                window = {
-                    border = "single", -- "rounded", "double", "solid", "none"
-                    -- or an array with eight chars building up the border in a clockwise fashion
-                    -- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
-                    size = { height = "50%", width = "90%" }, -- Or table format example: { height = "40%", width = "100%"}
-                    position = "50%", -- Or table format example: { row = "100%", col = "0%"}
-                    scrolloff = nil, -- scrolloff value within navbuddy window
-                    sections = {
-                        left = {
-                            size = "20%",
-                            border = nil, -- You can set border style for each section individually as well.
-                        },
-                        mid = {
-                            size = "40%",
-                            border = nil,
-                        },
-                        right = {
-                            -- No size option for right most section. It fills to
-                            -- remaining area.
-                            border = nil,
-                            preview = "leaf", -- Right section can show previews too.
-                            -- Options: "leaf", "always" or "never"
-                        },
-                    },
-                },
-                node_markers = {
-                    enabled = true,
-                    icons = {
-                        leaf = "  ",
-                        leaf_selected = " → ",
-                        branch = " ",
-                    },
-                },
-                icons = {
-                    [1] = " ", -- File
-                    [2] = " ", -- Module
-                    [3] = " ", -- Namespace
-                    [4] = " ", -- Package
-                    [5] = " ", -- Class
-                    [6] = " ", -- Method
-                    [7] = " ", -- Property
-                    [8] = " ", -- Field
-                    [9] = " ", -- Constructor
-                    [10] = "練", -- Enum
-                    [11] = "練", -- Interface
-                    [12] = " ", -- Function
-                    [13] = " ", -- Variable
-                    [14] = " ", -- Constant
-                    [15] = " ", -- String
-                    [16] = " ", -- Number
-                    [17] = "◩ ", -- Boolean
-                    [18] = " ", -- Array
-                    [19] = " ", -- Object
-                    [20] = " ", -- Key
-                    [21] = "ﳠ ", -- Null
-                    [22] = " ", -- EnumMember
-                    [23] = " ", -- Struct
-                    [24] = " ", -- Event
-                    [25] = " ", -- Operator
-                    [26] = " ", -- TypeParameter
-                    [255] = " ", -- Macro
-                },
-                use_default_mappings = true, -- If set to false, only mappings set
-                -- by user are set. Else default
-                -- mappings are used for keys
-                -- that are not set by user
-                mappings = {
-                    ["<esc>"] = actions.close, -- Close and cursor to original location
-                    ["q"] = actions.close,
-
-                    ["j"] = actions.next_sibling, -- down
-                    ["k"] = actions.previous_sibling, -- up
-
-                    ["h"] = actions.parent, -- Move to left panel
-                    ["l"] = actions.children, -- Move to right panel
-                    ["0"] = actions.root, -- Move to first panel
-
-                    ["v"] = actions.visual_name, -- Visual selection of name
-                    ["V"] = actions.visual_scope, -- Visual selection of scope
-
-                    ["y"] = actions.yank_name, -- Yank the name to system clipboard "+
-                    ["Y"] = actions.yank_scope, -- Yank the scope to system clipboard "+
-
-                    ["i"] = actions.insert_name, -- Insert at start of name
-                    ["I"] = actions.insert_scope, -- Insert at start of scope
-
-                    ["a"] = actions.append_name, -- Insert at end of name
-                    ["A"] = actions.append_scope, -- Insert at end of scope
-
-                    ["r"] = actions.rename, -- Rename currently focused symbol
-
-                    ["d"] = actions.delete, -- Delete scope
-
-                    ["f"] = actions.fold_create, -- Create fold of current scope
-                    ["F"] = actions.fold_delete, -- Delete fold of current scope
-
-                    ["c"] = actions.comment, -- Comment out current scope
-
-                    ["<enter>"] = actions.select, -- Goto selected symbol
-                    ["o"] = actions.select,
-
-                    ["J"] = actions.move_down, -- Move focused node down
-                    ["K"] = actions.move_up, -- Move focused node up
-
-                    ["t"] = actions.telescope { -- Fuzzy finder at current level.
-                        layout_config = {
-                            -- All options that can be
-                            height = 0.60, -- passed to telescope.nvim's
-                            width = 0.60, -- default can be passed here.
-                            prompt_position = "top",
-                            preview_width = 0.50,
-                        },
-                        -- theme = "ivy",
-                        -- layout_strategy = "vertical",
-                    },
-                },
-                lsp = {
-                    auto_attach = true, -- If set to true, you don't need to manually use attach function
-                    preference = nil, -- list of lsp server names in order of preference
-                },
-                source_buffer = {
-                    follow_node = true, -- Keep the current node in focus on the source buffer
-                    highlight = true, -- Highlight the currently focused node
-                    reorient = "smart", -- "smart", "top", "mid" or "none"
-                    scrolloff = nil, -- scrolloff value when navbuddy is open
-                },
-            }
-        end,
-    },
     -- AERIAL
     {
         "stevearc/aerial.nvim",
         event = "VeryLazy",
-        -- cmd = "AerialToggle",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("aerial").setup {
-                attach_mode = "global",
-                backends = { "lsp", "treesitter", "markdown", "man" },
-                layout = { min_width = 28 },
-
-                show_guides = true,
-                manage_folds = false,
-                guides = {
-                    mid_item = "├ ",
-                    last_item = "└ ",
-                    nested_top = "│ ",
-                    whitespace = "  ",
-                },
-                filter_kind = false,
-
-                keymaps = {
-                    ["[y"] = "actions.prev",
-                    ["O"] = "actions.jump",
-                    ["o"] = false,
-                    ["]y"] = "actions.next",
-                    ["[Y"] = "actions.prev_up",
-                    ["]Y"] = "actions.next_up",
-                    ["{"] = false,
-                    ["}"] = false,
-                    ["[["] = false,
-                    ["]]"] = false,
-                },
-            }
-        end,
-    },
-    -- SYMBOLSOUTLINE
-    {
-        "enddeadroyal/symbols-outline.nvim",
-        enabled = function()
-            if as.use_search_telescope then
-                return false
-            end
-            return true
-        end,
-        cmd = "SymbolsOutline",
-        branch = "bugfix/symbol-hover-misplacement",
+        enabled = false,
         init = function()
-            require("r.utils").disable_ctrl_i_and_o("NoOutline", { "Outline" })
+            require("r.utils").disable_ctrl_i_and_o("NoAerial", { "aerial" })
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "aerial" },
+                callback = function()
+                    vim.keymap.set("n", "zM", function()
+                        local aerial = require "aerial"
+                        return aerial.tree_close_all()
+                    end, {
+                        buffer = vim.api.nvim_get_current_buf(),
+                    })
+                    vim.keymap.set("n", "zO", function()
+                        local aerial = require "aerial"
+                        return aerial.tree_open_all()
+                    end, {
+                        buffer = vim.api.nvim_get_current_buf(),
+                    })
+                end,
+            })
 
             require("legendary").keymaps {
                 {
@@ -711,8 +521,8 @@ return {
                     keymaps = {
                         {
                             "go",
-                            "<CMD>SymbolsOutline<CR>",
-                            description = "SymbolsOutline: toggle",
+                            "<CMD>AerialToggle<CR>",
+                            description = "Aerial: toggle",
                         },
                         {
                             "gO",
@@ -721,13 +531,122 @@ return {
                                     { "Outline" },
                                     false
                                 )
-                                return cmd.SymbolsOutline()
+                                return cmd.AerialToggle()
                             end,
-                            description = "SymbolsOutline: focus toggle",
+                            description = "Aerial: focus toggle",
                         },
                     },
                 },
             }
+        end,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("aerial").setup {
+                attach_mode = "global",
+                backends = { "lsp", "treesitter", "markdown", "man" },
+                layout = { min_width = 28 },
+                -- fold code from tree (overwrites treesitter foldexpr)
+                manage_folds = false,
+                -- link_tree_to_folds = true,
+                -- link_folds_to_tree = true,
+                show_guides = true,
+                guides = {
+                    -- mid_item = "├ ",
+                    -- last_item = "└ ",
+                    -- nested_top = "│ ",
+                    -- whitespace = "  ",
+                    mid_item = " ",
+                    last_item = " ",
+                    nested_top = " ",
+                    whitespace = " ",
+                },
+                filter_kind = false,
+                icons = {
+                    Array = icons.kind.Array,
+                    Boolean = icons.kind.Boolean,
+                    Class = icons.kind.Class,
+                    Constant = icons.kind.Constant,
+                    Constructor = icons.kind.Constructor,
+                    Enum = icons.kind.Enum,
+                    EnumMember = icons.kind.EnumMember,
+                    Event = icons.kind.Event,
+                    Field = icons.kind.Field,
+                    File = icons.kind.File,
+                    Function = icons.kind.Function,
+                    Interface = icons.kind.Interface,
+                    Key = icons.kind.Keyword,
+                    Method = icons.kind.Method,
+                    Module = icons.kind.Module,
+                    Namespace = icons.kind.Namespace,
+                    Null = icons.kind.Null,
+                    Number = icons.kind.Number,
+                    Object = icons.kind.Object,
+                    Operator = icons.kind.Operator,
+                    Package = icons.kind.Package,
+                    Property = icons.kind.Property,
+                    String = icons.kind.String,
+                    Struct = icons.kind.Struct,
+                    TypeParameter = icons.kind.TypeParameter,
+                    Variable = icons.kind.Variable,
+                    Collapsed = " ",
+                },
+
+                keymaps = {
+                    ["[y"] = "actions.prev",
+                    ["O"] = "actions.jump",
+                    ["o"] = "actions.jump",
+                    ["]y"] = "actions.next",
+                    ["[Y"] = "actions.prev_up",
+                    ["]Y"] = "actions.next_up",
+                    ["{"] = false,
+                    ["}"] = false,
+                    ["[["] = false,
+                    ["]]"] = false,
+                    ["zM"] = false,
+                    ["zO"] = false,
+                },
+            }
+        end,
+    },
+    -- SYMBOLSOUTLINE
+    {
+        "enddeadroyal/symbols-outline.nvim",
+        -- enabled = function()
+        --     if as.use_search_telescope then
+        --         return true
+        --     end
+        --     return false
+        -- end,
+
+        enabled = true,
+        cmd = "SymbolsOutline",
+        branch = "bugfix/symbol-hover-misplacement",
+        init = function()
+            require("r.utils").disable_ctrl_i_and_o("NoOutline", { "Outline" })
+
+            -- require("legendary").keymaps {
+            --     {
+            --         itemgroup = "LSP",
+            --         keymaps = {
+            --             {
+            --                 "go",
+            --                 "<CMD>SymbolsOutline<CR>",
+            --                 description = "SymbolsOutline: toggle",
+            --             },
+            --             {
+            --                 "gO",
+            --                 function()
+            --                     require("r.utils.tiling").force_win_close(
+            --                         { "Outline" },
+            --                         false
+            --                     )
+            --                     return cmd.SymbolsOutline()
+            --                 end,
+            --                 description = "SymbolsOutline: focus toggle",
+            --             },
+            --         },
+            --     },
+            -- }
         end,
         config = function()
             require("symbols-outline").setup {
@@ -736,7 +655,7 @@ return {
                 position = "right",
                 border = "single",
                 relative_width = true,
-                width = 25,
+                width = 30,
                 auto_close = false,
                 auto_preview = false,
                 show_numbers = false,
@@ -812,9 +731,472 @@ return {
             }
         end,
     },
+    -- DROPBAR
+    {
+        "Bekaboo/dropbar.nvim",
+        enabled = true,
+        event = "BufRead",
+        init = function()
+            require("legendary").keymaps {
+                {
+                    itemgroup = "LSP",
+                    keymaps = {
+                        {
+                            "go",
+                            function()
+                                return require("dropbar.api").pick()
+                            end,
+                            description = "Dropbar: pick",
+                        },
+                    },
+                },
+            }
+        end,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            require("dropbar").setup {
+                general = {
+                    ---@type boolean|fun(buf: integer, win: integer): boolean
+                    enable = function(buf, win)
+                        return not vim.api.nvim_win_get_config(win).zindex
+                            and vim.bo[buf].buftype == ""
+                            and vim.api.nvim_buf_get_name(buf) ~= ""
+                            and not vim.wo[win].diff
+                    end,
+                    update_events = {
+                        "CursorMoved",
+                        "CursorMovedI",
+                        "DirChanged",
+                        "FileChangedShellPost",
+                        "TextChanged",
+                        "TextChangedI",
+                        "VimResized",
+                        "WinResized",
+                        "WinScrolled",
+                    },
+                },
+                icons = {
+                    kinds = {
+                        use_devicons = true,
+                        symbols = {
+                            Array = set_icons(icons.kind.Array),
+                            Boolean = set_icons(icons.kind.Boolean),
+                            BreakStatement = "󰙧 ",
+                            Call = "󰃷 ",
+                            CaseStatement = "󱃙 ",
+                            Class = set_icons(icons.kind.Class),
+                            Color = " ",
+                            Constant = set_icons(icons.kind.Constant),
+                            Constructor = set_icons(icons.kind.Constructor),
+                            ContinueStatement = "→ ",
+                            Copilot = " ",
+                            Declaration = "󰙠 ",
+                            Delete = "󰩺 ",
+                            DoStatement = "󰑖 ",
+                            Enum = set_icons(icons.kind.Enum),
+                            EnumMember = set_icons(icons.kind.Enum),
+                            Event = set_icons(icons.kind.Event),
+                            Field = set_icons(icons.kind.Field),
+                            File = set_icons(icons.kind.File),
+                            Folder = set_icons(icons.kind.Folder),
+                            ForStatement = "󰑖 ",
+                            Function = set_icons(icons.kind.Function),
+                            Identifier = "󰀫 ",
+                            IfStatement = "󰇉 ",
+                            Interface = set_icons(icons.kind.Interface),
+                            Keyword = set_icons(icons.kind.Keyword),
+                            List = " ",
+                            og = "󰦪 ",
+                            Lsp = " ",
+                            Macro = "󰁌 ",
+                            MarkdownH1 = "󰉫 ",
+                            MarkdownH2 = "󰉬 ",
+                            MarkdownH3 = "󰉭 ",
+                            MarkdownH4 = "󰉮 ",
+                            MarkdownH5 = "󰉯 ",
+                            MarkdownH6 = "󰉰 ",
+                            Method = set_icons(icons.kind.Method),
+                            Module = set_icons(icons.kind.Module),
+                            Namespace = set_icons(icons.kind.Namespace),
+                            Null = set_icons(icons.kind.Null),
+                            Number = set_icons(icons.kind.Number),
+                            Object = set_icons(icons.kind.Object),
+                            Operator = set_icons(icons.kind.Operator),
+                            Package = set_icons(icons.kind.Package),
+                            Property = set_icons(icons.kind.Property),
+                            Reference = set_icons(icons.kind.Reference),
+                            Regex = " ",
+                            Repeat = "󰑖 ",
+                            Scope = " ",
+                            Snippet = "󰩫 ",
+                            Specifier = "󰦪 ",
+                            Statement = " ",
+                            String = set_icons(icons.kind.String),
+                            Struct = set_icons(icons.kind.Struct),
+                            SwitchStatement = "󰺟 ",
+                            Text = set_icons(icons.kind.Text),
+                            Type = " ",
+                            TypeParameter = " ",
+                            Unit = set_icons(icons.kind.Unit),
+                            Value = set_icons(icons.kind.Value),
+                            Variable = set_icons(icons.kind.Variable),
+                            WhileStatement = "󰑖 ",
+                        },
+                    },
+                    ui = {
+                        bar = {
+                            separator = set_icons(icons.misc.arrow_right),
+                            extends = "…",
+                        },
+                        menu = {
+                            separator = " ",
+                            indicator = " ",
+                        },
+                    },
+                },
+                bar = {
+                    sources = function(_, _)
+                        local sources = require "dropbar.sources"
+
+                        local function get_hl_color(group, attr)
+                            return vim.fn.synIDattr(
+                                vim.fn.synIDtrans(vim.fn.hlID(group)),
+                                attr
+                            )
+                        end
+
+                        local get_symbols = function(buf, cursor, symbols)
+                            local path = false
+                            if symbols == nil then
+                                symbols = sources.path.get_symbols(buf, cursor)
+                                path = true
+                            end
+                            for _, symbol in ipairs(symbols) do
+                                -- get correct icon color
+                                local icon_fg =
+                                    get_hl_color(symbol.icon_hl, "fg#")
+                                symbol.icon_hl = "DropbarSymbol"
+                                    .. symbol.icon_hl
+
+                                -- set name highlight
+                                if not path then
+                                    symbol.name_hl = symbol.icon_hl
+                                end
+
+                                local icon_string = ""
+                                if icon_fg == "" then
+                                    icon_string = "hi "
+                                        .. symbol.icon_hl
+                                        .. " guisp=#665c54 gui=underline guibg=NONE"
+                                else
+                                    icon_string = "hi "
+                                        .. symbol.icon_hl
+                                        .. " guisp=#665c54 gui=underline guibg=NONE guifg="
+                                        .. icon_fg
+                                end
+
+                                vim.cmd(icon_string)
+                            end
+                            return symbols
+                        end
+
+                        return {
+                            sources.path,
+                            {
+                                get_symbols = function(buf, cursor)
+                                    if vim.bo[buf].ft == "markdown" then
+                                        return sources.markdown.get_symbols(
+                                            buf,
+                                            cursor
+                                        )
+                                    end
+                                    for _, source in ipairs {
+                                        sources.lsp,
+                                        sources.treesitter,
+                                    } do
+                                        -- local symbols =
+                                        --     source.get_symbols(buf, cursor)
+                                        -- if not vim.tbl_isempty(symbols) then
+                                        --     return symbols
+                                        -- end
+                                        return get_symbols(
+                                            buf,
+                                            cursor,
+                                            source.get_symbols(buf, cursor)
+                                        )
+                                    end
+                                    return {}
+                                end,
+                            },
+                        }
+                    end,
+                    padding = {
+                        left = 1,
+                        right = 1,
+                    },
+                    pick = {
+                        pivots = "abcdefghijklmnopqrstuvwxyz",
+                    },
+                    truncate = true,
+                },
+                menu = {
+                    entry = {
+                        padding = {
+                            left = 1,
+                            right = 1,
+                        },
+                    },
+                    ---@type table<string, string|function|table<string, string|function>>
+                    keymaps = {
+                        ["<LeftMouse>"] = function()
+                            local api = require "dropbar.api"
+                            local menu = api.get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+                            local mouse = vim.fn.getmousepos()
+                            if mouse.winid ~= menu.win then
+                                local parent_menu =
+                                    api.get_dropbar_menu(mouse.winid)
+                                if parent_menu and parent_menu.sub_menu then
+                                    parent_menu.sub_menu:close()
+                                end
+                                if vim.api.nvim_win_is_valid(mouse.winid) then
+                                    vim.api.nvim_set_current_win(mouse.winid)
+                                end
+                                return
+                            end
+                            menu:click_at(
+                                { mouse.line, mouse.column },
+                                nil,
+                                1,
+                                "l"
+                            )
+                        end,
+                        ["<CR>"] = function()
+                            local menu =
+                                require("dropbar.api").get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+                            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+                            local component =
+                                menu.entries[cursor[1]]:first_clickable(
+                                    cursor[2]
+                                )
+                            if component then
+                                menu:click_on(component, nil, 1, "l")
+                            end
+                        end,
+                        ["<c-c>"] = function()
+                            local api = require "dropbar.api"
+                            local menu = api.get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+                            vim.cmd "q"
+                        end,
+                        ["<esc>"] = function()
+                            local api = require "dropbar.api"
+                            local menu = api.get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+                            vim.cmd "q"
+                        end,
+                        ["l"] = function()
+                            local menu =
+                                require("dropbar.api").get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+                            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+                            local component =
+                                menu.entries[cursor[1]]:first_clickable(
+                                    cursor[2]
+                                )
+                            if component then
+                                vim.cmd "silent noautocmd update"
+                                menu:click_on(component, nil, 1, "l")
+                            end
+                        end,
+                        ["h"] = function()
+                            local menu =
+                                require("dropbar.api").get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+                            vim.cmd "q"
+                        end,
+                        ["P"] = function()
+                            local menu =
+                                require("dropbar.api").get_current_dropbar_menu()
+                            if not menu then
+                                return
+                            end
+
+                            -- vim.notify "not yet implemented"
+
+                            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+                            local component =
+                                menu.entries[cursor[1]]:first_clickable(
+                                    cursor[2]
+                                )
+
+                            local row = component.entry.idx
+                            local col = component.entry.padding.left + 1
+
+                            col = col
+                                + component:bytewidth()
+                                + component.entry.separator:bytewidth()
+
+                            print(tostring(row) .. " " .. tostring(col))
+                            print(vim.inspect(component))
+                        end,
+                    },
+                    win_configs = {
+                        border = "none",
+                        style = "minimal",
+                        row = function(menu)
+                            return menu.parent_menu
+                                    and menu.parent_menu.clicked_at
+                                    and menu.parent_menu.clicked_at[1] - vim.fn.line "w0"
+                                or 1
+                        end,
+                        col = function(menu)
+                            return menu.parent_menu
+                                    and menu.parent_menu._win_configs.width
+                                or 0
+                        end,
+                        relative = function(menu)
+                            return menu.parent_menu and "win" or "mouse"
+                        end,
+                        win = function(menu)
+                            return menu.parent_menu and menu.parent_menu.win
+                        end,
+                        height = function(menu)
+                            return math.max(
+                                1,
+                                math.min(
+                                    #menu.entries,
+                                    vim.go.pumheight ~= 0 and vim.go.pumheight
+                                        or math.ceil(vim.go.lines / 4)
+                                )
+                            )
+                        end,
+                        width = function(menu)
+                            local min_width = vim.go.pumwidth ~= 0
+                                    and vim.go.pumwidth
+                                or 8
+                            if vim.tbl_isempty(menu.entries) then
+                                return min_width
+                            end
+                            return math.max(
+                                min_width,
+                                math.max(
+                                    unpack(
+                                        vim.tbl_map(function(entry)
+                                            return entry:displaywidth()
+                                        end, menu.entries)
+                                    )
+                                )
+                            )
+                        end,
+                    },
+                },
+                sources = {
+                    path = {
+                        ---@type string|fun(buf: integer): string
+                        relative_to = function(_)
+                            return vim.fn.getcwd()
+                        end,
+                        ---Can be used to filter out files or directories
+                        ---based on their name
+                        ---@type fun(name: string): boolean
+                        filter = function(_)
+                            return true
+                        end,
+                    },
+                    treesitter = {
+                        -- Lua pattern used to extract a short name from the node text
+                        -- Be aware that the match result must not be nil!
+                        name_pattern = string.rep("[#~%w%._%->!]*", 4, "%s*"),
+                        -- The order matters! The first match is used as the type
+                        -- of the treesitter symbol and used to show the icon
+                        -- Types listed below must have corresponding icons
+                        -- in the `icons.kinds.symbols` table for the icon to be shown
+                        valid_types = {
+                            "array",
+                            "boolean",
+                            "break_statement",
+                            "call",
+                            "case_statement",
+                            "class",
+                            "constant",
+                            "constructor",
+                            "continue_statement",
+                            "delete",
+                            "do_statement",
+                            "enum",
+                            "enum_member",
+                            "event",
+                            "for_statement",
+                            "function",
+                            "if_statement",
+                            "interface",
+                            "keyword",
+                            "list",
+                            "macro",
+                            "method",
+                            "module",
+                            "namespace",
+                            "null",
+                            "number",
+                            "operator",
+                            "package",
+                            "property",
+                            "reference",
+                            "repeat",
+                            "scope",
+                            "specifier",
+                            "string",
+                            "struct",
+                            "switch_statement",
+                            "type",
+                            "type_parameter",
+                            "unit",
+                            "value",
+                            "variable",
+                            "while_statement",
+                            "declaration",
+                            "field",
+                            "identifier",
+                            "object",
+                            "statement",
+                            "text",
+                        },
+                    },
+                    lsp = {
+                        request = {
+                            -- Times to retry a request before giving up
+                            ttl_init = 60,
+                            interval = 1000, -- in ms
+                        },
+                    },
+                    markdown = {
+                        parse = {
+                            -- Number of lines to update when cursor moves out of the parsed range
+                            look_ahead = 200,
+                        },
+                    },
+                },
+            }
+        end,
+    },
     -- INCRENAME
     {
         "smjonas/inc-rename.nvim",
+        enabled = false,
         opts = { hl_group = "Visual", preview_empty_name = true },
         keys = {
             {
@@ -827,5 +1209,52 @@ return {
                 desc = "lsp: incremental rename",
             },
         },
+    },
+    -- ILLUMINATE
+    {
+        "RRethy/vim-illuminate",
+        event = "BufReadPost",
+        opts = { delay = 200 },
+        init = function()
+            require("legendary").keymaps {
+                {
+                    itemgroup = "FZFLua",
+                    keymaps = {
+                        {
+                            "<a-q>",
+                            function()
+                                require("illuminate").goto_next_reference(nil)
+                            end,
+                            description = "Lsp: Hi Symbol",
+                        },
+                        {
+                            "<a-Q>",
+                            function()
+                                require("illuminate").goto_prev_reference(nil)
+                            end,
+                            description = "Lsp: Hi Symbol",
+                        },
+                    },
+                },
+            }
+        end,
+        config = function()
+            require("illuminate").configure {
+                filetypes_denylist = {
+                    "NeogitStatus",
+                    "Outline",
+                    "TelescopePrompt",
+                    "Trouble",
+                    "alpha",
+                    "dirvish",
+                    "fugitive",
+                    "gitcommit",
+                    "lazy",
+                    "neo-tree",
+                    "orgagenda",
+                    "qf",
+                },
+            }
+        end,
     },
 }

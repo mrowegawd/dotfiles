@@ -1,14 +1,28 @@
-local fmt = string.format
+local fmt, api, L, fn = string.format, vim.api, vim.log.levels, vim.fn
 
-local api = vim.api
-local L = vim.log.levels
+local namespace = {
+    ui = {
+        winbar = { enable = true },
+        statuscolumn = { enable = true },
+        foldtext = { enable = false },
+    },
+
+    -- some vim mappings require a mixture of commandline commands and function
+    -- calls this table is place to store lua functions to be called in those
+    -- mappings
+    mappings = { enable = true },
+}
+
+-- This table is a globally accessible store to facilitating accessing
+-- helper functions and variables throughout my config
+_G.as = as or namespace
 
 as.home = os.getenv "HOME"
 as.dropbox_path = fmt("%s/Dropbox", as.home, "Dropbox")
 as.wiki_path = fmt("%s/neorg", as.dropbox_path)
 as.snippet_path = as.dropbox_path .. "/friendly-snippets"
 
-as.colorscheme = "tokyonight"
+as.colorscheme = "catppuccin"
 as.master_win = 1
 as.term_count = 1
 as.toggle_number = 1
@@ -114,7 +128,12 @@ function as.is_file(filename)
 end
 
 function as.absolute_path(bufnr)
-    return vim.fn.expand("#" .. bufnr .. ":p")
+    return fn.expand("#" .. bufnr .. ":p")
+end
+
+-- example use; as.is_loclist() and "Location List" or "Quickfix List"
+function as.is_loclist()
+    return fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0
 end
 
 ---@return string, string
@@ -216,11 +235,11 @@ function as.safe_require(module, opts)
     return ok, result
 end
 
-function as.try(fn, ...)
+function as.try(func, ...)
     local args = { ... }
 
     return xpcall(function()
-        return fn(unpack(args))
+        return func(unpack(args))
     end, function(err)
         local lines = {}
         table.insert(lines, err)
@@ -236,13 +255,13 @@ function as.require(mod)
 end
 
 function as.warn(msg, name)
-    vim.notify(msg, vim.log.levels.WARN, { title = name or "init.lua" })
+    vim.notify(msg, L.WARN, { title = name or "init.lua" })
 end
 function as.error(msg, name)
-    vim.notify(msg, vim.log.levels.ERROR, { title = name or "init.lua" })
+    vim.notify(msg, L.ERROR, { title = name or "init.lua" })
 end
 function as.info(msg, name)
-    vim.notify(msg, vim.log.levels.INFO, { title = name or "init.lua" })
+    vim.notify(msg, L.INFO, { title = name or "init.lua" })
 end
 
 --- Call the given function and use `vim.notify` to notify of any errors
@@ -268,10 +287,10 @@ function as.pcall(msg, func, ...)
 end
 
 function as.smart_quit()
-    local bufnr = vim.api.nvim_get_current_buf()
+    local bufnr = api.nvim_get_current_buf()
     local buf_windows = vim.call("win_findbuf", bufnr)
 
-    local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+    local modified = api.nvim_buf_get_option(bufnr, "modified")
     if modified and #buf_windows == 1 then
         vim.ui.input({
             prompt = "You have unsaved changes. Quit anyway? (y/n) ",
@@ -283,4 +302,34 @@ function as.smart_quit()
     else
         vim.cmd "q"
     end
+end
+
+function _G.foldtext()
+    local level = "+-" .. string.rep("-", vim.v.foldlevel - 1) .. " "
+    local nlines = (vim.v.foldend - vim.v.foldstart) + 1
+    local align = string.rep(
+        " ",
+        5 - (vim.v.foldlevel - 1) - string.len(tostring(nlines))
+    )
+
+    local fold_text = tostring(fn.getline(vim.v.foldstart))
+    if vim.startswith(fold_text, "\\documentclass") then
+        fold_text = "Preamble"
+    elseif vim.startswith(fold_text, "\\appendix") then
+        fold_text = "Appendix"
+    elseif vim.startswith(fold_text, "\\begin") then
+        -- Note: we only fold abstract and frame environments
+        if string.match(fold_text, "abstract") then
+            fold_text = "Abstract"
+        else
+            -- Assumes that we have something like `\frametitle{Foo}`
+            -- in next line to the \begin{frame} line
+            local frame_title = string.match(
+                tostring(fn.getline(vim.v.foldstart + 1)),
+                "{(.*.)}"
+            )
+            fold_text = "Frame - " .. frame_title
+        end
+    end
+    return string.format("%s%s%s lines: %s", level, align, nlines, fold_text)
 end

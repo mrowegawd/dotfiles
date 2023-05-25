@@ -1,16 +1,27 @@
 local highlight, fn, cmd, fmt = as.highlight, vim.fn, vim.cmd, string.format
 local icons = as.ui.icons
+local prompt = icons.misc.telescope .. "  "
+
+local function format_title(str, icon, icon_hl)
+    return {
+        { " " },
+        { (icon and icon .. " " or ""), icon_hl or "DevIconDefault" },
+        { str, "Bold" },
+        { " " },
+    }
+end
 
 return {
     -- LEAP
     {
         "ggandor/leap.nvim",
-        enabled = true,
+        enabled = false,
         keys = { "s", "S" },
         config = function()
             require("leap").add_default_mappings()
         end,
     },
+    -- HOP (false)
     {
         "phaazon/hop.nvim",
         event = "BufRead",
@@ -63,7 +74,8 @@ return {
                             description = "Fzflua: find files",
                         },
                         {
-                            "<Leader>fb",
+                            -- "<Leader>fb",
+                            "B",
                             function()
                                 return require("fzf-lua").buffers {
                                     winopts = {
@@ -99,12 +111,14 @@ return {
                                 if vim.bo.filetype ~= "norg" then
                                     local plugins_directory = vim.fn.stdpath "data"
                                         .. "/lazy"
+
                                     return require("fzf-lua").files {
                                         prompt = "Plugins❯ ",
                                         cwd = plugins_directory,
                                         prompt_title = "Find plugin files",
                                     }
                                 end
+
                                 return require("fzf-lua").files {
                                     prompt = "[NORG] files❯ ",
                                     cwd = as.wiki_path,
@@ -129,7 +143,13 @@ return {
                             "<Leader>fg",
                             function()
                                 return require("fzf-lua").live_grep_glob {
-                                    prompt = "Live GrepGlob❯ ",
+                                    -- prompt = "Live GrepGlob❯ ",
+                                    -- prompt = prompt,
+                                    winopts = {
+                                        preview = {
+                                            vertical = "up:60%",
+                                        },
+                                    },
                                 }
                             end,
                             description = "Fzflua: live grep",
@@ -141,7 +161,11 @@ return {
                             description = "Fzflua: live grep [visual]",
                             mode = { "v" },
                         },
-
+                        {
+                            "<c-g>",
+                            "<CMD>FzfLua jumps<CR>",
+                            description = "Fzflua: jumps",
+                        },
                         {
                             "z=",
                             function()
@@ -155,6 +179,47 @@ return {
                             end,
                             description = "Fzflua: spell",
                         },
+
+                        {
+                            "<leader>fq",
+                            function()
+                                local path = require "fzf-lua.path"
+
+                                local qf_items = fn.getqflist()
+
+                                local qf_ntbl = {}
+                                for _, qf_item in pairs(qf_items) do
+                                    table.insert(
+                                        qf_ntbl,
+                                        path.relative(
+                                            vim.api.nvim_buf_get_name(
+                                                qf_item.bufnr
+                                            ),
+                                            vim.loop.cwd()
+                                        )
+                                    )
+                                end
+
+                                local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case {q} ]]
+                                    .. table.concat(qf_ntbl, " ")
+
+                                return require("fzf-lua").live_grep {
+                                    -- prompt = "GrepQF❯ ",
+                                    prompt = prompt,
+                                    winopts = {
+                                        title = format_title("Grep", " "),
+                                        height = 0.85,
+                                        width = 0.90,
+                                        preview = {
+                                            vertical = "up:60%",
+                                            layout = "vertical",
+                                        },
+                                    },
+                                    cmd = pcmd,
+                                }
+                            end,
+                            description = "Fzflua: grep qf items",
+                        },
                     },
                     commands = {
                         {
@@ -166,17 +231,16 @@ return {
                             description = "Fzflua: keymaps",
                         },
                         {
+                            ":FzfLua autocmds",
+                            description = "Fzflua: autocmds",
+                        },
+                        {
                             ":FzfLua commands",
                             description = "Fzflua: commands",
                         },
-
                         {
                             ":FzfLua colorschemes",
-                            description = "Fzflua: autocmds",
-                        },
-                        {
-                            ":FzfLua autocmds",
-                            description = "Fzflua: autocmds",
+                            description = "Fzflua: colorschemes",
                         },
                         {
                             ":FzfLua command_history",
@@ -187,9 +251,8 @@ return {
                 {
                     itemgroup = "Misc",
                     keymaps = {
-
                         {
-                            "<c-l>",
+                            "<c-v>",
                             function()
                                 return require("fzf-lua").complete_path {
                                     winopts = {
@@ -386,10 +449,11 @@ return {
                 },
                 -- provider setup
                 files = {
-                    -- previewer      = "bat",          -- uncomment to override previewer
+                    -- previewer = "bat", -- uncomment to override previewer
                     -- (name from 'previewers' table)
                     -- set to 'false' to disable
-                    prompt = "Files❯ ",
+                    prompt = "  ",
+                    winopts = { title = format_title("Files", "") },
                     multiprocess = true, -- run command in a separate process
                     git_icons = true, -- show git icons?
                     file_icons = true, -- show file icons?
@@ -424,28 +488,18 @@ return {
                 },
                 git = {
                     files = {
-                        prompt = "GitFiles❯ ",
+                        prompt = "  ",
                         cmd = "git ls-files --exclude-standard",
+                        winopts = { title = format_title("Git Files", "") },
                         multiprocess = true, -- run command in a separate process
                         git_icons = true, -- show git icons?
                         file_icons = true, -- show file icons?
                         color_icons = true, -- colorize file|git icons
-                        -- force display the cwd header line regardles of your current working
-                        -- directory can also be used to hide the header when not wanted
-                        -- show_cwd_header = true
                     },
                     status = {
-                        prompt = "GitStatus❯ ",
-                        -- consider using `git status -su` if you wish to see
-                        -- untracked files individually under their subfolders
-                        -- cmd = "git -c color.status=false status -s",
-                        -- file_icons = true,
-                        -- git_icons = true,
-                        -- color_icons = true,
+                        prompt = "  ",
+                        winopts = { title = format_title("Git Status", "") },
                         preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS --line-numbers",
-                        -- previewer = "git_diff",
-                        -- uncomment if you wish to use git-delta as pager
-                        --preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
                         actions = {
                             -- actions inherit from 'actions.files' and merge
                             -- ["left"] = { actions.git_stage, actions.resume },
@@ -458,12 +512,18 @@ return {
                         },
                     },
                     commits = {
-                        prompt = "Commits❯ ",
+                        prompt = "  ",
+                        -- prompt = prompt,
                         cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
                         preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
+                        winopts = { title = format_title("", "Commits") },
                         actions = {
                             ["default"] = actions.git_buf_edit,
                             ["right"] = actions.git_checkout,
+                            ["ctrl-s"] = actions.git_buf_split,
+                            ["ctrl-v"] = actions.git_buf_vsplit,
+                            ["ctrl-t"] = actions.git_buf_tabedit,
+
                             ["ctrl-b"] = function(selected, _)
                                 local selection = selected[1]
                                 local commit_hash = require(
@@ -527,15 +587,18 @@ return {
                         },
                     },
                     bcommits = {
-                        prompt = "BCommits❯ ",
+                        prompt = "  ",
                         -- default preview shows a git diff vs the previous commit
                         -- if you prefer to see the entire commit you can use:
                         --   git show --color {1} --rotate-to=<file>
                         --   {1}    : commit SHA (fzf field index expression)
                         --   <file> : filepath placement within the commands
-                        cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' <file>",
-                        preview = "git diff --color {1}~1 {1} -- <file>",
-                        -- preview_pager = "delta -w $FZF_PREVIEW_COLUMNS",
+                        -- cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' <file>",
+                        -- preview = "git diff --color {1}~1 {1} -- <file>",
+                        preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+                        winopts = {
+                            title = format_title("", "Buffer Commits"),
+                        },
                         -- preview = "git show --pretty='%Cred%H%n%Cblue%an%n%Cgreen%s' --color {1} | delta --width $FZF_PREVIEW_COLUMNS",
                         -- uncomment if you wish to use git-delta as pager
                         --preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
@@ -608,17 +671,25 @@ return {
                         },
                     },
                     branches = {
-                        prompt = "Branches❯ ",
+                        prompt = "  ",
                         cmd = "git branch --all --color",
                         preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
+                        winopts = {
+                            title = format_title("Branches", ""),
+                            height = 0.3,
+                            row = 0.4,
+                        },
                         actions = {
                             ["default"] = actions.git_switch,
                         },
                     },
                     stash = {
-                        prompt = "Stash❯  ",
+                        prompt = "  ",
                         cmd = "git --no-pager stash list",
                         preview = "git --no-pager stash show --patch --color {1}",
+                        winopts = {
+                            title = format_title("Stash", ""),
+                        },
                         actions = {
                             ["default"] = actions.git_stash_apply,
                             ["ctrl-x"] = {
@@ -647,7 +718,12 @@ return {
                 },
                 grep = {
                     -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
-                    prompt = "Rg❯ ",
+                    -- prompt = "Rg❯ ",
+                    -- prompt = prompt,
+                    -- prompt = " ",
+                    prompt = "  ",
+                    winopts = { title = format_title("Grep", " ") },
+                    -- previewer = "bat", -- uncomment to override previewer
                     input_prompt = "Grep For❯ ",
                     multiprocess = true, -- run command in a separate process
                     git_icons = true, -- show git icons?
@@ -706,23 +782,32 @@ return {
                     },
                 },
                 oldfiles = {
-                    prompt = "Oldfiles❯ ",
-                    cwd_only = false,
+                    -- prompt = prompt,
+                    prompt = "  ",
+                    cwd_only = true,
                     stat_file = true, -- verify files exist on disk
+                    winopts = { title = format_title("History", "") },
                     include_current_session = false, -- include bufs from current session
                 },
                 buffers = {
-                    prompt = "Buffers❯ ",
+                    prompt = "  ",
+                    winopts = { title = format_title("Buffers", "󰈙") },
+                    -- previewer = "bat", -- uncomment to override previewer
                     file_icons = true, -- show file icons?
                     color_icons = true, -- colorize file|git icons
                     sort_lastused = true, -- sort buffers() by last used
                     cwd_only = false, -- buffers for the cwd only
                     cwd = nil, -- buffers list for a given dir
+                    fzf_opts = {
+                        ["--delimiter"] = "' '",
+                        ["--with-nth"] = "-1..",
+                    },
                     actions = {
-                        ["ctrl-x"] = { actions.buf_del, actions.resume },
+                        -- ["ctrl-x"] = { actions.buf_del, actions.resume },
                         ["ctrl-s"] = actions.buf_split,
                         ["ctrl-v"] = actions.buf_vsplit,
                         ["ctrl-t"] = actions.buf_tabedit,
+                        ["ctrl-d"] = { actions.buf_del, actions.resume },
                     },
                 },
                 tabs = {
@@ -743,7 +828,7 @@ return {
                     },
                 },
                 lines = {
-                    previewer = "builtin", -- set to 'false' to disable
+                    -- previewer = "bat", -- uncomment to override previewer
                     prompt = "Lines❯ ",
                     show_unlisted = false, -- exclude 'help' buffers
                     no_term_buffers = true, -- exclude 'term' buffers
@@ -768,7 +853,7 @@ return {
                     },
                 },
                 blines = {
-                    previewer = "builtin", -- set to 'false' to disable
+                    -- previewer = "bat", -- uncomment to override previewer
                     prompt = "BLines❯ ",
                     show_unlisted = true, -- include 'help' buffers
                     no_term_buffers = false, -- include 'term' buffers
@@ -843,8 +928,9 @@ return {
                     git_icons = true,
                 },
                 quickfix_stack = {
-                    prompt = "Quickfix Stack> ",
+                    prompt = "",
                     marker = ">", -- current list marker
+                    winopts = { title = format_title("Stack List", "+") },
                 },
                 lsp = {
                     prompt_postfix = "❯ ", -- will be appended to the LSP label
@@ -1026,466 +1112,466 @@ return {
             require("fzf-lua").register_ui_select()
         end,
     },
-    -- TELESCOPE
-    -- {
-    --     "nvim-telescope/telescope.nvim",
-    --     cmd = "Telescope",
-    --     enabled = function()
-    --         if as.use_search_telescope then
-    --             return true
-    --         end
-    --         return false
-    --     end,
-    --     init = function()
-    --         require("legendary").keymaps {
-    --             {
-    --                 itemgroup = "Telescope",
-    --                 description = "Gaze deeply into unknown regions using the power of the moon",
-    --                 icon = as.ui.icons.misc.telescope,
-    --                 keymaps = {
-    --
-    --                     {
-    --                         "<Leader>fb",
-    --                         "<CMD>Telescope buffers<CR>",
-    --                         description = "Telescope: find buffers",
-    --                     },
-    --
-    --                     {
-    --                         "<Leader>fw",
-    --                         "<CMD>Telescope current_buffer_fuzzy_find theme=ivy<CR>",
-    --                         description = "Telescope: live_grep on curbuf",
-    --                     },
-    --
-    --                     -- {
-    --                     --     "<Leader>fW",
-    --                     --     function(opts)
-    --                     --         local builtin = require "telescope.builtin"
-    --                     --         opts = opts or {}
-    --                     --         local opt = require("telescope.themes").get_ivy {
-    --                     --
-    --                     --             cwd = opts.dir,
-    --                     --             prompt_title = "Live Grep for all Buffers",
-    --                     --             grep_open_files = true,
-    --                     --             shorten_path = true,
-    --                     --             -- sorter = require("telescope.sorters").get_substr_matcher {},
-    --                     --         }
-    --                     --         return builtin.live_grep(opt)
-    --                     --     end,
-    --                     --     description = "Telescope: live_grep on buffers",
-    --                     -- },
-    --
-    --                     {
-    --                         "<Leader>fo",
-    --                         "<CMD>Telescope oldfiles<CR>",
-    --                         description = "Telescope: oldfiles",
-    --                     },
-    --                     {
-    --                         "<Leader>fh",
-    --                         "<CMD>Telescope help_tags<CR>",
-    --                         description = "Telescope: help tags",
-    --                     },
-    --                     {
-    --                         "<Leader>fl",
-    --                         "<CMD>Telescope resume<CR>",
-    --                         description = "Telescope: resume (last search)",
-    --                     },
-    --
-    --                     {
-    --                         "z=",
-    --                         "<CMD> Telescope spell_suggest theme=get_cursor<CR>",
-    --                         description = "Telescope: spell suggest",
-    --                     },
-    --
-    --                     -- {
-    --                     --     "<Leader>fF",
-    --                     --     function()
-    --                     --         local plugins_directory = vim.fn.stdpath "data"
-    --                     --             .. "/lazy"
-    --                     --         return require("telescope.builtin").find_files {
-    --                     --             cwd = plugins_directory,
-    --                     --             prompt_title = "Find plugin files",
-    --                     --         }
-    --                     --     end,
-    --                     --     description = "Find plugin files",
-    --                     -- },
-    --
-    --                     -- TELESCOPE-LAZY
-    --                     {
-    --                         "<Leader>fF",
-    --                         "<CMD>Telescope lazy theme=ivy<CR>",
-    --                         description = "Telescope-lazy: check plugins dir",
-    --                     },
-    --                     -- TELESCOPE-MENUFACTURE
-    --                     {
-    --                         "<Leader>ff",
-    --                         function()
-    --                             return require("telescope").extensions.menufacture.find_files()
-    --                         end,
-    --                         description = "Telescope-manufacture: find files",
-    --                     },
-    --                     -- {
-    --                     --     "<Leader>fg",
-    --                     --     function()
-    --                     --         return require("telescope").extensions.menufacture.live_grep()
-    --                     --     end,
-    --                     --     description = "Telescope-manufacture: live_grep",
-    --                     -- },
-    --
-    --                     -- {
-    --                     --     "<Leader>fg",
-    --                     --     function()
-    --                     --         return require("telescope").extensions.menufacture.grep_string()
-    --                     --     end,
-    --                     --     description = "Telescope-manufacture: grep string under cursor",
-    --                     --     mode = { "v" },
-    --                     -- },
-    --
-    --                     -- TELESCOPE-GREPQF
-    --                     {
-    --                         "<Leader>fq",
-    --                         "<CMD> Telescope grepqf theme=ivy<CR>",
-    --                         description = "Telescope-grepqf: live_grep qf items",
-    --                     },
-    --
-    --                     -- TELESCOPE-SYMBOLS
-    --                     {
-    --                         "<Leader>f1",
-    --                         "<CMD> Telescope symbols theme=ivy<CR>",
-    --                         description = "Telescope-symbol: emoji",
-    --                     },
-    --
-    --                     -- CONDUCT-NVIM
-    --                     {
-    --                         "<Leader>fp",
-    --                         "<CMD>Telescope conduct projects theme=ivy<CR>",
-    --                         description = "Telescope-conductt: projects",
-    --                     },
-    --                 },
-    --                 commands = {
-    --                     {
-    --                         ":Telescope highlights",
-    --                         description = "Telescope: highlights",
-    --                     },
-    --
-    --                     {
-    --                         ":Telescope keymaps",
-    --                         description = "Telescope: keymaps",
-    --                     },
-    --
-    --                     {
-    --                         ":Telescope colorscheme",
-    --                         description = "Telescope: colorscheme",
-    --                     },
-    --
-    --                     {
-    --                         ":Telescope commands",
-    --                         description = "Telescope: commands",
-    --                     },
-    --
-    --                     -- TELESCOPE-LUASNIP
-    --                     {
-    --                         ":Telescope luasnip",
-    --                         description = "Telescope-luasnip: open",
-    --                     },
-    --                 },
-    --             },
-    --         }
-    --     end,
-    --     dependencies = {
-    --         "nvim-telescope/telescope-symbols.nvim",
-    --         {
-    --             "aaditeynair/conduct.nvim",
-    --             init = function()
-    --                 require("legendary").keymaps {
-    --                     {
-    --                         itemgroup = "Sessions",
-    --                         keymaps = {
-    --                             {
-    --                                 "<Leader>sf",
-    --                                 "<CMD>Telescope conduct sessions<CR>",
-    --                                 description = "Telescope-conduct: session",
-    --                             },
-    --                         },
-    --                     },
-    --                 }
-    --             end,
-    --             config = function()
-    --                 require("conduct").setup {}
-    --             end,
-    --         },
-    --         "molecule-man/telescope-menufacture",
-    --         "nvim-telescope/telescope-live-grep-args.nvim",
-    --         "tsakirist/telescope-lazy.nvim",
-    --         "nvim-telescope/telescope-file-browser.nvim",
-    --         { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-    --         "nvim-lua/plenary.nvim",
-    --         "benfowler/telescope-luasnip.nvim",
-    --     },
-    --
-    --     config = function()
-    --         local telescope = require "telescope"
-    --         local trouble = require "trouble.providers.telescope"
-    --         local actions = require "telescope.actions"
-    --         local themes = require "telescope.themes"
-    --
-    --         local layout_actions = require "telescope.actions.layout"
-    --
-    --         -- local foldMaps = function(_, _)
-    --         --     require("telescope.actions.set").select:enhance {
-    --         --         post = function()
-    --         --             vim.cmd.normal { args = { "zx" }, bang = true }
-    --         --         end,
-    --         --     }
-    --         --     return true
-    --         -- end
-    --
-    --         ---@param opts table
-    --         ---@return table
-    --         ---@diagnostic disable-next-line: redefined-local
-    --         local function dropdown(opts)
-    --             return require("telescope.themes").get_dropdown(
-    --                 vim.tbl_extend("keep", opts or {}, {
-    --                     borderchars = {
-    --                         {
-    --                             "─",
-    --                             "│",
-    --                             "─",
-    --                             "│",
-    --                             "┌",
-    --                             "┐",
-    --                             "┘",
-    --                             "└",
-    --                         },
-    --                         prompt = {
-    --                             "─",
-    --                             "│",
-    --                             " ",
-    --                             "│",
-    --                             "┌",
-    --                             "┐",
-    --                             "│",
-    --                             "│",
-    --                         },
-    --                         results = {
-    --                             "─",
-    --                             "│",
-    --                             "─",
-    --                             "│",
-    --                             "├",
-    --                             "┤",
-    --                             "┘",
-    --                             "└",
-    --                         },
-    --                         preview = {
-    --                             "─",
-    --                             "│",
-    --                             "─",
-    --                             "│",
-    --                             "┌",
-    --                             "┐",
-    --                             "┘",
-    --                             "└",
-    --                         },
-    --                     },
-    --                 })
-    --             )
-    --         end
-    --
-    --         -- Telescope issue: kadang fold nya nge-bug, untuk sementara solusinya check the issue di github
-    --         -- Taken from https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
-    --         local function stopinsert(callback)
-    --             return function(prompt_bufnr)
-    --                 vim.cmd.stopinsert()
-    --                 vim.schedule(function()
-    --                     callback(prompt_bufnr)
-    --                 end)
-    --             end
-    --         end
-    --
-    --         -- local function stopinsert_fb(callback, callback_dir)
-    --         --     return function(prompt_bufnr)
-    --         --         local entry =
-    --         --             require("telescope.actions.state").get_selected_entry()
-    --         --         if entry and not entry.Path:is_dir() then
-    --         --             stopinsert(callback)(prompt_bufnr)
-    --         --         elseif callback_dir then
-    --         --             callback_dir(prompt_bufnr)
-    --         --         end
-    --         --     end
-    --         -- end
-    --
-    --         telescope.setup {
-    --             defaults = {
-    --                 vimgrep_arguments = {
-    --                     "rg",
-    --                     "--hidden",
-    --                     "--follow",
-    --                     "--color=never",
-    --                     "--column",
-    --                     "--line-number",
-    --                     "--with-filename",
-    --                     "--no-heading",
-    --                     "--smart-case",
-    --                     "--trim", -- remove indentation
-    --                 },
-    --                 file_ignore_patterns = {
-    --                     "%.jpg",
-    --                     "%.jpeg",
-    --                     "%.png",
-    --                     "%.otf",
-    --                     "%.ttf",
-    --                     "%.DS_Store",
-    --                     "^.git/",
-    --                     "node%_modules/.*",
-    --                     "^site-packages/",
-    --                     "%.yarn/.*",
-    --                 },
-    --                 -- path_display = function(opts, path)
-    --                 --     local tail = require("telescope.utils").path_tail(path)
-    --                 --     return string.format("%s (%s)", tail, path)
-    --                 -- end,
-    --                 -- path_display = "smart",
-    --                 sorting_strategy = "descending",
-    --                 scroll_strategy = "cycle",
-    --                 layout_strategy = "flex",
-    --                 layout_config = {
-    --                     horizontal = { preview_width = 0.55 },
-    --                 },
-    --                 prompt_prefix = "  ",
-    --                 selection_caret = " ",
-    --                 cycle_layout_list = { -- digunakan ketika use <c-l>
-    --                     "flex",
-    --                     "horizontal",
-    --                     "vertical",
-    --                     "bottom_pane",
-    --                     "center",
-    --                 },
-    --                 borderchars = {
-    --                     "─",
-    --                     "│",
-    --                     "─",
-    --                     "│",
-    --                     "┌",
-    --                     "┐",
-    --                     "┘",
-    --                     "└",
-    --                 },
-    --                 mappings = {
-    --                     i = {
-    --                         ["<esc>"] = actions.close,
-    --                         ["<c-c>"] = actions.close,
-    --
-    --                         ["<c-o>"] = trouble.open_with_trouble,
-    --
-    --                         ["<c-j>"] = actions.cycle_history_next,
-    --                         ["<c-k>"] = actions.cycle_history_prev,
-    --
-    --                         ["<CR>"] = stopinsert(actions.select_default),
-    --                         ["<C-x>"] = stopinsert(actions.select_horizontal),
-    --                         ["<C-v>"] = stopinsert(actions.select_vertical),
-    --                         ["<C-t>"] = stopinsert(actions.select_tab),
-    --
-    --                         -- ["<C-s>"] = actions.select_horizontal,
-    --                         -- ["<C-v>"] = actions.select_vertical,
-    --                         -- ["<C-t>"] = actions.select_tab,
-    --
-    --                         ["<c-r>"] = actions.to_fuzzy_refine,
-    --                         ["<C-/>"] = actions.which_key, -- keys from pressing <C-/>
-    --
-    --                         ["<F6>"] = layout_actions.cycle_layout_next,
-    --                         ["<F4>"] = layout_actions.toggle_preview,
-    --
-    --                         ["<hh>"] = function()
-    --                             vim.cmd.stopinsert()
-    --                         end,
-    --                     },
-    --                     n = {
-    --                         ["<esc>"] = actions.close,
-    --                         ["q"] = actions.close,
-    --                     },
-    --                 },
-    --             },
-    --             pickers = {
-    --                 highlights = {
-    --                     theme = "ivy",
-    --                 },
-    --                 buffers = dropdown {
-    --                     sort_mru = true,
-    --                     sort_lastused = true,
-    --                     show_all_buffers = true,
-    --                     ignore_current_buffer = true,
-    --                     previewer = false,
-    --                     mappings = {
-    --                         i = { ["<c-x>"] = "delete_buffer" },
-    --                         n = { ["<c-x>"] = "delete_buffer" },
-    --                     },
-    --                 },
-    --                 oldfiles = dropdown {},
-    --                 find_files = themes.get_ivy { hidden = true },
-    --                 help_tags = { theme = "ivy" },
-    --                 live_grep = themes.get_ivy {
-    --                     file_ignore_patterns = { ".git/", "%.svg", "%.lock" },
-    --                     max_results = 2000,
-    --                 },
-    --                 current_buffer_fuzzy_find = dropdown {
-    --                     previewer = false,
-    --                     shorten_path = false,
-    --                 },
-    --                 diagnostics = dropdown {},
-    --                 colorscheme = { enable_preview = true },
-    --                 keymaps = dropdown {
-    --                     layout_config = { height = 18, width = 0.5 },
-    --                 },
-    --                 lsp_references = {
-    --                     sorting_strategy = "descending",
-    --                     layout_strategy = "vertical", -- ivy, cursor, dropdown
-    --                     theme = "dropdown",
-    --                     preview_title = false,
-    --                     path_display = { "shorten" },
-    --                     prompt_title = "References",
-    --                     layout_config = {
-    --                         width = 0.80,
-    --                         height = 0.80,
-    --                         -- preview_width = 0.70,
-    --                     },
-    --                 },
-    --             },
-    --
-    --             extensions = {
-    --                 file_browser = {
-    --                     theme = "ivy",
-    --                     mappings = {
-    --                         i = {
-    --                             ["<CR>"] = stopinsert(actions.select_default),
-    --                             ["<C-x>"] = stopinsert(
-    --                                 actions.select_horizontal
-    --                             ),
-    --                             ["<C-v>"] = stopinsert(actions.select_vertical),
-    --                             ["<C-t>"] = stopinsert(actions.select_tab),
-    --                         },
-    --                     },
-    --                 },
-    --                 persisted = dropdown {},
-    --                 live_grep_args = {
-    --                     auto_quoting = false, -- enable/disable auto-quoting
-    --                 },
-    --             },
-    --         }
-    --
-    --         telescope.load_extension "fzf"
-    --         telescope.load_extension "file_browser"
-    --         telescope.load_extension "conduct" -- sessions telescope
-    --         telescope.load_extension "aerial"
-    --         telescope.load_extension "luasnip"
-    --         telescope.load_extension "lazy"
-    --         telescope.load_extension "menufacture"
-    --         telescope.load_extension "live_grep_args"
-    --
-    --         -- My extensions
-    --         telescope.load_extension "grepqf"
-    --         -- telescope.load_extension "conventional_commits"
-    --     end,
-    -- },
+    -- TELESCOPE (disabled)
+    {
+        "nvim-telescope/telescope.nvim",
+        cmd = "Telescope",
+        enabled = function()
+            if as.use_search_telescope then
+                return true
+            end
+            return false
+        end,
+        init = function()
+            require("legendary").keymaps {
+                {
+                    itemgroup = "Telescope",
+                    description = "Gaze deeply into unknown regions using the power of the moon",
+                    icon = as.ui.icons.misc.telescope,
+                    keymaps = {
+
+                        {
+                            "<Leader>fb",
+                            "<CMD>Telescope buffers<CR>",
+                            description = "Telescope: find buffers",
+                        },
+
+                        {
+                            "<Leader>fw",
+                            "<CMD>Telescope current_buffer_fuzzy_find theme=ivy<CR>",
+                            description = "Telescope: live_grep on curbuf",
+                        },
+
+                        -- {
+                        --     "<Leader>fW",
+                        --     function(opts)
+                        --         local builtin = require "telescope.builtin"
+                        --         opts = opts or {}
+                        --         local opt = require("telescope.themes").get_ivy {
+                        --
+                        --             cwd = opts.dir,
+                        --             prompt_title = "Live Grep for all Buffers",
+                        --             grep_open_files = true,
+                        --             shorten_path = true,
+                        --             -- sorter = require("telescope.sorters").get_substr_matcher {},
+                        --         }
+                        --         return builtin.live_grep(opt)
+                        --     end,
+                        --     description = "Telescope: live_grep on buffers",
+                        -- },
+
+                        {
+                            "<Leader>fo",
+                            "<CMD>Telescope oldfiles<CR>",
+                            description = "Telescope: oldfiles",
+                        },
+                        {
+                            "<Leader>fh",
+                            "<CMD>Telescope help_tags<CR>",
+                            description = "Telescope: help tags",
+                        },
+                        {
+                            "<Leader>fl",
+                            "<CMD>Telescope resume<CR>",
+                            description = "Telescope: resume (last search)",
+                        },
+
+                        {
+                            "z=",
+                            "<CMD> Telescope spell_suggest theme=get_cursor<CR>",
+                            description = "Telescope: spell suggest",
+                        },
+
+                        -- {
+                        --     "<Leader>fF",
+                        --     function()
+                        --         local plugins_directory = vim.fn.stdpath "data"
+                        --             .. "/lazy"
+                        --         return require("telescope.builtin").find_files {
+                        --             cwd = plugins_directory,
+                        --             prompt_title = "Find plugin files",
+                        --         }
+                        --     end,
+                        --     description = "Find plugin files",
+                        -- },
+
+                        -- TELESCOPE-LAZY
+                        {
+                            "<Leader>fF",
+                            "<CMD>Telescope lazy theme=ivy<CR>",
+                            description = "Telescope-lazy: check plugins dir",
+                        },
+                        -- TELESCOPE-MENUFACTURE
+                        {
+                            "<Leader>ff",
+                            function()
+                                return require("telescope").extensions.menufacture.find_files()
+                            end,
+                            description = "Telescope-manufacture: find files",
+                        },
+                        -- {
+                        --     "<Leader>fg",
+                        --     function()
+                        --         return require("telescope").extensions.menufacture.live_grep()
+                        --     end,
+                        --     description = "Telescope-manufacture: live_grep",
+                        -- },
+
+                        -- {
+                        --     "<Leader>fg",
+                        --     function()
+                        --         return require("telescope").extensions.menufacture.grep_string()
+                        --     end,
+                        --     description = "Telescope-manufacture: grep string under cursor",
+                        --     mode = { "v" },
+                        -- },
+
+                        -- TELESCOPE-GREPQF
+                        {
+                            "<Leader>fq",
+                            "<CMD> Telescope grepqf theme=ivy<CR>",
+                            description = "Telescope-grepqf: live_grep qf items",
+                        },
+
+                        -- TELESCOPE-SYMBOLS
+                        {
+                            "<Leader>f1",
+                            "<CMD> Telescope symbols theme=ivy<CR>",
+                            description = "Telescope-symbol: emoji",
+                        },
+
+                        -- CONDUCT-NVIM
+                        {
+                            "<Leader>fp",
+                            "<CMD>Telescope conduct projects theme=ivy<CR>",
+                            description = "Telescope-conductt: projects",
+                        },
+                    },
+                    commands = {
+                        {
+                            ":Telescope highlights",
+                            description = "Telescope: highlights",
+                        },
+
+                        {
+                            ":Telescope keymaps",
+                            description = "Telescope: keymaps",
+                        },
+
+                        {
+                            ":Telescope colorscheme",
+                            description = "Telescope: colorscheme",
+                        },
+
+                        {
+                            ":Telescope commands",
+                            description = "Telescope: commands",
+                        },
+
+                        -- TELESCOPE-LUASNIP
+                        {
+                            ":Telescope luasnip",
+                            description = "Telescope-luasnip: open",
+                        },
+                    },
+                },
+            }
+        end,
+        dependencies = {
+            "nvim-telescope/telescope-symbols.nvim",
+            {
+                "aaditeynair/conduct.nvim",
+                init = function()
+                    require("legendary").keymaps {
+                        {
+                            itemgroup = "Sessions",
+                            keymaps = {
+                                {
+                                    "<Leader>sf",
+                                    "<CMD>Telescope conduct sessions<CR>",
+                                    description = "Telescope-conduct: session",
+                                },
+                            },
+                        },
+                    }
+                end,
+                config = function()
+                    require("conduct").setup {}
+                end,
+            },
+            "molecule-man/telescope-menufacture",
+            "nvim-telescope/telescope-live-grep-args.nvim",
+            "tsakirist/telescope-lazy.nvim",
+            "nvim-telescope/telescope-file-browser.nvim",
+            { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+            "nvim-lua/plenary.nvim",
+            "benfowler/telescope-luasnip.nvim",
+        },
+
+        config = function()
+            local telescope = require "telescope"
+            local trouble = require "trouble.providers.telescope"
+            local actions = require "telescope.actions"
+            local themes = require "telescope.themes"
+
+            local layout_actions = require "telescope.actions.layout"
+
+            -- local foldMaps = function(_, _)
+            --     require("telescope.actions.set").select:enhance {
+            --         post = function()
+            --             vim.cmd.normal { args = { "zx" }, bang = true }
+            --         end,
+            --     }
+            --     return true
+            -- end
+
+            ---@param opts table
+            ---@return table
+            ---@diagnostic disable-next-line: redefined-local
+            local function dropdown(opts)
+                return require("telescope.themes").get_dropdown(
+                    vim.tbl_extend("keep", opts or {}, {
+                        borderchars = {
+                            {
+                                "─",
+                                "│",
+                                "─",
+                                "│",
+                                "┌",
+                                "┐",
+                                "┘",
+                                "└",
+                            },
+                            prompt = {
+                                "─",
+                                "│",
+                                " ",
+                                "│",
+                                "┌",
+                                "┐",
+                                "│",
+                                "│",
+                            },
+                            results = {
+                                "─",
+                                "│",
+                                "─",
+                                "│",
+                                "├",
+                                "┤",
+                                "┘",
+                                "└",
+                            },
+                            preview = {
+                                "─",
+                                "│",
+                                "─",
+                                "│",
+                                "┌",
+                                "┐",
+                                "┘",
+                                "└",
+                            },
+                        },
+                    })
+                )
+            end
+
+            -- Telescope issue: kadang fold nya nge-bug, untuk sementara solusinya check the issue di github
+            -- Taken from https://github.com/nvim-telescope/telescope.nvim/issues/559#issuecomment-1311441898
+            local function stopinsert(callback)
+                return function(prompt_bufnr)
+                    vim.cmd.stopinsert()
+                    vim.schedule(function()
+                        callback(prompt_bufnr)
+                    end)
+                end
+            end
+
+            -- local function stopinsert_fb(callback, callback_dir)
+            --     return function(prompt_bufnr)
+            --         local entry =
+            --             require("telescope.actions.state").get_selected_entry()
+            --         if entry and not entry.Path:is_dir() then
+            --             stopinsert(callback)(prompt_bufnr)
+            --         elseif callback_dir then
+            --             callback_dir(prompt_bufnr)
+            --         end
+            --     end
+            -- end
+
+            telescope.setup {
+                defaults = {
+                    vimgrep_arguments = {
+                        "rg",
+                        "--hidden",
+                        "--follow",
+                        "--color=never",
+                        "--column",
+                        "--line-number",
+                        "--with-filename",
+                        "--no-heading",
+                        "--smart-case",
+                        "--trim", -- remove indentation
+                    },
+                    file_ignore_patterns = {
+                        "%.jpg",
+                        "%.jpeg",
+                        "%.png",
+                        "%.otf",
+                        "%.ttf",
+                        "%.DS_Store",
+                        "^.git/",
+                        "node%_modules/.*",
+                        "^site-packages/",
+                        "%.yarn/.*",
+                    },
+                    -- path_display = function(opts, path)
+                    --     local tail = require("telescope.utils").path_tail(path)
+                    --     return string.format("%s (%s)", tail, path)
+                    -- end,
+                    -- path_display = "smart",
+                    sorting_strategy = "descending",
+                    scroll_strategy = "cycle",
+                    layout_strategy = "flex",
+                    layout_config = {
+                        horizontal = { preview_width = 0.55 },
+                    },
+                    prompt_prefix = "  ",
+                    selection_caret = " ",
+                    cycle_layout_list = { -- digunakan ketika use <c-l>
+                        "flex",
+                        "horizontal",
+                        "vertical",
+                        "bottom_pane",
+                        "center",
+                    },
+                    borderchars = {
+                        "─",
+                        "│",
+                        "─",
+                        "│",
+                        "┌",
+                        "┐",
+                        "┘",
+                        "└",
+                    },
+                    mappings = {
+                        i = {
+                            ["<esc>"] = actions.close,
+                            ["<c-c>"] = actions.close,
+
+                            ["<c-o>"] = trouble.open_with_trouble,
+
+                            ["<c-j>"] = actions.cycle_history_next,
+                            ["<c-k>"] = actions.cycle_history_prev,
+
+                            ["<CR>"] = stopinsert(actions.select_default),
+                            ["<C-x>"] = stopinsert(actions.select_horizontal),
+                            ["<C-v>"] = stopinsert(actions.select_vertical),
+                            ["<C-t>"] = stopinsert(actions.select_tab),
+
+                            -- ["<C-s>"] = actions.select_horizontal,
+                            -- ["<C-v>"] = actions.select_vertical,
+                            -- ["<C-t>"] = actions.select_tab,
+
+                            ["<c-r>"] = actions.to_fuzzy_refine,
+                            ["<C-/>"] = actions.which_key, -- keys from pressing <C-/>
+
+                            ["<F6>"] = layout_actions.cycle_layout_next,
+                            ["<F4>"] = layout_actions.toggle_preview,
+
+                            ["<hh>"] = function()
+                                vim.cmd.stopinsert()
+                            end,
+                        },
+                        n = {
+                            ["<esc>"] = actions.close,
+                            ["q"] = actions.close,
+                        },
+                    },
+                },
+                pickers = {
+                    highlights = {
+                        theme = "ivy",
+                    },
+                    buffers = dropdown {
+                        sort_mru = true,
+                        sort_lastused = true,
+                        show_all_buffers = true,
+                        ignore_current_buffer = true,
+                        previewer = false,
+                        mappings = {
+                            i = { ["<c-x>"] = "delete_buffer" },
+                            n = { ["<c-x>"] = "delete_buffer" },
+                        },
+                    },
+                    oldfiles = dropdown {},
+                    find_files = themes.get_ivy { hidden = true },
+                    help_tags = { theme = "ivy" },
+                    live_grep = themes.get_ivy {
+                        file_ignore_patterns = { ".git/", "%.svg", "%.lock" },
+                        max_results = 2000,
+                    },
+                    current_buffer_fuzzy_find = dropdown {
+                        previewer = false,
+                        shorten_path = false,
+                    },
+                    diagnostics = dropdown {},
+                    colorscheme = { enable_preview = true },
+                    keymaps = dropdown {
+                        layout_config = { height = 18, width = 0.5 },
+                    },
+                    lsp_references = {
+                        sorting_strategy = "descending",
+                        layout_strategy = "vertical", -- ivy, cursor, dropdown
+                        theme = "dropdown",
+                        preview_title = false,
+                        path_display = { "shorten" },
+                        prompt_title = "References",
+                        layout_config = {
+                            width = 0.80,
+                            height = 0.80,
+                            -- preview_width = 0.70,
+                        },
+                    },
+                },
+
+                extensions = {
+                    file_browser = {
+                        theme = "ivy",
+                        mappings = {
+                            i = {
+                                ["<CR>"] = stopinsert(actions.select_default),
+                                ["<C-x>"] = stopinsert(
+                                    actions.select_horizontal
+                                ),
+                                ["<C-v>"] = stopinsert(actions.select_vertical),
+                                ["<C-t>"] = stopinsert(actions.select_tab),
+                            },
+                        },
+                    },
+                    persisted = dropdown {},
+                    live_grep_args = {
+                        auto_quoting = false, -- enable/disable auto-quoting
+                    },
+                },
+            }
+
+            telescope.load_extension "fzf"
+            telescope.load_extension "file_browser"
+            telescope.load_extension "conduct" -- sessions telescope
+            telescope.load_extension "aerial"
+            telescope.load_extension "luasnip"
+            telescope.load_extension "lazy"
+            telescope.load_extension "menufacture"
+            telescope.load_extension "live_grep_args"
+
+            -- My extensions
+            telescope.load_extension "grepqf"
+            -- telescope.load_extension "conventional_commits"
+        end,
+    },
     -- SPECTRE
     {
         "windwp/nvim-spectre",
@@ -1721,8 +1807,10 @@ return {
     },
     -- TODO-COMMENTS
     {
-        "folke/todo-comments.nvim",
-        cmd = { "TodoTrouble", "TodoTelescope", "TodoQuickFix" },
+        -- "folke/todo-comments.nvim",
+        -- cmd = { "TodoTrouble", "TodoTelescope", "TodoQuickFix" },
+        "mrowegawd/todo.nvim",
+        cmd = { "TODOQuickFixList" },
         init = function()
             require("legendary").keymaps {
                 {
@@ -1734,7 +1822,10 @@ return {
                             "<Leader>tq",
                             function()
                                 return cmd(
-                                    fmt("TodoQuickFix cwd=%s", fn.expand "%:p")
+                                    fmt(
+                                        "TODOQuickfixList cwd=%s",
+                                        fn.expand "%:p"
+                                    )
                                 )
                             end,
                             description = "Todocomment: find todo comment curbuf",
@@ -1742,7 +1833,10 @@ return {
                         },
                         {
                             "<Leader>tQ",
-                            "<CMD>TodoTrouble<CR>",
+                            fmt(
+                                "<CMD>TODOQuickfixList cwd=%s<CR>",
+                                fn.getcwd()
+                            ),
                             description = "Todocomment: find all todo comments on repo",
                         },
 
@@ -1758,95 +1852,162 @@ return {
         end,
         event = "BufReadPost",
         config = function()
-            require("todo-comments").setup {
-                signs = true, -- show icons in the signs column
-                sign_priority = 8, -- sign priority
-                -- keywords recognized as todo comments
+            require("todo").setup {
+                signs = {
+                    enable = true, -- show icons in the sign column
+                    priority = 8,
+                },
                 keywords = {
                     FIX = {
-                        icon = " ", -- icon used for the sign, and in search results
-                        color = "error", -- can be a hex color, or a named color (see below)
-                        alt = {
-                            "FIXME",
-                            "BUG",
-                            "FIXIT",
-                            "ISSUE",
-                            "fix",
-                            "fixme",
-                            "bug",
-                        }, -- a set of other keywords that all map to this FIX keywords
-                        -- alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-                        -- signs = false, -- configure signs for some keywords individually
+                        icon = " ", -- used for the sign, and search results
+                        -- can be a hex color, or a named color
+                        -- named colors definitions follow below
+                        color = "error",
+                        -- a set of other keywords that all map to this FIX keywords
+                        alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+                        -- signs = false -- configure signs for some keywords individually
                     },
                     TODO = { icon = " ", color = "info" },
-                    HACK = { icon = " ", color = "warning" },
                     WARN = {
-                        icon = " ",
+                        icon = " ",
                         color = "warning",
-                        alt = { "WARNING", "XXX" },
-                    },
-                    PERF = {
-                        icon = " ",
-                        alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
+                        alt = { "WARNING" },
                     },
                     -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
                 },
-                merge_keywords = false, -- when true, custom keywords will be merged with the defaults
-                -- highlighting of the line containing the todo comment
-                -- * before: highlights before the keyword (typically comment characters)
-                -- * keyword: highlights of the keyword
-                -- * after: highlights after the keyword (todo text)
+                merge_keywords = false, -- wheather to merge custom keywords with defaults
                 highlight = {
-                    before = "", -- "fg" or "bg" or empty
-                    keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
-                    after = "", -- "fg" or "bg" or empty
-                    pattern = [[.*<(KEYWORDS)\s*:]], -- pattern used for highlightng (vim regex)
-                    comments_only = true, -- uses treesitter to match keywords in comments only
-                    exclude = {
-                        -- "org",
-                        -- "norg",
-                        "git",
-                        ".git",
-                        "gitcommit",
-                        "grc",
-                        "snippets",
-                        "fugitive",
-                        "help",
-                        "markdown",
-                        "qf",
-                        "fugitiveblame",
-                        "DiffviewFileHistory",
-                    }, -- list of file types to exclude highlighting
+                    -- highlights before the keyword (typically comment characters)
+                    before = "", -- "fg", "bg", or empty
+                    -- highlights of the keyword
+                    -- wide is the same as bg, but also highlights the colon
+                    keyword = "wide", -- "fg", "bg", "wide", or empty
+                    -- highlights after the keyword (TODO text)
+                    after = "fg", -- "fg", "bg", or empty
+                    -- pattern can be a string, or a table of regexes that will be checked
+                    -- vim regex
+                    pattern = [[.*<(KEYWORDS)\s*:]],
+                    comments_only = true, -- highlight only inside comments using treesitter
+                    max_line_len = 400, -- ignore lines longer than this
+                    exclude = {}, -- list of file types to exclude highlighting
                 },
-                -- list of named colors where we try to extract the guifg from the
-                -- list of hilight groups or use the hex color if hl not found as a fallback
-                -- colors = {
-                --     error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-                --     warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
-                --     info = { "DiagnosticInformation", "#2563EB" },
-                --     hint = { "DiagnosticInformation", "#10B981" },
-                --     default = { "Identifier", "#7C3AED" },
+                -- list of named colors
+                -- a list of hex colors or highlight groups
+                -- will use the first valid one
+                colors = {
+                    error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+                    warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+                    info = { "DiagnosticInfo", "#2563EB" },
+                    hint = { "DiagnosticHint", "#10B981" },
+                    default = { "Identifier", "#7C3AED" },
+                },
+                -- rg_rege = {
+                --     "--color=always",
+                --     "--no-heading",
+                --     "--follow",
+                --     "--hidden",
+                --     "--with-filename",
+                --     "--line-number",
+                --     "--column",
+                --     "-g",
+                --     "!node_modules/**",
+                --     "-g",
+                --     "!.git/**",
                 -- },
                 search = {
                     command = "rg",
-                    args = {
-                        "--color=never",
-                        "--no-heading",
-                        "--follow",
-                        "--hidden",
-                        "--with-filename",
-                        "--line-number",
-                        "--column",
-                        "-g",
-                        "!node_modules/**",
-                        "-g",
-                        "!.git/**",
-                    },
-                    -- regex that will be used to match keywords.
+
                     -- don't replace the (KEYWORDS) placeholder
-                    pattern = [[\b(KEYWORDS):]], -- ripgrep regex
-                    -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
+                    pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
                 },
+                -- signs = true, -- show icons in the signs column
+                -- sign_priority = 8, -- sign priority
+                -- -- keywords recognized as todo comments
+                -- keywords = {
+                --     FIX = {
+                --         icon = " ", -- icon used for the sign, and in search results
+                --         color = "error", -- can be a hex color, or a named color (see below)
+                --         alt = {
+                --             "FIXME",
+                --             "BUG",
+                --             "FIXIT",
+                --             "ISSUE",
+                --             "fix",
+                --             "fixme",
+                --             "bug",
+                --         }, -- a set of other keywords that all map to this FIX keywords
+                --         -- alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+                --         -- signs = false, -- configure signs for some keywords individually
+                --     },
+                --     TODO = { icon = " ", color = "info" },
+                --     HACK = { icon = " ", color = "warning" },
+                --     WARN = {
+                --         icon = " ",
+                --         color = "warning",
+                --         alt = { "WARNING", "XXX" },
+                --     },
+                --     PERF = {
+                --         icon = " ",
+                --         alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
+                --     },
+                --     -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+                -- },
+                -- merge_keywords = false, -- when true, custom keywords will be merged with the defaults
+                -- -- highlighting of the line containing the todo comment
+                -- -- * before: highlights before the keyword (typically comment characters)
+                -- -- * keyword: highlights of the keyword
+                -- -- * after: highlights after the keyword (todo text)
+                -- highlight = {
+                --     before = "", -- "fg" or "bg" or empty
+                --     keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
+                --     after = "", -- "fg" or "bg" or empty
+                --     pattern = [[.*<(KEYWORDS)\s*:]], -- pattern used for highlightng (vim regex)
+                --     comments_only = true, -- uses treesitter to match keywords in comments only
+                --     exclude = {
+                --         -- "org",
+                --         -- "norg",
+                --         "git",
+                --         ".git",
+                --         "gitcommit",
+                --         "grc",
+                --         "snippets",
+                --         "fugitive",
+                --         "help",
+                --         "markdown",
+                --         "qf",
+                --         "fugitiveblame",
+                --         "DiffviewFileHistory",
+                --     }, -- list of file types to exclude highlighting
+                -- },
+                -- -- list of named colors where we try to extract the guifg from the
+                -- -- list of hilight groups or use the hex color if hl not found as a fallback
+                -- -- colors = {
+                -- --     error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+                -- --     warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
+                -- --     info = { "DiagnosticInformation", "#2563EB" },
+                -- --     hint = { "DiagnosticInformation", "#10B981" },
+                -- --     default = { "Identifier", "#7C3AED" },
+                -- -- },
+                -- search = {
+                --     command = "rg",
+                --     args = {
+                --         "--color=never",
+                --         "--no-heading",
+                --         "--follow",
+                --         "--hidden",
+                --         "--with-filename",
+                --         "--line-number",
+                --         "--column",
+                --         "-g",
+                --         "!node_modules/**",
+                --         "-g",
+                --         "!.git/**",
+                --     },
+                --     -- regex that will be used to match keywords.
+                --     -- don't replace the (KEYWORDS) placeholder
+                --     pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+                --     -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
+                -- },
             }
         end,
     },

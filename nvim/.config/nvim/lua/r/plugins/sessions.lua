@@ -15,7 +15,7 @@ return {
             end
             return false
         end,
-        lazy = false,
+        -- lazy = false,
         init = function()
             -- as.command("ListSessions", "Telescope persisted")
             as.augroup("PersistedEvents", {

@@ -478,7 +478,7 @@ end
 return {
     {
         "anuvyklack/hydra.nvim",
-        event = "VeryLazy",
+        -- event = "VeryLazy",
         config = function(_, _)
             local hydra = require "hydra"
             hydra(gitsigns_menu())

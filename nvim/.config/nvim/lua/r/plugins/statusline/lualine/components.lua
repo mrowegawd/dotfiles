@@ -14,6 +14,16 @@ local conditions = {
         local gitdir = vim.fn.finddir(".git", filepath .. ";")
         return gitdir and #gitdir > 0 and #gitdir < #filepath
     end,
+    width_percent_below = function(n, thresh, is_winbar)
+        local winwidth
+        if vim.o.laststatus == 3 and not is_winbar then
+            winwidth = vim.o.columns
+        else
+            winwidth = vim.api.nvim_win_get_width(0)
+        end
+
+        return n / winwidth <= thresh
+    end,
 }
 
 local color = vim.api.nvim_get_hl(0, { name = "Normal" })
@@ -93,18 +103,6 @@ else
 end
 
 _G.Gstatus_timer:start(0, 2000, vim.schedule_wrap(update_gstatus))
-
--- local function diff_source()
---     ---@diagnostic disable-next-line: undefined-field
---     local gitsigns = vim.b.gitsigns_status_dict
---     if gitsigns then
---         return {
---             added = gitsigns.added,
---             modified = gitsigns.changed,
---             removed = gitsigns.removed,
---         }
---     end
--- end
 
 M.mode = function()
     return {
@@ -186,26 +184,15 @@ M.filetype = function()
 end
 M.filename = function()
     return {
-        -- "filename",
-        -- symbols = {
-        --     modified = "",
-        --     readonly = "",
-        -- },
         function()
-            local filepath =
-                vim.api.nvim_exec2("echo expand('%:p')", { output = true })
-
-            local prefix = ""
-
-            if filepath.output:find("fugitive", 1, true) == 1 then
-                prefix = "[fugitive]:"
-            elseif filepath.output:find("diffview", 1, true) then
-                prefix = "[diffview]:"
+            local filename =
+                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+            if not conditions.width_percent_below(#filename, 0.40) then
+                filename = vim.fn.pathshorten(filename)
             end
-
-            return fmt("%s%s/%s", prefix, fn.expand "%:p:h:t", fn.expand "%:t")
+            return fmt("%s", filename)
         end,
-        color = { gui = "italic,bold", bg = bg_filename, fg = "black" },
+        color = { gui = "bold", bg = bg_filename, fg = "black" },
     }
 end
 M.file_modified = function()
@@ -314,6 +301,33 @@ M.treesitter = function()
         cond = conditions.hide_in_width,
     }
 end
+M.search_count = function()
+    return {
+        function()
+            local ok, result = pcall(fn.searchcount, { recompute = 0 })
+            if not ok then
+                return ""
+            end
+            if vim.tbl_isempty(result) then
+                return ""
+            end
+            if result.incomplete == 1 then -- timed out
+                return "?/??"
+            elseif result.incomplete == 2 then -- max count exceeded
+                if
+                    result.total > result.maxcount
+                    and result.current > result.maxcount
+                then
+                    return fmt(">%d/>%d", result.current, result.total)
+                elseif result.total > result.maxcount then
+                    return fmt("%d/>%d", result.current, result.total)
+                end
+            end
+            return fmt("%d/%d", result.current, result.total)
+        end,
+        cond = conditions.hide_in_width,
+    }
+end
 M.python_env = function()
     return {
         function()
@@ -355,6 +369,23 @@ M.sessions = function()
         -- cond = conditions.hide_in_width,
     }
 end
+M.check_loaded_buf = function()
+    return {
+        function()
+            local is_loaded = vim.api.nvim_buf_is_loaded
+            local tbl = vim.api.nvim_list_bufs()
+            local loaded_bufs = 0
+            for i = 1, #tbl do
+                if is_loaded(tbl[i]) then
+                    loaded_bufs = loaded_bufs + 1
+                end
+            end
+            return loaded_bufs
+        end,
+        icon = "﬘",
+        color = { fg = "DarkCyan", gui = "bold" },
+    }
+end
 M.root_dir = function()
     return {
         function()
@@ -381,54 +412,12 @@ M.root_dir = function()
 end
 M.get_lsp_client_notify = function()
     return {
-        function(msg)
-            msg = msg or ""
-            local buf_clients = vim.lsp.get_active_clients { bufnr = 0 }
-
-            if next(buf_clients) == nil then
-                if type(msg) == "boolean" or #msg == 0 then
-                    return ""
-                end
-                return msg
+        function()
+            local names = {}
+            for _, server in pairs(vim.lsp.get_active_clients { bufnr = 0 }) do
+                table.insert(names, server.name)
             end
-
-            local buf_ft = vim.bo.filetype
-            local buf_client_names = {}
-
-            -- add client
-            for _, client in pairs(buf_clients) do
-                if client.name ~= "null-ls" then
-                    table.insert(buf_client_names, client.name)
-                end
-            end
-
-            -- add formatter
-            local lsp_utils = require "r.plugins.lsp.utils"
-            local formatters = lsp_utils.list_formatters(buf_ft)
-            vim.list_extend(buf_client_names, formatters)
-
-            -- add linter
-            local linters = lsp_utils.list_linters(buf_ft)
-            vim.list_extend(buf_client_names, linters)
-
-            -- add hover
-            local hovers = lsp_utils.list_hovers(buf_ft)
-            vim.list_extend(buf_client_names, hovers)
-
-            -- add code action
-            local code_actions = lsp_utils.list_code_actions(buf_ft)
-            vim.list_extend(buf_client_names, code_actions)
-
-            local hash = {}
-            local client_names = {}
-            for _, v in ipairs(buf_client_names) do
-                if not hash[v] then
-                    client_names[#client_names + 1] = v
-                    hash[v] = true
-                end
-            end
-            table.sort(client_names)
-            return " LSP: " .. table.concat(client_names, ", ") .. " "
+            return " [" .. table.concat(names, " ") .. "]"
         end,
         cond = conditions.hide_in_width,
     }

@@ -24,4 +24,78 @@ return {
             require("auto-session").setup(opts)
         end,
     },
+    {
+
+        "tummetott/unimpaired.nvim",
+        enabled = false,
+        config = function()
+            require("unimpaired").setup {}
+        end,
+    },
+
+    -- BIONIC
+    {
+        "HampusHauffman/bionic.nvim", -- A tiny plugin to help people read code faster.
+        enabled = false,
+        event = "BufRead",
+    },
+
+    {
+        "kwkarlwang/bufjump.nvim",
+        enabled = false,
+        event = "BufRead",
+        config = function()
+            require("bufjump").setup()
+        end,
+    },
+    -- {
+    --     "myitcv/vim-common-jumplist",
+    --     event = "BufRead",
+    -- },
+    -- {
+    --     "kwkarlwang/bufjump.nvim",
+    --     event = "BufRead",
+    --     config = function()
+    --         require("bufjump").setup {
+    --             forward = "<C-i>",
+    --             backward = "<C-o>",
+    --             -- on_success = function()
+    --             --     cmd [[execute "normal! g`\"zz"]]
+    --             -- end,
+    --         }
+    --     end,
+    -- },
+
+    -- INI BIKIN BERAT NEOVIM, HARUS DISABLED DAHULU
+    -- need install: python3 -m pip install gkeepapi keyring
+    -- {
+    --     "stevearc/gkeep.nvim",
+    --     build = ":UpdateRemotePlugins",
+    --     cmd = {
+    --         "GkeepLogin",
+    --         "GkeepLogout",
+    --         "GkeepOpen",
+    --         "GkeepEnter",
+    --         -- "GkeepClose",
+    --         "GkeepToggle",
+    --         -- "GkeepNew",
+    --         -- "GkeepSync",
+    --         -- "GkeepRefresh",
+    --         -- "GkeepGoto",
+    --         -- "GkeepBrowse",
+    --         -- "GkeepPopup",
+    --         -- "GkeepYank ",
+    --         -- "GkeepUpdateLinks",
+    --         -- "GkeepCheck",
+    --         -- "GkeepSortChecked",
+    --         -- "GkeepClearChecked",
+    --     },
+    --     event = "BufReadPre",
+    --     config = function()
+    --         vim.g.gkeep_log_levels = {
+    --             gkeep = "debug",
+    --             gkeepapi = "warning",
+    --         }
+    --     end,
+    -- },
 }

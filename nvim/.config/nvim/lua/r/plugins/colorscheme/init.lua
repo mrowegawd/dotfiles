@@ -198,7 +198,7 @@ return {
                     WinSeparator = { fg = "#343434", bg = "NONE" },
                     Pmenu = { bg = "#171717" },
                     -- PmenuThumb = { bg = "#B0BEC5" },
-                    -- NormalFloat = { bg = "#191919" },
+                    NormalFloat = { bg = "#171717" },
                     -- -- FloatBorder = { bg = "#191919" },
                     PmenuSel = { bg = "#640202", fg = "NONE" },
                     -- CmpItemAbbrMatch = { fg = "#1a1a1a", bg = "NONE" },
@@ -222,7 +222,7 @@ return {
         "catppuccin/nvim",
         name = "catppuccin",
         lazy = false,
-        priority = 1000,
+        -- priority = 1000,
         enabled = function()
             if as.colorscheme == "catppuccin" then
                 return true
@@ -247,6 +247,7 @@ return {
                 },
                 no_italic = false, -- Force no italic
                 no_bold = false, -- Force no bold
+                -- no_underline = false,
                 styles = {
                     comments = { "italic" },
                     conditionals = { "italic" },
@@ -276,13 +277,28 @@ return {
                 --     }
                 -- end,
                 integrations = {
-                    cmp = true,
+                    cmp = false,
                     gitsigns = true,
                     nvimtree = true,
                     telescope = true,
                     notify = false,
                     mini = false,
                     -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+                    native_lsp = {
+                        enabled = true,
+                        virtual_text = {
+                            errors = { "italic" },
+                            hints = { "italic" },
+                            warnings = { "italic" },
+                            information = { "italic" },
+                        },
+                        underlines = {
+                            errors = { "undercurl" },
+                            hints = { "undercurl" },
+                            warnings = { "undercurl" },
+                            information = { "undercurl" },
+                        },
+                    },
                 },
             }
         end,

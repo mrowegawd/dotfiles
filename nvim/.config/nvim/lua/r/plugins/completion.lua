@@ -6,7 +6,7 @@ return {
     -- CMP
     {
         "hrsh7th/nvim-cmp",
-        event = "InsertEnter",
+        event = "BufRead",
         -- event = "UIEnter",
         dependencies = {
             "hrsh7th/cmp-nvim-lsp-signature-help",
@@ -17,13 +17,28 @@ return {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
             "rcarriga/cmp-dap",
-            -- "lukas-reineke/cmp-rg",
             "saadparwaiz1/cmp_luasnip",
+            "lukas-reineke/cmp-under-comparator",
 
-            -- "lukas-reineke/cmp-rg",
+            "hrsh7th/cmp-nvim-lsp-document-symbol",
         },
         config = function()
             local cmp = require "cmp"
+            local compare = require "cmp.config.compare"
+
+            compare.lsp_scores = function(entry1, entry2)
+                local diff
+                if
+                    entry1.completion_item.score
+                    and entry2.completion_item.score
+                then
+                    diff = (entry2.completion_item.score * entry2.score)
+                        - (entry1.completion_item.score * entry1.score)
+                else
+                    diff = entry2.score - entry1.score
+                end
+                return (diff < 0)
+            end
 
             -- Based on (private) function in LuaSnip/lua/luasnip/init.lua.
             local in_snippet = function()
@@ -45,7 +60,7 @@ return {
                 end
             end
 
-            local callme = 0
+            -- local callme = 0
 
             cmp.setup {
 
@@ -75,48 +90,60 @@ return {
                 },
 
                 mapping = {
-                    ["<TAB>"] = cmp.mapping(function(fallback)
+                    ["<c-n>"] = cmp.mapping(function(fallback)
                         local c_cmp = require "cmp"
-                        local has_luasnip, sp = pcall(require, "luasnip")
 
-                        local col = vim.fn.col "." - 1
+                        -- local col = vim.fn.col "." - 1
 
                         if c_cmp.visible() then
-                            if #c_cmp.get_entries() == 1 then
-                                c_cmp.confirm { select = true }
-                            else
-                                c_cmp.select_next_item()
-                            end
-                        elseif
-                            has_luasnip
-                            and sp.expand_or_locally_jumpable()
-                        then
-                            sp.expand_or_jump()
-                        elseif
-                            col == 0
-                            or vim.fn.getline("."):sub(col, col):match "%s"
-                        then
-                            fallback()
+                            -- if #c_cmp.get_entries() == 1 then
+                            --     c_cmp.confirm { select = true }
+                            -- else
+                            c_cmp.select_next_item()
+                            -- end
+                            -- elseif
+                            --     col == 0
+                            --     or vim.fn.getline("."):sub(col, col):match "%s"
+                            -- then
+                            --     fallback()
                         else
                             require("cmp").complete()
                         end
-                    end, { "i", "s", "c" }),
-                    ["<S-TAB>"] = cmp.mapping(function(fallback)
+                    end, { "i", "s" }),
+                    ["<c-p>"] = cmp.mapping(function(fallback)
                         local c_cmp = require "cmp"
-                        local has_luasnip, sp = pcall(require, "luasnip")
 
                         if c_cmp.visible() then
                             c_cmp.select_prev_item()
-                        elseif
-                            has_luasnip
-                            and in_snippet()
-                            and sp.jumpable(-1)
-                        then
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+
+                    ["<TAB>"] = cmp.mapping(function(fallback)
+                        -- local c_cmp = require "cmp"
+                        local has_luasnip, sp = pcall(require, "luasnip")
+
+                        -- if c_cmp.visible() then
+                        --     if #c_cmp.get_entries() == 1 then
+                        --         c_cmp.confirm { select = true }
+                        --     end
+                        if has_luasnip and sp.expand_or_locally_jumpable() then
+                            sp.expand_or_jump()
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+
+                    ["<S-TAB>"] = cmp.mapping(function(fallback)
+                        local has_luasnip, sp = pcall(require, "luasnip")
+
+                        if has_luasnip and in_snippet() and sp.jumpable(-1) then
                             sp.jump(-1)
                         else
                             fallback()
                         end
-                    end, { "i", "s", "c" }),
+                    end, { "i", "s" }),
 
                     ["<C-u>"] = cmp.mapping(
                         cmp.mapping.scroll_docs(-4),
@@ -126,105 +153,76 @@ return {
                         cmp.mapping.scroll_docs(4),
                         { "i", "s" }
                     ),
-
-                    ["<c-n>"] = cmp.mapping(function()
-                        if cmp.visible() then
-                            cmp.select_next_item()
-                            -- else
-                            --     fallback()
-                        end
-                    end, {
-                        "i",
-                        "s",
-                    }),
-                    ["<c-p>"] = cmp.mapping(function()
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                            -- else
-                            --     fallback()
-                        end
-                    end, {
-                        "i",
-                        "s",
-                    }),
-
                     ["<CR>"] = cmp.mapping.confirm { select = false },
-                    ["<c-space>"] = cmp.mapping.confirm { select = false },
+                    -- ["<c-space>"] = cmp.mapping.confirm { select = false },
 
-                    ["<C-e>"] = cmp.mapping(function(_)
-                        local c_cmp = require "cmp"
-                        if c_cmp.visible() then
-                            c_cmp.abort()
-                        elseif callme == 0 then
-                            callme = 1
-                            c_cmp.complete {
-                                config = {
-                                    sources = {
-                                        { name = "luasnip" },
-                                    },
-                                },
-                            }
-                        elseif callme == 1 then
-                            callme = 2
-                            cmp.complete {
-                                config = {
-                                    sources = {
-                                        {
-                                            name = "buffer",
-                                            option = {
-                                                get_bufnrs = function()
-                                                    return vim.api.nvim_list_bufs()
-                                                end,
-                                            },
-                                        },
-                                    },
-                                },
-                            }
-                        else
-                            if callme == 2 then
-                                callme = 0
-                                cmp.complete {
-                                    config = {
-                                        sources = {
-                                            { name = "nvim_lsp" },
-                                        },
-                                    },
-                                }
-                            end
-                        end
-                    end, {
-                        "i",
-                        "s",
-                    }),
+                    -- ["<C-e>"] = cmp.mapping(function(_)
+                    --     local c_cmp = require "cmp"
+                    --     if c_cmp.visible() then
+                    --         c_cmp.abort()
+                    --     else
+                    --         c_cmp.complete()
+                    --         -- elseif callme == 0 then
+                    --         --     callme = 1
+                    --         --     c_cmp.complete {
+                    --         --         config = {
+                    --         --             sources = {
+                    --         --                 { name = "luasnip" },
+                    --         --             },
+                    --         --         },
+                    --         --     }
+                    --         -- elseif callme == 1 then
+                    --         --     callme = 2
+                    --         --     cmp.complete {
+                    --         --         config = {
+                    --         --             sources = {
+                    --         --                 {
+                    --         --                     name = "buffer",
+                    --         --                     option = {
+                    --         --                         get_bufnrs = function()
+                    --         --                             return vim.api.nvim_list_bufs()
+                    --         --                         end,
+                    --         --                     },
+                    --         --                 },
+                    --         --             },
+                    --         --         },
+                    --         --     }
+                    --         -- else
+                    --         --     if callme == 2 then
+                    --         --         callme = 0
+                    --         --         cmp.complete {
+                    --         --             config = {
+                    --         --                 sources = {
+                    --         --                     { name = "nvim_lsp" },
+                    --         --                 },
+                    --         --             },
+                    --         --         }
+                    --         --     end
+                    --     end
+                    -- end, {
+                    --     "i",
+                    --     "s",
+                    -- }),
 
                     ["<C-q>"] = cmp.mapping.abort(),
                 },
-                -- sorting = {
-                --     comparators = {
-                --         compare.offset,
-                --         compare.exact,
-                --         compare.score,
-                --         -- Taken from https://github.com/lukas-reineke/cmp-under-comparator
-                --         function(entry1, entry2)
-                --             local _, entry1_under =
-                --                 entry1.completion_item.label:find "^_+"
-                --             local _, entry2_under =
-                --                 entry2.completion_item.label:find "^_+"
-                --             entry1_under = entry1_under or 0
-                --             entry2_under = entry2_under or 0
-                --             if entry1_under > entry2_under then
-                --                 return false
-                --             elseif entry1_under < entry2_under then
-                --                 return true
-                --             end
-                --         end,
-                --         compare.recently_used,
-                --         compare.kind,
-                --         compare.sort_text,
-                --         compare.length,
-                --         compare.order,
-                --     },
-                -- },
+                sorting = {
+                    comparators = {
+                        compare.offset, -- Items closer to cursor will have lower priority
+                        compare.exact,
+                        -- compare.scopes,
+                        compare.lsp_scores,
+                        compare.sort_text,
+                        compare.score,
+                        compare.recently_used,
+                        -- compare.locality, -- Items closer to cursor will have higher priority, conflicts with `offset`
+                        require("cmp-under-comparator").under,
+                        compare.kind,
+                        compare.sort_text,
+                        compare.length,
+                        compare.order,
+                    },
+                },
                 formatting = {
                     fields = { "abbr", "kind", "menu" },
 
@@ -289,12 +287,10 @@ return {
                             end
                             return true
                         end,
-                        group_index = 1,
+                        -- group_index = 1,
                     },
-                    {
-                        name = "luasnip",
-                        group_index = 1,
-                    },
+                    { name = "luasnip" },
+                    { name = "nvim_lsp_document_symbol" },
                     {
                         name = "buffer",
                         options = {
@@ -302,21 +298,9 @@ return {
                                 return vim.api.nvim_list_bufs()
                             end,
                         },
-                        group_index = 2,
                     },
-
-                    -- {
-                    --     name = "rg",
-                    --     keyword_length = 4,
-                    --     max_item_count = 10,
-                    --     option = { additional_arguments = "--max-depth 8" },
-                    --     group_index = 1,
-                    -- },
-                    {
-                        name = "path",
-                        group_index = 1,
-                    },
-                    { name = "neorg", group_index = 2 },
+                    { name = "path" },
+                    { name = "neorg" },
                     { name = "nvim_lsp_signature_help" },
                 },
             }
@@ -352,13 +336,12 @@ return {
                 }),
             })
 
-            cmp.setup.filetype("gitcommit", {
-                sources = cmp.config.sources({
+            cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
+                sources = cmp.config.sources {
                     { name = "path" },
                     { name = "emoji" },
-                }, {
                     { name = "buffer" },
-                }),
+                },
             })
 
             cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
@@ -377,6 +360,11 @@ return {
 
             cmp.setup.cmdline(":", {
                 mapping = {
+                    ["<esc>"] = {
+                        c = function()
+                            require("r.utils").feedkey("<c-c>", "n")
+                        end,
+                    },
                     ["<c-q>"] = {
                         c = function(fallback)
                             if require("cmp").visible() then
@@ -386,24 +374,24 @@ return {
                             end
                         end,
                     },
-                    -- ["<c-p>"] = {
-                    --     c = function(fallback)
-                    --         if require("cmp").visible() then
-                    --             require("cmp").select_prev_item()
-                    --         else
-                    --             fallback()
-                    --         end
-                    --     end,
-                    -- },
-                    -- ["<c-n>"] = {
-                    --     c = function(fallback)
-                    --         if require("cmp").visible() then
-                    --             require("cmp").select_next_item()
-                    --         else
-                    --             fallback()
-                    --         end
-                    --     end,
-                    -- },
+                    ["<TAB>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").select_next_item()
+                            else
+                                require("cmp").complete()
+                            end
+                        end,
+                    },
+                    ["<S-TAB>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").select_prev_item()
+                            else
+                                fallback()
+                            end
+                        end,
+                    },
                 },
                 sources = cmp.config.sources({
                     { name = "path" },
@@ -413,6 +401,40 @@ return {
             })
 
             cmp.setup.cmdline({ "/", "?" }, {
+                mapping = {
+                    ["<esc>"] = {
+                        c = function()
+                            require("r.utils").feedkey("<c-c>", "n")
+                        end,
+                    },
+                    ["<c-q>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").abort()
+                            else
+                                fallback()
+                            end
+                        end,
+                    },
+                    ["<TAB>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").select_next_item()
+                            else
+                                require("cmp").complete()
+                            end
+                        end,
+                    },
+                    ["<S-TAB>"] = {
+                        c = function(fallback)
+                            if require("cmp").visible() then
+                                require("cmp").select_prev_item()
+                            else
+                                fallback()
+                            end
+                        end,
+                    },
+                },
                 sources = {
                     { name = "buffer" },
                 },
@@ -463,11 +485,11 @@ return {
             luasnip.filetype_extend("typescriptreact", { "html" })
             luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
 
-            vim.keymap.set({ "i", "s" }, "<c-e>", function()
-                if luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
-                end
-            end, { silent = true })
+            -- vim.keymap.set({ "i", "s" }, "<c-e>", function()
+            --     if luasnip.expand_or_jumpable() then
+            --         luasnip.expand_or_jump()
+            --     end
+            -- end, { silent = true })
 
             -- jump backwards key.
             -- this always moves to the previous item within the snippet

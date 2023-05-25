@@ -160,7 +160,7 @@ return {
                 },
                 -- on_attach = nil,
                 on_attach = function(bufnr)
-                    require("r.plugins.vcs.mappings").signs(
+                    require("r.mappings.utils.git").signs(
                         bufnr,
                         package.loaded.gitsigns
                     )
@@ -192,29 +192,10 @@ return {
                 },
                 -- Dont mess me up >_>, (`<c-i>` `<c-o>`)
                 init = function()
-                    local augroup =
-                        vim.api.nvim_create_augroup("killme", { clear = true })
-                    vim.api.nvim_create_autocmd("FileType", {
-                        pattern = { "DiffviewFiles", "DiffviewFileHistory" },
-                        group = augroup,
-                        callback = function()
-                            local ft, _ = as.get_bo_buft()
-
-                            if
-                                vim.tbl_contains(
-                                    { "DiffviewFiles", "DiffviewFileHistory" },
-                                    ft
-                                )
-                            then
-                                vim.keymap.set("n", "<c-i>", "<Nop>", {
-                                    buffer = vim.api.nvim_get_current_buf(),
-                                })
-                                vim.keymap.set("n", "<c-o>", "<Nop>", {
-                                    buffer = vim.api.nvim_get_current_buf(),
-                                })
-                            end
-                        end,
-                    })
+                    require("r.utils").disable_ctrl_i_and_o(
+                        "NoDiffview",
+                        { "DiffviewFiles", "DiffviewFileHistory" }
+                    )
                 end,
                 config = function()
                     local diffview = require "diffview"
@@ -367,7 +348,7 @@ return {
                     itemgroup = "Git",
                     keymaps = {
                         {
-                            "<F2>",
+                            "<leader>hl",
                             "<CMD>Neogit<CR>",
                             description = "Neogit: open",
                         },

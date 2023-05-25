@@ -1,47 +1,4 @@
 return {
-    -- LISTISH
-    {
-        "arsham/listish.nvim",
-        event = "VeryLazy",
-        dependencies = { "arsham/arshlib.nvim" },
-        config = function()
-            require("listish").config {
-                theme_list = true,
-                clearqflist = "Clearquickfix", -- command
-                clearloclist = "Clearloclist", -- command
-                clear_notes = "ClearListNotes", -- command
-                lists_close = "<leader>cc", -- closes both qf/local lists
-                in_list_dd = "dd", -- delete current item in the list
-                signs = { -- show signs on the signcolumn
-                    locallist = "", -- the icon/sigil/sign on the signcolumn
-                    qflist = "", -- the icon/sigil/sign on the signcolumn
-                    priority = 10,
-                },
-                extmarks = { -- annotate with extmarks
-                    locallist_text = " Locallist Note",
-                    qflist_text = " Quickfix Note",
-                },
-                quickfix = {
-                    open = "<localleader>qo",
-                    on_cursor = "<localleader>qq", -- add current position to the list
-                    add_note = "<localleader>qn", -- add current position with your note to the list
-                    clear = "<localleader>qd", -- clear all items
-                    close = "<localleader>qc",
-                    next = "]q",
-                    prev = "[q",
-                },
-                locallist = {
-                    open = "<localleader>wo",
-                    on_cursor = "<localleader>ww",
-                    add_note = "<localleader>wn",
-                    clear = "<localleader>wd",
-                    close = "<localleader>wc",
-                    next = "]w",
-                    prev = "[w",
-                },
-            }
-        end,
-    },
     -- NVIM-BQF
     {
 
@@ -123,8 +80,8 @@ return {
     -- MY PLUGINS
     ---------------------------------------------------------------------
     {
-        dir = "~/Downloads/qfsilet",
-        event = "BufRead",
+        dir = "~/.local/src/nvim_plugins/qfsilet",
+        event = "UIEnter",
         init = function()
             require("legendary").keymaps {
                 {
@@ -136,7 +93,7 @@ return {
                             description = "QFSilet: load",
                         },
                         {
-                            "<localleader>qs",
+                            "<leader>QS",
                             "<CMD>QFSiletSave<CR>",
                             description = "QFSilet: save",
                         },
@@ -146,8 +103,15 @@ return {
         end,
         config = function()
             require("qfsilet").setup {
-                qf = {
-                    use_default_keymaps = true,
+                ext_note = "", -- "" or ".md", ".txt" whatever u want it
+                signs = {
+                    priority = 10,
+                },
+                keymap = {
+                    del_item = "dd",
+                },
+                popup = {
+                    winhighlight = "Normal:Pmenu,FloatBorder:FzfLuaBorder",
                 },
             }
         end,

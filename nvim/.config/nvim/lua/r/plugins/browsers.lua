@@ -19,7 +19,7 @@ return {
     -- FIRENVIM
     {
         "glacambre/firenvim", -- embed neovim in browsers
-        lazy = false,
+        -- lazy = false,
         build = function()
             vim.fn["firenvim#install"](0)
         end,

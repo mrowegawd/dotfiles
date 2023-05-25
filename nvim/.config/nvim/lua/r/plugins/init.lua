@@ -23,7 +23,7 @@ return {
     -- LEGENDARY
     {
         "mrjones2014/legendary.nvim", -- A command palette for keymaps, commands and autocmds
-        event = "VeryLazy",
+        -- event = "VeryLazy",
         init = function()
             require("legendary").keymaps {
                 {
@@ -60,13 +60,13 @@ return {
         end,
     },
     -- CLOSE-BUFFERS
-    {
-        "kazhala/close-buffers.nvim",
-        cmd = { "BDelete" },
-        keys = {
-            { "<leader>qq", "<Cmd>BDelete this<CR>", desc = "buffer delete" },
-        },
-    },
+    -- {
+    --     "kazhala/close-buffers.nvim",
+    --     cmd = { "BDelete" },
+    --     keys = {
+    --         { "<leader>qq", "<Cmd>BDelete this<CR>", desc = "buffer delete" },
+    --     },
+    -- },
     -- VIM-HIGHLIGHTER
     {
         "azabiong/vim-highlighter", -- map ex: f<enter> `highlighte the word`
@@ -80,7 +80,10 @@ return {
         end,
     },
     -- VIM-LOG
-    { "mtdl9/vim-log-highlighting", lazy = false },
+    {
+        "mtdl9/vim-log-highlighting",
+        ft = "log",
+    },
     -- SUDA
     {
         "lambdalisue/suda.vim",
@@ -147,14 +150,14 @@ return {
         end,
     },
     -- TREESJ
-    {
-        "Wansmer/treesj",
-        keys = { "<space>m", "<space>j", "<space>s" },
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = function()
-            require("treesj").setup {}
-        end,
-    },
+    -- {
+    --     "Wansmer/treesj",
+    --     keys = { "<space>m", "<space>j", "<space>s" },
+    --     dependencies = { "nvim-treesitter/nvim-treesitter" },
+    --     config = function()
+    --         require("treesj").setup {}
+    --     end,
+    -- },
     -- HELPFUL.VIM
     { "tweekmonster/helpful.vim", cmd = "HelpfulVersion", ft = "help" },
     -- NUMB-NVIM
@@ -189,13 +192,14 @@ return {
         "andymass/vim-matchup",
         event = { "BufReadPost" },
         config = function()
-            vim.g.matchup_matchparen_offscreen = { method = "popup" }
+            vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
         end,
     },
     -- HLARGS
     {
         "m-demare/hlargs.nvim",
-        event = "VeryLazy",
+        enabled = true,
+        event = "UIEnter",
         opts = {
             color = "#ef9062",
             use_colorpalette = true,
@@ -215,23 +219,23 @@ return {
                 { fg = "#EEF06D" },
                 { fg = "#8FB272" },
             },
-            disable = function(_, bufnr)
-                if vim.b.semantic_tokens then
-                    return true
-                end
-                local clients = vim.lsp.get_active_clients { bufnr = bufnr }
-                for _, c in pairs(clients) do
-                    local caps = c.server_capabilities
-                    if
-                        c.name ~= "null-ls"
-                        and caps.semanticTokensProvider
-                        and caps.semanticTokensProvider.full
-                    then
-                        vim.b.semantic_tokens = true
-                        return vim.b.semantic_tokens
-                    end
-                end
-            end,
+            -- disable = function(_, bufnr)
+            --     if vim.b.semantic_tokens then
+            --         return true
+            --     end
+            --     local clients = vim.lsp.get_active_clients { bufnr = bufnr }
+            --     for _, c in pairs(clients) do
+            --         local caps = c.server_capabilities
+            --         if
+            --             c.name ~= "null-ls"
+            --             and caps.semanticTokensProvider
+            --             and caps.semanticTokensProvider.full
+            --         then
+            --             vim.b.semantic_tokens = true
+            --             return vim.b.semantic_tokens
+            --         end
+            --     end
+            -- end,
         },
     },
     -- NEOZOOM
@@ -266,6 +270,7 @@ return {
             }
         end,
     },
+
     -- UNDOTREE
     {
         "mbbill/undotree",
@@ -289,6 +294,7 @@ return {
             vim.g.undotree_SplitWidth = 35
             vim.g.undotree_DiffpanelHeight = 7
             vim.g.undotree_WindowLayout = 2 -- Tree on the left, diff on the bottom
+
             vim.g.undotree_TreeNodeShape = "◉"
             vim.g.undotree_SetFocusWhenToggle = 1
         end,
@@ -365,50 +371,15 @@ return {
         },
     },
 
-    -- {
-    --     "kwkarlwang/bufjump.nvim",
-    --     event = "BufRead",
-    --     config = function()
-    --         require("bufjump").setup {
-    --             forward = "<C-i>",
-    --             backward = "<C-o>",
-    --             -- on_success = function()
-    --             --     cmd [[execute "normal! g`\"zz"]]
-    --             -- end,
-    --         }
-    --     end,
-    -- },
-
-    -- INI BIKIN BERAT NEOVIM, HARUS DISABLED DAHULU
-    -- need install: python3 -m pip install gkeepapi keyring
-    -- {
-    --     "stevearc/gkeep.nvim",
-    --     build = ":UpdateRemotePlugins",
-    --     cmd = {
-    --         "GkeepLogin",
-    --         "GkeepLogout",
-    --         "GkeepOpen",
-    --         "GkeepEnter",
-    --         -- "GkeepClose",
-    --         "GkeepToggle",
-    --         -- "GkeepNew",
-    --         -- "GkeepSync",
-    --         -- "GkeepRefresh",
-    --         -- "GkeepGoto",
-    --         -- "GkeepBrowse",
-    --         -- "GkeepPopup",
-    --         -- "GkeepYank ",
-    --         -- "GkeepUpdateLinks",
-    --         -- "GkeepCheck",
-    --         -- "GkeepSortChecked",
-    --         -- "GkeepClearChecked",
-    --     },
-    --     event = "BufReadPre",
-    --     config = function()
-    --         vim.g.gkeep_log_levels = {
-    --             gkeep = "debug",
-    --             gkeepapi = "warning",
-    --         }
-    --     end,
-    -- },
+    ---------------------------------------------------------------------
+    -- MY PLUGINS
+    ---------------------------------------------------------------------
+    {
+        dir = "~/.local/src/nvim_plugins/jumpj",
+        enabled = false,
+        event = "BufRead",
+        config = function()
+            require("jumpj").setup {}
+        end,
+    },
 }

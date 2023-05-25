@@ -8,7 +8,6 @@ local general_overrides = function()
     highlight.all {
         { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
         { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
-        { CursorLineNr = { link = "Normal" } },
         -- { MsgArea = { bg = { from = "Normal", alter = -10 } } },
         -- { MsgSeparator = { link = "MsgArea" } },
         {
@@ -19,6 +18,17 @@ local general_overrides = function()
                     attr = "bg",
                     alter = 0.2,
                 },
+            },
+        },
+        {
+            LineNr = {
+                bg = "NONE",
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+            },
+        },
+        {
+            CursorLineNr = {
+                fg = { from = "ColorColumn", attr = "bg", alter = 1.5 },
             },
         },
         { NormalFloat = { bg = { from = "Pmenu" } } },
@@ -37,7 +47,7 @@ local general_overrides = function()
         {
             PmenuSel = {
                 bold = true,
-                bg = { from = "PmenuSel", alter = -0.3 },
+                fg = "NONE",
             },
         },
         {
@@ -61,7 +71,12 @@ local general_overrides = function()
                 bold = true,
             },
         },
-        { Folded = { link = "Comment", italic = true, bold = true } },
+        {
+            Folded = {
+                fg = { from = "Folded", attr = "fg", alter = -0.3 },
+                bg = { from = "Folded", attr = "bg", alter = -0.4 },
+            },
+        },
         {
             QuickFixLine = {
                 bg = { from = "Normal", attr = "bg", alter = -0.5 },
@@ -70,7 +85,6 @@ local general_overrides = function()
         { SpellRare = { undercurl = true } },
         { EndOfBuffer = { bg = "NONE" } },
         { SignColumn = { bg = "NONE" } },
-        { LineNr = { bg = "NONE" } },
         { MarkSignNumHL = { inherit = "SpecialKey", bg = "NONE" } },
         {
             WinSeparator = {
@@ -86,40 +100,40 @@ local general_overrides = function()
         -----------------------------------------------------------------------
         --  SEMANTIC TOKENS
         -----------------------------------------------------------------------
-        { ["@lsp.type.variable"] = { clear = true } },
-        { ["@lsp.typemod.method"] = { link = "@method" } },
-        {
-            ["@lsp.type.parameter"] = {
-                italic = true,
-                fg = { from = "Normal" },
-            },
-        },
-
-        {
-            ["@lsp.typemod.variable.global"] = {
-                bold = true,
-                inherit = "@constant.builtin",
-            },
-        },
-        { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
-        { ["@lsp.typemod.variable.readonly.typescript"] = { clear = true } },
-        { ["@lsp.type.type.lua"] = { clear = true } },
-        { ["@lsp.typemod.number.injected"] = { link = "@number" } },
-        { ["@lsp.typemod.operator.injected"] = { link = "@operator" } },
-        { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
-        { ["@lsp.typemod.string.injected"] = { link = "@string" } },
-        { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
+        -- { ["@lsp.type.variable"] = { clear = true } },
+        -- { ["@lsp.typemod.method"] = { link = "@method" } },
+        -- {
+        --     ["@lsp.type.parameter"] = {
+        --         italic = true,
+        --         fg = { from = "Normal" },
+        --     },
+        -- },
+        --
+        -- {
+        --     ["@lsp.typemod.variable.global"] = {
+        --         bold = true,
+        --         inherit = "@constant.builtin",
+        --     },
+        -- },
+        -- { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
+        -- { ["@lsp.typemod.variable.readonly.typescript"] = { clear = true } },
+        -- { ["@lsp.type.type.lua"] = { clear = true } },
+        -- { ["@lsp.typemod.number.injected"] = { link = "@number" } },
+        -- { ["@lsp.typemod.operator.injected"] = { link = "@operator" } },
+        -- { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
+        -- { ["@lsp.typemod.string.injected"] = { link = "@string" } },
+        -- { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
         -----------------------------------------------------------------------
         -- TREESITTER
         -----------------------------------------------------------------------
-        { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
-        { ["@type.qualifier"] = { inherit = "@keyword", italic = true } },
-        { ["@variable"] = { clear = true } },
-        { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
-        { ["@error"] = { fg = "fg", bg = "NONE" } },
-        { ["@text.diff.add"] = { link = "DiffAdd" } },
-        { ["@text.diff.delete"] = { link = "DiffDelete" } },
-        { ["@text.title.markdown"] = { underdouble = true } },
+        -- { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
+        -- { ["@type.qualifier"] = { inherit = "@keyword", italic = true } },
+        -- { ["@variable"] = { clear = true } },
+        -- { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
+        -- { ["@error"] = { fg = "fg", bg = "NONE" } },
+        -- { ["@text.diff.add"] = { link = "DiffAdd" } },
+        -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
+        -- { ["@text.title.markdown"] = { underdouble = true } },
 
         -----------------------------------------------------------------------
         -- Diff
@@ -186,6 +200,24 @@ local general_overrides = function()
         },
         { LspSignatureActiveParameter = { link = "Visual" } },
 
+        -- { illuminatedWordText = { link = "LspReferenceText" } },
+        -- { illuminatedWordWrite = { link = "LspReferenceText" } },
+        -- { illuminatedWordRead = { link = "LspReferenceText" } },
+
+        { illuminatedWordText = { link = "LspReferenceText" } },
+        {
+            illuminatedWordWrite = {
+                bg = { from = "Visual", attr = "bg", alter = -0.05 },
+                fg = "NONE",
+            },
+        },
+        {
+            illuminatedWordRead = {
+                bg = { from = "Visual", attr = "bg", alter = -0.05 },
+                fg = "NONE",
+            },
+        },
+
         -----------------------------------------------------------------------
         -- DIAGNOSTIC
         -----------------------------------------------------------------------
@@ -214,6 +246,7 @@ local general_overrides = function()
         -----------------------------------------------------------------------
         -- CUSTOMS
         -----------------------------------------------------------------------
+        { MyCursorline = { bg = { from = "Normal", alter = 0.2 } } },
         {
             Mystatusline_fg = {
                 fg = { from = "LineNr", alter = 0.1 },
@@ -240,13 +273,11 @@ local general_overrides = function()
                 bg = { from = "Normal", alter = -0.1 },
             },
         },
-
         {
-            MyQuickFixLineLeave = { inherit = "QuickFixLine" },
+            MyQuickFixLineLeave = { bg = { from = "PmenuSel", alter = -0.65 } },
         },
-
         {
-            MyQuickFixLineEnter = { bg = { from = "CursorLine", alter = 0.3 } },
+            MyQuickFixLineEnter = { bg = { from = "PmenuSel", alter = -0.3 } },
         },
         -----------------------------------------------------------------------
         -- PLUGINS
@@ -367,13 +398,18 @@ end
 
 local function colorscheme_overrides()
     local overrides = {
-        ["material"] = {}, -- hi custom `material` ini ga bs di ubah, set di config nya
+        ["material"] = {}, -- hi set custom hi untuk "material" colorscheme, harus di set config nya
         ["gruvbox"] = {
             {
                 CmpItemAbbrMatch = {
                     fg = { from = "ErrorMsg", attr = "bg", alter = 0.2 },
                     bg = "NONE",
                     bold = true,
+                },
+            },
+            {
+                MyQuickFixLineLeave = {
+                    bg = { from = "PmenuSel", alter = -0.5 },
                 },
             },
         },
@@ -450,10 +486,9 @@ local function colorscheme_overrides()
             { GitSignsDelete = { bg = "NONE" } },
         },
         ["catppuccin"] = {
-
-            {
-                LspCodeLens = { fg = { from = "LspCodeLens", alter = -0.5 } },
-            },
+            { NormalFloat = { bg = { from = "Pmenu" } } },
+            { LspCodeLens = { fg = { from = "LspCodeLens", alter = -0.5 } } },
+            { CursorLine = { bg = { from = "CursorLine", alter = -0.1 } } },
             {
                 Comment = {
                     fg = { from = "Comment", alter = -0.4 },
@@ -476,9 +511,27 @@ local function colorscheme_overrides()
                     bold = true,
                 },
             },
+            {
+                PmenuSel = {
+                    bold = true,
+                    bg = { from = "PmenuSel", alter = -0.3 },
+                    fg = "NONE",
+                },
+            },
+            {
+                MyQuickFixLineLeave = {
+                    bg = { from = "PmenuSel", alter = -0.1 },
+                },
+            },
+            {
+                MyQuickFixLineEnter = {
+                    bg = { from = "PmenuSel", alter = 0.3 },
+                },
+            },
         },
         ["tokyonight"] = {
             { Normal = { bg = { from = "Normal", alter = -0.05 } } },
+            { NormalFloat = { bg = { from = "Pmenu" } } },
             {
                 PmenuSel = {
                     bold = true,
@@ -486,7 +539,6 @@ local function colorscheme_overrides()
                     bg = { from = "PmenuSel", alter = 0.6 },
                 },
             },
-            { NormalFloat = { bg = { from = "Pmenu" } } },
             {
                 FoldColumn = {
                     bg = "NONE",

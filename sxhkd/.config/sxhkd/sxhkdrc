@@ -28,84 +28,36 @@ super + {p,b}
 #         bspc wm -h on
 
 ########################################
-# workspaces
+# Window
 ########################################
+# window: rotate or split window
+super + F6
+        bspc node @/ -R {90,270}
 
+# window: next/prev
 super + {l,h}
-        bspc node -f {next,prev}.!hidden.window
-
-# workspaces: move current node to the next/previous workspaces
-super + ctrl + {h,l}
-        DIR={prev,next}; \
-        bspc node -d "$DIR"; \
-        bspc desktop -f "$DIR"
+        bspc node -f {next.local,prev.local}
 
 ########################################
-# window
+# Workspace
 ########################################
 
-# window: change focus window
-# super + shift + {h,j,k,l}
-#         bspc node -{f,s} {west,south,north,east}
+# workspace: next/prev
+super + ctrl + {l,h}
+        bspc desktop -f {next.local,prev.local}
 
-# super + shift + {h,j,k,l}
-# 	      bspc node -{f,s} {west,south,north,east}
-
-# window: swap pane window
-# super + ctrl + {h,j,k,l}
-#         bspc node -s {west,south,north,east}
-
-# focus the next/previous node in the current desktop
-# super + {_,shift + }c
-# 	      bspc node -f {next,prev}.local
-
-# window: move node worspace to the given workspace number
+# workspace: move node workspace to the given workspace number
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
 
-# window: rotate split
-super + shift + {comma,period}
-        bspc node @/ -R {90,270}
 
 ########################################
-# Preselection
+# Move, Resize, Floating
 ########################################
 
-# preselection: enter preselection mode
-# super + super + {h,j,k,l}
-#         bspc node -p {west,south,north,east}
-
-# preselection: resize current preselection mode
-# super + super + {1-9}
-#         bspc node -o 0.{1-9}
-
-# preselection: cancel the preselection mode
-# super + super + space
-#         bspc node -p cancel
-
-# preselection: cancel the preselection for the focused desktop
-# super + ctrl + shift + space
-#         bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
-
-########################################
-# Move and resize windows
-########################################
-
-# window: move window left/right/up/down [if mode: float]
+# resize: move window left/right/up/down [if mode: float]
 super + {Left,Down,Up,Right}
         bspc node -v {-20 0,0 20,0 -20,20 0}
-
-# resize: to grow window (super+s _ +h/j/k/l)
-# super + ctrl + {h,j,k,l}
-#         STEP=20; SELECTION={1,2,3,4}; \
-#         bspc node -z $(echo "left -$STEP 0,bottom 0 $STEP,top 0 -$STEP,right $STEP 0" | cut -d',' -f$SELECTION) || \
-#         bspc node -z $(echo "right -$STEP 0,top 0 $STEP,bottom 0 -$STEP,left $STEP 0" | cut -d',' -f$SELECTION)
-
-# resize: shrink window size
-# super + shift + {h,j,k,l}
-#         STEP=20; SELECTION={1,2,3,4}; \
-#         bspc node -z $(echo "left $STEP 0,bottom 0 -$STEP,top 0 $STEP,right -$STEP 0" | cut -d',' -f$SELECTION) || \
-#         bspc node -z $(echo "right $STEP 0,top 0 -$STEP,bottom 0 $STEP,left -$STEP 0" | cut -d',' -f$SELECTION)
 
 # resize: to grow window (super+alt+shift+Up/Down/Left/Down)
 super + shift + {Left,Down,Up,Right}
@@ -114,13 +66,13 @@ super + shift + {Left,Down,Up,Right}
                       top 0 -20 || bspc node -z bottom 0 -20,\
                       right 20 0 || bspc node -z left 20 0}
 
-# resize: to shrink window (super+alt+Up/Down/Left/Down)
-super + alt + {Right,Up,Down,Left}
+# resize: to shrink window (super+ctrl+Up/Down/Left/Down)
+super + ctrl + {Right,Up,Down,Left}
         bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 
 # resize: window gap (super+=/-)
-super + shift + {minus,equal}
-        bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+# super + shift + {minus,equal}
+#         bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
 
 ########################################
 # Brightness

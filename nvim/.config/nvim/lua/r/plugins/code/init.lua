@@ -45,9 +45,10 @@ return {
             "OverseerTaskAction",
         },
         init = function()
-            vim.api.nvim_create_autocmd("FileType", {
+            as.augroup("RunOverseerTasks", {
+                event = { "FileType" },
                 pattern = as.lspfiles,
-                callback = function()
+                command = function()
                     require("r.mappings.utils.overseer").run_task(
                         api.nvim_get_current_buf()
                     )

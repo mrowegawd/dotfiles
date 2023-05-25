@@ -42,7 +42,12 @@ as.augroup("SmartClose", {
             or smart_close_filetypes[buf.ft]
             or smart_close_buftypes[buf.bt]
         if is_eligible then
-            map("n", "q", smart_close, { buffer = args.buf, nowait = true })
+            vim.keymap.set(
+                "n",
+                "q",
+                smart_close,
+                { buffer = args.buf, nowait = true }
+            )
         end
     end,
 }, {
@@ -186,21 +191,9 @@ as.augroup("WindowBehaviours", {
     end,
 }, {
     event = { "FileType" },
-    pattern = { "norg", "neorg" },
+    pattern = { "norg", "org", "orgagenda" },
     command = function()
-        vim.opt_local.foldlevel = 99
         vim.opt_local.foldcolumn = "0"
-        vim.opt_local.foldmethod = "expr"
-        vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
-    end,
-}, {
-    event = { "FileType" },
-    pattern = { "org" },
-    command = function()
-        vim.opt_local.foldlevel = 0
-        vim.opt_local.foldcolumn = "0"
-        vim.opt_local.foldmethod = "expr"
-        vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
     end,
 })
 
@@ -256,6 +249,13 @@ as.augroup("WindowDim", {
         windowdim.buf_enter()
     end,
 }, {
+    event = { "BufEnter" },
+    pattern = { "*" },
+    command = function()
+        windowdim.buf_enter()
+    end,
+}, {
+
     event = { "FocusGained" },
     pattern = "*",
     command = function()

@@ -13,7 +13,7 @@ function M.neorg_mappings_ft(bufnr)
             {
                 "<leader>tq",
                 function()
-                    return cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
+                    return cmd(fmt("TODOQuickfixList cwd=%s", fn.expand "%:p"))
                 end,
                 opts = { buffer = bufnr },
                 description = "Todocomment: find todo buffer",
@@ -21,10 +21,10 @@ function M.neorg_mappings_ft(bufnr)
             {
                 "<leader>tQ",
                 function()
-                    return cmd(fmt([[TodoTrouble cwd=%s]], as.wiki_path))
+                    return cmd(fmt([[TODOQuickfixList cwd=%s]], as.wiki_path))
                 end,
                 opts = { buffer = bufnr },
-                description = "Todocomment: find all todo's",
+                description = "Todocomment: find all todo",
             },
             {
                 "<localleader>fw",
@@ -32,25 +32,25 @@ function M.neorg_mappings_ft(bufnr)
                     -- Karena use grep utk curbuf, agar bisa menggunakan regex
                     -- pakai `lgrep_curbuf`
                     require("fzf-lua").lgrep_curbuf {
-                        prompt = "[Neorg] Find Linkable Curbuf❯ ",
+                        prompt = "[Neorg] Linkable❯ ",
                         search = [[\{:\$]],
                         no_esc = true,
                     }
                 end,
                 opts = { buffer = bufnr },
-                description = "FzfLua: find linkable on buffer",
+                description = "FzfLua: find linkable curbuf",
             },
             {
                 "<localleader>fW",
                 function()
                     require("fzf-lua").lgrep_curbuf {
-                        prompt = "[Neorg] Find Site Link Curbuf❯ ",
+                        prompt = "[Neorg] Linksite❯ ",
                         search = [[http(s|)://]],
                         no_esc = true,
                     }
                 end,
                 opts = { buffer = bufnr },
-                description = "Fzflua: find Site links on buffer",
+                description = "Fzflua: find site links",
             },
 
             {
@@ -70,7 +70,7 @@ function M.neorg_mappings_ft(bufnr)
                 "<localleader>fT",
                 function()
                     require("fzf-lua").live_grep {
-                        prompt = "[Neorg] Find AllTitle❯ ",
+                        prompt = "[Neorg] TitleAll❯ ",
                         cwd = as.wiki_path,
                         no_esc = true,
                         search = [[(^\*|\*\*).*$]],
@@ -86,7 +86,7 @@ function M.neorg_mappings_ft(bufnr)
                 "<localleader>ft",
                 function()
                     require("fzf-lua").lgrep_curbuf {
-                        prompt = "[Neorg] Find Title❯ ",
+                        prompt = "[Neorg] Title❯ ",
                         search = [[(^\*|\*\*).*$]],
                         no_esc = true,
                         winopts = {
@@ -100,7 +100,7 @@ function M.neorg_mappings_ft(bufnr)
                 description = "Fzflua: find title buffer",
             },
             {
-                "<localleader>fl",
+                "<localleader>fo",
                 function()
                     cmd "normal yi}"
                     local title = vim.fn.getreg '"0'
@@ -123,7 +123,7 @@ function M.neorg_mappings_ft(bufnr)
                 description = "Fzlua: find friend notes",
             },
             {
-                "<c-l>",
+                "<c-v>",
                 function()
                     local opts = {
                         prompt = "[Neorg] linkable❯ ",

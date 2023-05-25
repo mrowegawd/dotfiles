@@ -5,12 +5,41 @@ local M = {}
 ------------------------------DEFAULT COMMANDS---------------------------------
 function M.default_commands()
     return {
+
         {
-            ":Snippets",
+            ":TestFunct",
             function()
-                require("r.utils").EditSnippet()
+                require("r.utils").YoungTest()
             end,
-            description = "Edit Snippets",
+            description = "Test func",
+        },
+
+        {
+            itemgroup = "Misc",
+            commands = {
+                {
+                    ":ToggleSemantic",
+                    function()
+                        require("r.utils").toggle_buffer_semantic_tokens(
+                            vim.api.nvim_get_current_buf()
+                        )
+                    end,
+                    description = "Toggle semantics tokens",
+                },
+                {
+                    ":Snippets",
+                    function()
+                        require("r.utils").EditSnippet()
+                    end,
+                    description = "Edit Snippets",
+                },
+
+                -- NEOGEN -------------------------------------------------------------
+                {
+                    ":Neogen",
+                    description = "Generate annotation",
+                },
+            },
         },
 
         {
@@ -63,12 +92,6 @@ function M.default_commands()
             },
         },
 
-        -- NEOGEN -------------------------------------------------------------
-        {
-            ":Neogen",
-            description = "Generate annotation",
-        },
-
         -- LAZY ---------------------------------------------------------------
         {
             itemgroup = "Lazy",
@@ -106,7 +129,6 @@ end
 function M.default_keymaps()
     return {
         -- BASIC
-
         {
             "<Leader>P",
             function()
@@ -136,32 +158,6 @@ function M.default_keymaps()
         { "n", "nzzzv", hide = true, description = "Search next" },
         { "N", "Nzzzv", hide = true, description = "Search prev" },
         {
-            "g,",
-            "g,zvzz",
-            hide = true,
-            description = "Go to new cursor positions in change list",
-        },
-        {
-            "g;",
-            "g;zvzz",
-            hide = true,
-            description = "Go to older positions in change list",
-        },
-        {
-            "<leader>q",
-            function()
-                return require("r.utils").toggle_qf()
-            end,
-            description = "Toggle open qf",
-        },
-        {
-            "<leader>w",
-            function()
-                return require("r.utils").toggle_loc()
-            end,
-            description = "Toggle open location list",
-        },
-        {
             "<Leader><TAB>",
             function()
                 local ft, _ = as.get_bo_buft()
@@ -189,22 +185,52 @@ function M.default_keymaps()
                     ["qf"] = require("r.utils").toggle_kil_loc_qf,
                 }
 
-                for ft_i, exec_msg in pairs(buf_fts) do
-                    if ft == ft_i then
-                        if type(exec_msg) == "string" then
-                            -- vim.notify(exec_msg)
-                            return cmd(exec_msg)
-                        elseif type(exec_msg) == "function" then
-                            -- vim.notify(type(exec_msg))
-                            return exec_msg()
+                local wins = vim.api.nvim_tabpage_list_wins(0)
+                -- Both neo-tree and aerial will auto-quit if there is only a single window left
+                if #wins <= 1 then
+                    return as.smart_quit()
+                end
+
+                local sidebar_fts = { aerial = true, ["neo-tree"] = true }
+
+                for _, winid in ipairs(wins) do
+                    if vim.api.nvim_win_is_valid(winid) then
+                        local bufnr = vim.api.nvim_win_get_buf(winid)
+                        local filetype = vim.api.nvim_get_option_value(
+                            "filetype",
+                            { buf = bufnr }
+                        )
+
+                        -- If any visible windows are not sidebars, early return
+                        if not sidebar_fts[filetype] then
+                            for ft_i, exec_msg in pairs(buf_fts) do
+                                if ft == ft_i then
+                                    if type(exec_msg) == "string" then
+                                        return cmd(exec_msg)
+                                    elseif type(exec_msg) == "function" then
+                                        return exec_msg()
+                                    end
+                                else
+                                    return as.smart_quit()
+                                    -- return require("mini.bufremove").delete(0, false)
+                                end
+                            end
+
+                        -- If the visible window is a sidebar
+                        else
+                            -- only count filetypes once, so remove a found sidebar from the detection
+                            sidebar_fts[filetype] = nil
                         end
                     end
                 end
 
-                return as.smart_quit()
-                -- return require("mini.bufremove").delete(0, false)
+                if #vim.api.nvim_list_tabpages() > 1 then
+                    vim.cmd.tabclose()
+                else
+                    vim.cmd.qall()
+                end
             end,
-            description = "Quit from a tab or window",
+            description = "Magic quit windows or tabs",
         },
         {
             -- Allow moving the cursor through wrapped lines using j and k,
@@ -219,19 +245,19 @@ function M.default_keymaps()
             opts = { expr = true },
         },
         -- WINDOWS
-        --
         {
             itemgroup = "Window-splits",
             description = "Windows; split, commands",
             icon = "",
             keymaps = {
                 {
-                    "<localleader>ws",
+                    -- "<localleader>ws",
+                    "<c-w>J",
                     "<C-W>t <C-W>K",
                     description = "Windows: change two horizontally split windows to vertical splits",
                 },
                 {
-                    "<localleader>wv",
+                    "<c-w>L",
                     "<C-W>t <C-W>H",
                     description = "Windows: change two vertically split windows to horizontal splits",
                 },
@@ -313,11 +339,19 @@ function M.default_keymaps()
                     description = "Misc: toggle spell",
                 },
                 {
-                    "c<BS>",
+                    "<BS>1",
                     function()
-                        return require("r.utils").echo_base_colors_theme()
+                        return require("r.utils").infoBaseColorsTheme()
                     end,
                     description = "Misc: print out base color themes",
+                },
+
+                {
+                    "<BS>2",
+                    function()
+                        return require("r.utils").infoFoldPreview()
+                    end,
+                    description = "Misc: print out all about fold info",
                 },
             },
         },
@@ -603,14 +637,14 @@ function M.lsp_keymaps()
                 description = "LSP: hover",
                 -- opts = { buffer = bufnr },
             },
-            -- { -- we use `IncRename` now
-            --     "<leader>gR",
-            --     function()
-            --         return vim.lsp.buf.rename()
-            --     end,
-            --     description = "LSP: rename",
-            -- opts = { buffer = bufnr },
-            -- },
+            {
+                "<leader>gR",
+                function()
+                    return vim.lsp.buf.rename()
+                end,
+                description = "LSP: rename",
+                -- opts = { buffer = bufnr },
+            },
 
             -- {
             --     "<leader>gR",
@@ -667,18 +701,6 @@ function M.lsp_keymaps()
                 "<leader>gW",
                 "<CMD>FzfLua lsp_live_workspace_symbols<CR>",
                 description = "LSP: document symbols all",
-                -- opts = { buffer = bufnr },
-            },
-            {
-                "<leader>go",
-                "<CMD>FzfLua outgoing_calls<CR>",
-                description = "Lspsaga: outgoing calls",
-                -- opts = { buffer = bufnr },
-            },
-            {
-                "<leader>gi",
-                "<CMD>FzfLua lsp_incoming_calls<CR>",
-                description = "Lspsaga: incoming calls",
                 -- opts = { buffer = bufnr },
             },
 

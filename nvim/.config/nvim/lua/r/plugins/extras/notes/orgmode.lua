@@ -80,25 +80,7 @@ return {
                     DONE = ":foreground green :weight bold :slant italic",
                     NEXT = ":foreground orange :weight bold",
                 },
-                win_split_mode = function(name)
-                    local bufnr = vim.api.nvim_create_buf(false, true)
-                    --- Setting buffer name is required
-                    vim.api.nvim_buf_set_name(bufnr, name)
-                    local fill = 0.8
-                    local width = math.floor((vim.o.columns * fill))
-                    local height = math.floor((vim.o.lines * fill))
-                    local row = math.floor((((vim.o.lines - height) / 2) - 1))
-                    local col = math.floor(((vim.o.columns - width) / 2))
-                    vim.api.nvim_open_win(bufnr, true, {
-                        relative = "editor",
-                        width = width,
-                        height = height,
-                        row = row,
-                        col = col,
-                        style = "minimal",
-                        border = "rounded",
-                    })
-                end,
+                win_split_mode = "20split",
                 org_agenda_templates = {
                     t = {
                         description = "Todo",
@@ -138,6 +120,7 @@ return {
                 },
                 mappings = {
                     disable_all = false,
+                    prefix = "<leader>",
                     global = {
                         org_agenda = ",aa",
                         org_capture = ",ac",
@@ -150,28 +133,26 @@ return {
                         org_agenda_week_view = "vw",
                         org_agenda_month_view = "vm",
                         org_agenda_year_view = "vy",
-                        org_agenda_quit = "q",
-                        org_agenda_goto = { "<TAB>" },
-                        org_agenda_goto_date = "d",
-                        -- org_agenda_redo = "r",
+                        org_agenda_quit = { "q", "<esc>" },
+                        org_agenda_goto = { "<TAB>", "<cr>" },
                         org_agenda_show_help = "?",
-
                         org_agenda_redo = "r",
+                        org_agenda_goto_date = "cid",
                         org_agenda_todo = "cit",
                         org_agenda_clock_goto = "<prefix>xj",
                         org_agenda_set_effort = "<prefix>xe",
-                        org_agenda_clock_in = "I",
-                        org_agenda_clock_out = "O",
-                        org_agenda_clock_cancel = "X",
+                        org_agenda_clock_in = "<prefix>I",
+                        org_agenda_clock_out = "<prefix>O",
+                        org_agenda_clock_cancel = "<prefix>C",
                         org_agenda_clockreport_mode = "R",
-                        org_agenda_priority = "<prefix>,",
-                        org_agenda_priority_up = "+",
-                        org_agenda_priority_down = "-",
+                        org_agenda_priority = "<prefix>1",
+                        org_agenda_priority_up = "<c-Up>",
+                        org_agenda_priority_down = "<c-Down>",
                         org_agenda_archive = "<prefix>$",
-                        org_agenda_toggle_archive_tag = "<prefix>A",
-                        org_agenda_set_tags = "<prefix>t",
-                        org_agenda_deadline = "<prefix>id",
-                        org_agenda_schedule = "<prefix>is",
+                        org_agenda_toggle_archive_tag = "<leader>T",
+                        org_agenda_set_tags = "<leader>t",
+                        org_agenda_deadline = "<leader>d",
+                        org_agenda_schedule = "<leader>s",
                         org_agenda_filter = "/",
                     },
                     capture = {
@@ -192,50 +173,41 @@ return {
                         org_meta_return = "<F12>", -- Add heading, item or row
                         org_return = "<F11>",
                         org_global_cycle = "<c-space>",
-                        org_archive_subtree = "<Leader>o$",
-                        org_set_tags_command = "<Leader>ot",
-                        org_toggle_archive_tag = "<Leader>oA",
-                        org_next_visible_heading = "gn",
-                        org_previous_visible_heading = "gp",
-                        -- org_do_promote = "<<",
-                        -- org_do_demote = ">>",
+                        org_archive_subtree = "<prefix>$",
+                        org_set_tags_command = "<Leader>t",
+                        org_toggle_archive_tag = "<Leader>T",
+                        org_next_visible_heading = "zn",
+                        org_previous_visible_heading = "zp",
                         org_toggle_heading = "<leader>o*",
-                        -- org_promote_subtree = "<s",
-                        -- org_demote_subtree = ">s",
-                        -- org_insert_heading_respect_content = "<Leader>oih", -- Add new headling after current heading block with same level
-                        -- org_insert_todo_heading = "<Leader>oiT", -- Add new todo headling right after current heading with same level
-                        -- org_insert_todo_heading_respect_content = "<Leader>oit", -- Add new todo headling after current heading block on same level
-                        -- org_move_subtree_up = "<Leader>ok",
-                        -- org_move_subtree_down = "<Leader>oj",
                         org_show_help = "?",
 
-                        org_timestamp_up_day = "<S-UP>",
-                        org_timestamp_down_day = "<S-DOWN>",
+                        org_timestamp_up_day = "<PageUp>",
+                        org_timestamp_down_day = "<PageDown>",
                         org_priority = "<prefix>,",
-                        org_priority_up = "ciR",
-                        org_priority_down = "cir",
+                        org_priority_up = "<c-Up>",
+                        org_priority_down = "<c-Down>",
                         org_todo_prev = "ciT",
                         org_edit_special = [[<prefix>']],
                         org_do_promote = "<<",
                         org_do_demote = ">>",
-                        org_promote_subtree = "<s",
-                        org_demote_subtree = ">s",
+                        org_promote_subtree = "<left>",
+                        org_demote_subtree = "<right>",
                         org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
                         org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
                         org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
-                        org_move_subtree_up = "<prefix>K",
-                        org_move_subtree_down = "<prefix>J",
+                        org_move_subtree_up = "<S-UP>",
+                        org_move_subtree_down = "<S-DOWN>",
                         org_export = "<prefix>e",
                         org_forward_heading_same_level = "]]",
                         org_backward_heading_same_level = "[[",
                         outline_up_heading = "g{",
-                        org_deadline = "<prefix>id",
-                        org_schedule = "<prefix>is",
-                        org_time_stamp = "<prefix>i.",
-                        org_time_stamp_inactive = "<prefix>i!",
-                        org_clock_in = "<prefix>xi",
-                        org_clock_out = "<prefix>xo",
-                        org_clock_cancel = "<prefix>xq",
+                        org_time_stamp = "<prefix>it",
+                        org_time_stamp_inactive = "<prefix>iT",
+                        org_deadline = "<leader>d",
+                        org_schedule = "<leader>s",
+                        org_clock_in = "<prefix>I",
+                        org_clock_out = "<prefix>O",
+                        org_clock_cancel = "<prefix>C",
                         org_clock_goto = "<prefix>xj",
                         org_set_effort = "<prefix>xe",
                     },

@@ -12,9 +12,7 @@ local diagnostic = vim.diagnostic
 local L = vim.lsp.log_levels
 
 local icons = as.ui.icons
--- local border = as.ui.border
 local augroup = as.augroup
-local command = as.command
 
 if vim.env.DEVELOPING then
     vim.lsp.set_log_level(L.DEBUG)
@@ -33,6 +31,30 @@ local provider = {
     REFERENCES = "documentHighlightProvider",
     DEFINITION = "definitionProvider",
 }
+
+local __save_win_positions = function(bufnr)
+    if bufnr == nil or bufnr == 0 then
+        bufnr = vim.api.nvim_get_current_buf()
+    end
+    local win_positions = {}
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_buf(winid) == bufnr then
+            vim.api.nvim_win_call(winid, function()
+                local view = vim.fn.winsaveview()
+                table.insert(win_positions, { winid, view })
+            end)
+        end
+    end
+
+    return function()
+        for _, pair in ipairs(win_positions) do
+            local winid, view = unpack(pair)
+            vim.api.nvim_win_call(winid, function()
+                pcall(vim.fn.winrestview, view)
+            end)
+        end
+    end
+end
 
 local function setup_autocommands(client, buf)
     if client.server_capabilities[provider.FORMATTING] then
@@ -53,12 +75,11 @@ local function setup_autocommands(client, buf)
                             buffer = buf,
                         }
                     )
+
                     if #clients >= 1 then
-                        lsp.buf.format {
-                            bufnr = args.buf,
-                            async = #clients == 1,
-                            timeout_ms = 2000,
-                        }
+                        local restore = __save_win_positions(0)
+                        vim.lsp.buf.format { timeout_ms = 500, bufnr = args.buf }
+                        restore()
                     end
                 end
             end,
@@ -78,64 +99,24 @@ local function setup_autocommands(client, buf)
         })
     end
 
-    if client.server_capabilities[provider.REFERENCES] then
-        augroup(("LspReferences%d"):format(buf), {
-            event = { "CursorHold", "CursorHoldI" },
-            buffer = buf,
-            desc = "LSP: References",
-            command = function()
-                lsp.buf.document_highlight()
-            end,
-        }, {
-            event = "CursorMoved",
-            desc = "LSP: References Clear",
-            buffer = buf,
-            command = function()
-                lsp.buf.clear_references()
-            end,
-        })
-    end
+    --     if client.server_capabilities[provider.REFERENCES] then
+    --         augroup(("LspReferences%d"):format(buf), {
+    --             event = { "CursorHold", "CursorHoldI" },
+    --             buffer = buf,
+    --             desc = "LSP: References",
+    --             command = function()
+    --                 lsp.buf.document_highlight()
+    --             end,
+    --         }, {
+    --             event = "CursorMoved",
+    --             desc = "LSP: References Clear",
+    --             buffer = buf,
+    --             command = function()
+    --                 lsp.buf.clear_references()
+    --             end,
+    --         })
+    --     end
 end
-
-----------------------------------------------------------------------------------------------------
---  LSP file Rename
-----------------------------------------------------------------------------------------------------
--- local function prepare_rename(data)
---     local bufnr = fn.bufnr(data.old_name)
---     for _, client in pairs(lsp.get_active_clients { bufnr = bufnr }) do
---         local rename_path = {
---             "server_capabilities",
---             "workspace",
---             "fileOperations",
---             "willRename",
---         }
---         if not vim.tbl_get(client, rename_path) then
---             vim.notify(
---                 fmt "%s does not support rename files",
---                 "error",
---                 { title = "LSP" }
---             )
---         end
---         local params = {
---             files = {
---                 {
---                     newUri = "file://" .. data.new_name,
---                     oldUri = "file://" .. data.old_name,
---                 },
---             },
---         }
---         local resp =
---             client.request_sync("workspace/willRenameFiles", params, 1000)
---         vim.lsp.util.apply_workspace_edit(resp.result, client.offset_encoding)
---     end
--- end
---
--- local function rename_file()
---     local old_name = api.nvim_buf_get_name(0)
---     local new_name = fmt("%s/%s", fs.dirname(old_name), fn.input "New name: ")
---     prepare_rename { old_name = old_name, new_name }
---     lsp.util.rename(old_name, new_name)
--- end
 
 ----------------------------------------------------------------------------------------------------
 --  Related Locations
@@ -248,13 +229,52 @@ local function setup_semantic_tokens(client, bufnr)
     })
 end
 
+local function adjust_formatting_capabilities(client, bufnr)
+    if not pcall(require, "null-ls") then
+        return
+    end
+    local sources = require "null-ls.sources"
+    local methods = require "null-ls.methods"
+    local null_ls_client = require("null-ls.client").get_client()
+    if
+        not null_ls_client
+        or not vim.lsp.buf_is_attached(bufnr, null_ls_client.id)
+    then
+        return
+    end
+    local formatters =
+        sources.get_available(vim.bo[bufnr].filetype, methods.FORMATTING)
+    if vim.tbl_isempty(formatters) then
+        return
+    end
+    if client.id == null_ls_client.id then
+        -- We're attaching a null-ls client. If it has a formatter, disable
+        -- formatting on all prior clients
+        local clients = vim.lsp.get_active_clients { bufnr = bufnr }
+        for _, other_client in ipairs(clients) do
+            if other_client.id ~= client.id then
+                other_client.server_capabilities.documentFormattingProvider =
+                    nil
+                other_client.server_capabilities.documentRangeFormattingProvider =
+                    nil
+            end
+        end
+    else
+        client.server_capabilities.documentFormattingProvider = nil
+        client.server_capabilities.documentRangeFormattingProvider = nil
+    end
+end
+
 -- Add buffer local mappings, autocommands etc for attaching servers
 -- this runs for each client because they have different capabilities so each time one
 -- attaches it might enable autocommands or mappings that the previous client did not support
 local function on_attach(client, bufnr)
     setup_autocommands(client, bufnr)
+    adjust_formatting_capabilities(client, bufnr)
     setup_mappings(client, bufnr)
     setup_semantic_tokens(client, bufnr)
+
+    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 end
 
 augroup("LspSetupCommands", {
@@ -352,13 +372,11 @@ diagnostic.config {
     update_in_insert = false,
     severity_sort = true,
     signs = true,
-    virtual_text = false and {
+    virtual_text = true and {
         spacing = 1,
         prefix = "",
         format = function(d)
-            -- local level = diagnostic.severity[d.severity]
-            -- return fmt("%s %s", icons.diagnostics[level:lower()], d.message)
-            return fmt("%s %s", icons.kind.Event, d.message)
+            return fmt("%s %s", icons.misc.circle, d.message)
         end,
     },
     float = {

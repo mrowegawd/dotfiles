@@ -75,14 +75,14 @@ return {
 
                         -- RESIZE
                         {
-                            "<c-Up>",
+                            "<a-K>",
                             function()
                                 return require("smart-splits").resize_up()
                             end,
                             description = "Smart_splits: resize window up",
                         },
                         {
-                            "<c-Down>",
+                            "<a-J>",
                             function()
                                 return require("smart-splits").resize_down()
                             end,
@@ -90,14 +90,14 @@ return {
                         },
 
                         {
-                            "<c-Left>",
+                            "<a-H>",
                             function()
                                 return require("smart-splits").resize_left()
                             end,
                             description = "Smart_splits: resize window left",
                         },
                         {
-                            "<c-Right>",
+                            "<a-L>",
                             function()
                                 return require("smart-splits").resize_right()
                             end,
