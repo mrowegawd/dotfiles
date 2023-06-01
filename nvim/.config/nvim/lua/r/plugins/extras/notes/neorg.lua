@@ -240,6 +240,21 @@ return {
                                 "<left>",
                                 "core.promo.demote"
                             )
+
+                            -- go next heading fold
+                            keybinds.remap_event(
+                                "norg",
+                                "n",
+                                "zn",
+                                "core.integrations.treesitter.next.heading"
+                            )
+                            -- go prev heading fold
+                            keybinds.remap_event(
+                                "norg",
+                                "n",
+                                "zp",
+                                "core.integrations.treesitter.previous.heading"
+                            )
                         end,
                     },
                 },
