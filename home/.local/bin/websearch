@@ -36,7 +36,8 @@ ${FILEOPT}
 [ \"Add:New:Bookmark\", \"\" ],
 [ \"Open:Bookmarked\", \"\" ],
 [ \"Delete:Query\",  \"\" ],
-[ \"Delete:Bookmarked\",  \"\" ]
+[ \"Delete:Bookmarked\",  \"\" ],
+[ \"Edit:Bookmarked\",  \"\" ]
 ]
 "
 
@@ -77,17 +78,17 @@ delete_query() {
 add_bookmark() {
 	GET_CLIPCOPY=$(xclip -selection c -o)
 	if [ -z "$GET_CLIPCOPY" ]; then
-		dunstify "url: your url is empty"
+		dunstify "url: empty, abort"
 		exit
 	fi
 
-	SET_TAGS=$(echo -e "todo\ntorrent\nforum\ngithub\ncheck\nfun\ntips\ndevs" | dmenu -p "Tags:")
-	DESCRIPTION=$(echo "" | dmenu -p "Add description:" <&-)
-
+	SET_TAGS=$(echo -e "hacky\ndotfiles\ntodo\ntutorial\ntorrent\nforum\ngithub\nTODO\nfun\ntips\ndevs\nmoneygame\nwallpaper" | dmenu -p "Tags:")
 	if [ -z "$SET_TAGS" ]; then
-		dunstify "tags: your tag is empty"
+		dunstify "tags: empty, abort"
 		exit
 	fi
+
+	DESCRIPTION=$(echo "" | dmenu -p "Add description:" <&-)
 
 	if [ -n "$DESCRIPTION" ]; then
 		# PREFIX_DAT=$(echo "$GET_CLIPCOPY" | sed -e 's/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/')
@@ -109,6 +110,12 @@ open_bookmarked() {
 	exit
 }
 
+edit_bookmarked() {
+	# kalau bukan bspwm, ini bakal error
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+
+	exit
+}
 main() {
 	for i in $(seq 0 $((OBJ_LENGTH - 1))); do
 		if [ "$OBJ_SELECTED" = "Add:New:Query" ]; then
@@ -129,6 +136,10 @@ main() {
 
 		if [ "$OBJ_SELECTED" = "Delete:Bookmarked" ]; then
 			delete_query "ROFI" "$FILE_BOOKMARKED"
+		fi
+
+		if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
+			edit_bookmarked
 		fi
 
 		if [ "$OBJ_SELECTED" = "$(echo "$OPTIONS" | jq -r --arg i "$i" '.[($i|tonumber)][0]')" ]; then
