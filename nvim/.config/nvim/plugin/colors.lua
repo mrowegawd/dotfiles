@@ -378,6 +378,10 @@ local general_overrides = function()
             },
         },
 
+        -- ORGMODE ============================================================
+
+        { OrgDONE = { fg = "#00FF00" } },
+
         -- NEORG ==============================================================
         -- {
         --     NeorgCodeBlock = { bg = { from = "CursorIM", alter = -14 } },
