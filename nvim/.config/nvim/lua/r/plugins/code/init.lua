@@ -214,7 +214,6 @@ return {
     {
         "LintaoAmons/scratch.nvim",
         cmd = { "Scratch", "ScratchOpen" },
-        -- config = function() end,
         init = function()
             require("legendary").keymaps {
                 {

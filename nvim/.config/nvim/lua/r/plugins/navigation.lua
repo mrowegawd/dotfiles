@@ -34,12 +34,12 @@ return {
                                     end
                                 end
                             end,
-                            description = "Open File explore",
+                            description = "Neo-tree: open File explore",
                         },
                         {
                             "<Leader>E",
                             "<CMD>Neotree reveal<CR>",
-                            description = "Open find file on File Explore",
+                            description = "Neo-tree: open find file on File Explore",
                         },
                     },
                 },

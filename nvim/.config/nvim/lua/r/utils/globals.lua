@@ -304,7 +304,7 @@ function as.smart_quit()
     end
 end
 
-function _G.foldtext()
+function _G.CustomFoldText()
     local level = "+-" .. string.rep("-", vim.v.foldlevel - 1) .. " "
     local nlines = (vim.v.foldend - vim.v.foldstart) + 1
     local align = string.rep(

@@ -17,6 +17,22 @@ function M.default_commands()
         {
             itemgroup = "Misc",
             commands = {
+
+                {
+                    ":InfoBaseColorsTheme",
+                    function()
+                        return require("r.utils").infoBaseColorsTheme()
+                    end,
+                    description = "Misc: base color (untuk theme bspwm)",
+                },
+
+                {
+                    ":InfoOption",
+                    function()
+                        return require("r.utils").infoFoldPreview()
+                    end,
+                    description = "Misc: echo options",
+                },
                 {
                     ":ToggleSemantic",
                     function()
@@ -24,14 +40,14 @@ function M.default_commands()
                             vim.api.nvim_get_current_buf()
                         )
                     end,
-                    description = "Toggle semantics tokens",
+                    description = "Misc: toggle semantics tokens",
                 },
                 {
                     ":Snippets",
                     function()
                         require("r.utils").EditSnippet()
                     end,
-                    description = "Edit Snippets",
+                    description = "Misc: edit Snippets",
                 },
 
                 -- NEOGEN -------------------------------------------------------------
@@ -337,21 +353,6 @@ function M.default_keymaps()
                         end
                     end,
                     description = "Misc: toggle spell",
-                },
-                {
-                    "<BS>1",
-                    function()
-                        return require("r.utils").infoBaseColorsTheme()
-                    end,
-                    description = "Misc: print out base color themes",
-                },
-
-                {
-                    "<BS>2",
-                    function()
-                        return require("r.utils").infoFoldPreview()
-                    end,
-                    description = "Misc: print out all about fold info",
                 },
             },
         },

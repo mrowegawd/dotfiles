@@ -195,6 +195,20 @@ as.augroup("WindowBehaviours", {
     command = function()
         vim.opt_local.foldcolumn = "0"
     end,
+}, {
+
+    event = { "FileType" },
+    pattern = { "org", "orgagenda" },
+    command = function()
+        vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
+    end,
+}, {
+
+    event = { "FileType" },
+    pattern = { "norg" },
+    command = function()
+        vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
+    end,
 })
 
 as.augroup("DisableWinBf", {
@@ -316,7 +330,7 @@ local trim = function(pattern)
     fn.winrestview(save)
 end
 
-local ignore_filetype_trim = { "norg", "text" }
+local ignore_filetype_trim = { "norg", "text", "org" }
 local remove_group =
     vim.api.nvim_create_augroup("removeTrailingSpaces", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {
