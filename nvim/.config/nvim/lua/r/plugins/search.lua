@@ -162,6 +162,11 @@ return {
                             mode = { "v" },
                         },
                         {
+                            "<localleader>g",
+                            "<CMD>FzfLua changes<CR>",
+                            description = "Fzflua: changes",
+                        },
+                        {
                             "<c-g>",
                             "<CMD>FzfLua jumps<CR>",
                             description = "Fzflua: jumps",
