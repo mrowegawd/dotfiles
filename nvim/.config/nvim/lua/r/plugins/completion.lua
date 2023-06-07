@@ -60,7 +60,7 @@ return {
                 end
             end
 
-            -- local callme = 0
+            local callme = 0
 
             cmp.setup {
 
@@ -156,55 +156,52 @@ return {
                     ["<CR>"] = cmp.mapping.confirm { select = false },
                     -- ["<c-space>"] = cmp.mapping.confirm { select = false },
 
-                    -- ["<C-e>"] = cmp.mapping(function(_)
-                    --     local c_cmp = require "cmp"
-                    --     if c_cmp.visible() then
-                    --         c_cmp.abort()
-                    --     else
-                    --         c_cmp.complete()
-                    --         -- elseif callme == 0 then
-                    --         --     callme = 1
-                    --         --     c_cmp.complete {
-                    --         --         config = {
-                    --         --             sources = {
-                    --         --                 { name = "luasnip" },
-                    --         --             },
-                    --         --         },
-                    --         --     }
-                    --         -- elseif callme == 1 then
-                    --         --     callme = 2
-                    --         --     cmp.complete {
-                    --         --         config = {
-                    --         --             sources = {
-                    --         --                 {
-                    --         --                     name = "buffer",
-                    --         --                     option = {
-                    --         --                         get_bufnrs = function()
-                    --         --                             return vim.api.nvim_list_bufs()
-                    --         --                         end,
-                    --         --                     },
-                    --         --                 },
-                    --         --             },
-                    --         --         },
-                    --         --     }
-                    --         -- else
-                    --         --     if callme == 2 then
-                    --         --         callme = 0
-                    --         --         cmp.complete {
-                    --         --             config = {
-                    --         --                 sources = {
-                    --         --                     { name = "nvim_lsp" },
-                    --         --                 },
-                    --         --             },
-                    --         --         }
-                    --         --     end
-                    --     end
-                    -- end, {
-                    --     "i",
-                    --     "s",
-                    -- }),
-
-                    ["<C-q>"] = cmp.mapping.abort(),
+                    ["<C-q>"] = cmp.mapping(function(_)
+                        local c_cmp = require "cmp"
+                        if c_cmp.visible() then
+                            c_cmp.abort()
+                        elseif callme == 0 then
+                            callme = 1
+                            c_cmp.complete {
+                                config = {
+                                    sources = {
+                                        { name = "luasnip" },
+                                    },
+                                },
+                            }
+                        elseif callme == 1 then
+                            callme = 2
+                            cmp.complete {
+                                config = {
+                                    sources = {
+                                        {
+                                            name = "buffer",
+                                            option = {
+                                                get_bufnrs = function()
+                                                    return vim.api.nvim_list_bufs()
+                                                end,
+                                            },
+                                        },
+                                    },
+                                },
+                            }
+                        else
+                            if callme == 2 then
+                                callme = 0
+                                cmp.complete {
+                                    config = {
+                                        sources = {
+                                            { name = "nvim_lsp" },
+                                        },
+                                    },
+                                }
+                            end
+                        end
+                    end, {
+                        "i",
+                        "s",
+                    }),
+                    -- ["<C-q>"] = cmp.mapping.abort(),
                 },
                 sorting = {
                     comparators = {
