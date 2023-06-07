@@ -92,6 +92,30 @@ return {
 
         config = function()
             local nls = require "null-ls"
+            local diagnostics = nls.builtins.diagnostics
+
+            -- Ruff settings
+            local ruff_severities = {
+                ["E"] = vim.diagnostic.severity.ERROR,
+                ["F8"] = vim.diagnostic.severity.ERROR,
+                ["F"] = vim.diagnostic.severity.WARN,
+                ["W"] = vim.diagnostic.severity.WARN,
+                ["D"] = vim.diagnostic.severity.INFO,
+                ["B"] = vim.diagnostic.severity.INFO,
+            }
+            local ruff = diagnostics.ruff.with {
+                diagnostics_postprocess = function(diagnostic)
+                    local code = string.sub(diagnostic.code, 1, 2)
+                    if code ~= "F8" then
+                        code = string.sub(code, 1, 1)
+                    end
+                    local new_severity = ruff_severities[code]
+                    if new_severity then
+                        diagnostic.severity = new_severity
+                    end
+                end,
+            }
+
             nls.setup {
                 debounce = 150,
                 save_after_format = false,
@@ -131,9 +155,11 @@ return {
                     -- nls.builtins.code_actions.gitsigns,
 
                     -- PYTHON
+                    -- nls.builtins.diagnostics.flake8,
+                    nls.builtins.diagnostics.pylint,
+                    ruff,
                     nls.builtins.formatting.isort,
                     nls.builtins.formatting.black,
-                    nls.builtins.diagnostics.flake8,
 
                     -- NOTE: ini error dengan warning deprecated treesitter di neorg
                     -- require("null-ls-embedded").nls_source.with {
@@ -611,14 +637,7 @@ return {
     -- SYMBOLSOUTLINE
     {
         "enddeadroyal/symbols-outline.nvim",
-        -- enabled = function()
-        --     if as.use_search_telescope then
-        --         return true
-        --     end
-        --     return false
-        -- end,
-
-        enabled = true,
+        enabled = false,
         cmd = "SymbolsOutline",
         branch = "bugfix/symbol-hover-misplacement",
         init = function()
@@ -758,21 +777,37 @@ return {
                 general = {
                     ---@type boolean|fun(buf: integer, win: integer): boolean
                     enable = function(buf, win)
+                        local fname = vim.api.nvim_buf_get_name(
+                            vim.api.nvim_get_current_buf()
+                        )
+                        if fname:match "orgagenda" then
+                            return false
+                        end
+
                         return not vim.api.nvim_win_get_config(win).zindex
                             and vim.bo[buf].buftype == ""
                             and vim.api.nvim_buf_get_name(buf) ~= ""
                             and not vim.wo[win].diff
                     end,
                     update_events = {
-                        "CursorMoved",
-                        "CursorMovedI",
-                        "DirChanged",
-                        "FileChangedShellPost",
-                        "TextChanged",
-                        "TextChangedI",
-                        "VimResized",
-                        "WinResized",
-                        "WinScrolled",
+                        win = {
+                            "CursorMoved",
+                            "CursorMovedI",
+                            "WinEnter",
+                            "WinLeave",
+                            "WinResized",
+                            "WinScrolled",
+                        },
+                        buf = {
+                            "BufModifiedSet",
+                            "FileChangedShellPost",
+                            "TextChanged",
+                            "TextChangedI",
+                        },
+                        global = {
+                            "DirChanged",
+                            "VimResized",
+                        },
                     },
                 },
                 icons = {
