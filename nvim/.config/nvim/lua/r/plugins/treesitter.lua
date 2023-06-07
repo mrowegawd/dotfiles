@@ -98,6 +98,7 @@ return {
                     "vhs",
                     "vim",
                     "vue",
+                    "ruby",
                     "wgsl",
                     "yaml",
                     -- "wgsl",
