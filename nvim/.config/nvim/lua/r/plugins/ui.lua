@@ -369,7 +369,7 @@ return {
         -- https://github.com/kevinhwang91/nvim-ufo/issues/33#issuecomment-1478102255
         "kevinhwang91/nvim-ufo",
         event = "BufRead",
-        enabled = false,
+        -- enabled = false,
         dependencies = {
             "kevinhwang91/promise-async",
         },
@@ -389,6 +389,14 @@ return {
                     local ufo = require "ufo"
                     ufo.detach()
                 end,
+            })
+
+            highlight.plugin("UfoNcolor", {
+                {
+                    Folded = {
+                        bg = "NONE",
+                    },
+                },
             })
 
             require("legendary").keymaps {

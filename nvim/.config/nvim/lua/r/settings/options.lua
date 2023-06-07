@@ -170,7 +170,7 @@ local options = {
 
         foldmethod = "expr",
         foldexpr = "nvim_treesitter#foldexpr()",
-        foldtext = "v:lua.foldtext()",
+        foldtext = "v:lua.CustomFoldText()",
         foldcolumn = "1", -- 0 is not bad
         -- unfortunately folding in (n)vim is a mess, if you set the fold level to start
         -- at x then it will auto fold anything at that level, all good so far. if you then
