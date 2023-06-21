@@ -195,6 +195,14 @@ return {
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
         end,
     },
+    -- HYPERSONIC.NVIM (make regex readable)
+    {
+        "tomiis4/Hypersonic.nvim",
+        cmd = { "Hypersonic" },
+        config = function()
+            require("hypersonic").setup()
+        end,
+    },
     -- HLARGS
     {
         "m-demare/hlargs.nvim",
@@ -270,7 +278,6 @@ return {
             }
         end,
     },
-
     -- UNDOTREE
     {
         "mbbill/undotree",
@@ -369,6 +376,13 @@ return {
                 "NeogitStatus",
             },
         },
+    },
+    -- GKEEP
+    {
+        -- Check and run: `python3 -m pip install gkeepapi keyring`
+        "stevearc/gkeep.nvim",
+        build = ":UpdateRemotePlugins",
+        event = "BufReadPre gkeep://*",
     },
 
     ---------------------------------------------------------------------

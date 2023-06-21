@@ -33,6 +33,7 @@ M.servers = {
     -- bufls = {},
     prosemd_lsp = {},
     docker_compose_language_service = {},
+    tailwindcss = {},
     vtsls = {
         settings = {
             typescript = {
@@ -118,6 +119,7 @@ M.servers = {
                 analyses = {
                     unusedparams = true,
                 },
+                semanticTokens = true,
                 usePlaceholders = true,
                 completeUnimported = true,
                 staticcheck = true,

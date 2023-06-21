@@ -122,6 +122,9 @@ super + shift + m
 super + shift + F8
         pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
 
+super + shift + F9
+        pkill ffmpeg && dunstify "Record" "quit..."
+
 # misc: restart/reload bspwm
 super + shift + F12
         bspc wm -r && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
@@ -139,8 +142,8 @@ super + shift + n
         $HOME/Dropbox/exbin/for-local-bin/bspwmfloat ncmpcpp
 
 # misc: run glinux
-super + shift + g
-        $HOME/.config/rofi/menu/_glinux
+# super + shift + g
+#         $HOME/.config/rofi/menu/_glinux
 
 # misc: run obsidian
 super + shift + o

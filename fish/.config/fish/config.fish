@@ -39,9 +39,9 @@ export BROWSER="firefox"
 # sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 #
 # Configuration check this link: https://starship.rs/config/
-if command -v starship >/dev/null
-    starship init fish | source
-end
+# if command -v starship >/dev/null
+#     starship init fish | source
+# end
 # -----------------------------------------------------------------------------
 
 # FORGIT: ----------------------------------------------------------------- {{{

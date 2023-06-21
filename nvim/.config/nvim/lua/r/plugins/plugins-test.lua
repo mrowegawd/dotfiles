@@ -2,6 +2,9 @@
 -- NOTE: disini hanya lah tempat testing plugin2s nvim, nothing more
 -------------------------------------------------------------------------------
 return {
+    -- { "TheDreadedAndy/colorschemes.nvim", lazy = false },
+    -- { "jan-warchol/selenized", lazy = false },
+
     {
 
         "rmagatti/auto-session",
@@ -62,39 +65,6 @@ return {
     --             -- on_success = function()
     --             --     cmd [[execute "normal! g`\"zz"]]
     --             -- end,
-    --         }
-    --     end,
-    -- },
-
-    -- INI BIKIN BERAT NEOVIM, HARUS DISABLED DAHULU
-    -- need install: python3 -m pip install gkeepapi keyring
-    -- {
-    --     "stevearc/gkeep.nvim",
-    --     build = ":UpdateRemotePlugins",
-    --     cmd = {
-    --         "GkeepLogin",
-    --         "GkeepLogout",
-    --         "GkeepOpen",
-    --         "GkeepEnter",
-    --         -- "GkeepClose",
-    --         "GkeepToggle",
-    --         -- "GkeepNew",
-    --         -- "GkeepSync",
-    --         -- "GkeepRefresh",
-    --         -- "GkeepGoto",
-    --         -- "GkeepBrowse",
-    --         -- "GkeepPopup",
-    --         -- "GkeepYank ",
-    --         -- "GkeepUpdateLinks",
-    --         -- "GkeepCheck",
-    --         -- "GkeepSortChecked",
-    --         -- "GkeepClearChecked",
-    --     },
-    --     event = "BufReadPre",
-    --     config = function()
-    --         vim.g.gkeep_log_levels = {
-    --             gkeep = "debug",
-    --             gkeepapi = "warning",
     --         }
     --     end,
     -- },

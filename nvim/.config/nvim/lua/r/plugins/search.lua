@@ -277,6 +277,7 @@ return {
         end,
         config = function()
             local actions = require "fzf-lua.actions"
+            local path = require "fzf-lua.path"
 
             require("fzf-lua").setup {
                 keymap = {
@@ -302,15 +303,6 @@ return {
                     fzf = {
                         -- fzf '--bind=' options
                         ["ctrl-z"] = "abort",
-
-                        -- ["ctrl-h"] = function(_, args)
-                        --     if args.cmd:find "--hidden" then
-                        --         args.cmd = args.cmd:gsub("--hidden", "", 1)
-                        --     else
-                        --         args.cmd = args.cmd .. " --hidden"
-                        --     end
-                        --     require("fzf-lua").files(args)
-                        -- end,
 
                         -- ["ctrl-u"] = "unix-line-discard",
                         -- ["ctrl-d"] = "half-page-down",
@@ -454,6 +446,7 @@ return {
                 },
                 -- provider setup
                 files = {
+                    -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
                     -- previewer = "bat", -- uncomment to override previewer
                     -- (name from 'previewers' table)
                     -- set to 'false' to disable
@@ -484,11 +477,65 @@ return {
                     actions = {
                         -- inherits from 'actions.files', here we can override
                         -- or set bind to 'false' to disable a default action
-                        ["default"] = actions.file_edit,
                         -- custom actions are available too
                         -- ["ctrl-y"] = function(selected)
                         --     print(selected[1])
                         -- end,
+                        ["default"] = function(selected, opts)
+                            -- as.info(selected[1])
+                            local selected_item = selected[1]
+                            local status, entry = pcall(
+                                path.entry_to_file,
+                                selected_item,
+                                opts,
+                                opts.force_uri
+                            )
+
+                            local file_or_dir = vim.loop.fs_stat(entry.path)
+
+                            if
+                                file_or_dir
+                                and status
+                                and file_or_dir.type == "file"
+                            then
+                                require("fzf-lua").actions.file_edit(
+                                    selected,
+                                    opts
+                                )
+                            else
+                                require("fzf-lua").live_grep {
+                                    winopts = {
+                                        title = format_title(
+                                            entry.path,
+                                            "  "
+                                        ),
+                                    },
+                                    cwd = entry.path,
+                                }
+                            end
+                        end,
+
+                        ["ctrl-b"] = function(_, args)
+                            local winopts = {
+                                preview = { hidden = "nohidden" },
+                            }
+                            if args.cmd:find "--type f" then
+                                args.cmd = args.cmd:gsub("--type f", "", 1)
+                                args.cmd:gsub("%s*\\*$", "")
+                                args.cmd = args.cmd .. " --type d"
+                                winopts = {
+                                    preview = { hidden = "hidden" },
+                                }
+                            elseif args.cmd:find "--type d" then
+                                args.cmd = args.cmd:gsub("--type d", "", 1)
+                                args.cmd:gsub("%s*\\*$", "")
+                                args.cmd = args.cmd .. " --type f"
+                            end
+                            require("fzf-lua").files {
+                                cmd = args.cmd,
+                                winopts = winopts,
+                            }
+                        end,
                     },
                 },
                 git = {
@@ -529,6 +576,7 @@ return {
                             ["ctrl-v"] = actions.git_buf_vsplit,
                             ["ctrl-t"] = actions.git_buf_tabedit,
 
+                            -- Open hash on browser
                             ["ctrl-b"] = function(selected, _)
                                 local selection = selected[1]
                                 local commit_hash = require(
@@ -540,6 +588,7 @@ return {
 
                                 vim.api.nvim_command(":GBrowse " .. commit_hash)
                             end,
+                            -- Copy hash to clipboard
                             ["ctrl-y"] = function(selected, _)
                                 local selection = selected[1]
                                 local commit_hash = require(
@@ -559,7 +608,28 @@ return {
                                     "FZFGit"
                                 )
                             end,
+                            -- Show diff all log
                             ["ctrl-o"] = function(selected, _)
+                                local selection = selected[1]
+
+                                local commit_hash = require(
+                                    "r.utils.fzf_diffview"
+                                ).split_string(
+                                    selection,
+                                    " "
+                                )[1]
+
+                                local cmdmsg = ":DiffviewOpen -uno "
+                                    .. commit_hash
+
+                                vim.api.nvim_command(cmdmsg)
+
+                                as.info(
+                                    "Showing a diff " .. commit_hash "FZFGit"
+                                )
+                            end,
+                            -- Open diff current modified
+                            ["ctrl-m"] = function(selected, _)
                                 local selection = selected[1]
 
                                 local commit_hash = require(
@@ -574,12 +644,12 @@ return {
                                         vim.api.nvim_get_current_buf()
                                     )
 
-                                vim.api.nvim_command(
-                                    ":DiffviewOpen -uno "
-                                        .. commit_hash
-                                        .. " -- "
-                                        .. filename
-                                )
+                                local cmdmsg = ":DiffviewOpen -uno "
+                                    .. commit_hash
+                                    .. " -- "
+                                    .. filename
+
+                                vim.api.nvim_command(cmdmsg)
 
                                 as.info(
                                     "Comparing a commit diff "
@@ -599,8 +669,8 @@ return {
                         --   {1}    : commit SHA (fzf field index expression)
                         --   <file> : filepath placement within the commands
                         -- cmd = "git log --color --pretty=format:'%C(yellow)%h%Creset %Cgreen(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' <file>",
-                        -- preview = "git diff --color {1}~1 {1} -- <file>",
-                        preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+                        preview = "git diff --color {1}~1 {1} -- <file>",
+                        -- preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
                         winopts = {
                             title = format_title("", "Buffer Commits"),
                         },
@@ -653,17 +723,36 @@ return {
                                     " "
                                 )[1]
 
+                                local cmdmsg = ":DiffviewOpen -uno "
+                                    .. commit_hash
+
+                                vim.api.nvim_command(cmdmsg)
+
+                                as.info(
+                                    "Showing a diff " .. commit_hash "FZFGit"
+                                )
+                            end,
+                            ["ctrl-m"] = function(selected, _)
+                                local selection = selected[1]
+
+                                local commit_hash = require(
+                                    "r.utils.fzf_diffview"
+                                ).split_string(
+                                    selection,
+                                    " "
+                                )[1]
+
                                 local filename =
                                     require("r.utils.fzf_diffview").git_relative_path(
                                         vim.api.nvim_get_current_buf()
                                     )
 
-                                vim.api.nvim_command(
-                                    ":DiffviewOpen -uno "
-                                        .. commit_hash
-                                        .. " -- "
-                                        .. filename
-                                )
+                                local cmdmsg = ":DiffviewOpen -uno "
+                                    .. commit_hash
+                                    .. " -- "
+                                    .. filename
+
+                                vim.api.nvim_command(cmdmsg)
 
                                 as.info(
                                     "Showing a diff "

@@ -22,7 +22,7 @@ as.dropbox_path = fmt("%s/Dropbox", as.home, "Dropbox")
 as.wiki_path = fmt("%s/neorg", as.dropbox_path)
 as.snippet_path = as.dropbox_path .. "/friendly-snippets"
 
-as.colorscheme = "catppuccin"
+as.colorscheme = "doom-one"
 as.master_win = 1
 as.term_count = 1
 as.toggle_number = 1
@@ -103,6 +103,7 @@ local function validate_autocmd(name, command)
     if #incorrect > 0 then
         vim.schedule(function()
             local msg = "Incorrect keys: " .. table.concat(incorrect, ", ")
+            ---@diagnostic disable-next-line: param-type-mismatch
             vim.notify(msg, "error", { title = fmt("Autocmd: %s", name) })
         end)
     end
@@ -276,6 +277,7 @@ function as.pcall(msg, func, ...)
     local args = { ... }
     if type(msg) == "function" then
         local arg = func --[[@as any]]
+        ---@diagnostic disable-next-line: cast-local-type
         args, func, msg = { arg, unpack(args) }, msg, nil
     end
     return xpcall(func, function(err)
@@ -288,8 +290,10 @@ end
 
 function as.smart_quit()
     local bufnr = api.nvim_get_current_buf()
+    ---@diagnostic disable-next-line: param-type-mismatch
     local buf_windows = vim.call("win_findbuf", bufnr)
 
+    ---@diagnostic disable-next-line: redundant-parameter
     local modified = api.nvim_buf_get_option(bufnr, "modified")
     if modified and #buf_windows == 1 then
         vim.ui.input({

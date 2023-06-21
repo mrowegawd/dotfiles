@@ -775,7 +775,6 @@ return {
         config = function()
             require("dropbar").setup {
                 general = {
-                    ---@type boolean|fun(buf: integer, win: integer): boolean
                     enable = function(buf, win)
                         local fname = vim.api.nvim_buf_get_name(
                             vim.api.nvim_get_current_buf()
@@ -934,14 +933,14 @@ return {
                             end
                             return symbols
                         end
-
                         return {
                             sources.path,
                             {
-                                get_symbols = function(buf, cursor)
+                                get_symbols = function(buf, win, cursor)
                                     if vim.bo[buf].ft == "markdown" then
                                         return sources.markdown.get_symbols(
                                             buf,
+                                            win,
                                             cursor
                                         )
                                     end
@@ -950,14 +949,15 @@ return {
                                         sources.treesitter,
                                     } do
                                         -- local symbols =
-                                        --     source.get_symbols(buf, cursor)
+                                        --     source.get_symbols(buf, win, cursor)
                                         -- if not vim.tbl_isempty(symbols) then
                                         --     return symbols
                                         -- end
+
                                         return get_symbols(
                                             buf,
                                             cursor,
-                                            source.get_symbols(buf, cursor)
+                                            source.get_symbols(buf, win, cursor)
                                         )
                                     end
                                     return {}
@@ -975,6 +975,11 @@ return {
                     truncate = true,
                 },
                 menu = {
+                    -- When on, preview the symbol under the cursor on CursorMoved
+                    preview = false,
+                    -- When on, automatically set the cursor to the closest previous/next
+                    -- clickable component in the direction of cursor movement on CursorMoved
+                    quick_navigation = true,
                     entry = {
                         padding = {
                             left = 1,
@@ -1087,55 +1092,6 @@ return {
 
                             print(tostring(row) .. " " .. tostring(col))
                             print(vim.inspect(component))
-                        end,
-                    },
-                    win_configs = {
-                        border = "none",
-                        style = "minimal",
-                        row = function(menu)
-                            return menu.parent_menu
-                                    and menu.parent_menu.clicked_at
-                                    and menu.parent_menu.clicked_at[1] - vim.fn.line "w0"
-                                or 1
-                        end,
-                        col = function(menu)
-                            return menu.parent_menu
-                                    and menu.parent_menu._win_configs.width
-                                or 0
-                        end,
-                        relative = function(menu)
-                            return menu.parent_menu and "win" or "mouse"
-                        end,
-                        win = function(menu)
-                            return menu.parent_menu and menu.parent_menu.win
-                        end,
-                        height = function(menu)
-                            return math.max(
-                                1,
-                                math.min(
-                                    #menu.entries,
-                                    vim.go.pumheight ~= 0 and vim.go.pumheight
-                                        or math.ceil(vim.go.lines / 4)
-                                )
-                            )
-                        end,
-                        width = function(menu)
-                            local min_width = vim.go.pumwidth ~= 0
-                                    and vim.go.pumwidth
-                                or 8
-                            if vim.tbl_isempty(menu.entries) then
-                                return min_width
-                            end
-                            return math.max(
-                                min_width,
-                                math.max(
-                                    unpack(
-                                        vim.tbl_map(function(entry)
-                                            return entry:displaywidth()
-                                        end, menu.entries)
-                                    )
-                                )
-                            )
                         end,
                     },
                 },

@@ -424,6 +424,11 @@ local function colorscheme_overrides()
                 },
             },
             {
+                CursorLineNr = {
+                    bg = "NONE",
+                },
+            },
+            {
                 PmenuSel = {
                     bold = true,
                     fg = "NONE",
@@ -435,6 +440,24 @@ local function colorscheme_overrides()
                     fg = { from = "ErrorMsg", alter = 0.15 },
                     bg = "NONE",
                     bold = true,
+                },
+            },
+            {
+                illuminatedWordWrite = {
+                    bg = {
+                        from = "illuminatedWordWrite",
+                        attr = "bg",
+                        alter = -0.35,
+                    },
+                },
+            },
+            {
+                illuminatedWordRead = {
+                    bg = {
+                        from = "illuminatedWordRead",
+                        attr = "bg",
+                        alter = -0.35,
+                    },
                 },
             },
         },

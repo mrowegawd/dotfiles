@@ -482,14 +482,16 @@ return {
                         },
 
                         {
-                            "zp",
+                            -- "zp",
+                            "<UP>",
                             function()
                                 return require("ufo").goPreviousClosedFold()
                             end,
                             description = "Ufo: go prev closed fold",
                         },
                         {
-                            "zn",
+                            -- "zn",
+                            "<DOWN>",
                             function()
                                 return require("ufo").goNextClosedFold()
                             end,
@@ -1421,6 +1423,14 @@ return {
             map["zb"] = { "zb", { "150" } }
 
             require("neoscroll.config").set_mappings(map)
+        end,
+    },
+    -- BLOCK NVIM
+    {
+        "HampusHauffman/block.nvim",
+        cmd = { "BlockOn", "BlockOff", "Block" },
+        config = function()
+            require("block").setup {}
         end,
     },
 }

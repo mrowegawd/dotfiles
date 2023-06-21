@@ -113,8 +113,16 @@ return {
             load = {
                 ["core.defaults"] = {},
                 ["core.concealer"] = {
-                    config = { icon_preset = "diamond" },
+                    config = {
+                        icon_preset = "diamond",
+                        fold = true,
+                        dim_code_blocks = {
+                            padding = { left = 2, right = 2 },
+                            width = "content",
+                        },
+                    },
                 },
+                ["core.ui.calendar"] = {},
                 ["core.highlights"] = {
                     config = {
                         -- highlights = {
@@ -185,6 +193,7 @@ return {
                     },
                 },
                 ["core.integrations.nvim-cmp"] = {},
+                -- ["core.integrations.telescope"] = {},
                 ["core.keybinds"] = {
                     config = {
                         default_keybinds = false,
@@ -245,21 +254,61 @@ return {
                             keybinds.remap_event(
                                 "norg",
                                 "n",
-                                "zn",
+                                "<down>",
                                 "core.integrations.treesitter.next.heading"
                             )
                             -- go prev heading fold
                             keybinds.remap_event(
                                 "norg",
                                 "n",
-                                "zp",
+                                "<up>",
                                 "core.integrations.treesitter.previous.heading"
                             )
+
+                            keybinds.remap_event(
+                                "norg",
+                                "n",
+                                ">>",
+                                "core.promo.promote"
+                            )
+
+                            keybinds.remap_event(
+                                "norg",
+                                "n",
+                                "<<",
+                                "core.promo.demote"
+                            )
+
+                            -- keybinds.remap_event(
+                            --     "norg",
+                            --     "n",
+                            --     "<left>",
+                            --     -- "nested",
+                            --     "core.promo.demote"
+                            -- )
+                            --
+                            -- keybinds.remap_event(
+                            --     "norg",
+                            --     "n",
+                            --     "<right>",
+                            --     -- "nested",
+                            --     "core.promo.promote"
+                            -- )
                         end,
                     },
                 },
-                -- ["core.integrations.telescope"] = {},
             },
         },
     },
 }
+
+-- { ">.", "core.promo.promote", opts = { desc = "Promote Object (Non-Recursively)" } },
+-- { "<,", "core.promo.demote", opts = { desc = "Demote Object (Non-Recursively)" } },
+--
+-- { ">>", "core.promo.promote", "nested", opts = { desc = "Promote Object (Recursively)" } },
+-- { "<<", "core.promo.demote", "nested", opts = { desc = "Demote Object (Recursively)" } },
+--
+-- { leader .. "lt", "core.pivot.toggle-list-type", opts = { desc = "Toggle (Un)ordered List" } },
+-- { leader .. "li", "core.pivot.invert-list-type", opts = { desc = "Invert (Un)ordered List" } },
+--
+-- { leader .. "id", "core.tempus.insert-date", opts = { desc = "Insert Date" } },

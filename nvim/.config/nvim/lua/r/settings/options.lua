@@ -171,7 +171,8 @@ local options = {
         foldmethod = "expr",
         foldexpr = "nvim_treesitter#foldexpr()",
         foldtext = "v:lua.CustomFoldText()",
-        foldcolumn = "1", -- 0 is not bad
+        foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil, -- show foldcolumn in nvim 0.9
+        foldlevelstart = 99, -- start with all code unfolded
         -- unfortunately folding in (n)vim is a mess, if you set the fold level to start
         -- at x then it will auto fold anything at that level, all good so far. if you then
         -- try to edit the content of your fold and the foldmethod=manual then it will
@@ -289,7 +290,7 @@ end
 -- vim.g.loaded_node_provider = 0
 --
 -- vim.g.glow_binary_path = as.home .. "/.local/bin"
--- vim.g.python3_host_prog = as.home .. "/.config/neovim3/bin/python"
+vim.g.python3_host_prog = as.home .. "/.config/neovim3/bin/python"
 
 -- Load cfilter plugin allows filtering down an existing quickfix list
 cmd.packadd "cfilter"

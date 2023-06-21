@@ -92,15 +92,14 @@ map u
 map y
 map g
 
-
-
 # map <enter> shell
-map <enter> $$EDITOR "$f"                           # enter with nvim/vim
+map e $$EDITOR "$f"                           # enter with nvim/vim
 map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf)"
 map <c-f> $lf -remote "send $id select '$(fzf)'"    # search file and folders (fzf)
 map <c-g> fzf_search                                # search grep text (fzf)
-map <c-n> push :mkdir<space>
-map <f-5> reload
+# map <c-n> push :mkdir<space>
+map <enter> open
+map <f5> reload
 map P set preview!
 
 map yy copy
@@ -108,8 +107,8 @@ map dd cut
 
 map x $$f
 map X !$f
-map o &mimeopen $f
-map O $mimeopen --ask $f
+# map o &mimeopen $f
+# map O $mimeopen --ask $f
 map H set hidden!
 map p paste
 map D delete

@@ -224,7 +224,10 @@ return {
         lazy = false,
         -- priority = 1000,
         enabled = function()
-            if as.colorscheme == "catppuccin" then
+            if
+                as.colorscheme == "catppuccin"
+                or as.colorscheme == "catppuccin-latte"
+            then
                 return true
             end
 
@@ -392,4 +395,15 @@ return {
     ---------------------------------------------------------------------------
     -- OXOCARBON
     { "shaunsingh/oxocarbon.nvim", lazy = false, enabled = true },
+    -- KYNTELL
+    {
+        "romgrk/kyntell.vim",
+        lazy = false,
+        enabled = function()
+            if as.colorscheme == "kyntell" then
+                return true
+            end
+            return false
+        end,
+    },
 }

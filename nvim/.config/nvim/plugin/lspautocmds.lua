@@ -99,6 +99,11 @@ local function setup_autocommands(client, buf)
         })
     end
 
+    -- if current nvim version supports inlay hints, enable them
+    if client.server_capabilities.inlayHintProvider then
+        vim.lsp.buf.inlay_hint(buf, true)
+    end
+
     --     if client.server_capabilities[provider.REFERENCES] then
     --         augroup(("LspReferences%d"):format(buf), {
     --             event = { "CursorHold", "CursorHoldI" },
