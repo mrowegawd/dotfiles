@@ -158,6 +158,18 @@ return {
                                             buffer = vim.api.nvim_get_current_buf(),
                                         },
                                     },
+
+                                    {
+                                        "<Localleader>rl",
+                                        "<CMD>ToggleTermSendCurrentLine<CR>",
+                                        description = "Send current line",
+                                    },
+                                    {
+                                        "<Localleader>rl",
+                                        "<CMD>ToggleTermSendVisualSelection<CR>",
+                                        description = "Send visual selections",
+                                        mode = { "v" },
+                                    },
                                 },
                             },
                         }
@@ -395,13 +407,13 @@ return {
                 start_in_insert = true,
                 persist_size = true,
                 direction = "vertical",
+                -- on_open = function(_)
+                --     require("shade").toggle()
+                -- end,
+                -- on_close = function(_)
+                --     require("shade").toggle()
+                -- end,
             }
-
-            -- Hide number column for
-            -- vim.cmd [[au TermOpen * setlocal nonumber norelativenumber]]
-
-            -- Esc twice to get to normal mode
-            -- vim.cmd [[tnoremap <esc><esc> <C-\><C-N>]]
         end,
     },
 }

@@ -16,26 +16,6 @@ return {
             require("windows").setup()
         end,
     },
-    -- VIM-TMUX-NAVIGATOR (disabled)
-    {
-        -- fot tmux integration, check https://github.com/mrjones2014/smart-splits.nvim#tmux-integration
-        -- "mrjones2014/smart-splits.nvim",
-        -- "aserowy/tmux.nvim",
-        "christoomey/vim-tmux-navigator",
-        event = "BufRead",
-        enabled = false,
-        dependencies = {
-            "talek/obvious-resize",
-            config = function()
-                vim.g.obvious_resize_default = 5
-                vim.g.obvious_resize_run_tmux = 1
-            end,
-        },
-
-        config = function()
-            vim.g.tmux_navigator_no_mappings = 1
-        end,
-    },
     -- SMART-SPLITS
     {
         "mrjones2014/smart-splits.nvim",

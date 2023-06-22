@@ -2,7 +2,6 @@
 
 sxhkd &
 
-"$HOME/.config/bspwm/autostart.sh"
 # bspc monitor -d I II III IV V VI VII VIII IX X
 # bspc monitor -d term web todo pdfile code docs music misc
 bspc monitor -d 1 2 3 4 5 6
@@ -61,51 +60,21 @@ bspc wm --record-history on
 # remove x cursor
 xsetroot -cursor_name left_ptr &
 
-# rsync_wikis() {
-# 	# taken from https://www.unix.com/unix-for-dummies-questions-and-answers/17594-how-catch-rscyn-errors.html
-# 	WIKI_SRC_PATH_LINUX="$HOME/Dropbox/wiki/"
-
-# 	# WIKI_DEST_PATH_LINUX="$HOME/Backuples/wiki/"
-# 	WIKI_DEST_PATH_WINDOW="/media/programming/wiki/"
-
-# 	tempfile=/tmp/error_rsync.$(date '+%m%d%Y_%H%M%SGMT')
-
-# 	if [ -d "$WIKI_SRC_PATH_LINUX" ]; then
-# 		if [ -d "$WIKI_DEST_PATH_WINDOW" ]; then
-
-# 			# catch the errors with `2>&1`
-# 			rsync -auv --include="*.org" --include="*/" --exclude="*" "$WIKI_DEST_PATH_WINDOW" "$WIKI_SRC_PATH_LINUX" >"$tempfile" 2>&1
-
-# 			if [ $? -eq 0 ]; then # No need for the X variable since you don't use it
-# 				echo "Rsync was completed successfully..!"
-# 			else
-# 				dunstify "$(cat "$tempfile")"
-# 				rm -rf "$tempfile"
-# 			fi
-
-# 		else
-# 			dunstify "path: $WIKI_DEST_PATH_WINDOW not found"
-# 		fi
-# 	else
-# 		dunstify "path: $WIKI_SRC_PATH_LINUX not found"
-# 	fi
-# }
-
-#rsync_wikis
-
 # launch auto start application
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
 	echo "dummy" >$startup_lock_file
-	sleep 2
-	alacritty &
-	sleep 2
-	firefox &
-	sleep 2
-	#~/.local/bin/reminder_deamon
 
-	# "$HOME/.local/bin/Todoist" &
-	# "$HOME/.local/bin/Notions" &
-	# dunstify "all setup already done juragan"
-	#clipmenud &
+	"$HOME/.config/bspwm/autostart.sh"
+
+	sleep 2
+
+	alacritty &
+
+	sleep 2
+
+	firefox &
+
+	sleep 2
+
 fi

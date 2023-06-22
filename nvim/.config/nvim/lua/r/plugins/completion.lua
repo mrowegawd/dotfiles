@@ -24,21 +24,21 @@ return {
         },
         config = function()
             local cmp = require "cmp"
-            local compare = require "cmp.config.compare"
+            -- local compare = require "cmp.config.compare"
 
-            compare.lsp_scores = function(entry1, entry2)
-                local diff
-                if
-                    entry1.completion_item.score
-                    and entry2.completion_item.score
-                then
-                    diff = (entry2.completion_item.score * entry2.score)
-                        - (entry1.completion_item.score * entry1.score)
-                else
-                    diff = entry2.score - entry1.score
-                end
-                return (diff < 0)
-            end
+            -- compare.lsp_scores = function(entry1, entry2)
+            --     local diff
+            --     if
+            --         entry1.completion_item.score
+            --         and entry2.completion_item.score
+            --     then
+            --         diff = (entry2.completion_item.score * entry2.score)
+            --             - (entry1.completion_item.score * entry1.score)
+            --     else
+            --         diff = entry2.score - entry1.score
+            --     end
+            --     return (diff < 0)
+            -- end
 
             -- Based on (private) function in LuaSnip/lua/luasnip/init.lua.
             local in_snippet = function()
@@ -60,10 +60,44 @@ return {
                 end
             end
 
+            -- local function deprioritize_snippet(entry1, entry2)
+            --     if
+            --         entry1:get_kind() == types.lsp.CompletionItemKind.Snippet
+            --     then
+            --         return false
+            --     end
+            --     if
+            --         entry2:get_kind() == types.lsp.CompletionItemKind.Snippet
+            --     then
+            --         return true
+            --     end
+            -- end
+            --
+            -- local has_words_before = function()
+            --     ---@diagnostic disable-next-line: redundant-parameter
+            --     if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+            --         return false
+            --     end
+            --     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+            --     return col ~= 0
+            --         and vim.api
+            --                 .nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]
+            --                 :match "^%s*$"
+            --             == nil
+            -- end
+
+            local check_backspace = function()
+                local col = vim.fn.col "." - 1
+                return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
+            end
+
             local callme = 0
 
             cmp.setup {
-
+                enabled = function()
+                    return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+                        or require("cmp_dap").is_dap_buffer()
+                end,
                 window = {
                     completion = {
                         border = border, --single
@@ -80,8 +114,9 @@ return {
                     },
                 },
 
+                preselect = cmp.PreselectMode.None,
                 completion = {
-                    completeopt = "menu,menuone,noselect",
+                    completeopt = "menu,menuone,noinsert,noselect",
                 },
                 snippet = {
                     expand = function(args)
@@ -90,29 +125,16 @@ return {
                 },
 
                 mapping = {
-                    ["<c-n>"] = cmp.mapping(function(fallback)
+                    ["<c-n>"] = cmp.mapping(function()
                         local c_cmp = require "cmp"
-
-                        -- local col = vim.fn.col "." - 1
-
                         if c_cmp.visible() then
-                            -- if #c_cmp.get_entries() == 1 then
-                            --     c_cmp.confirm { select = true }
-                            -- else
                             c_cmp.select_next_item()
-                            -- end
-                            -- elseif
-                            --     col == 0
-                            --     or vim.fn.getline("."):sub(col, col):match "%s"
-                            -- then
-                            --     fallback()
                         else
                             require("cmp").complete()
                         end
                     end, { "i", "s" }),
                     ["<c-p>"] = cmp.mapping(function(fallback)
                         local c_cmp = require "cmp"
-
                         if c_cmp.visible() then
                             c_cmp.select_prev_item()
                         else
@@ -121,15 +143,19 @@ return {
                     end, { "i", "s" }),
 
                     ["<TAB>"] = cmp.mapping(function(fallback)
-                        -- local c_cmp = require "cmp"
                         local has_luasnip, sp = pcall(require, "luasnip")
-
-                        -- if c_cmp.visible() then
-                        --     if #c_cmp.get_entries() == 1 then
-                        --         c_cmp.confirm { select = true }
-                        --     end
-                        if has_luasnip and sp.expand_or_locally_jumpable() then
+                        -- if cmp.visible() then
+                        --     cmp.select_next_item()
+                        -- if cmp.visible() and has_words_before() then
+                        --     cmp.select_next_item {
+                        --         behavior = cmp.SelectBehavior.Select,
+                        --     }
+                        if has_luasnip and sp.expandable() then
+                            sp.expand()
+                        elseif sp.expand_or_jumpable() then
                             sp.expand_or_jump()
+                        elseif check_backspace() then
+                            fallback()
                         else
                             fallback()
                         end
@@ -147,11 +173,11 @@ return {
 
                     ["<C-u>"] = cmp.mapping(
                         cmp.mapping.scroll_docs(-4),
-                        { "i", "s" }
+                        { "i", "c" }
                     ),
                     ["<C-d>"] = cmp.mapping(
                         cmp.mapping.scroll_docs(4),
-                        { "i", "s" }
+                        { "i", "c" }
                     ),
                     ["<CR>"] = cmp.mapping.confirm { select = false },
                     -- ["<c-space>"] = cmp.mapping.confirm { select = false },
@@ -201,23 +227,31 @@ return {
                         "i",
                         "s",
                     }),
-                    -- ["<C-q>"] = cmp.mapping.abort(),
                 },
                 sorting = {
                     comparators = {
-                        compare.offset, -- Items closer to cursor will have lower priority
-                        compare.exact,
-                        -- compare.scopes,
-                        compare.lsp_scores,
-                        compare.sort_text,
-                        compare.score,
-                        compare.recently_used,
-                        -- compare.locality, -- Items closer to cursor will have higher priority, conflicts with `offset`
-                        require("cmp-under-comparator").under,
-                        compare.kind,
-                        compare.sort_text,
-                        compare.length,
-                        compare.order,
+                        cmp.config.compare.offset,
+                        cmp.config.compare.exact,
+                        cmp.config.compare.score,
+
+                        function(entry1, entry2)
+                            local _, entry1_under =
+                                entry1.completion_item.label:find "^_+"
+                            local _, entry2_under =
+                                entry2.completion_item.label:find "^_+"
+                            entry1_under = entry1_under or 0
+                            entry2_under = entry2_under or 0
+                            if entry1_under > entry2_under then
+                                return false
+                            elseif entry1_under < entry2_under then
+                                return true
+                            end
+                        end,
+
+                        cmp.config.compare.kind,
+                        cmp.config.compare.sort_text,
+                        cmp.config.compare.length,
+                        cmp.config.compare.order,
                     },
                 },
                 formatting = {
@@ -229,11 +263,6 @@ return {
                             vim_item.abbr = vim_item.abbr:sub(1, MAX)
                                 .. icons.misc.ellipsis
                         end
-                        vim_item.kind = fmt(
-                            "%s  %s",
-                            icons.kind[vim_item.kind],
-                            vim_item.kind
-                        )
 
                         local item = entry:get_completion_item()
                         if item.detail then
@@ -257,6 +286,23 @@ return {
                             rg = "[Rg]",
                             git = "[Git]",
                         })[entry.source.name]
+
+                        vim_item.kind = fmt(
+                            "%s  %s",
+                            icons.kind[vim_item.kind],
+                            vim_item.kind
+                        )
+
+                        if string.find(vim_item.kind, "Color") then
+                            vim_item.kind = "Color"
+                            local tailwind_item =
+                                require("cmp-tailwind-colors").format(
+                                    entry,
+                                    vim_item
+                                )
+                            vim_item.menu = "[Color]"
+                            vim_item.kind = " " .. tailwind_item.kind
+                        end
 
                         -- remove duplicates
                         vim_item.dup = ({
@@ -290,9 +336,15 @@ return {
                     { name = "nvim_lsp_document_symbol" },
                     {
                         name = "buffer",
-                        options = {
+                        option = {
+                            keyword_pattern = [[\k\+]],
+                            -- Enable completion from all visible buffers
                             get_bufnrs = function()
-                                return vim.api.nvim_list_bufs()
+                                local bufs = {}
+                                for _, win in ipairs(vim.api.nvim_list_wins()) do
+                                    bufs[vim.api.nvim_win_get_buf(win)] = true
+                                end
+                                return vim.tbl_keys(bufs)
                             end,
                         },
                     },
@@ -349,9 +401,27 @@ return {
                 }),
             })
 
-            cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+            cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
                 sources = cmp.config.sources {
                     { name = "dap" },
+                },
+                mapping = {
+                    ["<c-n>"] = cmp.mapping(function()
+                        local c_cmp = require "cmp"
+                        if c_cmp.visible() then
+                            c_cmp.select_next_item()
+                        else
+                            require("cmp").complete()
+                        end
+                    end, { "i", "s" }),
+                    ["<c-p>"] = cmp.mapping(function(fallback)
+                        local c_cmp = require "cmp"
+                        if c_cmp.visible() then
+                            c_cmp.select_prev_item()
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
                 },
             })
 
@@ -372,7 +442,7 @@ return {
                         end,
                     },
                     ["<TAB>"] = {
-                        c = function(fallback)
+                        c = function()
                             if require("cmp").visible() then
                                 require("cmp").select_next_item()
                             else
@@ -414,7 +484,7 @@ return {
                         end,
                     },
                     ["<TAB>"] = {
-                        c = function(fallback)
+                        c = function()
                             if require("cmp").visible() then
                                 require("cmp").select_next_item()
                             else
@@ -490,11 +560,19 @@ return {
 
             -- jump backwards key.
             -- this always moves to the previous item within the snippet
-            vim.keymap.set({ "i", "s" }, "<c-y>", function()
-                if luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
-                end
-            end, { silent = true })
+            -- vim.keymap.set({ "i", "s" }, "<c-y>", function()
+            --     if luasnip.jumpable(-1) then
+            --         luasnip.jump(-1)
+            --     end
+            -- end, { silent = true })
+        end,
+    },
+    -- CMP-TAILWIND-COLORS
+    {
+        -- Support cmp color for tailwind
+        "js-everts/cmp-tailwind-colors",
+        config = function()
+            require("cmp-tailwind-colors").setup()
         end,
     },
 }

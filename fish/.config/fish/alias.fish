@@ -10,9 +10,6 @@ alias grep="grep --color=auto"
 # alias rg="rg --hidden"
 alias g="git"
 
-alias r_m="tmux -2"
-alias r_mat="r_m a -t"
-alias s_ducks='sudo du -cks * | sort -rn | head -11'
 # alias vv=neovide
 alias mpv_c="mpv --geometry=-50-50 --autofit=40% "
 
@@ -22,6 +19,8 @@ alias :c=exit
 alias :C=exit
 alias :c!=exit
 alias :C!=exit
+
+alias tree="exa --group-directories-first --icons -a --tree -I 'node_modules|.git|dist|out|target|.husky'"
 
 alias c="bat "
 # alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
@@ -33,26 +32,6 @@ alias ls="/bin/ls -nphq --time-style=iso --color=auto\
 
 function mdg --description "create folder and cd"
     mkdir -p $argv[1] && cd $argv[1] || return
-end
-
-# function cd
-#     # Try a normal cd
-#     set -l checkCD (builtin cd $argv)
-
-#     if test -z "$checkCD"
-#         exa -lhaa
-#     end
-# end
-
-function cc --description "go back to the last cd"
-    set -l last_dir (ls -Frt | grep '/$' | tail -n1 | awk 'NF>1{print $NF}')
-    if test -z "$last_dir" # check jika $last_dir not contains any string, return it
-        return 1
-    end
-
-    if test -d $last_dir
-        cd "$last_dir" || return
-    end
 end
 
 if [ $USER = root ]
@@ -83,16 +62,48 @@ function e
     end
 end
 
-###############################################################################
-## CHECK
-###############################################################################
-function c_size_cd --description "check current size folder/files"
+function jp
+    set -l marked_pwd ~/Dropbox/data.programming.forprivate/marked-pwd
+    if not test -f $marked_pwd
+        echo "[warn] path not found: $marked_pwd"
+        commandline -f repaint
+        return
+    end
+
+    set -l select (cat $marked_pwd | fzf )
+
+    if test -z $select
+        commandline -f repaint
+        return
+    end
+
+    if test -d $select
+        cd $select
+    else
+        echo "[warn] cannot cd to $select"
+    end
+
+    # Ketika cd ke target, prompt fish terkadang hilang
+    # line dibawah untuk mengatasi itu
+    commandline -f repaint
+end
+
+# ╭──────────────────────────────────────────────────────────╮
+# │                          CHECK                           │
+# ╰──────────────────────────────────────────────────────────╯
+
+function c_size_memuse --description "check memory usage of a process"
+    ps -eo size,pid,user,command --sort -size |
+        awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' | fzf | cut -d "" -f2 | cut -d - -f1
+end
+
+function c_size_pwd --description "check current size folder/files"
     du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'
 end
 
-function c_size_tfile --description "check size of file"
+function c_size_file --description "check size of file"
     if test -z $argv[1]
-        echo "[warn] run like this, ex: c_size_cd <file>"
+        echo "[warn] need args, e.g 'c_size_file <file>'"
         return 1
     end
 
@@ -104,7 +115,15 @@ function c_size_tfile --description "check size of file"
     sudo du -a $argv[1] 2>/dev/null | sort -n -r | head -n 20 | awk -F" " '{printf "%-15s %-10s\n",$1,$2}'
 end
 
-function c_sniff --description "sniff HTTP traffic (ngrep)"
+function c_size_chown --description "check owner and perm files/folders"
+    if test -z $argv[1]
+        echo "[warn] need args, e.g 'c_size_statf <file>'"
+        return 1
+    end
+    stat -L -c "%a %G %U" $argv[1]
+end
+
+function c_sniff_http_ngrep --description "sniff HTTP traffic (ngrep)"
     if command -v ngrep >/dev/null
         sudo ngrep -d en1 -t '^(GET|POST) ' 'tcp and port 80'
     else
@@ -112,7 +131,7 @@ function c_sniff --description "sniff HTTP traffic (ngrep)"
     end
 end
 
-function c_httpdump --description "sniff HTTP traffic (tcpdump)"
+function c_sniff_http_tcdump --description "sniff HTTP traffic (tcpdump)"
     if command -v tcpdump >/dev/null
         sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\\: .* | GET \\/.*\"
     else
@@ -120,11 +139,7 @@ function c_httpdump --description "sniff HTTP traffic (tcpdump)"
     end
 end
 
-function c_size_owner_filefolder --description "check owner and perm files/folders"
-    stat -L -c "%a %G %U" $argv[1]
-end
-
-function mylan
+function c_LAN --description "check LAN"
     if command -v ifconfig >/dev/null
         echo ---------------------------------------------------
         /sbin/ifconfig enp0s31f6 | awk /'inet/ {print $2}'
@@ -142,7 +157,7 @@ function mylan
     end
 end
 
-function c_info_on_system --description "check size all disk size on system"
+function c_info_on_system --description "check size all disk size on system and LAN"
     echo "╓───── m o u n t . p o i n t s"
     echo "╙────────────────────────────────────── ─ ─ "
     lsblk -a
@@ -189,10 +204,10 @@ function c_info_on_system --description "check size all disk size on system"
     echo ""
     echo "╓───── m y l a n"
     echo "╙────────────────────────────────────── ─ ─ "
-    mylan
+    c_LAN
 end
 
-function c_os --description "check os"
+function c_OS --description "check os"
     # if test -e /etc/os-release
     #     # freedesktop.org and systemd
     #     . /etc/os-release
@@ -226,7 +241,6 @@ function c_os --description "check os"
 
 end
 
-# check users and their passwd
 function c_user --description "check users on 'passwd'"
     getent passwd | awk -F ':' '
       BEGIN {
@@ -238,16 +252,11 @@ function c_user --description "check users on 'passwd'"
     ' | less
 end
 
-function c_size_memuse --description "check memory usage of a process"
-    ps -eo size,pid,user,command --sort -size |
-        awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' | fzf | cut -d "" -f2 | cut -d - -f1
-end
-
 function c_port_listen_tcpupd --description "list all listening ports tcp/udp conn"
     if command -v netstat >/dev/null
         sudo netstat -a | less
     else
-        echo "[warn] install netstat first"
+        echo "[warn] install netstat"
     end
 end
 
@@ -255,23 +264,34 @@ function c_port_statistic --description "check show statistic by protocol"
     if command -v netstat >/dev/null
         sudo netstat -s | less
     else
-        echo "[warn] install netstat first"
+        echo "[warn] install netstat"
     end
 end
 
-###############################################################################
-## RUN SCRIPT r_<name-of-snipscript>
-###############################################################################
-function r_logs --description "see current for all logs"
-    sudo find /var/log -type f -exec file {} \; | grep text | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f
+function c_pid_ps --description 'Select a process to record performance data in given file name'
+    set proc (ps -ef | fzf | awk '{print $2}')
+    htop -H -p $proc
 end
 
+function c_pid_tree --description 'Show process tree of a process'
+    set proc (ps -ef | fzf | awk '{print $2}' | head -1)
+    pstree -H $proc $proc
+end
+
+function c_tail_all_log --description "see current for all logs"
+    sudo find /var/log -type f -exec file {} \; | grep text | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs sudo tail -f
+end
+
+# ╭──────────────────────────────────────────────────────────╮
+# │                        RUN SCRIPT                        │
+# ╰──────────────────────────────────────────────────────────╯
+
 function r_ytmp3 --description "convert youtube link to mp3"
-    tsp yt-dlp --extract-audio --audio-format mp3 $argv[1]
+    tsp youtube-dl --extract-audio --audio-format mp3 $argv[1]
 end
 
 function r_ytdl --description "download youtube video"
-    tsp yt-dlp --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" $argv[1]
+    tsp youtube-dl --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" $argv[1]
 end
 
 function r_calc --description "run calculator with python"
@@ -280,7 +300,7 @@ end
 
 # abbr -a r_hapus_files find  -type f -name "*" -exec shred -v -n 25 -u -z {} \;
 
-function r_sshkeygen --description "creating SSH keygen"
+function r_create_sshkeygen --description "create SSH keygen"
     read -P "some comments for new sshgen? " commentme
     read -P "prefix ~/.ssh/_your_prefix? " prefixfile
 
@@ -288,7 +308,7 @@ function r_sshkeygen --description "creating SSH keygen"
         -f "$HOME/.ssh/$prefixfile$(date +%F)"
 end
 
-function r_passkeygen --description "creating password SHA-512 keygen"
+function r_create_passSHA_512 --description "create password SHA-512 keygen"
     if command -v whois >/dev/null
         printf "##### GENERATE PASSWORD ###########\\n\\n"
         set -l PATHTEMP (mktemp -d)
@@ -311,12 +331,12 @@ end
 
 abbr -a r_r lfrun
 
-function r_apt
+function r_apt --description "apt install; e.g 'r_apt show vim' | show, policy, search"
     if test -z $argv[2]
-        echo "[warn] you need spesific name of package. ex: 'r_apt show vim'"
+        echo "[warn] you need spesific name of package. e.g 'r_apt show vim' | show, policy, search"
         return 1
     else if test -z $argv[1]
-        echo "[warn] define option, ex: show, policy, search"
+        echo "[warn] define option e.g 'show, policy, search'"
         return 1
     end
 
@@ -331,16 +351,6 @@ function r_apt
             echo "not found"
     end
 
-end
-
-function r_pfr --description 'Select a process to record performance data in given file name'
-    set proc (ps -ef | fzf | awk '{print $2}')
-    top -H -p $proc
-end
-
-function r_pst --description 'Show process tree of a process'
-    set proc (ps -ef | fzf | awk '{print $2}' | head -1)
-    pstree -H $proc $proc
 end
 
 function r_extract --description "run extract data zip/tar/gz"
@@ -379,7 +389,7 @@ function r_extract --description "run extract data zip/tar/gz"
     end
 end
 
-function r_ps_curUser --description "get pid ps from current user"
+function r_get_pid_user --description "get pid ps from current user"
     set -l PROC_ID_ORIGIN (ps -alf | grcat fps.grc | fzf-tmux -p 80% --ansi)
     set -l PROC_ID_GREP (echo $PROC_ID_ORIGIN | grep "UID[[:blank:]]*PID")
     if test -z $PROC_ID_GREP
@@ -388,7 +398,7 @@ function r_ps_curUser --description "get pid ps from current user"
     end
 end
 
-function r_ps_allSystem --description "get pid ps for all systems"
+function r_get_pid_all --description "get pid ps for all systems"
     set -l PROC_ID_ORIGIN (ps -elf | grcat fps.grc | fzf-tmux -p 80% --ansi)
     set -l PROC_ID_GREP (echo $PROC_ID_ORIGIN | grep "UID[[:blank:]]*PID")
     if test -z $PROC_ID_GREP
@@ -397,10 +407,7 @@ function r_ps_allSystem --description "get pid ps for all systems"
     end
 end
 
-###############################################################################
-## WATCH
-###############################################################################
-function w_vlc
+function r_vlc
     if test -z $args[1]
         echo "[help] example w_vlc 1000 300 link_youtube"
         return 1
@@ -415,10 +422,7 @@ function w_vlc
     end
 end
 
-###############################################################################
-## FZF ENCHANTED
-###############################################################################
-function fz_kill --description "fzf, kill selected pid"
+function r_kill --description "kill selected pid"
     set fzpid (ps -ef | sed 1d  | grcat fps.grc | fzf --height=40% --ansi | awk '{print $2}')
 
     if test -z $fzpid
@@ -431,15 +435,42 @@ function fz_kill --description "fzf, kill selected pid"
     # echo $fzpid | xargs kill -${1:-9}
 end
 
-###############################################################################
-## DOCKER
-###############################################################################
-# IMAGES
+# ╞══════════════════════════════════════════════════════════╡
+#  Transmission-remote (torrent)
+# ╞══════════════════════════════════════════════════════════╡
+
+abbr -a r_tsm_ls transmission-remote -l
+abbr -a r_tsm_altspeedenable transmission-remote --alt-speed
+abbr -a r_tsm_noaltspeedenable transmission-remote --no-alt-speed
+abbr -a r_tsm_add transmission-remote -a
+abbr -a r_tsm_pause transmission-remote -t "$1" --stop
+abbr -a r_tsm_start transmission-remote -t "$1" --start
+abbr -a r_tsm_purge transmission-remote -t "$1" --remove-and-delete
+abbr -a r_tsm_i transmission-remote -t "$1" -i
+function r_tsm_remove --description "Select and remove torrent"
+    touch /tmp/test
+    set chosen (transmission-remote -l | tail -n +2 > /tmp/test ; sed -i '$ d' /tmp/test; cat /tmp/test | fzf-tmux -p 80% | xargs | cut -d" " -f1)
+    echo $chosen
+    if test -z "$chosen"
+        return 1
+    end
+    transmission-remote -t $chosen -r
+    rm /tmp/test
+end
+
+# ╭──────────────────────────────────────────────────────────╮
+# │                          DOCKER                          │
+# ╰──────────────────────────────────────────────────────────╯
+
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker image
+# ╞══════════════════════════════════════════════════════════╡
+
 abbr -a doc_im_ls docker images
 abbr -a doc_im_his_id docker history # id
-function doc_im_build_tag --description "docker im, build image with tag"
+function doc_im_build_tag --description "docker im, build image:tag"
     if test -z $argv[1]
-        echo "[Warn] - You need tag, ex: 'doc_im_build_tag name_img:latest'"
+        echo "[Warn] need a tag, e.g doc_im_build_tag 'name_img:latest'"
         return 1
     end
     docker build -t $argv[1] .
@@ -484,7 +515,9 @@ end
 
 abbr -a doc_im_rid docker rmi -f
 
-# CONTAINERS
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Container
+# ╞══════════════════════════════════════════════════════════╡
 abbr -a doc_con_ls docker ps -a
 abbr -a doc_con_run_it docker run -it
 abbr -a doc_con_run_rmit docker run -it --rm
@@ -494,22 +527,31 @@ abbr -a doc_con_log_id docker container logs
 abbr -a doc_con_start_id docker start
 abbr -a doc_con_stop_id docker stop
 abbr -a doc_con_restart_id docker restart
+
 function doc_con_rall --description "docker con, remove all containers"
     docker rm -f (docker ps -aq)
 end
-abbr -a doc_con_rid docker rm
+
+function doc_con_rid --description "remove container [id]"
+    docker rm $args[1]
+end
+
 function doc_con_rallex --description "docker con, remove all 'exit' containers"
     docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
 end
-function doc_con_enter_id --description "docker con, entering a container with ID"
+
+function doc_con_enter_id --description "docker con, enter container [id]"
     if test -z $args[1]
-        echo "[warn] you need adding id, ex: doc_con_enter_id 'id'"
+        printf "++warn: spesific [id] container"
         return 1
     end
     docker exec -it $args[1] /bin/bash
 end
 
-## VOLUME
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Volume
+# ╞══════════════════════════════════════════════════════════╡
+
 abbr -a doc_vol docker volume ls
 function doc_vol_rall --description "docker vol, remove all volumes"
     docker volume rm (docker volume ls -qf dangling=true)
@@ -520,13 +562,19 @@ function doc_vol_rdang --description "docker vol, remove all dangling volumes"
 end
 abbr -a doc_vol_inspect_id docker volume inspect
 
-# NETWORK
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Network
+# ╞══════════════════════════════════════════════════════════╡
+
 abbr -a doc_net_ls docker network ls
 function doc_net_rall --description "docker net, remove all networks"
     docker network rm (docker network ls -q)
 end
 
-#COMPOSE
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Compose
+# ╞══════════════════════════════════════════════════════════╡
+
 abbr -a doc_comp_ps docker-compose ps
 abbr -a doc_comp_upd docker-compose up -d
 abbr -a doc_comp_down docker-compose down
@@ -534,19 +582,26 @@ abbr -a doc_comp_stop docker-compose stop
 abbr -a doc_comp_run docker-compose run
 abbr -a doc_comp_run_rm docker-compose run --rm
 
-###############################################################################
-## NPM AND YARN (TYPESCRIPT/JAVASCRIPT)
-###############################################################################
-abbr -a yarn_i_saveDev yarn add -D
-abbr -a yarn_i_saveGlobal yarn global add
-abbr -a yarn_run yarn run
+# ╭──────────────────────────────────────────────────────────╮
+# │                   COMMAND PROGRAMMING                    │
+# ╰──────────────────────────────────────────────────────────╯
 
-abbr -a npm_i_saveGlobal npm install -g
+# ╞══════════════════════════════════════════════════════════╡
+#  NPM and YARN
+# ╞══════════════════════════════════════════════════════════╡
+
+abbr -a yarn_i_sl yarn add -D
+abbr -a yarn_i_sg yarn global add
+abbr -a yarn_r yarn run
+
+abbr -a npm_i_sl npm install
+abbr -a npm_i_sg npm install -g
 abbr -a npm_c_outdated npm outdated -g
 
-###############################################################################
-## PIP ENV (PYTHON)
-###############################################################################
+# ╞══════════════════════════════════════════════════════════╡
+#  PIP
+# ╞══════════════════════════════════════════════════════════╡
+
 abbr -a pip_i pip install
 abbr -a pip_search pip search
 abbr -a pip_show pip show
@@ -554,25 +609,3 @@ function pip_ls --description "pip list | less"
     pip list | less
 end
 abbr -a pip_i_requirments pip install -r
-
-###############################################################################
-## TRANSMISSION-REMOTE (TORRENT)
-###############################################################################
-abbr -a tsm_ls transmission-remote -l
-abbr -a tsm_altspeedenable transmission-remote --alt-speed
-abbr -a tsm_noaltspeedenable transmission-remote --no-alt-speed
-abbr -a tsm_add transmission-remote -a
-abbr -a tsm_pause transmission-remote -t "$1" --stop
-abbr -a tsm_start transmission-remote -t "$1" --start
-abbr -a tsm_purge transmission-remote -t "$1" --remove-and-delete
-abbr -a tsm_i transmission-remote -t "$1" -i
-function tsm_remove --description "Remove torrent with fzf"
-    touch /tmp/test
-    set chosen (transmission-remote -l | tail -n +2 > /tmp/test ; sed -i '$ d' /tmp/test; cat /tmp/test | fzf-tmux -p 80% | xargs | cut -d" " -f1)
-    echo $chosen
-    if test -z "$chosen"
-        return 1
-    end
-    transmission-remote -t $chosen -r
-    rm /tmp/test
-end

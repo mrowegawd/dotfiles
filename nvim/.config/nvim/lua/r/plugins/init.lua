@@ -59,14 +59,6 @@ return {
             }
         end,
     },
-    -- CLOSE-BUFFERS
-    -- {
-    --     "kazhala/close-buffers.nvim",
-    --     cmd = { "BDelete" },
-    --     keys = {
-    --         { "<leader>qq", "<Cmd>BDelete this<CR>", desc = "buffer delete" },
-    --     },
-    -- },
     -- VIM-HIGHLIGHTER
     {
         "azabiong/vim-highlighter", -- map ex: f<enter> `highlighte the word`
@@ -82,7 +74,7 @@ return {
     -- VIM-LOG
     {
         "mtdl9/vim-log-highlighting",
-        ft = "log",
+        lazy = false,
     },
     -- SUDA
     {
@@ -128,7 +120,8 @@ return {
         end,
     },
     -- VIM-STARTUPTIME (disabled)
-    { -- Dont forget to check this https://github.com/neovim/neovim/pull/15436 is merged
+    {
+        -- Dont forget to check this https://github.com/neovim/neovim/pull/15436 is merged
         "dstein64/vim-startuptime",
         cmd = { "StartupTime" },
         enabled = false,
@@ -149,17 +142,6 @@ return {
             vim.g.startuptime_tries = 10
         end,
     },
-    -- TREESJ
-    -- {
-    --     "Wansmer/treesj",
-    --     keys = { "<space>m", "<space>j", "<space>s" },
-    --     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    --     config = function()
-    --         require("treesj").setup {}
-    --     end,
-    -- },
-    -- HELPFUL.VIM
-    { "tweekmonster/helpful.vim", cmd = "HelpfulVersion", ft = "help" },
     -- NUMB-NVIM
     {
         "nacro90/numb.nvim",
@@ -193,6 +175,27 @@ return {
         event = { "BufReadPost" },
         config = function()
             vim.g.matchup_matchparen_offscreen = { method = "status_manual" }
+        end,
+    },
+    -- COMMENT-BOX
+    {
+        "LudoPinelli/comment-box.nvim",
+        cmd = {
+            "CBlcbox",
+            "CBllbox",
+            "CBlcbox",
+            "CBlrbox",
+            "CBclbox",
+            "CBccbox",
+            "CBcrbox",
+            "CBrlbox",
+            "CBrcbox",
+            "CBalbox",
+            "CBacbox",
+            "CBarbox",
+        },
+        config = function()
+            require("comment-box").setup()
         end,
     },
     -- HYPERSONIC.NVIM (make regex readable)
@@ -384,10 +387,9 @@ return {
         build = ":UpdateRemotePlugins",
         event = "BufReadPre gkeep://*",
     },
-
-    ---------------------------------------------------------------------
-    -- MY PLUGINS
-    ---------------------------------------------------------------------
+    --  ╭──────────────────────────────────────────────────────────╮
+    --  │                        MY PLUGINS                        │
+    --  ╰──────────────────────────────────────────────────────────╯
     {
         dir = "~/.local/src/nvim_plugins/jumpj",
         enabled = false,

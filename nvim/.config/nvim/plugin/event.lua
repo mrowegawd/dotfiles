@@ -224,6 +224,17 @@ as.augroup("DisableWinBf", {
     end,
 })
 
+-- Get into insert mode whenever we enter a terminal buffer
+as.augroup("TermAcg", {
+    event = { "BufEnter" },
+    pattern = { "*" },
+    command = function()
+        if vim.startswith(vim.api.nvim_buf_get_name(0), "term://") then
+            vim.cmd "startinsert"
+        end
+    end,
+})
+
 as.augroup("CheckOutsideTime", {
     -- automatically check for changed files outside vim
     event = {
@@ -330,7 +341,7 @@ local trim = function(pattern)
     fn.winrestview(save)
 end
 
-local ignore_filetype_trim = { "norg", "text", "org" }
+local ignore_filetype_trim = { "norg", "text", "org", "sh", "zsh", "fish" }
 local remove_group =
     vim.api.nvim_create_augroup("removeTrailingSpaces", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -340,7 +351,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         if vim.tbl_contains(ignore_filetype_trim, vim.bo.filetype) then
             trim [[%s/\($\n\s*\)\+\%$//]]
             trim [[%s/\s\+$//e]]
-            vim.notify "Auto remove trailing spaces and lines"
         end
     end,
     group = remove_group,

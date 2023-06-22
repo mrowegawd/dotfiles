@@ -47,7 +47,7 @@ return {
                     lualine_y = {},
                     lualine_z = {},
                 },
-                extensions = { "nvim-tree", "misc" },
+                extensions = { "nvim-tree", "misc", "dap-neotest" },
             }
 
             local components = require "r.plugins.statusline.lualine.components"
@@ -67,20 +67,19 @@ return {
             ins_left(components.filename())
             ins_left(components.file_modified())
             ins_left(components.term_akinsho())
-            -- ins_left(components.navic())
 
+            ins_right(components.python_env())
+            ins_right(components.noice_status())
             ins_right(components.trailing())
-            ins_right(components.diagnostics())
-            -- ins_right(components.noice_status())
-            ins_right(components.diff())
-            ins_right(components.overseer())
-            ins_right(components.lazy_updates())
-            ins_right(components.get_lsp_client_notify())
             ins_right(components.mixindent())
-            ins_right(components.search_count())
-            ins_right(components.sessions())
-            ins_right(components.treesitter())
+            ins_right(components.diagnostics())
+            ins_right(components.diff())
+            ins_right(components.lazy_updates())
+            ins_right(components.overseer())
             ins_right(components.check_loaded_buf())
+            ins_right(components.get_lsp_client_notify())
+
+            ins_right(components.sessions())
             ins_right(components.root_dir())
             ins_right(components.filetype())
             ins_right(components.location_mod())

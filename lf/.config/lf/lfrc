@@ -91,6 +91,7 @@ map r
 map u
 map y
 map g
+map q
 
 # map <enter> shell
 map e $$EDITOR "$f"                           # enter with nvim/vim
@@ -116,6 +117,7 @@ map C copyto
 map M moveto
 map R bulkrename
 map r rename
+map <c-c> quit
 map V push :!nvim<space>
 
 # Basic Functions

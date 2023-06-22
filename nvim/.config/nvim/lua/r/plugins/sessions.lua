@@ -3,9 +3,9 @@ local cmd, fn = vim.cmd, vim.fn
 vim.g.ssession = false
 
 return {
-    -----------------------------------------------------------------------
-    -- SESSION
-    -----------------------------------------------------------------------
+    --  ╭──────────────────────────────────────────────────────────╮
+    --  │                         SESSION                          │
+    --  ╰──────────────────────────────────────────────────────────╯
     -- PERSISTED NVIM (disabled)
     {
         "olimorris/persisted.nvim",
@@ -142,15 +142,12 @@ return {
     -- NVIM-POSSESSION
     {
         "gennaro-tedesco/nvim-possession",
-        -- event = "VeryLazy",
         dependencies = {
             "ibhagwan/fzf-lua",
         },
-        enabled = true,
-
         config = function()
             require("nvim-possession").setup {
-                autoload = false, -- whether to autoload sessions in the cwd at startup
+                autoload = true, -- whether to autoload sessions in the cwd at startup
                 autosave = true, -- whether to autosave loaded sessions before quitting
                 autoswitch = {
                     enable = true, -- default false
@@ -347,9 +344,9 @@ return {
             --     })
         end,
     },
-    -----------------------------------------------------------------------
-    -- PROJECTS
-    -----------------------------------------------------------------------
+    --  ╭──────────────────────────────────────────────────────────╮
+    --  │                         PROJECTS                         │
+    --  ╰──────────────────────────────────────────────────────────╯
     -- PROJECTS.NVIM
     {
         "ahmedkhalf/project.nvim",

@@ -1,7 +1,10 @@
 local M = {}
 
 function M.setup(_)
-    require("dap-python").setup(require("mason-core.path").package_prefix "debugpy" .. "/venv/bin/python3")
+    require("dap-python").setup(
+        require("mason-core.path").package_prefix "debugpy"
+            .. "/venv/bin/python3"
+    )
     table.insert(require("dap").configurations.python, {
         type = "python",
         request = "attach",
@@ -12,22 +15,21 @@ function M.setup(_)
         mode = "remote",
         name = "Container Attach Debug",
         cwd = vim.fn.getcwd(),
-        pathMappings = {
-            {
-                localRoot = function()
-                    return vim.fn.input(
-                        "Local code folder > ",
-                        vim.fn.getcwd(),
-                        "file"
-                    )
-                    --"/home/alpha2phi/workspace/alpha2phi/python-apps/ml-yolo/backend", -- Local folder the code lives
-                end,
-                remoteRoot = function()
-                    return vim.fn.input("Container code folder > ", "/", "file")
-                    -- "/fastapi", -- Wherever your Python code lives in the container.
-                end,
-            },
-        },
+        -- pathMappings = {
+        --     {
+        --         localRoot = function()
+        --             return vim.fn.input(
+        --                 "Local code folder > ",
+        --                 vim.fn.getcwd(),
+        --                 "file"
+        --             )
+        --         end,
+        --         remoteRoot = function()
+        --             return vim.fn.input("Container code folder > ", "/", "file")
+        --             -- "/fastapi", -- Wherever your Python code lives in the container.
+        --         end,
+        --     },
+        -- },
     })
 end
 

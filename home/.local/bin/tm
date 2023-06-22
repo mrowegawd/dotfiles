@@ -1,0 +1,39 @@
+#!/bin/bash
+
+DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
+MARKED_PWD="$DROPBOX_PATH/marked-pwd"
+
+if [[ -z "$TMUX" ]]; then
+	select=$(fzf <"$MARKED_PWD")
+else
+	select=$(fzf-tmux -p 80% <"$MARKED_PWD")
+fi
+
+[[ -z $select ]] && exit
+[[ ! -d $select ]] && dunstify "Path: $select" "Not found!" && exit
+
+session_name=$(basename "$select")
+
+ss_name=$(echo "$session_name" | sed -e "s/\./\_/g")
+
+not_in_tmux() {
+	[ -z "$TMUX" ]
+}
+
+session_exists() {
+	tmux has-session -t "=$ss_name"
+}
+
+create_if_needed_and_attach() {
+	if not_in_tmux; then
+		tmux new-session -As "$ss_name" -c "$select"
+	else
+		if ! session_exists; then
+			tmux new-session -d -s "$ss_name" -c "$select"
+		fi
+
+		tmux switch-client -t "$ss_name"
+	fi
+}
+
+create_if_needed_and_attach

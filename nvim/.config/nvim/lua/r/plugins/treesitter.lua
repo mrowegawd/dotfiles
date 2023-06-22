@@ -19,17 +19,31 @@ return {
                     },
                 },
             }
-            -- vim.cmd [[
-            --     omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
-            --     xnoremap <silent> m :lua require('tsht').nodes()<CR>
-            -- ]]
+            vim.cmd [[
+                omap     <silent> m :<C-U>lua require('tsht').nodes()<CR>
+                xnoremap <silent> m :lua require('tsht').nodes()<CR>
+            ]]
         end,
         dependencies = {
             { "nvim-treesitter/nvim-treesitter-textobjects" },
             { "JoosepAlviste/nvim-ts-context-commentstring" },
-            -- { "mfussenegger/nvim-treehopper" },
+            {
+                "windwp/nvim-ts-autotag",
+                ft = {
+                    "typescriptreact",
+                    "javascript",
+                    "javascriptreact",
+                    "html",
+                    "tsx",
+                    "vue",
+                },
+                config = function()
+                    require("nvim-ts-autotag").setup()
+                end,
+            },
+            { "HiPhish/nvim-ts-rainbow2" },
+            { "mfussenegger/nvim-treehopper" },
             -- { "David-Kunz/markid" },
-            -- { "HiPhish/nvim-ts-rainbow2" },
         },
         config = function()
             local ok, orgmode = pcall(require, "orgmode")
@@ -51,7 +65,6 @@ return {
                 return false
             end
 
-            -- require("nvim-treesitter.install").compilers = { "gcc-12" }
             require("nvim-treesitter.configs").setup {
                 -- end,
                 ensure_installed = {
@@ -101,8 +114,8 @@ return {
                     "ruby",
                     "wgsl",
                     "yaml",
-                    -- "wgsl",
                     "json",
+                    -- "wgsl",
                     -- "markdown",
                 },
 
@@ -112,7 +125,7 @@ return {
                     disable = function(_, bufnr)
                         return vim.api.nvim_buf_line_count(bufnr) > 10000
                     end,
-                    -- additional_vim_regex_highlighting = { "orgmode" },
+                    additional_vim_regex_highlighting = { "orgmode" },
                 },
 
                 indent = {
@@ -161,12 +174,13 @@ return {
                     -- [options]
                 },
 
-                -- rainbow = {
-                --     enable = true,
-                --     disable = { "tsx", "jsx", "html", "lua" },
-                --     query = { "rainbow-parens" },
-                --     strategy = require("ts-rainbow").strategy.global,
-                -- },
+                rainbow = {
+                    enable = true,
+                    extended_mode = true,
+                    -- disable = { "tsx", "jsx", "html", "lua" },
+                    -- query = { "rainbow-parens" },
+                    -- strategy = require("ts-rainbow").strategy.global,
+                },
 
                 -- "David-Kunz/markid"
                 -- https://github.com/David-Kunz/markid#installation
@@ -216,6 +230,10 @@ return {
                     enable = true,
                     use_virtual_text = true,
                     lint_events = { "BufWrite", "CursorHold" },
+                },
+
+                autotag = {
+                    enable = true,
                 },
 
                 -- nvim-treesitter-textobjects
@@ -349,19 +367,6 @@ return {
         end,
         dependencies = { "nvim-treesitter" },
     },
-    -- NVIM-TS-AUTOTAG
-    {
-        "windwp/nvim-ts-autotag",
-        ft = {
-            "typescriptreact",
-            "javascript",
-            "javascriptreact",
-            "html",
-            "vue",
-        },
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = true,
-    },
     -- NVIM-AUTOPAIRS
     {
         "windwp/nvim-autopairs",
@@ -385,6 +390,7 @@ return {
                     "TelescopePrompt",
                     "spectre_panel",
                     "neo-tree-popup",
+                    "vim",
                 },
 
                 -- fast_wrap = { map = "<c-e>" },

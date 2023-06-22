@@ -4,17 +4,14 @@ end
 
 local highlight = as.highlight
 
-local fn, fmt, icons, cmd = vim.fn, string.format, as.ui.icons, vim.cmd
+local fn, fmt, icons, cmd, api =
+    vim.fn, string.format, as.ui.icons, vim.cmd, vim.api
 
 local set_icons = function(icons_name)
     return icons_name .. " "
 end
 
 return {
-    -- NVIM-VTSLS (js/ts server)
-    { "yioneko/nvim-vtsls" },
-    -- GUIHUA
-    { "ray-x/guihua.lua", build = { "cd lua/fzy && make" } },
     -- MASON
     {
         "williamboman/mason.nvim",
@@ -24,13 +21,10 @@ return {
     -- NVIM-LSPCONFIG
     {
         "neovim/nvim-lspconfig",
+        event = "BufReadPre",
         dependencies = {
             { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-            {
-                "folke/neodev.nvim",
-                ft = "lua",
-                opts = { library = { plugins = { "nvim-dap-ui" } } },
-            },
+            { "folke/neodev.nvim" },
         },
     },
     -- MASON-LSPCONFIG
@@ -59,17 +53,6 @@ return {
 
             mason_lspconfig.setup { ensure_installed = ensure_installed }
             mason_lspconfig.setup_handlers {
-
-                -- Taken from https://www.reddit.com/r/neovim/comments/131l9cw/theres_another_typescript_lsp_that_wraps_the/
-                -- better than `tsserver`?
-                vtsls = function()
-                    require("lspconfig.configs").vtsls =
-                        require("vtsls").lspconfig
-                    require("lspconfig").vtsls.setup(
-                        require("r.plugins.lsp.servers").setup "vtsls"
-                    )
-                end,
-
                 function(name)
                     local config = require("r.plugins.lsp.servers").setup(name)
                     if config then
@@ -81,13 +64,19 @@ return {
     },
     -- NULL-LS
     {
+        "jose-elias-alvarez/null-ls.nvim",
+        event = "BufNewFile",
+        dependencies = { "mason.nvim" },
+    },
+    -- MASON-NULL-LS
+    {
         "jay-babu/mason-null-ls.nvim", -- Automatically install null-ls servers
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "williamboman/mason.nvim",
             "nvim-lua/plenary.nvim",
             "jose-elias-alvarez/null-ls.nvim",
-            -- "LostNeophyte/null-ls-embedded", -- error deprecated warn (treesitter)
+            "LostNeophyte/null-ls-embedded",
         },
 
         config = function()
@@ -97,6 +86,7 @@ return {
             -- Ruff settings
             local ruff_severities = {
                 ["E"] = vim.diagnostic.severity.ERROR,
+
                 ["F8"] = vim.diagnostic.severity.ERROR,
                 ["F"] = vim.diagnostic.severity.WARN,
                 ["W"] = vim.diagnostic.severity.WARN,
@@ -123,6 +113,12 @@ return {
                     -- Lua
                     nls.builtins.formatting.stylua,
                     -- nls.builtins.diagnostics.luacheck,
+                    -- nls.builtins.diagnostics.selene,
+                    -- nls.builtins.diagnostics.selene.with {
+                    --     condition = function(utils)
+                    --         return utils.root_has_file { "selene.toml" }
+                    --     end,
+                    -- },
 
                     -- JSON
                     -- nls.builtins.formatting.fixjson.with({ filetypes = { "jsonc" } }),
@@ -135,21 +131,13 @@ return {
                     -- nls.builtins.formatting.fish_indent,
 
                     -- Markdown
-                    nls.builtins.diagnostics.markdownlint,
+                    -- nls.builtins.diagnostics.markdownlint,
 
                     -- Js / Typescript
                     -- nls.builtins.formatting.prettierd.with {
-                    --     filetypes = { "markdown" }, -- only runs `deno fmt` for markdown
+                    --     filetypes = { "markdown", "css", "json", "html" }, -- only runs `deno fmt` for markdown
                     -- },
-                    nls.builtins.formatting.prettierd,
                     -- nls.builtins.formatting.eslint_d,
-
-                    -- Selene
-                    -- nls.builtins.diagnostics.selene.with {
-                    --     condition = function(utils)
-                    --         return utils.root_has_file { "selene.toml" }
-                    --     end,
-                    -- },
 
                     -- GIT stuff
                     -- nls.builtins.code_actions.gitsigns,
@@ -161,10 +149,9 @@ return {
                     nls.builtins.formatting.isort,
                     nls.builtins.formatting.black,
 
-                    -- NOTE: ini error dengan warning deprecated treesitter di neorg
-                    -- require("null-ls-embedded").nls_source.with {
-                    --     filetypes = { "norg", "org", "markdown", "md" },
-                    -- },
+                    require("null-ls-embedded").nls_source.with {
+                        filetypes = { "norg", "org", "markdown", "md" },
+                    },
 
                     nls.builtins.formatting.trim_whitespace.with {
                         filetypes = { "norg", "org", "markdown", "md" },
@@ -515,6 +502,13 @@ return {
             }
         end,
     },
+    -- GOTO-PREVIEW
+    {
+        "rmagatti/goto-preview",
+        config = function()
+            require("goto-preview").setup {}
+        end,
+    },
     -- AERIAL
     {
         "stevearc/aerial.nvim",
@@ -523,20 +517,20 @@ return {
         init = function()
             require("r.utils").disable_ctrl_i_and_o("NoAerial", { "aerial" })
 
-            vim.api.nvim_create_autocmd("FileType", {
+            api.nvim_create_autocmd("FileType", {
                 pattern = { "aerial" },
                 callback = function()
                     vim.keymap.set("n", "zM", function()
                         local aerial = require "aerial"
                         return aerial.tree_close_all()
                     end, {
-                        buffer = vim.api.nvim_get_current_buf(),
+                        buffer = api.nvim_get_current_buf(),
                     })
                     vim.keymap.set("n", "zO", function()
                         local aerial = require "aerial"
                         return aerial.tree_open_all()
                     end, {
-                        buffer = vim.api.nvim_get_current_buf(),
+                        buffer = api.nvim_get_current_buf(),
                     })
                 end,
             })
@@ -776,38 +770,17 @@ return {
             require("dropbar").setup {
                 general = {
                     enable = function(buf, win)
-                        local fname = vim.api.nvim_buf_get_name(
-                            vim.api.nvim_get_current_buf()
-                        )
+                        local fname =
+                            api.nvim_buf_get_name(api.nvim_get_current_buf())
                         if fname:match "orgagenda" then
                             return false
                         end
 
-                        return not vim.api.nvim_win_get_config(win).zindex
+                        return not api.nvim_win_get_config(win).zindex
                             and vim.bo[buf].buftype == ""
-                            and vim.api.nvim_buf_get_name(buf) ~= ""
+                            and api.nvim_buf_get_name(buf) ~= ""
                             and not vim.wo[win].diff
                     end,
-                    update_events = {
-                        win = {
-                            "CursorMoved",
-                            "CursorMovedI",
-                            "WinEnter",
-                            "WinLeave",
-                            "WinResized",
-                            "WinScrolled",
-                        },
-                        buf = {
-                            "BufModifiedSet",
-                            "FileChangedShellPost",
-                            "TextChanged",
-                            "TextChangedI",
-                        },
-                        global = {
-                            "DirChanged",
-                            "VimResized",
-                        },
-                    },
                 },
                 icons = {
                     kinds = {
@@ -879,7 +852,7 @@ return {
                     },
                     ui = {
                         bar = {
-                            separator = set_icons(icons.misc.arrow_right),
+                            separator = set_icons(icons.kind.arrow_right),
                             extends = "…",
                         },
                         menu = {
@@ -976,7 +949,7 @@ return {
                 },
                 menu = {
                     -- When on, preview the symbol under the cursor on CursorMoved
-                    preview = false,
+                    preview = true,
                     -- When on, automatically set the cursor to the closest previous/next
                     -- clickable component in the direction of cursor movement on CursorMoved
                     quick_navigation = true,
@@ -989,20 +962,24 @@ return {
                     ---@type table<string, string|function|table<string, string|function>>
                     keymaps = {
                         ["<LeftMouse>"] = function()
-                            local api = require "dropbar.api"
-                            local menu = api.get_current_dropbar_menu()
+                            local dropbar_api = require "dropbar.api"
+                            local menu = dropbar_api.get_current_dropbar_menu()
                             if not menu then
                                 return
                             end
                             local mouse = vim.fn.getmousepos()
                             if mouse.winid ~= menu.win then
                                 local parent_menu =
-                                    api.get_dropbar_menu(mouse.winid)
+                                    dropbar_api.get_dropbar_menu(mouse.winid)
                                 if parent_menu and parent_menu.sub_menu then
                                     parent_menu.sub_menu:close()
                                 end
-                                if vim.api.nvim_win_is_valid(mouse.winid) then
-                                    vim.api.nvim_set_current_win(mouse.winid)
+                                if
+                                    dropbar_api.nvim_win_is_valid(mouse.winid)
+                                then
+                                    dropbar_api.nvim_set_current_win(
+                                        mouse.winid
+                                    )
                                 end
                                 return
                             end
@@ -1019,7 +996,7 @@ return {
                             if not menu then
                                 return
                             end
-                            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+                            local cursor = api.nvim_win_get_cursor(menu.win)
                             local component =
                                 menu.entries[cursor[1]]:first_clickable(
                                     cursor[2]
@@ -1029,16 +1006,16 @@ return {
                             end
                         end,
                         ["<c-c>"] = function()
-                            local api = require "dropbar.api"
-                            local menu = api.get_current_dropbar_menu()
+                            local dropbar_api = require "dropbar.api"
+                            local menu = dropbar_api.get_current_dropbar_menu()
                             if not menu then
                                 return
                             end
                             vim.cmd "q"
                         end,
                         ["<esc>"] = function()
-                            local api = require "dropbar.api"
-                            local menu = api.get_current_dropbar_menu()
+                            local dropbar_api = require "dropbar.api"
+                            local menu = dropbar_api.get_current_dropbar_menu()
                             if not menu then
                                 return
                             end
@@ -1050,7 +1027,7 @@ return {
                             if not menu then
                                 return
                             end
-                            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+                            local cursor = api.nvim_win_get_cursor(menu.win)
                             local component =
                                 menu.entries[cursor[1]]:first_clickable(
                                     cursor[2]
@@ -1077,7 +1054,7 @@ return {
 
                             -- vim.notify "not yet implemented"
 
-                            local cursor = vim.api.nvim_win_get_cursor(menu.win)
+                            local cursor = api.nvim_win_get_cursor(menu.win)
                             local component =
                                 menu.entries[cursor[1]]:first_clickable(
                                     cursor[2]
@@ -1093,92 +1070,6 @@ return {
                             print(tostring(row) .. " " .. tostring(col))
                             print(vim.inspect(component))
                         end,
-                    },
-                },
-                sources = {
-                    path = {
-                        ---@type string|fun(buf: integer): string
-                        relative_to = function(_)
-                            return vim.fn.getcwd()
-                        end,
-                        ---Can be used to filter out files or directories
-                        ---based on their name
-                        ---@type fun(name: string): boolean
-                        filter = function(_)
-                            return true
-                        end,
-                    },
-                    treesitter = {
-                        -- Lua pattern used to extract a short name from the node text
-                        -- Be aware that the match result must not be nil!
-                        name_pattern = string.rep("[#~%w%._%->!]*", 4, "%s*"),
-                        -- The order matters! The first match is used as the type
-                        -- of the treesitter symbol and used to show the icon
-                        -- Types listed below must have corresponding icons
-                        -- in the `icons.kinds.symbols` table for the icon to be shown
-                        valid_types = {
-                            "array",
-                            "boolean",
-                            "break_statement",
-                            "call",
-                            "case_statement",
-                            "class",
-                            "constant",
-                            "constructor",
-                            "continue_statement",
-                            "delete",
-                            "do_statement",
-                            "enum",
-                            "enum_member",
-                            "event",
-                            "for_statement",
-                            "function",
-                            "if_statement",
-                            "interface",
-                            "keyword",
-                            "list",
-                            "macro",
-                            "method",
-                            "module",
-                            "namespace",
-                            "null",
-                            "number",
-                            "operator",
-                            "package",
-                            "property",
-                            "reference",
-                            "repeat",
-                            "scope",
-                            "specifier",
-                            "string",
-                            "struct",
-                            "switch_statement",
-                            "type",
-                            "type_parameter",
-                            "unit",
-                            "value",
-                            "variable",
-                            "while_statement",
-                            "declaration",
-                            "field",
-                            "identifier",
-                            "object",
-                            "statement",
-                            "text",
-                        },
-                    },
-                    lsp = {
-                        request = {
-                            -- Times to retry a request before giving up
-                            ttl_init = 60,
-                            interval = 1000, -- in ms
-                        },
-                    },
-                    markdown = {
-                        parse = {
-                            -- Number of lines to update when cursor moves out of the parsed range
-                            look_ahead = 200,
-                        },
                     },
                 },
             }
@@ -1247,5 +1138,182 @@ return {
                 },
             }
         end,
+    },
+    --  ╭──────────────────────────────────────────────────────────╮
+    --  │              Typescript-Javascript-Related               │
+    --  ╰──────────────────────────────────────────────────────────╯
+    -- TYPESCRIPT-TOOLS.NVIM
+    {
+        "pmizio/typescript-tools.nvim",
+        lazy = false,
+        dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+        opts = {
+            tsserver_file_preferences = {
+                includeInlayParameterNameHints = "literal",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = false,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = false,
+                includeInlayEnumMemberValueHints = true,
+            },
+        },
+    },
+    -- IMPORT-COST.NVIM
+    {
+        -- Display javascript import costs inside of neovim
+        "barrett-ruth/import-cost.nvim",
+        build = "sh install.sh yarn",
+        ft = {
+            "javascript",
+            "typescript",
+            "javascriptreact",
+            "typescriptreact",
+        },
+        config = true,
+    },
+    -- TSC.NVIM
+    {
+        -- Type checking typescript
+        "dmmulroy/tsc.nvim",
+        cmd = { "TSC" },
+        config = function()
+            require("tsc").setup()
+        end,
+    },
+    -- PACKAGE-INFO.NVIM
+    {
+        "vuki656/package-info.nvim",
+        event = "BufEnter package.json",
+        config = function()
+            require("package-info").setup {
+                colors = {
+                    up_to_date = "#3C4048", -- Text color for up to date package virtual text
+                    outdated = "#fc514e", -- Text color for outdated package virtual text
+                },
+                icons = {
+                    enable = true, -- Whether to display icons
+                    style = {
+                        up_to_date = icons.misc.check, -- Icon for up to date packages
+                        outdated = icons.git.remove, -- Icon for outdated packages
+                    },
+                },
+                autostart = true, -- Whether to autostart when `package.json` is opened
+                hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
+                hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
+
+                -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
+                -- The plugin will try to auto-detect the package manager based on
+                -- `yarn.lock` or `package-lock.json`. If none are found it will use the
+                -- provided one,                              if nothing is provided it will use `yarn`
+                package_manager = "yarn",
+            }
+        end,
+    },
+    --  ╭──────────────────────────────────────────────────────────╮
+    --  │                      Python-Related                      │
+    --  ╰──────────────────────────────────────────────────────────╯
+    {
+        "linux-cultist/venv-selector.nvim",
+        enabled = false,
+        event = "VeryLazy",
+        config = function()
+            local venv = require "venv-selector.venv"
+            local venv_selector = require "venv-selector"
+
+            venv_selector.setup {
+                search = false,
+                notify_user_on_activate = false,
+            }
+
+            _G.Venv = {}
+
+            local function auto_poetry_venv()
+                if vim.env.VIRTUAL_ENV then
+                    if vim.b.poetry_venv == vim.env.VIRTUAL_ENV then
+                        -- Active venv is equal to current so there is nothing to do
+                        return
+                    elseif
+                        vim.b.poetry_venv == nil
+                        and next(_G.Venv.active_venv) ~= nil
+                        and vim.tbl_contains(
+                            _G.Venv.active_venv.project_files,
+                            vim.api.nvim_buf_get_name(0)
+                        )
+                    then
+                        -- Current file belongs to the project of the active env then simply
+                        -- set the buffer cache variable since we can reuse the existing venv
+                        vim.b.poetry_venv = _G.Venv.active_venv.venv_path
+                        return
+                    else
+                        venv_selector.deactivate_venv()
+                        _G.Venv.active_venv = {}
+                    end
+                end
+
+                -- Save working dir and cd to window cwd (lcd) to ensure system call works
+                local lwd = vim.loop.cwd()
+                vim.cmd "lcd %:p:h"
+
+                -- If there is no active venv look for one (but just once)
+                if vim.b.poetry_venv == nil then
+                    local poetry_path =
+                        vim.fn.trim(vim.fn.system "poetry env info --path")
+                    if vim.v.shell_error ~= 1 then
+                        vim.b.poetry_venv = poetry_path
+                        -- Also store (cache) project root and all py files in the project
+                        local project_root = vim.fn.fnamemodify(
+                            vim.fn.findfile(
+                                "pyproject.toml",
+                                vim.fn.getcwd() .. ";"
+                            ),
+                            ":p:h"
+                        )
+                        local py_files = vim.fs.find(function(name)
+                            return name:match ".*%.py$"
+                        end, {
+                            limit = math.huge,
+                            type = "file",
+                            path = project_root,
+                        })
+                        _G.Venv.active_venv = {
+                            project_root = project_root,
+                            project_files = py_files,
+                            venv_path = poetry_path,
+                        }
+                    else
+                        vim.b.poetry_venv = "none"
+                    end
+                end
+
+                -- Actually activate the venv if it exists/was found
+                if vim.b.poetry_venv ~= "none" then
+                    local path = {}
+                    path.value = vim.b.poetry_venv
+                    venv.set_venv_and_system_paths(path)
+                    venv.cache_venv(path)
+                end
+                vim.cmd("lcd " .. lwd)
+            end
+
+            -- Auto-activate
+            vim.api.nvim_create_autocmd({ "BufEnter" }, {
+                group = vim.api.nvim_create_augroup(
+                    "poetry_venv_auto",
+                    { clear = true }
+                ),
+                pattern = { "*.py" },
+                callback = function()
+                    if not string.match(vim.fn.expand "%:p", ".git/") then
+                        auto_poetry_venv()
+                    end
+                end,
+            })
+        end,
+        dependencies = {
+            -- for DAP support
+            "mfussenegger/nvim-dap-python",
+        },
     },
 }

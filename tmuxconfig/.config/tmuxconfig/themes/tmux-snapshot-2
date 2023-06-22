@@ -39,7 +39,7 @@ set -g message-style "fg=$WINDOW_STYLE_BG,bg=$BG_ACTIVE_STATUSLINE bold"
 # set -g status-left-length 40
 # set -g status-style bg="colour238",fg="colour255"
 
-set -g status-left "❐ #S "
+set -g status-left "#[fg=$COL_WHITE,bold] ❐ #S "
 
 # set -g window-status-format "#[fg=$COL_WHITE] #W"
 

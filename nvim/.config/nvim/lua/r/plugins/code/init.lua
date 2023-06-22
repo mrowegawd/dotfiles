@@ -12,6 +12,16 @@ return {
     -- NVIM-COVERAGE
     {
         "andythigpen/nvim-coverage", -- Display test coverage information
+        dependencies = "nvim-lua/plenary.nvim",
+        cmd = {
+            "Coverage",
+            "CoverageSummary",
+            "CoverageLoad",
+            "CoverageShow",
+            "CoverageHide",
+            "CoverageToggle",
+            "CoverageClear",
+        },
         config = function()
             local ok, coverage = as.safe_require "coverage"
             if not ok then
@@ -29,7 +39,6 @@ return {
     -- OVERSEER
     {
         "stevearc/overseer.nvim", -- Task runner and job management
-        -- Overseer lazy loads itself
         cmd = {
             "OverseerToggle",
             "OverseerOpen",
@@ -61,7 +70,6 @@ return {
                     icon = as.ui.icons.misc.run_program,
                     description = "A task runner and job management plugin",
                     keymaps = {
-
                         {
                             "<Leader>oo",
                             function()
@@ -71,46 +79,32 @@ return {
                                 )
                                 return cmd "OverseerToggle"
                             end,
-                            description = "Overseer toggle",
+                            description = "Overseer: toggle",
                         },
 
                         {
                             "<Leader>ol",
                             "<Cmd>OverseerQuickAction open vsplit<CR>",
-                            description = "Overseer open repl vsplit",
+                            description = "Overseer: open repl vsplit",
                         },
-
-                        -- {
-                        --     "<Leader>ol",
-                        --     "<CMD>OverseerLoadBundle<CR>",
-                        --     description = "Overseer load bundle",
-                        -- },
-
-                        -- {
-                        --     "<Leader>ob",
-                        --     "<CMD>OverseerBuild<CR>",
-                        --     description = "Overseer build",
-                        -- },
 
                         {
                             "<Leader>oa",
                             "<CMD>OverseerQuickAction<CR>",
-                            description = "Overseer quick action",
+                            description = "Overseer: quick action",
                         },
 
                         {
                             "<Leader>ot",
                             "<CMD>OverseerTaskAction<CR>",
-                            description = "Overseer task action",
+                            description = "Overseer: task action",
                         },
                     },
                 },
             }
         end,
         config = function()
-            local overseer = require "overseer"
-
-            overseer.setup {
+            require("overseer").setup {
                 -- strategy = "toggleterm",
                 strategy = { "toggleterm", open_on_start = true },
                 templates = { "builtin", "r" },
@@ -209,6 +203,136 @@ return {
             --     {}
             -- )
         end,
+    },
+    -- IRON.NVIM
+    {
+        "hkupty/iron.nvim",
+        init = function()
+            vim.g.iron_map_defaults = 0
+            vim.g.iron_map_extended = 0
+
+            local isIronShow = false
+            require("legendary").keymaps {
+                {
+                    itemgroup = "Task runner",
+                    keymaps = {
+
+                        {
+                            "<Leader>rr",
+                            function()
+                                if not isIronShow then
+                                    isIronShow = true
+
+                                    return vim.cmd.IronRepl()
+                                else
+                                    isIronShow = false
+                                    return vim.cmd.IronHide()
+                                end
+                            end,
+                            description = "Iron: open repl",
+                        },
+                        {
+                            "<Leader>rR",
+                            "<CMD>IronRestart<CR>",
+                            description = "Iron: restart repl",
+                        },
+
+                        {
+                            "<Leader>rm",
+                            function()
+                                require("iron.core").run_motion "send_motion"
+                            end,
+                            description = "Iron: send motion",
+                        },
+                        {
+                            "<Leader>rl",
+                            function()
+                                require("iron.core").visual_send()
+                                -- require("iron.core").send(nil, string.char(13))
+                            end,
+                            description = "Iron: send visual",
+                            mode = { "v" },
+                        },
+
+                        {
+                            "<Leader>rf",
+                            function()
+                                require("iron.core").send_file()
+                            end,
+                            description = "Iron: send file",
+                        },
+
+                        {
+                            "<Leader>rl",
+                            function()
+                                require("iron.core").send_line()
+                            end,
+                            description = "Iron: send line",
+                        },
+                        {
+                            "<Leader>r<cr>",
+                            function()
+                                require("iron.core").send(nil, string.char(13))
+                            end,
+                            description = "Iron: send (ENTER)",
+                        },
+
+                        {
+                            "<Leader>ri",
+                            function()
+                                require("iron.core").send(nil, string.char(03))
+                            end,
+                            description = "Iron: send (interrupt)",
+                        },
+
+                        {
+                            "<leader>rc",
+                            function()
+                                require("iron.core").send(nil, string.char(12))
+                            end,
+                            desc = "Iron: clear",
+                        },
+
+                        {
+                            "<leader>rL",
+                            function()
+                                require("iron.core").send_until_cursor()
+                            end,
+                            desc = "Iron: run until cursor",
+                        },
+                    },
+                },
+            }
+        end,
+        event = "VeryLazy",
+        cmd = { "IronRepl", "IronRestart", "IronHide" },
+        config = function()
+            require("iron.core").setup {
+                config = {
+                    -- Whether a repl should be discarded or not
+                    scratch_repl = true,
+                    -- Your repl definitions come here
+                    repl_definition = {
+                        sh = {
+                            command = { "zsh" },
+                        },
+                        python = {
+                            command = { "python" },
+                        },
+                    },
+
+                    repl_open_cmd = "vertical botright 80 split",
+                    buflisted = false,
+                },
+                -- If the highlight is on, you can change how it looks
+                -- For the available options, check nvim_set_hl
+                highlight = {
+                    italic = true,
+                },
+                ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
+            }
+        end,
+        -- disable = true,
     },
     -- SCRATCH
     {

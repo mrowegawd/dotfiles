@@ -91,9 +91,10 @@ local function __generate_links(files)
 
     return res
 end
------------------------------------------------------------------------
--- LINKABLE
------------------------------------------------------------------------
+
+--  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+--  ┃                         LINKABLE                         ┃
+--  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 function norg.finder_linkableGlobal(neorg)
     local tbl_files = __get_norg_files(__get_check_dirman(neorg))
@@ -181,9 +182,9 @@ function norg.get_check_linkdir(neorg)
     -- }
 end
 
------------------------------------------------------------------------
--- SITELINKABLE
------------------------------------------------------------------------
+--  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+--  ┃                       SITELINKABLE                       ┃
+--  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 function norg.finder_sitelinkable(neorg)
     local res = {}
@@ -217,44 +218,43 @@ function norg.finder_sitelinkable(neorg)
     return res
 end
 
------------------------------------------------------------------------
--- BROKEN LINKS
------------------------------------------------------------------------
+--  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+--  ┃                       BROKEN LINKS                       ┃
+--  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-local escape_chars = function(x)
-    x = x or ""
-    return (
-        x:gsub("%%", "%%%%")
-            :gsub("^%^", "%%^")
-            :gsub("%$$", "%%$")
-            :gsub("%(", "%%(")
-            :gsub("%)", "%%)")
-            :gsub("%.", "%%.")
-            :gsub("%[", "%%[")
-            :gsub("%]", "%%]")
-            :gsub("%*", "%%*")
-            :gsub("%+", "%%+")
-            :gsub("%-", "%%-")
-            :gsub("%?", "%%?")
-    )
-end
-
-local function set_command()
-    local command = {
-        "rg",
-        "tools",
-        -- as.absolute_path(vim.api.nvim_get_current_buf()),
-        "/home/mr00x/Dropbox/neorg/index.norg",
-    }
-    return vim.tbl_flatten(command)
-end
-
-function norg.finder_broken_links(all)
-    if all then
-        return print "get all broken links"
-    end
-
-    return table.concat(set_command(), " ")
-end
+-- local escape_chars = function(x)
+--     x = x or ""
+--     return (
+--         x:gsub("%%", "%%%%")
+--             :gsub("^%^", "%%^")
+--             :gsub("%$$", "%%$")
+--             :gsub("%(", "%%(")
+--             :gsub("%)", "%%)")
+--             :gsub("%.", "%%.")
+--             :gsub("%[", "%%[")
+--             :gsub("%]", "%%]")
+--             :gsub("%*", "%%*")
+--             :gsub("%+", "%%+")
+--             :gsub("%-", "%%-")
+--             :gsub("%?", "%%?")
+--     )
+-- end
+--
+-- local function set_command()
+--     local command = {
+--         "rg",
+--         "tools",
+--         -- as.absolute_path(vim.api.nvim_get_current_buf()),
+--     }
+--     return vim.tbl_flatten(command)
+-- end
+--
+-- function norg.finder_broken_links(all)
+--     if all then
+--         return print "get all broken links"
+--     end
+--
+--     return table.concat(set_command(), " ")
+-- end
 
 return norg

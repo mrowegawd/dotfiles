@@ -279,6 +279,13 @@ return {
                                 "core.promo.demote"
                             )
 
+                            keybinds.remap_event(
+                                "norg",
+                                "n",
+                                "<C-c>",
+                                "core.qol.todo_items.todo.task_cycle"
+                            )
+
                             -- keybinds.remap_event(
                             --     "norg",
                             --     "n",

@@ -7,9 +7,9 @@ local utils = {}
 local Job = require "plenary.job"
 local scan = require "plenary.scandir"
 
--------------------------------------------------------------------------------
---- BASE
--------------------------------------------------------------------------------
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                         GENERAL                          │
+--  ╰──────────────────────────────────────────────────────────╯
 local vi = false
 function utils.toggle_vi()
     if vi then
@@ -150,274 +150,6 @@ function utils.Buf_only()
     )
 end
 
-function utils.EditSnippet()
-    local base_snippets = { "package", "global" }
-
-    local ft, _ = as.get_bo_buft()
-
-    if ft == "" then
-        return vim.notify("Belum dibuat??", L.WARN, { title = "No snippets" })
-    elseif ft == "typescript" then
-        ft = "javascript"
-    elseif ft == "sh" then
-        ft = "shell"
-    end
-
-    local ft_snippet_path = as.snippet_path .. "/snippets/"
-
-    local snippets = {}
-    local is_file = true
-
-    if as.is_dir(ft_snippet_path .. ft) then
-        if not as.exists(ft_snippet_path .. ft) then
-            return vim.notify(
-                ft_snippet_path .. ft .. ".json",
-                L.WARN,
-                { title = "Snippet file not exists" }
-            )
-        end
-        -- Untuk akses ke snippet khusus dir harus di tambahkan ext sama `ft` nya
-        -- e.g path/ft-nya/<snippet.json>
-        ft_snippet_path = ft_snippet_path .. ft .. "/"
-
-        local dirs = scan.scan_dir(
-            ft_snippet_path,
-            { depth = 1, search_pattern = "json" }
-        )
-        for _, sp in pairs(dirs) do
-            local nm = sp:match "[^/]*.json$"
-            local sp_e = nm:gsub(".json", "")
-            table.insert(snippets, sp_e)
-        end
-
-        for _, sp in pairs(base_snippets) do
-            table.insert(snippets, sp)
-        end
-    else
-        snippets = { ft }
-
-        if not as.exists(ft_snippet_path .. ft .. ".json") then
-            return vim.notify(
-                ft_snippet_path .. ft .. ".json",
-                L.WARN,
-                { title = "Snippet file not exists" }
-            )
-        end
-        if not as.exists(ft_snippet_path .. ft .. ".json") then
-            return vim.notify(
-                ft_snippet_path .. ft .. ".json",
-                L.WARN,
-                { title = "Snippet file not exists" }
-            )
-        end
-
-        for _, sp in pairs(base_snippets) do
-            table.insert(snippets, sp)
-        end
-    end
-
-    vim.ui.select(snippets, { prompt = "Edit snippet> " }, function(choice)
-        if choice == nil then
-            return
-        end
-        if is_file then
-            if not as.exists(ft_snippet_path .. choice .. ".json") then
-                return vim.notify(
-                    ft_snippet_path .. choice .. ".json",
-                    L.WARN,
-                    { title = "Snippet file not exists" }
-                )
-            end
-            cmd(":edit " .. ft_snippet_path .. choice .. ".json")
-        end
-    end)
-end
-
-function utils.EditOrgTodo()
-    local org_todos = { "inbox", "refile" }
-    local org_todo_path = as.wiki_path .. "/orgmode/gtd/"
-
-    vim.ui.select(org_todos, { prompt = "Edit OrgTODO's> " }, function(choice)
-        if choice == nil then
-            return
-        end
-
-        if not as.exists(org_todo_path .. choice .. ".org") then
-            return vim.notify(
-                "Cant find todo path: " .. org_todo_path .. choice .. ".org",
-                L.WARN,
-                { title = "Todo info" }
-            )
-        end
-        cmd(":edit " .. org_todo_path .. choice .. ".org")
-    end)
-end
-
--------------------------------------------------------------------------------
---- GIT
--------------------------------------------------------------------------------
-function utils.ListBranches()
-    local branches = vim.fn.systemlist [[git branch 2>/dev/null]]
-    local new_branch_prompt = "Create new branch"
-    table.insert(branches, 1, new_branch_prompt)
-
-    vim.ui.select(branches, {
-        prompt = "Git branches",
-    }, function(choice)
-        if choice == nil then
-            return
-        end
-
-        if choice == new_branch_prompt then
-            -- local new_branch = ""
-            vim.ui.input({ prompt = "New branch name:" }, function(branch)
-                if branch ~= nil then
-                    vim.fn.systemlist("git checkout -b " .. branch)
-                end
-            end)
-        else
-            vim.fn.systemlist("git checkout " .. choice)
-        end
-    end)
-end
-
-function utils.GitRemoteSync()
-    if not _G.GitStatus then
-        _G.GitStatus = { ahead = 0, behind = 0, status = nil }
-    end
-
-    -- Fetch the remote repository
-    local git_fetch = Job:new {
-        command = "git",
-        args = { "fetch" },
-        on_start = function()
-            _G.GitStatus.status = "pending"
-        end,
-        on_exit = function()
-            _G.GitStatus.status = "done"
-        end,
-    }
-
-    -- Compare local repository to upstream
-    local git_upstream = Job:new {
-        command = "git",
-        args = { "rev-list", "--left-right", "--count", "HEAD...@{upstream}" },
-        on_start = function()
-            _G.GitStatus.status = "pending"
-            vim.schedule(function()
-                vim.api.nvim_exec_autocmds(
-                    "User",
-                    { pattern = "GitStatusChanged" }
-                )
-            end)
-        end,
-        on_exit = function(job, _)
-            local res = job:result()[1]
-            if type(res) ~= "string" then
-                _G.GitStatus = { ahead = 0, behind = 0, status = "error" }
-                return
-            end
-            local _, ahead, behind = pcall(string.match, res, "(%d+)%s*(%d+)")
-
-            _G.GitStatus = {
-                ahead = tonumber(ahead),
-                behind = tonumber(behind),
-                status = "done",
-            }
-            vim.schedule(function()
-                vim.api.nvim_exec_autocmds(
-                    "User",
-                    { pattern = "GitStatusChanged" }
-                )
-            end)
-        end,
-    }
-
-    git_fetch:start()
-    git_upstream:start()
-end
-
-------------------------------------------------------------------------
---                          Word Processor                            --
-------------------------------------------------------------------------
-function utils.WordProcessor()
-    vim.wo.wrap = true
-    vim.wo.linebreak = true
-    vim.bo.expandtab = true
-    vim.opt_local.spell = true
-    vim.opt_local.complete:append "k"
-    vim.opt_local.spelllang = { "en_us", "en_gb" }
-    -- vim.o.thesaurus = vim.env.XDG_CONFIG_HOME .. "/nvim/thesaurus/mthesaur.txt"
-    require("r.mappings.util").wordProcessor()
-end
-
--------------------------------------------------------------------------------
---- LSP Stuff
--------------------------------------------------------------------------------
----Get a table with names of currnetly active language server names
----@return table Active clients
-function utils.get_client_names()
-    local buf_clients = vim.lsp.get_active_clients()
-
-    local buf_client_names = {}
-    for _, client in pairs(buf_clients) do
-        table.insert(buf_client_names, client.name)
-    end
-    return buf_client_names
-end
-
----Get servers from table.
----The variable `dvim.lsp.language_servers` holds all the information needed.
----This function parses that table, and returns the active servers.
-function utils.get_servers()
-    local servers = {}
-
-    for _, server_object in ipairs(as.lspfiles) do
-        print(server_object)
-        -- if
-        --     pcall(function()
-        --         return dvim.builtin.filetypes[server_object.filetype].active
-        --             ~= nil
-        --     end)
-        -- then
-        --     Log.trace(
-        --         "[LSP] Toggling server for filetype: "
-        --             .. server_object.filetype
-        --             .. " Server is: ["
-        --             .. server_object.server
-        --             .. "]"
-        --     )
-        --     table.insert(servers, server_object.server)
-        -- else
-        --     Log.error(
-        --         "[LSP] Filetype: ["
-        --             .. server_object.filetype
-        --             .. "] not found in dvim.builtin.filetypes. Please look at the config.lua file."
-        --     )
-        -- end
-    end
-
-    return servers
-end
-
-local diagnostics_active = false
-
-function utils.show_diagnostics()
-    return diagnostics_active
-end
-
-function utils.toggle_diagnostics()
-    diagnostics_active = not diagnostics_active
-    if diagnostics_active then
-        vim.diagnostic.show()
-    else
-        vim.diagnostic.hide()
-    end
-end
--------------------------------------------------------------------------------
--- Plugin functions
--------------------------------------------------------------------------------
-
 ---Write current file and source it within current nvim instance
 ---@param buf number Bufner to attach mapping to
 function utils.write_and_source(buf)
@@ -533,6 +265,187 @@ function utils.infoFoldPreview()
     vim.cmd "options"
 end
 
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                           GIT                            │
+--  ╰──────────────────────────────────────────────────────────╯
+function utils.ListBranches()
+    local branches = vim.fn.systemlist [[git branch 2>/dev/null]]
+    local new_branch_prompt = "Create new branch"
+    table.insert(branches, 1, new_branch_prompt)
+
+    vim.ui.select(branches, {
+        prompt = "Git branches",
+    }, function(choice)
+        if choice == nil then
+            return
+        end
+
+        if choice == new_branch_prompt then
+            -- local new_branch = ""
+            vim.ui.input({ prompt = "New branch name:" }, function(branch)
+                if branch ~= nil then
+                    vim.fn.systemlist("git checkout -b " .. branch)
+                end
+            end)
+        else
+            vim.fn.systemlist("git checkout " .. choice)
+        end
+    end)
+end
+
+function utils.GitRemoteSync()
+    if not _G.GitStatus then
+        _G.GitStatus = { ahead = 0, behind = 0, status = nil }
+    end
+
+    -- Fetch the remote repository
+    local git_fetch = Job:new {
+        command = "git",
+        args = { "fetch" },
+        on_start = function()
+            _G.GitStatus.status = "pending"
+        end,
+        on_exit = function()
+            _G.GitStatus.status = "done"
+        end,
+    }
+
+    -- Compare local repository to upstream
+    local git_upstream = Job:new {
+        command = "git",
+        args = { "rev-list", "--left-right", "--count", "HEAD...@{upstream}" },
+        on_start = function()
+            _G.GitStatus.status = "pending"
+            vim.schedule(function()
+                vim.api.nvim_exec_autocmds(
+                    "User",
+                    { pattern = "GitStatusChanged" }
+                )
+            end)
+        end,
+        on_exit = function(job, _)
+            local res = job:result()[1]
+            if type(res) ~= "string" then
+                _G.GitStatus = { ahead = 0, behind = 0, status = "error" }
+                return
+            end
+            local _, ahead, behind = pcall(string.match, res, "(%d+)%s*(%d+)")
+
+            _G.GitStatus = {
+                ahead = tonumber(ahead),
+                behind = tonumber(behind),
+                status = "done",
+            }
+            vim.schedule(function()
+                vim.api.nvim_exec_autocmds(
+                    "User",
+                    { pattern = "GitStatusChanged" }
+                )
+            end)
+        end,
+    }
+
+    git_fetch:start()
+    git_upstream:start()
+end
+
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                      WORD PROCESSOR                      │
+--  ╰──────────────────────────────────────────────────────────╯
+function utils.WordProcessor()
+    vim.wo.wrap = true
+    vim.wo.linebreak = true
+    vim.bo.expandtab = true
+    vim.opt_local.spell = true
+    vim.opt_local.complete:append "k"
+    vim.opt_local.spelllang = { "en_us", "en_gb" }
+    -- vim.o.thesaurus = vim.env.XDG_CONFIG_HOME .. "/nvim/thesaurus/mthesaur.txt"
+    require("r.mappings.util").wordProcessor()
+end
+
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                        LSP STUFF                         │
+--  ╰──────────────────────────────────────────────────────────╯
+---Get a table with names of currnetly active language server names
+---@return table Active clients
+function utils.get_client_names()
+    local buf_clients = vim.lsp.get_active_clients()
+
+    local buf_client_names = {}
+    for _, client in pairs(buf_clients) do
+        table.insert(buf_client_names, client.name)
+    end
+    return buf_client_names
+end
+
+---Get servers from table.
+---The variable `dvim.lsp.language_servers` holds all the information needed.
+---This function parses that table, and returns the active servers.
+function utils.get_servers()
+    local servers = {}
+
+    for _, server_object in ipairs(as.lspfiles) do
+        print(server_object)
+        -- if
+        --     pcall(function()
+        --         return dvim.builtin.filetypes[server_object.filetype].active
+        --             ~= nil
+        --     end)
+        -- then
+        --     Log.trace(
+        --         "[LSP] Toggling server for filetype: "
+        --             .. server_object.filetype
+        --             .. " Server is: ["
+        --             .. server_object.server
+        --             .. "]"
+        --     )
+        --     table.insert(servers, server_object.server)
+        -- else
+        --     Log.error(
+        --         "[LSP] Filetype: ["
+        --             .. server_object.filetype
+        --             .. "] not found in dvim.builtin.filetypes. Please look at the config.lua file."
+        --     )
+        -- end
+    end
+
+    return servers
+end
+
+local diagnostics_active = true
+
+function utils.show_diagnostics()
+    return diagnostics_active
+end
+
+function utils.toggle_diagnostics()
+    diagnostics_active = not diagnostics_active
+    if diagnostics_active then
+        vim.diagnostic.show()
+        as.info "Show diagnostic"
+    else
+        vim.diagnostic.hide()
+        as.info "Hide diagnostic"
+    end
+end
+
+local inlayhints_active = false
+
+function utils.show_inlayhinst()
+    return inlayhints_active
+end
+
+function utils.toggle_inlayhints(func)
+    inlayhints_active = not inlayhints_active
+    if inlayhints_active then
+        inlayhints_active = false
+        func()
+    else
+        inlayhints_active = true
+    end
+    as.info "toggle inlayhints"
+end
+
 local function bool2str(bool)
     return bool and "on" or "off"
 end
@@ -556,6 +469,145 @@ function utils.toggle_buffer_semantic_tokens(bufnr)
             )
         end
     end
+end
+
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                      PLUGINS STUFF                       │
+--  ╰──────────────────────────────────────────────────────────╯
+
+function utils.EditOrgTodo()
+    local org_todos = { "inbox", "refile" }
+    local org_todo_path = as.wiki_path .. "/orgmode/gtd/"
+
+    vim.ui.select(org_todos, { prompt = "Edit OrgTODO's> " }, function(choice)
+        if choice == nil then
+            return
+        end
+
+        if not as.exists(org_todo_path .. choice .. ".org") then
+            return vim.notify(
+                "Cant find todo path: " .. org_todo_path .. choice .. ".org",
+                L.WARN,
+                { title = "Todo info" }
+            )
+        end
+        cmd(":edit " .. org_todo_path .. choice .. ".org")
+    end)
+end
+
+function utils.EditSnippet()
+    local base_snippets = { "package", "global" }
+
+    local ft, _ = as.get_bo_buft()
+
+    if ft == "" then
+        return vim.notify("Belum dibuat??", L.WARN, { title = "No snippets" })
+    elseif ft == "typescript" then
+        ft = "javascript"
+    elseif ft == "sh" then
+        ft = "shell"
+    end
+
+    local ft_snippet_path = as.snippet_path .. "/snippets/"
+
+    local snippets = {}
+    local is_file = true
+
+    if as.is_dir(ft_snippet_path .. ft) then
+        if not as.exists(ft_snippet_path .. ft) then
+            return vim.notify(
+                ft_snippet_path .. ft .. ".json",
+                L.WARN,
+                { title = "Snippet file not exists" }
+            )
+        end
+        -- Untuk akses ke snippet khusus dir harus di tambahkan ext sama `ft` nya
+        -- e.g path/ft-nya/<snippet.json>
+        ft_snippet_path = ft_snippet_path .. ft .. "/"
+
+        local dirs = scan.scan_dir(
+            ft_snippet_path,
+            { depth = 1, search_pattern = "json" }
+        )
+        for _, sp in pairs(dirs) do
+            local nm = sp:match "[^/]*.json$"
+            local sp_e = nm:gsub(".json", "")
+            table.insert(snippets, sp_e)
+        end
+
+        for _, sp in pairs(base_snippets) do
+            table.insert(snippets, sp)
+        end
+    else
+        snippets = { ft }
+
+        if not as.exists(ft_snippet_path .. ft .. ".json") then
+            return vim.notify(
+                ft_snippet_path .. ft .. ".json",
+                L.WARN,
+                { title = "Snippet file not exists" }
+            )
+        end
+        if not as.exists(ft_snippet_path .. ft .. ".json") then
+            return vim.notify(
+                ft_snippet_path .. ft .. ".json",
+                L.WARN,
+                { title = "Snippet file not exists" }
+            )
+        end
+
+        for _, sp in pairs(base_snippets) do
+            table.insert(snippets, sp)
+        end
+    end
+
+    vim.ui.select(snippets, { prompt = "Edit snippet> " }, function(choice)
+        if choice == nil then
+            return
+        end
+        if is_file then
+            if not as.exists(ft_snippet_path .. choice .. ".json") then
+                return vim.notify(
+                    ft_snippet_path .. choice .. ".json",
+                    L.WARN,
+                    { title = "Snippet file not exists" }
+                )
+            end
+            cmd(":edit " .. ft_snippet_path .. choice .. ".json")
+        end
+    end)
+end
+
+function utils.ufo_handler(virtText, lnum, endLnum, width, truncate)
+    local newVirtText = {}
+    local suffix = ("  %d "):format(endLnum - lnum)
+    local sufWidth = vim.fn.strdisplaywidth(suffix)
+    local targetWidth = width - sufWidth
+    local curWidth = 0
+
+    for _, chunk in ipairs(virtText) do
+        local chunkText = chunk[1]
+        local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+        if targetWidth > curWidth + chunkWidth then
+            table.insert(newVirtText, chunk)
+        else
+            chunkText = truncate(chunkText, targetWidth - curWidth)
+            local hlGroup = chunk[2]
+            table.insert(newVirtText, { chunkText, hlGroup })
+            chunkWidth = vim.fn.strdisplaywidth(chunkText)
+            -- str width returned from truncate() may less than 2nd argument, need padding
+            if curWidth + chunkWidth < targetWidth then
+                suffix = suffix
+                    .. (" "):rep(targetWidth - curWidth - chunkWidth)
+            end
+            break
+        end
+        curWidth = curWidth + chunkWidth
+    end
+
+    table.insert(newVirtText, { suffix, "MoreMsg" })
+
+    return newVirtText
 end
 
 return utils

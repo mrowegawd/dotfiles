@@ -150,15 +150,13 @@ return {
                 type = "group",
                 val = {
                     button("o", "   Recents", ":FzfLua oldfiles<CR>"),
-                    -- button("b", "   Buffers", ":Telescope buffers<CR>"),
                     button("f", "   Explore", ":FzfLua files<CR>"),
-                    button("w", "   Ripgrep", ":FzfLua live_grep<CR>"),
+                    button("g", "   Ripgrep", ":FzfLua live_grep<CR>"),
                     button(
                         "s",
                         "   Sessions",
-                        ":Telescope conduct projects theme=ivy<CR>"
+                        "<CMD>lua require('nvim-possession').list()<CR>"
                     ),
-                    -- button("p", "   Projects", ":Telescope projects<CR>"),
                     button("q", "   Quit", "<cmd>qa<cr>"),
                 },
                 opts = {

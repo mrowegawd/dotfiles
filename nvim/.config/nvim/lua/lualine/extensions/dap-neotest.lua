@@ -1,14 +1,6 @@
 local M = {}
 
-local fmt, api, hg = string.format, vim.api, as.highlight
-
--- local clock = function()
---     return " " .. os.date "%H:%M"
--- end
-
-local function qflabel()
-    return as.is_loclist() and "Location List" or "Quickfix List"
-end
+local fmt, hg = string.format, as.highlight
 
 local function title()
     if vim.bo.filetype ~= "qf" then
@@ -26,39 +18,14 @@ local function title()
     )
 end
 
-local term_plugins = function()
-    local ft_buf =
-        api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "filetype")
-    if ft_buf == "toggleterm" then
-        local terms = require "toggleterm.terminal"
-        local count_term = terms.get_all()
-        if #count_term > 0 then
-            return fmt("   |  ﬑  %s/%s ", as.toggle_number, #count_term)
-        end
-    elseif ft_buf == "BufTerm" then
-        return "bufterm"
-    else
-        return ""
-    end
-end
-
 local function label()
     local ft = {
-        ["NvimTree"] = "file Manager",
-        ["Outline"] = "outline",
-        ["TelescopePrompt"] = "telescope prompt",
-        ["aerial"] = "aerial",
-        ["alpha"] = "",
-        ["fugitive"] = "fugitive status",
-        ["floggraph"] = "floggraph",
-        ["Trouble"] = "trouble",
-        ["neo-tree"] = "file Manager",
-        ["qf"] = qflabel,
-        ["toggleterm"] = term_plugins,
-        ["BufTerm"] = term_plugins,
-        ["undotree"] = "undotree",
-        ["orgagenda"] = "orgagenda",
-        ["OverseerList"] = "overseer list",
+        ["dap-repl"] = "dap-repl",
+        ["dapui_breakpoints"] = "dapui_breakpoints",
+        ["dapui_console"] = "dapui_console",
+        ["dapui_scopes"] = "dapui_scopes",
+        ["dapui_stacks"] = "dapui_stacks",
+        ["dapui_watches"] = "dapui_watches",
     }
 
     local set_label = ft[vim.bo.filetype]
@@ -105,8 +72,8 @@ M.sections = {
 }
 
 M.inactive_sections = {
-    lualine_c = {},
-    lualine_x = {
+    lualine_x = {},
+    lualine_c = {
         {
             label,
             color = {
@@ -118,22 +85,13 @@ M.inactive_sections = {
 }
 
 M.filetypes = {
-    "BufTerm",
-    "NvimTree",
-    "Outline",
-    "OverseerList",
-    "TelescopePrompt",
-    "Trouble",
-    "aerial",
-    "floaterm",
-    "floggraph",
-    "fugitive",
-    "neo-tree",
-    "orgagenda",
-    "qf",
-    "quickfix",
-    "toggleterm",
-    "undotree",
+
+    "dap-repl",
+    "dapui_breakpoints",
+    "dapui_console",
+    "dapui_scopes",
+    "dapui_stacks",
+    "dapui_watches",
 }
 
 return M

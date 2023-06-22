@@ -12,44 +12,20 @@ local function format_title(str, icon, icon_hl)
 end
 
 return {
-    -- LEAP
+    -- FLASH.NVIM
     {
-        "ggandor/leap.nvim",
-        enabled = false,
-        keys = { "s", "S" },
-        config = function()
-            require("leap").add_default_mappings()
-        end,
-    },
-    -- HOP (false)
-    {
-        "phaazon/hop.nvim",
-        event = "BufRead",
-        enabled = false,
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "s",
-                            "<CMD>HopWordAC<CR>",
-                            description = "Hop: find motion down",
-                        },
-                        {
-                            "S",
-                            "<CMD>HopWordBC<CR>",
-                            description = "Hop: find motion up",
-                        },
-                    },
-                },
-            }
-        end,
-        config = function()
-            require("hop").setup {
-                keys = "asdghklqwertyuiopzxcvbnmfj",
-            }
-        end,
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = {},
+        keys = {
+            {
+                "s",
+                mode = { "n" },
+                function()
+                    require("flash").jump()
+                end,
+            },
+        },
     },
     -- FZF-LUA
     {
@@ -186,6 +162,12 @@ return {
                         },
 
                         {
+                            "<leader>fQ",
+                            "<CMD>FzfLua quickfix<CR>",
+                            description = "Fzflua: qf list",
+                        },
+
+                        {
                             "<leader>fq",
                             function()
                                 local path = require "fzf-lua.path"
@@ -291,11 +273,6 @@ return {
                         -- Rotate preview clockwise/counter-clockwise
                         -- ["c-l>"] = "toggle-preview-ccw",
                         ["<F6>"] = "toggle-preview-cw",
-
-                        -- ["<S-down>"] = "preview-page-down",
-                        -- ["<S-up>"] = "preview-page-up",
-
-                        ["<S-left>"] = "preview-page-reset",
 
                         ["<c-d>"] = "preview-page-down",
                         ["<c-u>"] = "preview-page-up",
@@ -1202,7 +1179,6 @@ return {
                 -- 'EN SPACE' (U+2002), the below sets it to 'NBSP' (U+00A0) instead
                 -- nbsp = '\xc2\xa0',
             }
-
             require("fzf-lua").register_ui_select()
         end,
     },
@@ -1401,7 +1377,6 @@ return {
             "nvim-lua/plenary.nvim",
             "benfowler/telescope-luasnip.nvim",
         },
-
         config = function()
             local telescope = require "telescope"
             local trouble = require "trouble.providers.telescope"
@@ -1670,7 +1645,6 @@ return {
     {
         "windwp/nvim-spectre",
         event = "BufRead",
-
         init = function()
             require("legendary").keymaps {
                 {
@@ -1901,8 +1875,6 @@ return {
     },
     -- TODO-COMMENTS
     {
-        -- "folke/todo-comments.nvim",
-        -- cmd = { "TodoTrouble", "TodoTelescope", "TodoQuickFix" },
         "mrowegawd/todo.nvim",
         cmd = { "TODOQuickFixList" },
         init = function()

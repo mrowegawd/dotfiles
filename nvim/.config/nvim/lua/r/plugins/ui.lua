@@ -2,6 +2,8 @@ local highlight = as.highlight
 local border, icons, api, fn =
     as.ui.border.rectangle, as.ui.icons, vim.api, vim.fn
 
+local ufo_config_handler = require("r.utils").ufo_handler
+
 return {
     -- INDENTBLANK
     {
@@ -225,9 +227,10 @@ return {
                 --     -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
                 --     view_search = false,
                 -- },
+
                 -- notify = { enabled = true },
-                -- cmdline = { enabled = true },
-                -- messages = { enabled = true },
+                -- cmdline = { enabled = true }
+                -- messages = { enabled = false },
                 lsp = {
                     progress = {
                         enabled = false,
@@ -361,15 +364,27 @@ return {
             }
         end,
     },
-    -- NVIM-UFO
+    -- FOLD CYCLE
+    {
+        "jghauser/fold-cycle.nvim",
+        opts = {},
+        keys = {
+            {
+                "<space><space>",
+                function()
+                    require("fold-cycle").open()
+                end,
+                desc = "fold-cycle: toggle",
+            },
+        },
+    },
+    -- NVIM-UVO
     {
         -- NOTE ufo ini selalu jalan ketika buka ft apapun, seharusnya bisa di
         -- disable. Contoh ketika open AerialToggle, map zM harusnya milik Aerial bukan Ufo.
         -- Solusi lain mungkin dari issue ini:
         -- https://github.com/kevinhwang91/nvim-ufo/issues/33#issuecomment-1478102255
         "kevinhwang91/nvim-ufo",
-        event = "BufRead",
-        -- enabled = false,
         dependencies = {
             "kevinhwang91/promise-async",
         },
@@ -525,72 +540,11 @@ return {
             vim.o.foldenable = true
             vim.o.foldcolumn = "1"
 
-            local function handler(
-                virt_text,
-                lnum,
-                end_lnum,
-                width,
-                truncate,
-                ctx
-            )
-                local result = {}
-
-                local counts = ("    %d    "):format(end_lnum - lnum)
-                local suffix = " ⋯⋯  "
-                local padding = ""
-
-                local end_virt_text = ctx.get_fold_virt_text(end_lnum)
-
-                local sufWidth = (2 * api.nvim_strwidth(suffix))
-                    + api.nvim_strwidth(counts)
-
-                local target_width = width - sufWidth
-                local cur_width = 0
-
-                for _, chunk in ipairs(virt_text) do
-                    local chunk_text = chunk[1]
-
-                    local chunk_width = api.nvim_strwidth(chunk_text)
-                    if target_width > cur_width + chunk_width then
-                        table.insert(result, chunk)
-                    else
-                        chunk_text =
-                            truncate(chunk_text, target_width - cur_width)
-                        local hl_group = chunk[2]
-                        table.insert(result, { chunk_text, hl_group })
-                        chunk_width = api.nvim_strwidth(chunk_text)
-
-                        if cur_width + chunk_width < target_width then
-                            padding = padding
-                                .. (" "):rep(
-                                    target_width - cur_width - chunk_width
-                                )
-                        end
-                        break
-                    end
-                    cur_width = cur_width + chunk_width
-                end
-
-                if end_virt_text[1] and end_virt_text[1][1] then
-                    end_virt_text[1][1] =
-                        end_virt_text[1][1]:gsub("[%s\t]+", "")
-                end
-
-                table.insert(result, { suffix, "UfoFoldedEllipsis" })
-                table.insert(result, { counts, "MoreMsg" })
-                table.insert(result, { suffix, "UfoFoldedEllipsis" })
-
-                vim.list_extend(result, end_virt_text)
-                table.insert(result, { padding, "" })
-
-                return result
-            end
-
             local ufo = require "ufo"
 
             ufo.setup {
                 open_fold_hl_timeout = 0,
-                fold_virt_text_handler = handler,
+                fold_virt_text_handler = ufo_config_handler,
                 close_fold_kinds = { "imports", "comment" },
                 enable_get_fold_virt_text = true,
                 ---@diagnostic disable-next-line: unused-local
@@ -1431,6 +1385,16 @@ return {
         cmd = { "BlockOn", "BlockOff", "Block" },
         config = function()
             require("block").setup {}
+        end,
+    },
+    -- SHADE
+    {
+        "sunjon/shade.nvim",
+        enabled = false,
+        -- event = "BufReadPre",
+        config = function()
+            require("shade").setup()
+            require("shade").toggle()
         end,
     },
 }

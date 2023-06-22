@@ -42,12 +42,12 @@ keymap.set("n", "<Leader>mi", ":norm `^<CR>", { noremap = true, unique = true })
 keymap.set("n", "<Leader>mj", ":norm `'<CR>", { noremap = true, unique = true })
 
 -- Evaluates whether there is a fold on the current line if so unfold it else return a normal space
-keymap.set(
-    "n",
-    "<space><space>",
-    [[@=(foldlevel('.')?'za':"\<Space>")<CR>]],
-    { noremap = true, desc = "toggle fold under cursor", silent = true }
-)
+-- keymap.set(
+--     "n",
+--     "<space><space>",
+--     [[@=(foldlevel('.')?'za':"\<Space>")<CR>]],
+--     { noremap = true, desc = "toggle fold under cursor", silent = true }
+-- )
 -- Toggle open close fold (recursive)
 keymap.set(
     "n",
@@ -209,23 +209,23 @@ keymap.set(
 -- }}}
 
 vim.cmd [[
-cab Wq wq
-cab Q! q!
-cab Q!! q!
-cab q!! q!
-cab WQ up
-cab Q1 q
-cab W1 updatee!
-cab W! update!
-cab w; update!
-cab W; update!
-cab W update
-cab Q q
-cab w@ update!
-cab W@ update!
+cab <silent> Wq wq
+cab <silent> Q! q!
+cab <silent> Q!! q!
+cab <silent> q!! q!
+cab <silent> WQ up
+cab <silent> Q1 q
+cab <silent> W1 updatee!
+cab <silent> W! update!
+cab <silent> w; update!
+cab <silent> W; update!
+cab <silent> W update
+cab <silent> Q q
+cab <silent> w@ update!
+cab <silent> W@ update!
 
-cab Bd bd!
-cab BD bd!
-cab bD bd!
-cab Bd bd!
-cab bd bd!]]
+cab <silent> Bd bd!
+cab <silent> BD bd!
+cab <silent> bD bd!
+cab <silent> Bd bd!
+cab <silent> bd bd!]]

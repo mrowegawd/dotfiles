@@ -6,7 +6,7 @@ if as.use_navigator_ray_x then
     return
 end
 
-local lsp, fn, api, fmt = vim.lsp, vim.fn, vim.api, string.format
+local lsp, fn, fmt = vim.lsp, vim.fn, string.format
 local diagnostic = vim.diagnostic
 
 local L = vim.lsp.log_levels
@@ -18,114 +18,9 @@ if vim.env.DEVELOPING then
     vim.lsp.set_log_level(L.DEBUG)
 end
 
------------------------------------------------------------------------------//
--- Autocommands
------------------------------------------------------------------------------//
----@enum
-local provider = {
-    HOVER = "hoverProvider",
-    RENAME = "renameProvider",
-    CODELENS = "codeLensProvider",
-    CODEACTIONS = "codeActionProvider",
-    FORMATTING = "documentFormattingProvider",
-    REFERENCES = "documentHighlightProvider",
-    DEFINITION = "definitionProvider",
-}
-
-local __save_win_positions = function(bufnr)
-    if bufnr == nil or bufnr == 0 then
-        bufnr = vim.api.nvim_get_current_buf()
-    end
-    local win_positions = {}
-    for _, winid in ipairs(vim.api.nvim_list_wins()) do
-        if vim.api.nvim_win_get_buf(winid) == bufnr then
-            vim.api.nvim_win_call(winid, function()
-                local view = vim.fn.winsaveview()
-                table.insert(win_positions, { winid, view })
-            end)
-        end
-    end
-
-    return function()
-        for _, pair in ipairs(win_positions) do
-            local winid, view = unpack(pair)
-            vim.api.nvim_win_call(winid, function()
-                pcall(vim.fn.winrestview, view)
-            end)
-        end
-    end
-end
-
-local function setup_autocommands(client, buf)
-    if client.server_capabilities[provider.FORMATTING] then
-        augroup(("LspFormatting%d"):format(buf), {
-            event = "BufWritePre",
-            buffer = buf,
-            desc = "LSP: Format on save",
-            command = function(args)
-                if
-                    not vim.g.formatting_disabled
-                    and not vim.b[buf].formatting_disabled
-                then
-                    local clients = vim.tbl_filter(
-                        function(c)
-                            return c.server_capabilities[provider.FORMATTING]
-                        end,
-                        lsp.get_active_clients {
-                            buffer = buf,
-                        }
-                    )
-
-                    if #clients >= 1 then
-                        local restore = __save_win_positions(0)
-                        vim.lsp.buf.format { timeout_ms = 500, bufnr = args.buf }
-                        restore()
-                    end
-                end
-            end,
-        })
-    end
-
-    if client.server_capabilities[provider.CODELENS] then
-        augroup(("LspCodeLens%d"):format(buf), {
-            event = { "BufEnter", "InsertLeave", "BufWritePost" },
-            -- event = { "BufEnter", "InsertLeave" },
-            desc = "LSP: Code Lens",
-            buffer = buf,
-            -- call via vimscript so that errors are silenced
-            command = function()
-                vim.lsp.codelens.refresh()
-            end,
-        })
-    end
-
-    -- if current nvim version supports inlay hints, enable them
-    if client.server_capabilities.inlayHintProvider then
-        vim.lsp.buf.inlay_hint(buf, true)
-    end
-
-    --     if client.server_capabilities[provider.REFERENCES] then
-    --         augroup(("LspReferences%d"):format(buf), {
-    --             event = { "CursorHold", "CursorHoldI" },
-    --             buffer = buf,
-    --             desc = "LSP: References",
-    --             command = function()
-    --                 lsp.buf.document_highlight()
-    --             end,
-    --         }, {
-    --             event = "CursorMoved",
-    --             desc = "LSP: References Clear",
-    --             buffer = buf,
-    --             command = function()
-    --                 lsp.buf.clear_references()
-    --             end,
-    --         })
-    --     end
-end
-
-----------------------------------------------------------------------------------------------------
---  Related Locations
-----------------------------------------------------------------------------------------------------
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                    RELATED LOCATIONS                     │
+--  ╰──────────────────────────────────────────────────────────╯
 -- This relates to:
 -- 1. https://github.com/neovim/neovim/issues/19649#issuecomment-1327287313
 -- 2. https://github.com/neovim/neovim/issues/22744#issuecomment-1479366923
@@ -150,6 +45,7 @@ local function show_related_locations(diag)
 end
 
 local handler = lsp.handlers["textDocument/publishDiagnostics"]
+
 ---@diagnostic disable-next-line: duplicate-set-field
 lsp.handlers["textDocument/publishDiagnostics"] = function(
     err,
@@ -161,9 +57,9 @@ lsp.handlers["textDocument/publishDiagnostics"] = function(
     handler(err, result, ctx, config)
 end
 
------------------------------------------------------------------------------//
--- Mappings
------------------------------------------------------------------------------//
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                         MAPPINGS                         │
+--  ╰──────────────────────────────────────────────────────────╯
 -- local function prev_diagnostic(lvl)
 --     return function()
 --         diagnostic.goto_prev { float = true, severity = { min = lvl } }
@@ -176,27 +72,21 @@ end
 -- end
 
 ---Setup mapping when an lsp attaches to a buffer
-local function setup_mappings(client, bufnr)
+local function setup_mappings()
     local legendary_installed, legendary =
         as.safe_require("legendary", { silent = true })
     if legendary_installed then
         if legendary_installed then
-            if as.use_search_telescope then
-                legendary.keymaps(
-                    require("r.mappings").lsp_keymaps_lspsaga(client, bufnr)
-                )
-            else
-                legendary.keymaps(require("r.mappings").lsp_keymaps())
-            end
+            legendary.keymaps(require("r.mappings").lsp_keymaps())
 
             legendary.commands(require("r.mappings").lsp_commands())
         end
     end
 end
 
------------------------------------------------------------------------------//
--- LSP SETUP/TEARDOWN
------------------------------------------------------------------------------//
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                    LSP SETUP/TEARDOWN                    │
+--  ╰──────────────────────────────────────────────────────────╯
 --- A set of custom overrides for specific lsp clients
 --- This is a way of adding functionality for specific lsps
 --- without putting all this logic in the general on_attach function
@@ -219,6 +109,10 @@ local client_overrides = {
     },
 }
 
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                     SEMANTIC TOKENS                      │
+--  ╰──────────────────────────────────────────────────────────╯
+
 local function setup_semantic_tokens(client, bufnr)
     local overrides = client_overrides[client.name]
     if not overrides or not overrides.semantic_tokens then
@@ -234,40 +128,112 @@ local function setup_semantic_tokens(client, bufnr)
     })
 end
 
-local function adjust_formatting_capabilities(client, bufnr)
-    if not pcall(require, "null-ls") then
-        return
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                       AUTOCOMMANDS                       │
+--  ╰──────────────────────────────────────────────────────────╯
+
+---@enum
+local provider = {
+    HOVER = "hoverProvider",
+    RENAME = "renameProvider",
+    CODELENS = "codeLensProvider",
+    CODEACTIONS = "codeActionProvider",
+    FORMATTING = "documentFormattingProvider",
+    REFERENCES = "documentHighlightProvider",
+    DEFINITION = "definitionProvider",
+}
+
+-- local __save_win_positions = function(bufnr)
+--     if bufnr == nil or bufnr == 0 then
+--         bufnr = api.nvim_get_current_buf()
+--     end
+--     local win_positions = {}
+--     for _, winid in ipairs(api.nvim_list_wins()) do
+--         if api.nvim_win_get_buf(winid) == bufnr then
+--             api.nvim_win_call(winid, function()
+--                 local view = vim.fn.winsaveview()
+--                 table.insert(win_positions, { winid, view })
+--             end)
+--         end
+--     end
+--
+--     return function()
+--         for _, pair in ipairs(win_positions) do
+--             local winid, view = unpack(pair)
+--             api.nvim_win_call(winid, function()
+--                 pcall(vim.fn.winrestview, view)
+--             end)
+--         end
+--     end
+-- end
+
+local function setup_autocommands(client, buf)
+    if client.server_capabilities[provider.FORMATTING] then
+        augroup(("LspFormatting%d"):format(buf), {
+            event = "BufWritePre",
+            buffer = buf,
+            desc = "LSP: Format on save",
+            ---@diagnostic disable-next-line: unused-local
+            command = function(args)
+                if
+                    not vim.g.formatting_disabled
+                    and not vim.b[buf].formatting_disabled
+                then
+                    local clients = vim.tbl_filter(
+                        function(c)
+                            return c.server_capabilities[provider.FORMATTING]
+                        end,
+                        lsp.get_active_clients {
+                            buffer = buf,
+                        }
+                    )
+
+                    if #clients >= 1 then
+                        -- This is custom format async that i can use it now
+                        -- check [textDocument/apply_formatting] at line :357
+                        vim.bo[buf].modifiable = false -- Prevent me from changing the buffer.
+                        vim.b[buf].write_after_format = true -- Tell apply_formatting to save the buffer afterwards
+                        pcall(vim.lsp.buf.format, { async = true }) -- Call the formatting function for the LSP
+                    end
+                end
+            end,
+        })
     end
-    local sources = require "null-ls.sources"
-    local methods = require "null-ls.methods"
-    local null_ls_client = require("null-ls.client").get_client()
-    if
-        not null_ls_client
-        or not vim.lsp.buf_is_attached(bufnr, null_ls_client.id)
-    then
-        return
+
+    if client.server_capabilities[provider.CODELENS] then
+        augroup(("LspCodeLens%d"):format(buf), {
+            event = { "BufEnter", "InsertLeave", "BufWritePost" },
+            desc = "LSP: Code Lens",
+            buffer = buf,
+            -- call via vimscript so that errors are silenced
+            command = "silent! lua vim.lsp.codelens.refresh()",
+        })
     end
-    local formatters =
-        sources.get_available(vim.bo[bufnr].filetype, methods.FORMATTING)
-    if vim.tbl_isempty(formatters) then
-        return
-    end
-    if client.id == null_ls_client.id then
-        -- We're attaching a null-ls client. If it has a formatter, disable
-        -- formatting on all prior clients
-        local clients = vim.lsp.get_active_clients { bufnr = bufnr }
-        for _, other_client in ipairs(clients) do
-            if other_client.id ~= client.id then
-                other_client.server_capabilities.documentFormattingProvider =
-                    nil
-                other_client.server_capabilities.documentRangeFormattingProvider =
-                    nil
-            end
+
+    -- Enable inlay_hint
+    if client.server_capabilities.inlayHintProvider then
+        if require("r.utils").show_inlayhinst() then
+            vim.lsp.buf.inlay_hint(buf, true)
         end
-    else
-        client.server_capabilities.documentFormattingProvider = nil
-        client.server_capabilities.documentRangeFormattingProvider = nil
     end
+
+    --     if client.server_capabilities[provider.REFERENCES] then
+    --         augroup(("LspReferences%d"):format(buf), {
+    --             event = { "CursorHold", "CursorHoldI" },
+    --             buffer = buf,
+    --             desc = "LSP: References",
+    --             command = function()
+    --                 lsp.buf.document_highlight()
+    --             end,
+    --         }, {
+    --             event = "CursorMoved",
+    --             desc = "LSP: References Clear",
+    --             buffer = buf,
+    --             command = function()
+    --                 lsp.buf.clear_references()
+    --             end,
+    --         })
+    --     end
 end
 
 -- Add buffer local mappings, autocommands etc for attaching servers
@@ -275,8 +241,7 @@ end
 -- attaches it might enable autocommands or mappings that the previous client did not support
 local function on_attach(client, bufnr)
     setup_autocommands(client, bufnr)
-    adjust_formatting_capabilities(client, bufnr)
-    setup_mappings(client, bufnr)
+    setup_mappings()
     setup_semantic_tokens(client, bufnr)
 
     vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -290,7 +255,9 @@ augroup("LspSetupCommands", {
         if not client then
             return
         end
+
         on_attach(client, args.buf)
+
         local overrides = client_overrides[client.name]
         if not overrides or not overrides.on_attach then
             return
@@ -315,16 +282,17 @@ augroup("LspSetupCommands", {
         end
     end,
 })
------------------------------------------------------------------------------//
--- Commands
------------------------------------------------------------------------------//
--- command("LspFormat", function()
---     lsp.buf.format { bufnr = 0, async = false }
--- end)
 
------------------------------------------------------------------------------//
--- Signs
------------------------------------------------------------------------------//
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                         COMMANDS                         │
+--  ╰──────────────────────────────────────────────────────────╯
+as.command("LspFormat", function()
+    lsp.buf.format { bufnr = 0, async = false }
+end)
+
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                          SIGNS                           │
+--  ╰──────────────────────────────────────────────────────────╯
 ---@param opts {highlight: string, icon: string}
 local function sign(opts)
     fn.sign_define(opts.highlight, {
@@ -340,43 +308,82 @@ sign { highlight = "DiagnosticSignError", icon = icons.diagnostics.error }
 sign { highlight = "DiagnosticSignWarn", icon = icons.diagnostics.warn }
 sign { highlight = "DiagnosticSignInfo", icon = icons.diagnostics.info }
 sign { highlight = "DiagnosticSignHint", icon = icons.diagnostics.hint }
------------------------------------------------------------------------------//
--- Handler Overrides
------------------------------------------------------------------------------//
--- This section overrides the default diagnostic handlers for signs and virtual text so that only
--- the most severe diagnostic is shown per line
 
---- The custom namespace is so that ALL diagnostics across all namespaces can be aggregated
---- including diagnostics from plugins
-local ns = api.nvim_create_namespace "severe-diagnostics"
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                    HANDLER OVERRIDES                     │
+--  ╰──────────────────────────────────────────────────────────╯
 
---- Restricts nvim's diagnostic signs to only the single most severe one per line
---- see `:help vim.diagnostic`
----@param callback fun(namespace: integer, bufnr: integer, diagnostics: table, opts: table)
----@return fun(namespace: integer, bufnr: integer, diagnostics: table, opts: table)
-local function max_diagnostic(callback)
-    return function(_, bufnr, diagnostics, opts)
-        local max_severity_per_line = as.fold(function(diag_map, d)
-            local m = diag_map[d.lnum]
-            if not m or d.severity < m.severity then
-                diag_map[d.lnum] = d
-            end
-            return diag_map
-        end, diagnostics, {})
-        callback(ns, bufnr, vim.tbl_values(max_severity_per_line), opts)
+--  ------------------------------------------------------------
+--  [diagnostic.handlers]
+--  ------------------------------------------------------------
+
+-- TODO: something wrong with this functions, investigate this later
+-- 1. When diagnostic updated, nvim got hang for sec
+-- 2. Got some wierd behaviour, i can't exit from nvim
+
+-- -- This section overrides the default diagnostic handlers for signs and virtual text so that only
+-- -- the most severe diagnostic is shown per line
+--
+-- --- The custom namespace is so that ALL diagnostics across all namespaces can be aggregated
+-- --- including diagnostics from plugins
+-- local ns = api.nvim_create_namespace "severe-diagnostics"
+--
+-- --- Restricts nvim's diagnostic signs to only the single most severe one per line
+-- --- see `:help vim.diagnostic`
+-- ---@param callback fun(namespace: integer, bufnr: integer, diagnostics: table, opts: table)
+-- ---@return fun(namespace: integer, bufnr: integer, diagnostics: table, opts: table)
+-- local function max_diagnostic(callback)
+--     return function(_, bufnr, diagnostics, opts)
+--         local max_severity_per_line = as.fold(function(diag_map, d)
+--             local m = diag_map[d.lnum]
+--             if not m or d.severity < m.severity then
+--                 diag_map[d.lnum] = d
+--             end
+--             return diag_map
+--         end, diagnostics, {})
+--         callback(ns, bufnr, vim.tbl_values(max_severity_per_line), opts)
+--     end
+-- end
+--
+-- local signs_handler = diagnostic.handlers.signs
+-- diagnostic.handlers.signs = vim.tbl_extend("force", signs_handler, {
+--     show = max_diagnostic(signs_handler.show),
+--     hide = function(_, bufnr)
+--         signs_handler.hide(ns, bufnr)
+--     end,
+-- })
+
+--  ------------------------------------------------------------
+--  [textDocument/formatting]
+--  ------------------------------------------------------------
+
+--  Taken from: https://www.reddit.com/r/neovim/comments/14iqm8t/my_setup_for_responsive_immutable_formatting/
+
+local function apply_formatting(bufnr, result, client_id)
+    local util = require "vim.lsp.util"
+    vim.bo[bufnr].modifiable = true -- Make the buffer modifiable again
+    if not result then
+        return
     end
+    local client = vim.lsp.get_client_by_id(client_id)
+    util.apply_text_edits(result, bufnr, client.offset_encoding) -- Apply changes from LSP
+    if vim.b[bufnr].write_after_format then
+        vim.cmd(
+            "let buf = bufnr('%') | exec '"
+                .. bufnr
+                .. "bufdo :noa w' | exec 'b' buf"
+        )
+    end -- Save the buffer if formatting was requested during saving (make sure to not trigger formatting again)
+    vim.b[bufnr].write_after_format = nil
 end
 
-local signs_handler = diagnostic.handlers.signs
-diagnostic.handlers.signs = vim.tbl_extend("force", signs_handler, {
-    show = max_diagnostic(signs_handler.show),
-    hide = function(_, bufnr)
-        signs_handler.hide(ns, bufnr)
-    end,
-})
------------------------------------------------------------------------------//
--- Diagnostic Configuration
------------------------------------------------------------------------------//
+vim.lsp.handlers["textDocument/formatting"] = function(_, result, ctx, _)
+    apply_formatting(ctx.bufnr, result, ctx.client_id)
+end
+
+--  ╭──────────────────────────────────────────────────────────╮
+--  │                 DIAGNOSTIC CONFIGURATION                 │
+--  ╰──────────────────────────────────────────────────────────╯
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 
@@ -385,7 +392,7 @@ diagnostic.config {
     update_in_insert = false,
     severity_sort = true,
     signs = true,
-    virtual_text = true and {
+    virtual_text = false and {
         spacing = 1,
         prefix = "",
         format = function(d)
@@ -409,7 +416,7 @@ diagnostic.config {
             { "  ", "DiagnosticFloatTitleIcon" },
             { "Problems  ", "DiagnosticFloatTitle" },
         },
-        focusable = true,
+        focusable = false,
         scope = "cursor",
         source = "if_many",
         prefix = function(diag)

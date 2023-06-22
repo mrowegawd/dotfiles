@@ -29,17 +29,6 @@ local conditions = {
 local color = vim.api.nvim_get_hl(0, { name = "Normal" })
 local bg_filename = string.format("#%06x", color.fg)
 
-local function env_cleanup(venv)
-    if string.find(venv, "/") then
-        local final_venv = venv
-        for w in venv:gmatch "([^/]+)" do
-            final_venv = w
-        end
-        venv = final_venv
-    end
-    return venv
-end
-
 local gstatus = { ahead = 0, behind = 0 }
 local exclude = {
     ["NvimTree"] = true,
@@ -301,50 +290,35 @@ M.treesitter = function()
         cond = conditions.hide_in_width,
     }
 end
-M.search_count = function()
-    return {
-        function()
-            local ok, result = pcall(fn.searchcount, { recompute = 0 })
-            if not ok then
-                return ""
-            end
-            if vim.tbl_isempty(result) then
-                return ""
-            end
-            if result.incomplete == 1 then -- timed out
-                return "?/??"
-            elseif result.incomplete == 2 then -- max count exceeded
-                if
-                    result.total > result.maxcount
-                    and result.current > result.maxcount
-                then
-                    return fmt(">%d/>%d", result.current, result.total)
-                elseif result.total > result.maxcount then
-                    return fmt("%d/>%d", result.current, result.total)
-                end
-            end
-            return fmt("%d/%d", result.current, result.total)
-        end,
-        cond = conditions.hide_in_width,
-    }
-end
 M.python_env = function()
     return {
         function()
+            local function env_cleanup(venv)
+                if string.find(venv, "/") then
+                    local final_venv = venv
+                    for w in venv:gmatch "([^/]+)" do
+                        final_venv = w
+                    end
+                    venv = final_venv
+                end
+                return venv
+            end
+
             if vim.bo.filetype == "python" then
                 local venv = os.getenv "CONDA_DEFAULT_ENV"
                 if venv then
-                    return fmt("  (%s)", env_cleanup(venv))
+                    return string.format(":(%s)", env_cleanup(venv))
                 end
                 venv = os.getenv "VIRTUAL_ENV"
                 if venv then
-                    return fmt("  (%s)", env_cleanup(venv))
+                    return string.format(":(%s)", env_cleanup(venv))
                 end
-                return ""
             end
             return ""
         end,
-        -- cond = conditions.hide_in_width,
+        icon = "",
+        cond = conditions.hide_in_width,
+        color = { fg = "DarkYellow", gui = "italic,bold" },
     }
 end
 M.clock = function()
@@ -382,7 +356,7 @@ M.check_loaded_buf = function()
             end
             return loaded_bufs
         end,
-        icon = "﬘",
+        icon = icons.kind.stacked,
         color = { fg = "DarkCyan", gui = "bold" },
     }
 end
@@ -407,7 +381,8 @@ M.root_dir = function()
 
             return root_path
         end,
-        color = { fg = "#ff9e64", gui = "italic,bold" },
+        icon = "",
+        color = { fg = "Cyan", gui = "bold" },
     }
 end
 M.get_lsp_client_notify = function()
@@ -516,7 +491,7 @@ M.noice_status = function()
     return {
         require("noice").api.status.search.get,
         cond = require("noice").api.status.search.has,
-        color = { fg = "#ff9e64" },
+        color = { fg = "#ff9e64", gui = "bold" },
     }
 end
 M.lazy_updates = function()

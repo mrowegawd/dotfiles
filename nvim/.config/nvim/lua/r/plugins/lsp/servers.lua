@@ -1,10 +1,138 @@
+-- local ufo_config_handler = require("r.utils").ufo_handler
+
+local util = require "lspconfig/util"
+
 local M = {}
 
+local function get_python_path(workspace)
+    -- Use activated virtualenv.
+    if vim.env.VIRTUAL_ENV then
+        return util.path.join(vim.env.VIRTUAL_ENV, "bin", "python")
+    end
+
+    -- Check for a poetry.lock file
+    local crmatch = vim.fn.glob(util.path.join(workspace, "poetry.lock"))
+    if crmatch ~= "" then
+        local venv = vim.fn.trim(vim.fn.system "poetry env info -p")
+        return util.path.join(venv, "bin", "python")
+    end
+
+    -- Find and use virtualenv from pipenv in workspace directory.
+    local match = vim.fn.glob(util.path.join(workspace, "Pipfile"))
+    if match ~= "" then
+        local venv = vim.fn.trim(
+            vim.fn.system("PIPENV_PIPFILE=" .. match .. " pipenv --venv")
+        )
+        return util.path.join(venv, "bin", "python")
+    end
+
+    -- Fallback to system Python.
+    return vim.fn.exepath "python3" or vim.fn.exepath "python" or "python"
+end
+
 M.servers = {
-    ansiblels = {},
-    sqlls = {},
-    eslint = {},
-    -- ccls = {},
+    tailwindcss = {
+        init_options = {
+            userLanguages = {
+                eelixir = "html-eex",
+                eruby = "erb",
+            },
+        },
+        on_attach = function(client, bufnr)
+            if client.server_capabilities.colorProvider then
+                require("lsp/utils/documentcolors").buf_attach(bufnr)
+                require("colorizer").attach_to_buffer(bufnr, {
+                    mode = "background",
+                    css = true,
+                    names = false,
+                    tailwind = false,
+                })
+            end
+        end,
+        filetypes = {
+            "html",
+            "mdx",
+            "javascript",
+            "javascriptreact",
+            "typescriptreact",
+            "vue",
+            "svelte",
+        },
+        settings = {
+            tailwindCSS = {
+                lint = {
+                    cssConflict = "warning",
+                    invalidApply = "error",
+                    invalidConfigPath = "error",
+                    invalidScreen = "error",
+                    invalidTailwindDirective = "error",
+                    invalidVariant = "error",
+                    recommendedVariantOrder = "warning",
+                },
+                experimental = {
+                    classRegex = {
+                        "tw`([^`]*)",
+                        'tw="([^"]*)',
+                        'tw={"([^"}]*)',
+                        "tw\\.\\w+`([^`]*)",
+                        "tw\\(.*?\\)`([^`]*)",
+                        { "clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                        { "classnames\\(([^)]*)\\)", "'([^']*)'" },
+                        { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+                    },
+                },
+                validate = true,
+            },
+        },
+    },
+    eslint = {
+        settings = {
+            codeAction = {
+                disableRuleComment = {
+                    enable = true,
+                    location = "separateLine",
+                },
+                showDocumentation = {
+                    enable = true,
+                },
+            },
+            codeActionOnSave = {
+                enable = false,
+                mode = "all",
+            },
+            format = true,
+            nodePath = "",
+            onIgnoredFiles = "off",
+            packageManager = "npm",
+            quiet = false,
+            rulesCustomizations = {},
+            run = "onType",
+            useESLintClass = false,
+            validate = "on",
+            workingDirectory = {
+                mode = "location",
+            },
+        },
+    },
+    cssls = {
+        settings = {
+            css = {
+                lint = {
+                    unknownAtRules = "ignore",
+                },
+            },
+            scss = {
+                lint = {
+                    unknownAtRules = "ignore",
+                },
+            },
+        },
+        on_attach = function(client)
+            client.server_capabilities.documentFormattingProvider = true
+            client.server_capabilities.documentRangeFormattingProvider = true
+        end,
+    },
+    html = {},
     jsonls = {
         on_new_config = function(new_config)
             new_config.settings.json.schemas = new_config.settings.json.schemas
@@ -23,71 +151,20 @@ M.servers = {
             },
         },
     },
-
+    sqlls = {},
     bashls = {},
     vimls = {},
+    ansiblels = {},
     terraformls = {},
-    -- marksman = {},
-    pyright = {},
+    pyright = {
+        on_init = function(client)
+            client.config.settings.python.pythonPath =
+                get_python_path(client.config.root_dir)
+        end,
+    },
     ruff_lsp = {},
-    -- bufls = {},
     prosemd_lsp = {},
     docker_compose_language_service = {},
-    tailwindcss = {},
-    vtsls = {
-        settings = {
-            typescript = {
-                inlayHints = {
-                    includeInlayParameterNameHints = "all",
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = false,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayEnumMemberValueHints = true,
-                },
-            },
-            javascript = {
-                inlayHints = {
-                    includeInlayParameterNameHints = "all",
-                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                    includeInlayFunctionParameterTypeHints = true,
-                    includeInlayVariableTypeHints = false,
-                    includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayFunctionLikeReturnTypeHints = true,
-                    includeInlayEnumMemberValueHints = true,
-                },
-            },
-        },
-    },
-    -- tsserver = {
-    --     settings = {
-    --         typescript = {
-    --             inlayHints = {
-    --                 includeInlayParameterNameHints = "all",
-    --                 includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-    --                 includeInlayFunctionParameterTypeHints = true,
-    --                 includeInlayVariableTypeHints = false,
-    --                 includeInlayPropertyDeclarationTypeHints = true,
-    --                 includeInlayFunctionLikeReturnTypeHints = true,
-    --                 includeInlayEnumMemberValueHints = true,
-    --             },
-    --         },
-    --         javascript = {
-    --             inlayHints = {
-    --                 includeInlayParameterNameHints = "all",
-    --                 includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-    --                 includeInlayFunctionParameterTypeHints = true,
-    --                 includeInlayVariableTypeHints = false,
-    --                 includeInlayPropertyDeclarationTypeHints = true,
-    --                 includeInlayFunctionLikeReturnTypeHints = true,
-    --                 includeInlayEnumMemberValueHints = true,
-    --             },
-    --         },
-    --     },
-    -- },
     graphql = {
         on_attach = function(client)
             -- Disable workspaceSymbolProvider because this prevents
@@ -142,10 +219,6 @@ M.servers = {
     lua_ls = {
         settings = {
             Lua = {
-                -- runtime = {
-                -- path = path,
-                -- version = "LuaJIT",
-                -- },
                 codeLens = { enable = true },
                 hint = {
                     enable = true,
@@ -192,22 +265,6 @@ M.setup = function(name)
         config = config()
     end
 
-    -- config.on_attach = function(client, bufnr)
-    --     local legendary_installed, legendary =
-    --         as.safe_require("legendary", { silent = true })
-    --     if legendary_installed then
-    --         if legendary_installed then
-    --             legendary.keymaps(
-    --                 require("config.mappings").lsp_keymaps(client, bufnr)
-    --             )
-    --
-    --             legendary.commands(
-    --                 require("config.commands").lsp_commands(client, bufnr)
-    --             )
-    --         end
-    --     end
-    -- end
-
     local ok, cmp_nvim_lsp = as.pcall(require, "cmp_nvim_lsp")
 
     if ok then
@@ -226,6 +283,12 @@ M.setup = function(name)
                 },
             },
         })
+
+    -- require("ufo").setup {
+    --     fold_virt_text_handler = ufo_config_handler,
+    --     close_fold_kinds = { "imports" },
+    -- }
+
     return config
 end
 

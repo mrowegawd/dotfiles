@@ -2,6 +2,8 @@ local highlight, icons, fn, border =
     as.highlight, as.ui.icons, vim.fn, as.ui.border
 local palette = as.ui.palette
 
+local isDapRunning = false
+
 return {
     -- NVIM DAP
     {
@@ -16,8 +18,11 @@ return {
                     description = "Debug functionality",
                     keymaps = {
 
+                        --  +----------------------------------------------------------+
+                        --    Breakpoints
+
                         {
-                            "<Localleader>db",
+                            "<localleader>db",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -27,7 +32,18 @@ return {
                             description = "Dap: breakpoint (toggle)",
                         },
                         {
-                            "<Localleader>dB",
+                            "<localleader>dL",
+                            function()
+                                require("dap").set_breakpoint(
+                                    nil,
+                                    nil,
+                                    fn.input "Log point message: "
+                                )
+                            end,
+                            desc = "dap: log breakpoint",
+                        },
+                        {
+                            "<localleader>dB",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -38,18 +54,9 @@ return {
                             end,
                             description = "Dap: breakpoint with condition",
                         },
+
                         {
-                            "<Localleader>dq",
-                            function()
-                                local function dap()
-                                    return require "dap"
-                                end
-                                return dap().send_to_qf()
-                            end,
-                            description = "Dap: get lists breakpoint on qf",
-                        },
-                        {
-                            "<Localleader><c-b>",
+                            "<localleader>dC",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -58,28 +65,47 @@ return {
                             end,
                             description = "Dap: clear all breakpoints",
                         },
+
+                        --  +----------------------------------------------------------+
+                        --    DAP commands
                         {
-                            "<Localleader>dc",
+
+                            "<localleader>dc",
                             function()
-                                local function dap()
-                                    return require "dap"
+                                if isDapRunning then
+                                    local function dap()
+                                        return require "dap"
+                                    end
+                                    return dap().continue()
+                                else
+                                    as.warn(
+                                        "Run debug with: <localleader>dd",
+                                        "DAP"
+                                    )
                                 end
-                                return dap().continue()
                             end,
-                            description = "Dap: continue",
+                            description = "Dap: continue or start debugging",
                         },
+
+                        -- {
+                        --     "<localleader>dR",
+                        --     function()
+                        --         require("dap").run_to_cursor()
+                        --     end,
+                        --     description = "Dap: Run to Cursor",
+                        -- },
                         {
-                            "<Localleader>d$",
+                            "<localleader>dl",
                             function()
                                 local function dap()
                                     return require "dap"
                                 end
                                 return dap().run_last()
                             end,
-                            description = "Dap: last debug",
+                            description = "Dap: run last",
                         },
                         {
-                            "<Localleader>de",
+                            "<localleader>de",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -88,18 +114,18 @@ return {
                             end,
                             description = "Dap: evaluate",
                         },
+                        -- {
+                        --     "<localleader>dr",
+                        --     function()
+                        --         local function dap()
+                        --             return require "dap"
+                        --         end
+                        --         return dap().repl.toggle(nil, "botright split")
+                        --     end,
+                        --     description = "Dap: toggle REPL",
+                        -- },
                         {
-                            "<Localleader>dr",
-                            function()
-                                local function dap()
-                                    return require "dap"
-                                end
-                                return dap().repl.toggle(nil, "botright split")
-                            end,
-                            description = "Dap: toggle REPL",
-                        },
-                        {
-                            "<Localleader>ds",
+                            "<localleader>dS",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -108,39 +134,89 @@ return {
                             end,
                             description = "Dap: get session",
                         },
+
+                        --  +----------------------------------------------------------+
+                        --    UI DAP
+
                         {
-                            "<Localleader>dd",
+                            "<localleader>dt",
                             function()
-                                local function dap()
-                                    return require "dap"
+                                return require("dapui").toggle()
+                            end,
+                            description = "Dapui: toggle UI (dapui)",
+                        },
+
+                        {
+                            "<localleader>dr",
+                            function()
+                                return require("dapui").open { reset = true }
+                            end,
+                            description = "Dapui: Reset UI (dapui)",
+                        },
+
+                        --  +----------------------------------------------------------+
+                        --    Close and run debug
+
+                        {
+                            "<localleader>dd",
+                            function()
+                                if not isDapRunning then
+                                    local function dap()
+                                        return require "dap"
+                                    end
+                                    isDapRunning = true
+                                    return dap().continue()
+                                else
+                                    local function dap()
+                                        return require "dap"
+                                    end
+                                    isDapRunning = false
+                                    return dap().disconnect()
                                 end
-                                return dap().disconnect()
                             end,
                             description = "Dap: disconnect",
                         },
                         {
-                            "<Localleader>dQ",
+                            "<localleader>dq",
                             function()
-                                local function dap()
-                                    return require "dap"
+                                if isDapRunning then
+                                    local function dap()
+                                        return require "dap"
+                                    end
+                                    isDapRunning = false
+                                    return dap().close()
                                 end
-                                return dap().close()
                             end,
                             description = "Dap: quit",
                         },
+                        -- {
+                        --     "<localleader>dx",
+                        --     function()
+                        --         local function dap()
+                        --             return require "dap"
+                        --         end
+                        --         return dap().terminate()
+                        --     end,
+                        --     description = "Dap: terminate",
+                        -- },
+
+                        --  +----------------------------------------------------------+
+                        --    Step-in, step-out, step-over
+                        --    For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
+
                         {
-                            "<Localleader>dx",
+                            "<s-right>",
                             function()
                                 local function dap()
                                     return require "dap"
                                 end
-                                return dap().terminate()
+                                return dap().step_into()
                             end,
-                            description = "Dap: terminate",
+                            description = "Dap: step-into",
                         },
 
                         {
-                            "<Localleader>de",
+                            "<s-left>",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -150,17 +226,7 @@ return {
                             description = "Dap: step-out",
                         },
                         {
-                            "<Localleader>di",
-                            function()
-                                local function dap()
-                                    return require "dap"
-                                end
-                                return dap().step_into()
-                            end,
-                            description = "Dap: step-into",
-                        },
-                        {
-                            "<Localleader>do",
+                            "<s-down>",
                             function()
                                 local function dap()
                                     return require "dap"
@@ -169,28 +235,13 @@ return {
                             end,
                             description = "Dap: step-over",
                         },
-
-                        {
-                            "<Localleader>dU",
-                            function()
-                                return require("dapui").toggle()
-                            end,
-                            description = "Dapui: toggle UI (dapui)",
-                        },
                     },
                 },
             }
         end,
         dependencies = {
             { "rcarriga/nvim-dap-ui" },
-            -- { "nvim-telescope/telescope-dap.nvim" },
-            {
-                "theHamsta/nvim-dap-virtual-text",
-                config = function()
-                    require("nvim-dap-virtual-text").setup { all_frames = true }
-                end,
-            },
-
+            { "theHamsta/nvim-dap-virtual-text" },
             { "mfussenegger/nvim-dap-python" },
             { "leoluz/nvim-dap-go" },
             { "mxsdev/nvim-dap-vscode-js" },
@@ -213,8 +264,8 @@ return {
                 })
             end
 
-            local function dap_UI(dap)
-                require("dapui").setup {
+            local function dap_UI(dapui, dap)
+                dapui.setup {
                     -- expand_lines = fn.has "nvim-0.7",
                     mappings = {
                         expand = { "<CR>", "<2-LeftMouse>" },
@@ -286,7 +337,35 @@ return {
             -------------------------------------------------------------------
             -- Setup
             -------------------------------------------------------------------
-            local dap = require "dap" -- Dap must be loaded before the signs can be tweaked
+
+            local present_dapui, dapui = pcall(require, "dapui")
+            local present_dap, dap = pcall(require, "dap")
+            local present_virtual_text, dap_vt =
+                pcall(require, "nvim-dap-virtual-text")
+            if
+                not present_dapui
+                or not present_dap
+                or not present_virtual_text
+            then
+                return
+            end
+
+            dap_vt.setup {
+                enabled = true, -- enable this plugin (the default)
+                enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
+                highlight_changed_variables = true, -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
+                highlight_new_as_changed = false, -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
+                show_stop_reason = true, -- show stop reason when stopped for exceptions
+                commented = false, -- prefix virtual text with comment string
+                only_first_definition = true, -- only show virtual text at first definition (if there are multiple)
+                all_references = false, -- show virtual text on all all references of the variable (not only definitions)
+                filter_references_pattern = "<module", -- filter references (not definitions) pattern when all_references is activated (Lua gmatch pattern, default filters out Python modules)
+                -- Experimental Features:
+                virt_text_pos = "eol", -- position of virtual text, see `:h nvim_buf_set_extmark()`
+                all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
+                virt_lines = false, -- show virtual lines instead of virtual text (will flicker!)
+                virt_text_win_col = nil, -- position the virtual text at a fixed window column (starting from the first text column) ,
+            }
 
             highlight.plugin("dap", {
                 { DapBreakpoint = { fg = palette.light_red } },
@@ -311,10 +390,8 @@ return {
                 },
             }
 
-            dap_UI(dap) -- setup UI dap harus paling bawah
-
-            -- DON'T automatically stop at exceptions
-            -- dap.defaults.fallback.exception_breakpoints = {}
+            -- Setup DAP UI harus dicall paling bawah
+            dap_UI(dapui, dap)
         end,
     },
 }

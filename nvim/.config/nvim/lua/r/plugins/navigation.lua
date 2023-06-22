@@ -289,131 +289,17 @@ return {
                     },
                 },
             }
-
-            -- vim.cmd [[nnoremap \ :Neotree reveal<cr>]]
         end,
-        --     sources = {
-        --         "filesystem",
-        --         "buffers",
-        --         "git_status",
-        --         "diagnostics",
-        --     },
-        --     source_selector = {
-        --         winbar = true,
-        --         separator_active = " ",
-        --     },
-        --     enable_git_status = true,
-        --     git_status_async = true,
-        --     filesystem = {
-        --         hijack_netrw_behavior = "open_current",
-        --         use_libuv_file_watcher = true,
-        --         group_empty_dirs = true,
-        --         follow_current_file = false,
-        --         filtered_items = {
-        --             visible = false,
-        --             hide_dotfiles = false,
-        --             hide_gitignored = true,
-        --             never_show = {
-        --                 ".DS_Store",
-        --                 "__pycache__",
-        --                 ".pytest_cache",
-        --                 ".mypy_cache",
-        --                 ".git",
-        --                 "node_modules",
-        --             },
-        --         },
-        --         window = {
-        --             mappings = {
-        --                 ["/"] = "noop",
-        --                 ["g/"] = "fuzzy_finder",
-        --                 ["e"] = function()
-        --                     ---@diagnostic disable-next-line: undefined-field
-        --                     vim.api.nvim_exec(
-        --                         "Neotree focus filesystem",
-        --                         true
-        --                     )
-        --                 end,
-        --                 ["b"] = function()
-        --                     ---@diagnostic disable-next-line: undefined-field
-        --                     vim.api.nvim_exec("Neotree focus buffers", true)
-        --                 end,
-        --                 ["g"] = function()
-        --                     ---@diagnostic disable-next-line: undefined-field
-        --                     vim.api.nvim_exec(
-        --                         "Neotree focus git_status",
-        --                         true
-        --                     )
-        --                 end,
-        --             },
-        --         },
-        --     },
-        --     default_component_configs = {
-        --         icon = {
-        --             folder_empty = "",
-        --         },
-        --         diagnostics = {
-        --             highlights = {
-        --                 hint = "DiagnosticHint",
-        --                 info = "DiagnosticInfo",
-        --                 warn = "DiagnosticWarn",
-        --                 error = "DiagnosticError",
-        --             },
-        --         },
-        --         modified = {
-        --             symbol = "" .. " ",
-        --         },
-        --         git_status = {
-        --             symbols = {
-        --                 added = "",
-        --                 deleted = "",
-        --                 modified = "",
-        --                 renamed = "",
-        --                 untracked = "",
-        --                 ignored = "",
-        --                 unstaged = "",
-        --                 staged = "",
-        --                 conflict = "",
-        --             },
-        --         },
-        --     },
-        --     window = {
-        --         -- How to disable default mappings:
-        --         -- https://github.com/nvim-neo-tree/neo-tree.nvim/discussions/265#discussioncomment-2547198
-        --         mappings = {
-        --             ["l"] = "toggle_node",
-        --             ["zM"] = "close_all_nodes",
-        --             ["z"] = "",
-        --             ["<CR>"] = "open",
-        --             --
-        --             -- ["<c-s>"] = "split_with_window_picker",
-        --             ["<c-v>"] = "open_vsplit",
-        --             ["<c-s>"] = "open_split",
-        --             ["<c-t>"] = "open_tabnew",
-        --
-        --             ["t"] = "none",
-        --             ["w"] = "none",
-        --
-        --             ["<esc>"] = "revert_preview",
-        --             ["P"] = {
-        --                 "toggle_preview",
-        --                 config = { use_float = true },
-        --             },
-        --         },
-        --     },
-        -- }
-        -- end,
     },
     -- NVIM-TREE (disabled)
     {
         "nvim-tree/nvim-tree.lua",
-        -- tag = "nightly", -- optional, updated every week. (see issue #1193)
+        enabled = false,
         cmd = {
             "NvimTreeToggle",
             "NvimTreeClose",
             "NvimTreeFindFileToggle",
         },
-        enabled = false,
-
         config = function()
             -- disable netrw at the very start of your init.lua (strongly advised)
             vim.g.loaded_netrw = 1
@@ -495,6 +381,19 @@ return {
             }
 
             nvimtree.setup(options)
+
+            -- Fix nvim-dapui's split sizes, see nvim-dap-ui#175
+            -- local api = require "nvim-tree.api"
+            -- local Event = api.events.Event
+            -- api.events.subscribe(Event.TreeClose, function()
+            --     local dap_status, dap = pcall(require, "dap")
+            --     local dap_ui_status, dapui = pcall(require, "dapui")
+            --     if dap_status and dap_ui_status then
+            --         if dap.session() then
+            --             dapui.open { reset = true }
+            --         end
+            --     end
+            -- end)
         end,
     },
 }
