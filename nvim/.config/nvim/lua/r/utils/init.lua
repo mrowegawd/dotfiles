@@ -399,6 +399,21 @@ function utils.get_servers()
 
     return servers
 end
+
+local diagnostics_active = false
+
+function utils.show_diagnostics()
+    return diagnostics_active
+end
+
+function utils.toggle_diagnostics()
+    diagnostics_active = not diagnostics_active
+    if diagnostics_active then
+        vim.diagnostic.show()
+    else
+        vim.diagnostic.hide()
+    end
+end
 -------------------------------------------------------------------------------
 -- Plugin functions
 -------------------------------------------------------------------------------

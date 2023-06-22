@@ -9,9 +9,9 @@ return {
                     itemgroup = "Misc",
                     keymaps = {
                         {
-                            "<Leader>tra",
+                            "<Leader>ua",
                             "y<ESC>:Translate id<CR>",
-                            description = "Translate: translate it [visual]",
+                            description = "Translate: toggle translate it [visual]",
                             mode = { "v" },
                         },
                     },

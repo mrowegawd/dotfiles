@@ -306,6 +306,14 @@ augroup("LspSetupCommands", {
             vim.cmd "silent! lclose"
         end
     end,
+}, {
+    event = "CursorHold",
+    desc = "Show diagnostic on float mode",
+    command = function()
+        if require("r.utils").show_diagnostics() then
+            vim.schedule(vim.diagnostic.open_float)
+        end
+    end,
 })
 -----------------------------------------------------------------------------//
 -- Commands

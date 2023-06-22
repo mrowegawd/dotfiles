@@ -17,7 +17,6 @@ function M.default_commands()
         {
             itemgroup = "Misc",
             commands = {
-
                 {
                     ":InfoBaseColorsTheme",
                     function()
@@ -332,7 +331,22 @@ function M.default_keymaps()
             keymaps = {
 
                 {
-                    "<Leader>rs",
+                    "<leader>uh",
+                    function()
+                        vim.lsp.buf.inlay_hint(0, nil)
+                    end,
+                    description = "Misc: toogle inlayhints",
+                },
+                {
+                    -- TODO: apakah ini ditaruh di category lsp?
+                    "<leader>ud",
+                    function()
+                        require("r.utils").toggle_diagnostics()
+                    end,
+                    description = "Misc: toogle diagnostics",
+                },
+                {
+                    "<Leader>us",
                     function()
                         local mymodes = {
                             ["norg"] = { "set spell!" },
