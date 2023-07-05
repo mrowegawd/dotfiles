@@ -271,6 +271,7 @@ end
 function M.setup(_, opts)
     ---@diagnostic disable-next-line: unused-local
     lsp_utils.on_attach(function(client, bufnr)
+        lsp_utils.lspmappings(client, bufnr)
         -- local legendary_installed, legendary =
         --     as.safe_require("legendary", { silent = true })
         -- if legendary_installed then

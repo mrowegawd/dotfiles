@@ -25,22 +25,6 @@ function M.default_keymaps()
                 --     description = "Sudovim: write file sudo",
                 -- },
                 {
-                    "<leader>uh",
-                    function()
-                        return require("r.utils").toggle_inlayhints(function()
-                            vim.lsp.buf.inlay_hint(0, nil)
-                        end)
-                    end,
-                    description = "Misc: toogle inlayhints",
-                },
-                {
-                    "<leader>ud",
-                    function()
-                        require("r.utils").toggle_diagnostics()
-                    end,
-                    description = "Misc: toogle diagnostics",
-                },
-                {
                     "<Leader>us",
                     function()
                         local mymodes = {

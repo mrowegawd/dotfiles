@@ -1102,14 +1102,14 @@ return {
                 function()
                     require("illuminate").goto_next_reference(nil)
                 end,
-                desc = "Lsp: Hi Symbol",
+                desc = "LSP(vim-illuminate): got next reference",
             },
             {
                 "<a-Q>",
                 function()
                     require("illuminate").goto_prev_reference(nil)
                 end,
-                desc = "Lsp: Hi Symbol",
+                desc = "LSP(vim-illuminate): got prev reference",
             },
         },
         config = function()
