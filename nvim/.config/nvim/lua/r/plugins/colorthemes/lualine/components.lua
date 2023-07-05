@@ -86,7 +86,7 @@ local function update_gstatus()
 end
 
 if _G.Gstatus_timer == nil then
-    _G.Gstatus_timer = vim.loop.new_timer()
+    _G.Gstatus_timer = vim.uv.new_timer()
 else
     _G.Gstatus_timer:stop()
 end
@@ -335,9 +335,9 @@ M.sessions = function()
         function()
             local sess = require("nvim-possession").status()
             if sess ~= nil then
-                return "%#Mymisc_fg#"
+                return "%#Mymisc_fg# "
             else
-                return ""
+                return " "
             end
         end,
         -- cond = conditions.hide_in_width,

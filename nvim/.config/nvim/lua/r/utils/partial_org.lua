@@ -26,7 +26,7 @@ return {
                 --     string.format("%s: %s", task.type, task.time:to_string())
 
                 if vim.fn.executable "dunstify" == 1 then
-                    vim.loop.spawn("dunstify", {
+                    vim.uv.spawn("dunstify", {
                         args = {
                             fmt("%s\n%s", title, subtitle),
                             fmt("--icon=%s/.config/dunst/bell.png", as.home),

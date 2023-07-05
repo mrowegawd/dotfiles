@@ -31,7 +31,7 @@ function M.default_keymaps()
         {
             "<Leader>n",
             function()
-                require("notify").dismiss()
+                require("notify").dismiss {}
                 return cmd.nohl()
             end,
             hide = true,
@@ -211,6 +211,14 @@ function M.default_keymaps()
             description = "General functionality",
             keymaps = {
 
+                -- {
+                --     ":SudaRead",
+                --     description = "Sudovim: read file sudo",
+                -- },
+                -- {
+                --     ":SudaWrite",
+                --     description = "Sudovim: write file sudo",
+                -- },
                 {
                     "<leader>uh",
                     function()
@@ -484,7 +492,7 @@ function M.lsp_keymaps()
             {
                 "gP",
                 function()
-                    require("goto-preview").goto_preview_definition()
+                    require("goto-preview").goto_preview_definition {}
                 end,
                 description = "Goto_Preview: Preview definitions",
             },
@@ -563,9 +571,9 @@ function M.lsp_commands()
         --  LSP
         --  +----------------------------------------------------------+
         {
-            ":Format",
+            ":LspFormat",
             function()
-                vim.lsp.buf.format(nil)
+                vim.lsp.buf.format { bufnr = 0, async = false }
             end,
             description = "LSP: format buffer",
         },

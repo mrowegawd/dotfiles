@@ -3,7 +3,7 @@ local fn, opt = vim.fn, vim.opt
 local data = fn.stdpath "data"
 local lazypath = data .. "/lazy/lazy.nvim"
 
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
     fn.system {
         "git",
         "clone",
@@ -19,12 +19,12 @@ opt.rtp:prepend(lazypath)
 require("lazy").setup {
     spec = {
         { import = "r.plugins" },
-        { import = "r.plugins.extras.notes" },
-        { import = "r.plugins.extras.db" },
-        { import = "r.plugins.extras.ui" },
-        { import = "r.plugins.extras.misc" },
+        { import = "r.plugins.extras.lang" },
+        -- { import = "r.plugins.extras.db" },
+        -- { import = "r.plugins.extras.ui" },
+        -- { import = "r.plugins.extras.misc" },
     },
-    defaults = { lazy = true, version = nil },
+    defaults = { lazy = true, version = false },
     change_detection = { notify = false },
     install = {
         missing = true,
@@ -37,6 +37,9 @@ require("lazy").setup {
     },
     diff = {
         cmd = "terminal_git",
+    },
+    ui = {
+        border = "single",
     },
     performance = {
         rtp = {

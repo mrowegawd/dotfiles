@@ -1,11 +1,12 @@
 local opt, cmd, fn, g, env, loop =
-    vim.opt, vim.cmd, vim.fn, vim.g, vim.env, vim.loop
+    vim.opt, vim.cmd, vim.fn, vim.g, vim.env, vim.uv
 
 g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
 g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
 g.os = loop.os_uname().sysname
 
 opt.viewoptions:remove "curdir" -- disable saving current directory with views
+opt.backspace:append { "nostop" } -- Don't stop backspace at insert
 if fn.has "nvim-0.9" == 1 then
     opt.diffopt:append "linematch:60" -- enable linematch diff algorithm
 end
@@ -32,8 +33,8 @@ local options = {
         -- do not use split or vsplit to ensure we don't open any new windows
         switchbuf = "useopen,uselast",
         encoding = "utf-8",
-        backspace = { "eol", "start", "indent" },
         conceallevel = 2,
+        infercase = true, -- Infer cases in keyword completion
         concealcursor = "nc",
         guifont = "Fira Code:h9",
         pumheight = 15,
@@ -46,8 +47,6 @@ local options = {
         laststatus = 1, -- 2 = always show status line (filename, etc)
         -- -- buat cursor selalu di tengah window, https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3frprs
         -- -- tapi ada minus jika open file diff, secara bersebarangan
-        scrolloff = 9, -- 999
-        sidescrolloff = 10, -- min number of cols to keep between cursor and screen edge
         sidescroll = 1,
         textwidth = 80, -- max inserted text width for paste operations
         linespace = 0, -- font spacing
@@ -56,7 +55,6 @@ local options = {
         signcolumn = "yes", -- Always show the sign column
         relativenumber = false, -- otherwise, show relative numbers in the ruler
         equalalways = false, -- New vim windows created won't make everything back to same sizes
-        wrap = false, -- wrap long lines
         breakindent = true, -- start wrapped lines indented
         linebreak = true, -- do not break words on line wrap
         showbreak = "↪ ",
@@ -121,7 +119,7 @@ local options = {
 
         joinspaces = true, -- insert spaces after '.?!' when joining lines
         autoindent = true, -- copy indent from current line on newline
-        smartindent = true, -- add <tab> depending on syntax (C/C++)
+        smartindent = false, -- add <tab> depending on syntax (C/C++)
         startofline = false, -- keep cursor column on navigation
 
         tabstop = 2, -- Tab indentation levels every two columns
@@ -179,7 +177,6 @@ local options = {
         -- recompute the fold which when using nvim-ufo means it will be closed again...
         foldlevel = 99, -- using ufo provider need a large value, feel free to decrease the value
 
-        autochdir = false, -- do not change dir when opening a file
         magic = true, --  use 'magic' chars in search patterns
         hlsearch = true, -- highlight all text matching current search pattern
         incsearch = true, -- show search matches as you type
@@ -211,7 +208,6 @@ local options = {
         --     }
         -- end
         hidden = true, -- do not unload buffer when abandoned
-        swapfile = false, -- no swap file
 
         -----------------------------------------------------------------------------//
         -- timings {{{1
@@ -238,7 +234,21 @@ local options = {
          :rshada   - read the shada file (:rinfo for vim)
          :wshada   - write the shada file (:wrinfo for vim)
         -- ]]
-        shada = [[!,'100,<0,s100,h]],
+        -- shada = [[!,'100,<0,s100,h]],
+
+        -- Aditions
+        undodir = vim.fn.stdpath "data" .. "/undodir", -- Chooses where to store the undodir
+        history = 1000, -- Number of commands to remember in a history table (per buffer).
+        swapfile = false, -- Ask what state to recover when opening a file that was not saved.
+        wrap = false, -- Disable wrapping of lines longer than the width of window.
+        -- colorcolumn = "80", -- PEP8 like character limit vertical bar.
+        mouse = "a", -- Enable mouse support.
+        mousescroll = "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
+        guicursor = "n:blinkon200,i-ci-ve:ver25", -- Enable cursor blink.
+        autochdir = false, -- Use current file dir as working dir (See project.nvim)
+        scrolloff = 1000, -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.
+        sidescrolloff = 8, -- Same but for side scrolling.
+        selection = "old", -- Don't select the newline symbol when using <End> on visual mode
 
         -----------------------------------------------------------------------------//
         -- emoji {{{1

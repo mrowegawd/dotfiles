@@ -96,10 +96,9 @@ super + u
 
 # misc: open terminal
 super + Return
-        alacritty
+        wezterm
+        # alacritty
         # st -e tmux
-        # kitty
-        # wezterm
         # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty
 
 # misc: kill/close window

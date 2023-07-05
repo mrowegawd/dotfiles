@@ -143,7 +143,7 @@ function M.neorg_mappings_ft(bufnr)
                                     "[" .. str_path .. "]",
                                 }, "c", false, true)
 
-                                vim.api.nvim_feedkeys("hf]a", "t", false)
+                                -- vim.api.nvim_feedkeys("hf]a", "t", false)
                             end,
                         },
                     }
@@ -177,7 +177,7 @@ function M.neorg_mappings_ft(bufnr)
                                     "{" .. str_path .. "}",
                                 }, "c", false, true)
 
-                                vim.api.nvim_feedkeys("hf]a", "t", false)
+                                -- vim.api.nvim_feedkeys("hf]a", "t", false)
                             end,
                         },
                     }
@@ -239,7 +239,7 @@ function M.neorg_mappings_ft(bufnr)
                                         .. "}",
                                 }, "c", false, true)
 
-                                vim.api.nvim_feedkeys("hf]a", "t", false)
+                                -- vim.api.nvim_feedkeys("hf]a", "t", false)
                             end,
                         },
                     }

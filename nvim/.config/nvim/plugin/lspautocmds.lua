@@ -11,7 +11,7 @@ local diagnostic = vim.diagnostic
 
 local L = vim.lsp.log_levels
 
-local icons = as.ui.icons
+-- local icons = as.ui.icons
 local augroup = as.augroup
 
 if vim.env.DEVELOPING then
@@ -72,17 +72,6 @@ end
 -- end
 
 ---Setup mapping when an lsp attaches to a buffer
-local function setup_mappings()
-    local legendary_installed, legendary =
-        as.safe_require("legendary", { silent = true })
-    if legendary_installed then
-        if legendary_installed then
-            legendary.keymaps(require("r.mappings").lsp_keymaps())
-
-            legendary.commands(require("r.mappings").lsp_commands())
-        end
-    end
-end
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │                    LSP SETUP/TEARDOWN                    │
@@ -189,6 +178,9 @@ local function setup_autocommands(client, buf)
                     )
 
                     if #clients >= 1 then
+                        if vim.bo[buf].filetype == "norg" then
+                            return
+                        end
                         -- This is custom format async that i can use it now
                         -- check [textDocument/apply_formatting] at line :357
                         vim.bo[buf].modifiable = false -- Prevent me from changing the buffer.
@@ -241,7 +233,6 @@ end
 -- attaches it might enable autocommands or mappings that the previous client did not support
 local function on_attach(client, bufnr)
     setup_autocommands(client, bufnr)
-    setup_mappings()
     setup_semantic_tokens(client, bufnr)
 
     vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -284,30 +275,23 @@ augroup("LspSetupCommands", {
 })
 
 --  ╭──────────────────────────────────────────────────────────╮
---  │                         COMMANDS                         │
---  ╰──────────────────────────────────────────────────────────╯
-as.command("LspFormat", function()
-    lsp.buf.format { bufnr = 0, async = false }
-end)
-
---  ╭──────────────────────────────────────────────────────────╮
 --  │                          SIGNS                           │
 --  ╰──────────────────────────────────────────────────────────╯
----@param opts {highlight: string, icon: string}
-local function sign(opts)
-    fn.sign_define(opts.highlight, {
-        text = opts.icon,
-        texthl = opts.highlight,
-        -- numhl = opts.highlight .. "Nr" or nil,
-        -- culhl = opts.highlight .. "CursorNr" or nil,
-        -- linehl = opts.highlight .. "Line" or nil,
-    })
-end
-
-sign { highlight = "DiagnosticSignError", icon = icons.diagnostics.error }
-sign { highlight = "DiagnosticSignWarn", icon = icons.diagnostics.warn }
-sign { highlight = "DiagnosticSignInfo", icon = icons.diagnostics.info }
-sign { highlight = "DiagnosticSignHint", icon = icons.diagnostics.hint }
+-- -@param opts {highlight: string, icon: string}
+-- local function sign(opts)
+--     fn.sign_define(opts.highlight, {
+--         text = opts.icon,
+--         texthl = opts.highlight,
+--         -- numhl = opts.highlight .. "Nr" or nil,
+--         -- culhl = opts.highlight .. "CursorNr" or nil,
+--         -- linehl = opts.highlight .. "Line" or nil,
+--     })
+-- end
+--
+-- sign { highlight = "DiagnosticSignError", icon = icons.diagnostics.error }
+-- sign { highlight = "DiagnosticSignWarn", icon = icons.diagnostics.warn }
+-- sign { highlight = "DiagnosticSignInfo", icon = icons.diagnostics.info }
+-- sign { highlight = "DiagnosticSignHint", icon = icons.diagnostics.hint }
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │                    HANDLER OVERRIDES                     │
@@ -384,45 +368,56 @@ end
 --  ╭──────────────────────────────────────────────────────────╮
 --  │                 DIAGNOSTIC CONFIGURATION                 │
 --  ╰──────────────────────────────────────────────────────────╯
-local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
-local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
-
-diagnostic.config {
-    underline = true,
-    update_in_insert = false,
-    severity_sort = true,
-    signs = true,
-    virtual_text = false and {
-        spacing = 1,
-        prefix = "",
-        format = function(d)
-            return fmt("%s %s", icons.misc.circle, d.message)
-        end,
-    },
-    float = {
-        max_width = max_width,
-        max_height = max_height,
-        border = {
-            { "┌", "ErrorMsg" },
-            { "─", "ErrorMsg" },
-            { "┐", "ErrorMsg" },
-            { "│", "ErrorMsg" },
-            { "┘", "ErrorMsg" },
-            { "─", "ErrorMsg" },
-            { "└", "ErrorMsg" },
-            { "│", "ErrorMsg" },
-        },
-        title = {
-            { "  ", "DiagnosticFloatTitleIcon" },
-            { "Problems  ", "DiagnosticFloatTitle" },
-        },
-        focusable = false,
-        scope = "cursor",
-        source = "if_many",
-        prefix = function(diag)
-            local level = diagnostic.severity[diag.severity]
-            local prefix = fmt("%s ", icons.diagnostics[level:lower()])
-            return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
-        end,
-    },
-}
+-- local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
+-- local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
+--
+-- diagnostic.config {
+--     underline = true,
+--     update_in_insert = false,
+--     severity_sort = true,
+--     signs = true,
+--     virtual_text = false and {
+--         spacing = 1,
+--         prefix = "",
+--         format = function(d)
+--             return fmt("%s %s", icons.misc.circle, d.message)
+--         end,
+--     },
+--     float = {
+--         max_width = max_width,
+--         max_height = max_height,
+--         -- border = {
+--         --     { "┌", "ErrorMsg" },
+--         --     { "─", "ErrorMsg" },
+--         --     { "┐", "ErrorMsg" },
+--         --     { "│", "ErrorMsg" },
+--         --     { "┘", "ErrorMsg" },
+--         --     { "─", "ErrorMsg" },
+--         --     { "└", "ErrorMsg" },
+--         --     { "│", "ErrorMsg" },
+--         -- },
+--
+--         border = {
+--             { "┌" },
+--             { "─" },
+--             { "┐" },
+--             { "│" },
+--             { "┘" },
+--             { "─" },
+--             { "└" },
+--             { "│" },
+--         },
+--         title = {
+--             { "  ", "DiagnosticFloatTitleIcon" },
+--             { "Problems  ", "DiagnosticFloatTitle" },
+--         },
+--         focusable = false,
+--         scope = "cursor",
+--         source = "if_many",
+--         prefix = function(diag)
+--             local level = diagnostic.severity[diag.severity]
+--             local prefix = fmt("%s ", icons.diagnostics[level:lower()])
+--             return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
+--         end,
+--     },
+-- }

@@ -334,10 +334,11 @@ return {
             }
         end,
     },
-    -- NEOGIT
+    -- NEOGIT (disabled)
     {
         "TimUntersberger/neogit",
         cmd = "Neogit",
+        enabled = false,
         init = function()
             require("r.utils").disable_ctrl_i_and_o(
                 "NoNeogit",
@@ -378,15 +379,18 @@ return {
                 },
             }
 
-            highlight.plugin("neogit", { -- NOTE: highlights must be set AFTER neogit's setup
-                { NeogitDiffAdd = { link = "DiffAdd" } },
-                { NeogitDiffDelete = { link = "DiffDelete" } },
-                { NeogitDiffAddHighlight = { link = "DiffAdd" } },
-                { NeogitDiffDeleteHighlight = { link = "DiffDelete" } },
-                { NeogitDiffContextHighlight = { link = "NormalFloat" } },
-                { NeogitHunkHeader = { link = "TabLine" } },
-                { NeogitHunkHeaderHighlight = { link = "DiffText" } },
-            })
+            highlight.plugin(
+                "neogit",
+                { -- NOTE: highlights must be set AFTER neogit's setup
+                    { NeogitDiffAdd = { link = "DiffAdd" } },
+                    { NeogitDiffDelete = { link = "DiffDelete" } },
+                    { NeogitDiffAddHighlight = { link = "DiffAdd" } },
+                    { NeogitDiffDeleteHighlight = { link = "DiffDelete" } },
+                    { NeogitDiffContextHighlight = { link = "NormalFloat" } },
+                    { NeogitHunkHeader = { link = "TabLine" } },
+                    { NeogitHunkHeaderHighlight = { link = "DiffText" } },
+                }
+            )
         end,
     },
     -- COMMITTIA (disabled)

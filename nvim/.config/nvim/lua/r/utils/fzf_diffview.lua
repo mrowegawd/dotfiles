@@ -1,5 +1,5 @@
 local validate = vim.validate
-local uv = vim.loop
+local uv = vim.uv
 
 local M = {}
 

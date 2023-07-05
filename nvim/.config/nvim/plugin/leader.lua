@@ -170,12 +170,15 @@ keymap.set("c", "<c-e>", "<End>", { desc = "Cmdline go last" })
 
 keymap.set("c", "<c-f>", "<Right>", { desc = "Cmdline next word" })
 keymap.set("c", "<c-b>", "<Left>", { desc = "Cmdline prev word" })
+keymap.set("c", "<M-b>", "<S-Left>", { desc = "Cmdnline <" })
+keymap.set("c", "<M-f>", "<S-Right>", { desc = "Cmdline > " })
 
 keymap.set("c", "<c-j>", "<S-Left>", { desc = "Cmdline back word" })
 keymap.set("c", "<c-k>", "<S-Right>", { desc = "Cmdline forward word" })
 
 keymap.set("c", "<c-n>", "<Down>", { desc = "Cmdline next hist" })
 keymap.set("c", "<c-p>", "<Up>", { desc = "Cmdline prev hist" })
+
 -- vim.keymap.set("c", "<esc>b", "<Up>", { desc = "Cmdline prev hist" })
 -- }}}
 -- TERMINAL ------------------------------------------------------------------- {{{

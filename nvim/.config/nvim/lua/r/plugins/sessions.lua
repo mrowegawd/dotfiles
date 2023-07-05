@@ -142,17 +142,28 @@ return {
     -- NVIM-POSSESSION
     {
         "gennaro-tedesco/nvim-possession",
+        priority = 100,
+        -- lazy = false,
         dependencies = {
             "ibhagwan/fzf-lua",
         },
-        config = function()
-            require("nvim-possession").setup {
-                autoload = true, -- whether to autoload sessions in the cwd at startup
-                autosave = true, -- whether to autosave loaded sessions before quitting
-                autoswitch = {
-                    enable = true, -- default false
-                },
-            }
+        opts = {
+            autoload = true, -- whether to autoload sessions in the cwd at startup
+            autosave = true, -- whether to autosave loaded sessions before quitting
+            autoswitch = {
+                enable = true, -- default false
+            },
+            save_hook = function()
+                -- before saving a session, close all norg files
+                local isNeorgOn, _ = pcall(require, "neorg")
+                if isNeorgOn then
+                    vim.cmd [[Neorg return]]
+                end
+            end,
+        },
+
+        config = function(_, opts)
+            require("nvim-possession").setup(opts)
         end,
         init = function()
             require("legendary").keymaps {
@@ -201,12 +212,6 @@ return {
         },
         event = "VeryLazy",
         enabled = false,
-        -- enabled = function()
-        --     if as.use_search_telescope then
-        --         return false
-        --     end
-        --     return true
-        -- end,
         init = function()
             require("legendary").keymaps {
                 {
@@ -350,8 +355,6 @@ return {
     -- PROJECTS.NVIM
     {
         "ahmedkhalf/project.nvim",
-        enabled = true,
-        event = "BufReadPre",
         init = function()
             require("legendary").keymaps {
                 {
@@ -399,34 +402,35 @@ return {
             }
         end,
 
-        config = function()
-            require("project_nvim").setup {
-                -- Manual mode doesn't automatically change your root directory, so you have
-                -- the option to manually do so using `:ProjectRoot` command.
-                manual_mode = true,
+        opts = {
+            -- Manual mode doesn't automatically change your root directory, so you have
+            -- the option to manually do so using `:ProjectRoot` command.
+            manual_mode = true,
 
-                -- Methods of detecting the root directory. **"lsp"** uses the native neovim
-                -- lsp, while **"pattern"** uses vim-rooter like glob pattern matching. Here
-                -- order matters: if one is not detected, the other is used as fallback. You
-                -- can also delete or rearangne the detection methods.
-                detection_methods = { "pattern" },
+            -- Methods of detecting the root directory. **"lsp"** uses the native neovim
+            -- lsp, while **"pattern"** uses vim-rooter like glob pattern matching. Here
+            -- order matters: if one is not detected, the other is used as fallback. You
+            -- can also delete or rearangne the detection methods.
+            detection_methods = { "pattern" },
 
-                -- All the patterns used to detect root dir, when **"pattern"** is in
-                -- detection_methods
-                patterns = {
-                    -- ".git",
-                    -- "_darcs",
-                    -- ".hg",
-                    -- ".bzr",
-                    -- ".svn",
-                    -- "Makefile",
-                    -- "package.json",
-                },
+            -- All the patterns used to detect root dir, when **"pattern"** is in
+            -- detection_methods
+            patterns = {
+                -- ".git",
+                -- "_darcs",
+                -- ".hg",
+                -- ".bzr",
+                -- ".svn",
+                -- "Makefile",
+                -- "package.json",
+            },
 
-                -- When set to false, you will get a message when project.nvim changes your
-                -- directory.
-                silent_chdir = false,
-            }
+            -- When set to false, you will get a message when project.nvim changes your
+            -- directory.
+            silent_chdir = false,
+        },
+        config = function(_, opts)
+            require("project_nvim").setup(opts)
         end,
     },
 }

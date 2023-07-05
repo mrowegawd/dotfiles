@@ -102,12 +102,67 @@ return {
     -- DRESSING
     {
         "stevearc/dressing.nvim",
-        event = "VeryLazy",
-        config = function()
-            require("dressing").setup {
-                backend = { "telescope", "fzf", "builtin" },
-            }
+        init = function()
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.ui.select = function(...)
+                require("lazy").load { plugins = { "dressing.nvim" } }
+                return vim.ui.select(...)
+            end
         end,
+        opts = {
+            input = { enabled = false },
+            select = {
+                backend = { "fzf_lua", "builtin" },
+                builtin = {
+                    border = border,
+                    min_height = 10,
+                    win_options = { winblend = 10 },
+                    mappings = { n = { ["q"] = "Close" } },
+                },
+                get_config = function(opts)
+                    opts.prompt = opts.prompt and opts.prompt:gsub(":", "")
+                    if opts.kind == "codeaction" then
+                        return {
+                            backend = "fzf_lua",
+                            fzf_lua = as.fzf.cursor_dropdown {
+                                winopts = { title = opts.prompt },
+                            },
+                        }
+                    end
+                    if opts.kind == "orgmode" then
+                        return {
+                            backend = "nui",
+                            nui = {
+                                position = "97%",
+                                -- border = { style = border.rectangle },
+                                min_width = vim.o.columns - 2,
+                            },
+                        }
+                    end
+                    return {
+                        backend = "fzf_lua",
+                        fzf_lua = as.fzf.dropdown {
+                            winopts = {
+                                title = opts.prompt,
+                                height = 0.33,
+                                row = 0.5,
+                            },
+                        },
+                    }
+                end,
+                nui = {
+                    min_height = 10,
+                    win_options = {
+                        winhighlight = table.concat({
+                            "Normal:Italic",
+                            "FloatBorder:PickerBorder",
+                            "FloatTitle:Title",
+                            "CursorLine:Visual",
+                        }, ","),
+                    },
+                },
+            },
+        },
     },
     -- NVIM-NOTIFY
     {
@@ -593,7 +648,7 @@ return {
             local col_base_fg_attr = "Normal"
 
             local col_unselected_bg_attr = "bufferline_unselected"
-            local col_unselected_fg_attr = "Comment"
+            local col_unselected_fg_attr = "Normal"
 
             local col_selected_fg_attr = "Boolean"
             local col_selected_bg_attr = "bufferline_unselected"

@@ -15,28 +15,65 @@ return {
     -- FLASH.NVIM
     {
         "folke/flash.nvim",
-        event = "VeryLazy",
-        opts = {},
+        opts = {
+            modes = {
+                search = {
+                    search = { trigger = ";" },
+                },
+                char = {
+                    keys = { "f", "F", "t", "T", ";" }, -- remove "," from keys
+                },
+            },
+        },
         keys = {
             {
                 "s",
-                mode = { "n" },
+                mode = { "n", "x", "o" },
                 function()
+                    -- default options: exact mode, multi window, all directions, with a backdrop
                     require("flash").jump()
                 end,
+                desc = "Flash",
             },
+            {
+                "S",
+                mode = { "n", "o", "x" },
+                function()
+                    -- show labeled treesitter nodes around the cursor
+                    require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+            },
+            {
+                "r",
+                mode = "o",
+                function()
+                    -- jump to a remote location to execute the operator
+                    require("flash").remote()
+                end,
+                desc = "Remote Flash",
+            },
+            -- {
+            --     "R",
+            --     mode = { "n", "o", "x" },
+            --     function()
+            --         -- show labeled treesitter nodes around the search matches
+            --         require("flash").treesitter_search()
+            --     end,
+            --     desc = "Treesitter Search",
+            -- },
         },
     },
     -- FZF-LUA
     {
         "ibhagwan/fzf-lua",
+        cmd = "FzfLua",
         enabled = function()
             if as.use_search_telescope then
                 return false
             end
             return true
         end,
-        cmd = "FzfLua",
         init = function()
             require("legendary").keymaps {
                 {
@@ -80,6 +117,11 @@ return {
                             "<Leader>fo",
                             "<CMD>FzfLua oldfiles<CR>",
                             description = "Fzflua: oldfiles",
+                        },
+                        {
+                            "<Leader>fO",
+                            "<CMD>FzfLua files cwd=~/.config/nvim<CR>",
+                            description = "Fzflua: dotfiles",
                         },
                         {
                             "<Leader>fF",
@@ -182,7 +224,7 @@ return {
                                             vim.api.nvim_buf_get_name(
                                                 qf_item.bufnr
                                             ),
-                                            vim.loop.cwd()
+                                            vim.uv.cwd()
                                         )
                                     )
                                 end
@@ -468,7 +510,7 @@ return {
                                 opts.force_uri
                             )
 
-                            local file_or_dir = vim.loop.fs_stat(entry.path)
+                            local file_or_dir = vim.uv.fs_stat(entry.path)
 
                             if
                                 file_or_dir
@@ -1644,7 +1686,6 @@ return {
     -- SPECTRE
     {
         "windwp/nvim-spectre",
-        event = "BufRead",
         init = function()
             require("legendary").keymaps {
                 {
@@ -1877,6 +1918,7 @@ return {
     {
         "mrowegawd/todo.nvim",
         cmd = { "TODOQuickFixList" },
+        event = "BufReadPost",
         init = function()
             require("legendary").keymaps {
                 {
@@ -1916,165 +1958,162 @@ return {
                 },
             }
         end,
-        event = "BufReadPost",
-        config = function()
-            require("todo").setup {
-                signs = {
-                    enable = true, -- show icons in the sign column
-                    priority = 8,
+        opts = {
+            signs = {
+                enable = true, -- show icons in the sign column
+                priority = 8,
+            },
+            keywords = {
+                FIX = {
+                    icon = " ", -- used for the sign, and search results
+                    -- can be a hex color, or a named color
+                    -- named colors definitions follow below
+                    color = "error",
+                    -- a set of other keywords that all map to this FIX keywords
+                    alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+                    -- signs = false -- configure signs for some keywords individually
                 },
-                keywords = {
-                    FIX = {
-                        icon = " ", -- used for the sign, and search results
-                        -- can be a hex color, or a named color
-                        -- named colors definitions follow below
-                        color = "error",
-                        -- a set of other keywords that all map to this FIX keywords
-                        alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-                        -- signs = false -- configure signs for some keywords individually
-                    },
-                    TODO = { icon = " ", color = "info" },
-                    WARN = {
-                        icon = " ",
-                        color = "warning",
-                        alt = { "WARNING" },
-                    },
-                    -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+                TODO = { icon = " ", color = "info" },
+                WARN = {
+                    icon = " ",
+                    color = "warning",
+                    alt = { "WARNING" },
                 },
-                merge_keywords = false, -- wheather to merge custom keywords with defaults
-                highlight = {
-                    -- highlights before the keyword (typically comment characters)
-                    before = "", -- "fg", "bg", or empty
-                    -- highlights of the keyword
-                    -- wide is the same as bg, but also highlights the colon
-                    keyword = "wide", -- "fg", "bg", "wide", or empty
-                    -- highlights after the keyword (TODO text)
-                    after = "fg", -- "fg", "bg", or empty
-                    -- pattern can be a string, or a table of regexes that will be checked
-                    -- vim regex
-                    pattern = [[.*<(KEYWORDS)\s*:]],
-                    comments_only = true, -- highlight only inside comments using treesitter
-                    max_line_len = 400, -- ignore lines longer than this
-                    exclude = {}, -- list of file types to exclude highlighting
-                },
-                -- list of named colors
-                -- a list of hex colors or highlight groups
-                -- will use the first valid one
-                colors = {
-                    error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-                    warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
-                    info = { "DiagnosticInfo", "#2563EB" },
-                    hint = { "DiagnosticHint", "#10B981" },
-                    default = { "Identifier", "#7C3AED" },
-                },
-                -- rg_rege = {
-                --     "--color=always",
-                --     "--no-heading",
-                --     "--follow",
-                --     "--hidden",
-                --     "--with-filename",
-                --     "--line-number",
-                --     "--column",
-                --     "-g",
-                --     "!node_modules/**",
-                --     "-g",
-                --     "!.git/**",
-                -- },
-                search = {
-                    command = "rg",
+                -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+            },
+            merge_keywords = false, -- wheather to merge custom keywords with defaults
+            highlight = {
+                -- highlights before the keyword (typically comment characters)
+                before = "", -- "fg", "bg", or empty
+                -- highlights of the keyword
+                -- wide is the same as bg, but also highlights the colon
+                keyword = "wide", -- "fg", "bg", "wide", or empty
+                -- highlights after the keyword (TODO text)
+                after = "fg", -- "fg", "bg", or empty
+                -- pattern can be a string, or a table of regexes that will be checked
+                -- vim regex
+                pattern = [[.*<(KEYWORDS)\s*:]],
+                comments_only = true, -- highlight only inside comments using treesitter
+                max_line_len = 400, -- ignore lines longer than this
+                exclude = {}, -- list of file types to exclude highlighting
+            },
+            -- list of named colors
+            -- a list of hex colors or highlight groups
+            -- will use the first valid one
+            colors = {
+                error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+                warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+                info = { "DiagnosticInfo", "#2563EB" },
+                hint = { "DiagnosticHint", "#10B981" },
+                default = { "Identifier", "#7C3AED" },
+            },
+            -- rg_rege = {
+            --     "--color=always",
+            --     "--no-heading",
+            --     "--follow",
+            --     "--hidden",
+            --     "--with-filename",
+            --     "--line-number",
+            --     "--column",
+            --     "-g",
+            --     "!node_modules/**",
+            --     "-g",
+            --     "!.git/**",
+            -- },
+            search = {
+                command = "rg",
 
-                    -- don't replace the (KEYWORDS) placeholder
-                    pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
-                },
-                -- signs = true, -- show icons in the signs column
-                -- sign_priority = 8, -- sign priority
-                -- -- keywords recognized as todo comments
-                -- keywords = {
-                --     FIX = {
-                --         icon = " ", -- icon used for the sign, and in search results
-                --         color = "error", -- can be a hex color, or a named color (see below)
-                --         alt = {
-                --             "FIXME",
-                --             "BUG",
-                --             "FIXIT",
-                --             "ISSUE",
-                --             "fix",
-                --             "fixme",
-                --             "bug",
-                --         }, -- a set of other keywords that all map to this FIX keywords
-                --         -- alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-                --         -- signs = false, -- configure signs for some keywords individually
-                --     },
-                --     TODO = { icon = " ", color = "info" },
-                --     HACK = { icon = " ", color = "warning" },
-                --     WARN = {
-                --         icon = " ",
-                --         color = "warning",
-                --         alt = { "WARNING", "XXX" },
-                --     },
-                --     PERF = {
-                --         icon = " ",
-                --         alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
-                --     },
-                --     -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-                -- },
-                -- merge_keywords = false, -- when true, custom keywords will be merged with the defaults
-                -- -- highlighting of the line containing the todo comment
-                -- -- * before: highlights before the keyword (typically comment characters)
-                -- -- * keyword: highlights of the keyword
-                -- -- * after: highlights after the keyword (todo text)
-                -- highlight = {
-                --     before = "", -- "fg" or "bg" or empty
-                --     keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
-                --     after = "", -- "fg" or "bg" or empty
-                --     pattern = [[.*<(KEYWORDS)\s*:]], -- pattern used for highlightng (vim regex)
-                --     comments_only = true, -- uses treesitter to match keywords in comments only
-                --     exclude = {
-                --         -- "org",
-                --         -- "norg",
-                --         "git",
-                --         ".git",
-                --         "gitcommit",
-                --         "grc",
-                --         "snippets",
-                --         "fugitive",
-                --         "help",
-                --         "markdown",
-                --         "qf",
-                --         "fugitiveblame",
-                --         "DiffviewFileHistory",
-                --     }, -- list of file types to exclude highlighting
-                -- },
-                -- -- list of named colors where we try to extract the guifg from the
-                -- -- list of hilight groups or use the hex color if hl not found as a fallback
-                -- -- colors = {
-                -- --     error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-                -- --     warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
-                -- --     info = { "DiagnosticInformation", "#2563EB" },
-                -- --     hint = { "DiagnosticInformation", "#10B981" },
-                -- --     default = { "Identifier", "#7C3AED" },
-                -- -- },
-                -- search = {
-                --     command = "rg",
-                --     args = {
-                --         "--color=never",
-                --         "--no-heading",
-                --         "--follow",
-                --         "--hidden",
-                --         "--with-filename",
-                --         "--line-number",
-                --         "--column",
-                --         "-g",
-                --         "!node_modules/**",
-                --         "-g",
-                --         "!.git/**",
-                --     },
-                --     -- regex that will be used to match keywords.
-                --     -- don't replace the (KEYWORDS) placeholder
-                --     pattern = [[\b(KEYWORDS):]], -- ripgrep regex
-                --     -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
-                -- },
-            }
-        end,
+                -- don't replace the (KEYWORDS) placeholder
+                pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
+            },
+            -- signs = true, -- show icons in the signs column
+            -- sign_priority = 8, -- sign priority
+            -- -- keywords recognized as todo comments
+            -- keywords = {
+            --     FIX = {
+            --         icon = " ", -- icon used for the sign, and in search results
+            --         color = "error", -- can be a hex color, or a named color (see below)
+            --         alt = {
+            --             "FIXME",
+            --             "BUG",
+            --             "FIXIT",
+            --             "ISSUE",
+            --             "fix",
+            --             "fixme",
+            --             "bug",
+            --         }, -- a set of other keywords that all map to this FIX keywords
+            --         -- alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+            --         -- signs = false, -- configure signs for some keywords individually
+            --     },
+            --     TODO = { icon = " ", color = "info" },
+            --     HACK = { icon = " ", color = "warning" },
+            --     WARN = {
+            --         icon = " ",
+            --         color = "warning",
+            --         alt = { "WARNING", "XXX" },
+            --     },
+            --     PERF = {
+            --         icon = " ",
+            --         alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
+            --     },
+            --     -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+            -- },
+            -- merge_keywords = false, -- when true, custom keywords will be merged with the defaults
+            -- -- highlighting of the line containing the todo comment
+            -- -- * before: highlights before the keyword (typically comment characters)
+            -- -- * keyword: highlights of the keyword
+            -- -- * after: highlights after the keyword (todo text)
+            -- highlight = {
+            --     before = "", -- "fg" or "bg" or empty
+            --     keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
+            --     after = "", -- "fg" or "bg" or empty
+            --     pattern = [[.*<(KEYWORDS)\s*:]], -- pattern used for highlightng (vim regex)
+            --     comments_only = true, -- uses treesitter to match keywords in comments only
+            --     exclude = {
+            --         -- "org",
+            --         -- "norg",
+            --         "git",
+            --         ".git",
+            --         "gitcommit",
+            --         "grc",
+            --         "snippets",
+            --         "fugitive",
+            --         "help",
+            --         "markdown",
+            --         "qf",
+            --         "fugitiveblame",
+            --         "DiffviewFileHistory",
+            --     }, -- list of file types to exclude highlighting
+            -- },
+            -- -- list of named colors where we try to extract the guifg from the
+            -- -- list of hilight groups or use the hex color if hl not found as a fallback
+            -- -- colors = {
+            -- --     error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+            -- --     warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
+            -- --     info = { "DiagnosticInformation", "#2563EB" },
+            -- --     hint = { "DiagnosticInformation", "#10B981" },
+            -- --     default = { "Identifier", "#7C3AED" },
+            -- -- },
+            -- search = {
+            --     command = "rg",
+            --     args = {
+            --         "--color=never",
+            --         "--no-heading",
+            --         "--follow",
+            --         "--hidden",
+            --         "--with-filename",
+            --         "--line-number",
+            --         "--column",
+            --         "-g",
+            --         "!node_modules/**",
+            --         "-g",
+            --         "!.git/**",
+            --     },
+            --     -- regex that will be used to match keywords.
+            --     -- don't replace the (KEYWORDS) placeholder
+            --     pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+            --     -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
+            -- },
+        },
     },
 }

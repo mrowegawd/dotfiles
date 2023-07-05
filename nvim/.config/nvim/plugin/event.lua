@@ -225,15 +225,24 @@ as.augroup("DisableWinBf", {
 })
 
 -- Get into insert mode whenever we enter a terminal buffer
-as.augroup("TermAcg", {
-    event = { "BufEnter" },
-    pattern = { "*" },
-    command = function()
-        if vim.startswith(vim.api.nvim_buf_get_name(0), "term://") then
-            vim.cmd "startinsert"
-        end
-    end,
-})
+-- as.augroup("TermAcg", {
+--     event = { "BufEnter" },
+--     pattern = { "*" },
+--     command = function()
+--         if vim.startswith(vim.api.nvim_buf_get_name(0), "term://") then
+--             vim.cmd "startinsert"
+--         end
+--     end,
+-- })
+
+-- as.augroup("ExternalCommands", {
+--     -- Open images in an image viewer (probably Preview)
+--     event = { "BufEnter" },
+--     pattern = { "*.png", "*.jpg", "*.gif" },
+--     command = function()
+--         cmd(string.format("silent! !%s", "sxiv " .. fn.expand "%"))
+--     end,
+-- })
 
 as.augroup("CheckOutsideTime", {
     -- automatically check for changed files outside vim
@@ -362,4 +371,8 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- jika sudah di perbaiki, hapus ini command ini
 vim.cmd [[
   autocmd BufRead * autocmd BufWinEnter * ++once normal! zx
+]]
+
+vim.cmd [[
+  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
 ]]

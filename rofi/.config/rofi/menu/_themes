@@ -182,6 +182,7 @@ set_terminal() {
 }
 wm_bspwm() {
 	~/.config/bspwm/bspwmrc &>/dev/null
+	~/.config/polybar/runpolybar.sh &>/dev/null
 }
 wm_i3() {
 	cat ~/Dropbox/exbin/xfiles/cfg_i3/config ~/Dropbox/exbin/xfiles/cfg_i3/i3theme \

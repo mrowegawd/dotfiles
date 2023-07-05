@@ -47,7 +47,9 @@ return {
         end,
         dependencies = {
             "mrbjarksen/neo-tree-diagnostics.nvim",
-            -- module = "neo-tree.sources.diagnostics",
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons",
         },
         config = function()
             vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]

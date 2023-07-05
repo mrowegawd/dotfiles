@@ -12,151 +12,198 @@ local set_icons = function(icons_name)
 end
 
 return {
-    -- MASON
+    -- MASON NVIM
     {
         "williamboman/mason.nvim",
         cmd = "Mason",
         build = ":MasonUpdate",
+        opts = {
+            ensure_installed = {
+                "stylua",
+                "shfmt",
+            },
+            ui = { border = as.ui.border.rectangle, height = 0.8 },
+        },
+        config = function(_, opts)
+            require("mason").setup(opts)
+            local mr = require "mason-registry"
+            local function ensure_installed()
+                for _, tool in ipairs(opts.ensure_installed) do
+                    local p = mr.get_package(tool)
+                    if not p:is_installed() then
+                        p:install()
+                    end
+                end
+            end
+            if mr.refresh then
+                mr.refresh(ensure_installed)
+            else
+                ensure_installed()
+            end
+        end,
     },
     -- NVIM-LSPCONFIG
     {
         "neovim/nvim-lspconfig",
-        event = "BufReadPre",
-        dependencies = {
-            { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-            { "folke/neodev.nvim" },
-        },
-    },
-    -- MASON-LSPCONFIG
-    {
-        "williamboman/mason-lspconfig.nvim",
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
-            "williamboman/mason.nvim",
-            "neovim/nvim-lspconfig",
             "hrsh7th/cmp-nvim-lsp",
             "glepnir/lspsaga.nvim",
             "b0o/SchemaStore.nvim",
-        },
-        config = function()
-            require("mason").setup()
-
-            local servers = require("r.plugins.lsp.servers").servers
-
-            local ensure_installed = {}
-
-            for server, _ in pairs(servers) do
-                ensure_installed[#ensure_installed + 1] = server
-            end
-
-            local mason_lspconfig = require "mason-lspconfig"
-
-            mason_lspconfig.setup { ensure_installed = ensure_installed }
-            mason_lspconfig.setup_handlers {
-                function(name)
-                    local config = require("r.plugins.lsp.servers").setup(name)
-                    if config then
-                        require("lspconfig")[name].setup(config)
-                    end
+            "williamboman/mason-lspconfig.nvim",
+            "williamboman/mason.nvim",
+            -- {
+            --     "folke/neoconf.nvim",
+            --     cmd = { "Neoconf" },
+            --     config = true,
+            -- },
+            -- { "folke/neodev.nvim", opts = {} },
+            { "rmagatti/goto-preview", config = true },
+            {
+                "lvimuser/lsp-inlayhints.nvim",
+                init = function()
+                    as.augroup("InlayHintsSetup", {
+                        event = "LspAttach",
+                        command = function(args)
+                            local id = vim.tbl_get(args, "data", "client_id")
+                            if not id then
+                                return
+                            end
+                            local client = vim.lsp.get_client_by_id(id)
+                            require("lsp-inlayhints").on_attach(
+                                client,
+                                args.buf
+                            )
+                        end,
+                    })
                 end,
-            }
+                opts = {
+                    inlay_hints = {
+                        highlight = "Comment",
+                        labels_separator = " ⏐ ",
+                        parameter_hints = { prefix = "" },
+                        type_hints = {
+                            prefix = "=> ",
+                            remove_colon_start = true,
+                        },
+                    },
+                },
+            },
+        },
+        opts = {
+            servers = {
+                lua_ls = {
+                    settings = {
+                        Lua = {
+                            codeLens = { enable = true },
+                            hint = {
+                                enable = true,
+                                arrayIndex = "Disable",
+                                setType = true,
+                                paramName = "Disable",
+                            },
+                            format = { enable = false },
+                            diagnostics = {
+                                globals = {
+                                    "vim",
+                                    "P",
+                                    "describe",
+                                    "it",
+                                    "as",
+                                    "before_each",
+                                    "after_each",
+                                    "packer_plugins",
+                                    "pending",
+                                },
+                            },
+                            completion = {
+                                keywordSnippet = "Replace",
+                                callSnippet = "Replace",
+                            },
+                            workspace = { checkThirdParty = false },
+                            telemetry = { enable = false },
+                        },
+                    },
+                },
+                dockerls = {},
+            },
+            setup = {
+                lua_ls = function(_, _)
+                    local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
+                    lsp_utils.on_attach(function(client, buffer)
+                        if client.name == "lua_ls" then
+                            require("legendary").keymaps {
+
+                                {
+                                    itemgroup = "Debug",
+                                    icon = as.ui.icons.misc.bug,
+                                    description = "Debug functionality",
+                                    keymaps = {
+                                        {
+
+                                            "<localleader>dX",
+                                            function()
+                                                require("osv").run_this()
+                                            end,
+                                            description = "Dap: OSV run",
+                                            opts = {
+                                                buffer = buffer,
+                                            },
+                                        },
+
+                                        {
+
+                                            "<localleader>dL",
+                                            function()
+                                                require("osv").launch {
+                                                    port = 8086,
+                                                }
+                                            end,
+                                            description = "Dap: OSV Launch",
+                                            opts = {
+                                                buffer = buffer,
+                                            },
+                                        },
+                                    },
+                                },
+                            }
+                        end
+                    end)
+                end,
+            },
+            format = {
+                timeout_ms = 3000,
+            },
+        },
+        config = function(plugin, opts)
+            require("r.plugins.lspconfig.lsp.servers").setup(plugin, opts)
         end,
     },
     -- NULL-LS
     {
         "jose-elias-alvarez/null-ls.nvim",
-        event = "BufNewFile",
-        dependencies = { "mason.nvim" },
-    },
-    -- MASON-NULL-LS
-    {
-        "jay-babu/mason-null-ls.nvim", -- Automatically install null-ls servers
-        event = { "BufReadPre", "BufNewFile" },
+        event = "BufReadPre",
         dependencies = {
             "williamboman/mason.nvim",
             "nvim-lua/plenary.nvim",
-            "jose-elias-alvarez/null-ls.nvim",
             "LostNeophyte/null-ls-embedded",
         },
-
-        config = function()
+        opts = function()
             local nls = require "null-ls"
-            local diagnostics = nls.builtins.diagnostics
-
-            -- Ruff settings
-            local ruff_severities = {
-                ["E"] = vim.diagnostic.severity.ERROR,
-
-                ["F8"] = vim.diagnostic.severity.ERROR,
-                ["F"] = vim.diagnostic.severity.WARN,
-                ["W"] = vim.diagnostic.severity.WARN,
-                ["D"] = vim.diagnostic.severity.INFO,
-                ["B"] = vim.diagnostic.severity.INFO,
-            }
-            local ruff = diagnostics.ruff.with {
-                diagnostics_postprocess = function(diagnostic)
-                    local code = string.sub(diagnostic.code, 1, 2)
-                    if code ~= "F8" then
-                        code = string.sub(code, 1, 1)
-                    end
-                    local new_severity = ruff_severities[code]
-                    if new_severity then
-                        diagnostic.severity = new_severity
-                    end
-                end,
-            }
-
-            nls.setup {
-                debounce = 150,
-                save_after_format = false,
+            return {
                 sources = {
                     -- Lua
                     nls.builtins.formatting.stylua,
-                    -- nls.builtins.diagnostics.luacheck,
-                    -- nls.builtins.diagnostics.selene,
-                    -- nls.builtins.diagnostics.selene.with {
-                    --     condition = function(utils)
-                    --         return utils.root_has_file { "selene.toml" }
-                    --     end,
-                    -- },
-
-                    -- JSON
-                    -- nls.builtins.formatting.fixjson.with({ filetypes = { "jsonc" } }),
 
                     -- SH / Bash shell
                     nls.builtins.formatting.shfmt,
-                    -- nls.builtins.diagnostics.shellcheck,
-
-                    -- Fish shell
-                    -- nls.builtins.formatting.fish_indent,
-
-                    -- Markdown
-                    -- nls.builtins.diagnostics.markdownlint,
-
-                    -- Js / Typescript
-                    -- nls.builtins.formatting.prettierd.with {
-                    --     filetypes = { "markdown", "css", "json", "html" }, -- only runs `deno fmt` for markdown
-                    -- },
-                    -- nls.builtins.formatting.eslint_d,
-
-                    -- GIT stuff
-                    -- nls.builtins.code_actions.gitsigns,
-
-                    -- PYTHON
-                    -- nls.builtins.diagnostics.flake8,
-                    nls.builtins.diagnostics.pylint,
-                    ruff,
-                    nls.builtins.formatting.isort,
-                    nls.builtins.formatting.black,
 
                     require("null-ls-embedded").nls_source.with {
                         filetypes = { "norg", "org", "markdown", "md" },
                     },
-
                     nls.builtins.formatting.trim_whitespace.with {
                         filetypes = { "norg", "org", "markdown", "md" },
                     },
-
                     nls.builtins.formatting.trim_newlines.with {
                         filetypes = { "norg", "org", "markdown", "md" },
                     },
@@ -170,37 +217,17 @@ return {
                     ".git"
                 ),
             }
-
-            require("mason-null-ls").setup {
-                automatic_installation = true,
-                automatic_setup = true,
-            }
+        end,
+        config = function(_, opts)
+            require("null-ls").setup(opts)
         end,
     },
-    -- LSP-INLAYHINTS
+    -- MASON-NULL-LS
     {
-        "lvimuser/lsp-inlayhints.nvim",
-        dependencies = "neovim/nvim-lspconfig",
-        init = function()
-            as.augroup("InlayHintsSetup", {
-                event = "LspAttach",
-                command = function(args)
-                    local id = vim.tbl_get(args, "data", "client_id")
-                    if not id then
-                        return
-                    end
-                    local client = vim.lsp.get_client_by_id(id)
-                    require("lsp-inlayhints").on_attach(client, args.buf)
-                end,
-            })
-        end,
+        "jay-babu/mason-null-ls.nvim", -- Automatically install null-ls servers
         opts = {
-            inlay_hints = {
-                highlight = "Comment",
-                labels_separator = " ⏐ ",
-                parameter_hints = { prefix = "" },
-                type_hints = { prefix = "=> ", remove_colon_start = true },
-            },
+            automatic_installation = true,
+            automatic_setup = true,
         },
     },
     -- TROUBLE.NVIM (disabled)
@@ -250,7 +277,7 @@ return {
             }
         end,
     },
-    -- LSPSAGA
+    -- LSPSAGA (disabled)
     {
         "glepnir/lspsaga.nvim",
         event = "VeryLazy",
@@ -502,14 +529,7 @@ return {
             }
         end,
     },
-    -- GOTO-PREVIEW
-    {
-        "rmagatti/goto-preview",
-        config = function()
-            require("goto-preview").setup {}
-        end,
-    },
-    -- AERIAL
+    -- AERIAL (disabled)
     {
         "stevearc/aerial.nvim",
         event = "VeryLazy",
@@ -628,7 +648,7 @@ return {
             }
         end,
     },
-    -- SYMBOLSOUTLINE
+    -- SYMBOLSOUTLINE (disabled)
     {
         "enddeadroyal/symbols-outline.nvim",
         enabled = false,
@@ -1075,7 +1095,7 @@ return {
             }
         end,
     },
-    -- INCRENAME
+    -- INCRENAME (disabled)
     {
         "smjonas/inc-rename.nvim",
         enabled = false,
@@ -1095,7 +1115,7 @@ return {
     -- ILLUMINATE
     {
         "RRethy/vim-illuminate",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile" },
         opts = { delay = 200 },
         init = function()
             require("legendary").keymaps {
@@ -1138,182 +1158,5 @@ return {
                 },
             }
         end,
-    },
-    --  ╭──────────────────────────────────────────────────────────╮
-    --  │              Typescript-Javascript-Related               │
-    --  ╰──────────────────────────────────────────────────────────╯
-    -- TYPESCRIPT-TOOLS.NVIM
-    {
-        "pmizio/typescript-tools.nvim",
-        lazy = false,
-        dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-        opts = {
-            tsserver_file_preferences = {
-                includeInlayParameterNameHints = "literal",
-                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = false,
-                includeInlayPropertyDeclarationTypeHints = true,
-                includeInlayFunctionLikeReturnTypeHints = false,
-                includeInlayEnumMemberValueHints = true,
-            },
-        },
-    },
-    -- IMPORT-COST.NVIM
-    {
-        -- Display javascript import costs inside of neovim
-        "barrett-ruth/import-cost.nvim",
-        build = "sh install.sh yarn",
-        ft = {
-            "javascript",
-            "typescript",
-            "javascriptreact",
-            "typescriptreact",
-        },
-        config = true,
-    },
-    -- TSC.NVIM
-    {
-        -- Type checking typescript
-        "dmmulroy/tsc.nvim",
-        cmd = { "TSC" },
-        config = function()
-            require("tsc").setup()
-        end,
-    },
-    -- PACKAGE-INFO.NVIM
-    {
-        "vuki656/package-info.nvim",
-        event = "BufEnter package.json",
-        config = function()
-            require("package-info").setup {
-                colors = {
-                    up_to_date = "#3C4048", -- Text color for up to date package virtual text
-                    outdated = "#fc514e", -- Text color for outdated package virtual text
-                },
-                icons = {
-                    enable = true, -- Whether to display icons
-                    style = {
-                        up_to_date = icons.misc.check, -- Icon for up to date packages
-                        outdated = icons.git.remove, -- Icon for outdated packages
-                    },
-                },
-                autostart = true, -- Whether to autostart when `package.json` is opened
-                hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
-                hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
-
-                -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
-                -- The plugin will try to auto-detect the package manager based on
-                -- `yarn.lock` or `package-lock.json`. If none are found it will use the
-                -- provided one,                              if nothing is provided it will use `yarn`
-                package_manager = "yarn",
-            }
-        end,
-    },
-    --  ╭──────────────────────────────────────────────────────────╮
-    --  │                      Python-Related                      │
-    --  ╰──────────────────────────────────────────────────────────╯
-    {
-        "linux-cultist/venv-selector.nvim",
-        enabled = false,
-        event = "VeryLazy",
-        config = function()
-            local venv = require "venv-selector.venv"
-            local venv_selector = require "venv-selector"
-
-            venv_selector.setup {
-                search = false,
-                notify_user_on_activate = false,
-            }
-
-            _G.Venv = {}
-
-            local function auto_poetry_venv()
-                if vim.env.VIRTUAL_ENV then
-                    if vim.b.poetry_venv == vim.env.VIRTUAL_ENV then
-                        -- Active venv is equal to current so there is nothing to do
-                        return
-                    elseif
-                        vim.b.poetry_venv == nil
-                        and next(_G.Venv.active_venv) ~= nil
-                        and vim.tbl_contains(
-                            _G.Venv.active_venv.project_files,
-                            vim.api.nvim_buf_get_name(0)
-                        )
-                    then
-                        -- Current file belongs to the project of the active env then simply
-                        -- set the buffer cache variable since we can reuse the existing venv
-                        vim.b.poetry_venv = _G.Venv.active_venv.venv_path
-                        return
-                    else
-                        venv_selector.deactivate_venv()
-                        _G.Venv.active_venv = {}
-                    end
-                end
-
-                -- Save working dir and cd to window cwd (lcd) to ensure system call works
-                local lwd = vim.loop.cwd()
-                vim.cmd "lcd %:p:h"
-
-                -- If there is no active venv look for one (but just once)
-                if vim.b.poetry_venv == nil then
-                    local poetry_path =
-                        vim.fn.trim(vim.fn.system "poetry env info --path")
-                    if vim.v.shell_error ~= 1 then
-                        vim.b.poetry_venv = poetry_path
-                        -- Also store (cache) project root and all py files in the project
-                        local project_root = vim.fn.fnamemodify(
-                            vim.fn.findfile(
-                                "pyproject.toml",
-                                vim.fn.getcwd() .. ";"
-                            ),
-                            ":p:h"
-                        )
-                        local py_files = vim.fs.find(function(name)
-                            return name:match ".*%.py$"
-                        end, {
-                            limit = math.huge,
-                            type = "file",
-                            path = project_root,
-                        })
-                        _G.Venv.active_venv = {
-                            project_root = project_root,
-                            project_files = py_files,
-                            venv_path = poetry_path,
-                        }
-                    else
-                        vim.b.poetry_venv = "none"
-                    end
-                end
-
-                -- Actually activate the venv if it exists/was found
-                if vim.b.poetry_venv ~= "none" then
-                    local path = {}
-                    path.value = vim.b.poetry_venv
-                    venv.set_venv_and_system_paths(path)
-                    venv.cache_venv(path)
-                end
-                vim.cmd("lcd " .. lwd)
-            end
-
-            -- Auto-activate
-            vim.api.nvim_create_autocmd({ "BufEnter" }, {
-                group = vim.api.nvim_create_augroup(
-                    "poetry_venv_auto",
-                    { clear = true }
-                ),
-                pattern = { "*.py" },
-                callback = function()
-                    if not string.match(vim.fn.expand "%:p", ".git/") then
-                        auto_poetry_venv()
-                    end
-                end,
-            })
-        end,
-        dependencies = {
-            -- for DAP support
-            "mfussenegger/nvim-dap-python",
-        },
     },
 }

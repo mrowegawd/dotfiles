@@ -396,24 +396,25 @@ return {
                 },
             }
         end,
-        config = function()
-            require("toggleterm").setup {
-                size = 90,
-                hide_numbers = true,
-                -- open_mapping = "",
-                shade_filetypes = {},
-                shade_terminals = false,
-                shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
-                start_in_insert = true,
-                persist_size = true,
-                direction = "vertical",
-                -- on_open = function(_)
-                --     require("shade").toggle()
-                -- end,
-                -- on_close = function(_)
-                --     require("shade").toggle()
-                -- end,
-            }
+        opts = {
+            size = 90,
+            hide_numbers = true,
+            -- open_mapping = "",
+            shade_filetypes = {},
+            shade_terminals = false,
+            shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
+            start_in_insert = true,
+            persist_size = true,
+            direction = "vertical",
+            -- on_open = function(_)
+            --     require("shade").toggle()
+            -- end,
+            -- on_close = function(_)
+            --     require("shade").toggle()
+            -- end,
+        },
+        config = function(_, opts)
+            require("toggleterm").setup(opts)
         end,
     },
 }

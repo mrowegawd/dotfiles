@@ -1,4 +1,5 @@
 return {
+    -- NVIM-COLORIZER (disabled)
     {
         "NvChad/nvim-colorizer.lua",
         enabled = false,
@@ -23,6 +24,7 @@ return {
             "ColorizerReloadAllBuffers",
         },
     },
+    -- CCC
     {
         "uga-rosa/ccc.nvim",
         init = function()

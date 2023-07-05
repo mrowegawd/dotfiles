@@ -23,11 +23,7 @@ return {
             "CoverageClear",
         },
         config = function()
-            local ok, coverage = as.safe_require "coverage"
-            if not ok then
-                return
-            end
-            coverage.setup {
+            require("coverage").setup {
                 commands = false,
                 highlights = {
                     covered = { fg = "green" },
@@ -58,9 +54,54 @@ return {
                 event = { "FileType" },
                 pattern = as.lspfiles,
                 command = function()
-                    require("r.mappings.utils.overseer").run_task(
-                        api.nvim_get_current_buf()
-                    )
+                    require("legendary").keymaps {
+                        {
+                            itemgroup = "Task runner",
+                            keymaps = {
+
+                                {
+                                    "<F4>",
+                                    function()
+                                        local overseer = require "overseer"
+                                        local tasks = overseer.list_tasks {
+                                            recent_first = true,
+                                        }
+                                        if vim.tbl_isempty(tasks) then
+                                            return vim.notify(
+                                                "No tasks found",
+                                                vim.log.levels.WARN
+                                            )
+                                        else
+                                            return overseer.run_action(
+                                                tasks[1],
+                                                "restart"
+                                            )
+                                        end
+                                    end,
+                                    description = "Overseer: run or restart the task",
+                                    opts = {
+                                        buffer = api.nvim_get_current_buf(),
+                                    },
+                                },
+
+                                {
+                                    "<F1>",
+                                    function()
+                                        if
+                                            vim.bo.filetype ~= "OverseerList"
+                                        then
+                                            return cmd "OverseerRun"
+                                        end
+                                        return cmd "OverseerQuickAction"
+                                    end,
+                                    description = "Overseer: run quick action",
+                                    opts = {
+                                        buffer = api.nvim_get_current_buf(),
+                                    },
+                                },
+                            },
+                        },
+                    }
                 end,
             })
 
@@ -212,17 +253,16 @@ return {
             vim.g.iron_map_extended = 0
 
             local isIronShow = false
+
             require("legendary").keymaps {
                 {
                     itemgroup = "Task runner",
                     keymaps = {
-
                         {
                             "<Leader>rr",
                             function()
                                 if not isIronShow then
                                     isIronShow = true
-
                                     return vim.cmd.IronRepl()
                                 else
                                     isIronShow = false
@@ -238,14 +278,14 @@ return {
                         },
 
                         {
-                            "<Leader>rm",
+                            "rm",
                             function()
                                 require("iron.core").run_motion "send_motion"
                             end,
                             description = "Iron: send motion",
                         },
                         {
-                            "<Leader>rl",
+                            "rl",
                             function()
                                 require("iron.core").visual_send()
                                 -- require("iron.core").send(nil, string.char(13))
@@ -255,7 +295,7 @@ return {
                         },
 
                         {
-                            "<Leader>rf",
+                            "rf",
                             function()
                                 require("iron.core").send_file()
                             end,
@@ -263,14 +303,14 @@ return {
                         },
 
                         {
-                            "<Leader>rl",
+                            "rl",
                             function()
                                 require("iron.core").send_line()
                             end,
                             description = "Iron: send line",
                         },
                         {
-                            "<Leader>r<cr>",
+                            "r<cr>",
                             function()
                                 require("iron.core").send(nil, string.char(13))
                             end,
@@ -278,7 +318,7 @@ return {
                         },
 
                         {
-                            "<Leader>ri",
+                            "ri",
                             function()
                                 require("iron.core").send(nil, string.char(03))
                             end,
@@ -286,7 +326,7 @@ return {
                         },
 
                         {
-                            "<leader>rc",
+                            "rc",
                             function()
                                 require("iron.core").send(nil, string.char(12))
                             end,
@@ -316,9 +356,7 @@ return {
                         sh = {
                             command = { "zsh" },
                         },
-                        python = {
-                            command = { "python" },
-                        },
+                        python = require("iron.fts.python").python,
                     },
 
                     repl_open_cmd = "vertical botright 80 split",
@@ -329,10 +367,25 @@ return {
                 highlight = {
                     italic = true,
                 },
+
+                -- keymaps = {
+                --     send_motion = "rl",
+                --     visual_send = "sl",
+                --     send_file = "<space>sf",
+                --     send_line = "<space>sl",
+                --     send_until_cursor = "<space>su",
+                --     send_mark = "<space>sm",
+                --     mark_motion = "<space>mc",
+                --     mark_visual = "<space>mc",
+                --     remove_mark = "<space>md",
+                --     cr = "<space>s<cr>",
+                --     interrupt = "<space>s<space>",
+                --     exit = "<space>sq",
+                --     clear = "<space>cl",
+                -- },
                 ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
             }
         end,
-        -- disable = true,
     },
     -- SCRATCH
     {

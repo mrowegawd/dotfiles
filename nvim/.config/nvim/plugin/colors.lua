@@ -271,6 +271,7 @@ local general_overrides = function()
             Mymisc_fg = {
                 fg = { from = "Boolean", atrr = "fg", alter = 0.1 },
                 bg = { from = "Normal", alter = -0.1 },
+                -- bg = "NONE",
             },
         },
         {
@@ -411,9 +412,54 @@ local function colorscheme_overrides()
                     bold = true,
                 },
             },
+
+            {
+                PmenuSel = {
+                    bold = true,
+                    fg = { from = "CmpItemMenu", attr = "fg", alter = 0.9 },
+                },
+            },
+
+            {
+                Error = {
+                    bg = "NONE",
+                },
+            },
+
+            {
+                CursorLineNr = {
+                    bg = "NONE",
+                },
+            },
             {
                 MyQuickFixLineLeave = {
                     bg = { from = "PmenuSel", alter = -0.5 },
+                },
+            },
+
+            { LspCodeLens = { fg = { from = "LspCodeLens", alter = -0.5 } } },
+            {
+                illuminatedWordWrite = {
+                    bg = {
+                        from = "illuminatedWordWrite",
+                        attr = "bg",
+                        alter = -0.30,
+                    },
+                },
+            },
+            {
+                illuminatedWordRead = {
+                    bg = {
+                        from = "illuminatedWordRead",
+                        attr = "bg",
+                        alter = -0.30,
+                    },
+                },
+            },
+
+            {
+                Comment = {
+                    fg = { from = "Comment", alter = -0.4 },
                 },
             },
         },
@@ -511,6 +557,20 @@ local function colorscheme_overrides()
             { GitSignsAdd = { bg = "NONE" } },
             { GitSignsChange = { bg = "NONE" } },
             { GitSignsDelete = { bg = "NONE" } },
+
+            {
+                Comment = {
+                    fg = { from = "Comment", alter = -0.4 },
+                },
+            },
+
+            {
+                CursorLineNr = {
+                    bg = "NONE",
+                },
+            },
+
+            { NormalFloat = { bg = { from = "Normal" } } },
         },
         ["catppuccin"] = {
             { NormalFloat = { bg = { from = "Pmenu" } } },

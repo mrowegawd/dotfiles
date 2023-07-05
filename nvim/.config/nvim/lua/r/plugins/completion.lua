@@ -6,39 +6,24 @@ return {
     -- CMP
     {
         "hrsh7th/nvim-cmp",
-        event = "BufRead",
-        -- event = "UIEnter",
+        event = "InsertEnter",
         dependencies = {
             "hrsh7th/cmp-nvim-lsp-signature-help",
             "dmitmel/cmp-cmdline-history",
             "hrsh7th/cmp-buffer",
+            "rcarriga/cmp-dap",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/cmp-emoji",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-path",
-            "rcarriga/cmp-dap",
             "saadparwaiz1/cmp_luasnip",
             "lukas-reineke/cmp-under-comparator",
 
             "hrsh7th/cmp-nvim-lsp-document-symbol",
+            "js-everts/cmp-tailwind-colors", -- Support cmp color for tailwind
         },
-        config = function()
+        opts = function()
             local cmp = require "cmp"
-            -- local compare = require "cmp.config.compare"
-
-            -- compare.lsp_scores = function(entry1, entry2)
-            --     local diff
-            --     if
-            --         entry1.completion_item.score
-            --         and entry2.completion_item.score
-            --     then
-            --         diff = (entry2.completion_item.score * entry2.score)
-            --             - (entry1.completion_item.score * entry1.score)
-            --     else
-            --         diff = entry2.score - entry1.score
-            --     end
-            --     return (diff < 0)
-            -- end
 
             -- Based on (private) function in LuaSnip/lua/luasnip/init.lua.
             local in_snippet = function()
@@ -60,32 +45,6 @@ return {
                 end
             end
 
-            -- local function deprioritize_snippet(entry1, entry2)
-            --     if
-            --         entry1:get_kind() == types.lsp.CompletionItemKind.Snippet
-            --     then
-            --         return false
-            --     end
-            --     if
-            --         entry2:get_kind() == types.lsp.CompletionItemKind.Snippet
-            --     then
-            --         return true
-            --     end
-            -- end
-            --
-            -- local has_words_before = function()
-            --     ---@diagnostic disable-next-line: redundant-parameter
-            --     if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
-            --         return false
-            --     end
-            --     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-            --     return col ~= 0
-            --         and vim.api
-            --                 .nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]
-            --                 :match "^%s*$"
-            --             == nil
-            -- end
-
             local check_backspace = function()
                 local col = vim.fn.col "." - 1
                 return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
@@ -93,7 +52,7 @@ return {
 
             local callme = 0
 
-            cmp.setup {
+            return {
                 enabled = function()
                     return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
                         or require("cmp_dap").is_dap_buffer()
@@ -114,7 +73,6 @@ return {
                     },
                 },
 
-                preselect = cmp.PreselectMode.None,
                 completion = {
                     completeopt = "menu,menuone,noinsert,noselect",
                 },
@@ -144,7 +102,7 @@ return {
 
                     ["<TAB>"] = cmp.mapping(function(fallback)
                         local has_luasnip, sp = pcall(require, "luasnip")
-                        -- if cmp.visible() then
+                        -- if cmp.visible() thec
                         --     cmp.select_next_item()
                         -- if cmp.visible() and has_words_before() then
                         --     cmp.select_next_item {
@@ -353,6 +311,12 @@ return {
                     { name = "nvim_lsp_signature_help" },
                 },
             }
+        end,
+
+        config = function(_, opts)
+            local cmp = require "cmp"
+
+            cmp.setup(opts)
 
             cmp.setup.filetype("markdown", {
                 sources = cmp.config.sources({
@@ -506,21 +470,28 @@ return {
                     { name = "buffer" },
                 },
             })
-
-            local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-            require("cmp").event:on(
-                "confirm_done",
-                cmp_autopairs.on_confirm_done { map_char = { tex = "" } }
-            )
         end,
     },
     -- NEOGEN
     {
         "danymat/neogen",
-        dependencies = "nvim-treesitter/nvim-treesitter",
-        config = function()
-            require("neogen").setup { snippet_engine = "luasnip" }
+        cmd = "Neogen",
+        init = function()
+            require("legendary").commands {
+                {
+                    itemgroup = "Misc",
+                    commands = {
+                        {
+                            ":Neogen",
+                            description = "Generate annotation",
+                        },
+                    },
+                },
+            }
         end,
+        opts = {
+            snippet_engine = "luasnip",
+        },
     },
     -- LUASNIP
     {
@@ -551,28 +522,6 @@ return {
             luasnip.filetype_extend("typescript", { "html" })
             luasnip.filetype_extend("typescriptreact", { "html" })
             luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
-
-            -- vim.keymap.set({ "i", "s" }, "<c-e>", function()
-            --     if luasnip.expand_or_jumpable() then
-            --         luasnip.expand_or_jump()
-            --     end
-            -- end, { silent = true })
-
-            -- jump backwards key.
-            -- this always moves to the previous item within the snippet
-            -- vim.keymap.set({ "i", "s" }, "<c-y>", function()
-            --     if luasnip.jumpable(-1) then
-            --         luasnip.jump(-1)
-            --     end
-            -- end, { silent = true })
-        end,
-    },
-    -- CMP-TAILWIND-COLORS
-    {
-        -- Support cmp color for tailwind
-        "js-everts/cmp-tailwind-colors",
-        config = function()
-            require("cmp-tailwind-colors").setup()
         end,
     },
 }

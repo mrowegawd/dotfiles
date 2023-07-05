@@ -1,14 +1,12 @@
 local highlight, icons, fn, border =
     as.highlight, as.ui.icons, vim.fn, as.ui.border
-local palette = as.ui.palette
 
-local isDapRunning = false
+local palette = as.ui.palette
 
 return {
     -- NVIM DAP
     {
         "mfussenegger/nvim-dap",
-        event = "BufReadPre",
         init = function()
             require("legendary").keymaps {
 
@@ -31,17 +29,17 @@ return {
                             end,
                             description = "Dap: breakpoint (toggle)",
                         },
-                        {
-                            "<localleader>dL",
-                            function()
-                                require("dap").set_breakpoint(
-                                    nil,
-                                    nil,
-                                    fn.input "Log point message: "
-                                )
-                            end,
-                            desc = "dap: log breakpoint",
-                        },
+                        -- {
+                        --     "<localleader>dL",
+                        --     function()
+                        --         require("dap").set_breakpoint(
+                        --             nil,
+                        --             nil,
+                        --             fn.input "Log point message: "
+                        --         )
+                        --     end,
+                        --     desc = "dap: log breakpoint",
+                        -- },
                         {
                             "<localleader>dB",
                             function()
@@ -72,7 +70,7 @@ return {
 
                             "<localleader>dc",
                             function()
-                                if isDapRunning then
+                                if as.isDebugRunning then
                                     local function dap()
                                         return require "dap"
                                     end
@@ -87,13 +85,13 @@ return {
                             description = "Dap: continue or start debugging",
                         },
 
-                        -- {
-                        --     "<localleader>dR",
-                        --     function()
-                        --         require("dap").run_to_cursor()
-                        --     end,
-                        --     description = "Dap: Run to Cursor",
-                        -- },
+                        {
+                            "<localleader>dR",
+                            function()
+                                require("dap").run_to_cursor()
+                            end,
+                            description = "Dap: Run to Cursor",
+                        },
                         {
                             "<localleader>dl",
                             function()
@@ -130,7 +128,7 @@ return {
                                 local function dap()
                                     return require "dap"
                                 end
-                                return dap().session()
+                                return print(dap().session())
                             end,
                             description = "Dap: get session",
                         },
@@ -160,17 +158,17 @@ return {
                         {
                             "<localleader>dd",
                             function()
-                                if not isDapRunning then
+                                if not as.isDebugRunning then
                                     local function dap()
                                         return require "dap"
                                     end
-                                    isDapRunning = true
+                                    as.isDebugRunning = true
                                     return dap().continue()
                                 else
                                     local function dap()
                                         return require "dap"
                                     end
-                                    isDapRunning = false
+                                    as.isDebugRunning = false
                                     return dap().disconnect()
                                 end
                             end,
@@ -179,11 +177,11 @@ return {
                         {
                             "<localleader>dq",
                             function()
-                                if isDapRunning then
+                                if as.isDebugRunning then
                                     local function dap()
                                         return require "dap"
                                     end
-                                    isDapRunning = false
+                                    as.isDebugRunning = false
                                     return dap().close()
                                 end
                             end,
@@ -242,137 +240,36 @@ return {
         dependencies = {
             { "rcarriga/nvim-dap-ui" },
             { "theHamsta/nvim-dap-virtual-text" },
-            { "mfussenegger/nvim-dap-python" },
-            { "leoluz/nvim-dap-go" },
             { "mxsdev/nvim-dap-vscode-js" },
             {
                 "microsoft/vscode-js-debug",
                 build = "npm install --legacy-peer-deps && npm run compile",
             },
+
+            -- { "nvim-telescope/telescope-dap.nvim" },
+            { "jbyuki/one-small-step-for-vimkind" },
+            { "LiadOz/nvim-dap-repl-highlights", opts = {} },
         },
-        config = function()
-            local function configure_debuggers()
-                require("r.plugins.debug.servers.python").setup()
-                require("r.plugins.debug.servers.lua").setup()
-                require("r.plugins.debug.servers.javascript").setup()
-
-                vim.api.nvim_create_autocmd("FileType", {
-                    pattern = "dap-repl",
-                    callback = function()
-                        require("dap.ext.autocompl").attach()
-                    end,
-                })
-            end
-
-            local function dap_UI(dapui, dap)
-                dapui.setup {
-                    -- expand_lines = fn.has "nvim-0.7",
-                    mappings = {
-                        expand = { "<CR>", "<2-LeftMouse>" },
-                        open = "o",
-                        remove = "d",
-                        edit = "e",
-                        repl = "r",
-                        toggle = "t",
-                    },
-                    layouts = {
-                        {
-                            elements = {
-                                -- Elements can be strings or table with id and size keys.
-                                { id = "scopes", size = 0.25 },
-                                "breakpoints",
-                                "stacks",
-                                "watches",
-                            },
-                            size = 40, -- 40 columns
-                            position = "right",
-                        },
-                        {
-                            elements = {
-                                "repl",
-                                "console",
-                            },
-                            size = 0.25, -- 25% of total lines
-                            position = "bottom",
-                        },
-                    },
-                    floating = {
-                        max_height = nil, -- These can be integers or a float between 0 and 1.
-                        max_width = nil, -- Floats will be treated as percentage of your screen.
-                        border = border.rectangle, -- Border style. Can be "single", "double" or "rounded"
-                        mappings = {
-                            close = { "q", "<Esc>" },
-                        },
-                    },
-                    windows = { indent = 1 },
-                    render = {
-                        max_type_length = nil, -- Can be integer or nil.
-                    },
-                }
-
-                local exclusions = { "dart" }
-
-                dap.listeners.after.event_initialized["dapui_config"] = function(
-                )
-                    if vim.tbl_contains(exclusions, vim.bo.filetype) then
-                        return
-                    end
-                    require("dapui").open()
-                    vim.api.nvim_exec_autocmds(
-                        "User",
-                        { pattern = "DapStarted" }
-                    )
-                end
-
-                dap.listeners.before.event_terminated["dapui_config"] = function(
-                )
-                    require("dapui").close()
-                end
-
-                dap.listeners.before.event_exited["dapui_config"] = function()
-                    require("dapui").close()
-                end
-            end
-
-            -------------------------------------------------------------------
-            -- Setup
-            -------------------------------------------------------------------
-
-            local present_dapui, dapui = pcall(require, "dapui")
-            local present_dap, dap = pcall(require, "dap")
-            local present_virtual_text, dap_vt =
-                pcall(require, "nvim-dap-virtual-text")
-            if
-                not present_dapui
-                or not present_dap
-                or not present_virtual_text
-            then
-                return
-            end
-
-            dap_vt.setup {
-                enabled = true, -- enable this plugin (the default)
-                enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
-                highlight_changed_variables = true, -- highlight changed values with NvimDapVirtualTextChanged, else always NvimDapVirtualText
-                highlight_new_as_changed = false, -- highlight new variables in the same way as changed variables (if highlight_changed_variables)
-                show_stop_reason = true, -- show stop reason when stopped for exceptions
-                commented = false, -- prefix virtual text with comment string
-                only_first_definition = true, -- only show virtual text at first definition (if there are multiple)
-                all_references = false, -- show virtual text on all all references of the variable (not only definitions)
-                filter_references_pattern = "<module", -- filter references (not definitions) pattern when all_references is activated (Lua gmatch pattern, default filters out Python modules)
-                -- Experimental Features:
-                virt_text_pos = "eol", -- position of virtual text, see `:h nvim_buf_set_extmark()`
-                all_frames = false, -- show virtual text for all stack frames not only current. Only works for debugpy on my machine.
-                virt_lines = false, -- show virtual lines instead of virtual text (will flicker!)
-                virt_text_win_col = nil, -- position the virtual text at a fixed window column (starting from the first text column) ,
-            }
-
+        opts = {
+            setup = {
+                osv = function(_, _)
+                    require("r.plugins.lspconfig.debug.lua").setup()
+                end,
+            },
+        },
+        config = function(plugin, opts)
             highlight.plugin("dap", {
                 { DapBreakpoint = { fg = palette.light_red } },
                 { DapStopped = { fg = palette.green } },
             })
 
-            configure_debuggers()
+            -- vim.api.nvim_create_autocmd("FileType", {
+            --     pattern = "dap-repl",
+            --     callback = function()
+            --         require("dap.ext.autocompl").attach()
+            --     end,
+            -- })
+
             fn.sign_define {
                 {
                     name = "DapBreakpoint",
@@ -391,7 +288,93 @@ return {
             }
 
             -- Setup DAP UI harus dicall paling bawah
-            dap_UI(dapui, dap)
+            -- dap_UI(dapui, dap)
+
+            -- for name, sign in pairs(icons.dap) do
+            --     sign = type(sign) == "table" and sign or { sign }
+            --     vim.fn.sign_define("Dap" .. name, {
+            --         text = sign[1],
+            --         texthl = sign[2] or "DiagnosticInfo",
+            --         linehl = sign[3],
+            --         numhl = sign[3],
+            --     })
+            -- end
+
+            require("nvim-dap-virtual-text").setup {
+                commented = true,
+            }
+
+            local dap, dapui = require "dap", require "dapui"
+            dapui.setup {
+                -- expand_lines = fn.has "nvim-0.7",
+                mappings = {
+                    expand = { "<CR>", "<2-LeftMouse>" },
+                    open = "o",
+                    remove = "d",
+                    edit = "e",
+                    repl = "r",
+                    toggle = "t",
+                },
+                layouts = {
+                    {
+                        elements = {
+                            -- Elements can be strings or table with id and size keys.
+                            { id = "scopes", size = 0.25 },
+                            "breakpoints",
+                            "stacks",
+                            "watches",
+                        },
+                        size = 40, -- 40 columns
+                        position = "right",
+                    },
+                    {
+                        elements = {
+                            "repl",
+                            "console",
+                        },
+                        size = 0.25, -- 25% of total lines
+                        position = "bottom",
+                    },
+                },
+                floating = {
+                    max_height = nil, -- These can be integers or a float between 0 and 1.
+                    max_width = nil, -- Floats will be treated as percentage of your screen.
+                    border = border.rectangle, -- Border style. Can be "single", "double" or "rounded"
+                    mappings = {
+                        close = { "q", "<Esc>" },
+                    },
+                },
+                windows = { indent = 1 },
+                render = {
+                    max_type_length = nil, -- Can be integer or nil.
+                },
+            }
+
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated["dapui_config"] = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited["dapui_config"] = function()
+                dapui.close()
+            end
+
+            -- set up debugger
+            for k, _ in pairs(opts.setup) do
+                opts.setup[k](plugin, opts)
+            end
         end,
+    },
+
+    {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = "mason.nvim",
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = {
+            automatic_setup = true,
+            handlers = {},
+            ensure_installed = {},
+        },
     },
 }

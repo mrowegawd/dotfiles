@@ -3,7 +3,7 @@ return {
     {
 
         "tyru/open-browser.vim",
-        event = "BufRead",
+        event = "BufReadPre",
         init = function()
             require("legendary").keymaps {
                 {

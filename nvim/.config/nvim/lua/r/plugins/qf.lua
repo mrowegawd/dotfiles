@@ -80,7 +80,7 @@ return {
     --  ╰──────────────────────────────────────────────────────────╯
     {
         dir = "~/.local/src/nvim_plugins/qfsilet",
-        event = "UIEnter",
+        event = "BufRead",
         init = function()
             require("legendary").keymaps {
                 {
@@ -100,19 +100,17 @@ return {
                 },
             }
         end,
-        config = function()
-            require("qfsilet").setup {
-                ext_note = "", -- "" or ".md", ".txt" whatever u want it
-                signs = {
-                    priority = 10,
-                },
-                keymap = {
-                    del_item = "dd",
-                },
-                popup = {
-                    winhighlight = "Normal:Pmenu,FloatBorder:FzfLuaBorder",
-                },
-            }
-        end,
+        opts = {
+            ext_note = "", -- "" or ".md", ".txt" whatever u want it
+            signs = {
+                priority = 10,
+            },
+            keymap = {
+                del_item = "dd",
+            },
+            popup = {
+                winhighlight = "Normal:Pmenu,FloatBorder:FzfLuaBorder",
+            },
+        },
     },
 }

@@ -587,7 +587,7 @@ abbr -a doc_comp_run_rm docker-compose run --rm
 # ╰──────────────────────────────────────────────────────────╯
 
 # ╞══════════════════════════════════════════════════════════╡
-#  NPM and YARN
+#   Npm and Yarn
 # ╞══════════════════════════════════════════════════════════╡
 
 abbr -a yarn_i_sl yarn add -D
@@ -599,7 +599,7 @@ abbr -a npm_i_sg npm install -g
 abbr -a npm_c_outdated npm outdated -g
 
 # ╞══════════════════════════════════════════════════════════╡
-#  PIP
+#   Pip
 # ╞══════════════════════════════════════════════════════════╡
 
 abbr -a pip_i pip install
@@ -609,3 +609,9 @@ function pip_ls --description "pip list | less"
     pip list | less
 end
 abbr -a pip_i_requirments pip install -r
+
+# ╞══════════════════════════════════════════════════════════╡
+#   Poetry
+# ╞══════════════════════════════════════════════════════════╡
+
+abbr -a poet_i_sl poetry add -D

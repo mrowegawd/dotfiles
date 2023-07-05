@@ -11,7 +11,7 @@ return {
 
             local config = {
                 options = {
-                    theme = require "r.plugins.statusline.lualine.themes",
+                    theme = require "r.plugins.colorthemes.lualine.themes",
                     -- or use 'auto'
                     -- normal = { c = { fg = col_fg, bg = col_bg } },
                     -- inactive = { c = { fg = col_fg, bg = col_bg } },
@@ -50,7 +50,8 @@ return {
                 extensions = { "nvim-tree", "misc", "dap-neotest" },
             }
 
-            local components = require "r.plugins.statusline.lualine.components"
+            local components =
+                require "r.plugins.colorthemes.lualine.components"
 
             -- Inserts a component in lualine_c at left section
             local function ins_left(component)
@@ -142,9 +143,9 @@ return {
             -- local bufferline =
             --     require(config_namespace .. ".plugins.heirline.bufferline")
             local statusline =
-                require "r.plugins.statusline.heirline.statusline"
+                require "r.plugins.colorthemes.heirline.statusline"
             local statuscolumn =
-                require "r.plugins.statusline.heirline.statuscol"
+                require "r.plugins.colorthemes.heirline.statuscol"
 
             heirline.setup {
                 statusline = {
@@ -192,30 +193,6 @@ return {
                     statuscolumn.folds,
                     statuscolumn.git_signs,
                 },
-                -- winbar = {
-                --     {
-                --         condition = function()
-                --             return conditions.buffer_matches {
-                --                 buftype = {
-                --                     "nofile",
-                --                     "prompt",
-                --                     "help",
-                --                     "quickfix",
-                --                     "terminal",
-                --                 },
-                --                 filetype = { "alpha", "oil", "toggleterm" },
-                --             }
-                --         end,
-                --         init = function()
-                --             vim.opt_local.winbar = nil
-                --         end,
-                --     },
-                --     winbar.filepath,
-                --     winbar.filename,
-                --     winbar.navic,
-                --     align,
-                --     winbar.vim_logo,
-                -- },
             }
         end,
     },

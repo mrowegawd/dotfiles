@@ -9,25 +9,28 @@ local wezterm = require("wezterm")
 -- Example wezterm lua configurations:
 -- https://github.com/wez/wezterm/discussions/628
 
-local myfunc = function(params)
+local cmd_call = function(params)
 	local handle = io.popen(params)
+	if handle == nil then
+		return
+	end
 	local result = handle:read("*a")
 	handle:close()
 	return result:gsub("\n", "")
 end
 -- The filled in variant of the < symbol
 
-local LEFT_ARROW = utf8.char(0xff0b3)
--- The filled in variant of the < symbol
-local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
--- The filled in variant of the > symbol
-local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)
-
-local COL_BG = "#eceff4"
-local COL_BG_ALT = "#d8dee9"
-local COL_FG = "#4c566a"
-local COL_FG_ALT = "#5e81ac"
-local COL_ACCENT = "#88c0d0"
+-- local LEFT_ARROW = utf8.char(0xff0b3)
+-- -- The filled in variant of the < symbol
+-- local SOLID_LEFT_ARROW = utf8.char(0xe0b2)
+-- -- The filled in variant of the > symbol
+-- local SOLID_RIGHT_ARROW = utf8.char(0xe0b0)
+--
+-- local COL_BG = "#eceff4"
+-- local COL_BG_ALT = "#d8dee9"
+-- local COL_FG = "#4c566a"
+-- local COL_FG_ALT = "#5e81ac"
+-- local COL_ACCENT = "#88c0d0"
 
 -- wezterm.on(
 --     "format-tab-title",
@@ -67,15 +70,15 @@ return {
 	-- [1.0] alpha channel value with floating point numbers in the range 0.0
 	-- (meaning completely translucent/transparent) through to 1.0 (meaning
 	-- completely opaque)- Base
-	window_background_opacity = 0.7,
+	-- window_background_opacity = 0.7,
 	window_close_confirmation = "NeverPrompt",
 	exit_behavior = "Close",
-	window_padding = {
-		left = 10,
-		right = 10,
-		top = 0,
-		bottom = 2,
-	},
+	-- window_padding = {
+	-- 	left = 10,
+	-- 	right = 10,
+	-- 	top = 0,
+	-- 	bottom = 2,
+	-- },
 
 	-- Fonts
 	font = wezterm.font_with_fallback({
@@ -89,6 +92,7 @@ return {
 		-- "LastResort",
 	}),
 	adjust_window_size_when_changing_font_size = false,
+	hide_tab_bar_if_only_one_tab = true,
 	warn_about_missing_glyphs = false,
 	-- font_antialias = "Subpixel", -- None, Greyscale, Subpixel
 	-- font_hinting = "None", -- None, Vertical, VerticalSubpixel, Full
@@ -103,32 +107,31 @@ return {
 	-- leader = { key = "a", mods = "CTRL" },
 	leader = { key = "`", mods = "CTRL" },
 	keys = {
-		-- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
-		{
-			key = "a",
-			mods = "LEADER|CTRL",
-			action = wezterm.action({ SendString = "\x01" }),
-		},
-		{ key = "f", mods = "LEADER", action = "QuickSelect" },
-		{
-			key = "l",
-			mods = "LEADER",
-			action = wezterm.action({
-				SplitHorizontal = { domain = "CurrentPaneDomain" },
-			}),
-		},
-		{
-			key = "j",
-			mods = "LEADER",
-			action = wezterm.action({
-				SplitVertical = { domain = "CurrentPaneDomain" },
-			}),
-		},
-		{
-			key = "n",
-			mods = "LEADER",
-			action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }),
-		},
+		-- {
+		-- 	key = "a",
+		-- 	mods = "LEADER|CTRL",
+		-- 	action = wezterm.action({ SendString = "\x01" }),
+		-- },
+		-- { key = "f", mods = "LEADER", action = "QuickSelect" },
+		-- {
+		-- 	key = "l",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({
+		-- 		SplitHorizontal = { domain = "CurrentPaneDomain" },
+		-- 	}),
+		-- },
+		-- {
+		-- 	key = "j",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({
+		-- 		SplitVertical = { domain = "CurrentPaneDomain" },
+		-- 	}),
+		-- },
+		-- {
+		-- 	key = "n",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }),
+		-- },
 		{
 			key = "c",
 			mods = "CTRL|SHIFT",
@@ -139,129 +142,130 @@ return {
 			mods = "CTRL|SHIFT",
 			action = wezterm.action({ PasteFrom = "Clipboard" }),
 		},
-		{ key = "N", mods = "LEADER", action = "ShowLauncher" },
-		{ key = "R", mods = "LEADER", action = "ReloadConfiguration" },
-		{ key = "m", mods = "LEADER", action = "TogglePaneZoomState" }, -- toggle maximize
-		{ key = "j", mods = "CTRL|SHIFT", action = "IncreaseFontSize" },
-		{ key = "k", mods = "CTRL|SHIFT", action = "DecreaseFontSize" },
+		-- { key = "N", mods = "LEADER", action = "ShowLauncher" },
+		-- { key = "R", mods = "LEADER", action = "ReloadConfiguration" },
+		-- { key = "m", mods = "LEADER", action = "TogglePaneZoomState" }, -- toggle maximize
+		{ key = "+", mods = "CTRL|SHIFT", action = "IncreaseFontSize" },
+		{ key = "_", mods = "CTRL|SHIFT", action = "DecreaseFontSize" },
 		{ key = "Home", mods = "CTRL|SHIFT", action = "ResetFontSize" },
-		{ key = "Enter", mods = "LEADER", action = "ActivateCopyMode" },
-		{
-			key = "h",
-			mods = "ALT|CTRL",
-			action = wezterm.action({ MoveTabRelative = -1 }),
-		},
-		{
-			key = "l",
-			mods = "ALT|CTRL",
-			action = wezterm.action({ MoveTabRelative = 1 }),
-		},
-		{
-
-			key = "h",
-			mods = "ALT",
-			action = wezterm.action({ ActivateTabRelative = -1 }),
-		},
-		{
-			key = "l",
-			mods = "ALT",
-			action = wezterm.action({ ActivateTabRelative = 1 }),
-		},
-		{
-			key = "q",
-			mods = "LEADER",
-			action = wezterm.action({ CloseCurrentPane = { confirm = true } }),
-		},
-		{
-			key = "LeftArrow",
-			mods = "CTRL|SHIFT",
-			action = wezterm.action({ ActivatePaneDirection = "Left" }),
-		},
-		{
-			key = "DownArrow",
-			mods = "CTRL|SHIFT",
-			action = wezterm.action({ ActivatePaneDirection = "Down" }),
-		},
-		{
-			key = "UpArrow",
-			mods = "CTRL|SHIFT",
-			action = wezterm.action({ ActivatePaneDirection = "Up" }),
-		},
-		{
-			key = "RightArrow",
-			mods = "CTRL|SHIFT",
-			action = wezterm.action({ ActivatePaneDirection = "Right" }),
-		},
-		{
-			key = "1",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 0 }),
-		},
-		{
-			key = "2",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 1 }),
-		},
-		{
-			key = "3",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 2 }),
-		},
-		{
-			key = "4",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 3 }),
-		},
-		{
-			key = "5",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 4 }),
-		},
-		{
-			key = "6",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 5 }),
-		},
-		{
-			key = "7",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 6 }),
-		},
-		{
-			key = "8",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 7 }),
-		},
-		{
-			key = "9",
-			mods = "LEADER",
-			action = wezterm.action({ ActivateTab = 8 }),
-		},
-		{
-			key = "K",
-			mods = "LEADER",
-			action = wezterm.action({ ClearScrollback = "ScrollbackOnly" }),
-		},
-		{
-			key = "k",
-			mods = "LEADER",
-			action = wezterm.action({ ScrollToPrompt = 1 }),
-		},
-		{
-			key = "j",
-			mods = "LEADER",
-			action = wezterm.action({ ScrollToPrompt = -1 }),
-		},
-		{
-			key = "PageUp",
-			mods = "NONE",
-			action = wezterm.action({ ScrollByPage = -1 }),
-		},
-		{
-			key = "PageDown",
-			mods = "NONE",
-			action = wezterm.action({ ScrollByPage = 1 }),
-		},
+		-- { key = "Enter", mods = "LEADER", action = "ActivateCopyMode" },
+		-- {
+		-- 	key = "h",
+		-- 	mods = "ALT|CTRL",
+		-- 	action = wezterm.action({ MoveTabRelative = -1 }),
+		-- },
+		-- {
+		-- 	key = "l",
+		-- 	mods = "ALT|CTRL",
+		-- 	action = wezterm.action({ MoveTabRelative = 1 }),
+		-- },
+		--
+		-- {
+		--
+		-- 	key = "h",
+		-- 	mods = "ALT",
+		-- 	action = wezterm.action({ ActivateTabRelative = -1 }),
+		-- },
+		-- {
+		-- 	key = "l",
+		-- 	mods = "ALT",
+		-- 	action = wezterm.action({ ActivateTabRelative = 1 }),
+		-- },
+		-- {
+		-- 	key = "q",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ CloseCurrentPane = { confirm = true } }),
+		-- },
+		-- {
+		-- 	key = "LeftArrow",
+		-- 	mods = "CTRL|SHIFT",
+		-- 	action = wezterm.action({ ActivatePaneDirection = "Left" }),
+		-- },
+		-- {
+		-- 	key = "DownArrow",
+		-- 	mods = "CTRL|SHIFT",
+		-- 	action = wezterm.action({ ActivatePaneDirection = "Down" }),
+		-- },
+		-- {
+		-- 	key = "UpArrow",
+		-- 	mods = "CTRL|SHIFT",
+		-- 	action = wezterm.action({ ActivatePaneDirection = "Up" }),
+		-- },
+		-- {
+		-- 	key = "RightArrow",
+		-- 	mods = "CTRL|SHIFT",
+		-- 	action = wezterm.action({ ActivatePaneDirection = "Right" }),
+		-- },
+		-- {
+		-- 	key = "1",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 0 }),
+		-- },
+		-- {
+		-- 	key = "2",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 1 }),
+		-- },
+		-- {
+		-- 	key = "3",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 2 }),
+		-- },
+		-- {
+		-- 	key = "4",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 3 }),
+		-- },
+		-- {
+		-- 	key = "5",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 4 }),
+		-- },
+		-- {
+		-- 	key = "6",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 5 }),
+		-- },
+		-- {
+		-- 	key = "7",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 6 }),
+		-- },
+		-- {
+		-- 	key = "8",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 7 }),
+		-- },
+		-- {
+		-- 	key = "9",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ActivateTab = 8 }),
+		-- },
+		-- {
+		-- 	key = "K",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ClearScrollback = "ScrollbackOnly" }),
+		-- },
+		-- {
+		-- 	key = "k",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ScrollToPrompt = 1 }),
+		-- },
+		-- {
+		-- 	key = "j",
+		-- 	mods = "LEADER",
+		-- 	action = wezterm.action({ ScrollToPrompt = -1 }),
+		-- },
+		-- {
+		-- 	key = "PageUp",
+		-- 	mods = "NONE",
+		-- 	action = wezterm.action({ ScrollByPage = -1 }),
+		-- },
+		-- {
+		-- 	key = "PageDown",
+		-- 	mods = "NONE",
+		-- 	action = wezterm.action({ ScrollByPage = 1 }),
+		-- },
 	},
 	window_frame = {
 		-- The font used in the tab bar.
@@ -278,17 +282,17 @@ return {
 
 		-- The overall background color of the tab bar when
 		-- the window is focused
-		active_titlebar_bg = myfunc("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
+		active_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 
 		-- The overall background color of the tab bar when
 		-- the window is not focused
-		inactive_titlebar_bg = myfunc("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
+		inactive_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 	},
 	colors = {
 		-- The default text color
-		foreground = myfunc("xrdb -query | grep -i foreground| cut -d':' -f2 | xargs"),
+		foreground = cmd_call("xrdb -query | grep -i foreground| cut -d':' -f2 | xargs"),
 		-- The default background color
-		background = myfunc("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
+		background = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 
 		tab_bar = {
 			--     -- The color of the strip that goes along the top of the window

@@ -22,11 +22,12 @@ as.dropbox_path = fmt("%s/Dropbox", as.home, "Dropbox")
 as.wiki_path = fmt("%s/neorg", as.dropbox_path)
 as.snippet_path = as.dropbox_path .. "/friendly-snippets"
 
-as.colorscheme = "doom-one"
+as.colorscheme = "kanagawa"
 as.master_win = 1
 as.term_count = 1
 as.toggle_number = 1
 as.colorcolumn_width = 80
+as.isDebugRunning = false
 
 as.use_navigator_ray_x = false -- plugin ray-x/navigator.lua
 as.use_search_telescope = false -- if false, use fzflua
@@ -113,7 +114,7 @@ end
 ---@param filename string
 ---@return string|boolean
 function as.exists(filename)
-    local stat = vim.loop.fs_stat(filename)
+    local stat = vim.uv.fs_stat(filename)
     return stat and stat.type or false
 end
 
