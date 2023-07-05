@@ -489,8 +489,19 @@ M.debugger = function()
 end
 M.noice_status = function()
     return {
-        require("noice").api.status.search.get,
-        cond = require("noice").api.status.search.has,
+        function()
+            local isNoice, noice = pcall(require, "noice")
+            if isNoice then
+                return noice.api.status.search.get()
+            end
+            return ""
+        end,
+        cond = function()
+            local isNoice, noice = pcall(require, "noice")
+            if isNoice then
+                return noice.api.status.search.has()
+            end
+        end,
         color = { fg = "#ff9e64", gui = "bold" },
     }
 end

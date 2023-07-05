@@ -54,96 +54,89 @@ return {
                 event = { "FileType" },
                 pattern = as.lspfiles,
                 command = function()
-                    require("legendary").keymaps {
-                        {
-                            itemgroup = "Task runner",
-                            keymaps = {
-
-                                {
-                                    "<F4>",
-                                    function()
-                                        local overseer = require "overseer"
-                                        local tasks = overseer.list_tasks {
-                                            recent_first = true,
-                                        }
-                                        if vim.tbl_isempty(tasks) then
-                                            return vim.notify(
-                                                "No tasks found",
-                                                vim.log.levels.WARN
-                                            )
-                                        else
-                                            return overseer.run_action(
-                                                tasks[1],
-                                                "restart"
-                                            )
-                                        end
-                                    end,
-                                    description = "Overseer: run or restart the task",
-                                    opts = {
-                                        buffer = api.nvim_get_current_buf(),
-                                    },
-                                },
-
-                                {
-                                    "<F1>",
-                                    function()
-                                        if
-                                            vim.bo.filetype ~= "OverseerList"
-                                        then
-                                            return cmd "OverseerRun"
-                                        end
-                                        return cmd "OverseerQuickAction"
-                                    end,
-                                    description = "Overseer: run quick action",
-                                    opts = {
-                                        buffer = api.nvim_get_current_buf(),
-                                    },
-                                },
-                            },
-                        },
-                    }
+                    -- require("legendary").keymaps {
+                    --     {
+                    --         itemgroup = "Task runner",
+                    --         keymaps = {
+                    --
+                    --             {
+                    --                 "<F4>",
+                    --                 function()
+                    --                     local overseer = require "overseer"
+                    --                     local tasks = overseer.list_tasks {
+                    --                         recent_first = true,
+                    --                     }
+                    --                     if vim.tbl_isempty(tasks) then
+                    --                         return vim.notify(
+                    --                             "No tasks found",
+                    --                             vim.log.levels.WARN
+                    --                         )
+                    --                     else
+                    --                         return overseer.run_action(
+                    --                             tasks[1],
+                    --                             "restart"
+                    --                         )
+                    --                     end
+                    --                 end,
+                    --                 description = "Overseer: run or restart the task",
+                    --                 opts = {
+                    --                     buffer = api.nvim_get_current_buf(),
+                    --                 },
+                    --             },
+                    --
+                    --             {
+                    --                 "<F1>",
+                    --                 function()
+                    --                     if
+                    --                         vim.bo.filetype ~= "OverseerList"
+                    --                     then
+                    --                         return cmd "OverseerRun"
+                    --                     end
+                    --                     return cmd "OverseerQuickAction"
+                    --                 end,
+                    --                 description = "Overseer: run quick action",
+                    --                 opts = {
+                    --                     buffer = api.nvim_get_current_buf(),
+                    --                 },
+                    --             },
+                    --         },
+                    --     },
+                    -- }
                 end,
             })
-
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Task runner",
-                    icon = as.ui.icons.misc.run_program,
-                    description = "A task runner and job management plugin",
-                    keymaps = {
-                        {
-                            "<Leader>oo",
-                            function()
-                                require("r.utils.tiling").force_win_close(
-                                    { "neo-tree", "undotree" },
-                                    false
-                                )
-                                return cmd "OverseerToggle"
-                            end,
-                            description = "Overseer: toggle",
-                        },
-
-                        {
-                            "<Leader>ol",
-                            "<Cmd>OverseerQuickAction open vsplit<CR>",
-                            description = "Overseer: open repl vsplit",
-                        },
-
-                        {
-                            "<Leader>oa",
-                            "<CMD>OverseerQuickAction<CR>",
-                            description = "Overseer: quick action",
-                        },
-
-                        {
-                            "<Leader>ot",
-                            "<CMD>OverseerTaskAction<CR>",
-                            description = "Overseer: task action",
-                        },
-                    },
-                },
-            }
         end,
+        keys = {
+
+            {
+                "<Leader>oo",
+                function()
+                    require("r.utils.tiling").force_win_close(
+                        { "neo-tree", "undotree" },
+                        false
+                    )
+                    return cmd "OverseerToggle"
+                end,
+                desc = "Overseer: toggle",
+            },
+
+            {
+                "<Leader>ol",
+                "<Cmd>OverseerQuickAction open vsplit<CR>",
+                desc = "Overseer: open repl vsplit",
+            },
+
+            {
+                "<Leader>oa",
+                "<CMD>OverseerQuickAction<CR>",
+                desc = "Overseer: quick action",
+            },
+
+            {
+                "<Leader>ot",
+                "<CMD>OverseerTaskAction<CR>",
+                desc = "Overseer: task action",
+            },
+        },
         config = function()
             require("overseer").setup {
                 -- strategy = "toggleterm",
@@ -251,101 +244,93 @@ return {
         init = function()
             vim.g.iron_map_defaults = 0
             vim.g.iron_map_extended = 0
-
-            local isIronShow = false
-
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Task runner",
-                    keymaps = {
-                        {
-                            "<Leader>rr",
-                            function()
-                                if not isIronShow then
-                                    isIronShow = true
-                                    return vim.cmd.IronRepl()
-                                else
-                                    isIronShow = false
-                                    return vim.cmd.IronHide()
-                                end
-                            end,
-                            description = "Iron: open repl",
-                        },
-                        {
-                            "<Leader>rR",
-                            "<CMD>IronRestart<CR>",
-                            description = "Iron: restart repl",
-                        },
-
-                        {
-                            "rm",
-                            function()
-                                require("iron.core").run_motion "send_motion"
-                            end,
-                            description = "Iron: send motion",
-                        },
-                        {
-                            "rl",
-                            function()
-                                require("iron.core").visual_send()
-                                -- require("iron.core").send(nil, string.char(13))
-                            end,
-                            description = "Iron: send visual",
-                            mode = { "v" },
-                        },
-
-                        {
-                            "rf",
-                            function()
-                                require("iron.core").send_file()
-                            end,
-                            description = "Iron: send file",
-                        },
-
-                        {
-                            "rl",
-                            function()
-                                require("iron.core").send_line()
-                            end,
-                            description = "Iron: send line",
-                        },
-                        {
-                            "r<cr>",
-                            function()
-                                require("iron.core").send(nil, string.char(13))
-                            end,
-                            description = "Iron: send (ENTER)",
-                        },
-
-                        {
-                            "ri",
-                            function()
-                                require("iron.core").send(nil, string.char(03))
-                            end,
-                            description = "Iron: send (interrupt)",
-                        },
-
-                        {
-                            "rc",
-                            function()
-                                require("iron.core").send(nil, string.char(12))
-                            end,
-                            desc = "Iron: clear",
-                        },
-
-                        {
-                            "<leader>rL",
-                            function()
-                                require("iron.core").send_until_cursor()
-                            end,
-                            desc = "Iron: run until cursor",
-                        },
-                    },
-                },
-            }
         end,
         event = "VeryLazy",
         cmd = { "IronRepl", "IronRestart", "IronHide" },
+        keys = {
+            -- {
+            --     "<Leader>rr",
+            --     function()
+            --         if not isIronShow then
+            --             isIronShow = true
+            --             return vim.cmd.IronRepl()
+            --         else
+            --             isIronShow = false
+            --             return vim.cmd.IronHide()
+            --         end
+            --     end,
+            --     desc = "Iron: open repl",
+            -- },
+            {
+                "<Leader>rR",
+                "<CMD>IronRestart<CR>",
+                desc = "Iron: restart repl",
+            },
+
+            {
+                "rm",
+                function()
+                    require("iron.core").run_motion "send_motion"
+                end,
+                desc = "Iron: send motion",
+            },
+            {
+                "rl",
+                function()
+                    require("iron.core").visual_send()
+                    -- require("iron.core").send(nil, string.char(13))
+                end,
+                desc = "Iron: send visual",
+                mode = { "v" },
+            },
+
+            {
+                "rf",
+                function()
+                    require("iron.core").send_file()
+                end,
+                desc = "Iron: send file",
+            },
+
+            {
+                "rl",
+                function()
+                    require("iron.core").send_line()
+                end,
+                desc = "Iron: send line",
+            },
+            {
+                "r<cr>",
+                function()
+                    require("iron.core").send(nil, string.char(13))
+                end,
+                desc = "Iron: send (ENTER)",
+            },
+
+            {
+                "ri",
+                function()
+                    require("iron.core").send(nil, string.char(03))
+                end,
+                desc = "Iron: send (interrupt)",
+            },
+
+            {
+                "rc",
+                function()
+                    require("iron.core").send(nil, string.char(12))
+                end,
+                desc = "Iron: clear",
+            },
+
+            {
+                "<leader>rL",
+                function()
+                    require("iron.core").send_until_cursor()
+                end,
+                desc = "Iron: run until cursor",
+            },
+        },
         config = function()
             require("iron.core").setup {
                 config = {
@@ -391,24 +376,18 @@ return {
     {
         "LintaoAmons/scratch.nvim",
         cmd = { "Scratch", "ScratchOpen" },
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "<Leader>sO",
-                            "<CMD>Scratch<CR>",
-                            description = "Scratch: open",
-                        },
-                        {
-                            "<Leader>so",
-                            "<CMD>ScratchOpen<CR>",
-                            description = "Scratch: open list",
-                        },
-                    },
-                },
-            }
-        end,
+        keys = {
+
+            {
+                "<Leader>sO",
+                "<CMD>Scratch<CR>",
+                desc = "Scratch: open",
+            },
+            {
+                "<Leader>so",
+                "<CMD>ScratchOpen<CR>",
+                desc = "Scratch: open list",
+            },
+        },
     },
 }

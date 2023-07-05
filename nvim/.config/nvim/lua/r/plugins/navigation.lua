@@ -7,44 +7,38 @@ return {
         cmd = "Neotree",
         init = function()
             require("r.utils").disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    icon = as.ui.icons.misc.smiley,
-                    description = "Task functionality",
-                    keymaps = {
-                        {
-                            "<Leader>e",
-                            function()
-                                require("r.utils.tiling").force_win_close(
-                                    { "OverseerList", "undotree", "aerial" },
-                                    false
-                                )
-                                for _, w in ipairs(vim.api.nvim_list_wins()) do
-                                    if
-                                        vim.api.nvim_buf_get_option(
-                                            vim.api.nvim_win_get_buf(w),
-                                            "ft"
-                                        )
-                                        == "neo-tree"
-                                    then
-                                        return vim.api.nvim_win_close(w, false)
-                                    else
-                                        return cmd "Neotree toggle"
-                                    end
-                                end
-                            end,
-                            description = "Neo-tree: open File explore",
-                        },
-                        {
-                            "<Leader>E",
-                            "<CMD>Neotree reveal<CR>",
-                            description = "Neo-tree: open find file on File Explore",
-                        },
-                    },
-                },
-            }
         end,
+        keys = {
+
+            {
+                "<Leader>e",
+                function()
+                    require("r.utils.tiling").force_win_close(
+                        { "OverseerList", "undotree", "aerial" },
+                        false
+                    )
+                    for _, w in ipairs(vim.api.nvim_list_wins()) do
+                        if
+                            vim.api.nvim_buf_get_option(
+                                vim.api.nvim_win_get_buf(w),
+                                "ft"
+                            )
+                            == "neo-tree"
+                        then
+                            return vim.api.nvim_win_close(w, false)
+                        else
+                            return cmd "Neotree toggle"
+                        end
+                    end
+                end,
+                desc = "Neo-tree: open File explore",
+            },
+            {
+                "<Leader>E",
+                "<CMD>Neotree reveal<CR>",
+                desc = "Neo-tree: open find file on File Explore",
+            },
+        },
         dependencies = {
             "mrbjarksen/neo-tree-diagnostics.nvim",
             "nvim-lua/plenary.nvim",

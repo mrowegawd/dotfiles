@@ -476,19 +476,6 @@ return {
     {
         "danymat/neogen",
         cmd = "Neogen",
-        init = function()
-            require("legendary").commands {
-                {
-                    itemgroup = "Misc",
-                    commands = {
-                        {
-                            ":Neogen",
-                            description = "Generate annotation",
-                        },
-                    },
-                },
-            }
-        end,
         opts = {
             snippet_engine = "luasnip",
         },

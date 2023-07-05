@@ -272,10 +272,10 @@ nnoremap <C-k> <C-W>k
 nnoremap <C-h> <C-W>h
 nnoremap <C-l> <C-W>l
 
-nnoremap <silent> J    :resize -2<CR>
-nnoremap <silent> K    :resize +2<CR>
-nnoremap <silent> L    :vertical resize -2<CR>
-nnoremap <silent> H    :vertical resize +2<CR>
+" nnoremap <silent> J    :resize -2<CR>
+" nnoremap <silent> K    :resize +2<CR>
+" nnoremap <silent> L    :vertical resize -2<CR>
+" nnoremap <silent> H    :vertical resize +2<CR>
 
 nnoremap <silent> <c-p> :call <sid>maximazeWindow()<cr>
 

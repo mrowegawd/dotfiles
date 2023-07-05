@@ -271,15 +271,15 @@ end
 function M.setup(_, opts)
     ---@diagnostic disable-next-line: unused-local
     lsp_utils.on_attach(function(client, bufnr)
-        local legendary_installed, legendary =
-            as.safe_require("legendary", { silent = true })
-        if legendary_installed then
-            if legendary_installed then
-                legendary.keymaps(require("r.mappings").lsp_keymaps())
-
-                legendary.commands(require("r.mappings").lsp_commands())
-            end
-        end
+        -- local legendary_installed, legendary =
+        --     as.safe_require("legendary", { silent = true })
+        -- if legendary_installed then
+        --     if legendary_installed then
+        --         legendary.keymaps(require("r.mappings").lsp_keymaps())
+        --
+        --         legendary.commands(require("r.mappings").lsp_commands())
+        --     end
+        -- end
     end)
 
     lsp_init() -- diagnostics, handlers

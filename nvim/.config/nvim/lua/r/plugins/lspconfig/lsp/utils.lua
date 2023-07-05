@@ -42,4 +42,8 @@ function M.on_attach(on_attach)
     })
 end
 
+function M.mappings()
+    -- code
+end
+
 return M

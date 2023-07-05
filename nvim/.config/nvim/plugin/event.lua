@@ -350,7 +350,8 @@ local trim = function(pattern)
     fn.winrestview(save)
 end
 
-local ignore_filetype_trim = { "norg", "text", "org", "sh", "zsh", "fish" }
+local ignore_filetype_trim =
+    { "norg", "text", "org", "sh", "zsh", "fish", "dosini" }
 local remove_group =
     vim.api.nvim_create_augroup("removeTrailingSpaces", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {

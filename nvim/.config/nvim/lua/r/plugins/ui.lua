@@ -23,18 +23,6 @@ return {
                     },
                 },
             })
-
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    commands = {
-                        {
-                            ":IndentBlanklineToggle",
-                            description = "Indentblankline: toggle",
-                        },
-                    },
-                },
-            }
         end,
         opts = {
             char = "│", -- ┆ ┊ 
@@ -208,56 +196,15 @@ return {
     {
         "folke/noice.nvim",
         event = "VeryLazy",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Noice",
-                    commands = {
-                        {
-                            ":NoiceLast",
-                            function()
-                                return require("noice").cmd "last"
-                            end,
-                            description = "Show last message",
-                        },
-
-                        {
-                            ":NoiceHistory",
-                            function()
-                                return require("noice").cmd "history"
-                            end,
-                            description = "Show history message",
-                        },
-                        {
-                            ":NoiceLog",
-                            function()
-                                return require("noice").cmd "log"
-                            end,
-                            description = "Show log",
-                        },
-
-                        {
-                            ":NoiceAll",
-                            function()
-                                return require("noice").cmd "all"
-                            end,
-                            description = "Show all message",
-                        },
-                    },
-                    keymaps = {
-                        {
-                            "<F6>",
-                            function()
-                                return require("noice").redirect(
-                                    vim.fn.getcmdline()
-                                )
-                            end,
-                            description = "Redirect Cmdline",
-                        },
-                    },
-                },
-            }
-        end,
+        -- keys = {
+        --     {
+        --         "<F6>",
+        --         function()
+        --             return require("noice").redirect(vim.fn.getcmdline())
+        --         end,
+        --         desc = "Redirect Cmdline",
+        --     },
+        -- },
         dependencies = {
             "MunifTanjim/nui.nvim",
             "rcarriga/nvim-notify",
@@ -369,10 +316,10 @@ return {
     {
         "luukvbaal/statuscol.nvim",
         event = "BufReadPre",
-        config = function()
+        opts = function()
             local builtin = require "statuscol.builtin"
 
-            require("statuscol").setup {
+            return {
                 -- hl = "FoldColumn", -- %# highlight group label, applies to each text element
                 relculright = true,
                 segments = {
@@ -429,7 +376,7 @@ return {
                 function()
                     require("fold-cycle").open()
                 end,
-                desc = "fold-cycle: toggle",
+                desc = "Fold(fold-cycle): toggle",
             },
         },
     },
@@ -443,6 +390,68 @@ return {
         dependencies = {
             "kevinhwang91/promise-async",
         },
+        keys = {
+            {
+                "zM",
+                function()
+                    -- Unwanted autofolding triggered by insert
+                    -- return require("ufo").closeAllFolds()
+
+                    -- Taken from https://github.com/kevinhwang91/nvim-ufo/issues/85
+                    local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+
+                    vim.cmd "normal gg"
+
+                    for i = 1, vim.api.nvim_buf_line_count(0) do
+                        vim.cmd("silent! normal " .. tostring(i) .. "GzC")
+                    end
+                    vim.cmd("normal " .. tostring(row) .. "G")
+                end,
+                desc = "Fold(Ufo): close all folds",
+            },
+
+            {
+                "zm",
+                function()
+                    return require("ufo").closeFoldsWith()
+                end,
+                desc = "Fold(Ufo): close fold",
+            },
+
+            {
+                "zR",
+                function()
+                    return require("ufo").openAllFolds()
+                end,
+                desc = "Fold(Ufo): open all folds",
+            },
+
+            {
+                "zP",
+                function()
+                    return require("ufo").peekFoldedLinesUnderCursor()
+                end,
+                desc = "Fold(Ufo): open peek folds",
+            },
+
+            {
+                -- "zp",
+                "<UP>",
+                function()
+                    return require("ufo").goPreviousClosedFold()
+                end,
+                desc = "Fold(Ufo): go prev closed fold",
+            },
+            {
+                -- "zn",
+                "<DOWN>",
+                function()
+                    return require("ufo").goNextClosedFold()
+                end,
+                desc = "Fold(Ufo): go next closed fold",
+            },
+        },
+
         init = function()
             as.augroup("UfoSettings", {
                 event = "FileType",
@@ -469,124 +478,14 @@ return {
                 },
             })
 
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Fold",
-                    description = "Fold in nvim",
-                    icon = as.ui.icons.misc.double_chevron_right,
-                    keymaps = {
-
-                        -- {
-                        --     "<Localleader>z",
-                        --     [[zMzvzz]], --> command ini bikin foldlevel menjadi 0
-                        --     description = "Misc: refocus folds",
-                        -- },
-                        --
-                        -- {
-                        --     "zY",
-                        --     [[zCzO]],
-                        --     description = "Misc: open folds whatever top fold we're in",
-                        -- },
-                        --
-                        -- {
-                        --     "<BS>",
-                        --     [[@=(foldlevel('.')?'za':"\<Space>")<CR>]],
-                        --     description = "Misc: toggle fold under cursor",
-                        -- },
-
-                        -- UFO --------------------------------------------------------
-                        {
-                            "zM",
-                            function()
-                                -- Unwanted autofolding triggered by insert
-                                -- return require("ufo").closeAllFolds()
-
-                                -- Taken from https://github.com/kevinhwang91/nvim-ufo/issues/85
-                                local row, _ =
-                                    unpack(vim.api.nvim_win_get_cursor(0))
-
-                                vim.cmd "normal gg"
-
-                                for i = 1, vim.api.nvim_buf_line_count(0) do
-                                    vim.cmd(
-                                        "silent! normal "
-                                            .. tostring(i)
-                                            .. "GzC"
-                                    )
-                                end
-                                vim.cmd("normal " .. tostring(row) .. "G")
-                            end,
-                            description = "Ufo: close all folds",
-                        },
-
-                        {
-                            "zm",
-                            function()
-                                return require("ufo").closeFoldsWith()
-                            end,
-                            description = "Ufo: close fold",
-                        },
-
-                        {
-                            "zR",
-                            function()
-                                return require("ufo").openAllFolds()
-                            end,
-                            description = "Ufo: open all folds",
-                        },
-                        --
-                        -- {
-                        --     "zr",
-                        --     function()
-                        --         return require("ufo").openFoldsExceptKinds()
-                        --     end,
-                        --     description = "Ufo: Open folds except kinds",
-                        -- },
-
-                        {
-                            "zP",
-                            function()
-                                return require("ufo").peekFoldedLinesUnderCursor()
-                            end,
-                            description = "Ufo: open peek folds",
-                        },
-
-                        {
-                            -- "zp",
-                            "<UP>",
-                            function()
-                                return require("ufo").goPreviousClosedFold()
-                            end,
-                            description = "Ufo: go prev closed fold",
-                        },
-                        {
-                            -- "zn",
-                            "<DOWN>",
-                            function()
-                                return require("ufo").goNextClosedFold()
-                            end,
-                            description = "Ufo: go next closed fold",
-                        },
-
-                        -- FOLDCYCLE --------------------------------------------------
-                        -- {
-                        --     "<Localleader>z",
-                        --     function()
-                        --         return require("fold-cycle").open()
-                        --     end,
-                        --
-                        --     description = "Foldcyle: toggle",
-                        --     mode = { "n", "v" },
-                        -- },
-                    },
-                    commands = {
-                        {
-                            ":UfoInspect",
-                            description = "Ufo: inspect",
-                        },
-                    },
-                },
-            }
+            --     commands = {
+            --         {
+            --             ":UfoInspect",
+            --             description = "Ufo: inspect",
+            --         },
+            --     },
+            -- },
+            -- }
         end,
 
         config = function()
@@ -618,31 +517,24 @@ return {
     {
         "akinsho/nvim-bufferline.lua",
         event = "VeryLazy",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Buffertabs",
-                    keymaps = {
-                        {
-                            "gl",
-                            "<CMD>BufferLineCycleNext<CR>",
-                            description = "Bufferline: next buffer",
-                        },
-                        {
-                            "gh",
-                            "<CMD>BufferLineCyclePrev<CR>",
-                            description = "Bufferline: prev buffer",
-                        },
+        keys = {
+            {
+                "gl",
+                "<CMD>BufferLineCycleNext<CR>",
+                desc = "Buffer(Bufferline): next buffer",
+            },
+            {
+                "gh",
+                "<CMD>BufferLineCyclePrev<CR>",
+                desc = "Buffer(Bufferline): prev buffer",
+            },
 
-                        {
-                            "<leader><BS>",
-                            "<CMD>BufferLineGroupToggle docs<CR>",
-                            description = "Bufferline: group close docs",
-                        },
-                    },
-                },
-            }
-        end,
+            {
+                "<leader><BS>",
+                "<CMD>BufferLineGroupToggle docs<CR>",
+                desc = "Buffer(Bufferline): group close docs",
+            },
+        },
         config = function()
             local col_base_bg_attr = "Normal"
             local col_base_fg_attr = "Normal"
@@ -1446,7 +1338,6 @@ return {
     {
         "sunjon/shade.nvim",
         enabled = false,
-        -- event = "BufReadPre",
         config = function()
             require("shade").setup()
             require("shade").toggle()

@@ -49,7 +49,7 @@ font-5              = Wucon Siji:size=8;1
 ; modules-right       = cpu cpu-load pulseaudio round-left updates network temperature memory filesystem round-right round-left time round-right powermenu
 ; modules-right       = record-ffmpeg pulseaudio round-left youtube_count updates network temperature memory filesystem round-right round-left time round-right powermenu
 modules-left = appmenu mod bspwm mpd
-modules-right = pulseaudio info-docker updates memory filesystem check-network date powermenu
+modules-right = pulseaudio info-docker updates memory transmission filesystem check-network date powermenu
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;; General

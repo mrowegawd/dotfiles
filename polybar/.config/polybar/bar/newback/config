@@ -46,8 +46,8 @@ font-5              = Wucon Siji:size=8;1
 modules-left = appmenu bspwm
 ; modules-right = mpd pillar polypomo pillar info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar check-network pillar date pillar powermenu pillar
 ; modules-right = mpd info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar date pillar powermenu pillar
-modules-right = mpd info-docker record-ffmpeg pulseaudio memory filesystem date powermenu 
-; modules-right = info-docker record-ffmpeg pulseaudio memory filesystem date powermenu 
+modules-right = mpd info-docker record-ffmpeg pulseaudio check-network transmission memory filesystem date powermenu
+; modules-right = info-docker record-ffmpeg pulseaudio memory filesystem date powermenu
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;; General

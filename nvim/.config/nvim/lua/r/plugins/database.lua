@@ -3,39 +3,30 @@ return {
     {
         "tpope/vim-dadbod",
         cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection" },
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "DB",
-                    description = "Database for actions!",
-                    icon = as.ui.icons.misc.gear,
-                    keymaps = {
-                        {
-                            "<Leader>Dt",
-                            "<CMD>DBUIToggle<CR>",
-                            description = "Dadbod toggle UI",
-                        },
-                        {
-                            "<Leader>Df",
-                            "<CMD>DBUIFindBuffer<CR>",
-                            description = "Find buffer",
-                        },
+        keys = {
+            {
+                "<Leader>Dt",
+                "<CMD>DBUIToggle<CR>",
+                desc = "Database(dadbod): toggle UI",
+            },
+            {
+                "<Leader>Df",
+                "<CMD>DBUIFindBuffer<CR>",
+                desc = "Database(dadbod): find buffer",
+            },
 
-                        {
-                            "<leader>Dr",
-                            "<CMD>DBUIRenameBuffer<cr>",
-                            description = "Rename Buffer",
-                        },
+            {
+                "<leader>Dr",
+                "<CMD>DBUIRenameBuffer<cr>",
+                desc = "Database(dadbod): rename buffer",
+            },
 
-                        {
-                            "<leader>Dq",
-                            "<CMD>DBUILastQueryInfo<cr>",
-                            description = "Last Query Info",
-                        },
-                    },
-                },
-            }
-        end,
+            {
+                "<leader>Dq",
+                "<CMD>DBUILastQueryInfo<cr>",
+                desc = "Database(dadbod): last query info",
+            },
+        },
         dependencies = {
             "kristijanhusak/vim-dadbod-ui",
             "kristijanhusak/vim-dadbod-completion",

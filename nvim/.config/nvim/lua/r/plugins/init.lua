@@ -1,6 +1,3 @@
-local neozoom = false
-local cmd = vim.cmd
-
 return {
     -- NUI
     "MunifTanjim/nui.nvim",
@@ -15,42 +12,6 @@ return {
         --         override = require("nvim-material-icon").get_icons(),
         --     }
         -- end,
-    },
-    -- LEGENDARY
-    {
-        "mrjones2014/legendary.nvim", -- A command palette for keymaps, commands and autocmds
-        lazy = false, -- Never lazy load this
-        priority = 900,
-        dependencies = "kkharji/sqlite.lua",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    "<Leader>fk",
-                    require("legendary").find,
-                    hide = true,
-                    description = "Open Legendary",
-                    mode = { "n", "v" },
-                },
-            }
-        end,
-        config = function()
-            local legendary = require "legendary"
-            legendary.setup {
-                select_prompt = "  legendary.nvim  ",
-                include_builtin = true,
-                include_legendary_cmds = true,
-                which_key = { auto_register = false },
-
-                keymaps = require("r.mappings").default_keymaps(),
-                commands = require("r.mappings").default_commands(),
-
-                default_opts = {
-                    keymaps = { silent = true, noremap = true },
-                },
-                -- Log level, one of 'trace', 'debug', 'info', 'warn', 'error', 'fatal'
-                log_level = "warn",
-            }
-        end,
     },
     -- VIM-HIGHLIGHTER
     {
@@ -134,7 +95,6 @@ return {
     -- HLARGS
     {
         "m-demare/hlargs.nvim",
-        enabled = true,
         event = "UIEnter",
         opts = {
             color = "#ef9062",
@@ -178,27 +138,6 @@ return {
     {
         "nyngwang/NeoZoom.lua",
         cmd = "NeoZoomToggle",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "<a-m>",
-                            function()
-                                if neozoom then
-                                    neozoom = false
-                                else
-                                    neozoom = true
-                                end
-                                return cmd "NeoZoomToggle"
-                            end,
-                            description = "Neozoom: toggle",
-                        },
-                    },
-                },
-            }
-        end,
         opts = {
             scrolloff_on_enter = 7,
             exclude_buftypes = { "terminal" },
@@ -215,19 +154,6 @@ return {
 
             vim.g.undotree_TreeNodeShape = "◉"
             vim.g.undotree_SetFocusWhenToggle = 1
-
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    commands = {
-                        {
-                            ":UndotreeToggle",
-                            "<CMD>UndotreeToggle<CR>",
-                            description = "Undotree: toggle",
-                        },
-                    },
-                },
-            }
         end,
     },
     -- BEACON
@@ -261,20 +187,6 @@ return {
         "goolord/alpha-nvim",
         event = "VimEnter",
         -- priority = 5, -- Load after persisted.nvim
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    commands = {
-                        -- ALPHA ------------------------------------------------------
-                        {
-                            ":Alpha",
-                            description = "Alpha: show dashboard",
-                        },
-                    },
-                },
-            }
-        end,
         config = function()
             local alpha = require "alpha"
 
@@ -453,6 +365,7 @@ return {
             alpha.setup(options)
         end,
     },
+
     --  ╭──────────────────────────────────────────────────────────╮
     --  │                        MY PLUGINS                        │
     --  ╰──────────────────────────────────────────────────────────╯

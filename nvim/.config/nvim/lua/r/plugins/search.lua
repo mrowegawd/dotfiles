@@ -21,7 +21,7 @@ return {
                     search = { trigger = ";" },
                 },
                 char = {
-                    keys = { "f", "F", "t", "T", ";" }, -- remove "," from keys
+                    keys = { "f", "F", "t", "T", ";", "H", "L" }, -- remove "," from keys
                 },
             },
         },
@@ -74,231 +74,228 @@ return {
             end
             return true
         end,
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "FZFLua",
-                    description = "Gaze deeply into unknown regions using the power of the moon",
-                    icon = as.ui.icons.misc.telescope,
-                    keymaps = {
-                        {
-                            "<Leader>ff",
-                            "<CMD>FzfLua files<CR>",
-                            description = "Fzflua: find files",
+        keys = {
+            -- { "<leader>ff", require("utils").find_files, desc = "Find Files" },
+            {
+                "<Leader>ff",
+                "<cmd>FzfLua files<cr>",
+                desc = "Fzflua: find files",
+            },
+            {
+                "B",
+                function()
+                    return require("fzf-lua").buffers {
+                        winopts = {
+                            preview = { hidden = "hidden" },
+                            width = 0.5,
+                            height = 0.33,
                         },
-                        {
-                            -- "<Leader>fb",
-                            "B",
-                            function()
-                                return require("fzf-lua").buffers {
-                                    winopts = {
-                                        preview = {
-                                            hidden = "hidden",
-                                        },
-                                        width = 0.5,
-                                        height = 0.33,
-                                    },
-                                }
-                            end,
-                            description = "Fzflua: buffers",
-                        },
+                    }
+                end,
+                desc = "Fzflua: buffers",
+            },
 
-                        {
-                            "<Leader>fw",
-                            "<CMD>FzfLua blines<CR>",
-                            description = "FzfLua: live_grep on curbuf",
-                        },
-                        {
-                            "<Leader>fW",
-                            "<CMD>FzfLua lines<CR>",
-                            description = "Fzflua: live_grep on buffers",
-                        },
-                        {
-                            "<Leader>fo",
-                            "<CMD>FzfLua oldfiles<CR>",
-                            description = "Fzflua: oldfiles",
-                        },
-                        {
-                            "<Leader>fO",
-                            "<CMD>FzfLua files cwd=~/.config/nvim<CR>",
-                            description = "Fzflua: dotfiles",
-                        },
-                        {
-                            "<Leader>fF",
-                            function()
-                                if vim.bo.filetype ~= "norg" then
-                                    local plugins_directory = vim.fn.stdpath "data"
-                                        .. "/lazy"
+            {
+                "<Leader>fw",
+                "<CMD>FzfLua blines<CR>",
+                desc = "FzfLua: live_grep on curbuf",
+            },
+            {
+                "<Leader>fW",
+                "<CMD>FzfLua lines<CR>",
+                desc = "Fzflua: live_grep on buffers",
+            },
+            {
+                "<Leader>fk",
+                "<CMD>FzfLua keymaps<CR>",
+                desc = "Fzflua: keymaps",
+            },
+            {
+                "<Leader>fc",
+                "<CMD>FzfLua commands<CR>",
+                desc = "Fzflua: commands",
+            },
+            {
+                "<Leader>fo",
+                "<CMD>FzfLua oldfiles<CR>",
+                desc = "Fzflua: oldfiles",
+            },
+            {
+                "<Leader>fO",
+                "<CMD>FzfLua files cwd=~/.config/nvim<CR>",
+                desc = "Fzflua: dotfiles",
+            },
+            {
+                "<Leader>fF",
+                function()
+                    if vim.bo.filetype ~= "norg" then
+                        local plugins_directory = vim.fn.stdpath "data"
+                            .. "/lazy"
 
-                                    return require("fzf-lua").files {
-                                        prompt = "Plugins❯ ",
-                                        cwd = plugins_directory,
-                                        prompt_title = "Find plugin files",
-                                    }
-                                end
+                        return require("fzf-lua").files {
+                            prompt = "Plugins❯ ",
+                            cwd = plugins_directory,
+                            prompt_title = "Find plugin files",
+                        }
+                    end
 
-                                return require("fzf-lua").files {
-                                    prompt = "[NORG] files❯ ",
-                                    cwd = as.wiki_path,
-                                }
-                            end,
-                            description = "Fzflua: find plugin files",
+                    return require("fzf-lua").files {
+                        prompt = "[NORG] files❯ ",
+                        cwd = as.wiki_path,
+                    }
+                end,
+                desc = "Fzflua: find plugin files",
+            },
+            {
+                "<Leader>fh",
+                "<CMD>FzfLua help_tags<CR>",
+                desc = "Fzflua: help tags",
+            },
+            {
+                "<Leader>fl",
+                "<CMD>FzfLua resume<CR>",
+                desc = "Fzflua: resume (last search)",
+            },
+            {
+                "<Leader>fg",
+                function()
+                    return require("fzf-lua").live_grep_glob {
+                        -- prompt = "Live GrepGlob❯ ",
+                        -- prompt = prompt,
+                        winopts = {
+                            preview = {
+                                vertical = "up:60%",
+                            },
                         },
+                    }
+                end,
+                desc = "Fzflua: live grep",
+            },
+            {
+                "<Leader>fg",
+                "<CMD>FzfLua grep_visual<CR>",
+                desc = "Fzflua: live grep [visual]",
+                mode = { "v" },
+            },
+            {
+                "<localleader>g",
+                "<CMD>FzfLua changes<CR>",
+                desc = "Fzflua: changes",
+            },
+            {
+                "<c-g>",
+                "<CMD>FzfLua jumps<CR>",
+                desc = "Fzflua: jumps",
+            },
+            {
+                "z=",
+                function()
+                    return require("fzf-lua").spell_suggest {
+                        winopts = {
+                            relative = "cursor",
+                            height = 0.33,
+                            width = 0.33,
+                        },
+                    }
+                end,
+                desc = "Fzflua: spell",
+            },
+            {
+                "<leader>fQ",
+                "<CMD>FzfLua quickfix<CR>",
+                desc = "Fzflua: qf list",
+            },
 
-                        {
-                            "<Leader>fh",
-                            "<CMD>FzfLua help_tags<CR>",
-                            description = "Fzflua: help tags",
-                        },
+            {
+                "<leader>fq",
+                function()
+                    local path = require "fzf-lua.path"
 
-                        {
-                            "<Leader>fl",
-                            "<CMD>FzfLua resume<CR>",
-                            description = "Fzflua: resume (last search)",
-                        },
+                    local qf_items = fn.getqflist()
 
-                        {
-                            "<Leader>fg",
-                            function()
-                                return require("fzf-lua").live_grep_glob {
-                                    -- prompt = "Live GrepGlob❯ ",
-                                    -- prompt = prompt,
-                                    winopts = {
-                                        preview = {
-                                            vertical = "up:60%",
-                                        },
-                                    },
-                                }
-                            end,
-                            description = "Fzflua: live grep",
-                        },
+                    local qf_ntbl = {}
+                    for _, qf_item in pairs(qf_items) do
+                        table.insert(
+                            qf_ntbl,
+                            path.relative(
+                                vim.api.nvim_buf_get_name(qf_item.bufnr),
+                                vim.uv.cwd()
+                            )
+                        )
+                    end
 
-                        {
-                            "<Leader>fg",
-                            "<CMD>FzfLua grep_visual<CR>",
-                            description = "Fzflua: live grep [visual]",
-                            mode = { "v" },
-                        },
-                        {
-                            "<localleader>g",
-                            "<CMD>FzfLua changes<CR>",
-                            description = "Fzflua: changes",
-                        },
-                        {
-                            "<c-g>",
-                            "<CMD>FzfLua jumps<CR>",
-                            description = "Fzflua: jumps",
-                        },
-                        {
-                            "z=",
-                            function()
-                                return require("fzf-lua").spell_suggest {
-                                    winopts = {
-                                        relative = "cursor",
-                                        height = 0.33,
-                                        width = 0.33,
-                                    },
-                                }
-                            end,
-                            description = "Fzflua: spell",
-                        },
+                    local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case {q} ]]
+                        .. table.concat(qf_ntbl, " ")
 
-                        {
-                            "<leader>fQ",
-                            "<CMD>FzfLua quickfix<CR>",
-                            description = "Fzflua: qf list",
+                    return require("fzf-lua").live_grep {
+                        -- prompt = "GrepQF❯ ",
+                        prompt = prompt,
+                        winopts = {
+                            title = format_title("Grep", " "),
+                            height = 0.85,
+                            width = 0.90,
+                            preview = {
+                                vertical = "up:60%",
+                                layout = "vertical",
+                            },
                         },
-
-                        {
-                            "<leader>fq",
-                            function()
-                                local path = require "fzf-lua.path"
-
-                                local qf_items = fn.getqflist()
-
-                                local qf_ntbl = {}
-                                for _, qf_item in pairs(qf_items) do
-                                    table.insert(
-                                        qf_ntbl,
-                                        path.relative(
-                                            vim.api.nvim_buf_get_name(
-                                                qf_item.bufnr
-                                            ),
-                                            vim.uv.cwd()
-                                        )
-                                    )
-                                end
-
-                                local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case {q} ]]
-                                    .. table.concat(qf_ntbl, " ")
-
-                                return require("fzf-lua").live_grep {
-                                    -- prompt = "GrepQF❯ ",
-                                    prompt = prompt,
-                                    winopts = {
-                                        title = format_title("Grep", " "),
-                                        height = 0.85,
-                                        width = 0.90,
-                                        preview = {
-                                            vertical = "up:60%",
-                                            layout = "vertical",
-                                        },
-                                    },
-                                    cmd = pcmd,
-                                }
-                            end,
-                            description = "Fzflua: grep qf items",
-                        },
-                    },
-                    commands = {
-                        {
-                            ":FzfLua highlights",
-                            description = "Fzflua: highlights",
-                        },
-                        {
-                            ":FzfLua keymaps",
-                            description = "Fzflua: keymaps",
-                        },
-                        {
-                            ":FzfLua autocmds",
-                            description = "Fzflua: autocmds",
-                        },
-                        {
-                            ":FzfLua commands",
-                            description = "Fzflua: commands",
-                        },
-                        {
-                            ":FzfLua colorschemes",
-                            description = "Fzflua: colorschemes",
-                        },
-                        {
-                            ":FzfLua command_history",
-                            description = "Fzflua: command history",
-                        },
-                    },
-                },
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "<c-v>",
-                            function()
-                                return require("fzf-lua").complete_path {
-                                    winopts = {
-                                        relative = "cursor",
-                                        height = 0.33,
-                                        width = 0.33,
-                                    },
-                                    cmd = "fd --color never --type f --hidden --follow",
-                                }
-                            end,
-                            mode = { "i" },
-                            description = "Fzflua: complete path",
-                        },
-                    },
-                },
-            }
-        end,
+                        cmd = pcmd,
+                    }
+                end,
+                desc = "Fzflua: grep qf items",
+            },
+        },
+        -- init = function()
+        --             },
+        --             commands = {
+        --                 {
+        --                     ":FzfLua highlights",
+        --                     description = "Fzflua: highlights",
+        --                 },
+        --                 {
+        --                     ":FzfLua keymaps",
+        --                     description = "Fzflua: keymaps",
+        --                 },
+        --                 {
+        --                     ":FzfLua autocmds",
+        --                     description = "Fzflua: autocmds",
+        --                 },
+        --                 {
+        --                     ":FzfLua commands",
+        --                     description = "Fzflua: commands",
+        --                 },
+        --                 {
+        --                     ":FzfLua colorschemes",
+        --                     description = "Fzflua: colorschemes",
+        --                 },
+        --                 {
+        --                     ":FzfLua command_history",
+        --                     description = "Fzflua: command history",
+        --                 },
+        --             },
+        --         },
+        --         {
+        --             itemgroup = "Misc",
+        --             keymaps = {
+        --                 {
+        --                     "<c-v>",
+        --                     function()
+        --                         return require("fzf-lua").complete_path {
+        --                             winopts = {
+        --                                 relative = "cursor",
+        --                                 height = 0.33,
+        --                                 width = 0.33,
+        --                             },
+        --                             cmd = "fd --color never --type f --hidden --follow",
+        --                         }
+        --                     end,
+        --                     mode = { "i" },
+        --                     description = "Fzflua: complete path",
+        --                 },
+        --             },
+        --         },
+        --     }
+        -- end,
         config = function()
             local actions = require "fzf-lua.actions"
             local path = require "fzf-lua.path"
@@ -1686,40 +1683,40 @@ return {
     -- SPECTRE
     {
         "windwp/nvim-spectre",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "<Leader><s-f>",
-                            function()
-                                require("r.utils.tiling").force_win_close(
-                                    {},
-                                    true
-                                )
-                                return require("spectre").open()
-                            end,
-                            description = "Spectre: open",
-                        },
-                        {
-                            "<Leader><s-f>",
-                            function()
-                                require("r.utils.tiling").force_win_close(
-                                    {},
-                                    true
-                                )
-                                return require("spectre").open_visual {
-                                    select_word = true,
-                                }
-                            end,
-                            description = "Spectre: open [visual]",
-                            mode = { "v" },
-                        },
-                    },
-                },
-            }
-        end,
+        -- init = function()
+        --     require("legendary").keymaps {
+        --         {
+        --             itemgroup = "Misc",
+        --             keymaps = {
+        --                 {
+        --                     "<Leader><s-f>",
+        --                     function()
+        --                         require("r.utils.tiling").force_win_close(
+        --                             {},
+        --                             true
+        --                         )
+        --                         return require("spectre").open()
+        --                     end,
+        --                     description = "Spectre: open",
+        --                 },
+        --                 {
+        --                     "<Leader><s-f>",
+        --                     function()
+        --                         require("r.utils.tiling").force_win_close(
+        --                             {},
+        --                             true
+        --                         )
+        --                         return require("spectre").open_visual {
+        --                             select_word = true,
+        --                         }
+        --                     end,
+        --                     description = "Spectre: open [visual]",
+        --                     mode = { "v" },
+        --                 },
+        --             },
+        --         },
+        --     }
+        -- end,
         config = function()
             local spectre = require "spectre"
 
@@ -1919,45 +1916,45 @@ return {
         "mrowegawd/todo.nvim",
         cmd = { "TODOQuickFixList" },
         event = "BufReadPost",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Todo Comment",
-                    description = "Searching todo!",
-                    icon = as.ui.icons.misc.tag,
-                    keymaps = {
-                        {
-                            "<Leader>tq",
-                            function()
-                                return cmd(
-                                    fmt(
-                                        "TODOQuickfixList cwd=%s",
-                                        fn.expand "%:p"
-                                    )
-                                )
-                            end,
-                            description = "Todocomment: find todo comment curbuf",
-                            mode = { "n", "v" },
-                        },
-                        {
-                            "<Leader>tQ",
-                            fmt(
-                                "<CMD>TODOQuickfixList cwd=%s<CR>",
-                                fn.getcwd()
-                            ),
-                            description = "Todocomment: find all todo comments on repo",
-                        },
+        -- init = function()
+        --     require("legendary").keymaps {
+        --         {
+        --             itemgroup = "Todo Comment",
+        --             description = "Searching todo!",
+        --             icon = as.ui.icons.misc.tag,
+        --             keymaps = {
+        --                 {
+        --                     "<Leader>tq",
+        --                     function()
+        --                         return cmd(
+        --                             fmt(
+        --                                 "TODOQuickfixList cwd=%s",
+        --                                 fn.expand "%:p"
+        --                             )
+        --                         )
+        --                     end,
+        --                     description = "Todocomment: find todo comment curbuf",
+        --                     mode = { "n", "v" },
+        --                 },
+        --                 {
+        --                     "<Leader>tQ",
+        --                     fmt(
+        --                         "<CMD>TODOQuickfixList cwd=%s<CR>",
+        --                         fn.getcwd()
+        --                     ),
+        --                     description = "Todocomment: find all todo comments on repo",
+        --                 },
 
-                        -- TELESCOPE
-                        -- {
-                        --     "<Leader>ft",
-                        --     "<CMD>TodoTelescope<CR>",
-                        --     description = "Telescope: open todotroble with telescope",
-                        -- },
-                    },
-                },
-            }
-        end,
+        --                 -- TELESCOPE
+        --                 -- {
+        --                 --     "<Leader>ft",
+        --                 --     "<CMD>TodoTelescope<CR>",
+        --                 --     description = "Telescope: open todotroble with telescope",
+        --                 -- },
+        --             },
+        --         },
+        --     }
+        -- end,
         opts = {
             signs = {
                 enable = true, -- show icons in the sign column

@@ -5,21 +5,21 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "m",
-                            [[:<C-U>lua require('tsht').nodes()<CR>]],
-                            description = "Treesitter: jump nodes",
-                            mode = { "o", "x" },
-                        },
-                    },
-                },
-            }
-        end,
+        -- init = function()
+        --     require("legendary").keymaps {
+        --         {
+        --             itemgroup = "Misc",
+        --             keymaps = {
+        --                 {
+        --                     "m",
+        --                     [[:<C-U>lua require('tsht').nodes()<CR>]],
+        --                     description = "Treesitter: jump nodes",
+        --                     mode = { "o", "x" },
+        --                 },
+        --             },
+        --         },
+        --     }
+        -- end,
         dependencies = {
             { "nvim-treesitter/nvim-treesitter-textobjects" },
             { "JoosepAlviste/nvim-ts-context-commentstring" },
@@ -41,229 +41,231 @@ return {
             { "mfussenegger/nvim-treehopper" },
             -- { "David-Kunz/markid" },
         },
-        opts = {
-            ensure_installed = {
-                "bash",
-                "c",
-                "cmake",
-                -- "comment", -- comments are slowing down TS bigtime, so disable for now
-                "cpp",
-                "css",
-                "diff",
-                "fish",
-                "gitignore",
-                "graphql",
-                "html",
-                "http",
-                "java",
-                "jsdoc",
-                "jsonc",
-                "latex",
-                "lua",
-                "kotlin",
-                "dart",
-                "markdown",
-                "markdown_inline",
-                "meson",
-                "ninja",
-                "nix",
-                "norg",
-                "org",
-                "php",
-                "query",
-                "regex",
+        opts = function()
+            -- local queries = require "nvim-treesitter.query"
+            -- local parsers = require "nvim-treesitter.parsers"
+            local disable_max_size = 2000000 -- 2MB
 
-                "scss",
-                "sql",
-                "svelte",
-                "teal",
-                "vhs",
-                "vim",
-                "vue",
-                "ruby",
-                "wgsl",
-                "yaml",
-                "json",
-            },
+            local function should_disable(_, bufnr)
+                local size =
+                    vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr or 0))
+                -- size will be -2 if it doesn't fit into a number
+                if size > disable_max_size or size == -2 then
+                    return true
+                end
+                return false
+            end
 
-            auto_install = true,
-            highlight = {
-                enable = true,
-                disable = function(_, bufnr)
-                    return vim.api.nvim_buf_line_count(bufnr) > 10000
-                end,
-                additional_vim_regex_highlighting = {
-                    "orgmode",
-                    "org",
+            return {
+                ensure_installed = {
+                    "bash",
+                    "c",
+                    "cmake",
+                    -- "comment", -- comments are slowing down TS bigtime, so disable for now
+                    "cpp",
+                    "css",
+                    "diff",
+                    "fish",
+                    "gitignore",
+                    "graphql",
+                    "html",
+                    "http",
+                    "java",
+                    "jsdoc",
+                    "jsonc",
+                    "latex",
+                    "lua",
+                    "kotlin",
+                    "dart",
                     "markdown",
+                    "markdown_inline",
+                    "meson",
+                    "ninja",
+                    "nix",
+                    "norg",
+                    "org",
+                    "php",
+                    "query",
+                    "regex",
+
+                    "scss",
+                    "sql",
+                    "svelte",
+                    "teal",
+                    "vhs",
+                    "vim",
+                    "vue",
+                    "ruby",
+                    "wgsl",
+                    "yaml",
+                    "json",
                 },
-            },
 
-            indent = {
-                enable = true,
-                -- disable = function(lang, bufnr)
-                --     if
-                --         vim.tbl_contains({ "python", "org" }, vim.bo.buftype)
-                --     then -- or lang == "python" then
-                --         return true
-                --     else
-                --         return should_disable(lang, bufnr)
-                --     end
-                -- end,
-            },
-            context_commentstring = {
-                enable = true,
-                enable_autocmd = false,
-            },
-            -- incremental_selection = {
-            --     enable = true,
-            --     disable = { "help" },
-            --     keymaps = {
-            --         init_selection = "<CR>", -- maps in normal mode to init the node/scope selection
-            --         node_incremental = "<CR>", -- increment to the upper named parent
-            --         node_decremental = "<C-CR>", -- decrement to the previous node
-            --     },
-            -- },
-
-            incremental_selection = {
-                enable = false, -- TODO: nanti di check ini
-                keymaps = {
-                    init_selection = ";gn",
-                    node_incremental = ";gi",
-                    scope_incremental = ";gs",
-                    node_decremental = ";gr",
-                },
-            },
-
-            -- vim-matchup
-            -- matchup = {
-            --     enable = true, -- mandatory, false will disable the whole extension
-            --     disable = { "c", "ruby", "orgagenda" }, -- optional, list of language that will be disabled
-            --     -- [options]
-            -- },
-
-            rainbow = {
-                enable = true,
-                extended_mode = true,
-                -- disable = { "tsx", "jsx", "html", "lua" },
-                -- query = { "rainbow-parens" },
-                -- strategy = require("ts-rainbow").strategy.global,
-            },
-
-            -- "David-Kunz/markid"
-            -- https://github.com/David-Kunz/markid#installation
-            -- markid = { enable = true }, --> for markid plugin
-
-            -- "nvim-treesitter/nvim-treesitter-refactor"
-            -- refactor = {
-            --     smart_rename = {
-            --         enable = true,
-            --         client = {
-            --             smart_rename = "<leader>cr",
-            --         },
-            --     },
-            --     navigation = {
-            --         enable = true,
-            --         keymaps = {
-            --             -- goto_definition = "gd",
-            --             -- list_definitions = "gnD",
-            --             -- list_definitions_toc = "gO",
-            --             -- goto_next_usage = "<a-*>",
-            --             -- goto_previous_usage = "<a-#>",
-            --         },
-            --     },
-            -- },
-
-            -- "nvim-treesitter/playground"
-            playground = {
-                enable = true,
-                disable = {},
-                updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-                persist_queries = true, -- Whether the query persists across vim sessions
-                keybindings = {
-                    toggle_query_editor = "o",
-                    toggle_hl_groups = "i",
-                    toggle_injected_languages = "t",
-                    toggle_anonymous_nodes = "a",
-                    toggle_language_display = "I",
-                    focus_language = "f",
-                    unfocus_language = "F",
-                    update = "R",
-                    goto_node = "<cr>",
-                    show_help = "?",
-                },
-            },
-
-            query_linter = {
-                enable = true,
-                use_virtual_text = true,
-                lint_events = { "BufWrite", "CursorHold" },
-            },
-
-            autotag = {
-                enable = true,
-            },
-
-            -- nvim-treesitter-textobjects
-            textobjects = {
-                select = {
+                auto_install = true,
+                highlight = {
                     enable = true,
-                    lookahead = true,
+                    disable = function(_, bufnr)
+                        return vim.api.nvim_buf_line_count(bufnr) > 10000
+                    end,
+                    additional_vim_regex_highlighting = {
+                        "orgmode",
+                        "org",
+                        "markdown",
+                    },
+                },
+
+                indent = {
+                    enable = true,
+                    disable = function(lang, bufnr)
+                        -- if
+                        --     vim.tbl_contains({ "python", "org" }, vim.bo.buftype)
+                        -- then -- or lang == "python" then
+                        --     return true
+                        -- else
+                        return should_disable(lang, bufnr)
+                        -- end
+                    end,
+                },
+                context_commentstring = {
+                    enable = true,
+                    enable_autocmd = false,
+                },
+                -- incremental_selection = {
+                --     enable = true,
+                --     disable = { "help" },
+                --     keymaps = {
+                --         init_selection = "<CR>", -- maps in normal mode to init the node/scope selection
+                --         node_incremental = "<CR>", -- increment to the upper named parent
+                --         node_decremental = "<C-CR>", -- decrement to the previous node
+                --     },
+                -- },
+
+                incremental_selection = {
+                    enable = false, -- TODO: nanti di check ini
                     keymaps = {
-                        -- You can use the capture groups defined in textobjects.scm
-                        ["af"] = "@function.outer",
-                        ["if"] = "@function.inner",
-                        ["ac"] = "@class.outer",
-                        ["ic"] = "@class.inner",
+                        init_selection = ";gn",
+                        node_incremental = ";gi",
+                        scope_incremental = ";gs",
+                        node_decremental = ";gr",
                     },
                 },
-                move = {
-                    enable = false,
-                    set_jumps = true, -- whether to set jumps in the jumplist
-                    goto_next_start = {
-                        ["]f"] = "@function.outer",
-                        ["]c"] = "@class.outer",
-                    },
-                    goto_next_end = {
-                        ["]F"] = "@function.outer",
-                        ["]C"] = "@class.outer",
-                    },
-                    goto_previous_start = {
-                        ["[f"] = "@function.outer",
-                        ["[c"] = "@class.outer",
-                    },
-                    goto_previous_end = {
-                        ["[F"] = "@function.outer",
-                        ["[C"] = "@class.outer",
+
+                -- vim-matchup
+                -- matchup = {
+                --     enable = true, -- mandatory, false will disable the whole extension
+                --     disable = { "c", "ruby", "orgagenda" }, -- optional, list of language that will be disabled
+                --     -- [options]
+                -- },
+
+                rainbow = {
+                    enable = true,
+                    extended_mode = true,
+                    -- disable = { "tsx", "jsx", "html", "lua" },
+                    -- query = { "rainbow-parens" },
+                    -- strategy = require("ts-rainbow").strategy.global,
+                },
+
+                -- "David-Kunz/markid"
+                -- https://github.com/David-Kunz/markid#installation
+                -- markid = { enable = true }, --> for markid plugin
+
+                -- "nvim-treesitter/nvim-treesitter-refactor"
+                -- refactor = {
+                --     smart_rename = {
+                --         enable = true,
+                --         client = {
+                --             smart_rename = "<leader>cr",
+                --         },
+                --     },
+                --     navigation = {
+                --         enable = true,
+                --         keymaps = {
+                --             -- goto_definition = "gd",
+                --             -- list_definitions = "gnD",
+                --             -- list_definitions_toc = "gO",
+                --             -- goto_next_usage = "<a-*>",
+                --             -- goto_previous_usage = "<a-#>",
+                --         },
+                --     },
+                -- },
+
+                -- "nvim-treesitter/playground"
+                playground = {
+                    enable = true,
+                    disable = {},
+                    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+                    persist_queries = true, -- Whether the query persists across vim sessions
+                    keybindings = {
+                        toggle_query_editor = "o",
+                        toggle_hl_groups = "i",
+                        toggle_injected_languages = "t",
+                        toggle_anonymous_nodes = "a",
+                        toggle_language_display = "I",
+                        focus_language = "f",
+                        unfocus_language = "F",
+                        update = "R",
+                        goto_node = "<cr>",
+                        show_help = "?",
                     },
                 },
-                lsp_interop = {
-                    enable = false,
-                    peek_definition_code = {
-                        ["gD"] = "@function.outer",
+
+                query_linter = {
+                    enable = true,
+                    use_virtual_text = true,
+                    lint_events = { "BufWrite", "CursorHold" },
+                },
+
+                autotag = {
+                    enable = true,
+                },
+
+                -- nvim-treesitter-textobjects
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            -- You can use the capture groups defined in textobjects.scm
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ac"] = "@class.outer",
+                            ["ic"] = "@class.inner",
+                        },
+                    },
+                    move = {
+                        enable = false,
+                        set_jumps = true, -- whether to set jumps in the jumplist
+                        goto_next_start = {
+                            ["]f"] = "@function.outer",
+                            ["]c"] = "@class.outer",
+                        },
+                        goto_next_end = {
+                            ["]F"] = "@function.outer",
+                            ["]C"] = "@class.outer",
+                        },
+                        goto_previous_start = {
+                            ["[f"] = "@function.outer",
+                            ["[c"] = "@class.outer",
+                        },
+                        goto_previous_end = {
+                            ["[F"] = "@function.outer",
+                            ["[C"] = "@class.outer",
+                        },
+                    },
+                    lsp_interop = {
+                        enable = false,
+                        peek_definition_code = {
+                            ["gD"] = "@function.outer",
+                        },
                     },
                 },
-            },
-        },
+            }
+        end,
         config = function(_, opts)
             local ok, orgmode = pcall(require, "orgmode")
             if ok then
                 orgmode.setup_ts_grammar()
             end
-
-            -- local queries = require "nvim-treesitter.query"
-            -- local parsers = require "nvim-treesitter.parsers"
-            -- local disable_max_size = 2000000 -- 2MB
-
-            -- local function should_disable(_, bufnr)
-            --     local size =
-            --         vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr or 0))
-            --     -- size will be -2 if it doesn't fit into a number
-            --     if size > disable_max_size or size == -2 then
-            --         return true
-            --     end
-            --     return false
-            -- end
 
             require("nvim-treesitter.configs").setup(opts)
 
@@ -341,19 +343,6 @@ return {
     {
         "nvim-treesitter/playground",
         cmd = { "TSPlaygroundToggle" },
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    commands = {
-                        {
-                            ":TSPlayground",
-                            description = "Playground: treesitter playground",
-                        },
-                    },
-                },
-            }
-        end,
         dependencies = { "nvim-treesitter" },
     },
     -- NVIM-AUTOPAIRS

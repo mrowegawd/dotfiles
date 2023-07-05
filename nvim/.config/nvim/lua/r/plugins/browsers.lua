@@ -4,22 +4,20 @@ return {
 
         "tyru/open-browser.vim",
         event = "BufReadPre",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    "<Leader>rb",
-                    "<Plug>(openbrowser-smart-search)",
-                    description = "Open on browser",
-                    mode = { "n", "v" },
-                },
+        keys = {
+            {
+                "<Leader>rb",
+                "<Plug>(openbrowser-smart-search)",
+                desc = "Open on browser",
+                mode = { "n", "v" }
             }
-        end,
+        },
         -- cmd = { "<Plug>(openbrowser-smart-search)" },
     },
     -- FIRENVIM
     {
         "glacambre/firenvim", -- embed neovim in browsers
-        -- lazy = false,
+        lazy = false,
         build = function()
             vim.fn["firenvim#install"](0)
         end,

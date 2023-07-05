@@ -129,46 +129,37 @@ return {
             },
             setup = {
                 lua_ls = function(_, _)
-                    local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
-                    lsp_utils.on_attach(function(client, buffer)
-                        if client.name == "lua_ls" then
-                            require("legendary").keymaps {
+                    -- local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
+                    -- lsp_utils.on_attach(function(client, buffer)
+                    --     if client.name == "lua_ls" then
 
-                                {
-                                    itemgroup = "Debug",
-                                    icon = as.ui.icons.misc.bug,
-                                    description = "Debug functionality",
-                                    keymaps = {
-                                        {
+                    --                     vim.keymap.set{ "n",
 
-                                            "<localleader>dX",
-                                            function()
-                                                require("osv").run_this()
-                                            end,
-                                            description = "Dap: OSV run",
-                                            opts = {
-                                                buffer = buffer,
-                                            },
-                                        },
+                    --                         "<localleader>dX",
+                    --                         function()
+                    --                             require("osv").run_this()
+                    --                         end,
+                    --                         desc = "Dap: OSV run",
+                    --                         opts = {
+                    --                             buffer = buffer,
+                    --                         },
+                    --                     }
 
-                                        {
+                    --                     vim.keymap.set{ "n",
 
-                                            "<localleader>dL",
-                                            function()
-                                                require("osv").launch {
-                                                    port = 8086,
-                                                }
-                                            end,
-                                            description = "Dap: OSV Launch",
-                                            opts = {
-                                                buffer = buffer,
-                                            },
-                                        },
-                                    },
-                                },
-                            }
-                        end
-                    end)
+                    --                         "<localleader>dL",
+                    --                         function()
+                    --                             require("osv").launch {
+                    --                                 port = 8086,
+                    --                             }
+                    --                         end,
+                    --                         desc = "Dap: OSV Launch",
+                    --                         opts = {
+                    --                             buffer = buffer,
+                    --                         },
+                    --                     }
+                    --     end
+                    -- end)
                 end,
             },
             format = {
@@ -554,31 +545,26 @@ return {
                     })
                 end,
             })
-
-            require("legendary").keymaps {
-                {
-                    itemgroup = "LSP",
-                    keymaps = {
-                        {
-                            "go",
-                            "<CMD>AerialToggle<CR>",
-                            description = "Aerial: toggle",
-                        },
-                        {
-                            "gO",
-                            function()
-                                require("r.utils.tiling").force_win_close(
-                                    { "Outline" },
-                                    false
-                                )
-                                return cmd.AerialToggle()
-                            end,
-                            description = "Aerial: focus toggle",
-                        },
-                    },
-                },
-            }
         end,
+
+        keys = {
+            {
+                "go",
+                "<CMD>AerialToggle<CR>",
+                desc = "Aerial: toggle",
+            },
+            {
+                "gO",
+                function()
+                    require("r.utils.tiling").force_win_close(
+                        { "Outline" },
+                        false
+                    )
+                    return cmd.AerialToggle()
+                end,
+                desc = "Aerial: focus toggle",
+            },
+        },
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("aerial").setup {
@@ -769,22 +755,15 @@ return {
         "Bekaboo/dropbar.nvim",
         enabled = true,
         event = "BufRead",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "LSP",
-                    keymaps = {
-                        {
-                            "go",
-                            function()
-                                return require("dropbar.api").pick()
-                            end,
-                            description = "Dropbar: pick",
-                        },
-                    },
-                },
-            }
-        end,
+        keys = {
+            {
+                "go",
+                function()
+                    return require("dropbar.api").pick()
+                end,
+                desc = "Dropbar: pick",
+            },
+        },
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("dropbar").setup {
@@ -1117,29 +1096,22 @@ return {
         "RRethy/vim-illuminate",
         event = { "BufReadPost", "BufNewFile" },
         opts = { delay = 200 },
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "FZFLua",
-                    keymaps = {
-                        {
-                            "<a-q>",
-                            function()
-                                require("illuminate").goto_next_reference(nil)
-                            end,
-                            description = "Lsp: Hi Symbol",
-                        },
-                        {
-                            "<a-Q>",
-                            function()
-                                require("illuminate").goto_prev_reference(nil)
-                            end,
-                            description = "Lsp: Hi Symbol",
-                        },
-                    },
-                },
-            }
-        end,
+        keys = {
+            {
+                "<a-q>",
+                function()
+                    require("illuminate").goto_next_reference(nil)
+                end,
+                desc = "Lsp: Hi Symbol",
+            },
+            {
+                "<a-Q>",
+                function()
+                    require("illuminate").goto_prev_reference(nil)
+                end,
+                desc = "Lsp: Hi Symbol",
+            },
+        },
         config = function()
             require("illuminate").configure {
                 filetypes_denylist = {
