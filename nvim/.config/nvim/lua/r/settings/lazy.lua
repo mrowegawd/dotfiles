@@ -19,7 +19,7 @@ opt.rtp:prepend(lazypath)
 require("lazy").setup {
     spec = {
         { import = "r.plugins" },
-        -- { import = "r.plugins.extras.lang" },
+        { import = "r.plugins.extras.lang" },
         -- { import = "r.plugins.extras.db" },
         -- { import = "r.plugins.extras.ui" },
         -- { import = "r.plugins.extras.misc" },
@@ -43,16 +43,16 @@ require("lazy").setup {
     },
     performance = {
         rtp = {
-      disabled_plugins = {
-        "gzip",
-        "matchit",
-        "matchparen",
-        "netrwPlugin",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
-      },
+            disabled_plugins = {
+                "gzip",
+                "matchit",
+                "matchparen",
+                "netrwPlugin",
+                "tarPlugin",
+                "tohtml",
+                "tutor",
+                "zipPlugin",
+            },
         },
     },
     lockfile = data .. "/lazy-lock.json",

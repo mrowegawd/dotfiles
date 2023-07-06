@@ -53,6 +53,14 @@ return {
                 end,
                 desc = "Remote Flash",
             },
+            {
+                "<c-s>",
+                mode = { "c" },
+                function()
+                    require("flash").toggle()
+                end,
+                desc = "Toggle Flash Search",
+            },
             -- {
             --     "R",
             --     mode = { "n", "o", "x" },
@@ -1231,179 +1239,163 @@ return {
             end
             return false
         end,
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Telescope",
-                    description = "Gaze deeply into unknown regions using the power of the moon",
-                    icon = as.ui.icons.misc.telescope,
-                    keymaps = {
+        keys = {
 
-                        {
-                            "<Leader>fb",
-                            "<CMD>Telescope buffers<CR>",
-                            description = "Telescope: find buffers",
-                        },
+            {
+                "<Leader>fb",
+                "<CMD>Telescope buffers<CR>",
+                desc = "Telescope: find buffers",
+            },
 
-                        {
-                            "<Leader>fw",
-                            "<CMD>Telescope current_buffer_fuzzy_find theme=ivy<CR>",
-                            description = "Telescope: live_grep on curbuf",
-                        },
+            {
+                "<Leader>fw",
+                "<CMD>Telescope current_buffer_fuzzy_find theme=ivy<CR>",
+                desc = "Telescope: live_grep on curbuf",
+            },
 
-                        -- {
-                        --     "<Leader>fW",
-                        --     function(opts)
-                        --         local builtin = require "telescope.builtin"
-                        --         opts = opts or {}
-                        --         local opt = require("telescope.themes").get_ivy {
-                        --
-                        --             cwd = opts.dir,
-                        --             prompt_title = "Live Grep for all Buffers",
-                        --             grep_open_files = true,
-                        --             shorten_path = true,
-                        --             -- sorter = require("telescope.sorters").get_substr_matcher {},
-                        --         }
-                        --         return builtin.live_grep(opt)
-                        --     end,
-                        --     description = "Telescope: live_grep on buffers",
-                        -- },
+            -- {
+            --     "<Leader>fW",
+            --     function(opts)
+            --         local builtin = require "telescope.builtin"
+            --         opts = opts or {}
+            --         local opt = require("telescope.themes").get_ivy {
+            --
+            --             cwd = opts.dir,
+            --             prompt_title = "Live Grep for all Buffers",
+            --             grep_open_files = true,
+            --             shorten_path = true,
+            --             -- sorter = require("telescope.sorters").get_substr_matcher {},
+            --         }
+            --         return builtin.live_grep(opt)
+            --     end,
+            --     description = "Telescope: live_grep on buffers",
+            -- },
 
-                        {
-                            "<Leader>fo",
-                            "<CMD>Telescope oldfiles<CR>",
-                            description = "Telescope: oldfiles",
-                        },
-                        {
-                            "<Leader>fh",
-                            "<CMD>Telescope help_tags<CR>",
-                            description = "Telescope: help tags",
-                        },
-                        {
-                            "<Leader>fl",
-                            "<CMD>Telescope resume<CR>",
-                            description = "Telescope: resume (last search)",
-                        },
+            {
+                "<Leader>fo",
+                "<CMD>Telescope oldfiles<CR>",
+                desc = "Telescope: oldfiles",
+            },
+            {
+                "<Leader>fh",
+                "<CMD>Telescope help_tags<CR>",
+                desc = "Telescope: help tags",
+            },
+            {
+                "<Leader>fl",
+                "<CMD>Telescope resume<CR>",
+                desc = "Telescope: resume (last search)",
+            },
 
-                        {
-                            "z=",
-                            "<CMD> Telescope spell_suggest theme=get_cursor<CR>",
-                            description = "Telescope: spell suggest",
-                        },
+            {
+                "z=",
+                "<CMD> Telescope spell_suggest theme=get_cursor<CR>",
+                desc = "Telescope: spell suggest",
+            },
 
-                        -- {
-                        --     "<Leader>fF",
-                        --     function()
-                        --         local plugins_directory = vim.fn.stdpath "data"
-                        --             .. "/lazy"
-                        --         return require("telescope.builtin").find_files {
-                        --             cwd = plugins_directory,
-                        --             prompt_title = "Find plugin files",
-                        --         }
-                        --     end,
-                        --     description = "Find plugin files",
-                        -- },
+            -- {
+            --     "<Leader>fF",
+            --     function()
+            --         local plugins_directory = vim.fn.stdpath "data"
+            --             .. "/lazy"
+            --         return require("telescope.builtin").find_files {
+            --             cwd = plugins_directory,
+            --             prompt_title = "Find plugin files",
+            --         }
+            --     end,
+            --     description = "Find plugin files",
+            -- },
 
-                        -- TELESCOPE-LAZY
-                        {
-                            "<Leader>fF",
-                            "<CMD>Telescope lazy theme=ivy<CR>",
-                            description = "Telescope-lazy: check plugins dir",
-                        },
-                        -- TELESCOPE-MENUFACTURE
-                        {
-                            "<Leader>ff",
-                            function()
-                                return require("telescope").extensions.menufacture.find_files()
-                            end,
-                            description = "Telescope-manufacture: find files",
-                        },
-                        -- {
-                        --     "<Leader>fg",
-                        --     function()
-                        --         return require("telescope").extensions.menufacture.live_grep()
-                        --     end,
-                        --     description = "Telescope-manufacture: live_grep",
-                        -- },
+            -- TELESCOPE-LAZY
+            {
+                "<Leader>fF",
+                "<CMD>Telescope lazy theme=ivy<CR>",
+                desc = "Telescope-lazy: check plugins dir",
+            },
+            -- TELESCOPE-MENUFACTURE
+            {
+                "<Leader>ff",
+                function()
+                    return require("telescope").extensions.menufacture.find_files()
+                end,
+                desc = "Telescope-manufacture: find files",
+            },
+            -- {
+            --     "<Leader>fg",
+            --     function()
+            --         return require("telescope").extensions.menufacture.live_grep()
+            --     end,
+            --     description = "Telescope-manufacture: live_grep",
+            -- },
 
-                        -- {
-                        --     "<Leader>fg",
-                        --     function()
-                        --         return require("telescope").extensions.menufacture.grep_string()
-                        --     end,
-                        --     description = "Telescope-manufacture: grep string under cursor",
-                        --     mode = { "v" },
-                        -- },
+            -- {
+            --     "<Leader>fg",
+            --     function()
+            --         return require("telescope").extensions.menufacture.grep_string()
+            --     end,
+            --     description = "Telescope-manufacture: grep string under cursor",
+            --     mode = { "v" },
+            -- },
 
-                        -- TELESCOPE-GREPQF
-                        {
-                            "<Leader>fq",
-                            "<CMD> Telescope grepqf theme=ivy<CR>",
-                            description = "Telescope-grepqf: live_grep qf items",
-                        },
+            -- TELESCOPE-GREPQF
+            {
+                "<Leader>fq",
+                "<CMD> Telescope grepqf theme=ivy<CR>",
+                desc = "Telescope-grepqf: live_grep qf items",
+            },
 
-                        -- TELESCOPE-SYMBOLS
-                        {
-                            "<Leader>f1",
-                            "<CMD> Telescope symbols theme=ivy<CR>",
-                            description = "Telescope-symbol: emoji",
-                        },
+            -- TELESCOPE-SYMBOLS
+            {
+                "<Leader>f1",
+                "<CMD> Telescope symbols theme=ivy<CR>",
+                desc = "Telescope-symbol: emoji",
+            },
 
-                        -- CONDUCT-NVIM
-                        {
-                            "<Leader>fp",
-                            "<CMD>Telescope conduct projects theme=ivy<CR>",
-                            description = "Telescope-conductt: projects",
-                        },
-                    },
-                    commands = {
-                        {
-                            ":Telescope highlights",
-                            description = "Telescope: highlights",
-                        },
-
-                        {
-                            ":Telescope keymaps",
-                            description = "Telescope: keymaps",
-                        },
-
-                        {
-                            ":Telescope colorscheme",
-                            description = "Telescope: colorscheme",
-                        },
-
-                        {
-                            ":Telescope commands",
-                            description = "Telescope: commands",
-                        },
-
-                        -- TELESCOPE-LUASNIP
-                        {
-                            ":Telescope luasnip",
-                            description = "Telescope-luasnip: open",
-                        },
-                    },
-                },
-            }
-        end,
+            -- CONDUCT-NVIM
+            {
+                "<Leader>fp",
+                "<CMD>Telescope conduct projects theme=ivy<CR>",
+                desc = "Telescope-conductt: projects",
+            },
+        },
+        -- commands = {
+        --     {
+        --         ":Telescope highlights",
+        --         description = "Telescope: highlights",
+        --     },
+        --
+        --     {
+        --         ":Telescope keymaps",
+        --         description = "Telescope: keymaps",
+        --     },
+        --
+        --     {
+        --         ":Telescope colorscheme",
+        --         description = "Telescope: colorscheme",
+        --     },
+        --
+        --     {
+        --         ":Telescope commands",
+        --         description = "Telescope: commands",
+        --     },
+        --
+        --     -- TELESCOPE-LUASNIP
+        --     {
+        --         ":Telescope luasnip",
+        --         description = "Telescope-luasnip: open",
+        --     },
+        -- },
         dependencies = {
             "nvim-telescope/telescope-symbols.nvim",
             {
                 "aaditeynair/conduct.nvim",
-                init = function()
-                    require("legendary").keymaps {
-                        {
-                            itemgroup = "Sessions",
-                            keymaps = {
-                                {
-                                    "<Leader>sf",
-                                    "<CMD>Telescope conduct sessions<CR>",
-                                    description = "Telescope-conduct: session",
-                                },
-                            },
-                        },
-                    }
-                end,
+                keys = {
+                    {
+                        "<Leader>sf",
+                        "<CMD>Telescope conduct sessions<CR>",
+                        desc = "Telescope-conduct: session",
+                    },
+                },
                 config = function()
                     require("conduct").setup {}
                 end,
@@ -1683,40 +1675,27 @@ return {
     -- SPECTRE
     {
         "windwp/nvim-spectre",
-        -- init = function()
-        --     require("legendary").keymaps {
-        --         {
-        --             itemgroup = "Misc",
-        --             keymaps = {
-        --                 {
-        --                     "<Leader><s-f>",
-        --                     function()
-        --                         require("r.utils.tiling").force_win_close(
-        --                             {},
-        --                             true
-        --                         )
-        --                         return require("spectre").open()
-        --                     end,
-        --                     description = "Spectre: open",
-        --                 },
-        --                 {
-        --                     "<Leader><s-f>",
-        --                     function()
-        --                         require("r.utils.tiling").force_win_close(
-        --                             {},
-        --                             true
-        --                         )
-        --                         return require("spectre").open_visual {
-        --                             select_word = true,
-        --                         }
-        --                     end,
-        --                     description = "Spectre: open [visual]",
-        --                     mode = { "v" },
-        --                 },
-        --             },
-        --         },
-        --     }
-        -- end,
+        keys = {
+            {
+                "<Leader><s-f>",
+                function()
+                    require("r.utils.tiling").force_win_close({}, true)
+                    return require("spectre").open()
+                end,
+                desc = "Spectre: open",
+            },
+            {
+                "<Leader><s-f>",
+                function()
+                    require("r.utils.tiling").force_win_close({}, true)
+                    return require("spectre").open_visual {
+                        select_word = true,
+                    }
+                end,
+                desc = "Spectre: open [visual]",
+                mode = { "v" },
+            },
+        },
         config = function()
             local spectre = require "spectre"
 
@@ -1916,45 +1895,28 @@ return {
         "mrowegawd/todo.nvim",
         cmd = { "TODOQuickFixList" },
         event = "BufReadPost",
-        -- init = function()
-        --     require("legendary").keymaps {
-        --         {
-        --             itemgroup = "Todo Comment",
-        --             description = "Searching todo!",
-        --             icon = as.ui.icons.misc.tag,
-        --             keymaps = {
-        --                 {
-        --                     "<Leader>tq",
-        --                     function()
-        --                         return cmd(
-        --                             fmt(
-        --                                 "TODOQuickfixList cwd=%s",
-        --                                 fn.expand "%:p"
-        --                             )
-        --                         )
-        --                     end,
-        --                     description = "Todocomment: find todo comment curbuf",
-        --                     mode = { "n", "v" },
-        --                 },
-        --                 {
-        --                     "<Leader>tQ",
-        --                     fmt(
-        --                         "<CMD>TODOQuickfixList cwd=%s<CR>",
-        --                         fn.getcwd()
-        --                     ),
-        --                     description = "Todocomment: find all todo comments on repo",
-        --                 },
+        keys = {
+            {
+                "<Leader>tq",
+                function()
+                    return cmd(fmt("TODOQuickfixList cwd=%s", fn.expand "%:p"))
+                end,
+                desc = "Todocomment: find todo comment curbuf",
+                mode = { "n", "v" },
+            },
+            {
+                "<Leader>tQ",
+                fmt("<CMD>TODOQuickfixList cwd=%s<CR>", fn.getcwd()),
+                desc = "Todocomment: find all todo comments on repo",
+            },
 
-        --                 -- TELESCOPE
-        --                 -- {
-        --                 --     "<Leader>ft",
-        --                 --     "<CMD>TodoTelescope<CR>",
-        --                 --     description = "Telescope: open todotroble with telescope",
-        --                 -- },
-        --             },
-        --         },
-        --     }
-        -- end,
+            -- TELESCOPE
+            -- {
+            --     "<Leader>ft",
+            --     "<CMD>TodoTelescope<CR>",
+            --     description = "Telescope: open todotroble with telescope",
+            -- },
+        },
         opts = {
             signs = {
                 enable = true, -- show icons in the sign column

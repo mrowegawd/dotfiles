@@ -161,6 +161,12 @@ function M.lspmappings(_, bufnr)
             vim.lsp.inlay_hint(0, nil)
         end)
     end, { desc = "LSP: toogle inlayhints", buffer = bufnr })
+
+    vim.keymap.set("n", "<leader>uH", function()
+        return require("r.utils").toggle_buffer_semantic_tokens(
+            vim.api.nvim_get_current_buf()
+        )
+    end, { desc = "LSP: toogle semantic token", buffer = bufnr })
 end
 
 return M

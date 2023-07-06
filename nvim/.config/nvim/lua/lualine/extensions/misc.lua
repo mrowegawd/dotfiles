@@ -105,8 +105,7 @@ M.sections = {
 }
 
 M.inactive_sections = {
-    lualine_c = {},
-    lualine_x = {
+    lualine_c = {
         {
             label,
             color = {
@@ -115,6 +114,7 @@ M.inactive_sections = {
             },
         },
     },
+    lualine_x = {},
 }
 
 M.filetypes = {

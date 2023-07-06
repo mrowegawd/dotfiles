@@ -5,21 +5,6 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        -- init = function()
-        --     require("legendary").keymaps {
-        --         {
-        --             itemgroup = "Misc",
-        --             keymaps = {
-        --                 {
-        --                     "m",
-        --                     [[:<C-U>lua require('tsht').nodes()<CR>]],
-        --                     description = "Treesitter: jump nodes",
-        --                     mode = { "o", "x" },
-        --                 },
-        --             },
-        --         },
-        --     }
-        -- end,
         dependencies = {
             { "nvim-treesitter/nvim-treesitter-textobjects" },
             { "JoosepAlviste/nvim-ts-context-commentstring" },
@@ -268,6 +253,13 @@ return {
             end
 
             require("nvim-treesitter.configs").setup(opts)
+
+            vim.keymap.set(
+                { "o", "x" },
+                "m",
+                [[:<C-U>lua require('tsht').nodes()<CR>]],
+                { desc = "Treesitter: jump nodes" }
+            )
 
             -- Howt to custom queries, check https://github.com/nvim-treesitter/nvim-treesitter/blob/master/queries/python/folds.scm)
             -- vim.treesitter.query.set(

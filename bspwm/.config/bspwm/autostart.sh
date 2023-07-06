@@ -26,12 +26,12 @@ bspc config presel_feedback_color "$MAGENTA"
 setxkbmap -option caps:backspace # switch capslock to backspace
 export _JAVA_AWT_WM_NONREPARENTING=1
 
-if [ -f "$HOME/.config/compton.conf" ]; then
-	if [ ! -z "$(command -v compton)" ]; then
-		killall -q compton
-		compton --config ~/.config/compton.conf &
-	fi
-fi
+# if [ -f "$HOME/.config/compton.conf" ]; then
+# 	if [ ! -z "$(command -v compton)" ]; then
+# 		killall -q compton
+# 		compton --config ~/.config/compton.conf &
+# 	fi
+# fi
 
 # if [ -f "$HOME/.config/picom.conf" ]; then
 #   if [ ! -z "$(command -v picom)" ]; then

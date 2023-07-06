@@ -9,7 +9,6 @@ return {
             require("r.utils").disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
         end,
         keys = {
-
             {
                 "<Leader>e",
                 function()

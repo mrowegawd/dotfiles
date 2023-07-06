@@ -37,5 +37,15 @@ local run_tmux_pane = function()
     )
 end
 
-keymap.set("n", "<localleader>rf", run_toggleterm, { buffer = true })
-keymap.set({ "n", "i" }, "<F5>", run_tmux_pane, { buffer = true })
+keymap.set(
+    "n",
+    "<localleader>rf",
+    run_toggleterm,
+    { buffer = true, desc = "Task: run toggleterm" }
+)
+keymap.set(
+    { "n", "i" },
+    "<F5>",
+    run_tmux_pane,
+    { buffer = true, desc = "Task: run tmux pane" }
+)

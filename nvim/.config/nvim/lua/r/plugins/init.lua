@@ -16,7 +16,12 @@ return {
     -- VIM-HIGHLIGHTER
     {
         "azabiong/vim-highlighter", -- map ex: f<enter> `highlighte the word`
-        cmd = { "Hi" },
+        keys = {
+            "f<CR>",
+            "f<BS>",
+            "f<C-L>",
+            "f<Tab>",
+        },
         setup = function()
             vim.g.HiSet = "f<CR>"
             vim.g.HiErase = "f<BS>"
@@ -84,7 +89,11 @@ return {
             "CBacbox",
             "CBarbox",
         },
-        -- config = true,
+        config = function()
+            as.command(":CBcatalog", function()
+                return require("comment-box").catalog()
+            end, { desc = "Comment-box: show catalog" })
+        end,
     },
     -- HYPERSONIC.NVIM (make regex readable)
     {

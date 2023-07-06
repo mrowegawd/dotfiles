@@ -126,40 +126,33 @@ return {
                     },
                 },
                 dockerls = {},
+                sqlls = {},
+                ansiblels = {},
+                bashls = {},
+                vimls = {},
             },
             setup = {
                 lua_ls = function(_, _)
-                    -- local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
-                    -- lsp_utils.on_attach(function(client, buffer)
-                    --     if client.name == "lua_ls" then
+                    local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
+                    lsp_utils.on_attach(function(client, buffer)
+                        if client.name == "lua_ls" then
+                            vim.keymap.set("n", "<localleader>dX", function()
+                                require("osv").run_this()
+                            end, {
+                                desc = "Debug(osv): run",
+                                buffer = buffer,
+                            })
 
-                    --                     vim.keymap.set{ "n",
-
-                    --                         "<localleader>dX",
-                    --                         function()
-                    --                             require("osv").run_this()
-                    --                         end,
-                    --                         desc = "Dap: OSV run",
-                    --                         opts = {
-                    --                             buffer = buffer,
-                    --                         },
-                    --                     }
-
-                    --                     vim.keymap.set{ "n",
-
-                    --                         "<localleader>dL",
-                    --                         function()
-                    --                             require("osv").launch {
-                    --                                 port = 8086,
-                    --                             }
-                    --                         end,
-                    --                         desc = "Dap: OSV Launch",
-                    --                         opts = {
-                    --                             buffer = buffer,
-                    --                         },
-                    --                     }
-                    --     end
-                    -- end)
+                            vim.keymap.set("n", "<localleader>dL", function()
+                                require("osv").launch {
+                                    port = 8086,
+                                }
+                            end, {
+                                desc = "Debug(osv): Launch",
+                                buffer = buffer,
+                            })
+                        end
+                    end)
                 end,
             },
             format = {
@@ -226,20 +219,13 @@ return {
         "folke/trouble.nvim",
         enabled = false,
         cmd = { "TroubleToggle", "Trouble" },
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "LSP",
-                    keymaps = {
-                        {
-                            "<Leader>tt",
-                            "<CMD>TroubleToggle<CR>",
-                            description = "Trouble: toggle",
-                        },
-                    },
-                },
-            }
-        end,
+        keys = {
+            {
+                "<Leader>tt",
+                "<CMD>TroubleToggle<CR>",
+                desc = "Trouble: toggle",
+            },
+        },
         config = function()
             require("trouble").setup {
                 auto_open = false,
@@ -278,20 +264,13 @@ return {
             end
             return false
         end,
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    keymaps = {
-                        {
-                            "gO",
-                            "<CMD>Lspsaga outline<CR>",
-                            description = "Outline: Lspsaga",
-                        },
-                    },
-                },
-            }
-        end,
+        keys = {
+            {
+                "gO",
+                "<CMD>Lspsaga outline<CR>",
+                desc = "LSP(outline): Lspsaga",
+            },
+        },
         dependencies = {
             { "nvim-tree/nvim-web-devicons" },
             { "nvim-treesitter/nvim-treesitter" },
@@ -634,39 +613,32 @@ return {
             }
         end,
     },
-    -- SYMBOLSOUTLINE (disabled)
+    -- SYMBOLSOUTLINE
     {
         "enddeadroyal/symbols-outline.nvim",
-        enabled = false,
         cmd = "SymbolsOutline",
         branch = "bugfix/symbol-hover-misplacement",
         init = function()
             require("r.utils").disable_ctrl_i_and_o("NoOutline", { "Outline" })
-
-            -- require("legendary").keymaps {
-            --     {
-            --         itemgroup = "LSP",
-            --         keymaps = {
-            --             {
-            --                 "go",
-            --                 "<CMD>SymbolsOutline<CR>",
-            --                 description = "SymbolsOutline: toggle",
-            --             },
-            --             {
-            --                 "gO",
-            --                 function()
-            --                     require("r.utils.tiling").force_win_close(
-            --                         { "Outline" },
-            --                         false
-            --                     )
-            --                     return cmd.SymbolsOutline()
-            --                 end,
-            --                 description = "SymbolsOutline: focus toggle",
-            --             },
-            --         },
-            --     },
-            -- }
         end,
+        keys = {
+            -- {
+            --     "go",
+            --     "<CMD>SymbolsOutline<CR>",
+            --     desc = "LSP(symbolsoutline): toggle",
+            -- },
+            -- {
+            --     "gO",
+            --     function()
+            --         require("r.utils.tiling").force_win_close(
+            --             { "Outline" },
+            --             false
+            --         )
+            --         return cmd.SymbolsOutline()
+            --     end,
+            --     desc = "LSP(symbolsoutline): focus toggle",
+            -- },
+        },
         config = function()
             require("symbols-outline").setup {
                 highlight_hovered_item = true,

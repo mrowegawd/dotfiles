@@ -97,7 +97,6 @@ return {
             end
             return false
         end,
-        init = function() end,
         opts = {
             compile = false, -- enable compiling the colorscheme
             undercurl = true, -- enable undercurls

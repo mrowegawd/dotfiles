@@ -69,7 +69,7 @@ if [ ! -f $startup_lock_file ]; then
 
 	sleep 2
 
-	alacritty &
+	wezterm &
 
 	sleep 2
 

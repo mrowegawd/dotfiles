@@ -94,21 +94,24 @@ local function run_ipython(mode)
 end
 
 -- keymap.set("n", "<localleader>rf", run_toggleterm, { buffer = true })
-keymap.set({ "n", "i" }, "<F5>", run_tmux_pane, { buffer = true })
+keymap.set(
+    { "n", "i" },
+    "<F5>",
+    run_tmux_pane,
+    { buffer = true, desc = "Task: run tmux pane" }
+)
 keymap.set("n", "<localleader>rp", function()
     run_toggleterm(true)
-end, { buffer = true })
-
+end, { buffer = true, desc = "Task: run toggleterm" })
 keymap.set({ "n", "i" }, "<F6>", function()
     run_tmux_pane(true)
-end, { buffer = true })
+end, { buffer = true, desc = "Task: run tmux pane" })
 keymap.set("n", "<localleader>rl", function()
     run_ipython "line"
-end, { buffer = true })
+end, { buffer = true, desc = "Task: run ipython [line]" })
 keymap.set("v", "<localleader>rl", function()
-    print "send"
     run_ipython "selection"
-end, { buffer = true })
+end, { buffer = true, desc = "Task: run ipython (visual)" })
 keymap.set("n", "<localleader>ri", function()
     run_ipython "module"
-end, { buffer = true })
+end, { buffer = true, desc = "Task: run ipython [module]" })

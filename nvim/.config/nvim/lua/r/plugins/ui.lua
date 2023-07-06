@@ -407,7 +407,7 @@ return {
                     end
                     vim.cmd("normal " .. tostring(row) .. "G")
                 end,
-                desc = "Fold(Ufo): close all folds",
+                desc = "Fold(ufo): close all folds",
             },
 
             {
@@ -415,7 +415,7 @@ return {
                 function()
                     return require("ufo").closeFoldsWith()
                 end,
-                desc = "Fold(Ufo): close fold",
+                desc = "Fold(ufo): close fold",
             },
 
             {
@@ -423,7 +423,7 @@ return {
                 function()
                     return require("ufo").openAllFolds()
                 end,
-                desc = "Fold(Ufo): open all folds",
+                desc = "Fold(ufo): open all folds",
             },
 
             {
@@ -431,7 +431,7 @@ return {
                 function()
                     return require("ufo").peekFoldedLinesUnderCursor()
                 end,
-                desc = "Fold(Ufo): open peek folds",
+                desc = "Fold(ufo): open peek folds",
             },
 
             {
@@ -440,7 +440,7 @@ return {
                 function()
                     return require("ufo").goPreviousClosedFold()
                 end,
-                desc = "Fold(Ufo): go prev closed fold",
+                desc = "Fold(ufo): go prev closed fold",
             },
             {
                 -- "zn",
@@ -448,7 +448,7 @@ return {
                 function()
                     return require("ufo").goNextClosedFold()
                 end,
-                desc = "Fold(Ufo): go next closed fold",
+                desc = "Fold(ufo): go next closed fold",
             },
         },
 
@@ -1334,13 +1334,142 @@ return {
             require("block").setup {}
         end,
     },
-    -- SHADE
+    -- SHADE (disabled)
     {
         "sunjon/shade.nvim",
         enabled = false,
         config = function()
             require("shade").setup()
             require("shade").toggle()
+        end,
+    },
+    -- EDGY.NVIM (disabled)
+    {
+        "folke/edgy.nvim",
+        event = "VeryLazy",
+        enabled = false,
+        keys = {
+            {
+                "<leader>ue",
+                function()
+                    require("edgy").toggle()
+                end,
+                desc = "Edgy Toggle",
+            },
+            {
+                "<leader>uE",
+                function()
+                    require("edgy").select()
+                end,
+                desc = "Edgy Select Window",
+            },
+        },
+        opts = function()
+            local opts = {
+                bottom = {
+                    {
+                        ft = "toggleterm",
+                        size = { height = 0.4 },
+                        filter = function(buf, win)
+                            return vim.api.nvim_win_get_config(win).relative
+                                == ""
+                        end,
+                    },
+                    {
+                        ft = "noice",
+                        size = { height = 0.4 },
+                        filter = function(buf, win)
+                            return vim.api.nvim_win_get_config(win).relative
+                                == ""
+                        end,
+                    },
+                    {
+                        ft = "lazyterm",
+                        title = "LazyTerm",
+                        size = { height = 0.4 },
+                        filter = function(buf)
+                            return not vim.b[buf].lazyterm_cmd
+                        end,
+                    },
+                    "Trouble",
+                    { ft = "qf", title = "QuickFix" },
+                    {
+                        ft = "help",
+                        size = { height = 20 },
+                        -- don't open help files in edgy that we're editing
+                        filter = function(buf)
+                            return vim.bo[buf].buftype == "help"
+                        end,
+                    },
+                    -- { ft = "spectre_panel", size = { height = 0.4 } },
+                    {
+                        title = "Neotest Output",
+                        ft = "neotest-output-panel",
+                        size = { height = 15 },
+                    },
+                },
+                left = {
+                    {
+                        title = "Neo-Tree",
+                        ft = "neo-tree",
+                        filter = function(buf)
+                            return vim.b[buf].neo_tree_source == "filesystem"
+                        end,
+                        pinned = true,
+                        open = function()
+                            vim.api.nvim_input "<esc><space>e"
+                        end,
+                        size = { height = 0.5 },
+                    },
+                    { title = "Neotest Summary", ft = "neotest-summary" },
+                    -- {
+                    --     title = "Neo-Tree Git",
+                    --     ft = "neo-tree",
+                    --     filter = function(buf)
+                    --         return vim.b[buf].neo_tree_source == "git_status"
+                    --     end,
+                    --     pinned = true,
+                    --     open = "Neotree position=right git_status",
+                    -- },
+                    -- {
+                    --     title = "Neo-Tree Buffers",
+                    --     ft = "neo-tree",
+                    --     filter = function(buf)
+                    --         return vim.b[buf].neo_tree_source == "buffers"
+                    --     end,
+                    --     pinned = true,
+                    --     open = "Neotree position=top buffers",
+                    -- },
+                    -- "neo-tree",
+                },
+                keys = {
+                    -- increase width
+                    ["<a-L>"] = function(win)
+                        win:resize("width", 2)
+                    end,
+                    -- decrease width
+                    ["<a-H>"] = function(win)
+                        win:resize("width", -2)
+                    end,
+                    -- increase height
+                    ["<a-K>"] = function(win)
+                        win:resize("height", 2)
+                    end,
+                    -- decrease height
+                    ["<a-J"] = function(win)
+                        win:resize("height", -2)
+                    end,
+                },
+            }
+            if as.has "symbols-outline.nvim" then
+                table.insert(opts.left, {
+                    title = "Outline",
+                    ft = "Outline",
+                    pinned = true,
+                    open = "SymbolsOutline",
+                })
+            end
+            return opts
         end,
     },
 }

@@ -571,7 +571,27 @@ local function colorscheme_overrides()
             },
 
             { NormalFloat = { bg = { from = "Normal" } } },
+
+            {
+                illuminatedWordWrite = {
+                    bg = {
+                        from = "illuminatedWordWrite",
+                        attr = "bg",
+                        alter = -0.2,
+                    },
+                },
+            },
+            {
+                illuminatedWordRead = {
+                    bg = {
+                        from = "illuminatedWordRead",
+                        attr = "bg",
+                        alter = -0.2,
+                    },
+                },
+            },
         },
+
         ["catppuccin"] = {
             { NormalFloat = { bg = { from = "Pmenu" } } },
             { LspCodeLens = { fg = { from = "LspCodeLens", alter = -0.5 } } },

@@ -2,23 +2,22 @@ local silent = { silent = true }
 local nosilent = { silent = false }
 local opts = { noremap = true, unique = true }
 
-local keymap, api = vim.keymap, vim.api
+local fn, api, cmd, command, fmt, map =
+    vim.fn, vim.api, vim.cmd, as.command, string.format, vim.keymap.set
 
-local fn, api, uv, cmd, command, fmt, map =
-    vim.fn, vim.api, vim.uv, vim.cmd, as.command, string.format, vim.keymap.set
+-- local recursive_map = function(mode, lhs, rhs, opts)
+--     opts = opts or {}
+--     opts.remap = true
+--     map(mode, lhs, rhs, opts)
+-- end
+--
+-- local nmap = function(...)
+--     recursive_map("n", ...)
+-- end
+-- local imap = function(...)
+--     recursive_map("i", ...)
+-- end
 
-local recursive_map = function(mode, lhs, rhs, opts)
-    opts = opts or {}
-    opts.remap = true
-    map(mode, lhs, rhs, opts)
-end
-
-local nmap = function(...)
-    recursive_map("n", ...)
-end
-local imap = function(...)
-    recursive_map("i", ...)
-end
 local nnoremap = function(...)
     map("n", ...)
 end
@@ -108,7 +107,7 @@ nnoremap("<localleader>z", [[zMzvzz]], { desc = "Fold: center viewport" }) -- Re
 --  ╰──────────────────────────────────────────────────────────╯
 nnoremap("<Leader>O", function()
     return require("r.utils").Buf_only()
-end, { desc = "Buffer: BufOnly" })
+end, { desc = "Buffer: bufonly" })
 
 nnoremap("<c-w>b", "<C-w><S-t>", { desc = "Buffer: break buffer into new tab" })
 nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
@@ -184,7 +183,7 @@ nnoremap("<Leader><TAB>", function()
     else
         vim.cmd.qall()
     end
-end, { desc = "Buffer: Magic exit" })
+end, { desc = "Buffer: magic exit" })
 
 -- Alternate the buffer
 local ignore_alternate_ft = {
@@ -206,7 +205,7 @@ nnoremap("<Leader>b", function()
         "n",
         true
     )
-end, { desc = "Buffer: Alternate the buffer/file" })
+end, { desc = "Buffer: alternate buffer/file" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ TABS                                                     │
@@ -424,3 +423,37 @@ cab <silent> BD bd!
 cab <silent> bD bd!
 cab <silent> Bd bd!
 cab <silent> bd bd!]]
+
+--  ╭──────────────────────────────────────────────────────────╮
+--  │ COMMANDS                                                 │
+--  ╰──────────────────────────────────────────────────────────╯
+
+command("Snippets", function()
+    require("r.utils").EditSnippet()
+end, { desc = "Snippet: edit snippet file" })
+
+command("CBcatalog", function()
+    return require("comment-box").catalog()
+end, { desc = "Comment-bobx: show catalog" })
+
+command("InfoBaseColorsTheme", function()
+    return require("r.utils").infoBaseColorsTheme()
+end, { desc = "Misc: base color (untuk theme bspwm)" })
+
+command("InfoOption", function()
+    return require("r.utils").infoFoldPreview()
+end, { desc = "Misc: echo options" })
+
+command("Uuid", function()
+    local uuid = fn.system("uuidgen"):gsub("\n", ""):lower()
+    local line = fn.getline "."
+    return vim.schedule(function()
+        fn.setline(
+            ---@diagnostic disable-next-line: param-type-mismatch
+            ".",
+            fn.strpart(line, 0, fn.col ".")
+                .. uuid
+                .. fn.strpart(line, fn.col ".")
+        )
+    end)
+end, { desc = "Misc: Generate a UUID and insert it into the buffer" })

@@ -3,7 +3,10 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         opts = function(_, opts)
-            vim.list_extend(opts.ensure_installed, { "python" })
+            vim.list_extend(
+                opts.ensure_installed,
+                { "python", "ninja", "rst", "toml" }
+            )
         end,
     },
     -- NULL-LS.NVIM
@@ -53,6 +56,15 @@ return {
                 ruff_lsp = {},
             },
             setup = {
+                ruff_lsp = function()
+                    local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
+                    lsp_utils.on_attach(function(client, _)
+                        if client.name == "ruff_lsp" then
+                            -- Disable hover in favor of Pyright
+                            client.server_capabilities.hoverProvider = false
+                        end
+                    end)
+                end,
                 pyright = function(_, _)
                     local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
                     lsp_utils.on_attach(function(client, buffer)
@@ -61,23 +73,39 @@ return {
                                 require("dap-python").test_class()
                             end, {
                                 buffer = buffer,
-                                desc = "Debug Class",
+                                desc = "Testing: debug Class",
                             })
                             vim.keymap.set("n", "<leader>tM", function()
                                 require("dap-python").test_method()
                             end, {
                                 buffer = buffer,
-                                desc = "Debug Method",
+                                desc = "Testing: debug Method",
                             })
                             vim.keymap.set("v", "<leader>tS", function()
                                 require("dap-python").debug_selection()
                             end, {
                                 buffer = buffer,
-                                desc = "Debug Selection",
+                                desc = "Testing: debug selection",
                             })
                         end
                     end)
                 end,
+            },
+        },
+    },
+    {
+        "nvim-neotest/neotest",
+        optional = true,
+        dependencies = {
+            "nvim-neotest/neotest-python",
+        },
+        opts = {
+            adapters = {
+                ["neotest-python"] = {
+                    -- Here you can specify the settings for the adapter, i.e.
+                    runner = "pytest",
+                    -- python = ".venv/bin/python",
+                },
             },
         },
     },

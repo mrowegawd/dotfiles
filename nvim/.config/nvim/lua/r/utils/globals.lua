@@ -133,6 +133,11 @@ function as.absolute_path(bufnr)
     return fn.expand("#" .. bufnr .. ":p")
 end
 
+---@param plugin string
+function as.has(plugin)
+    return require("lazy.core.config").plugins[plugin] ~= nil
+end
+
 -- example use; as.is_loclist() and "Location List" or "Quickfix List"
 function as.is_loclist()
     return fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0

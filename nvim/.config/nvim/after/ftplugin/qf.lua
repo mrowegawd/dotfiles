@@ -75,6 +75,7 @@ keymap.set("n", "gh", function()
 end, {
     silent = true,
     buffer = vim.api.nvim_get_current_buf(),
+    desc = "Qf: colder",
 })
 keymap.set("n", "gl", function()
     vim.cmd [[
@@ -87,6 +88,7 @@ keymap.set("n", "gl", function()
 end, {
     silent = true,
     buffer = vim.api.nvim_get_current_buf(),
+    desc = "Qf: cnewer",
 })
 
 vim.keymap.set("n", "<c-d>", function()

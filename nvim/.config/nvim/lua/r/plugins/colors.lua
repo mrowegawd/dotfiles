@@ -4,19 +4,6 @@ return {
         "NvChad/nvim-colorizer.lua",
         enabled = false,
         opts = {},
-        -- init = function()
-        --     require("legendary").keymaps {
-        --         {
-        --             itemgroup = "Color",
-        --             commands = {
-        --                 {
-        --                     ":ColorizerToggle",
-        --                     description = "Colorizer: toggle",
-        --                 },
-        --             },
-        --         },
-        --     }
-        -- end,
         cmd = {
             "ColorizerToggle",
             "ColorizerAttachToBuffer",
@@ -27,31 +14,7 @@ return {
     -- CCC
     {
         "uga-rosa/ccc.nvim",
-        -- init = function()
-        --     require("legendary").keymaps {
-        --         {
-        --             itemgroup = "Color",
-        --             icon = as.ui.icons.misc.squirrel,
-        --             description = "Hello there...",
-        --             commands = {
-        --             },
-        --         },
-        --     }
-        -- end,
-        -- keys = {
-        --     {
-        --         ":CccPick",
-        --         desc = "Ccc: pick color",
-        --     },
-        --     {
-        --         ":CccConvert",
-        --         desc = "Ccc: pick color",
-        --     },
-        --     {
-        --         ":CccHighlighterToggle",
-        --         desc = "Ccc: toggle",
-        --     },
-        -- },
+        cmd = { "CccPick", "CccConvert", "CccHighlighterToggle" },
         opts = function()
             local ccc = require "ccc"
             local p = ccc.picker
@@ -84,10 +47,5 @@ return {
                 },
             }
         end,
-        cmd = {
-            "CccPick",
-            "CccConvert",
-            "CccHighlighterToggle",
-        },
     },
 }

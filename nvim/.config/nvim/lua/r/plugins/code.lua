@@ -54,59 +54,37 @@ return {
                 event = { "FileType" },
                 pattern = as.lspfiles,
                 command = function()
-                    -- require("legendary").keymaps {
-                    --     {
-                    --         itemgroup = "Task runner",
-                    --         keymaps = {
-                    --
-                    --             {
-                    --                 "<F4>",
-                    --                 function()
-                    --                     local overseer = require "overseer"
-                    --                     local tasks = overseer.list_tasks {
-                    --                         recent_first = true,
-                    --                     }
-                    --                     if vim.tbl_isempty(tasks) then
-                    --                         return vim.notify(
-                    --                             "No tasks found",
-                    --                             vim.log.levels.WARN
-                    --                         )
-                    --                     else
-                    --                         return overseer.run_action(
-                    --                             tasks[1],
-                    --                             "restart"
-                    --                         )
-                    --                     end
-                    --                 end,
-                    --                 description = "Overseer: run or restart the task",
-                    --                 opts = {
-                    --                     buffer = api.nvim_get_current_buf(),
-                    --                 },
-                    --             },
-                    --
-                    --             {
-                    --                 "<F1>",
-                    --                 function()
-                    --                     if
-                    --                         vim.bo.filetype ~= "OverseerList"
-                    --                     then
-                    --                         return cmd "OverseerRun"
-                    --                     end
-                    --                     return cmd "OverseerQuickAction"
-                    --                 end,
-                    --                 description = "Overseer: run quick action",
-                    --                 opts = {
-                    --                     buffer = api.nvim_get_current_buf(),
-                    --                 },
-                    --             },
-                    --         },
-                    --     },
-                    -- }
+                    vim.keymap.set("n", "<F4>", function()
+                        local overseer = require "overseer"
+                        local tasks = overseer.list_tasks {
+                            recent_first = true,
+                        }
+                        if vim.tbl_isempty(tasks) then
+                            return vim.notify(
+                                "No tasks found",
+                                vim.log.levels.WARN
+                            )
+                        else
+                            return overseer.run_action(tasks[1], "restart")
+                        end
+                    end, {
+                        desc = "Task(overseer): run or restart the task",
+                        buffer = api.nvim_get_current_buf(),
+                    })
+
+                    vim.keymap.set("n", "<F1>", function()
+                        if vim.bo.filetype ~= "OverseerList" then
+                            return cmd "OverseerRun"
+                        end
+                        return cmd "OverseerQuickAction"
+                    end, {
+                        desc = "Task(overseer): run quick action",
+                        buffer = api.nvim_get_current_buf(),
+                    })
                 end,
             })
         end,
         keys = {
-
             {
                 "<Leader>oo",
                 function()
@@ -116,25 +94,25 @@ return {
                     )
                     return cmd "OverseerToggle"
                 end,
-                desc = "Overseer: toggle",
+                desc = "Task(overseer): toggle",
             },
 
             {
                 "<Leader>ol",
                 "<Cmd>OverseerQuickAction open vsplit<CR>",
-                desc = "Overseer: open repl vsplit",
+                desc = "Task(overseer): open repl vsplit",
             },
 
             {
                 "<Leader>oa",
                 "<CMD>OverseerQuickAction<CR>",
-                desc = "Overseer: quick action",
+                desc = "Task(overseer): quick action",
             },
 
             {
                 "<Leader>ot",
                 "<CMD>OverseerTaskAction<CR>",
-                desc = "Overseer: task action",
+                desc = "Task(overseer): task action",
             },
         },
         config = function()
@@ -264,7 +242,7 @@ return {
             {
                 "<Leader>rR",
                 "<CMD>IronRestart<CR>",
-                desc = "Iron: restart repl",
+                desc = "Task(iron): restart repl",
             },
 
             {
@@ -272,16 +250,24 @@ return {
                 function()
                     require("iron.core").run_motion "send_motion"
                 end,
-                desc = "Iron: send motion",
+                desc = "Task(iron): send motion",
             },
+            -- TODO: found 2 mappings using same keystrokes
             {
                 "rl",
                 function()
                     require("iron.core").visual_send()
                     -- require("iron.core").send(nil, string.char(13))
                 end,
-                desc = "Iron: send visual",
+                desc = "Task(iron): send visual",
                 mode = { "v" },
+            },
+            {
+                "rl",
+                function()
+                    require("iron.core").send_line()
+                end,
+                desc = "Task(iron): send line",
             },
 
             {
@@ -289,22 +275,15 @@ return {
                 function()
                     require("iron.core").send_file()
                 end,
-                desc = "Iron: send file",
+                desc = "Task(iron): send file",
             },
 
-            {
-                "rl",
-                function()
-                    require("iron.core").send_line()
-                end,
-                desc = "Iron: send line",
-            },
             {
                 "r<cr>",
                 function()
                     require("iron.core").send(nil, string.char(13))
                 end,
-                desc = "Iron: send (ENTER)",
+                desc = "Task(iron): send (ENTER)",
             },
 
             {
@@ -312,7 +291,7 @@ return {
                 function()
                     require("iron.core").send(nil, string.char(03))
                 end,
-                desc = "Iron: send (interrupt)",
+                desc = "Task(iron): send (interrupt)",
             },
 
             {
@@ -320,7 +299,7 @@ return {
                 function()
                     require("iron.core").send(nil, string.char(12))
                 end,
-                desc = "Iron: clear",
+                desc = "Task(iron): clear",
             },
 
             {
@@ -328,7 +307,7 @@ return {
                 function()
                     require("iron.core").send_until_cursor()
                 end,
-                desc = "Iron: run until cursor",
+                desc = "Task(iron): run until cursor",
             },
         },
         config = function()

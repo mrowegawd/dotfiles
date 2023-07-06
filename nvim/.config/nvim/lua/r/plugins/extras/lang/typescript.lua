@@ -35,6 +35,21 @@ return {
         opts = {
             servers = {
                 tsserver = {},
+                html = {},
+                cssls = {
+                    settings = {
+                        css = {
+                            lint = {
+                                unknownAtRules = "ignore",
+                            },
+                        },
+                        scss = {
+                            lint = {
+                                unknownAtRules = "ignore",
+                            },
+                        },
+                    },
+                },
             },
             setup = {
                 tsserver = function(_, _)
@@ -86,6 +101,13 @@ return {
     {
         "mfussenegger/nvim-dap",
         optional = true,
+        -- dependencies = {
+        -- {
+        --     "microsoft/vscode-js-debug",
+        --     build = "npm install --legacy-peer-deps && npm run compile",
+        -- },
+        -- { "mxsdev/nvim-dap-vscode-js" },
+        -- },
         opts = function()
             local dap = require "dap"
             if not dap.adapters["pwa-node"] then

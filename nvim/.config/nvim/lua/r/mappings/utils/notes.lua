@@ -13,13 +13,13 @@ function M.neorg_mappings_ft(bufnr)
                 function()
                     return cmd(fmt("TODOQuickfixList cwd=%s", fn.expand "%:p"))
                 end,
-                "Todocomment: find todo buffer",
+                "Note(todocomment): find todo buffer",
             },
             ["<leader>tQ"] = {
                 function()
                     return cmd(fmt([[TODOQuickfixList cwd=%s]], as.wiki_path))
                 end,
-                "Todocomment: find all todo",
+                "Note(todocomment): find all todo",
             },
             ["f<CR>"] = {
                 function()
@@ -30,7 +30,7 @@ function M.neorg_mappings_ft(bufnr)
                         winopts = { fullscreen = true },
                     }
                 end,
-                "Fzflua: files",
+                "Note(fzflua): files",
             },
             ["T<CR>"] = {
                 function()
@@ -49,7 +49,7 @@ function M.neorg_mappings_ft(bufnr)
                         },
                     }
                 end,
-                "Fzflua: find all titles",
+                "Note(fzflua): find all titles",
             },
             ["t<CR>"] = {
                 function()
@@ -69,7 +69,7 @@ function M.neorg_mappings_ft(bufnr)
                         },
                     }
                 end,
-                "Fzflua: find title buffer",
+                "Note(fzflua): find title buffer",
             },
             ["g<CR>"] = {
                 function()
@@ -92,7 +92,7 @@ function M.neorg_mappings_ft(bufnr)
                         },
                     }
                 end,
-                "Fzlua: find friend notes",
+                "Note(fzflua): find friend notes",
             },
             ["l<CR>"] = {
                 function()
@@ -112,20 +112,20 @@ function M.neorg_mappings_ft(bufnr)
                         },
                     }
                 end,
-                "FzfLua: find linkable",
+                "Note(fzflua): find linkable",
             },
 
             ["lb"] = {
                 function()
                     require("r.utils.neorg_notes").get_check_linkdir(neorg)
                 end,
-                "Fzflua: search local broken link",
+                "Note(fzflua): search local broken link",
             },
             ["lB"] = {
                 function()
                     print "searching global broken link: not implemented yet"
                 end,
-                "Fzflua: search global broken link",
+                "Note(fzflua): search global broken link",
             },
         },
 
@@ -155,8 +155,7 @@ function M.neorg_mappings_ft(bufnr)
                         opts
                     )
                 end,
-
-                "Fzflua: insert sitelinkable curbuf",
+                "Note(fzflua): insert sitelinkable curbuf",
             },
             ["t<cr>"] = {
                 function()
@@ -188,7 +187,7 @@ function M.neorg_mappings_ft(bufnr)
                     )
                 end,
 
-                "Fzflua: insert linkable curbuf",
+                "Note(fzflua): insert linkable curbuf",
             },
 
             ["T<cr>"] = {
@@ -251,39 +250,23 @@ function M.neorg_mappings_ft(bufnr)
                         opts
                     )
                 end,
-                "Fzflua: insert linkable global",
+                "Note(fzflua): insert linkable global",
             },
         },
     }
 
-    local resuffle = {}
+    -- local resuffle = {}
     for i, x in pairs(mappings) do
         if i == "i" then
             for g, gg in pairs(x) do
-                table.insert(resuffle, {
-                    g,
-                    gg[1],
-                    description = gg[2],
-                    mode = { "i" },
-                    opts = { buffer = bufnr },
-                })
+                vim.keymap.set(i, g, gg[1], { desc = gg[2], buffer = bufnr })
             end
         else
             for j, jj in pairs(x) do
-                table.insert(resuffle, {
-                    j,
-                    jj[1],
-                    description = jj[2],
-                    opts = { buffer = bufnr },
-                })
+                vim.keymap.set(i, j, jj[1], { desc = jj[2], buffer = bufnr })
             end
         end
     end
-
-    require("legendary").keymaps {
-        itemgroup = "Notes",
-        keymaps = resuffle,
-    }
 end
 
 return M

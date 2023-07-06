@@ -7,7 +7,7 @@ return {
     -- NVIM DAP
     {
         "mfussenegger/nvim-dap",
-        keys=  {
+        keys = {
 
             --  +----------------------------------------------------------+
             --    Breakpoints
@@ -20,7 +20,7 @@ return {
                     end
                     return dap().toggle_breakpoint()
                 end,
-                desc = "Dap: breakpoint (toggle)",
+                desc = "Debug(dap): breakpoint (toggle)",
             },
             -- {
             --     "<localleader>dL",
@@ -31,7 +31,7 @@ return {
             --             fn.input "Log point message: "
             --         )
             --     end,
-            --     desc = "dap: log breakpoint",
+            --     desc = "Debug(dap): log breakpoint",
             -- },
             {
                 "<localleader>dB",
@@ -40,10 +40,10 @@ return {
                         return require "dap"
                     end
                     return dap().set_breakpoint(
-                    fn.input "Breakpoint condition: "
+                        fn.input "Breakpoint condition: "
                     )
                 end,
-                desc = "Dap: breakpoint with condition",
+                desc = "Debug(dap): breakpoint with condition",
             },
 
             {
@@ -54,7 +54,7 @@ return {
                     end
                     return dap().clear_breakpoints()
                 end,
-                desc = "Dap: clear all breakpoints",
+                desc = "Debug(dap): clear all breakpoints",
             },
 
             --  +----------------------------------------------------------+
@@ -69,13 +69,10 @@ return {
                         end
                         return dap().continue()
                     else
-                        as.warn(
-                        "Run debug with: <localleader>dd",
-                        "DAP"
-                        )
+                        as.warn("Run debug with: <localleader>dd", "DAP")
                     end
                 end,
-                desc = "Dap: continue or start debugging",
+                desc = "Debug(dap): continue or start debugging",
             },
 
             {
@@ -83,7 +80,7 @@ return {
                 function()
                     require("dap").run_to_cursor()
                 end,
-                desc = "Dap: Run to Cursor",
+                desc = "Debug(dap): Run to Cursor",
             },
             {
                 "<localleader>dl",
@@ -93,7 +90,7 @@ return {
                     end
                     return dap().run_last()
                 end,
-                desc = "Dap: run last",
+                desc = "Debug(dap): run last",
             },
             {
                 "<localleader>de",
@@ -103,7 +100,7 @@ return {
                     end
                     return dap().eval()
                 end,
-                desc = "Dap: evaluate",
+                desc = "Debug(dap): evaluate",
             },
             -- {
             --     "<localleader>dr",
@@ -123,7 +120,7 @@ return {
                     end
                     return print(dap().session())
                 end,
-                desc = "Dap: get session",
+                desc = "Debug(dap): get session",
             },
 
             --  +----------------------------------------------------------+
@@ -134,7 +131,7 @@ return {
                 function()
                     return require("dapui").toggle()
                 end,
-                desc = "Dapui: toggle UI (dapui)",
+                desc = "Debug(dapui): toggle UI (dapui)",
             },
 
             {
@@ -142,7 +139,7 @@ return {
                 function()
                     return require("dapui").open { reset = true }
                 end,
-                desc = "Dapui: Reset UI (dapui)",
+                desc = "Debug(dapui): Reset UI (dapui)",
             },
 
             --  +----------------------------------------------------------+
@@ -165,7 +162,7 @@ return {
                         return dap().disconnect()
                     end
                 end,
-                desc = "Dap: disconnect",
+                desc = "Debug(dap): disconnect",
             },
             {
                 "<localleader>dq",
@@ -178,7 +175,7 @@ return {
                         return dap().close()
                     end
                 end,
-                desc = "Dap: quit",
+                desc = "Debug(dap): quit",
             },
             -- {
             --     "<localleader>dx",
@@ -203,7 +200,7 @@ return {
                     end
                     return dap().step_into()
                 end,
-                desc = "Dap: step-into",
+                desc = "Debug(dap): step-into",
             },
 
             {
@@ -214,7 +211,7 @@ return {
                     end
                     return dap().step_out()
                 end,
-                desc = "Dap: step-out",
+                desc = "Debug(dap): step-out",
             },
             {
                 "<s-down>",
@@ -224,26 +221,48 @@ return {
                     end
                     return dap().step_over()
                 end,
-                desc = "Dap: step-over",
+                desc = "Debug(dap): step-over",
             },
         },
         dependencies = {
             { "rcarriga/nvim-dap-ui" },
             { "theHamsta/nvim-dap-virtual-text" },
-            { "mxsdev/nvim-dap-vscode-js" },
-            {
-                "microsoft/vscode-js-debug",
-                build = "npm install --legacy-peer-deps && npm run compile",
-            },
-
-            -- { "nvim-telescope/telescope-dap.nvim" },
-            { "jbyuki/one-small-step-for-vimkind" },
             { "LiadOz/nvim-dap-repl-highlights", opts = {} },
+
+            { "jbyuki/one-small-step-for-vimkind" }, -- debug for lua
         },
         opts = {
             setup = {
                 osv = function(_, _)
-                    require("r.plugins.lspconfig.debug.lua").setup()
+                    local dap = require "dap"
+                    dap.configurations.lua = {
+                        {
+                            type = "nlua",
+                            request = "attach",
+                            name = "Attach to running Neovim instance",
+                            host = function()
+                                local value = vim.fn.input "Host [127.0.0.1]: "
+                                if value ~= "" then
+                                    return value
+                                end
+                                return "127.0.0.1"
+                            end,
+                            port = function()
+                                local val =
+                                    tonumber(vim.fn.input("Port: ", "8086"))
+                                assert(val, "Please provide a port number")
+                                return val
+                            end,
+                        },
+                    }
+
+                    dap.adapters.nlua = function(callback, config)
+                        callback {
+                            type = "server",
+                            host = config.host,
+                            port = config.port,
+                        }
+                    end
                 end,
             },
         },

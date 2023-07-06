@@ -66,5 +66,15 @@ end
 
 -- Mappings
 -- keymap.set("n", "<Leader>rf", run_toggleterm, { buffer = true })
-keymap.set({ "n", "i" }, "<F5>", run_tmux_pane, { buffer = true })
-keymap.set({ "n", "i" }, "<F7>", run_overseer, { buffer = true })
+keymap.set(
+    { "n", "i" },
+    "<F5>",
+    run_tmux_pane,
+    { buffer = true, desc = "Task: run tmux pane" }
+)
+keymap.set(
+    { "n", "i" },
+    "<F7>",
+    run_overseer,
+    { buffer = true, desc = "Task: run overseer" }
+)

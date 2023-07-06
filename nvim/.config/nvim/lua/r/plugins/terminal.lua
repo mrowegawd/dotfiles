@@ -68,38 +68,26 @@ return {
         "boltlessengineer/bufterm.nvim",
         cmd = { "BufTermEnter", "BufTermPrev", "BufTermNext" },
         enabled = false,
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Terminal",
-                    description = "Terminal commands",
-                    icon = as.ui.icons.misc.terminal,
-                    keymaps = {
+        keys = {
+            {
+                "<Leader>rr",
+                function()
+                    -- this will add Terminal to the list (not starting job yet)
+                    local Terminal = require("bufterm.terminal").Terminal
+                    local ui = require "bufterm.ui"
 
-                        -- Bufterm
-                        {
-                            "<Leader>rr",
-                            function()
-                                -- this will add Terminal to the list (not starting job yet)
-                                local Terminal =
-                                    require("bufterm.terminal").Terminal
-                                local ui = require "bufterm.ui"
+                    local lfrun = Terminal:new {
+                        cmd = "lfrun",
+                        buflisted = false,
+                        termlisted = false,
+                    }
 
-                                local lfrun = Terminal:new {
-                                    cmd = "lfrun",
-                                    buflisted = false,
-                                    termlisted = false,
-                                }
-
-                                lfrun:spawn()
-                                return ui.toggle_float(lfrun.bufnr)
-                            end,
-                            description = "Bufterm: open lfrun",
-                        },
-                    },
-                },
-            }
-        end,
+                    lfrun:spawn()
+                    return ui.toggle_float(lfrun.bufnr)
+                end,
+                desc = "Terminal(bufterm): open lfrun",
+            },
+        },
         dependencies = {
             { "akinsho/nvim-bufferline.lua" },
         },
@@ -319,20 +307,15 @@ return {
 
                     cmd(fmt("%sToggleTerm", as.term_count))
                 end,
-                desc = "Toggle togglerterm",
                 mode = { "n", "t" },
+                desc = "Terminal(toggleterm): toggle",
             },
 
             {
                 "<Localleader>rl",
                 "<CMD>ToggleTermSendCurrentLine<CR>",
-                desc = "Send current line",
-            },
-            {
-                "<Localleader>rl",
-                "<CMD>ToggleTermSendVisualSelection<CR>",
-                desc = "Send visual selections",
-                mode = { "v" },
+                mode = { "n", "v" },
+                desc = "Task(toggleterm): send line",
             },
             {
                 "<F2>",
@@ -359,7 +342,7 @@ return {
 
                     _lazygit:toggle()
                 end,
-                desc = "Open lazygit",
+                desc = "Terminal(toggleterm): open lazygit",
             },
         },
         opts = {

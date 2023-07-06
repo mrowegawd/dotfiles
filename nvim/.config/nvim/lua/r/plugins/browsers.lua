@@ -8,11 +8,10 @@ return {
             {
                 "<Leader>rb",
                 "<Plug>(openbrowser-smart-search)",
+                mode = { "n", "v" },
                 desc = "Open on browser",
-                mode = { "n", "v" }
-            }
+            },
         },
-        -- cmd = { "<Plug>(openbrowser-smart-search)" },
     },
     -- FIRENVIM
     {
