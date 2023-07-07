@@ -53,15 +53,6 @@ return {
     -- FUGITIVE
     {
         "tpope/vim-fugitive",
-        event = "BufRead",
-        -- cmd = {
-        --     "Git",
-        --     "GBrowse",
-        --     "Gdiffsplit",
-        --     "Gvdiffsplit",
-        --     "Gclog",
-        --     -- "0Gclog",
-        -- },
         dependencies = {
             "tpope/vim-rhubarb",
             "idanarye/vim-merginal", -- fugitive dependencies, UI git branches
@@ -76,13 +67,26 @@ return {
             "tpope/vim-fugitive",
             "tpope/vim-rhubarb",
         },
-        init = function()
-            vim.api.nvim_create_user_command(
-                "DiffCommitLine",
-                "lua require('advanced_git_search.fzf').diff_commit_line()",
-                { range = true }
-            )
-        end,
+        keys = {
+            {
+                "<leader>hgC",
+                "<CMD>AdvancedGitSearch search_log_content<CR>",
+                desc = "Git(git-advanced): search string on repo (all contents)",
+            },
+
+            {
+                "<leader>hgc",
+                ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
+                mode = "v",
+                desc = "Git(git-advanced): opens a window with a list of previous commit logs with respect to selected lines (visual)",
+            },
+
+            {
+                "<leader>hgc",
+                "<CMD>AdvancedGitSearch search_log_content_file<CR>",
+                desc = "Git(git-advanced): search string on curbuf",
+            },
+        },
         config = function()
             require("advanced_git_search.fzf").setup {
                 diff_plugin = "diffview",
@@ -95,7 +99,6 @@ return {
     -- GITSIGNS
     {
         "lewis6991/gitsigns.nvim",
-        event = "BufReadPre",
         opts = {
             -- Experimental ------------------------------------------------------------------------------
             _extmark_signs = true,

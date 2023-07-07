@@ -194,17 +194,20 @@ return {
     },
     -- NOICE
     {
+        -- :nmap output is having wrong linebreaks
+        -- https://github.com/folke/noice.nvim/issues/259
         "folke/noice.nvim",
         event = "VeryLazy",
-        -- keys = {
-        --     {
-        --         "<F6>",
-        --         function()
-        --             return require("noice").redirect(vim.fn.getcmdline())
-        --         end,
-        --         desc = "Redirect Cmdline",
-        --     },
-        -- },
+        keys = {
+            {
+                "<s-enter>",
+                function()
+                    return require("noice").redirect(vim.fn.getcmdline())
+                end,
+                mode = "c",
+                desc = "Noice: redirect cmdline",
+            },
+        },
         dependencies = {
             "MunifTanjim/nui.nvim",
             "rcarriga/nvim-notify",

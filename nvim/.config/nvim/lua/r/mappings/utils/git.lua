@@ -77,28 +77,7 @@ function M.gitlinker(bufnr)
     )
 end
 
-function M.advanced_git_search(bufnr)
-    vnoremap("<Leader>hcc", ":'<,'>DiffCommitLine<CR>", {
-        desc = "Git(git-advanced): compare diff commits [visual]",
-        buffer = bufnr,
-    })
-    nnoremap("<Leader>hgC", function()
-        return require("advanced_git_search.fzf").search_log_content()
-    end, {
-        desc = "Git(git-advanced): search string on repo (all contents)",
-        buffer = bufnr,
-    })
-    nnoremap(
-        "<Leader>hgc",
-        function()
-            return require("advanced_git_search.fzf").search_log_content_file()
-        end,
-        { desc = "Git(git-advanced): search string on curbuf", buffer = bufnr }
-    )
-end
-
 function M.signs(bufnr, gs)
-    M.advanced_git_search(bufnr)
     M.gitlinker(bufnr)
     M.diffview(bufnr)
 

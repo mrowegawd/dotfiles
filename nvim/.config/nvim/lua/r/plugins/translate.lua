@@ -7,7 +7,7 @@ return {
             {
                 "<Leader>ua",
                 "y<ESC>:Translate id<CR>",
-                desc = "Translate: toggle translate it [visual]",
+                desc = "Translate: toggle translate it (visual)",
                 mode = { "v" },
             },
         },

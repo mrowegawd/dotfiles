@@ -182,7 +182,7 @@ return {
             {
                 "<Leader>fg",
                 "<CMD>FzfLua grep_visual<CR>",
-                desc = "Fzflua: live grep [visual]",
+                desc = "Fzflua: live grep (visual)",
                 mode = { "v" },
             },
             {
@@ -1692,7 +1692,7 @@ return {
                         select_word = true,
                     }
                 end,
-                desc = "Spectre: open [visual]",
+                desc = "Spectre: open (visual)",
                 mode = { "v" },
             },
         },
