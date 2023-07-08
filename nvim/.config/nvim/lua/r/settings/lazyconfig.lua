@@ -19,9 +19,10 @@ opt.rtp:prepend(lazypath)
 require("lazy").setup {
     spec = {
         { import = "r.plugins" },
+        { import = "r.plugins.extras.db" },
+        -- { import = "r.plugins.extras.ai" },
         { import = "r.plugins.extras.lang" },
-        -- { import = "r.plugins.extras.db" },
-        -- { import = "r.plugins.extras.ui" },
+        { import = "r.plugins.extras.linting" },
         -- { import = "r.plugins.extras.misc" },
     },
     defaults = { lazy = true, version = false },

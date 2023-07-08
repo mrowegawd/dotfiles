@@ -1233,184 +1233,164 @@ return {
     {
         "nvim-telescope/telescope.nvim",
         cmd = "Telescope",
-        enabled = function()
-            if as.use_search_telescope then
-                return true
-            end
-            return false
-        end,
-        keys = {
-
-            {
-                "<Leader>fb",
-                "<CMD>Telescope buffers<CR>",
-                desc = "Telescope: find buffers",
-            },
-
-            {
-                "<Leader>fw",
-                "<CMD>Telescope current_buffer_fuzzy_find theme=ivy<CR>",
-                desc = "Telescope: live_grep on curbuf",
-            },
-
-            -- {
-            --     "<Leader>fW",
-            --     function(opts)
-            --         local builtin = require "telescope.builtin"
-            --         opts = opts or {}
-            --         local opt = require("telescope.themes").get_ivy {
-            --
-            --             cwd = opts.dir,
-            --             prompt_title = "Live Grep for all Buffers",
-            --             grep_open_files = true,
-            --             shorten_path = true,
-            --             -- sorter = require("telescope.sorters").get_substr_matcher {},
-            --         }
-            --         return builtin.live_grep(opt)
-            --     end,
-            --     description = "Telescope: live_grep on buffers",
-            -- },
-
-            {
-                "<Leader>fo",
-                "<CMD>Telescope oldfiles<CR>",
-                desc = "Telescope: oldfiles",
-            },
-            {
-                "<Leader>fh",
-                "<CMD>Telescope help_tags<CR>",
-                desc = "Telescope: help tags",
-            },
-            {
-                "<Leader>fl",
-                "<CMD>Telescope resume<CR>",
-                desc = "Telescope: resume (last search)",
-            },
-
-            {
-                "z=",
-                "<CMD> Telescope spell_suggest theme=get_cursor<CR>",
-                desc = "Telescope: spell suggest",
-            },
-
-            -- {
-            --     "<Leader>fF",
-            --     function()
-            --         local plugins_directory = vim.fn.stdpath "data"
-            --             .. "/lazy"
-            --         return require("telescope.builtin").find_files {
-            --             cwd = plugins_directory,
-            --             prompt_title = "Find plugin files",
-            --         }
-            --     end,
-            --     description = "Find plugin files",
-            -- },
-
-            -- TELESCOPE-LAZY
-            {
-                "<Leader>fF",
-                "<CMD>Telescope lazy theme=ivy<CR>",
-                desc = "Telescope-lazy: check plugins dir",
-            },
-            -- TELESCOPE-MENUFACTURE
-            {
-                "<Leader>ff",
-                function()
-                    return require("telescope").extensions.menufacture.find_files()
-                end,
-                desc = "Telescope-manufacture: find files",
-            },
-            -- {
-            --     "<Leader>fg",
-            --     function()
-            --         return require("telescope").extensions.menufacture.live_grep()
-            --     end,
-            --     description = "Telescope-manufacture: live_grep",
-            -- },
-
-            -- {
-            --     "<Leader>fg",
-            --     function()
-            --         return require("telescope").extensions.menufacture.grep_string()
-            --     end,
-            --     description = "Telescope-manufacture: grep string under cursor",
-            --     mode = { "v" },
-            -- },
-
-            -- TELESCOPE-GREPQF
-            {
-                "<Leader>fq",
-                "<CMD> Telescope grepqf theme=ivy<CR>",
-                desc = "Telescope-grepqf: live_grep qf items",
-            },
-
-            -- TELESCOPE-SYMBOLS
-            {
-                "<Leader>f1",
-                "<CMD> Telescope symbols theme=ivy<CR>",
-                desc = "Telescope-symbol: emoji",
-            },
-
-            -- CONDUCT-NVIM
-            {
-                "<Leader>fp",
-                "<CMD>Telescope conduct projects theme=ivy<CR>",
-                desc = "Telescope-conductt: projects",
-            },
-        },
-        -- commands = {
-        --     {
-        --         ":Telescope highlights",
-        --         description = "Telescope: highlights",
-        --     },
+        -- keys = {
         --
-        --     {
-        --         ":Telescope keymaps",
-        --         description = "Telescope: keymaps",
-        --     },
+        --         {
+        --             "<Leader>fb",
+        --             "<CMD>Telescope buffers<CR>",
+        --             desc = "Telescope: find buffers",
+        --         },
         --
-        --     {
-        --         ":Telescope colorscheme",
-        --         description = "Telescope: colorscheme",
-        --     },
+        --         {
+        --             "<Leader>fw",
+        --             "<CMD>Telescope current_buffer_fuzzy_find theme=ivy<CR>",
+        --             desc = "Telescope: live_grep on curbuf",
+        --         },
         --
-        --     {
-        --         ":Telescope commands",
-        --         description = "Telescope: commands",
-        --     },
+        --         -- {
+        --         --     "<Leader>fW",
+        --         --     function(opts)
+        --         --         local builtin = require "telescope.builtin"
+        --         --         opts = opts or {}
+        --         --         local opt = require("telescope.themes").get_ivy {
+        --         --
+        --         --             cwd = opts.dir,
+        --         --             prompt_title = "Live Grep for all Buffers",
+        --         --             grep_open_files = true,
+        --         --             shorten_path = true,
+        --         --             -- sorter = require("telescope.sorters").get_substr_matcher {},
+        --         --         }
+        --         --         return builtin.live_grep(opt)
+        --         --     end,
+        --         --     description = "Telescope: live_grep on buffers",
+        --         -- },
         --
-        --     -- TELESCOPE-LUASNIP
-        --     {
-        --         ":Telescope luasnip",
-        --         description = "Telescope-luasnip: open",
+        --         {
+        --             "<Leader>fo",
+        --             "<CMD>Telescope oldfiles<CR>",
+        --             desc = "Telescope: oldfiles",
+        --         },
+        --         {
+        --             "<Leader>fh",
+        --             "<CMD>Telescope help_tags<CR>",
+        --             desc = "Telescope: help tags",
+        --         },
+        --         {
+        --             "<Leader>fl",
+        --             "<CMD>Telescope resume<CR>",
+        --             desc = "Telescope: resume (last search)",
+        --         },
+        --
+        --         {
+        --             "z=",
+        --             "<CMD> Telescope spell_suggest theme=get_cursor<CR>",
+        --             desc = "Telescope: spell suggest",
+        --         },
+        --
+        --         -- {
+        --         --     "<Leader>fF",
+        --         --     function()
+        --         --         local plugins_directory = vim.fn.stdpath "data"
+        --         --             .. "/lazy"
+        --         --         return require("telescope.builtin").find_files {
+        --         --             cwd = plugins_directory,
+        --         --             prompt_title = "Find plugin files",
+        --         --         }
+        --         --     end,
+        --         --     description = "Find plugin files",
+        --         -- },
+        --
+        --         -- TELESCOPE-LAZY
+        --         {
+        --             "<Leader>fF",
+        --             "<CMD>Telescope lazy theme=ivy<CR>",
+        --             desc = "Telescope-lazy: check plugins dir",
+        --         },
+        --         -- TELESCOPE-MENUFACTURE
+        --         {
+        --             "<Leader>ff",
+        --             function()
+        --                 return require("telescope").extensions.menufacture.find_files()
+        --             end,
+        --             desc = "Telescope-manufacture: find files",
+        --         },
+        --         -- {
+        --         --     "<Leader>fg",
+        --         --     function()
+        --         --         return require("telescope").extensions.menufacture.live_grep()
+        --         --     end,
+        --         --     description = "Telescope-manufacture: live_grep",
+        --         -- },
+        --
+        --         -- {
+        --         --     "<Leader>fg",
+        --         --     function()
+        --         --         return require("telescope").extensions.menufacture.grep_string()
+        --         --     end,
+        --         --     description = "Telescope-manufacture: grep string under cursor",
+        --         --     mode = { "v" },
+        --         -- },
+        --
+        --         -- TELESCOPE-GREPQF
+        --         {
+        --             "<Leader>fq",
+        --             "<CMD> Telescope grepqf theme=ivy<CR>",
+        --             desc = "Telescope-grepqf: live_grep qf items",
+        --         },
+        --
+        --         -- TELESCOPE-SYMBOLS
+        --         {
+        --             "<Leader>f1",
+        --             "<CMD> Telescope symbols theme=ivy<CR>",
+        --             desc = "Telescope-symbol: emoji",
+        --         },
+        --
+        --         -- CONDUCT-NVIM
+        --         {
+        --             "<Leader>fp",
+        --             "<CMD>Telescope conduct projects theme=ivy<CR>",
+        --             desc = "Telescope-conductt: projects",
+        --         },
         --     },
-        -- },
+        --     -- commands = {
+        --     --     {
+        --     --         ":Telescope highlights",
+        --     --         description = "Telescope: highlights",
+        --     --     },
+        --     --
+        --     --     {
+        --     --         ":Telescope keymaps",
+        --     --         description = "Telescope: keymaps",
+        --     --     },
+        --     --
+        --     --     {
+        --     --         ":Telescope colorscheme",
+        --     --         description = "Telescope: colorscheme",
+        --     --     },
+        --     --
+        --     --     {
+        --     --         ":Telescope commands",
+        --     --         description = "Telescope: commands",
+        --     --     },
+        --     --
+        --     --     -- TELESCOPE-LUASNIP
+        --     --     {
+        --     --         ":Telescope luasnip",
+        --     --         description = "Telescope-luasnip: open",
+        --     --     },
+        --     -- },
         dependencies = {
+            { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
             "nvim-telescope/telescope-symbols.nvim",
-            {
-                "aaditeynair/conduct.nvim",
-                keys = {
-                    {
-                        "<Leader>sf",
-                        "<CMD>Telescope conduct sessions<CR>",
-                        desc = "Telescope-conduct: session",
-                    },
-                },
-                config = function()
-                    require("conduct").setup {}
-                end,
-            },
             "molecule-man/telescope-menufacture",
             "nvim-telescope/telescope-live-grep-args.nvim",
             "tsakirist/telescope-lazy.nvim",
             "nvim-telescope/telescope-file-browser.nvim",
-            { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-            "nvim-lua/plenary.nvim",
             "benfowler/telescope-luasnip.nvim",
         },
         config = function()
             local telescope = require "telescope"
-            local trouble = require "trouble.providers.telescope"
+            -- local trouble = require "trouble.providers.telescope"
             local actions = require "telescope.actions"
             local themes = require "telescope.themes"
 
@@ -1561,7 +1541,7 @@ return {
                             ["<esc>"] = actions.close,
                             ["<c-c>"] = actions.close,
 
-                            ["<c-o>"] = trouble.open_with_trouble,
+                            -- ["<c-o>"] = trouble.open_with_trouble,
 
                             ["<c-j>"] = actions.cycle_history_next,
                             ["<c-k>"] = actions.cycle_history_prev,
@@ -1660,8 +1640,7 @@ return {
 
             telescope.load_extension "fzf"
             telescope.load_extension "file_browser"
-            telescope.load_extension "conduct" -- sessions telescope
-            telescope.load_extension "aerial"
+            -- telescope.load_extension "aerial"
             telescope.load_extension "luasnip"
             telescope.load_extension "lazy"
             telescope.load_extension "menufacture"
