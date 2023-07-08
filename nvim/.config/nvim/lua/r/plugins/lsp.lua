@@ -621,24 +621,6 @@ return {
         init = function()
             require("r.utils").disable_ctrl_i_and_o("NoOutline", { "Outline" })
         end,
-        keys = {
-            -- {
-            --     "go",
-            --     "<CMD>SymbolsOutline<CR>",
-            --     desc = "LSP(symbolsoutline): toggle",
-            -- },
-            -- {
-            --     "gO",
-            --     function()
-            --         require("r.utils.tiling").force_win_close(
-            --             { "Outline" },
-            --             false
-            --         )
-            --         return cmd.SymbolsOutline()
-            --     end,
-            --     desc = "LSP(symbolsoutline): focus toggle",
-            -- },
-        },
         config = function()
             require("symbols-outline").setup {
                 highlight_hovered_item = true,

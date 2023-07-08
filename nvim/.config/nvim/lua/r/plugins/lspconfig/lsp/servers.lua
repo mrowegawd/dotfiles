@@ -197,10 +197,10 @@ local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 
 local function lsp_init()
     local signs = {
-        { name = "DiagnosticSignError", text = icons.diagnostics.Error },
-        { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
-        { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
-        { name = "DiagnosticSignInfo", text = icons.diagnostics.Info },
+        { name = "DiagnosticSignError", text = icons.diagnostics.error },
+        { name = "DiagnosticSignWarn", text = icons.diagnostics.warn },
+        { name = "DiagnosticSignHint", text = icons.diagnostics.hint },
+        { name = "DiagnosticSignInfo", text = icons.diagnostics.info },
     }
     for _, sign in ipairs(signs) do
         vim.fn.sign_define(
