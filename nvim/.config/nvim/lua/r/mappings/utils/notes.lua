@@ -115,18 +115,25 @@ function M.neorg_mappings_ft(bufnr)
                 "Note(fzflua): find linkable",
             },
 
-            ["lb"] = {
-                function()
-                    require("r.utils.neorg_notes").get_check_linkdir(neorg)
-                end,
-                "Note(fzflua): search local broken link",
-            },
-            ["lB"] = {
-                function()
-                    print "searching global broken link: not implemented yet"
-                end,
-                "Note(fzflua): search global broken link",
-            },
+            -- ["lb"] = {
+            --     function()
+            --         require("r.utils.neorg_notes").get_check_linkdir(neorg)
+            --     end,
+            --     "Note(fzflua): search local broken link",
+            -- },
+            -- ["lB"] = {
+            --     function()
+            --         print "searching global broken link: not implemented yet"
+            --     end,
+            --     "Note(fzflua): search global broken link",
+            -- },
+            --
+            -- ["cs"] = {
+            --     function()
+            --         require("r.utils.neorg_notes").testing()
+            --     end,
+            --     "Note(fzflua): PROGRAM testing",
+            -- },
         },
 
         ["i"] = {
@@ -142,8 +149,6 @@ function M.neorg_mappings_ft(bufnr)
                                 vim.api.nvim_put({
                                     "[" .. str_path .. "]",
                                 }, "c", false, true)
-
-                                -- vim.api.nvim_feedkeys("hf]a", "t", false)
                             end,
                         },
                     }
@@ -175,8 +180,6 @@ function M.neorg_mappings_ft(bufnr)
                                 vim.api.nvim_put({
                                     "{" .. str_path .. "}",
                                 }, "c", false, true)
-
-                                -- vim.api.nvim_feedkeys("hf]a", "t", false)
                             end,
                         },
                     }
@@ -237,8 +240,6 @@ function M.neorg_mappings_ft(bufnr)
                                         .. title
                                         .. "}",
                                 }, "c", false, true)
-
-                                -- vim.api.nvim_feedkeys("hf]a", "t", false)
                             end,
                         },
                     }

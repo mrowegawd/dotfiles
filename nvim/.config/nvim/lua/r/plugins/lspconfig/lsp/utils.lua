@@ -93,13 +93,6 @@ function M.lspmappings(_, bufnr)
 
     vim.keymap.set(
         "n",
-        "gt",
-        "<CMD>FzfLua lsp_typedefs<CR>",
-        { desc = "LSP(fzflua): type definitions", buffer = bufnr }
-    )
-
-    vim.keymap.set(
-        "n",
         "<leader>gw",
         "<CMD>FzfLua lsp_document_symbols<CR>",
         { desc = "LSP: document symbols on curbuf", buffer = bufnr }
@@ -112,9 +105,44 @@ function M.lspmappings(_, bufnr)
         { desc = "LSP: document symbols all", buffer = bufnr }
     )
 
-    vim.keymap.set("n", "gP", function()
-        require("goto-preview").goto_preview_definition {}
-    end, { desc = "LSP(goto-preview): preview definitions", buffer = bufnr })
+    if pcall(require, "goto-preview") then
+        vim.keymap.set(
+            "n",
+            "gP",
+            function()
+                require("goto-preview").goto_preview_definition {}
+            end,
+            { desc = "LSP(goto-preview): preview definitions", buffer = bufnr }
+        )
+
+        vim.keymap.set("n", "<leader>gr", function()
+            require("goto-preview").goto_preview_references()
+        end, {
+            desc = "LSP(goto-preview): preview references",
+            buffer = bufnr,
+        })
+
+        vim.keymap.set("n", "gi", function()
+            require("goto-preview").goto_preview_implementation {}
+        end, {
+            desc = "LSP(goto-preview): preview implementations",
+            buffer = bufnr,
+        })
+
+        vim.keymap.set("n", "gt", function()
+            require("goto-preview").goto_preview_type_definition {}
+        end, {
+            desc = "LSP(goto-preview): preview type definitions",
+            buffer = bufnr,
+        })
+    else
+        vim.keymap.set(
+            "n",
+            "gt",
+            "<CMD>FzfLua lsp_typedefs<CR>",
+            { desc = "LSP(fzflua): type definitions", buffer = bufnr }
+        )
+    end
 
     --  +----------------------------------------------------------+
     --  Diagnostics
@@ -148,7 +176,7 @@ function M.lspmappings(_, bufnr)
 
     vim.keymap.set("n", "<leader>ud", function()
         require("r.utils").toggle_diagnostics()
-    end, { desc = "LSP: toogle diagnostics", buffer = bufnr })
+    end, { desc = "LSP: toggle diagnostics", buffer = bufnr })
 
     --  +----------------------------------------------------------+
     --  MISC
@@ -158,13 +186,21 @@ function M.lspmappings(_, bufnr)
         return require("r.utils").toggle_inlayhints(function()
             vim.lsp.inlay_hint(0, nil)
         end)
-    end, { desc = "LSP: toogle inlayhints", buffer = bufnr })
+    end, { desc = "LSP: toggle inlayhints", buffer = bufnr })
 
     vim.keymap.set("n", "<leader>uH", function()
         return require("r.utils").toggle_buffer_semantic_tokens(
             vim.api.nvim_get_current_buf()
         )
-    end, { desc = "LSP: toogle semantic token", buffer = bufnr })
+    end, { desc = "LSP: toggle semantic token", buffer = bufnr })
+
+    --  +----------------------------------------------------------+
+    --  COMMANDS
+    --  +----------------------------------------------------------+
+
+    as.command("LspFormat", function()
+        vim.lsp.buf.format { bufnr = 0, async = false }
+    end)
 end
 
 return M

@@ -316,58 +316,55 @@ return {
             }
         end,
     },
-    -- NEOGIT (disabled)
+    -- NEOGIT
     {
-        "TimUntersberger/neogit",
+        "NeogitOrg/neogit",
         cmd = "Neogit",
-        enabled = false,
-        init = function()
-            require("r.utils").disable_ctrl_i_and_o(
-                "NoNeogit",
-                { "NeogitStatus" }
-            )
-        end,
+        dependencies = { "nvim-lua/plenary.nvim" },
         keys = {
             {
-                "<leader>hl",
-                "<CMD>Neogit<CR>",
-                desc = "Git(neogit): open",
+                "<localleader>gs",
+                function()
+                    require("neogit").open()
+                end,
+                desc = "Git(neogit): open status buffer",
             },
             {
-                "<Leader>hC",
-                "<CMD>Neogit commit<CR>",
-                desc = "Git(neogit): commit",
+                "<localleader>gc",
+                function()
+                    require("neogit").open { "commit" }
+                end,
+                desc = "Git(neogit): open commit buffer",
+            },
+            -- {
+            --     "<localleader>gl",
+            --     function()
+            --         require("neogit").popups.pull.create()
+            --     end,
+            --     desc = "Git(neogit): open pull popup",
+            -- },
+            -- {
+            --     "<localleader>gp",
+            --     function()
+            --         require("neogit").popups.push.create()
+            --     end,
+            --     desc = "Git(neogit): open push popup",
+            -- },
+        },
+        opts = {
+            disable_signs = false,
+            disable_hint = true,
+            disable_commit_confirmation = true,
+            disable_builtin_notifications = true,
+            disable_insert_on_commit = false,
+            signs = {
+                section = { "", "" }, -- "󰁙", "󰁊"
+                item = { "▸", "▾" },
+                hunk = { "󰐕", "󰍴" },
+            },
+            integrations = {
+                diffview = true,
             },
         },
-        config = function()
-            local neogit = require "neogit"
-
-            neogit.setup {
-                disable_signs = false,
-                disable_hint = false,
-                disable_commit_confirmation = true,
-                disable_builtin_notifications = true,
-                disable_insert_on_commit = false,
-                integrations = { diffview = true },
-                signs = {
-                    section = { "", "" }, -- "", ""
-                    item = { "▸", "▾" },
-                    hunk = { "樂", "" },
-                },
-            }
-
-            highlight.plugin(
-                "neogit",
-                { -- NOTE: highlights must be set AFTER neogit's setup
-                    { NeogitDiffAdd = { link = "DiffAdd" } },
-                    { NeogitDiffDelete = { link = "DiffDelete" } },
-                    { NeogitDiffAddHighlight = { link = "DiffAdd" } },
-                    { NeogitDiffDeleteHighlight = { link = "DiffDelete" } },
-                    { NeogitDiffContextHighlight = { link = "NormalFloat" } },
-                    { NeogitHunkHeader = { link = "TabLine" } },
-                    { NeogitHunkHeaderHighlight = { link = "DiffText" } },
-                }
-            )
-        end,
     },
 }

@@ -213,7 +213,7 @@ end, { desc = "Buffer: alternate buffer/file" })
 nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab" })
 nnoremap("tl", "<CMD>tabn<CR>", { desc = "Tab: next tab" })
 nnoremap("th", "<CMD>tabp<CR>", { desc = "Tab: prev tab" })
-nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab; first tab" })
+nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab" })
 nnoremap("tL", "<CMD>tabfirst<CR>", { desc = "Tab: last tab" })
 
 --  ╭──────────────────────────────────────────────────────────╮
@@ -233,6 +233,19 @@ vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 --  ╰──────────────────────────────────────────────────────────╯
 nnoremap("~", "%", silent)
 
+nnoremap("<leader>dd", function()
+    local query = vim.fn.input "Search DevDocs: "
+    if query == "" then
+        return
+    end
+
+    local encodedURL = string.format(
+        'open "https://devdocs.io/#q=%s"',
+        query:gsub("%s", "%%20")
+    )
+    os.execute(encodedURL)
+end, { desc = "Misc: search devdocs" })
+
 -- Multiple Cursor Replacement
 -- http://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-byses-of-vimscript/
 -- vim.keymap.set("n", "cn", "*``cgn")
@@ -247,21 +260,21 @@ nnoremap(
 
 nnoremap("<Leader>P", function()
     return vim.notify(fn.expand "%:p")
-end, { desc = "Check cwd curfile" })
+end, { desc = "Misc: check cwd curfile" })
 
 nnoremap("<Leader>cd", function()
     local filepath = fn.expand "%:p:h" -- code
     cmd(fmt("cd %s", filepath))
     vim.notify(fmt("ROOT CHANGED: %s", filepath))
-end, { desc = "Change cur pwd to curfile" })
+end, { desc = "Misc: change cur pwd to curfile" })
 
 nnoremap("<Leader>n", function()
     require("notify").dismiss {}
     return cmd.nohl()
-end, { desc = "Clear searches" })
+end, { desc = "Misc: clear searches" })
 
-nnoremap("n", "nzzzv", { desc = "Search next" })
-nnoremap("N", "Nzzzv", { desc = "Search prev" })
+nnoremap("n", "nzzzv", { desc = "Misc: search next" })
+nnoremap("N", "Nzzzv", { desc = "Misc: search prev" })
 
 -- Allow moving the cursor through wrapped lines using j and k,
 -- note that I have line wrapping turned off but turned on only for Markdown
@@ -434,7 +447,7 @@ end, { desc = "Snippet: edit snippet file" })
 
 command("CBcatalog", function()
     return require("comment-box").catalog()
-end, { desc = "Comment-bobx: show catalog" })
+end, { desc = "Comment-box: show catalog" })
 
 command("InfoBaseColorsTheme", function()
     return require("r.utils").infoBaseColorsTheme()
