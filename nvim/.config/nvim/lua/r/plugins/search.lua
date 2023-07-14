@@ -102,7 +102,21 @@ return {
                 end,
                 desc = "Fzflua: buffers",
             },
-
+            {
+                "<c-v>",
+                function()
+                    return require("fzf-lua").complete_path {
+                        winopts = {
+                            relative = "cursor",
+                            height = 0.33,
+                            width = 0.33,
+                        },
+                        cmd = "fd --color never --type f --hidden --follow",
+                    }
+                end,
+                mode = { "i" },
+                desc = "Fzflua: complete path",
+            },
             {
                 "<Leader>fw",
                 "<CMD>FzfLua blines<CR>",
@@ -119,7 +133,7 @@ return {
                 desc = "Fzflua: keymaps",
             },
             {
-                "<Leader>fc",
+                "<Leader>fm",
                 "<CMD>FzfLua commands<CR>",
                 desc = "Fzflua: commands",
             },
@@ -186,7 +200,7 @@ return {
                 mode = { "v" },
             },
             {
-                "<localleader>g",
+                "<Leader>fc",
                 "<CMD>FzfLua changes<CR>",
                 desc = "Fzflua: changes",
             },
@@ -279,26 +293,6 @@ return {
         --                 {
         --                     ":FzfLua command_history",
         --                     description = "Fzflua: command history",
-        --                 },
-        --             },
-        --         },
-        --         {
-        --             itemgroup = "Misc",
-        --             keymaps = {
-        --                 {
-        --                     "<c-v>",
-        --                     function()
-        --                         return require("fzf-lua").complete_path {
-        --                             winopts = {
-        --                                 relative = "cursor",
-        --                                 height = 0.33,
-        --                                 width = 0.33,
-        --                             },
-        --                             cmd = "fd --color never --type f --hidden --follow",
-        --                         }
-        --                     end,
-        --                     mode = { "i" },
-        --                     description = "Fzflua: complete path",
         --                 },
         --             },
         --         },

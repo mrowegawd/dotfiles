@@ -1,5 +1,3 @@
-local highlight = as.highlight
-
 return {
     -- GITHUB NOTIFICATIONS
     { "rlch/github-notifications.nvim" },
