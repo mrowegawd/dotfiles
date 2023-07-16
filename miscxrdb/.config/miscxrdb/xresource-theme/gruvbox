@@ -11,7 +11,7 @@
 *background: #282828
 ! soft contrast: *background: #32302f
 *foreground: #ebdbb2
-*.cursorColor: #fb4934
+*cursorColor: #fb4934
 
 ! Black + DarkGrey
 *color0:  #282828

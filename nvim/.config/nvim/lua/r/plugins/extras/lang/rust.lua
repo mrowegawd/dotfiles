@@ -1,201 +1,169 @@
-local function get_codelldb()
-    local mason_registry = require "mason-registry"
-    local codelldb = mason_registry.get_package "codelldb"
-    local extension_path = codelldb:get_install_path() .. "/extension/"
-    local codelldb_path = extension_path .. "adapter/codelldb"
-    local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
-    return codelldb_path, liblldb_path
+local function status_dap()
+  local ok, dap = pcall(require, "dap")
+
+  if not ok then
+    return ""
+  end
+
+  return dap.status()
 end
 
 return {
-    -- NVIM-TREESITTER
-    {
-        "nvim-treesitter/nvim-treesitter",
-        opts = function(_, opts)
-            vim.list_extend(opts.ensure_installed, { "ron", "rust", "toml" })
-        end,
+  -- NVIM-TREESITTER
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "ron", "rust", "toml" })
+      end
+    end,
+  },
+  -- MASON.NVIM
+  {
+    "williamboman/mason.nvim",
+    optional = true,
+    opts = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        vim.list_extend(opts.ensure_installed, { "codelldb" })
+      end
+    end,
+  },
+  -- RUST-TOOLS
+  {
+    "simrat39/rust-tools.nvim",
+    dependencies = {
+      "rust-lang/rust.vim",
     },
-    -- MASON.NVIM
-    {
-        "williamboman/mason.nvim",
-        optional = true,
-        opts = function(_, opts)
-            -- vim.list_extend(opts.ensure_installed, { "codelldb" })
-            vim.list_extend(opts.ensure_installed, { "codelldb" })
-        end,
-    },
-    -- NVIM-LSPCONFIG
-    {
-        "neovim/nvim-lspconfig",
-        dependencies = { "simrat39/rust-tools.nvim", "rust-lang/rust.vim" },
-        opts = {
-            servers = {
-                -- Ensure mason installs the server
-                rust_analyzer = {
-                    keys = {
-                        {
-                            "K",
-                            "<cmd>RustHoverActions<cr>",
-                            desc = "Hover Actions (Rust)",
-                        },
-                        {
-                            "<leader>cR",
-                            "<cmd>RustCodeAction<cr>",
-                            desc = "Code Action (Rust)",
-                        },
-                        {
-                            "<leader>dr",
-                            "<cmd>RustDebuggables<cr>",
-                            desc = "Run Debuggables (Rust)",
-                        },
-                    },
-                    settings = {
-                        ["rust-analyzer"] = {
-                            cargo = {
-                                allFeatures = true,
-                                loadOutDirsFromCheck = true,
-                                runBuildScripts = true,
-                            },
-                            -- Add clippy lints for Rust.
-                            checkOnSave = {
-                                allFeatures = true,
-                                command = "clippy",
-                                extraArgs = { "--no-deps" },
-                            },
-                            procMacro = {
-                                enable = true,
-                                ignored = {
-                                    ["async-trait"] = { "async_trait" },
-                                    ["napi-derive"] = { "napi" },
-                                    ["async-recursion"] = { "async_recursion" },
-                                },
-                            },
-                        },
-                    },
+    lazy = true,
+    opts = function()
+      local ok, mason_registry = pcall(require, "mason-registry")
+      local adapter ---@type any
+      if ok then
+        -- rust tools configuration for debugging support
+        local codelldb = mason_registry.get_package "codelldb"
+        local extension_path = codelldb:get_install_path() .. "/extension/"
+        local codelldb_path = extension_path .. "adapter/codelldb"
+        local liblldb_path = vim.fn.has "mac" == 1 and extension_path .. "lldb/lib/liblldb.dylib"
+          or extension_path .. "lldb/lib/liblldb.so"
+        adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
+      end
+      return {
+        dap = {
+          adapter = adapter,
+        },
+        tools = {
+          hover_actions = {
+            auto_focus = true,
+          },
+          inlay_hints = {
+            auto = false,
+          },
+        },
+      }
+    end,
+    config = function() end,
+  },
+  -- NVIM-LSPCONFIG
+  {
+    "neovim/nvim-lspconfig",
+    optional = true,
+    opts = {
+      servers = {
+        rust_analyzer = {
+          settings = {
+            ["rust-analyzer"] = {
+              cargo = {
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                runBuildScripts = true,
+              },
+              -- Add clippy lints for Rust.
+              checkOnSave = {
+                allFeatures = true,
+                command = "clippy",
+                extraArgs = { "--no-deps" },
+              },
+              procMacro = {
+                enable = true,
+                ignored = {
+                  ["async-trait"] = { "async_trait" },
+                  ["napi-derive"] = { "napi" },
+                  ["async-recursion"] = { "async_recursion" },
                 },
-                taplo = {
-                    keys = {
-                        {
-                            "K",
-                            function()
-                                if
-                                    vim.fn.expand "%:t" == "Cargo.toml"
-                                    and require("crates").popup_available()
-                                then
-                                    require("crates").show_popup()
-                                else
-                                    vim.lsp.buf.hover()
-                                end
-                            end,
-                            desc = "Show Crate Documentation",
-                        },
-                    },
-                },
+              },
             },
-            setup = {
-                rust_analyzer = function(_, opts)
-                    local codelldb_path, liblldb_path = get_codelldb()
-                    local lsp_utils = require "r.plugins.lspconfig.lsp.utils"
-                    lsp_utils.on_attach(function(client, buffer)
-                        if client.name == "rust_analyzer" then
-                            vim.keymap.set(
-                                "n",
-                                "<leader>cR",
-                                "<cmd>RustRunnables<cr>",
-                                { buffer = buffer, desc = "Runnables" }
-                            )
-                            vim.keymap.set("n", "<leader>cl", function()
-                                vim.lsp.codelens.run()
-                            end, {
-                                buffer = buffer,
-                                desc = "Code Lens",
-                            })
-                        end
-                    end)
+          },
+        },
+        taplo = {
+          keys = {
+            {
+              "K",
+              function()
+                if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
+                  require("crates").show_popup()
+                else
+                  vim.lsp.buf.hover()
+                end
+              end,
+              desc = "Show Crate Documentation",
+            },
+          },
+        },
+      },
+      setup = {
+        rust_analyzer = function(_, opts)
+          local function locopts(name)
+            local plugin = require("lazy.core.config").plugins[name]
+            if not plugin then
+              return {}
+            end
+            local Plugin = require "lazy.core.plugin"
+            return Plugin.values(plugin, "opts", false)
+          end
 
-                    require("rust-tools").setup {
-                        tools = {
-                            hover_actions = { border = "solid" },
-                            on_initialized = function()
-                                vim.api.nvim_create_autocmd({
-                                    "BufWritePost",
-                                    "BufEnter",
-                                    "CursorHold",
-                                    "InsertLeave",
-                                }, {
-                                    pattern = { "*.rs" },
-                                    callback = function()
-                                        vim.lsp.codelens.refresh()
-                                    end,
-                                })
-                            end,
-                        },
-                        server = opts,
-                        dap = {
-                            adapter = require("rust-tools.dap").get_codelldb_adapter(
-                                codelldb_path,
-                                liblldb_path
-                            ),
-                        },
-                    }
-                    return true
-                end,
-            },
-        },
-    },
-    -- NVIM-DAP
-    {
-        "mfussenegger/nvim-dap",
-        opts = {
-            setup = {
-                codelldb = function(_, _)
-                    local codelldb_path, liblldb_path = get_codelldb()
-                    local dap = require "dap"
-                    dap.adapters.codelldb = {
-                        type = "server",
-                        port = "${port}",
-                        executable = {
-                            command = codelldb_path,
-                            args = { "--port", "${port}" },
+          local rust_tools_opts = locopts "rust-tools.nvim"
 
-                            -- On windows you may have to uncomment this:
-                            -- detached = false,
-                        },
-                    }
-                    dap.configurations.cpp = {
-                        {
-                            name = "Launch file",
-                            type = "codelldb",
-                            request = "launch",
-                            program = function()
-                                return vim.fn.input(
-                                    "Path to executable: ",
-                                    vim.fn.getcwd() .. "/",
-                                    "file"
-                                )
-                            end,
-                            cwd = "${workspaceFolder}",
-                            stopOnEntry = false,
-                        },
-                    }
+          require("rust-tools").setup(vim.tbl_deep_extend("force", rust_tools_opts or {}, { server = opts }))
 
-                    dap.configurations.c = dap.configurations.cpp
-                    dap.configurations.rust = dap.configurations.cpp
-                end,
-            },
-        },
+          local lsp_utils = require "r.plugins.lsp.utils"
+          lsp_utils.on_attach(function(client, buffer)
+            if client.name == "rust_analyzer" then
+              vim.keymap.set("n", "<localleader>dd", function()
+                if #status_dap() > 0 then
+                  require("dap").disconnect()
+                  return require("dapui").close()
+                else
+                  return vim.cmd.RustDebuggables()
+                end
+              end, {
+                desc = "Debug(rust): RustDebuggables",
+                buffer = buffer,
+              })
+
+              vim.keymap.set("n", "K", function()
+                return vim.cmd.RustHoverActions()
+              end, {
+                desc = "LSP(rust): RustHoverActions",
+                buffer = buffer,
+              })
+            end
+          end)
+          return true
+        end,
+      },
     },
-    -- NEOTEST
-    {
-        "nvim-neotest/neotest",
-        optional = true,
-        dependencies = {
-            "rouge8/neotest-rust",
-        },
-        opts = {
-            adapters = {
-                ["neotest-rust"] = {},
-            },
-        },
+  },
+  -- NEOTEST RUST
+  {
+    "nvim-neotest/neotest",
+    optional = true,
+    dependencies = {
+      "rouge8/neotest-rust",
     },
+    opts = {
+      adapters = {
+        ["neotest-rust"] = {},
+      },
+    },
+  },
 }

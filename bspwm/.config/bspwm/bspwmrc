@@ -1,6 +1,40 @@
 #! /bin/sh
 
-sxhkd &
+export SXHKD_SHELL=/usr/bin/sh
+
+# remove x cursor
+# xsetroot -cursor_name left_ptr &
+xsetroot -cursor_name left_ptr
+
+run_disowned() {
+	nohup "$@" >/dev/null 2>&1 &
+}
+
+killall sxhkd
+run_disowned sxhkd
+
+# launch auto start application
+startup_lock_file=/tmp/bspwm-startup.lock
+if [ ! -f $startup_lock_file ]; then
+
+	echo "dummy" >$startup_lock_file
+
+	"$HOME/.config/bspwm/autostart.sh"
+
+	# killall mpd
+	# mpd &
+
+	sleep 2
+
+	kitty &
+
+	sleep 2
+
+	firefox &
+
+	sleep 2
+
+fi
 
 # bspc monitor -d I II III IV V VI VII VIII IX X
 # bspc monitor -d term web todo pdfile code docs music misc
@@ -34,11 +68,16 @@ bspc rule -a URxvt:ncmpcpp state=floating
 bspc rule -a st:ncmpcpp state=floating
 # bspc rule -a mpv state=floating rectangle=WidthxHeight+Xoffset+Yoffset
 # bspc rule -a URxvt:urxvt_keys_help state=floating center=true rectangle=500x300+0+0
-# bspc rule -a "Firefox-esr" desktop=$desk_web follow=on
+bspc rule -a "discord" desktop=$desk_doc follow=on
 bspc rule -a "Firefox-esr" desktop=$desk_web
+bspc rule -a "Navigator" desktop=$desk_web
 
+bspc rule -a Yad state=floating center=off
 bspc rule -a jetbrains-idea-ce desktop=$desk_code # intellij 'did you know' popup
 bspc rule -a jetbrains-idea-c desktop=$desk_code  # the rest of intellij
+bspc rule -a Transmission-gtk state=tiled center=off
+bspc rule -a Pulseeffects state=floating center=on
+bspc rule -a Pulsemixer state=floating center=on
 
 # bspc rule -a libreofficedev-calc state=tiled desktop='docs'
 # bspc rule -a '*:libreofficedev' desktop='docs'
@@ -56,25 +95,3 @@ bspc rule -a '*:soffice' state=tiled desktop=$desk_doc
 # bspc rule -a 'Zathura' desktop='file' follow=on state=tiled
 
 bspc wm --record-history on
-
-# remove x cursor
-xsetroot -cursor_name left_ptr &
-
-# launch auto start application
-startup_lock_file=/tmp/bspwm-startup.lock
-if [ ! -f $startup_lock_file ]; then
-	echo "dummy" >$startup_lock_file
-
-	"$HOME/.config/bspwm/autostart.sh"
-
-	sleep 2
-
-	wezterm &
-
-	sleep 2
-
-	firefox &
-
-	sleep 2
-
-fi

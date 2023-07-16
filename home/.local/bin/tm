@@ -3,6 +3,20 @@
 DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
 MARKED_PWD="$DROPBOX_PATH/marked-pwd"
 
+not_in_tmux() {
+	[ -z "$TMUX" ]
+}
+
+# TODO: create a session in current cwd
+# if [[ "$1" == "p" ]]; then
+# 	if not_in_tmux; then
+# 		tmux new-session -As "$(basename $(pwd))" -c "$(basename $(pwd))"
+# 	else
+# 		tmux new-session -d -s "$(basename $(pwd))" -c "$(basename $(pwd))"
+# 	fi
+# 	exit 1
+# fi
+
 if [[ -z "$TMUX" ]]; then
 	select=$(fzf <"$MARKED_PWD")
 else
@@ -16,15 +30,12 @@ session_name=$(basename "$select")
 
 ss_name=$(echo "$session_name" | sed -e "s/\./\_/g")
 
-not_in_tmux() {
-	[ -z "$TMUX" ]
-}
-
 session_exists() {
 	tmux has-session -t "=$ss_name"
 }
 
 create_if_needed_and_attach() {
+
 	if not_in_tmux; then
 		tmux new-session -As "$ss_name" -c "$select"
 	else

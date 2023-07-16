@@ -40,7 +40,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 #   fi
 # fi
 
-if [ ! -z "$(command -v clipmenud)" ]; then
+if [ -n "$(command -v clipmenud)" ]; then
 	killall -q clipmenud
 	clipmenud &
 fi

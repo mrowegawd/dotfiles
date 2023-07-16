@@ -14,32 +14,32 @@ local col_visual = highlight.tint(col_visual_default, -0.2)
 local col_visual_fg = highlight.tint(col_visual_default, 0.3)
 
 local colors = {
-    normal_bg = col_bg,
-    normal_fg = col_fg,
+  normal_bg = col_bg,
+  normal_fg = col_fg,
 
-    command_bg = col_cmd,
-    command_fg = col_cmd_fg,
+  command_bg = col_cmd,
+  command_fg = col_cmd_fg,
 
-    visual_bg = col_visual,
-    visual_fg = col_visual_fg,
+  visual_bg = col_visual,
+  visual_fg = col_visual_fg,
 }
 return {
-    normal = {
-        -- a = { bg = colors.yellow, fg = colors.black, gui = "bold" },
-        -- b = { bg = colors.lightgray, fg = colors.white },
-        c = { bg = colors.normal_bg, fg = colors.normal_fg, gui = "bold" },
-    },
-    insert = {
-        c = { bg = colors.insert_bg, fg = colors.insert_fg, gui = "bold" },
-    },
-    visual = {
-        c = { bg = colors.visual_bg, fg = colors.visual_fg, gui = "bold" },
-    },
-    replace = {
-        c = { bg = colors.normal_bg, fg = colors.normal_fg, gui = "bold" },
-    },
-    command = {
-        c = { bg = colors.command_bg, fg = colors.command_fg, gui = "bold" },
-    },
-    inactive = {},
+  normal = {
+    -- a = { bg = colors.yellow, fg = colors.black, gui = "bold" },
+    -- b = { bg = colors.lightgray, fg = colors.white },
+    c = { bg = colors.normal_bg, fg = colors.normal_fg, gui = "bold" },
+  },
+  insert = {
+    c = { bg = colors.insert_bg, fg = colors.insert_fg, gui = "bold" },
+  },
+  visual = {
+    c = { bg = colors.visual_bg, fg = colors.visual_fg, gui = "bold" },
+  },
+  replace = {
+    c = { bg = colors.normal_bg, fg = colors.normal_fg, gui = "bold" },
+  },
+  command = {
+    c = { bg = colors.command_bg, fg = colors.command_fg, gui = "bold" },
+  },
+  inactive = {},
 }

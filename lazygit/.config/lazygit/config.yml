@@ -49,9 +49,10 @@ gui:
   commandLogSize: 8
 git:
   paging:
-    colorArg: always
+    colorArg: 'always'
     # colorArg: never
     useConfig: false
+    # pager: delta --dark --color-only --side-by-side
     pager: delta --dark --paging=never
   commit:
     signOff: false
@@ -79,7 +80,7 @@ git:
   diffContextSize: 3 # how many lines of context are shown around a change in diffs
 os:
   editCommand: "" # see 'Configuring File Editing' section
-  editCommandTemplate: "{{editor}} {{filename}}"
+  # editCommandTemplate: "{{editor}} {{filename}}"
   openCommand: ""
 refresher:
   refreshInterval: 10 # File/submodule refresh interval in seconds. Auto-refresh can be disabled via option 'git.autoRefresh'.

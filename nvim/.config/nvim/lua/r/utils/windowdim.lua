@@ -6,171 +6,169 @@ local autocmds = {}
 local focused_colorcolumn = as.tryjoin(as.tryrange(80, 256), ",")
 
 local winhighlight_blurred = table.concat({
-    "CursorLineNr:LineNr",
-    "EndOfBuffer:ColorColumn",
-    -- "IncSearch:ColorColumn",
-    "Normal:ColorColumn",
-    "NormalNC:ColorColumn",
-    "SignColumn:ColorColumn",
-    --
-    -- "Float:ColorColumn",
-    "NormalFloat:ColorColumn",
+  "CursorLineNr:LineNr",
+  "EndOfBuffer:ColorColumn",
+  -- "IncSearch:ColorColumn",
+  "Normal:ColorColumn",
+  "NormalNC:ColorColumn",
+  "SignColumn:ColorColumn",
+  --
+  -- "Float:ColorColumn",
+  "NormalFloat:ColorColumn",
 }, ",")
 
 -- Jangan bikin ft ini effect windowdim
 autocmds.winhighlight_filetype_blacklist = {
-    ["CommandTMatchListing"] = true,
-    ["CommandTPrompt"] = true,
-    ["CommandTTitle"] = true,
-    ["noice"] = true,
-    -- ["Outline"] = true,
-    ["alpha"] = true,
-    ["lazy"] = true,
-    ["mason"] = true,
-    ["dashboard"] = true,
-    ["diff"] = true,
-    ["Glance"] = true,
-    -- ["git"] = true,
-    -- ["floggraph"] = true,
-    ["octo"] = true,
-    ["fugitiveblame"] = true,
-    ["packer"] = true,
-    ["sagahover"] = true,
-    ["sagasignature"] = true,
-    ["startup"] = true,
-    ["tsplayground"] = true,
-    ["undotree"] = true,
+  ["CommandTMatchListing"] = true,
+  ["CommandTPrompt"] = true,
+  ["CommandTTitle"] = true,
+  ["noice"] = true,
+  -- ["Outline"] = true,
+  ["alpha"] = true,
+  ["lazy"] = true,
+  ["mason"] = true,
+  ["dashboard"] = true,
+  ["diff"] = true,
+  ["Glance"] = true,
+  -- ["git"] = true,
+  -- ["floggraph"] = true,
+  ["octo"] = true,
+  ["fugitiveblame"] = true,
+  ["packer"] = true,
+  ["sagahover"] = true,
+  ["sagasignature"] = true,
+  ["startup"] = true,
+  ["tsplayground"] = true,
+  ["undotree"] = true,
 }
 
 -- Don't use colorcolumn when these filetypes get focus (we want them to appear
 -- full-width irrespective of 'textwidth').
 autocmds.colorcolumn_filetype_blacklist = {
-    ["DiffviewFileHistory"] = true,
-    ["NeogitCommitSelectView"] = true,
-    ["NeogitStatus"] = true,
-    ["TelescopePrompt"] = true,
-    ["Trouble"] = true,
-    ["alpha"] = true,
-    ["lazy"] = true,
-    ["mason"] = true,
-    ["capture"] = true,
-    ["command-t"] = true,
-    ["git"] = true,
-    ["floggraph"] = true,
-    ["dap-repl"] = true,
-    ["dap-variables"] = true,
-    ["dapui_breakpoints"] = true,
-    ["dapui_scopes"] = true,
-    ["dapui_stacks"] = true,
-    ["dapui_watches"] = true,
-    ["noice"] = true,
-    ["dashboard"] = true,
-    ["diff"] = true,
-    ["dirvish"] = true,
-    ["fugitive"] = true,
-    ["Glance"] = true,
-    ["fugitiveblame"] = true,
-    ["gitcommit"] = true,
-    ["help"] = true,
-    ["man"] = true,
-    ["mind"] = true,
-    ["octo"] = true,
-    ["orgagenda"] = true,
-    ["packer"] = true,
-    ["qf"] = true,
-    ["sagahover"] = true,
-    ["sagasignature"] = true,
-    ["scratch"] = true,
-    ["startup"] = true,
-    ["undotree"] = true,
+  ["DiffviewFileHistory"] = true,
+  ["NeogitCommitSelectView"] = true,
+  ["NeogitStatus"] = true,
+  ["TelescopePrompt"] = true,
+  ["Trouble"] = true,
+  ["alpha"] = true,
+  ["lazy"] = true,
+  ["mason"] = true,
+  ["capture"] = true,
+  ["command-t"] = true,
+  ["git"] = true,
+  ["floggraph"] = true,
+  ["dap-repl"] = true,
+  ["dap-variables"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dapui_scopes"] = true,
+  ["dapui_stacks"] = true,
+  ["dapui_watches"] = true,
+  ["noice"] = true,
+  ["dashboard"] = true,
+  ["diff"] = true,
+  ["dirvish"] = true,
+  ["fugitive"] = true,
+  ["Glance"] = true,
+  ["fugitiveblame"] = true,
+  ["gitcommit"] = true,
+  ["help"] = true,
+  ["man"] = true,
+  ["mind"] = true,
+  ["octo"] = true,
+  ["orgagenda"] = true,
+  ["packer"] = true,
+  ["qf"] = true,
+  ["sagahover"] = true,
+  ["sagasignature"] = true,
+  ["scratch"] = true,
+  ["startup"] = true,
+  ["undotree"] = true,
 }
 
 autocmds.number_blacklist = {
-    ["qf"] = false,
-    ["Outline"] = false,
-    ["orgagenda"] = false,
-    ["BufTerm"] = false,
+  ["qf"] = false,
+  ["Outline"] = false,
+  ["orgagenda"] = false,
+  ["BufTerm"] = false,
 }
 
 autocmds.cursorline_blacklist = {
-    ["CommandTMatchListing"] = true,
-    ["CommandTPrompt"] = true,
-    ["CommandTTitle"] = true,
-    ["NvimTree"] = true,
-    ["Outline"] = true,
-    ["TelescopePrompt"] = true,
-    ["alpha"] = true,
-    ["command-t"] = true,
-    ["dap-repl"] = true,
-    ["dapui_breakpoints"] = true,
-    ["dapui_console"] = true,
-    ["dapui_scopes"] = true,
-    ["dapui_stacks"] = true,
-    ["dapui_watches"] = true,
-    ["mason"] = true,
-    ["packer"] = true,
-    ["tsplayground"] = true,
-    ["undotree"] = true,
+  ["CommandTMatchListing"] = true,
+  ["CommandTPrompt"] = true,
+  ["CommandTTitle"] = true,
+  ["NvimTree"] = true,
+  ["Outline"] = true,
+  ["TelescopePrompt"] = true,
+  ["alpha"] = true,
+  ["command-t"] = true,
+  ["dap-repl"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dapui_console"] = true,
+  ["dapui_scopes"] = true,
+  ["dapui_stacks"] = true,
+  ["dapui_watches"] = true,
+  ["mason"] = true,
+  ["packer"] = true,
+  ["tsplayground"] = true,
+  ["undotree"] = true,
 }
 
 autocmds.mkview_filetype_blacklist = {
-    ["diff"] = true,
-    ["gitcommit"] = true,
-    ["hgcommit"] = true,
-    ["undotree"] = true,
-    ["packer"] = true,
-    ["NvimTree"] = true,
-    ["Outline"] = true,
-    ["alpha"] = true,
-    ["dap-repl"] = true,
-    ["dapui_console"] = true,
-    ["dapui_watches"] = true,
-    ["dapui_stacks"] = true,
-    ["dapui_breakpoints"] = true,
-    ["dapui_scopes"] = true,
-    ["mason"] = true,
+  ["diff"] = true,
+  ["gitcommit"] = true,
+  ["hgcommit"] = true,
+  ["undotree"] = true,
+  ["packer"] = true,
+  ["NvimTree"] = true,
+  ["Outline"] = true,
+  ["alpha"] = true,
+  ["dap-repl"] = true,
+  ["dapui_console"] = true,
+  ["dapui_watches"] = true,
+  ["dapui_stacks"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dapui_scopes"] = true,
+  ["mason"] = true,
 }
 
 local focus_window = function()
-    local filetype, buftype = as.get_bo_buft()
+  local filetype, buftype = as.get_bo_buft()
 
-    if autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
-        wo.winhighlight = ""
+  if autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
+    wo.winhighlight = ""
+  end
+
+  if
+    autocmds.colorcolumn_filetype_blacklist[filetype] == true
+    -- Dont dim pada floating window, seperti TelescopePrompt
+    or api.nvim_win_get_config(0).relative ~= ""
+  then
+    wo.colorcolumn = "255"
+
+    if buftype == "" then
+      return
     end
-
-    if
-        autocmds.colorcolumn_filetype_blacklist[filetype] == true
-        -- Dont dim pada floating window, seperti TelescopePrompt
-        or api.nvim_win_get_config(0).relative ~= ""
-    then
-        wo.colorcolumn = "255"
-
-        if buftype == "" then
-            return
-        end
+  else
+    local ft = api.nvim_buf_get_option(0, "filetype")
+    if ft == "markdown" or ft == "org" then
+      as.colorcolumn_width = 120
     else
-        local ft = api.nvim_buf_get_option(0, "filetype")
-        if ft == "markdown" or ft == "org" then
-            as.colorcolumn_width = 120
-        else
-            as.colorcolumn_width = 80
-        end
-        focused_colorcolumn =
-            as.tryjoin(as.tryrange(as.colorcolumn_width, 256), ",")
-        wo.colorcolumn = focused_colorcolumn
+      as.colorcolumn_width = 80
     end
+    focused_colorcolumn = as.tryjoin(as.tryrange(as.colorcolumn_width, 256), ",")
+    wo.colorcolumn = focused_colorcolumn
+  end
 end
 
 local blur_window = function()
-    local filetype, _ = as.get_bo_buft()
+  local filetype, _ = as.get_bo_buft()
 
-    if
-        filetype == ""
-        or autocmds.winhighlight_filetype_blacklist[filetype] ~= true
-            and api.nvim_win_get_config(0).relative ~= "win"
-    then
-        wo.winhighlight = winhighlight_blurred
-    end
+  if
+    filetype == ""
+    or autocmds.winhighlight_filetype_blacklist[filetype] ~= true and api.nvim_win_get_config(0).relative ~= "win"
+  then
+    wo.winhighlight = winhighlight_blurred
+  end
 end
 
 -- http://vim.wikia.com/wiki/Make_views_automatic
@@ -202,40 +200,40 @@ end
 -- end
 
 local set_cursorline = function(active)
-    local filetype, _ = as.get_bo_buft()
-    if autocmds.cursorline_blacklist[filetype] ~= true then
-        -- check jika window is floating, like TelescopePrompt
-        if api.nvim_win_get_config(0).relative ~= "" then
-            wo.cursorline = false
-        else
-            wo.cursorline = active
-        end
-        -- wo.cursorcolumn = active
+  local filetype, _ = as.get_bo_buft()
+  if autocmds.cursorline_blacklist[filetype] ~= true then
+    -- check jika window is floating, like TelescopePrompt
+    if api.nvim_win_get_config(0).relative ~= "" then
+      wo.cursorline = false
+    else
+      wo.cursorline = active
     end
+    -- wo.cursorcolumn = active
+  end
 end
 
 autocmds.buf_enter = function()
-    -- focus_window()
+  -- focus_window()
 end
 
 autocmds.focus_gained = function()
-    set_cursorline(true)
-    -- focus_window()
+  set_cursorline(true)
+  -- focus_window()
 end
 
 autocmds.focus_lost = function()
-    set_cursorline(false)
-    -- blur_window()
+  set_cursorline(false)
+  -- blur_window()
 end
 
 autocmds.win_enter = function()
-    set_cursorline(true)
-    -- focus_window()
+  set_cursorline(true)
+  -- focus_window()
 end
 
 autocmds.win_leave = function()
-    set_cursorline(false)
-    -- blur_window()
+  set_cursorline(false)
+  -- blur_window()
 end
 
 return autocmds

@@ -1,7 +1,10 @@
 {
+    "editor.lineNumbers": "relative",
+    "editor.stickyScroll.enabled": true,
     "workbench.startupEditor": "newUntitledFile",
-    "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
-    "vscode-neovim.neovimInitVimPaths.linux": "/home/mr00x/.config/nvim/init.vim",
+    "editor.suggest.insertMode": "insert",
+    // "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
+    // "vscode-neovim.neovimInitVimPaths.linux": "/home/mr00x/.config/nvim/init.vim",
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "python.jediEnabled": false,
@@ -11,172 +14,102 @@
     "vim.useCtrlKeys": true,
     "vim.hlsearch": true,
     "vim.sneak": true,
+    "vim.highlightedyank.enable": true,
     "vim.easymotionMarkerooundColor": "#020202",
+    "vim.foldfix": true,
+    "vim.leader": "<space>",
+    "window.zoomLevel": -1.5,
     "vim.normalModeKeyBindings": [
         {
-            "before": [
-                "g",
-                "l"
-            ],
-            "commands": [
-                "workbench.action.nextEditor"
-            ]
+            "before": [ "g", "l" ],
+            "commands": [ "workbench.action.nextEditor" ]
         },
         {
-            "before": [
-                "g",
-                "h"
-            ],
-            "commands": [
-                "workbench.action.previousEditor"
-            ]
+            "before": [ "g", "h" ],
+            "commands": [ "workbench.action.previousEditor" ]
+        },
+        {
+            "before": [ "K"],
+            "commands": [ "editor.action.showHover" ]
         }
     ],
     "vim.insertModeKeyBindings": [
         {
-            "before": [
-                "h",
-                "h"
-            ],
-            "after": [
-                "<Esc>"
-            ]
+            "before": [ "h", "h" ],
+            "after": [ "<Esc>" ]
         }
     ],
     "vim.insertModeKeyBindingsNonRecursive": [
         {
-            "before": [
-                "<c-h>"
-            ],
-            "after": [
-                "<c-o>",
-                "h"
-            ]
+            "before": [ "<c-h>" ],
+            "after": [ "<c-o>", "h" ]
         },
         {
-            "before": [
-                "<c-l>"
-            ],
-            "after": [
-                "<c-o>",
-                "l"
-            ]
+            "before": [ "<c-l>" ],
+            "after": [ "<c-o>", "l" ]
         }
     ],
     "vim.visualModeKeyBindings": [
         {
-            "before": [
-                ">"
-            ],
-            "after": [
-                ">",
-                "g",
-                "v"
-            ]
+            "before": [ ">" ],
+            "after": [ ">", "g", "v" ]
         },
         {
-            "before": [
-                "<"
-            ],
-            "after": [
-                "<",
-                "g",
-                "v"
-            ]
+            "before": [ "<" ],
+            "after": [ "<", "g", "v" ]
         }
     ],
     "vim.normalModeKeyBindingsNonRecursive": [
         {
-            "before": [
-                "<C-w>",
-                "l"
-            ],
-            "commands": [
-                "workbench.files.action.focusOpenEditorsView"
-            ]
+            "before": [ "<C-w>", "l" ],
+            "commands": [ "workbench.files.action.focusOpenEditorsView" ]
         },
         {
-            "before": [
-                "<leader>",
-                "n"
-            ],
-            "commands": [
-                ":nohl"
-            ]
+            "before": [ "<leader>", "n" ],
+            "commands": [ ":nohl" ] 
         },
         {
-            "before": [
-                "<leader>",
-                "<tab>"
-            ],
-            "commands": [
-                ":q!"
-            ]
+            "before": [ "<leader>", "<tab>" ],
+            "commands": [ ":q!" ]
         },
         {
-            "before": [
-                "<leader>",
-                "w"
-            ],
-            "commands": [
-                "workbench.action.splitEditor"
-            ]
+            "before": [ "<leader>", "w" ],
+            "commands": [ "workbench.action.splitEditor" ]
         },
         {
-            "before": [
-                "<c-f>"
-            ],
-            "after": [
-                "/"
-            ]
+            "before": [ "<leader>", "E" ],
+            "commands": [ "revealInExplorer" ] 
         },
         {
-            "before": [
-                "<leader>",
-                "E"
-            ],
-            "commands": [
-                "revealInExplorer"
-            ]
+            "before": [ "<leader>", "e" ],
+            "commands": [ "workbench.action.toggleSidebarVisibility" ]
         },
         {
-            "before": [
-                "<leader>",
-                "e"
-            ],
-            "commands": [
-                "workbench.action.toggleSidebarVisibility"
-            ]
+            "before": [ "<leader>", "f", "f" ],
+            "commands": [ "workbench.action.quickOpen" ]
         },
         {
-            "before": [
-                "<leader>",
-                "f",
-                "f"
-            ],
-            "commands": [
-                "workbench.action.quickOpen"
-            ]
+            "before": [ "<leader>", "f", "w" ],
+            "commands": [ "workbench.view.search" ]
         },
-        {
-            "before": [
-                "<leader>",
-                "f",
-                "w"
-            ],
-            "commands": [
-                "workbench.view.search"
-            ]
-        },
-        {
-            "before": [
-                "<c-w>"
-            ],
-            "after": [],
-            "command": [
-                "workbench.action.terminal.kill"
-            ]
-        },
+        // {
+        //     "before": [
+        //         "<leader>",
+        //         "q",
+        //     ],
+        //     "commands": [
+        //         "workbench.action.quickOpen"
+        //     ]
+        // },
+        // {
+        //     "before": [
+        //         "<c-w>"
+        //     ],
+        //     "after": [],
+        //     "command": [
+        //         "workbench.action.terminal.kill"
+        //     ]
+        // },
         // {
         //     "before": [
         //         "<leader>",
@@ -198,10 +131,5 @@
         //     ],
         //     "when": "terminal.focus"
         // }
-    }
-],
-"vim.leader": "<space>",
-"vim.foldfix": true,
-"window.zoomLevel": -1,
-"python.languageServer": "Microsoft"
+    ],
 }

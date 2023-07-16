@@ -2,7 +2,7 @@
 # Kanagawa Alacritty Colors
 colors:
   primary:
-    background: '0x1d1d26'
+    background: '0x1f1f28'
     foreground: '0xdcd7ba'
 
   normal:

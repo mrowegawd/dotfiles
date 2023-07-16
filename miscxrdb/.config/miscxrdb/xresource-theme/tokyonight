@@ -2,7 +2,7 @@
 !https://github.com/folke/tokyonight.nvim/blob/main/extras/xresources_tokyonight_storm.Xresources
 ! TokyoNight storm colors for Xresources
 
-*background: #222638
+*background: #24283b
 *foreground: #c0caf5
 
 *color0: #1D202F

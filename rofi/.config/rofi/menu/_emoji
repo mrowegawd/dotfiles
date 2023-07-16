@@ -9,11 +9,9 @@ rofi_command="rofi -theme $dir/$theme"
 # [[ ! -d $EMOJI_PATH ] && dunstify "Emoji run" "Path: $EMOJI_PATH not found" && exit 0
 
 (
-
 	awk -F";" '{printf "%s\n",$1}' <"$EMOJI_PATH" |
 		$rofi_command -dmenu -p " ﲃ " |
 		awk '{print $1}' | tr -d '\d' | xclip -selection c
-
 )
 
 CHECK_XCLIP_EMOJI=$(xclip -o -selection clipboard)

@@ -1,85 +1,144 @@
 if not as then
-    return
+  return
 end
 
-local fn, api, cmd = vim.fn, vim.api, vim.cmd
+local fn, api, cmd, v = vim.fn, vim.api, vim.cmd, vim.v
 local windowdim = require "r.utils.windowdim"
 
 local smart_close_filetypes = as.p_table {
-    ["qf"] = true,
-    ["log"] = true,
-    ["help"] = true,
-    ["query"] = true,
-    ["dbui"] = true,
-    ["lspinfo"] = true,
-    ["git.*"] = true,
-    ["Neogit.*"] = true,
-    ["neotest.*"] = true,
-    ["fugitive.*"] = true,
-    ["copilot.*"] = true,
-    ["tsplayground"] = true,
-    ["startuptime"] = true,
+  ["qf"] = true,
+  ["log"] = true,
+  ["help"] = true,
+  ["query"] = true,
+  ["dbui"] = true,
+  ["lspinfo"] = true,
+  ["git.*"] = true,
+  ["Neogit.*"] = true,
+  ["neotest.*"] = true,
+  ["fugitive.*"] = true,
+  ["copilot.*"] = true,
+  ["tsplayground"] = true,
+  ["aerial"] = true,
+  ["outline"] = true,
+  ["sagaoutline"] = true,
+  ["startuptime"] = true,
 }
 
 local smart_close_buftypes = as.p_table {
-    ["nofile"] = true,
+  ["nofile"] = true,
 }
 
 local function smart_close()
-    if fn.winnr "$" ~= 1 then
-        api.nvim_win_close(0, true)
-    end
+  if fn.winnr "$" ~= 1 then
+    api.nvim_win_close(0, true)
+  end
 end
 
-as.augroup("SmartClose", {
+as.augroup(
+  "SmartClose",
+  {
     -- Close certain filetypes by pressing q.
     event = { "FileType" },
     command = function(args)
-        local is_unmapped = fn.hasmapto("q", "n") == 0
-        local buf = vim.bo[args.buf]
-        local is_eligible = is_unmapped
-            or vim.wo.previewwindow
-            or smart_close_filetypes[buf.ft]
-            or smart_close_buftypes[buf.bt]
-        if is_eligible then
-            vim.keymap.set(
-                "n",
-                "q",
-                smart_close,
-                { buffer = args.buf, nowait = true }
-            )
-        end
+      local is_unmapped = fn.hasmapto("q", "n") == 0
+      local buf = vim.bo[args.buf]
+      local is_eligible = is_unmapped
+        or vim.wo.previewwindow
+        or smart_close_filetypes[buf.ft]
+        or smart_close_buftypes[buf.bt]
+      if is_eligible then
+        vim.keymap.set("n", "q", smart_close, { buffer = args.buf, nowait = true })
+      end
     end,
-}, {
+  },
+  {
     -- Close quick fix window if the file containing it was closed
     event = { "BufEnter" },
     command = function()
-        if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
-            vim.notify "Bufenter autoclose running?"
-            api.nvim_buf_delete(0, { force = true })
-        end
+      if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
+        api.nvim_buf_delete(0, { force = true })
+      end
     end,
-}, {
-    -- Automatically close corresponding loclist when quitting a window
-    event = { "QuitPre", "BufDelete" },
-    nested = true,
-    command = function()
-        if vim.bo.filetype ~= "qf" then
-            cmd.lclose { mods = { silent = true } }
-        end
-    end,
-})
+  }
+  -- , {
+  -- automatically close corresponding loclist when quitting a window
+  -- event = { "QuitPre" },
+  -- nested = true,
+  -- command = function()
+  --   if vim.bo.filetype ~= "qf" then
+  --     cmd.lclose { mods = { silent = true } }
+  --   end
+  -- end,
+  -- }
+)
 
 as.augroup("TextYankHighlight", {
-    -- don't execute silently in case of errors
-    event = { "TextYankPost" },
-    command = function()
-        vim.highlight.on_yank {
-            timeout = 500,
-            on_visual = false,
-            higroup = "Visual",
-        }
-    end,
+  -- don't execute silently in case of errors
+  event = { "TextYankPost" },
+  command = function()
+    vim.highlight.on_yank {
+      timeout = 200,
+      on_visual = true,
+      higroup = "NvimInternalError",
+    }
+  end,
+})
+
+vim.keymap.set({ "n", "v", "o", "i", "c" }, "<Plug>(StopHL)", 'execute("nohlsearch")[-1]', { expr = true })
+
+local function stop_hl()
+  if v.hlsearch == 0 or api.nvim_get_mode().mode ~= "n" then
+    return
+  end
+  require("r.utils.init").feedkey("<Plug>(StopHL)", "n")
+end
+
+local function hl_search()
+  local col = api.nvim_win_get_cursor(0)[2]
+  local curr_line = api.nvim_get_current_line()
+  local ok, match = pcall(fn.matchstrpos, curr_line, fn.getreg "/", 0)
+  if pcall(require, "hlslens") then
+    require("hlslens").start()
+  end
+
+  if not ok then
+    return
+  end
+  local _, p_start, p_end = unpack(match)
+  -- if the cursor is in a search result, leave highlighting on
+  if col < p_start or col > p_end then
+    stop_hl()
+  end
+end
+
+as.augroup("VimrcIncSearchHighlight", {
+  event = { "CursorMoved" },
+  command = function()
+    hl_search()
+  end,
+}, {
+  event = { "InsertEnter" },
+  command = function()
+    stop_hl()
+  end,
+}, {
+  event = { "OptionSet" },
+  pattern = { "hlsearch" },
+  command = function()
+    vim.schedule(function()
+      cmd.redrawstatus()
+    end)
+  end,
+}, {
+  event = "RecordingEnter",
+  command = function()
+    vim.o.hlsearch = false
+  end,
+}, {
+  event = "RecordingLeave",
+  command = function()
+    vim.o.hlsearch = true
+  end,
 })
 
 -- local excluded = {
@@ -112,116 +171,114 @@ local ignore_buftype = { "quickfix", "nofile", "help", "terminal" }
 local ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" }
 
 as.augroup("WindowBehaviours", {
-    event = { "CmdwinEnter" }, -- map q to close command window on quit
-    pattern = { "*" },
-    command = "nnoremap <silent><buffer><nowait> q <C-W>c",
+  event = { "CmdwinEnter" }, -- map q to close command window on quit
+  pattern = { "*" },
+  command = "nnoremap <silent><buffer><nowait> q <C-W>c",
 }, {
-    event = { "BufWinEnter" },
-    command = function(args)
-        if vim.wo.diff then
-            vim.diagnostic.disable(args.buf)
-        end
-    end,
+  event = { "BufWinEnter" },
+  command = function(args)
+    if vim.wo.diff then
+      vim.diagnostic.disable(args.buf)
+    end
+  end,
 }, {
-    event = { "BufWinLeave" },
-    command = function(args)
-        if vim.wo.diff then
-            vim.diagnostic.enable(args.buf)
-        end
-    end,
+  event = { "BufWinLeave" },
+  command = function(args)
+    if vim.wo.diff then
+      vim.diagnostic.enable(args.buf)
+    end
+  end,
 }, {
-    -- Go to last loc when opening a buffer
-    event = { "BufWinEnter", "FileType", "BufRead", "BufEnter" },
-    pattern = { "*" },
-    command = function()
-        if vim.tbl_contains(ignore_buftype, vim.bo.buftype) then
-            return
-        end
+  -- Go to last loc when opening a buffer
+  event = { "BufWinEnter", "FileType", "BufRead", "BufEnter" },
+  pattern = { "*" },
+  command = function()
+    if vim.tbl_contains(ignore_buftype, vim.bo.buftype) then
+      return
+    end
 
-        if vim.tbl_contains(ignore_filetype, vim.bo.filetype) then
-            -- reset cursor to first line
-            vim.cmd "normal! gg"
-            return
-        end
+    if vim.tbl_contains(ignore_filetype, vim.bo.filetype) then
+      -- reset cursor to first line
+      vim.cmd "normal! gg"
+      return
+    end
 
-        -- If a line has already been specified on the command line, we are done e.g. nvim file +num
-        if fn.line "." > 1 then
-            return
-        end
+    -- If a line has already been specified on the command line, we are done e.g. nvim file +num
+    if fn.line "." > 1 then
+      return
+    end
 
-        local last_line = fn.line [['"]]
-        local buff_last_line = fn.line "$"
+    local last_line = fn.line [['"]]
+    local buff_last_line = fn.line "$"
 
-        -- If the last line is set and the less than the last line in the buffer
-        if last_line > 0 and last_line <= buff_last_line then
-            local win_last_line = fn.line "w$"
-            local win_first_line = fn.line "w0"
-            -- Check if the last line of the buffer is the same as the win
-            if win_last_line == buff_last_line then
-                vim.cmd 'normal! g`"' -- Set line to last line edited
-                -- Try to center
-            elseif
-                buff_last_line - last_line
-                > ((win_last_line - win_first_line) / 2) - 1
-            then
-                vim.cmd 'normal! g`"zz'
-            else
-                vim.cmd [[normal! G'"<c-e>]]
-            end
-        end
-    end,
+    -- If the last line is set and the less than the last line in the buffer
+    if last_line > 0 and last_line <= buff_last_line then
+      local win_last_line = fn.line "w$"
+      local win_first_line = fn.line "w0"
+      -- Check if the last line of the buffer is the same as the win
+      if win_last_line == buff_last_line then
+        vim.cmd 'normal! g`"' -- Set line to last line edited
+        -- Try to center
+      elseif buff_last_line - last_line > ((win_last_line - win_first_line) / 2) - 1 then
+        vim.cmd 'normal! g`"zz'
+      else
+        vim.cmd [[normal! G'"<c-e>]]
+      end
+    end
+  end,
 }, {
-    event = { "FileType" },
-    pattern = {
-        "orgagenda",
-        "capture",
-        "gitcommit",
-        "help",
-        "qf",
-        "Trouble",
-    },
-    command = function()
-        cmd "wincmd J"
-    end,
+  event = { "FileType" },
+  pattern = {
+    "orgagenda",
+    "capture",
+    "gitcommit",
+    -- "help",
+    "qf",
+    "Trouble",
+  },
+
+  command = function()
+    cmd "wincmd J"
+  end,
 }, {
-    event = { "FileType" },
-    pattern = { "qf" },
-    command = function()
-        cmd "stopinsert"
-    end,
+  event = { "FileType" },
+  pattern = { "qf" },
+  command = function()
+    cmd "stopinsert"
+  end,
 }, {
-    event = { "FileType" },
-    pattern = { "norg", "org", "orgagenda" },
-    command = function()
-        vim.opt_local.foldcolumn = "0"
-    end,
+  event = { "FileType" },
+  pattern = { "norg", "org", "orgagenda" },
+  command = function()
+    vim.opt_local.foldcolumn = "0"
+  end,
 }, {
 
-    event = { "FileType" },
-    pattern = { "org", "orgagenda" },
-    command = function()
-        vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
-    end,
+  event = { "FileType" },
+  pattern = { "org", "orgagenda" },
+  command = function()
+    vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
+  end,
 }, {
 
-    event = { "FileType" },
-    pattern = { "norg" },
-    command = function()
-        vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
-    end,
+  event = { "FileType" },
+  pattern = { "norg" },
+  command = function()
+    vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
+  end,
 })
 
 as.augroup("DisableWinBf", {
-    event = { "BufRead", "BufWinEnter" },
-    pattern = { "*" },
-    command = function(args)
-        local buf = vim.bo[args.buf].filetype
+  event = { "BufRead", "BufWinEnter" },
+  pattern = { "*" },
+  command = function(args)
+    local buf = vim.bo[args.buf].filetype
 
-        if buf == "BufTerm" then
-            vim.opt_local.number = false
-            vim.opt_local.relativenumber = false
-        end
-    end,
+    if buf == "BufTerm" then
+      vim.opt_local.number = false
+      vim.opt_local.relativenumber = false
+    end
+  end,
 })
 
 -- Get into insert mode whenever we enter a terminal buffer
@@ -235,136 +292,115 @@ as.augroup("DisableWinBf", {
 --     end,
 -- })
 
--- as.augroup("ExternalCommands", {
---     -- Open images in an image viewer (probably Preview)
---     event = { "BufEnter" },
---     pattern = { "*.png", "*.jpg", "*.gif" },
---     command = function()
---         cmd(string.format("silent! !%s", "sxiv " .. fn.expand "%"))
---     end,
--- })
-
-as.augroup("CheckOutsideTime", {
-    -- automatically check for changed files outside vim
-    event = {
-        "WinEnter",
-        "BufWinEnter",
-        "BufWinLeave",
-        "BufRead",
-        "BufEnter",
-        "FocusGained",
-    },
-    command = "silent! checktime",
+as.augroup("ConvertNorg", {
+  event = { "BufWritePost" },
+  pattern = { "*.norg" },
+  command = function()
+    require("r.utils").ConvertNorgToMarkdown()
+  end,
 })
 
--- Disable swap/undo/backup files in temp directories or shm
--- vim.api.nvim_create_autocmd({ "BufNewFile", "BufReadPre" }, {
---     group = augroup "secure",
---     pattern = {
---         "/tmp/*",
---         "$TMPDIR/*",
---         "$TMP/*",
---         "$TEMP/*",
---         "*/shm/*",
---         "/private/var/*",
---     },
---     callback = function()
---         vim.opt_local.undofile = false
---         vim.opt_local.swapfile = false
---         vim.opt_global.backup = false
---         vim.opt_global.writebackup = false
---     end,
--- })
+as.augroup("CheckOutsideTime", {
+  -- automatically check for changed files outside vim
+  event = {
+    "WinEnter",
+    "BufWinEnter",
+    "BufWinLeave",
+    "BufRead",
+    "BufEnter",
+    "FocusGained",
+  },
+  command = "silent! checktime",
+})
 
 as.augroup("WindowDim", {
-    event = { "BufRead" },
-    pattern = { "*" },
-    command = function()
-        windowdim.buf_enter()
-    end,
+  event = { "BufRead" },
+  pattern = { "*" },
+  command = function()
+    windowdim.buf_enter()
+  end,
 }, {
-    event = { "BufEnter" },
-    pattern = { "*" },
-    command = function()
-        windowdim.buf_enter()
-    end,
+  event = { "BufEnter" },
+  pattern = { "*" },
+  command = function()
+    windowdim.buf_enter()
+  end,
 }, {
 
-    event = { "FocusGained" },
-    pattern = "*",
-    command = function()
-        windowdim.focus_gained()
-    end,
+  event = { "FocusGained" },
+  pattern = "*",
+  command = function()
+    windowdim.focus_gained()
+  end,
 }, {
-    event = { "FocusLost" },
-    pattern = "*",
-    command = function()
-        windowdim.focus_lost()
-    end,
+  event = { "FocusLost" },
+  pattern = "*",
+  command = function()
+    windowdim.focus_lost()
+  end,
 }, {
-    event = { "WinEnter" },
-    pattern = "*",
-    command = function()
-        windowdim.win_enter()
-    end,
+  event = { "WinEnter" },
+  pattern = "*",
+  command = function()
+    windowdim.win_enter()
+  end,
 }, {
-    event = { "WinLeave" },
-    pattern = "*",
-    command = function()
-        windowdim.win_leave()
-    end,
+  event = { "WinLeave" },
+  pattern = "*",
+  command = function()
+    windowdim.win_leave()
+  end,
 })
 
 as.augroup("UnwareCursorLine", {
-    event = { "InsertLeave" },
-    pattern = { "*" },
-    command = function()
-        cmd [[set cursorline]]
-    end,
+  event = { "InsertLeave" },
+  pattern = { "*" },
+  command = function()
+    cmd [[set cursorline]]
+  end,
 }, {
-    event = { "InsertEnter" },
-    pattern = { "*" },
-    command = function()
-        cmd [[set nocursorline]]
-    end,
+  event = { "InsertEnter" },
+  pattern = { "*" },
+  command = function()
+    cmd [[set nocursorline]]
+  end,
 })
 
 as.augroup("DisableStatusline", {
-    event = { "FocusLost" },
-    pattern = "*",
-    command = function()
-        cmd [[set laststatus=0]]
-    end,
+  event = { "FocusLost" },
+  pattern = "*",
+  command = function()
+    cmd [[set laststatus=0]]
+  end,
 }, {
 
-    event = { "BufRead", "FocusGained" },
-    pattern = "*",
-    command = function()
-        cmd [[set laststatus=2]]
-    end,
+  event = { "BufRead", "FocusGained" },
+  pattern = "*",
+  command = function()
+    cmd [[set laststatus=3]]
+  end,
 })
 
-local trim = function(pattern)
-    local save = fn.winsaveview()
-    cmd(string.format("keepjumps keeppatterns silent! %s", pattern))
-    fn.winrestview(save)
-end
-
-local ignore_filetype_trim =
-    { "norg", "text", "org", "sh", "zsh", "fish", "dosini" }
-local remove_group =
-    vim.api.nvim_create_augroup("removeTrailingSpaces", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePre", {
-    pattern = "*",
-    callback = function()
-        -- trim trailing lines
-        if vim.tbl_contains(ignore_filetype_trim, vim.bo.filetype) then
-            trim [[%s/\($\n\s*\)\+\%$//]]
-            trim [[%s/\s\+$//e]]
-        end
-    end,
-    group = remove_group,
-})
+-- local trim = function(pattern)
+--   local save = fn.winsaveview()
+--   cmd(string.format("keepjumps keeppatterns silent! %s", pattern))
+--   fn.winrestview(save)
+-- end
+--
+-- local ignore_filetype_trim = { "norg", "text", "org", "sh", "zsh", "fish", "dosini", "taskrc" }
+-- local remove_group = vim.api.nvim_create_augroup("removeTrailingSpaces", { clear = true })
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   pattern = "*",
+--
+--   callback = function()
+--     -- trim trailing lines
+--     if vim.tbl_contains(ignore_filetype_trim, vim.bo.filetype) then
+--       trim [[%s/\($\n\s*\)\+\%$//]]
+--       trim [[%s/\s\+$//e]]
+--     end
+--   end,
+--   group = remove_group,
+-- })
 
 -- NOTE ga suka behaviour fold window, setelah <CR> dari telescope bikin fold
 -- nya menjadi kacau, beberapa solusi udah di aplikasikan ke config telescope dari

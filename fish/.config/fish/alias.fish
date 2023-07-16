@@ -5,10 +5,10 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias l="ls -CF --color=auto"
-alias ll="exa -lhaa"
+# alias ll="exa -lhaa"
+alias ll="exa -lhaa --icons"
+alias lt="exa -ll -a --icons --tree --level=3"
 alias grep="grep --color=auto"
-# alias rg="rg --hidden"
-alias g="git"
 
 # alias vv=neovide
 alias mpv_c="mpv --geometry=-50-50 --autofit=40% "
@@ -22,13 +22,7 @@ alias :C!=exit
 
 alias tree="exa --group-directories-first --icons -a --tree -I 'node_modules|.git|dist|out|target|.husky'"
 
-alias c="bat "
 # alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
-
-alias ag="ag --hidden --skip-vcs-ignores --ignore=\"*Library*\" --ignore=\"*.gem*\" --ignore=\"*.build*\" --ignore=\"*.git*\""
-
-alias ls="/bin/ls -nphq --time-style=iso --color=auto\
-  --group-directories-first --show-control-chars"
 
 function mdg --description "create folder and cd"
     mkdir -p $argv[1] && cd $argv[1] || return

@@ -1,52 +1,10 @@
-###############################################################################
-# Enter bindkey run :$bindkey -v
-# and run `bindkey` again, you will get all list commands zsh
-# vim: ft=zsh sw=2 ts=2 et
-###############################################################################
-
-bindkey -v # set bindkey to `vim`
-# export KEYTIMEOUT=1
-
-autoload -Uz history-search-end edit-command-line
-zle -N edit-command-line
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-
-bindkey -M viins 'hh' vi-cmd-mode # Changing <Esc> to mine bindkey
-
-bindkey -M viins '^A' beginning-of-line
-bindkey -M viins '^E' end-of-line
-bindkey -M viins '^F' forward-char
-bindkey -M viins '^B' backward-char
-bindkey -M viins '^D' delete-char-or-list
-
-bindkey -M viins '^K' kill-line
-bindkey -M viins '^P' history-beginning-search-backward-end
-bindkey -M viins '^N' history-beginning-search-forward-end
-
-# bindkey -M viins '^e' edit-command-line
-bindkey -M viins '^[[Z' reverse-menu-complete
-
-# bindkey -M viins '^[M' edit-command-line
-bindkey -M viins '^e' edit-command-line
-
-# bindkey '\ev' slash-backward-kill-word
-
-# If fzf activated this mapping will overwrited
-# bindkey '^r'    history-incremental-pattern-search-backward
-# bindkey '^s'    history-incremental-pattern-search-forward
-
-# bindkey "^[+" up-one-dir
-# bindkey "^[=" back-one-dir
-
-# bindkey " "     magic-space
 
 showalias() {
   local selected num
   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
 
   SELECT=$(awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-    column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc | fzf-tmux -p 80% ${commands[grcat]:+--ansi} | cut -d" " -f1 | cut -d"(" -f1)
+  column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc | fzf-tmux -p 80% ${commands[grcat]:+--ansi} | cut -d" " -f1 | cut -d"(" -f1)
 
   # note: https://doronbehar.com/articles/ZSH-FZF-completion/
   # how to Programmatically Change the Line in Zle?
@@ -59,43 +17,53 @@ showalias() {
 }
 
 zle -N showalias
-# bindkey '\ej' showalias
 bindkey '^o' showalias
 
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
 
-bindkey '^g' fzm
+run-mark() {
+  local cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
 
-# bindkey -M menuselect '^o'    accept-and-infer-next-history
-# bindkey -M menuselect 'o'     accept-and-infer-next-history
-# bindkey -M menuselect "+"     accept-and-menu-complete
-# bindkey -M menuselect "^[[2~" accept-and-menu-complete
-# bindkey -M menuselect '\e^M'  accept-and-menu-complete
+  if [[ ! -f $cwd  ]]; then
+    echo -ne "[warn] path not found: $cwd\n"
+  else
+    select=$(cat $cwd | fzf)
+    if [[ -n $select ]]; then
+      if [[ ! -f $select ]]; then
+        cd $select
+      else
+        echo -ne "[warn] this not folder??"
+      fi
+
+    fi
+  fi
+
+  zle accept-line
+}
+
+zle -N run-mark
+bindkey '^g' run-mark
 
 # CREDIT: taken from https://github.com/kevinhwang91/dotfiles/blob/main/zsh/lplug/fzf/fzf-completion-widget
 _fps() {
   ps -eo user,pid,ppid,pgid,stat,command | awk '
     BEGIN { "ps -p $$ -o pgid= | tr -d \"[:blank:]\"" | getline pgid } {
-        if ($4 != pgid || $2 == pgid) print }' |
-    grcat fps.grc | fzf --header-lines=1 -m \
+  if ($4 != pgid || $2 == pgid) print }' |
+  grcat fps.grc | fzf --header-lines=1 -m \
     ${commands[grcat]:+--ansi} --height=60% \
     --min-height=15 --tac --reverse \
     --preview-window=down:2,border-top |
-    awk -v sep=${myflag:- } '{ printf "%s%c", $2, sep }' |
-    sed -E "s/${myflag:- }$//"
+  awk -v sep=${myflag:- } '{ printf "%s%c", $2, sep }' |
+  sed -E "s/${myflag:- }$//"
 }
 
 _t_expand_alias_f() {
-    # echo $functions
-    if (( $+functions[_t_expand_alias] )); then
-        print ${functions[_t_expand_alias]#$'\t'}
-        unset -f _t_expand_alias
-    else
-        print $@
-    fi
+  # echo $functions
+  if (( $+functions[_t_expand_alias] )); then
+    print ${functions[_t_expand_alias]#$'\t'}
+    unset -f _t_expand_alias
+  else
+    print $@
+  fi
 }
 
 fzf_lsof() {
@@ -115,11 +83,9 @@ fzf_lsof() {
 
 }
 
-zle -N fzf_lsof
-
 #mapping: open fzf lsof(to get PID) dengan flag -p
-# bindkey '\eu' fzf_lsof
-bindkey '^u' fzf_lsof
+# zle -N fzf_lsof
+# bindkey '^u' fzf_lsof
 
 function fg-bg(){
   if [[ $#BUFFER -eq 0 ]]; then
@@ -130,10 +96,34 @@ function fg-bg(){
 }
 
 zle -N fg-bg
-
-#mapping: shortcut toggle fg command with vim
 bindkey '^z' fg-bg
 
+cursor_mode() {
+  # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
+  cursor_block='\e[2 q'
+  cursor_beam='\e[6 q'
+
+  function zle-keymap-select {
+    if [[ ${KEYMAP} == vicmd ]] ||
+    [[ $1 = 'block' ]]; then
+      echo -ne $cursor_block
+    elif [[ ${KEYMAP} == main ]] ||
+    [[ ${KEYMAP} == viins ]] ||
+    [[ ${KEYMAP} = '' ]] ||
+    [[ $1 = 'beam' ]]; then
+      echo -ne $cursor_beam
+    fi
+  }
+
+  zle-line-init() {
+    echo -ne $cursor_beam
+  }
+
+  zle -N zle-keymap-select
+  zle -N zle-line-init
+}
+
+cursor_mode
 
 # # Pipenv completion
 # _pipenv() {

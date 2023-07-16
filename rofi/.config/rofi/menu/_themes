@@ -85,7 +85,7 @@ set_dunst() {
 }
 set_tmux() {
 	# TMUX_PATH="$DOTFILES_PATH/rofi/.config/rofi"
-	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot-2"
+	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot"
 
 	if [ -f "$_PATH_TMUX_THEMES" ]; then
 		sleep 1
@@ -95,6 +95,7 @@ set_tmux() {
 		sed -i -e "s/^COL_RED=.*$/COL_RED=\"$GET_MAGENTA\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^BG_STATUSLINE=.*$/BG_STATUSLINE=\"$GET_BACKGROUND_ACTIVE_STATUSLINE\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^COL_BORDER_SEPERATOR=.*$/COL_BORDER_SEPERATOR=\"$GET_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^COL_ACTIVE_BORDER_SEPERATOR=.*$/COL_ACTIVE_BORDER_SEPERATOR=\"$GET_ACTIVE_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
 	else
 		dunstify "$_PATH_TMUX_THEMES not found"
 	fi

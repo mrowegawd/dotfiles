@@ -9,12 +9,8 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias l="ls -CF --color=auto"
 alias grep="grep --color=auto"
 alias rg="rg --hidden"
-alias g="git"
-
-alias ag="ag --hidden --skip-vcs-ignores --ignore=\"*Library*\" --ignore=\"*.gem*\" --ignore=\"*.build*\" --ignore=\"*.git*\""
 
 # misc: create and cd/go to folder <$NEW_NAMEFOLDER>
 mdg() {
@@ -26,34 +22,16 @@ md() {
 	mkdir -p "$@"
 }
 
-# show size current dir
-alias s_ducks='sudo du -cks * | sort -rn | head -11'
-
-cl() {
-	last_dir="$(ls -Frt | grep '/$' | tail -n1)"
-	if [ -d "$last_dir" ]; then
-		cd "$last_dir" || return
-	fi
-}
-# alias vv=neovide
-
-alias c="bat "
 alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
 
-alias ls="/bin/ls -nphq --time-style=iso --color=auto\
-  --group-directories-first --show-control-chars"
-
-# if command -v exa > /dev/null; then
-alias ll="exa -lhaa"
-# else
-#     alias ll="ls -lah -nphq --time-style=iso --color=auto\
-#         --group-directories-first --show-control-chars"
-# fi
-#
-
-#  alias mpv_c="mpv --no-osc --profile=low-latency --untimed --geometry=-50-50 --autofit=40% --no-resume-playback "
-
-# alias mpv_c="mpv --geometry=-50-50 --autofit=40% "
+alias l="eza -l -snew"
+if command -v eza >/dev/null; then
+	alias ll="eza --long --all --git --color=always --group-directories-first --icons"
+	alias lt="eza --icons --all --color=always -T"
+else
+	alias ll='ls -lFh' # size,show type,human readable
+	alias lt="tree ."
+fi
 
 alias :q!=exitq
 alias :Q!=exitq
@@ -61,8 +39,6 @@ alias :c=exit
 alias :C=exit
 alias :c!=exit
 alias :C!=exit
-
-cdls() { cd "$@" && ll; }
 
 if [ "${USER}" = "root" ]; then
 	alias v="vim"
@@ -72,12 +48,16 @@ if [ "${USER}" = "root" ]; then
 else
 	if command -v nvim >/dev/null; then
 		alias v="nvim"
+		alias vv="vv"
+		alias vvg="vv --multigrid"
 		alias svi="sudo nvim"
 		alias ttext='nvim /tmp/dump_text.txt'
 		alias tbash='nvim /tmp/dump_bash.sh'
 	else
 		alias v="vim"
-		alias sv="sudo vim"
+		alias vv="vim"
+		alias vvg="vim"
+		alias svi="sudo vim"
 		alias ttext='vim /tmp/dump_text.txt'
 		alias tbash='vim /tmp/dump_bash.sh'
 	fi
@@ -87,11 +67,15 @@ if command -v emacs >/dev/null; then
 	alias e="emacs --insecure"
 fi
 
-###############################################################################
+# ╭──────────────────────────────────────────────────────────╮
+# │                          CHECK                           │
+# ╰──────────────────────────────────────────────────────────╯
+# prefix: _c
 #
-#       CHECKING, prefix c_
-#
-###############################################################################
+# check: size current dir
+c_ducks() {
+	sudo du -cks "$(ls -A)" | sort -rn | head -20
+}
 
 c_size_cd() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
 
@@ -350,14 +334,18 @@ c_summary() {
 \t\e[1;32mdoc_\e[0m     -> docker\n\n"
 }
 
-# download: youtube <$URL_YOUTUBE>
-d_ytdl() {
+# ╭──────────────────────────────────────────────────────────╮
+# │                        RUN SCRIPT                        │
+# ╰──────────────────────────────────────────────────────────╯
+
+# run: youtube download <$URL_YOUTUBE>
+r_ytdl() {
 	tsp yt-dlp --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" "$1"
 }
 
-# download: convert vidoutube to mp3 <$URL_YOUTUBE>
-d_ytmp3() {
-	tsp yt-dlp --extract-audio --audio-format mp3 "$1"
+# run: convert youtube to mp3 <$URL_YOUTUBE>
+r_ytmp3() {
+	tsp youtube-dl --extract-audio --audio-format mp3 "$1"
 }
 
 # run: hapus file all <$1>
@@ -365,12 +353,17 @@ r_hapus() {
 	find "$1" -type f -name "*" -exec shred -v -n 25 -u -z {} \;
 }
 
+# run: run calculator by python
+r_calc() {
+	python -ic "from __future__ import division; from math import *; from random import *"
+}
+
 # run: open lf
 r_r() {
-	if command -v vifmrun >/dev/null; then
-		vifmrun
+	if command -v lfrun >/dev/null; then
+		lfrun
 	else
-		vifm
+		echo "lfrun not installed!"
 	fi
 }
 
@@ -394,11 +387,6 @@ r_apt() {
 		echo ""
 		sudo apt-cache policy "$2"
 	fi
-}
-
-# run: run calculator by python
-r_calc() {
-	python -ic "from __future__ import division; from math import *; from random import *"
 }
 
 # run: extract file <$YOUR_TAR_RAR_ZIP_7z_TAR_GZ_FILE>
@@ -430,7 +418,7 @@ r_news() {
 
 		test_proxychains=$(docker ps -a | grep -i up)
 
-		if [ ! -z "$test_proxychains" ]; then
+		if [ -n "$test_proxychains" ]; then
 			tmux new-window && tmux rename-window 'newsboat' &&
 				tmux send-keys 'proxychains newsboat && tmux kill-pane' enter
 		else
@@ -438,7 +426,6 @@ r_news() {
 				tmux send-keys 'newsboat && tmux kill-pane' enter
 		fi
 	else
-
 		newsboat
 	fi
 }
@@ -458,11 +445,11 @@ r_logsys() {
 }
 
 # run: generate pass key
-r_passkeygen() {
+r_create_passSHA_512() {
 	if command -v whois >/dev/null; then
 		printf "##### GENERATE PASSWORD ###########\\n\\n"
 		PATHTEMP=$(mktemp -d)
-		if [ ! -n "$TMUX" ]; then
+		if [ -z "$TMUX" ]; then
 			read -r -p "your password? " getvar
 			hlse
 			read -r "getvar?your password? "
@@ -481,10 +468,8 @@ r_passkeygen() {
 }
 
 # run: generate ssh key
-r_sshkeygen() {
-	echo "##### GENERATE SSH ###########"
-	echo ""
-	if [ ! -n "$TMUX" ]; then
+r_create_sshkeygen() {
+	if [ -n "$TMUX" ]; then
 		read -r -p "some comments for new sshgen? " commentme
 		read -r -p "prefix ~/.ssh/_your_prefix? " prefixfile
 	else
@@ -505,7 +490,7 @@ r_uncommentfile() {
 r_iide() {
 	# check if tmux ses exists
 	printf "..launch ide: "
-	if [ ! -z "$TMUX" ]; then
+	if [ -n "$TMUX" ]; then
 		tmux split-window -v -p 34
 		tmux split-window -h -p 66
 		tmux split-window -h -p 34
@@ -513,6 +498,48 @@ r_iide() {
 		echo "Done"
 	else
 		echo "Tmux session off !!"
+	fi
+}
+
+# run: kill pid
+r_kill() {
+	local pid
+	pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
+
+	if [ "x$pid" != "x" ]; then
+		echo "$pid" | xargs kill -"${1:-9}"
+	fi
+}
+
+# run: watch vlc run with args <$GEOMETRY_X> <$GEOMETRY_Y> <$URL_OR_FILE_VID>
+r_vlc() {
+
+	if [ "$#" -gt 1 ]; then
+		tsp vlc -ontop -no-border -force-window \
+			--autofit="$1"x"$2" --geometry=-15-60 "$3"
+	else
+		tsp vlc --ontop --no-border --force-window \
+			--autofit=700x300 --geometry=-15-60 "$1"
+
+		echo ""
+		echo "Example: w_vlc 1000 300 link_youtube"
+		printf "\\t or w_vlc link_youtube\\n"
+	fi
+}
+
+# run: watch mpv run with args <$GEOMETRY_X> <$GEOMETRY_Y> <$URL_OR_FILE_VID>
+r_mpv() {
+
+	if [ "$#" -gt 1 ]; then
+		tsp mpv -ontop -no-border -force-window \
+			--autofit="$1"x"$2" --geometry=-15-60 "$3"
+	else
+		tsp mpv --ontop --no-border --force-window \
+			--autofit=700x300 --geometry=-15-60 "$1"
+
+		echo ""
+		echo "Example: w_mpv 1000 300 link_youtube"
+		printf "\\t or w_mpv link_youtube\\n"
 	fi
 }
 
@@ -588,38 +615,6 @@ ps_kill_all() {
 	fi
 }
 
-# watch: mpv run with args <$GEOMETRY_X> <$GEOMETRY_Y> <$URL_OR_FILE_VID>
-w_mpv() {
-
-	if [ "$#" -gt 1 ]; then
-		tsp mpv -ontop -no-border -force-window \
-			--autofit="$1"x"$2" --geometry=-15-60 "$3"
-	else
-		tsp mpv --ontop --no-border --force-window \
-			--autofit=700x300 --geometry=-15-60 "$1"
-
-		echo ""
-		echo "Example: w_mpv 1000 300 link_youtube"
-		printf "\\t or w_mpv link_youtube\\n"
-	fi
-}
-
-# watch: vlc run with args <$GEOMETRY_X> <$GEOMETRY_Y> <$URL_OR_FILE_VID>
-w_vlc() {
-
-	if [ "$#" -gt 1 ]; then
-		tsp vlc -ontop -no-border -force-window \
-			--autofit="$1"x"$2" --geometry=-15-60 "$3"
-	else
-		tsp vlc --ontop --no-border --force-window \
-			--autofit=700x300 --geometry=-15-60 "$1"
-
-		echo ""
-		echo "Example: w_vlc 1000 300 link_youtube"
-		printf "\\t or w_vlc link_youtube\\n"
-	fi
-}
-
 # alias py_pipl="pip list --format=columns"
 # alias py_pips="pip show"
 # alias py_pudb="python -m pudb"
@@ -633,18 +628,16 @@ w_vlc() {
 
 # Info -> https://github.com/junegunn/fzf/wiki/examples#opening-files
 
-# fzf: kill pid
-fz_kill() {
-	local pid
-	pid=$(ps -ef | sed 1d | fzf-tmux -p 80% | awk '{print $2}')
-
-	if [ "x$pid" != "x" ]; then
-		echo $pid | xargs kill -${1:-9}
-	fi
-}
-
 # Check guide docker help commands:
 # https://gist.github.com/bradtraversy/89fad226dc058a41b596d586022a9bd3
+
+# ╭──────────────────────────────────────────────────────────╮
+# │                          DOCKER                          │
+# ╰──────────────────────────────────────────────────────────╯
+
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker image
+# ╞══════════════════════════════════════════════════════════╡
 
 # docker: show list of docker images
 doc_im_ls() {
@@ -653,7 +646,7 @@ doc_im_ls() {
 
 # docker: image: check histroy of docker image <$DOCKER_IMAGE_ID>
 doc_im_his_id() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker history "$1"
 	else
 		echo "warn - [docker history image] need image_id"
@@ -662,7 +655,7 @@ doc_im_his_id() {
 
 # docker: image: build images with <$YOUR_NEW_DOCKER_TAG>
 doc_im_build_tag() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker build -t "$1" .
 	else
 		echo "warn - [docker build] you need tag, seperti name_img:latest"
@@ -686,13 +679,17 @@ doc_im_rdang() {
 
 # docker: image: remove docker image <$ID_DOCKER_IMAGE>
 doc_im_rid() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		__send_msg "docker rmi -f <id>"
 		docker rmi -f "$1"
 	else
 		echo "warn - [docker image] need image_id"
 	fi
 }
+
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Container
+# ╞══════════════════════════════════════════════════════════╡
 
 # docker: container: show list or containers
 doc_con_ls() {
@@ -704,7 +701,7 @@ doc_con_ls() {
 doc_con_run_it() {
 	__send_msg "docker run -it <id>"
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker run -it "$@"
 	else
 		echo "warn - [docker image] need image_id"
@@ -715,7 +712,7 @@ doc_con_run_it() {
 doc_con_run_rmit() {
 	__send_msg "docker run -it --rm  <id>"
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker run -it --rm "$1"
 	else
 		echo "warn - [docker image] need image_id"
@@ -724,7 +721,7 @@ doc_con_run_rmit() {
 
 # docker: container: check inspect container <$DOCKER_CONTAINER_ID>
 doc_con_inspect_id() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		__send_msg "docker container inspect <id>"
 		docker container inspect "$1"
 	else
@@ -739,7 +736,7 @@ doc_con_showex() {
 
 # docker: container: check log container <$DOCKER_CONTAINER_ID>
 doc_con_log_id() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker container logs "$1"
 	else
 		echo "[warn] doc_con_log: need container id"
@@ -751,7 +748,7 @@ doc_con_start_id() {
 
 	__send_msg "docker start <id>"
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker start "$1"
 	else
 		echo "[warn] doc_con_start_id: need container id"
@@ -763,7 +760,7 @@ doc_con_stop_id() {
 
 	__send_msg "docker stop <id>"
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker stop "$1"
 	else
 		echo "[warn] doc_con_stop_id: need container id"
@@ -775,7 +772,7 @@ doc_con_restart_id() {
 
 	__send_msg "docker restart <id>"
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker restart "$1"
 	else
 		echo "[warn] doc_con_restart_id: need container id"
@@ -789,7 +786,7 @@ doc_con_rall() {
 
 # docker: container: remove container by id <$DOCKER_CONTAINER_ID>
 doc_con_rid() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker rm "$1"
 	else
 		echo "[warn] doc_con_rid: need container id"
@@ -808,6 +805,10 @@ doc_con_enter_id() {
 	docker exec -it "$1" /bin/bash
 }
 
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Volume
+# ╞══════════════════════════════════════════════════════════╡
+
 # docker: volume: show list of docker volumes
 doc_vol() {
 	docker volume ls
@@ -820,7 +821,7 @@ doc_vol_rall() {
 
 # docker: volume: remove docker volume by <$DOCKER_VOLUME_ID>
 doc_vol_rid() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		docker volume rm "$1"
 	else
 		echo "[warn] doc_vol_rid: need volume id"
@@ -837,6 +838,10 @@ doc_vol_inspect_id() {
 	docker volume inspect "$1"
 }
 
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Network
+# ╞══════════════════════════════════════════════════════════╡
+
 # docker: network: show list of docker network
 doc_net_ls() {
 	docker network ls
@@ -846,6 +851,10 @@ doc_net_ls() {
 doc_net_rall() {
 	docker network rm "$(docker network ls -q)"
 }
+
+# ╞══════════════════════════════════════════════════════════╡
+#   Docker Compose
+# ╞══════════════════════════════════════════════════════════╡
 
 # docker: compose: show list of docker compose
 doc_comp_ps() {
@@ -880,7 +889,7 @@ doc_comp_run_rm() {
 # yarn: install package local directory <$PACKAGE>
 yarn_i_saveDev() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		yarn add -D "$1"
 	else
 		printf "\nwrong!\n\tex: yarn_i_savedev lodash\n\n"
@@ -888,10 +897,18 @@ yarn_i_saveDev() {
 
 }
 
+# ╭──────────────────────────────────────────────────────────╮
+# │                   COMMAND PROGRAMMING                    │
+# ╰──────────────────────────────────────────────────────────╯
+
+# ╞══════════════════════════════════════════════════════════╡
+#   Npm and Yarn
+# ╞══════════════════════════════════════════════════════════╡
+
 # yarn: install package for global directory <$PACKAGE>
 yarn_i_saveGlobal() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		yarn global add "$1"
 	else
 		printf "\nwrong!\n\tex: yarn_i_global lodash\n\n"
@@ -902,7 +919,7 @@ yarn_i_saveGlobal() {
 # yarn: run with <$SCRIPT_NAME>
 yarn_run() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		yarn run "$1"
 	else
 		printf "\nwrong!\n\tex: yarn_t_run linter\n\n"
@@ -913,7 +930,7 @@ yarn_run() {
 # npm: install package for global directory <$PACKAGE>
 npm_i_saveGlobal() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		npm install -g "$1"
 	else
 		printf "\nwrong!\n\tex: npm_i_global lodash\n\n"
@@ -926,10 +943,14 @@ npm_c_goutdated() {
 	npm outdated -g
 }
 
+# ╞══════════════════════════════════════════════════════════╡
+#   Pip
+# ╞══════════════════════════════════════════════════════════╡
+
 # pip: install package <$PACKAGE>++
 pip_i() {
-	if [ ! -z "$1" ]; then
-		pip install $1
+	if [ -n "$1" ]; then
+		pip install "$1"
 	else
 		printf "\nwrong!\n\tex: pip_i request\n\n"
 	fi
@@ -937,7 +958,7 @@ pip_i() {
 
 # pip: search package <$PACKAGE>++
 pip_search() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pip search "$1"
 	else
 		printf "\nwrong!\n\tex: pip_search request\n\n"
@@ -946,7 +967,7 @@ pip_search() {
 
 # pip: check: show package <$PACKAGE>++
 pip_show() {
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pip show "$1"
 	else
 		printf "\nwrong!\n\tex: pip_search request\n\n"
@@ -961,7 +982,7 @@ pip_c_ls() {
 # pip: install from requirments <$REQUIRMENTS.TXT>
 pip_i_requirments() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pip install -r "$1"
 	else
 		printf "\nwrong!\n\tex: pip_i_requirments requirments.txt\n\n"
@@ -971,18 +992,22 @@ pip_i_requirments() {
 # pip: export packages installed to <$REQUIRMENTS.TXT>
 pip_frez_requirments() {
 
-	if [ ! -z "$1" ]; then
-		pip freeze >$1
+	if [ -n "$1" ]; then
+		pip freeze >"$1"
 	else
 		printf "\nwrong!\n\tex: pip_frez_requirments requirments.txt\n\n"
 	fi
 
 }
 
+# ╞══════════════════════════════════════════════════════════╡
+#   Poetry
+# ╞══════════════════════════════════════════════════════════╡
+
 # pipenv: install package <$PACKAGES>++
 pipenv_i() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pipenv install "$1"
 	else
 		printf "\nwrong!\n\tex: pipenv_i requests\n\n"
@@ -993,7 +1018,7 @@ pipenv_i() {
 # pipenv: install package as dev <$PACKAGES>++
 pipenv_i_savedev() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pipenv install --dev "$1"
 	else
 		printf "\nwrong!\n\tex: pipenv_i_savedev requests\n\n"
@@ -1009,7 +1034,7 @@ pipenv_i_pipfile() {
 # pipenv: uninstall package <$PACKAGES>++
 pipenv_unins() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pipenv uninstall "$1"
 	else
 		printf "\nwrong!\n\tex: pipenv_unins requestst\n\n"
@@ -1020,7 +1045,7 @@ pipenv_unins() {
 # pipenv: install from requirments <$REQUIRMENTS.TXT>
 pipenv_i_requirments() {
 
-	if [ ! -z "$1" ]; then
+	if [ -n "$1" ]; then
 		pipenv install -r "$1"
 	else
 		printf "\nwrong!\n\tex: pipenv_i_requirments requirments.txt\n\n"
@@ -1092,13 +1117,15 @@ tsm_purge() {
 # tsm: transmission-remote remove, remove torrent but not the data
 tsm_remove() {
 	chosen=$(
-		transmission-remote -l | tail -n +2 /tmp/test >!
+		transmission-remote -l | tail -n +2 >/tmp/test
 		sed -i '$ d' /tmp/test
 		cat /tmp/test | fzf-tmux -p 80% | xargs | cut -d" " -f1
 	)
 	if [ -n "$chosen" ]; then
 		transmission-remote -t "$chosen" -r
 	fi
+
+	rm /tmp/test
 }
 
 # tsm: transmission-remote info with ID <$1>

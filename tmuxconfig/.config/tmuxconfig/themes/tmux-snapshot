@@ -1,10 +1,14 @@
-WINDOW_STYLE_BG="#3d3f52"
-WINDOW_ACTIVE_STYLE_BG="#514C75"
+WINDOW_STYLE_BG="#1f1f28"
+WINDOW_ACTIVE_STYLE_BG="#1f1f28"
 
 COL_WHITE="#626262"
+COL_RED="#957fb8"
 
-BG_STATUSLINE="#2E2F3E"
-BG_ACTIVE_STATUSLINE="#7ef5b8"
+COL_ACTIVE_BORDER_SEPERATOR="#282834"
+COL_BORDER_SEPERATOR="#22222c"
+
+BG_STATUSLINE="#1f1f28"
+BG_ACTIVE_STATUSLINE="#957fb8"
 
 left_separator=''
 # left_separator_black=''
@@ -16,42 +20,43 @@ session_symbol=''
 window_status_current_fg=colour3 # black
 window_status_current_bg=colour4 # blue
 
-setw -g pane-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_WHITE
-setw -g pane-active-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_WHITE
+setw -g pane-active-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_ACTIVE_BORDER_SEPERATOR
+setw -g pane-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_BORDER_SEPERATOR
 
 setw -g window-style bg=$WINDOW_ACTIVE_STYLE_BG
 setw -g window-active-style bg=$WINDOW_STYLE_BG
 
-set -g status-fg colour8
-set -g status-bg $WINDOW_STYLE_BG
+set -g status-fg $WINDOW_STYLE_BG
+set -g status-bg $BG_STATUSLINE
 
 ## STATUS SETTINGS
-set -g status-position bottom
+set -g status-position top
 set -g status on
 set -g status-interval 5
 set -g status-justify 'left'  #left,centre,??
-set -g message-style "fg=$WINDOW_ACTIVE_BG,bg=$BG_ACTIVE_STATUSLINE bold"
-
-## PANE THEME
-set -wg pane-border-status top
-set -wg pane-border-format '#[align=right] #{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
-#{pane_current_command}  #{pane_tty} #{?pane_active,❐ #S:#I/#{session_windows} ,}\
-#{?window_zoomed_flag,⬢,❄} #P '
+set -g message-style "fg=$WINDOW_STYLE_BG,bg=$BG_ACTIVE_STATUSLINE bold"
 
 ## LEFT
-set -g status-left-length 40
-set -g status-style bg="colour238",fg="colour255"
-set -g status-left "#[fg=$COL_WHITE,bg=$WINDOW_NONACTIVE_BG,bold] ❐ #S \
-#[fg=$WINDOW_NONACTIVE_BG,bg=$BG_STATUSLINE,nobold]$left_separator_black"
+# set -g status-left-length 40
+# set -g status-style bg="colour238",fg="colour255"
 
-set -g window-status-format "#[fg=$COL_WHITE] #I #W"
-set -g window-status-current-format "#[fg=$BG_STATUSLINE,bg=$BG_ACTIVE_STATUSLINE]$left_separator_black\
-#[fg=$WINDOW_ACTIVE_BG,bg=$BG_ACTIVE_STATUSLINE,bold] #I \
-$left_separator #W #[fg=$BG_ACTIVE_STATUSLINE,bg=$BG_STATUSLINE,nobold]$left_separator_black\
-#[bg=$WINDOW_NONACTIVE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM ,}"
+set -g status-left "#[fg=$COL_WHITE,bold] ❐ #S "
+
+set -g window-status-format "#[fg=$COL_WHITE] #W"
+
+# set -g window-status-current-format "#[fg=$BG_STATUSLINE,bg=$BG_ACTIVE_STATUSLINE]$left_separator_black\
+# #[fg=$WINDOW_STYLE_BG,bg=$BG_ACTIVE_STATUSLINE,bold] #I \
+# $left_separator #W #[fg=$BG_ACTIVE_STATUSLINE,bg=$BG_STATUSLINE,nobold]$left_separator_black\
+# #[bg=$WINDOW_ACTIVE_STYLE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM ,}"
+
+set -g window-status-format "#[fg=$COL_WHITE,bold]  "
+# set -g window-status-current-format "#[fg=$BG_ACTIVE_STATUSLINE,bold]  #W #[bg=$WINDOW_ACTIVE_STYLE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
+# set -g window-status-current-format "#[fg=$BG_ACTIVE_STATUSLINE,bold]  [bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_RED,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
+set -g window-status-current-format "#[fg=red,bold]  #[fg=red,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
+
 
 ## RIGHT
 set -g status-right-length 40
-set -g status-right "#[fg=$COL_WHITE]   #(lsb_release -d | cut -f 2) "
+set -g status-right "#[fg=$COL_WHITE,bold] #{pomodoro_status}"
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

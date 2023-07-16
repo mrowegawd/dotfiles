@@ -97,6 +97,7 @@ super + u
 # misc: open terminal
 super + Return
         wezterm
+        # kitty
         # alacritty
         # st -e tmux
         # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty
@@ -152,9 +153,9 @@ super + shift + o
 super + F4
         $HOME/Dropbox/exbin/for-local-bin/bspc_firefox
 
-# misc: run create task or note
+# misc: create task
 super + shift + u
-        bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/neorg/orgmode/gtd/refile.org"
+        bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "taskwarrior-tui"
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && sh -e bash -c "/usr/local/bin/nvim --noplugin -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
 

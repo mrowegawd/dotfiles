@@ -14,6 +14,10 @@ else
     export EDITOR="$VISUAL"
 end
 
+if test -e "$HOME/.config/emacs/bin/doom"
+    export PATH="$HOME/.config/emacs/bin:$PATH"
+end
+
 set -U fifc_fd_opts --hidden
 set -Ux fifc_editor nvim
 

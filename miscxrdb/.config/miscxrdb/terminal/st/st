@@ -1,16 +1,16 @@
-st.font:          JetBrains Mono:Regular:pixelsize=10
-st.boldFont:      JetBrains Mono:Bold:pixelsize=10
-st.italicFont:    JetBrains Mono:Italic:pixelsize=10
+st.font:          JetBrainsMonoNL NF:Regular:pixelsize=10
+st.boldFont:      JetBrainsMonoNL NF:Bold:pixelsize=10
+st.italicFont:    JetBrainsMonoNL NF:Italic:pixelsize=10
 
-st.borderperc:              100
-st.cursorshape:               2
-st.cursorthickness:           2
-st.scrollrate:                1
-st.boxdraw_bold:              0
-st.boxdraw_braille:           0
-st.depth:                     0
-st.opacity:                   255
-st.disable_alpha_correction:  0
+! st.borderperc:              100
+! st.cursorshape:               2
+! st.cursorthickness:           2
+! st.scrollrate:                1
+! st.boxdraw_bold:              0
+! st.boxdraw_braille:           0
+! st.depth:                     0
+! st.opacity:                   255
+! st.disable_alpha_correction:  0
 
 !t*font  : -*-tamzenforpowerline-medium-*-*-*-12-*-*-*-*-*-*-*
 !t*font1 : -*-tamzenforpowerline-medium-*-*-*-9-*-*-*-*-*-*-*

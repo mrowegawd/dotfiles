@@ -1,12 +1,11 @@
-
 -- Global objects defined by the C code
 globals = {
     "config_namespace",
-  "vim",
+    "vim",
 }
 
 ignore = {
-  "212", -- Unused argument
-  "631", -- Line is too long
-  "122", -- Setting a readonly global
+    "212", -- Unused argument
+    "631", -- Line is too long
+    "122", -- Setting a readonly global
 }

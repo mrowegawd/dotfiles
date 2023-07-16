@@ -110,8 +110,8 @@ nmap / /\v
 vmap / <Esc>/\%V
 
 " keymap: [search] open search
-nnoremap <c-f> /\v
-vnoremap <c-f> <Esc>/\%V
+nnoremap / /\v
+vnoremap / <Esc>/\%V
 
 " keymap: [search][quickfix] search current word (with quickfix)
 " nmap <silent> <c-f> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
@@ -672,8 +672,8 @@ nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
       \ 'zt' : (winline() == 1) ? 'zb' : 'zz'
 
 " keymap: [scroll] fast down
-" noremap <expr> <C-f> max([winheight(0) - 2, 1])
-"       \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
+noremap <expr> <C-f> max([winheight(0) - 2, 1])
+      \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
 
 " keymap: [scroll] fast up
 noremap <expr> <C-b> max([winheight(0) - 2, 1])

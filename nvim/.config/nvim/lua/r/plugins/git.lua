@@ -1,368 +1,444 @@
 return {
-    -- GITHUB NOTIFICATIONS
-    { "rlch/github-notifications.nvim" },
-    -- GIT CONFLICT
-    {
-        "akinsho/git-conflict.nvim", --- hanya untuk viewer untuk git log, namun bisa di kombinasi dengan fugitive
-        version = "*",
-        cmd = {
-            "GitConflictChooseOurs",
-            "GitConflictChooseTheirs",
-            "GitConflictChooseBoth",
-            "GitConflictChooseNone",
-            "GitConflictNextConflict",
-            "GitConflictPrevConflict",
-            "GitConflictListQf",
+  -- GITHUB NOTIFICATIONS
+  { "rlch/github-notifications.nvim" },
+  -- GIT-WORKTREE
+  {
+    "ThePrimeagen/git-worktree.nvim",
+    opts = {},
+    config = function()
+      require("telescope").load_extension "git_worktree"
+    end,
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    --stylua: ignore
+    keys = {
+      {"<leader>gwm", function() require("telescope").extensions.git_worktree.git_worktrees() end, desc = "Manage"},
+      {"<leader>gwc", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Create"},
+    },
+  },
+  -- GIT CONFLICT
+  {
+    "akinsho/git-conflict.nvim", --- hanya untuk viewer untuk git log, namun bisa di kombinasi dengan fugitive
+    event = "VeryLazy",
+    config = true,
+  },
+  -- GITLINKER
+  {
+    "ruifm/gitlinker.nvim", -- generate shareable file permalinks
+    event = "BufReadPre",
+    opts = {
+      mappings = "<Leader>gy",
+    },
+    config = function(_, opts)
+      require("gitlinker").setup(opts)
+    end,
+  },
+  -- OCTO
+  {
+    "pwntester/octo.nvim",
+    cmd = "Octo",
+    dependencies = {
+      "nvim-telescope/telescope.nvim",
+    },
+    opts = {
+      -- picker = "fzf-lua",
+      enable_builtin = true,
+      mappings = {
+        issue = {
+          close_issue = { lhs = "<space>ic", desc = "close issue" },
+          reopen_issue = { lhs = "<space>io", desc = "reopen issue" },
+          list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
+          reload = { lhs = "<C-r>", desc = "reload issue" },
+          open_in_browser = { lhs = "<space>gO", desc = "open issue in browser" },
+          copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          add_assignee = { lhs = "<space>aa", desc = "add assignee" },
+          remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
+          create_label = { lhs = "<space>lc", desc = "create label" },
+          add_label = { lhs = "<space>la", desc = "add label" },
+          remove_label = { lhs = "<space>ld", desc = "remove label" },
+          goto_issue = { lhs = "<space>gi", desc = "navigate to a local repo issue" },
+          add_comment = { lhs = "<space>ca", desc = "add comment" },
+          delete_comment = { lhs = "<space>cd", desc = "delete comment" },
+          next_comment = { lhs = "]c", desc = "go to next comment" },
+          prev_comment = { lhs = "[c", desc = "go to previous comment" },
+          react_hooray = { lhs = "<space>rp", desc = "add/remove 🎉 reaction" },
+          react_heart = { lhs = "<space>rh", desc = "add/remove ❤️ reaction" },
+          react_eyes = { lhs = "<space>re", desc = "add/remove 👀 reaction" },
+          react_thumbs_up = { lhs = "<space>r+", desc = "add/remove 👍 reaction" },
+          react_thumbs_down = { lhs = "<space>r-", desc = "add/remove 👎 reaction" },
+          react_rocket = { lhs = "<space>rr", desc = "add/remove 🚀 reaction" },
+          react_laugh = { lhs = "<space>rl", desc = "add/remove 😄 reaction" },
+          react_confused = { lhs = "<space>rc", desc = "add/remove 😕 reaction" },
         },
-        config = function()
-            require("git-conflict").setup {
-                default_mappings = true, -- disable buffer local mapping created by this plugin
-                default_commands = true, -- disable commands created by this plugin
-                disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
-                highlights = { -- They must have background color, otherwise the default color will be used
-                    incoming = "DiffText",
-                    current = "DiffAdd",
-                },
-            }
+        pull_request = {
+          checkout_pr = { lhs = "<space>po", desc = "checkout PR" },
+          merge_pr = { lhs = "<space>pm", desc = "merge commit PR" },
+          squash_and_merge_pr = { lhs = "<space>psm", desc = "squash and merge PR" },
+          list_commits = { lhs = "<space>pc", desc = "list PR commits" },
+          list_changed_files = { lhs = "<space>pf", desc = "list PR changed files" },
+          show_pr_diff = { lhs = "<space>pd", desc = "show PR diff" },
+          add_reviewer = { lhs = "<space>va", desc = "add reviewer" },
+          remove_reviewer = { lhs = "<space>vd", desc = "remove reviewer request" },
+          close_issue = { lhs = "<space>ic", desc = "close PR" },
+          reopen_issue = { lhs = "<space>io", desc = "reopen PR" },
+          list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
+          reload = { lhs = "<C-r>", desc = "reload PR" },
+          open_in_browser = { lhs = "<space>gO", desc = "open PR in browser" },
+          copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          goto_file = { lhs = "gf", desc = "go to file" },
+          add_assignee = { lhs = "<space>aa", desc = "add assignee" },
+          remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
+          create_label = { lhs = "<space>lc", desc = "create label" },
+          add_label = { lhs = "<space>la", desc = "add label" },
+          remove_label = { lhs = "<space>ld", desc = "remove label" },
+          goto_issue = { lhs = "<space>gi", desc = "navigate to a local repo issue" },
+          add_comment = { lhs = "<space>ca", desc = "add comment" },
+          delete_comment = { lhs = "<space>cd", desc = "delete comment" },
+          next_comment = { lhs = "]c", desc = "go to next comment" },
+          prev_comment = { lhs = "[c", desc = "go to previous comment" },
+          react_hooray = { lhs = "<space>rp", desc = "add/remove 🎉 reaction" },
+          react_heart = { lhs = "<space>rh", desc = "add/remove ❤️ reaction" },
+          react_eyes = { lhs = "<space>re", desc = "add/remove 👀 reaction" },
+          react_thumbs_up = { lhs = "<space>r+", desc = "add/remove 👍 reaction" },
+          react_thumbs_down = { lhs = "<space>r-", desc = "add/remove 👎 reaction" },
+          react_rocket = { lhs = "<space>rr", desc = "add/remove 🚀 reaction" },
+          react_laugh = { lhs = "<space>rl", desc = "add/remove 😄 reaction" },
+          react_confused = { lhs = "<space>rc", desc = "add/remove 😕 reaction" },
+        },
+        review_thread = {
+          goto_issue = { lhs = "<space>gi", desc = "navigate to a local repo issue" },
+          add_comment = { lhs = "<space>ca", desc = "add comment" },
+          add_suggestion = { lhs = "<space>sa", desc = "add suggestion" },
+          delete_comment = { lhs = "<space>cd", desc = "delete comment" },
+          next_comment = { lhs = "]c", desc = "go to next comment" },
+          prev_comment = { lhs = "[c", desc = "go to previous comment" },
+          select_next_entry = { lhs = "]q", desc = "move to previous changed file" },
+          select_prev_entry = { lhs = "[q", desc = "move to next changed file" },
+          close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
+          react_hooray = { lhs = "<space>rp", desc = "add/remove 🎉 reaction" },
+          react_heart = { lhs = "<space>rh", desc = "add/remove ❤️ reaction" },
+          react_eyes = { lhs = "<space>re", desc = "add/remove 👀 reaction" },
+          react_thumbs_up = { lhs = "<space>r+", desc = "add/remove 👍 reaction" },
+          react_thumbs_down = { lhs = "<space>r-", desc = "add/remove 👎 reaction" },
+          react_rocket = { lhs = "<space>rr", desc = "add/remove 🚀 reaction" },
+          react_laugh = { lhs = "<space>rl", desc = "add/remove 😄 reaction" },
+          react_confused = { lhs = "<space>rc", desc = "add/remove 😕 reaction" },
+        },
+        submit_win = {
+          approve_review = { lhs = "<C-a>", desc = "approve review" },
+          comment_review = { lhs = "<C-m>", desc = "comment review" },
+          request_changes = { lhs = "<C-r>", desc = "request changes review" },
+          close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
+        },
+        review_diff = {
+          add_review_comment = { lhs = "<space>ca", desc = "add a new review comment" },
+          add_review_suggestion = { lhs = "<space>sa", desc = "add a new review suggestion" },
+          focus_files = { lhs = "<leader>e", desc = "move focus to changed file panel" },
+          toggle_files = { lhs = "<leader>b", desc = "hide/show changed files panel" },
+          next_thread = { lhs = "]t", desc = "move to next thread" },
+          prev_thread = { lhs = "[t", desc = "move to previous thread" },
+          select_next_entry = { lhs = "]q", desc = "move to previous changed file" },
+          select_prev_entry = { lhs = "[q", desc = "move to next changed file" },
+          close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
+          toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
+          goto_file = { lhs = "gf", desc = "go to file" },
+        },
+        file_panel = {
+          next_entry = { lhs = "j", desc = "move to next changed file" },
+          prev_entry = { lhs = "k", desc = "move to previous changed file" },
+          select_entry = { lhs = "<cr>", desc = "show selected changed file diffs" },
+          refresh_files = { lhs = "R", desc = "refresh changed files panel" },
+          focus_files = { lhs = "<leader>E", desc = "move focus to changed file panel" },
+          toggle_files = { lhs = "<leader>B", desc = "hide/show changed files panel" },
+          select_next_entry = { lhs = "]q", desc = "move to previous changed file" },
+          select_prev_entry = { lhs = "[q", desc = "move to next changed file" },
+          close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
+          toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
+        },
+      },
+      config = function(_, opts)
+        require("octo").setup(opts)
+      end,
+    },
+  },
+  -- GIT ADVANCED SEARCH
+  {
+    "aaronhallaert/advanced-git-search.nvim",
+    dependencies = {
+      "sindrets/diffview.nvim",
+      "ibhagwan/fzf-lua",
+      "tpope/vim-fugitive",
+      "tpope/vim-rhubarb",
+    },
+    init = function()
+      vim.api.nvim_create_user_command(
+        "DiffCommitLine",
+        "lua require('advanced_git_search.fzf').diff_commit_line()",
+        { range = true }
+      )
+    end,
+    keys = {
+      {
+        "<Leader>gG",
+        "<CMD>AdvancedGitSearch search_log_content<CR>",
+        desc = "Git(git-advanced): grep string on branch repo",
+      },
+
+      {
+        "<Leader>gg",
+        ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
+        mode = "v",
+        desc = "Git(git-advanced): opens a window with a list of previous commit logs with respect to selected lines (visual)",
+      },
+
+      {
+        "<Leader>gg",
+        "<CMD>AdvancedGitSearch search_log_content_file<CR>",
+        desc = "Git(git-advanced): grep string on buffer repo",
+      },
+    },
+    config = function()
+      require("advanced_git_search.fzf").setup {
+        diff_plugin = "diffview",
+        git_flags = {},
+        git_diff_flags = {},
+        show_builtin_git_pickers = false,
+      }
+    end,
+  },
+  -- GITSIGNS
+  {
+    "lewis6991/gitsigns.nvim",
+    opts = {
+      -- Experimental ------------------------------------------------------------------------------
+      _extmark_signs = true,
+      _signs_staged_enable = false,
+      signs = {
+        add = {
+          hl = "GitSignsAdd",
+          text = "▎",
+          -- numhl = "GitSignsAddNr",
+          -- linehl = "GitSignsAddLn",
+        },
+        change = {
+          hl = "GitSignsChange",
+          text = "▎", -- "▍"
+          -- numhl = "GitSignsChangeNr",
+          -- linehl = "GitSignsChangeLn",
+        },
+        delete = {
+          hl = "GitSignsDelete",
+          text = "▎",
+          -- numhl = "GitSignsDeleteNr",
+          -- linehl = "GitSignsDeleteLn",
+        },
+        topdelete = {
+          hl = "GitSignsDelete",
+          text = "▎",
+          -- numhl = "GitSignsDeleteNr",
+          -- linehl = "GitSignsDeleteLn",
+        },
+        changedelete = {
+          hl = "GitSignsChange",
+          text = "▎",
+          -- numhl = "GitSignsChangeNr",
+          -- linehl = "GitSignsChangeLn",
+        },
+        untracked = {
+          hl = "GitSignsAdd",
+          text = "▎",
+          -- numhl = "GitSignsAddNr",
+          -- linehl = "GitSignsAddLn",
+        },
+      },
+      -- on_attach = nil,
+      on_attach = function(bufnr)
+        require("r.mappings.utils.git").signs(bufnr, package.loaded.gitsigns)
+      end,
+    },
+  },
+  -- DIFFVIEW
+  {
+    "sindrets/diffview.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- Dont mess me up >_>, (`<c-i>` `<c-o>`)
+    init = function()
+      require("r.utils").disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+    end,
+    config = function()
+      local diffview = require "diffview"
+      local actions = require "diffview.actions"
+
+      local cb = require("diffview.config").diffview_callback
+
+      diffview.setup {
+        enhanced_diff_hl = true,
+        git_cmd = { "git" },
+        hg_cmd = { "chg" },
+        hooks = {
+          diff_buf_read = function()
+            local opt = vim.opt_local
+            opt.wrap, opt.list, opt.relativenumber = false, false, false
+            opt.colorcolumn = ""
+          end,
+        },
+        key_bindings = {
+          disable_defaults = true, -- Disable the default key bindings
+          -- The `view` bindings are active in the diff buffers, only when the current
+          -- tabpage is a Diffview.
+          view = {
+            ["<tab>"] = actions.select_next_entry, -- Open the diff for the next file
+            ["<s-tab>"] = actions.select_prev_entry, -- Open the diff for the previous file
+
+            ["gf"] = actions.goto_file, -- Open the file in a new split in previous tabpage
+            ["<C-s>"] = actions.goto_file_split, -- Open the file in a new split
+            ["<C-t>"] = actions.goto_file_tab, -- Open the file in a new tabpage
+
+            ["<space>E"] = actions.focus_files, -- Bring focus to the files panel
+            ["<space>e"] = actions.toggle_files, -- Toggle the files panel.
+
+            ["<F4>"] = actions.cycle_layout,
+            ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
+          },
+          file_panel = {
+
+            ["<up>"] = actions.scroll_view(-0.25),
+            ["<down>"] = actions.scroll_view(0.25),
+
+            ["j"] = actions.next_entry,
+            ["k"] = actions.prev_entry,
+            -- ["<down>"] = actions.next_entry,
+            -- ["<up>"] = actions.prev_entry,
+            ["<c-n>"] = actions.select_next_entry,
+            ["<c-p>"] = actions.select_prev_entry,
+            ["<cr>"] = actions.select_entry,
+            ["<2-LeftMouse>"] = actions.select_entry,
+
+            ["<tab>"] = actions.select_next_entry,
+            ["<s-tab>"] = actions.select_prev_entry,
+
+            -- ["-"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+            -- ["S"] = actions.stage_all, -- Stage all entries.
+            -- ["U"] = actions.unstage_all, -- Unstage all entries.
+            -- ["X"] = actions.restore_entry, -- Restore entry to the state on the left side.
+            -- ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
+
+            ["H"] = actions.listing_style, -- Toggle between 'list' and 'tree' views
+            ["f"] = actions.toggle_flatten_dirs, -- Flatten empty subdirectories in tree listing style.
+
+            ["o"] = actions.goto_file_edit,
+            ["<c-t>"] = actions.goto_file_tab,
+            ["<c-s>"] = actions.goto_file_split,
+
+            ["<F4>"] = actions.cycle_layout,
+            ["L"] = actions.open_commit_log,
+            ["R"] = actions.refresh_files,
+
+            ["<space>E"] = actions.focus_files,
+            ["<space>e"] = actions.toggle_files,
+
+            ["gf"] = "",
+            ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
+          },
+          file_history_panel = {
+            ["?"] = actions.options, -- Open the option panel
+
+            -- ["<c-u>"] = actions.scroll_view(-0.25),
+            -- ["<c-d>"] = actions.scroll_view(0.25),
+            ["<up>"] = actions.scroll_view(-0.25),
+            ["<down>"] = actions.scroll_view(0.25),
+
+            ["zR"] = actions.open_all_folds,
+            ["zM"] = actions.close_all_folds,
+            ["zo"] = actions.open_fold,
+            ["zc"] = actions.close_fold,
+            ["za"] = actions.toggle_fold,
+            ["<tab>"] = actions.toggle_fold,
+            ["<s-tab>"] = actions.toggle_fold,
+
+            ["j"] = actions.next_entry,
+            ["k"] = actions.prev_entry,
+            -- ["<down>"] = actions.next_entry,
+            -- ["<up>"] = actions.prev_entry,
+            ["<c-n>"] = actions.select_next_entry,
+            ["<c-p>"] = actions.select_prev_entry,
+            ["<cr>"] = actions.select_entry,
+            ["<2-LeftMouse>"] = actions.select_entry,
+
+            ["o"] = actions.goto_file_edit,
+            ["<c-t>"] = actions.goto_file_tab,
+            ["<c-s>"] = actions.goto_file_split,
+
+            ["<F4>"] = actions.cycle_layout,
+            ["L"] = actions.open_commit_log,
+            ["D"] = actions.open_in_diffview, -- Open the entry under the cursor in a diffview
+            ["y"] = actions.copy_hash, -- Copy the commit hash of the entry under the cursor
+
+            ["<space>E"] = actions.focus_files,
+            ["<space>e"] = actions.toggle_files,
+
+            ["gf"] = "",
+          },
+          option_panel = {
+            ["<tab>"] = cb "select",
+          },
+        },
+      }
+    end,
+  },
+  -- NEOGIT
+  {
+    "NeogitOrg/neogit",
+    cmd = "Neogit",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      {
+        "<Leader>gs",
+        function()
+          require("neogit").open()
         end,
-    },
-    -- GITLINKER
-    {
-        "ruifm/gitlinker.nvim", -- generate shareable file permalinks
-        event = "BufReadPre",
-        opts = {
-            mappings = "<leader>hy",
-        },
-        config = function(_, opts)
-            require("gitlinker").setup(opts)
+        desc = "Git(neogit): open",
+      },
+      {
+        "<Leader>gc",
+        function()
+          require("neogit").open { "commit" }
         end,
+        desc = "Git(neogit): create commit",
+      },
+      -- {
+      --     "<localleader>gl",
+      --     function()
+      --         require("neogit").popups.pull.create()
+      --     end,
+      --     desc = "Git(neogit): open pull popup",
+      -- },
+      -- {
+      --     "<localleader>gp",
+      --     function()
+      --         require("neogit").popups.push.create()
+      --     end,
+      --     desc = "Git(neogit): open push popup",
+      -- },
     },
-    -- OCTO
-    {
-        "pwntester/octo.nvim",
-        cmd = "Octo",
-        dependencies = {
-            "nvim-telescope/telescope.nvim",
-        },
-        config = function()
-            require("octo").setup()
-        end,
+    opts = {
+      disable_signs = false,
+      disable_hint = true,
+      disable_commit_confirmation = true,
+      disable_builtin_notifications = true,
+      disable_insert_on_commit = false,
+      signs = {
+        section = { "", "" }, -- "󰁙", "󰁊"
+        item = { "▸", "▾" },
+        hunk = { "󰐕", "󰍴" },
+      },
+      integrations = {
+        diffview = true,
+      },
     },
-    -- FUGITIVE
-    {
-        "tpope/vim-fugitive",
-        dependencies = {
-            "tpope/vim-rhubarb",
-            "idanarye/vim-merginal", -- fugitive dependencies, UI git branches
-        },
-    },
-    -- GIT ADVANCED SEARCH
-    {
-        "aaronhallaert/advanced-git-search.nvim",
-        dependencies = {
-            "sindrets/diffview.nvim",
-            "ibhagwan/fzf-lua",
-            "tpope/vim-fugitive",
-            "tpope/vim-rhubarb",
-        },
-        keys = {
-            {
-                "<leader>hgC",
-                "<CMD>AdvancedGitSearch search_log_content<CR>",
-                desc = "Git(git-advanced): search string on repo (all contents)",
-            },
-
-            {
-                "<leader>hgc",
-                ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
-                mode = "v",
-                desc = "Git(git-advanced): opens a window with a list of previous commit logs with respect to selected lines (visual)",
-            },
-
-            {
-                "<leader>hgc",
-                "<CMD>AdvancedGitSearch search_log_content_file<CR>",
-                desc = "Git(git-advanced): search string on curbuf",
-            },
-        },
-        config = function()
-            require("advanced_git_search.fzf").setup {
-                diff_plugin = "diffview",
-                git_flags = {},
-                git_diff_flags = {},
-                show_builtin_git_pickers = false,
-            }
-        end,
-    },
-    -- GITSIGNS
-    {
-        "lewis6991/gitsigns.nvim",
-        opts = {
-            -- Experimental ------------------------------------------------------------------------------
-            _extmark_signs = true,
-            _signs_staged_enable = false,
-            signs = {
-                add = {
-                    hl = "GitSignsAdd",
-                    text = "▎",
-                    -- numhl = "GitSignsAddNr",
-                    -- linehl = "GitSignsAddLn",
-                },
-                change = {
-                    hl = "GitSignsChange",
-                    text = "▎", -- "▍"
-                    -- numhl = "GitSignsChangeNr",
-                    -- linehl = "GitSignsChangeLn",
-                },
-                delete = {
-                    hl = "GitSignsDelete",
-                    text = "▎",
-                    -- numhl = "GitSignsDeleteNr",
-                    -- linehl = "GitSignsDeleteLn",
-                },
-                topdelete = {
-                    hl = "GitSignsDelete",
-                    text = "▎",
-                    -- numhl = "GitSignsDeleteNr",
-                    -- linehl = "GitSignsDeleteLn",
-                },
-                changedelete = {
-                    hl = "GitSignsChange",
-                    text = "▎",
-                    -- numhl = "GitSignsChangeNr",
-                    -- linehl = "GitSignsChangeLn",
-                },
-                untracked = {
-                    hl = "GitSignsAdd",
-                    text = "▎",
-                    -- numhl = "GitSignsAddNr",
-                    -- linehl = "GitSignsAddLn",
-                },
-            },
-            -- on_attach = nil,
-            on_attach = function(bufnr)
-                require("r.mappings.utils.git").signs(
-                    bufnr,
-                    package.loaded.gitsigns
-                )
-            end,
-        },
-    },
-    -- GIT ADVANCED SEARCH
-    {
-        "aaronhallaert/advanced-git-search.nvim",
-        dependencies = {
-            "ibhagwan/fzf-lua",
-            "tpope/vim-fugitive",
-            "tpope/vim-rhubarb",
-            -- DIFFVIEW
-            {
-                "sindrets/diffview.nvim",
-                cmd = {
-                    "DiffviewLog",
-                    "DiffviewOpen",
-                    "DiffviewClose",
-                    "DiffviewRefresh",
-                    "DiffviewFocusFiles",
-                    "DiffviewFileHistory",
-                    "DiffviewToggleFiles",
-                },
-                dependencies = {
-                    "nvim-lua/plenary.nvim",
-                },
-                -- Dont mess me up >_>, (`<c-i>` `<c-o>`)
-                init = function()
-                    require("r.utils").disable_ctrl_i_and_o(
-                        "NoDiffview",
-                        { "DiffviewFiles", "DiffviewFileHistory" }
-                    )
-                end,
-                config = function()
-                    local diffview = require "diffview"
-                    local actions = require "diffview.actions"
-
-                    local cb = require("diffview.config").diffview_callback
-
-                    diffview.setup {
-                        enhanced_diff_hl = true,
-                        git_cmd = { "git" },
-                        hg_cmd = { "chg" },
-                        hooks = {
-                            diff_buf_read = function()
-                                local opt = vim.opt_local
-                                opt.wrap, opt.list, opt.relativenumber =
-                                    false, false, false
-                                opt.colorcolumn = ""
-                            end,
-                        },
-                        key_bindings = {
-                            disable_defaults = true, -- Disable the default key bindings
-                            -- The `view` bindings are active in the diff buffers, only when the current
-                            -- tabpage is a Diffview.
-                            view = {
-                                ["<tab>"] = actions.select_next_entry, -- Open the diff for the next file
-                                ["<s-tab>"] = actions.select_prev_entry, -- Open the diff for the previous file
-
-                                ["gf"] = actions.goto_file, -- Open the file in a new split in previous tabpage
-                                ["<C-s>"] = actions.goto_file_split, -- Open the file in a new split
-                                ["<C-t>"] = actions.goto_file_tab, -- Open the file in a new tabpage
-
-                                ["<space>E"] = actions.focus_files, -- Bring focus to the files panel
-                                ["<space>e"] = actions.toggle_files, -- Toggle the files panel.
-
-                                ["<F4>"] = actions.cycle_layout,
-                                ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
-                            },
-                            file_panel = {
-
-                                ["<c-u>"] = actions.scroll_view(-0.25),
-                                ["<c-d>"] = actions.scroll_view(0.25),
-
-                                ["j"] = actions.next_entry,
-                                ["k"] = actions.prev_entry,
-                                ["<down>"] = actions.next_entry,
-                                ["<up>"] = actions.prev_entry,
-                                ["<c-n>"] = actions.select_next_entry,
-                                ["<c-p>"] = actions.select_prev_entry,
-                                ["<cr>"] = actions.select_entry,
-                                ["<2-LeftMouse>"] = actions.select_entry,
-
-                                ["<tab>"] = actions.select_next_entry,
-                                ["<s-tab>"] = actions.select_prev_entry,
-
-                                -- ["-"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
-                                -- ["S"] = actions.stage_all, -- Stage all entries.
-                                -- ["U"] = actions.unstage_all, -- Unstage all entries.
-                                -- ["X"] = actions.restore_entry, -- Restore entry to the state on the left side.
-                                -- ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
-
-                                ["H"] = actions.listing_style, -- Toggle between 'list' and 'tree' views
-                                ["f"] = actions.toggle_flatten_dirs, -- Flatten empty subdirectories in tree listing style.
-
-                                ["o"] = actions.goto_file_edit,
-                                ["<c-t>"] = actions.goto_file_tab,
-                                ["<c-s>"] = actions.goto_file_split,
-
-                                ["<F4>"] = actions.cycle_layout,
-                                ["L"] = actions.open_commit_log,
-                                ["R"] = actions.refresh_files,
-
-                                ["<space>E"] = actions.focus_files,
-                                ["<space>e"] = actions.toggle_files,
-
-                                ["gf"] = "",
-                                ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
-                            },
-                            file_history_panel = {
-                                ["?"] = actions.options, -- Open the option panel
-
-                                ["<c-u>"] = actions.scroll_view(-0.25),
-                                ["<c-d>"] = actions.scroll_view(0.25),
-
-                                ["zR"] = actions.open_all_folds,
-                                ["zM"] = actions.close_all_folds,
-                                ["zo"] = actions.open_fold,
-                                ["zc"] = actions.close_fold,
-                                ["za"] = actions.toggle_fold,
-                                ["<tab>"] = actions.toggle_fold,
-                                ["<s-tab>"] = actions.toggle_fold,
-
-                                ["j"] = actions.next_entry,
-                                ["k"] = actions.prev_entry,
-                                ["<down>"] = actions.next_entry,
-                                ["<up>"] = actions.prev_entry,
-                                ["<c-n>"] = actions.select_next_entry,
-                                ["<c-p>"] = actions.select_prev_entry,
-                                ["<cr>"] = actions.select_entry,
-                                ["<2-LeftMouse>"] = actions.select_entry,
-
-                                ["o"] = actions.goto_file_edit,
-                                ["<c-t>"] = actions.goto_file_tab,
-                                ["<c-s>"] = actions.goto_file_split,
-
-                                ["<F4>"] = actions.cycle_layout,
-                                ["L"] = actions.open_commit_log,
-                                ["D"] = actions.open_in_diffview, -- Open the entry under the cursor in a diffview
-                                ["y"] = actions.copy_hash, -- Copy the commit hash of the entry under the cursor
-
-                                ["<space>E"] = actions.focus_files,
-                                ["<space>e"] = actions.toggle_files,
-
-                                ["gf"] = "",
-                            },
-                            option_panel = {
-                                ["<tab>"] = cb "select",
-                            },
-                        },
-                    }
-                end,
-            },
-        },
-        init = function()
-            vim.api.nvim_create_user_command(
-                "DiffCommitLine",
-                "lua require('advanced_git_search.fzf').diff_commit_line()",
-                { range = true }
-            )
-        end,
-        config = function()
-            require("advanced_git_search.fzf").setup {
-                diff_plugin = "diffview",
-                git_flags = {},
-                git_diff_flags = {},
-                show_builtin_git_pickers = false,
-            }
-        end,
-    },
-    -- NEOGIT
-    {
-        "NeogitOrg/neogit",
-        cmd = "Neogit",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        keys = {
-            {
-                "<localleader>gs",
-                function()
-                    require("neogit").open()
-                end,
-                desc = "Git(neogit): open status buffer",
-            },
-            {
-                "<localleader>gc",
-                function()
-                    require("neogit").open { "commit" }
-                end,
-                desc = "Git(neogit): open commit buffer",
-            },
-            -- {
-            --     "<localleader>gl",
-            --     function()
-            --         require("neogit").popups.pull.create()
-            --     end,
-            --     desc = "Git(neogit): open pull popup",
-            -- },
-            -- {
-            --     "<localleader>gp",
-            --     function()
-            --         require("neogit").popups.push.create()
-            --     end,
-            --     desc = "Git(neogit): open push popup",
-            -- },
-        },
-        opts = {
-            disable_signs = false,
-            disable_hint = true,
-            disable_commit_confirmation = true,
-            disable_builtin_notifications = true,
-            disable_insert_on_commit = false,
-            signs = {
-                section = { "", "" }, -- "󰁙", "󰁊"
-                item = { "▸", "▾" },
-                hunk = { "󰐕", "󰍴" },
-            },
-            integrations = {
-                diffview = true,
-            },
-        },
-    },
+  },
 }

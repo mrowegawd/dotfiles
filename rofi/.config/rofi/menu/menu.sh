@@ -14,6 +14,7 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 	[[ -z $chosen ]] && exit
 
 	MYBIN_PATH="$HOME/Dropbox/exbin"
+
 	[[ ! -d $MYBIN_PATH ]] && dunstify "Path not found:" "$MYBIN_PATH"
 
 	case "$chosen" in

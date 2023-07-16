@@ -1,12 +1,13 @@
 return {
-    {
-        "james1236/backseat.nvim",
-        cmd = {
-            "Backseat",
-            "BackseatAsk",
-            "BackseatClear",
-            "BackseatClearLine",
-        },
-        config = true,
+  {
+    "james1236/backseat.nvim",
+    enabled = false,
+    cmd = {
+      "Backseat",
+      "BackseatAsk",
+      "BackseatClear",
+      "BackseatClearLine",
     },
+    config = true,
+  },
 }
