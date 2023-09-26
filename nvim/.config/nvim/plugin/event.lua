@@ -5,75 +5,43 @@ end
 local fn, api, cmd, v = vim.fn, vim.api, vim.cmd, vim.v
 local windowdim = require "r.utils.windowdim"
 
-local smart_close_filetypes = as.p_table {
-  ["qf"] = true,
-  ["log"] = true,
-  ["help"] = true,
-  ["query"] = true,
-  ["dbui"] = true,
-  ["lspinfo"] = true,
-  ["git.*"] = true,
-  ["Neogit.*"] = true,
-  ["neotest.*"] = true,
-  ["fugitive.*"] = true,
-  ["copilot.*"] = true,
-  ["tsplayground"] = true,
-  ["aerial"] = true,
-  ["outline"] = true,
-  ["sagaoutline"] = true,
-  ["startuptime"] = true,
-}
-
-local smart_close_buftypes = as.p_table {
-  ["nofile"] = true,
-}
-
-local function smart_close()
-  if fn.winnr "$" ~= 1 then
-    api.nvim_win_close(0, true)
-  end
-end
-
-as.augroup(
-  "SmartClose",
-  {
-    -- Close certain filetypes by pressing q.
-    event = { "FileType" },
-    command = function(args)
-      local is_unmapped = fn.hasmapto("q", "n") == 0
-      local buf = vim.bo[args.buf]
-      local is_eligible = is_unmapped
-        or vim.wo.previewwindow
-        or smart_close_filetypes[buf.ft]
-        or smart_close_buftypes[buf.bt]
-      if is_eligible then
-        vim.keymap.set("n", "q", smart_close, { buffer = args.buf, nowait = true })
-      end
-    end,
+-- Close certain filetypes by pressing q.
+as.augroup("SmartClose", {
+  event = { "FileType" },
+  pattern = {
+    "PlenaryTestPopup",
+    "help",
+    "lspinfo",
+    "man",
+    "notify",
+    "qf",
+    "query",
+    "spectre_panel",
+    "startuptime",
+    "tsplayground",
+    "neotest-output",
+    "checkhealth",
+    "neotest-summary",
+    "neotest-output-panel",
   },
-  {
-    -- Close quick fix window if the file containing it was closed
-    event = { "BufEnter" },
-    command = function()
-      if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
-        api.nvim_buf_delete(0, { force = true })
-      end
-    end,
-  }
-  -- , {
-  -- automatically close corresponding loclist when quitting a window
-  -- event = { "QuitPre" },
-  -- nested = true,
-  -- command = function()
-  --   if vim.bo.filetype ~= "qf" then
-  --     cmd.lclose { mods = { silent = true } }
-  --   end
-  -- end,
-  -- }
-)
+  command = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+  end,
+})
 
+-- Close quick fix window if the file containing it was closed
+as.augroup("AutoCloseQf", {
+  event = { "BufEnter" },
+  command = function()
+    if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
+      api.nvim_buf_delete(0, { force = true })
+    end
+  end,
+})
+
+-- don't execute silently in case of errors
 as.augroup("TextYankHighlight", {
-  -- don't execute silently in case of errors
   event = { "TextYankPost" },
   command = function()
     vim.highlight.on_yank {
@@ -141,33 +109,7 @@ as.augroup("VimrcIncSearchHighlight", {
   end,
 })
 
--- local excluded = {
---     "neo-tree",
---     "NeogitStatus",
---     "NeogitCommitMessage",
---     "undotree",
---     "log",
---     "man",
---     "dap-repl",
---     "markdown",
---     "vimwiki",
---     "vim-plug",
---     "gitcommit",
---     "toggleterm",
---     "fugitive",
---     "list",
---     "NvimTree",
---     "startify",
---     "help",
---     "orgagenda",
---     "org",
---     "himalaya",
---     "Trouble",
---     "NeogitCommitMessage",
---     "NeogitRebaseTodo",
--- }
-
-local ignore_buftype = { "quickfix", "nofile", "help", "terminal" }
+-- local ignore_buftype = { "quickfix", "nofile", "help", "terminal" }
 local ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" }
 
 as.augroup("WindowBehaviours", {
@@ -190,40 +132,17 @@ as.augroup("WindowBehaviours", {
   end,
 }, {
   -- Go to last loc when opening a buffer
-  event = { "BufWinEnter", "FileType", "BufRead", "BufEnter" },
-  pattern = { "*" },
+  event = { "BufReadPost" },
   command = function()
-    if vim.tbl_contains(ignore_buftype, vim.bo.buftype) then
+    local exclude = ignore_filetype
+    local buf = vim.api.nvim_get_current_buf()
+    if vim.tbl_contains(exclude, vim.bo[buf].filetype) then
       return
     end
-
-    if vim.tbl_contains(ignore_filetype, vim.bo.filetype) then
-      -- reset cursor to first line
-      vim.cmd "normal! gg"
-      return
-    end
-
-    -- If a line has already been specified on the command line, we are done e.g. nvim file +num
-    if fn.line "." > 1 then
-      return
-    end
-
-    local last_line = fn.line [['"]]
-    local buff_last_line = fn.line "$"
-
-    -- If the last line is set and the less than the last line in the buffer
-    if last_line > 0 and last_line <= buff_last_line then
-      local win_last_line = fn.line "w$"
-      local win_first_line = fn.line "w0"
-      -- Check if the last line of the buffer is the same as the win
-      if win_last_line == buff_last_line then
-        vim.cmd 'normal! g`"' -- Set line to last line edited
-        -- Try to center
-      elseif buff_last_line - last_line > ((win_last_line - win_first_line) / 2) - 1 then
-        vim.cmd 'normal! g`"zz'
-      else
-        vim.cmd [[normal! G'"<c-e>]]
-      end
+    local mark = vim.api.nvim_buf_get_mark(buf, '"')
+    local lcount = vim.api.nvim_buf_line_count(buf)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
     end
   end,
 }, {
@@ -232,11 +151,10 @@ as.augroup("WindowBehaviours", {
     "orgagenda",
     "capture",
     "gitcommit",
-    -- "help",
+    "help",
     "qf",
     "Trouble",
   },
-
   command = function()
     cmd "wincmd J"
   end,
@@ -280,17 +198,6 @@ as.augroup("DisableWinBf", {
     end
   end,
 })
-
--- Get into insert mode whenever we enter a terminal buffer
--- as.augroup("TermAcg", {
---     event = { "BufEnter" },
---     pattern = { "*" },
---     command = function()
---         if vim.startswith(vim.api.nvim_buf_get_name(0), "term://") then
---             vim.cmd "startinsert"
---         end
---     end,
--- })
 
 as.augroup("ConvertNorg", {
   event = { "BufWritePost" },
@@ -380,27 +287,6 @@ as.augroup("DisableStatusline", {
     cmd [[set laststatus=3]]
   end,
 })
-
--- local trim = function(pattern)
---   local save = fn.winsaveview()
---   cmd(string.format("keepjumps keeppatterns silent! %s", pattern))
---   fn.winrestview(save)
--- end
---
--- local ignore_filetype_trim = { "norg", "text", "org", "sh", "zsh", "fish", "dosini", "taskrc" }
--- local remove_group = vim.api.nvim_create_augroup("removeTrailingSpaces", { clear = true })
--- vim.api.nvim_create_autocmd("BufWritePre", {
---   pattern = "*",
---
---   callback = function()
---     -- trim trailing lines
---     if vim.tbl_contains(ignore_filetype_trim, vim.bo.filetype) then
---       trim [[%s/\($\n\s*\)\+\%$//]]
---       trim [[%s/\s\+$//e]]
---     end
---   end,
---   group = remove_group,
--- })
 
 -- NOTE ga suka behaviour fold window, setelah <CR> dari telescope bikin fold
 -- nya menjadi kacau, beberapa solusi udah di aplikasikan ke config telescope dari

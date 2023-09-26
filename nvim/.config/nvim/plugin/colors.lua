@@ -6,10 +6,12 @@ local highlight, augroup = as.highlight, as.augroup
 
 local general_overrides = function()
   highlight.all {
-    { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
-    { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
+    { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
+    { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
+    -- { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
+    -- { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
     -- {
     --   CursorLineNr = {
