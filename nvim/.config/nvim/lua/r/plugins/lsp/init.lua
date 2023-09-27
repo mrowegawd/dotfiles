@@ -21,9 +21,7 @@ return {
     cmd = "Mason",
     build = ":MasonUpdate",
     opts = {
-      ensure_installed = {
-        "shfmt",
-      },
+      ensure_installed = { "shfmt" },
       ui = { border = as.ui.border.rectangle, height = 0.8 },
     },
     config = function(_, opts)
@@ -111,6 +109,7 @@ return {
 
       local check_backspace = function()
         local col = vim.fn.col "." - 1
+        ---@diagnostic disable-next-line: param-type-mismatch
         return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
       end
 
@@ -508,15 +507,16 @@ return {
     event = "VimEnter",
     opts = {
       linters_by_ft = {
-        javascript = { "eslint_d" },
         ["javascript.jsx"] = { "eslint_d" },
+        ["typescript.tsx"] = { "eslint_d" },
+        go = { "golangcilint" },
+        javascript = { "eslint_d" },
         javascriptreact = { "eslint_d" },
         lua = { "selene" },
         python = { "mypy", "pylint" },
         rst = { "rstlint" },
         sh = { "shellcheck" },
         typescript = { "eslint_d" },
-        ["typescript.tsx"] = { "eslint_d" },
         typescriptreact = { "eslint_d" },
         vim = { "vint" },
         yaml = { "yamllint" },
