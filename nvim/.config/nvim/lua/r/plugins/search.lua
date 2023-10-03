@@ -79,8 +79,7 @@ return {
           search = { trigger = ";" },
         },
         char = {
-          -- Jika key tidak di set disini,
-          -- efek key akan di ignore
+          -- Jika key tidak di set disini, efek key akan di ignore
           keys = { "f", "F", "t", "T" },
         },
       },

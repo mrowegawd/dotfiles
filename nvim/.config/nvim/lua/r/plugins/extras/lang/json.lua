@@ -1,5 +1,4 @@
 return {
-
   -- add json to treesitter
   {
     "nvim-treesitter/nvim-treesitter",
@@ -9,14 +8,15 @@ return {
       end
     end,
   },
-
+  -- yaml schema support
+  {
+    "b0o/SchemaStore.nvim",
+    lazy = true,
+    version = false, -- last release is way too old
+  },
   -- correctly setup lspconfig
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "b0o/SchemaStore.nvim",
-      version = false, -- last release is way too old
-    },
     opts = {
       -- make sure mason installs the server
       servers = {

@@ -3,7 +3,6 @@ local fn, fmt, icons, api = vim.fn, string.format, as.ui.icons, vim.api
 local highlight, ui = as.highlight, as.ui
 local r_utils = require "r.utils"
 
-local prettier = { "prettierd", "prettier" }
 local set_icons = function(icons_name)
   return icons_name .. " "
 end
@@ -38,52 +37,6 @@ return {
         info = icons.diagnostics.info,
       },
     },
-  },
-  -- CONFORM.NVIM
-  {
-    "stevearc/conform.nvim",
-    event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
-    keys = {
-      {
-        "<Leader>lf",
-        function()
-          require("conform").format { async = true, lsp_fallback = true }
-        end,
-        desc = "Lang(conform): Format buffer",
-      },
-    },
-    opts = {
-      formatters_by_ft = {
-        javascript = prettier,
-        typescript = prettier,
-        javascriptreact = prettier,
-        typescriptreact = prettier,
-        css = prettier,
-        html = prettier,
-        json = prettier,
-        jsonc = prettier,
-        yaml = prettier,
-        markdown = prettier,
-        graphql = prettier,
-        lua = { "stylua" },
-        go = { "goimports", "gofmt" },
-        sh = { "shfmt" },
-        ["_"] = { "trim_whitespace", "trim_newlines" },
-        python = {
-          formatters = { "isort", "black" },
-          run_all_formatters = true,
-        },
-      },
-      format_on_save = { timeout_ms = 500, lsp_fallback = true },
-      log_level = vim.log.levels.DEBUG,
-    },
-    config = function(_, opts)
-      if vim.g.started_by_firenvim then
-        opts.format_on_save = false
-      end
-      require("conform").setup(opts)
-    end,
   },
   -- TROUBLE.NVIM (disabled)
   {
@@ -632,29 +585,12 @@ return {
     config = function()
       require("dropbar").setup {
         general = {
-          -- enable = function(buf, win)
-          --     local fname =
-          --         api.nvim_buf_get_name(api.nvim_get_current_buf())
-          --     if fname:match "orgagenda" then
-          --         return false
-          --     end
-          --
-          --     return not api.nvim_win_get_config(win).zindex
-          --         and vim.bo[buf].buftype == ""
-          --         and api.nvim_buf_get_name(buf) ~= ""
-          --         and not vim.wo[win].diff
-          -- end,
-
+          update_interval = 100,
           enable = function(buf, win)
             local b, w = vim.bo[buf], vim.wo[win]
-            local decor = ui.decorations.get {
-              ft = b.ft,
-              bt = b.bt,
-              setting = "winbar",
-            }
-            ---@diagnostic disable-next-line: need-check-nil
-            return decor.ft ~= false
-              ---@diagnostic disable-next-line: need-check-nil
+            local decor = ui.decorations.get { ft = b.ft, bt = b.bt, setting = "winbar" }
+            return decor ~= nil
+              and decor.ft ~= false
               and decor.bt ~= false
               and b.bt == ""
               and not w.diff
@@ -744,61 +680,8 @@ return {
         bar = {
           sources = function(_, _)
             local sources = require "dropbar.sources"
-            --
-            --   local function get_hl_color(group, attr)
-            --     return vim.fn.synIDattr(vim.fn.synIDtrans(vim.fn.hlID(group)), attr)
-            --   end
-            --
-            --   local get_symbols = function(buf, cursor, symbols)
-            --     local path = false
-            --     if symbols == nil then
-            --       symbols = sources.path.get_symbols(buf, cursor)
-            --       path = true
-            --     end
-            --     for _, symbol in ipairs(symbols) do
-            --       -- get correct icon color
-            --       local icon_fg = get_hl_color(symbol.icon_hl, "fg#")
-            --       symbol.icon_hl = "DropbarSymbol" .. symbol.icon_hl
-            --
-            --       -- set name highlight
-            --       if not path then
-            --         symbol.name_hl = symbol.icon_hl
-            --       end
-            --
-            --       local icon_string = ""
-            --       if icon_fg == "" then
-            --         icon_string = "hi " .. symbol.icon_hl .. " guisp=#665c54 gui=underline guibg=NONE"
-            --       else
-            --         icon_string = "hi " .. symbol.icon_hl .. " guisp=#665c54 gui=underline guibg=NONE guifg=" .. icon_fg
-            --       end
-            --
-            --       vim.cmd(icon_string)
-            --     end
-            --     return symbols
-            -- end
             return {
-              sources.lsp,
-              -- sources.lsp,
-              -- {
-              --   get_symbols = function(buf, win, cursor)
-              --     if vim.bo[buf].ft == "markdown" then
-              --       return sources.markdown.get_symbols(buf, win, cursor)
-              --     end
-              --     for _, source in ipairs {
-              --       sources.lsp,
-              --       sources.treesitter,
-              --     } do
-              --       -- local symbols =
-              --       --     source.get_symbols(buf, win, cursor)
-              --       -- if not vim.tbl_isempty(symbols) then
-              --       --     return symbols
-              --       -- end
-              --
-              --       return get_symbols(buf, cursor, source.get_symbols(buf, win, cursor))
-              --     end
-              --     return {}
-              --   end,
-              -- },
+              sources.path,
             }
           end,
           padding = {
@@ -942,7 +825,6 @@ return {
   {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
-    enabled = false,
     opts = { delay = 200 },
     keys = {
       {

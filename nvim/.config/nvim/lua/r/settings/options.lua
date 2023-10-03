@@ -75,7 +75,7 @@ local options = {
     -----------------------------------------------------------------------------//
     -- Message output on vim actions {{{1
     -----------------------------------------------------------------------------//
-    shortmess = "filnxToOFc", -- copied default and removed `t` (long paths were being truncated) while adding `c`
+    shortmess = opt.shortmess:append { W = true, I = true, c = true, C = true }, -- copied default and removed `t` (long paths were being truncated) while adding `c`
 
     -----------------------------------------------------------------------------//
     -- Wild and file globbing stuff in command mode {{{1
