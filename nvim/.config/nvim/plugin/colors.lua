@@ -9,16 +9,10 @@ local general_overrides = function()
     { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
     { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
-    { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
-    -- { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
-    -- { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
+    -- { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
+    { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
+    { CursorLine = { bg = { from = "Normal", alter = -0.3 } } },
     { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
-    -- {
-    --   CursorLineNr = {
-    --     fg = { from = "ColorColumn", attr = "bg", alter = 1.5 },
-    --     bg = { from = "CursorLine", attr = "bg" },
-    --   },
-    -- },
     {
       Pmenu = {
         bg = { from = "Normal", attr = "bg", alter = 0.3 },
@@ -28,19 +22,16 @@ local general_overrides = function()
     { PmenuSel = { bold = true, fg = "NONE", bg = { from = "ColorColumn", alter = 0.6 } } },
     { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
-    { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
-    { NormalFloat = { bg = { from = "Normal", attr = "bg" } } },
+    { NormalFloat = { bg = { from = "Normal" } } },
     { FloatBorder = { bg = { from = "Normal" }, fg = { from = "Directory" } } },
     { Comment = { fg = { from = "Directory", attr = "fg", alter = -0.3 }, italic = true } },
-    { SpellBad = { undercurl = true, bg = "NONE", fg = "NONE", sp = "green", bold = true } },
     {
       Folded = {
-        fg = { from = "Directory", attr = "fg", alter = -0.3 },
-        bg = { from = "ColorColumn", attr = "bg", alter = -0.25 },
+        -- fg = { from = "Directory", attr = "fg", alter = -0.3 },
+        bg = { from = "Directory", attr = "fg", alter = -0.4 },
       },
     },
     { QuickFixLine = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
-    { SpellRare = { undercurl = true } },
     { EndOfBuffer = { bg = "NONE" } },
     { SignColumn = { bg = "NONE" } },
     { MarkSignNumHL = { inherit = "SpecialKey", bg = "NONE" } },
@@ -48,14 +39,20 @@ local general_overrides = function()
     {
       WinSeparator = {
         bg = "NONE",
-        fg = { from = "ColorColumn", attr = "bg", alter = 0.2 },
+        fg = { from = "ColorColumn", attr = "bg", alter = 0.15 },
       },
     },
+
+    -----------------------------------------------------------------------------//
+    --  Spell
+    -----------------------------------------------------------------------------//
+    { SpellBad = { undercurl = true, bg = "NONE", fg = "NONE", sp = "green" } },
+    { SpellRare = { undercurl = true } },
 
     -----------------------------------------------------------------------
     --  SEMANTIC TOKENS
     -----------------------------------------------------------------------
-    -- { ["@lsp.type.variable"] = { clear = true } },
+    { ["@lsp.type.variable"] = { clear = true } },
     -- { ["@lsp.typemod.method"] = { link = "@method" } },
     -- {
     --     ["@lsp.type.parameter"] = {
@@ -93,13 +90,13 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- Diff
     -----------------------------------------------------------------------
-    { DiffAdd = { underline = false, fg = { from = "DiffAdd", attr = "fg", alter = -0.3 } } },
-    { DiffDelete = { underline = false, fg = { from = "DiffDelete", attr = "fg", alter = -0.3 } } },
-    { DiffChange = { underline = false, fg = { from = "DiffChange", attr = "fg", alter = -0.3 } } },
-    { DiffText = { underline = false, fg = { from = "DiffText", attr = "fg", alter = -0.3 } } },
-
-    { diffAdded = { link = "DiffAdd" } },
-    { diffChanged = { link = "DiffChange" } },
+    -- { DiffAdd = { underline = false, fg = { from = "DiffAdd", attr = "fg", alter = -0.3 } } },
+    -- { DiffDelete = { underline = false, fg = { from = "DiffDelete", attr = "fg", alter = -0.3 } } },
+    -- { DiffChange = { underline = false, fg = { from = "DiffChange", attr = "fg", alter = -0.3 } } },
+    -- { DiffText = { underline = false, fg = { from = "DiffText", attr = "fg", alter = -0.3 } } },
+    -- these highlights are syntax groups that are set in diff.vim
+    { diffAdded = { inherit = "DiffAdd" } },
+    { diffChanged = { inherit = "DiffChange" } },
     { diffRemoved = { link = "DiffDelete" } },
     { diffBDiffer = { link = "WarningMsg" } },
     { diffCommon = { link = "WarningMsg" } },
@@ -111,6 +108,9 @@ local general_overrides = function()
     { diffNoEOL = { link = "WarningMsg" } },
     { diffOnly = { link = "WarningMsg" } },
 
+    { ["@text.diff.add"] = { link = "DiffAdd" } },
+    { ["@text.diff.delete"] = { link = "DiffDelete" } },
+
     -----------------------------------------------------------------------
     -- LSP
     -----------------------------------------------------------------------
@@ -120,7 +120,15 @@ local general_overrides = function()
     { LspReferenceRead = { link = "LspReferenceText" } },
     { LspReferenceWrite = { inherit = "LspReferenceText", bold = true, italic = true, underline = true } },
     { LspSignatureActiveParameter = { link = "Visual" } },
-    { LspInlayhint = { bg = "NONE", fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
+    {
+      LspInlayhint = {
+        bg = { from = "ColorColumn", attr = "bg", alter = -0.4 },
+        fg = { from = "Directory", attr = "fg", alter = -0.3 },
+      },
+    },
+
+    { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+    { TreesitterContextLineNumber = { inherit = "LineNr" } },
 
     -- { illuminatedWordText = { link = "LspReferenceText" } },
     -- { illuminatedWordWrite = { link = "LspReferenceText" } },
@@ -154,7 +162,7 @@ local general_overrides = function()
     { GitSignsDelete = { bg = "NONE" } },
 
     -----------------------------------------------------------------------
-    -- CUSTOMS
+    -- CREATED HIGHLIGHTS
     -----------------------------------------------------------------------
     { MyCursorline = { bg = { from = "Normal", alter = 0.2 } } },
     { Mystatusline_fg = { fg = { from = "LineNr", alter = 0.1 } } },
@@ -231,7 +239,7 @@ local general_overrides = function()
     { OrgDONE = { fg = "#00FF00" } },
 
     -- INDENTBLANK ========================================================
-    { IndentBlanklineChar = { fg = { from = "Directory", attr = "fg", alter = -0.55 } } },
+    { ["@ibl.indent.char.1"] = { fg = { from = "Directory", attr = "fg", alter = 2 }, nocombine = false } },
 
     -- MINIINDENTSCOPE ====================================================
     { MiniIndentscopeSymbol = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
@@ -263,7 +271,6 @@ local function colorscheme_overrides()
   local overrides = {
     ["kanagawa"] = {},
     ["catppuccin"] = {},
-    ["tokyonight"] = {},
     ["gruvbox"] = {
       { WinBarNC = { bg = "NONE" } },
       { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "bg", alter = 0.2 }, bg = "NONE", bold = true } },
@@ -276,6 +283,9 @@ local function colorscheme_overrides()
     ["gruvbox-material"] = {
       { bufferline_unselected = { bg = { from = "Normal", attr = "fg", alter = -0.75 } } },
       { PmenuSel = { bg = { from = "ColorColumn", alter = 0.6 } } },
+      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.1 } } },
+      { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+      { IndentBlanklineChar = { fg = { from = "Directory", attr = "fg", alter = -0.8 } } },
     },
     ["github_dark_high_contrast"] = {
       { Comment = { fg = { from = "Directory", alter = 0.9 } } },
@@ -296,12 +306,6 @@ local function colorscheme_overrides()
       { ["@lsp.type.comment"] = { fg = { from = "Comment" } } },
     },
     ["solarized"] = {
-
-      -- { DiffAdd = { reverse = false } },
-      -- { DiffDelete = { reverse = false } },
-      -- { DiffChange = { reverse = false } },
-      -- { DiffText = { reverse = false } },
-
       { Folded = { underline = false } },
       { WinBar = { bg = "NONE" } },
       { MatchParen = { bg = "NONE" } },
@@ -359,6 +363,12 @@ local function colorscheme_overrides()
       { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
       { WinSeparator = { bg = "NONE" } },
       { Comment = { fg = { from = "Comment", alter = -0.15 } } },
+    },
+    ["tokyonight"] = {
+      { Comment = { fg = { from = "Directory", alter = -0.15 } } },
+      { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
+      { TreesitterContextLineNumber = { inherit = "LineNr" } },
+      { TreesitterContext = { inherit = "ColorColumn" } },
     },
     ["tokyonight-night"] = {
       { WinSeparator = { bg = "NONE" } },

@@ -13,8 +13,12 @@ return {
     },
     --stylua: ignore
     keys = {
-      {"<leader>gwm", function() require("telescope").extensions.git_worktree.git_worktrees() end, desc = "Manage"},
-      {"<leader>gwc", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Create"},
+      {"<leader>gwm", function()
+        require("telescope").extensions.git_worktree.git_worktrees()
+      end, desc = "Git(git-worktree): manage"},
+      {"<leader>gwc", function()
+        require("telescope").extensions.git_worktree.create_git_worktree()
+      end, desc = "Git(git-worktree): create"},
     },
   },
   -- GIT CONFLICT
@@ -38,9 +42,7 @@ return {
   {
     "pwntester/octo.nvim",
     cmd = "Octo",
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-    },
+    dependencies = { "nvim-telescope/telescope.nvim" },
     opts = {
       -- picker = "fzf-lua",
       enable_builtin = true,
@@ -210,6 +212,7 @@ return {
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
+    event = "UIEnter",
     opts = {
       -- Experimental ------------------------------------------------------------------------------
       _extmark_signs = true,
@@ -397,7 +400,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       {
-        "<Leader>gs",
+        "<Leader>gS",
         function()
           require("neogit").open()
         end,

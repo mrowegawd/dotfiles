@@ -67,21 +67,27 @@ return {
     end,
     keys = {
       {
-        "<Leader>e",
+        "<Leader>E",
         function()
           require("r.utils.tiling").force_win_close({ "OverseerList", "undotree", "aerial" }, false)
           return cmd "Neotree toggle"
         end,
         desc = "Misc(neotree): open File explore",
       },
-      { "<Leader>E", "<CMD>Neotree reveal<CR>", desc = "Misc(neotree): open find file on File Explore" },
+      {
+        "<Leader>e",
+        function()
+          require("r.utils.tiling").force_win_close({ "OverseerList", "undotree", "aerial" }, false)
+          return cmd "Neotree reveal toggle"
+        end,
+        desc = "Misc(neotree): open find file on File Explore",
+      },
     },
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "nvim-tree/nvim-web-devicons",
-      "onsails/lspkind.nvim",
       {
         "ten3roberts/window-picker.nvim",
         name = "window-picker",
@@ -208,25 +214,51 @@ return {
             symbol = icons.misc.circle .. " ",
           },
         },
+
+        commands = {
+          system_open = function(state)
+            -- TODO: just use vim.ui.open when dropping support for Neovim <0.10
+            (vim.ui.open or require("astronvim.utils").system_open)(state.tree:get_node():get_id())
+          end,
+          parent_or_close = function(state)
+            local node = state.tree:get_node()
+            if (node.type == "directory" or node:has_children()) and node:is_expanded() then
+              state.commands.toggle_node(state)
+            else
+              require("neo-tree.ui.renderer").focus_node(state, node:get_parent_id())
+            end
+          end,
+
+          child_or_open = function(state)
+            local node = state.tree:get_node()
+            if node.type == "directory" or node:has_children() then
+              if not node:is_expanded() then -- if unexpanded, expand
+                state.commands.toggle_node(state)
+              else -- if expanded and has children, seleect the next child
+                require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
+              end
+            else -- if not a directory just open it
+              state.commands.open(state)
+            end
+          end,
+        },
         window = {
+
           mappings = {
             ["<2-LeftMouse>"] = "open",
-            ["l"] = {
-              "toggle_node",
-              nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
-            },
+            ["l"] = "child_or_open",
+            ["h"] = "close_node",
             ["P"] = {
               "toggle_preview",
               config = { use_float = true },
             },
             ["o"] = "open",
-            ["<CR>"] = "open_with_window_picker",
+            -- ["<CR>"] = "child_or_open",
             ["<c-s>"] = "split_with_window_picker",
             ["<c-v>"] = "vsplit_with_window_picker",
             ["<esc>"] = "revert_preview",
             ["<c-c>"] = "clear_filter",
 
-            ["C"] = "close_node",
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
             ["gh"] = "prev_source",

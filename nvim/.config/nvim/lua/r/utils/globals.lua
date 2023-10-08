@@ -22,13 +22,11 @@ as.dropbox_path = fmt("%s/Dropbox", as.home, "Dropbox")
 as.wiki_path = fmt("%s/neorg", as.dropbox_path)
 as.snippet_path = as.dropbox_path .. "/friendly-snippets"
 
-as.colorscheme = "kanagawa"
+as.colorscheme = "tokyonight"
 as.master_win = 1
 as.term_count = 1
 as.toggle_number = 1
 as.colorcolumn_width = 80
-as.isInlayActive = true
-as.diagnostics_mode = 3 -- set the visibility of diagnostics in the UI (0=off, 1=only show in status line, 2=virtual text off, 3=all on)
 
 as.use_search_telescope = false -- if false, use fzflua
 as.use_lsp_native = true -- if true use native lsp, else use coc
@@ -297,30 +295,6 @@ function as.pcall(msg, func, ...)
   end, unpack(args))
 end
 
-function _G.CustomFoldText()
-  local level = "+-" .. string.rep("-", vim.v.foldlevel - 1) .. " "
-  local nlines = (vim.v.foldend - vim.v.foldstart) + 1
-  local align = string.rep(" ", 5 - (vim.v.foldlevel - 1) - string.len(tostring(nlines)))
-
-  local fold_text = tostring(fn.getline(vim.v.foldstart))
-  if vim.startswith(fold_text, "\\documentclass") then
-    fold_text = "Preamble"
-  elseif vim.startswith(fold_text, "\\appendix") then
-    fold_text = "Appendix"
-  elseif vim.startswith(fold_text, "\\begin") then
-    -- Note: we only fold abstract and frame environments
-    if string.match(fold_text, "abstract") then
-      fold_text = "Abstract"
-    else
-      -- Assumes that we have something like `\frametitle{Foo}`
-      -- in next line to the \begin{frame} line
-      local frame_title = string.match(tostring(fn.getline(vim.v.foldstart + 1)), "{(.*.)}")
-      fold_text = "Frame - " .. frame_title
-    end
-  end
-  return string.format("%s%s%s lines: %s", level, align, nlines, fold_text)
-end
-
 function as.status_dap()
   local ok, dap = pcall(require, "dap")
 
@@ -329,4 +303,19 @@ function as.status_dap()
   end
 
   return dap.status()
+end
+
+function as.lsp_get_config(server)
+  local configs = require "lspconfig.configs"
+  return rawget(configs, server)
+end
+
+function as.lsp_disable(server, cond)
+  local util = require "lspconfig.util"
+  local def = as.lsp_get_config(server)
+  def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config, function(config, root_dir)
+    if cond(root_dir, config) then
+      config.enabled = false
+    end
+  end)
 end

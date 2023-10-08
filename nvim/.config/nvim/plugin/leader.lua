@@ -43,16 +43,15 @@ end
 --  │ EDITING TEXT                                             │
 --  ╰──────────────────────────────────────────────────────────╯
 inoremap("hh", "<ESC>", silent)
-inoremap("<c-f>", "<Right>", silent)
-inoremap("<c-b>", "<Left>", silent)
-inoremap("<c-a>", "<Home>", silent)
-inoremap("<c-e>", "<End>", silent)
+
+inoremap("<c-l>", "<Right>", silent)
+inoremap("<c-h>", "<Left>", silent)
+
+inoremap("<c-a>", "<c-O>^", silent)
+inoremap("<c-e>", "<c-O>$", silent)
+inoremap("<c-d>", "<c-O>dw", silent)
 inoremap("<c-j>", "<Down>", silent)
 inoremap("<c-k>", "<Up>", silent)
-inoremap("<c-d>", "<c-O>dw", silent)
-
--- inoremap("<c-h>", "<Left>", silent)
--- inoremap("<c-l>", "<Right>", silent)
 
 nnoremap("g,", "g,zvzz", silent) -- go last edit
 nnoremap("g;", "g;zvzz", silent) -- go prev edit
@@ -60,7 +59,7 @@ nnoremap("g;", "g;zvzz", silent) -- go prev edit
 -- inoremap("<C-w>", "<C-o>E<C-o>l")
 -- inoremap("<C-b>", "<C-o>B")
 
--- nnoremap("<c-f>", "/", nosilent)
+inoremap("<c-f>", "<esc>/")
 -- TODO:  check ini nanti
 -- vnoremap("<c-f>", [["zy:%s/<C-r><C-o>"/]], { desc = "Insert: search and replace on the fly" })
 
@@ -113,6 +112,8 @@ end, { desc = "Buffer: bufonly" })
 nnoremap("<Leader>rB", function()
   return require("r.utils").toggle_background()
 end, { desc = "Misc: toggle background" })
+
+nnoremap("<bs>", "<c-^>", { desc = "buffer: alternate" })
 
 nnoremap("<Leader>b5", function()
   return require("r.utils").testfunc()
@@ -325,8 +326,8 @@ cnoremap("hh", "<c-c>", { desc = "Cmdline: exit from cmdline" })
 cnoremap("<c-a>", "<Home>", { desc = "Cmdline: go to the first" })
 cnoremap("<c-e>", "<End>", { desc = "Cmdline: go to the last" })
 
-cnoremap("<c-f>", "<Right>", { desc = "Cmdline: next word" })
-cnoremap("<c-b>", "<Left>", { desc = "Cmdline: prev word" })
+cnoremap("<c-l>", "<Right>", { desc = "Cmdline: next word" })
+cnoremap("<c-h>", "<Left>", { desc = "Cmdline: prev word" })
 
 cnoremap("<c-n>", "<Down>", { desc = "Cmdline: next hist" })
 cnoremap("<c-p>", "<Up>", { desc = "Cmdline: prev hist" })

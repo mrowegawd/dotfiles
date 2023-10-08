@@ -1,14 +1,14 @@
-WINDOW_STYLE_BG="#1f1f28"
-WINDOW_ACTIVE_STYLE_BG="#1f1f28"
+WINDOW_STYLE_BG="#24283b"
+WINDOW_ACTIVE_STYLE_BG="#24283b"
 
 COL_WHITE="#626262"
-COL_RED="#957fb8"
+COL_RED="#bb9af7"
 
-COL_ACTIVE_BORDER_SEPERATOR="#282834"
-COL_BORDER_SEPERATOR="#22222c"
+COL_ACTIVE_BORDER_SEPERATOR="#2e344c"
+COL_BORDER_SEPERATOR="#272c40"
 
-BG_STATUSLINE="#1f1f28"
-BG_ACTIVE_STATUSLINE="#957fb8"
+BG_STATUSLINE="#24283b"
+BG_ACTIVE_STATUSLINE="#bb9af7"
 
 left_separator=''
 # left_separator_black=''
@@ -20,14 +20,19 @@ session_symbol=''
 window_status_current_fg=colour3 # black
 window_status_current_bg=colour4 # blue
 
-setw -g pane-active-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_ACTIVE_BORDER_SEPERATOR
-setw -g pane-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_BORDER_SEPERATOR
+# setw -g pane-active-border-style fg=$COL_ACTIVE_BORDER_SEPERATOR
+# setw -g pane-active-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_ACTIVE_BORDER_SEPERATOR
+# setw -g pane-border-style bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_BORDER_SEPERATOR
 
-setw -g window-style bg=$WINDOW_ACTIVE_STYLE_BG
-setw -g window-active-style bg=$WINDOW_STYLE_BG
+setw -g pane-active-border-style fg=$COL_ACTIVE_BORDER_SEPERATOR
+setw -g pane-border-style fg=$COL_BORDER_SEPERATOR
+
+# setw -g window-style bg=$WINDOW_ACTIVE_STYLE_BG
+# setw -g window-active-style bg=$WINDOW_STYLE_BG
 
 set -g status-fg $WINDOW_STYLE_BG
 set -g status-bg $BG_STATUSLINE
+# set -g status-bg "#000000"
 
 ## STATUS SETTINGS
 set -g status-position top

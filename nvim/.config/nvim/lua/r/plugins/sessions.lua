@@ -1,7 +1,5 @@
 local cmd, fn = vim.cmd, vim.fn
 
-vim.g.ssession = false
-
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
 
 return {
@@ -30,7 +28,7 @@ return {
         function()
           return cmd.SessionLoadLast()
         end,
-        { desc = "Session(persisted): load a session" },
+        { desc = "Misc(persisted): load a session" },
       },
       {
         "<Leader>ps",
@@ -38,7 +36,7 @@ return {
           cmd.SessionStart()
           return vim.notify "Sessions persisted: Started.."
         end,
-        { desc = "Session(persisted): start a session" },
+        { desc = "Misc(persisted): start a session" },
       },
     },
     config = function()
@@ -78,7 +76,7 @@ return {
           local possession = require "nvim-possession"
           return possession.list()
         end,
-        desc = "Session(possession): load a session",
+        desc = "Misc(possession): load a session",
       },
       {
         "<Leader>ps",
@@ -86,7 +84,7 @@ return {
           local possession = require "nvim-possession"
           return possession.new()
         end,
-        desc = "Session(possession): start or save a session name",
+        desc = "Misc(possession): start or save a session name",
       },
       {
         "<Leader>pu",
@@ -94,7 +92,7 @@ return {
           local possession = require "nvim-possession"
           return possession.update()
         end,
-        desc = "Session(possession): save a new session or overwrite it",
+        desc = "Misc(possession): save a new session or overwrite it",
       },
     },
     opts = {
@@ -135,7 +133,7 @@ return {
           local resession = require "resession"
           return resession.load(nil, { reset = false })
         end,
-        desc = "Possession: load a session",
+        desc = "Misc(possession): load a session",
       },
       {
         "<Leader>ps",
@@ -143,7 +141,7 @@ return {
           local resession = require "resession"
           return resession.save()
         end,
-        desc = "Possession: start a session",
+        desc = "Misc(possession): start a session",
       },
       {
         "<Leader>pu",
@@ -151,7 +149,7 @@ return {
           local possession = require "nvim-possession"
           return possession.update()
         end,
-        desc = "Possession: save a new session or overwrite it",
+        desc = "Misc(possession): save a new session or overwrite it",
       },
     },
     config = function()
@@ -168,7 +166,9 @@ return {
         },
         tab_buf_filter = function(tabpage, bufnr)
           local dir = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
-          return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
+          if dir ~= nil then
+            return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
+          end
         end,
         buf_filter = function(bufnr)
           if not resession.default_buf_filter(bufnr) then
@@ -198,18 +198,18 @@ return {
       {
         "<Leader>pl",
         "<cmd>SessionManager! load_last_session<cr>",
-        { desc = "Session(nvim-session-manager): load a session" },
+        { desc = "Misc(nvim-session-manager): load a session" },
       },
       {
         "<Leader>ps",
         "<cmd>SessionManager! save_current_session<cr>",
-        { desc = "Session(nvim-session-manager): save session" },
+        { desc = "Misc(nvim-session-manager): save session" },
       },
 
       {
         "<Leader>pL",
         "<cmd>SessionManager! load_session<cr>",
-        { desc = "Session(nvim-session-manager): list session" },
+        { desc = "Misc(nvim-session-manager): list session" },
       },
     },
     opts = {
@@ -247,25 +247,23 @@ return {
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
-    opts = function()
-      return {
-        options = { "buffers", "curdir", "tabpages", "winsize", "help" },
-        pre_save = function()
-          for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-            if vim.fn.buflisted(bufnr) == 1 then
-              if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-                vim.api.nvim_buf_delete(bufnr, {})
-              end
+    opts = {
+      options = { "buffers", "curdir", "tabpages", "winsize", "help" },
+      pre_save = function()
+        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
+          if vim.fn.buflisted(bufnr) == 1 then
+            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
+              vim.api.nvim_buf_delete(bufnr, {})
             end
           end
-        end,
-      }
-    end,
+        end
+      end,
+    },
     -- stylua: ignore
     keys = {
-      -- { "<Leader>sL", function() require("persistence").load() end, desc = "Restore Session" },
-      { "<Leader>sl", function() require("persistence").load({ last = true }) end, desc = "Restore Last Session" },
-      { "<Leader>ss", function() require("persistence").stop() end, desc = "Don't Save Current Session" },
+      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
+      { "<Leader>sL", function() require("persistence").load({ last = true }) end, desc = "Misc(persistence): restore last session" },
+      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
     },
   },
   --  ╭──────────────────────────────────────────────────────────╮

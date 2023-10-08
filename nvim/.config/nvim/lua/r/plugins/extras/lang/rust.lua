@@ -28,6 +28,16 @@ return {
       end
     end,
   },
+  -- CRATES
+  {
+    "saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
+    opts = {
+      src = {
+        cmp = { enabled = true },
+      },
+    },
+  },
   -- RUST-TOOLS
   {
     "simrat39/rust-tools.nvim",

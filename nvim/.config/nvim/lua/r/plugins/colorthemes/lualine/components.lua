@@ -193,7 +193,7 @@ end
 M.filename = function()
   return {
     function()
-      local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+      local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
       if not conditions.width_percent_below(#filename, 0.40) then
         filename = vim.fn.pathshorten(filename)
       end
@@ -357,11 +357,12 @@ end
 M.sessions = function()
   return {
     function()
-      local sess = vim.g.persisting
+      local ses_persistent = require("persistence").get_current()
+      local sess = vim.fn.filereadable(ses_persistent) == 1
       if sess ~= nil then
-        return "%#Mymisc_fg# "
+        return "%#Mymisc_fg#"
       else
-        return " "
+        return ""
       end
     end,
     cond = conditions.debugger_status_run,
@@ -467,7 +468,7 @@ M.get_lsp_client_notify = function()
       return language_servers
     end,
     color = { fg = "DarkMagenta", gui = "bold" },
-    -- cond = conditions.hide_in_width,
+    cond = conditions.hide_in_width,
   }
 end
 M.term_akinsho = function()

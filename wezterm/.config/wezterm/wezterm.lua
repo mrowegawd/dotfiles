@@ -19,6 +19,38 @@ local cmd_call = function(params)
 	return result:gsub("\n", "")
 end
 
+-- local function get_random_entry(tbl)
+-- 	local keys = {}
+-- 	for key, _ in ipairs(tbl) do
+-- 		table.insert(keys, key)
+-- 	end
+-- 	local randomKey = keys[math.random(1, #keys)]
+-- 	return tbl[randomKey]
+-- end
+--
+-- local function get_wallpaper()
+-- 	local wallpapers = {}
+-- 	local wallpapers_glob = os.getenv("HOME") .. "/Downloads/wezterm-walli3/**"
+--
+-- 	for _, v in ipairs(wezterm.glob(wallpapers_glob)) do
+-- 		table.insert(wallpapers, v)
+-- 	end
+-- 	return {
+-- 		source = { File = { path = get_random_entry(wallpapers) } },
+--
+-- 		-- height = "Contain",
+-- 		-- width = "Contain",
+--
+-- 		repeat_y = "Repeat",
+-- 		repeat_x = "NoRepeat",
+-- 		-- repeat_x = "Repeat",
+--
+-- 		width = "100%",
+-- 		hsb = { brightness = 0.05 },
+-- 		opacity = 1,
+-- 	}
+-- end
+
 return {
 	-- [1.0] alpha channel value with floating point numbers in the range 0.0
 	-- (meaning completely translucent/transparent) through to 1.0 (meaning
@@ -69,6 +101,9 @@ return {
 		active_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 		inactive_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 	},
+	-- background = {
+	-- 	get_wallpaper(),
+	-- },
 	colors = {
 		foreground = cmd_call("xrdb -query | grep -i foreground| cut -d':' -f2 | xargs"),
 		background = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),

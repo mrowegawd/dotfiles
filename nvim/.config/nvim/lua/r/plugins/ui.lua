@@ -1,45 +1,56 @@
 local highlight = as.highlight
-local border, icons, api, fn, L = as.ui.border.rectangle, as.ui.icons, vim.api, vim.fn, vim.log.levels
+local border, icons, api, fn = as.ui.border.rectangle, as.ui.icons, vim.api, vim.fn
 
 local ufo_config_handler = require("r.utils").ufo_handler
 
 local isUfoFold = true
 
 return {
-  -- INDENTBLANK
+  -- INDENTBLANKLINE (disabled)
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "UIEnter",
+    event = { "BufReadPost", "BufNewFile" },
+    main = "ibl",
     opts = {
-      char = "│", -- ┆ ┊ 
-      show_trailing_blankline_indent = false,
-      show_current_context = false,
-      filetype_exclude = {
-        "dbout",
-        "neo-tree-popup",
-        "log",
-        "gitcommit",
-        "txt",
-        "fzf",
-        "help",
-        "NvimTree",
-        "git",
-        "flutterToolsOutline",
-        "undotree",
-        "markdown",
-        "norg",
-        "org",
-        "orgagenda",
-        "fzflua",
-        "", -- for all buffers without a file type
+      scope = { enabled = false },
+      indent = {
+        -- char = '│', -- ▏┆ ┊  "┊"
+        char = "┊", --"│", -- "┊"
+        -- tab_char = "│",
+      },
+      exclude = {
+        filetypes = {
+          "dbout",
+          "neo-tree-popup",
+          "log",
+          "gitcommit",
+          "txt",
+          "fzf",
+          "help",
+          "NvimTree",
+          "git",
+          "flutterToolsOutline",
+          "undotree",
+          "markdown",
+          "norg",
+          "org",
+          "orgagenda",
+          "fzflua",
+        },
       },
     },
+    config = function(_, opts)
+      require("ibl").setup(opts)
+      -- local hooks = require "ibl.hooks"
+      -- hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+      -- hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+    end,
   },
-  -- MINI.INDENTSCOPE (disabled)
+  -- MINI.INDENTSCOPE
   {
     "echasnovski/mini.indentscope",
     event = { "BufReadPre", "BufNewFile" },
-    version = false, -- wait till new 0.7.0 release to put it back on semver
+    -- version = false, -- wait till new 0.7.0 release to put it back on semver
     enabled = false,
     init = function()
       vim.api.nvim_create_autocmd("FileType", {
@@ -75,13 +86,19 @@ return {
   -- DRESSING
   {
     "stevearc/dressing.nvim",
-    event = "VeryLazy",
-    opts = {
-      input = { relative = "editor" },
-      select = {
-        backend = { "telescope", "fzf", "builtin" },
-      },
-    },
+    lazy = true,
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.input(...)
+      end
+    end,
   },
   -- NVIM-NOTIFY
   {
@@ -143,7 +160,6 @@ return {
     -- https://github.com/folke/noice.nvim/issues/259
     "folke/noice.nvim",
     event = "VeryLazy",
-    enabled = false,
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
@@ -165,64 +181,31 @@ return {
     end,
     opts = {
       -- debug = true,
-      -- popupmenu = {
-      --   backend = "nui",
-      -- },
       lsp = {
-        documentation = {
-          opts = {
-            border = { style = "rounded" },
-            position = { row = 2 },
-          },
-        },
+        -- documentation = {
+        --   opts = {
+        --     border = { style = "rounded" },
+        --     position = { row = 2 },
+        --   },
+        -- },
         progress = {
-          enabled = true,
+          enabled = false,
         },
-        signature = {
-          auto_open = { enabled = false },
-        },
-        hover = { enabled = true },
+        signature = { auto_open = { enabled = false } },
+        hover = { enabled = false },
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
           ["cmp.entry.get_documentation"] = true,
         },
       },
-
-      -- views = {
-      --   cmdline_popup = {
-      --     position = {
-      --       row = -5,
-      --       col = "50%",
-      --     },
-      --     size = {
-      --       width = "auto",
-      --       height = "auto",
-      --     },
-      --   },
-      -- },
-
-      -- "Classic" command line
       cmdline = {
         view = "cmdline",
       },
-
       messages = {
         -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
         view_search = false,
       },
-
-      -- redirect = { view = "popup", filter = { event = "msg_show" } },
-
-      -- you can enable a preset for easier configuration
-      presets = {
-        bottom_search = true, -- use a classic bottom cmdline for search
-        command_palette = true, -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = true, -- add a border to hover docs and signature help
-      },
-
       routes = {
         {
           opts = { skip = true },
@@ -232,10 +215,7 @@ return {
               { find = "; after #%d+" },
               { find = "; before #%d+" },
               { event = "msg_show", find = "written" },
-              {
-                event = "msg_show",
-                find = "%d+ lines, %d+ bytes",
-              },
+              { event = "msg_show", find = "%d+ lines, %d+ bytes" },
               { event = "msg_show", kind = "search_count" },
               { event = "msg_show", find = "%d+L, %d+B" },
               { event = "msg_show", find = "^Hunk %d+ of %d" },
@@ -243,80 +223,19 @@ return {
               { event = "msg_show", find = "%d+ line" },
               { event = "msg_show", find = "%d+ more line" },
               -- TODO: investigate the source of this LSP message and disable it happens in typescript files
-              {
-                event = "notify",
-                find = "No information available",
-              },
+              { event = "notify", find = "No information available" },
             },
           },
-        },
-        -- {
-        --   view = "vsplit",
-        --   filter = { event = "msg_show", min_height = 20 },
-        -- },
-        {
-          view = "notify",
-          filter = {
-            any = {
-              { event = "msg_show", min_height = 10 },
-              { event = "msg_show", find = "Treesitter" },
-            },
-          },
-          opts = { timeout = 10000 },
-        },
-        {
-          view = "notify",
-          filter = { event = "notify", find = "Type%-checking" },
-          opts = { replace = true, merge = true, title = "TSC" },
-          stop = true,
-        },
-        {
           view = "mini",
-          filter = {
-            any = {
-              { event = "msg_show", find = "^E486:" },
-              { event = "notify", max_height = 1 },
-            },
-          }, -- minimise pattern not found messages
         },
-        {
-          view = "notify",
-          filter = {
-            any = {
-              { warning = true },
-              { event = "msg_show", find = "^Warn" },
-              { event = "msg_show", find = "^W%d+:" },
-              { event = "msg_show", find = "^No hunks$" },
-            },
-          },
-          opts = {
-            title = "Warning",
-            level = L.WARN,
-            merge = false,
-            replace = false,
-          },
-        },
-        {
-          view = "notify",
-          opts = {
-            title = "Error",
-            level = L.ERROR,
-            merge = true,
-            replace = false,
-          },
-          filter = {
-            any = {
-              { error = true },
-              { event = "msg_show", find = "^Error" },
-              { event = "msg_show", find = "^E%d+:" },
-            },
-          },
-        },
-        {
-          view = "notify",
-          opts = { title = "" },
-          filter = { kind = { "emsg", "echo", "echomsg" } },
-        },
+      },
+      -- you can enable a preset for easier configuration
+      presets = {
+        bottom_search = true, -- use a classic bottom cmdline for search
+        command_palette = true, -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        inc_rename = false, -- enables an input dialog for inc-rename.nvim
+        lsp_doc_border = true, -- add a border to hover docs and signature help
       },
     },
   },
@@ -324,6 +243,7 @@ return {
   {
     "luukvbaal/statuscol.nvim",
     event = "BufReadPre",
+    enabled = false,
     config = function()
       local builtin = require "statuscol.builtin"
       require("statuscol").setup {
@@ -550,10 +470,10 @@ return {
     },
     config = function()
       local col_base_bg_attr = "Normal"
-      local col_base_fg_attr = "Normal"
+      local col_base_fg_attr = "Pmenu"
 
       local col_unselected_bg_attr = "bufferline_unselected"
-      local col_unselected_fg_attr = "Normal"
+      local col_unselected_fg_attr = "Pmenu"
 
       local col_selected_fg_attr = "Boolean"
       local col_selected_bg_attr = "PmenuSel"
@@ -1011,7 +931,7 @@ return {
           priority = 5,
           color = nil,
           cterm = nil,
-          highlight = "Normal",
+          -- highlight = "Normal",
         },
       },
       excluded_buftypes = {

@@ -1,20 +1,19 @@
 local M = {}
 
 local diagnostic = vim.diagnostic
+local lsp_utils = require "r.plugins.lsp.utils"
 
 -- stylua: ignore
 function M.on_attach(client, bufnr)
   local self = M.new(client, bufnr)
 
-  self:map("K", vim.lsp.buf.hover, { desc = "LSP(lspsaga): show", has = "hover" })
+  self:map("K", vim.lsp.buf.hover, { desc = "LSP: hover", has = "hover" })
   self:map("<c-s>", vim.lsp.buf.signature_help, { desc = "LSP: show signature", has = "signatureHelp", mode = { "i" } })
-  self:map("gR", vim.lsp.buf.rename, { desc = "LSP(lspsaga): rename" })
+  self:map("gR", vim.lsp.buf.rename, { desc = "LSP: rename" })
   self:map("gd", "FzfLua lsp_definitions", { desc = "LSP(fzflua): definitions" })
   self:map("gr", "FzfLua lsp_finder", { desc = "LSP(fzflua): finder" })
   self:map("gT", "FzfLua lsp_typedefs", { desc = "LSP(fzflua): peek type definitions" })
   self:map("ga", "FzfLua lsp_code_actions", { desc = "LSP(fzflua): code actions", mode = { "n", "v" }, has = "codeAction" })
-  self:map("gs", "FzfLua lsp_document_symbols", { desc = "LSP(fzflua): document symbols on curbuf" })
-  self:map("gS", "FzfLua lsp_live_workspace_symbols", { desc = "LSP(fzflua): document symbols all" })
   self:map("gi", "FzfLua incoming_calls", { desc = "LSP(fzflua): incoming calls" })
   self:map("gI", "FzfLua outgoing_calls", { desc = "LSP(fzflua): outgoing calls" })
   if pcall(require, "goto-preview") then
@@ -22,46 +21,16 @@ function M.on_attach(client, bufnr)
   else
     self:map("gP", "Lspsaga peek_definition", { desc = "LSP(lspsaga): preview definitions" })
   end
-  -- self:map("gti", function()
-  --   if as.isInlayActive then
-  --     local buffers = vim.api.nvim_list_bufs()
-  --     for _, bf in ipairs(buffers) do
-  --       ---@diagnostic disable-next-line: deprecated
-  --       local clients = vim.lsp.buf_get_clients(bf)
-  --       if #clients > 0 then
-  --         for _, cl in ipairs(clients) do
-  --           if cl.server_capabilities.inlayHintProvider then
-  --             vim.lsp.inlay_hint(bf, false)
-  --           end
-  --         end
-  --       end
-  --     end
-  --     as.isInlayActive = false
-  --     return
-  --   end
-  --   local buffers = vim.api.nvim_list_bufs()
-  --   for _, bf in ipairs(buffers) do
-  --     ---@diagnostic disable-next-line: deprecated
-  --     local clients = vim.lsp.buf_get_clients(bf)
-  --     if #clients > 0 then
-  --       for _, cl in ipairs(clients) do
-  --         if cl.server_capabilities.inlayHintProvider then
-  --           vim.lsp.inlay_hint(bf, true)
-  --         end
-  --       end
-  --     end
-  --   end
-  --   as.isInlayActive = true
-  -- end, { desc = "Lang(LSP): toggle inlay hint" })
+  self:map("gti", function()
+    vim.lsp.inlay_hint(0, nil)
+  end, { desc = "LSP: toggle inlay hint" })
 
   --  +----------------------------------------------------------+
   --  Diagnostics
   --  +----------------------------------------------------------+
+  self:map("gtd", lsp_utils.toggle_diagnostics, { desc = "LSP(diagnostic): toggle diagnostics" })
   self:map("dn", function() diagnostic.goto_next({ float = false }) end, { desc = "LSP(diagnostic): next item" })
-
   self:map("dp", function() diagnostic.goto_prev({ float = false }) end, { desc = "LSP(diagnostic): prev item" })
-  self:map("df", "FzfLua diagnostics_workspace", { desc = "LSP(diagnostic): fzflua diagnostics" })
-  self:map("gtd", require("r.plugins.lsp.utils").toggle_diagnostics, { desc = "LSP(diagnostic): toggle diagnostics" })
   self:map("dP", function() vim.diagnostic.open_float { focusable = true } end, { desc = "LSP(diagnostic): open float preview" })
   self:map("dq", function()
     if #vim.diagnostic.get() > 0 then
@@ -77,8 +46,8 @@ function M.on_attach(client, bufnr)
   --  MISC
   --  +----------------------------------------------------------+
   self:map("gts", function()
-    return require("r.utils").toggle_buffer_semantic_tokens(vim.api.nvim_get_current_buf())
-  end, { desc = "Lang(LSP): toggle semantic token" })
+    return lsp_utils.toggle_buffer_semantic_tokens(vim.api.nvim_get_current_buf())
+  end, { desc = "LSP: toggle semantic token" })
 
 end
 

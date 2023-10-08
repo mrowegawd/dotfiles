@@ -219,7 +219,7 @@ return {
   {
     "rebelot/kanagawa.nvim",
     lazy = false,
-    name = "kanagawa",
+    priority = 1000,
     enabled = function()
       if as.colorscheme == "kanagawa" then
         return true
@@ -237,16 +237,23 @@ return {
       transparent = false, -- do not set background color
       dimInactive = false, -- dim inactive window `:h hl-NormalNC`
       terminalColors = true, -- define vim.g.terminal_color_{0,17}
-      theme = "wave", -- Load "wave" theme when 'background' option is not set
-      -- background = { -- map the value of 'background' option to a theme
-      --     dark = "lotus", -- try "dragon" !
-      --     light = "lotus",
-      -- },
+      theme = "dragon", -- Load "wave" theme when 'background' option is not set
+      background = { -- map the value of 'background' option to a theme
+        dark = "dragon", -- try "dragon" !
+        -- light = "lotus",
+      },
+      -- overrides = function(colors)
+      --   local theme = colors.theme
+      --   return {
+      --     -- TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 } },
+      --     -- Folded = { fg = { from = "Normal", attr = "bg", alter = -0.1 } },
+      --     Folded = { link = "Directory" },
+      --     -- NormalFloat = { bg = "none" },
+      --     -- FloatBorder = { bg = "none" },
+      --     -- FloatTitle = { bg = "none" },
+      --   }
+      -- end,
     },
-    config = function(_, opts)
-      local kanagawa = require "kanagawa"
-      kanagawa.setup(opts)
-    end,
   },
   -- MATERIAL
   {

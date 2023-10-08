@@ -165,11 +165,11 @@ return {
       local buttons = {
         type = "group",
         val = {
-          button("o", "   Recents", ":FzfLua oldfiles<CR>"),
-          button("f", "   Explore", ":FzfLua files<CR>"),
-          button("g", "   Ripgrep", ":FzfLua live_grep<CR>"),
-          button("l", "   Sessions", '<CMD>lua require("persisted").load({ last = true })<CR>'),
-          button("q", "   Quit", "<cmd>qa<cr>"),
+          button("o", "   Recents", "<CMD> FzfLua oldfiles <CR>"),
+          button("f", "   Explore", "<CMD> FzfLua files <CR>"),
+          button("g", "   Ripgrep", "<CMD> FzfLua live_grep <CR>"),
+          button("l", "   Sessions", '<CMD> lua require("persistence").load() <CR>'),
+          button("q", "   Quit", "<cmd> qa <CR>"),
         },
         opts = {
           spacing = 1,

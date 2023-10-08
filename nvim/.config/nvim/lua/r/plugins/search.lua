@@ -3,6 +3,8 @@ local icons = ui.icons
 local prompt = icons.misc.telescope .. "  "
 local lsp_hls = ui.lsp.highlights
 
+local root_patterns = { ".git", "lua" }
+
 local function format_title(str, icon, icon_hl)
   return {
     { " " },
@@ -24,7 +26,7 @@ local function dropdown(opts)
     winopts = {
       title_pos = opts.winopts.title and "center" or nil,
       height = 0.70,
-      width = 0.45,
+      width = 0.60,
       row = 0.1,
       preview = {
         hidden = "hidden",
@@ -44,6 +46,80 @@ local function cursor_dropdown(opts)
       width = 0.25,
     },
   }, opts))
+end
+
+--
+-- returns the root directory based on:
+-- * lsp workspace folders
+-- * lsp root_dir
+-- * root pattern of filename of the current buffer
+-- * root pattern of cwd
+---@return string
+local function get_root()
+  ---@type string?
+  local path = vim.api.nvim_buf_get_name(0)
+  path = path ~= "" and vim.loop.fs_realpath(path) or nil
+  ---@type string[]
+  local roots = {}
+  if path then
+    for _, client in pairs(vim.lsp.get_active_clients { bufnr = 0 }) do
+      local workspace = client.config.workspace_folders
+      local paths = workspace and vim.tbl_map(function(ws)
+        return vim.uri_to_fname(ws.uri)
+      end, workspace) or client.config.root_dir and { client.config.root_dir } or {}
+      for _, p in ipairs(paths) do
+        local r = vim.loop.fs_realpath(p)
+        if path:find(r, 1, true) then
+          roots[#roots + 1] = r
+        end
+      end
+    end
+  end
+  table.sort(roots, function(a, b)
+    return #a > #b
+  end)
+  ---@type string?
+  local root = roots[1]
+  if not root then
+    path = path and vim.fs.dirname(path) or vim.loop.cwd()
+    ---@type string?
+    root = vim.fs.find(root_patterns, { path = path, upward = true })[1]
+    root = root and vim.fs.dirname(root) or vim.loop.cwd()
+  end
+  ---@cast root string
+  return root
+end
+
+local function telescope_util(builtin, opts)
+  local params = { builtin = builtin, opts = opts }
+  return function()
+    builtin = params.builtin
+    opts = params.opts
+    opts = vim.tbl_deep_extend("force", { cwd = get_root() }, opts or {})
+    if builtin == "files" then
+      if vim.loop.fs_stat((opts.cwd or vim.loop.cwd()) .. "/.git") then
+        opts.show_untracked = true
+        builtin = "git_files"
+      else
+        builtin = "find_files"
+      end
+    end
+    if opts.cwd and opts.cwd ~= vim.loop.cwd() then
+      opts.attach_mappings = function(_, map)
+        map("i", "<a-c>", function()
+          local action_state = require "telescope.actions.state"
+          local line = action_state.get_current_line()
+          telescope_util(
+            params.builtin,
+            vim.tbl_deep_extend("force", {}, params.opts or {}, { cwd = false, default_text = line })
+          )()
+        end)
+        return true
+      end
+    end
+
+    require("telescope.builtin")[builtin](opts)
+  end
 end
 
 return {
@@ -86,10 +162,10 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "misc(flash)" },
-      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "misc(flash): treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end,  desc = "misc(flash): remote" },
-      { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "misc(flash): toggle search", },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
+      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end,  desc = "Misc(flash): remote" },
+      { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search", },
     },
   },
   -- NVIM-HLSLENS
@@ -882,6 +958,48 @@ return {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
     keys = {
+      { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
+      { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
+      {
+        "gs",
+        telescope_util("lsp_document_symbols", {
+          symbols = {
+            "Class",
+            "Function",
+            "Method",
+            "Constructor",
+            "Interface",
+            "Module",
+            "Struct",
+            "Trait",
+            "Field",
+            "Property",
+            "Enum",
+            "Constant",
+          },
+        }),
+        desc = "Goto Symbol",
+      },
+      {
+        "gS",
+        telescope_util("lsp_dynamic_workspace_symbols", {
+          symbols = {
+            "Class",
+            "Function",
+            "Method",
+            "Constructor",
+            "Interface",
+            "Module",
+            "Struct",
+            "Trait",
+            "Field",
+            "Property",
+            "Enum",
+            "Constant",
+          },
+        }),
+        desc = "Goto Symbol (Workspace)",
+      },
       -- { "<Leader>bf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps" },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
@@ -1477,7 +1595,7 @@ return {
     -- Fork repo
     "mrowegawd/todo.nvim",
     event = "BufReadPre",
-    enabled = false,
+    -- enabled = false,
     keys = {
       {
         "<Leader>rt",
@@ -1562,17 +1680,5 @@ return {
         pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
       },
     },
-  },
-  -- MUREN.NVIM
-  {
-    "AckslD/muren.nvim", -- Multiple replacements in neovim
-    cmd = {
-      "MurenToggle",
-      "MurenOpen",
-      "MurenClose",
-      "MurenFresh",
-      "MurenUnique",
-    },
-    config = true,
   },
 }

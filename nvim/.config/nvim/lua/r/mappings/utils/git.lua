@@ -128,8 +128,8 @@ function M.signs(bufnr, gs)
   end, { desc = "Git(gitsigns): prev hunk", buffer = bufnr })
 
   -- FZFLUA
-  nnoremap("<Leader>gfs", "<CMD>FzfLua git_status<CR>", { desc = "Git(fzflua): git status", buffer = bufnr })
-  nnoremap("<Leader>gfS", "<CMD>FzfLua git_stash<CR>", { desc = "Git(fzflua): stash", buffer = bufnr })
+  nnoremap("<Leader>gs", "<CMD>FzfLua git_status<CR>", { desc = "Git(fzflua): git status", buffer = bufnr })
+  nnoremap("<Leader>gts", "<CMD>FzfLua git_stash<CR>", { desc = "Git(fzflua): stash", buffer = bufnr })
   nnoremap("<Leader>gB", "<CMD>FzfLua git_commits<CR>", { desc = "Git(fzflua): open commits repos", buffer = bufnr })
   nnoremap("<Leader>gb", "<CMD>FzfLua git_bcommits<CR>", { desc = "Git(fzflua): open commits buffer", buffer = bufnr })
 end

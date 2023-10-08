@@ -65,6 +65,7 @@ return {
       ins_left(components.file_modified())
       ins_left(components.term_akinsho())
       ins_left(components.debugger())
+      ins_left(components.diff())
 
       ins_right(components.lazy_updates())
       ins_right(components.trailing())
@@ -73,7 +74,6 @@ return {
       ins_right(components.python_env())
       ins_right(components.get_lsp_client_notify())
       -- ins_right(components.noice_status())
-      ins_right(components.diff())
       ins_right(components.rmux())
       ins_right(components.branch())
       ins_right(components.check_loaded_buf())

@@ -99,6 +99,31 @@ return {
       },
     },
   },
+  --- CONFORM
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        -- go = { "goimports" },
+        go = { "goimports", "gofmt" },
+      },
+    },
+  },
+  -- NONE-LS
+  {
+    "nvimtools/none-ls.nvim",
+    optional = true,
+    opts = function(_, opts)
+      if type(opts.sources) == "table" then
+        local nls = require "null-ls"
+        vim.list_extend(opts.sources, {
+          nls.builtins.code_actions.gomodifytags,
+          nls.builtins.code_actions.impl,
+        })
+      end
+    end,
+  },
   -- NVIM-DAP
   {
     "mfussenegger/nvim-dap",

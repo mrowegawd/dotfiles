@@ -3,18 +3,18 @@ if not as.use_lsp_native then
 end
 
 local border = as.ui.border.rectangle
+local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
+local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 local icons = as.ui.icons
-local fmt = string.format
+-- local augroup = as.augroup
 
-local callme = 0
-
+-- local prettier = { "prettierd", "prettier" }
+local prettier = { "prettier" }
 local uv = vim.uv or vim.loop
 
 return {
-  -- GOTO-PREVIEW (disabled)
+  -- GOTO-PREVIEW
   { "rmagatti/goto-preview", config = true },
-  -- LSPKIND
-  { "onsails/lspkind.nvim" },
   -- MASON NVIM
   {
     "williamboman/mason.nvim",
@@ -45,460 +45,235 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
+    enabled = false,
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      -- LSP stuff
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+      { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+      { "folke/neodev.nvim", opts = {} },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
 
-      -- CMP
-      "hrsh7th/nvim-cmp",
-
-      -- CMP plugins
-      "davidsierradz/cmp-conventionalcommits",
-      "dmitmel/cmp-cmdline-history",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-cmdline",
-      "hrsh7th/cmp-emoji",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-path",
-      "lukas-reineke/cmp-under-comparator",
-      "rcarriga/cmp-dap",
-      "saadparwaiz1/cmp_luasnip",
-
-      "hrsh7th/cmp-nvim-lsp-document-symbol",
-      "js-everts/cmp-tailwind-colors", -- Support cmp color for tailwind
-      { "saecki/crates.nvim", event = { "BufRead Cargo.toml" }, config = true }, -- for rust, creates
-
-      "L3MON4D3/LuaSnip",
+      -- {
+      --   "hrsh7th/cmp-nvim-lsp",
+      --   cond = function()
+      --     return as.has "nvim-cmp"
+      --   end,
+      -- },
     },
     opts = {
+      -- options for vim.diagnostic.config()
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+          -- prefix = "icons",
+        },
+        severity_sort = true,
+        float = {
+          max_width = max_width,
+          max_height = max_height,
+          title = "",
+          -- title = {
+          --     { "  ", "DiagnosticFloatTitleIcon" },
+          --     { "Problems  ", "DiagnosticFloatTitle" },
+          -- },
+          focusable = false,
+          style = "minimal",
+          border = border, -- "rounded"
+          source = "always",
+          header = "",
+          prefix = function(diag)
+            local level = vim.diagnostic.severity[diag.severity]
+            local prefix = string.format("%s ", icons.diagnostics[level:lower()])
+            return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
+          end,
+        },
+      },
+      -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
+      -- Be aware that you also will need to properly configure your LSP server to
+      -- provide the inlay hints.
+      inlay_hints = {
+        enabled = false,
+      },
       -- add any global capabilities here
-      -- capabilities = {},
+      capabilities = {},
+      -- Automatically format on save
+      autoformat = true,
+      -- options for vim.lsp.buf.format
+      -- `bufnr` and `filter` is handled by the LazyVim formatter,
+      -- but can be also overridden when specified
       format = {
+        formatting_options = nil,
         timeout_ms = nil,
       },
-      -- LSP Server Settings
       servers = {
-        dockerls = {},
-      },
-      setup = {},
-    },
-    config = function(plugin, opts)
-      require("r.plugins.lsp.servers").setup(plugin, opts)
-
-      local cmp = require "cmp"
-      local has_luasnip, luasnip = pcall(require, "luasnip")
-      local types = require "cmp.types"
-
-      -- Based on (private) function in LuaSnip/lua/luasnip/init.lua.
-      local in_snippet = function()
-        local session = require "luasnip.session"
-        local node = session.current_nodes[vim.api.nvim_get_current_buf()]
-        if not node then
-          return false
-        end
-        local snippet = node.parent.snippet
-        local snip_begin_pos, snip_end_pos = snippet.mark:pos_begin_end()
-        local pos = vim.api.nvim_win_get_cursor(0)
-        if pos[1] - 1 >= snip_begin_pos[1] and pos[1] - 1 <= snip_end_pos[1] then
-          return true
-        end
-      end
-
-      local check_backspace = function()
-        local col = vim.fn.col "." - 1
-        ---@diagnostic disable-next-line: param-type-mismatch
-        return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
-      end
-
-      local cmp_opts = {
-        enabled = function()
-          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt" or require("cmp_dap").is_dap_buffer()
-        end,
-        window = {
-          completion = {
-            border = border, --single
-            scrollbar = "║",
-            col_offset = -1,
-            winhighlight = "Normal:Normal,FloatBorder:FzfLuaBorder,CursorLine:PmenuSel,Search:None",
-            -- side_padding = -1,
-          },
-          documentation = {
-            border = border, -- "shadow", "rounded"
-            winhighlight = "Normal:Normal,FloatBorder:FzfLuaBorder,Search:None",
-            scrollbar = "║",
-          },
-        },
-
-        completion = {
-          completeopt = "menu,menuone,noinsert,noselect",
-        },
-        snippet = {
-          expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-          end,
-        },
-
-        mapping = {
-          ["<c-n>"] = cmp.mapping(function()
-            local c_cmp = require "cmp"
-            if c_cmp.visible() then
-              c_cmp.select_next_item()
-            else
-              require("cmp").complete()
-            end
-          end, { "i", "s" }),
-          ["<c-p>"] = cmp.mapping(function(fallback)
-            local c_cmp = require "cmp"
-            if c_cmp.visible() then
-              c_cmp.select_prev_item()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<TAB>"] = cmp.mapping(function(fallback)
-            if has_luasnip and luasnip.expandable() then
-              luasnip.expand()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            elseif check_backspace() then
-              fallback()
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<S-TAB>"] = cmp.mapping(function(fallback)
-            if has_luasnip and in_snippet() and luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { "i", "s" }),
-          ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
-          ["<c-l>"] = cmp.mapping.confirm { select = false },
-          ["<cr>"] = cmp.mapping.confirm { select = false },
-          ["<C-space>"] = cmp.mapping(function(_)
-            local c_cmp = require "cmp"
-            -- if c_cmp.visible() then
-            --   c_cmp.abort()
-            if callme == 0 then
-              callme = 1
-              c_cmp.complete {
-                config = {
-                  sources = {
-                    { name = "luasnip" },
-                  },
-                },
-              }
-            elseif callme == 1 then
-              callme = 2
-              cmp.complete {
-                config = {
-                  sources = {
-                    {
-                      name = "buffer",
-                      option = {
-                        get_bufnrs = function()
-                          return vim.api.nvim_list_bufs()
-                        end,
-                      },
-                    },
-                  },
-                },
-              }
-            else
-              if callme == 2 then
-                callme = 0
-                cmp.complete {
-                  config = {
-                    sources = {
-                      { name = "nvim_lsp" },
-                    },
-                  },
-                }
-              end
-            end
-          end, {
-            "i",
-            "s",
-          }),
-        },
-        sorting = {
-          comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
-            require("cmp-under-comparator").under,
-            function(entry1, entry2)
-              local kind1 = entry1:get_kind()
-              kind1 = kind1 == types.lsp.CompletionItemKind.Text and 100 or kind1
-              local kind2 = entry2:get_kind()
-              kind2 = kind2 == types.lsp.CompletionItemKind.Text and 100 or kind2
-              if kind1 ~= kind2 then
-                if kind1 == types.lsp.CompletionItemKind.Snippet then
-                  return false
-                end
-                if kind2 == types.lsp.CompletionItemKind.Snippet then
-                  return true
-                end
-                local diff = kind1 - kind2
-                if diff < 0 then
-                  return true
-                elseif diff > 0 then
-                  return false
-                end
-              end
-            end,
-
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
-          },
-        },
-        formatting = {
-          fields = { "abbr", "kind", "menu" },
-
-          format = function(entry, vim_item)
-            local MAX = math.floor(vim.o.columns * 0.5)
-            if #vim_item.abbr >= MAX then
-              vim_item.abbr = vim_item.abbr:sub(1, MAX) .. icons.misc.ellipsis
-            end
-
-            local item = entry:get_completion_item()
-            if item.detail then
-              vim_item.menu = item.detail
-            end
-
-            vim_item.menu = ({
-              nvim_lsp = "[LSP]",
-              nvim_lua = "[Lua]",
-              emoji = "[Emoji]",
-              path = "[Path]",
-              neorg = "[Neorg]",
-              luasnip = "[Snip]",
-              dictionary = "[Dict]",
-              treesitter = "串",
-              buffer = "[Buffer]",
-              spell = "[Spell]",
-              cmdline = "[Cmd]",
-              cmdline_history = "[Hist]",
-              orgmode = "[Org]",
-              rg = "[Rg]",
-              git = "[Git]",
-            })[entry.source.name]
-
-            vim_item.kind = fmt("%s  %s", icons.kind[vim_item.kind], vim_item.kind)
-
-            if string.find(vim_item.kind, "Color") then
-              vim_item.kind = "Color"
-              local tailwind_item = require("cmp-tailwind-colors").format(entry, vim_item)
-              vim_item.menu = "[Color]"
-              vim_item.kind = " " .. tailwind_item.kind
-            end
-
-            -- remove duplicates
-            vim_item.dup = ({
-              buffer = 1,
-              path = 1,
-              nvim_lsp = 0,
-            })[entry.source.name] or 0
-
-            return vim_item
-          end,
-        },
-        -- experimental = {
-        --     ghost_text = {
-        --         hl_group = "LspCodeLens",
-        --     },
-        -- },
-        sources = cmp.config.sources {
-          {
-            name = "nvim_lsp",
-            -- Remove snippet from lsp, use luasnip instead
-            ---@diagnostic disable-next-line: unused-local
-            entry_filter = function(entry, ctx)
-              if entry:get_kind() == 15 then
-                return false
-              end
-              return true
-            end,
-            -- group_index = 1,
-          },
-          { name = "luasnip" },
-          {
-            name = "buffer",
-            option = {
-              keyword_pattern = [[\k\+]],
-              -- Enable completion from all visible buffers
-              get_bufnrs = function()
-                local bufs = {}
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                  bufs[vim.api.nvim_win_get_buf(win)] = true
-                end
-                return vim.tbl_keys(bufs)
-              end,
+        lua_ls = {
+          -- keys = {},
+          settings = {
+            Lua = {
+              -- codeLens = { enable = true },
+              workspace = {
+                checkThirdParty = false,
+              },
+              completion = {
+                callSnippet = "Replace",
+              },
             },
           },
-          { name = "path" },
-          { name = "neorg" },
-          -- { name = "nvim_lsp_signature_help" },
-          { name = "crates" },
         },
-      }
+      },
+      setup = {
+        -- example to setup with typescript.nvim
+        -- tsserver = function(_, opts)
+        --   require("typescript").setup({ server = opts })
+        --   return true
+        -- end,
+        -- Specify * to use this function as a fallback for any server
+        -- ["*"] = function(server, opts) end,
+      },
+    },
+    config = function(_, opts)
+      local lsp_utils = require "r.plugins.lsp.utils"
 
-      cmp.setup(cmp_opts)
+      if as.has "neoconf.nvim" then
+        local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
+        require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
+      end
 
-      cmp.setup.filetype("markdown", {
-        sources = cmp.config.sources({
-          { name = "emoji" },
-          { name = "luasnip" },
-          { name = "path" },
-          -- { name = "spell", group_index = 2 },
-        }, {
-          { name = "buffer" },
-        }),
+      require("r.plugins.lsp.format").setup(opts)
+
+      -- local provider = {
+      --   HOVER = "hoverProvider",
+      --   RENAME = "renameProvider",
+      --   CODELENS = "codeLensProvider",
+      --   CODEACTIONS = "codeActionProvider",
+      --   FORMATTING = "documentFormattingProvider",
+      --   REFERENCES = "documentHighlightProvider",
+      --   DEFINITION = "definitionProvider",
+      -- }
+
+      -- setup formatting and keymaps
+      lsp_utils.on_attach(function(client, bufnr)
+        require("r.plugins.lsp.keymaps").on_attach(client, bufnr)
+
+        -- if client.server_capabilities[provider.CODELENS] then
+        --   augroup(("LspCodeLens%d"):format(bufnr), {
+        --     event = { "BufEnter", "InsertLeave", "BufWritePost" },
+        --     desc = "LSP: Code Lens",
+        --     buffer = bufnr,
+        --     -- call via vimscript so that errors are silenced
+        --     command = "silent! lua vim.lsp.codelens.refresh()",
+        --   })
+        -- end
+      end)
+
+      local register_capability = vim.lsp.handlers["client/registerCapability"]
+
+      vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
+        local ret = register_capability(err, res, ctx)
+        local client_id = ctx.client_id
+        local client = vim.lsp.get_client_by_id(client_id)
+        local buffer = vim.api.nvim_get_current_buf()
+        require("r.plugins.lsp.keymaps").on_attach(client, buffer)
+        return ret
+      end
+
+      -- Hover
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+        border = border,
       })
 
-      cmp.setup.filetype("norg", {
-        sources = cmp.config.sources({
-          { name = "neorg" },
-          { name = "luasnip" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
-      })
+      -- Diagnostics
+      for name, icon in pairs(icons.diagnostics) do
+        name = "DiagnosticSign" .. name
+        vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
+      end
 
-      cmp.setup.filetype("org", {
-        sources = cmp.config.sources({
-          { name = "orgmode" },
-          { name = "luasnip" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
-      })
+      local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
 
-      cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
-        sources = cmp.config.sources {
-          { name = "path" },
-          { name = "emoji" },
-          { name = "buffer" },
-        },
-      })
+      if opts.inlay_hints.enabled and inlay_hint then
+        lsp_utils.on_attach(function(client, buffer)
+          if client.supports_method "textDocument/inlayHint" then
+            inlay_hint(buffer, true)
+          end
+        end)
+      end
 
-      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = cmp.config.sources({
-          { name = "vim-dadbod-completion" },
-        }, {
-          { name = "buffer" },
-        }),
-      })
-      cmp.setup.cmdline(":", {
-        mapping = {
-          ["<esc>"] = {
-            c = function()
-              require("r.utils").feedkey("<c-c>", "n")
-            end,
-          },
-          ["<c-q>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").abort()
-              else
-                fallback()
+      if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
+        opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
+          or function(diagnostic)
+            for d, icon in pairs(icons.diagnostics) do
+              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                return icon
               end
-            end,
-          },
-          ["<TAB>"] = {
-            c = function()
-              if require("cmp").visible() then
-                require("cmp").select_next_item()
-              else
-                require("cmp").complete()
-              end
-            end,
-          },
-          ["<S-TAB>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, { { name = "cmdline" }, { { name = "cmdline_history" } } }),
-      })
+            end
+          end
+      end
+      vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = {
-          ["<esc>"] = {
-            c = function()
-              require("r.utils").feedkey("<c-c>", "n")
-            end,
-          },
-          ["<c-q>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").abort()
-              else
-                fallback()
-              end
-            end,
-          },
-          ["<TAB>"] = {
-            c = function()
-              if require("cmp").visible() then
-                require("cmp").select_next_item()
-              else
-                require("cmp").complete()
-              end
-            end,
-          },
-          ["<S-TAB>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
-        sources = {
-          { name = "buffer" },
-        },
-      })
+      local servers = opts.servers
+      local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      local capabilities = vim.tbl_deep_extend(
+        "force",
+        {},
+        vim.lsp.protocol.make_client_capabilities(),
+        has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+        opts.capabilities or {}
+      )
 
-      luasnip.config.setup {
-        history = true,
-        enable_autosnippets = true,
-        -- Update more often, :h events for more info.
-        -- updateevents = "TextChanged,TextChangedI",
-      }
+      local function setup(server)
+        local server_opts = vim.tbl_deep_extend("force", {
+          capabilities = vim.deepcopy(capabilities),
+        }, servers[server] or {})
 
-      require("luasnip.loaders.from_vscode").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load {
-        paths = "~/Dropbox/friendly-snippets",
-      }
+        if opts.setup[server] then
+          if opts.setup[server](server, server_opts) then
+            return
+          end
+        elseif opts.setup["*"] then
+          if opts.setup["*"](server, server_opts) then
+            return
+          end
+        end
+        require("lspconfig")[server].setup(server_opts)
+      end
 
-      luasnip.filetype_extend("django-html", { "html" })
-      luasnip.filetype_extend("htmldjango", { "html" })
-      luasnip.filetype_extend("javascript", { "html" })
-      luasnip.filetype_extend("javascript", { "javascriptreact" })
-      luasnip.filetype_extend("javascriptreact", { "html" })
-      luasnip.filetype_extend("python", { "django" })
-      luasnip.filetype_extend("typescript", { "html" })
-      luasnip.filetype_extend("typescriptreact", { "html" })
-      luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
+      -- get all the servers that are available through mason-lspconfig
+      local have_mason, mlsp = pcall(require, "mason-lspconfig")
+      local all_mslp_servers = {}
+      if have_mason then
+        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+      end
+
+      local ensure_installed = {} ---@type string[]
+      for server, server_opts in pairs(servers) do
+        if server_opts then
+          server_opts = server_opts == true and {} or server_opts
+          -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
+          if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
+            setup(server)
+          else
+            ensure_installed[#ensure_installed + 1] = server
+          end
+        end
+      end
+
+      if have_mason then
+        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
+      end
+
+      if as.lsp_get_config "denols" and as.lsp_get_config "tsserver" then
+        local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+        as.lsp_disable("tsserver", is_deno)
+        as.lsp_disable("denols", function(root_dir)
+          return not is_deno(root_dir)
+        end)
+      end
     end,
   },
   -- NVIM-LINT
@@ -551,6 +326,70 @@ return {
         end,
       })
       lint.try_lint(nil, { ignore_errors = true })
+    end,
+  },
+  -- CONFORM.NVIM
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        "<Leader>lf",
+        function()
+          require("conform").format { async = true, lsp_fallback = true }
+        end,
+        desc = "Lang(conform): Format buffer",
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        javascript = prettier,
+        typescript = prettier,
+        javascriptreact = prettier,
+        typescriptreact = prettier,
+        css = prettier,
+        html = prettier,
+        json = prettier,
+        jsonc = prettier,
+        yaml = prettier,
+        markdown = prettier,
+        graphql = prettier,
+        lua = { "stylua" },
+        sh = { "shfmt" },
+        ["_"] = { "trim_whitespace", "trim_newlines" },
+        python = {
+          formatters = { "isort", "black" },
+          run_all_formatters = true,
+        },
+      },
+      format_on_save = { timeout_ms = 500, lsp_fallback = true },
+      log_level = vim.log.levels.DEBUG,
+    },
+    config = function(_, opts)
+      if vim.g.started_by_firenvim then
+        opts.format_on_save = false
+      end
+      require("conform").setup(opts)
+    end,
+  },
+  -- NONE-LS
+  {
+    "nvimtools/none-ls.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "mason.nvim" },
+    opts = function()
+      local nls = require "null-ls"
+      return {
+        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
+        sources = {
+          nls.builtins.formatting.fish_indent,
+          nls.builtins.diagnostics.fish,
+          nls.builtins.formatting.stylua,
+          nls.builtins.formatting.shfmt,
+          -- nls.builtins.diagnostics.flake8,
+        },
+      }
     end,
   },
 }

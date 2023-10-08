@@ -4,12 +4,6 @@ g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
 g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
 g.os = loop.os_uname().sysname
 
-opt.viewoptions:remove "curdir" -- disable saving current directory with views
-opt.backspace:append { "nostop" } -- Don't stop backspace at insert
-if fn.has "nvim-0.9" == 1 then
-  opt.diffopt:append "linematch:60" -- enable linematch diff algorithm
-end
-
 local options = {
   g = {
     open_command = g.os == "Darwin" and "open" or "xdg-open",
@@ -153,12 +147,12 @@ local options = {
       eob = " ", -- suppress ~ at endofbuffer
       diff = "⣿", -- alternatives = ⣿ ░ ╱
       msgsep = " ", -- alternatives: ‾ ─
-      -- fold = " ",
+      fold = " ",
       foldopen = "", -- '▼'
       foldclose = "", -- '▶'
       foldsep = " ",
     },
-    -- foldtext = "v:lua.CustomFoldText()",
+
     foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil, -- show foldcolumn in nvim 0.9
     foldlevelstart = 99, -- start with all code unfolded
     -- unfortunately folding in (n)vim is a mess, if you set the fold level to start
@@ -240,8 +234,7 @@ local options = {
     sidescrolloff = 3, -- Same but for side scrolling.
     sidescroll = 1,
     selection = "old", -- Don't select the newline symbol when using <End> on visual mode
-
-    -- statuscolumn = "%s %{foldlevel(v:lnum) <= foldlevel(v:lnum-1) ? ' ' : (foldclosed(v:lnum) == -1 ? '' : '')} %{v:relnum ? v:relnum : v:lnum} ",
+    statuscolumn = [[%!v:lua.require'r.utils'.statuscolumn()]],
 
     -----------------------------------------------------------------------------//
     -- emoji {{{1
@@ -255,16 +248,16 @@ local options = {
     -- diff {{{1
     -----------------------------------------------------------------------------//
     -- use in vertical diff mode, blank lines to keep sides aligned, ignore whitespace changes
-    -- diffopt = opt.diffopt + {
-    --     "vertical",
-    --     "iwhite",
-    --     "hiddenoff",
-    --     "foldcolumn:0",
-    --     "context:4",
-    --     "algorithm:histogram",
-    --     "indent-heuristic",
-    --     "linematch:60",
-    -- },
+    diffopt = opt.diffopt + {
+      "vertical",
+      "iwhite",
+      "hiddenoff",
+      "foldcolumn:0",
+      "context:4",
+      "algorithm:histogram",
+      "indent-heuristic",
+      "linematch:60",
+    },
 
     sessionoptions = {
       "globals",
@@ -276,6 +269,10 @@ local options = {
     },
   },
 }
+
+if vim.treesitter.foldtext then
+  vim.opt.foldtext = "v:lua.require'r.utils'.foldtext()"
+end
 
 -- Use faster grep alternatives if possible
 if as and not as.falsy(fn.executable "rg") then

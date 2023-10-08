@@ -8,36 +8,6 @@ local set_icons = function(icons_name)
 end
 
 return {
-  -- TROUBLESUM
-  {
-    "ivanjermakov/troublesum.nvim",
-    event = "LspAttach",
-    opts = {
-      enabled = function()
-        return vim.bo.filetype ~= "lazy"
-      end,
-      severity_format = {
-        icons.diagnostics.error,
-        icons.diagnostics.warn,
-        icons.diagnostics.info,
-        icons.diagnostics.hint,
-      },
-    },
-  },
-  -- DIAGFLOW
-  {
-    "RaafatTurki/corn.nvim",
-    event = "LspAttach",
-    opts = {
-      scope = "line",
-      icons = {
-        error = icons.diagnostics.error,
-        warn = icons.diagnostics.warn,
-        hint = icons.diagnostics.hint,
-        info = icons.diagnostics.info,
-      },
-    },
-  },
   -- TROUBLE.NVIM (disabled)
   {
     "folke/trouble.nvim",
@@ -894,6 +864,31 @@ return {
       "DevdocsOpenCurrentFloat",
       "DevdocsUpdate",
       "DevdocsUpdateAll",
+    },
+  },
+  -- HLARGS
+  {
+    "m-demare/hlargs.nvim",
+    event = "VeryLazy", --  "UIEnter"
+    opts = {
+      color = "#ef9062",
+      use_colorpalette = true,
+      colorpalette = {
+        { fg = "#ef9062" },
+        { fg = "#3AC6BE" },
+        { fg = "#35D27F" },
+        { fg = "#EB75D6" },
+        { fg = "#E5D180" },
+        { fg = "#8997F5" },
+        { fg = "#D49DA5" },
+        { fg = "#7FEC35" },
+        { fg = "#F6B223" },
+        { fg = "#F67C1B" },
+        { fg = "#DE9A4E" },
+        { fg = "#BBEA87" },
+        { fg = "#EEF06D" },
+        { fg = "#8FB272" },
+      },
     },
   },
 }

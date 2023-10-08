@@ -1,22 +1,11 @@
-local highlight = as.highlight
-
 return {
   -- TREESITTER- CONTEXT
   {
     "nvim-treesitter/nvim-treesitter-context",
     event = "VeryLazy",
-    enabled = false, -- NOTE: something wrong with this plugin, error found (disable dahulu)
-    init = function()
-      highlight.plugin("treesitter-context", {
-        { TreesitterContextSeparator = { link = "Directory" } },
-        { TreesitterContext = { inherit = "Normal" } },
-        { TreesitterContextLineNumber = { inherit = "LineNr" } },
-      })
-    end,
     opts = {
       multiline_threshold = 2,
-      separator = "─", -- alternatives: ▁ ─ ▄
-      -- separator = '--',
+      separator = "─", -- "─", alternatives: ▁ ─ ▄ '--',
       mode = "cursor",
     },
   },
@@ -41,6 +30,15 @@ return {
             },
             query = {
               [""] = "rainbow-delimiters",
+            },
+            highlight = {
+              "TSRainbowRed",
+              "TSRainbowYellow",
+              "TSRainbowBlue",
+              "TSRainbowOrange",
+              "TSRainbowGreen",
+              "TSRainbowViolet",
+              "TSRainbowCyan",
             },
           }
         end,
@@ -131,11 +129,9 @@ return {
           enable = true,
           disable = { "help" },
           keymaps = {
-            init_selection = "<CR>",
-            node_incremental = "<CR>",
-            scope_incremental = false,
-            -- node_decremental = "<M-CR>",
-            node_decremental = "<bs>",
+            init_selection = false,
+            node_incremental = "v",
+            node_decremental = "V",
           },
         },
 

@@ -134,6 +134,7 @@ as.ui.icons = {
     dashboard = "  ",
     double_chevron_right = "» ",
     down = "⇣ ",
+    dots = "󰇘",
     ellipsis = "… ",
     fire = " ",
     gear = " ",

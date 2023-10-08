@@ -1,6 +1,8 @@
 return {
+  -- MINI.CLUE (disabled)
   {
     "echasnovski/mini.clue",
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       -- local map_leader = function(suffix, rhs, desc)
@@ -13,16 +15,13 @@ return {
       -- map_leader("so", require("utils.coding").stack_overflow, "Stack Overflow")
 
       local miniclue = require "mini.clue"
+
       return {
         window = {
           delay = vim.o.timeoutlen,
-          config = {
-            width = "auto",
-          },
-          -- delay = tonumber(_G.LVIM_SETTINGS.keyshelperdelay),
-          -- scroll_down = "<C-d>",
-          -- scroll_up = "<C-u>",
-          -- },
+          -- Keys to scroll inside the clue window
+          scroll_down = "<C-d>",
+          scroll_up = "<C-u>",
         },
         triggers = {
           -- Leader triggers
@@ -37,7 +36,9 @@ return {
           -- `g` key
           { mode = "n", keys = "g" },
           { mode = "x", keys = "g" },
-          { mode = "x", keys = "d" },
+
+          -- `d` key (diagnostic)
+          { mode = "n", keys = "d" },
           { mode = "x", keys = "d" },
 
           -- Marks
@@ -84,7 +85,7 @@ return {
 
           { mode = "n", keys = "<Leader>l", desc = "+Language" },
           { mode = "x", keys = "<Leader>l", desc = "+Language" },
-          -- { mode = "n", keys = "<Leader>lt", desc = "+Toggle" },
+          -- { mode = "n", keys = "gc", desc = "+Coi" },
 
           -- { mode = "n", keys = "<Leader>lg", desc = "+Annotation" },
           -- { mode = "n", keys = "<Leader>lx", desc = "+Swap Next" },
@@ -143,22 +144,10 @@ return {
       }
     end,
   },
-  -- LEGENDARY
-  -- {
-  --   "mrjones2014/legendary.nvim",
-  --   enabled = flalse,
-  --   cmd = "Legendary",
-  --   opts = {
-  --     which_key = { auto_register = true },
-  --   },
-  -- },
   -- WHICH-KEY
   {
     "folke/which-key.nvim",
-    enabled = false,
-    event = "BufRead",
-    -- lazy = false,
-
+    event = "VeryLazy",
     opts = {
       setup = {
         show_help = true,
@@ -188,27 +177,30 @@ return {
         ["<leader>"] = {
           name = "<Leader>",
           b = { name = "+buffer" },
-          d = { name = "+database" },
+          d = { name = "+debug" },
+          D = { name = "+database" },
           f = { name = "+fzflua" },
-          h = { name = "+gitactions" },
-          g = { name = "+lsp-set" },
+          j = { name = "+harpoon" },
+          g = {
+            name = "+git",
+            v = { name = "+diffview" },
+            t = { name = "+toggle" },
+            w = { name = "+git-worktree" },
+          },
+          c = { name = "+change_dir" },
           v = { name = "+view" },
           s = { name = "+sessions" },
           r = { name = "+run/misc" },
-          p = { name = "+project/sessions" },
+          p = { name = "+project" },
           y = { name = "+surround" },
-          a = { name = "+run-set" },
-          t = { name = "+toggler" },
+          t = { name = "+testing" },
+          l = { name = "+lang" },
         },
 
         ["<localleader>"] = {
-          name = "Localleader",
-          d = { name = "+debug" },
-          t = { name = "+testing" },
-          g = { name = "+git-set" },
-          f = { name = "+notes" },
           q = { name = "+qf" },
-          w = { name = "+loclist" },
+          o = { name = "+open" },
+          f = { name = "+note" },
         },
       },
     },

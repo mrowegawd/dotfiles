@@ -27,7 +27,7 @@ local function title()
 end
 
 local term_plugins = function()
-  local ft_buf = api.nvim_buf_get_option(vim.api.nvim_get_current_buf(), "filetype")
+  local ft_buf = api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
   if ft_buf == "toggleterm" then
     local terms = require "toggleterm.terminal"
     local count_term = terms.get_all()

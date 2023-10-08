@@ -1,5 +1,7 @@
 local api, highlight, fmt, cmd = vim.api, as.highlight, string.format, vim.cmd
-local option = api.nvim_buf_get_option
+local option = api.nvim_get_option_value
+
+local icons = as.ui.icons
 local L = vim.log.levels
 
 local utils = {}
@@ -8,7 +10,7 @@ local Job = require "plenary.job"
 local scan = require "plenary.scandir"
 
 --  ╭──────────────────────────────────────────────────────────╮
---  │                         GENERAL                          │
+--  │                         GENERAL                                    │
 --  ╰──────────────────────────────────────────────────────────╯
 local vi = false
 function utils.toggle_vi()
@@ -87,6 +89,16 @@ function utils.toggle_kil_loc_qf()
   toggle_list("none", true)
 end
 
+function utils.foldtext()
+  local ret = vim.treesitter.foldtext and vim.treesitter.foldtext()
+  if not ret then
+    ret = { { vim.api.nvim_buf_get_lines(0, vim.v.lnum - 1, vim.v.lnum, false)[1], {} } }
+  end
+  ---@diagnostic disable-next-line: param-type-mismatch
+  table.insert(ret, { " " .. icons.misc.dots })
+  return ret
+end
+
 --- Opens the given url in the default browser.
 ---@param url string: The url to open.
 function utils.open_in_browser(url)
@@ -121,14 +133,14 @@ function utils.Buf_only()
   for _, n in ipairs(api.nvim_list_bufs()) do
     -- If the iter buffer is modified one, then don't do anything
     ---@diagnostic disable-next-line: redundant-parameter
-    if option(n, "modified") then
+    if option("modified", { buf = n }) then
       modified = modified + 1
 
       -- iter is not equal to current buffer
       -- iter is modifiable or del_non_modifiable == true
       -- `modifiable` check is needed as it will prevent closing file tree ie. NERD_tree
       ---@diagnostic disable-next-line: redundant-parameter
-    elseif n ~= cur and (option(n, "modifiable") or del_non_modifiable) then
+    elseif n ~= cur and (option("modifiable", { buf = n }) or del_non_modifiable) then
       api.nvim_buf_delete(n, {})
       deleted = deleted + 1
     end
@@ -176,7 +188,7 @@ function utils.smart_quit()
   local buf_windows = vim.call("win_findbuf", bufnr)
 
   ---@diagnostic disable-next-line: redundant-parameter
-  local modified = api.nvim_buf_get_option(bufnr, "modified")
+  local modified = option("modified", { buf = bufnr })
   if modified and #buf_windows == 1 then
     vim.ui.input({
       prompt = "You have unsaved changes. Quit anyway? (y/n) ",
@@ -288,6 +300,91 @@ function utils.toggle_background()
   vim.notify(string.format("background=%s", vim.go.background))
 end
 
+function utils.icon(sign, len)
+  sign = sign or {}
+  len = len or 2
+  local text = vim.fn.strcharpart(sign.text or "", 0, len) ---@type string
+  text = text .. string.rep(" ", len - vim.fn.strchars(text))
+  return sign.texthl and ("%#" .. sign.texthl .. "#" .. text .. "%*") or text
+end
+
+function utils.get_signs(buf, lnum)
+  local signs = vim.tbl_map(function(sign)
+    local ret = vim.fn.sign_getdefined(sign.name)[1]
+    ret.priority = sign.priority
+    return ret
+  end, vim.fn.sign_getplaced(buf, { group = "*", lnum = lnum })[1].signs)
+
+  -- Get extmark signs
+  local extmarks = vim.api.nvim_buf_get_extmarks(
+    buf,
+    -1,
+    { lnum - 1, 0 },
+    { lnum - 1, -1 },
+    { details = true, type = "sign" }
+  )
+  for _, extmark in pairs(extmarks) do
+    signs[#signs + 1] = {
+      name = extmark[4].sign_hl_group or "",
+      text = extmark[4].sign_text,
+      texthl = extmark[4].sign_hl_group,
+      priority = extmark[4].priority,
+    }
+  end
+
+  -- Sort by priority
+  table.sort(signs, function(a, b)
+    return (a.priority or 0) < (b.priority or 0)
+  end)
+
+  return signs
+end
+
+function utils.get_mark(buf, lnum)
+  local marks = vim.fn.getmarklist(buf)
+  vim.list_extend(marks, vim.fn.getmarklist())
+  for _, mark in ipairs(marks) do
+    if mark.pos[1] == buf and mark.pos[2] == lnum and mark.mark:match "[a-zA-Z]" then
+      return { text = mark.mark:sub(2), texthl = "DiagnosticHint" }
+    end
+  end
+end
+
+function utils.statuscolumn()
+  local win = vim.g.statusline_winid
+  if vim.wo[win].signcolumn == "no" then
+    return ""
+  end
+  local buf = vim.api.nvim_win_get_buf(win)
+
+  local left, right, fold
+  for _, s in ipairs(utils.get_signs(buf, vim.v.lnum)) do
+    if s.name and s.name:find "GitSign" then
+      right = s
+    elseif not left then
+      left = s
+    end
+  end
+
+  vim.api.nvim_win_call(win, function()
+    if vim.fn.foldclosed(vim.v.lnum) >= 0 then
+      fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded" }
+    end
+  end)
+
+  local nu = ""
+  if vim.wo[win].number and vim.v.virtnum == 0 then
+    nu = vim.wo[win].relativenumber and vim.v.relnum ~= 0 and vim.v.relnum or vim.v.lnum
+  end
+
+  return table.concat({
+    utils.icon(utils.get_mark(buf, vim.v.lnum) or left),
+    [[%=]],
+    nu .. " ",
+    utils.icon(fold or right),
+  }, "")
+end
+
 --  ╭──────────────────────────────────────────────────────────╮
 --  │                           GIT                            │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -344,6 +441,7 @@ end
 --  ╭──────────────────────────────────────────────────────────╮
 --  │                      WORD PROCESSOR                      │
 --  ╰──────────────────────────────────────────────────────────╯
+
 function utils.WordProcessor()
   vim.wo.wrap = true
   vim.wo.linebreak = true
@@ -353,46 +451,6 @@ function utils.WordProcessor()
   vim.opt_local.spelllang = { "en_us", "en_gb" }
   -- vim.o.thesaurus = vim.env.XDG_CONFIG_HOME .. "/nvim/thesaurus/mthesaur.txt"
   require("r.mappings.util").wordProcessor()
-end
-
---  ╭──────────────────────────────────────────────────────────╮
---  │                        LSP STUFF                         │
---  ╰──────────────────────────────────────────────────────────╯
----Get a table with names of currnetly active language server names
----@return table Active clients
-function utils.get_client_names()
-  local buf_clients = vim.lsp.get_active_clients()
-
-  local buf_client_names = {}
-  for _, client in pairs(buf_clients) do
-    table.insert(buf_client_names, client.name)
-  end
-  return buf_client_names
-end
-
-local function bool2str(bool)
-  return bool and "on" or "off"
-end
-
---- Toggle buffer semantic token highlighting for all language servers that support it
----@param bufnr? number the buffer to toggle the clients on
-function utils.toggle_buffer_semantic_tokens(bufnr)
-  vim.b.semantic_tokens_enabled = vim.b.semantic_tokens_enabled == false
-
-  for _, client in ipairs(vim.lsp.get_active_clients()) do
-    if client.server_capabilities.semanticTokensProvider then
-      vim.lsp.semantic_tokens[vim.b.semantic_tokens_enabled and "start" or "stop"](bufnr or 0, client.id)
-      as.info(string.format("Buffer lsp semantic highlighting %s", bool2str(vim.b.semantic_tokens_enabled)))
-    end
-  end
-end
-
--- Toggle inlayhints
-function utils.inlayhints()
-  vim.g.inlay_hints_enabled = not vim.g.inlay_hints_enabled -- flip global state
-  vim.b.inlay_hints_enabled = not vim.g.inlay_hints_enabled -- sync buffer state
-  vim.lsp.inlay_hint(0, vim.g.inlay_hints_enabled) -- apply state
-  vim.notify(string.format("Global inlay hints %s", bool2str(vim.g.inlay_hints_enabled)))
 end
 
 --  ╭──────────────────────────────────────────────────────────╮
