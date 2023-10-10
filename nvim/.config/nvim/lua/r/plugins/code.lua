@@ -28,7 +28,9 @@ return {
         function()
           return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
         end,
-        expr = true, silent = true, mode = "i",
+        expr = true,
+        silent = true,
+        mode = "i",
       },
       { "<tab>", function() require("luasnip").jump(1) end, mode = "s" },
       { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
@@ -246,7 +248,11 @@ return {
             cmp.config.compare.order,
           },
         },
-
+        -- experimental = {
+        --     ghost_text = {
+        --         hl_group = "LspCodeLens",
+        --     },
+        -- },
         formatting = {
           fields = { "abbr", "kind", "menu" },
 
@@ -291,11 +297,6 @@ return {
             return vim_item
           end,
         },
-        -- experimental = {
-        --     ghost_text = {
-        --         hl_group = "LspCodeLens",
-        --     },
-        -- },
         sources = cmp.config.sources {
           {
             name = "nvim_lsp",
@@ -310,6 +311,8 @@ return {
             -- group_index = 1,
           },
           { name = "luasnip" },
+          { name = "path" },
+          { name = "neorg" },
           {
             name = "buffer",
             option = {
@@ -324,143 +327,140 @@ return {
               end,
             },
           },
-          { name = "path" },
-          { name = "neorg" },
-          { name = "crates" },
         },
       }
     end,
-    config = function(_, opts)
-      local cmp = require "cmp"
+    -- config = function(_, opts)
+    --   local cmp = require "cmp"
 
-      cmp.setup(opts)
+    --   cmp.setup(opts)
 
-      cmp.setup.filetype("markdown", {
-        sources = cmp.config.sources({
-          { name = "emoji" },
-          { name = "luasnip" },
-          { name = "path" },
-          -- { name = "spell", group_index = 2 },
-        }, {
-          { name = "buffer" },
-        }),
-      })
+    --   cmp.setup.filetype("markdown", {
+    --     sources = cmp.config.sources({
+    --       { name = "emoji" },
+    --       { name = "luasnip" },
+    --       { name = "path" },
+    --       -- { name = "spell", group_index = 2 },
+    --     }, {
+    --       { name = "buffer" },
+    --     }),
+    --   })
 
-      cmp.setup.filetype("norg", {
-        sources = cmp.config.sources({
-          { name = "neorg" },
-          { name = "luasnip" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
-      })
+    --   cmp.setup.filetype("norg", {
+    --     sources = cmp.config.sources({
+    --       { name = "neorg" },
+    --       { name = "luasnip" },
+    --       { name = "path" },
+    --     }, {
+    --       { name = "buffer" },
+    --     }),
+    --   })
 
-      cmp.setup.filetype("org", {
-        sources = cmp.config.sources({
-          { name = "orgmode" },
-          { name = "luasnip" },
-          { name = "path" },
-        }, {
-          { name = "buffer" },
-        }),
-      })
+    --   cmp.setup.filetype("org", {
+    --     sources = cmp.config.sources({
+    --       { name = "orgmode" },
+    --       { name = "luasnip" },
+    --       { name = "path" },
+    --     }, {
+    --       { name = "buffer" },
+    --     }),
+    --   })
 
-      cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
-        sources = cmp.config.sources {
-          { name = "path" },
-          { name = "emoji" },
-          { name = "buffer" },
-        },
-      })
+    --   cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
+    --     sources = cmp.config.sources {
+    --       { name = "path" },
+    --       { name = "emoji" },
+    --       { name = "buffer" },
+    --     },
+    --   })
 
-      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = cmp.config.sources({
-          { name = "vim-dadbod-completion" },
-        }, {
-          { name = "buffer" },
-        }),
-      })
-      cmp.setup.cmdline(":", {
-        mapping = {
-          ["<esc>"] = {
-            c = function()
-              require("r.utils").feedkey("<c-c>", "n")
-            end,
-          },
-          ["<c-q>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").abort()
-              else
-                fallback()
-              end
-            end,
-          },
-          ["<TAB>"] = {
-            c = function()
-              if require("cmp").visible() then
-                require("cmp").select_next_item()
-              else
-                require("cmp").complete()
-              end
-            end,
-          },
-          ["<S-TAB>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, { { name = "cmdline" }, { { name = "cmdline_history" } } }),
-      })
+    --   cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+    --     sources = cmp.config.sources({
+    --       { name = "vim-dadbod-completion" },
+    --     }, {
+    --       { name = "buffer" },
+    --     }),
+    --   })
+    --   cmp.setup.cmdline(":", {
+    --     mapping = {
+    --       ["<esc>"] = {
+    --         c = function()
+    --           require("r.utils").feedkey("<c-c>", "n")
+    --         end,
+    --       },
+    --       ["<c-q>"] = {
+    --         c = function(fallback)
+    --           if require("cmp").visible() then
+    --             require("cmp").abort()
+    --           else
+    --             fallback()
+    --           end
+    --         end,
+    --       },
+    --       ["<TAB>"] = {
+    --         c = function()
+    --           if require("cmp").visible() then
+    --             require("cmp").select_next_item()
+    --           else
+    --             require("cmp").complete()
+    --           end
+    --         end,
+    --       },
+    --       ["<S-TAB>"] = {
+    --         c = function(fallback)
+    --           if require("cmp").visible() then
+    --             require("cmp").select_prev_item()
+    --           else
+    --             fallback()
+    --           end
+    --         end,
+    --       },
+    --     },
+    --     sources = cmp.config.sources({
+    --       { name = "path" },
+    --     }, { { name = "cmdline" }, { { name = "cmdline_history" } } }),
+    --   })
 
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = {
-          ["<esc>"] = {
-            c = function()
-              require("r.utils").feedkey("<c-c>", "n")
-            end,
-          },
-          ["<c-q>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").abort()
-              else
-                fallback()
-              end
-            end,
-          },
-          ["<TAB>"] = {
-            c = function()
-              if require("cmp").visible() then
-                require("cmp").select_next_item()
-              else
-                require("cmp").complete()
-              end
-            end,
-          },
-          ["<S-TAB>"] = {
-            c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
-        sources = {
-          { name = "buffer" },
-        },
-      })
-    end,
+    --   cmp.setup.cmdline({ "/", "?" }, {
+    --     mapping = {
+    --       ["<esc>"] = {
+    --         c = function()
+    --           require("r.utils").feedkey("<c-c>", "n")
+    --         end,
+    --       },
+    --       ["<c-q>"] = {
+    --         c = function(fallback)
+    --           if require("cmp").visible() then
+    --             require("cmp").abort()
+    --           else
+    --             fallback()
+    --           end
+    --         end,
+    --       },
+    --       ["<TAB>"] = {
+    --         c = function()
+    --           if require("cmp").visible() then
+    --             require("cmp").select_next_item()
+    --           else
+    --             require("cmp").complete()
+    --           end
+    --         end,
+    --       },
+    --       ["<S-TAB>"] = {
+    --         c = function(fallback)
+    --           if require("cmp").visible() then
+    --             require("cmp").select_prev_item()
+    --           else
+    --             fallback()
+    --           end
+    --         end,
+    --       },
+    --     },
+    --     sources = {
+    --       { name = "buffer" },
+    --     },
+    --   })
+    -- end,
   },
   -- COMMENT.NVIM
   {
@@ -474,19 +474,6 @@ return {
       }
       require("Comment").setup(opts)
     end,
-  },
-  -- MINI.COMMENT (disabled)
-  {
-    "echasnovski/mini.comment",
-    event = "BufRead",
-    enabled = false,
-    opts = {
-      options = {
-        custom_commentstring = function()
-          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
-        end,
-      },
-    },
   },
   -- TREESJ
   {
@@ -629,8 +616,7 @@ return {
     --     desc = "Task(overseer): toggle",
     --   },
     -- },
-    config = function()
-      require("overseer").setup {
+    opts = {
         templates = { "builtin", "user" },
         component_aliases = {
           log = {
@@ -660,8 +646,7 @@ return {
             ["<c-j>"] = false,
           },
         },
-      }
-    end,
+    },
   },
   -- LUAPAD
   {
@@ -695,6 +680,67 @@ return {
       { "<Localleader>or", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
     },
     opts = { skip_ssl_verification = true },
+  },
+  -- ULTIMATE-AUTOPAIR (disabled)
+  {
+    "altermo/ultimate-autopair.nvim",
+    enabled = false,
+    event = { "InsertEnter", "CmdlineEnter" },
+    branch = "v0.6",
+    opts = {},
+  },
+  -- NVIM-AUTOPAIRS
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    dependencies = { "hrsh7th/nvim-cmp" },
+    opts = {
+      close_triple_quotes = true,
+      check_ts = true,
+      ts_config = {
+        lua = { "string" },
+        dart = { "string" },
+        javascript = { "template_string" },
+      },
+      disable_filetype = {
+        "TelescopePrompt",
+        "spectre_panel",
+        "neo-tree-popup",
+        "vim",
+      },
+
+      fast_wrap = { map = "<c-g>" },
+      highlight = "PmenuSel",
+      highlight_grey = "LineNr",
+    },
+    config = function(_, opts)
+      local npairs = require "nvim-autopairs"
+      npairs.setup(opts)
+
+      local cmp = require "cmp"
+      local has_autopairs, cmp_autopairs = pcall(require, "nvim-autopairs.completion.cmp")
+      if has_autopairs then
+        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
+      end
+
+      local handlers = require "nvim-autopairs.completion.handlers"
+      cmp.event:on(
+        "confirm_done",
+        cmp_autopairs.on_confirm_done {
+          filetypes = {
+            ["*"] = {
+              ["("] = {
+                kind = {
+                  cmp.lsp.CompletionItemKind.Function,
+                  cmp.lsp.CompletionItemKind.Method,
+                },
+                handler = handlers["*"],
+              },
+            },
+          },
+        }
+      )
+    end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                        MY PLUGINS                        │
