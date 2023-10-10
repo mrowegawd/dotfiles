@@ -254,6 +254,7 @@ nnoremap("<leader>cd", function()
 end, { desc = "Misc: change cur pwd to curfile" })
 
 nnoremap("<Leader>n", function()
+  ---@diagnostic disable-next-line: missing-fields
   require("notify").dismiss {}
   return cmd.nohl()
 end, { desc = "Misc: clear searches" })
@@ -402,18 +403,6 @@ end, { desc = "Misc: set theme bspwm" })
 command("InfoOption", function()
   return require("r.utils").infoFoldPreview()
 end, { desc = "Misc: echo options" })
-
-command("Uuid", function()
-  local uuid = fn.system("uuidgen"):gsub("\n", ""):lower()
-  local line = fn.getline "."
-  return vim.schedule(function()
-    fn.setline(
-      ---@diagnostic disable-next-line: param-type-mismatch
-      ".",
-      fn.strpart(line, 0, fn.col ".") .. uuid .. fn.strpart(line, fn.col ".")
-    )
-  end)
-end, { desc = "Misc: Generate a UUID and insert it into the buffer" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ Improve scroll, credits: https://github.com/Shougo       │
