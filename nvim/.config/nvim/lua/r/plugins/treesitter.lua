@@ -12,10 +12,40 @@ return {
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
-    lazy = false,
+    version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
+    event = { "VeryLazy" },
+    cmd = { "TSUpdateSync", "TSUdate", "TSIntsall" },
+    keys = {
+      { "v", desc = "Increment selection" },
+      { "V", desc = "Decrement selection", mode = "x" },
+    },
     dependencies = {
-      { "nvim-treesitter/nvim-treesitter-textobjects" },
+      {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        config = function()
+          -- When in diff mode, we want to use the default
+          -- vim text objects c & C instead of the treesitter ones.
+          local move = require "nvim-treesitter.textobjects.move" ---@type table<string,fun(...)>
+          local configs = require "nvim-treesitter.configs"
+          for name, fn in pairs(move) do
+            if name:find "goto" == 1 then
+              move[name] = function(q, ...)
+                if vim.wo.diff then
+                  local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
+                  for key, query in pairs(config or {}) do
+                    if q == query and key:find "[%]%[][cC]" then
+                      vim.cmd("normal! " .. key)
+                      return
+                    end
+                  end
+                end
+                return fn(q, ...)
+              end
+            end
+          end
+        end,
+      },
       { "JoosepAlviste/nvim-ts-context-commentstring" },
       { "mfussenegger/nvim-treehopper" },
       { "windwp/nvim-ts-autotag", config = true },
@@ -250,67 +280,6 @@ return {
         callback = set_ts_win_defaults,
         group = aug,
       })
-    end,
-  },
-  -- ULTIMATE-AUTOPAIR
-  {
-    "altermo/ultimate-autopair.nvim",
-    enabled = true,
-    event = { "InsertEnter", "CmdlineEnter" },
-    branch = "v0.6",
-    opts = {},
-  },
-  -- NVIM-AUTOPAIRS
-  {
-    "windwp/nvim-autopairs",
-    enabled = false,
-    event = "InsertEnter",
-    dependencies = { "hrsh7th/nvim-cmp" },
-    config = function()
-      local npairs = require "nvim-autopairs"
-      npairs.setup {
-        close_triple_quotes = true,
-        check_ts = true,
-        ts_config = {
-          lua = { "string" },
-          dart = { "string" },
-          javascript = { "template_string" },
-        },
-        disable_filetype = {
-          "TelescopePrompt",
-          "spectre_panel",
-          "neo-tree-popup",
-          "vim",
-        },
-
-        fast_wrap = { map = "<c-g>" },
-        highlight = "PmenuSel",
-        highlight_grey = "LineNr",
-      }
-
-      local cmp = require "cmp"
-      local has_autopairs, cmp_autopairs = pcall(require, "nvim-autopairs.completion.cmp")
-      if has_autopairs then
-        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
-      end
-
-      local handlers = require "nvim-autopairs.completion.handlers"
-      cmp.event:on(
-        "confirm_done",
-        cmp_autopairs.on_confirm_done {
-          filetypes = {
-            ["*"] = {
-              ["("] = {
-                kind = {
-                  cmp.lsp.CompletionItemKind.Function,
-                  cmp.lsp.CompletionItemKind.Method,
-                },
-                handler = handlers["*"],
-              },
-            },
-          },
-        }
-      )
     end,
   },
 }
