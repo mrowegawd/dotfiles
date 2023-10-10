@@ -38,11 +38,11 @@ as.ui.icons = {
     light_shade_block = "░",
   },
   diagnostics = {
-    error = " ",
-    warn = " ",
-    question = " ",
-    info = " ",
-    hint = " ",
+    Error = " ",
+    Warn = " ",
+    Question = " ",
+    Info = " ",
+    Hint = " ",
   },
   lsp = {
     error = " ", -- '✗'
