@@ -315,6 +315,7 @@ return {
   {
     "stevearc/aerial.nvim",
     event = "LspAttach",
+    enabled = false,
     init = function()
       r_utils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
 
@@ -451,14 +452,13 @@ return {
   {
     "enddeadroyal/symbols-outline.nvim",
     cmd = "SymbolsOutline",
-    enabled = false,
     branch = "bugfix/symbol-hover-misplacement",
     init = function()
       r_utils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
     end,
     keys = {
       {
-        "<Localleader>oS",
+        "<Localleader>oa",
         "<cmd>SymbolsOutline<CR>",
         desc = "Open(symbolsoutline): pick",
       },
