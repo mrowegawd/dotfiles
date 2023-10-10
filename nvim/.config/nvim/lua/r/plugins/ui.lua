@@ -1,12 +1,8 @@
 local highlight = as.highlight
-local border, icons, api, fn = as.ui.border.rectangle, as.ui.icons, vim.api, vim.fn
-
-local ufo_config_handler = require("r.utils").ufo_handler
-
-local isUfoFold = true
+local icons, fn = as.ui.icons, vim.fn
 
 return {
-  -- INDENTBLANKLINE (disabled)
+  -- INDENTBLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPost", "BufNewFile" },
@@ -46,43 +42,6 @@ return {
       -- hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
     end,
   },
-  -- MINI.INDENTSCOPE
-  {
-    "echasnovski/mini.indentscope",
-    event = { "BufReadPre", "BufNewFile" },
-    -- version = false, -- wait till new 0.7.0 release to put it back on semver
-    enabled = false,
-    init = function()
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = {
-          "help",
-          "alpha",
-          "dashboard",
-          "NvimTree",
-          "Trouble",
-          "fzf",
-          "lazy",
-          "aerial",
-          "outline",
-          "sagaoutline",
-          "mason",
-          "norg",
-          "org",
-          "orgagenda",
-        },
-        callback = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-    end,
-    opts = {
-      symbol = "┊", --- "│",
-      options = { try_as_border = true },
-    },
-    config = function(_, opts)
-      require("mini.indentscope").setup(opts)
-    end,
-  },
   -- DRESSING
   {
     "stevearc/dressing.nvim",
@@ -104,14 +63,14 @@ return {
   {
     "rcarriga/nvim-notify",
     event = "VeryLazy",
-    keys = {
-      {
-        "<leader>rD",
-        function()
-          require("notify").dismiss { silent = true, pending = true }
+    opts = {
+      timeout = 3000,
+      max_height = function()
+        return math.floor(vim.o.lines * 0.75)
+      end,
+      max_width = function()
+        return math.floor(vim.o.columns * 0.75)
         end,
-        desc = "Misc(nvim-notify): dismiss all notifications",
-      },
     },
     config = function()
       highlight.plugin("notify", {
@@ -126,53 +85,27 @@ return {
         { NotifyDEBUGBody = { link = "Pmenu" } },
         { NotifyTRACEBody = { link = "Pmenu" } },
       })
-
-      local notify = require "notify"
-
-      notify.setup {
-        timeout = 5000,
-        stages = "fade_in_slide_out",
-        top_down = false,
-        background_colour = "NormalFloat",
-        max_width = function()
-          return math.floor(vim.o.columns * 0.6)
-        end,
-        max_height = function()
-          return math.floor(vim.o.lines * 0.8)
-        end,
-        on_open = function(win)
-          if not api.nvim_win_is_valid(win) then
-            return
-          end
-          api.nvim_win_set_config(win, { border = border })
-        end,
-        render = function(...)
-          local notification = select(2, ...)
-          local style = as.falsy(notification.title[1]) and "minimal" or "default"
-          require("notify.render")[style](...)
-        end,
-      }
     end,
   },
-  -- NOICE (disabled)
+  -- NOICE
   {
-    -- :nmap output got wrong linebreaks
-    -- https://github.com/folke/noice.nvim/issues/259
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
+    -- stylua: ignore
     keys = {
       {
-        "<s-enter>",
-        function()
-          return require("noice").redirect(vim.fn.getcmdline())
-        end,
+        "<S-Enter>",
+        ---@diagnostic disable-next-line: param-type-mismatch
+        function() require("noice").redirect(fn.getcmdline()) end,
         mode = "c",
-        desc = "Noice: redirect cmdline",
+        desc =
+        "Redirect Cmdline"
       },
+      { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
     },
     init = function()
       highlight.plugin("notify", {
@@ -294,163 +227,7 @@ return {
         end,
         desc = "Fold(fold-cycle): cycle fold",
       },
-      -- {
-      --   "<a-h>",
-      --   function()
-      --     require("fold-cycle").open()
-      --   end,
-      --   desc = "Fold(fold-cycle): cycle fold",
-      -- },
-      -- {
-      --   "<a-a>",
-      --   function()
-      --     require("fold-cycle").close_all()
-      --   end,
-      --   desc = "Fold(fold-cycle): toggle all?",
-      -- },
     },
-  },
-  -- NVIM-UVO (disabled)
-  {
-    -- NOTE ufo ini selalu jalan ketika buka ft apapun, seharusnya bisa di
-    -- disable. Contoh ketika open AerialToggle, map zM harusnya milik Aerial bukan Ufo.
-    -- Solusi lain mungkin dari issue ini:
-    -- https://github.com/kevinhwang91/nvim-ufo/issues/33#issuecomment-1478102255
-    "kevinhwang91/nvim-ufo",
-    enabled = false,
-    dependencies = {
-      "kevinhwang91/promise-async",
-    },
-    keys = {
-      {
-        "zC",
-        function()
-          return require("ufo").closeFoldsWith()
-        end,
-        desc = "Fold(ufo): close all fold",
-      },
-      {
-        "zM",
-        function()
-          return require("ufo").closeFoldsWith()
-        end,
-        desc = "Fold(ufo): close all fold",
-      },
-      {
-        "<a-u>",
-        function()
-          if isUfoFold then
-            isUfoFold = false
-            return require("ufo").closeFoldsWith()
-          else
-            isUfoFold = true
-            return require("ufo").openAllFolds()
-          end
-        end,
-        desc = "Fold(ufo): close fold",
-      },
-      {
-        "zR",
-        function()
-          return require("ufo").openAllFolds()
-        end,
-        desc = "Fold(ufo): open all folds",
-      },
-      {
-        "zP",
-        function()
-          return require("ufo").peekFoldedLinesUnderCursor()
-        end,
-        desc = "Fold(ufo): open peek folds",
-      },
-      {
-        "<a-j>",
-        "zj",
-        desc = "Fold(ufo): go prev closed fold",
-      },
-
-      {
-        "<a-k>",
-        "zk",
-        desc = "Fold(ufo): go prev closed fold",
-      },
-
-      {
-        "<a-p>",
-        function()
-          return require("ufo").goPreviousClosedFold()
-        end,
-        desc = "Fold(ufo): go prev closed fold",
-      },
-      {
-        "<a-n>",
-        function()
-          return require("ufo").goNextClosedFold()
-        end,
-        desc = "Fold(ufo): go next closed fold",
-      },
-    },
-
-    init = function()
-      as.augroup("UfoSettings", {
-        event = "FileType",
-        pattern = {
-          "org",
-          "alpha",
-          "norg",
-          "aerial",
-          "Outline",
-          "neo-tree",
-          "DiffviewFileHistory",
-        },
-        command = function()
-          local ufo = require "ufo"
-          ufo.detach()
-        end,
-      })
-
-      -- highlight.plugin("UfoNcolor", {
-      --     {
-      --         Folded = {
-      --             bg = "NONE",
-      --         },
-      --     },
-      -- })
-
-      --     commands = {
-      --         {
-      --             ":UfoInspect",
-      --             description = "Ufo: inspect",
-      --         },
-      --     },
-      -- },
-      -- }
-    end,
-
-    config = function()
-      vim.o.foldlevel = 99 -- feel free to decrease the value
-      vim.o.foldlevelstart = 99
-      vim.o.foldenable = true
-      vim.o.foldcolumn = "1"
-
-      local ufo = require "ufo"
-
-      ufo.setup {
-        open_fold_hl_timeout = 0,
-        fold_virt_text_handler = ufo_config_handler,
-        close_fold_kinds = { "imports", "comment" },
-        enable_get_fold_virt_text = true,
-        ---@diagnostic disable-next-line: unused-local
-        provider_selector = function(bufnr, filetype, buftype)
-          return { "treesitter", "indent" }
-        end,
-        preview = {
-          win_config = {
-            winhighlight = "Normal:Normal,FloatBorder:Normal",
-          },
-        },
-      }
-    end,
   },
   -- ORIGAMI (disabled)
   {
@@ -461,14 +238,14 @@ return {
   },
   -- BUFFERLINE
   {
-    "akinsho/nvim-bufferline.lua",
+    "akinsho/bufferline.nvim",
     event = "VeryLazy",
     keys = {
       { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
       { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
       { "<leader><BS>", "<CMD>BufferLineGroupToggle docs<CR>", desc = "Buffer(Bufferline): group close docs" },
     },
-    config = function()
+    opts = function()
       local col_base_bg_attr = "Normal"
       local col_base_fg_attr = "Pmenu"
 
@@ -482,25 +259,27 @@ return {
 
       local bufferline = require "bufferline"
 
-      bufferline.setup {
+      return {
         options = {
-          mode = "tabs",
-          modified_icon = "●",
-          show_buffer_close_icon = false,
-          buffer_close_icon = "",
+          -- mode = "tabs",
+          -- show_buffer_close_icon = false,
+          -- buffer_close_icon = "",
           -- sort_by = "insert_after_current",
-          show_close_icon = true,
+          -- show_close_icon = true,
+          always_show_bufferline = false,
           diagnostics = "nvim_lsp",
-          max_name_length = 100,
+          -- max_name_length = 100,
           -- max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
           -- truncate_names = true, -- whether or not tab names should be truncated
           -- max_prefix_length = 5,
-          diagnostics_update_in_insert = false,
-          hover = { enabled = true, reveal = { "close" } },
-          separator_style = "thick",
-          diagnostics_indicator = function(count, level)
-            level = level:match "warn" and "warn" or level
-            return (icons.diagnostics[level] or "?") .. count
+          -- diagnostics_update_in_insert = false,
+          -- hover = { enabled = true, reveal = { "close" } },
+          -- separator_style = "thick",
+          diagnostics_indicator = function(_, _, diag)
+            local icons_diagnostic = icons.diagnostics
+            local ret = (diag.error and icons_diagnostic.Error .. diag.error .. " " or "")
+              .. (diag.warning and icons_diagnostic.Warn .. diag.warning or "")
+            return vim.trim(ret)
           end,
           offsets = {
             {
@@ -640,10 +419,11 @@ return {
           },
           -- CLOSE --------------------------------------------------
           close_button = {
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            fg = { attribute = "bg", highlight = col_base_fg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           close_button_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = { attribute = "fg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
           close_button_selected = {
@@ -856,6 +636,9 @@ return {
         },
       }
     end,
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+    end,
   },
   -- SATELLITE (disabled)
   {
@@ -963,50 +746,11 @@ return {
     --   require("scrollbar").setup(opts)
     -- end,
   },
-  -- NEOSCROLL
-  {
-    "karb94/neoscroll.nvim",
-    event = "VeryLazy",
-    -- enabled = false,
-    opts = {
-      hide_cursor = true,
-      mappings = { "<C-d>", "<C-u>", "zt", "zz", "zb" },
-    },
-  },
-  -- SMOOTHCURSOR (disabled)
-  {
-    "gen740/SmoothCursor.nvim",
-    event = "BufReadPre",
-    enabled = false,
-    config = function()
-      require("smoothcursor").setup {
-        fancy = { enable = true },
-        disabled_filetypes = { "fzf", "neo-tree", "lazy" }, -- this option will be skipped if enabled_filetypes is set. example: { "TelescopePrompt", "NvimTree" }
-        disable_float_win = true, -- disable on float window
-      }
-      -- Always enable on `BufEnter`.
-      vim.api.nvim_create_autocmd({ "BufEnter", "BufRead", "FocusGained", "InsertLeave" }, {
-        pattern = "*",
-        callback = function()
-          vim.cmd "SmoothCursorStart"
-        end,
-      })
-      -- Strangely, we can use `BufWinLeave` to detect filetype `lazy`.
-      vim.api.nvim_create_autocmd({ "BufWinLeave", "FocusLost", "InsertEnter" }, {
-        pattern = "*",
-        callback = function()
-          vim.cmd "SmoothCursorStop"
-        end,
-      })
-    end,
-  },
   -- BLOCK NVIM
   {
     "HampusHauffman/block.nvim",
     cmd = { "BlockOn", "BlockOff", "Block" },
-    config = function()
-      require("block").setup {}
-    end,
+    opts = {},
   },
   -- SHADE (disabled)
   {
@@ -1015,135 +759,6 @@ return {
     config = function()
       require("shade").setup()
       require("shade").toggle()
-    end,
-  },
-  -- EDGY.NVIM (disabled)
-  {
-    "folke/edgy.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    keys = {
-      {
-        "<leader>ue",
-        function()
-          require("edgy").toggle()
-        end,
-        desc = "Edgy Toggle",
-      },
-      {
-        "<leader>uE",
-        function()
-          require("edgy").select()
-        end,
-        desc = "Edgy Select Window",
-      },
-    },
-    opts = function()
-      local opts = {
-        bottom = {
-          {
-            ft = "toggleterm",
-            size = { height = 0.4 },
-            ---@diagnostic disable-next-line: unused-local
-            filter = function(buf, win)
-              return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
-          {
-            ft = "noice",
-            size = { height = 0.4 },
-            ---@diagnostic disable-next-line: unused-local
-            filter = function(buf, win)
-              return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
-          {
-            ft = "lazyterm",
-            title = "LazyTerm",
-            size = { height = 0.4 },
-            filter = function(buf)
-              return not vim.b[buf].lazyterm_cmd
-            end,
-          },
-          "Trouble",
-          { ft = "qf", title = "QuickFix" },
-          {
-            ft = "help",
-            size = { height = 20 },
-            -- don't open help files in edgy that we're editing
-            filter = function(buf)
-              return vim.bo[buf].buftype == "help"
-            end,
-          },
-          -- { ft = "spectre_panel", size = { height = 0.4 } },
-          {
-            title = "Neotest Output",
-            ft = "neotest-output-panel",
-            size = { height = 15 },
-          },
-        },
-        left = {
-          {
-            title = "Neo-Tree",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "filesystem"
-            end,
-            pinned = true,
-            open = function()
-              vim.api.nvim_input "<esc><space>e"
-            end,
-            size = { height = 0.5 },
-          },
-          { title = "Neotest Summary", ft = "neotest-summary" },
-          -- {
-          --     title = "Neo-Tree Git",
-          --     ft = "neo-tree",
-          --     filter = function(buf)
-          --         return vim.b[buf].neo_tree_source == "git_status"
-          --     end,
-          --     pinned = true,
-          --     open = "Neotree position=right git_status",
-          -- },
-          -- {
-          --     title = "Neo-Tree Buffers",
-          --     ft = "neo-tree",
-          --     filter = function(buf)
-          --         return vim.b[buf].neo_tree_source == "buffers"
-          --     end,
-          --     pinned = true,
-          --     open = "Neotree position=top buffers",
-          -- },
-          -- "neo-tree",
-        },
-        keys = {
-          -- increase width
-          ["<a-L>"] = function(win)
-            win:resize("width", 2)
-          end,
-          -- decrease width
-          ["<a-H>"] = function(win)
-            win:resize("width", -2)
-          end,
-          -- increase height
-          ["<a-K>"] = function(win)
-            win:resize("height", 2)
-          end,
-          -- decrease height
-          ["<a-J"] = function(win)
-            win:resize("height", -2)
-          end,
-        },
-      }
-      if as.has "symbols-outline.nvim" then
-        table.insert(opts.left, {
-          title = "Outline",
-          ft = "Outline",
-          pinned = true,
-          open = "SymbolsOutline",
-        })
-      end
-      return opts
     end,
   },
   -- CELLULARAUTOMATON
