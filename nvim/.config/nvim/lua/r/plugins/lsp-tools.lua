@@ -760,7 +760,7 @@ return {
 
               local cursor = api.nvim_win_get_cursor(menu.win)
               local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
-
+              if component ~= nil then
               local row = component.entry.idx
               local col = component.entry.padding.left + 1
 
@@ -768,6 +768,7 @@ return {
 
               print(tostring(row) .. " " .. tostring(col))
               print(vim.inspect(component))
+              end
             end,
           },
         },
@@ -869,6 +870,7 @@ return {
   -- HLARGS
   {
     "m-demare/hlargs.nvim",
+    enabled = false,
     event = "VeryLazy", --  "UIEnter"
     opts = {
       color = "#ef9062",
