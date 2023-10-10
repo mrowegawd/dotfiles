@@ -166,6 +166,7 @@ function as.tryrange(lower, upper)
   end
   return result
 end
+
 function as.tryjoin(tbl, delimiter)
   delimiter = delimiter or ""
   local result = ""
@@ -179,6 +180,7 @@ function as.tryjoin(tbl, delimiter)
   end
   return result
 end
+
 function as.rm_duplicates_tbl(arr)
   local newArray = {}
   local checkerTbl = {}
@@ -199,6 +201,7 @@ function as.foreach(callback, list)
     callback(v, k)
   end
 end
+
 function as.p_table(map)
   return setmetatable(map, {
     __index = function(tbl, key)
@@ -213,6 +216,7 @@ function as.p_table(map)
     end,
   })
 end
+
 function as.augroup(name, ...)
   local commands = { ... }
   assert(name ~= "User", "The name of an augroup CANNOT be User")
@@ -234,6 +238,7 @@ function as.augroup(name, ...)
   end
   return id
 end
+
 function as.safe_require(module, opts)
   opts = opts or { silent = false }
   local ok, result = pcall(require, module)
@@ -257,6 +262,7 @@ function as.try(func, ...)
     return err
   end)
 end
+
 function as.require(mod)
   local ok, ret = as.try(require, mod)
   return ok and ret
@@ -265,9 +271,11 @@ end
 function as.warn(msg, name)
   vim.notify(msg, L.WARN, { title = name or "init.lua" })
 end
+
 function as.error(msg, name)
   vim.notify(msg, L.ERROR, { title = name or "init.lua" })
 end
+
 function as.info(msg, name)
   vim.notify(msg, L.INFO, { title = name or "init.lua" })
 end
@@ -318,4 +326,21 @@ function as.lsp_disable(server, cond)
       config.enabled = false
     end
   end)
+end
+
+function as.on_load(name, func)
+  local Config = require "lazy.core.config"
+  if Config.plugins[name] and Config.plugins[name]._.loaded then
+    func(name)
+  else
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "LazyLoad",
+      callback = function(event)
+        if event.data == name then
+          func(name)
+          return true
+        end
+      end,
+    })
+  end
 end
