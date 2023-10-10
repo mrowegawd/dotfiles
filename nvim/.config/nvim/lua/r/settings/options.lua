@@ -19,6 +19,8 @@ local options = {
     termguicolors = true,
     jumpoptions = { "stack" },
     inccommand = "split",
+    virtualedit = "block", -- Allow cursor to move where there is no text in visual block mode
+    smoothscroll = true,
     fileformats = { "unix", "mac", "dos" },
 
     clipboard = "unnamedplus",
