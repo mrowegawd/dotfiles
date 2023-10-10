@@ -45,20 +45,12 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    enabled = false,
-    event = { "BufReadPre", "BufNewFile" },
+    event = "BufReadPost",
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
       { "folke/neodev.nvim", opts = {} },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-
-      -- {
-      --   "hrsh7th/cmp-nvim-lsp",
-      --   cond = function()
-      --     return as.has "nvim-cmp"
-      --   end,
-      -- },
     },
     opts = {
       -- options for vim.diagnostic.config()
@@ -383,10 +375,10 @@ return {
       return {
         root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
         sources = {
-          nls.builtins.formatting.fish_indent,
           nls.builtins.diagnostics.fish,
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.fish_indent,
+          -- nls.builtins.formatting.stylua,
+          -- nls.builtins.formatting.shfmt,
           -- nls.builtins.diagnostics.flake8,
         },
       }
