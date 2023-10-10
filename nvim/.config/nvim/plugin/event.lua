@@ -109,6 +109,17 @@ as.augroup("VimrcIncSearchHighlight", {
   end,
 })
 
+-- as.augroup("fix_folds", {
+--   event = "BufEnter",
+--   command = function()
+--     if vim.opt.foldmethod:get() == "expr" then
+--       vim.schedule(function()
+--         vim.opt.foldmethod = "expr"
+--       end)
+--     end
+--   end,
+-- })
+
 -- local ignore_buftype = { "quickfix", "nofile", "help", "terminal" }
 local ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" }
 
@@ -152,7 +163,7 @@ as.augroup("WindowBehaviours", {
     "capture",
     "gitcommit",
     "help",
-    "qf",
+    -- "qf",
     "Trouble",
   },
   command = function()
