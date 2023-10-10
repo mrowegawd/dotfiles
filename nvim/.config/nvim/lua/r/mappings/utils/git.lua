@@ -99,6 +99,10 @@ function M.signs(bufnr, gs)
     return gs.toggle_deleted()
   end, { desc = "Git(gitsigns): toggle show deleted", buffer = bufnr })
 
+  nnoremap("gf", function()
+    return gs.setqflist()
+  end, { desc = "Git(gitsigns): call on quickfix list", buffer = bufnr })
+
   nnoremap("<Leader>gth", function()
     gs.toggle_linehl()
     gs.toggle_word_diff()
