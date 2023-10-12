@@ -7,96 +7,22 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
-      { "theHamsta/nvim-dap-virtual-text" },
-      { "LiadOz/nvim-dap-repl-highlights", opts = {} },
-      { "rcarriga/nvim-dap-ui" },
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        opts = {
+          commented = true,
     },
+      },
+      -- { "LiadOz/nvim-dap-repl-highlights", opts = {} },
+      {
+        "rcarriga/nvim-dap-ui",
     -- stylua: ignore
     keys = {
-      --  +----------------------------------------------------------+
-      --    Breakpoints
-      --  +----------------------------------------------------------+
-      { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
-      { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug(dap): clear all breakpoints" },
-      { "<Leader>dC", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug(dap): breakpoint with condition" },
-      -- { "<Leader>dL", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
-      --  +----------------------------------------------------------+
-      --    DAP commands
-      --  +----------------------------------------------------------+
-      { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug(dap): run to cursor" },
-      { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
-      -- { "<Leader>dr", function() require "dap".repl.toggle(nil, "botright split") end, desc = "Dap: toggle REPL" },
-      { "<Leader>dS", function() print(require "dap".session()) end, desc = "Debug(dap): get session" },
-      --  +----------------------------------------------------------+
-      --    Close and run debug
-      --  +----------------------------------------------------------+
-      {
-        "<Leader>dd",
-        function()
-          if #as.status_dap() > 0 then
-            return require("dap").disconnect()
-          else
-            return require("dap").continue()
-          end
-        end,
-        desc = "Debug(dap): run or disconnect",
-      },
-      {
-        "<Leader>dc",
-        function()
-          if #as.status_dap() > 0 then
-            return require("dap").close()
-          end
-        end,
-        desc = "Debug(dap): closing or quit debug",
-      },
-      --  +----------------------------------------------------------+
-      --    Step-in, step-out, step-over
-      --    For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
-      --  +----------------------------------------------------------+
-      { "<s-right>", function() require "dap".step_into() end, desc = "Debug(dap): step-into" },
-      { "<s-left>", function() require "dap".step_out() end, desc = "Debug(dap): step-out" },
-      { "<s-down>", function() require "dap".step_over() end, desc = "Debug(dap): step-over" },
-      --  +----------------------------------------------------------+
-      --    UI DAP
-      --  +----------------------------------------------------------+
       { "<Leader>dtt", function() require("dapui").toggle() end, desc = "Debug(dapui): toggle UI (dapui)" },
       { "<Leader>dr", function() return require("dapui").open { reset = true } end, desc = "Debug(dapui): reset UI (dapui)" },
       { "<Leader>de", function() require("dapui").eval() end, mode = { "v", "n" }, desc = "Debug(dapui): evaluate" },
     },
     opts = {
-      setup = {},
-    },
-    config = function(plugin, opts)
-      highlight.plugin("dapHi", {
-        { DapBreakpoint = { fg = palette.light_red } },
-        { DapStopped = { fg = palette.green } },
-      })
-
-      fn.sign_define {
-        {
-          name = "DapBreakpoint",
-          text = icons.dap.breakpoint,
-          texthl = "DapBreakpoint",
-          linehl = "",
-          numhl = "",
-        },
-        {
-          name = "DapStopped",
-          text = icons.dap.breakpoint_stoped,
-          texthl = "DapStopped",
-          linehl = "",
-          numhl = "",
-        },
-      }
-
-      require("nvim-dap-virtual-text").setup {
-        commented = true,
-      }
-
-      local dap, dapui = require "dap", require "dapui"
-
-      dapui.setup {
         -- expand_lines = fn.has "nvim-0.7",
         mappings = {
           expand = { "<CR>", "<2-LeftMouse>" },
@@ -139,8 +65,13 @@ return {
         render = {
           max_type_length = nil, -- Can be integer or nil.
         },
-      }
-
+        },
+        config = function(_, opts)
+          -- setup dap config by VsCode launch.json file
+          -- require("dap.ext.vscode").load_launchjs()
+          local dap = require "dap"
+          local dapui = require "dapui"
+          dapui.setup(opts)
       dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open {}
       end
@@ -150,11 +81,60 @@ return {
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close {}
       end
+        end,
+      },
+    },
+    -- stylua: ignore
+    keys = {
+      --  +----------------------------------------------------------+
+      --    Breakpoints
+      --  +----------------------------------------------------------+
+      { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
+      { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug(dap): clear all breakpoints" },
+      { "<Leader>dC", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug(dap): breakpoint with condition" },
+      -- { "<Leader>dL", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
+      --  +----------------------------------------------------------+
+      --    DAP commands
+      --  +----------------------------------------------------------+
+      { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug(dap): run to cursor" },
+      { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
+      -- { "<Leader>dr", function() require "dap".repl.toggle(nil, "botright split") end, desc = "Dap: toggle REPL" },
+      { "<Leader>dS", function() print(require "dap".session()) end, desc = "Debug(dap): get session" },
+      --  +----------------------------------------------------------+
+      --    Close and run debug
+      --  +----------------------------------------------------------+
+      { "<Leader>dd", function() if #as.status_dap() > 0 then return require("dap").disconnect() else return require("dap").continue() end end, desc = "Debug(dap): run or disconnect", },
+      { "<Leader>dc", function() if #as.status_dap() > 0 then return require("dap").close() end end, desc = "Debug(dap): closing or quit debug", },
+      --  +----------------------------------------------------------+
+      --    Step-in, step-out, step-over
+      --    For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
+      --  +----------------------------------------------------------+
+      { "<s-right>", function() require "dap".step_into() end, desc = "Debug(dap): step-into" },
+      { "<s-left>",  function() require "dap".step_out() end,  desc = "Debug(dap): step-out" },
+      { "<s-down>",  function() require "dap".step_over() end, desc = "Debug(dap): step-over" },
+    },
+    config = function()
+      highlight.plugin("dapHi", {
+        { DapBreakpoint = { fg = palette.light_red } },
+        { DapStopped = { fg = palette.green } },
+      })
 
-      -- set up debugger
-      for k, _ in pairs(opts.setup) do
-        opts.setup[k](plugin, opts)
-      end
+      fn.sign_define {
+        {
+          name = "DapBreakpoint",
+          text = icons.dap.breakpoint,
+          texthl = "DapBreakpoint",
+          linehl = "",
+          numhl = "",
+        },
+        {
+          name = "DapStopped",
+          text = icons.dap.breakpoint_stoped,
+          texthl = "DapStopped",
+          linehl = "",
+          numhl = "",
+        },
+      }
     end,
   },
   -- MASON-DAP-NVIM
@@ -166,6 +146,7 @@ return {
       automatic_setup = true,
       handlers = {},
       ensure_installed = {},
+      automatic_installation = true,
     },
   },
 }
