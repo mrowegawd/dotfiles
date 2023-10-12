@@ -99,7 +99,7 @@ function M.signs(bufnr, gs)
     return gs.toggle_deleted()
   end, { desc = "Git(gitsigns): toggle show deleted", buffer = bufnr })
 
-  nnoremap("gf", function()
+  nnoremap("gq", function()
     return gs.setqflist()
   end, { desc = "Git(gitsigns): call on quickfix list", buffer = bufnr })
 
@@ -110,6 +110,7 @@ function M.signs(bufnr, gs)
 
   xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk", buffer = bufnr })
   onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk", buffer = bufnr })
+
   nnoremap("<Leader>gl", "<CMD>Gitsigns blame_line<CR>", { desc = "Git(gitsigns): blame line", buffer = bufnr })
 
   nnoremap("gn", function()
