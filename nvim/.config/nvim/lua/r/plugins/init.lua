@@ -9,14 +9,6 @@ return {
   { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } },
   -- TASKWARRIOR SYNTAX
   { "framallo/taskwarrior.vim", ft = "taskrc" },
-  -- NVIM-TS-COMMENTSTRING
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = true,
-    opts = {
-      enable_autocmd = false,
-    },
-  },
   -- NUMB-NVIM
   {
     "nacro90/numb.nvim",
@@ -59,9 +51,7 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = {
-      { "<Leader>rm", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" },
-    },
+    keys = { { "<Leader>rm", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },
@@ -100,7 +90,6 @@ return {
   -- STICKYBUF.NVIM
   {
     "stevearc/stickybuf.nvim",
-    enabled = false,
     event = "VeryLazy",
     config = function()
       require("stickybuf").setup()
