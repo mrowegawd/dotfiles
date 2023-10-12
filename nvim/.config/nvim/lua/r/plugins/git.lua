@@ -13,13 +13,8 @@ return {
     },
     --stylua: ignore
     keys = {
-      {"<leader>gwm", function()
-        require("telescope").extensions.git_worktree.git_worktrees()
-      end, desc = "Git(git-worktree): manage"},
-      {"<leader>gwc", function()
-        require("telescope").extensions.git_worktree.create_git_worktree()
-      end, desc = "Git(git-worktree): create"},
-    },
+      {"<leader>gwm", function() require("telescope").extensions.git_worktree.git_worktrees() end, desc = "Git(git-worktree): manage" },
+      {"<leader>gwc", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Git(git-worktree): create"}, },
   },
   -- GIT CONFLICT
   {
@@ -31,9 +26,7 @@ return {
   {
     "ruifm/gitlinker.nvim", -- generate shareable file permalinks
     event = "BufReadPre",
-    opts = {
-      mappings = "<Leader>gy",
-    },
+    opts = { mappings = "<Leader>gy" },
     config = function(_, opts)
       require("gitlinker").setup(opts)
     end,
@@ -180,25 +173,11 @@ return {
         { range = true }
       )
     end,
+    --stylua: ignore
     keys = {
-      {
-        "<Leader>gG",
-        "<CMD>AdvancedGitSearch search_log_content<CR>",
-        desc = "Git(git-advanced): grep string on branch repo",
-      },
-
-      {
-        "<Leader>gg",
-        ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
-        mode = "v",
-        desc = "Git(git-advanced): opens a window with a list of previous commit logs with respect to selected lines (visual)",
-      },
-
-      {
-        "<Leader>gg",
-        "<CMD>AdvancedGitSearch search_log_content_file<CR>",
-        desc = "Git(git-advanced): grep string on buffer repo",
-      },
+      { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>", desc = "Git(git-advanced): grep all repo", },
+      { "<Leader>gg", "<CMD>AdvancedGitSearch search_log_content_file<CR>", desc = "Git(git-advanced): grep buf repo", },
+      { "<Leader>gg", ":'<,'>AdvancedGitSearch diff_commit_line<CR>", mode = "v", desc = "Git(git-advanced): grep buf repo (visual)", },
     },
     config = function()
       require("advanced_git_search.fzf").setup {
@@ -218,42 +197,12 @@ return {
       _extmark_signs = true,
       _signs_staged_enable = false,
       signs = {
-        add = {
-          hl = "GitSignsAdd",
-          text = "▎",
-          -- numhl = "GitSignsAddNr",
-          -- linehl = "GitSignsAddLn",
-        },
-        change = {
-          hl = "GitSignsChange",
-          text = "▎", -- "▍"
-          -- numhl = "GitSignsChangeNr",
-          -- linehl = "GitSignsChangeLn",
-        },
-        delete = {
-          hl = "GitSignsDelete",
-          text = "▎",
-          -- numhl = "GitSignsDeleteNr",
-          -- linehl = "GitSignsDeleteLn",
-        },
-        topdelete = {
-          hl = "GitSignsDelete",
-          text = "▎",
-          -- numhl = "GitSignsDeleteNr",
-          -- linehl = "GitSignsDeleteLn",
-        },
-        changedelete = {
-          hl = "GitSignsChange",
-          text = "▎",
-          -- numhl = "GitSignsChangeNr",
-          -- linehl = "GitSignsChangeLn",
-        },
-        untracked = {
-          hl = "GitSignsAdd",
-          text = "▎",
-          -- numhl = "GitSignsAddNr",
-          -- linehl = "GitSignsAddLn",
-        },
+        add = { hl = "GitSignsAdd", text = "▎" },
+        change = { hl = "GitSignsChange", text = "▎" },
+        delete = { hl = "GitSignsDelete", text = "▎" },
+        topdelete = { hl = "GitSignsDelete", text = "▎" },
+        changedelete = { hl = "GitSignsChange", text = "▎" },
+        untracked = { hl = "GitSignsAdd", text = "▎" },
       },
       -- on_attach = nil,
       on_attach = function(bufnr)
@@ -268,7 +217,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    -- Dont mess me up >_>, (`<c-i>` `<c-o>`)
+    -- remove these maps: `<c-i>` `<c-o>`
     init = function()
       require("r.utils").disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
     end,
@@ -276,12 +225,10 @@ return {
       local diffview = require "diffview"
       local actions = require "diffview.actions"
 
-      local cb = require("diffview.config").diffview_callback
-
       diffview.setup {
         enhanced_diff_hl = true,
+        diff_binaries = false, -- Show diffs for binaries
         git_cmd = { "git" },
-        hg_cmd = { "chg" },
         hooks = {
           diff_buf_read = function()
             local opt = vim.opt_local
@@ -309,13 +256,11 @@ return {
           },
           file_panel = {
 
-            ["<up>"] = actions.scroll_view(-0.25),
-            ["<down>"] = actions.scroll_view(0.25),
+            ["<c-d>"] = actions.scroll_view(0.25), -- Scroll the view down
+            ["<c-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
 
             ["j"] = actions.next_entry,
             ["k"] = actions.prev_entry,
-            -- ["<down>"] = actions.next_entry,
-            -- ["<up>"] = actions.prev_entry,
             ["<c-n>"] = actions.select_next_entry,
             ["<c-p>"] = actions.select_prev_entry,
             ["<cr>"] = actions.select_entry,
@@ -350,10 +295,8 @@ return {
           file_history_panel = {
             ["?"] = actions.options, -- Open the option panel
 
-            -- ["<c-u>"] = actions.scroll_view(-0.25),
-            -- ["<c-d>"] = actions.scroll_view(0.25),
-            ["<up>"] = actions.scroll_view(-0.25),
-            ["<down>"] = actions.scroll_view(0.25),
+            ["<c-d>"] = actions.scroll_view(0.25), -- Scroll the view down
+            ["<c-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
 
             ["zR"] = actions.open_all_folds,
             ["zM"] = actions.close_all_folds,
@@ -383,11 +326,10 @@ return {
 
             ["<space>E"] = actions.focus_files,
             ["<space>e"] = actions.toggle_files,
-
-            ["gf"] = "",
           },
           option_panel = {
-            ["<tab>"] = cb "select",
+            ["<tab>"] = actions.select_entry,
+            ["q"] = actions.close,
           },
         },
       }
@@ -398,35 +340,12 @@ return {
     "NeogitOrg/neogit",
     cmd = "Neogit",
     dependencies = { "nvim-lua/plenary.nvim" },
+    --stylua: ignore
     keys = {
-      {
-        "<Leader>gS",
-        function()
-          require("neogit").open()
-        end,
-        desc = "Git(neogit): open",
-      },
-      {
-        "<Leader>gc",
-        function()
-          require("neogit").open { "commit" }
-        end,
-        desc = "Git(neogit): create commit",
-      },
-      -- {
-      --     "<localleader>gl",
-      --     function()
-      --         require("neogit").popups.pull.create()
-      --     end,
-      --     desc = "Git(neogit): open pull popup",
-      -- },
-      -- {
-      --     "<localleader>gp",
-      --     function()
-      --         require("neogit").popups.push.create()
-      --     end,
-      --     desc = "Git(neogit): open push popup",
-      -- },
+      { "<Leader>gS", function() require("neogit").open() end, desc = "Git(neogit): open", },
+      { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit", },
+      -- { "<localleader>gl", function() require("neogit").popups.pull.create() end, desc = "Git(neogit): open pull popup", },
+      -- { "<localleader>gp", function() require("neogit").popups.push.create() end, desc = "Git(neogit): open push popup", },
     },
     opts = {
       disable_signs = false,
