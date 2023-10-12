@@ -1,7 +1,7 @@
 -- Enable experimental lua module loader
 vim.loader.enable()
 
-require "r.utils.globals"
+require "r.settings.globals"
 require "r.settings.options"
 require "r.settings.ui"
 require "r.settings.highlights"
