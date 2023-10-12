@@ -448,7 +448,7 @@ return {
       },
     },
   },
-  -- SYMBOLSOUTLINE (disabled)
+  -- SYMBOLSOUTLINE
   {
     "enddeadroyal/symbols-outline.nvim",
     cmd = "SymbolsOutline",
@@ -456,13 +456,8 @@ return {
     init = function()
       r_utils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
     end,
-    keys = {
-      {
-        "<Localleader>oa",
-        "<cmd>SymbolsOutline<CR>",
-        desc = "Open(symbolsoutline): pick",
-      },
-    },
+    -- stylua: ignore
+    keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Open(symbolsoutline): pick", }, },
     config = function()
       require("symbols-outline").setup {
         highlight_hovered_item = true,
@@ -536,15 +531,8 @@ return {
   {
     "Bekaboo/dropbar.nvim",
     event = "BufRead",
-    keys = {
-      {
-        "<Localleader>od",
-        function()
-          return require("dropbar.api").pick()
-        end,
-        desc = "Open(dropbar): pick",
-      },
-    },
+    -- stylua: ignore
+    keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
     init = function()
       highlight.plugin("DropBar", {
         { DropBarIconUISeparator = { link = "Delimiter" } },
@@ -792,26 +780,15 @@ return {
       },
     },
   },
-  -- ILLUMINATE (disabled)
+  -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
     opts = { delay = 200 },
+    -- stylua: ignore
     keys = {
-      {
-        "<a-q>",
-        function()
-          require("illuminate").goto_next_reference(nil)
-        end,
-        desc = "LSP(vim-illuminate): go next reference",
-      },
-      {
-        "<a-Q>",
-        function()
-          require("illuminate").goto_prev_reference(nil)
-        end,
-        desc = "LSP(vim-illuminate): go prev reference",
-      },
+      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference", },
+      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference", },
     },
     config = function()
       require("illuminate").configure {
@@ -867,7 +844,7 @@ return {
       "DevdocsUpdateAll",
     },
   },
-  -- HLARGS
+  -- HLARGS (disabled)
   {
     "m-demare/hlargs.nvim",
     enabled = false,
