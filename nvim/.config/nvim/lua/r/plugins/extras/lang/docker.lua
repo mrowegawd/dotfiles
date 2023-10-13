@@ -28,16 +28,6 @@ return {
       })
     end,
   },
-  -- NVIM-LINT
-  {
-    "mfussenegger/nvim-lint",
-    optional = true,
-    opts = {
-      linters_by_ft = {
-        dockerfile = { "hadolint" },
-      },
-    },
-  },
   -- LSPCONFIG
   {
     "neovim/nvim-lspconfig",

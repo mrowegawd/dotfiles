@@ -5,65 +5,30 @@ return {
     opts = {
       servers = {
         tailwindcss = {
+          -- exclude a filetype from the default_config
           filetypes_exclude = { "markdown" },
-          init_options = {
-            userLanguages = {
-              eelixir = "html-eex",
-              eruby = "erb",
-            },
-          },
-          on_attach = function(client, bufnr)
-            if client.server_capabilities.colorProvider then
-              require("lsp/utils/documentcolors").buf_attach(bufnr)
-              require("colorizer").attach_to_buffer(bufnr, {
-                mode = "background",
-                css = true,
-                names = false,
-                tailwind = false,
-              })
-            end
-          end,
-          settings = {
-            tailwindCSS = {
-              lint = {
-                cssConflict = "warning",
-                invalidApply = "error",
-                invalidConfigPath = "error",
-                invalidScreen = "error",
-                invalidTailwindDirective = "error",
-                invalidVariant = "error",
-                recommendedVariantOrder = "warning",
-              },
-              experimental = {
-                classRegex = {
-                  "tw`([^`]*)",
-                  'tw="([^"]*)',
-                  'tw={"([^"}]*)',
-                  "tw\\.\\w+`([^`]*)",
-                  "tw\\(.*?\\)`([^`]*)",
-                  {
-                    "clsx\\(([^)]*)\\)",
-                    "(?:'|\"|`)([^']*)(?:'|\"|`)",
-                  },
-                  { "classnames\\(([^)]*)\\)", "'([^']*)'" },
-                  {
-                    "cva\\(([^)]*)\\)",
-                    "[\"'`]([^\"'`]*).*?[\"'`]",
-                  },
-                },
-              },
-              validate = true,
-            },
-          },
+          -- add additional filetypes to the default_config
+          filetypes_include = {},
+          -- to fully override the default_config, change the below
+          -- filetypes = {}
         },
       },
       setup = {
         tailwindcss = function(_, opts)
           local tw = require "lspconfig.server_configurations.tailwindcss"
+          opts.filetypes = opts.filetypes or {}
 
+          -- Add default filetypes
+          vim.list_extend(opts.filetypes, tw.default_config.filetypes)
+
+          -- Remove excluded filetypes
+          --- @param ft string
           opts.filetypes = vim.tbl_filter(function(ft)
             return not vim.tbl_contains(opts.filetypes_exclude or {}, ft)
-          end, tw.default_config.filetypes)
+          end, opts.filetypes)
+
+          -- Add additional filetypes
+          vim.list_extend(opts.filetypes, opts.filetypes_include or {})
         end,
       },
     },

@@ -11,20 +11,6 @@ return {
       })
     end,
   },
-  -- MASON.NVIM
-  {
-    "mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      vim.list_extend(opts.ensure_installed, {
-        "gomodifytags",
-        "impl",
-        "gofumpt",
-        "goimports-reviser",
-        "delve",
-      })
-    end,
-  },
   -- NVIM-LSPCONFIG"
   {
     "neovim/nvim-lspconfig",
@@ -105,8 +91,7 @@ return {
     optional = true,
     opts = {
       formatters_by_ft = {
-        -- go = { "goimports" },
-        go = { "goimports", "gofmt" },
+        go = { "goimports", "gofumpt" },
       },
     },
   },
@@ -114,14 +99,23 @@ return {
   {
     "nvimtools/none-ls.nvim",
     optional = true,
+    dependencies = {
+      {
+        "williamboman/mason.nvim",
+        opts = function(_, opts)
+          opts.ensure_installed = opts.ensure_installed or {}
+          vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl", "gomodifytags", "impl", "goimports" })
+        end,
+      },
+    },
     opts = function(_, opts)
-      if type(opts.sources) == "table" then
-        local nls = require "null-ls"
-        vim.list_extend(opts.sources, {
-          nls.builtins.code_actions.gomodifytags,
-          nls.builtins.code_actions.impl,
-        })
-      end
+      local nls = require "null-ls"
+      opts.sources = vim.list_extend(opts.sources or {}, {
+        nls.builtins.code_actions.gomodifytags,
+        nls.builtins.code_actions.impl,
+        nls.builtins.formatting.goimports,
+        nls.builtins.formatting.gofumpt,
+      })
     end,
   },
   -- NVIM-DAP
@@ -130,10 +124,10 @@ return {
     optional = true,
     dependencies = {
       {
-        "mason.nvim",
+        "williamboman/mason.nvim",
         opts = function(_, opts)
           opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl", "goimports", "delve" })
+          vim.list_extend(opts.ensure_installed, { "delve" })
         end,
       },
       {
