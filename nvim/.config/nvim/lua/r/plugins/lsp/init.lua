@@ -10,7 +10,6 @@ local augroup = as.augroup
 
 -- local prettier = { "prettierd", "prettier" }
 local prettier = { "prettier" }
-local uv = vim.uv or vim.loop
 
 return {
   -- GOTO-PREVIEW

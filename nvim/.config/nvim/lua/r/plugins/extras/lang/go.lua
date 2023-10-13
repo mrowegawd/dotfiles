@@ -62,6 +62,7 @@ return {
         },
       },
       setup = {
+        ---@diagnostic disable-next-line: unused-local
         gopls = function(_, opts)
           -- workaround for gopls not supporting semanticTokensProvider
           -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
