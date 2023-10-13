@@ -29,20 +29,20 @@ require("lazy").setup {
     { import = "r.plugins.extras.linting" },
     -- { import = "r.plugins.extras.misc" },
   },
-  defaults = { lazy = true, version = false },
+  defaults = { lazy = true },
   change_detection = { notify = false },
   install = {
     missing = true,
-    colorscheme = { "catppuccin", "habamax" },
   },
   checker = {
     enabled = true,
+    concurrency = 30,
     notify = false,
-    frequency = 900,
+    frequency = 3600, -- check for updates every hour
   },
-  diff = {
-    cmd = "terminal_git",
-  },
+  -- diff = {
+  --   cmd = "terminal_git",
+  -- },
   ui = {
     wrap = true, -- wrap the lines in the ui
     border = "rounded",
@@ -67,18 +67,7 @@ require("lazy").setup {
     reset_packpath = true, -- reset the package path to improve startup time
     rtp = {
       reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
-      disabled_plugins = {
-        "gzip",
-        "matchit",
-        "matchparen",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
-
-        -- Do not add these plugins:
-        -- "netrwPlugin",   -- we need this for orgmode (open link)
-      },
+      -- disabled_plugins = { "netrw", "netrwPlugin" },
     },
   },
 }
