@@ -27,7 +27,6 @@ require("lazy").setup {
     { import = "r.plugins.extras.dab" },
     { import = "r.plugins.extras.lang" },
     { import = "r.plugins.extras.linting" },
-    -- { import = "r.plugins.extras.misc" },
   },
   defaults = { lazy = true },
   change_detection = { notify = false },
@@ -40,9 +39,6 @@ require("lazy").setup {
     notify = false,
     frequency = 3600, -- check for updates every hour
   },
-  -- diff = {
-  --   cmd = "terminal_git",
-  -- },
   ui = {
     wrap = true, -- wrap the lines in the ui
     border = "rounded",
@@ -67,6 +63,8 @@ require("lazy").setup {
     reset_packpath = true, -- reset the package path to improve startup time
     rtp = {
       reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
+
+      -- To fix `:changes` showing invalid, remove `netrw*` from `disabled_plugins` field
       -- disabled_plugins = { "netrw", "netrwPlugin" },
     },
   },
