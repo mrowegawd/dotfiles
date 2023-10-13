@@ -53,7 +53,7 @@ return {
       --     end
       --   end,
       -- },
-      },
+    },
     opts = function()
       local symbols = require("lspkind").symbol_map
       local lsp_kinds = as.ui.lsp.highlights
@@ -152,7 +152,7 @@ return {
             if node.type == "directory" or node:has_children() then
               if not node:is_expanded() then -- if unexpanded, expand
                 state.commands.toggle_node(state)
-              else -- if expanded and has children, seleect the next child
+              else                           -- if expanded and has children, seleect the next child
                 require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
               end
             else -- if not a directory just open it
@@ -194,11 +194,11 @@ return {
             { NeoTreeRootName = { underline = false } },
             { NeoTreeStatusLine = { link = "PanelSt" } },
             { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-  {
+            {
               NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },
-    },
+            },
             { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
-              {
+            {
               NeoTreeTabSeparatorInactive = {
                 inherit = "NeoTreeTabInactive",
                 fg = { from = "PanelDarkBackground", attr = "bg" },
@@ -246,15 +246,15 @@ return {
             filter = function(buf, win)
               return vim.api.nvim_win_get_config(win).relative == ""
             end,
-              },
-              {
+          },
+          {
             ft = "noice",
             size = { height = 0.4 },
             ---@diagnostic disable-next-line: unused-local
             filter = function(buf, win)
               return vim.api.nvim_win_get_config(win).relative == ""
             end,
-              },
+          },
           {
             ft = "lazyterm",
             title = "LazyTerm",
@@ -262,9 +262,9 @@ return {
             filter = function(buf)
               return not vim.b[buf].lazyterm_cmd
             end,
-            },
+          },
           -- "Trouble",
-          { ft = "qf", title = "QuickFix" },
+          { ft = "qf",                title = "QuickFix" },
           {
             ft = "help",
             size = { height = 20 },
@@ -273,7 +273,7 @@ return {
               return vim.bo[buf].buftype == "help"
             end,
           },
-          { ft = "spectre_panel", size = { height = 0.4 } },
+          { ft = "spectre_panel",     size = { height = 0.4 } },
           { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
         },
         left = {
@@ -288,7 +288,7 @@ return {
               vim.api.nvim_input "<esc><space>e"
             end,
             size = { height = 0.5 },
-        },
+          },
           { title = "Neotest Summary", ft = "neotest-summary" },
           {
             title = "Neo-Tree Git",
@@ -360,7 +360,7 @@ return {
     optional = true,
     opts = function(_, opts)
       opts.open_files_do_not_replace_types = opts.open_files_do_not_replace_types
-        or { "terminal", "Trouble", "qf", "Outline" }
+          or { "terminal", "Trouble", "qf", "Outline" }
       table.insert(opts.open_files_do_not_replace_types, "edgy")
     end,
   },

@@ -127,12 +127,12 @@ return {
     "ThePrimeagen/harpoon",
     --stylua: ignore
     keys = {
-      { "<leader>ja", function() require("harpoon.mark").add_file() end, desc = "Misc(harpoon): add file" },
+      { "<leader>ja", function() require("harpoon.mark").add_file() end,            desc = "Misc(harpoon): add file" },
       -- { "<leader>jm", function() require("harpoon.ui").toggle_quick_menu() end,     desc = "Misc(harpoon): file menu" },
       { "<leader>jm", "<CMD> Telescope harpoon marks <CR>",                         desc = "Misc(harpoon): file menu" },
       { "<leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
-      { "<leader>1", function() require("harpoon.ui").nav_file(1) end, desc = "Misc(harpoon): file 1" },
-      { "<leader>2", function() require("harpoon.ui").nav_file(2) end, desc = "Misc(harpoon): file 2" },
+      { "<leader>1",  function() require("harpoon.ui").nav_file(1) end,             desc = "Misc(harpoon): file 1" },
+      { "<leader>2",  function() require("harpoon.ui").nav_file(2) end,             desc = "Misc(harpoon): file 2" },
       -- { "<leader>3", function() require("harpoon.term").gotoTerminal(1) end, desc = "Terminal 1" },
       -- { "<leader>4", function() require("harpoon.term").gotoTerminal(2) end, desc = "Terminal 2" },
       -- { "<leader>5", function() require("harpoon.term").sendCommand(1,1) end, desc = "Command 1" },
@@ -162,9 +162,9 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "Misc(flash)" },
       { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end,  desc = "Misc(flash): remote" },
+      { "r", mode = "o",               function() require("flash").remote() end,     desc = "Misc(flash): remote" },
       { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search",
       },
     },
@@ -1334,7 +1334,7 @@ return {
     keys = {
       { "<Leader><s-f>", function() require("r.utils.tiling").force_win_close({}, true) return require("spectre").open() end, desc = "Misc(spectre): open", },
       { "<Leader><s-f>", function() require("r.utils.tiling").force_win_close({}, true) return require("spectre").open_visual { select_word = true, } end, desc = "Misc(spectre): open (visual)", mode = { "v" }, },
-      },
+    },
     opts = function()
       as.augroup("SpectreClose", {
         event = { "FileType" },

@@ -244,12 +244,12 @@ return {
         local added = {}
         opts.ensure_installed = vim.tbl_filter(function(lang)
           if added[lang] then
-        return false
-      end
+            return false
+          end
           added[lang] = true
           return true
         end, opts.ensure_installed)
-            end
+      end
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
