@@ -749,13 +749,13 @@ return {
               local cursor = api.nvim_win_get_cursor(menu.win)
               local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
               if component ~= nil then
-              local row = component.entry.idx
-              local col = component.entry.padding.left + 1
+                local row = component.entry.idx
+                local col = component.entry.padding.left + 1
 
-              col = col + component:bytewidth() + component.entry.separator:bytewidth()
+                col = col + component:bytewidth() + component.entry.separator:bytewidth()
 
-              print(tostring(row) .. " " .. tostring(col))
-              print(vim.inspect(component))
+                print(tostring(row) .. " " .. tostring(col))
+                print(vim.inspect(component))
               end
             end,
           },

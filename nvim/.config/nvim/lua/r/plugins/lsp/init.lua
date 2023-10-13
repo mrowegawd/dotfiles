@@ -6,7 +6,7 @@ local border = as.ui.border.rectangle
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 local icons = as.ui.icons
--- local augroup = as.augroup
+local augroup = as.augroup
 
 -- local prettier = { "prettierd", "prettier" }
 local prettier = { "prettier" }
@@ -45,10 +45,20 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    event = "BufReadPost",
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
-      { "folke/neodev.nvim", opts = {} },
+      {
+        "folke/neoconf.nvim",
+        cmd = "Neoconf",
+        dependencies = { "nvim-lspconfig" },
+        opts = {
+          library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
+        },
+      },
+      {
+        "folke/neodev.nvim",
+        opts = { experimental = { pathStrict = true } },
+      },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
@@ -81,7 +91,7 @@ return {
           header = "",
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
-            local prefix = string.format("%s ", icons.diagnostics[level:lower()])
+            local prefix = string.format("%s ", icons.lsp[level:lower()])
             return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
           end,
         },
@@ -105,15 +115,17 @@ return {
       },
       servers = {
         lua_ls = {
-          -- keys = {},
           settings = {
             Lua = {
-              -- codeLens = { enable = true },
               workspace = {
                 checkThirdParty = false,
               },
               completion = {
                 callSnippet = "Replace",
+              },
+              telemetry = { enable = false },
+              hint = {
+                enable = false,
               },
             },
           },
@@ -139,29 +151,29 @@ return {
 
       require("r.plugins.lsp.format").setup(opts)
 
-      -- local provider = {
-      --   HOVER = "hoverProvider",
-      --   RENAME = "renameProvider",
-      --   CODELENS = "codeLensProvider",
-      --   CODEACTIONS = "codeActionProvider",
-      --   FORMATTING = "documentFormattingProvider",
-      --   REFERENCES = "documentHighlightProvider",
-      --   DEFINITION = "definitionProvider",
-      -- }
+      local provider = {
+        HOVER = "hoverProvider",
+        RENAME = "renameProvider",
+        CODELENS = "codeLensProvider",
+        CODEACTIONS = "codeActionProvider",
+        FORMATTING = "documentFormattingProvider",
+        REFERENCES = "documentHighlightProvider",
+        DEFINITION = "definitionProvider",
+      }
 
       -- setup formatting and keymaps
       lsp_utils.on_attach(function(client, bufnr)
         require("r.plugins.lsp.keymaps").on_attach(client, bufnr)
 
-        -- if client.server_capabilities[provider.CODELENS] then
-        --   augroup(("LspCodeLens%d"):format(bufnr), {
-        --     event = { "BufEnter", "InsertLeave", "BufWritePost" },
-        --     desc = "LSP: Code Lens",
-        --     buffer = bufnr,
-        --     -- call via vimscript so that errors are silenced
-        --     command = "silent! lua vim.lsp.codelens.refresh()",
-        --   })
-        -- end
+        if client.server_capabilities[provider.CODELENS] then
+          augroup(("LspCodeLens%d"):format(bufnr), {
+            event = { "BufEnter", "InsertLeave", "BufWritePost" },
+            desc = "LSP: Code Lens",
+            buffer = bufnr,
+            -- call via vimscript so that errors are silenced
+            command = "silent! lua vim.lsp.codelens.refresh()",
+          })
+        end
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
@@ -271,6 +283,7 @@ return {
   -- NVIM-LINT
   {
     "mfussenegger/nvim-lint",
+    enabled = false,
     event = "VimEnter",
     opts = {
       linters_by_ft = {
@@ -323,6 +336,7 @@ return {
   -- CONFORM.NVIM
   {
     "stevearc/conform.nvim",
+    enabled = false,
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {
@@ -377,8 +391,8 @@ return {
         sources = {
           nls.builtins.diagnostics.fish,
           nls.builtins.formatting.fish_indent,
-          -- nls.builtins.formatting.stylua,
-          -- nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.stylua,
+          nls.builtins.formatting.shfmt,
           -- nls.builtins.diagnostics.flake8,
         },
       }

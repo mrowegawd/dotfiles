@@ -32,7 +32,7 @@ return {
         silent = true,
         mode = "i",
       },
-      { "<tab>", function() require("luasnip").jump(1) end, mode = "s" },
+      { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
       { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
     },
     config = function()
@@ -624,35 +624,35 @@ return {
     --   },
     -- },
     opts = {
-        templates = { "builtin", "user" },
-        component_aliases = {
-          log = {
-            {
-              type = "echo",
-              level = vim.log.levels.WARN,
-            },
-            {
-              type = "file",
-              filename = "overseer.log",
-              level = vim.log.levels.DEBUG,
-            },
+      templates = { "builtin", "user" },
+      component_aliases = {
+        log = {
+          {
+            type = "echo",
+            level = vim.log.levels.WARN,
+          },
+          {
+            type = "file",
+            filename = "overseer.log",
+            level = vim.log.levels.DEBUG,
           },
         },
-        task_list = {
-          default_detail = 1,
-          direction = "bottom",
-          min_height = 25,
-          max_height = 25,
-          bindings = {
-            ["<S-tab>"] = "ScrollOutputUp",
-            ["<tab>"] = "ScrollOutputDown",
-            ["q"] = function()
-              vim.cmd "OverseerClose"
-            end,
-            ["<c-k>"] = false,
-            ["<c-j>"] = false,
-          },
+      },
+      task_list = {
+        default_detail = 1,
+        direction = "bottom",
+        min_height = 25,
+        max_height = 25,
+        bindings = {
+          ["<S-tab>"] = "ScrollOutputUp",
+          ["<tab>"] = "ScrollOutputDown",
+          ["q"] = function()
+            vim.cmd "OverseerClose"
+          end,
+          ["<c-k>"] = false,
+          ["<c-j>"] = false,
         },
+      },
     },
   },
   -- LUAPAD

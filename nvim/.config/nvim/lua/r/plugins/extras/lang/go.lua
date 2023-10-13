@@ -127,13 +127,18 @@ return {
   -- NVIM-DAP
   {
     "mfussenegger/nvim-dap",
-    dependencies = { "leoluz/nvim-dap-go", config = true },
     optional = true,
-    opts = {
-      setup = {
-        delve = function()
-          require("dap-go").setup()
+    dependencies = {
+      {
+        "mason.nvim",
+        opts = function(_, opts)
+          opts.ensure_installed = opts.ensure_installed or {}
+          vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl", "goimports", "delve" })
         end,
+      },
+      {
+        "leoluz/nvim-dap-go",
+        config = true,
       },
     },
   },
