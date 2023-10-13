@@ -191,7 +191,7 @@ return {
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
-    event = "UIEnter",
+    event = "BufReadPre",
     opts = {
       -- Experimental ------------------------------------------------------------------------------
       _extmark_signs = true,

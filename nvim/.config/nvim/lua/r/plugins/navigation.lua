@@ -325,14 +325,14 @@ return {
           end,
         },
       }
-      -- if as.has "symbols-outline.nvim" then
-      --   table.insert(opts.left, {
-      --     title = "Outline",
-      --     ft = "Outline",
-      --     pinned = true,
-      --     open = "SymbolsOutline",
-      --   })
-      -- end
+
+      -- opts.right = opts.right or {}
+      -- table.insert(opts.right, {
+      --   title = "Aerial",
+      --   ft = "aerial",
+      --   pinned = true,
+      --   open = "AerialOpen",
+      -- })
       return opts
     end,
   },

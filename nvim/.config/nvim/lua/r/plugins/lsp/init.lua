@@ -187,10 +187,10 @@ return {
         return ret
       end
 
-      -- Hover
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        border = border,
-      })
+      -- Uncomment this if you not using 'noice.nvim'
+      -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+      --   border = border,
+      -- })
 
       -- Diagnostics
       for name, icon in pairs(icons.diagnostics) do
