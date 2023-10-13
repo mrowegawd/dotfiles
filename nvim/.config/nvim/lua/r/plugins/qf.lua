@@ -2,10 +2,10 @@ return {
   -- NVIM-BQF
   {
     "kevinhwang91/nvim-bqf",
+    ft = { "qf" },
     dependencies = {
       "junegunn/fzf",
     },
-    ft = { "qf" },
     opts = {
       preview = {
         auto_preview = false,
@@ -28,10 +28,9 @@ return {
         tab = "",
         ptogglemode = "p",
         ptoggleauto = "P",
-
         ptoggleitem = "",
-        -- pscrollup = "<a-u>",
-        -- pscrolldown = "<a-d>",
+        pscrollup = "<c-u>",
+        pscrolldown = "<c-d>",
         prevfile = "",
         nextfile = "",
         sclear = "z<Tab>",

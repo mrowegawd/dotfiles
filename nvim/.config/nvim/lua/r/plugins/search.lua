@@ -127,16 +127,16 @@ return {
     "ThePrimeagen/harpoon",
     --stylua: ignore
     keys = {
-      { "<leader>ja", function() require("harpoon.mark").add_file() end,            desc = "Misc(harpoon): add file" },
-      -- { "<leader>jm", function() require("harpoon.ui").toggle_quick_menu() end,     desc = "Misc(harpoon): file menu" },
-      { "<leader>jm", "<CMD> Telescope harpoon marks <CR>",                         desc = "Misc(harpoon): file menu" },
-      { "<leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
-      { "<leader>1",  function() require("harpoon.ui").nav_file(1) end,             desc = "Misc(harpoon): file 1" },
-      { "<leader>2",  function() require("harpoon.ui").nav_file(2) end,             desc = "Misc(harpoon): file 2" },
-      -- { "<leader>3", function() require("harpoon.term").gotoTerminal(1) end, desc = "Terminal 1" },
-      -- { "<leader>4", function() require("harpoon.term").gotoTerminal(2) end, desc = "Terminal 2" },
-      -- { "<leader>5", function() require("harpoon.term").sendCommand(1,1) end, desc = "Command 1" },
-      -- { "<leader>6", function() require("harpoon.term").sendCommand(1,2) end, desc = "Command 2" },
+      { "<Leader>ja", function() require("harpoon.mark").add_file() end,            desc = "Misc(harpoon): add file" },
+      -- { "<Leader>jm", function() require("harpoon.ui").toggle_quick_menu() end,     desc = "Misc(harpoon): file menu" },
+      { "<Leader>jm", "<CMD> Telescope harpoon marks <CR>",                         desc = "Misc(harpoon): file menu" },
+      { "<Leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
+      { "<Leader>1",  function() require("harpoon.ui").nav_file(1) end,             desc = "Misc(harpoon): file 1" },
+      { "<Leader>2",  function() require("harpoon.ui").nav_file(2) end,             desc = "Misc(harpoon): file 2" },
+      -- { "<Leader>3", function() require("harpoon.term").gotoTerminal(1) end, desc = "Terminal 1" },
+      -- { "<Leader>4", function() require("harpoon.term").gotoTerminal(2) end, desc = "Terminal 2" },
+      -- { "<Leader>5", function() require("harpoon.term").sendCommand(1,1) end, desc = "Command 1" },
+      -- { "<Leader>6", function() require("harpoon.term").sendCommand(1,2) end, desc = "Command 2" },
     },
     opts = {
       global_settings = {
@@ -205,10 +205,10 @@ return {
       { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
       { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v" } },
-      { "<leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
-      { "<leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
-      { "<leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
-      { "<leader>f=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell" },
+      { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
+      { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
+      { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
+      { "<Leader>f=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell" },
       {
         "<Leader>fk",
         function()
@@ -238,12 +238,12 @@ return {
         desc = "Fzflua: plugin files",
       },
       {
-        "<Localleader>qf",
+        "<Leader>fQ",
         [[<CMD>lua require("fzf-lua").quickfix({prompt = "    " })<CR>]],
-        desc = "QF(fzflua): qf list",
+        desc = "fzflua(qf): select qf list",
       },
       {
-        "<Localleader>qg",
+        "<Leader>fq",
         function()
           local path = require "fzf-lua.path"
 
@@ -272,10 +272,10 @@ return {
             cmd = pcmd,
           }
         end,
-        desc = "QF(fzflua): grep qf items",
+        desc = "fzflua(qf): grep qf items",
       },
       -- {
-      --   "<leader>bf",
+      --   "<Leader>bf",
       --   function()
       --     return require("fzf-lua").buffers {
       --       winopts = {
@@ -1002,8 +1002,8 @@ return {
       -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
       -- { "<Leader>fC", "<CMD>Telescope commands<CR>", desc = "Telescope: commands" },
       -- { "<Leader>fl", "<CMD>Telescope resume<CR>", desc = "Telescope: resume (last search)" },
-      -- { "<leader>f=", "<CMD>Telescope spell_suggest theme=get_cursor<CR>", desc = "Telescope: spell suggest" },
-      -- { "<leader>fF", "<CMD>Telescope lazy theme=ivy<CR>", desc = "Telescope: plugins files" },
+      -- { "<Leader>f=", "<CMD>Telescope spell_suggest theme=get_cursor<CR>", desc = "Telescope: spell suggest" },
+      -- { "<Leader>fF", "<CMD>Telescope lazy theme=ivy<CR>", desc = "Telescope: plugins files" },
       -- {
       --   "<Leader>ff",
       --   function()
