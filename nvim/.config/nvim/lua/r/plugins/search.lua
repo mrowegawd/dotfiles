@@ -129,7 +129,8 @@ return {
     --stylua: ignore
     keys = {
       { "<leader>ja", function() require("harpoon.mark").add_file() end, desc = "Misc(harpoon): add file" },
-      { "<leader>jm", function() require("harpoon.ui").toggle_quick_menu() end, desc = "Misc(harpoon): file menu" },
+      -- { "<leader>jm", function() require("harpoon.ui").toggle_quick_menu() end,     desc = "Misc(harpoon): file menu" },
+      { "<leader>jm", "<CMD> Telescope harpoon marks <CR>",                         desc = "Misc(harpoon): file menu" },
       { "<leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
       { "<leader>1", function() require("harpoon.ui").nav_file(1) end, desc = "Misc(harpoon): file 1" },
       { "<leader>2", function() require("harpoon.ui").nav_file(2) end, desc = "Misc(harpoon): file 2" },
