@@ -19,7 +19,7 @@ return {
     end,
     keys = {
       {
-        "<Leader>E",
+        "<Leader>e",
         function()
           require("r.utils.tiling").force_win_close({ "OverseerList", "undotree", "aerial" }, false)
           return cmd "Neotree toggle"
@@ -27,7 +27,7 @@ return {
         desc = "Misc(neotree): open File explore",
       },
       {
-        "<Leader>e",
+        "<Leader>E",
         function()
           require("r.utils.tiling").force_win_close({ "OverseerList", "undotree", "aerial" }, false)
           return cmd "Neotree reveal toggle"
@@ -221,7 +221,7 @@ return {
       require("neo-tree").setup(opts)
     end,
   },
-  -- EDGY
+  -- EDGY.NVIM
   {
     "folke/edgy.nvim",
     event = "VeryLazy",
