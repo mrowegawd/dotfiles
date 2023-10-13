@@ -169,7 +169,6 @@ as.augroup("WindowBehaviours", {
     vim.opt_local.foldcolumn = "0"
   end,
 }, {
-
   event = { "FileType" },
   pattern = { "org", "orgagenda" },
   command = function()
@@ -231,7 +230,6 @@ as.augroup("WindowDim", {
     windowdim.buf_enter()
   end,
 }, {
-
   event = { "FocusGained" },
   pattern = "*",
   command = function()
@@ -278,7 +276,6 @@ as.augroup("DisableStatusline", {
     cmd [[set laststatus=0]]
   end,
 }, {
-
   event = { "BufRead", "FocusGained" },
   pattern = "*",
   command = function()

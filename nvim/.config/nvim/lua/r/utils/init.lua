@@ -90,12 +90,22 @@ function utils.toggle_kil_loc_qf()
 end
 
 function utils.foldtext()
-  local ret = vim.treesitter.foldtext and vim.treesitter.foldtext()
-  if not ret then
+  local ok = pcall(vim.treesitter.get_parser, vim.api.nvim_get_current_buf())
+  local ret = ok and vim.treesitter.foldtext and vim.treesitter.foldtext()
+  if not ret or type(ret) == "string" then
     ret = { { vim.api.nvim_buf_get_lines(0, vim.v.lnum - 1, vim.v.lnum, false)[1], {} } }
   end
-  ---@diagnostic disable-next-line: param-type-mismatch
+
   table.insert(ret, { " " .. icons.misc.dots })
+
+  if not vim.treesitter.foldtext then
+    return table.concat(
+      vim.tbl_map(function(line)
+        return line[1]
+      end, ret),
+      " "
+    )
+  end
   return ret
 end
 
@@ -270,29 +280,6 @@ end
 
 function utils.infoFoldPreview()
   vim.cmd "options"
-end
-
-function utils.testfunc()
-  -- for _, winid in pairs(api.nvim_tabpage_list_wins(0)) do
-  --   local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
-  --
-  --   if winbufnr > 0 then
-  --     print(winbufnr)
-  --     -- print(api.nvim_win_get_option(winbufnr, "filetype"))
-  --     --   local winft = api.nvim_buf_get_option(winbufnr, "filetype")
-  --     --   print(winft)
-  --   end
-  -- end
-
-  local ignore_filetypes = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode" }
-
-  for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-    if vim.fn.buflisted(bufnr) == 1 then
-      if vim.tbl_contains(ignore_filetypes, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-        vim.api.nvim_buf_delete(bufnr, {})
-      end
-    end
-  end
 end
 
 function utils.toggle_background()
