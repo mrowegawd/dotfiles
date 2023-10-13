@@ -58,7 +58,7 @@ local function stop_hl()
   if v.hlsearch == 0 or api.nvim_get_mode().mode ~= "n" then
     return
   end
-  require("r.utils.init").feedkey("<Plug>(StopHL)", "n")
+  require("r.utils").feedkey("<Plug>(StopHL)", "n")
 end
 
 local function hl_search()
@@ -109,17 +109,6 @@ as.augroup("VimrcIncSearchHighlight", {
   end,
 })
 
--- as.augroup("fix_folds", {
---   event = "BufEnter",
---   command = function()
---     if vim.opt.foldmethod:get() == "expr" then
---       vim.schedule(function()
---         vim.opt.foldmethod = "expr"
---       end)
---     end
---   end,
--- })
-
 -- local ignore_buftype = { "quickfix", "nofile", "help", "terminal" }
 local ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" }
 
@@ -144,6 +133,7 @@ as.augroup("WindowBehaviours", {
 }, {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
+  pattern = "*",
   command = function()
     local exclude = ignore_filetype
     local buf = vim.api.nvim_get_current_buf()
@@ -298,14 +288,6 @@ as.augroup("DisableStatusline", {
     cmd [[set laststatus=3]]
   end,
 })
-
--- NOTE ga suka behaviour fold window, setelah <CR> dari telescope bikin fold
--- nya menjadi kacau, beberapa solusi udah di aplikasikan ke config telescope dari
--- link ini https://github.com/nvim-telescope/telescope.nvim/issues/559
--- jika sudah di perbaiki, hapus ini command ini
-vim.cmd [[
-  autocmd BufRead * autocmd BufWinEnter * ++once normal! zx
-]]
 
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw

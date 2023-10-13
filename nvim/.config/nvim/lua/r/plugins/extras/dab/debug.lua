@@ -137,7 +137,7 @@ return {
       }
     end,
   },
-  -- MASON-DAP-NVIM
+  -- MASON-NVIM-DAP.NVIM
   {
     "jay-babu/mason-nvim-dap.nvim",
     dependencies = "mason.nvim",
