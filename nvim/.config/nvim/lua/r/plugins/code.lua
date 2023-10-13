@@ -59,7 +59,7 @@ return {
   -- CMP
   {
     "hrsh7th/nvim-cmp",
-    version = false, -- last release is way too old
+    -- version = false, -- last release is way too old
     event = "InsertEnter",
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
@@ -308,7 +308,6 @@ return {
               end
               return true
             end,
-            -- group_index = 1,
           },
           { name = "luasnip" },
           { name = "path" },
@@ -330,137 +329,145 @@ return {
         },
       }
     end,
-    -- config = function(_, opts)
-    --   local cmp = require "cmp"
+    config = function(_, opts)
+      local cmp = require "cmp"
 
-    --   cmp.setup(opts)
+      cmp.setup(opts)
 
-    --   cmp.setup.filetype("markdown", {
-    --     sources = cmp.config.sources({
-    --       { name = "emoji" },
-    --       { name = "luasnip" },
-    --       { name = "path" },
-    --       -- { name = "spell", group_index = 2 },
-    --     }, {
-    --       { name = "buffer" },
-    --     }),
-    --   })
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.filetype("markdown", {
+        sources = cmp.config.sources({
+          { name = "emoji" },
+          { name = "luasnip" },
+          { name = "path" },
+          -- { name = "spell", group_index = 2 },
+        }, {
+          { name = "buffer" },
+        }),
+      })
 
-    --   cmp.setup.filetype("norg", {
-    --     sources = cmp.config.sources({
-    --       { name = "neorg" },
-    --       { name = "luasnip" },
-    --       { name = "path" },
-    --     }, {
-    --       { name = "buffer" },
-    --     }),
-    --   })
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.filetype("norg", {
+        sources = cmp.config.sources({
+          { name = "neorg" },
+          { name = "luasnip" },
+          { name = "path" },
+        }, {
+          { name = "buffer" },
+        }),
+      })
 
-    --   cmp.setup.filetype("org", {
-    --     sources = cmp.config.sources({
-    --       { name = "orgmode" },
-    --       { name = "luasnip" },
-    --       { name = "path" },
-    --     }, {
-    --       { name = "buffer" },
-    --     }),
-    --   })
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.filetype("org", {
+        sources = cmp.config.sources({
+          { name = "orgmode" },
+          { name = "luasnip" },
+          { name = "path" },
+        }, {
+          { name = "buffer" },
+        }),
+      })
 
-    --   cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
-    --     sources = cmp.config.sources {
-    --       { name = "path" },
-    --       { name = "emoji" },
-    --       { name = "buffer" },
-    --     },
-    --   })
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
+        sources = cmp.config.sources {
+          { name = "path" },
+          { name = "emoji" },
+          { name = "buffer" },
+        },
+      })
 
-    --   cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-    --     sources = cmp.config.sources({
-    --       { name = "vim-dadbod-completion" },
-    --     }, {
-    --       { name = "buffer" },
-    --     }),
-    --   })
-    --   cmp.setup.cmdline(":", {
-    --     mapping = {
-    --       ["<esc>"] = {
-    --         c = function()
-    --           require("r.utils").feedkey("<c-c>", "n")
-    --         end,
-    --       },
-    --       ["<c-q>"] = {
-    --         c = function(fallback)
-    --           if require("cmp").visible() then
-    --             require("cmp").abort()
-    --           else
-    --             fallback()
-    --           end
-    --         end,
-    --       },
-    --       ["<TAB>"] = {
-    --         c = function()
-    --           if require("cmp").visible() then
-    --             require("cmp").select_next_item()
-    --           else
-    --             require("cmp").complete()
-    --           end
-    --         end,
-    --       },
-    --       ["<S-TAB>"] = {
-    --         c = function(fallback)
-    --           if require("cmp").visible() then
-    --             require("cmp").select_prev_item()
-    --           else
-    --             fallback()
-    --           end
-    --         end,
-    --       },
-    --     },
-    --     sources = cmp.config.sources({
-    --       { name = "path" },
-    --     }, { { name = "cmdline" }, { { name = "cmdline_history" } } }),
-    --   })
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+        sources = cmp.config.sources({
+          { name = "vim-dadbod-completion" },
+        }, {
+          { name = "buffer" },
+        }),
+      })
 
-    --   cmp.setup.cmdline({ "/", "?" }, {
-    --     mapping = {
-    --       ["<esc>"] = {
-    --         c = function()
-    --           require("r.utils").feedkey("<c-c>", "n")
-    --         end,
-    --       },
-    --       ["<c-q>"] = {
-    --         c = function(fallback)
-    --           if require("cmp").visible() then
-    --             require("cmp").abort()
-    --           else
-    --             fallback()
-    --           end
-    --         end,
-    --       },
-    --       ["<TAB>"] = {
-    --         c = function()
-    --           if require("cmp").visible() then
-    --             require("cmp").select_next_item()
-    --           else
-    --             require("cmp").complete()
-    --           end
-    --         end,
-    --       },
-    --       ["<S-TAB>"] = {
-    --         c = function(fallback)
-    --           if require("cmp").visible() then
-    --             require("cmp").select_prev_item()
-    --           else
-    --             fallback()
-    --           end
-    --         end,
-    --       },
-    --     },
-    --     sources = {
-    --       { name = "buffer" },
-    --     },
-    --   })
-    -- end,
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.cmdline(":", {
+        mapping = {
+          ["<esc>"] = {
+            c = function()
+              require("r.utils").feedkey("<c-c>", "n")
+            end,
+          },
+          ["<c-q>"] = {
+            c = function(fallback)
+              if require("cmp").visible() then
+                require("cmp").abort()
+              else
+                fallback()
+              end
+            end,
+          },
+          ["<TAB>"] = {
+            c = function()
+              if require("cmp").visible() then
+                require("cmp").select_next_item()
+              else
+                require("cmp").complete()
+              end
+            end,
+          },
+          ["<S-TAB>"] = {
+            c = function(fallback)
+              if require("cmp").visible() then
+                require("cmp").select_prev_item()
+              else
+                fallback()
+              end
+            end,
+          },
+        },
+        sources = cmp.config.sources({
+          { name = "path" },
+        }, { { name = "cmdline" }, { { name = "cmdline_history" } } }),
+      })
+
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.cmdline({ "/", "?" }, {
+        mapping = {
+          ["<esc>"] = {
+            c = function()
+              require("r.utils").feedkey("<c-c>", "n")
+            end,
+          },
+          ["<c-q>"] = {
+            c = function(fallback)
+              if require("cmp").visible() then
+                require("cmp").abort()
+              else
+                fallback()
+              end
+            end,
+          },
+          ["<TAB>"] = {
+            c = function()
+              if require("cmp").visible() then
+                require("cmp").select_next_item()
+              else
+                require("cmp").complete()
+              end
+            end,
+          },
+          ["<S-TAB>"] = {
+            c = function(fallback)
+              if require("cmp").visible() then
+                require("cmp").select_prev_item()
+              else
+                fallback()
+              end
+            end,
+          },
+        },
+        sources = {
+          { name = "buffer" },
+        },
+      })
+    end,
   },
   -- COMMENT.NVIM
   {
