@@ -85,7 +85,7 @@ set_dunst() {
 }
 set_tmux() {
 	# TMUX_PATH="$DOTFILES_PATH/rofi/.config/rofi"
-	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot-2"
+	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot"
 
 	if [ -f "$_PATH_TMUX_THEMES" ]; then
 		sleep 1
@@ -95,6 +95,7 @@ set_tmux() {
 		sed -i -e "s/^COL_RED=.*$/COL_RED=\"$GET_MAGENTA\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^BG_STATUSLINE=.*$/BG_STATUSLINE=\"$GET_BACKGROUND_ACTIVE_STATUSLINE\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^COL_BORDER_SEPERATOR=.*$/COL_BORDER_SEPERATOR=\"$GET_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^COL_ACTIVE_BORDER_SEPERATOR=.*$/COL_ACTIVE_BORDER_SEPERATOR=\"$GET_ACTIVE_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
 	else
 		dunstify "$_PATH_TMUX_THEMES not found"
 	fi
@@ -182,6 +183,7 @@ set_terminal() {
 }
 wm_bspwm() {
 	~/.config/bspwm/bspwmrc &>/dev/null
+	~/.config/polybar/runpolybar.sh &>/dev/null
 }
 wm_i3() {
 	cat ~/Dropbox/exbin/xfiles/cfg_i3/config ~/Dropbox/exbin/xfiles/cfg_i3/i3theme \
@@ -214,6 +216,25 @@ rofi_command="rofi -theme $dir/$theme"
 	[[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
 	_NAMETHEME=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_command -dmenu -p "  ")
 	[[ -z $_NAMETHEME ]] && exit 1
+
+	STHEM="false"
+
+	array=()
+	while IFS= read -r -d $'\0'; do
+		array+=("$REPLY")
+	done < <(find "$HOME/.config/miscxrdb/xresource-theme" -type f -print0)
+
+	for value in "${array[@]}"; do
+
+		if [[ "$_NAMETHEME" == "$(basename "$value")" ]]; then
+			STHEM="true"
+		fi
+	done
+
+	if [[ $STHEM == "false" ]]; then
+		dunstify "Load theme: $_NAMETHEME" "Not found, abort it"
+		exit 1
+	fi
 
 	# # set new Xresources theme
 	if [ -n "$_NAMETHEME" ]; then
@@ -256,7 +277,7 @@ rofi_command="rofi -theme $dir/$theme"
 	"awesome") wm_awesome ;;
 	esac
 
-	dunstify -i ~/Dropbox/mytodo/icons/hexagon.png "THEME RELOADED" "<b><span foreground='$GET_RED'>$_NAMETHEME</span></b>\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM"
+	dunstify -i ~/Dropbox/mytodo/icons/hexagon.png "Load theme: $_NAMETHEME" "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM"
 
 )
 

@@ -26,7 +26,7 @@ Xft.autohint:               0
 xterm*iconName:Terminal
 xterm*eightBitInput:    false
 xterm*cursorBlink:      false
-xterm*faceName: Iosevka Nerd Font
+xterm*faceName: JetBrainsMonoNL NF
 xterm*cursorOffTime:    300
 xterm*metaSendsEscape:  true
 xterm*faceSize: 10

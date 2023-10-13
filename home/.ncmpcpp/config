@@ -1,5 +1,6 @@
-
 # execute_on_song_change="~/.config/ncmpcpp/ncmpcpp-ueberzug/ncmpcpp_cover_art.sh"
+# execute_on_song_change = `dunstify --replace=27072 -i /tmp/cover.png" "Now Playing ♫" "$(mpc current)"`
+execute_on_song_change = `dunstify --replace=27072 -i ~/.config/miscxrdb/icons/music_play.png "Now Playing ♫" "$(mpc current)"`
 mpd_music_dir = "~/moxconf/media_and_tuts/mp3"
 
 alternative_header_first_line_format = "$0$aqqu$/a$9 {%t}|{%f} $0$atqq$/a$9$/b"

@@ -1,27 +1,54 @@
 -------------------------------------------------------------------------------
--- NOTE: disini hanya lah tempat testing plugin2s nvim, nothing more
+-- NOTE: Just do some testing for new nvim plugin
 -------------------------------------------------------------------------------
+
 return {
-    {
+  {
+    "echasnovski/mini.animate",
+    enabled = false,
+    event = "VeryLazy",
+    opts = function()
+      -- don't use animate when scrolling with the mouse
+      local mouse_scrolled = false
+      for _, scroll in ipairs { "Up", "Down" } do
+        local key = "<ScrollWheel" .. scroll .. ">"
+        vim.keymap.set({ "", "i" }, key, function()
+          mouse_scrolled = true
+          return key
+        end, { expr = true })
+      end
 
-        "rmagatti/auto-session",
-        cmd = { "SaveSession", "RestoreSession" },
-        enabled = false,
-        -- dependencies = { "rmagatti/session-lens" },
-        config = function()
-            local opts = {
-                log_level = "error",
-                auto_session_enable_last_session = false,
-                auto_session_root_dir = vim.fn.expand "~/.vim/session/",
-                auto_session_enabled = true,
-                auto_session_create_enabled = false,
-                auto_save_enabled = true,
-                auto_restore_enabled = true,
-                auto_session_suppress_dirs = nil,
-                auto_session_allowed_dirs = nil,
-            }
-
-            require("auto-session").setup(opts)
-        end,
-    },
+      local animate = require "mini.animate"
+      return {
+        resize = {
+          timing = animate.gen_timing.linear { duration = 120, unit = "total" },
+        },
+        scroll = {
+          timing = animate.gen_timing.exponential { duration = 50, unit = "total" },
+          subscroll = animate.gen_subscroll.equal {
+            predicate = function(total_scroll)
+              if mouse_scrolled then
+                mouse_scrolled = false
+                return false
+              end
+              return total_scroll > 1 and total_scroll < 50
+            end,
+          },
+        },
+        cursor = {
+          subscroll = animate.gen_path.spiral(),
+        },
+        open = {
+          winconfig = animate.gen_winconfig.wipe {
+            direction = "from_edge",
+          },
+        },
+        close = {
+          winconfig = animate.gen_winconfig.wipe {
+            direction = "to_edge",
+          },
+        },
+      }
+    end,
+  },
 }

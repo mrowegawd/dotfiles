@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# check jika line task lebih dari 1
+num=$(/usr/local/bin/task active | wc -l)
+
+# grab active tasks dari `task active`
+msg=$(/usr/local/bin/task active | tail -n +4 | head -n 1 | awk '{ for (i=6; i<=NF; i++) printf $i" "; print "" }')
+icons="$HOME/.config/miscxrdb/icons/icons8-todo-list-64.png"
+
+if [[ $num -gt "1" ]]; then
+	/usr/local/bin/dunstify -i "$icons" "Active Task" "$msg"
+else
+	/usr/local/bin/dunstify -i "$icons" "No Active Tasks" "C'mon! what are you doing!"
+fi

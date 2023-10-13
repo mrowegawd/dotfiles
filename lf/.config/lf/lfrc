@@ -18,7 +18,7 @@ cmd open ${{
 	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
 	text/*|application/json) $EDITOR $fx;;
 	image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
-	image/*) sxiv $fx& 2>/dev/null ;;
+	image/*) sxiv -a $fx& 2>/dev/null ;;
 	audio/*) mpv --audio-display=no $f ;;
 	video/*) setsid -f mpv -ontop -no-border -force-window --autofit=400x300 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
 	application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
@@ -91,16 +91,16 @@ map r
 map u
 map y
 map g
-
-
+map q
 
 # map <enter> shell
-map <enter> $$EDITOR "$f"                           # enter with nvim/vim
+map e $$EDITOR "$f"                           # enter with nvim/vim
 map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf)"
 map <c-f> $lf -remote "send $id select '$(fzf)'"    # search file and folders (fzf)
 map <c-g> fzf_search                                # search grep text (fzf)
-map <c-n> push :mkdir<space>
-map <f-5> reload
+# map <c-n> push :mkdir<space>
+map <enter> open
+map <f5> reload
 map P set preview!
 
 map yy copy
@@ -108,8 +108,8 @@ map dd cut
 
 map x $$f
 map X !$f
-map o &mimeopen $f
-map O $mimeopen --ask $f
+# map o &mimeopen $f
+# map O $mimeopen --ask $f
 map H set hidden!
 map p paste
 map D delete
@@ -117,6 +117,7 @@ map C copyto
 map M moveto
 map R bulkrename
 map r rename
+map <c-c> quit
 map V push :!nvim<space>
 
 # Basic Functions

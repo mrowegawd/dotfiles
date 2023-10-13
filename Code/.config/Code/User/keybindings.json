@@ -10,6 +10,26 @@
         "command": "-editor.action.cancelSelectionAnchor",
         "when": "editorTextFocus && selectionAnchorSet"
     },
+    {
+      "key": "ctrl+h",
+      "command": "workbench.action.focusLeftGroup",
+      "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
+    {
+      "key": "ctrl+l",
+      "command": "workbench.action.focusRightGroup",
+      "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
+    {
+      "key": "ctrl+k",
+      "command": "workbench.action.focusAboveGroup",
+      "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
+    {
+      "key": "ctrl+j",
+      "command": "workbench.action.focusBelowGroup",
+      "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
+    },
     // {
     //   "key": "shift+alt+h",
     //   "command": "-editor.showCallHierarchy",
@@ -73,7 +93,7 @@
         "when": "terminalFocus"
     },
     {
-        "key": "shift+alt+h",
+        "key": "shift+alt+l",
         "command": "workbench.action.increaseViewSize"
     },
     {
@@ -81,7 +101,7 @@
         "command": "workbench.action.increaseViewSize"
     },
     {
-        "key": "shift+alt+l",
+        "key": "shift+alt+h",
         "command": "workbench.action.decreaseViewSize"
     },
     {

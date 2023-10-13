@@ -6,8 +6,20 @@ gui:
   expandFocusedSidePanel: false
   mainPanelSplitMode: "flexible" # one of 'horizontal' | 'flexible' | 'vertical'
   language: "auto" # one of 'auto' | 'en' | 'zh' | 'pl' | 'nl'
-  # theme:
-  #   lightTheme: false # For terminals with a light background
+  theme:
+    lightTheme: false # For terminals with a light background
+    activeBorderColor:
+      - "#89ddff"
+      - bold
+    inactiveBorderColor:
+      - "#565f89"
+    optionsTextColor:
+      - "#3d59a1"
+    selectedLineBgColor:
+      - "#495257"
+      - bold
+    selectedRangeBgColor:
+      - "#89ddff"
   #   activeBorderColor:
   #     - white
   #     - bold
@@ -37,9 +49,10 @@ gui:
   commandLogSize: 8
 git:
   paging:
-    # colorArg: always
-    colorArg: never
+    colorArg: 'always'
+    # colorArg: never
     useConfig: false
+    # pager: delta --dark --color-only --side-by-side
     pager: delta --dark --paging=never
   commit:
     signOff: false
@@ -55,7 +68,7 @@ git:
     order: "topo-order"
     # one of always, never, when-maximised
     # this determines whether the git graph is rendered in the commits panel
-    showGraph: "when-maximised"
+    showGraph: always
   skipHookPrefix: WIP
   autoFetch: true
   autoRefresh: true
@@ -67,7 +80,7 @@ git:
   diffContextSize: 3 # how many lines of context are shown around a change in diffs
 os:
   editCommand: "" # see 'Configuring File Editing' section
-  editCommandTemplate: "{{editor}} {{filename}}"
+  # editCommandTemplate: "{{editor}} {{filename}}"
   openCommand: ""
 refresher:
   refreshInterval: 10 # File/submodule refresh interval in seconds. Auto-refresh can be disabled via option 'git.autoRefresh'.
@@ -84,9 +97,10 @@ notARepository: "prompt" # one of: 'prompt' | 'create' | 'skip'
 promptToReturnFromSubprocess: true # display confirmation when subprocess terminates
 keybinding:
   universal:
-    quit: "<esc>"
-    quit-alt1: "<esc>" # alternative/alias of quit
-    return: "<c-c>" # return to previous menu, will quit if there's nowhere to return
+    quit: "<c-c>"
+    quit-alt: "<c-c>" # alternative/alias of quit
+    return: "q" # return to previous menu, will quit if there's nowhere to return
+    # return-alt: "q" # return to previous menu, will quit if there's nowhere to return
     quitWithoutChangingDirectory: "Q"
     togglePanel: "<tab>" # goto the next panel
     prevItem: "<up>" # go one line up
@@ -101,9 +115,9 @@ keybinding:
     scrollRight: "<" # scroll right within list view
     prevBlock: "<left>" # goto the previous block / panel
     nextBlock: "<right>" # goto the next block / panel
-    prevBlock-alt: "h" # goto the previous block / panel
-    nextBlock-alt: "l" # goto the next block / panel
-    jumpToBlock: ["1", "2", "3", "4", "5"] # goto the Nth block / panel
+    prevBlock-alt: "<c-h>" # goto the previous block / panel
+    nextBlock-alt: "<c-l>" # goto the next block / panel
+    jumpToBlock: [ "1", "2", "3", "4", "5" ] # goto the Nth block / panel
     nextMatch: "n"
     prevMatch: "N"
     optionMenu: "x" # show help menu
@@ -129,8 +143,8 @@ keybinding:
     pullFiles: "p"
     refresh: "R"
     createPatchOptionsMenu: "<c-p>"
-    nextTab: "<c-l>"
-    prevTab: "<c-h>"
+    nextTab: "l"
+    prevTab: "h"
     nextScreenMode: "+"
     prevScreenMode: "_"
     undo: "z"

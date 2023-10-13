@@ -55,7 +55,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
 		SLOP_INFO=$(slop -f "%wx%h+%x,%y")
 
-		FILE_ICONS="$HOME/Dropbox/data.programming.forprivate/icons/rec-button.png"
+		FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
 		if [ -f "$FILE_ICONS" ]; then
 			dunstify "Record" "starting.." -i "$FILE_ICONS"
 		else
@@ -88,8 +88,13 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 	}
 
 	run_simplegif() {
+		filegif="$HOME/Downloads/screenshot/$(date +%s).gif"
 		if [ -n "$(command -v giph)" ]; then
-			giph -s -l -c 1,1,1,0.3 -b 5 -p -5 -d 3 -t 10 "$HOME/Downloads/screenshot/$(date +%s).gif"
+			dunstify "Gif will start in 3 sec, create 10 sec"
+			# -d waktu mulai dari n
+			# -t jumlah waktu ngerekam gif
+			giph -f 30 -s -l -c 0.3,0,0.5,0.3 -d 3 -t 10 "$filegif"
+			dunstify "Gif created:" "$filegif"
 		else
 			# check install here: https://github.com/phisch/giph
 			dunstify ":you need install giph"

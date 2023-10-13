@@ -1,10 +1,18 @@
 # vim: ft=zsh sw=2 ts=2 et
 
-autoload -U colors && colors
+
+# option ini digunakan untuk ekspansi fitur agar bisa menampilkan sesuatu secara periodik,
+# seperti menampilkan waktu di prompt
+# tanpa option ini, display waktu tidak berubah (statik), berubah ketika login
+# baru di zsh
 setopt prompt_subst
+
+
+autoload -U colors && colors
 
 # vcs_info git
 autoload -Uz vcs_info
+
 zstyle ':vcs_info:*' stagedstr '%F{green}•'
 zstyle ':vcs_info:*' unstagedstr '%F{yellow}•'
 zstyle ':vcs_info:*' check-for-changes true
@@ -15,7 +23,7 @@ zstyle ':vcs_info:*' enable git svn
 : ${PR_JOBS_SYMBOL:=""}
 : ${PR_DOTS:="•"}
 
-function virtualenv_info {
+virtualenv_info() {
   [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`')'
 }
 
@@ -115,11 +123,11 @@ set_jobs(){
 # }
 
 # function zle-line-init zle-keymap-select {
-#     RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
-#     RPS2=$RPS1
-#     zle reset-prompt
+#   RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
+#   RPS2=$RPS1
+#   zle reset-prompt
 # }
-
+#
 # zle -N zle-line-init
 # zle -N zle-keymap-select
 
@@ -127,7 +135,19 @@ set_jobs(){
 # https://wiki.gentoo.org/wiki/Zsh/Guide#Prompts
 # %2~     :show only 2 dirs
 # %~
-PROMPT='%F{6}┌──╼ [%F{8}%2~%{$reset_color%}$(git_info)$(set_jobs)%F{6}❯%{$reset_color%} %F{6}$(virtualenv_info)%{$reset_color%} $exit_code
+
+zsh_update_vim_mode() {
+  if [[ $KEYMAP == 'vicmd' ]]; then
+    echo "[VIM]"
+  else
+    echo ""
+  fi
+}
+# Set up a precmd hook to update the Vim mode indicator before each prompt display
+# autoload -Uz add-zsh-hook
+# add-zsh-hook precmd zsh_update_vim_mode
+
+PROMPT='%F{6}┌──╼ [%F{6}%2~%{$reset_color%}$(git_info)$(set_jobs)%F{6}❯%{$reset_color%} %F{6}$(virtualenv_info)%{$reset_color%} $exit_code
 %F{6}└╼%f%F{reset_color}$PR_JOBS_PREFIX'
 
 # terminfo_down_sc=$terminfo[cud1]$terminfo[cuu1]$terminfo[sc]$terminfo[cud1]
@@ -136,7 +156,7 @@ PROMPT='%F{6}┌──╼ [%F{8}%2~%{$reset_color%}$(git_info)$(set_jobs)%F{6}�
 # function normal-mode () { echo "-- NORMAL --" }
 
 # precmd () {
-#     # yes, I actually like to have a new line, then some stuff and then 
+#     # yes, I actually like to have a new line, then some stuff and then
 #     # the input line
 #     print -rP "
 # [%D{%a, %d %b %Y, %H:%M:%S}] %n %{$fg[blue]%}%m%{$reset_color%}"

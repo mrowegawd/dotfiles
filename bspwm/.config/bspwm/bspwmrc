@@ -1,8 +1,41 @@
 #! /bin/sh
 
-sxhkd &
+export SXHKD_SHELL=/usr/bin/sh
 
-"$HOME/.config/bspwm/autostart.sh"
+# remove x cursor
+# xsetroot -cursor_name left_ptr &
+xsetroot -cursor_name left_ptr
+
+run_disowned() {
+	nohup "$@" >/dev/null 2>&1 &
+}
+
+killall sxhkd
+run_disowned sxhkd
+
+# launch auto start application
+startup_lock_file=/tmp/bspwm-startup.lock
+if [ ! -f $startup_lock_file ]; then
+
+	echo "dummy" >$startup_lock_file
+
+	"$HOME/.config/bspwm/autostart.sh"
+
+	# killall mpd
+	# mpd &
+
+	sleep 2
+
+	kitty &
+
+	sleep 2
+
+	firefox &
+
+	sleep 2
+
+fi
+
 # bspc monitor -d I II III IV V VI VII VIII IX X
 # bspc monitor -d term web todo pdfile code docs music misc
 bspc monitor -d 1 2 3 4 5 6
@@ -35,11 +68,16 @@ bspc rule -a URxvt:ncmpcpp state=floating
 bspc rule -a st:ncmpcpp state=floating
 # bspc rule -a mpv state=floating rectangle=WidthxHeight+Xoffset+Yoffset
 # bspc rule -a URxvt:urxvt_keys_help state=floating center=true rectangle=500x300+0+0
-# bspc rule -a "Firefox-esr" desktop=$desk_web follow=on
+bspc rule -a "discord" desktop=$desk_doc follow=on
 bspc rule -a "Firefox-esr" desktop=$desk_web
+bspc rule -a "Navigator" desktop=$desk_web
 
+bspc rule -a Yad state=floating center=off
 bspc rule -a jetbrains-idea-ce desktop=$desk_code # intellij 'did you know' popup
 bspc rule -a jetbrains-idea-c desktop=$desk_code  # the rest of intellij
+bspc rule -a Transmission-gtk state=tiled center=off
+bspc rule -a Pulseeffects state=floating center=on
+bspc rule -a Pulsemixer state=floating center=on
 
 # bspc rule -a libreofficedev-calc state=tiled desktop='docs'
 # bspc rule -a '*:libreofficedev' desktop='docs'
@@ -57,55 +95,3 @@ bspc rule -a '*:soffice' state=tiled desktop=$desk_doc
 # bspc rule -a 'Zathura' desktop='file' follow=on state=tiled
 
 bspc wm --record-history on
-
-# remove x cursor
-xsetroot -cursor_name left_ptr &
-
-# rsync_wikis() {
-# 	# taken from https://www.unix.com/unix-for-dummies-questions-and-answers/17594-how-catch-rscyn-errors.html
-# 	WIKI_SRC_PATH_LINUX="$HOME/Dropbox/wiki/"
-
-# 	# WIKI_DEST_PATH_LINUX="$HOME/Backuples/wiki/"
-# 	WIKI_DEST_PATH_WINDOW="/media/programming/wiki/"
-
-# 	tempfile=/tmp/error_rsync.$(date '+%m%d%Y_%H%M%SGMT')
-
-# 	if [ -d "$WIKI_SRC_PATH_LINUX" ]; then
-# 		if [ -d "$WIKI_DEST_PATH_WINDOW" ]; then
-
-# 			# catch the errors with `2>&1`
-# 			rsync -auv --include="*.org" --include="*/" --exclude="*" "$WIKI_DEST_PATH_WINDOW" "$WIKI_SRC_PATH_LINUX" >"$tempfile" 2>&1
-
-# 			if [ $? -eq 0 ]; then # No need for the X variable since you don't use it
-# 				echo "Rsync was completed successfully..!"
-# 			else
-# 				dunstify "$(cat "$tempfile")"
-# 				rm -rf "$tempfile"
-# 			fi
-
-# 		else
-# 			dunstify "path: $WIKI_DEST_PATH_WINDOW not found"
-# 		fi
-# 	else
-# 		dunstify "path: $WIKI_SRC_PATH_LINUX not found"
-# 	fi
-# }
-
-#rsync_wikis
-
-# launch auto start application
-startup_lock_file=/tmp/bspwm-startup.lock
-if [ ! -f $startup_lock_file ]; then
-	echo "dummy" >$startup_lock_file
-	sleep 2
-	alacritty &
-	sleep 2
-	firefox &
-	sleep 2
-	#~/.local/bin/reminder_deamon
-
-	# "$HOME/.local/bin/Todoist" &
-	# "$HOME/.local/bin/Notions" &
-	# dunstify "all setup already done juragan"
-	#clipmenud &
-fi

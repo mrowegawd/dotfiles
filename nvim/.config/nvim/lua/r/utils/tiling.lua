@@ -23,7 +23,7 @@ state.found_main_wins = {}
 local expand_tree = false
 
 local activate_tiling_autocmds = function()
-    vim.cmd [[
+  vim.cmd [[
   augroup TilingAutocmds
   au!
   au FileType * call setbufvar('%', 'ft', &ft)
@@ -32,29 +32,29 @@ local activate_tiling_autocmds = function()
   augroup END
 ]]
 
-    -- local augroup = vim.api.nvim_create_augroup("luasnip-expand", { clear = true })
-    -- vim.api.nvim_create_autocmd("ModeChanged", {
-    --     group = augroup,
-    --     pattern = "*:s",
-    --     callback = function()
-    --         if luasnip.in_snippet() then
-    --             return vim.diagnostic.disable()
-    --         end
-    --     end,
-    -- })
-    -- vim.api.nvim_create_autocmd("ModeChanged", {
-    --     group = augroup,
-    --     pattern = "[is]:n",
-    --     callback = function()
-    --         if luasnip.in_snippet() then
-    --             return vim.diagnostic.enable()
-    --         end
-    --     end,
-    -- })
+  -- local augroup = vim.api.nvim_create_augroup("luasnip-expand", { clear = true })
+  -- vim.api.nvim_create_autocmd("ModeChanged", {
+  --     group = augroup,
+  --     pattern = "*:s",
+  --     callback = function()
+  --         if luasnip.in_snippet() then
+  --             return vim.diagnostic.disable()
+  --         end
+  --     end,
+  -- })
+  -- vim.api.nvim_create_autocmd("ModeChanged", {
+  --     group = augroup,
+  --     pattern = "[is]:n",
+  --     callback = function()
+  --         if luasnip.in_snippet() then
+  --             return vim.diagnostic.enable()
+  --         end
+  --     end,
+  -- })
 end
 
 local deactivate_tiling_autocmds = function()
-    vim.cmd [[
+  vim.cmd [[
     augroup TilingAutocmds
     au!
     augroup END
@@ -65,89 +65,89 @@ local wins_stay_left_screen = { "Outline", "NvimTree", "neo-tree" }
 local wins_stay_up_screen = { "qf", "scratch", "Trouble", "fugitive" }
 
 local wins_stay_on_screen = {
-    Outline = {
-        position = "H",
-        resize = "vertical resize 30",
-    },
-    NvimTree = {
-        position = "H",
-        resize = "vertical resize 30",
-    },
-    ["neo-tree"] = {
-        position = "H",
-        resize = "vertical resize 30",
-    },
-    qf = {
-        position = "K",
-        resize = "resize 10",
-    },
-    scratch = {
-        position = "K",
-        resize = "resize 10",
-    },
-    Trouble = {
-        position = "K",
-        resize = "resize 10",
-    },
-    fugitive = {
-        position = "K",
-        resize = "resize 10",
-    },
+  Outline = {
+    position = "H",
+    resize = "vertical resize 30",
+  },
+  NvimTree = {
+    position = "H",
+    resize = "vertical resize 30",
+  },
+  ["neo-tree"] = {
+    position = "H",
+    resize = "vertical resize 30",
+  },
+  qf = {
+    position = "K",
+    resize = "resize 10",
+  },
+  scratch = {
+    position = "K",
+    resize = "resize 10",
+  },
+  Trouble = {
+    position = "K",
+    resize = "resize 10",
+  },
+  fugitive = {
+    position = "K",
+    resize = "resize 10",
+  },
 }
 
 local wins_main_table = {
-    "toggleterm",
-    "neotree",
-    "sidebar",
-    "undotree",
-    "fugitive",
-    "spectre_panel",
-    "orgagenda",
-    "alpha",
+  "toggleterm",
+  "neotree",
+  "sidebar",
+  "undotree",
+  "fugitive",
+  "spectre_panel",
+  "orgagenda",
+  "alpha",
 }
 
 local aucmd_win_stay_left = {}
 local aucmd_win_stay_up = {}
 
 local function __indexOf(array, value)
-    for i, v in ipairs(array) do
-        if v == value then
-            return i
-        end
+  for i, v in ipairs(array) do
+    if v == value then
+      return i
     end
-    return nil
+  end
+  return nil
 end
 
 local __winmaxheight = function()
-    local height = api.nvim_get_option "lines" - api.nvim_get_option "cmdheight"
+  local height = api.nvim_get_option "lines" - api.nvim_get_option "cmdheight"
 
-    -- subtract one from height if tabbar is visible
-    if
-        (fn.tabpagenr "$" > 1 and api.nvim_get_option "showtabline")
-        or (fn.tabpagenr "$" > 1 and api.nvim_get_option "laststatus")
-        or api.nvim_get_option "showtabline" > 1
-    then
-        height = height - 1
-    end
+  -- subtract one from height if tabbar is visible
+  if
+    (fn.tabpagenr "$" > 1 and api.nvim_get_option "showtabline")
+    or (fn.tabpagenr "$" > 1 and api.nvim_get_option "laststatus")
+    or api.nvim_get_option "showtabline" > 1
+  then
+    height = height - 1
+  end
 
-    -- -- subtract one from height if statusline is visible
-    -- if
-    --     (fn.winnr "$" > 1 and api.nvim_get_option "laststatus")
-    --     or api.nvim_get_option "laststatus" > 1
-    -- then
-    --     height = height - 1
-    -- end
+  -- -- subtract one from height if statusline is visible
+  -- if
+  --     (fn.winnr "$" > 1 and api.nvim_get_option "laststatus")
+  --     or api.nvim_get_option "laststatus" > 1
+  -- then
+  --     height = height - 1
+  -- end
 
-    return height
+  return height
 end
 
 local __get_tab_layout = function()
-    local curtab = vim.api.nvim_get_current_tabpage()
+  local curtab = vim.api.nvim_get_current_tabpage()
 
-    if tab_layouts[curtab] == nil then
-        tab_layouts[curtab] = tile_layout
-    end
-    return tab_layouts[curtab]
+  if tab_layouts[curtab] == nil then
+    tab_layouts[curtab] = tile_layout
+  end
+  return tab_layouts[curtab]
 end
 
 -- local __removeDuplicatesTbl = function(tbl)
@@ -163,18 +163,18 @@ end
 -- end
 
 local __change_buffers = function()
-    local curbufnum = api.nvim_buf_get_number(0)
-    vim.cmd(fmt([[%d wincmd w]], as.master_win))
-    vim.cmd(fmt("b %d", curbufnum))
+  local curbufnum = api.nvim_buf_get_number(0)
+  vim.cmd(fmt([[%d wincmd w]], as.master_win))
+  vim.cmd(fmt("b %d", curbufnum))
 end
 
 local __resize_master = function()
-    local width_primer_win = vim.o.columns * 0.65
-    if expand_tree then
-        width_primer_win = 80
-    end
-    vim.cmd(fmt("vertical resize %d", width_primer_win))
-    expand_tree = false
+  local width_primer_win = vim.o.columns * 0.65
+  if expand_tree then
+    width_primer_win = 80
+  end
+  vim.cmd(fmt("vertical resize %d", width_primer_win))
+  expand_tree = false
 end
 
 -- local __winid_from_tab_buf = function(tabnr, bufnr)
@@ -187,37 +187,32 @@ end
 -- end
 
 local __loop_wins = function(tbl_loop, tbl_output, winft, winid)
-    for i = 1, #tbl_loop do
-        if tbl_loop[i] == winft then
-            table.insert(tbl_output, { winid = winid, ft = winft })
-        end
+  for i = 1, #tbl_loop do
+    if tbl_loop[i] == winft then
+      table.insert(tbl_output, { winid = winid, ft = winft })
     end
+  end
 end
 
 local __scan_wins = function()
-    aucmd_win_stay_left = {}
-    aucmd_win_stay_up = {}
+  aucmd_win_stay_left = {}
+  aucmd_win_stay_up = {}
 
-    for _, winid in pairs(api.nvim_tabpage_list_wins(0)) do
-        local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
+  for _, winid in pairs(api.nvim_tabpage_list_wins(0)) do
+    local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
 
-        if winbufnr > 0 then
-            local winft = api.nvim_buf_get_option(winbufnr, "filetype")
+    if winbufnr > 0 then
+      local winft = api.nvim_buf_get_option(winbufnr, "filetype")
 
-            __loop_wins(wins_stay_up_screen, aucmd_win_stay_up, winft, winid)
-            __loop_wins(
-                wins_stay_left_screen,
-                aucmd_win_stay_left,
-                winft,
-                winid
-            )
-        end
+      __loop_wins(wins_stay_up_screen, aucmd_win_stay_up, winft, winid)
+      __loop_wins(wins_stay_left_screen, aucmd_win_stay_left, winft, winid)
     end
+  end
 end
 
 local __window_move = function(direction, i)
-    vim.cmd(string.format("silent %d wincmd w", i))
-    vim.cmd(string.format("silent wincmd %s", direction))
+  vim.cmd(string.format("silent %d wincmd w", i))
+  vim.cmd(string.format("silent wincmd %s", direction))
 end
 
 -- local __get_dat = function(tbl, ft)
@@ -232,11 +227,11 @@ end
 -- end
 
 local __tbl_ft_stay_on_screen = function()
-    local exTbl = {}
-    for k, _ in pairs(wins_stay_on_screen) do
-        table.insert(exTbl, k)
-    end
-    return exTbl
+  local exTbl = {}
+  for k, _ in pairs(wins_stay_on_screen) do
+    table.insert(exTbl, k)
+  end
+  return exTbl
 end
 
 -- local get_master_layouts = function()
@@ -287,35 +282,29 @@ end
 -- end
 
 local arrange_window = function()
-    local layout = __get_tab_layout()
+  local layout = __get_tab_layout()
 
-    for i = 1, fn.winnr "$" do
-        if
-            (
-                (layout == "left" or layout == "right")
-                and fn.winwidth(i) ~= vim.o.columns
-            )
-            or (
-                (layout == "top" or layout == "bottom")
-                and fn.winwidth(i) ~= __winmaxheight()
-            )
-        then
-            __window_move(tile_layouts_stack[layout], i)
-            return -1
-        end
+  for i = 1, fn.winnr "$" do
+    if
+      ((layout == "left" or layout == "right") and fn.winwidth(i) ~= vim.o.columns)
+      or ((layout == "top" or layout == "bottom") and fn.winwidth(i) ~= __winmaxheight())
+    then
+      __window_move(tile_layouts_stack[layout], i)
+      return -1
     end
-    return 1
+  end
+  return 1
 end
 
 local stack_windows = function()
-    local counter = 0
-    while arrange_window() < 0 do
-        counter = counter + 1
-        if counter > 50 then
-            as.warn "infinite loop, probably an issue with getting max height or width"
-            break
-        end
+  local counter = 0
+  while arrange_window() < 0 do
+    counter = counter + 1
+    if counter > 50 then
+      as.warn "infinite loop, probably an issue with getting max height or width"
+      break
     end
+  end
 end
 
 -- local find_popups = function()
@@ -343,192 +332,181 @@ end
 -- end
 
 local winds_find = function(input_tbl, output_tbl)
-    for k, winid in pairs(api.nvim_tabpage_list_wins(0)) do
-        local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
+  for k, winid in pairs(api.nvim_tabpage_list_wins(0)) do
+    local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
 
-        if winbufnr > 0 then
-            local winft = api.nvim_buf_get_option(winbufnr, "filetype")
+    if winbufnr > 0 then
+      local winft = api.nvim_buf_get_option(winbufnr, "filetype")
 
-            for i = 1, #input_tbl do
-                if winft == input_tbl[i] then
-                    table.insert(output_tbl, {
-                        ft = winft,
-                        winnumber = winbufnr,
-                        winid = winid,
-                        winposition = k,
-                    })
-                end
-            end
+      for i = 1, #input_tbl do
+        if winft == input_tbl[i] then
+          table.insert(output_tbl, {
+            ft = winft,
+            winnumber = winbufnr,
+            winid = winid,
+            winposition = k,
+          })
         end
+      end
     end
+  end
 end
 
 local get_autojump = function()
-    state.found_stay_wins = {}
+  state.found_stay_wins = {}
 
-    winds_find(__tbl_ft_stay_on_screen(), state.found_stay_wins)
+  winds_find(__tbl_ft_stay_on_screen(), state.found_stay_wins)
 
-    local tot_wins = #state.found_stay_wins + 1
+  local tot_wins = #state.found_stay_wins + 1
 
-    state.found_main_wins = {
-        winbufnr = fn.winbufnr(tot_wins),
-    }
+  state.found_main_wins = {
+    winbufnr = fn.winbufnr(tot_wins),
+  }
 
-    if tot_wins > 2 then
-        expand_tree = true
+  if tot_wins > 2 then
+    expand_tree = true
+  end
+
+  for _, v in ipairs(state.found_stay_wins) do
+    if __indexOf(wins_stay_left_screen, v.ft) ~= nil then
+      expand_tree = true
+      break
     end
+  end
 
-    for _, v in ipairs(state.found_stay_wins) do
-        if __indexOf(wins_stay_left_screen, v.ft) ~= nil then
-            expand_tree = true
-            break
-        end
-    end
-
-    vim.cmd(fmt("%d wincmd w", tot_wins))
+  vim.cmd(fmt("%d wincmd w", tot_wins))
 end
 
 local tile_reorder = function()
-    stack_windows()
+  stack_windows()
 
-    vim.cmd "split"
-    vim.cmd "wincmd H"
+  vim.cmd "split"
+  vim.cmd "wincmd H"
 
-    -- NOTE: butuh loop ini untuk current cursor jika sama dengan wins_stay_left_screen
-    for _, v in pairs(wins_stay_left_screen) do
-        if vim.bo.filetype == v then
-            vim.cmd(
-                fmt(
-                    [[b %s]],
-                    api.nvim_buf_get_name(state.found_main_wins.winbufnr)
-                )
-            )
-        end
+  -- NOTE: butuh loop ini untuk current cursor jika sama dengan wins_stay_left_screen
+  for _, v in pairs(wins_stay_left_screen) do
+    if vim.bo.filetype == v then
+      vim.cmd(fmt([[b %s]], api.nvim_buf_get_name(state.found_main_wins.winbufnr)))
     end
+  end
 
-    local newTbl = {}
-    for winidx, winid in pairs(api.nvim_tabpage_list_wins(0)) do
-        local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
-        if winbufnr > 0 then
-            table.insert(newTbl, {
-                winft = api.nvim_buf_get_option(winbufnr, "filetype"),
-                winidx = winidx,
-            })
-        end
+  local newTbl = {}
+  for winidx, winid in pairs(api.nvim_tabpage_list_wins(0)) do
+    local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
+    if winbufnr > 0 then
+      table.insert(newTbl, {
+        winft = api.nvim_buf_get_option(winbufnr, "filetype"),
+        winidx = winidx,
+      })
     end
+  end
 
-    for _, val in pairs(newTbl) do
-        for ft, opts in pairs(wins_stay_on_screen) do
-            if val.winft == "scratch" then
-                vim.cmd [[ScratchPreview]]
-                vim.cmd [[ScratchPreview]]
-            else
-                if val.winft == ft then
-                    vim.cmd(fmt("%d wincmd w", val.winidx))
-                    -- as.info(val.winft .. " position " .. opts.position)
-                    vim.cmd(fmt("wincmd %s", opts.position))
-                    vim.cmd(opts.resize)
-                end
-            end
+  for _, val in pairs(newTbl) do
+    for ft, opts in pairs(wins_stay_on_screen) do
+      if val.winft == "scratch" then
+        vim.cmd [[ScratchPreview]]
+        vim.cmd [[ScratchPreview]]
+      else
+        if val.winft == ft then
+          vim.cmd(fmt("%d wincmd w", val.winidx))
+          -- as.info(val.winft .. " position " .. opts.position)
+          vim.cmd(fmt("wincmd %s", opts.position))
+          vim.cmd(opts.resize)
         end
+      end
     end
+  end
 
-    M.resize_window()
+  M.resize_window()
 end
 
 M.force_win_close = function(close_wins_table, close_all)
-    state.active_overlays = {}
-    close_all = close_all or false
+  state.active_overlays = {}
+  close_all = close_all or false
 
-    if not close_all then
-        winds_find(close_wins_table, state.active_overlays)
+  if not close_all then
+    winds_find(close_wins_table, state.active_overlays)
 
-        if #state.active_overlays > 0 then
-            for i = 1, #state.active_overlays do
-                api.nvim_win_close(state.active_overlays[i].winid, true)
-            end
-        end
-    else
-        vim.cmd "only"
+    if #state.active_overlays > 0 then
+      for i = 1, #state.active_overlays do
+        api.nvim_win_close(state.active_overlays[i].winid, true)
+      end
     end
+  else
+    vim.cmd "only"
+  end
 end
 
 local __aucmd_win_cmd = function(tbl_wins)
-    if #tbl_wins > 1 then
-        -- local bufnr = api.nvim_get_current_buf()
-        -- local buftype = api.nvim_buf_get_option(bufnr, "filetype")
-        -- if buftype == "scratch" then
-        --     return
-        -- end
-        if
-            vim.api.nvim_win_is_valid(tbl_wins[2].winid)
-            and tbl_wins[2].ft ~= tbl_wins[1].ft
-        then
-            -- as.info(
-            --     "kill " .. tbl_wins[2].winid .. ", with ft: " .. tbl_wins[2].ft
-            -- )
-            api.nvim_win_close(tbl_wins[2].winid, true)
-        end
+  if #tbl_wins > 1 then
+    -- local bufnr = api.nvim_get_current_buf()
+    -- local buftype = api.nvim_buf_get_option(bufnr, "filetype")
+    -- if buftype == "scratch" then
+    --     return
+    -- end
+    if vim.api.nvim_win_is_valid(tbl_wins[2].winid) and tbl_wins[2].ft ~= tbl_wins[1].ft then
+      -- as.info(
+      --     "kill " .. tbl_wins[2].winid .. ", with ft: " .. tbl_wins[2].ft
+      -- )
+      api.nvim_win_close(tbl_wins[2].winid, true)
     end
+  end
 end
 
 M.handle_event = function(_)
-    if state.active then
-        __scan_wins()
-        -- as.warn(aucmd_win_stay_up)
-        __aucmd_win_cmd(aucmd_win_stay_up)
-        __aucmd_win_cmd(aucmd_win_stay_left)
-    end
+  if state.active then
+    __scan_wins()
+    -- as.warn(aucmd_win_stay_up)
+    __aucmd_win_cmd(aucmd_win_stay_up)
+    __aucmd_win_cmd(aucmd_win_stay_left)
+  end
 end
 
 M.tiling_toggle = function()
-    if state.active then
-        state.active = false
-        deactivate_tiling_autocmds()
-        as.info "[+] Tiling autocmds off.."
-        return
-    end
-    state.active = true
-    activate_tiling_autocmds()
-    as.info "[+] Tiling autocmds on.."
+  if state.active then
+    state.active = false
+    deactivate_tiling_autocmds()
+    as.info "[+] Tiling autocmds off.."
+    return
+  end
+  state.active = true
+  activate_tiling_autocmds()
+  as.info "[+] Tiling autocmds on.."
 end
 
 M.state_active = function(stat)
-    state.active = stat
+  state.active = stat
 end
 
 M.create_window = function()
-    if
-        api.nvim_buf_get_option(api.nvim_get_current_buf(), "filetype")
-        == "alpha"
-    then
-        vim.cmd "Telescope find_files"
-        return
-    end
+  if api.nvim_buf_get_option(api.nvim_get_current_buf(), "filetype") == "alpha" then
+    vim.cmd "Telescope find_files"
+    return
+  end
 
-    if not state.active then
-        -- TODO: harus bikin logic, jika debugging active
-        state.active = true
-    end
-    M.force_win_close(wins_main_table)
+  if not state.active then
+    -- TODO: harus bikin logic, jika debugging active
+    state.active = true
+  end
+  M.force_win_close(wins_main_table)
 
-    get_autojump()
-    deactivate_tiling_autocmds()
-    tile_reorder()
+  get_autojump()
+  deactivate_tiling_autocmds()
+  tile_reorder()
 
-    state.found_close_wins = {}
-    state.found_stay_wins = {}
-    activate_tiling_autocmds()
+  state.found_close_wins = {}
+  state.found_stay_wins = {}
+  activate_tiling_autocmds()
 end
 
 M.focus_window = function()
-    __change_buffers()
-    __resize_master()
+  __change_buffers()
+  __resize_master()
 end
 
 M.resize_window = function()
-    get_autojump()
-    __resize_master()
+  get_autojump()
+  __resize_master()
 end
 
 return M

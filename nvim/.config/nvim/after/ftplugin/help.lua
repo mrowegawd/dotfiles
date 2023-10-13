@@ -1,4 +1,5 @@
 local keymap = vim.keymap
+
 local opt_local = vim.opt_local
 
 opt_local.number = false
@@ -6,8 +7,8 @@ opt_local.relativenumber = false
 opt_local.signcolumn = "no"
 
 keymap.set("n", "gd", "<c-]>", {
-    buffer = true,
-    desc = "Go to definition",
+  buffer = true,
+  desc = "Go to definition",
 })
 
 -- keymap.set("n", "<BS>", "<c-t>", {

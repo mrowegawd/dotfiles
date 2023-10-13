@@ -35,6 +35,7 @@ https://www.reddit.com/r/UnixProTips+linux+linuxquestions+linuxadmin.rss "~REDDI
 https://www.reddit.com/r/javascript.rss "~REDDIT: Javascript" javascript programming
 https://www.reddit.com/r/typescript.rss "~REDDIT: Typescript" typescript programming
 https://www.reddit.com/r/python.rss "~REDDIT: Python" python programming
+https://www.reddit.com/r/rust.rss "~REDDIT: Rust" rust programming
 https://www.reddit.com/r/golang.rss "~REDDIT: Golang" golang programming
 https://www.reddit.com/r/php.rss "~REDDIT: Php" php programming
 https://www.reddit.com/r/askprogramming+programming.rss "~REDDIT: Programming" learnprogramming programming
@@ -74,6 +75,7 @@ https://www.blackhatworld.com/forums/black-hat-seo-tools.9/index.rss "~NEWSFEED:
 https://www.blackhatworld.com/forums/-/index.rss "~NEWSFEED: Blackhatworld" internetmarketing
 
 https://dev.to/feed/tag/python "~NEWSFEED: Dev.to/python" python programming
+https://dev.to/feed/tag/rust "~NEWSFEED: Dev.to/rust" rust programming
 https://dev.to/feed/tag/typescript "~NEWSFEED: Dev.to/typescript" typescript programming
 https://dev.to/feed/tag/javascript "~NEWSFEED: Dev.to/javascript" javascript programming
 https://dev.to/feed/tag/webdev "~NEWSFEED: Dev.to/webdev" web programming
@@ -99,10 +101,13 @@ https://www.youtube.com/feeds/videos.xml?user=gotbletu "~YOUTUBE: gotbletu" yout
 https://www.youtube.com/feeds/videos.xml?user=JtheLinuxguy "~YOUTUBE: JtheLinuxguy" youtube linux
 https://www.youtube.com/feeds/videos.xml?user=ConfigTerm "~YOUTUBE: DavidBombal" youtube linux hack
 https://www.youtube.com/feeds/videos.xml?user=GISIGeometry "~YOUTUBE: HusseinNasser" youtube linux hack
-https://www.youtube.com/feeds/videos.xml?channel_id=UCVls1GmFKf6WlTraIb_IaJg "~YOUTUBE: DistroTube" youtube linux
-https://www.youtube.com/feeds/videos.xml?channel_id=UC2eYFnH61tmytImy1mTYvhA "~YOUTUBE: Luke Smith" youtube
+# https://www.youtube.com/feeds/videos.xml?channel_id=UCVls1GmFKf6WlTraIb_IaJg "~YOUTUBE: DistroTube" youtube linux
+https://www.youtube.com/feeds/videos.xml?channel_id=UC2eYFnH61tmytImy1mTYvhA "~YOUTUBE: Luke Smith" youtube linux vim
+https://www.youtube.com/feeds/videos.xml?channel_id=UC_iD0xppBwwsrM9DegC5cQQ "~YOUTUBE: jonhoo (rust)" youtube rust programming
+https://www.youtube.com/feeds/videos.xml?channel_id=UCSp-OaMpsO8K0KkOqyBl7_w "~YOUTUBE: Letsgetrusty (rust)" youtube rust programming
+https://www.youtube.com/feeds/videos.xml?channel_id=UC7YY_Y0UXAbL_1xkY0hQjJA "~YOUTUBE: Ferrous Systems GmbH (rust)" youtube rust programming
 https://www.youtube.com/feeds/videos.xml?channel_id=UCXPHFM88IlFn68OmLwtPmZA "~YOUTUBE: Greg Hurrell" youtube vim
-https://www.youtube.com/feeds/videos.xml?channel_id=UC0ZTPkdxlAKf-V33tqXwi3Q "~YOUTUBE: HackerSploit" youtube
+https://www.youtube.com/feeds/videos.xml?channel_id=UC0ZTPkdxlAKf-V33tqXwi3Q "~YOUTUBE: HackerSploit" youtube hack
 https://www.youtube.com/feeds/videos.xml?channel_id=UCgkG68BiCngkoV7I2BLtAVg "~YOUTUBE: DevDungeon" youtube linux
 https://www.youtube.com/feeds/videos.xml?channel_id=UCMz9lmndR0BEqi70kM_ioyA "~YOUTUBE: Ben Kadel" vim
 https://www.youtube.com/feeds/videos.xml?user=NapoleonWils0n "~YOUTUBE: NapoleonWils0n" youtube linux hack

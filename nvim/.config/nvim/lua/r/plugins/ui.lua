@@ -1,1323 +1,783 @@
 local highlight = as.highlight
-local border, icons, api, fn =
-    as.ui.border.rectangle, as.ui.icons, vim.api, vim.fn
+local icons, fn = as.ui.icons, vim.fn
+
+local border = as.ui.border.rectangle
 
 return {
-    -- INDENTBLANK
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        event = "UIEnter",
-
-        init = function()
-            highlight.plugin("indentline", {
-                {
-                    IndentBlanklineContextChar = { fg = { from = "Directory" } },
-                },
-                {
-                    IndentBlanklineContextStart = {
-                        sp = { from = "Directory", attr = "fg" },
-                    },
-                },
-            })
-
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Misc",
-                    commands = {
-                        {
-                            ":IndentBlanklineToggle",
-                            description = "Indentblankline: toggle",
-                        },
-                    },
-                },
-            }
-        end,
-        opts = {
-            char = "│", -- ┆ ┊ 
-            use_treesitter_scope = false,
-            show_trailing_blankline_indent = false,
-            show_foldtext = false,
-            context_char = "▎",
-            char_priority = 12,
-            show_current_context = true,
-            show_current_context_start = true,
-            show_current_context_start_on_current_line = false,
-            show_first_indent_level = true,
-            buftype_exclude = { "terminal", "nofile" },
-            filetype_exclude = {
-                "",
-                "DiffviewFileHistory",
-                "DiffviewFiles",
-                "NvimTree",
-                "TelescopePrompt",
-                "TelescopeResults",
-                "Trouble",
-                "aerial",
-                "alpha",
-                "dashboard",
-                "help",
-                "lazy",
-                "lspinfo",
-                "mason",
-                "neo-tree",
-                "neogitstatus",
-                "neorg",
-                "norg",
-                "org",
-                "packer",
-                "qf",
-                "sagahover",
-                "sagasignature",
-                "startify",
-                "terminal",
+  -- INDENTBLANKLINE
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    main = "ibl",
+    opts = {
+      scope = { enabled = false },
+      indent = {
+        char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+      },
+      exclude = {
+        filetypes = {
+          "dbout",
+          "neo-tree-popup",
+          "log",
+          "gitcommit",
+          "txt",
+          "fzf",
+          "help",
+          "NvimTree",
+          "git",
+          "flutterToolsOutline",
+          "undotree",
+          "markdown",
+          "norg",
+          "org",
+          "orgagenda",
+          "fzflua",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("ibl").setup(opts)
+      -- local hooks = require "ibl.hooks"
+      -- hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+      -- hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+    end,
+  },
+  -- DRESSING
+  {
+    "stevearc/dressing.nvim",
+    lazy = true,
+    init = function()
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line: duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.input(...)
+      end
+    end,
+  },
+  -- NVIM-NOTIFY
+  {
+    "rcarriga/nvim-notify",
+    event = "VeryLazy",
+    opts = {
+      timeout = 3000,
+      max_height = function()
+        return math.floor(vim.o.lines * 0.75)
+      end,
+      max_width = function()
+        return math.floor(vim.o.columns * 0.75)
+      end,
+    },
+    config = function()
+      highlight.plugin("notify", {
+        { NotifyERRORBorder = { bg = { from = "Pmenu" } } },
+        { NotifyWARNBorder = { bg = { from = "Pmenu" } } },
+        { NotifyINFOBorder = { bg = { from = "Pmenu" } } },
+        { NotifyDEBUGBorder = { bg = { from = "Pmenu" } } },
+        { NotifyTRACEBorder = { bg = { from = "Pmenu" } } },
+        { NotifyERRORBody = { link = "Pmenu" } },
+        { NotifyWARNBody = { link = "Pmenu" } },
+        { NotifyINFOBody = { link = "Pmenu" } },
+        { NotifyDEBUGBody = { link = "Pmenu" } },
+        { NotifyTRACEBody = { link = "Pmenu" } },
+      })
+    end,
+  },
+  -- NOICE
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    },
+    -- stylua: ignore
+    keys = {
+      {
+        "<S-Enter>",
+        ---@diagnostic disable-next-line: param-type-mismatch
+        function() require("noice").redirect(fn.getcmdline()) end,
+        mode = "c",
+        desc =
+        "Redirect Cmdline"
+      },
+      { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+    },
+    init = function()
+      highlight.plugin("notify", {
+        { NoiceCmdlinePopupBorder = { fg = { from = "Directory" } } },
+      })
+    end,
+    opts = {
+      -- debug = true,
+      lsp = {
+        -- documentation = {
+        --   opts = {
+        --     border = { style = "rounded" },
+        --     position = { row = 2 },
+        --   },
+        -- },
+        progress = {
+          enabled = false,
+        },
+        signature = { auto_open = { enabled = false } },
+        hover = { enabled = false },
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true,
+        },
+      },
+      cmdline = {
+        view = "cmdline",
+      },
+      messages = {
+        -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
+        view_search = false,
+      },
+      popupmenu = {
+        backend = "cmp",
+      },
+      redirect = { view = "popup", filter = { event = "msg_show" } },
+      views = {
+        vsplit = { size = { width = "auto" } },
+        split = { win_options = { winhighlight = { Normal = "Normal" } } },
+        popup = {
+          border = { style = border, padding = { 0, 1 } },
+        },
+        cmdline_popup = {
+          position = {
+            row = -5,
+            col = "50%",
+          },
+          size = {
+            width = "auto",
+            height = "auto",
+          },
+        },
+        confirm = {
+          border = { style = border, padding = { 0, 1 }, text = { top = "" } },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = { row = -5, col = "50%" },
+          size = { width = 60, height = 10 },
+          border = { style = border, padding = { 0, 1 } },
+          win_options = { winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" } },
+        },
+      },
+      routes = {
+        {
+          opts = { skip = true },
+          filter = {
+            any = {
+              { find = "%d+L, %d+B" },
+              { find = "; after #%d+" },
+              { find = "; before #%d+" },
+              { event = "msg_show", find = "written" },
+              { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+              { event = "msg_show", kind = "search_count" },
+              { event = "msg_show", find = "%d+L, %d+B" },
+              { event = "msg_show", find = "^Hunk %d+ of %d" },
+              { event = "msg_show", find = "%d+ change" },
+              { event = "msg_show", find = "%d+ line" },
+              { event = "msg_show", find = "%d+ more line" },
+              -- TODO: investigate the source of this LSP message and disable it happens in typescript files
+              { event = "notify", find = "No information available" },
             },
-            -- context_patterns = {
-            --     "class",
-            --     "return",
-            --     "function",
-            --     "method",
-            --     "^if",
-            --     "^while",
-            --     "jsx_element",
-            --     "^for",
-            --     "^object",
-            --     "^table",
-            --     "block",
-            --     "arguments",
-            --     "if_statement",
-            --     "else_clause",
-            --     "jsx_element",
-            --     "jsx_self_closing_element",
-            --     "try_statement",
-            --     "catch_clause",
-            --     "import_statement",
-            --     "operation_type",
-            -- },
+          },
+          view = "mini",
         },
+      },
+      -- you can enable a preset for easier configuration
+      presets = {
+        -- bottom_search = true,         -- use a classic bottom cmdline for search
+        -- command_palette = false,      -- position the cmdline and popupmenu together
+        -- long_message_to_split = true, -- long messages will be sent to a split
+        -- inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+        -- lsp_doc_border = true,        -- add a border to hover docs and signature help
+
+        inc_rename = true,
+        long_message_to_split = true,
+        lsp_doc_border = true,
+      },
     },
-    -- DRESSING
-    {
-        "stevearc/dressing.nvim",
-        event = "VeryLazy",
-        config = function()
-            require("dressing").setup {
-                backend = { "telescope", "fzf", "builtin" },
-            }
-        end,
-    },
-    -- NVIM-NOTIFY
-    {
-        "rcarriga/nvim-notify",
-        event = "VeryLazy",
-        config = function()
-            local notify = require "notify"
-
-            highlight.plugin("notify", {
-                { NotifyERRORBorder = { bg = { from = "Pmenu" } } },
-                { NotifyWARNBorder = { bg = { from = "Pmenu" } } },
-                { NotifyINFOBorder = { bg = { from = "Pmenu" } } },
-                { NotifyDEBUGBorder = { bg = { from = "Pmenu" } } },
-                { NotifyTRACEBorder = { bg = { from = "Pmenu" } } },
-                { NotifyERRORBody = { link = "Pmenu" } },
-                { NotifyWARNBody = { link = "Pmenu" } },
-                { NotifyINFOBody = { link = "Pmenu" } },
-                { NotifyDEBUGBody = { link = "Pmenu" } },
-                { NotifyTRACEBody = { link = "Pmenu" } },
-            })
-
-            notify.setup {
-                timeout = 5000,
-                stages = "fade_in_slide_out",
-                -- top_down = false,
-                background_colour = "NormalFloat",
-                max_width = function()
-                    return math.floor(vim.o.columns * 0.6)
-                end,
-                max_height = function()
-                    return math.floor(vim.o.lines * 0.8)
-                end,
-                on_open = function(win)
-                    if not api.nvim_win_is_valid(win) then
-                        return
-                    end
-                    api.nvim_win_set_config(win, { border = border })
-                end,
-            }
-        end,
-    },
-    -- NOICE
-    {
-        "folke/noice.nvim",
-        event = "VeryLazy",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Noice",
-                    commands = {
-                        {
-                            ":NoiceLast",
-                            function()
-                                return require("noice").cmd "last"
-                            end,
-                            description = "Show last message",
-                        },
-
-                        {
-                            ":NoiceHistory",
-                            function()
-                                return require("noice").cmd "history"
-                            end,
-                            description = "Show history message",
-                        },
-                        {
-                            ":NoiceLog",
-                            function()
-                                return require("noice").cmd "log"
-                            end,
-                            description = "Show log",
-                        },
-
-                        {
-                            ":NoiceAll",
-                            function()
-                                return require("noice").cmd "all"
-                            end,
-                            description = "Show all message",
-                        },
-                    },
-                    keymaps = {
-                        {
-                            "<F6>",
-                            function()
-                                return require("noice").redirect(
-                                    vim.fn.getcmdline()
-                                )
-                            end,
-                            description = "Redirect Cmdline",
-                        },
-                    },
-                },
-            }
-        end,
-        dependencies = {
-            "MunifTanjim/nui.nvim",
-            "rcarriga/nvim-notify",
-            "nvim-treesitter/nvim-treesitter",
+  },
+  -- STATUSCOL
+  {
+    "luukvbaal/statuscol.nvim",
+    event = "BufReadPre",
+    enabled = false,
+    config = function()
+      local builtin = require "statuscol.builtin"
+      require("statuscol").setup {
+        relculright = true,
+        segments = {
+          { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
+          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+          {
+            sign = {
+              name = { "GitSigns" },
+              maxwidth = 1,
+              colwidth = 1,
+              auto = false,
+              -- fillcharhl = "StatusColumnSeparator",
+            },
+            click = "v:lua.ScSa",
+          },
+          { text = { "%s" } },
         },
-        config = function()
-            require("noice").setup {
-
-                -- debug = false,
-                popupmenu = {
-                    -- cmp-cmdline has more sources and can be extended
-                    backend = "cmp", -- backend to use to show regular cmdline completions
-                },
-                -- lsp = {
-                --     -- can not filter null-ls's data
-                --     -- j-hui/fidget.nvim
-                --     progress = {
-                --         enabled = false,
-                --     },
-                -- },
-                -- messages = {
-                --     -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
-                --     view_search = false,
-                -- },
-                -- notify = { enabled = true },
-                -- cmdline = { enabled = true },
-                -- messages = { enabled = true },
-                lsp = {
-                    progress = {
-                        enabled = false,
-                        -- view = "mini",
-                    },
-                    documentation = {
-                        opts = {
-                            border = { style = "rounded" },
-                            position = { row = 2 },
-                        },
-                    },
-                    signature = {
-                        auto_open = { enabled = false },
-                    },
-                    hover = { enabled = true },
-                    override = {
-                        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-                        ["vim.lsp.util.stylize_markdown"] = true,
-                        ["cmp.entry.get_documentation"] = true,
-                    },
-                },
-
-                views = {
-                    cmdline_popup = {
-                        position = {
-                            row = -5,
-                            col = "50%",
-
-                            -- row = vim.o.lines - 3, -- posisi sama dengan yang cmd lama
-                            -- col = 0,
-                        },
-                        size = {
-                            width = "auto",
-                            height = "auto",
-                        },
-                    },
-                },
-
-                -- you can enable a preset for easier configuration
-                presets = {
-                    bottom_search = false, -- use a classic bottom cmdline for search
-                    command_palette = true, -- position the cmdline and popupmenu together
-                    long_message_to_split = true, -- long messages will be sent to a split
-                    inc_rename = true, -- enables an input dialog for inc-rename.nvim
-                    lsp_doc_border = true, -- add a border to hover docs and signature help
-                },
-                -- `Route` gunanya untuk memfilter noitifikasi yang ga terlalu
-                -- berguna di noice
-                -- https://github.com/folke/noice.nvim#-routes
-                routes = {
-                    {
-                        opts = { skip = true },
-                        filter = {
-                            any = {
-                                { event = "msg_show", kind = "search_count" },
-                                { event = "msg_show", find = "written" },
-                                { event = "notify", find = "SUCCESS" },
-                                {
-                                    event = "msg_show",
-                                    find = "%d+ lines, %d+ bytes",
-                                },
-                                { event = "msg_show", find = "%d+L, %d+B" },
-                                {
-                                    event = "msg_show",
-                                    find = "^Hunk %d+ of %d",
-                                },
-                                { event = "msg_show", find = "%d+ change" },
-                                { event = "msg_show", find = "%d+ more line" },
-                                {
-                                    event = "notify",
-                                    find = "No information available",
-                                },
-                            },
-                        },
-                    },
-                },
-            }
+        ft_ignore = {
+          "NvimTree",
+          "NeogitStatus",
+          "NeogitCommitMessage",
+          "toggleterm",
+          "dapui_scopes",
+          "dapui_breakpoints",
+          "dapui_stacks",
+          "dapui_watches",
+          "dapui_console",
+          "dap-repl",
+          "neotest-summary",
+        },
+        bt_ignore = {
+          "terminal",
+        },
+      }
+    end,
+  },
+  -- FOLD CYCLE
+  {
+    "jghauser/fold-cycle.nvim",
+    opts = {},
+    keys = {
+      {
+        "<a-space>",
+        function()
+          require("fold-cycle").open()
         end,
+        desc = "Fold(fold-cycle): cycle fold",
+      },
     },
-    -- STATUSCOL
-    {
-        "luukvbaal/statuscol.nvim",
-        event = "BufReadPre",
-        config = function()
-            local builtin = require "statuscol.builtin"
-            require("statuscol").setup {
-                -- hl = "FoldColumn", -- %# highlight group label, applies to each text element
-                relculright = true,
-                segments = {
-                    -- {
-                    --     text = { builtin.foldfunc },
-                    --     click = "v:lua.ScFa",
-                    -- },
-                    {
-                        text = { "%s" },
-                        hl = "FoldColumn", -- %# highlight group label
-                        click = "v:lua.ScSa",
-                    },
-                    {
-                        text = { builtin.lnumfunc, " " },
-                        hl = "FoldColumn",
-                        click = "v:lua.ScLa",
-                    },
-                    {
-                        text = { " ", builtin.foldfunc, " " },
-                        hl = "FoldColumn",
-                        click = "v:lua.ScFa",
-                    },
-                },
-            }
-        end,
+  },
+  -- BUFFERLINE
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = {
+      { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
+      { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
+      { "<leader><BS>", "<CMD>BufferLineGroupToggle docs<CR>", desc = "Buffer(Bufferline): group close docs" },
     },
-    -- NVIM-UFO
-    {
-        -- NOTE ufo ini selalu jalan ketika buka ft apapun, seharusnya bisa di
-        -- disable. Contoh ketika open AerialToggle, map zM harusnya milik Aerial bukan Ufo.
-        -- Solusi lain mungkin dari issue ini:
-        -- https://github.com/kevinhwang91/nvim-ufo/issues/33#issuecomment-1478102255
-        "kevinhwang91/nvim-ufo",
-        event = "BufRead",
-        init = function()
-            as.augroup("UfoSettings", {
-                event = "FileType",
-                pattern = {
+    opts = function()
+      local col_base_bg_attr = "Normal"
+      local col_base_fg_attr = "Pmenu"
+
+      local col_unselected_bg_attr = "bufferline_unselected"
+      local col_unselected_fg_attr = "Pmenu"
+
+      local col_selected_fg_attr = "Boolean"
+      local col_selected_bg_attr = "PmenuSel"
+
+      local col_selected_sp = "bufferline_unselected"
+
+      local bufferline = require "bufferline"
+
+      return {
+        options = {
+          -- mode = "tabs",
+          -- show_buffer_close_icon = false,
+          -- buffer_close_icon = "",
+          -- sort_by = "insert_after_current",
+          -- show_close_icon = true,
+          always_show_bufferline = false,
+          diagnostics = "nvim_lsp",
+          -- max_name_length = 100,
+          -- max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
+          -- truncate_names = true, -- whether or not tab names should be truncated
+          -- max_prefix_length = 5,
+          -- diagnostics_update_in_insert = false,
+          -- hover = { enabled = true, reveal = { "close" } },
+          -- separator_style = "thick",
+          diagnostics_indicator = function(_, _, diag)
+            local icons_diagnostic = icons.diagnostics
+            local ret = (diag.error and icons_diagnostic.Error .. diag.error .. " " or "")
+              .. (diag.warning and icons_diagnostic.Warn .. diag.warning or "")
+            return vim.trim(ret)
+          end,
+          offsets = {
+            {
+              text = "EXPLORER",
+              filetype = "NvimTree",
+              highlight = "Directory",
+              text_align = "left",
+            },
+
+            {
+              text = " DIFF VIEW",
+              filetype = "DiffviewFiles",
+              highlight = "PanelHeading",
+              separator = true,
+            },
+
+            {
+              text = " DATABASE VIEWER",
+              filetype = "dbui",
+              highlight = "PanelHeading",
+              separator = true,
+            },
+
+            {
+              text = "EXPLORER",
+              filetype = "neo-tree",
+              highlight = "Directory",
+              text_align = "left",
+            },
+          },
+          groups = {
+            options = { toggle_hidden_on_enter = true },
+            items = {
+              bufferline.groups.builtin.pinned:with {
+                icon = "",
+              },
+              bufferline.groups.builtin.ungrouped,
+              {
+                name = "Dependencies",
+                icon = "",
+                highlight = { fg = "#ECBE7B" },
+                matcher = function(buf)
+                  return vim.startswith(buf.path, vim.env.VIMRUNTIME)
+                end,
+              },
+              {
+                name = "Terraform",
+                matcher = function(buf)
+                  return buf.name:match "%.tf" ~= nil
+                end,
+              },
+              {
+                name = "Kubernetes",
+                matcher = function(buf)
+                  return buf.name:match "kubernetes" and buf.name:match "%.yaml"
+                end,
+              },
+              {
+                name = "SQL",
+                matcher = function(buf)
+                  return buf.name:match "%.sql$"
+                end,
+              },
+              {
+                name = "tests",
+                icon = "",
+                matcher = function(buf)
+                  local name = buf.name
+                  return name:match "[_%.]spec" or name:match "[_%.]test"
+                end,
+              },
+              {
+                name = "docs",
+                icon = "",
+                matcher = function(buf)
+                  if vim.bo[buf.id].filetype == "man" or buf.path:match "man://" then
+                    return true
+                  end
+                  for _, ext in ipairs {
+                    "md",
+                    "txt",
                     "org",
-                    "alpha",
                     "norg",
-                    "aerial",
-                    "Outline",
-                    "neo-tree",
-                    "DiffviewFileHistory",
-                },
-                command = function()
-                    local ufo = require "ufo"
-                    ufo.detach()
-                end,
-            })
-
-            require("legendary").keymaps {
-
-                {
-                    itemgroup = "Fold",
-                    description = "Fold in nvim",
-                    icon = as.ui.icons.misc.double_chevron_right,
-                    keymaps = {
-
-                        -- {
-                        --     "<Localleader>z",
-                        --     [[zMzvzz]], --> command ini bikin foldlevel menjadi 0
-                        --     description = "Misc: refocus folds",
-                        -- },
-                        --
-                        -- {
-                        --     "zY",
-                        --     [[zCzO]],
-                        --     description = "Misc: open folds whatever top fold we're in",
-                        -- },
-                        --
-                        -- {
-                        --     "<BS>",
-                        --     [[@=(foldlevel('.')?'za':"\<Space>")<CR>]],
-                        --     description = "Misc: toggle fold under cursor",
-                        -- },
-
-                        -- UFO --------------------------------------------------------
-                        {
-                            "zM",
-                            function()
-                                return require("ufo").closeAllFolds()
-                            end,
-                            description = "Ufo: close all folds",
-                        },
-
-                        -- {
-                        --     "zm",
-                        --     function()
-                        --         return require("ufo").closeFoldsWith()
-                        --     end,
-                        --     description = "Ufo: close fold",
-                        -- },
-
-                        {
-                            "zR",
-                            function()
-                                return require("ufo").openAllFolds()
-                            end,
-                            description = "Ufo: open all folds",
-                        },
-                        --
-                        -- {
-                        --     "zr",
-                        --     function()
-                        --         return require("ufo").openFoldsExceptKinds()
-                        --     end,
-                        --     description = "Ufo: Open folds except kinds",
-                        -- },
-
-                        {
-                            "zP",
-                            function()
-                                return require("ufo").peekFoldedLinesUnderCursor()
-                            end,
-                            description = "Ufo: open peek folds",
-                        },
-
-                        -- FOLDCYCLE --------------------------------------------------
-                        -- {
-                        --     "<Localleader>z",
-                        --     function()
-                        --         return require("fold-cycle").open()
-                        --     end,
-                        --
-                        --     description = "Foldcyle: toggle",
-                        --     mode = { "n", "v" },
-                        -- },
-                    },
-                    commands = {
-                        {
-                            ":UfoInspect",
-                            description = "Ufo: inspect",
-                        },
-                    },
-                },
-            }
-        end,
-        -- disabled = false,
-        dependencies = {
-            "kevinhwang91/promise-async",
-        },
-        config = function()
-            local function handler(
-                virt_text,
-                lnum,
-                end_lnum,
-                width,
-                truncate,
-                ctx
-            )
-                local result = {}
-
-                local counts = ("    %d    "):format(end_lnum - lnum)
-                local suffix = " ⋯⋯  "
-                local padding = ""
-
-                local end_virt_text = ctx.get_fold_virt_text(end_lnum)
-
-                local sufWidth = (2 * api.nvim_strwidth(suffix))
-                    + api.nvim_strwidth(counts)
-
-                local target_width = width - sufWidth
-                local cur_width = 0
-
-                for _, chunk in ipairs(virt_text) do
-                    local chunk_text = chunk[1]
-
-                    local chunk_width = api.nvim_strwidth(chunk_text)
-                    if target_width > cur_width + chunk_width then
-                        table.insert(result, chunk)
-                    else
-                        chunk_text =
-                            truncate(chunk_text, target_width - cur_width)
-                        local hl_group = chunk[2]
-                        table.insert(result, { chunk_text, hl_group })
-                        chunk_width = api.nvim_strwidth(chunk_text)
-
-                        if cur_width + chunk_width < target_width then
-                            padding = padding
-                                .. (" "):rep(
-                                    target_width - cur_width - chunk_width
-                                )
-                        end
-                        break
+                    "wiki",
+                  } do
+                    if ext == fn.fnamemodify(buf.path, ":e") then
+                      return true
                     end
-                    cur_width = cur_width + chunk_width
-                end
-
-                if end_virt_text[1] and end_virt_text[1][1] then
-                    end_virt_text[1][1] =
-                        end_virt_text[1][1]:gsub("[%s\t]+", "")
-                end
-
-                table.insert(result, { suffix, "UfoFoldedEllipsis" })
-                table.insert(result, { counts, "MoreMsg" })
-                table.insert(result, { suffix, "UfoFoldedEllipsis" })
-
-                vim.list_extend(result, end_virt_text)
-                table.insert(result, { padding, "" })
-
-                return result
-            end
-
-            vim.o.foldlevel = 99 -- feel free to decrease the value
-            vim.o.foldlevelstart = 99
-            vim.o.foldenable = true
-            vim.o.foldcolumn = "1"
-
-            local ufo = require "ufo"
-
-            ufo.setup {
-                open_fold_hl_timeout = 0,
-                fold_virt_text_handler = handler,
-                close_fold_kinds = { "imports", "comment" },
-                enable_get_fold_virt_text = true,
-                ---@diagnostic disable-next-line: unused-local
-                provider_selector = function(bufnr, filetype, buftype)
-                    return { "treesitter", "indent" }
+                  end
                 end,
-                --     provider_selector = function(_, filetype, buftype)
-                --         local function handleFallbackException(
-                --             bufnr,
-                --             err,
-                --             providerName
-                --         )
-                --             if
-                --                 type(err) == "string"
-                --                 and err:match "UfoFallbackException"
-                --             then
-                --                 return require("ufo").getFolds(bufnr, providerName)
-                --             else
-                --                 return require("promise").reject(err)
-                --             end
-                --         end
-                --
-                --         return (filetype == "" or buftype == "nofile") and "indent" -- only use indent until a file is opened
-                --             or function(bufnr)
-                --                 return require("ufo")
-                --                     .getFolds(bufnr, "lsp")
-                --                     :catch(function(err)
-                --                         return handleFallbackException(
-                --                             bufnr,
-                --                             err,
-                --                             "treesitter"
-                --                         )
-                --                     end)
-                --                     :catch(function(err)
-                --                         return handleFallbackException(
-                --                             bufnr,
-                --                             err,
-                --                             "indent"
-                --                         )
-                --                     end)
-                --             end
-                --     end,
-                preview = {
-                    win_config = {
-                        winhighlight = "Normal:Normal,FloatBorder:Normal",
-                    },
-                },
-            }
-        end,
-    },
-    -- BUFFERLINE
-    {
-        "akinsho/nvim-bufferline.lua",
-        event = "VeryLazy",
-        init = function()
-            require("legendary").keymaps {
-                {
-                    itemgroup = "Buffertabs",
-                    keymaps = {
-                        {
-                            "gl",
-                            "<CMD>BufferLineCycleNext<CR>",
-                            description = "Bufferline: next buffer",
-                        },
-                        {
-                            "gh",
-                            "<CMD>BufferLineCyclePrev<CR>",
-                            description = "Bufferline: prev buffer",
-                        },
-
-                        {
-                            "<leader><BS>",
-                            "<CMD>BufferLineGroupToggle docs<CR>",
-                            description = "Bufferline: group close docs",
-                        },
-                    },
-                },
-            }
-        end,
-        config = function()
-            local col_selected_bg_attr = "Normal"
-            local col_selected_fg_attr = "Normal"
-            local col_unselected_bg_attr = "bufferline_unselected"
-
-            local bufferline = require "bufferline"
-            bufferline.setup {
-                options = {
-                    mode = "buffers",
-                    modified_icon = "●",
-                    show_buffer_close_icon = false,
-                    buffer_close_icon = "",
-                    sort_by = "insert_after_current",
-                    show_close_icon = true,
-                    diagnostics = "nvim_lsp",
-                    diagnostics_update_in_insert = false,
-                    hover = { enabled = true, reveal = { "close" } },
-                    separator_style = "thick",
-                    diagnostics_indicator = function(count, level)
-                        level = level:match "warn" and "warn" or level
-                        return (icons.diagnostics[level] or "?") .. count
-                    end,
-                    offsets = {
-                        {
-                            text = "EXPLORER",
-                            filetype = "NvimTree",
-                            highlight = "Directory",
-                            -- text_align = "left",
-                        },
-
-                        {
-                            text = " DIFF VIEW",
-                            filetype = "DiffviewFiles",
-                            highlight = "PanelHeading",
-                            separator = true,
-                        },
-
-                        {
-                            text = " DATABASE VIEWER",
-                            filetype = "dbui",
-                            highlight = "PanelHeading",
-                            separator = true,
-                        },
-
-                        {
-                            text = "NEOTREE",
-                            filetype = "neo-tree",
-                            highlight = "Directory",
-                            -- text_align = "left",
-                        },
-                        {
-                            filetype = "UNDOTREE",
-                            text = "Undotree",
-                            highlight = "PanelHeading",
-                            text_align = "left",
-                        },
-                    },
-                    groups = {
-                        options = { toggle_hidden_on_enter = true },
-                        items = {
-                            bufferline.groups.builtin.pinned:with {
-                                icon = "",
-                            },
-                            bufferline.groups.builtin.ungrouped,
-                            {
-                                name = "Dependencies",
-                                icon = "",
-                                highlight = { fg = "#ECBE7B" },
-                                matcher = function(buf)
-                                    return vim.startswith(
-                                        buf.path,
-                                        vim.env.VIMRUNTIME
-                                    )
-                                end,
-                            },
-                            {
-                                name = "Terraform",
-                                matcher = function(buf)
-                                    return buf.name:match "%.tf" ~= nil
-                                end,
-                            },
-                            {
-                                name = "Kubernetes",
-                                matcher = function(buf)
-                                    return buf.name:match "kubernetes"
-                                        and buf.name:match "%.yaml"
-                                end,
-                            },
-                            {
-                                name = "SQL",
-                                matcher = function(buf)
-                                    return buf.name:match "%.sql$"
-                                end,
-                            },
-                            {
-                                name = "tests",
-                                icon = "",
-                                matcher = function(buf)
-                                    local name = buf.name
-                                    return name:match "[_%.]spec"
-                                        or name:match "[_%.]test"
-                                end,
-                            },
-                            {
-                                name = "docs",
-                                icon = "",
-                                matcher = function(buf)
-                                    if
-                                        vim.bo[buf.id].filetype == "man"
-                                        or buf.path:match "man://"
-                                    then
-                                        return true
-                                    end
-                                    for _, ext in ipairs {
-                                        "md",
-                                        "txt",
-                                        "org",
-                                        "norg",
-                                        "wiki",
-                                    } do
-                                        if
-                                            ext
-                                            == fn.fnamemodify(buf.path, ":e")
-                                        then
-                                            return true
-                                        end
-                                    end
-                                end,
-                            },
-                        },
-                    },
-                },
-
-                highlights = {
-                    fill = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_fg_attr,
-                        },
-                    },
-                    background = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                    },
-
-                    -- TAB ----------------------------------------------------
-                    tab = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                    },
-                    tab_close = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                    },
-                    tab_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        italic = false,
-                    },
-
-                    -- SEPARATOR ----------------------------------------------
-                    separator = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    separator_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    separator_visible = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-
-                    -- CLOSE --------------------------------------------------
-                    close_button = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_fg_attr,
-                        },
-                    },
-                    close_button_visible = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_fg_attr,
-                        },
-                    },
-                    close_button_selected = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_selected_fg_attr,
-                        },
-                    },
-
-                    -- BUFFER -------------------------------------------------
-                    buffer = {
-
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                    },
-                    buffer_visible = {
-                        italic = true,
-                        fg = {
-                            attribute = "fg",
-                            highlight = "Boolean",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                    },
-                    buffer_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        italic = false,
-                    },
-
-                    -- PICK ---------------------------------------------------
-                    pick = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        italic = false,
-                    },
-                    pick_selected = {
-                        italic = false,
-                    },
-                    pick_visible = {
-                        italic = false,
-                    },
-
-                    -- MODIFIED -----------------------------------------------
-                    modified = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        fg = {
-                            attribute = "fg",
-                            highlight = "ErrorMsg",
-                        },
-                    },
-                    modified_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "ErrorMsg",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                    },
-                    modified_selected = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "ErrorMsg",
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_bg_attr,
-                        },
-                    },
-
-                    -- DUPLICATE ----------------------------------------------
-                    duplicate = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        italic = false,
-                    },
-                    duplicate_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "boolean",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = false,
-                    },
-                    duplicate_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_bg_attr,
-                        },
-                    },
-
-                    -- OFFSET -------------------------------------------------
-                    offset_separator = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-
-                    -----------------------------------------------------------
-                    -- DIAGNOSTICS
-                    -----------------------------------------------------------
-                    -- diagnostic = {
-                    --     bg = {
-                    --         attribute = "fg",
-                    --         highlight = "Boolean",
-                    --     },
-                    -- },
-                    diagnostic_visible = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                    },
-                    -- diagnostic_selected = {
-                    --     bg = {
-                    --         attribute = "fg",
-                    --         highlight = "Boolean",
-                    --     },
-                    -- },
-
-                    -- WARNING ------------------------------------------------
-                    warning = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    warning_visible = {
-                        italic = true,
-                        fg = {
-                            attribute = "fg",
-                            highlight = "Boolean",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                    },
-                    warning_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        italic = false,
-                    },
-                    warning_diagnostic = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    warning_diagnostic_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "DiagnosticWarn",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = true,
-                    },
-                    warning_diagnostic_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        italic = false,
-                    },
-
-                    -- ERROR --------------------------------------------------
-                    error = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    error_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "Boolean",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = true,
-                    },
-                    error_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-
-                        italic = false,
-                    },
-                    error_diagnostic = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    error_diagnostic_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "DiagnosticError",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = true,
-                    },
-                    error_diagnostic_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        -- bg = {
-                        --     attribute = "bg",
-                        --     highlight = "Normal",
-                        -- },
-                        italic = false,
-                    },
-
-                    -- HINT ---------------------------------------------------
-                    hint = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    hint_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "Boolean",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = true,
-                    },
-                    hint_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-
-                        italic = false,
-                    },
-                    hint_diagnostic = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    hint_diagnostic_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "DiagnosticHint",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = true,
-                    },
-                    hint_diagnostic_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        italic = false,
-                    },
-
-                    -- INFO ---------------------------------------------------
-                    info = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    info_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "Boolean",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                        italic = true,
-                    },
-                    info_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-
-                        italic = false,
-                    },
-                    info_diagnostic = {
-                        bg = {
-                            attribute = "bg",
-                            highlight = "Normal",
-                        },
-                    },
-                    info_diagnostic_visible = {
-                        fg = {
-                            attribute = "fg",
-                            highlight = "DiagnosticInfo",
-                        },
-                        bg = {
-                            attribute = "bg",
-                            highlight = col_unselected_bg_attr,
-                        },
-                        italic = true,
-                    },
-                    info_diagnostic_selected = {
-                        fg = {
-                            attribute = "bg",
-                            highlight = col_selected_bg_attr,
-                        },
-                        bg = {
-                            attribute = "fg",
-                            highlight = col_selected_fg_attr,
-                        },
-                        italic = false,
-                    },
-                },
-            }
-        end,
-    },
-    -- SATELLITE (disabled)
-    {
-        "lewis6991/satellite.nvim",
-        event = "VeryLazy",
-        enabled = false,
-        opts = {
-            current_only = true,
-            excluded_filetypes = {
-                "help",
-                "alpha",
-                "undotree",
-                "neo-tree",
-                "gitcommit",
-                "gitrebase",
+              },
             },
+          },
         },
+        highlights = {
+          fill = {
+            fg = { attribute = "bg", highlight = col_base_fg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            italic = true,
+          },
+          background = {
+            fg = { attribute = "fg", highlight = "Directory" },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            italic = true,
+          },
+          -- TAB ---------------------------------------------------
+          tab = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          tab_close = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          tab_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            -- bg = { attribute = "bg", highlight = col_selected_bg_attr },
+          },
+          -- INDICATOR ----------------------------------------------
+          indicator_visible = {
+            fg = { attribute = "bg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+          },
+          indicator_selected = {
+            fg = { attribute = "bg", highlight = col_selected_bg_attr },
+          },
+          -- SEPARATOR ----------------------------------------------
+          separator = {
+            fg = { attribute = "bg", highlight = col_base_fg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          separator_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          separator_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            -- bg = { attribute = "bg", highlight = col_selected_bg_attr },
+          },
+          -- CLOSE --------------------------------------------------
+          close_button = {
+            fg = { attribute = "bg", highlight = col_base_fg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          close_button_visible = {
+            fg = { attribute = "fg", highlight = col_base_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          close_button_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+          },
+          -- BUFFER -------------------------------------------------
+          buffer = {
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          buffer_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          buffer_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = "ErrorMsg" },
+            -- underline = true,
+            italic = false,
+          },
+          -- PICK ---------------------------------------------------
+          pick = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            italic = false,
+          },
+          pick_selected = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            -- bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = false,
+          },
+          pick_visible = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            italic = false,
+          },
+          -- MODIFIED -----------------------------------------------
+          modified = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            fg = { attribute = "fg", highlight = col_selected_sp },
+          },
+          modified_visible = {
+            fg = { attribute = "fg", highlight = "ErrorMsg" },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          modified_selected = {
+            fg = { attribute = "fg", highlight = "ErrorMsg" },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+          },
+          -- DUPLICATE ----------------------------------------------
+          duplicate = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            italic = false,
+          },
+          duplicate_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = false,
+          },
+          duplicate_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+          },
+          -- OFFSET -------------------------------------------------
+          offset_separator = {
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            fg = { attribute = "bg", highlight = col_selected_bg_attr },
+          },
+          -----------------------------------------------------------
+          -- DIAGNOSTICS
+          -----------------------------------------------------------
+          diagnostic_visible = {
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          diagnostic_selected = {
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          -- WARNING ------------------------------------------------
+          warning = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          warning_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          warning_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          warning_diagnostic = {
+            fg = { attribute = "fg", highlight = "DiagnosticWarn" },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          warning_diagnostic_visible = {
+            fg = { attribute = "fg", highlight = "DiagnosticWarn" },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          warning_diagnostic_selected = {
+            fg = { attribute = "fg", highlight = "DiagnosticWarn" },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          -- ERROR --------------------------------------------------
+          error = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          error_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+          },
+          error_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          error_diagnostic = {
+            fg = { attribute = "fg", highlight = "DiagnosticError" },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          error_diagnostic_visible = {
+            fg = { attribute = "fg", highlight = "DiagnosticError" },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          error_diagnostic_selected = {
+            fg = { attribute = "fg", highlight = "DiagnosticError" },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          -- HINT ---------------------------------------------------
+          hint = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          hint_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          hint_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          hint_diagnostic = {
+            fg = { attribute = "fg", highlight = "DiagnosticHint" },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          hint_diagnostic_visible = {
+            fg = { attribute = "fg", highlight = "DiagnosticHint" },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          hint_diagnostic_selected = {
+            fg = { attribute = "fg", highlight = "DiagnosticHint" },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          -- INFO ---------------------------------------------------
+          info = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          info_visible = {
+            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          info_selected = {
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+          info_diagnostic = {
+            fg = { attribute = "fg", highlight = "DiagnosticInfo" },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          info_diagnostic_visible = {
+            fg = { attribute = "fg", highlight = "DiagnosticInfo" },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
+          },
+          info_diagnostic_selected = {
+            fg = { attribute = "fg", highlight = "DiagnosticInfo" },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            -- sp = { attribute = "fg", highlight = col_selected_sp },
+            -- underline = true,
+            italic = false,
+          },
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+    end,
+  },
+  -- NVIM-SCROLLBAR
+  {
+    "petertriho/nvim-scrollbar",
+    event = "VimEnter",
+    opts = {
+      show = true,
+      set_highlights = true,
+      handle = {
+        text = " ",
+        color = "#3F4A5A",
+        cterm = nil,
+        highlight = "CursorColumn",
+        hide_if_all_visible = true, -- Hides handle if all lines are visible
+      },
+      marks = {
+        Search = {
+          text = { "-", "=" },
+          priority = 0,
+          color = nil,
+          cterm = nil,
+          highlight = "Search",
+        },
+        Error = {
+          text = { "-", "=" },
+          priority = 1,
+          color = nil,
+          cterm = nil,
+          highlight = "DiagnosticVirtualTextError",
+        },
+        Warn = {
+          text = { "-", "=" },
+          priority = 2,
+          color = nil,
+          cterm = nil,
+          highlight = "DiagnosticVirtualTextWarn",
+        },
+        Info = {
+          text = { "-", "=" },
+          priority = 3,
+          color = nil,
+          cterm = nil,
+          highlight = "DiagnosticVirtualTextInfo",
+        },
+        Hint = {
+          text = { "-", "=" },
+          priority = 4,
+          color = nil,
+          cterm = nil,
+          highlight = "DiagnosticVirtualTextHint",
+        },
+        Misc = {
+          text = { "-", "=" },
+          priority = 5,
+          color = nil,
+          cterm = nil,
+          -- highlight = "Normal",
+        },
+      },
+      excluded_buftypes = {
+        "terminal",
+      },
+      excluded_filetypes = {
+        "prompt",
+        "TelescopePrompt",
+        "lazy",
+      },
+      autocmd = {
+        render = {
+          "BufWinEnter",
+          "TabEnter",
+          "TermEnter",
+          "WinEnter",
+          "CmdwinLeave",
+          -- "TextChanged",
+          "VimResized",
+          "WinScrolled",
+        },
+      },
+      handlers = {
+        diagnostic = true,
+        search = true, -- Requires hlslens to be loaded, will run require("scrollbar.handlers.search").setup() for you
+      },
     },
-    -- NVIM-SCROLLBAR (disabled)
-    {
-        "petertriho/nvim-scrollbar",
-        event = "BufRead",
-        enabled = false,
-        config = function()
-            local scrollbar = require "scrollbar"
-
-            -- PERF: throttle scrollbar refresh
-            -- Disable, throttle, since it was caused by comment TS
-            -- local render = scrollbar.render
-            -- scrollbar.render = require("util").throttle(300, render)
-
-            local linenr_bg = highlight.get("LineNr", "fg")
-            -- local bg = h.alter_color(linenr_bg, 13)
-
-            scrollbar.setup {
-                handle = {
-                    color = linenr_bg,
-                },
-                excluded_filetypes = {
-                    "prompt",
-                    "TelescopePrompt",
-                    "noice",
-                    "lazy",
-                    "notify",
-                },
-                -- marks = {
-                --     -- Search = { color = colors.orange },
-                --     Error = { color = O.default.palette.error },
-                --     Warn = { color = O.default.palette.warn },
-                --     Info = { color = O.default.palette.info },
-                --     Hint = { color = O.default.palette.hint },
-                --     Misc = { color = O.default.palette.misc },
-                -- },
-            }
-        end,
+    -- config = function(_, opts)
+    --   require("scrollbar").setup(opts)
+    -- end,
+  },
+  -- BLOCK NVIM
+  {
+    "HampusHauffman/block.nvim",
+    cmd = { "BlockOn", "BlockOff", "Block" },
+    opts = {},
+  },
+  -- BEACON (disabled)
+  {
+    "rainbowhxch/beacon.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    opts = {
+      minimal_jump = 20,
+      ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
+      ignore_filetypes = {
+        "qf",
+        "dap_watches",
+        "dap_scopes",
+        "neo-tree",
+        "NeogitCommitMessage",
+        "NeogitPopup",
+        "NeogitStatus",
+      },
     },
-    -- NEOSCROLL
-    {
-        "karb94/neoscroll.nvim",
-        event = "BufReadPre",
-        config = function()
-            require("neoscroll").setup {
-                mappings = {
-                    "<C-u>",
-                    "<C-d>",
-                    "<C-y>",
-                    "<C-e>",
-                    "zt",
-                    "zz",
-                    "zb",
-                },
-                stop_eof = true, -- Stop at <EOF> when scrolling downwards
-                -- performance_mode = true,
-                use_local_scrolloff = false, -- Use the local scope of scrolloff instead of the global scope
-                respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
-                cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
-                easing_function = nil, -- Default easing function
-                pre_hook = function()
-                    vim.opt.eventignore:append {
-                        "WinScrolled",
-                        "CursorMoved",
-                    }
-                end,
-                post_hook = function()
-                    vim.opt.eventignore:remove {
-                        "WinScrolled",
-                        "CursorMoved",
-                    }
-                end,
-            }
-
-            local map = {}
-
-            map["<C-u>"] = { "scroll", { "-vim.wo.scroll", "true", "250" } }
-            map["<C-d>"] = { "scroll", { "vim.wo.scroll", "true", "250" } }
-            -- map["<C-b>"] = { "scroll", { "-vim.api.nvim_win_get_height(0)", "true", "250" } }
-            -- map["<C-f>"] = { "scroll", { "vim.api.nvim_win_get_height(0)", "true", "250" } }
-            map["<C-y>"] = { "scroll", { "-0.10", "false", "80" } }
-            map["<C-e>"] = { "scroll", { "0.10", "false", "80" } }
-            map["zt"] = { "zt", { "150" } }
-            map["zz"] = { "zz", { "150" } }
-            map["zb"] = { "zb", { "150" } }
-
-            require("neoscroll.config").set_mappings(map)
-        end,
-    },
+  },
 }

@@ -72,28 +72,15 @@ setopt hist_save_no_dups
 setopt hist_verify
 setopt hist_beep
 setopt inc_append_history
-setopt extended_history
-
 
 source "$HOME/.config/zsh/03-exports.zsh"            # base exports for zsh
-source "$ZSH_CONFIG/05-completion.zsh"
 source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
-source "$ZSH_CONFIG/10-ohmyzsh.zsh"
+source "$ZSH_CONFIG/05-completion.zsh"               # terdapat default keybind juga
 source "$ZSH_CONFIG/11-prompt.zsh"
 source "$ZSH_CONFIG/15-bindkey.zsh"
-source "$ZSH_CONFIG/20-aliases.zsh"
 
-typeset -ga sources
-sources+="$ZSH_CONFIG/zshload/asdf.zsh"
-
-foreach file (`echo $sources`)
-  if [[ -a $file ]]; then
-    source $file
-  fi
-end
 
 # [[ ${PROFILE_CONFIG} == true ]] && zprof
-
 SAVEHIST=5000
 HISTSIZE=5000               #How many lines of history to keep in memory
 if (( ! EUID )); then
@@ -123,21 +110,14 @@ export MANPAGER="/bin/sh -c \"col -b | \
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.config/miscxrdb/fzf/fzf.config ] && source ~/.config/miscxrdb/fzf/fzf.config
 
-[ -f $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh ] \
-  && source $ZSH_PLUGINS/fzf-marks/fzf-marks.plugin.zsh
-
-FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/fzf-marks"
-# FZF_MARKS_COMMAND="fzf --height 40% -n 1 -d ' : '"
-FZF_MARKS_COMMAND="fzf-tmux -p 80%"
-FZF_MARKS_COLOR_RHS="249"
-
 ###########################################
 # ZSH-SYNTAX-HIGHLIGHTING
 ###########################################
-
 [ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
   && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ] \
+  && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 ###########################################
 # AUTO SSH-ADD (for git master)
@@ -218,11 +198,11 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 # }
 # alias lf=lf-ueberzug
 lf () {
-	LF_TEMPDIR="$(mktemp -d -t lf-tempdir-XXXXXX)"
-	LF_TEMPDIR="$LF_TEMPDIR" lf-run -last-dir-path="$LF_TEMPDIR/lastdir" "$@"
-	if [ "$(cat "$LF_TEMPDIR/cdtolastdir" 2>/dev/null)" = "1" ]; then
-		cd "$(cat "$LF_TEMPDIR/lastdir")"
-	fi
-	rm -r "$LF_TEMPDIR"
-	unset LF_TEMPDIR
+  LF_TEMPDIR="$(mktemp -d -t lf-tempdir-XXXXXX)"
+  LF_TEMPDIR="$LF_TEMPDIR" lf-run -last-dir-path="$LF_TEMPDIR/lastdir" "$@"
+  if [ "$(cat "$LF_TEMPDIR/cdtolastdir" 2>/dev/null)" = "1" ]; then
+    cd "$(cat "$LF_TEMPDIR/lastdir")"
+  fi
+  rm -r "$LF_TEMPDIR"
+  unset LF_TEMPDIR
 }

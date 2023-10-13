@@ -14,6 +14,10 @@ else
     export EDITOR="$VISUAL"
 end
 
+if test -e "$HOME/.config/emacs/bin/doom"
+    export PATH="$HOME/.config/emacs/bin:$PATH"
+end
+
 set -U fifc_fd_opts --hidden
 set -Ux fifc_editor nvim
 
@@ -29,6 +33,9 @@ else if command -v alacritty >/dev/null
 end
 
 export BROWSER="firefox"
+
+# export TERM="xterm-256color"
+# [[ -n $TMUX ]] && export TERM="screen-256color"
 # end
 
 # -----------------------------------------------------------------------------
@@ -36,9 +43,9 @@ export BROWSER="firefox"
 # sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 #
 # Configuration check this link: https://starship.rs/config/
-if command -v starship >/dev/null
-    starship init fish | source
-end
+# if command -v starship >/dev/null
+#     starship init fish | source
+# end
 # -----------------------------------------------------------------------------
 
 # FORGIT: ----------------------------------------------------------------- {{{
