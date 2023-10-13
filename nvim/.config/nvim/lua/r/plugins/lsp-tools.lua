@@ -315,7 +315,6 @@ return {
   {
     "stevearc/aerial.nvim",
     event = "LspAttach",
-    enabled = false,
     init = function()
       r_utils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
 
@@ -392,9 +391,10 @@ return {
       manage_folds = false,
       show_guides = true,
       guides = {
-        mid_item = "├─",
-        last_item = "└─",
-        nested_top = "│",
+        mid_item = "├╴",
+        last_item = "└╴",
+        nested_top = "│ ",
+        whitespace = "  ",
       },
       whitespace = "  ",
       filter_kind = false,
@@ -427,30 +427,30 @@ return {
         Variable = icons.kind.Variable,
         Collapsed = " ",
       },
-
       keymaps = {
-        ["O"] = "actions.jump",
+        ["o"] = "actions.jump",
         -- ["o"] = "actions.jump",
-        ["o"] = "actions.scroll",
+        ["O"] = "actions.scroll",
         -- ["]y"] = "actions.next",
         -- ["[y"] = "actions.prev",
         -- ["<c-p>"] = "actions.prev_up",
         -- ["<c-n>"] = "actions.next_up",
         ["<c-n>"] = "actions.next",
         ["<c-p>"] = "actions.prev",
-        ["zM"] = "actions.tree_close_all",
+        -- ["zM"] = "actions.tree_close_all",
         ["{"] = false,
         ["}"] = false,
         ["[["] = false,
         ["]]"] = false,
-        -- ["zM"] = false,
+        ["zM"] = false,
         ["zO"] = false,
       },
     },
   },
-  -- SYMBOLSOUTLINE
+  -- SYMBOLSOUTLINE (disabled)
   {
     "enddeadroyal/symbols-outline.nvim",
+    enabled = false,
     cmd = "SymbolsOutline",
     branch = "bugfix/symbol-hover-misplacement",
     init = function()
