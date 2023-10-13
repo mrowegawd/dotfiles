@@ -20,12 +20,8 @@ return {
           component_separators = { left = "", right = "" }, -- "" "" "" ""
           icons_enabled = true,
           disabled_filetypes = {
-            statusline = { "alpha", "lazy" },
-            winbar = {
-              "help",
-              "alpha",
-              "lazy",
-            },
+            statusline = { "alpha", "lazy", "dashboard" },
+            winbar = { "help", "alpha", "lazy", "dashboard", },
           },
         },
         sections = {
