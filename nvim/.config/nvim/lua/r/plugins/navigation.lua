@@ -152,7 +152,7 @@ return {
             if node.type == "directory" or node:has_children() then
               if not node:is_expanded() then -- if unexpanded, expand
                 state.commands.toggle_node(state)
-              else                           -- if expanded and has children, seleect the next child
+              else -- if expanded and has children, seleect the next child
                 require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
               end
             else -- if not a directory just open it
@@ -260,7 +260,7 @@ return {
             end,
           },
           -- "Trouble",
-          { ft = "qf",                title = "QuickFix" },
+          { ft = "qf", title = "QuickFix" },
           {
             ft = "help",
             size = { height = 20 },
@@ -269,7 +269,7 @@ return {
               return vim.bo[buf].buftype == "help"
             end,
           },
-          { ft = "spectre_panel",     size = { height = 0.4 } },
+          { ft = "spectre_panel", size = { height = 0.4 } },
           { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
         },
         left = {
@@ -356,7 +356,7 @@ return {
     optional = true,
     opts = function(_, opts)
       opts.open_files_do_not_replace_types = opts.open_files_do_not_replace_types
-          or { "terminal", "Trouble", "qf", "Outline" }
+        or { "terminal", "Trouble", "qf", "Outline" }
       table.insert(opts.open_files_do_not_replace_types, "edgy")
     end,
   },

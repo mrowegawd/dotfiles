@@ -466,6 +466,8 @@ return {
                 local selection = selected[1]
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
 
+                as.info("Open browser commit hash: " .. commit_hash, "FZFGit")
+
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
               -- Copy hash to clipboard
@@ -476,9 +478,9 @@ return {
                 vim.fn.setreg("+", commit_hash)
                 vim.fn.setreg("*", commit_hash)
 
-                as.info("Copied commit hash " .. commit_hash .. " to clipboard", "FZFGit")
+                as.info("Commit hash: " .. commit_hash .. " copied", "FZFGit")
               end,
-              -- Show diff all log
+              -- Open all diff for req commit
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
 
@@ -486,9 +488,9 @@ return {
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
-                vim.api.nvim_command(cmdmsg)
+                as.info("Open all diff " .. commit_hash, "FZFGit")
 
-                as.info("Show all diff " .. commit_hash "FZFGit")
+                vim.api.nvim_command(cmdmsg)
               end,
               -- Open diff current modified
               ["ctrl-d"] = function(selected, _)
@@ -527,11 +529,13 @@ return {
                 vim.fn.setreg("+", commit_hash)
                 vim.fn.setreg("*", commit_hash)
 
-                as.info("Copied commit hash " .. commit_hash .. " to clipboard", "FZFGit")
+                as.info("Commit hash: " .. commit_hash .. " copied", "FZFGit")
               end,
               ["ctrl-b"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+
+                as.info("Open browser commit hash: " .. commit_hash, "FZFGit")
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
@@ -542,9 +546,9 @@ return {
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
-                vim.api.nvim_command(cmdmsg)
+                as.info("Open all diff " .. commit_hash, "FZFGit")
 
-                as.info("Show all diff " .. commit_hash "FZFGit")
+                vim.api.nvim_command(cmdmsg)
               end,
               ["ctrl-d"] = function(selected, _)
                 local selection = selected[1]
@@ -555,9 +559,9 @@ return {
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
-                vim.api.nvim_command(cmdmsg)
-
                 as.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, "FZFGit")
+
+                vim.api.nvim_command(cmdmsg)
               end,
             },
           },
