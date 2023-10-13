@@ -1,6 +1,8 @@
 local highlight = as.highlight
 local icons, fn = as.ui.icons, vim.fn
 
+local border = as.ui.border.rectangle
+
 return {
   -- INDENTBLANKLINE
   {
@@ -10,9 +12,7 @@ return {
     opts = {
       scope = { enabled = false },
       indent = {
-        -- char = '│', -- ▏┆ ┊  "┊"
-        char = "┊", --"│", -- "┊"
-        -- tab_char = "│",
+        char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
       },
       exclude = {
         filetypes = {
@@ -139,6 +139,37 @@ return {
         -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
         view_search = false,
       },
+      popupmenu = {
+        backend = "cmp",
+      },
+      redirect = { view = "popup", filter = { event = "msg_show" } },
+      views = {
+        vsplit = { size = { width = "auto" } },
+        split = { win_options = { winhighlight = { Normal = "Normal" } } },
+        popup = {
+          border = { style = border, padding = { 0, 1 } },
+        },
+        cmdline_popup = {
+          position = {
+            row = -5,
+            col = "50%",
+          },
+          size = {
+            width = "auto",
+            height = "auto",
+          },
+        },
+        confirm = {
+          border = { style = border, padding = { 0, 1 }, text = { top = "" } },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = { row = -5, col = "50%" },
+          size = { width = 60, height = 10 },
+          border = { style = border, padding = { 0, 1 } },
+          win_options = { winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" } },
+        },
+      },
       routes = {
         {
           opts = { skip = true },
@@ -164,11 +195,15 @@ return {
       },
       -- you can enable a preset for easier configuration
       presets = {
-        bottom_search = true, -- use a classic bottom cmdline for search
-        command_palette = true, -- position the cmdline and popupmenu together
-        long_message_to_split = true, -- long messages will be sent to a split
-        inc_rename = false, -- enables an input dialog for inc-rename.nvim
-        lsp_doc_border = true, -- add a border to hover docs and signature help
+        -- bottom_search = true,         -- use a classic bottom cmdline for search
+        -- command_palette = false,      -- position the cmdline and popupmenu together
+        -- long_message_to_split = true, -- long messages will be sent to a split
+        -- inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+        -- lsp_doc_border = true,        -- add a border to hover docs and signature help
+
+        inc_rename = true,
+        long_message_to_split = true,
+        lsp_doc_border = true,
       },
     },
   },
@@ -221,20 +256,13 @@ return {
     opts = {},
     keys = {
       {
-        "<a-o>",
+        "<a-space>",
         function()
           require("fold-cycle").open()
         end,
         desc = "Fold(fold-cycle): cycle fold",
       },
     },
-  },
-  -- ORIGAMI (disabled)
-  {
-    "chrisgrieser/nvim-origami",
-    enabled = false,
-    event = "BufReadPost", -- later or on keypress would prevent saving folds
-    opts = true, -- needed even when using default config
   },
   -- BUFFERLINE
   {
@@ -640,25 +668,6 @@ return {
       require("bufferline").setup(opts)
     end,
   },
-  -- SATELLITE (disabled)
-  {
-    "lewis6991/satellite.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    opts = {
-      current_only = true,
-      excluded_filetypes = {
-        "help",
-        "alpha",
-        "undotree",
-        "neo-tree",
-        "gitcommit",
-        "gitrebase",
-        "fzf",
-        "qf",
-      },
-    },
-  },
   -- NVIM-SCROLLBAR
   {
     "petertriho/nvim-scrollbar",
@@ -751,20 +760,6 @@ return {
     "HampusHauffman/block.nvim",
     cmd = { "BlockOn", "BlockOff", "Block" },
     opts = {},
-  },
-  -- SHADE (disabled)
-  {
-    "sunjon/shade.nvim",
-    enabled = false,
-    config = function()
-      require("shade").setup()
-      require("shade").toggle()
-    end,
-  },
-  -- CELLULARAUTOMATON
-  {
-    "eandrju/cellular-automaton.nvim",
-    cmd = "CellularAutomaton",
   },
   -- BEACON (disabled)
   {
