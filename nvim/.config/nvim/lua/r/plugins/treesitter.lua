@@ -9,6 +9,18 @@ return {
       mode = "cursor",
     },
   },
+  -- NVIM-TS-COMMENTSTRING
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    lazy = true,
+    opts = { enable_autocmd = false },
+  },
+  -- NVIM-TS-AUTOTAG
+  {
+    "windwp/nvim-ts-autotag",
+    event = "InsertEnter",
+    opts = {},
+  },
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
@@ -19,6 +31,8 @@ return {
     keys = {
       { "v", desc = "Increment selection" },
       { "V", desc = "Decrement selection", mode = "x" },
+      { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "o" },
+      { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "x" },
     },
     dependencies = {
       {
@@ -48,7 +62,6 @@ return {
       },
       { "JoosepAlviste/nvim-ts-context-commentstring" },
       { "mfussenegger/nvim-treehopper" },
-      { "windwp/nvim-ts-autotag", config = true },
       {
         "HiPhish/rainbow-delimiters.nvim",
         config = function()
@@ -180,9 +193,6 @@ return {
         -- nvim-ts-context-commentstring plugin
         context_commentstring = { enable = true },
 
-        -- nvim-ts-autotag plugin
-        autotag = { enable = true },
-
         -- nvim-treesitter-textobjects
         textobjects = {
           select = {
@@ -228,58 +238,19 @@ return {
     end,
     config = function(_, opts)
       require("orgmode").setup_ts_grammar()
-      require("nvim-treesitter.configs").setup(opts)
-      vim.keymap.set({ "o", "x" }, "m", [[:<C-U>lua require('tsht').nodes()<CR>]], { desc = "Treesitter: jump nodes" })
 
-      local queries = require "nvim-treesitter.query"
-      local parsers = require "nvim-treesitter.parsers"
-
-      local disable_max_size = 2000000 -- 2MB
-
-      local function should_disable(lang, bufnr)
-        local size = vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr or 0))
-        -- size will be -2 if it doesn't fit into a number
-        if size > disable_max_size or size == -2 then
-          return true
-        end
+      if type(opts.ensure_installed) == "table" then
+        ---@type table<string, boolean>
+        local added = {}
+        opts.ensure_installed = vim.tbl_filter(function(lang)
+          if added[lang] then
         return false
       end
-
-      local function set_ts_win_defaults()
-        local parser_name = parsers.get_buf_lang()
-        if parsers.has_parser(parser_name) and not should_disable(parser_name, 0) then
-          local ok, has_folds = pcall(queries.get_query, parser_name, "folds")
-          if ok and has_folds then
-            if vim.wo.foldmethod == "manual" then
-              vim.api.nvim_win_set_var(0, "ts_prev_foldmethod", vim.wo.foldmethod)
-              vim.api.nvim_win_set_var(0, "ts_prev_foldexpr", vim.wo.foldexpr)
-              vim.wo.foldmethod = "expr"
-              vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
+          added[lang] = true
+          return true
+        end, opts.ensure_installed)
             end
-            return
-          end
-        end
-        if vim.wo.foldexpr == "nvim_treesitter#foldexpr()" then
-          local ok, prev_foldmethod = pcall(vim.api.nvim_win_get_var, 0, "ts_prev_foldmethod")
-          if ok and prev_foldmethod then
-            vim.api.nvim_win_del_var(0, "ts_prev_foldmethod")
-            vim.wo.foldmethod = prev_foldmethod
-          end
-          local ok2, prev_foldexpr = pcall(vim.api.nvim_win_get_var, 0, "ts_prev_foldexpr")
-          if ok2 and prev_foldexpr then
-            vim.api.nvim_win_del_var(0, "ts_prev_foldexpr")
-            vim.wo.foldexpr = prev_foldexpr
-          end
-        end
-      end
-
-      local aug = vim.api.nvim_create_augroup("StevearcTSConfig", {})
-      vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter" }, {
-        desc = "Set treesitter defaults on win enter",
-        pattern = "*",
-        callback = set_ts_win_defaults,
-        group = aug,
-      })
+      require("nvim-treesitter.configs").setup(opts)
     end,
   },
 }
