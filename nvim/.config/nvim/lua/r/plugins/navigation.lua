@@ -225,16 +225,12 @@ return {
   {
     "folke/edgy.nvim",
     event = "VeryLazy",
-    keys = {
-      {
-        "<leader>ue",
-        function()
-          require("edgy").toggle()
-        end,
-        desc = "Misc(edgy): toggle",
-      },
       -- stylua: ignore
-      { "<leader>uE", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
+    keys = {
+      { "<leader>ue", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
+      { "<leader>uu", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
+      { "<leader>ug",  "<CMD> Neotree git_status toggle <CR>", desc = "Misc(edgy): toggle git_status" },
+      { "<leader>ub",  "<CMD> Neotree buffers toggle <CR>", desc = "Misc(edgy): toggle buffers" },
     },
     opts = function()
       local opts = {
