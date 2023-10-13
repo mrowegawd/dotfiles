@@ -110,22 +110,15 @@ return {
 
       return {
         ensure_installed = {
-          "bash",
           "c",
-          "cmake",
           -- "comment", -- comments are slowing down TS bigtime, so disable for now
           "cpp",
-          "css",
           "diff",
           "gitignore",
           "graphql",
-          "html",
-          "http",
           "java",
           "jsdoc",
-          "jsonc",
           "latex",
-          "lua",
           "kotlin",
           "dart",
           "markdown",
@@ -138,9 +131,7 @@ return {
           "php",
           "query",
           "regex",
-          "make",
 
-          "scss",
           "sql",
           "svelte",
           "teal",
@@ -149,8 +140,6 @@ return {
           "vue",
           "ruby",
           "wgsl",
-          "yaml",
-          "json",
         },
 
         auto_install = false,
