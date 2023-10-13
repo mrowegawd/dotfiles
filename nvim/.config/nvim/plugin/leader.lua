@@ -1,5 +1,5 @@
 local silent = { silent = true }
--- local nosilent = { silent = false }
+local nosilent = { silent = false }
 -- local opts = { noremap = true, unique = true }
 
 local fn, api, cmd, command, fmt, map = vim.fn, vim.api, vim.cmd, as.command, string.format, vim.keymap.set
@@ -59,9 +59,8 @@ nnoremap("g;", "g;zvzz", silent) -- go prev edit
 -- inoremap("<C-w>", "<C-o>E<C-o>l")
 -- inoremap("<C-b>", "<C-o>B")
 
-inoremap("<c-f>", "<esc>/")
--- TODO:  check ini nanti
--- vnoremap("<c-f>", [["zy:%s/<C-r><C-o>"/]], { desc = "Insert: search and replace on the fly" })
+nnoremap("<c-f>", "/", nosilent)
+vnoremap("<c-f>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MARKS                                                    │
@@ -108,16 +107,6 @@ nnoremap("zm", "zM", { desc = "Folds: close all" })
 nnoremap("<Leader>bO", function()
   return require("r.utils").Buf_only()
 end, { desc = "Buffer: bufonly" })
-
-nnoremap("<Leader>rB", function()
-  return require("r.utils").toggle_background()
-end, { desc = "Misc: toggle background" })
-
-nnoremap("<bs>", "<c-^>", { desc = "buffer: alternate" })
-
-nnoremap("<Leader>b5", function()
-  return require("r.utils").testfunc()
-end, { desc = "Buffer: test func" })
 
 nnoremap("<c-w>b", "<C-w><S-t>", { desc = "Buffer: break buffer into new tab" })
 nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
@@ -192,7 +181,7 @@ local ignore_alternate_ft = {
   ["neo-tree"] = true,
   ["OverseerList"] = true,
 }
-nnoremap("<Leader>bb", function()
+nnoremap("<bs>", function()
   local bufnr = vim.api.nvim_get_current_buf()
 
   local ft = vim.bo[bufnr].filetype
@@ -230,6 +219,10 @@ vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 --  │ MISC                                                     │
 --  ╰──────────────────────────────────────────────────────────╯
 nnoremap("~", "%", silent)
+
+nnoremap("<Leader>rB", function()
+  return require("r.utils").toggle_background()
+end, { desc = "Misc: toggle background" })
 
 nnoremap("<leader>rd", function()
   local query = vim.fn.input "Search DevDocs: "
@@ -426,7 +419,7 @@ nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
       \ 'zt' : (winline() == 1) ? 'zb' : 'zz'
   ]]
 
-vim.cmd [[
-noremap <expr> <C-f> max([winheight(0) - 2, 1])
-      \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
-      ]]
+-- vim.cmd [[
+-- noremap <expr> <C-f> max([winheight(0) - 2, 1])
+--       \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
+--       ]]
