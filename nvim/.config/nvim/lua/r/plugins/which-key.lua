@@ -72,6 +72,7 @@ return {
           { mode = "x", keys = "<Leader>d", desc = "+Debug" },
           { mode = "n", keys = "<Leader>D", desc = "+Database" },
           { mode = "n", keys = "<Leader>f", desc = "+FZFlua" },
+          { mode = "n", keys = "<Leader>u", desc = "+Edgy" },
 
           { mode = "n", keys = "<Leader>j", desc = "+Harpoon" },
           { mode = "n", keys = "<Leader>j", desc = "+Harpoon" },
@@ -181,6 +182,7 @@ return {
           D = { name = "+database" },
           f = { name = "+fzflua" },
           j = { name = "+harpoon" },
+          u = { name = "+edgy" },
           g = {
             name = "+git",
             v = { name = "+diffview" },
