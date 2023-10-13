@@ -115,17 +115,17 @@ return {
     opts = {
       -- debug = true,
       lsp = {
-        -- documentation = {
-        --   opts = {
-        --     border = { style = "rounded" },
-        --     position = { row = 2 },
-        --   },
-        -- },
+        documentation = {
+          opts = {
+            border = { style = "rounded" },
+            position = { row = 2 },
+          },
+        },
         progress = {
           enabled = false,
         },
-        signature = { auto_open = { enabled = false } },
-        hover = { enabled = false },
+        signature = { auto_open = { enabled = true }, enabled = true },
+        hover = { enabled = true },
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
