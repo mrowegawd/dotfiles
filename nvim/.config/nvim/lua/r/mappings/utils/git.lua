@@ -55,16 +55,18 @@ function M.signs(bufnr, gs)
 
   nnoremap("gq", gs.setqflist, { desc = "Git(gitsigns): collect git hunks on qf", buffer = bufnr })
 
-  nnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): add hunk", buffer = bufnr })
-  nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): add hunk curbuf", buffer = bufnr })
+  nnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>", { desc = "Git(gitsigns): stage hunk", buffer = bufnr })
+  vnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>", { desc = "Git(gitsigns): stage hunk (visual)", buffer = bufnr })
+  nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): stage entire hunk buffer", buffer = bufnr })
   nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk", buffer = bufnr })
   nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk", buffer = bufnr })
   nnoremap("<Leader>gR", gs.reset_buffer, { desc = "Git(gitsigns): reset hunk buffer", buffer = bufnr })
   nnoremap("<Leader>gP", gs.preview_hunk, { desc = "Git(gitsigns): preview hunk", buffer = bufnr })
   nnoremap("<Leader>gl", gs.blame_line, { desc = "Git(gitsigns): blame line", buffer = bufnr })
 
-  nnoremap("<Leader>gtd", gs.toggle_deleted, { desc = "Git(gitsigns): toggle show deleted", buffer = bufnr })
-  nnoremap("<Leader>gth", function() gs.toggle_linehl() gs.toggle_word_diff() end, { desc = "Git(gitsigns): toggle buffer highlights", buffer = bufnr })
+  nnoremap("<Leader>gtD", gs.toggle_deleted, { desc = "Git(gitsigns): toggle show deleted", buffer = bufnr })
+  nnoremap("<Leader>gth", gs.toggle_linehl, { desc = "Git(gitsigns): toggle buffer highlights", buffer = bufnr })
+  nnoremap("<Leader>gtd", gs.toggle_word_diff, { desc = "Git(gitsigns): toggle word diff", buffer = bufnr })
 
   xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk", buffer = bufnr })
   onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk", buffer = bufnr })

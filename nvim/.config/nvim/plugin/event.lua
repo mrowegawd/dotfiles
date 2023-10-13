@@ -109,9 +109,6 @@ as.augroup("VimrcIncSearchHighlight", {
   end,
 })
 
--- local ignore_buftype = { "quickfix", "nofile", "help", "terminal" }
-local ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" }
-
 as.augroup("WindowBehaviours", {
   event = { "CmdwinEnter" }, -- map q to close command window on quit
   pattern = { "*" },
@@ -133,13 +130,13 @@ as.augroup("WindowBehaviours", {
 }, {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
-  pattern = "*",
-  command = function()
-    local exclude = ignore_filetype
-    local buf = vim.api.nvim_get_current_buf()
-    if vim.tbl_contains(exclude, vim.bo[buf].filetype) then
+  command = function(args)
+    local exclude = { "gitcommit", "gitrebase", "svn", "hgcommit" }
+    local buf = args.buf
+    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
       return
     end
+    vim.b[buf].lazyvim_last_loc = true
     local mark = vim.api.nvim_buf_get_mark(buf, '"')
     local lcount = vim.api.nvim_buf_line_count(buf)
     if mark[1] > 0 and mark[1] <= lcount then

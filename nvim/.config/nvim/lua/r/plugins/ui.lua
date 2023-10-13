@@ -256,7 +256,7 @@ return {
     opts = {},
     keys = {
       {
-        "<a-space>",
+        "<a-o>",
         function()
           require("fold-cycle").open()
         end,

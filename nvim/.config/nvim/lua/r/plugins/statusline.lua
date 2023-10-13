@@ -3,85 +3,67 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
-    config = function()
-      -- if vim.g.started_by_firenvim then
-      --   return
-      -- end
-
-      local config = {
+    init = function()
+      vim.g.lualine_laststatus = vim.o.laststatus
+      if vim.fn.argc(-1) > 0 then
+        -- set an empty statusline till lualine loads
+        vim.o.statusline = " "
+      else
+        -- hide the statusline on the starter page
+        vim.o.laststatus = 0
+      end
+    end,
+    opts = function()
+      local themes = require "r.plugins.colorthemes.lualine.themes"
+      local component = require "r.plugins.colorthemes.lualine.components"
+      return {
         options = {
-          theme = require "r.plugins.colorthemes.lualine.themes",
           -- theme = "auto",
-          -- normal = { c = { fg = col_fg, bg = col_bg } },
-          -- inactive = { c = { fg = col_fg, bg = col_bg } },
-          -- component_separators = { left = "", right = "" },
-          -- section_separators = { left = "", right = "" },
-          -- section_separators = { left = "" },
-          component_separators = { left = "", right = "" }, -- "" "" "" ""
-          icons_enabled = true,
+          theme = themes,
+
+          -- Remove any separators icons
+          component_separators = { left = "", right = "" }, -- "", "", "", "", "", ""
+          section_separators = { left = "", right = "" },
+
           disabled_filetypes = {
             statusline = { "alpha", "lazy", "dashboard" },
-            winbar = { "help", "alpha", "lazy", "dashboard", },
+            winbar = { "help", "alpha", "lazy", "dashboard" },
           },
         },
         sections = {
-          lualine_a = {},
+          lualine_a = { component.mode() },
           lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
+          lualine_c = {
+            component.filename(),
+            component.file_modified(),
+            component.branch(),
+            component.diff(),
+            component.debugger(),
+          },
+          lualine_x = {
+            component.term_akinsho(),
+            component.lazy_updates(),
+            component.trailing(),
+            component.mixindent(),
+            component.diagnostics(),
+            component.python_env(),
+            component.get_lsp_client_notify(),
+            -- components.noice_status(),
+            component.rmux(),
+            component.check_loaded_buf(),
+            component.overseer(),
+            -- components.vmux()
+            component.sessions(),
+            component.root_dir(),
+            component.filetype(),
+            component.location_mod(),
+            -- components.clock()
+          },
           lualine_y = {},
-          lualine_z = {},
-        },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = {},
-          -- lualine_x = {},
-          -- lualine_x = { { "filename", path = 1 } },
-          -- lualine_x = { "location" },
-          lualine_c = {},
           lualine_z = {},
         },
         extensions = { "misc" },
       }
-
-      local components = require "r.plugins.colorthemes.lualine.components"
-
-      -- Inserts a component in lualine_c at left section
-      local function ins_left(component)
-        table.insert(config.sections.lualine_c, component)
-      end
-
-      -- Inserts a component in lualine_x ot right section
-      local function ins_right(component)
-        table.insert(config.sections.lualine_x, component)
-      end
-
-      ins_left(components.mode())
-      ins_left(components.filename())
-      ins_left(components.file_modified())
-      ins_left(components.term_akinsho())
-      ins_left(components.debugger())
-      ins_left(components.diff())
-
-      ins_right(components.lazy_updates())
-      ins_right(components.trailing())
-      ins_right(components.mixindent())
-      ins_right(components.diagnostics())
-      ins_right(components.python_env())
-      ins_right(components.get_lsp_client_notify())
-      -- ins_right(components.noice_status())
-      ins_right(components.rmux())
-      ins_right(components.branch())
-      ins_right(components.check_loaded_buf())
-      ins_right(components.overseer())
-      -- ins_right(components.vmux())
-      ins_right(components.sessions())
-      ins_right(components.root_dir())
-      ins_right(components.filetype())
-      ins_right(components.location_mod())
-      -- ins_right(components.clock())
-
-      require("lualine").setup(config)
     end,
   },
   -- HEIRLINE (disabled)

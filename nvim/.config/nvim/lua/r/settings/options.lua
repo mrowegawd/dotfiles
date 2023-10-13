@@ -127,17 +127,8 @@ local options = {
     -- j: remove comment leader when it makes sense
     -- this gets overwritten by ftplugins (:verb set fo)
     -- we use autocmd to remove 'o' in '/lua/autocmd.lua'
-    -- borrowed from tjdevries
-    -- formatoptions = o.formatoptions
-    --     - "a" -- Auto formatting is BAD.
-    --     - "t" -- Don't auto format my code. I got linters for that.
-    --     + "c" -- In general, I like it when comments respect textwidth
-    --     + "q" -- Allow formatting comments w/ gq
-    --     - "o" -- O and o, don't continue comments
-    --     + "r" -- But do continue when pressing enter.
-    --     + "n" -- Indent past the formatlistpat, not underneath it.
-    --     + "j" -- Auto-remove comments if possible.
-    --     - "2" -- I'm not in gradeschool anymore
+    -- [comments borrowed from tjdevries]
+    formatoptions = "jcroqlnt", -- tcqj
 
     splitkeep = "screen",
     splitbelow = true, -- ':new' ':split' below current
