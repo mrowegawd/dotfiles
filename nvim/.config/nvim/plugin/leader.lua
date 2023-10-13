@@ -212,6 +212,7 @@ nnoremap("tl", "<CMD>tabn<CR>", { desc = "Tab: next tab" })
 nnoremap("th", "<CMD>tabp<CR>", { desc = "Tab: prev tab" })
 nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab" })
 nnoremap("tL", "<CMD>tabfirst<CR>", { desc = "Tab: last tab" })
+nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ VISUAL                                                   │
