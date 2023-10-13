@@ -5,53 +5,6 @@ end
 local fn, api, cmd, v = vim.fn, vim.api, vim.cmd, vim.v
 local windowdim = require "r.utils.windowdim"
 
--- Close certain filetypes by pressing q.
-as.augroup("SmartClose", {
-  event = { "FileType" },
-  pattern = {
-    "PlenaryTestPopup",
-    "help",
-    "lspinfo",
-    "man",
-    "notify",
-    "qf",
-    "query",
-    "spectre_panel",
-    "startuptime",
-    "tsplayground",
-    "neotest-output",
-    "checkhealth",
-    "neotest-summary",
-    "neotest-output-panel",
-  },
-  command = function(event)
-    vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
-  end,
-})
-
--- Close quick fix window if the file containing it was closed
-as.augroup("AutoCloseQf", {
-  event = { "BufEnter" },
-  command = function()
-    if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
-      api.nvim_buf_delete(0, { force = true })
-    end
-  end,
-})
-
--- don't execute silently in case of errors
-as.augroup("TextYankHighlight", {
-  event = { "TextYankPost" },
-  command = function()
-    vim.highlight.on_yank {
-      timeout = 200,
-      on_visual = true,
-      higroup = "NvimInternalError",
-    }
-  end,
-})
-
 vim.keymap.set({ "n", "v", "o", "i", "c" }, "<Plug>(StopHL)", 'execute("nohlsearch")[-1]', { expr = true })
 
 local function stop_hl()
@@ -109,6 +62,63 @@ as.augroup("VimrcIncSearchHighlight", {
   end,
 })
 
+-- wrap and check for spell in text filetypes
+as.augroup("Wrap_spell", {
+  event = { "FileType" }, -- map q to close command window on quit
+  pattern = { "gitcommit", "markdown", "NeogitCommitMessage" },
+  command = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = true
+  end,
+})
+
+-- Close certain filetypes by pressing q.
+as.augroup("SmartClose", {
+  event = { "FileType" },
+  pattern = {
+    "PlenaryTestPopup",
+    "help",
+    "lspinfo",
+    "man",
+    "notify",
+    "qf",
+    "query",
+    "spectre_panel",
+    "startuptime",
+    "tsplayground",
+    "neotest-output",
+    "checkhealth",
+    "neotest-summary",
+    "neotest-output-panel",
+  },
+  command = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+  end,
+})
+
+-- Close quick fix window if the file containing it was closed
+as.augroup("AutoCloseQf", {
+  event = { "BufEnter" },
+  command = function()
+    if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
+      api.nvim_buf_delete(0, { force = true })
+    end
+  end,
+})
+
+-- don't execute silently in case of errors
+as.augroup("TextYankHighlight", {
+  event = { "TextYankPost" },
+  command = function()
+    vim.highlight.on_yank {
+      timeout = 200,
+      on_visual = true,
+      higroup = "NvimInternalError",
+    }
+  end,
+})
+
 as.augroup("WindowBehaviours", {
   event = { "CmdwinEnter" }, -- map q to close command window on quit
   pattern = { "*" },
@@ -150,7 +160,6 @@ as.augroup("WindowBehaviours", {
     "capture",
     "gitcommit",
     "help",
-    -- "qf",
     "Trouble",
   },
   command = function()
