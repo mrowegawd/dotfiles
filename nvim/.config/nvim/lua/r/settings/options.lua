@@ -28,7 +28,7 @@ local options = {
     -- do not use split or vsplit to ensure we don't open any new windows
     switchbuf = "useopen,uselast",
     encoding = "utf-8",
-    conceallevel = 2,
+    conceallevel = 3,
     infercase = true, -- Infer cases in keyword completion
     concealcursor = "nc",
     guifont = "Fira Code:h7.5",
@@ -189,9 +189,8 @@ local options = {
     -----------------------------------------------------------------------------//
     -- timings {{{1
     -----------------------------------------------------------------------------//
-    updatetime = 300,
-    timeoutlen = 500,
-    -- ttimeoutlen = 10
+    timeoutlen = 300,
+    updatetime = 200, -- Save swap file and trigger CursorHold
 
     --[[
          shda (info for vim): session data history
@@ -283,11 +282,11 @@ elseif as and not as.falsy(fn.executable "ag") then
   opt.grepformat = opt.grepformat ^ { "%f:%l:%c:%m" }
 end
 
--- -- Disable providers we do not care a about
+-- Disable providers we do not care a about
 -- vim.g.loaded_python_provider = 0 -- for python 2
--- vim.g.loaded_ruby_provider = 0
--- vim.g.loaded_perl_provider = 0
--- vim.g.loaded_node_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
 --
 -- vim.g.glow_binary_path = as.home .. "/.local/bin"
 vim.g.python3_host_prog = as.home .. "/.config/neovim3/bin/python"
