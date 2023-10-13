@@ -1,4 +1,4 @@
-local opt, cmd, fn, g, env, loop = vim.opt, vim.cmd, vim.fn, vim.g, vim.env, vim.uv
+local opt, fn, g, env, loop = vim.opt, vim.fn, vim.g, vim.env, vim.uv
 
 g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
 g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
@@ -276,6 +276,13 @@ if vim.treesitter.foldtext then
   vim.opt.foldtext = "v:lua.require'r.utils'.foldtext()"
 end
 
+if vim.fn.has "nvim-0.10" == 1 then
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+else
+  vim.opt.foldmethod = "indent"
+end
+
 -- Use faster grep alternatives if possible
 if as and not as.falsy(fn.executable "rg") then
   vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
@@ -293,9 +300,6 @@ end
 --
 -- vim.g.glow_binary_path = as.home .. "/.local/bin"
 vim.g.python3_host_prog = as.home .. "/.config/neovim3/bin/python"
-
--- Load cfilter plugin allows filtering down an existing quickfix list
-cmd.packadd "cfilter"
 
 for scope, table in pairs(options) do
   for setting, value in pairs(table) do
