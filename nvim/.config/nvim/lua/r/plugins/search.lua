@@ -48,7 +48,6 @@ local function cursor_dropdown(opts)
   }, opts))
 end
 
---
 -- returns the root directory based on:
 -- * lsp workspace folders
 -- * lsp root_dir
@@ -166,7 +165,8 @@ return {
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
       { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
       { "r", mode = "o", function() require("flash").remote() end,  desc = "Misc(flash): remote" },
-      { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search", },
+      { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search",
+      },
     },
   },
   -- NVIM-HLSLENS
@@ -178,7 +178,8 @@ return {
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
-    lazy = true,
+    version = false, -- fzflua did only one release, so use HEAD for now
+    cmd = "Fzflua",
     enabled = function()
       if as.use_search_telescope then
         return false
@@ -309,7 +310,7 @@ return {
 
       require("fzf-lua").setup {
         winopts = {
-          split = "belowright new | wincmd J | resize 25",
+          split = "botright new | resize 25",
         },
         fzf_opts = {
           ["--ansi"] = "",
@@ -942,22 +943,11 @@ return {
       vim.fn["fzf#install"]()
     end,
   },
-  -- FZFX (disabled)
-  {
-    "linrongbin16/fzfx.nvim",
-    enabled = false,
-    cmd = "FzfxFiles",
-    keys = {
-      { "<Leader>ff", "<CMD>FzfxFiles<CR>", desc = "fzfx: find files" },
-    },
-    config = function()
-      require("fzfx").setup()
-    end,
-  },
   -- TELESCOPE
   {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
+    version = false, -- telescope did only one release, so use HEAD for now
     keys = {
       { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
       { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
@@ -1103,7 +1093,21 @@ return {
       --         },
     },
     dependencies = {
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make",
+        enabled = vim.fn.executable "make" == 1,
+        config = function()
+          as.on_load("telescope.nvim", function()
+            require("telescope").load_extension "fzf"
+            require("telescope").load_extension "grepqf"
+            require("telescope").load_extension "harpoon"
+            require("telescope").load_extension "file_browser"
+            require("telescope").load_extension "live_grep_args"
+            require("telescope").load_extension "menufacture"
+          end)
+        end,
+      },
       "nvim-telescope/telescope-symbols.nvim",
       "molecule-man/telescope-menufacture",
       "debugloop/telescope-undo.nvim", -- Visualise undotree
@@ -1112,8 +1116,7 @@ return {
       "nvim-telescope/telescope-file-browser.nvim",
       "benfowler/telescope-luasnip.nvim",
     },
-    config = function()
-      local telescope = require "telescope"
+    opts = function()
       -- local trouble = require "trouble.providers.telescope"
       local actions = require "telescope.actions"
       local themes = require "telescope.themes"
@@ -1135,46 +1138,10 @@ return {
       local function dropdown(opts)
         return require("telescope.themes").get_dropdown(vim.tbl_extend("keep", opts or {}, {
           borderchars = {
-            {
-              "─",
-              "│",
-              "─",
-              "│",
-              "┌",
-              "┐",
-              "┘",
-              "└",
-            },
-            prompt = {
-              "─",
-              "│",
-              " ",
-              "│",
-              "┌",
-              "┐",
-              "│",
-              "│",
-            },
-            results = {
-              "─",
-              "│",
-              "─",
-              "│",
-              "├",
-              "┤",
-              "┘",
-              "└",
-            },
-            preview = {
-              "─",
-              "│",
-              "─",
-              "│",
-              "┌",
-              "┐",
-              "┘",
-              "└",
-            },
+            { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
+            prompt = { "─", "│", " ", "│", "┌", "┐", "│", "│" },
+            results = { "─", "│", "─", "│", "├", "┤", "┘", "└" },
+            preview = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
           },
         }))
       end
@@ -1202,7 +1169,7 @@ return {
       --     end
       -- end
 
-      telescope.setup {
+      return {
         defaults = {
           vimgrep_arguments = {
             "rg",
@@ -1357,49 +1324,18 @@ return {
           },
         },
       }
-
-      telescope.load_extension "fzf"
-      telescope.load_extension "file_browser"
-      telescope.load_extension "undo"
-      -- telescope.load_extension "aerial"
-      telescope.load_extension "luasnip"
-      telescope.load_extension "lazy"
-      telescope.load_extension "menufacture"
-      telescope.load_extension "live_grep_args"
-      telescope.load_extension "harpoon"
-
-      -- My extensions
-      telescope.load_extension "grepqf"
-      -- telescope.load_extension "conventional_commits"
     end,
   },
   -- SPECTRE
   {
-    "windwp/nvim-spectre",
+    "nvim-pack/nvim-spectre",
+    cmd = "Spectre",
+    --stylua: ignore
     keys = {
-      {
-        "<Leader><s-f>",
-        function()
-          require("r.utils.tiling").force_win_close({}, true)
-          return require("spectre").open()
-        end,
-        desc = "Misc(spectre): open",
+      { "<Leader><s-f>", function() require("r.utils.tiling").force_win_close({}, true) return require("spectre").open() end, desc = "Misc(spectre): open", },
+      { "<Leader><s-f>", function() require("r.utils.tiling").force_win_close({}, true) return require("spectre").open_visual { select_word = true, } end, desc = "Misc(spectre): open (visual)", mode = { "v" }, },
       },
-      {
-        "<Leader><s-f>",
-        function()
-          require("r.utils.tiling").force_win_close({}, true)
-          return require("spectre").open_visual {
-            select_word = true,
-          }
-        end,
-        desc = "Misc(spectre): open (visual)",
-        mode = { "v" },
-      },
-    },
-    config = function()
-      local spectre = require "spectre"
-
+    opts = function()
       as.augroup("SpectreClose", {
         event = { "FileType" },
         pattern = { "spectre_panel" },
@@ -1437,9 +1373,9 @@ return {
           },
         },
       })
-      spectre.setup {
+      return {
+        open_cmd = "noswapfile vnew",
         color_devicons = true,
-        open_cmd = "vnew",
         live_update = false, -- auto excute search again when you write any file in vim
         line_sep_start = "┌-----------------------------------------",
         result_padding = "¦  ",
@@ -1593,10 +1529,8 @@ return {
   },
   -- TODO-COMMENTS
   {
-    -- Fork repo
     "mrowegawd/todo.nvim",
     event = "BufReadPre",
-    -- enabled = false,
     keys = {
       {
         "<Leader>rt",
