@@ -231,7 +231,7 @@ local general_overrides = function()
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
 
     -- NOICE ==============================================================
-    { NoicePopupBorder = { link = "Pmenu" } },
+    { NoicePopupBorder = { bg = "NONE", fg = { from = "Directory", attr = "fg" } } },
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
@@ -369,6 +369,7 @@ local function colorscheme_overrides()
       { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
       { TreesitterContextLineNumber = { inherit = "LineNr" } },
       { TreesitterContext = { inherit = "ColorColumn" } },
+      { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
     },
     ["tokyonight-night"] = {
       { WinSeparator = { bg = "NONE" } },
