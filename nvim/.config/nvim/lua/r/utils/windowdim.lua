@@ -149,7 +149,7 @@ local focus_window = function()
       return
     end
   else
-    local ft = api.nvim_buf_get_option(0, "filetype")
+    local ft = api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
     if ft == "markdown" or ft == "org" then
       as.colorcolumn_width = 120
     else
