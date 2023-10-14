@@ -17,7 +17,12 @@ return {
     cmd = { "CccPick", "CccConvert", "CccHighlighterToggle" },
     keys = {
       {
-        "<leader>rc",
+        "<Leader>rc",
+        "<CMD>CccPick<CR>",
+        desc = "Misc(ccc): open CCCpick",
+      },
+      {
+        "<Localleader>tc",
         "<CMD>CccHighlighterToggle<CR>",
         desc = "Misc(ccc): toggle color",
       },

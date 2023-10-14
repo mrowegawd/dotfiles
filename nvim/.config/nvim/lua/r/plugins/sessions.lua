@@ -257,7 +257,6 @@ return {
         desc = "Projects(project.nvim): open project lists",
       },
     },
-
     opts = {
       manual_mode = true,
       detection_methods = { "pattern" },

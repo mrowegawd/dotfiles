@@ -203,6 +203,7 @@ return {
           q = { name = "+qf" },
           o = { name = "+open" },
           f = { name = "+note" },
+          t = { name = "+toggle" },
         },
       },
     },

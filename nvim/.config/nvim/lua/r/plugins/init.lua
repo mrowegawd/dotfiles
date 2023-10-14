@@ -40,13 +40,20 @@ return {
     cmd = { "Hypersonic" },
     config = true,
   },
-  -- SG.NVIM (disabled)
+  -- SG.NVIM
   {
     "sourcegraph/sg.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    opts = {},
     dependencies = { "nvim-lua/plenary.nvim" },
+    -- You must do this first before using it:
+    -- jika belum login, gunakan `:SourcegraphLogin`
+    keys = {
+      {
+        "<Localleader>og",
+        "<CMD> lua require('sg.extensions.telescope').fuzzy_search_results() <CR>",
+        desc = "Misc(sq): search",
+      },
+    },
+    opts = {},
   },
   -- NEOZOOM
   {
@@ -86,14 +93,6 @@ return {
     event = "VeryLazy",
     keys = { { "<leader>rO", "<cmd>OutputPanel<CR>", desc = "Misc(outputpanel): open" } },
     config = true,
-  },
-  -- STICKYBUF.NVIM
-  {
-    "stevearc/stickybuf.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("stickybuf").setup()
-    end,
   },
   -- NREDIR
   {

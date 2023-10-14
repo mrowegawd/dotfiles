@@ -620,5 +620,8 @@ return {
   {
     "itchyny/calendar.vim",
     cmd = { "Calendar" },
+    keys = {
+      { "<Localleader>oC", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
+    },
   },
 }

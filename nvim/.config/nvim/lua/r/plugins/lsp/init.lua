@@ -8,8 +8,7 @@ local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 local icons = as.ui.icons
 local augroup = as.augroup
 
--- local prettier = { "prettierd", "prettier" }
-local prettier = { "prettier" }
+local prettier = { "prettierd", "prettier" }
 
 return {
   -- GOTO-PREVIEW
@@ -279,7 +278,7 @@ return {
       end
     end,
   },
-  -- CONFORM.NVIM
+  -- CONFORM.NVIM (disabled)
   {
     "stevearc/conform.nvim",
     enabled = false,

@@ -72,19 +72,20 @@ return {
         return math.floor(vim.o.columns * 0.75)
       end,
     },
-    config = function()
+    config = function(_, opts)
       highlight.plugin("notify", {
-        { NotifyERRORBorder = { bg = { from = "Pmenu" } } },
-        { NotifyWARNBorder = { bg = { from = "Pmenu" } } },
-        { NotifyINFOBorder = { bg = { from = "Pmenu" } } },
-        { NotifyDEBUGBorder = { bg = { from = "Pmenu" } } },
-        { NotifyTRACEBorder = { bg = { from = "Pmenu" } } },
-        { NotifyERRORBody = { link = "Pmenu" } },
-        { NotifyWARNBody = { link = "Pmenu" } },
-        { NotifyINFOBody = { link = "Pmenu" } },
-        { NotifyDEBUGBody = { link = "Pmenu" } },
-        { NotifyTRACEBody = { link = "Pmenu" } },
+        { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyERRORBody = { link = "NormalFloat" } },
+        { NotifyWARNBody = { link = "NormalFloat" } },
+        { NotifyINFOBody = { link = "NormalFloat" } },
+        { NotifyDEBUGBody = { link = "NormalFloat" } },
+        { NotifyTRACEBody = { link = "NormalFloat" } },
       })
+      require("notify").setup(opts)
     end,
   },
   -- NOICE
@@ -761,23 +762,10 @@ return {
     cmd = { "BlockOn", "BlockOff", "Block" },
     opts = {},
   },
-  -- BEACON (disabled)
+  -- STICKYBUF.NVIM
   {
-    "rainbowhxch/beacon.nvim",
-    enabled = false,
+    "stevearc/stickybuf.nvim",
     event = "VeryLazy",
-    opts = {
-      minimal_jump = 20,
-      ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
-      ignore_filetypes = {
-        "qf",
-        "dap_watches",
-        "dap_scopes",
-        "neo-tree",
-        "NeogitCommitMessage",
-        "NeogitPopup",
-        "NeogitStatus",
-      },
-    },
+    opts = {},
   },
 }

@@ -66,6 +66,7 @@ local ascii_img = {
 }
 
 return {
+  -- DASHBOARD.NVIM
   {
     "nvimdev/dashboard-nvim",
     event = "VimEnter",
@@ -120,7 +121,7 @@ return {
       return opts
     end,
   },
-  -- ALPHA
+  -- ALPHA (disabled)
   {
     "goolord/alpha-nvim",
     enabled = false,
