@@ -414,41 +414,60 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
             italic = true,
           },
-          -- TAB ---------------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ TAB                                                      ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           tab = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            bg = { attribute = "bg", highlight = "ColorColumn" },
           },
           tab_close = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           tab_selected = {
             fg = { attribute = "fg", highlight = col_selected_fg_attr },
-            -- bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_selected_bg_attr },
+            italic = false,
           },
-          -- INDICATOR ----------------------------------------------
-          indicator_visible = {
-            fg = { attribute = "bg", highlight = col_selected_bg_attr },
+          tab_separator = {
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          tab_separator_selected = {
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
             bg = { attribute = "bg", highlight = col_selected_bg_attr },
           },
-          indicator_selected = {
-            fg = { attribute = "bg", highlight = col_selected_bg_attr },
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ INDICATOR                                                ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+          indicator_visible = {
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
-          -- SEPARATOR ----------------------------------------------
+          indicator_selected = {
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
+          },
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ SEPARATOR                                                ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           separator = {
-            fg = { attribute = "bg", highlight = col_base_fg_attr },
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           separator_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           separator_selected = {
-            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
             -- bg = { attribute = "bg", highlight = col_selected_bg_attr },
           },
-          -- CLOSE --------------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ CLOSE                                                    ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           close_button = {
-            fg = { attribute = "bg", highlight = col_base_fg_attr },
+            fg = { attribute = "bg", highlight = col_base_bg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           close_button_visible = {
@@ -459,7 +478,9 @@ return {
             fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_selected_bg_attr },
           },
-          -- BUFFER -------------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ BUFFER                                                   ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           buffer = {
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
@@ -471,11 +492,11 @@ return {
           buffer_selected = {
             fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_selected_bg_attr },
-            -- sp = { attribute = "fg", highlight = "ErrorMsg" },
-            -- underline = true,
             italic = false,
           },
-          -- PICK ---------------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ PICK                                                     ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           pick = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
             italic = false,
@@ -490,7 +511,9 @@ return {
             bg = { attribute = "bg", highlight = col_selected_bg_attr },
             italic = false,
           },
-          -- MODIFIED -----------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ MODIFIED                                                 ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           modified = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
             fg = { attribute = "fg", highlight = col_selected_sp },
@@ -505,7 +528,9 @@ return {
             -- sp = { attribute = "fg", highlight = col_selected_sp },
             -- underline = true,
           },
-          -- DUPLICATE ----------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ DUPLICATE                                                ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           duplicate = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
             italic = false,
@@ -521,21 +546,25 @@ return {
             -- sp = { attribute = "fg", highlight = col_selected_sp },
             -- underline = true,
           },
-          -- OFFSET -------------------------------------------------
+          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
+          --  ╎ OFFSET                                                   ╎
+          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           offset_separator = {
             bg = { attribute = "bg", highlight = col_selected_bg_attr },
             fg = { attribute = "bg", highlight = col_selected_bg_attr },
           },
-          -----------------------------------------------------------
-          -- DIAGNOSTICS
-          -----------------------------------------------------------
+          --  ┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑
+          --  │ DIAGNOSTICS                                              │
+          --  ┕━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙
           diagnostic_visible = {
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
           diagnostic_selected = {
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
-          -- WARNING ------------------------------------------------
+          --  ╒══════════════════════════════════════════════════════════╕
+          --  │ WARNING                                                  │
+          --  ╘══════════════════════════════════════════════════════════╛
           warning = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
@@ -567,7 +596,9 @@ return {
             -- underline = true,
             italic = false,
           },
-          -- ERROR --------------------------------------------------
+          --  ╒══════════════════════════════════════════════════════════╕
+          --  │ ERROR                                                    │
+          --  ╘══════════════════════════════════════════════════════════╛
           error = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
@@ -598,7 +629,9 @@ return {
             -- underline = true,
             italic = false,
           },
-          -- HINT ---------------------------------------------------
+          --  ╒══════════════════════════════════════════════════════════╕
+          --  │ HINT                                                     │
+          --  ╘══════════════════════════════════════════════════════════╛
           hint = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
@@ -630,7 +663,9 @@ return {
             -- underline = true,
             italic = false,
           },
-          -- INFO ---------------------------------------------------
+          --  ╒══════════════════════════════════════════════════════════╕
+          --  │ INFO                                                     │
+          --  ╘══════════════════════════════════════════════════════════╛
           info = {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
