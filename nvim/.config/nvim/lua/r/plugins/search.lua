@@ -209,6 +209,7 @@ return {
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
       { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
       { "<Leader>f=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell" },
+      { "<Leader>f<c-f>", [[<CMD>FzfLua search_history reverse_search=true<CR>]], desc = "Fzflua: search-history" },
       {
         "<Leader>fk",
         function()
@@ -328,13 +329,28 @@ return {
         keymap = {
           builtin = {
             ["<F1>"] = "toggle-help",
-            ["<c-e>"] = "toggle-preview",
+            ["<F3>"] = "toggle-preview",
             ["<F4>"] = "toggle-fullscreen",
             -- ["<c-w>"] = "toggle-preview-wrap",
             ["<c-j>"] = "toggle-preview-cw",
             ["<c-k>"] = "toggle-preview-ccw",
             ["<c-d>"] = "preview-page-down",
             ["<c-u>"] = "preview-page-up",
+          },
+          fzf = {
+            -- fzf '--bind=' options
+            ["ctrl-z"]      = "abort",
+            -- ["ctrl-u"]      = "unix-line-discard",
+            ["ctrl-f"]      = "half-page-down",
+            ["ctrl-b"]      = "half-page-up",
+            ["ctrl-a"]      = "beginning-of-line",
+            ["ctrl-e"]      = "end-of-line",
+            ["alt-a"]       = "toggle-all",
+            -- Only valid with fzf previewers (bat/cat/git/etc)
+            ["f3"]          = "toggle-preview-wrap",
+            ["f4"]          = "toggle-preview",
+            ["ctrl-d"]      = "preview-page-down",
+            ["ctrl-u"]      = "preview-page-up",
           },
         },
         actions = {
@@ -395,7 +411,7 @@ return {
                 }
               end
             end,
-            ["ctrl-g"] = function(_, args)
+            ["ctrl-x"] = function(_, args)
               -- local winopts = {
               --   preview = { hidden = "nohidden" },
               --   title = format_title("Files", ""),
@@ -452,7 +468,7 @@ return {
           commits = {
             prompt = "  ",
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
-            -- preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+            preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = format_title("", "Commits") },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -462,7 +478,7 @@ return {
               ["ctrl-t"] = actions.git_buf_tabedit,
 
               -- Open hash on browser
-              ["ctrl-b"] = function(selected, _)
+              ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
 
@@ -481,19 +497,19 @@ return {
                 as.info("Commit hash: " .. commit_hash .. " copied", "FZFGit")
               end,
               -- Open all diff for req commit
-              ["ctrl-o"] = function(selected, _)
+              ["ctrl-i"] = function(selected, _)
                 local selection = selected[1]
 
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
-                as.info("Open all diff " .. commit_hash, "FZFGit")
-
                 vim.api.nvim_command(cmdmsg)
+
+                as.info("Open all diff " .. commit_hash, "FZFGit")
               end,
               -- Open diff current modified
-              ["ctrl-d"] = function(selected, _)
+              ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
 
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
@@ -512,7 +528,7 @@ return {
             prompt = "  ",
             -- debug = true,
             preview = "git diff --color {1}~1 {1} -- <file>",
-            -- preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+            preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = {
               title = format_title("", "Buffer Commits"),
             },
@@ -531,7 +547,7 @@ return {
 
                 as.info("Commit hash: " .. commit_hash .. " copied", "FZFGit")
               end,
-              ["ctrl-b"] = function(selected, _)
+              ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
 
@@ -539,18 +555,18 @@ return {
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
-              ["ctrl-o"] = function(selected, _)
+              ["ctrl-i"] = function(selected, _)
                 local selection = selected[1]
 
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
-                as.info("Open all diff " .. commit_hash, "FZFGit")
-
                 vim.api.nvim_command(cmdmsg)
+
+                as.info("Open all diff " .. commit_hash, "FZFGit")
               end,
-              ["ctrl-d"] = function(selected, _)
+              ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
 
                 local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
@@ -559,9 +575,9 @@ return {
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
-                as.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, "FZFGit")
-
                 vim.api.nvim_command(cmdmsg)
+
+                as.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, "FZFGit")
               end,
             },
           },
@@ -1236,20 +1252,19 @@ return {
 
               -- ["<c-o>"] = trouble.open_with_trouble,
 
-              ["<c-j>"] = actions.cycle_history_next,
-              ["<c-k>"] = actions.cycle_history_prev,
+              ["<s-down>"] = actions.cycle_history_next,
+              ["<s-up>"] = actions.cycle_history_prev,
+
+              ["<c-f>"] = actions.results_scrolling_up,
+              ["<c-b>"] = actions.results_scrolling_down,
 
               ["<CR>"] = stopinsert(actions.select_default),
-              ["<C-x>"] = stopinsert(actions.select_horizontal),
+              ["<C-s>"] = stopinsert(actions.select_horizontal),
               ["<C-v>"] = stopinsert(actions.select_vertical),
               ["<C-t>"] = stopinsert(actions.select_tab),
 
-              -- ["<C-s>"] = actions.select_horizontal,
-              -- ["<C-v>"] = actions.select_vertical,
-              -- ["<C-t>"] = actions.select_tab,
-
               ["<c-r>"] = actions.to_fuzzy_refine,
-              ["<C-/>"] = actions.which_key, -- keys from pressing <C-/>
+              ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
               ["<F6>"] = layout_actions.cycle_layout_next,
               ["<F4>"] = layout_actions.toggle_preview,
@@ -1261,6 +1276,11 @@ return {
             n = {
               ["<esc>"] = actions.close,
               ["q"] = actions.close,
+
+              ["<c-f>"] = actions.results_scrolling_up,
+              ["<c-b>"] = actions.results_scrolling_down,
+
+              ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
             },
           },
         },
