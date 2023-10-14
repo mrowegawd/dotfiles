@@ -44,8 +44,8 @@ end
 --  ╰──────────────────────────────────────────────────────────╯
 inoremap("hh", "<ESC>", silent)
 
-inoremap("<c-l>", "<Right>", silent)
-inoremap("<c-h>", "<Left>", silent)
+inoremap("<c-f>", "<Right>", silent)
+inoremap("<c-b>", "<Left>", silent)
 
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
@@ -95,7 +95,7 @@ nnoremap("zm", "zM", { desc = "Folds: close all" })
 --     [[@=(foldlevel('.')?'zA':"\<Space>")<CR>]],
 --     { desc = "Fold: toggle fold recursive" }
 -- ) -- Toggle open close fold (recursive)
--- nnoremap("<localleader>z", [[zMzvzz]], { desc = "Fold: center viewport" }) -- Refocus folds
+-- nnoremap("<Localleader>z", [[zMzvzz]], { desc = "Fold: center viewport" }) -- Refocus folds
 
 -- Jump next/prev fold
 -- nnoremap("zn", "zjzz", opts)
@@ -220,11 +220,11 @@ vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 --  ╰──────────────────────────────────────────────────────────╯
 nnoremap("~", "%", silent)
 
-nnoremap("<Leader>rB", function()
+nnoremap("<Localleader>tb", function()
   return require("r.utils").toggle_background()
 end, { desc = "Misc: toggle background" })
 
-nnoremap("<leader>rd", function()
+nnoremap("<Leader>rd", function()
   local query = vim.fn.input "Search DevDocs: "
   if #query > 0 then
     local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
@@ -241,7 +241,7 @@ nnoremap("<Leader>rP", function()
   return print(fn.expand "%:p")
 end, { desc = "Misc: check cwd curfile" })
 
-nnoremap("<leader>cd", function()
+nnoremap("<Leader>cd", function()
   local filepath = fn.expand "%:p:h" -- code
   cmd(fmt("cd %s", filepath))
   vim.notify(fmt("ROOT CHANGED: %s", filepath))
@@ -280,7 +280,7 @@ nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 nnoremap("<c-w>v", "<CMD>vsplit<CR>", silent)
 nnoremap("<c-w>s", "<CMD>split<CR>", silent)
 
-nnoremap("<leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
+nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 
 nnoremap("<c-w>J", "<C-W>t <C-W>K", {
   desc = "Windows: change two horizontally split windows to vertical splits",
@@ -289,11 +289,11 @@ nnoremap("<c-w>L", "<C-W>t <C-W>H", {
   desc = "Windows: change two vertically split windows to horizontal splits",
 })
 
--- nnoremap("<localleader>ws", "<C-W>t <C-W>K", {
+-- nnoremap("<Localleader>ws", "<C-W>t <C-W>K", {
 --     desc = "change two horizontally split windows to vertical splits",
 --     silent = true,
 -- })
--- nnoremap("<localleader>wv", "<C-W>t <C-W>H", {
+-- nnoremap("<Localleader>wv", "<C-W>t <C-W>H", {
 --     desc = "change two vertically split windows to horizontal splits",
 --     silent = true,
 -- })
@@ -321,8 +321,8 @@ cnoremap("hh", "<c-c>", { desc = "Cmdline: exit from cmdline" })
 cnoremap("<c-a>", "<Home>", { desc = "Cmdline: go to the first" })
 cnoremap("<c-e>", "<End>", { desc = "Cmdline: go to the last" })
 
-cnoremap("<c-l>", "<Right>", { desc = "Cmdline: next word" })
-cnoremap("<c-h>", "<Left>", { desc = "Cmdline: prev word" })
+cnoremap("<c-f>", "<Right>", { desc = "Cmdline: next word" })
+cnoremap("<c-b>", "<Left>", { desc = "Cmdline: prev word" })
 
 cnoremap("<c-n>", "<Down>", { desc = "Cmdline: next hist" })
 cnoremap("<c-p>", "<Up>", { desc = "Cmdline: prev hist" })

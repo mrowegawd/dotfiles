@@ -23,7 +23,10 @@ return {
       },
       {
         "<Localleader>tc",
-        "<CMD>CccHighlighterToggle<CR>",
+        function()
+          as.info("Toggle highlighter CCC", "CCC.nvim")
+          return vim.cmd.CccHighlighterToggle()
+        end,
         desc = "Misc(ccc): toggle color",
       },
     },

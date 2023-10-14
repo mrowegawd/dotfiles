@@ -8,6 +8,22 @@ return {
       separator = "─", -- "─", alternatives: ▁ ─ ▄ '--',
       mode = "cursor",
     },
+    keys = {
+      {
+        "<Localleader>tt",
+        function()
+          require("treesitter-context").toggle()
+          if require("treesitter-context.config").enable then
+            require("treesitter-context.config").enable = false
+            as.warn("Disabled Treesitter Context", "Treesitter Context")
+          else
+            require("treesitter-context.config").enable = true
+            as.info("Enabled Treesitter Context", "Treesitter Context")
+          end
+        end,
+        desc = "Misc(treesitter-contex): toggle",
+      },
+    },
   },
   -- NVIM-TS-COMMENTSTRING
   {
