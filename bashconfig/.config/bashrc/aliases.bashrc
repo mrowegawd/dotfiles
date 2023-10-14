@@ -25,13 +25,16 @@ md() {
 alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
 
 alias l="eza -l -snew"
-if command -v eza >/dev/null; then
-	alias ll="eza --long --all --git --color=always --group-directories-first --icons"
-	alias lt="eza --icons --all --color=always -T"
-else
-	alias ll='ls -lFh' # size,show type,human readable
-	alias lt="tree ."
-fi
+alias ll="eza --long --all --git --color=always --group-directories-first --icons"
+alias lt="eza --icons --all --color=always -T"
+
+# if command -v eza >/dev/null; then
+# 	alias ll="eza --long --all --git --color=always --group-directories-first --icons"
+# 	alias lt="eza --icons --all --color=always -T"
+# else
+# 	alias ll='ls -lFh' # size,show type,human readable
+# 	alias lt="tree ."
+# fi
 
 alias :q!=exitq
 alias :Q!=exitq
