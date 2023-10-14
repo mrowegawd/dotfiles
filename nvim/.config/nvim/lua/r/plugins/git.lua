@@ -35,18 +35,21 @@ return {
   {
     "pwntester/octo.nvim",
     cmd = "Octo",
-    dependencies = { "nvim-telescope/telescope.nvim" },
+    dependencies = {
+      "nvim-telescope/telescope.nvim" ,
+      "ibhagwan/fzf-lua"
+    },
     opts = {
       -- picker = "fzf-lua",
-      enable_builtin = true,
+      enable_builtin = false,
       mappings = {
         issue = {
           close_issue = { lhs = "<space>ic", desc = "close issue" },
           reopen_issue = { lhs = "<space>io", desc = "reopen issue" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload issue" },
-          open_in_browser = { lhs = "<space>gO", desc = "open issue in browser" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          open_in_browser = { lhs = "<C-i>", desc = "open issue in browser" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
           remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
           create_label = { lhs = "<space>lc", desc = "create label" },
@@ -79,7 +82,8 @@ return {
           reopen_issue = { lhs = "<space>io", desc = "reopen PR" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload PR" },
-          open_in_browser = { lhs = "<space>gO", desc = "open PR in browser" },
+          -- open_in_browser = { lhs = "<space>gO", desc = "open PR in browser" },
+          open_in_browser = nil,
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           goto_file = { lhs = "gf", desc = "go to file" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
