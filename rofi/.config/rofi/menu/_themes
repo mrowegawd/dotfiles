@@ -123,7 +123,7 @@ set_zathura() {
 	sed -i -e "s/^set recolor-lightcolor.*/set recolor-lightcolor \"$GET_BACKGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
 }
 set_vim() {
-	_PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/utils/globals.lua"
+	_PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/settings/globals.lua"
 	if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
 		PATH_NVIM="base2tone_space_dark"
 	else

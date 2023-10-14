@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/tokyonight"
+#include ".config/miscxrdb/xresource-theme/doom-one"
 
 ! --------------
 ! XFT SETTINGS

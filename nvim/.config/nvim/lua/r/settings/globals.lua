@@ -22,7 +22,7 @@ as.dropbox_path = fmt("%s/Dropbox", as.home, "Dropbox")
 as.wiki_path = fmt("%s/neorg", as.dropbox_path)
 as.snippet_path = as.dropbox_path .. "/friendly-snippets"
 
-as.colorscheme = "tokyonight"
+as.colorscheme = "doom-one"
 as.master_win = 1
 as.term_count = 1
 as.toggle_number = 1

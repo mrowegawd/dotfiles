@@ -292,7 +292,6 @@ return {
       },
       -- "<localleader>fa",
     },
-
     dependencies = {
       {
         "akinsho/org-bullets.nvim",

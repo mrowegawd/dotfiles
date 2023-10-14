@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 #define S_base03        #002b36
 #define S_base02        #073642
 #define S_base01        #586e75
@@ -9,10 +10,6 @@
 
 *background:            S_base03
 *foreground:            S_base00
-*fadeColor:             S_base03
-*cursorColor:           S_base1
-*pointerColorBackground:S_base01
-*pointerColorForeground:S_base1
 
 #define S_yellow        #b58900
 #define S_orange        #cb4b16

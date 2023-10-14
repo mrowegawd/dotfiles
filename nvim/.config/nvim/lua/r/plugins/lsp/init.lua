@@ -102,8 +102,6 @@ return {
       },
       -- add any global capabilities here
       capabilities = {},
-      -- Automatically format on save
-      autoformat = true,
       -- options for vim.lsp.buf.format
       -- `bufnr` and `filter` is handled by the LazyVim formatter,
       -- but can be also overridden when specified
@@ -122,9 +120,7 @@ return {
                 callSnippet = "Replace",
               },
               telemetry = { enable = false },
-              hint = {
-                enable = false,
-              },
+              hint = { enable = false },
             },
           },
         },

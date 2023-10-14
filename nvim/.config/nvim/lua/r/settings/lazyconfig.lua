@@ -33,6 +33,9 @@ require("lazy").setup {
   install = {
     missing = true,
   },
+  diff = {
+      cmd = "terminal_git",
+  },
   checker = {
     enabled = true,
     concurrency = 30,
