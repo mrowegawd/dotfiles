@@ -129,6 +129,7 @@ local general_overrides = function()
 
     { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { TreesitterContextLineNumber = { inherit = "LineNr" } },
+    { TreesitterContext = { inherit = "ColorColumn" } },
 
     -- { illuminatedWordText = { link = "LspReferenceText" } },
     -- { illuminatedWordWrite = { link = "LspReferenceText" } },
@@ -267,18 +268,22 @@ local function set_sidebar_highlight()
   }
 end
 
+-- stylua: ignore
 local function colorscheme_overrides()
   local overrides = {
+    -- These colorscheme needs their own config settings
     ["kanagawa"] = {},
     ["catppuccin"] = {},
+    ["everblush"] = {},
+
     ["gruvbox"] = {
       { WinBarNC = { bg = "NONE" } },
       { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "bg", alter = 0.2 }, bg = "NONE", bold = true } },
     },
-    ["everblush"] = {}, -- hi set custom hi untuk "material" colorscheme, harus di set config nya
     ["doom-one"] = {
       { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.15 }, bg = "NONE", bold = true } },
       { WinSeparator = { bg = "NONE" } },
+      { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
     },
     ["gruvbox-material"] = {
       { bufferline_unselected = { bg = { from = "Normal", attr = "fg", alter = -0.75 } } },
@@ -301,32 +306,19 @@ local function colorscheme_overrides()
       { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
       { MatchParen = { bg = { from = "Normal", alter = 0.25 } } },
       { WinSeparator = { bg = "NONE" } },
-      -- { CmpItemAbbrMatch = { bg = "NONE", bold = true } },
       { ["@Comment"] = { fg = { from = "Comment" } } },
       { ["@lsp.type.comment"] = { fg = { from = "Comment" } } },
     },
     ["solarized"] = {
-      { Folded = { underline = false } },
+      { Folded = { underline = false, bg = {from="Folded", attr="bg", alter=-0.3} } },
       { WinBar = { bg = "NONE" } },
       { MatchParen = { bg = "NONE" } },
       { ErrorMsg = { standout = false, reverse = false } },
       { LineNr = { fg = { from = "LineNr", alter = -0.15 } } },
-
       { LspReferenceText = { bg = "NONE", standout = false } },
-      -- { LspReferenceText = { bg = "NONE", gui = "" } },
-
       { illuminatedWordText = { bg = "NONE" } },
-      {
-        illuminatedWordWrite = {
-          bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.2 },
-          sp = { from = "Directory", attr = "fg" },
-        },
-      },
-      {
-        illuminatedWordRead = {
-          bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 },
-          sp = { from = "Directory", attr = "fg" },
-        },
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" }, }, },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" }, },
       },
     },
     ["miasma"] = {
@@ -339,18 +331,8 @@ local function colorscheme_overrides()
     },
     ["darcula-dark"] = {
       { WinSeparator = { bg = "NONE" } },
-      {
-        illuminatedWordWrite = {
-          bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 },
-          sp = { from = "Directory", attr = "fg" },
-        },
-      },
-      {
-        illuminatedWordRead = {
-          bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 },
-          sp = { from = "Directory", attr = "fg" },
-        },
-      },
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" }, }, },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" }, }, },
       { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
       { Normal = { fg = { from = "Directory", alter = 0.3 } } },
       { ["@Comment"] = { fg = { from = "Comment" } } },
@@ -360,7 +342,7 @@ local function colorscheme_overrides()
       { illuminatedWordRead = { bg = { from = "ColorColumn", attr = "bg", alter = -0.2 } } },
       { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
       { IndentBlanklineChar = { fg = { from = "Directory", attr = "fg", alter = -0.6 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      { CursorLine = { bg = { from = "Normal", alter = -0.1 } } },
       { WinSeparator = { bg = "NONE" } },
       { Comment = { fg = { from = "Comment", alter = -0.15 } } },
     },
@@ -368,7 +350,6 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Directory", alter = -0.15 } } },
       { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
       { TreesitterContextLineNumber = { inherit = "LineNr" } },
-      { TreesitterContext = { inherit = "ColorColumn" } },
       { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
     },
     ["tokyonight-night"] = {

@@ -92,6 +92,7 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
+    enabled = false,
     dependencies = {
       "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
@@ -283,6 +284,10 @@ return {
 
       local col_selected_fg_attr = "Boolean"
       local col_selected_bg_attr = "PmenuSel"
+      if as.colorscheme == "material" then
+        col_selected_bg_attr = "PmenuSel"
+        col_selected_fg_attr = "PmenuSel"
+      end
 
       local col_selected_sp = "bufferline_unselected"
 
