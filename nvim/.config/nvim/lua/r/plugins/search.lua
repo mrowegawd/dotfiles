@@ -1258,6 +1258,8 @@ return {
               ["<c-f>"] = actions.results_scrolling_up,
               ["<c-b>"] = actions.results_scrolling_down,
 
+              ["<a-a>"] = actions.toggle_all,
+
               ["<CR>"] = stopinsert(actions.select_default),
               ["<C-s>"] = stopinsert(actions.select_horizontal),
               ["<C-v>"] = stopinsert(actions.select_vertical),
