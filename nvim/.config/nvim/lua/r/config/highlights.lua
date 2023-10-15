@@ -1,4 +1,65 @@
-local fmt, notify, api = string.format, vim.notify, vim.api
+local fmt, notify, api, L = string.format, vim.notify, vim.api, vim.log.levels
+
+local M = {}
+
+local autocmd_keys = {
+  "event",
+  "buffer",
+  "pattern",
+  "desc",
+  "command",
+  "group",
+  "once",
+  "nested",
+}
+
+local function fold(callback, list, accum)
+  accum = accum or {}
+  for k, v in pairs(list) do
+    accum = callback(accum, v, k)
+    assert(accum ~= nil, "The accumulator must be returned on each iteration")
+  end
+  return accum
+end
+
+local function validate_autocmd(name, command)
+  local incorrect = fold(function(accum, _, key)
+    if not vim.tbl_contains(autocmd_keys, key) then
+      table.insert(accum, key)
+    end
+    return accum
+  end, command, {})
+
+  if #incorrect > 0 then
+    vim.schedule(function()
+      local msg = "Incorrect keys: " .. table.concat(incorrect, ", ")
+      ---@diagnostic disable-next-line: param-type-mismatch
+      vim.notify(msg, "error", { title = fmt("Autocmd: %s", name) })
+    end)
+  end
+end
+
+local function augroup(name, ...)
+  local commands = { ... }
+  assert(name ~= "User", "The name of an augroup CANNOT be User")
+  assert(#commands > 0, fmt("You must specify at least one autocommand for %s", name))
+  local id = api.nvim_create_augroup(name, { clear = true })
+  for _, autocmd in ipairs(commands) do
+    validate_autocmd(name, autocmd)
+    local is_callback = type(autocmd.command) == "function"
+    api.nvim_create_autocmd(autocmd.event, {
+      group = name,
+      pattern = autocmd.pattern,
+      desc = autocmd.desc,
+      callback = is_callback and autocmd.command or nil,
+      command = not is_callback and autocmd.command or nil,
+      once = autocmd.once,
+      nested = autocmd.nested,
+      buffer = autocmd.buffer,
+    })
+  end
+  return id
+end
 
 local attrs = {
   fg = true,
@@ -35,7 +96,7 @@ end)
 ---see:
 --- 1. https://stackoverflow.com/q/5560248
 --- 2. https://stackoverflow.com/a/37797380
-local function tint(color, percent)
+function M.tint(color, percent)
   assert(color and percent, "cannot alter a color without specifying a color and percentage")
   local r = tonumber(color:sub(2, 3), 16)
   local g = tonumber(color:sub(4, 5), 16)
@@ -62,7 +123,7 @@ end
 ---Get the value a highlight group whilst handling errors, fallbacks as well as returning a gui value
 ---If no attribute is specified return the entire highlight table
 ---in the right format
-local function get(group, attribute, fallback)
+function M.get(group, attribute, fallback)
   assert(group, "cannot get a highlight without specifying a group name")
   local data = get_hl_as_hex { name = group }
   if not attribute then
@@ -94,11 +155,26 @@ local function resolve_from_attribute(hl, attr)
   if type(hl) ~= "table" or not hl.from then
     return hl
   end
-  local colour = get(hl.from, hl.attr or attr)
+  local colour = M.get(hl.from, hl.attr or attr)
   if hl.alter then
-    colour = tint(colour, hl.alter)
+    colour = M.tint(colour, hl.alter)
   end
   return colour
+end
+
+local function pcall(msg, func, ...)
+  local args = { ... }
+  if type(msg) == "function" then
+    local arg = func --[[@as any]]
+    ---@diagnostic disable-next-line: cast-local-type
+    args, func, msg = { arg, unpack(args) }, msg, nil
+  end
+  return xpcall(func, function(err)
+    msg = debug.traceback(msg and fmt("%s:\n%s", msg, err) or err)
+    vim.schedule(function()
+      vim.notify(msg, L.ERROR, { title = "ERROR" })
+    end)
+  end, unpack(args))
 end
 
 --- Sets a neovim highlight with some syntactic sugar. It takes a highlight table and converts
@@ -112,7 +188,7 @@ end
 --- This will take the foreground colour from ErrorMsg and set it to the foreground of MatchParen.
 --- NOTE: this function must NOT mutate the options table as these are re-used when the colorscheme is updated
 ---
-local function set(ns, name, opts)
+function M.set(ns, name, opts)
   if type(ns) == "string" and type(name) == "table" then
     opts, name, ns = name, ns, 0
   end
@@ -132,19 +208,25 @@ local function set(ns, name, opts)
   end
 
   local msg = ('failed to set highlight "%s" with value %s'):format(name, vim.inspect(hl))
-  as.pcall(msg, api.nvim_set_hl, ns, name, hl)
+  pcall(msg, api.nvim_set_hl, ns, name, hl)
+end
+
+local function foreach(callback, list)
+  for k, v in pairs(list) do
+    callback(v, k)
+  end
 end
 
 ---Apply a list of highlights
-local function all(hls, namespace)
-  as.foreach(function(hl)
-    set(namespace or 0, next(hl))
+function M.all(hls, namespace)
+  foreach(function(hl)
+    M.set(namespace or 0, next(hl))
   end, hls)
 end
 
-local function set_winhl(name, win_id, hls)
+function M.set_winhl(name, win_id, hls)
   local namespace = api.nvim_create_namespace(name)
-  all(hls, namespace)
+  M.all(hls, namespace)
   api.nvim_win_set_hl_ns(win_id, namespace)
 end
 
@@ -167,7 +249,7 @@ local function add_theme_overrides(theme)
 end
 
 ---Apply highlights for a plugin and refresh on colorscheme change
-local function plugin(name, opts)
+function M.plugin(name, opts)
   -- Options can be specified by theme name so check if they have been or
   -- there is a general definition otherwise use the opts as is
   if opts.theme then
@@ -179,25 +261,27 @@ local function plugin(name, opts)
 
   -- capitalise the name for autocommand convention sake
   name = name:gsub("^%l", string.upper)
-  all(opts)
+  M.all(opts)
 
   -- capitalise the name for autocommand convention sake
-  as.augroup(fmt("%sHighlightOverrides", name:gsub("^%l", string.upper)), {
+  augroup(fmt("%sHighlightOverrides", name:gsub("^%l", string.upper)), {
     event = "ColorScheme",
     command = function()
       -- Defer resetting these highlights to ensure they apply after other overrides
       vim.defer_fn(function()
-        all(opts)
+        M.all(opts)
       end, 1)
     end,
   })
 end
 
-as.highlight = {
-  get = get,
-  set = set,
-  all = all,
-  tint = tint,
-  plugin = plugin,
-  set_winhl = set_winhl,
-}
+-- M.highlight = {
+--   get = get,
+--   set = set,
+--   all = all,
+--   tint = tint,
+--   plugin = plugin,
+--   set_winhl = set_winhl,
+-- }
+
+return M

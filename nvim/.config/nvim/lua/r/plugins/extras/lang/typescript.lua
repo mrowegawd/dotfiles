@@ -1,5 +1,3 @@
-local icons = as.ui.icons
-
 return {
   -- TREESITTER
   {
@@ -118,6 +116,7 @@ return {
     -- Type checking typescript
     "dmmulroy/tsc.nvim",
     cmd = { "TSC" },
+    keys = { { "<leader>lv", [[<CMD> TSC <CR>]], desc = "LSP(tsc): run TSC" } },
     config = function()
       require("tsc").setup()
     end,
@@ -127,6 +126,8 @@ return {
     "vuki656/package-info.nvim",
     event = "BufEnter package.json",
     config = function()
+      local Config = require "r.config"
+
       require("package-info").setup {
         colors = {
           up_to_date = "#3C4048", -- Text color for up to date package virtual text
@@ -135,8 +136,8 @@ return {
         icons = {
           enable = true, -- Whether to display icons
           style = {
-            up_to_date = icons.misc.check, -- Icon for up to date packages
-            outdated = icons.git.remove, -- Icon for outdated packages
+            up_to_date = Config.misc.check, -- Icon for up to date packages
+            outdated = Config.git.remove, -- Icon for outdated packages
           },
         },
         autostart = true, -- Whether to autostart when `package.json` is opened

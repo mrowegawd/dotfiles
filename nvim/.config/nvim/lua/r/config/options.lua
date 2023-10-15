@@ -18,6 +18,7 @@ local options = {
     errorbells = false, -- disable error bells (no beep/flash)
     termguicolors = true,
     jumpoptions = { "stack" },
+    cursorline = true,
     inccommand = "split",
     virtualedit = "block", -- Allow cursor to move where there is no text in visual block mode
     smoothscroll = true,
@@ -189,8 +190,10 @@ local options = {
     -----------------------------------------------------------------------------//
     -- timings {{{1
     -----------------------------------------------------------------------------//
+    updatetime = 100,
+    timeout = true,
     timeoutlen = 300,
-    updatetime = 200, -- Save swap file and trigger CursorHold
+    ttimeoutlen = 10,
 
     --[[
          shda (info for vim): session data history
@@ -226,7 +229,7 @@ local options = {
     sidescrolloff = 3, -- Same but for side scrolling.
     sidescroll = 1,
     selection = "old", -- Don't select the newline symbol when using <End> on visual mode
-    statuscolumn = [[%!v:lua.require'r.utils'.statuscolumn()]],
+    statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]],
 
     -----------------------------------------------------------------------------//
     -- emoji {{{1
@@ -263,7 +266,7 @@ local options = {
 }
 
 if vim.treesitter.foldtext then
-  vim.opt.foldtext = "v:lua.require'r.utils'.foldtext()"
+  vim.opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
 end
 
 if vim.fn.has "nvim-0.10" == 1 then
@@ -273,26 +276,19 @@ else
   vim.opt.foldmethod = "indent"
 end
 
--- Use faster grep alternatives if possible
-if as and not as.falsy(fn.executable "rg") then
-  vim.o.grepprg = [[rg --glob "!.git" --no-heading --vimgrep --follow $*]]
-  opt.grepformat = opt.grepformat ^ { "%f:%l:%c:%m" }
-elseif as and not as.falsy(fn.executable "ag") then
-  vim.o.grepprg = [[ag --nogroup --nocolor --vimgrep]]
-  opt.grepformat = opt.grepformat ^ { "%f:%l:%c:%m" }
-end
-
 -- Disable providers we do not care a about
 -- vim.g.loaded_python_provider = 0 -- for python 2
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 --
--- vim.g.glow_binary_path = as.home .. "/.local/bin"
-vim.g.python3_host_prog = as.home .. "/.config/neovim3/bin/python"
+-- vim.g.glow_binary_path = os.getenv "HOME" .. "/.local/bin"
+vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
 
 for scope, table in pairs(options) do
   for setting, value in pairs(table) do
     vim[scope][setting] = value
   end
 end
+
+vim.o.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"

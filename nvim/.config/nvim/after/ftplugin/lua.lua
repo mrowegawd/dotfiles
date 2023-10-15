@@ -1,4 +1,4 @@
--- local keymap = vim.keymap
+local keymap = vim.keymap
 -- local buffer_dir = vim.fn.expand "%:p:h"
 
 vim.opt.tabstop = 2
@@ -25,6 +25,10 @@ require("r.utils").write_and_source(0)
 --   vim.cmd("silent! !tmux new-window -c " .. cwd .. " -n " .. fname .. " " .. sh_cmd)
 -- end
 
--- keymap.set({ "n", "i" }, "<F5>", run_tmux_pane, { buffer = true, desc = "Task: run tmux pane" })
---
--- keymap.set("n", "rF", run_toggleterm, { buffer = true, desc = "Task: run toggleterm" })
+-- keymap.set("n", "<Leader>dal", function()
+--   require("osv").run_this()
+-- end, { buffer = true, desc = "Debug(nlua): adapter lua" })
+
+-- keymap.set("n", "<Leader>daL", function()
+--   require("osv").launch { port = 8086 }
+-- end, { buffer = true, desc = "Debug(nlua): launch" })

@@ -1,13 +1,10 @@
-local highlight = as.highlight
-local icons, fn = as.ui.icons, vim.fn
-
-local border = as.ui.border.rectangle
+local fn = vim.fn
 
 return {
   -- INDENTBLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "LazyFile",
     main = "ibl",
     opts = {
       scope = { enabled = false },
@@ -37,9 +34,10 @@ return {
     },
     config = function(_, opts)
       require("ibl").setup(opts)
-      -- local hooks = require "ibl.hooks"
-      -- hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
-      -- hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+
+      require("r.config.highlights").plugin("ibl_indentline", {
+        { ["@ibl.indent.char.1"] = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
+      })
     end,
   },
   -- DRESSING
@@ -71,9 +69,24 @@ return {
       max_width = function()
         return math.floor(vim.o.columns * 0.75)
       end,
+      on_open = function(win)
+        vim.api.nvim_win_set_config(win, { zindex = 175 })
+        if not vim.g.notifications_enabled then
+          vim.api.nvim_win_close(win, true)
+        end
+        if not package.loaded["nvim-treesitter"] then
+          pcall(require, "nvim-treesitter")
+        end
+        vim.wo[win].conceallevel = 3
+        local buf = vim.api.nvim_win_get_buf(win)
+        if not pcall(vim.treesitter.start, buf, "markdown") then
+          vim.bo[buf].syntax = "markdown"
+        end
+        vim.wo[win].spell = false
+      end,
     },
     config = function(_, opts)
-      highlight.plugin("notify", {
+      require("r.config.highlights").plugin("notify", {
         { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
         { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
         { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
@@ -92,9 +105,8 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    enabled = false,
+    -- enabled = false,
     dependencies = {
-      "MunifTanjim/nui.nvim",
       "rcarriga/nvim-notify",
     },
     -- stylua: ignore
@@ -110,7 +122,7 @@ return {
       { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
     },
     init = function()
-      highlight.plugin("notify", {
+      require("r.config.highlights").plugin("notify", {
         { NoiceCmdlinePopupBorder = { fg = { from = "Directory" } } },
       })
     end,
@@ -126,7 +138,7 @@ return {
         progress = {
           enabled = false,
         },
-        signature = { auto_open = { enabled = true }, enabled = true },
+        signature = { auto_open = { enabled = true }, enabled = false },
         hover = { enabled = true },
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -149,7 +161,7 @@ return {
         vsplit = { size = { width = "auto" } },
         split = { win_options = { winhighlight = { Normal = "Normal" } } },
         popup = {
-          border = { style = border, padding = { 0, 1 } },
+          border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 } },
         },
         cmdline_popup = {
           position = {
@@ -162,15 +174,15 @@ return {
           },
         },
         confirm = {
-          border = { style = border, padding = { 0, 1 }, text = { top = "" } },
+          border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 }, text = { top = "" } },
         },
-        popupmenu = {
-          relative = "editor",
-          position = { row = -5, col = "50%" },
-          size = { width = 60, height = 10 },
-          border = { style = border, padding = { 0, 1 } },
-          win_options = { winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" } },
-        },
+        -- popupmenu = {
+        --   relative = "editor",
+        --   position = { row = -5, col = "50%" },
+        --   size = { width = 60, height = 10 },
+        --   border = { style = border, padding = { 0, 1 } },
+        --   win_options = { winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" } },
+        -- },
       },
       routes = {
         {
@@ -180,6 +192,7 @@ return {
               { find = "%d+L, %d+B" },
               { find = "; after #%d+" },
               { find = "; before #%d+" },
+              { event = { "msg_showmode", "msg_showcmd", "msg_ruler" } },
               { event = "msg_show", find = "written" },
               { event = "msg_show", find = "%d+ lines, %d+ bytes" },
               { event = "msg_show", kind = "search_count" },
@@ -212,7 +225,7 @@ return {
   -- STATUSCOL
   {
     "luukvbaal/statuscol.nvim",
-    event = "BufReadPre",
+    event = "LazyFile",
     enabled = false,
     config = function()
       local builtin = require "statuscol.builtin"
@@ -273,7 +286,15 @@ return {
     keys = {
       { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
       { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
-      { "<leader><BS>", "<CMD>BufferLineGroupToggle docs<CR>", desc = "Buffer(Bufferline): group close docs" },
+      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
+      {
+        "<leader>bP",
+        "<Cmd>BufferLineGroupClose ungrouped<CR>",
+        desc = "Buffer(bufferline): delete non-pinned buffers",
+      },
+      { "<leader>bO", "<Cmd>BufferLineCloseOthers<CR>", desc = "Buffer(bufferline): delete other buffers" },
+      { "<leader>bl", "<Cmd>BufferLineCloseRight<CR>", desc = "Buffer(bufferline): delete buffers to the right" },
+      { "<leader>bh", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
     },
     opts = function()
       local col_base_bg_attr = "Normal"
@@ -284,7 +305,7 @@ return {
 
       local col_selected_fg_attr = "Boolean"
       local col_selected_bg_attr = "PmenuSel"
-      if as.colorscheme == "material" then
+      if require("r.config").colorscheme == "material" then
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
       end
@@ -310,9 +331,9 @@ return {
           -- hover = { enabled = true, reveal = { "close" } },
           -- separator_style = "thick",
           diagnostics_indicator = function(_, _, diag)
-            local icons_diagnostic = icons.diagnostics
-            local ret = (diag.error and icons_diagnostic.Error .. diag.error .. " " or "")
-              .. (diag.warning and icons_diagnostic.Warn .. diag.warning or "")
+            local icons = require("r.config").icons.diagnostics
+            local ret = (diag.error and icons.Error .. diag.error .. " " or "")
+              .. (diag.warning and icons.Warn .. diag.warning or "")
             return vim.trim(ret)
           end,
           offsets = {
@@ -797,12 +818,6 @@ return {
   {
     "HampusHauffman/block.nvim",
     cmd = { "BlockOn", "BlockOff", "Block" },
-    opts = {},
-  },
-  -- STICKYBUF.NVIM
-  {
-    "stevearc/stickybuf.nvim",
-    event = "VeryLazy",
     opts = {},
   },
 }

@@ -1,3 +1,5 @@
+local Util = require "r.utils"
+
 return {
   -- GITHUB NOTIFICATIONS
   { "rlch/github-notifications.nvim" },
@@ -13,8 +15,18 @@ return {
     },
     --stylua: ignore
     keys = {
-      {"<leader>gwm", function() require("telescope").extensions.git_worktree.git_worktrees() end, desc = "Git(git-worktree): manage" },
-      {"<leader>gwc", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Git(git-worktree): create"}, },
+      {
+        "<leader>gwm",
+        function() require("telescope").extensions.git_worktree.git_worktrees() end,
+        desc =
+        "Git(git-worktree): manage"
+      },
+      {
+        "<leader>gwc",
+        function() require("telescope").extensions.git_worktree.create_git_worktree() end,
+        desc =
+        "Git(git-worktree): create"
+      }, },
   },
   -- GIT CONFLICT
   {
@@ -36,8 +48,8 @@ return {
     "pwntester/octo.nvim",
     cmd = "Octo",
     dependencies = {
-      "nvim-telescope/telescope.nvim" ,
-      "ibhagwan/fzf-lua"
+      "nvim-telescope/telescope.nvim",
+      "ibhagwan/fzf-lua",
     },
     opts = {
       -- picker = "fzf-lua",
@@ -82,8 +94,7 @@ return {
           reopen_issue = { lhs = "<space>io", desc = "reopen PR" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload PR" },
-          -- open_in_browser = { lhs = "<space>gO", desc = "open PR in browser" },
-          open_in_browser = nil,
+          open_in_browser = { lhs = "<space>gO", desc = "open PR in browser" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           goto_file = { lhs = "gf", desc = "go to file" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
@@ -164,11 +175,10 @@ return {
   -- GIT ADVANCED SEARCH
   {
     "aaronhallaert/advanced-git-search.nvim",
+    event = "LazyFile",
     dependencies = {
       "sindrets/diffview.nvim",
       "ibhagwan/fzf-lua",
-      "tpope/vim-fugitive",
-      "tpope/vim-rhubarb",
     },
     init = function()
       vim.api.nvim_create_user_command(
@@ -179,9 +189,15 @@ return {
     end,
     --stylua: ignore
     keys = {
-      { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>", desc = "Git(git-advanced): grep all repo", },
+      { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>",      desc = "Git(git-advanced): grep all repo", },
       { "<Leader>gg", "<CMD>AdvancedGitSearch search_log_content_file<CR>", desc = "Git(git-advanced): grep buf repo", },
-      { "<Leader>gg", ":'<,'>AdvancedGitSearch diff_commit_line<CR>", mode = "v", desc = "Git(git-advanced): grep buf repo (visual)", },
+      {
+        "<Leader>gg",
+        ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
+        mode = "v",
+        desc =
+        "Git(git-advanced): grep buf repo (visual)",
+      },
     },
     config = function()
       require("advanced_git_search.fzf").setup {
@@ -195,7 +211,7 @@ return {
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
-    event = "BufReadPre",
+    event = "LazyFile",
     opts = {
       -- Experimental ------------------------------------------------------------------------------
       _extmark_signs = true,
@@ -223,7 +239,7 @@ return {
     },
     -- remove these maps: `<c-i>` `<c-o>`
     init = function()
-      require("r.utils").disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+      Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
     end,
     config = function()
       local diffview = require "diffview"
@@ -346,7 +362,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     --stylua: ignore
     keys = {
-      { "<Leader>gS", function() require("neogit").open() end, desc = "Git(neogit): open", },
+      { "<Leader>gS", function() require("neogit").open() end,            desc = "Git(neogit): open", },
       { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit", },
       -- { "<localleader>gl", function() require("neogit").popups.pull.create() end, desc = "Git(neogit): open pull popup", },
       -- { "<localleader>gp", function() require("neogit").popups.push.create() end, desc = "Git(neogit): open push popup", },

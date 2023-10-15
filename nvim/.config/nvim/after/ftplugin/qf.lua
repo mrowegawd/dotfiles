@@ -1,6 +1,8 @@
-vim.opt.buflisted = false
-
 local keymap, api = vim.keymap, vim.api
+
+local Util = require "r.utils"
+
+vim.opt.buflisted = false
 
 -- Disable ctrl-i and ctrl-o
 keymap.set("n", "<c-i>", "<Nop>", {
@@ -10,17 +12,8 @@ keymap.set("n", "<c-o>", "<Nop>", {
   buffer = api.nvim_get_current_buf(),
 })
 
--- keymap.set("n", "<c-n>", "<down><CR>zz<c-w>p", {
---     silent = true,
---     buffer = vim.api.nvim_get_current_buf(),
--- })
--- keymap.set("n", "<c-p>", "<UP><CR>zz<c-w>p", {
---     silent = true,
---     buffer = vim.api.nvim_get_current_buf(),
--- })
-
 keymap.set("n", "<c-n>", function()
-  local ft, _ = as.get_bo_buft()
+  local ft, _ = Util.buf.get_bo_buft()
 
   if ft == "Trouble" or ft == "lspsagafinder" then
     api.nvim_feedkeys("j", "n", true)
@@ -41,7 +34,7 @@ keymap.set("n", "<c-n>", function()
   end
 end, { silent = true })
 keymap.set("n", "<c-p>", function()
-  local ft, _ = as.get_bo_buft()
+  local ft, _ = Util.buf.get_bo_buft()
 
   if ft == "Trouble" or ft == "lspsagafinder" then
     api.nvim_feedkeys("k", "n", true)
@@ -116,7 +109,7 @@ end, {
   buffer = vim.api.nvim_get_current_buf(),
 })
 
-as.augroup("ColorQuickFixLine", {
+Util.cmd.augroup("ColorQuickFixLine", {
   event = { "BufRead", "WinEnter", "FocusGained", "VimEnter", "BufEnter" },
   command = function()
     if vim.bo.filetype ~= "qf" then

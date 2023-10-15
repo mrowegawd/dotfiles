@@ -1,6 +1,31 @@
-local fmt = string.format
+local fmt, cmd, L = string.format, vim.cmd, vim.log.levels
 
-local norg = {}
+local M = {}
+
+function M.EditOrgTodo()
+  local org_todos = { "inbox", "refile" }
+  local org_todo_path = require("r.config").path.wiki_path .. "/orgmode/gtd/"
+
+  vim.ui.select(org_todos, { prompt = "Edit OrgTODO's> " }, function(choice)
+    if choice == nil then
+      return
+    end
+
+    if not require("r.utils").file.exists(org_todo_path .. choice .. ".org") then
+      return vim.notify("Cant find todo path: " .. org_todo_path .. choice .. ".org", L.WARN, { title = "Todo info" })
+    end
+    cmd(":edit " .. org_todo_path .. choice .. ".org")
+  end)
+end
+
+function M.convert_norg_to_markdown()
+  local fname = vim.fn.expand "%:t:r"
+  local pname = vim.fn.expand "%:p:h"
+
+  local msg_cmd = "Neorg export to-file " .. pname .. "/" .. fname .. ".md"
+
+  vim.cmd(msg_cmd)
+end
 
 local function __get_check_dirman(neorg)
   local dirman = neorg.modules.get_module "core.dirman"
@@ -96,7 +121,7 @@ end
 --  ┃                         LINKABLE                         ┃
 --  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function norg.finder_linkableGlobal(neorg)
+function M.finder_linkableGlobal(neorg)
   local tbl_files = __get_norg_files(__get_check_dirman(neorg))
 
   local tb_rt = {}
@@ -108,7 +133,7 @@ function norg.finder_linkableGlobal(neorg)
   return tb_rt
 end
 
-function norg.finder_linkable(neorg)
+function M.finder_linkable(neorg)
   local res = {}
   local dirman = neorg.modules.get_module "core.dirman"
 
@@ -138,7 +163,7 @@ function norg.finder_linkable(neorg)
   return res
 end
 
-function norg.get_check_linkdir(neorg)
+function M.get_check_linkdir(neorg)
   -- TODO: check link broken di norg
   -- check jika ada broken link di local dan global
   -- output masukkan ke quickfix
@@ -187,7 +212,7 @@ end
 --  ┃                       SITELINKABLE                       ┃
 --  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function norg.finder_sitelinkable(neorg)
+function M.finder_sitelinkable(neorg)
   local dirman = neorg.modules.get_module "core.dirman"
 
   if not dirman then
@@ -224,7 +249,7 @@ end
 --  ┃                       BROKEN LINKS                       ┃
 --  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function norg.testing()
+function M.testing()
   local neorg = require "neorg"
   local ts = neorg.modules.get_module "core.integrations.treesitter"
 
@@ -272,4 +297,4 @@ end
 --     return table.concat(set_command(), " ")
 -- end
 
-return norg
+return M

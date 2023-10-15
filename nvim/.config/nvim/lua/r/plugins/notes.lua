@@ -1,5 +1,7 @@
 local fmt, cmd, api = string.format, vim.cmd, vim.api
 
+local Util = require "r.utils"
+
 local function format_title(str, icon, icon_hl)
   return {
     { " " },
@@ -17,7 +19,7 @@ return {
     ft = "norg",
     build = ":Neorg sync-parsers", -- This is the important bit!
     init = function()
-      as.augroup("ManageNotesNeorg", {
+      Util.cmd.augroup("ManageNotesNeorg", {
         event = { "FileType" },
         pattern = { "norg" },
         command = function()
@@ -37,24 +39,14 @@ return {
         end,
         desc = "Note(neorg): open neorg workspace",
       },
-
       {
         "<Localleader>ff",
         function()
           cmd [[Lazy load neorg]]
 
-          if as.use_search_telescope then
-            -- TELESCOPE-MENUFACTURE
-            return require("telescope").extensions.menufacture.find_files {
-              cwd = as.wiki_path,
-              prompt_title = "Find Neorg Wiki Files",
-              theme = "cursor",
-            }
-          end
-
           return require("fzf-lua").files {
             prompt = "  ",
-            cwd = as.wiki_path,
+            cwd = require("r.config").path.wiki_path,
             rg_glob = true,
             file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
             winopts = {
@@ -69,37 +61,9 @@ return {
         "<Localleader>fg",
         function()
           cmd [[Lazy load neorg]]
-
-          if as.use_search_telescope then
-            -- TELESCOPE-MENUFACTURE
-            return require("telescope").extensions.menufacture.live_grep {
-              cwd = as.wiki_path,
-              prompt_title = "Live Grep Neorg Wiki",
-              vimgrep_arguments = {
-                "rg",
-                "--follow",
-                "--hidden",
-                "--color=never",
-                "--no-heading",
-                "--with-filename",
-                "--line-number",
-                "--column",
-                "--smart-case",
-                "--trim", -- remove indentation
-                "-g",
-                "*.norg",
-                "-g",
-                "*.org",
-                "-g",
-                "!config/",
-                "-g",
-                "!.obsidian/",
-              },
-            }
-          end
           return require("fzf-lua").live_grep_glob {
             prompt = "  ",
-            cwd = as.wiki_path,
+            cwd = require("r.config").path.wiki_path,
             winopts = {
               fullscreen = false,
 
@@ -209,8 +173,8 @@ return {
         ["core.dirman"] = {
           config = {
             workspaces = {
-              gtd = fmt("%s/gtd", as.wiki_path),
-              wiki = as.wiki_path,
+              gtd = fmt("%s/gtd", require("r.config").path.wiki_path),
+              wiki = require("r.config").path.wiki_path,
             },
           },
         },
@@ -286,7 +250,7 @@ return {
       {
         "<Localleader>fO",
         function()
-          return require("r.utils").EditOrgTodo()
+          return Util.neorg_notes.EditOrgTodo()
         end,
         desc = "Note(orgmode): directly edit todos org",
       },
@@ -345,11 +309,11 @@ return {
         },
         win_split_mode = "float",
         org_agenda_files = {
-          fmt("%s/orgmode/gtd/*", as.wiki_path),
-          fmt("%s/orgmode/journal/homeclean/*", as.wiki_path),
-          fmt("%s/orgmode/journal/HBD/*", as.wiki_path),
+          fmt("%s/orgmode/gtd/*", require("r.config").path.wiki_path),
+          fmt("%s/orgmode/journal/homeclean/*", require("r.config").path.wiki_path),
+          fmt("%s/orgmode/journal/HBD/*", require("r.config").path.wiki_path),
         },
-        org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", as.wiki_path),
+        org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", require("r.config").path.wiki_path),
         org_todo_keywords = {
           "TODO(t)",
           "NEXT(n)",
@@ -378,35 +342,35 @@ return {
             description = "Todo",
             -- template = "\n* TODO %? \n  SCHEDULED: %t",
             template = "* TODO %? \n  SCHEDULED: %t",
-            target = as.wiki_path .. "/orgmode/gtd/refile.org",
+            target = require("r.config").path.wiki_path .. "/orgmode/gtd/refile.org",
           },
 
           i = {
             description = "Inbox (someday)",
             template = "* %?",
-            target = as.wiki_path .. "/orgmode/gtd/inbox.org",
+            target = require("r.config").path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           l = {
             description = "Link",
             -- template = "\n* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
             template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
-            target = as.wiki_path .. "/orgmode/gtd/inbox.org",
+            target = require("r.config").path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           c = {
             description = "Check",
             -- template = "\n* CHECK %? \n  SCHEDULED: %t",
             template = "* CHECK %? \n  SCHEDULED: %t",
-            target = as.wiki_path .. "/orgmode/gtd/inbox.org",
+            target = require("r.config").path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           -- j = {
           --     description = "Journal",
           --     template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
-          --     target = as.wiki_path.. "/orgmode/gtd/journal.org",
+          --     target = require("r.config").path.wiki_path.. "/orgmode/gtd/journal.org",
           -- },
           -- k = {
           --     description = "Markdown",
           --     template = "\n* TODO %? \n  SCHEDULED: %t",
-          --     target = as.wiki_path .. "/orgmode/gtd/base.md",
+          --     target = require("r.config").path.wiki_path .. "/orgmode/gtd/base.md",
           --     filetype = "markdown",
           -- },
         },
@@ -545,7 +509,7 @@ return {
               if vim.fn.executable "dunstify" == 1 then
                 vim.uv.spawn("dunstify", {
                   args = {
-                    fmt("--icon=%s/.config/dunst/bell.png", as.home),
+                    fmt("--icon=%s/.config/dunst/bell.png", os.getenv "HOME"),
                     fmt("%s\n%s %s", title, subtitle, date),
                     -- fmt("%s", subtitle),
                   },
@@ -556,7 +520,7 @@ return {
                 vim.uv.spawn("mpv", {
                   args = {
                     "--audio-display=no",
-                    fmt("%s/.config/dunst/notif-me.wav", as.home),
+                    fmt("%s/.config/dunst/notif-me.wav", os.getenv "HOME"),
                     "--volume=50",
                   },
                 })

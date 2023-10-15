@@ -1,18 +1,9 @@
-if not as.use_lsp_native then
-  return {}
-end
+local Util = require "r.utils"
 
-local border = as.ui.border.rectangle
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
-local icons = as.ui.icons
-local augroup = as.augroup
-
-local prettier = { "prettierd", "prettier" }
 
 return {
-  -- GOTO-PREVIEW
-  { "rmagatti/goto-preview", config = true },
   -- MASON NVIM
   {
     "williamboman/mason.nvim",
@@ -20,11 +11,21 @@ return {
     build = ":MasonUpdate",
     opts = {
       ensure_installed = { "shfmt" },
-      ui = { border = as.ui.border.rectangle, height = 0.8 },
+      ui = { border = require("r.config").icons.border.rectangle, height = 0.8 },
     },
     config = function(_, opts)
       require("mason").setup(opts)
       local mr = require "mason-registry"
+      mr:on("package:install:success", function()
+        vim.defer_fn(function()
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger {
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          }
+        end, 100)
+      end)
+
       local function ensure_installed()
         for _, tool in ipairs(opts.ensure_installed) do
           local p = mr.get_package(tool)
@@ -43,7 +44,7 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "LazyFile",
     dependencies = {
       {
         "folke/neoconf.nvim",
@@ -53,10 +54,11 @@ return {
           library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
         },
       },
-      {
-        "folke/neodev.nvim",
-        opts = { experimental = { pathStrict = true } },
-      },
+      { "rmagatti/goto-preview", config = true },
+      -- {
+      --   "folke/neodev.nvim",
+      --   opts = { experimental = { pathStrict = true } },
+      -- },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
@@ -84,12 +86,17 @@ return {
           -- },
           focusable = false,
           style = "minimal",
-          border = border, -- "rounded"
+          border = require("r.config").icons.border.rectangle,
           source = "always",
           header = "",
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
-            local prefix = string.format("%s ", icons.lsp[level:lower()])
+            local prefix = string.format(
+              "%s ",
+              require("r.config").icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
+                return first:upper() .. rest:lower()
+              end)]
+            )
             return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
           end,
         },
@@ -113,6 +120,7 @@ return {
         lua_ls = {
           settings = {
             Lua = {
+              codeLens = { enable = true },
               workspace = {
                 checkThirdParty = false,
               },
@@ -121,6 +129,9 @@ return {
               },
               telemetry = { enable = false },
               hint = { enable = false },
+              diagnostics = {
+                globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
+              },
             },
           },
         },
@@ -136,14 +147,27 @@ return {
       },
     },
     config = function(_, opts)
-      local lsp_utils = require "r.plugins.lsp.utils"
-
-      if as.has "neoconf.nvim" then
+      if Util.has "neoconf.nvim" then
         local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
         require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
       end
 
-      require("r.plugins.lsp.format").setup(opts)
+      Util.format.register(Util.lsp.formatter())
+
+      -- deprectaed options
+      if opts.autoformat ~= nil then
+        vim.g.autoformat = opts.autoformat
+        Util.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
+      end
+
+      local function has_capability(capability, filter)
+        for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
+          if client.supports_method(capability) then
+            return true
+          end
+        end
+        return false
+      end
 
       local provider = {
         HOVER = "hoverProvider",
@@ -156,16 +180,23 @@ return {
       }
 
       -- setup formatting and keymaps
-      lsp_utils.on_attach(function(client, bufnr)
+      Util.lsp.on_attach(function(client, bufnr)
         require("r.plugins.lsp.keymaps").on_attach(client, bufnr)
 
         if client.server_capabilities[provider.CODELENS] then
-          augroup(("LspCodeLens%d"):format(bufnr), {
+          Util.cmd.augroup("LspCodelensRefresh", {
             event = { "BufEnter", "InsertLeave", "BufWritePost" },
             desc = "LSP: Code Lens",
             buffer = bufnr,
-            -- call via vimscript so that errors are silenced
-            command = "silent! lua vim.lsp.codelens.refresh()",
+            command = function()
+              if not has_capability("textDocument/codeLens", { bufnr = bufnr }) then
+                Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
+                return
+              end
+              if vim.g.codelens_enabled then
+                vim.lsp.codelens.refresh()
+              end
+            end,
           })
         end
       end)
@@ -187,7 +218,7 @@ return {
       -- })
 
       -- Diagnostics
-      for name, icon in pairs(icons.diagnostics) do
+      for name, icon in pairs(require("r.config").icons.diagnostics) do
         name = "DiagnosticSign" .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
       end
@@ -195,7 +226,7 @@ return {
       local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
 
       if opts.inlay_hints.enabled and inlay_hint then
-        lsp_utils.on_attach(function(client, buffer)
+        Util.lsp.on_attach(function(client, buffer)
           if client.supports_method "textDocument/inlayHint" then
             inlay_hint(buffer, true)
           end
@@ -205,7 +236,7 @@ return {
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
           or function(diagnostic)
-            for d, icon in pairs(icons.diagnostics) do
+            for d, icon in pairs(require("r.config").icons.diagnostics) do
               if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
                 return icon
               end
@@ -265,78 +296,13 @@ return {
         mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
 
-      if as.lsp_get_config "denols" and as.lsp_get_config "tsserver" then
+      if Util.lsp.get_config "denols" and Util.lsp.get_config "tsserver" then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        as.lsp_disable("tsserver", is_deno)
-        as.lsp_disable("denols", function(root_dir)
+        Util.lsp.lsp_disable("tsserver", is_deno)
+        Util.lsp.lsp_disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
       end
-    end,
-  },
-  -- CONFORM.NVIM (disabled)
-  {
-    "stevearc/conform.nvim",
-    enabled = false,
-    event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
-    keys = {
-      {
-        "<Leader>lf",
-        function()
-          require("conform").format { async = true, lsp_fallback = true }
-        end,
-        desc = "Lang(conform): Format buffer",
-      },
-    },
-    opts = {
-      formatters_by_ft = {
-        javascript = prettier,
-        typescript = prettier,
-        javascriptreact = prettier,
-        typescriptreact = prettier,
-        css = prettier,
-        html = prettier,
-        json = prettier,
-        jsonc = prettier,
-        yaml = prettier,
-        markdown = prettier,
-        graphql = prettier,
-        lua = { "stylua" },
-        sh = { "shfmt" },
-        ["_"] = { "trim_whitespace", "trim_newlines" },
-        python = {
-          formatters = { "isort", "black" },
-          run_all_formatters = true,
-        },
-      },
-      format_on_save = { timeout_ms = 500, lsp_fallback = true },
-      log_level = vim.log.levels.DEBUG,
-    },
-    config = function(_, opts)
-      if vim.g.started_by_firenvim then
-        opts.format_on_save = false
-      end
-      require("conform").setup(opts)
-    end,
-  },
-  -- NONE-LS
-  {
-    "nvimtools/none-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
-    opts = function()
-      local nls = require "null-ls"
-      return {
-        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
-        sources = {
-          nls.builtins.diagnostics.fish,
-          nls.builtins.formatting.fish_indent,
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.shfmt,
-          -- nls.builtins.diagnostics.flake8,
-        },
-      }
     end,
   },
 }

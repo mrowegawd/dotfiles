@@ -1,3 +1,5 @@
+local Util = require "r.utils"
+
 return {
   -- NVIM-COLORIZER (disabled)
   {
@@ -24,7 +26,7 @@ return {
       {
         "<Localleader>tc",
         function()
-          as.info("Toggle highlighter CCC", "CCC.nvim")
+          Util.info("Toggle highlighter CCC", "CCC.nvim")
           return vim.cmd.CccHighlighterToggle()
         end,
         desc = "Misc(ccc): toggle color",
@@ -38,7 +40,7 @@ return {
         [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]=],
       }
       ccc.setup {
-        win_opts = { border = as.ui.border.line },
+        win_opts = { border = require("r.config").icons.border.rectangle },
         pickers = {
           p.hex,
           p.css_rgb,

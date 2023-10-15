@@ -4,6 +4,8 @@ local fmt = string.format
 local api = vim.api
 local fn = vim.fn
 
+local Util = require "r.utils"
+
 local M = {}
 
 local tab_layouts = {}
@@ -21,6 +23,8 @@ state.found_close_wins = {}
 state.found_main_wins = {}
 
 local expand_tree = false
+
+local master_win = 1
 
 local activate_tiling_autocmds = function()
   vim.cmd [[
@@ -164,7 +168,7 @@ end
 
 local __change_buffers = function()
   local curbufnum = api.nvim_buf_get_number(0)
-  vim.cmd(fmt([[%d wincmd w]], as.master_win))
+  vim.cmd(fmt([[%d wincmd w]], master_win))
   vim.cmd(fmt("b %d", curbufnum))
 end
 
@@ -301,7 +305,7 @@ local stack_windows = function()
   while arrange_window() < 0 do
     counter = counter + 1
     if counter > 50 then
-      as.warn "infinite loop, probably an issue with getting max height or width"
+      Util.warn "infinite loop, probably an issue with getting max height or width"
       break
     end
   end
@@ -466,12 +470,12 @@ M.tiling_toggle = function()
   if state.active then
     state.active = false
     deactivate_tiling_autocmds()
-    as.info "[+] Tiling autocmds off.."
+    Util.info "[+] Tiling autocmds off.."
     return
   end
   state.active = true
   activate_tiling_autocmds()
-  as.info "[+] Tiling autocmds on.."
+  Util.info "[+] Tiling autocmds on.."
 end
 
 M.state_active = function(stat)

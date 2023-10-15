@@ -22,10 +22,10 @@ local grepqf = function(opts)
   end
 
   opts = {
-    vimgrep_arguments = as.vimgrep_arguments,
+    vimgrep_arguments = require("r.config").vimgrep_arguments,
     path_display = { "smart" },
     theme = "ivy",
-    search_dirs = as.rm_duplicates_tbl(path), -- much better, unique path
+    search_dirs = require("r.utils").cmd.rm_duplicates_tbl(path), -- much better, unique path
     prompt_title = "Live Grep Quickfix",
 
     attach_mappings = function(_)

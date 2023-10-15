@@ -1,4 +1,4 @@
-if as.use_lsp_native then
+if true then
   return {}
 end
 
@@ -48,8 +48,6 @@ return {
       -- Make <CR> to accept selected completion item or notify coc.nvim to format
       -- <C-g>u breaks current undo, please make your own choice
       keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
-
-
 
       -- Use <c-j> to trigger snippets
       keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")

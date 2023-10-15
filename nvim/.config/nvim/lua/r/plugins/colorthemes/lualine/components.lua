@@ -1,6 +1,27 @@
 local M = {}
 
-local fn, fmt, icons, falsy = vim.fn, string.format, as.ui.icons, as.falsy
+local fn, fmt = vim.fn, string.format
+
+local Util = require "r.utils"
+
+local icons = require("r.config").icons
+
+local term_count = 1
+
+function M.format(component, text, hl_group)
+  if not hl_group then
+    return text
+  end
+  ---@type table<string, string>
+  component.hl_cache = component.hl_cache or {}
+  local lualine_hl_group = component.hl_cache[hl_group]
+  if not lualine_hl_group then
+    local utils = require "lualine.utils.utils"
+    lualine_hl_group = component:create_hl({ fg = utils.extract_highlight_colors(hl_group, "fg") }, "LV_" .. hl_group)
+    component.hl_cache[hl_group] = lualine_hl_group
+  end
+  return component:format_hl(lualine_hl_group) .. text .. component:get_default_hl()
+end
 
 local state = { lsp_clients_visible = true }
 
@@ -155,7 +176,6 @@ end
 M.diff = function()
   return {
     "diff",
-
     symbols = {
       added = icons.git.add,
       modified = icons.git.mod,
@@ -190,23 +210,78 @@ M.filetype = function()
     cond = conditions.debugger_status_run,
   }
 end
-M.filename = function()
+M.cmp_source = function(name, icon)
+  local started = false
+  local function status()
+    if not package.loaded["cmp"] then
+      return
+    end
+    for _, s in ipairs(require("cmp").core.sources) do
+      if s.name == name then
+        if s.source:is_available() then
+          started = true
+        else
+          return started and "error" or nil
+        end
+        if s.status == s.SourceStatus.FETCHING then
+          return "pending"
+        end
+        return "ok"
+      end
+    end
+  end
+
+  local colors = {
+    ok = Util.ui.fg "Special",
+    error = Util.ui.fg "DiagnosticError",
+    pending = Util.ui.fg "DiagnosticWarn",
+  }
+
   return {
     function()
-      local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-      if not conditions.width_percent_below(#filename, 0.40) then
-        filename = vim.fn.pathshorten(filename)
-      end
-      return fmt("%s", filename)
+      return icon or require("r.config").icons.kinds[name:sub(1, 1):upper() .. name:sub(2)]
     end,
-
-    -- "filename",
-    -- path = 4,
-    color = {
-      gui = "bold", --[[ bg = bg_filename, ]]
-      fg = "lightgrey",
-    },
+    cond = function()
+      return status() ~= nil
+    end,
+    color = function()
+      return colors[status()] or colors.ok
+    end,
   }
+end
+M.filename = function(opts)
+  opts = vim.tbl_extend("force", {
+    relative = "cwd",
+    modified_hl = "Constant",
+  }, opts or {})
+
+  return function(self)
+    local path = vim.fn.expand "%:p" --[[@as string]]
+
+    if path == "" then
+      return ""
+    end
+    local root = Util.root.get { normalize = true }
+    local cwd = Util.root.cwd()
+
+    if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
+      path = path:sub(#cwd + 2)
+    else
+      path = path:sub(#root + 2)
+    end
+
+    local sep = package.config:sub(1, 1)
+    local parts = vim.split(path, "[\\/]")
+    if #parts > 3 then
+      parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
+    end
+
+    if opts.modified_hl and vim.bo.modified then
+      parts[#parts] = M.format(self, parts[#parts], opts.modified_hl)
+    end
+
+    return table.concat(parts, sep)
+  end
 end
 M.file_modified = function()
   return {
@@ -217,12 +292,11 @@ M.file_modified = function()
       local ft_modified = ""
 
       if modified then
-        ft_modified = " ✘ "
+        ft_modified = "✘ "
       elseif nomodified then
-        ft_modified = "  "
-      else
-        ft_modified = " "
+        ft_modified = " "
       end
+
       return ft_modified
     end,
     padding = { left = 0 },
@@ -251,11 +325,11 @@ M.location_mod = function()
           rhs = rhs .. (" "):rep(padding)
         end
 
-        rhs = rhs .. "ℓ " -- (Literal, \u2113 "SCRIPT SMALL L").
+        rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
         rhs = rhs .. line
         rhs = rhs .. "/"
         rhs = rhs .. height
-        rhs = rhs .. " 𝚌 " -- (Literal, \u1d68c "MATHEMATICAL MONOSPACE SMALL C").
+        rhs = rhs .. " 𝚌 " -- (Literal, \ᵨc "MATHEMATICAL MONOSPACE SMALL C").
         rhs = rhs .. column
         rhs = rhs .. "/"
         rhs = rhs .. width
@@ -381,34 +455,49 @@ M.check_loaded_buf = function()
       end
       return loaded_bufs
     end,
-    icon = icons.kind.stacked,
+    icon = icons.kinds.stacked,
     cond = conditions.debugger_status_run,
     color = { fg = "DarkCyan", gui = "bold" },
   }
 end
-M.root_dir = function()
+M.root_dir = function(opts)
+  opts = vim.tbl_extend("force", {
+    cwd = false,
+    subdirectory = true,
+    parent = true,
+    other = true,
+    icon = "󱉭 ",
+    color = Util.ui.fg "Special",
+  }, opts or {})
+
+  local function get()
+    local cwd = Util.root.cwd()
+    local root = Util.root.get { normalize = true }
+    local name = vim.fs.basename(root)
+
+    if root == cwd then
+      -- root is cwd
+      return opts.cwd and name
+    elseif root:find(cwd, 1, true) == 1 then
+      -- root is subdirectory of cwd
+      return opts.subdirectory and name
+    elseif cwd:find(root, 1, true) == 1 then
+      -- root is parent directory of cwd
+      return opts.parent and name
+    else
+      -- root and cwd are not related
+      return opts.other and name
+    end
+  end
+
   return {
     function()
-      local HAVE_GITSIGNS = pcall(require, "gitsigns")
-
-      ---@diagnostic disable-next-line: undefined-field
-      local status = vim.b.gitsigns_status_dict or nil
-
-      local root_path
-      if not HAVE_GITSIGNS or status == nil or status["root"] == nil then
-        root_path = fn.getcwd()
-      else
-        root_path = status["root"]
-      end
-
-      if root_path and #root_path > 0 then
-        root_path = vim.fs.basename(root_path)
-      end
-
-      return root_path
+      return (opts.icon and opts.icon .. " ") .. get()
     end,
-    icon = "",
-    color = { fg = "Cyan", gui = "bold" },
+    cond = function()
+      return type(get()) == "string"
+    end,
+    color = opts.color,
   }
 end
 M.get_lsp_client_notify = function()
@@ -416,7 +505,7 @@ M.get_lsp_client_notify = function()
     function()
       local clients = vim.lsp.get_active_clients { bufnr = 0 }
 
-      if falsy(clients) then
+      if Util.cmd.falsy(clients) then
         return "No LSP clients available"
       end
 
@@ -479,7 +568,7 @@ M.term_akinsho = function()
       if #count_term == 0 then
         return ""
       else
-        return fmt("No.%s of ﬑ %s ", as.term_count, #count_term)
+        return fmt("No.%s of %s", term_count, #count_term)
       end
     end,
   }

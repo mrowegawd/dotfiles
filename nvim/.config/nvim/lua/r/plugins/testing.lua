@@ -76,13 +76,12 @@ return {
     keys = {
       -- { "<Leader>tL", function() require("neotest").run.run_last { strategy = "dap", } end, desc = "Testing(neotest): run last with debug" },
       { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing(neotest): test file" },
-      { "<Leader>tF", function() require("neotest").run.run(vim.loop.cwd()) end, desc = "Testing(neotest): test all files" },
-      { "<Leader>tt", function() require("neotest").run.run() end, desc = "Testing(neotest): run nearest" },
+      { "<Leader>tF", function() require("neotest").run.run(vim.loop.cwd()) end, "Testing(neotest): test all files" },
+      { "<Leader>tt", function() require("neotest").run.run() end, desc = "Testing(neotest): test unit" },
       { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing(neotest): stop" },
       { "<Leader>tO", function() require("neotest").summary.toggle() end, desc = "Testing(neotest): output summary panel" },
-      { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false, } end, desc = "Testing(neotest): preview the output", },
-      {
-        "<Leader>ts",
+      { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false, } end, desc = "Testing(neotest): preview the output" },
+      { "<Leader>ts",
         function()
           local neotest = require "neotest"
           for _, adapter_id in ipairs(neotest.state.adapter_ids()) do
@@ -101,7 +100,6 @@ return {
     optional = true,
     -- stylua: ignore
     keys = {
-      { "<Leader>td", function() require("neotest").run.run { strategy = "dap", } end, desc = "Testing(neotest): debug nearest" },
-    },
+      { "<Leader>td", function() require("neotest").run.run { strategy = "dap", } end, desc = "Testing(neotest): debug nearest" }, },
   },
 }

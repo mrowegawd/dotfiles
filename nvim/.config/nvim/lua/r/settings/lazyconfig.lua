@@ -27,6 +27,7 @@ require("lazy").setup {
     { import = "r.plugins.extras.dab" },
     { import = "r.plugins.extras.lang" },
     { import = "r.plugins.extras.linting" },
+    { import = "r.plugins.extras.formatter" },
   },
   defaults = { lazy = true },
   change_detection = { notify = false },
@@ -34,7 +35,7 @@ require("lazy").setup {
     missing = true,
   },
   diff = {
-      cmd = "terminal_git",
+    cmd = "terminal_git",
   },
   checker = {
     enabled = true,
@@ -68,7 +69,16 @@ require("lazy").setup {
       reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
 
       -- To fix `:changes` showing invalid, remove `netrw*` from `disabled_plugins` field
-      -- disabled_plugins = { "netrw", "netrwPlugin" },
+      disabled_plugins = {
+        "gzip",
+        -- "matchit",
+        -- "matchparen",
+        -- "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
     },
   },
 }

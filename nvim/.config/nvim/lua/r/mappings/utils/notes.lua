@@ -1,10 +1,5 @@
 local fmt, cmd, fn = string.format, vim.cmd, vim.fn
-
--- TODO: buatkan untuk telescope, selain menggunakan fzflua
-local use_fzflua = true
-if as.use_search_telescope then
-  use_fzflua = false
-end
+local Util = require "r.utils"
 
 local function format_title(str, icon, icon_hl)
   return {
@@ -31,7 +26,7 @@ function M.neorg_mappings_ft(bufnr)
       },
       ["<Leader>tQ"] = {
         function()
-          return cmd(fmt([[TODOQuickfixList cwd=%s]], as.wiki_path))
+          return cmd(fmt([[TODOQuickfixList cwd=%s]], require("r.config").path.wiki_path))
         end,
         "Note(todocomment): find global todo",
       },
@@ -39,7 +34,7 @@ function M.neorg_mappings_ft(bufnr)
         function()
           require("fzf-lua").live_grep {
             prompt = "  ",
-            cwd = as.wiki_path,
+            cwd = require("r.config").path.wiki_path,
             no_esc = true,
             search = [[^(\*|\*\*|\*\*\*|\*\*\*\*).*$]],
             fzf_opts = { ["--layout"] = false },
@@ -85,7 +80,7 @@ function M.neorg_mappings_ft(bufnr)
 
           require("fzf-lua").live_grep {
             prompt = "  ",
-            cwd = as.wiki_path,
+            cwd = require("r.config").path.wiki_path,
             no_esc = true,
             search = title_trim,
             fzf_opts = { ["--layout"] = "reverse" },
@@ -153,7 +148,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(require("r.utils.neorg_notes").finder_sitelinkable(neorg), opts)
+          return require("fzf-lua").fzf_exec(Util.neorg_notes.finder_sitelinkable(neorg), opts)
         end,
         "Note(fzflua): insert link (curbuf)",
       },
@@ -185,7 +180,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(require("r.utils.neorg_notes").finder_linkable(neorg), opts)
+          return require("fzf-lua").fzf_exec(Util.neorg_notes.finder_linkable(neorg), opts)
         end,
         "Note(fzflua): insert title (curbuf)",
       },
@@ -227,7 +222,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(require("r.utils.neorg_notes").finder_linkableGlobal(neorg), opts)
+          return require("fzf-lua").fzf_exec(Util.neorg_notes.finder_linkableGlobal(neorg), opts)
         end,
         "Note(fzflua): insert title (global)",
       },

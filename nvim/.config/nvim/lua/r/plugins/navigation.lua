@@ -1,4 +1,7 @@
-local cmd, highlight, icons = vim.cmd, as.highlight, as.ui.icons
+local cmd = vim.cmd
+
+local highlight = require "r.config.highlights"
+local Util = require "r.utils"
 
 return {
   -- NEO-TREE
@@ -6,7 +9,7 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     init = function()
-      require("r.utils").disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
+      Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
       --   vim.api.nvim_create_autocmd("BufEnter", {
       --     desc = "Load NeoTree if entering a directory",
       --     callback = function(args)
@@ -21,7 +24,7 @@ return {
       {
         "<Leader>e",
         function()
-          require("r.utils.tiling").force_win_close({ "OverseerList", "undotree", "aerial" }, false)
+          Util.tiling.force_win_close({ "OverseerList", "undotree", "aerial" }, false)
           return cmd "Neotree toggle"
         end,
         desc = "Misc(neotree): open File explore",
@@ -29,7 +32,7 @@ return {
       {
         "<Leader>E",
         function()
-          require("r.utils.tiling").force_win_close({ "OverseerList", "undotree", "aerial" }, false)
+          Util.tiling.force_win_close({ "OverseerList", "undotree", "aerial" }, false)
           return cmd "Neotree reveal toggle"
         end,
         desc = "Misc(neotree): open find file on File Explore",
@@ -38,7 +41,6 @@ return {
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
       "nvim-tree/nvim-web-devicons",
       -- {
       --   "ten3roberts/window-picker.nvim",
@@ -55,8 +57,6 @@ return {
       -- },
     },
     opts = function()
-      local symbols = require("lspkind").symbol_map
-      local lsp_kinds = as.ui.lsp.highlights
       return {
         sources = { "filesystem", "buffers", "git_status", "document_symbols" },
         source_selector = {
@@ -97,9 +97,8 @@ return {
           hijack_netrw_behavior = "open_current",
           use_libuv_file_watcher = true,
           group_empty_dirs = false,
-          -- follow_current_file = false,
           filtered_items = {
-            visible = true,
+            visible = false,
             hide_dotfiles = false,
             hide_gitignored = true,
             never_show = { ".DS_Store" },
@@ -115,21 +114,11 @@ return {
           },
         },
         default_component_configs = {
-          icon = {
-            folder_empty = icons.documents.open_folder,
-          },
-          name = {
-            highlight_opened_files = true,
-          },
-          document_symbols = {
-            follow_cursor = true,
-            kinds = vim.iter(symbols):fold({}, function(acc, k, v)
-              acc[k] = { icon = v, hl = lsp_kinds[k] }
-              return acc
-            end),
-          },
-          modified = {
-            symbol = icons.misc.circle .. " ",
+          indent = {
+            with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
+            expander_collapsed = "",
+            expander_expanded = "",
+            expander_highlight = "NeoTreeExpander",
           },
         },
 
@@ -218,19 +207,38 @@ return {
 
       vim.g.neo_tree_remove_legacy_commands = 1
 
+      local function on_move(data)
+        Util.lsp.on_rename(data.source, data.destination)
+      end
+
+      local events = require "neo-tree.events"
+      opts.event_handlers = opts.event_handlers or {}
+      vim.list_extend(opts.event_handlers, {
+        { event = events.FILE_MOVED, handler = on_move },
+        { event = events.FILE_RENAMED, handler = on_move },
+      })
+
       require("neo-tree").setup(opts)
+      vim.api.nvim_create_autocmd("TermClose", {
+        pattern = "*lazygit",
+        callback = function()
+          if package.loaded["neo-tree.sources.git_status"] then
+            require("neo-tree.sources.git_status").refresh()
+          end
+        end,
+      })
     end,
   },
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
     event = "VeryLazy",
-      -- stylua: ignore
+    -- stylua: ignore
     keys = {
       { "<leader>ue", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
       { "<leader>uu", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
-      { "<leader>ug",  "<CMD> Neotree git_status toggle <CR>", desc = "Misc(edgy): toggle git_status" },
-      { "<leader>ub",  "<CMD> Neotree buffers toggle <CR>", desc = "Misc(edgy): toggle buffers" },
+      { "<leader>ug", "<CMD> Neotree git_status toggle <CR>",  desc = "Misc(edgy): toggle git_status" },
+      { "<leader>ub", "<CMD> Neotree buffers toggle <CR>",     desc = "Misc(edgy): toggle buffers" },
     },
     opts = function()
       local opts = {

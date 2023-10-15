@@ -1,10 +1,10 @@
 return {
-  -- BUFRESIZE
+  -- STICKYBUF.NVIM (disbaled)
   {
-    "kwkarlwang/bufresize.nvim",
-    event = "WinNew",
+    "stevearc/stickybuf.nvim",
+    event = "VeryLazy",
     config = function()
-      require("bufresize").setup()
+      require("stickybuf").setup()
     end,
   },
   -- WINDOWS NVIM (disabled)
@@ -21,7 +21,6 @@ return {
   {
     "mrjones2014/smart-splits.nvim",
     keys = {
-
       {
         "<c-k>",
         function()
@@ -29,7 +28,6 @@ return {
         end,
         desc = "Navigations(smart-splits): move up",
       },
-
       {
         "<c-j>",
         function()

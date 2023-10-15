@@ -47,6 +47,7 @@ return {
             component.mixindent(),
             component.diagnostics(),
             component.python_env(),
+            component.cmp_source(),
             component.get_lsp_client_notify(),
             -- components.noice_status(),
             component.rmux(),

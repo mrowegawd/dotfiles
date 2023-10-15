@@ -1,11 +1,11 @@
 
 # Basic vars
-set shell bash
+set shell zsh
 set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
-# set color256
 set icons
+set hidden
 set period 1
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
 
@@ -13,8 +13,7 @@ set previewer ~/.config/lf/preview
 set cleaner ~/.config/lf/cleaner
 
 # cmds/functions
-cmd open ${{
-    case $(file --mime-type $f -b) in
+cmd open ${{ case $(file --mime-type $f -b) in
 	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
 	text/*|application/json) $EDITOR $fx;;
 	image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
@@ -41,7 +40,7 @@ cmd moveto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	clear; echo "Move to where?"
-	dest="$(cut -d'	' -f2- ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf | sed 's|~|$HOME|' )" &&
+	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/miscxrdb/lf/bm-dirs | fzf | sed 's|~|$HOME|')" &&
 	for x in $fx; do
 		eval mv -iv \"$x\" \"$dest\"
 	done &&
@@ -52,7 +51,7 @@ cmd copyto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	clear; echo "Copy to where?"
-	dest="$(cut -d'	' -f2- ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf | sed 's|~|$HOME|' )" &&
+	dest="$(sed -e 's/\s*#.*//' -e '/^$/d' -e 's/^\S*\s*//' ${XDG_CONFIG_HOME:-$HOME/.config}/miscxrdb/lf/bm-dirs | fzf | sed 's|~|$HOME|')" &&
 	for x in $fx; do
 		eval cp -ivr \"$x\" \"$dest\"
 	done &&
@@ -108,8 +107,8 @@ map dd cut
 
 map x $$f
 map X !$f
-# map o &mimeopen $f
-# map O $mimeopen --ask $f
+map o &mimeopen $f
+map O $mimeopen --ask $f
 map H set hidden!
 map p paste
 map D delete
@@ -122,7 +121,7 @@ map V push :!nvim<space>
 
 # Basic Functions
 map cd push :cd<space>
-map gc cd ~/.config
+map gc cd ~/moxconf/development/dotfiles
 map gd cd ~/Downloads
 map gD cd ~/Documents
 map gv cd ~/Downloads/Video

@@ -1,4 +1,4 @@
-local highlight = as.highlight
+local highlight = require "r.config.highlights"
 
 local col_bg_default = highlight.get("Normal", "bg")
 local col_fg_default = highlight.get("Comment", "fg")

@@ -3,6 +3,8 @@ local uv = vim.uv
 
 local M = {}
 
+local File = require "r.utils.file"
+
 function M.split_string(inputstr, sep)
   if sep == nil then
     sep = "%s"
@@ -83,7 +85,7 @@ end
 
 local function find_first_ancestor_dir_or_file(startpath, pattern)
   return search_ancestors(startpath, function(path)
-    if as.is_file(M.path_join(path, pattern)) or as.is_dir(M.path_join(path, pattern)) then
+    if File.is_file(M.path_join(path, pattern)) or File.is_dir(M.path_join(path, pattern)) then
       return path
     end
   end)
@@ -108,7 +110,7 @@ local escape_chars = function(x)
 end
 
 function M.git_relative_path(bufnr)
-  local abs_filename = as.absolute_path(bufnr)
+  local abs_filename = File.absolute_path(bufnr)
   local git_dir = find_first_ancestor_dir_or_file(abs_filename, ".git")
 
   if git_dir and git_dir ~= "" then

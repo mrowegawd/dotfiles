@@ -1,13 +1,14 @@
 local M = {}
 
-local fmt, hg = string.format, as.highlight
+local fmt = string.format
+local hg = require "r.config.highlights"
 
 local function title()
   if vim.bo.filetype ~= "qf" then
     return ""
   end
 
-  if as.is_loclist() then
+  if require("r.utils").qf.is_loclist() then
     return vim.fn.getloclist(0, { title = 0 }).title
   end
 

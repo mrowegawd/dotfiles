@@ -1,9 +1,6 @@
-if not as then
-  return
-end
-
 local fn, api, cmd, v = vim.fn, vim.api, vim.cmd, vim.v
-local windowdim = require "r.utils.windowdim"
+
+local Util = require "r.utils"
 
 vim.keymap.set({ "n", "v", "o", "i", "c" }, "<Plug>(StopHL)", 'execute("nohlsearch")[-1]', { expr = true })
 
@@ -11,7 +8,7 @@ local function stop_hl()
   if v.hlsearch == 0 or api.nvim_get_mode().mode ~= "n" then
     return
   end
-  require("r.utils").feedkey("<Plug>(StopHL)", "n")
+  Util.cmd.feedkey("<Plug>(StopHL)", "n")
 end
 
 local function hl_search()
@@ -25,6 +22,7 @@ local function hl_search()
   if not ok then
     return
   end
+  ---@diagnostic disable-next-line: deprecated
   local _, p_start, p_end = unpack(match)
   -- if the cursor is in a search result, leave highlighting on
   if col < p_start or col > p_end then
@@ -32,7 +30,7 @@ local function hl_search()
   end
 end
 
-as.augroup("VimrcIncSearchHighlight", {
+Util.cmd.augroup("VimrcIncSearchHighlight", {
   event = { "CursorMoved" },
   command = function()
     hl_search()
@@ -63,7 +61,7 @@ as.augroup("VimrcIncSearchHighlight", {
 })
 
 -- wrap and check for spell in text filetypes
-as.augroup("Wrap_spell", {
+Util.cmd.augroup("Wrap_spell", {
   event = { "FileType" }, -- map q to close command window on quit
   pattern = { "gitcommit", "markdown", "NeogitCommitMessage" },
   command = function()
@@ -73,7 +71,7 @@ as.augroup("Wrap_spell", {
 })
 
 -- Close certain filetypes by pressing q.
-as.augroup("SmartClose", {
+Util.cmd.augroup("SmartClose", {
   event = { "FileType" },
   pattern = {
     "PlenaryTestPopup",
@@ -98,7 +96,7 @@ as.augroup("SmartClose", {
 })
 
 -- Close quick fix window if the file containing it was closed
-as.augroup("AutoCloseQf", {
+Util.cmd.augroup("AutoCloseQf", {
   event = { "BufEnter" },
   command = function()
     if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
@@ -108,7 +106,7 @@ as.augroup("AutoCloseQf", {
 })
 
 -- don't execute silently in case of errors
-as.augroup("TextYankHighlight", {
+Util.cmd.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
     vim.highlight.on_yank {
@@ -119,7 +117,7 @@ as.augroup("TextYankHighlight", {
   end,
 })
 
-as.augroup("WindowBehaviours", {
+Util.cmd.augroup("WindowBehaviours", {
   event = { "CmdwinEnter" }, -- map q to close command window on quit
   pattern = { "*" },
   command = "nnoremap <silent><buffer><nowait> q <C-W>c",
@@ -192,7 +190,7 @@ as.augroup("WindowBehaviours", {
   end,
 })
 
-as.augroup("DisableWinBf", {
+Util.cmd.augroup("DisableWinBf", {
   event = { "BufRead", "BufWinEnter" },
   pattern = { "*" },
   command = function(args)
@@ -205,15 +203,15 @@ as.augroup("DisableWinBf", {
   end,
 })
 
-as.augroup("ConvertNorg", {
+Util.cmd.augroup("ConvertNorg", {
   event = { "BufWritePost" },
   pattern = { "*.norg" },
   command = function()
-    require("r.utils").ConvertNorgToMarkdown()
+    Util.neorg_notes.convert_norg_to_markdown()
   end,
 })
 
-as.augroup("CheckOutsideTime", {
+Util.cmd.augroup("CheckOutsideTime", {
   -- automatically check for changed files outside vim
   event = {
     "WinEnter",
@@ -226,59 +224,59 @@ as.augroup("CheckOutsideTime", {
   command = "silent! checktime",
 })
 
-as.augroup("WindowDim", {
-  event = { "BufRead" },
-  pattern = { "*" },
-  command = function()
-    windowdim.buf_enter()
-  end,
-}, {
-  event = { "BufEnter" },
-  pattern = { "*" },
-  command = function()
-    windowdim.buf_enter()
-  end,
-}, {
-  event = { "FocusGained" },
-  pattern = "*",
-  command = function()
-    windowdim.focus_gained()
-  end,
-}, {
-  event = { "FocusLost" },
-  pattern = "*",
-  command = function()
-    windowdim.focus_lost()
-  end,
-}, {
-  event = { "WinEnter" },
-  pattern = "*",
-  command = function()
-    windowdim.win_enter()
-  end,
-}, {
-  event = { "WinLeave" },
-  pattern = "*",
-  command = function()
-    windowdim.win_leave()
-  end,
-})
+-- Util.cmd.augroup("WindowDim", {
+--   event = { "BufRead" },
+--   pattern = { "*" },
+--   command = function()
+--     Util.windowdim.buf_enter()
+--   end,
+-- }, {
+--   event = { "BufEnter" },
+--   pattern = { "*" },
+--   command = function()
+--     Util.windowdim.buf_enter()
+--   end,
+-- }, {
+--   event = { "FocusGained" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.focus_gained()
+--   end,
+-- }, {
+--   event = { "FocusLost" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.focus_lost()
+--   end,
+-- }, {
+--   event = { "WinEnter" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.win_enter()
+--   end,
+-- }, {
+--   event = { "WinLeave" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.win_leave()
+--   end,
+-- })
 
-as.augroup("UnwareCursorLine", {
-  event = { "InsertLeave" },
-  pattern = { "*" },
-  command = function()
-    cmd [[set cursorline]]
-  end,
-}, {
-  event = { "InsertEnter" },
-  pattern = { "*" },
-  command = function()
-    cmd [[set nocursorline]]
-  end,
-})
+-- Util.cmd.augroup("UnwareCursorLine", {
+--   event = { "InsertLeave" },
+--   pattern = { "*" },
+--   command = function()
+--     cmd [[set cursorline]]
+--   end,
+-- }, {
+--   event = { "InsertEnter" },
+--   pattern = { "*" },
+--   command = function()
+--     cmd [[set nocursorline]]
+--   end,
+-- })
 
-as.augroup("DisableStatusline", {
+Util.cmd.augroup("DisableStatusline", {
   event = { "FocusLost" },
   pattern = "*",
   command = function()
@@ -290,6 +288,13 @@ as.augroup("DisableStatusline", {
   command = function()
     cmd [[set laststatus=3]]
   end,
+})
+
+-- Automatically resize windows when host resizes
+Util.cmd.augroup("AutoResizeWindows", {
+  event = { "BufNew", "BufRead" },
+  pattern = "*",
+  command = "tabdo wincmd =",
 })
 
 vim.cmd [[

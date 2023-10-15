@@ -1,4 +1,7 @@
 local cmd, fmt = vim.cmd, string.format
+local Util = require "r.utils"
+
+local term_count = 1
 
 -- local function close_toggleterm(fmt_cmd)
 --     for _, winid in pairs(api.nvim_tabpage_list_wins(0)) do
@@ -18,48 +21,48 @@ local cmd, fmt = vim.cmd, string.format
 --     --     "check_toggleterm, total_term: "
 --     --         .. total_term_spawned
 --     --         .. " term_count: "
---     --         .. as.term_count
+--     --         .. term_count
 --     -- )
 --
---     if as.term_count == total_term_spawned then
+--     if term_count == total_term_spawned then
 --         if vim.bo.filetype ~= "toggleterm" then
 --             cmd "ToggleTerm"
 --         end
 --         return
 --     end
 --
---     if as.term_count == 1 and total_term_spawned == 0 then
+--     if term_count == 1 and total_term_spawned == 0 then
 --         cmd "ToggleTerm"
 --         return
 --     end
 -- end
 --
 -- local function increase_toggleterm(total_term_spawned)
---     if as.term_count == total_term_spawned then
+--     if term_count == total_term_spawned then
 --         return
 --     end
 --
 --     local fmt_cmd = "ToggleTerm"
 --     close_toggleterm(fmt_cmd)
 --
---     -- log.debug("decreaase_toggleterm: " .. as.term_count)
+--     -- log.debug("decreaase_toggleterm: " .. term_count)
 --
---     as.term_count = as.term_count + 1
---     cmd(fmt("%sToggleTerm", as.term_count))
+--     term_count = term_count + 1
+--     cmd(fmt("%sToggleTerm", term_count))
 -- end
 --
 -- local function decreaase_toggleterm()
---     if as.term_count == 1 then
+--     if term_count == 1 then
 --         return
 --     end
 --
 --     local fmt_cmd = "ToggleTerm"
 --     close_toggleterm(fmt_cmd)
 --
---     -- log.debug("decreaase_toggleterm: " .. as.term_count)
+--     -- log.debug("decreaase_toggleterm: " .. term_count)
 --
---     as.term_count = as.term_count - 1
---     cmd(fmt("%sToggleTerm", as.term_count))
+--     term_count = term_count - 1
+--     cmd(fmt("%sToggleTerm", term_count))
 -- end
 
 return {
@@ -124,7 +127,7 @@ return {
     --                     end
     --
     --                     if vim.bo.filetype == "qf" then
-    --                         require("r.utils.tiling").force_win_close(
+    --                         Util.tiling.force_win_close(
     --                             { "qf" },
     --                             false
     --                         )
@@ -132,7 +135,7 @@ return {
     --                         cmd [[wincmd w]]
     --                     end
     --
-    --                     cmd(fmt("%sToggleTerm", as.term_count))
+    --                     cmd(fmt("%sToggleTerm", term_count))
     --                 end,
     --                 description = "Toggle togglerterm",
     --                 mode = { "n", "t" },
@@ -195,10 +198,10 @@ return {
     --             --         if total_term_spawned == 0 then
     --             --             cmd(fmt_cmd)
     --             --         else
-    --             --             as.term_count = as.term_count + 1
+    --             --             term_count = term_count + 1
     --             --             fmt_cmd = fmt(
     --             --                 [[%sToggleTerm]],
-    --             --                 as.term_count
+    --             --                 term_count
     --             --             )
     --             --             cmd(fmt_cmd)
     --             --         end
@@ -216,10 +219,10 @@ return {
     --             --             cmd(fmt_cmd)
     --             --         end
     --             --
-    --             --         as.term_count = as.term_count + 1
+    --             --         term_count = term_count + 1
     --             --         fmt_cmd = fmt(
     --             --             [[%sToggleTerm]],
-    --             --             as.term_count
+    --             --             term_count
     --             --         )
     --             --         cmd(fmt_cmd)
     --             --     end,
@@ -294,15 +297,19 @@ return {
     -- }
     keys = {
       {
-        "<c-t>",
+        "<a-t>",
         function()
           if vim.bo.filetype == "qf" then
-            require("r.utils.tiling").force_win_close({ "qf" }, false)
+            Util.tiling.force_win_close({ "qf" }, false)
 
             cmd [[wincmd w]]
           end
 
-          cmd(fmt("%sToggleTerm", as.term_count))
+          if vim.bo.filetype == "fzf" then
+            return
+          end
+
+          cmd(fmt("%sToggleTerm", term_count))
         end,
         mode = { "n", "t" },
         desc = "Terminal(toggleterm): toggle",

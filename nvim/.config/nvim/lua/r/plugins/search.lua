@@ -1,7 +1,8 @@
-local highlight, fn, cmd, ui, fmt = as.highlight, vim.fn, vim.cmd, as.ui, string.format
-local icons = ui.icons
-local prompt = icons.misc.telescope .. "  "
-local lsp_hls = ui.lsp.highlights
+local fn, cmd, fmt = vim.fn, vim.cmd, string.format
+
+local highlight = require "r.config.highlights"
+
+local Util = require "r.utils"
 
 local root_patterns = { ".git", "lua" }
 
@@ -21,7 +22,7 @@ local function dropdown(opts)
     opts.winopts.title = format_title(title)
   end
   return vim.tbl_deep_extend("force", {
-    prompt = prompt,
+    prompt = require("r.config").icons.misc.dots,
     fzf_opts = { ["--layout"] = "reverse" },
     winopts = {
       title_pos = opts.winopts.title and "center" or nil,
@@ -148,6 +149,7 @@ return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
+    enabled = false,
     event = "VeryLazy",
     opts = {
       modes = {
@@ -180,31 +182,46 @@ return {
     "ibhagwan/fzf-lua",
     version = false, -- fzflua did only one release, so use HEAD for now
     cmd = "Fzflua",
-    enabled = function()
-      if as.use_search_telescope then
-        return false
-      end
-      return true
-    end,
     dependencies = {
       "sindrets/diffview.nvim",
-      "tpope/vim-fugitive",
-      "tpope/vim-rhubarb",
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
     },
     keys = {
       { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files" },
       { "<Leader>bf", "<CMD>FzfLua buffers<CR>", desc = "Buffer(Fzflua): open" },
-      { "<Leader>bg", "<CMD>FzfLua blines<CR>", desc = "Buffer(FzfLua): live_grep on curbuf" },
-      { "<Leader>bG", "<CMD>FzfLua lines<CR>", desc = "Buffer(Fzflua): live_grep on buffers" },
+      {
+        "<Leader>bg",
+        "<CMD>FzfLua blines<CR>",
+        desc = "Buffer(FzfLua): live_grep on curbuf",
+      },
+      {
+        "<Leader>bG",
+        "<CMD>FzfLua lines<CR>",
+        desc = "Buffer(Fzflua): live_grep on buffers",
+      },
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
-      { "<Leader>bo", "<CMD>FzfLua oldfiles<CR>", desc = "Buffer(Fzflua): oldfiles" },
+      {
+        "<Leader>bo",
+        "<CMD>FzfLua oldfiles<CR>",
+        desc = "Buffer(Fzflua): oldfiles",
+      },
       { "<Leader>fo", "<CMD>FzfLua files cwd=~/moxconf/development/dotfiles<CR>", desc = "Fzflua: dotfiles" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
-      { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
+      {
+        "<Leader>fl",
+        "<CMD>FzfLua resume<CR>",
+        desc = "Fzflua: resume (last search)",
+      },
       { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
-      { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v" } },
+      {
+        "<Leader>fg",
+        "<CMD>FzfLua grep_visual<CR>",
+        desc = "Fzflua: live grep (visual)",
+        mode = {
+          "v",
+        },
+      },
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
       { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
@@ -339,18 +356,18 @@ return {
           },
           fzf = {
             -- fzf '--bind=' options
-            ["ctrl-z"]      = "abort",
+            ["ctrl-z"] = "abort",
             -- ["ctrl-u"]      = "unix-line-discard",
-            ["ctrl-f"]      = "half-page-down",
-            ["ctrl-b"]      = "half-page-up",
-            ["ctrl-a"]      = "beginning-of-line",
-            ["ctrl-e"]      = "end-of-line",
-            ["alt-a"]       = "toggle-all",
+            ["ctrl-f"] = "half-page-down",
+            ["ctrl-b"] = "half-page-up",
+            ["ctrl-a"] = "beginning-of-line",
+            ["ctrl-e"] = "end-of-line",
+            ["alt-a"] = "toggle-all",
             -- Only valid with fzf previewers (bat/cat/git/etc)
-            ["f3"]          = "toggle-preview-wrap",
-            ["f4"]          = "toggle-preview",
-            ["ctrl-d"]      = "preview-page-down",
-            ["ctrl-u"]      = "preview-page-up",
+            ["f3"] = "toggle-preview-wrap",
+            ["f4"] = "toggle-preview",
+            ["ctrl-d"] = "preview-page-down",
+            ["ctrl-u"] = "preview-page-up",
           },
         },
         actions = {
@@ -480,47 +497,47 @@ return {
               -- Open hash on browser
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
-
-                as.info("Open browser commit hash: " .. commit_hash, "FZFGit")
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
+
+                Util.info("Open browser commit hash: " .. commit_hash, { title = "FZFGit" })
               end,
               -- Copy hash to clipboard
               ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
                 vim.fn.setreg("+", commit_hash)
                 vim.fn.setreg("*", commit_hash)
 
-                as.info("Commit hash: " .. commit_hash .. " copied", "FZFGit")
+                Util.info("Commit hash: " .. commit_hash .. " copied", { title = "FZFGit" })
               end,
               -- Open all diff for req commit
               ["ctrl-i"] = function(selected, _)
                 local selection = selected[1]
 
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                as.info("Open all diff " .. commit_hash, "FZFGit")
+                Util.info("Open all diff " .. commit_hash, "FZFGit")
               end,
               -- Open diff current modified
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
 
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
-                local filename = require("r.utils.fzf_diffview").git_relative_path(vim.api.nvim_get_current_buf())
+                local filename = Util.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
                 vim.api.nvim_command(cmdmsg)
 
-                as.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, "FZFGit")
+                Util.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, { title = "FZFGit" })
               end,
             },
           },
@@ -540,44 +557,44 @@ return {
 
               ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
                 vim.fn.setreg("+", commit_hash)
                 vim.fn.setreg("*", commit_hash)
 
-                as.info("Commit hash: " .. commit_hash .. " copied", "FZFGit")
+                Util.info("Commit hash: " .. commit_hash .. " copied", { title = "FZFGit" })
               end,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
-                as.info("Open browser commit hash: " .. commit_hash, "FZFGit")
+                Util.info("Open browser commit hash: " .. commit_hash, { title = "FZFGit" })
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
               ["ctrl-i"] = function(selected, _)
                 local selection = selected[1]
 
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                as.info("Open all diff " .. commit_hash, "FZFGit")
+                Util.info("Open all diff " .. commit_hash, { title = "FZFGit" })
               end,
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
 
-                local commit_hash = require("r.utils.fzf_diffview").split_string(selection, " ")[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
-                local filename = require("r.utils.fzf_diffview").git_relative_path(vim.api.nvim_get_current_buf())
+                local filename = Util.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
                 vim.api.nvim_command(cmdmsg)
 
-                as.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, "FZFGit")
+                Util.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, { title = "FZFGit" })
               end,
             },
           },
@@ -861,37 +878,7 @@ return {
           symbols = {
             prompt = "  ",
             symbol_style = 1,
-            symbol_icons = {
-              File = icons.kind.File,
-              Module = icons.kind.Module,
-              Namespace = icons.kind.Namespace,
-              Package = icons.kind.Package,
-              Class = icons.kind.Class,
-              Method = icons.kind.Method,
-              Property = icons.kind.Property,
-              Field = icons.kind.Field,
-              Constructor = icons.kind.Constant,
-              Enum = icons.kind.Enum,
-              Interface = icons.kind.Interface,
-              Function = icons.kind.Function,
-              Variable = icons.kind.Variable,
-              Constant = icons.kind.Constant,
-              String = icons.kind.String,
-              Number = icons.kind.Number,
-              Boolean = icons.kind.Boolean,
-              Array = icons.kind.Array,
-              Object = icons.kind.Object,
-              Key = icons.kind.Keyword,
-              Null = icons.kind.Null,
-              EnumMember = icons.kind.EnumMember,
-              Struct = icons.kind.Struct,
-              Event = icons.kind.Event,
-              Operator = icons.kind.Operator,
-              TypeParameter = icons.kind.TypeParameter,
-            },
-            symbol_hl = function(s)
-              return lsp_hls[s]
-            end,
+            symbol_icons = require("r.config").icons.kinds,
             fzf_opts = {
               ["--reverse"] = false,
               ["--scrollbar"] = "▓",
@@ -973,43 +960,21 @@ return {
       { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
       {
         "gs",
-        telescope_util("lsp_document_symbols", {
-          symbols = {
-            "Class",
-            "Function",
-            "Method",
-            "Constructor",
-            "Interface",
-            "Module",
-            "Struct",
-            "Trait",
-            "Field",
-            "Property",
-            "Enum",
-            "Constant",
-          },
-        }),
-        desc = "Goto Symbol",
+        function()
+          require("telescope.builtin").lsp_document_symbols {
+            symbols = require("r.config").get_kind_filter(),
+          }
+        end,
+        desc = "Telescope (lsp): goto symbol",
       },
       {
         "gS",
-        telescope_util("lsp_dynamic_workspace_symbols", {
-          symbols = {
-            "Class",
-            "Function",
-            "Method",
-            "Constructor",
-            "Interface",
-            "Module",
-            "Struct",
-            "Trait",
-            "Field",
-            "Property",
-            "Enum",
-            "Constant",
-          },
-        }),
-        desc = "Goto Symbol (Workspace)",
+        function()
+          require("telescope.builtin").lsp_dynamic_workspace_symbols {
+            symbols = require("r.config").get_kind_filter(),
+          }
+        end,
+        desc = "Telescope(lsp): goto symbol (Workspace)",
       },
       -- { "<Leader>bf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps" },
@@ -1118,7 +1083,7 @@ return {
         build = "make",
         enabled = vim.fn.executable "make" == 1,
         config = function()
-          as.on_load("telescope.nvim", function()
+          Util.on_load("telescope.nvim", function()
             require("telescope").load_extension "fzf"
             require("telescope").load_extension "grepqf"
             require("telescope").load_extension "harpoon"
@@ -1356,13 +1321,29 @@ return {
   {
     "nvim-pack/nvim-spectre",
     cmd = "Spectre",
-    --stylua: ignore
     keys = {
-      { "<Leader><s-f>", function() require("r.utils.tiling").force_win_close({}, true) return require("spectre").open() end, desc = "Misc(spectre): open", },
-      { "<Leader><s-f>", function() require("r.utils.tiling").force_win_close({}, true) return require("spectre").open_visual { select_word = true, } end, desc = "Misc(spectre): open (visual)", mode = { "v" }, },
+      {
+        "<Leader><s-f>",
+        function()
+          Util.tiling.force_win_close({}, true)
+          return require("spectre").open()
+        end,
+        desc = "Misc(spectre): open",
+      },
+      {
+        "<Leader><s-f>",
+        function()
+          Util.tiling.force_win_close({}, true)
+          return require("spectre").open_visual { select_word = true }
+        end,
+        desc = "Misc(spectre): open (visual)",
+        mode = {
+          "v",
+        },
+      },
     },
     opts = function()
-      as.augroup("SpectreClose", {
+      Util.cmd.augroup("SpectreClose", {
         event = { "FileType" },
         pattern = { "spectre_panel" },
         command = [[setlocal nofoldenable | nnoremap <buffer>q <cmd>q<CR>]],
@@ -1371,7 +1352,7 @@ return {
       highlight.plugin("Spectre", {
         {
           TargetKeyword = {
-            fg = as.ui.palette.bright_yellow,
+            fg = "DarkYellow",
             bold = true,
             italic = true,
           },
@@ -1393,7 +1374,7 @@ return {
         },
         {
           TargetReplace = {
-            bg = as.ui.palette.light_red,
+            bg = "Cyan",
             fg = "black",
             italic = true,
           },
@@ -1555,20 +1536,23 @@ return {
   },
   -- TODO-COMMENTS
   {
-    "mrowegawd/todo.nvim",
-    event = "BufReadPre",
+    "folke/todo-comments.nvim",
+    event = "LazyFile",
     keys = {
       {
         "<Leader>rt",
         function()
-          return cmd(fmt("TODOQuickfixList cwd=%s", fn.expand "%:p"))
+          return cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
         end,
         desc = "Misc(todocomment): find todo comment curbuf",
-        mode = { "n", "v" },
+        mode = {
+          "n",
+          "v",
+        },
       },
       {
         "<Leader>rT",
-        fmt("<CMD>TODOQuickfixList cwd=%s<CR>", fn.getcwd()),
+        fmt("<CMD>TodoQuickFix cwd=%s<CR>", fn.getcwd()),
         desc = "Misc(todocomment): find all todo comments on repo",
       },
     },

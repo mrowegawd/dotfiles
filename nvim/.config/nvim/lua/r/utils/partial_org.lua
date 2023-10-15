@@ -3,11 +3,11 @@ require "r.utils.globals"
 
 return {
   org_agenda_files = {
-    fmt("%s/orgmode/gtd/*", as.wiki_path),
-    fmt("%s/orgmode/journal/homeclean/*", as.wiki_path),
-    fmt("%s/orgmode/journal/HBD/*", as.wiki_path),
+    fmt("%s/orgmode/gtd/*", require("r.config").path.wiki_path),
+    fmt("%s/orgmode/journal/homeclean/*", require("r.config").path.wiki_path),
+    fmt("%s/orgmode/journal/HBD/*", require("r.config").path.wiki_path),
   },
-  org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", as.wiki_path),
+  org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", require("r.config").path.wiki_path),
   notifications = {
     reminder_time = { 0, 1, 5, 10 },
     repeater_reminder_time = { 0, 1, 5, 10 },
@@ -28,7 +28,7 @@ return {
           vim.uv.spawn("dunstify", {
             args = {
               fmt("%s\n%s", title, subtitle),
-              fmt("--icon=%s/.config/dunst/bell.png", as.home),
+              fmt("--icon=%s/.config/dunst/bell.png", os.getenv "HOME"),
               "-u",
               "low",
             },
@@ -39,7 +39,7 @@ return {
           vim.loop.spawn("mpv", {
             args = {
               "--audio-display=no",
-              fmt("%s/.config/dunst/notif-me.wav", as.home),
+              fmt("%s/.config/dunst/notif-me.wav", os.getenv "HOME"),
               "--volume=50",
             },
           })

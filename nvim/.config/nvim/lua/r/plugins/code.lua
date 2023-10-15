@@ -1,12 +1,10 @@
+local Util = require "r.utils"
+
 _G.OverseerConfig = {} -- to store error formats
 
 OverseerConfig.fnpane_run = 0
 OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
-
-local border = as.ui.border.rectangle
-local icons = as.ui.icons
-local fmt = string.format
 
 local callme = 0
 
@@ -14,6 +12,7 @@ return {
   -- LUASNIP
   {
     "L3MON4D3/LuaSnip",
+    ---@diagnostic disable-next-line: undefined-global
     build = (not jit.os:find "Windows")
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
       or nil,
@@ -22,19 +21,19 @@ return {
       delete_check_events = "TextChanged",
     },
     -- stylua: ignore
-    keys = {
-      {
-        "<tab>",
-        function()
-          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = "i",
-      },
-      { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
-      { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
-    },
+    -- keys = {
+    --   {
+    --     "<tab>",
+    --     function()
+    --       return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+    --     end,
+    --     expr = true,
+    --     silent = true,
+    --     mode = "i",
+    --   },
+    --   { "<tab>",   function() require("luasnip").jump(1) end,  mode = "s" },
+    --   { "<s-tab>", function() require("luasnip").jump(-1) end, mode = { "i", "s" } },
+    -- },
     config = function()
       local luasnip = require "luasnip"
 
@@ -56,6 +55,15 @@ return {
       luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     end,
   },
+  -- VIM-MATCHUP
+  {
+    "andymass/vim-matchup",
+    event = "VeryLazy",
+    config = function()
+      vim.g.matchup_matchparen_deferred = 1 -- work async
+      vim.g.matchup_matchparen_offscreen = {} -- disable status bar icon
+    end,
+  },
   -- CMP
   {
     "hrsh7th/nvim-cmp",
@@ -72,13 +80,12 @@ return {
       "lukas-reineke/cmp-under-comparator",
       "rcarriga/cmp-dap",
       "saadparwaiz1/cmp_luasnip",
-
-      "hrsh7th/cmp-nvim-lsp-document-symbol",
     },
     opts = function()
       local cmp = require "cmp"
       local has_luasnip, luasnip = pcall(require, "luasnip")
-      local types = require "cmp.types"
+      -- local types = require "cmp.types"
+      local defaults = require "cmp.config.default"()
 
       -- Based on (private) function in LuaSnip/lua/luasnip/init.lua.
       local in_snippet = function()
@@ -95,28 +102,25 @@ return {
         end
       end
 
-      local check_backspace = function()
-        local col = vim.fn.col "." - 1
-        ---@diagnostic disable-next-line: param-type-mismatch
-        return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
+      local border_opts = {
+        border = require("r.config").icons.border.rectangle,
+        winhighlight = "Normal:Normal,FloatBorder:FzfLuaBorder,CursorLine:PmenuSel,Search:None",
+      }
+
+      local function has_words_before()
+        ---@diagnostic disable-next-line: deprecated
+        local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
       end
+
       return {
         enabled = function()
-          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt" or require("cmp_dap").is_dap_buffer()
+          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
+          -- or require("cmp_dap").is_dap_buffer()
         end,
         window = {
-          completion = {
-            border = border, --single
-            scrollbar = "║",
-            col_offset = -1,
-            winhighlight = "Normal:Normal,FloatBorder:FzfLuaBorder,CursorLine:PmenuSel,Search:None",
-            -- side_padding = -1,
-          },
-          documentation = {
-            border = border, -- "shadow", "rounded"
-            winhighlight = "Normal:Normal,FloatBorder:FzfLuaBorder,Search:None",
-            scrollbar = "║",
-          },
+          completion = cmp.config.window.bordered(border_opts),
+          documentation = cmp.config.window.bordered(border_opts),
         },
 
         completion = {
@@ -125,23 +129,21 @@ return {
 
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body)
+            luasnip.lsp_expand(args.body)
           end,
         },
 
         mapping = {
           ["<c-n>"] = cmp.mapping(function()
-            local c_cmp = require "cmp"
-            if c_cmp.visible() then
-              c_cmp.select_next_item()
-            else
-              require("cmp").complete()
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif has_words_before() then
+              cmp.complete()
             end
           end, { "i", "s" }),
           ["<c-p>"] = cmp.mapping(function(fallback)
-            local c_cmp = require "cmp"
-            if c_cmp.visible() then
-              c_cmp.select_prev_item()
+            if cmp.visible() then
+              cmp.select_prev_item()
             else
               fallback()
             end
@@ -151,8 +153,6 @@ return {
               luasnip.expand()
             elseif luasnip.expand_or_jumpable() then
               luasnip.expand_or_jump()
-            elseif check_backspace() then
-              fallback()
             else
               fallback()
             end
@@ -169,12 +169,11 @@ return {
           ["<c-l>"] = cmp.mapping.confirm { select = false },
           ["<cr>"] = cmp.mapping.confirm { select = false },
           ["<C-space>"] = cmp.mapping(function(_)
-            local c_cmp = require "cmp"
             -- if c_cmp.visible() then
             --   c_cmp.abort()
             if callme == 0 then
               callme = 1
-              c_cmp.complete {
+              cmp.complete {
                 config = {
                   sources = {
                     { name = "luasnip" },
@@ -186,6 +185,7 @@ return {
               cmp.complete {
                 config = {
                   sources = {
+                    { name = "cmp_tabnine" },
                     {
                       name = "buffer",
                       option = {
@@ -215,157 +215,79 @@ return {
           }),
         },
 
-        sorting = {
-          comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
-            require("cmp-under-comparator").under,
-            function(entry1, entry2)
-              local kind1 = entry1:get_kind()
-              kind1 = kind1 == types.lsp.CompletionItemKind.Text and 100 or kind1
-              local kind2 = entry2:get_kind()
-              kind2 = kind2 == types.lsp.CompletionItemKind.Text and 100 or kind2
-              if kind1 ~= kind2 then
-                if kind1 == types.lsp.CompletionItemKind.Snippet then
-                  return false
-                end
-                if kind2 == types.lsp.CompletionItemKind.Snippet then
-                  return true
-                end
-                local diff = kind1 - kind2
-                if diff < 0 then
-                  return true
-                elseif diff > 0 then
-                  return false
-                end
-              end
-            end,
-
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
-          },
+        -- experimental = { ghost_text = true },
+        sorting = defaults.sorting,
+        duplicates = {
+          nvim_lsp = 1,
+          luasnip = 1,
+          cmp_tabnine = 1,
+          buffer = 1,
+          path = 1,
         },
-        -- experimental = {
-        --     ghost_text = {
-        --         hl_group = "LspCodeLens",
-        --     },
-        -- },
         formatting = {
           fields = { "abbr", "kind", "menu" },
-
-          format = function(entry, vim_item)
-            local MAX = math.floor(vim.o.columns * 0.5)
-            if #vim_item.abbr >= MAX then
-              vim_item.abbr = vim_item.abbr:sub(1, MAX) .. icons.misc.ellipsis
+          format = function(_, item)
+            local icons = require("r.config").icons.kinds
+            if icons[item.kind] then
+              item.kind = icons[item.kind] .. item.kind
             end
-
-            local item = entry:get_completion_item()
-            if item.detail then
-              vim_item.menu = item.detail
-            end
-
-            vim_item.menu = ({
-              nvim_lsp = "[LSP]",
-              nvim_lua = "[Lua]",
-              emoji = "[Emoji]",
-              path = "[Path]",
-              neorg = "[Neorg]",
-              luasnip = "[Snip]",
-              dictionary = "[Dict]",
-              treesitter = "串",
-              buffer = "[Buffer]",
-              spell = "[Spell]",
-              cmdline = "[Cmd]",
-              cmdline_history = "[Hist]",
-              orgmode = "[Org]",
-              rg = "[Rg]",
-              git = "[Git]",
-            })[entry.source.name]
-
-            vim_item.kind = fmt("%s  %s", icons.kind[vim_item.kind], vim_item.kind)
-
-            -- remove duplicates
-            vim_item.dup = ({
-              buffer = 1,
-              path = 1,
-              nvim_lsp = 0,
-            })[entry.source.name] or 0
-
-            return vim_item
           end,
         },
         sources = cmp.config.sources {
-          {
-            name = "nvim_lsp",
-            -- Remove snippet from lsp, use luasnip instead
-            ---@diagnostic disable-next-line: unused-local
-            entry_filter = function(entry, ctx)
-              if entry:get_kind() == 15 then
-                return false
-              end
-              return true
-            end,
-          },
+          { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "path" },
-          { name = "neorg" },
-          {
-            name = "buffer",
-            option = {
-              keyword_pattern = [[\k\+]],
-              -- Enable completion from all visible buffers
-              get_bufnrs = function()
-                local bufs = {}
-                for _, win in ipairs(vim.api.nvim_list_wins()) do
-                  bufs[vim.api.nvim_win_get_buf(win)] = true
-                end
-                return vim.tbl_keys(bufs)
-              end,
-            },
-          },
+          { name = "buffer" },
         },
       }
     end,
     config = function(_, opts)
       local cmp = require "cmp"
 
+      for _, source in ipairs(opts.sources) do
+        source.group_index = source.group_index or 1
+      end
       cmp.setup(opts)
 
       ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype("markdown", {
-        sources = cmp.config.sources({
+        sources = cmp.config.sources {
           { name = "emoji" },
           { name = "luasnip" },
           { name = "path" },
-          -- { name = "spell", group_index = 2 },
-        }, {
           { name = "buffer" },
-        }),
+        },
       })
 
       ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype("norg", {
-        sources = cmp.config.sources({
+        sources = cmp.config.sources {
           { name = "neorg" },
           { name = "luasnip" },
           { name = "path" },
-        }, {
           { name = "buffer" },
-        }),
+        },
       })
 
       ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype("org", {
-        sources = cmp.config.sources({
-          { name = "orgmode" },
+        sources = cmp.config.sources {
+          { name = "org" },
           { name = "luasnip" },
           { name = "path" },
-        }, {
           { name = "buffer" },
-        }),
+        },
+      })
+
+      ---@diagnostic disable-next-line: missing-fields
+      cmp.setup.filetype({ "dapui_watches", "dapui_hover", "dap-repl" }, {
+        sources = {
+          { name = "dap" },
+          -- { name = "nvim_lsp" },
+          -- { name = "luasnip" },
+          -- { name = "path" },
+          -- { name = "buffer" },
+        },
       })
 
       ---@diagnostic disable-next-line: missing-fields
@@ -379,11 +301,10 @@ return {
 
       ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = cmp.config.sources({
+        sources = cmp.config.sources {
           { name = "vim-dadbod-completion" },
-        }, {
           { name = "buffer" },
-        }),
+        },
       })
 
       ---@diagnostic disable-next-line: missing-fields
@@ -391,13 +312,13 @@ return {
         mapping = {
           ["<esc>"] = {
             c = function()
-              require("r.utils").feedkey("<c-c>", "n")
+              Util.cmd.feedkey("<c-c>", "n")
             end,
           },
           ["<c-q>"] = {
             c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").abort()
+              if cmp.visible() then
+                cmp.abort()
               else
                 fallback()
               end
@@ -405,17 +326,17 @@ return {
           },
           ["<TAB>"] = {
             c = function()
-              if require("cmp").visible() then
-                require("cmp").select_next_item()
+              if cmp.visible() then
+                cmp.select_next_item()
               else
-                require("cmp").complete()
+                cmp.complete()
               end
             end,
           },
           ["<S-TAB>"] = {
             c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").select_prev_item()
+              if cmp.visible() then
+                cmp.select_prev_item()
               else
                 fallback()
               end
@@ -432,13 +353,13 @@ return {
         mapping = {
           ["<esc>"] = {
             c = function()
-              require("r.utils").feedkey("<c-c>", "n")
+              Util.cmd.feedkey("<c-c>", "n")
             end,
           },
           ["<c-q>"] = {
             c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").abort()
+              if cmp.visible() then
+                cmp.abort()
               else
                 fallback()
               end
@@ -446,17 +367,17 @@ return {
           },
           ["<TAB>"] = {
             c = function()
-              if require("cmp").visible() then
-                require("cmp").select_next_item()
+              if cmp.visible() then
+                cmp.select_next_item()
               else
-                require("cmp").complete()
+                cmp.complete()
               end
             end,
           },
           ["<S-TAB>"] = {
             c = function(fallback)
-              if require("cmp").visible() then
-                require("cmp").select_prev_item()
+              if cmp.visible() then
+                cmp.select_prev_item()
               else
                 fallback()
               end
@@ -469,6 +390,16 @@ return {
       })
     end,
   },
+  -- -- Show TabNine status in lualine
+  -- {
+  --   "nvim-lualine/lualine.nvim",
+  --   optional = true,
+  --   event = "VeryLazy",
+  --   opts = function(_, opts)
+  --     local icon = require("lazyvim.config").icons.kinds.TabNine
+  --     table.insert(opts.sections.lualine_x, 2, require("lazyvim.util").lualine.cmp_source("cmp_tabnine", icon))
+  --   end,
+  -- },
   -- COMMENT.NVIM
   {
     "numToStr/Comment.nvim",
@@ -482,9 +413,10 @@ return {
       require("Comment").setup(opts)
     end,
   },
-  -- TREESJ
+  -- TREESJ (disabled)
   {
     "Wansmer/treesj",
+    enabled = false,
     cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
     keys = {
       { "<leader>rj", "<cmd>TSJToggle<cr>", desc = "Misc(treesj): toggle split/join" },
@@ -581,7 +513,7 @@ return {
     --   "OverseerTaskAction",
     -- },
     init = function()
-      -- as.augroup("RunOverseerTasks", {
+      -- Util.cmd.augroup("RunOverseerTasks", {
       --   event = { "FileType" },
       --   pattern = as.lspfiles,
       --   command = function()
@@ -617,7 +549,7 @@ return {
     --   {
     --     "rt",
     --     function()
-    --       require("r.utils.tiling").force_win_close({ "neo-tree", "undotree" }, false)
+    --       Util.tiling.force_win_close({ "neo-tree", "undotree" }, false)
     --       return cmd "OverseerToggle!"
     --     end,
     --     desc = "Task(overseer): toggle",

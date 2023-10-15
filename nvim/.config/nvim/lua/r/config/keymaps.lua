@@ -2,7 +2,9 @@ local silent = { silent = true }
 local nosilent = { silent = false }
 -- local opts = { noremap = true, unique = true }
 
-local fn, api, cmd, command, fmt, map = vim.fn, vim.api, vim.cmd, as.command, string.format, vim.keymap.set
+local fn, api, cmd, fmt, map = vim.fn, vim.api, vim.cmd, string.format, vim.keymap.set
+
+local Util = require "r.utils"
 
 -- local recursive_map = function(mode, lhs, rhs, opts)
 --     opts = opts or {}
@@ -38,6 +40,8 @@ end
 local tnoremap = function(...)
   map("t", ...)
 end
+
+nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ EDITING TEXT                                             │
@@ -81,11 +85,11 @@ end
 nnoremap("<space><space>", "za", { desc = "Folds: toggle" })
 
 nnoremap("<a-n>", function()
-  return require("r.utils").goNextClosedFold()
+  return Util.fold.goNextClosedFold()
 end, { desc = "Folds: go next closed" })
 
 nnoremap("<a-p>", function()
-  return require("r.utils").goPreviousClosedFold()
+  return Util.fold.goPreviousClosedFold()
 end, { desc = "Folds: go prev closed" })
 
 nnoremap("zm", "zM", { desc = "Folds: close all" })
@@ -104,9 +108,11 @@ nnoremap("zm", "zM", { desc = "Folds: close all" })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ BUFFERS                                                  │
 --  ╰──────────────────────────────────────────────────────────╯
-nnoremap("<Leader>bO", function()
-  return require("r.utils").Buf_only()
-end, { desc = "Buffer: bufonly" })
+if not Util.has "bufferline.nvim" then
+  nnoremap("<Leader>bO", function()
+    return Util.buf._only()
+  end, { desc = "Buffer: bufonly" })
+end
 
 nnoremap("<c-w>b", "<C-w><S-t>", { desc = "Buffer: break buffer into new tab" })
 nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
@@ -132,12 +138,12 @@ local function magic_quit()
     ["checkhealth"] = "q",
     ["neo-tree"] = "NeoTreeShowClose",
     ["DiffviewFileHistory"] = "DiffviewClose",
-    ["qf"] = require("r.utils").toggle_kil_loc_qf,
+    ["qf"] = Util.toggle.kill_loc_qf,
   }
 
   local alias_mode = { i = "I", c = "C", V = "V", [""] = "V" }
   if alias_mode[vim.fn.mode()] ~= nil then
-    return require("r.utils").feedkey("<esc>", "n")
+    return Util.cmd.feedkey("<esc>", "n")
   end
 
   local list_wins = {}
@@ -159,14 +165,14 @@ local function magic_quit()
 
       if buf_fts[filetype] ~= nil and vim.bo[0].filetype == buf_fts[filetype] then
         if buf_fts[filetype] == "q" then
-          return require("r.utils").feedkey(":q<cr>", "n")
+          return Util.cmd.feedkey(":q<cr>", "n")
         elseif buf_fts[filetype] == "bd" then
-          return require("r.utils").feedkey(":bd<cr>", "n")
+          return Util.cmd.feedkey(":bd<cr>", "n")
         else
           return vim.cmd(buf_fts[filetype])
         end
       else
-        return require("r.utils").feedkey(":q<cr>", "n")
+        return Util.cmd.feedkey(":q<cr>", "n")
       end
     end
   end
@@ -221,7 +227,7 @@ vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 nnoremap("~", "%", silent)
 
 nnoremap("<Localleader>tb", function()
-  return require("r.utils").toggle_background()
+  return Util.toggle.background()
 end, { desc = "Misc: toggle background" })
 
 nnoremap("<Leader>rd", function()
@@ -253,8 +259,15 @@ nnoremap("<Leader>n", function()
   return cmd.nohl()
 end, { desc = "Misc: clear searches" })
 
-nnoremap("n", "nzzzv", { desc = "Misc: search next" })
-nnoremap("N", "Nzzzv", { desc = "Misc: search prev" })
+-- nnoremap("n", "nzzzv", { desc = "Misc: search next" })
+-- nnoremap("N", "Nzzzv", { desc = "Misc: search prev" })
+
+nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
+xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
+onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
+nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
 -- Allow moving the cursor through wrapped lines using j and k,
 -- note that I have line wrapping turned off but turned on only for Markdown
@@ -331,7 +344,7 @@ cnoremap("<c-p>", "<Up>", { desc = "Cmdline: prev hist" })
 --  │ TERMINAL                                                 │
 --  ╰──────────────────────────────────────────────────────────╯
 
-as.augroup("AddTerminalMappings", {
+Util.cmd.augroup("AddTerminalMappings", {
   event = { "TermOpen" },
   pattern = { "term://*" },
   command = function()
@@ -356,46 +369,46 @@ nnoremap("zL", "<Nop>") -- disable
 nnoremap("Q", "<Nop>", {}) -- Disable Ex mode:
 nnoremap("Q", "<F1>", {}) -- Disable Ex mode:
 
-vim.cmd [[
-cab <silent> Wq wq
-cab <silent> Q! q!
-cab <silent> Q!! q!
-cab <silent> q!! q!
-cab <silent> WQ up
-cab <silent> Q1 q
-cab <silent> W1 updatee!
-cab <silent> W! update!
-cab <silent> w; update!
-cab <silent> W; update!
-cab <silent> W update
-cab <silent> Q q
-cab <silent> w@ update!
-cab <silent> W@ update!
+-- vim.cmd [[
+-- cab <silent> Wq wq
+-- cab <silent> Q! q!
+-- cab <silent> Q!! q!
+-- cab <silent> q!! q!
+-- cab <silent> WQ up
+-- cab <silent> Q1 q
+-- cab <silent> W1 updatee!
+-- cab <silent> W! update!
+-- cab <silent> w; update!
+-- cab <silent> W; update!
+-- cab <silent> W update
+-- cab <silent> Q q
+-- cab <silent> w@ update!
+-- cab <silent> W@ update!
 
-cab <silent> Bd bd!
-cab <silent> BD bd!
-cab <silent> bD bd!
-cab <silent> Bd bd!
-cab <silent> bd bd!]]
+-- cab <silent> Bd bd!
+-- cab <silent> BD bd!
+-- cab <silent> bD bd!
+-- cab <silent> Bd bd!
+-- cab <silent> bd bd!]]
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDS                                                 │
 --  ╰──────────────────────────────────────────────────────────╯
 
-command("Snippets", function()
-  require("r.utils").EditSnippet()
+Util.cmd.create_command("Snippets", function()
+  return Util.plugin.EditSnippet()
 end, { desc = "Snippet: edit snippet file" })
 
-command("CBcatalog", function()
+Util.cmd.create_command("CBcatalog", function()
   return require("comment-box").catalog()
 end, { desc = "Comment-box: show catalog" })
 
-command("InfoBaseColorsTheme", function()
-  return require("r.utils").infoBaseColorsTheme()
+Util.cmd.create_command("InfoBaseColorsTheme", function()
+  return Util.plugin.infoBaseColorsTheme()
 end, { desc = "Misc: set theme bspwm" })
 
-command("InfoOption", function()
-  return require("r.utils").infoFoldPreview()
+Util.cmd.create_command("InfoOption", function()
+  return Util.plugin.infoFoldPreview()
 end, { desc = "Misc: echo options" })
 
 --  ╭──────────────────────────────────────────────────────────╮

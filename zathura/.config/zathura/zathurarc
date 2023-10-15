@@ -94,23 +94,23 @@ map [fullscreen] J scroll half-down
 
 ### THEME ###
 
-set default-bg "#282c34"
-set default-fg "#bbc2cf"
+set default-bg "#1a1b26"
+set default-fg "#c0caf5"
 
 set statusbar-bg "#202020"
 set statusbar-fg "#eee4e5"
 
-set inputbar-bg "#98be65"
+set inputbar-bg "#9ece6a"
 set inputbar-fg "#202020"
 
-set highlight-color "#ff6c6b"
+set highlight-color "#f7768e"
 set highlight-active-color "#6A9FB5"
 
 set completion-highlight-fg "#151515"
 set completion-highlight-bg "#90A959"
 
-set notification-bg "#282c34"
-set notification-fg "#bbc2cf"
+set notification-bg "#1a1b26"
+set notification-fg "#c0caf5"
 
 set notification-error-bg "#AC4142"
 set notification-error-fg "#151515"
@@ -118,7 +118,7 @@ set notification-error-fg "#151515"
 set notification-warning-bg "#AC4142"
 set notification-warning-fg "#151515"
 
-set recolor-lightcolor "#282c34"
+set recolor-lightcolor "#1a1b26"
 set recolor-darkcolor "#E0E0E0"
 set recolor-reverse-video "true"
 set recolor-keephue "false"

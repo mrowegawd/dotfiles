@@ -1,47 +1,35 @@
-if not as then
-  return
-end
+-- if not as then
+--   return
+-- end
 
-local highlight, augroup = as.highlight, as.augroup
+local Util = require "r.utils"
 
+local highlight = require "r.config.highlights"
+
+-- stylua: ignore
 local general_overrides = function()
   highlight.all {
+    -- { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
     { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
     { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
-    -- { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
     { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
-    { CursorLine = { bg = { from = "Normal", alter = -0.3 } } },
+    { CursorLine = { bg = { from = "Normal", alter = -0.5 } } },
     { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
-    {
-      Pmenu = {
-        bg = { from = "Normal", attr = "bg", alter = 0.3 },
-        fg = { from = "Normal", attr = "fg", alter = -0.1 },
-      },
-    },
+    { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "Normal", attr = "fg", alter = -0.1 } } },
     { PmenuSel = { bold = true, fg = "NONE", bg = { from = "ColorColumn", alter = 0.6 } } },
     { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal" } } },
     { FloatBorder = { bg = { from = "Normal" }, fg = { from = "Directory" } } },
     { Comment = { fg = { from = "Directory", attr = "fg", alter = -0.3 }, italic = true } },
-    {
-      Folded = {
-        -- fg = { from = "Directory", attr = "fg", alter = -0.3 },
-        bg = { from = "Directory", attr = "fg", alter = -0.4 },
-      },
-    },
+    { Folded = { bg = { from = "Directory", attr = "fg", alter = -0.4 } } },
     { QuickFixLine = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
     { EndOfBuffer = { bg = "NONE" } },
     { SignColumn = { bg = "NONE" } },
     { MarkSignNumHL = { inherit = "SpecialKey", bg = "NONE" } },
     { Normal = { fg = { from = "Directory", alter = 0.3 } } },
-    {
-      WinSeparator = {
-        bg = "NONE",
-        fg = { from = "ColorColumn", attr = "bg", alter = 0.15 },
-      },
-    },
+    { WinSeparator = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } },
 
     -----------------------------------------------------------------------------//
     --  Spell
@@ -123,8 +111,8 @@ local general_overrides = function()
     {
       LspInlayhint = {
         bg = { from = "ColorColumn", attr = "bg", alter = -0.4 },
-        fg = { from = "Directory", attr = "fg", alter = -0.3 },
-      },
+        fg = { from = "Directory", attr = "fg", alter = -0.3 }
+      }
     },
 
     { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
@@ -176,8 +164,8 @@ local general_overrides = function()
       MyQuickFixLineEnter = {
         bg = { from = "CursorLine", alter = 0.6 },
         fg = { from = "CursorLine", attr = "bg", alter = 2 },
-        bold = true,
-      },
+        bold = true
+      }
     },
     { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.2 } } },
     { CodeBlock2 = { bg = "cyan" } },
@@ -202,8 +190,8 @@ local general_overrides = function()
       TelescoeePromptTitle = {
         bg = { from = "Normal", attr = "bg" },
         fg = { from = "WarningMsg", alter = 0.14, bold = true },
-        bold = true,
-      },
+        bold = true
+      }
     },
     { TelescopePromptBorder = { fg = { from = "Normal", alter = -0.4 }, bg = { from = "Normal", attr = "bg" } } },
     { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
@@ -214,8 +202,8 @@ local general_overrides = function()
       TelescopePreviewTitle = {
         bg = { from = "Normal", attr = "bg" },
         fg = { from = "Normal", alter = 0.14, bold = true },
-        bold = true,
-      },
+        bold = true
+      }
     },
     { TelescopeSelection = { link = "PmenuSel" } },
     { TelescopeMatching = { link = "CmpItemAbbrMatch" } },
@@ -239,9 +227,6 @@ local general_overrides = function()
     -- ORGMODE ============================================================
     { OrgDONE = { fg = "#00FF00" } },
 
-    -- INDENTBLANK ========================================================
-    { ["@ibl.indent.char.1"] = { fg = { from = "Directory", attr = "fg", alter = 2 }, nocombine = false } },
-
     -- MINIINDENTSCOPE ====================================================
     { MiniIndentscopeSymbol = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
 
@@ -250,8 +235,8 @@ local general_overrides = function()
       HlSearchLensNear = {
         bg = { from = "IncSearch", attr = "bg" },
         fg = { from = "IncSearch", attr = "bg", alter = -0.3 },
-        bold = true,
-      },
+        bold = true
+      }
     },
   }
 end
@@ -310,15 +295,24 @@ local function colorscheme_overrides()
       { ["@lsp.type.comment"] = { fg = { from = "Comment" } } },
     },
     ["solarized"] = {
-      { Folded = { underline = false, bg = {from="Folded", attr="bg", alter=-0.3} } },
+      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.3 } } },
       { WinBar = { bg = "NONE" } },
       { MatchParen = { bg = "NONE" } },
       { ErrorMsg = { standout = false, reverse = false } },
       { LineNr = { fg = { from = "LineNr", alter = -0.15 } } },
       { LspReferenceText = { bg = "NONE", standout = false } },
       { illuminatedWordText = { bg = "NONE" } },
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" }, }, },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" }, },
+      {
+        illuminatedWordWrite = {
+          bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.2 },
+          sp = { from = "Directory", attr = "fg" }
+        }
+      },
+      {
+        illuminatedWordRead = {
+          bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 },
+          sp = { from = "Directory", attr = "fg" }
+        }
       },
     },
     ["miasma"] = {
@@ -331,8 +325,18 @@ local function colorscheme_overrides()
     },
     ["darcula-dark"] = {
       { WinSeparator = { bg = "NONE" } },
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" }, }, },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" }, }, },
+      {
+        illuminatedWordWrite = {
+          bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 },
+          sp = { from = "Directory", attr = "fg" }
+        }
+      },
+      {
+        illuminatedWordRead = {
+          bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 },
+          sp = { from = "Directory", attr = "fg" }
+        }
+      },
       { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
       { Normal = { fg = { from = "Directory", alter = 0.3 } } },
       { ["@Comment"] = { fg = { from = "Comment" } } },
@@ -347,19 +351,23 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", alter = -0.15 } } },
     },
     ["tokyonight"] = {
-      { Comment = { fg = { from = "Directory", alter = -0.15 } } },
+      { Comment = { fg = { from = "Directory", alter = -0.2 } } },
       { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
       { TreesitterContextLineNumber = { inherit = "LineNr" } },
       { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
     },
     ["tokyonight-night"] = {
       { WinSeparator = { bg = "NONE" } },
+      { Comment = { fg = { from = "Directory", alter = 0.1 } } },
+      { CursorLine = { bg = { from = "Normal", alter = -0.4 } } },
+      { CmpItemAbbr = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
+      { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
       { Normal = { fg = { from = "Directory", alter = 0.8 } } },
       { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.3 } } },
     },
   }
 
-  local hls = overrides[as.colorscheme]
+  local hls = overrides[require("r.config").colorscheme]
   if not hls then
     return
   end
@@ -394,7 +402,7 @@ local function on_sidebar_enter()
   }
 end
 
-augroup("UserHighlights", {
+Util.cmd.augroup("UserHighlights", {
   event = "ColorScheme",
   command = function()
     user_highlights()

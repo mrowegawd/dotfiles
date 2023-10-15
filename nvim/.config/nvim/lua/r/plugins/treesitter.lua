@@ -2,7 +2,7 @@ return {
   -- TREESITTER- CONTEXT
   {
     "nvim-treesitter/nvim-treesitter-context",
-    event = "VeryLazy",
+    event = "LazyFile",
     opts = {
       multiline_threshold = 2,
       separator = "─", -- "─", alternatives: ▁ ─ ▄ '--',
@@ -12,18 +12,44 @@ return {
       {
         "<Localleader>tt",
         function()
-          require("treesitter-context").toggle()
-          if require("treesitter-context.config").enable then
-            require("treesitter-context.config").enable = false
-            as.warn("Disabled Treesitter Context", "Treesitter Context")
+          local Util = require "r.utils"
+          local tsc = require "treesitter-context"
+          tsc.toggle()
+          if Util.inject.get_upvalue(tsc.toggle, "enabled") then
+            Util.info("Enabled Treesitter Context", { title = "Option" })
           else
-            require("treesitter-context.config").enable = true
-            as.info("Enabled Treesitter Context", "Treesitter Context")
+            Util.warn("Disabled Treesitter Context", { title = "Option" })
           end
         end,
         desc = "Misc(treesitter-contex): toggle",
       },
     },
+  },
+  -- DELIMITERS
+  {
+    "HiPhish/rainbow-delimiters.nvim",
+    event = "VeryLazy",
+    config = function()
+      local rainbow_delimiters = require "rainbow-delimiters"
+
+      vim.g.rainbow_delimiters = {
+        strategy = {
+          [""] = rainbow_delimiters.strategy["global"],
+        },
+        query = {
+          [""] = "rainbow-delimiters",
+        },
+        highlight = {
+          "TSRainbowRed",
+          "TSRainbowYellow",
+          "TSRainbowBlue",
+          "TSRainbowOrange",
+          "TSRainbowGreen",
+          "TSRainbowViolet",
+          "TSRainbowCyan",
+        },
+      }
+    end,
   },
   -- NVIM-TS-COMMENTSTRING
   {
@@ -78,30 +104,6 @@ return {
       },
       { "JoosepAlviste/nvim-ts-context-commentstring" },
       { "mfussenegger/nvim-treehopper" },
-      {
-        "HiPhish/rainbow-delimiters.nvim",
-        config = function()
-          local rainbow_delimiters = require "rainbow-delimiters"
-
-          vim.g.rainbow_delimiters = {
-            strategy = {
-              [""] = rainbow_delimiters.strategy["global"],
-            },
-            query = {
-              [""] = "rainbow-delimiters",
-            },
-            highlight = {
-              "TSRainbowRed",
-              "TSRainbowYellow",
-              "TSRainbowBlue",
-              "TSRainbowOrange",
-              "TSRainbowGreen",
-              "TSRainbowViolet",
-              "TSRainbowCyan",
-            },
-          }
-        end,
-      },
       -- {
       --   "andymass/vim-matchup",
       --   event = "BufReadPost",
@@ -137,8 +139,6 @@ return {
           "latex",
           "kotlin",
           "dart",
-          "markdown",
-          "markdown_inline",
           "meson",
           "ninja",
           "nix",
@@ -242,7 +242,10 @@ return {
       }
     end,
     config = function(_, opts)
-      require("orgmode").setup_ts_grammar()
+      local Util = require "r.utils"
+      if Util.has "orgmode" then
+        require("orgmode").setup_ts_grammar()
+      end
 
       if type(opts.ensure_installed) == "table" then
         ---@type table<string, boolean>

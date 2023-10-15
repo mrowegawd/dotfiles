@@ -1,14 +1,25 @@
-local function status_dap()
-  local ok, dap = pcall(require, "dap")
-
-  if not ok then
-    return ""
-  end
-
-  return dap.status()
-end
-
 return {
+
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      {
+        "Saecki/crates.nvim",
+        event = { "BufRead Cargo.toml" },
+        opts = {
+          src = {
+            cmp = { enabled = true },
+          },
+        },
+      },
+    },
+    opts = function(_, opts)
+      local cmp = require "cmp"
+      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
+        { name = "crates" },
+      }))
+    end,
+  },
   -- NVIM-TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
@@ -28,23 +39,10 @@ return {
       end
     end,
   },
-  -- CRATES
-  {
-    "saecki/crates.nvim",
-    event = { "BufRead Cargo.toml" },
-    opts = {
-      src = {
-        cmp = { enabled = true },
-      },
-    },
-  },
   -- RUST-TOOLS
   {
     "simrat39/rust-tools.nvim",
     lazy = true,
-    dependencies = {
-      "rust-lang/rust.vim",
-    },
     opts = function()
       local ok, mason_registry = pcall(require, "mason-registry")
       local adapter ---@type any
@@ -53,22 +51,31 @@ return {
         local codelldb = mason_registry.get_package "codelldb"
         local extension_path = codelldb:get_install_path() .. "/extension/"
         local codelldb_path = extension_path .. "adapter/codelldb"
-        local liblldb_path = vim.fn.has "mac" == 1 and extension_path .. "lldb/lib/liblldb.dylib"
-          or extension_path .. "lldb/lib/liblldb.so"
+        local liblldb_path = ""
+        if vim.loop.os_uname().sysname:find "Windows" then
+          liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
+        elseif vim.fn.has "mac" == 1 then
+          liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
+        else
+          liblldb_path = extension_path .. "lldb/lib/liblldb.so"
+        end
         adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
       end
       return {
         dap = {
           adapter = adapter,
         },
-        tools = {
-          hover_actions = {
-            auto_focus = true,
-          },
-          inlay_hints = {
-            auto = false,
-          },
-        },
+        -- tools = {
+        --   on_initialized = function()
+        --     vim.cmd [[
+        --           augroup RustLSP
+        --             autocmd CursorHold                      *.rs silent! lua vim.lsp.buf.document_highlight()
+        --             autocmd CursorMoved,InsertEnter         *.rs silent! lua vim.lsp.buf.clear_references()
+        --             autocmd BufEnter,CursorHold,InsertLeave *.rs silent! lua vim.lsp.codelens.refresh()
+        --           augroup END
+        --         ]]
+        --   end,
+        -- },
       }
     end,
     config = function() end,
@@ -79,6 +86,11 @@ return {
     opts = {
       servers = {
         rust_analyzer = {
+          keys = {
+            { "K", "<cmd>RustHoverActions<cr>", desc = "Hover Actions (Rust)" },
+            { "<Leader>cR", "<cmd>RustCodeAction<cr>", desc = "LSP: Code Action (Rust)" },
+            { "<leader>dR", "<cmd>RustDebuggables<cr>", desc = "Debug(rust): run debuggables" },
+          },
           settings = {
             ["rust-analyzer"] = {
               cargo = {
@@ -103,60 +115,26 @@ return {
             },
           },
         },
-        -- taplo = {
-        --   keys = {
-        --     {
-        --       "K",
-        --       function()
-        --         if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
-        --           require("crates").show_popup()
-        --         else
-        --           vim.lsp.buf.hover()
-        --         end
-        --       end,
-        --       desc = "Show Crate Documentation",
-        --     },
-        --   },
-        -- },
+        taplo = {
+          keys = {
+            {
+              "K",
+              function()
+                if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
+                  require("crates").show_popup()
+                else
+                  vim.lsp.buf.hover()
+                end
+              end,
+              desc = "Show Crate Documentation",
+            },
+          },
+        },
       },
       setup = {
         rust_analyzer = function(_, opts)
-          local function locopts(name)
-            local plugin = require("lazy.core.config").plugins[name]
-            if not plugin then
-              return {}
-            end
-            local Plugin = require "lazy.core.plugin"
-            return Plugin.values(plugin, "opts", false)
-          end
-
-          local rust_tools_opts = locopts "rust-tools.nvim"
-
+          local rust_tools_opts = require("r.utils").opts "rust-tools.nvim"
           require("rust-tools").setup(vim.tbl_deep_extend("force", rust_tools_opts or {}, { server = opts }))
-
-          local lsp_utils = require "r.plugins.lsp.utils"
-          lsp_utils.on_attach(function(client, buffer)
-            if client.name == "rust_analyzer" then
-              vim.keymap.set("n", "<localleader>dd", function()
-                if #status_dap() > 0 then
-                  require("dap").disconnect()
-                  return require("dapui").close()
-                else
-                  return vim.cmd.RustDebuggables()
-                end
-              end, {
-                desc = "Debug(rust): RustDebuggables",
-                buffer = buffer,
-              })
-
-              vim.keymap.set("n", "K", function()
-                return vim.cmd.RustHoverActions()
-              end, {
-                desc = "LSP(rust): RustHoverActions",
-                buffer = buffer,
-              })
-            end
-          end)
           return true
         end,
       },

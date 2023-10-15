@@ -16,8 +16,8 @@ local journal_files = function(opts)
   local tbl = {}
   local grep_commands = "rg --files -g '*.org' " or opts.path
 
-  local notes = io.popen(grep_commands .. as.wiki_path .. "/journal")
-  local org = io.popen(grep_commands .. as.wiki_path .. "/gtd")
+  local notes = io.popen(grep_commands .. require("r.config").path.wiki_path .. "/journal")
+  local org = io.popen(grep_commands .. require("r.config").path.wiki_path .. "/gtd")
 
   insert_table(tbl, notes)
   insert_table(tbl, org)

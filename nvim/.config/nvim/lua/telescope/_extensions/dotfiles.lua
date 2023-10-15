@@ -9,7 +9,7 @@ local dotfiles_list = function()
   local list = {}
   local nvim_conf = io.popen(
     "rg --files --hidden --color=never --no-heading --with-filename --line-number --column --smart-case "
-      .. as.home
+      .. os.getenv "HOME"
       .. "/moxconf/development/dotfiles"
   )
   if nvim_conf ~= nil then

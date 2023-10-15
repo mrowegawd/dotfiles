@@ -123,14 +123,14 @@ set_zathura() {
 	sed -i -e "s/^set recolor-lightcolor.*/set recolor-lightcolor \"$GET_BACKGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
 }
 set_vim() {
-	_PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/settings/globals.lua"
+	_PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/config/init.lua"
 	if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
 		PATH_NVIM="base2tone_space_dark"
 	else
 		PATH_NVIM=$_PATH_NVIM
 	fi
 
-	sed -i -e "s/^as.colorscheme\s=.*/as.colorscheme = \"$1\"/" "$PATH_NVIM"
+	sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$1\"/" "$PATH_NVIM"
 }
 set_oomox() {
 	if command -v oomox-cli &>/dev/null; then

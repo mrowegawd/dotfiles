@@ -2,6 +2,8 @@ local cmd, fn = vim.cmd, vim.fn
 
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
 
+local Util = require "r.utils"
+
 return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
@@ -12,7 +14,7 @@ return {
     enabled = false,
     event = "BufEnter",
     init = function()
-      as.augroup("PersistedEvents", {
+      Util.cmd.augroup("PersistedEvents", {
         event = "User",
         pattern = "PersistedSavePre",
         -- Arguments are always persisted in a session and can't be removed using 'sessionoptions'
@@ -24,8 +26,13 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", function() return cmd.SessionLoadLast() end, { desc = "Misc(persisted): load a session" }, },
-      { "<Leader>ps", function() cmd.SessionStart() return vim.notify "Sessions persisted: Started.." end, { desc = "Misc(persisted): start a session" }, },
+      { "<Leader>pl", function() return cmd.SessionLoadLast() end,                                         { desc =
+      "Misc(persisted): load a session" }, },
+      { "<Leader>ps", function()
+        cmd.SessionStart()
+        return vim.notify "Sessions persisted: Started.."
+      end,                                                                                                 { desc =
+      "Misc(persisted): start a session" }, },
     },
     config = function()
       require("persisted").setup {
@@ -59,9 +66,21 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", function() local possession = require "nvim-possession" return possession.list() end, desc = "Misc(possession): load a session", },
-      { "<Leader>ps", function() local possession = require "nvim-possession" return possession.new() end, desc = "Misc(possession): start or save a session name", },
-      { "<Leader>pu", function() local possession = require "nvim-possession" return possession.update() end, desc = "Misc(possession): save a new session or overwrite it", },
+      { "<Leader>pl", function()
+        local possession = require "nvim-possession"
+        return possession.list()
+      end,                                                                                                    desc =
+      "Misc(possession): load a session", },
+      { "<Leader>ps", function()
+        local possession = require "nvim-possession"
+        return possession.new()
+      end,                                                                                                    desc =
+      "Misc(possession): start or save a session name", },
+      { "<Leader>pu", function()
+        local possession = require "nvim-possession"
+        return possession.update()
+      end,                                                                                                    desc =
+      "Misc(possession): save a new session or overwrite it", },
     },
     opts = {
       autoload = true, -- whether to autoload sessions in the cwd at startup
@@ -163,9 +182,14 @@ return {
     cmd = "SessionManager",
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", "<cmd>SessionManager! load_last_session<cr>", { desc = "Misc(nvim-session-manager): load a session" }, },
-      { "<Leader>ps", "<cmd>SessionManager! save_current_session<cr>", { desc = "Misc(nvim-session-manager): save session" }, },
-      { "<Leader>pL", "<cmd>SessionManager! load_session<cr>", { desc = "Misc(nvim-session-manager): list session" }, },
+      { "<Leader>pl", "<cmd>SessionManager! load_last_session<cr>",
+                                                                         { desc =
+        "Misc(nvim-session-manager): load a session" }, },
+      { "<Leader>ps", "<cmd>SessionManager! save_current_session<cr>",
+                                                                         { desc =
+        "Misc(nvim-session-manager): save session" }, },
+      { "<Leader>pL", "<cmd>SessionManager! load_session<cr>",         { desc =
+      "Misc(nvim-session-manager): list session" }, },
     },
     opts = {
       -- autoload_mode = require("session_manager.config").AutoloadMode.Disabled, -- Do not autoload on startup.
@@ -216,9 +240,14 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
-      { "<Leader>sL", function() require("persistence").load({ last = true }) end, desc = "Misc(persistence): restore last session" },
-      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
+      { "<Leader>sl", function() require("persistence").load() end,                desc =
+      "Misc(persistence): restore session" },
+      { "<Leader>sL", function() require("persistence").load({ last = true }) end,
+                                                                                     desc =
+        "Misc(persistence): restore last session" },
+      { "<Leader>ss", function() require("persistence").stop() end,
+                                                                                     desc =
+        "Misc(persistence): don't save current session" },
     },
   },
   --  ╭──────────────────────────────────────────────────────────╮

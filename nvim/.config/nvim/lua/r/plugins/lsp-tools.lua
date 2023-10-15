@@ -1,7 +1,7 @@
-local fn, fmt, icons, api = vim.fn, string.format, as.ui.icons, vim.api
+local api = vim.api
 
-local highlight, ui = as.highlight, as.ui
-local r_utils = require "r.utils"
+local highlight = require "r.config.highlights"
+local Util = require "r.utils"
 
 local set_icons = function(icons_name)
   return icons_name .. " "
@@ -314,9 +314,9 @@ return {
   -- AERIAL
   {
     "stevearc/aerial.nvim",
-    event = "LspAttach",
+    event = "LazyFile",
     init = function()
-      r_utils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
+      Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
 
       api.nvim_create_autocmd("FileType", {
         pattern = { "aerial" },
@@ -351,7 +351,7 @@ return {
         {
           "<Localleader>oA",
           function()
-            local selected = r_utils.select({
+            local selected = Util.plugin.select({
               "Class",
               "Constructor",
               "Object",
@@ -362,17 +362,18 @@ return {
               "Method",
               "Struct",
               "all",
-            }, { prompt = icons.kind.Package .. " Filter LSPkind" }, {})
+            }, { prompt = require("r.config").icons.kinds.Package .. " Filter LSPkind" }, {})
 
-            r_utils.nui_select(selected, function(choice)
+            Util.plugin.nui_select(selected, function(choice)
               if choice == "all" then
                 opts.opts["filter_kind"] = false
               else
                 opts.opts["filter_kind"] = { choice }
               end
+
               require("aerial").setup(opts.opts)
 
-              r_utils.Buf_only()
+              Util.buf._only()
               -- vim.schedule(function()
               --   vim.cmd [[:e]]
               -- end)
@@ -398,35 +399,7 @@ return {
       },
       whitespace = "  ",
       filter_kind = false,
-      icons = {
-        Array = icons.kind.Array,
-        Boolean = icons.kind.Boolean,
-        Class = icons.kind.Class,
-        Constant = icons.kind.Constant,
-        Constructor = icons.kind.Constructor,
-        Enum = icons.kind.Enum,
-        EnumMember = icons.kind.EnumMember,
-        Event = icons.kind.Event,
-        Field = icons.kind.Field,
-        File = icons.kind.File,
-        Function = icons.kind.Function,
-        Interface = icons.kind.Interface,
-        Key = icons.kind.Keyword,
-        Method = icons.kind.Method,
-        Module = icons.kind.Module,
-        Namespace = icons.kind.Namespace,
-        Null = icons.kind.Null,
-        Number = icons.kind.Number,
-        Object = icons.kind.Object,
-        Operator = icons.kind.Operator,
-        Package = icons.kind.Package,
-        Property = icons.kind.Property,
-        String = icons.kind.String,
-        Struct = icons.kind.Struct,
-        TypeParameter = icons.kind.TypeParameter,
-        Variable = icons.kind.Variable,
-        Collapsed = " ",
-      },
+      icons = require("r.config").icons.kinds,
       keymaps = {
         ["o"] = "actions.jump",
         -- ["o"] = "actions.jump",
@@ -449,34 +422,20 @@ return {
   },
   -- SYMBOLSOUTLINE (disabled)
   {
-    "enddeadroyal/symbols-outline.nvim",
+    "simrat39/symbols-outline.nvim",
     enabled = false,
     cmd = "SymbolsOutline",
-    branch = "bugfix/symbol-hover-misplacement",
     init = function()
-      r_utils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
     end,
     -- stylua: ignore
     keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Open(symbolsoutline): pick", }, },
-    config = function()
-      require("symbols-outline").setup {
-        highlight_hovered_item = true,
-        show_guides = false,
-        position = "right",
-        border = "single",
-        relative_width = true,
-        width = 30,
-        auto_close = false,
-        auto_preview = false,
-        show_numbers = false,
-        show_relative_numbers = false,
-        show_symbol_details = true,
-        preview_bg_highlight = "Pmenu",
-        winblend = 0,
-        autofold_depth = nil,
-        auto_unfold_hover = false,
-        fold_markers = { "", "" },
-        wrap = false,
+    opts = function()
+      local Config = require "r.config"
+      local defaults = require("symbols-outline.config").defaults
+      local opts = {
+        symbols = {},
+        symbol_blacklist = {},
         keymaps = { -- These keymaps can be a string or a table for multiple keys
           close = { "<Esc>", "q", "<leader><TAB>" },
           goto_location = "<Cr>",
@@ -492,45 +451,25 @@ return {
           unfold_all = "zO",
           fold_reset = "R",
         },
-        lsp_blacklist = {},
-        symbol_blacklist = {},
-        symbols = {
-          Module = { icon = icons.kind.Module, hl = "@namespace" },
-          Class = { icon = icons.kind.Class, hl = "@type" },
-          Method = { icon = icons.kind.Method, hl = "@method" },
-          Property = { icon = icons.kind.Property, hl = "@method" },
-          Field = { icon = icons.kind.Field, hl = "@field" },
-          Constructor = { icon = icons.kind.Constructor, hl = "@constructor" },
-          Enum = { icon = icons.kind.Enum, hl = "@type" },
-          Interface = { icon = icons.kind.Interface, hl = "@type" },
-          Function = { icon = icons.kind.Function, hl = "@function" },
-          Variable = { icon = icons.kind.Variable, hl = "@constant" },
-          Constant = { icon = icons.kind.Constant, hl = "@constant" },
-          String = { icon = icons.kind.String, hl = "@string" },
-          Number = { icon = icons.kind.Number, hl = "@number" },
-          Boolean = { icon = icons.kind.Boolean, hl = "@boolean" },
-          Array = { icon = icons.kind.Array, hl = "@constant" },
-          Object = { icon = icons.kind.Object, hl = "@type" },
-          Key = { icon = icons.kind.Keyword, hl = "@type" },
-          EnumMember = { icon = icons.kind.EnumMember, hl = "@field" },
-          Struct = { icon = icons.kind.Struct, hl = "@type" },
-          Event = { icon = icons.kind.Event, hl = "@type" },
-          Operator = { icon = icons.kind.Operator, hl = "@operator" },
-          Null = { icon = icons.kind.Null, hl = "@type" },
-          File = { icon = icons.kind.File, hl = "@text.uri" },
-          Namespace = { icon = icons.kind.Namespace, hl = "@namespace" },
-          Package = { icon = icons.kind.Package, hl = "@namespace" },
-          TypeParameter = { icon = icons.kind.TypeParameter, hl = "@parameter" },
-          Component = { icon = icons.kind.Component, hl = "@function" },
-          Fragment = { icon = icons.kind.Fragment, hl = "@constant" },
-        },
       }
+
+      for kind, symbol in pairs(defaults.symbols) do
+        opts.symbols[kind] = {
+          icon = Config.icons.kinds[kind] or symbol.icon,
+          hl = symbol.hl,
+        }
+        if not vim.tbl_contains(Config.kind_filter.default, kind) then
+          table.insert(opts.symbol_blacklist, kind)
+        end
+      end
+      return opts
     end,
   },
   -- DROPBAR
   {
     "Bekaboo/dropbar.nvim",
-    event = "BufRead",
+    enabled = false,
+    event = "LazyFile",
     -- stylua: ignore
     keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
     init = function()
@@ -544,89 +483,26 @@ return {
       require("dropbar").setup {
         general = {
           update_interval = 100,
-          enable = function(buf, win)
-            local b, w = vim.bo[buf], vim.wo[win]
-            local decor = ui.decorations.get { ft = b.ft, bt = b.bt, setting = "winbar" }
-            return decor ~= nil
-              and decor.ft ~= false
-              and decor.bt ~= false
-              and b.bt == ""
-              and not w.diff
-              and not api.nvim_win_get_config(win).zindex
-              and api.nvim_buf_get_name(buf) ~= ""
-          end,
+          -- enable = function(buf, win)
+          --   local b, w = vim.bo[buf], vim.wo[win]
+          --   local decor = ui.decorations.get { ft = b.ft, bt = b.bt, setting = "winbar" }
+          --   return decor ~= nil
+          --     and decor.ft ~= false
+          --     and decor.bt ~= false
+          --     and b.bt == ""
+          --     and not w.diff
+          --     and not api.nvim_win_get_config(win).zindex
+          --     and api.nvim_buf_get_name(buf) ~= ""
+          -- end,
         },
         icons = {
           kinds = {
             use_devicons = true,
-            symbols = {
-              Array = set_icons(icons.kind.Array),
-              Boolean = set_icons(icons.kind.Boolean),
-              BreakStatement = "󰙧 ",
-              Call = "󰃷 ",
-              CaseStatement = "󱃙 ",
-              Class = set_icons(icons.kind.Class),
-              Color = " ",
-              Constant = set_icons(icons.kind.Constant),
-              Constructor = set_icons(icons.kind.Constructor),
-              ContinueStatement = "→ ",
-              Copilot = " ",
-              Declaration = "󰙠 ",
-              Delete = "󰩺 ",
-              DoStatement = "󰑖 ",
-              Enum = set_icons(icons.kind.Enum),
-              EnumMember = set_icons(icons.kind.Enum),
-              Event = set_icons(icons.kind.Event),
-              Field = set_icons(icons.kind.Field),
-              File = set_icons(icons.kind.File),
-              Folder = set_icons(icons.kind.Folder),
-              ForStatement = "󰑖 ",
-              Function = set_icons(icons.kind.Function),
-              Identifier = "󰀫 ",
-              IfStatement = "󰇉 ",
-              Interface = set_icons(icons.kind.Interface),
-              Keyword = set_icons(icons.kind.Keyword),
-              List = " ",
-              og = "󰦪 ",
-              Lsp = " ",
-              Macro = "󰁌 ",
-              MarkdownH1 = "󰉫 ",
-              MarkdownH2 = "󰉬 ",
-              MarkdownH3 = "󰉭 ",
-              MarkdownH4 = "󰉮 ",
-              MarkdownH5 = "󰉯 ",
-              MarkdownH6 = "󰉰 ",
-              Method = set_icons(icons.kind.Method),
-              Module = set_icons(icons.kind.Module),
-              Namespace = set_icons(icons.kind.Namespace),
-              Null = set_icons(icons.kind.Null),
-              Number = set_icons(icons.kind.Number),
-              Object = set_icons(icons.kind.Object),
-              Operator = set_icons(icons.kind.Operator),
-              Package = set_icons(icons.kind.Package),
-              Property = set_icons(icons.kind.Property),
-              Reference = set_icons(icons.kind.Reference),
-              Regex = " ",
-              Repeat = "󰑖 ",
-              Scope = " ",
-              Snippet = "󰩫 ",
-              Specifier = "󰦪 ",
-              Statement = " ",
-              String = set_icons(icons.kind.String),
-              Struct = set_icons(icons.kind.Struct),
-              SwitchStatement = "󰺟 ",
-              Text = set_icons(icons.kind.Text),
-              Type = " ",
-              TypeParameter = " ",
-              Unit = set_icons(icons.kind.Unit),
-              Value = set_icons(icons.kind.Value),
-              Variable = set_icons(icons.kind.Variable),
-              WhileStatement = "󰑖 ",
-            },
+            symbols = require("r.config").icons.kinds,
           },
           ui = {
             bar = {
-              separator = set_icons(icons.kind.arrow_right),
+              separator = set_icons(require("r.config").icons.misc.arrow_right),
               extends = "…",
             },
             menu = {
@@ -763,32 +639,32 @@ return {
       }
     end,
   },
-  -- INCRENAME (disabled)
-  {
-    "smjonas/inc-rename.nvim",
-    enabled = false,
-    opts = { hl_group = "Visual", preview_empty_name = true },
-    keys = {
-      {
-        "<leader>gR",
-        function()
-          return fmt(":IncRename %s", fn.expand "<cword>")
-        end,
-        expr = true,
-        silent = false,
-        desc = "lsp: incremental rename",
-      },
-    },
-  },
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
-    event = { "BufReadPost", "BufNewFile" },
-    opts = { delay = 200 },
-    -- stylua: ignore
+    event = "LazyFile",
+    opts = {
+      delay = 200,
+      large_file_cutoff = 2000,
+      large_file_overrides = {
+        providers = { "lsp" },
+      },
+    },
     keys = {
-      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference", },
-      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference", },
+      {
+        "<a-q>",
+        function()
+          require("illuminate").goto_next_reference(nil)
+        end,
+        desc = "LSP(vim-illuminate): go next reference",
+      },
+      {
+        "<a-Q>",
+        function()
+          require("illuminate").goto_prev_reference(nil)
+        end,
+        desc = "LSP(vim-illuminate): go prev reference",
+      },
     },
     config = function()
       require("illuminate").configure {
@@ -869,5 +745,54 @@ return {
         { fg = "#8FB272" },
       },
     },
+  },
+  -- LSP-TIMEOUT.NVIM
+  {
+    --  lsp-timeout [lsp garbage collector]
+    --  https://github.com/hinell/lsp-timeout.nvim
+    --  Stop inactive lsp servers until the buffer recover the focus.
+    "hinell/lsp-timeout.nvim",
+    dependencies = { "neovim/nvim-lspconfig" },
+    event = "LazyFile",
+    init = function()
+      vim.g["lsp-timeout-config"] = {
+        stopTimeout = 1000 * 60 * 10, -- Stop unused lsp servers after 10 min.
+        startTimeout = 2000, -- Force server restart if nvim can't in 2s.
+        silent = true, -- Notifications disabled
+      }
+    end,
+  },
+  --- LSP_SIGNATURE.NVIM
+  {
+    -- lsp_signature.nvim [auto params help]
+    -- https://github.com/ray-x/lsp_signature.nvim
+    "ray-x/lsp_signature.nvim",
+    event = "LazyFile",
+    opts = function()
+      -- Apply globals from 1-options.lua
+      local is_enabled = vim.g.lsp_signature_enabled
+      local round_borders = { border = "rounded" }
+      return {
+
+        -- Window mode
+        floating_window = is_enabled, -- Dislay it as floating window.
+        hi_parameter = "IncSearch", -- Color to highlight floating window.
+        handler_opts = round_borders, -- Window style
+
+        -- Hint mode
+        hint_enable = false, -- Display it as hint.
+        hint_prefix = "👈 ",
+
+        -- Aditionally, you can use <space>ui to toggle inlay hints.
+      }
+    end,
+    config = function(_, opts)
+      require("lsp_signature").setup(opts)
+    end,
+  },
+  -- INCRENAME
+  {
+    "smjonas/inc-rename.nvim",
+    opts = {},
   },
 }

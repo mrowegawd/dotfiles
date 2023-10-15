@@ -6,7 +6,7 @@ local action_set = require "telescope.actions.set"
 local conf = require("telescope.config").values
 
 local listwikis = function(opts)
-  local dir = as.wiki_path or opts.path
+  local dir = require("r.config").path.wiki_path or opts.path
   local list = {}
 
   local nvim_conf = io.popen(

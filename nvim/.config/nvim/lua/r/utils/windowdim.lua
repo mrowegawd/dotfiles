@@ -1,9 +1,11 @@
 -- Taken from: https://github.com/wincent/wincent
 local api, wo = vim.api, vim.wo
 
+local Util = require "r.utils"
+
 local autocmds = {}
 
-local focused_colorcolumn = as.tryjoin(as.tryrange(80, 256), ",")
+local focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
 
 local winhighlight_blurred = table.concat({
   "CursorLineNr:LineNr",
@@ -131,8 +133,10 @@ autocmds.mkview_filetype_blacklist = {
   ["mason"] = true,
 }
 
+local colorcolumn_width
+
 local focus_window = function()
-  local filetype, buftype = as.get_bo_buft()
+  local filetype, buftype = Util.buf.get_bo_buft()
 
   if autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
     wo.winhighlight = ""
@@ -151,17 +155,17 @@ local focus_window = function()
   else
     local ft = api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
     if ft == "markdown" or ft == "org" then
-      as.colorcolumn_width = 120
+      colorcolumn_width = 120
     else
-      as.colorcolumn_width = 80
+      colorcolumn_width = 80
     end
-    focused_colorcolumn = as.tryjoin(as.tryrange(as.colorcolumn_width, 256), ",")
+    focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
   end
 end
 
 local blur_window = function()
-  local filetype, _ = as.get_bo_buft()
+  local filetype, _ = Util.buf.get_bo_buft()
 
   if
     filetype == ""
@@ -200,7 +204,7 @@ end
 -- end
 
 local set_cursorline = function(active)
-  local filetype, _ = as.get_bo_buft()
+  local filetype, _ = Util.buf.get_bo_buft()
   if autocmds.cursorline_blacklist[filetype] ~= true then
     -- check jika window is floating, like TelescopePrompt
     if api.nvim_win_get_config(0).relative ~= "" then
@@ -222,7 +226,7 @@ autocmds.focus_gained = function()
 end
 
 autocmds.focus_lost = function()
-  set_cursorline(false)
+  set_cursorline(true)
   -- blur_window()
 end
 

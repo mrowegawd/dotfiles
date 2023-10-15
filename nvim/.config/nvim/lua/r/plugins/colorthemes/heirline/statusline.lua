@@ -3,7 +3,7 @@ local M = {}
 local utils = require "heirline.utils"
 local conditions = require "heirline.conditions"
 
-local highlight = as.highlight
+local highlight = require "r.config.highlights"
 local col_bg_default = highlight.get("Normal", "bg")
 local col_fg_default = highlight.get("Comment", "fg")
 
@@ -536,7 +536,7 @@ M.Session = {
 
 M.Overseer = {
   condition = function()
-    local ok, _ = as.safe_require "overseer"
+    local ok, _ = pcall(require, "overseer")
     if ok then
       return true
     end

@@ -178,7 +178,11 @@ return {
         ["<leader>"] = {
           name = "<Leader>",
           b = { name = "+buffer" },
-          d = { name = "+debug" },
+          d = {
+            name = "+debug",
+            a = { name = "+run/launch" },
+            t = { name = "+toggle" },
+          },
           D = { name = "+database" },
           f = { name = "+fzflua" },
           j = { name = "+harpoon" },

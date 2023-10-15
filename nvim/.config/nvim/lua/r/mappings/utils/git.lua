@@ -21,7 +21,9 @@ function M.diffview(bufnr)
   nnoremap("<Leader>gvh", "<CMD>DiffviewFileHistory %<CR>", { desc = "Git(diffview): file history", buffer = bufnr })
 
   nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): branch history", buffer = bufnr })
-  vnoremap( "<Leader>gvH", [[:'<'>DiffviewFileHistory<CR>]], { desc = "Git(diffview): file history (visual)", buffer = bufnr })
+  vnoremap("<Leader>gvH", [[:'<'>DiffviewFileHistory<CR>]],
+    { desc = "Git(diffview): file history (visual)", buffer = bufnr })
+  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git: compare two window with dif", buffer = bufnr })
 end
 
 function M.gitlinker(bufnr)
@@ -56,7 +58,8 @@ function M.signs(bufnr, gs)
   nnoremap("gq", gs.setqflist, { desc = "Git(gitsigns): collect git hunks on qf", buffer = bufnr })
 
   nnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>", { desc = "Git(gitsigns): stage hunk", buffer = bufnr })
-  vnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>", { desc = "Git(gitsigns): stage hunk (visual)", buffer = bufnr })
+  vnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>",
+    { desc = "Git(gitsigns): stage hunk (visual)", buffer = bufnr })
   nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): stage entire hunk buffer", buffer = bufnr })
   nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk", buffer = bufnr })
   nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk", buffer = bufnr })

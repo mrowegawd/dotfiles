@@ -1,4 +1,4 @@
--- local highlight = as.high:Wight
+local colorscheme = require("r.config").colorscheme
 
 return {
   ---------------------------------------------------------------------------
@@ -10,7 +10,7 @@ return {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
-      if as.colorscheme == "caret" then
+      if colorscheme == "caret" then
         return true
       end
       return false
@@ -25,7 +25,7 @@ return {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
-      if as.colorscheme == "doom-one" then
+      if colorscheme == "doom-one" then
         return true
       end
       return false
@@ -68,7 +68,7 @@ return {
     priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
       local mintheme = { "min-theme" }
-      if vim.tbl_contains(mintheme, as.colorscheme) then
+      if vim.tbl_contains(mintheme, colorscheme) then
         return true
       end
       return false
@@ -95,7 +95,7 @@ return {
     priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
       local solarized = { "solarized" }
-      if vim.tbl_contains(solarized, as.colorscheme) then
+      if vim.tbl_contains(solarized, colorscheme) then
         return true
       end
       return false
@@ -109,7 +109,7 @@ return {
     "dotsilas/darcubox-nvim",
     enabled = function()
       local colordarcubox = { "darcubox" }
-      if vim.tbl_contains(colordarcubox, as.colorscheme) then
+      if vim.tbl_contains(colordarcubox, colorscheme) then
         return true
       end
       return false
@@ -123,7 +123,7 @@ return {
     priority = 1000,
     enabled = function()
       local colormiasma = { "miasma" }
-      if vim.tbl_contains(colormiasma, as.colorscheme) then
+      if vim.tbl_contains(colormiasma, colorscheme) then
         return true
       end
       return false
@@ -136,7 +136,7 @@ return {
     priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
       local colorgithub = { "github_dark_dimmed", "github_dark", "github_dark_high_contrast" }
-      if vim.tbl_contains(colorgithub, as.colorscheme) then
+      if vim.tbl_contains(colorgithub, colorscheme) then
         return true
       end
       return false
@@ -151,7 +151,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      if as.colorscheme == "gruvbox" then
+      if colorscheme == "gruvbox" then
         return true
       end
       return false
@@ -179,7 +179,7 @@ return {
     requires = { "nvim-treesitter/nvim-treesitter" },
     enabled = function()
       local colordarkuladark = { "darcula-dark" }
-      if vim.tbl_contains(colordarkuladark, as.colorscheme) then
+      if vim.tbl_contains(colordarkuladark, colorscheme) then
         return true
       end
       return false
@@ -192,7 +192,7 @@ return {
     priority = 1000,
     enabled = function()
       local coloreverforest = { "everforest" }
-      if vim.tbl_contains(coloreverforest, as.colorscheme) then
+      if vim.tbl_contains(coloreverforest, colorscheme) then
         return true
       end
       return false
@@ -209,7 +209,7 @@ return {
       vim.g.gruvbox_material_background = "hard"
     end,
     enabled = function()
-      if as.colorscheme == "gruvbox-material" then
+      if colorscheme == "gruvbox-material" then
         return true
       end
       return false
@@ -221,7 +221,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      if as.colorscheme == "kanagawa" then
+      if colorscheme == "kanagawa" then
         return true
       end
       return false
@@ -261,7 +261,7 @@ return {
     lazy = false,
     enabled = function()
       local colormaterial = { "material-darker", "material-oceanic", "material" }
-      if vim.tbl_contains(colormaterial, as.colorscheme) then
+      if vim.tbl_contains(colormaterial, colorscheme) then
         return true
       end
       return false
@@ -361,7 +361,7 @@ return {
     priority = 1000,
     enabled = function()
       local colorscattppuccin = { "catppuccin", "catppuccin-latte" }
-      if vim.tbl_contains(colorscattppuccin, as.colorscheme) then
+      if vim.tbl_contains(colorscattppuccin, colorscheme) then
         return true
       end
 
@@ -447,7 +447,7 @@ return {
     lazy = false,
     enabled = function()
       local colorstokyonight = { "tokyonight", "tokyonight-night" }
-      if vim.tbl_contains(colorstokyonight, as.colorscheme) then
+      if vim.tbl_contains(colorstokyonight, colorscheme) then
         return true
       end
     end,
@@ -488,7 +488,7 @@ return {
     "romgrk/kyntell.vim",
     lazy = false,
     enabled = function()
-      if as.colorscheme == "kyntell" then
+      if colorscheme == "kyntell" then
         return true
       end
       return false

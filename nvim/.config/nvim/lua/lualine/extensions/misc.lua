@@ -1,13 +1,17 @@
 local M = {}
 
-local fmt, api, hg = string.format, vim.api, as.highlight
+local fmt, api = string.format, vim.api
+
+local hg = require "r.config.highlights"
 
 -- local clock = function()
 --     return " " .. os.date "%H:%M"
 -- end
 
+local toggle_number = 1
+
 local function qflabel()
-  return as.is_loclist() and "Location List" or "Quickfix List"
+  return require("r.utils").qf.is_loclist() and "Location List" or "Quickfix List"
 end
 
 local function ft_()
@@ -19,7 +23,7 @@ local function title()
     return ""
   end
 
-  if as.is_loclist() then
+  if require("r.utils").qf.is_loclist()() then
     return vim.fn.getloclist(0, { title = 0 }).title
   end
 
@@ -32,7 +36,7 @@ local term_plugins = function()
     local terms = require "toggleterm.terminal"
     local count_term = terms.get_all()
     if #count_term > 0 then
-      return fmt("   |  ﬑  %s/%s ", as.toggle_number, #count_term)
+      return fmt("   |  ﬑  %s/%s ", toggle_number, #count_term)
     end
   elseif ft_buf == "BufTerm" then
     return "bufterm"
