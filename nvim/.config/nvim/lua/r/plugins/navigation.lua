@@ -10,15 +10,6 @@ return {
     cmd = "Neotree",
     init = function()
       Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
-      --   vim.api.nvim_create_autocmd("BufEnter", {
-      --     desc = "Load NeoTree if entering a directory",
-      --     callback = function(args)
-      --       if fn.isdirectory(vim.api.nvim_buf_get_name(args.buf)) > 0 then
-      --         require("lazy").load { plugins = { "neo-tree.nvim" } }
-      --         vim.api.nvim_del_autocmd(args.id)
-      --       end
-      --     end,
-      --   })
     end,
     keys = {
       {
@@ -333,14 +324,6 @@ return {
           end,
         },
       }
-
-      -- opts.right = opts.right or {}
-      -- table.insert(opts.right, {
-      --   title = "Aerial",
-      --   ft = "aerial",
-      --   pinned = true,
-      --   open = "AerialOpen",
-      -- })
       return opts
     end,
   },

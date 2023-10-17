@@ -22,7 +22,7 @@ return {
         ruff_lsp = {
           keys = {
             {
-              "gac",
+              "<leader>co",
               function()
                 vim.lsp.buf.code_action {
                   apply = true,
@@ -39,8 +39,7 @@ return {
       },
       setup = {
         ruff_lsp = function()
-          local Util = require "r.utils"
-          Util.lsp.on_attach(function(client, _)
+          require("r.utils").lsp.on_attach(function(client, _)
             if client.name == "ruff_lsp" then
               -- Disable hover in favor of Pyright
               client.server_capabilities.hoverProvider = false
@@ -57,14 +56,15 @@ return {
     dependencies = {
       "nvim-neotest/neotest-python",
     },
-    opts = function(_, opts)
-      vim.list_extend(opts.adapters, {
-        require "neotest-python" {
-          dap = { justmycode = false },
-          runner = "pytest", -- unittest
+    opts = {
+      adapters = {
+        ["neotest-python"] = {
+          -- Here you can specify the settings for the adapter, i.e.
+          -- runner = "pytest",
+          -- python = ".venv/bin/python",
         },
-      })
-    end,
+      },
+    },
   },
   -- NVIM-DAP
   {

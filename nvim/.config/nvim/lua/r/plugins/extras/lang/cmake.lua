@@ -20,6 +20,16 @@ return {
       })
     end,
   },
+  -- NVIM-LINT
+  {
+    "mfussenegger/nvim-lint",
+    optional = true,
+    opts = {
+      linters_by_ft = {
+        cmake = { "cmakelint" },
+      },
+    },
+  },
   -- MASON
   {
     "mason.nvim",
