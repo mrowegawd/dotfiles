@@ -291,11 +291,11 @@ Util.cmd.augroup("DisableStatusline", {
 })
 
 -- Automatically resize windows when host resizes
-Util.cmd.augroup("AutoResizeWindows", {
-  event = { "BufNew", "BufRead" },
-  pattern = "*",
-  command = "tabdo wincmd =",
-})
+-- Util.cmd.augroup("AutoResizeWindows", {
+--   event = { "BufNew", "BufRead" },
+--   pattern = "*",
+--   command = "tabdo wincmd =",
+-- })
 
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
