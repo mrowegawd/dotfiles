@@ -59,7 +59,7 @@ return {
   --  ╰──────────────────────────────────────────────────────────╯
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    event = "LazyFile",
+    event = "VeryLazy",
     keys = {
       { "<Localleader>ql", "<CMD>LoadQFProject<CR>", desc = "Qf(qfsilet): load project" },
       { "<Localleader>qL", "<CMD>LoadQFGlobal<CR>", desc = "Qf(qfsilet): load global" },

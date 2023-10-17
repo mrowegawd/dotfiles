@@ -41,6 +41,20 @@ local tnoremap = function(...)
   map("t", ...)
 end
 
+local function cabbrev(short, long)
+  local cmdpos = #short + 1
+  vim.api.nvim_set_keymap("ca", short, "", {
+    expr = true,
+    callback = function()
+      if vim.fn.getcmdtype() == ":" and vim.fn.getcmdpos() == cmdpos then
+        return long
+      else
+        return short
+      end
+    end,
+  })
+end
+
 nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 
 --  ╭──────────────────────────────────────────────────────────╮
@@ -238,11 +252,6 @@ nnoremap("<Leader>rd", function()
   end
 end, { desc = "Misc: search devdocs" })
 
--- Multiple Cursor Replacement
--- http://www.kevinli.co/posts/2017-01-19-multiple-cursors-in-500-byses-of-vimscript/
--- vim.keymap.set("n", "cn", "*``cgn")
--- vim.keymap.set("n", "cn", "*``cgN")
-
 nnoremap("<Leader>rP", function()
   return print(fn.expand "%:p")
 end, { desc = "Misc: check cwd curfile" })
@@ -290,8 +299,10 @@ nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS                                                  │
 --  ╰──────────────────────────────────────────────────────────╯
+
 nnoremap("<c-w>v", "<CMD>vsplit<CR>", silent)
 nnoremap("<c-w>s", "<CMD>split<CR>", silent)
+nnoremap("<c-w>y", "<CMD>wincmd =<CR>", silent)
 
 nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 
@@ -302,14 +313,6 @@ nnoremap("<c-w>L", "<C-W>t <C-W>H", {
   desc = "Windows: change two vertically split windows to horizontal splits",
 })
 
--- nnoremap("<Localleader>ws", "<C-W>t <C-W>K", {
---     desc = "change two horizontally split windows to vertical splits",
---     silent = true,
--- })
--- nnoremap("<Localleader>wv", "<C-W>t <C-W>H", {
---     desc = "change two vertically split windows to horizontal splits",
---     silent = true,
--- })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ NAVIGATIONS                                              │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -369,27 +372,27 @@ nnoremap("zL", "<Nop>") -- disable
 nnoremap("Q", "<Nop>", {}) -- Disable Ex mode:
 nnoremap("Q", "<F1>", {}) -- Disable Ex mode:
 
--- vim.cmd [[
--- cab <silent> Wq wq
--- cab <silent> Q! q!
--- cab <silent> Q!! q!
--- cab <silent> q!! q!
--- cab <silent> WQ up
--- cab <silent> Q1 q
--- cab <silent> W1 updatee!
--- cab <silent> W! update!
--- cab <silent> w; update!
--- cab <silent> W; update!
--- cab <silent> W update
--- cab <silent> Q q
--- cab <silent> w@ update!
--- cab <silent> W@ update!
+--  ╭──────────────────────────────────────────────────────────╮
+--  │ CABBREV                                                  │
+--  ╰──────────────────────────────────────────────────────────╯
 
--- cab <silent> Bd bd!
--- cab <silent> BD bd!
--- cab <silent> bD bd!
--- cab <silent> Bd bd!
--- cab <silent> bd bd!]]
+cabbrev("Wq", "wq")
+cabbrev("Q!", "q!")
+cabbrev("Q!!", "q!")
+cabbrev("Q1", "q")
+cabbrev("Q", "q")
+cabbrev("q!!", "q!")
+cabbrev("WQ", "up")
+cabbrev("W1", "update!")
+cabbrev("W;", "update!")
+cabbrev("w;", "update!")
+cabbrev("W", "update!")
+cabbrev("W!", "update!")
+cabbrev("Bd", "bd!")
+cabbrev("BD", "bd!")
+cabbrev("bD", "bd!")
+cabbrev("Bd", "bd!")
+cabbrev("bd", "bd!")
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDS                                                 │
