@@ -7,20 +7,10 @@ not_in_tmux() {
 	[ -z "$TMUX" ]
 }
 
-# TODO: create a session in current cwd
-# if [[ "$1" == "p" ]]; then
-# 	if not_in_tmux; then
-# 		tmux new-session -As "$(basename $(pwd))" -c "$(basename $(pwd))"
-# 	else
-# 		tmux new-session -d -s "$(basename $(pwd))" -c "$(basename $(pwd))"
-# 	fi
-# 	exit 1
-# fi
-
 if [[ -z "$TMUX" ]]; then
 	select=$(fzf <"$MARKED_PWD")
 else
-	select=$(fzf-tmux -p 80% <"$MARKED_PWD")
+	select=$(fzf-tmux -xC -w '50%' -h '40%' <"$MARKED_PWD")
 fi
 
 [[ -z $select ]] && exit

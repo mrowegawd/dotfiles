@@ -15,7 +15,7 @@ fz_tmux_selses() {
 	SELECTSESS=$(tmux list-sessions -F "$fmt" | sed 's/|(tmux-1)/ [attached]/g' |
 		sed 's/|(tmux-0)//g' |
 		sed 's/:|/ - /g' |
-		fzf-tmux -p |
+		fzf-tmux -xC -w '50%' -h '40%' |
 		cut -d"-" -f1)
 
 	[[ -z $SELECTSESS ]] && exit
