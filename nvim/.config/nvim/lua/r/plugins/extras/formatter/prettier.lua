@@ -5,20 +5,20 @@ return {
       table.insert(opts.ensure_installed, "prettier")
     end,
   },
-      {
+  {
     "nvimtools/none-ls.nvim",
     optional = true,
     opts = function(_, opts)
       local nls = require "null-ls"
       opts.sources = opts.sources or {}
       table.insert(opts.sources, nls.builtins.formatting.prettier)
-        end,
-        },
+    end,
+  },
   {
     "stevearc/conform.nvim",
     optional = true,
     opts = {
-        formatters_by_ft = {
+      formatters_by_ft = {
         ["javascript"] = { "prettier" },
         ["javascriptreact"] = { "prettier" },
         ["typescript"] = { "prettier" },
@@ -35,7 +35,7 @@ return {
         ["markdown.mdx"] = { "prettier" },
         ["graphql"] = { "prettier" },
         ["handlebars"] = { "prettier" },
-        },
-        },
+      },
+    },
   },
 }

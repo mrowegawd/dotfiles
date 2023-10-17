@@ -19,7 +19,6 @@ function M.setup(_, opts)
   end
 
   for _, key in ipairs { "format_on_save", "format_after_save" } do
-    print(vim.inspect(opts))
     if opts[key] then
       Util.warn(
         ("Don't set `opts.%s` for `conform.nvim`.\n**LazyVim** will use the conform formatter automatically"):format(

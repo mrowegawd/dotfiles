@@ -149,13 +149,9 @@ return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
-    enabled = false,
     event = "VeryLazy",
     opts = {
       modes = {
-        search = {
-          search = { trigger = ";" },
-        },
         char = {
           -- Jika key tidak di set disini, efek key akan di ignore
           keys = { "f", "F", "t", "T" },
@@ -164,11 +160,10 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end,       desc = "Misc(flash)" },
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
       { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
-      { "r", mode = "o",               function() require("flash").remote() end,     desc = "Misc(flash): remote" },
-      { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search",
-      },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Misc(flash): remote" },
+      { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search" },
     },
   },
   -- NVIM-HLSLENS
@@ -187,41 +182,19 @@ return {
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
     },
+    -- stylua: ignore
     keys = {
       { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files" },
       { "<Leader>bf", "<CMD>FzfLua buffers<CR>", desc = "Buffer(Fzflua): open" },
-      {
-        "<Leader>bg",
-        "<CMD>FzfLua blines<CR>",
-        desc = "Buffer(FzfLua): live_grep on curbuf",
-      },
-      {
-        "<Leader>bG",
-        "<CMD>FzfLua lines<CR>",
-        desc = "Buffer(Fzflua): live_grep on buffers",
-      },
+      { "<Leader>bg", "<CMD>FzfLua blines<CR>", desc = "Buffer(FzfLua): live_grep on curbuf" },
+      { "<Leader>bG", "<CMD>FzfLua lines<CR>", desc = "Buffer(Fzflua): live_grep on buffers" },
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
-      {
-        "<Leader>bo",
-        "<CMD>FzfLua oldfiles<CR>",
-        desc = "Buffer(Fzflua): oldfiles",
-      },
+      { "<Leader>bo", "<CMD>FzfLua oldfiles<CR>", desc = "Buffer(Fzflua): oldfiles" },
       { "<Leader>fo", "<CMD>FzfLua files cwd=~/moxconf/development/dotfiles<CR>", desc = "Fzflua: dotfiles" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
-      {
-        "<Leader>fl",
-        "<CMD>FzfLua resume<CR>",
-        desc = "Fzflua: resume (last search)",
-      },
+      { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
-      {
-        "<Leader>fg",
-        "<CMD>FzfLua grep_visual<CR>",
-        desc = "Fzflua: live grep (visual)",
-        mode = {
-          "v",
-        },
-      },
+      { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v", } },
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
       { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
@@ -255,11 +228,7 @@ return {
         end,
         desc = "Fzflua: plugin files",
       },
-      {
-        "<Leader>fQ",
-        [[<CMD>lua require("fzf-lua").quickfix({prompt = "    " })<CR>]],
-        desc = "fzflua(qf): select qf list",
-      },
+      { "<Leader>fQ", [[<CMD>lua require("fzf-lua").quickfix({prompt = "    " })<CR>]], desc = "Fzflua(qf): select qf list" },
       {
         "<Leader>fq",
         function()
@@ -276,51 +245,16 @@ return {
             .. table.concat(qf_ntbl, " ")
 
           return require("fzf-lua").live_grep {
-            -- debug = true,
             winopts = {
               title = format_title("[QF] Grep", " "),
               height = 0.85,
               width = 0.90,
-              -- preview = {
-              --   vertical = "up:60%",
-              --   horizontal = "left:60%",
-              --   layout = "flex",
-              -- },
             },
             cmd = pcmd,
           }
         end,
         desc = "fzflua(qf): grep qf items",
       },
-      -- {
-      --   "<Leader>bf",
-      --   function()
-      --     return require("fzf-lua").buffers {
-      --       winopts = {
-      --         split = "botright new",
-      --         preview = { hidden = "hidden" },
-      --         -- width = 0.5,
-      --         -- height = 0.33,
-      --       },
-      --     }
-      --   end,
-      --   desc = "Buffer(Fzflua): open",
-      -- },
-      -- {
-      --   "<c-v>",
-      --   function()
-      --     return require("fzf-lua").complete_path {
-      --       winopts = {
-      --         relative = "cursor",
-      --         height = 0.33,
-      --         width = 0.33,
-      --       },
-      --       cmd = "fd --color never --type f --hidden --follow",
-      --     }
-      --   end,
-      --   mode = { "i" },
-      --   desc = "Fzflua: complete path",
-      -- },
     },
     config = function()
       local actions = require "fzf-lua.actions"
@@ -1416,7 +1350,7 @@ return {
             desc = "input replace vim command",
           },
           ["show_option_menu"] = {
-            map = "<leader>o",
+            map = "<Leader>o",
             cmd = "<cmd>lua require('spectre').show_options()<CR>",
             desc = "show option",
           },
@@ -1431,7 +1365,7 @@ return {
             desc = "replace all",
           },
           ["change_view_mode"] = {
-            map = "<leader>v",
+            map = "<Leader>v",
             cmd = "<cmd>lua require('spectre').change_view()<CR>",
             desc = "change result view mode",
           },
