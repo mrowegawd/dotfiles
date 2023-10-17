@@ -379,7 +379,7 @@ nnoremap("Q", "<F1>", {}) -- Disable Ex mode:
 cabbrev("Wq", "wq")
 cabbrev("Q!", "q!")
 cabbrev("Q!!", "q!")
-cabbrev("Q1", "q")
+cabbrev("Q1", "q!")
 cabbrev("Q", "q")
 cabbrev("q!!", "q!")
 cabbrev("WQ", "up")
