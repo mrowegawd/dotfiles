@@ -108,13 +108,6 @@ end, { desc = "Folds: go prev closed" })
 
 nnoremap("zm", "zM", { desc = "Folds: close all" })
 
--- nnoremap(
---     "<c-space>",
---     [[@=(foldlevel('.')?'zA':"\<Space>")<CR>]],
---     { desc = "Fold: toggle fold recursive" }
--- ) -- Toggle open close fold (recursive)
--- nnoremap("<Localleader>z", [[zMzvzz]], { desc = "Fold: center viewport" }) -- Refocus folds
-
 -- Jump next/prev fold
 -- nnoremap("zn", "zjzz", opts)
 -- nnoremap("zp", "zkzz", opts)

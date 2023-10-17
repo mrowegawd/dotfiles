@@ -203,7 +203,7 @@ return {
 
               -- Want to move one keybind into the other? `remap_key` moves the data of the
               -- first keybind to the second keybind, then unbinds the first keybind.
-              -- keybinds.remap_key("norg", "n", "<C-Space>", "<Leader>t")
+              -- keybinds.remap_key("norg", "n", "<C-c>", "<Leader>t")
 
               -- Remap unbinds the current key then rebinds it to have a different action
               -- associated with it.
@@ -211,11 +211,11 @@ return {
               --
               -- Sometimes you may simply want to rebind the Neorg action something is bound to
               -- versus remapping the entire keybind. This remap is essentially the same as if you
-              -- did `keybinds.remap("norg", "n", "<C-Space>, "<cmd>Neorg keybind norg core.norg.qol.todo_items.todo.task_done<CR>")
+              -- did `keybinds.remap("norg", "n", "<C-c>, "<cmd>Neorg keybind norg core.norg.qol.todo_items.todo.task_done<CR>")
               -- keybinds.remap_event(
               --     "norg",
               --     "n",
-              --     "<C-Space>",
+              --     "<C-c>",
               --     "core.norg.qol.todo_items.todo.task_done"
               -- )
               -- ========================================================
@@ -449,7 +449,7 @@ return {
             org_cycle = "za",
             org_meta_return = "<F12>", -- Add heading, item or row
             org_return = "<F11>",
-            org_global_cycle = "<c-space>",
+            org_global_cycle = "<a-o>",
             org_archive_subtree = "<prefix>$",
             org_set_tags_command = "<Leader>t",
             org_toggle_archive_tag = "<Leader>T",

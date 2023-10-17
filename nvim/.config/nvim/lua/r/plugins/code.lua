@@ -168,7 +168,7 @@ return {
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<c-l>"] = cmp.mapping.confirm { select = false },
           ["<cr>"] = cmp.mapping.confirm { select = false },
-          ["<C-space>"] = cmp.mapping(function(_)
+          ["<C-y>"] = cmp.mapping(function(_)
             -- if c_cmp.visible() then
             --   c_cmp.abort()
             if callme == 0 then

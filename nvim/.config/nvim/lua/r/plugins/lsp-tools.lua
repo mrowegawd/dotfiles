@@ -440,7 +440,7 @@ return {
           close = { "<Esc>", "q", "<leader><TAB>" },
           goto_location = "<Cr>",
           focus_location = "o",
-          hover_symbol = "<C-space>",
+          hover_symbol = "K",
           toggle_preview = "P",
           rename_symbol = "r",
           code_actions = "a",

@@ -51,8 +51,7 @@ return {
 
       -- Use <c-j> to trigger snippets
       keyset("i", "<c-j>", "<Plug>(coc-snippets-expand-jump)")
-      -- Use <c-space> to trigger completion
-      keyset("i", "<c-space>", "coc#refresh()", { silent = true, expr = true })
+      keyset("i", "<c-y>", "coc#refresh()", { silent = true, expr = true })
 
       -- Use `[g` and `]g` to navigate diagnostics
       -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
