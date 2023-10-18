@@ -33,19 +33,19 @@ return {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
-      -- {
-      --   "ten3roberts/window-picker.nvim",
-      --   name = "window-picker",
-      --   config = function()
-      --     local picker = require "window-picker"
-      --     picker.setup()
-      --     picker.pick_window = function()
-      --       return picker.select({ hl = "WindowPicker", prompt = "Pick window: " }, function(winid)
-      --         return winid or nil
-      --       end)
-      --     end
-      --   end,
-      -- },
+      {
+        "ten3roberts/window-picker.nvim",
+        name = "window-picker",
+        config = function()
+          local picker = require "window-picker"
+          picker.setup()
+          picker.pick_window = function()
+            return picker.select({ hl = "WindowPicker", prompt = "Pick window: " }, function(winid)
+              return winid or nil
+            end)
+          end
+        end,
+      },
     },
     opts = function()
       return {

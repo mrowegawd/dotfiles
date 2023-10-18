@@ -120,7 +120,7 @@ M.mode = function()
     mode_colors = {
       ["STTUSLINE_NORMAL_MODE"] = { fg = sttsline_colors.blue, bg = colors.mode_bg },
       ["STTUSLINE_INSERT_MODE"] = { fg = sttsline_colors.green, bg = colors.mode_bg },
-      ["STTUSLINE_VISUAL_MODE"] = { fg = sttsline_colors.purple, bg = colors.mode_bg },
+      ["STTUSLINE_VISUAL_MODE"] = { fg = sttsline_colors.purple, bg = sttsline_utils.magenta },
       ["STTUSLINE_NTERMINAL_MODE"] = { fg = sttsline_colors.gray, bg = colors.mode_bg },
       ["STTUSLINE_TERMINAL_MODE"] = { fg = sttsline_colors.cyan, bg = colors.mode_bg },
       ["STTUSLINE_REPLACE_MODE"] = { fg = sttsline_colors.red, bg = colors.mode_bg },
@@ -252,6 +252,30 @@ M.filename = function()
 
   return Filename
 end
+M.filereadonly = function()
+  local Readonly = require("sttusline.component").new()
+
+  Readonly.set_config {
+    color = { fg = colors.modified_fg, bg = colors.base_bg },
+  }
+  Readonly.set_event(M.set_event)
+
+  Readonly.set_update(function()
+    local nomodified = vim.bo[0].readonly
+
+    if nomodified then
+      return sttsline_utils.add_highlight_name("[]ReadOnly", "STTUSLINE_READONLYC")
+    end
+
+    return ""
+  end)
+
+  Readonly.set_onhighlight(function()
+    hl(0, "STTUSLINE_READONLYC", Readonly.get_config().color)
+  end)
+
+  return Readonly
+end
 M.branch = function()
   local Branch = require("sttusline.component").new()
 
@@ -275,6 +299,8 @@ M.branch = function()
           return sttsline_utils.add_highlight_name(icon .. current_branch, "STTUSLINE_GITBRANCHC")
         end
       end
+    else
+      return ""
     end
   end)
 

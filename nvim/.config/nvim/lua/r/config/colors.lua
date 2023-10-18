@@ -284,6 +284,10 @@ local function colorscheme_overrides()
     ["night-owl"] = {
       { Comment = { fg = { from = "Directory", alter = 0.3 } } },
       { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
+      { Search = { bg = { from = "WarningMsg", attr = "fg", alter = 5 }, fg = { from= "Normal", attr="fg", alter = 5 }  } },
+      { FlashMatch = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
+      { FlashLable = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
+      { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
       { CursorLine = { bg = { from = "Normal", alter = -0.8 } } },
       { TreesitterContextSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
       { TreesitterContextLineNumber = { inherit = "LineNr" } },

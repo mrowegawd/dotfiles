@@ -25,6 +25,7 @@ return {
         components = {
           component.mode(),
           component.filename(),
+          component.filereadonly(),
           component.branch(),
           component.gitdiff(),
           "%=",
