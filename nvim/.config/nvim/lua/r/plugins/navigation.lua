@@ -307,19 +307,19 @@ return {
         },
         keys = {
           -- increase width
-          ["<c-Right>"] = function(win)
+          ["<a-L>"] = function(win)
             win:resize("width", 2)
           end,
           -- decrease width
-          ["<c-Left>"] = function(win)
+          ["<a-H>"] = function(win)
             win:resize("width", -2)
           end,
           -- increase height
-          ["<c-Up>"] = function(win)
+          ["<a-K>"] = function(win)
             win:resize("height", 2)
           end,
           -- decrease height
-          ["<c-Down>"] = function(win)
+          ["<a-J>"] = function(win)
             win:resize("height", -2)
           end,
         },
