@@ -94,6 +94,7 @@ return {
           lua = { "stylua" },
           fish = { "fish_indent" },
           sh = { "shfmt" },
+          ["_"] = { "trim_whitespace" },
         },
         -- LazyVim will merge the options you set here with builtin formatters.
         -- You can also define any custom formatters here.
