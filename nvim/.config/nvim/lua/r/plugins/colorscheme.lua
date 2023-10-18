@@ -4,6 +4,19 @@ return {
   ---------------------------------------------------------------------------
   -- Consistent color
   ---------------------------------------------------------------------------
+  {
+    "oxfist/night-owl.nvim",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    enabled = function()
+      local mintheme = { "night-owl" }
+      if vim.tbl_contains(mintheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {},
+  },
   -- CARET.NVIM
   {
     "projekt0n/caret.nvim",

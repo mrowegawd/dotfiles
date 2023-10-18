@@ -1,7 +1,3 @@
--- if not as then
---   return
--- end
-
 local Util = require "r.utils"
 
 local highlight = require "r.config.highlights"
@@ -12,7 +8,7 @@ local general_overrides = function()
     -- { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
     { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
-    { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
+    { Directory = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
     { CursorLine = { bg = { from = "Normal", alter = -0.5 } } },
     { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
@@ -25,10 +21,11 @@ local general_overrides = function()
     { Comment = { fg = { from = "Directory", attr = "fg", alter = -0.3 }, italic = true } },
     { Folded = { bg = { from = "Directory", attr = "fg", alter = -0.4 } } },
     { EndOfBuffer = { bg = "NONE" } },
+    { Statusline = { inherit = "ColorColumn"} } ,
     { SignColumn = { bg = "NONE" } },
     { MarkSignNumHL = { inherit = "SpecialKey", bg = "NONE" } },
     { Normal = { fg = { from = "Directory", alter = 0.3 } } },
-    { WinSeparator = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } },
+    { WinSeparator = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
 
     -----------------------------------------------------------------------------//
     --  Spell
@@ -283,6 +280,16 @@ local function colorscheme_overrides()
       { CursorLine = { bg = { from = "Normal", alter = -0.1 } } },
       { WinSeparator = { bg = "NONE" } },
       { Comment = { fg = { from = "Comment", alter = -0.15 } } },
+    },
+    ["night-owl"] = {
+      { Comment = { fg = { from = "Directory", alter = 0.3 } } },
+      { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
+      { CursorLine = { bg = { from = "Normal", alter = -0.8 } } },
+      { TreesitterContextSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      { TreesitterContextLineNumber = { inherit = "LineNr" } },
+      { TreesitterContext = { bg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } } ,
+      { Statusline = { bg = {from = "ColorColumn", attr = "bg", alter = "0.15" } } },
+      { CmpItemAbbr = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
     },
     ["tokyonight"] = {
       { Comment = { fg = { from = "Directory", alter = -0.2 } } },

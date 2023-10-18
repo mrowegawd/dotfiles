@@ -256,7 +256,6 @@ function M.infoBaseColorsTheme()
   local pmenusel = "PmenuSel"
 
   local winseparator = "WinSeparator"
-  local winseparatorCUS = "WinSeparatorCUS"
 
   local cmpmatchabbr = "CmpItemAbbrMatch"
   local cmpitemabbr = "CmpItemAbbr"
@@ -273,7 +272,6 @@ function M.infoBaseColorsTheme()
   local pmenusel_bg = highlight.get(pmenusel, "bg")
 
   local winseparator_fg = highlight.get(winseparator, "fg")
-  local winseparator_bg = highlight.get(winseparatorCUS, "fg")
 
   local cmpmatchabbr_fg = highlight.get(cmpmatchabbr, "fg")
   local cmpitemabbr_fg = highlight.get(cmpitemabbr, "fg")
@@ -294,7 +292,6 @@ FZF_FG (Pmenu) fg: %s
 FZF_BG_SELECTION (PmenuSel) bg: %s
 
 ACTIVE_FOREGROUND_WINSEPARATOR (WinSeparator) fg: %s
-FOREGROUND_WINSEPARATOR (WinSeparator) bg: %s
 
 FZF_BG_MATCH (CmpItemAbbrMatch) fg: %s
 FZF_FG_ITEM (CmpItemAbbr) fg: %s
@@ -306,7 +303,6 @@ FZF_FG_ITEM_FUZZY (CmpItemAbbrMatchFuzzy) fg: %s ]],
       pmenu_fg,
       pmenusel_bg,
       winseparator_fg,
-      winseparator_bg,
       cmpmatchabbr_fg,
       cmpitemabbr_fg,
       cmpmatchabbrfuzzy_fg

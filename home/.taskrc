@@ -101,4 +101,5 @@ report.day.columns=id,type,eta,tags,project,description.desc,planned,priority,du
 uda.taskwarrior-tui.keyconfig.next-tab=>
 uda.taskwarrior-tui.keyconfig.previous-tab=<
 uda.taskwarrior-tui.keyconfig.delete=D
+# uda.taskwarrior-tui.keyconfig.filter=f
 # uda.taskwarrior-tui.task-report.prompt-on-delete=true

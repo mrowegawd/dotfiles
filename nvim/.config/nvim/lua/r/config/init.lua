@@ -8,11 +8,11 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "tokyonight-night"
+local colorscheme = "night-owl"
 
 _G.base = {}
 
-local options = {
+local base_options = {
   g = {
     -- All these options are toggleable with <space + l + u>
     autoformat_enabled = false, -- Enable auto formatting at start.
@@ -30,7 +30,7 @@ local options = {
   },
 }
 
-for scope, table in pairs(options) do
+for scope, table in pairs(base_options) do
   for setting, value in pairs(table) do
     vim[scope][setting] = value
   end

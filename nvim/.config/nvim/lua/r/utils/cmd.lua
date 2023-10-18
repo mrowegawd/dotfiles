@@ -2,14 +2,6 @@ local api, fmt = vim.api, string.format
 
 local M = {}
 
--- function M.warn(msg, name)
---   vim.notify(msg, L.WARN, { title = name or "init.lua" })
--- end
-
--- function M.error(msg, name)
---   vim.notify(msg, L.ERROR, { title = name or "init.lua" })
--- end
-
 function M.fold(callback, list, accum)
   accum = accum or {}
   for k, v in pairs(list) do

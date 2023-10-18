@@ -1,7 +1,50 @@
 return {
+  -- STTUSLINE
+  {
+    "sontungexpt/sttusline",
+    event = "UIEnter",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+
+    opts = function()
+      local component = require "r.plugins.colorthemes.sttusline.components"
+      return {
+        -- 0 | 1 | 2 | 3
+        -- recommended: 3
+        laststatus = 3,
+        disabled = {
+          filetypes = {
+            "alpha",
+            -- "NvimTree",
+            -- "lazy",
+          },
+          buftypes = {
+            -- "terminal",
+          },
+        },
+        components = {
+          "mode",
+          "filename",
+          component.branch(),
+          "%=",
+          "git-diff",
+          "diagnostics",
+          "lsps-formatters",
+          "copilot",
+          "indent",
+          "encoding",
+          "pos-cursor",
+          "pos-cursor-progress",
+          component.datetime(),
+        },
+      }
+    end,
+  },
   -- LUALINE
   {
     "nvim-lualine/lualine.nvim",
+    enabled = false,
     event = "VeryLazy",
     init = function()
       vim.g.lualine_laststatus = vim.o.laststatus

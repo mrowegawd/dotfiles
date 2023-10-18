@@ -468,7 +468,6 @@ return {
   -- DROPBAR
   {
     "Bekaboo/dropbar.nvim",
-    enabled = false,
     event = "LazyFile",
     -- stylua: ignore
     keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
@@ -483,17 +482,17 @@ return {
       require("dropbar").setup {
         general = {
           update_interval = 100,
-          -- enable = function(buf, win)
-          --   local b, w = vim.bo[buf], vim.wo[win]
-          --   local decor = ui.decorations.get { ft = b.ft, bt = b.bt, setting = "winbar" }
-          --   return decor ~= nil
-          --     and decor.ft ~= false
-          --     and decor.bt ~= false
-          --     and b.bt == ""
-          --     and not w.diff
-          --     and not api.nvim_win_get_config(win).zindex
-          --     and api.nvim_buf_get_name(buf) ~= ""
-          -- end,
+          enable = function(buf, win)
+            local b, w = vim.bo[buf], vim.wo[win]
+            local decor = Util.uisec.decoration_get { ft = b.ft, bt = b.bt, setting = "winbar" }
+            return decor ~= nil
+              and decor.ft ~= false
+              and decor.bt ~= false
+              and b.bt == ""
+              and not w.diff
+              and not api.nvim_win_get_config(win).zindex
+              and api.nvim_buf_get_name(buf) ~= ""
+          end,
         },
         icons = {
           kinds = {

@@ -163,19 +163,19 @@ return {
         popup = {
           border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 } },
         },
-        cmdline_popup = {
-          position = {
-            row = -5,
-            col = "50%",
-          },
-          size = {
-            width = "auto",
-            height = "auto",
-          },
-        },
-        confirm = {
-          border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 }, text = { top = "" } },
-        },
+        -- cmdline_popup = {
+        --   position = {
+        --     row = -5,
+        --     col = "50%",
+        --   },
+        --   size = {
+        --     width = "auto",
+        --     height = "auto",
+        --   },
+        -- },
+        -- confirm = {
+        --   border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 }, text = { top = "" } },
+        -- },
         -- popupmenu = {
         --   relative = "editor",
         --   position = { row = -5, col = "50%" },
