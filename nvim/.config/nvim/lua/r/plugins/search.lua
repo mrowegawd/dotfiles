@@ -1277,12 +1277,6 @@ return {
       },
     },
     opts = function()
-      Util.cmd.augroup("SpectreClose", {
-        event = { "FileType" },
-        pattern = { "spectre_panel" },
-        command = [[setlocal nofoldenable | nnoremap <buffer>q <cmd>q<CR>]],
-      })
-
       highlight.plugin("Spectre", {
         {
           TargetKeyword = {
