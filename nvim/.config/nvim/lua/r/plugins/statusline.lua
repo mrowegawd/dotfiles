@@ -2,11 +2,10 @@ return {
   -- STTUSLINE
   {
     "sontungexpt/sttusline",
-    event = "UIEnter",
-    dependencies = {
+    event = "BufEnter",
+    de1endencies = {
       "nvim-tree/nvim-web-devicons",
     },
-
     opts = function()
       local component = require "r.plugins.colorthemes.sttusline.components"
       return {
@@ -24,15 +23,16 @@ return {
           },
         },
         components = {
-          "mode",
-          "filename",
+          component.mode(),
+          component.filename(),
           component.branch(),
+          component.gitdiff(),
           "%=",
-          "git-diff",
-          "diagnostics",
-          "lsps-formatters",
+          component.trailing(),
+          component.mixindent(),
+          component.diagnostics(),
+          component.lsp_notify(),
           "copilot",
-          "indent",
           "encoding",
           "pos-cursor",
           "pos-cursor-progress",
@@ -113,8 +113,7 @@ return {
   -- HEIRLINE (disabled)
   {
     "rebelot/heirline.nvim",
-    event = "UIEnter",
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     enabled = false,
     priority = 500,
     config = function()

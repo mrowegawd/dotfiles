@@ -1,4 +1,4 @@
-local fn = vim.fn
+local fn, fmt = vim.fn, string.format
 local hl = vim.api.nvim_set_hl
 local get_option = vim.api.nvim_buf_get_option
 
@@ -6,10 +6,17 @@ local sttsline_utils = require "sttusline.utils"
 local sttsline_colors = require "sttusline.utils.color"
 
 local Util = require "r.utils"
+
+local modules = Util.lsp.lazy_require {
+  sources = "r.plugins.colorthemes.sttusline.diagnostic-sources",
+}
+
 local highlight = require "r.config.highlights"
+local icons = require("r.config").icons
 
 local col_bg_StatusLine = highlight.get("StatusLine", "bg")
 local col_bg_ErrorMsg = highlight.get("ErrorMsg", "fg")
+
 local ICON_HIGHLIGHT = "STTUSLINE_FILE_ICON"
 
 local colors = {
@@ -22,10 +29,46 @@ local colors = {
   modified_fg = highlight.tint(col_bg_ErrorMsg, 0),
 }
 
+local exclude = {
+  ["NvimTree"] = true,
+  ["capture"] = true,
+  ["dap-repl"] = true,
+  ["dap-terminal"] = true,
+  ["dapui_breakpoints"] = true,
+  ["dapui_console"] = true,
+  ["dapui_scopes"] = true,
+  ["dapui_stacks"] = true,
+  ["dapui_watches"] = true,
+  ["help"] = true,
+  ["mind"] = true,
+  ["neo-tree"] = true,
+  ["noice"] = true,
+  ["prompt"] = true,
+  ["scratch"] = true,
+  ["terminal"] = true,
+  ["toggleterm"] = true,
+  ["TelescopePrompt"] = true,
+} -- Ignore float windows and exclude filetype
+
 local M = {}
+
+M.set_event = {
+  "WinEnter",
+  "BufEnter",
+  "BufNewFile",
+  "SessionLoadPost",
+  "FileChangedShellPost",
+  "VimResized",
+  -- "Filetype",
+  "CursorMoved",
+  "CursorMovedI",
+  "ModeChanged",
+}
 
 M.mode = function()
   local Mode = require "sttusline.components.mode"
+
+  Mode.set_event(M.set_event)
 
   Mode.set_config {
     modes = {
@@ -100,17 +143,17 @@ M.datetime = function()
 
   Datetime.set_update(function()
     local style = Datetime.get_config().style
-    local fmt = style
+    local time_Fmt = style
     if style == "default" then
-      fmt = "%A, %B %d | %H.%M"
+      time_Fmt = "%A, %B %d | %H.%M"
     elseif style == "us" then
-      fmt = "%m/%d/%Y"
+      time_Fmt = "%m/%d/%Y"
     elseif style == "uk" then
-      fmt = "%d/%m/%Y"
+      time_Fmt = "%d/%m/%Y"
     elseif style == "iso" then
-      fmt = "%Y-%m-%d"
+      time_Fmt = "%Y-%m-%d"
     end
-    return os.date(fmt) .. ""
+    return os.date(time_Fmt) .. ""
   end)
   return Datetime
 end
@@ -244,10 +287,73 @@ end
 M.diagnostics = function()
   local Diagnostics = require("sttusline.component").new()
 
-  local diag_source = modules.sources.sources
-  local get_diagnostics = modules.sources.get_diagnostics
+  Diagnostics.set_event(M.set_event)
 
-  Diagnostics.set_update(function() end)
+  Diagnostics.set_update(function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local diagnostics_count
+    local last_diagnostics_count = {}
+    local result = {}
+
+    if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "i" then
+      local diag_source = modules.sources.get_diagnostics { "nvim_diagnostic" }
+
+      local error_count, warning_count, info_count, hint_count = 0, 0, 0, 0
+
+      for _, data in pairs(diag_source) do
+        error_count = error_count + data.error
+        warning_count = warning_count + data.warn
+        info_count = info_count + data.info
+        hint_count = hint_count + data.hint
+      end
+      diagnostics_count = {
+        error = error_count,
+        warn = warning_count,
+        info = info_count,
+        hint = hint_count,
+      }
+      -- Save count for insert mode
+      last_diagnostics_count[bufnr] = diagnostics_count
+    else -- Use cached count in insert mode with update_in_insert disabled
+      diagnostics_count = last_diagnostics_count[bufnr] or { error = 0, warn = 0, info = 0, hint = 0 }
+    end
+
+    local always_visible = false
+
+    -- format the counts with symbols and highlights
+    local symbols = {
+      error = icons.diagnostics.Error,
+      warn = icons.diagnostics.Warn,
+      info = icons.diagnostics.Info,
+      hint = icons.diagnostics.Hint,
+    }
+    local sections = { "error", "warn", "info", "hint" }
+    -- local colored = true
+    -- local highlight_groups = { "error", "warn", "info", "hint" }
+
+    -- if colored then
+    --   local colorsss, bgs = {}, {}
+    --   for name, hll in pairs(highlight_groups) do
+    --     colorsss[name] = self:format_hl(hll)
+    --     bgs[name] = modules.utils.extract_highlight_colors(colorsss[name]:match "%%#(.-)#", "bg")
+    --   end
+    --   local previous_section, padding
+    --   for _, section in ipairs(sections) do
+    --     if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
+    --       padding = previous_section and (bgs[previous_section] ~= bgs[section]) and " " or ""
+    --       previous_section = section
+    --       table.insert(result, colorsss[section] .. padding .. symbols[section] .. diagnostics_count[section])
+    --     end
+    --   end
+    -- else
+    for _, section in ipairs(sections) do
+      if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
+        table.insert(result, symbols[section] .. diagnostics_count[section])
+      end
+    end
+
+    return table.concat(result, " ")
+  end)
 
   return Diagnostics
 end
@@ -257,6 +363,86 @@ M.lsp_notify = function()
   LSPFormatters.set_colors { fg = sttsline_colors.magenta, bg = colors.mode_bg }
 
   return LSPFormatters
+end
+M.gitdiff = function()
+  local Gitdiff = require "sttusline.components.git-diff"
+
+  Gitdiff.set_event(M.set_event)
+
+  return Gitdiff
+end
+M.trailing = function()
+  local Trailing = require("sttusline.component").new()
+
+  Trailing.set_event(M.set_event)
+
+  Trailing.set_update(function()
+    if not vim.o.modifiable or exclude[vim.bo.filetype] then
+      return ""
+    end
+
+    local line_num = nil
+
+    for i = 1, fn.line "$" do
+      local linetext = vim.fn.getline(i)
+      -- To prevent invalid escape error, we wrap the regex string with `[[]]`.
+      local idx = fn.match(linetext, [[\v\s+$]])
+
+      if idx ~= -1 then
+        line_num = i
+        break
+      end
+    end
+
+    local msg = ""
+    if line_num ~= nil then
+      msg = fmt("[%d]trailing", line_num)
+    end
+
+    return msg
+  end)
+
+  return Trailing
+end
+M.mixindent = function()
+  local Mixindent = require("sttusline.component").new()
+
+  Mixindent.set_event(M.set_event)
+
+  Mixindent.set_update(function()
+    if not vim.o.modifiable or exclude[vim.bo.filetype] then
+      return ""
+    end
+
+    local space_pat = [[\v^ +]]
+    local tab_pat = [[\v^\t+]]
+    local space_indent = fn.search(space_pat, "nwc")
+    local tab_indent = fn.search(tab_pat, "nwc")
+    local mixed = (space_indent > 0 and tab_indent > 0)
+    local mixed_same_line
+    if not mixed then
+      mixed_same_line = fn.search([[\v^(\t+ | +\t)]], "nwc")
+      mixed = mixed_same_line > 0
+    end
+    if not mixed then
+      return ""
+    end
+    if mixed_same_line ~= nil and mixed_same_line > 0 then
+      return "MI:" .. mixed_same_line
+    end
+    local space_indent_cnt = fn.searchcount({
+      pattern = space_pat,
+      max_count = 1e3,
+    }).total
+    local tab_indent_cnt = fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
+    if space_indent_cnt > tab_indent_cnt then
+      return "MI:" .. tab_indent
+    else
+      return "MI:" .. space_indent
+    end
+  end)
+
+  return Mixindent
 end
 
 return M

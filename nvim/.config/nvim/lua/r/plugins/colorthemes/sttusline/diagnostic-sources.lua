@@ -1,7 +1,17 @@
 local M = {}
 
 M.sources = {
-
+  nvim_diagnostic = function()
+    local diagnostics = vim.diagnostic.get(0)
+    local count = { 0, 0, 0, 0 }
+    for _, diagnostic in ipairs(diagnostics) do
+      count[diagnostic.severity] = count[diagnostic.severity] + 1
+    end
+    return count[vim.diagnostic.severity.ERROR],
+      count[vim.diagnostic.severity.WARN],
+      count[vim.diagnostic.severity.INFO],
+      count[vim.diagnostic.severity.HINT]
+  end,
   nvim_lsp = function()
     local error_count, warning_count, info_count, hint_count
     local diagnostics = vim.diagnostic.get(0)
