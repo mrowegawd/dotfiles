@@ -4,14 +4,13 @@ showalias() {
   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
 
   SELECT=$(awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-  column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc | fzf-tmux -p 80% ${commands[grcat]:+--ansi} | cut -d" " -f1 | cut -d"(" -f1)
+  column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc | fzf-tmux -xC -w '60%' -h '50%' ${commands[grcat]:+--ansi} | cut -d" " -f1 | cut -d"(" -f1)
 
   # note: https://doronbehar.com/articles/ZSH-FZF-completion/
   # how to Programmatically Change the Line in Zle?
   LBUFFER="${LBUFFER}$SELECT "
   local ret=$?
-
-  zle reset-prompt
+zle reset-prompt
 
   return $selected
 }
