@@ -1,3 +1,4 @@
+# vim: foldmethod=marker foldlevel=0
 set encoding=utf-8
 scriptencoding utf-8
 
@@ -105,13 +106,12 @@ inoremap hh <Esc>
 " xnoremap hh <Esc>
 cnoremap hh <C-C>
 
-" keymap: [visual] open search
-nmap / /\v
-vmap / <Esc>/\%V
-
 " keymap: [search] open search
 nnoremap / /\v
 vnoremap / <Esc>/\%V
+
+" keymap: [search] open search
+nnoremap <c-f> /\v
 
 " keymap: [search][quickfix] search current word (with quickfix)
 " nmap <silent> <c-f> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
@@ -129,9 +129,9 @@ nnoremap zL 10zl
 nnoremap zH 10zh
 
 " keymap: [cursor] to left (far)
-nmap zL z40l
+nnoremap zL z60l
 " keymap: [cursor] to right (far)
-nmap zH z40h
+nnoremap zH z60h
 
 " keymap: [visual] toggle nohl
 " nnoremap <silent> <leader>n :<C-u>nohlsearch<CR>:<C-u>call <SID>hier_clear()<CR>
@@ -174,11 +174,12 @@ nnoremap ZZ :qa<cr>
 "       \ . synIDattr(synIDtrans(synID(line('.'),col('.'),1)),'name') . '>'<CR>
 
 " keymap: [misc] show/check path current file
-nnoremap <leader>p :echo expand('%')<CR>
-" nnoremap <leader>P :echo expand('%:p:h:t')<CR>
-nnoremap <leader>P :echo expand('%:p:h')<CR>
+nnoremap <leader>rP :echo expand('%:p:h')<CR>
 
-nnoremap <localleader>p :echo expand('%:t')<CR>
+" nnoremap <leader>rp :echo expand('%')<CR>
+" nnoremap <leader>P :echo expand('%:p:h:t')<CR>
+
+" nnoremap <localleader>p :echo expand('%:t')<CR>
 
 " keymap: [misc] open MYVIMRC
 " noremap <leader>e :e $MYVIMRC<cr>
@@ -187,7 +188,7 @@ nnoremap <localleader>p :echo expand('%:t')<CR>
 nnoremap <leader>cd :cd %:p:h<cr>
 
 " keymap: [misc] format by vim
-nnoremap <leader>f                gg=G``
+" nnoremap <leader>f                gg=G``
 "
 " }}}
 " insert mode ---------------- {{{
@@ -200,10 +201,10 @@ nnoremap <leader>f                gg=G``
 
 " keymap: [insert][cursor] move prev word
 " inoremap <C-h> <C-\><C-o>h
-inoremap <C-h> <esc><left>a
+inoremap <C-b> <esc><left>a
 
 " keymap: [insert][cursor] move next word
-inoremap <C-l> <esc><right>a
+inoremap <C-f> <esc><right>a
 
 " keymap: [insert][cursor] go down
 " inoremap <C-j> <C-\><C-o>j
@@ -355,9 +356,9 @@ endfunction
 " keymap: [quickfix][toggle] open
 nnoremap <silent> <leader>q   :call ToggleList("Quickfix List", 'c')<CR>
 " keymap: [quickfix] next
-nnoremap <silent> <leader>j   :cnext<CR>zz
+" nnoremap <silent> <leader>j   :cnext<CR>zz
 " keymap: [quickfix] prev
-nnoremap <silent> <leader>k   :cprev<CR>zz
+" nnoremap <silent> <leader>k   :cprev<CR>zz
 
 " keymap: [locationlist][toggle] open
 nnoremap <silent> <leader>Q   :call ToggleList("Quickfix List", 'l')<CR>
@@ -482,13 +483,12 @@ cnoremap <C-d> <Del>
 " keymap: [commandline] expand current path
 cnoremap <C-t> <C-R>=expand("%:p:h") . "/" <CR>
 
-
 "
 " }}}
 " jump ----------------------- {{{
 "
 " keymap: [jumplist][window] open last buffer
-nnoremap <leader><leader> <c-^>
+nnoremap <bs> <c-^>
 "
 " }}}
 " terminal ------------------- {{{
@@ -514,52 +514,48 @@ if exists(':tnoremap')
       tnoremap <silent> <leader>tt  <C-\><C-n>:q<cr>
       tnoremap <ESC>                <C-\><C-n>
 
-    else
-      command! -nargs=* Terminal split | terminal <args>
-      command! -nargs=* TerminalV vsplit | terminal <args>
-      au TermOpen * set bufhidden=hide |
-            \ :startinsert
-      au TermOpen * :setl nonumber norelativenumber
+    " else
+    "   command! -nargs=* Terminal split | terminal <args>
+    "   command! -nargs=* TerminalV vsplit | terminal <args>
+    "   au TermOpen * set bufhidden=hide |
+    "         \ :startinsert
+    "   au TermOpen * :setl nonumber norelativenumber
 
-      " keymap: [terminal] open split
-      nnoremap <silent> <leader>tt :Terminal<cr>
+    "   " keymap: [terminal] open split
+    "   nnoremap <silent> <a-t> :Terminal<cr>
 
-      " keymap: [terminal] open vertical
-      nnoremap <silent> <leader>tv  :TerminalV<cr>
+    "   " keymap: [terminal] open vertical
+    "   nnoremap <silent> <leader>tv  :TerminalV<cr>
 
-      " keymap: [terminal] exit terminal
-      tnoremap <silent> <leader>tt  <C-\><C-n>:q<cr>
+    "   " keymap: [terminal] exit terminal
+    "   tnoremap <silent> <leader>tt  <C-\><C-n>:q<cr>
 
-      " keymap: [terminal] exit to normal mode
-      tnoremap   <ESC>              <C-\><C-n>
+    "   " keymap: [terminal] exit to normal mode
+    "   tnoremap   <ESC><ESC>              <C-\><C-n>
 
     endif
 
   else
-    nnoremap <silent> <leader>tt :vert term<cr>
-
-    tnoremap <silent> <leader>tt exit<cr>
-
+    nnoremap <a-t> :vert terminal<cr>
+    tnoremap <silent> <a-t> exit<cr>
     tnoremap   <ESC><ESC>     <C-w>N
-    tnoremap   <ESC>          <C-w>N
+    " tnoremap   <ESC>          <C-w>N
 
   endif
-  " tnoremap   j<Space>   j
-  " tnoremap <expr> ;  vimrc#sticky_func()
 endif
 
-tmap <c-t>v <c-a><CR>:vsplit term://zsh<CR>i
-tmap <c-t>x <c-a><CR>:split term://zsh<CR>i
-tmap <c-t>] <c-a>:+tabmove<cr>
-tmap <c-t>[ <c-a>:-tabmove<cr>
-tmap <a-h> <c-t><CR><c-w>h
-tmap <a-j> <c-t><CR><c-w>j
-tmap <a-k> <c-t><CR><C-w>k
-tmap <a-l> <c-t><CR><c-w>l
-tmap <c-t>J <c-t><CR><c-w>J
-tmap <c-t>K <c-t><CR><c-w>K
-tmap <c-t>H <c-t><CR><c-w>H
-tmap <c-t>L <c-t><CR><c-w>L
+" tmap <c-t>v <c-a><CR>:vsplit term://zsh<CR>i
+" tmap <c-t>x <c-a><CR>:split term://zsh<CR>i
+" tmap <c-t>] <c-a>:+tabmove<cr>
+" tmap <c-t>[ <c-a>:-tabmove<cr>
+" tmap <a-h> <c-t><CR><c-w>h
+" tmap <a-j> <c-t><CR><c-w>j
+" tmap <a-k> <c-t><CR><C-w>k
+" tmap <a-l> <c-t><CR><c-w>l
+" tmap <c-t>J <c-t><CR><c-w>J
+" tmap <c-t>K <c-t><CR><c-w>K
+" tmap <c-t>H <c-t><CR><c-w>H
+" tmap <c-t>L <c-t><CR><c-w>L
 
 "
 " }}}
@@ -672,8 +668,8 @@ nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
       \ 'zt' : (winline() == 1) ? 'zb' : 'zz'
 
 " keymap: [scroll] fast down
-noremap <expr> <C-f> max([winheight(0) - 2, 1])
-      \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
+" noremap <expr> <C-f> max([winheight(0) - 2, 1])
+"       \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
 
 " keymap: [scroll] fast up
 noremap <expr> <C-b> max([winheight(0) - 2, 1])
@@ -684,9 +680,5 @@ noremap <expr> <C-e> (line("w$") >= line('$') ? "2j" : "4\<C-e>")
 
 " keymap: [scroll] go down
 noremap <expr> <C-y> (line("w0") <= 1         ? "2k" : "4\<C-y>")
-"
-" }}}
-" test mapping --------------- {{{
-"
 "
 " }}}

@@ -7,8 +7,14 @@ num=$(/usr/local/bin/task active | wc -l)
 msg=$(/usr/local/bin/task active | tail -n +4 | head -n 1 | awk '{ for (i=6; i<=NF; i++) printf $i" "; print "" }')
 icons="$HOME/.config/miscxrdb/icons/icons8-todo-list-64.png"
 
+sound_mpv="$HOME/.config/dunst/livechat-129007.mp3"
 if [[ $num -gt "1" ]]; then
 	/usr/local/bin/dunstify -i "$icons" "Active Task" "$msg"
 else
 	/usr/local/bin/dunstify -i "$icons" "No Active Tasks" "C'mon! what are you doing!"
+	sound_mpv="$HOME/.config/dunst/wrong-answer-129254.mp3"
+fi
+
+if [ -f "$sound_mpv" ]; then
+	/usr/local/bin/mpv "$sound_mpv" --volume=100
 fi

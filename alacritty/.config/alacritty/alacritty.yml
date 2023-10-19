@@ -396,36 +396,35 @@ key_bindings:
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# Colors (Night Owl by Sarah Drasner)
+# TokyoNight Alacritty Colors
 colors:
   # Default colors
   primary:
-    background: '0x011627'
-    foreground: '0x033a65'
-
-  # Colors the cursor will use if `custom_cursor_colors` is true
-  cursor:
-    text: '0xffffff'
-    cursor: '0x7e57c2'
+    background: '0x24283b'
+    foreground: '0xc0caf5'
 
   # Normal colors
   normal:
-    black:   '0x000000'
-    red:     '0xef5350'
-    green:   '0x22da6e'
-    yellow:  '0xaddb67'
-    blue:    '0x82aaff'
-    magenta: '0xc792ea'
-    cyan:    '0x21c7a8'
-    white:   '0xffffff'
+    black:   '0x1D202F'
+    red:     '0xf7768e'
+    green:   '0x9ece6a'
+    yellow:  '0xe0af68'
+    blue:    '0x7aa2f7'
+    magenta: '0xbb9af7'
+    cyan:    '0x7dcfff'
+    white:   '0xa9b1d6'
 
   # Bright colors
   bright:
-    black:   '0x575656'
-    red:     '0xef5350'
-    green:   '0x22da6e'
-    yellow:  '0xffeb95'
-    blue:    '0x82aaff'
-    magenta: '0xc792ea'
-    cyan:    '0x7fdbca'
-    white:   '0xffffff'
+    black:   '0x414868'
+    red:     '0xf7768e'
+    green:   '0x9ece6a'
+    yellow:  '0xe0af68'
+    blue:    '0x7aa2f7'
+    magenta: '0xbb9af7'
+    cyan:    '0x7dcfff'
+    white:   '0xc0caf5'
+
+  indexed_colors:
+    - { index: 16, color: '0xff9e64' }
+    - { index: 17, color: '0xdb4b4b' }

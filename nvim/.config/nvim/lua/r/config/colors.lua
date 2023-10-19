@@ -24,8 +24,8 @@ local general_overrides = function()
     { Statusline = { inherit = "ColorColumn"} } ,
     { SignColumn = { bg = "NONE" } },
     { MarkSignNumHL = { inherit = "SpecialKey", bg = "NONE" } },
-    { Normal = { fg = { from = "Directory", alter = 0.3 } } },
-    { WinSeparator = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+    { Normal = { fg = { from = "Directory", alter = 0.5 } } },
+    { WinSeparator = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
 
     -----------------------------------------------------------------------------//
     --  Spell
@@ -95,7 +95,7 @@ local general_overrides = function()
     { LspSignatureActiveParameter = { link = "Visual" } },
     { LspInlayhint = { bg = { from = "ColorColumn", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
 
-    { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+    { TreesitterContextSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
     { TreesitterContextLineNumber = { inherit = "LineNr" } },
     { TreesitterContext = { inherit = "ColorColumn" } },
 
@@ -289,11 +289,12 @@ local function colorscheme_overrides()
       { FlashLable = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
       { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
       { CursorLine = { bg = { from = "Normal", alter = -0.8 } } },
-      { TreesitterContextSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      -- { TreesitterContextSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
       { TreesitterContextLineNumber = { inherit = "LineNr" } },
       { TreesitterContext = { bg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } } ,
       { Statusline = { bg = {from = "ColorColumn", attr = "bg", alter = "0.15" } } },
       { CmpItemAbbr = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
+      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.3 } } },
     },
     ["tokyonight"] = {
       { Comment = { fg = { from = "Directory", alter = -0.2 } } },

@@ -265,6 +265,12 @@ local options = {
   },
 }
 
+for scope, table in pairs(options) do
+  for setting, value in pairs(table) do
+    vim[scope][setting] = value
+  end
+end
+
 if vim.treesitter.foldtext then
   vim.opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
 end
@@ -276,6 +282,8 @@ else
   vim.opt.foldmethod = "indent"
 end
 
+vim.o.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
+
 -- Disable providers we do not care a about
 -- vim.g.loaded_python_provider = 0 -- for python 2
 vim.g.loaded_ruby_provider = 0
@@ -285,10 +293,5 @@ vim.g.loaded_node_provider = 0
 -- vim.g.glow_binary_path = os.getenv "HOME" .. "/.local/bin"
 vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
 
-for scope, table in pairs(options) do
-  for setting, value in pairs(table) do
-    vim[scope][setting] = value
-  end
-end
-
-vim.o.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
+-- Fix markdown indentation settings
+vim.g.markdown_recommended_style = 0

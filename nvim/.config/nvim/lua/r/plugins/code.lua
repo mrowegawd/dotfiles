@@ -356,15 +356,15 @@ return {
               Util.cmd.feedkey("<c-c>", "n")
             end,
           },
-          ["<c-q>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.abort()
-              else
-                fallback()
-              end
-            end,
-          },
+          -- ["<c-q>"] = {
+          --   c = function(fallback)
+          --     if cmp.visible() then
+          --       cmp.abort()
+          --     else
+          --       fallback()
+          --     end
+          --   end,
+          -- },
           ["<TAB>"] = {
             c = function()
               if cmp.visible() then

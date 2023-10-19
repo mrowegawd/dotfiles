@@ -96,11 +96,16 @@ return {
           },
           window = {
             mappings = {
-              ["/"] = "noop",
-              ["g/"] = "fuzzy_finder",
+              ["H"] = "toggle_hidden",
+              ["<leader>ff"] = "fuzzy_finder",
+              ["gf"] = "filter_on_submit",
+              ["<C-x>"] = "clear_filter",
               ["gp"] = "prev_git_modified",
               ["gn"] = "next_git_modified",
-              ["H"] = "toggle_hidden",
+              ["gd"] = "fuzzy_finder_directory",
+              --["/"] = "filter_as_you_type", -- this was the default until v1.28
+              -- ["D"] = "fuzzy_sorter_directory",
+              -- ["/"] = "noop",
             },
           },
         },
@@ -140,8 +145,32 @@ return {
             end
           end,
         },
+        git_status = {
+          window = {
+            mappings = {
+              ["ga"] = "git_add_file",
+              ["gA"] = "git_add_all",
+              ["gu"] = "git_unstage_file",
+              ["gr"] = "git_revert_file",
+              ["gc"] = "git_commit",
+              ["gp"] = "noop",
+              ["gn"] = "noop",
+              ["gg"] = "noop",
+              ["i"] = "show_file_details",
+              -- ["o"] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
+              ["o"] = "noop",
+              ["oc"] = { "order_by_created", nowait = false },
+              ["od"] = { "order_by_diagnostics", nowait = false },
+              ["om"] = { "order_by_modified", nowait = false },
+              ["on"] = { "order_by_name", nowait = false },
+              ["os"] = { "order_by_size", nowait = false },
+              ["ot"] = { "order_by_type", nowait = false },
+            },
+          },
+        },
         window = {
           mappings = {
+
             ["<2-LeftMouse>"] = "open",
             ["l"] = "child_or_open",
             ["h"] = "close_node",
@@ -226,8 +255,8 @@ return {
     event = "VeryLazy",
     -- stylua: ignore
     keys = {
-      { "<leader>ue", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
-      { "<leader>uu", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
+      { "<leader>uu", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
+      { "<leader>us", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
       { "<leader>ug", "<CMD> Neotree git_status toggle <CR>",  desc = "Misc(edgy): toggle git_status" },
       { "<leader>ub", "<CMD> Neotree buffers toggle <CR>",     desc = "Misc(edgy): toggle buffers" },
     },
@@ -315,11 +344,11 @@ return {
             win:resize("width", -2)
           end,
           -- increase height
-          ["<a-K>"] = function(win)
+          ["<a-J>"] = function(win)
             win:resize("height", 2)
           end,
           -- decrease height
-          ["<a-J>"] = function(win)
+          ["<a-K>"] = function(win)
             win:resize("height", -2)
           end,
         },

@@ -183,17 +183,49 @@ M.filename = function()
       icon, color_icon = devicons.get_icon_color(filename, fn.expand "%:e")
     end
 
+    local parts
+    if not icon then
+      local buftype = get_option(0, "buftype")
+      local filetype = get_option(0, "filetype")
+      if buftype == "terminal" then
+        icon, color_icon = "", sttsline_colors.red
+        parts = "Terminal"
+      elseif filetype == "NvimTree" then
+        icon, color_icon = "󱏒", sttsline_colors.red
+        parts = "NvimTree"
+      elseif filetype == "neo-tree" then
+        icon, color_icon = "󱏒", sttsline_colors.red
+        parts = "NeoTree"
+      elseif filetype == "TelescopePrompt" then
+        icon, color_icon = "", sttsline_colors.red
+        parts = "TelescopePromp"
+      elseif filetype == "fzf" then
+        icon, color_icon = "", sttsline_colors.red
+        parts = "Fzf"
+      elseif filetype == "mason" then
+        icon, color_icon = "󰏔", sttsline_colors.red
+        parts = "Mason"
+      elseif filetype == "lazy" then
+        icon, color_icon = "󰏔", sttsline_colors.red
+        parts = "Lazy"
+      else
+        icon, color_icon = "󰏔", sttsline_colors.red
+        parts = "Lazy"
+      end
+    end
+
     local opts = {
       relative = "cwd",
       modified_hl = "Constant",
     }
 
     local path = vim.fn.expand "%:p"
+    local sep
 
-    if path == "" then
-      return ""
-    end
-
+    -- if path == "" and type(parts) == "string" and not icon then
+    --   return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
+    --     .. sttsline_utils.add_highlight_name(parts, "STTUSLINE_FILENAMEC")
+    -- else
     local root = Util.root.get { normalize = true }
     local cwd = Util.root.cwd()
 
@@ -203,47 +235,52 @@ M.filename = function()
       path = path:sub(#root + 2)
     end
 
-    local sep = package.config:sub(1, 1)
-    local parts = vim.split(path, "[\\/]")
+    sep = package.config:sub(1, 1)
+    parts = vim.split(path, "[\\/]")
     if #parts > 3 then
       parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
+      if vim.bo[0].modified then
+        parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "STTUSLINE_MODIFIEDC")
+      elseif vim.bo[0].readonly then
+        parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "Comment")
+      else
+        parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "STTUSLINE_MOD_FILENAMEC")
+      end
+    else
+      parts = path
     end
 
-    if not icon then
-      local buftype = get_option(0, "buftype")
-      local filetype = get_option(0, "filetype")
-      if buftype == "terminal" then
-        icon, color_icon = "", sttsline_colors.red
-      elseif filetype == "NvimTree" then
-        icon, color_icon = "󱏒", sttsline_colors.red
-      elseif filetype == "neo-tree" then
-        icon, color_icon = "󱏒", sttsline_colors.red
-      elseif filetype == "TelescopePrompt" then
-        icon, color_icon = "", sttsline_colors.red
-      elseif filetype == "mason" then
-        icon, color_icon = "󰏔", sttsline_colors.red
-      elseif filetype == "lazy" then
-        icon, color_icon = "󰏔", sttsline_colors.red
-      else
-        icon, color_icon = "󰏔", sttsline_colors.red
-      end
-    end
+    -- local buftype = get_option(0, "buftype")
+    -- local filetype = get_option(0, "filetype")
+    -- if buftype == "terminal" then
+    --   icon, color_icon = "", sttsline_colors.red
+    -- elseif filetype == "TelescopePrompt" then
+    --   icon, color_icon = "", sttsline_colors.red
+    -- elseif filetype == "dashboard" then
+    --   icon, color_icon = "", sttsline_colors.red
+    -- elseif filetype == "qf" then
+    --   icon, color_icon = "", sttsline_colors.red
+    -- elseif filetype == "neo-tree" then
+    --   icon, color_icon = "󱏒", sttsline_colors.red
+    -- else
+    --   icon, color_icon = "", sttsline_colors.red
+    -- end
+
+    -- print(vim.inspect(icon))
+    -- print(vim.inspect(parts))
+    -- print(vim.inspect(vim.concatparts .. " " .. icon))
 
     hl(0, "STTUSLINE_MODIFIEDC", Filename.get_config().colors.modified)
     hl(0, "STTUSLINE_MOD_FILENAMEC", Filename.get_config().colors.filename)
     hl(0, ICON_HIGHLIGHT, { fg = color_icon })
 
-    if vim.bo[0].modified then
-      parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "STTUSLINE_MODIFIEDC")
-    elseif vim.bo[0].readonly then
-      parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "Comment")
+    if icon and type(parts) == "table" then
+      return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
+        .. " "
+        .. sttsline_utils.add_highlight_name(table.concat(parts, sep), "STTUSLINE_FILENAMEC")
     else
-      parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "STTUSLINE_MOD_FILENAMEC")
+      return sttsline_utils.add_highlight_name(parts, "STTUSLINE_FILENAMEC")
     end
-
-    return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
-      .. " "
-      .. sttsline_utils.add_highlight_name(table.concat(parts, sep), "STTUSLINE_FILENAMEC")
   end)
 
   Filename.set_onhighlight(function()

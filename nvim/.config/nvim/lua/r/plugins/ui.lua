@@ -105,9 +105,9 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    -- enabled = false,
     dependencies = {
       "rcarriga/nvim-notify",
+      "MunifTanjim/nui.nvim",
     },
     -- stylua: ignore
     keys = {
@@ -156,34 +156,6 @@ return {
       popupmenu = {
         backend = "cmp",
       },
-      redirect = { view = "popup", filter = { event = "msg_show" } },
-      views = {
-        vsplit = { size = { width = "auto" } },
-        split = { win_options = { winhighlight = { Normal = "Normal" } } },
-        popup = {
-          border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 } },
-        },
-        -- cmdline_popup = {
-        --   position = {
-        --     row = -5,
-        --     col = "50%",
-        --   },
-        --   size = {
-        --     width = "auto",
-        --     height = "auto",
-        --   },
-        -- },
-        -- confirm = {
-        --   border = { style = require("r.config").icons.border.rectangle, padding = { 0, 1 }, text = { top = "" } },
-        -- },
-        -- popupmenu = {
-        --   relative = "editor",
-        --   position = { row = -5, col = "50%" },
-        --   size = { width = 60, height = 10 },
-        --   border = { style = border, padding = { 0, 1 } },
-        --   win_options = { winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" } },
-        -- },
-      },
       routes = {
         {
           opts = { skip = true },
@@ -208,17 +180,12 @@ return {
           view = "mini",
         },
       },
-      -- you can enable a preset for easier configuration
       presets = {
-        -- bottom_search = true,         -- use a classic bottom cmdline for search
-        -- command_palette = false,      -- position the cmdline and popupmenu together
-        -- long_message_to_split = true, -- long messages will be sent to a split
-        -- inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-        -- lsp_doc_border = true,        -- add a border to hover docs and signature help
-
-        inc_rename = true,
-        long_message_to_split = true,
-        lsp_doc_border = true,
+        command_palette = true, -- position the cmdline and popupmenu together
+        bottom_search = true, -- use a classic bottom cmdline for search
+        inc_rename = true, -- enables an input dialog for inc-rename.nvim
+        long_message_to_split = true, -- long messages will be sent to a split
+        lsp_doc_border = true, -- add a border to hover docs and signature help
       },
     },
   },
@@ -227,9 +194,9 @@ return {
     "luukvbaal/statuscol.nvim",
     event = "LazyFile",
     enabled = false,
-    config = function()
+    opt = function()
       local builtin = require "statuscol.builtin"
-      require("statuscol").setup {
+      return {
         relculright = true,
         segments = {
           { text = { builtin.foldfunc }, click = "v:lua.ScFa" },

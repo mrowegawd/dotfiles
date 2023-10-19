@@ -7,6 +7,7 @@ return {
       multiline_threshold = 2,
       separator = "─", -- "─", alternatives: ▁ ─ ▄ '--',
       mode = "cursor",
+      max_lines = 3,
     },
     keys = {
       {
