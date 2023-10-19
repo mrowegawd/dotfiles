@@ -344,11 +344,11 @@ return {
             win:resize("width", -2)
           end,
           -- increase height
-          ["<a-J>"] = function(win)
+          ["<a-K>"] = function(win)
             win:resize("height", 2)
           end,
           -- decrease height
-          ["<a-K>"] = function(win)
+          ["<a-J>"] = function(win)
             win:resize("height", -2)
           end,
         },

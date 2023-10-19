@@ -5,7 +5,6 @@ local highlight = require "r.config.highlights"
 -- stylua: ignore
 local general_overrides = function()
   highlight.all {
-    -- { Normal = { fg = { from = "Directory", alter = 0.3 }, bg = "NONE" } },
     { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
     { Directory = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
@@ -207,18 +206,13 @@ end
 -- stylua: ignore
 local function colorscheme_overrides()
   local overrides = {
-    -- These colorscheme needs their own config settings
-    ["kanagawa"] = {},
-    ["catppuccin"] = {},
-    ["everblush"] = {},
-
-    ["gruvbox"] = {
-      { WinBarNC = { bg = "NONE" } },
-      { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "bg", alter = 0.2 }, bg = "NONE", bold = true } },
-    },
+    -- Theme dengan nama ini, tidak perlu diinstall karena tidak bisa di custom
+    -- pada function ini (I dont use it anymore)
+    -- {"kanagawa", "catppuccin"}
     ["doom-one"] = {
       { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.15 }, bg = "NONE", bold = true } },
       { WinSeparator = { bg = "NONE" } },
+      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.1 } } },
       { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
     },
     ["gruvbox-material"] = {
@@ -257,19 +251,26 @@ local function colorscheme_overrides()
       { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" } } },
     },
     ["miasma"] = {
+      { Directory = { bg = "NONE" } },
+      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
       { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.4 } } },
+      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = -0.5 } } },
     },
     ["darcubox"] = {
       { ["@lsp.type.comment"] = { fg = { from = "Directory", attr = "fg", alter = 0.3 } } },
       { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.5 } } },
       { LineNr = { fg = { from = "LineNr", alter = 0.4 } } },
+      { CursorLine = { bg = { from = "Normal", alter = 1 } } },
+      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = -0.2 } } },
     },
     ["darcula-dark"] = {
-      { WinSeparator = { bg = "NONE" } },
+      { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { CursorLine = { bg = { from = "Normal", alter = 0.5 } } },
+      { MyQuickFixLineLeave = { bg = { from = "CursorLine", alter = -0.15 } } },
+      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.4 } } },
       { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" } } },
       { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
-      { Normal = { fg = { from = "Directory", alter = 0.3 } } },
+      { Normal = { fg = { from = "Directory", alter = -0.1 } } },
       { ["@Comment"] = { fg = { from = "Comment" } } },
     },
     ["everforest"] = {
@@ -298,9 +299,11 @@ local function colorscheme_overrides()
     },
     ["tokyonight"] = {
       { Comment = { fg = { from = "Directory", alter = -0.2 } } },
+      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.35 } } },
       { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
       { TreesitterContextLineNumber = { inherit = "LineNr" } },
       { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
+      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = 0.5 } } },
     },
     ["tokyonight-night"] = {
       { WinSeparator = { bg = "NONE" } },

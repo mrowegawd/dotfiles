@@ -277,7 +277,7 @@ rofi_command="rofi -theme $dir/$theme"
 	"awesome") wm_awesome ;;
 	esac
 
-	dunstify -i ~/Dropbox/mytodo/icons/hexagon.png "Load theme: $_NAMETHEME" "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM"
+	dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM"
 
 )
 

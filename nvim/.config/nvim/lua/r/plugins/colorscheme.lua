@@ -4,6 +4,7 @@ return {
   ---------------------------------------------------------------------------
   -- Consistent color
   ---------------------------------------------------------------------------
+  -- NIGHT-OWL
   {
     "oxfist/night-owl.nvim",
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
@@ -16,21 +17,6 @@ return {
       return false
     end,
     opts = {},
-  },
-  -- CARET.NVIM
-  {
-    "projekt0n/caret.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      if colorscheme == "caret" then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("caret").setup {}
-    end,
   },
   -- DOOM-ONE
   {
@@ -74,33 +60,6 @@ return {
       vim.g.doom_one_plugin_lspsaga = true
     end,
   },
-  -- MIN-THEME
-  {
-    "datsfilipe/min-theme.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      local mintheme = { "min-theme" }
-      if vim.tbl_contains(mintheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("min-theme").setup {
-        theme = "dark", -- String: 'dark' or 'light', determines the colorscheme used (obs: if your config sets vim.o.background, this will do nothing)
-        transparent = false, -- Boolean: Sets the background to transparent
-        italics = {
-          comments = true, -- Boolean: Italicizes comments
-          keywords = true, -- Boolean: Italicizes keywords
-          functions = true, -- Boolean: Italicizes functions
-          strings = true, -- Boolean: Italicizes strings
-          variables = true, -- Boolean: Italicizes variables
-        },
-        -- overrides = {}, -- A dictionary of group names, can be a function returning a dictionary or a table.
-      }
-    end,
-  },
   -- SOLARIZED
   {
     "maxmx03/solarized.nvim",
@@ -140,48 +99,6 @@ return {
         return true
       end
       return false
-    end,
-  },
-  -- GITHUB-NVIM-THEME
-  {
-    "projekt0n/github-nvim-theme",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      local colorgithub = { "github_dark_dimmed", "github_dark", "github_dark_high_contrast" }
-      if vim.tbl_contains(colorgithub, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("github-theme").setup {}
-    end,
-  },
-  -- GRUVBOX
-  {
-    "ellisonleao/gruvbox.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      if colorscheme == "gruvbox" then
-        return true
-      end
-      return false
-    end,
-    init = function()
-      vim.o.background = "dark"
-    end,
-    config = function()
-      require("gruvbox").setup {
-        overrides = {
-          GruvboxGreenSign = { bg = "NONE" },
-          GruvboxRedSign = { bg = "NONE" },
-          GruvboxYellowSign = { bg = "NONE" },
-          GruvboxAquaSign = { bg = "NONE" },
-          GruvboxBlueSign = { bg = "NONE" },
-        },
-      }
     end,
   },
   -- DARCULA-DARK
@@ -227,46 +144,6 @@ return {
       end
       return false
     end,
-  },
-  -- KANAGAWA
-  {
-    "rebelot/kanagawa.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      if colorscheme == "kanagawa" then
-        return true
-      end
-      return false
-    end,
-    opts = {
-      compile = false, -- enable compiling the colorscheme
-      undercurl = true, -- enable undercurls
-      commentStyle = { italic = true },
-      functionStyle = {},
-      keywordStyle = { italic = true },
-      statementStyle = { bold = true },
-      typeStyle = {},
-      transparent = false, -- do not set background color
-      dimInactive = false, -- dim inactive window `:h hl-NormalNC`
-      terminalColors = true, -- define vim.g.terminal_color_{0,17}
-      theme = "dragon", -- Load "wave" theme when 'background' option is not set
-      background = { -- map the value of 'background' option to a theme
-        dark = "dragon", -- try "dragon" !
-        -- light = "lotus",
-      },
-      -- overrides = function(colors)
-      --   local theme = colors.theme
-      --   return {
-      --     -- TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 } },
-      --     -- Folded = { fg = { from = "Normal", attr = "bg", alter = -0.1 } },
-      --     Folded = { link = "Directory" },
-      --     -- NormalFloat = { bg = "none" },
-      --     -- FloatBorder = { bg = "none" },
-      --     -- FloatTitle = { bg = "none" },
-      --   }
-      -- end,
-    },
   },
   -- MATERIAL
   {
@@ -363,93 +240,6 @@ return {
         -- TelescopeMatching = { bg = "NONE", fg = "#ffe779" },
         -- TelescopeSelectionCaret = { bg = "#191919" },
         -- }, -- Overwrite highlights with your own
-      }
-    end,
-  },
-  -- CATPPUCCIN
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local colorscattppuccin = { "catppuccin", "catppuccin-latte" }
-      if vim.tbl_contains(colorscattppuccin, colorscheme) then
-        return true
-      end
-
-      return false
-    end,
-    config = function()
-      require("catppuccin").setup {
-        flavour = "mocha", -- latte, frappe, macchiato, mocha
-        background = { -- :h background
-          light = "latte",
-          dark = "mocha",
-        },
-        transparent_background = false,
-        show_end_of_buffer = false, -- show the '~' characters after the end of buffers
-        term_colors = false,
-        dim_inactive = {
-          enabled = false,
-          shade = "dark",
-          percentage = 0.15,
-        },
-        no_italic = false, -- Force no italic
-        no_bold = false, -- Force no bold
-        -- no_underline = false,
-        styles = {
-          comments = { "italic" },
-          conditionals = { "italic" },
-          loops = {},
-          functions = {},
-          keywords = {},
-          strings = {},
-          variables = {},
-          numbers = {},
-          booleans = {},
-          properties = {},
-          types = {},
-          operators = {},
-        },
-        color_overrides = {},
-        -- custom_highlights = function(col)
-        --     return {
-        --         TelescopeMatching = { fg = "#ffffc7", bg = "NONE" },
-        --         -- ["@constant.builtin"] = {
-        --         --     fg = col.peach,
-        --         --     style = {},
-        --         -- },
-        --         -- ["@comment"] = {
-        --         --     fg = col.surface2,
-        --         --     style = { "italic" },
-        --         -- },
-        --     }
-        -- end,
-        integrations = {
-          cmp = false,
-          gitsigns = true,
-          nvimtree = true,
-          telescope = true,
-          notify = false,
-          mini = false,
-          -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
-          native_lsp = {
-            enabled = true,
-            virtual_text = {
-              errors = { "italic" },
-              hints = { "italic" },
-              warnings = { "italic" },
-              information = { "italic" },
-            },
-            underlines = {
-              errors = { "undercurl" },
-              hints = { "undercurl" },
-              warnings = { "undercurl" },
-              information = { "undercurl" },
-            },
-          },
-        },
       }
     end,
   },

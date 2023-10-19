@@ -160,7 +160,8 @@ end
 M.filename = function()
   local Filename = require("sttusline.component").new()
 
-  Filename.set_event { "BufWritePost", "BufEnter", "InsertLeave", "ModeChanged" }
+  -- Filename.set_event { "BufWritePost", "BufEnter", "InsertLeave", "ModeChanged" }
+  Filename.set_event(M.set_event)
 
   Filename.set_config {
     icon = require("r.config").icons.git.branch,
@@ -184,35 +185,6 @@ M.filename = function()
     end
 
     local parts
-    if not icon then
-      local buftype = get_option(0, "buftype")
-      local filetype = get_option(0, "filetype")
-      if buftype == "terminal" then
-        icon, color_icon = "", sttsline_colors.red
-        parts = "Terminal"
-      elseif filetype == "NvimTree" then
-        icon, color_icon = "󱏒", sttsline_colors.red
-        parts = "NvimTree"
-      elseif filetype == "neo-tree" then
-        icon, color_icon = "󱏒", sttsline_colors.red
-        parts = "NeoTree"
-      elseif filetype == "TelescopePrompt" then
-        icon, color_icon = "", sttsline_colors.red
-        parts = "TelescopePromp"
-      elseif filetype == "fzf" then
-        icon, color_icon = "", sttsline_colors.red
-        parts = "Fzf"
-      elseif filetype == "mason" then
-        icon, color_icon = "󰏔", sttsline_colors.red
-        parts = "Mason"
-      elseif filetype == "lazy" then
-        icon, color_icon = "󰏔", sttsline_colors.red
-        parts = "Lazy"
-      else
-        icon, color_icon = "󰏔", sttsline_colors.red
-        parts = "Lazy"
-      end
-    end
 
     local opts = {
       relative = "cwd",
@@ -222,10 +194,6 @@ M.filename = function()
     local path = vim.fn.expand "%:p"
     local sep
 
-    -- if path == "" and type(parts) == "string" and not icon then
-    --   return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
-    --     .. sttsline_utils.add_highlight_name(parts, "STTUSLINE_FILENAMEC")
-    -- else
     local root = Util.root.get { normalize = true }
     local cwd = Util.root.cwd()
 
@@ -250,36 +218,53 @@ M.filename = function()
       parts = path
     end
 
-    -- local buftype = get_option(0, "buftype")
-    -- local filetype = get_option(0, "filetype")
-    -- if buftype == "terminal" then
-    --   icon, color_icon = "", sttsline_colors.red
-    -- elseif filetype == "TelescopePrompt" then
-    --   icon, color_icon = "", sttsline_colors.red
-    -- elseif filetype == "dashboard" then
-    --   icon, color_icon = "", sttsline_colors.red
-    -- elseif filetype == "qf" then
-    --   icon, color_icon = "", sttsline_colors.red
-    -- elseif filetype == "neo-tree" then
-    --   icon, color_icon = "󱏒", sttsline_colors.red
-    -- else
-    --   icon, color_icon = "", sttsline_colors.red
-    -- end
-
-    -- print(vim.inspect(icon))
-    -- print(vim.inspect(parts))
-    -- print(vim.inspect(vim.concatparts .. " " .. icon))
+    if not icon then
+      local buftype = get_option(0, "buftype")
+      local filetype = get_option(0, "filetype")
+      if buftype == "terminal" then
+        icon, color_icon = "", sttsline_colors.magenta
+      elseif filetype == "NvimTree" then
+        icon, color_icon = "󱏒", sttsline_colors.red
+      elseif filetype == "neo-tree" then
+        icon, color_icon = "󱏒", sttsline_colors.magenta
+      elseif filetype == "TelescopePrompt" then
+        icon, color_icon = "", sttsline_colors.yellow
+        parts = "TelescopePromp"
+      elseif filetype == "fzf" then
+        icon, color_icon = "", sttsline_colors.purple
+        parts = "FZFLua"
+      elseif filetype == "mason" then
+        icon, color_icon = "󰏔", sttsline_colors.pink
+        parts = "Mason"
+      elseif filetype == "lazy" then
+        icon, color_icon = "󰏔", sttsline_colors.pink
+        parts = "Lazy"
+      elseif filetype == "qf" then
+        icon, color_icon = "󰏔", sttsline_colors.magenta
+        if Util.qf.is_loclist() then
+          parts = fmt("Loclist:%s", fn.getloclist(0, { title = 0 }).title)
+        else
+          parts = fmt("Quickfix: %s %s", fn.getqflist({ id = 0 }).id, fn.getqflist({ title = 0 }).title)
+        end
+      else
+        icon, color_icon = "󰏔", sttsline_colors.gray
+      end
+    end
 
     hl(0, "STTUSLINE_MODIFIEDC", Filename.get_config().colors.modified)
     hl(0, "STTUSLINE_MOD_FILENAMEC", Filename.get_config().colors.filename)
     hl(0, ICON_HIGHLIGHT, { fg = color_icon })
 
-    if icon and type(parts) == "table" then
+    if icon and parts ~= nil and type(parts) == "table" then
       return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
         .. " "
         .. sttsline_utils.add_highlight_name(table.concat(parts, sep), "STTUSLINE_FILENAMEC")
+    elseif parts == "" then
+      return ""
     else
-      return sttsline_utils.add_highlight_name(parts, "STTUSLINE_FILENAMEC")
+      return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
+        .. " "
+        .. sttsline_utils.add_highlight_name(parts, "STTUSLINE_FILENAMEC")
     end
   end)
 
