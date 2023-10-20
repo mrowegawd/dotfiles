@@ -27,7 +27,20 @@ return {
                   },
                 }
               end,
-              desc = "Organize Imports",
+              desc = "LSP(typescript): organize imports",
+            },
+            {
+              "<leader>cR",
+              function()
+                vim.lsp.buf.code_action {
+                  apply = true,
+                  context = {
+                    only = { "source.removeUnused.ts" },
+                    diagnostics = {},
+                  },
+                }
+              end,
+              desc = "LSP(typescript): remove unused imports",
             },
           },
           settings = {
