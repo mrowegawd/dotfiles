@@ -14,7 +14,7 @@ return {
     opts = {
       servers = {
         -- emmet_language_server = dots.languages.web.emmet == "olrtg" and {} or nil,
-        emmet_ls = {},
+        -- emmet_ls = {},
         html = {},
         cssls = {
           settings = {

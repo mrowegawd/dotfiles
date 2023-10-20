@@ -3,7 +3,7 @@
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager\nKeyboard\nRecording Fullscreen\nRecording Rectangle\nRecording Gif\nStop Recording\nScreenshot\nDrawing"
+MENULIST_PATH="Calendar\nFile manager\nKeyboard\nRecording Fullscreen\nRecording Rectangle\nRecording Gif\nStop Recording Vid\nStop Recording Gif\nScreenshot\nDrawing"
 
 # For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
@@ -87,19 +87,24 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		dunstify "Record" "quit.."
 	}
 
+	filegif="$HOME/Downloads/screenshot/$(date +%s).gif"
 	run_simplegif() {
-		filegif="$HOME/Downloads/screenshot/$(date +%s).gif"
 		if [ -n "$(command -v giph)" ]; then
-			dunstify "Gif will start in 3 sec, create 10 sec"
+			# Dunstify "Gif will start in 3 sec, create 10 sec"
 			# -d waktu mulai dari n
 			# -t jumlah waktu ngerekam gif
-			giph -f 30 -s -l -c 0.3,0,0.5,0.3 -d 3 -t 10 "$filegif"
-			dunstify "Gif created:" "$filegif"
+			# giph -f 30 -s -l -c 0.3,0,0.5,0.3 -d 3 -t 10 "$filegif"
+			giph -s -l "$filegif"
 		else
-			# check install here: https://github.com/phisch/giph
+			# Check install here: https://github.com/phisch/giph
 			dunstify ":you need install giph"
 		fi
 
+	}
+
+	run_ffmpeg_stop() {
+		giph --stop
+		dunstify "Gif created:" "$filegif"
 	}
 
 	run_filemanager() {
@@ -117,7 +122,8 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 	"Recording Fullscreen") run_ffmpeg_record_fullscreen ;;
 	"Recording Rectangle") run_ffmpeg_record_with_rectangle ;;
 	"Recording Gif") run_simplegif ;;
-	"Stop Recording") run_ffmpeg_stop ;;
+	"Stop Recording Vid") run_ffmpeg_stop ;;
+	"Stop Recording Gif") run_simplegif_stop ;;
 	"File manager") run_filemanager ;;
 
 	esac

@@ -32,13 +32,13 @@
             "commands": [ "workbench.action.previousEditor" ]
         },
         {
-            "before": [ "K"],
+            "before": [ "K" ],
             "commands": [ "editor.action.showHover" ]
         }
     ],
     "vim.insertModeKeyBindings": [
         {
-            "before": [ "h", "h" ],
+            "before": [ "j", "k" ],
             "after": [ "<Esc>" ]
         },
         {

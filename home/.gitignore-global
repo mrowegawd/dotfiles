@@ -11,6 +11,7 @@ temp/
 tmp/
 tags
 
+.rmuxrc.json
 *.bak
 
 # Windows ------------------------------------- {{{

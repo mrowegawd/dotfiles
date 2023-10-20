@@ -146,14 +146,14 @@ super + shift + n
 #         $HOME/.config/rofi/menu/_glinux
 
 # misc: run obsidian
-super + shift + o
-        bspc rule -a \* -o state=floating st && st
+# super + shift + o
+#         bspc rule -a \* -o state=floating st && st
 
-# misc: panggill firefox lalu set di sisi kiri (side by side)
+# misc: panggil firefox lalu set di sisi kiri (side by side)
 super + F4
         $HOME/Dropbox/exbin/for-local-bin/bspc_firefox
 
-# misc: create task
+# misc: open taskwarrior
 super + shift + u
         bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "taskwarrior-tui"
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"

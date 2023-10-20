@@ -27,8 +27,8 @@ map q <Nop>
 
 let mapleader = ' '
 
-inoremap hh <Esc>
-vnoremap hh <Esc>
+inoremap jk <Esc>
+vnoremap jk  <Esc>
 nnoremap esc :nohlsearch<CR>
 
 " Emulated Plugins

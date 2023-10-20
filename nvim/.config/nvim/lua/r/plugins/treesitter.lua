@@ -26,10 +26,11 @@ return {
       },
     },
   },
-  -- DELIMITERS
+  -- DELIMITERS (Disabled, make nvim slow)
   {
     "HiPhish/rainbow-delimiters.nvim",
     event = "VeryLazy",
+    enabled = false,
     config = function()
       local rainbow_delimiters = require "rainbow-delimiters"
 
@@ -78,6 +79,7 @@ return {
       { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "x" },
     },
     dependencies = {
+      { "mfussenegger/nvim-treehopper" },
       {
         "nvim-treesitter/nvim-treesitter-textobjects",
         config = function()
@@ -103,17 +105,6 @@ return {
           end
         end,
       },
-      { "JoosepAlviste/nvim-ts-context-commentstring" },
-      { "mfussenegger/nvim-treehopper" },
-      -- {
-      --   "andymass/vim-matchup",
-      --   event = "BufReadPost",
-      --   enabled = false,
-      --   config = function()
-      --     -- vim.g.matchup_matchparen_offscreen = {} -- empty = disables
-      --     vim.g.matchup_matchparen_offscreen = { method = "popup" }
-      --   end,
-      -- },
     },
     opts = function()
       -- local disable_max_size = 200000 -- 2MB
@@ -190,11 +181,18 @@ return {
           lint_events = { "BufWrite", "CursorHold" },
         },
 
-        -- -- vim-matchup
-        -- matchup = {
-        --   enable = true,
-        --   disable = should_disable,
-        -- },
+        -- vim-matchup
+        matchup = {
+          enable = true,
+        },
+
+        endwise = {
+          enable = true,
+        },
+
+        autotag = {
+          enable = true,
+        },
 
         -- nvim-ts-context-commentstring plugin
         context_commentstring = { enable = true },
@@ -202,8 +200,8 @@ return {
         -- nvim-treesitter-textobjects
         textobjects = {
           select = {
-            enable = true,
             -- disable = should_disable,
+            enable = false,
             lookahead = true,
             keymaps = {
               -- You can use the capture groups defined in textobjects.scm

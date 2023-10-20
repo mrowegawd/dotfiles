@@ -1,9 +1,6 @@
 # Use vi editing mode
 set editing-mode vi
 
-# Set visible bell
-# set bell-style visible                   # Options: none, visible, audible
-
 # Adds punctuation as word delimiters
 set bind-tty-special-chars off
 
@@ -45,28 +42,20 @@ $if mode=vi
     set keymap vi-command
     "gg": beginning-of-history
     "G": end-of-history
-    "k": history-search-backward
-    "j": history-search-forward
     "?": reverse-search-history
     "/": forward-search-history
 
     set keymap vi-insert
-    "hh": vi-movement-mode
-    # "\C-p": clear-screen
+    "jk": vi-movement-mode
     "\C-w": backward-kill-word
-    # "\C-i": beginning-of-line
-    # "\C-a": end-of-line
+    "\C-p": history-search-backward
+    "\C-n": history-search-forward
+    "\C-a": beginning-of-line
+    "\C-e": end-of-line
     "\C-g": "fzm\n"
-    # "\C-e": edit-and-execute-command
+    "\ee": edit-and-execute-command
 $endif
 
 $if Bash
     Space: magic-space
 $endif
-
-# $if Python
-# $endif
-
-# IPython needs this to appear at the bottom of the
-# file for clear-screen to work
-set keymap vi

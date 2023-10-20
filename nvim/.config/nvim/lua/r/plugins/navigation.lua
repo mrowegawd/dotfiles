@@ -33,19 +33,19 @@ return {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
-      {
-        "ten3roberts/window-picker.nvim",
-        name = "window-picker",
-        config = function()
-          local picker = require "window-picker"
-          picker.setup()
-          picker.pick_window = function()
-            return picker.select({ hl = "WindowPicker", prompt = "Pick window: " }, function(winid)
-              return winid or nil
-            end)
-          end
-        end,
-      },
+      -- {
+      --   "ten3roberts/window-picker.nvim",
+      --   name = "window-picker",
+      --   config = function()
+      --     local picker = require "window-picker"
+      --     picker.setup()
+      --     picker.pick_window = function()
+      --       return picker.select({ hl = "WindowPicker", prompt = "Pick window: " }, function(winid)
+      --         return winid or nil
+      --       end)
+      --     end
+      --   end,
+      -- },
     },
     opts = function()
       return {
@@ -180,8 +180,10 @@ return {
             },
             ["o"] = "open",
             -- ["<CR>"] = "child_or_open",
-            ["<c-s>"] = "split_with_window_picker",
-            ["<c-v>"] = "vsplit_with_window_picker",
+            -- ["<c-s>"] = "split_with_window_picker",
+            -- ["<c-v>"] = "vsplit_with_window_picker",
+            ["<c-s>"] = "open",
+            ["<c-v>"] = "open",
             ["<esc>"] = "revert_preview",
             -- ["<c-c>"] = "clear_filter",
 
@@ -323,15 +325,15 @@ return {
             pinned = true,
             open = "Neotree position=right git_status",
           },
-          {
-            title = "Neo-Tree Buffers",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "buffers"
-            end,
-            pinned = true,
-            open = "Neotree position=top buffers",
-          },
+          -- {
+          --   title = "Neo-Tree Buffers",
+          --   ft = "neo-tree",
+          --   filter = function(buf)
+          --     return vim.b[buf].neo_tree_source == "buffers"
+          --   end,
+          --   pinned = true,
+          --   open = "Neotree position=top buffers",
+          -- },
           "neo-tree",
         },
         keys = {

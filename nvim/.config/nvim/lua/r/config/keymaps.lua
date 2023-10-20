@@ -60,7 +60,7 @@ nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ EDITING TEXT                                             │
 --  ╰──────────────────────────────────────────────────────────╯
-inoremap("hh", "<ESC>", silent)
+inoremap("jk", "<ESC>", silent)
 
 inoremap("<c-f>", "<Right>", silent)
 inoremap("<c-b>", "<Left>", silent)
@@ -326,7 +326,7 @@ end
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │
 --  ╰──────────────────────────────────────────────────────────╯
-cnoremap("hh", "<c-c>", { desc = "Cmdline: exit from cmdline" })
+cnoremap("jk", "<c-c>", { desc = "Cmdline: exit from cmdline" })
 cnoremap("<c-a>", "<Home>", { desc = "Cmdline: go to the first" })
 cnoremap("<c-e>", "<End>", { desc = "Cmdline: go to the last" })
 
@@ -375,6 +375,7 @@ cabbrev("Q!!", "q!")
 cabbrev("Q1", "q!")
 cabbrev("Q", "q")
 cabbrev("q!!", "q!")
+cabbrev("ql", "q!")
 cabbrev("Ql", "qal!")
 cabbrev("qla", "qal!")
 cabbrev("WQ", "up")

@@ -55,9 +55,10 @@ return {
       luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     end,
   },
-  -- VIM-MATCHUP
+  -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
+    enabled = false,
     event = "VeryLazy",
     config = function()
       vim.g.matchup_matchparen_deferred = 1 -- work async
@@ -236,8 +237,8 @@ return {
         sources = cmp.config.sources {
           { name = "nvim_lsp" },
           { name = "luasnip" },
-          { name = "path" },
           { name = "buffer" },
+          { name = "path" },
         },
       }
     end,
@@ -390,16 +391,16 @@ return {
       })
     end,
   },
-  -- -- Show TabNine status in lualine
-  -- {
-  --   "nvim-lualine/lualine.nvim",
-  --   optional = true,
-  --   event = "VeryLazy",
-  --   opts = function(_, opts)
-  --     local icon = require("lazyvim.config").icons.kinds.TabNine
-  --     table.insert(opts.sections.lualine_x, 2, require("lazyvim.util").lualine.cmp_source("cmp_tabnine", icon))
-  --   end,
-  -- },
+  -- Show TabNine status in lualine
+  {
+    "nvim-lualine/lualine.nvim",
+    optional = true,
+    event = "VeryLazy",
+    opts = function(_, opts)
+      local icon = require("lazyvim.config").icons.kinds.TabNine
+      table.insert(opts.sections.lualine_x, 2, require("lazyvim.util").lualine.cmp_source("cmp_tabnine", icon))
+    end,
+  },
   -- COMMENT.NVIM
   {
     "numToStr/Comment.nvim",
@@ -491,9 +492,10 @@ return {
       }
     end,
   },
-  -- OVERSEER.NVIM
+  -- OVERSEER.NVIM (disabled)
   {
     "stevearc/overseer.nvim", -- Task runner and job management
+    enabled = false,
     -- cmd = {
     --   "OverseerToggle",
     --   "OverseerOpen",
@@ -583,9 +585,10 @@ return {
       },
     },
   },
-  -- LUAPAD
+  -- LUAPAD (disabled)
   {
     "rafcamlet/nvim-luapad",
+    enabled = false,
     cmd = { "Luapad" },
     config = true,
   },

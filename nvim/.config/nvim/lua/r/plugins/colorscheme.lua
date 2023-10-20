@@ -4,6 +4,22 @@ return {
   ---------------------------------------------------------------------------
   -- Consistent color
   ---------------------------------------------------------------------------
+  -- NANO-THEME
+  {
+    "ronisbr/nano-theme.nvim",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    enabled = function()
+      local nanotheme = { "nano-theme" }
+      if vim.tbl_contains(nanotheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    init = function()
+      vim.o.background = "light" -- or "dark".
+    end,
+  },
   -- NIGHT-OWL
   {
     "oxfist/night-owl.nvim",

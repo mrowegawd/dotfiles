@@ -270,7 +270,7 @@ return {
       local col_unselected_bg_attr = "bufferline_unselected"
       local col_unselected_fg_attr = "Pmenu"
 
-      local col_selected_fg_attr = "Boolean"
+      local col_selected_fg_attr = "Function"
       local col_selected_bg_attr = "PmenuSel"
       if require("r.config").colorscheme == "material" then
         col_selected_bg_attr = "PmenuSel"
@@ -694,9 +694,10 @@ return {
       }
     end,
   },
-  -- NVIM-SCROLLBAR
+  -- NVIM-SCROLLBAR (disabled)
   {
     "petertriho/nvim-scrollbar",
+    enabled = false,
     event = "VimEnter",
     opts = {
       show = true,

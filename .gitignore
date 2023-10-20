@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+mpd/.config/mpd/playlist/*
+
 .suave
 
 home/.local/bin/wezterm

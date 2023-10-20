@@ -1,3 +1,5 @@
+bindkey -v # using vim bindkey
+export KEYTIMEOUT=300
 
 showalias() {
   local selected num
@@ -17,7 +19,6 @@ zle reset-prompt
 
 zle -N showalias
 bindkey '^o' showalias
-
 
 run-mark() {
   local cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
@@ -97,6 +98,13 @@ function fg-bg(){
 zle -N fg-bg
 bindkey '^z' fg-bg
 
+# function tmux-resize(){
+#   tmux resize-pane -Z
+# }
+
+# zle -N tmux-resize
+# bindkey '^[m' tmux-resize
+
 cursor_mode() {
   # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
   cursor_block='\e[2 q'
@@ -166,3 +174,45 @@ cursor_mode
 # }
 # zle -N copy_buffer
 # bindkey '^b' copy_buffer
+
+# Menu select
+# Select completion candidates with ←↓↑→ (completion candidates are displayed in different colors)
+# zstyle show completion menu if 1 or more items to select
+# zstyle ':completion:*:default' menu select=1
+zstyle ':completion:*' menu select
+zmodload -i zsh/complist
+
+# Menggunakan <Shift-hjkl> daripada <c-hjkl>, karena untuk navigate tmux
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
+
+# Shift-tab to reverse completion
+bindkey '^[[Z' reverse-menu-complete
+bindkey -M menuselect '^[[Z' reverse-menu-complete
+
+
+#  ╭─────────────╮
+#  │ INSERT-MODE │
+#  ╰─────────────╯
+bindkey '^d' backward-delete-char
+bindkey '^b' backward-char            # backward (c-b)
+bindkey '^f' forward-char             # forward char (c-f)
+bindkey '^w' backward-kill-word
+bindkey '^u' backward-kill-line
+bindkey '^a' beginning-of-line
+bindkey '^e' end-of-line
+
+# Shortcut bind to edit line text
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M viins '^[e' edit-command-line
+bindkey -M viins 'jk' vi-cmd-mode     # 'jk' to <esc>
+
+# Scroll history zsh
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^p" history-beginning-search-backward
+bindkey "^n" history-beginning-search-forward

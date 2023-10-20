@@ -4,9 +4,9 @@
 *.scrollBar: False
 
 ! special
-*.foreground:   #d6deeb
+*.foreground:   #064e87
 *.background:   #011627
-*.cursorColor:  #d6deeb
+*.cursorColor:  #064e87
 
 ! black
 *.color0:       #011627

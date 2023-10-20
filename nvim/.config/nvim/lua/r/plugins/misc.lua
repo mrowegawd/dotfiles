@@ -3,8 +3,6 @@ return {
   { "MunifTanjim/nui.nvim", lazy = true }, -- jangan di delete, karena di utils.init masih yang menggunakan
   { "nvim-lua/plenary.nvim", lazy = true },
   { "nvim-tree/nvim-web-devicons", lazy = true },
-  -- VIM-LOG
-  { "mtdl9/vim-log-highlighting", lazy = false },
   -- SUDA
   { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } },
   -- TASKWARRIOR SYNTAX
@@ -34,10 +32,11 @@ return {
       "CBcatalog",
     },
   },
-  -- HYPERSONIC.NVIM (make regex readable)
+  -- HYPERSONIC.NVIM (make regex readable) (disabled)
   {
     "tomiis4/Hypersonic.nvim",
     cmd = { "Hypersonic" },
+    enebled = "false",
     config = true,
   },
   -- SG.NVIM
@@ -58,7 +57,7 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = { { "<Leader>rm", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
+    keys = { { "<a-m>", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },

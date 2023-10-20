@@ -61,10 +61,10 @@ map <c-u>       scrollUp count=20
 map o           Vomnibar.activate
 
 # tab: open url in new tab (vomnibar)
-map O           Vomnibar.activateInNewTab
+# map O           Vomnibar.activateInNewTab
 
 # tab: select tab buffer (vomnibar)
-map B           Vomnibar.activateTabSelection
+# map B           Vomnibar.activateTabSelection
 
 # tab: open copied url in current tab
 # map <c-v>     openCopiedUrlInCurrentTab
@@ -95,7 +95,8 @@ map f           LinkHints.activateMode
 map F           LinkHints.activateModeToOpenInNewTab
 
 # link: open multi links in new tab
-#map <space>ff   LinkHints.activateWithQueue
+# map <space>ff   LinkHints.activateWithQueue
+map <space>ff   Vomnibar.activateTabSelection
 
 # link: follow the link activate download
 # map O         LinkHints.activateModeToDownloadLink
@@ -196,7 +197,11 @@ map <c-s-->     zoomOut
 # zoom: reset
 map <c-s-HOME>  zoomReset
 
-# mapkey <c-n:o> <tab>
-# mapkey <c-p:o> <s-tab>
+# NOTE!
+# ctrl-n ctrl-p untuk select next dan prev ketika vomnibar is active,
+# tapi ctrl-n defaultnya create new window untuk firefox (default nya gitu)
+# so.. seharusnya disable dahulu default keymap firefox
+mapkey <c-n:o> <tab>
+mapkey <c-p:o> <s-tab>
 
 # vim: ft=cfg

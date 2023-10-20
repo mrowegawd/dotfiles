@@ -101,10 +101,10 @@ nnoremap D d$
 " keymap: [word] spell check
 nnoremap <Insert> :set spell!<CR>
 
-" hh for escaping (insert and commandline)
-inoremap hh <Esc>
-" xnoremap hh <Esc>
-cnoremap hh <C-C>
+" jk for escaping (insert and commandline)
+inoremap jk <Esc>
+" xnoremap jk <Esc>
+cnoremap jk <C-C>
 
 " keymap: [search] open search
 nnoremap / /\v

@@ -452,6 +452,14 @@ M.trailing = function()
 
   return Trailing
 end
+M.linecount = function()
+  local Linecount = require("sttusline.component").new()
+  Linecount.set_event { "WinEnter", "BufEnter", "SessionLoadPost" }
+  Linecount.set_update(function()
+    return "ℓ " .. vim.api.nvim_buf_line_count(0)
+  end)
+  return Linecount
+end
 M.mixindent = function()
   local Mixindent = require("sttusline.component").new()
 

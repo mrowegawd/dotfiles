@@ -190,10 +190,10 @@ local options = {
     -----------------------------------------------------------------------------//
     -- timings {{{1
     -----------------------------------------------------------------------------//
-    updatetime = 100,
-    timeout = true,
+    updatetime = 50,
+    -- timeout = true,
     timeoutlen = 300,
-    ttimeoutlen = 10,
+    -- ttimeoutlen = 10,
 
     --[[
          shda (info for vim): session data history

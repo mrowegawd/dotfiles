@@ -36,6 +36,7 @@ return {
           "copilot",
           "encoding",
           "pos-cursor",
+          component.linecount(),
           "pos-cursor-progress",
           component.datetime(),
         },
