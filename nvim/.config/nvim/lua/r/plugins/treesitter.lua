@@ -61,7 +61,7 @@ return {
   -- NVIM-TS-AUTOTAG
   {
     "windwp/nvim-ts-autotag",
-    event = "InsertEnter",
+    event = "LazyFile",
     opts = {},
   },
   -- TREESITTER
