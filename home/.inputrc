@@ -38,23 +38,23 @@ $if mode=emacs
 $endif
 
 # Avoid binding ^J, ^M,  ^C, ^?, ^S, ^Q, etc.
-$if mode=vi
-    set keymap vi-command
-    "gg": beginning-of-history
-    "G": end-of-history
-    "?": reverse-search-history
-    "/": forward-search-history
+# $if mode=vi
+#     set keymap vi-command
+#     "gg": beginning-of-history
+#     "G": end-of-history
+#     "?": reverse-search-history
+#     "/": forward-search-history
 
-    set keymap vi-insert
-    "jk": vi-movement-mode
-    "\C-w": backward-kill-word
-    "\C-p": history-search-backward
-    "\C-n": history-search-forward
-    "\C-a": beginning-of-line
-    "\C-e": end-of-line
-    "\C-g": "fzm\n"
-    "\ee": edit-and-execute-command
-$endif
+#     set keymap vi-insert
+#     "jk": vi-movement-mode
+#     "\C-w": backward-kill-word
+#     "\C-p": history-search-backward
+#     "\C-n": history-search-forward
+#     "\C-a": beginning-of-line
+#     "\C-e": end-of-line
+#     "\C-g": "fzm\n"
+#     "\ee": edit-and-execute-command
+# $endif
 
 $if Bash
     Space: magic-space

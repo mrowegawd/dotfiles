@@ -3,6 +3,8 @@ return {
   { "MunifTanjim/nui.nvim", lazy = true }, -- jangan di delete, karena di utils.init masih yang menggunakan
   { "nvim-lua/plenary.nvim", lazy = true },
   { "nvim-tree/nvim-web-devicons", lazy = true },
+  -- VIM-LOG
+  { "mtdl9/vim-log-highlighting", lazy = false },
   -- SUDA
   { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } },
   -- TASKWARRIOR SYNTAX
@@ -90,7 +92,7 @@ return {
   {
     "mhanberg/output-panel.nvim",
     event = "VeryLazy",
-    keys = { { "<leader>rO", "<cmd>OutputPanel<CR>", desc = "Misc(outputpanel): open" } },
+    keys = { { "<Localleader>oo", "<cmd>OutputPanel<CR>", desc = "Misc(outputpanel): open" } },
     config = true,
   },
   -- NREDIR

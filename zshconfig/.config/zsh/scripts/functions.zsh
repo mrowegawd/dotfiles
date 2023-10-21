@@ -1,5 +1,16 @@
-bindkey -v # using vim bindkey
-export KEYTIMEOUT=300
+# vim: ft=zsh sw=2 ts=2 et
+
+function build-nvim() {
+  neovim_dir="$PROJECTS_DIR/contrib/neovim"
+  [ ! -d $neovim_dir ] && git clone git@github.com:neovim/neovim.git $neovim_dir
+  pushd $neovim_dir
+  git checkout master
+  git pull upstream master
+  [ -d "$neovim_dir/build/" ] && rm -r ./build/  # clear the CMake cache
+  make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+  make install
+  popd
+}
 
 showalias() {
   local selected num
@@ -158,9 +169,6 @@ cursor_mode
 #   fi
 # }
 
-# autoload -U add-zsh-hook
-# add-zsh-hook chpwd _togglePipenvShell
-
 # copy_output() {
 #     BUFFER+=' | xclip -selection clipboard -r'
 #     zle accept-line
@@ -175,44 +183,3 @@ cursor_mode
 # zle -N copy_buffer
 # bindkey '^b' copy_buffer
 
-# Menu select
-# Select completion candidates with ←↓↑→ (completion candidates are displayed in different colors)
-# zstyle show completion menu if 1 or more items to select
-# zstyle ':completion:*:default' menu select=1
-zstyle ':completion:*' menu select
-zmodload -i zsh/complist
-
-# Menggunakan <Shift-hjkl> daripada <c-hjkl>, karena untuk navigate tmux
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-
-# Shift-tab to reverse completion
-bindkey '^[[Z' reverse-menu-complete
-bindkey -M menuselect '^[[Z' reverse-menu-complete
-
-
-#  ╭─────────────╮
-#  │ INSERT-MODE │
-#  ╰─────────────╯
-bindkey '^d' backward-delete-char
-bindkey '^b' backward-char            # backward (c-b)
-bindkey '^f' forward-char             # forward char (c-f)
-bindkey '^w' backward-kill-word
-bindkey '^u' backward-kill-line
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
-
-# Shortcut bind to edit line text
-autoload -U edit-command-line
-zle -N edit-command-line
-bindkey -M viins '^[e' edit-command-line
-bindkey -M viins 'jk' vi-cmd-mode     # 'jk' to <esc>
-
-# Scroll history zsh
-autoload -U history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey "^p" history-beginning-search-backward
-bindkey "^n" history-beginning-search-forward

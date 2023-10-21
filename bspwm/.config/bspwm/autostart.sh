@@ -7,21 +7,6 @@ sleep 2
 
 [[ -f "$HOME/Dropbox/exbin/for-local-bin/paintree" ]] && "$HOME/Dropbox/exbin/for-local-bin/paintree"
 
-getcolors() {
-	# activate=$(xrdb -query | grep foreground | awk '{print $NF}')
-	inactive=$(xrdb -query | grep background | cut -d':' -f2 | sed 's/ //g' | xargs)
-	MAGENTA=$(xrdb -query | grep 'color5:' | awk '{print $NF}')
-	# BLACK=$(xrdb -query | grep 'color0:' | awk '{print $NF}')
-	GREEN=$(xrdb -query | grep 'foreground:' | awk '{print $NF}')
-}
-
-getcolors
-# Set the border colors.
-bspc config normal_border_color "$inactive"
-bspc config focused_border_color "$GREEN"
-bspc config active_border_color "$GREEN"
-bspc config presel_feedback_color "$MAGENTA"
-
 # setxkbmap -layout us -variant intl
 setxkbmap -option caps:backspace # switch capslock to backspace
 export _JAVA_AWT_WM_NONREPARENTING=1

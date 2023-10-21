@@ -3,12 +3,12 @@ colors:
   # Default colors
   primary:
     background: '0x011627'
-    foreground: '0x064e87'
+    foreground: '0x076fc2'
 
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
     text: '0xffffff'
-    cursor: '0x7e57c2'
+    cursor: '0x076fc2'
 
   # Normal colors
   normal:

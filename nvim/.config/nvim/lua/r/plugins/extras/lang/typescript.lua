@@ -137,6 +137,7 @@ return {
   -- PACKAGE-INFO.NVIM
   {
     "vuki656/package-info.nvim",
+    enabled = false,
     event = "BufEnter package.json",
     config = function()
       local Config = require "r.config"

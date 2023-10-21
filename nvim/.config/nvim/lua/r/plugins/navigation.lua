@@ -4,9 +4,13 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
+
+  -- NETRW (disabled)
+  { "prichrd/netrw.nvim", enabled = false, opts = {} },
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
+    -- enabled = false,
     cmd = "Neotree",
     init = function()
       Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
@@ -254,6 +258,7 @@ return {
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
+    enabled = false,
     event = "VeryLazy",
     -- stylua: ignore
     keys = {

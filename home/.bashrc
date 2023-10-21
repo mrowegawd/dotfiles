@@ -25,8 +25,8 @@
 
 # esac
 
-export DOTFILES="${HOME}/.dotfiles"
-[[ -f ${DOTFILES} ]] && . "${DOTFILES}/variables.sh"
+export DOTFILES="${HOME}/moxconf/development/dotfiles"
+[[ -d ${DOTFILES} ]] && source "${DOTFILES}/miscxrdb/global-exports/variables.sh"
 
 # EXPORT: ----------------------------------------------------------------- {{{
 #

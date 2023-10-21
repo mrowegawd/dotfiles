@@ -1,3 +1,5 @@
+# vim: foldmethod=marker foldlevel=0
+
 # GENERAL: ---------------------------------------------------------------- {{{
 #
 export LC_ALL=en_US.UTF-8
@@ -60,4 +62,4 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 #
 # }}}
 
-# vim: ft=sh sw=2 ts=2 et foldmethod=marker
+# vim: ft=sh sw=2 ts=2 et foldmethod=marker foldlevel=0

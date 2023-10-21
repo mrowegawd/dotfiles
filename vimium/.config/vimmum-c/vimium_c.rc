@@ -50,7 +50,6 @@ map <c-d>       scrollDown count=20
 # base: scroll down (fast)
 map <c-u>       scrollUp count=20
 
-
 ###############################
 #
 # Open
@@ -151,6 +150,9 @@ map H           moveTabLeft
 
 # tab: move tab to the right
 map L           moveTabRight
+
+# tab: pin tab
+map <space>bp  togglePinTab
 
 ###############################
 #

@@ -26,7 +26,7 @@ return {
       },
     },
   },
-  -- DELIMITERS (Disabled, make nvim slow)
+  -- DELIMITERS (Disabled, make nvim slow!)
   {
     "HiPhish/rainbow-delimiters.nvim",
     event = "VeryLazy",

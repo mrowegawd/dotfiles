@@ -7,6 +7,10 @@ vv
 
 mpd/.config/mpd/playlist/*
 
+zshconfig/.config/zsh/plugins
+
+.zcompdump
+.chpwd-recent-dirs
 .suave
 
 home/.local/bin/wezterm

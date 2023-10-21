@@ -6,8 +6,6 @@ OverseerConfig.fnpane_run = 0
 OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
-local callme = 0
-
 return {
   -- LUASNIP
   {
@@ -167,53 +165,53 @@ return {
           end, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<c-l>"] = cmp.mapping.confirm { select = false },
           ["<cr>"] = cmp.mapping.confirm { select = false },
-          ["<C-y>"] = cmp.mapping(function(_)
-            -- if c_cmp.visible() then
-            --   c_cmp.abort()
-            if callme == 0 then
-              callme = 1
-              cmp.complete {
-                config = {
-                  sources = {
-                    { name = "luasnip" },
-                  },
-                },
-              }
-            elseif callme == 1 then
-              callme = 2
-              cmp.complete {
-                config = {
-                  sources = {
-                    { name = "cmp_tabnine" },
-                    {
-                      name = "buffer",
-                      option = {
-                        get_bufnrs = function()
-                          return vim.api.nvim_list_bufs()
-                        end,
-                      },
-                    },
-                  },
-                },
-              }
-            else
-              if callme == 2 then
-                callme = 0
-                cmp.complete {
-                  config = {
-                    sources = {
-                      { name = "nvim_lsp" },
-                    },
-                  },
-                }
-              end
-            end
-          end, {
-            "i",
-            "s",
-          }),
+          ["<C-y>"] = cmp.mapping.confirm { select = true },
+          -- ["<C-y>"] = cmp.mapping(function(_)
+          --   -- if c_cmp.visible() then
+          --   --   c_cmp.abort()
+          --   if callme == 0 then
+          --     callme = 1
+          --     cmp.complete {
+          --       config = {
+          --         sources = {
+          --           { name = "luasnip" },
+          --         },
+          --       },
+          --     }
+          --   elseif callme == 1 then
+          --     callme = 2
+          --     cmp.complete {
+          --       config = {
+          --         sources = {
+          --           { name = "cmp_tabnine" },
+          --           {
+          --             name = "buffer",
+          --             option = {
+          --               get_bufnrs = function()
+          --                 return vim.api.nvim_list_bufs()
+          --               end,
+          --             },
+          --           },
+          --         },
+          --       },
+          --     }
+          --   else
+          --     if callme == 2 then
+          --       callme = 0
+          --       cmp.complete {
+          --         config = {
+          --           sources = {
+          --             { name = "nvim_lsp" },
+          --           },
+          --         },
+          --       }
+          --     end
+          --   end
+          -- end, {
+          --   "i",
+          --   "s",
+          -- }),
         },
 
         -- experimental = { ghost_text = true },
