@@ -1,15 +1,15 @@
 # vim: ft=conf
 
 ########################################
-# States and flags
+# STATES AND FLAGS
 ########################################
-# alt, super, ctrl
+# alt, super (tombol tengah), ctrl
 
 # state: fullscreen
 super + f
         bspc node -t {fullscreen,tiled}
 
-# stage: toggle entering mode float
+# state: float/tiled
 super + t
         bspc node -t {floating,tiled}
 
@@ -17,7 +17,7 @@ super + t
 # super + ctrl + {m,l,s,p}
 # 	      bspc node -g {marked,locked,sticky,private}
 
-# state: parent,brother,first,second
+# state: parent,brother
 super + {p,b}
         bspc node -f @{parent,brother}
 
@@ -28,21 +28,24 @@ super + {p,b}
 #         bspc wm -h on
 
 ########################################
-# Window
+# WINDOW
 ########################################
-# window: rotate or split window
-super + F6
+# window: rotate
+super + r
         bspc node @/ -R {90,270}
 
-# window: next/prev
-super + {l,h}
-        bspc node -f {next.local,prev.local}
+# window: focus next/prev
+super + {h,l,k,j}
+    dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
 
 ########################################
-# Workspace
+# WORKSPACE
 ########################################
 
-# workspace: next/prev
+# super + {_,shift + }{h,j,k,l}
+# 	bspc node -{f,s} {west,south,north,east}
+
+# workspace: focus next/prev
 super + ctrl + {l,h}
         bspc desktop -f {next.local,prev.local}
 
@@ -50,9 +53,8 @@ super + ctrl + {l,h}
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
 
-
 ########################################
-# Move, Resize, Floating
+# RESIZE, FLOATING
 ########################################
 
 # resize: move window left/right/up/down [if mode: float]
@@ -75,7 +77,7 @@ super + ctrl + {Right,Up,Down,Left}
 #         bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
 
 ########################################
-# Brightness
+# BRIGHTNESS
 ########################################
 
 # misc: increase brightness
@@ -87,7 +89,7 @@ super + ctrl + {Right,Up,Down,Left}
 #         xbacklight -dec 5
 
 ########################################
-# misc
+# APPS
 ########################################
 
 # misc: open rofi_call
@@ -159,7 +161,7 @@ super + shift + u
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
         # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && sh -e bash -c "/usr/local/bin/nvim --noplugin -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
 
-# misc: run websearch bookmark
+# misc: run bookmark
 super + shift + p
         ~/.local/bin/websearch
 
