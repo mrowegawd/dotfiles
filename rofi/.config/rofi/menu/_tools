@@ -102,7 +102,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 
 	}
 
-	run_ffmpeg_stop() {
+	run_simplegif_stop() {
 		giph --stop
 		dunstify "Gif created:" "$filegif"
 	}
