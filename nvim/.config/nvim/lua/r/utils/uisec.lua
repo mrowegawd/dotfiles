@@ -134,7 +134,7 @@ function M.decorations_set_colorcolumn(bufnr, fn)
       return
     end
     local ccol = decor.ft or decor.bt or ""
-    local virtcolumn = not as.falsy(ccol) and ccol or "+1"
+    local virtcolumn = not Util.cmd.falsy(ccol) and ccol or "+1"
     if vim.is_callable(fn) then
       fn(virtcolumn)
     end
