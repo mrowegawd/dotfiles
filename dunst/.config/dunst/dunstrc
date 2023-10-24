@@ -91,7 +91,7 @@ frame_width = 3
 
 # Defines color of the frame around the notification window.
 
-frame_color = "#002b36"
+frame_color = "#282c34"
 
 # Define a color for the separator.
 # possible values are:
@@ -302,15 +302,15 @@ timeout = 10
 #default_icon = /path/to/icon
 
 [urgency_normal]
-background = "#002b36"
-foreground = "#0098bf"
+background = "#282c34"
+foreground = "#bbc2cf"
 # frame_color = "#000004"
 timeout = 8
 icon = ~/.config/dunst/warning.png
 
 [urgency_critical]
-background = "#cb4b16"
-foreground = "#fdf6e3"
+background = "#ff6c6b"
+foreground = "#efefef"
 # frame_color = "#ff0000"
 timeout = 10
 icon = ~/.config/dunst/critical.png

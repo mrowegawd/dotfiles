@@ -133,6 +133,7 @@ return {
         },
 
         mapping = {
+          ["<C-q>"] = cmp.mapping.abort(),
           ["<c-n>"] = cmp.mapping(function()
             if cmp.visible() then
               cmp.select_next_item()
@@ -214,7 +215,7 @@ return {
           -- }),
         },
 
-        -- experimental = { ghost_text = true },
+        experimental = { ghost_text = false },
         sorting = defaults.sorting,
         duplicates = {
           nvim_lsp = 1,
