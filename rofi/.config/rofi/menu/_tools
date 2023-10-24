@@ -94,7 +94,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 			# -d waktu mulai dari n
 			# -t jumlah waktu ngerekam gif
 			# giph -f 30 -s -l -c 0.3,0,0.5,0.3 -d 3 -t 10 "$filegif"
-			giph -s -l "$filegif"
+			giph -f 30 -s -l "$filegif"
 		else
 			# Check install here: https://github.com/phisch/giph
 			dunstify ":you need install giph"

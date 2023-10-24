@@ -396,31 +396,58 @@ key_bindings:
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# Colors (Solarized Dark)
-colors:
-  # Default colors
+# TokyoNight Alacritty Colors
+doom_light: &doom_light
   primary:
-    background: '0x002b36'
-    foreground: '0x839496'
-
-  # Normal colors
+    foreground: '#383a42'
+    background: '#282c34'
+  cursor:
+    cursor: '#4078f2'
+    text: '#fafafa'
   normal:
-    black:   '0x073642'
-    red:     '0xdc322f'
-    green:   '0x859900'
-    yellow:  '0xb58900'
-    blue:    '0x268bd2'
-    magenta: '0xd33682'
-    cyan:    '0x2aa198'
-    white:   '0xeee8d5'
-
-  # Bright colors
+    black: '#fafafa'
+    red: '#e45649'
+    green: '#50a14f'
+    yellow: '#986801'
+    blue: '#4078f2'
+    magenta: '#b751b6'
+    cyan: '#0184bc'
+    white: '#383a42'
   bright:
-    black:   '0x002b36'
-    red:     '0xcb4b16'
-    green:   '0x586e75'
-    yellow:  '0x657b83'
-    blue:    '0x839496'
-    magenta: '0x6c71c4'
-    cyan:    '0x93a1a1'
-    white:   '0xfdf6e3'
+    black: '#9ca0a4'
+    red: '#e45649'
+    green: '#50a14f'
+    yellow: '#da8548'
+    blue: '#4078f2'
+    magenta: '#b751b6'
+    cyan: '#0184bc'
+    white: '#efefef'
+
+doom_dark: &doom_dark
+  primary:
+    foreground: '#bbc2cf'
+    background: "#282c34"
+  cursor:
+    cursor: '#51afef'
+    text: '#282c34'
+  normal:
+    black: "#282c34"
+    red: "#ff6c6b"
+    green: "#98be65"
+    yellow: "#ecbe7b"
+    blue: "#51afef"
+    magenta: "#a9a1e1"
+    cyan: "#46d9ff"
+    white: "#bbc2cf"
+  bright:
+    black: "#3f444a"
+    red: "#ff6c6b"
+    green: "#98be65"
+    yellow: "#da8548"
+    blue: "#51afef"
+    magenta: "#a9a1e1"
+    cyan: "#46d9ff"
+    white: "#efefef"
+
+# Apply
+colors: *doom_dark
