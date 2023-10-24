@@ -19,7 +19,7 @@ return {
       {
         "<Leader>e",
         function()
-          Util.tiling.force_win_close({ "OverseerList", "undotree", "aerial" }, false)
+          Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
           return cmd "Neotree toggle"
         end,
         desc = "Misc(neotree): open File explore",
@@ -27,7 +27,7 @@ return {
       {
         "<Leader>E",
         function()
-          Util.tiling.force_win_close({ "OverseerList", "undotree", "aerial" }, false)
+          Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
           return cmd "Neotree reveal toggle"
         end,
         desc = "Misc(neotree): open find file on File Explore",
