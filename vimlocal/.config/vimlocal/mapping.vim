@@ -1,4 +1,3 @@
-# vim: foldmethod=marker foldlevel=0
 set encoding=utf-8
 scriptencoding utf-8
 
@@ -506,12 +505,12 @@ if exists(':tnoremap')
 
     if PluginLoaded('nvim-toggleterm.lua')
       " keymap: [terminal] open split
-      nnoremap <silent> <leader>tt  :ToggleTerm<cr>
+      nnoremap <silent> <c-t>  :ToggleTerm<cr>
 
       " keymap: [terminal] open vertical
       " nnoremap <silent> <leader>tv  :TerminalV<cr>
 
-      tnoremap <silent> <leader>tt  <C-\><C-n>:q<cr>
+      tnoremap <silent> <c-t>  <C-\><C-n>:q<cr>
       tnoremap <ESC>                <C-\><C-n>
 
     " else
@@ -536,8 +535,8 @@ if exists(':tnoremap')
     endif
 
   else
-    nnoremap <a-t> :vert terminal<cr>
-    tnoremap <silent> <a-t> exit<cr>
+    nnoremap <c-t> :terminal<cr>
+    tnoremap <silent> <c-t> exit<cr>
     tnoremap   <ESC><ESC>     <C-w>N
     " tnoremap   <ESC>          <C-w>N
 

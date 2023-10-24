@@ -1,4 +1,3 @@
-# vim: foldmethod=marker foldlevel=0
 scriptencoding utf-8
 set linespace=5
 
