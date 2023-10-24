@@ -23,6 +23,7 @@ Util.cmd.augroup("SmartClose", {
     "notify",
     "qf",
     "query",
+    "noice",
     "spectre_panel",
     "startuptime",
     "tsplayground",
