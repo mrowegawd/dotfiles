@@ -21,7 +21,6 @@
     "vim.leader": "<space>",
     "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
     "snippets.extends": {},
-    "window.zoomLevel": -1.5,
     "vim.normalModeKeyBindings": [
         {
             "before": [ "g", "l" ],
@@ -120,8 +119,7 @@
         // {
         //     "before": [
         //         "<leader>",
-        //         "t",
-        //         "t"
+        //         "<leader>",
         //     ],
         //     "commands": [
         //         "workbench.action.terminal.toggleTerminal"
@@ -130,13 +128,13 @@
         // {
         //     "before": [
         //         "<leader>",
-        //         "t",
-        //         "t"
+        //         "<leader>",
         //     ],
         //     "commands": [
         //         "workbench.action.terminal.toggleTerminal"
         //     ],
-        //     "when": "terminal.focus"
+        //     "when": "terminalFocus"
         // }
     ],
+    "editor.fontSize": 10,
 }

@@ -112,4 +112,9 @@
         "key": "ctrl+t",
         "command": "workbench.action.terminal.toggleTerminal"
     }
+    {
+        "key": "ctrl+Insert",
+        "command": "workbench.action.terminal.new",
+        "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+    }
 ]

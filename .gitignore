@@ -47,6 +47,7 @@ home/.local/bin/glow
 home/.local/bin/fd
 home/.local/bin/dropbox
 home/.local/bin/deno
+home/.local/bin/nvim
 
 mpd/.config/mpd/mpd.pid
 mpd/.config/mpd/state
