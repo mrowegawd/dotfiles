@@ -1,6 +1,7 @@
 local fmt, cmd, api = string.format, vim.cmd, vim.api
 
 local Util = require "r.utils"
+local highlight = require "r.config.highlights"
 
 local function format_title(str, icon, icon_hl)
   return {
@@ -65,14 +66,7 @@ return {
             prompt = "  ",
             cwd = require("r.config").path.wiki_path,
             winopts = {
-              fullscreen = false,
-
               title = format_title("[Neorg] Grep", " "),
-              -- preview = {
-              --   vertical = "up:45%",
-              --   horizontal = "right:60%",
-              --   layout = "vertical",
-              -- },
             },
             -- cmd = "rg --follow hidden no-heading with-filename line-number column smart-case trim -- remove indentation -g *.norg -g *.org -g !config/ -g !.obsidian/",
           }
@@ -566,16 +560,35 @@ return {
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
-    ft = { "markdown", "org", "norg" },
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    config = function()
-      require("headlines").setup {
-        org = { headline_highlights = false },
-        norg = {
-          headline_highlights = false,
-          codeblock_highlight = false,
+    ft = { "markdown", "norg", "rmd", "org" },
+    opts = function()
+      -- local opts = {}
+      -- for _, ft in ipairs { "markdown", "norg", "rmd", "org" } do
+      --   opts[ft] = { headline_highlights = {} }
+      --   for i = 1, 6 do
+      --     table.insert(opts[ft].headline_highlights, "Headline" .. i)
+      --   end
+      -- end
+      -- opts.neorg = {
+      --   fat_headline_lower_string = "▔",
+      -- }
+      -- return opts
+
+      highlight.plugin("Headlines", {
+        theme = {
+          ["*"] = {
+            { Dash = { bg = "#0B60A1", bold = true } },
+          },
+          ["horizon"] = {
+            { Headline = { bold = true, italic = true, bg = { from = "Normal", alter = 0.2 } } },
+            { Headline1 = { inherit = "Headline", fg = { from = "Type" } } },
+          },
         },
-        markdown = { headline_highlights = false },
+      })
+      return {
+        org = { headline_highlights = false },
+        norg = { headline_highlights = { "Headline" }, codeblock_highlight = false },
+        markdown = { headline_highlights = { "Headline1" } },
       }
     end,
   },

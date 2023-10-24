@@ -41,11 +41,6 @@ function M.neorg_mappings_ft(bufnr)
 
             winopts = {
               title = format_title("[Neorg] Title Global", " "),
-              -- preview = {
-              --   vertical = "up:55%",
-              --   horizontal = "left:60%",
-              --   layout = "vertical",
-              -- },
             },
           }
         end,
@@ -60,11 +55,6 @@ function M.neorg_mappings_ft(bufnr)
             fzf_opts = { ["--layout"] = false },
             winopts = {
               title = format_title("[Neorg] Title Curbuf", " "),
-              -- preview = {
-              --   vertical = "up:55%",
-              --   horizontal = "left:60%",
-              --   layout = "vertical",
-              -- },
             },
           }
         end,
@@ -76,8 +66,6 @@ function M.neorg_mappings_ft(bufnr)
           local title = vim.fn.getreg '"0'
           local title_trim = title:gsub([[^:%$]], [[:\$]])
 
-          -- vim.notify("find: " .. title_trim)
-
           require("fzf-lua").live_grep {
             prompt = "  ",
             cwd = require("r.config").path.wiki_path,
@@ -86,11 +74,6 @@ function M.neorg_mappings_ft(bufnr)
             fzf_opts = { ["--layout"] = "reverse" },
             winopts = {
               title = format_title("[Neorg] Link Friend", " "),
-              -- preview = {
-              --   vertical = "up:55%",
-              --   horizontal = "right:60%",
-              --   layout = "vertical",
-              -- },
             },
           }
         end,
@@ -101,19 +84,12 @@ function M.neorg_mappings_ft(bufnr)
           -- Karena use grep utk curbuf, agar bisa menggunakan regex
           -- pakai `lgrep_curbuf`
           require("fzf-lua").lgrep_curbuf {
-            -- prompt = "[Neorg] Linkable❯ ",
             prompt = "  ",
             search = [[(\{:\$|\{http)]],
             no_esc = true,
             fzf_opts = { ["--layout"] = "reverse" },
             winopts = {
-              -- split = "belowright new | wincmd J | resize 40",
               title = format_title("[Neorg] Link Curbuf", " "),
-              -- preview = {
-              --   vertical = "up:55%",
-              --   horizontal = "right:60%",
-              --   layout = "vertical",
-              -- },
             },
           }
         end,
@@ -157,14 +133,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              -- split = "belowright new | wincmd J | resize 40",
               title = format_title("[Neorg] Title Curbuf", " "),
-              -- preview = {
-              --   hidden = "hidden",
-              --   vertical = "up:55%",
-              --   horizontal = "right:60%",
-              --   layout = "vertical",
-              -- },
             },
             actions = {
               ["default"] = function(selected, _)
@@ -189,13 +158,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              -- split = "belowright new | wincmd J | resize 40",
               title = format_title("[Neorg] Title Global", " "),
-              -- preview = {
-              --   vertical = "up:55%",
-              --   horizontal = "right:60%",
-              --   layout = "vertical",
-              -- },
             },
             fzf_opts = {
               ["--preview"] = fzf_lua.shell.preview_action_cmd(function(items)
