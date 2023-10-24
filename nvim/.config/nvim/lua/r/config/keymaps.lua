@@ -61,6 +61,7 @@ nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 --  │ EDITING TEXT                                             │
 --  ╰──────────────────────────────────────────────────────────╯
 inoremap("jk", "<ESC>", silent)
+inoremap("kj", "<ESC>", silent)
 
 inoremap("<c-f>", "<Right>", silent)
 inoremap("<c-b>", "<Left>", silent)
@@ -96,7 +97,7 @@ end
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ FOLDS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
-nnoremap("<space><space>", "za", { desc = "Folds: toggle" })
+-- nnoremap("<space><space>", "za", { desc = "Folds: toggle" })
 
 nnoremap("<a-n>", function()
   return Util.fold.goNextClosedFold()
@@ -346,7 +347,7 @@ Util.cmd.augroup("AddTerminalMappings", {
   command = function()
     if vim.bo.filetype == "" or vim.bo.filetype == "toggleterm" then
       tnoremap("<F1>", "<C-w>w", { desc = "Terminal change window" })
-      tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
+      tnoremap("<esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
       tnoremap("<C-h>", "<C-\\><C-n><C-w>h", { desc = "Terminal left window navigation" })
       tnoremap("<C-j>", "<C-\\><C-n><C-w>j", { desc = "Terminal down window navigation" })
       tnoremap("<C-k>", "<C-\\><C-n><C-w>k", { desc = "Terminal up window navigation" })
