@@ -1,4 +1,5 @@
 local Util = require "r.utils"
+local highlight = require "r.config.highlights"
 
 return {
   -- GITHUB NOTIFICATIONS
@@ -33,6 +34,13 @@ return {
     "akinsho/git-conflict.nvim", --- hanya untuk viewer untuk git log, namun bisa di kombinasi dengan fugitive
     event = "VeryLazy",
     config = true,
+  },
+  {
+    "tpope/vim-fugitive",
+    cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit" },
+    dependencies = {
+      "tpope/vim-rhubarb",
+    },
   },
   -- GITLINKER
   {
@@ -233,19 +241,30 @@ return {
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    -- remove these maps: `<c-i>` `<c-o>`
+    -- event = "VeryLazy",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     init = function()
       Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
     end,
-    config = function()
-      local diffview = require "diffview"
+    opts = function()
+      highlight.plugin("diffview", {
+        { DiffAddedChar = { bg = "NONE", fg = { from = "diffAdd", attr = "fg", alter = 0.3 } } },
+        { DiffChangedChar = { bg = "NONE", fg = { from = "diffChanged", attr = "fg", alter = 0.3 } } },
+        { DiffDeletedChar = { bg = "NONE", fg = { from = "diffRemoved", attr = "fg", alter = 0.3 } } },
+        { DiffviewStatusAdded = { link = "DiffAddedChar" } },
+        { DiffviewStatusModified = { link = "DiffChangedChar" } },
+        { DiffviewStatusRenamed = { link = "DiffChangedChar" } },
+        { DiffviewStatusUnmerged = { link = "DiffChangedChar" } },
+        { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
+        { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
+
+        { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
+        { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
+      })
       local actions = require "diffview.actions"
 
-      diffview.setup {
+      return {
         enhanced_diff_hl = true,
         diff_binaries = false, -- Show diffs for binaries
         git_cmd = { "git" },

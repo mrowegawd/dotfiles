@@ -757,7 +757,7 @@ return {
       }
     end,
   },
-  --- LSP_SIGNATURE.NVIM
+  -- LSP_SIGNATURE.NVIM
   {
     -- lsp_signature.nvim [auto params help]
     -- https://github.com/ray-x/lsp_signature.nvim
