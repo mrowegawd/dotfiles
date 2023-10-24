@@ -148,7 +148,7 @@ local general_overrides = function()
     { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", alter = -0.3 }, italic = true } },
 
     -- TELESCOPE ==========================================================
-    { TelescopeNormal = { link = "Normal" } },
+    { TelescopeNormal = { fg = { from= "Pmenu", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
     { TelescopeBorder = { fg = { from = "Normal", alter = -0.4 }, bg = { from = "Normal", attr = "bg" } } },
 
     -- Prompt
@@ -159,8 +159,8 @@ local general_overrides = function()
 
     -- Preview
     { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "Normal", alter = 0.14, bold = true }, bold = true } },
-    { TelescopeSelection = { link = "PmenuSel" } },
-    { TelescopeMatching = { link = "CmpItemAbbrMatch" } },
+    { TelescopeSelection = { fg = { from = "Normal", attr = "fg" }, standout = false } },
+    { TelescopeMatching = { link = "CmpItemAbbrMatchFuzzy" } },
 
     -- Results
     { TelescopeResultsTitle = { bg = "NONE" } },
@@ -189,13 +189,35 @@ end
 
 local function set_sidebar_highlight()
   highlight.all {
-    { PanelDarkBackground = { bg = { from = "Normal" } } },
+    { PanelDarkBackground = { bg = { from = "Normal", alter = -0.2 } } },
     { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
-    { PanelBackground = { bg = { from = "Normal" } } },
+    { PanelBackground = { bg = { from = "Normal", alter = -0.2 } } },
     { PanelHeading = { inherit = "PanelBackground", bold = true } },
     { PanelWinSeparator = { inherit = "PanelBackground", fg = { from = "WinSeparator" } } },
     { PanelStNC = { link = "PanelWinSeparator" } },
     { PanelSt = { bg = { from = "Visual", alter = -0.2 } } },
+  }
+end
+
+local sidebar_fts = {
+  "packer",
+  "flutterToolsOutline",
+  "undotree",
+  "Outline",
+  "dbui",
+  "neotest-summary",
+  "pr",
+}
+
+local function on_sidebar_enter()
+  vim.opt_local.winhighlight:append {
+    Normal = "PanelBackground",
+    EndOfBuffer = "PanelBackground",
+    StatusLine = "PanelSt",
+    StatusLineNC = "PanelStNC",
+    SignColumn = "PanelBackground",
+    VertSplit = "PanelVertSplit",
+    WinSeparator = "PanelWinSeparator",
   }
 end
 
@@ -232,6 +254,7 @@ local function colorscheme_overrides()
       { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.4 } } },
       { WinBar = { bg = "NONE" } },
       { MatchParen = { bg = "NONE" } },
+      { Directory = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { ErrorMsg = { standout = false, reverse = false } },
       { LineNr = { fg = { from = "LineNr", alter = -0.15 } } },
       { LspReferenceText = { bg = "NONE", standout = false } },
@@ -325,39 +348,14 @@ local function colorscheme_overrides()
     },
   }
 
-  local hls = overrides[require("r.config").colorscheme]
-  if not hls then
-    return
-  end
-  highlight.all(hls)
+  local hls = overrides[vim.g.colors_name]
+  if hls then highlight.all(hls) end
 end
 
 local function user_highlights()
   general_overrides()
   set_sidebar_highlight()
   colorscheme_overrides()
-end
-
-local sidebar_fts = {
-  "packer",
-  "flutterToolsOutline",
-  "undotree",
-  "Outline",
-  "dbui",
-  "neotest-summary",
-  "pr",
-}
-
-local function on_sidebar_enter()
-  vim.opt_local.winhighlight:append {
-    Normal = "PanelBackground",
-    EndOfBuffer = "PanelBackground",
-    StatusLine = "PanelSt",
-    StatusLineNC = "PanelStNC",
-    SignColumn = "PanelBackground",
-    VertSplit = "PanelVertSplit",
-    WinSeparator = "PanelWinSeparator",
-  }
 end
 
 Util.cmd.augroup("UserHighlights", {

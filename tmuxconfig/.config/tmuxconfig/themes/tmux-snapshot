@@ -1,14 +1,14 @@
-WINDOW_STYLE_BG="#002b36"
-WINDOW_ACTIVE_STYLE_BG="#002b36"
+WINDOW_STYLE_BG="#282c34"
+WINDOW_ACTIVE_STYLE_BG="#282c34"
 
 COL_WHITE="#626262"
-COL_RED="#d33682"
+COL_RED="#a9a1e1"
 
-COL_ACTIVE_BORDER_SEPERATOR="#003846"
-COL_BORDER_SEPERATOR="#002f3b"
+COL_ACTIVE_BORDER_SEPERATOR="#343944"
+COL_BORDER_SEPERATOR="#2c3039"
 
-BG_STATUSLINE="#002b36"
-BG_ACTIVE_STATUSLINE="#d33682"
+BG_STATUSLINE="#282c34"
+BG_ACTIVE_STATUSLINE="#a9a1e1"
 
 left_separator=''
 # left_separator_black=''
@@ -54,11 +54,10 @@ set -g window-status-format "#[fg=$COL_WHITE] #W"
 # $left_separator #W #[fg=$BG_ACTIVE_STATUSLINE,bg=$BG_STATUSLINE,nobold]$left_separator_black\
 # #[bg=$WINDOW_ACTIVE_STYLE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM ,}"
 
-set -g window-status-format "#[fg=$COL_WHITE,bold]  "
+set -g window-status-format "#[fg=$COL_WHITE,bold] "
 # set -g window-status-current-format "#[fg=$BG_ACTIVE_STATUSLINE,bold]  #W #[bg=$WINDOW_ACTIVE_STYLE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
 # set -g window-status-current-format "#[fg=$BG_ACTIVE_STATUSLINE,bold]  [bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_RED,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
-set -g window-status-current-format "#[fg=red,bold]  #[fg=red,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
-
+set -g window-status-current-format "#[fg=red,bold] #[fg=red,bold]#{?window_zoomed_flag,ZOOM#[fg=colour166](#(tmux list-panes | wc -l)),}"
 
 ## RIGHT
 set -g status-right-length 40

@@ -82,14 +82,9 @@ local attrs = {
 }
 
 local err_warn = vim.schedule_wrap(function(group, attribute)
-  notify(
-    fmt("failed to get highlight %s for attribute %s\n%s", group, attribute, debug.traceback()),
-    ---@diagnostic disable-next-line: param-type-mismatch
-    "ERROR",
-    {
-      title = fmt("Highlight - get(%s)", group),
-    }
-  ) -- stylua: ignore
+  notify(fmt("failed to get highlight %s for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
+    title = fmt("Highlight - get(%s)", group),
+  }) -- stylua: ignore
 end)
 
 --- Change the brightness of a color, negative numbers darken and positive ones brighten
@@ -165,12 +160,11 @@ end
 local function pcall(msg, func, ...)
   local args = { ... }
   if type(msg) == "function" then
-    local arg = func --[[@as any]]
-    ---@diagnostic disable-next-line: cast-local-type
+    local arg = func
     args, func, msg = { arg, unpack(args) }, msg, nil
   end
   return xpcall(func, function(err)
-    msg = debug.traceback(msg and fmt("%s:\n%s", msg, err) or err)
+    msg = debug.traceback(msg and fmt("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
     vim.schedule(function()
       vim.notify(msg, L.ERROR, { title = "ERROR" })
     end)
@@ -193,11 +187,7 @@ function M.set(ns, name, opts)
     opts, name, ns = name, ns, 0
   end
 
-  vim.validate {
-    opts = { opts, "table" },
-    name = { name, "string" },
-    ns = { ns, "number" },
-  }
+  vim.validate { opts = { opts, "table" }, name = { name, "string" }, ns = { ns, "number" } }
 
   local hl = opts.clear and {} or get_hl_as_hex { name = opts.inherit or name }
   for attribute, hl_data in pairs(opts) do
@@ -207,8 +197,7 @@ function M.set(ns, name, opts)
     end
   end
 
-  local msg = ('failed to set highlight "%s" with value %s'):format(name, vim.inspect(hl))
-  pcall(msg, api.nvim_set_hl, ns, name, hl)
+  pcall(fmt('setting highlight "%s"', name), api.nvim_set_hl, ns, name, hl)
 end
 
 local function foreach(callback, list)
@@ -258,9 +247,6 @@ function M.plugin(name, opts)
       return
     end
   end
-
-  -- capitalise the name for autocommand convention sake
-  name = name:gsub("^%l", string.upper)
   M.all(opts)
 
   -- capitalise the name for autocommand convention sake
