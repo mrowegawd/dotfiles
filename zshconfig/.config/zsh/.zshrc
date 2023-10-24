@@ -299,7 +299,7 @@ export AUTOENVME="$HOME/.autoenv"
 [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 
 # Disable virtualenv prompt, it breaks starship
-set -g VIRTUAL_ENV_DISABLE_PROMPT 1
+# set -g VIRTUAL_ENV_DISABLE_PROMPT 1
 
 # export TERM=screen-256color-bce
 

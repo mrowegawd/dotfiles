@@ -697,7 +697,15 @@ return {
       { "rC", "<Cmd> RmuxKillAllPanes <CR>" },
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
     },
-    opts = {},
+    opts = {
+      base = {
+        file_rc = ".rmuxrc.json",
+        setnotif = true,
+        auto_run_tasks = true,
+        tbl_opened_panes = {},
+        run_with = "tmux", -- tmux, tt
+      },
+    },
     config = function(_, opts)
       require("rmux").setup(opts)
     end,

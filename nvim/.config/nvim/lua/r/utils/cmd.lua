@@ -11,6 +11,23 @@ function M.fold(callback, list, accum)
   return accum
 end
 
+function M.get_term_id()
+  local term_idx = nil
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(bufnr)
+    term_idx = vim.fn.fnamemodify(name, ":t")
+    print(name)
+
+    -- if name == term_name then
+    -- term_idx = bufnr
+    -- else
+  end
+
+  -- local t_idx = vim.fn.termopen(term_idx)
+  return term_idx
+  -- vim.fn.chansend(--[[  ]]t_idx, { "echo 'hello world'", "" })
+end
+
 function M.falsy(item)
   if not item then
     return true

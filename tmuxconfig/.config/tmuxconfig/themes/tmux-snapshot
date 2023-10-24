@@ -35,18 +35,17 @@ set -g status-bg $BG_STATUSLINE
 # set -g status-bg "#000000"
 
 ## STATUS SETTINGS
-set -g status-position top
+# set -g status-position top
 set -g status on
 set -g status-interval 5
-set -g status-justify 'left'  #left,centre,??
-set -g message-style "fg=$WINDOW_STYLE_BG,bg=$BG_ACTIVE_STATUSLINE bold"
+# set -g status-justify 'left'  #left,centre,??
+set-option -g status-justify absolute-centre
+set-option -g message-style "fg=$WINDOW_STYLE_BG,bg=$BG_ACTIVE_STATUSLINE bold"
 
 ## LEFT
 # set -g status-left-length 40
 # set -g status-style bg="colour238",fg="colour255"
-
 set -g status-left "#[fg=$COL_WHITE,bold] ❐ #S "
-
 set -g window-status-format "#[fg=$COL_WHITE] #W"
 
 # set -g window-status-current-format "#[fg=$BG_STATUSLINE,bg=$BG_ACTIVE_STATUSLINE]$left_separator_black\
@@ -54,10 +53,11 @@ set -g window-status-format "#[fg=$COL_WHITE] #W"
 # $left_separator #W #[fg=$BG_ACTIVE_STATUSLINE,bg=$BG_STATUSLINE,nobold]$left_separator_black\
 # #[bg=$WINDOW_ACTIVE_STYLE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM ,}"
 
-set -g window-status-format "#[fg=$COL_WHITE,bold] "
+set -g window-status-format "#[fg=$COL_WHITE,bold] #W"
 # set -g window-status-current-format "#[fg=$BG_ACTIVE_STATUSLINE,bold]  #W #[bg=$WINDOW_ACTIVE_STYLE_BG,fg=red,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
 # set -g window-status-current-format "#[fg=$BG_ACTIVE_STATUSLINE,bold]  [bg=$WINDOW_ACTIVE_STYLE_BG,fg=$COL_RED,bold]#{?window_zoomed_flag, ZOOM #(tmux list-panes | wc -l) ,}"
-set -g window-status-current-format "#[fg=red,bold] #[fg=red,bold]#{?window_zoomed_flag,ZOOM#[fg=colour166](#(tmux list-panes | wc -l)),}"
+# set -g window-status-current-format "#[fg=red,bold] #[fg=red,bold]#{?window_zoomed_flag,ZOOM#[fg=colour166](#(tmux list-panes | wc -l)),}"
+set -g window-status-current-format "#[fg=red,bold] #W#[bg=red,fg=$COL_ACTIVE_BORDER_SEPERATOR,bold]#{?window_zoomed_flag, ZOOM #[fg=$COL_ACTIVE_BORDER_SEPERATOR](#(tmux list-panes | wc -l)) ,}"
 
 ## RIGHT
 set -g status-right-length 40
