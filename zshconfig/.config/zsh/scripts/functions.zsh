@@ -1,6 +1,6 @@
 # vim: ft=zsh sw=2 ts=2 et
 
-function build-nvim() {
+build-nvim() {
   neovim_dir="$PROJECTS_DIR/contrib/neovim"
   [ ! -d $neovim_dir ] && git clone git@github.com:neovim/neovim.git $neovim_dir
   pushd $neovim_dir

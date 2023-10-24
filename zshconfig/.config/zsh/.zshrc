@@ -97,6 +97,10 @@ bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
+# shift-tab to reverse completion
+bindkey '^[[Z' reverse-menu-complete
+bindkey -M menuselect '^[[Z' reverse-menu-complete
+
 # persistent reshahing i.e puts new executables in the $path
 # if no command is set typing in a line will cd by default
 zstyle ':completion:*' rehash true
@@ -198,15 +202,15 @@ export MANPAGER="/bin/sh -c \"col -b | \
 #  ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 #  ╏ KEYBINDINGS                                              ╏
 #  ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-bindkey '^y' autosuggest-accept
-bindkey "^[[89;5u" autosuggest-accept
-# bindkey '^d' backward-delete-char
-bindkey '^b' backward-char            # backward (c-b)
-bindkey '^f' forward-char             # forward char (c-f)
-# bindkey '^w' backward-kill-word
-# bindkey '^u' backward-kill-line
-bindkey '^a' beginning-of-line
-bindkey '^e' end-of-line
+bindkey '^y'        autosuggest-accept
+bindkey "^[[89;5u"  autosuggest-accept
+bindkey '^?'        backward-delete-char
+bindkey '^b'        backward-char            # backward (c-b)
+bindkey '^f'        forward-char             # forward char (c-f)
+# bindkey '^w'      backward-kill-word
+# bindkey '^u'      backward-kill-line
+bindkey '^a'        beginning-of-line
+bindkey '^e'        end-of-line
 
 # Shortcut bind to edit line text
 autoload -U edit-command-line
