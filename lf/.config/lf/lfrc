@@ -1,13 +1,16 @@
 
 # Basic vars
 set shell zsh
-set shellopts '-eu'
+# set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
 set icons
 set hidden
 set period 1
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+
+# Make parent cursor a bit less strident, to make it obvious focus isn't there.
+set cursorparentfmt "\033[7;90m"
 
 set previewer ~/.config/lf/preview
 set cleaner ~/.config/lf/cleaner
@@ -76,26 +79,26 @@ cmd bulkrename $vidir
 
 # Bindings ====================================================================
 # Remove defaults
-map "'"
-map '"'
-map c
-map d
-map e
-map f
-map m
-map n
-map o
-map p
-map r
-map u
-map y
-map g
-map q
+# map "'"
+# map '"'
+# map c
+# map d
+# map e
+# map f
+# map m
+# map n
+# map o
+# map p
+# map r
+# map u
+# map y
+# map g
+# map q
 
 # map <enter> shell
 map e $$EDITOR "$f"                           # enter with nvim/vim
 map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf)"
-map <c-f> $lf -remote "send $id select '$(fzf)'"    # search file and folders (fzf)
+# map <c-f> $lf -remote "send $id select '$(fzf)'"    # search file and folders (fzf)
 map <c-g> fzf_search                                # search grep text (fzf)
 # map <c-n> push :mkdir<space>
 map <enter> open
@@ -118,6 +121,9 @@ map R bulkrename
 map r rename
 map <c-c> quit
 map V push :!nvim<space>
+
+map <c-e> down
+map <c-y> up
 
 # Basic Functions
 map cd push :cd<space>
