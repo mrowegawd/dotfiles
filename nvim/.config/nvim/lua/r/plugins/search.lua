@@ -9,7 +9,7 @@ local root_patterns = { ".git", "lua" }
 local function format_title(str, icon, icon_hl)
   return {
     { " " },
-    { (icon and icon .. " " or ""), icon_hl or "Function" },
+    { (icon and icon .. " " or ""), icon_hl or "Boolean" },
     { str, "Bold" },
     { " " },
   }
@@ -271,9 +271,9 @@ return {
         "<Leader>fk",
         function()
           return require("fzf-lua").keymaps {
-            prompt = format_prompt("Keymaps", " "),
             winopts = {
               preview = {
+                title = format_title("Keymaps", " "),
                 vertical = "up:45%",
                 horizontal = "right:30%",
                 layout = "flex",
@@ -287,7 +287,8 @@ return {
         "<Leader>fo",
         function()
           return require("fzf-lua").files {
-            prompt = format_prompt("Dotfiles", " "),
+            prompt = "  ",
+            winopts = { title = format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
         end,
@@ -298,7 +299,8 @@ return {
         function()
           local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
           return require("fzf-lua").files {
-            prompt = format_prompt("File Plugins", " "),
+            prompt = "  ",
+            winopts = { title = format_title("Plugin Files", "󰈙") },
             cwd = plugins_directory,
           }
         end,
@@ -308,9 +310,8 @@ return {
         "<Leader>fG",
         function()
           return require("fzf-lua").live_grep_glob({
-            prompt = format_prompt("GrepHidden", " "),
-            -- glob_flag = "--iglob", -- for case sensitive globs use '--glob'
-            -- glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
+            prompt = "  ",
+            winopts = { title = format_title("GrepHidden", "󰈭") },
             filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
           })
         end,
@@ -344,26 +345,31 @@ return {
             .. table.concat(qf_ntbl, " ")
 
           return require("fzf-lua").live_grep {
-            prompt = format_prompt("[QF] Grep", " " ),
-            winopts = {
-              title = format_title("[QF] Grep", " "),
-              height = 0.85,
-              width = 0.90,
-            },
+            prompt = "  ",
+            winopts = { title = format_title("[QF] Grep", " ") },
             cmd = pcmd,
           }
         end,
         desc = "fzflua(qf): grep qf items",
       },
     },
-    config = function()
+    opts = function()
       local actions = require "fzf-lua.actions"
       local path = require "fzf-lua.path"
 
-      require("fzf-lua").setup {
-        winopts = {
-          split = "botright new | resize 25",
-        },
+      return {
+        winopts_fn = function()
+          local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.5)
+          local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
+          local col = math.ceil((vim.api.nvim_get_option "columns" - win_width) * 1)
+          local row = math.ceil((vim.api.nvim_get_option "lines" - win_height) * 1 - 3)
+          return {
+            width = win_width,
+            height = win_height,
+            row = row,
+            col = col,
+          }
+        end,
         fzf_opts = {
           ["--ansi"] = "",
           ["--info"] = "inline",
@@ -383,6 +389,7 @@ return {
             ["<F3>"] = "toggle-preview",
             ["<F4>"] = "toggle-fullscreen",
             -- ["<c-w>"] = "toggle-preview-wrap",
+            -- ["<F5>"] = "toggle-preview-ccw",
             ["<c-j>"] = "toggle-preview-cw",
             ["<c-k>"] = "toggle-preview-ccw",
             ["<c-d>"] = "preview-page-down",
@@ -429,7 +436,8 @@ return {
         -- PROVIDER SETUP
         files = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`
-          prompt = format_prompt("Files", " "),
+          -- prompt = format_prompt("Files", " "),
+          prompt = "  ",
           cwd_prompt = false,
           winopts = { title = format_title("Files", "") },
           find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
@@ -495,16 +503,16 @@ return {
         },
         git = {
           files = {
-            prompt = format_prompt("Gitfiles", " "),
-            cmd = "git ls-files --exclude-standard",
+            prompt = "  ",
             winopts = { title = format_title("Git Files", "") },
+            cmd = "git ls-files --exclude-standard",
             multiprocess = true, -- run command in a separate process
             git_icons = true, -- show git icons?
             file_icons = true, -- show file icons?
             color_icons = true, -- colorize file|git icons
           },
           status = {
-            prompt = format_prompt("GitStatus", " "),
+            prompt = "  ",
             winopts = { title = format_title("Git Status", "") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
@@ -517,7 +525,7 @@ return {
             },
           },
           commits = {
-            prompt = format_prompt("GitCommits", " "),
+            prompt = "  ",
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = format_title("", "Commits") },
@@ -577,7 +585,7 @@ return {
           },
           bcommits = {
             -- debug = true,
-            prompt = format_prompt("GitBcommits", " "),
+            prompt = "  ",
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = {
@@ -633,7 +641,7 @@ return {
             },
           },
           branches = {
-            prompt = format_prompt("GitBranches", " "),
+            prompt = "  ",
             cmd = "git branch --all --color",
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
             winopts = {
@@ -680,9 +688,10 @@ return {
         },
         grep = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
-          prompt = format_prompt("Grep", " "),
-          winopts = { title = format_title("Grep", " ") },
+          prompt = "  ",
+          winopts = { title = format_title("Grep", "󰈭") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
+
           rg_opts = "--column --line-number -i --hidden --no-heading --color=always --smart-case --max-columns=4096",
           rg_glob = true,
           glob_flag = "--iglob", -- for case sensitive globs use '--glob'
@@ -706,20 +715,26 @@ return {
           },
         },
         oldfiles = {
-          prompt = format_prompt("Oldfiles", " "),
+          winopts = { title = format_title("History", "") },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
-          winopts = { title = format_title("History", "") },
           include_current_session = false, -- include bufs from current session
         },
         buffers = {
-          prompt = format_prompt("Buffers", " "),
           winopts = { title = format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = {
             ["--delimiter"] = "' '",
             ["--with-nth"] = "-1..",
           },
+        },
+        highlights = {
+          prompt = "  ",
+          winopts = { title = format_title "Highlights" },
+        },
+        helptags = {
+          prompt = "  ",
+          winopts = { title = format_title("Help", "󰋖") },
         },
         tabs = {
           prompt = "Tabs❯ ",
@@ -739,27 +754,15 @@ return {
           },
         },
         lines = {
-          -- previewer = "bat", -- uncomment to override previewer
-          prompt = format_prompt("Lines", " "),
-          winopts = {
-            split = false,
-            title = format_title("Lines", " "),
-            -- split = "botright new",
-            -- preview = {
-            --   vertical = "left:45%",
-            --   horizontal = "up:60%",
-            --   layout = "flex",
-            -- },
-          },
+          prompt = "  ",
+          winopts = { title = format_title("Lines", " ") },
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
             -- tiebreak by line no.
-            ["--reverse"] = false,
             ["--delimiter"] = "'[\\]:]'",
             ["--nth"] = "2..",
             ["--tiebreak"] = "index",
             ["--tabstop"] = "1",
-            ["--layout"] = "default",
           },
           -- actions inherit from 'actions.buffers' and merge
           actions = {
@@ -774,17 +777,17 @@ return {
           },
         },
         blines = {
-          prompt = format_prompt("Blines", " "),
+          -- prompt = format_prompt("Blines", " "),
+          prompt = "  ",
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
           winopts = {
-            split = false,
+            --   split = false,
             title = format_title("Blines", " "),
-            preview = {
-              vertical = "down:45%",
-              horizontal = "right:60%",
-              layout = "flex",
-            },
+            --   preview = {
+            --     vertical = "down:45%",
+            --     horizontal = "right:60%",
+            --     layout = "flex",
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -793,8 +796,8 @@ return {
             ["--with-nth"] = "3..",
             ["--tiebreak"] = "index",
             ["--tabstop"] = "1",
-            ["--reverse"] = false,
-            ["--layout"] = "default",
+            -- ["--reverse"] = false,
+            -- ["--layout"] = "default",
           },
           -- actions inherit from 'actions.buffers' and merge
           actions = {
@@ -896,19 +899,15 @@ return {
             },
           },
           finder = {
-            prompt = format_prompt("LSPFinder", " "),
+            prompt = "  ",
             winopts = {
               title = format_title("LSP Finder", " "),
-              -- preview = {
-              --   vertical = "down:100%",
-              --   horizontal = "up:65%",
-              --   -- layout = "flex",
-              -- },
             },
           },
         },
         diagnostics = {
-          prompt = "Diagnostics❯ ",
+          prompt = "  ",
+          winopts = { title = format_title("Diagnostics", "", "DiagnosticError") },
           cwd_only = false,
           file_icons = true,
           git_icons = false,
@@ -937,7 +936,23 @@ return {
           winopts = { preview = { hidden = "hidden" } },
         },
       }
-      require("fzf-lua").register_ui_select()
+    end,
+    config = function(_, opts)
+      local function augroup(name, fnc)
+        fnc(vim.api.nvim_create_augroup(name, { clear = true }))
+      end
+
+      augroup("FzfLuaCtrlE", function(g)
+        vim.api.nvim_create_autocmd("FileType", {
+          group = g,
+          pattern = "fzf",
+          callback = function(e)
+            vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
+          end,
+        })
+      end)
+      require("fzf-lua").setup(opts)
+      -- require("fzf-lua").register_ui_select()
     end,
   },
   -- FZF
@@ -1333,7 +1348,7 @@ return {
       {
         "<Leader><s-f>",
         function()
-          Util.tiling.force_win_close({}, true)
+          Util.tiling.force_win_close({ "toggleterm", "termlist" }, true)
           return require("spectre").open()
         end,
         desc = "Misc(spectre): open",
@@ -1341,7 +1356,7 @@ return {
       {
         "<Leader><s-f>",
         function()
-          Util.tiling.force_win_close({}, true)
+          Util.tiling.force_win_close({ "toggleterm", "termlist" }, true)
           return require("spectre").open_visual { select_word = true }
         end,
         desc = "Misc(spectre): open (visual)",

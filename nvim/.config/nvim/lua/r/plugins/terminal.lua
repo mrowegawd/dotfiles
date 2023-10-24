@@ -1,7 +1,7 @@
-local cmd, fmt = vim.cmd, string.format
+local cmd = vim.cmd
 local Util = require "r.utils"
 
-local term_count = 1
+-- local term_count = 1
 
 -- local function close_toggleterm(fmt_cmd)
 --     for _, winid in pairs(api.nvim_tabpage_list_wins(0)) do
@@ -110,6 +110,7 @@ return {
   -- TOGGLETERM
   {
     "akinsho/nvim-toggleterm.lua",
+    enabled = false,
     event = "VeryLazy",
     -- cmd = "ToggleTerm",
 
@@ -296,24 +297,24 @@ return {
     --     },
     -- }
     keys = {
-      {
-        "<a-t>",
-        function()
-          if vim.bo.filetype == "qf" then
-            Util.tiling.force_win_close({ "qf" }, false)
+      -- {
+      --   "<a-t>",
+      --   function()
+      --     if vim.bo.filetype == "qf" then
+      --       Util.tiling.force_win_close({ "qf" }, false)
 
-            cmd [[wincmd w]]
-          end
+      --       cmd [[wincmd w]]
+      --     end
 
-          if vim.bo.filetype == "fzf" then
-            return
-          end
+      --     if vim.bo.filetype == "fzf" then
+      --       return
+      --     end
 
-          cmd(fmt("%sToggleTerm", term_count))
-        end,
-        mode = { "n", "t" },
-        desc = "Terminal(toggleterm): toggle",
-      },
+      --     cmd(fmt("%sToggleTerm", term_count))
+      --   end,
+      --   mode = { "n", "t" },
+      --   desc = "Terminal(toggleterm): toggle",
+      -- },
       {
         "<Localleader>ow",
         function()
@@ -375,6 +376,128 @@ return {
     },
     config = function(_, opts)
       require("toggleterm").setup(opts)
+    end,
+  },
+  -- {
+  --   "sychen52/smart-term-esc.nvim",
+  --   config = function()
+  --     require("smart-term-esc").setup {
+  --       key = "<Esc>",
+  --       except = { "nvim", "fzf" },
+  --     }
+  --   end,
+  -- },
+  -- TT.NVIM
+  {
+    "distek/tt.nvim",
+    keys = {
+      {
+        "<c-t>",
+        function()
+          if vim.bo.filetype == "qf" then
+            Util.tiling.force_win_close({ "qf" }, false)
+
+            cmd [[wincmd w]]
+          end
+
+          -- if vim.bo.filetype == "fzf" then
+          --   local actions = require "fzf-lua.actions"
+          --   return actions.file_tabedit({}, _)
+          -- end
+
+          return require("tt.terminal"):Toggle()
+        end,
+        mode = { "n", "t", "v" },
+        desc = "Terminal(tt.nvim): toggle",
+      },
+      {
+        "<c-Delete>",
+        function()
+          if vim.bo.filetype == "qf" then
+            Util.tiling.force_win_close({ "qf" }, false)
+
+            cmd [[wincmd w]]
+          end
+
+          if vim.bo.filetype == "fzf" then
+            return
+          end
+
+          return require("tt.termlist"):DeleteTermUnderCursor()
+        end,
+        mode = { "t", "n" },
+        desc = "Terminal(tt.nvim): delete",
+      },
+      {
+        "<c-Insert>",
+        function()
+          if vim.bo.filetype == "qf" then
+            Util.tiling.force_win_close({ "qf" }, false)
+
+            cmd [[wincmd w]]
+          end
+
+          if vim.bo.filetype == "fzf" then
+            return
+          end
+
+          return require("tt.terminal"):NewTerminal()
+        end,
+        mode = { "t" },
+        desc = "Terminal(tt.nvim): create new terminal",
+      },
+      {
+        "<C-PageDown>",
+        function()
+          if vim.bo.filetype == "qf" then
+            Util.tiling.force_win_close({ "qf" }, false)
+
+            cmd [[wincmd w]]
+          end
+
+          if vim.bo.filetype == "fzf" then
+            return
+          end
+
+          return require("tt.terminal"):FocusNext()
+        end,
+        mode = { "t" },
+        desc = "Terminal(tt.nvim): next",
+      },
+
+      {
+        "<C-PageUp>",
+        function()
+          if vim.bo.filetype == "qf" then
+            Util.tiling.force_win_close({ "qf" }, false)
+
+            cmd [[wincmd w]]
+          end
+
+          if vim.bo.filetype == "fzf" then
+            return
+          end
+
+          return require("tt.terminal"):FocusPrevious()
+        end,
+        mode = { "t" },
+        desc = "Terminal(tt.nvim): prev",
+      },
+    },
+    opts = function()
+      return {
+        termlist = {
+          winhighlight = "Normal:PanelDarkBackground,WinBar:PanelDarkBackground", -- See :h winhighlight - You can change winbar colors as well
+          enabled = true,
+          side = "right",
+          width = 25,
+        },
+        terminal = {
+          winhighlight = "Normal:PanelDarkBackground,WinBar:PanelDarkBackground", -- See :h winhighlight - You can change winbar colors as well
+        },
+        height = 15,
+        -- fixed_height = true,
+      }
     end,
   },
 }
