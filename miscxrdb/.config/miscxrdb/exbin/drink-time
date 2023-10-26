@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -u -e
+
+# Date Created: 10 Sep 2019
+# Last Modified:
+# Summary:
+# Author: Gitmox
+# License:
+
+notifysend_fgh="$(xrdb -query | grep "color4" | cut -d":" -f2 |
+  head -1 | xargs)"
+dunstify "REMINDER" "<span foreground='$notifysend_fgh'>Drink Time!!!</span>" -i ~/Dropbox/mytodo/icons/drink-time.png

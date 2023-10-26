@@ -1,0 +1,80 @@
+#!/bin/bash
+
+set -u -e
+
+# Date Created: 22 Dec 2019
+# Last Modified: 22 Dec 2019 (03:38:16)
+# Summary:
+# Author: Gitmox
+# License:
+
+cloneprojectlol() {
+  if [ -d /tmp/projectlol ]; then
+    rm -rf /tmp/projectlol
+    git clone https://github.com/gitmoxgit/projectlol.git /tmp/projectlol &>/dev/null
+  else
+    git clone https://github.com/gitmoxgit/projectlol.git /tmp/projectlol &>/dev/null
+  fi
+}
+
+__get_goapi() {
+  shopt -s dotglob
+
+  echo ""
+  echo "░█▀▀░█▀█░█▀█░█▀█░▀█▀"
+  echo "░█░█░█░█░█▀█░█▀▀░░█░"
+  echo "░▀▀▀░▀▀▀░▀░▀░▀░░░▀▀▀"
+  printf "\\nstarting..."
+  cloneprojectlol
+
+  cp /tmp/projectlol/goapi/* .
+  echo "..done"
+}
+
+_init_setup() {
+  if [ "$1" == "goapi" ]; then
+    __get_goapi
+  elif [ "$1" == "golang" ]; then
+    echo "golang"
+  elif [ "$1" == "frontend" ]; then
+    echo "frontend"
+  elif [ "$1" == "svelte" ]; then
+    echo "svelte"
+  elif [ "$1" == "help" ]; then
+    echo "help"
+  fi
+}
+
+main() {
+  clear
+  PS3="Select your project number? "
+  options=("goapi" "golang" "gobot" "frontend" "help" "quit")
+  select opt in "${options[@]}"; do
+    case $opt in
+    "goapi")
+      _init_setup "$opt"
+      break
+      ;;
+    "golang")
+      _init_setup "$opt"
+      break
+      ;;
+    "gobot")
+      _init_setup "$opt"
+      break
+      ;;
+    "frontend")
+      _init_setup "$opt"
+      break
+      ;;
+    "help")
+      _init_setup "$opt"
+      break
+      ;;
+    "quit") break ;;
+    *) echo "invalid option $REPLY" ;;
+    esac
+  done
+}
+
+main

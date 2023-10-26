@@ -220,6 +220,37 @@ Util.cmd.augroup("CheckOutsideTime", {
 --   end,
 -- })
 
+-- Util.cmd.augroup("UnwareCursorLine", {
+--   event = { "CmdlineEnter" },
+--   pattern = { "*" },
+--   command = function()
+--     cmd [[set nocursorline]]
+--   end,
+-- }, {
+--   event = { "CmdlineLeave" },
+--   pattern = { "*" },
+--   command = function()
+--     cmd [[set cursorline]]
+--   end,
+-- }, {
+--   -- vim.api.nvim_create_autocmd("ModeChanged
+--   event = { "ModeChanged" },
+--   pattern = "*:c",
+--   command = function()
+--     cmd [[set nocursorline]]
+--   end,
+-- })
+
+-- vim.api.nvim_create_autocmd("CmdlineEnter", {
+--   group = group,
+--   callback = function()
+--     if State.is_search() and M.enabled then
+--       M.start()
+--       M.set_op(vim.fn.mode() == "v")
+--     end
+--   end,
+-- })
+
 Util.cmd.augroup("DisableStatusline", {
   event = { "FocusLost" },
   pattern = "*",
@@ -235,12 +266,12 @@ Util.cmd.augroup("DisableStatusline", {
 })
 
 -- Automatically resize windows when host resizes
--- Util.cmd.augroup("AutoResizeWindows", {
+-- Util.cmd.augroup("AutoResizeWindowssf", {
 --   event = { "BufNew", "BufRead" },
 --   pattern = "*",
 --   command = "tabdo wincmd =",
 -- })
 
-vim.cmd [[
-  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
-]]
+-- vim.cmd [[
+--   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
+-- ]]

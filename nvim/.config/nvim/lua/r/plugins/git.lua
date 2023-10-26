@@ -35,8 +35,10 @@ return {
     event = "VeryLazy",
     config = true,
   },
+  -- FUGITIVE (disabled)
   {
     "tpope/vim-fugitive",
+    enabled = false,
     cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit" },
     dependencies = {
       "tpope/vim-rhubarb",

@@ -26,7 +26,7 @@ if [ ! -f $startup_lock_file ]; then
 
 	sleep 2
 
-	alacritty &
+	kitty &
 
 	sleep 2
 
@@ -75,7 +75,7 @@ bspc config borderless_monocle true
 bspc config single_monocle true
 bspc config gapless_monocle false
 
-bspc config external_rules_command "$HOME/Dropbox/exbin/for-local-bin/bspc-external-rules"
+bspc config external_rules_command "$HOME/.config/miscxrdb/bpswm/scripts/bspc-external-rules"
 
 desk_code="1"
 desk_web="2"

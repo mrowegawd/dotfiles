@@ -1,0 +1,164 @@
+#!/bin/bash
+
+set -e -u
+set -o nounset
+
+# Date Created: 28 Feb 2019
+# Last Modified: 28 Feb 2019 (23:33:04)
+# Summary:
+# Author: Gitmox
+# License:
+
+NC='\033[0m'
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+# LIGHTGREY='\033[0;37m'
+function clone_projectlol() {
+	git clone https://github.com/gitmoxgit/projectlol.git
+}
+
+function getandroid() {
+	echo -e "\\n
+  ######################
+  # YOU SELECT ${YELLOW}ANDROID${NC} #
+  ######################\\n
+  "
+}
+
+function getwordpress() {
+	echo -e "\\n
+  ########################
+  # YOU SELECT ${GREEN}WORDPRESS${NC} #
+  ########################\\n
+  "
+}
+
+function getreact() {
+	echo -e "\\n
+  ####################
+  # YOU SELECT ${GREEN}REACT${NC} #
+  ####################\\n
+  "
+
+	read -r -p "[+] Project name for Reactapp? " getvar
+	printf "\\n...wait a sec... "
+	clone_projectlol &>/dev/null
+	cp -r ./projectlol/reactnerd .
+	mv ./reactnerd "$getvar"
+	rm -rf ./projectlol
+	printf "${GREEN}%s${NC}\\n\\n" "Done!"
+}
+
+function getwebsite() {
+	echo -e "\\n
+  ######################
+  # YOU SELECT ${CYAN}WEBSITE${NC} #
+  ######################\\n
+  "
+	clone_projectlol >/dev/null
+	mv ./projectlol/webtest .
+	rm -rf ./projectlol
+	cd webtest && npm install
+}
+
+function getpynerd() {
+	echo -e "\\n
+  #####################
+  # YOU SELECT ${BLUE}PYNERD${NC} #
+  #####################\\n
+  "
+
+	read -r -p "[+] Project name for pynerd? " getvar
+	mkdir -p "$getvar"
+	virtualenv "$getvar"/.venv
+
+	clone_projectlol >/dev/null
+	mv ./projectlol/pynerd/* ./"$getvar"
+	rm -rf ./projectlol
+}
+
+function getgonerd() {
+	echo -e "\\n
+  #####################
+  # YOU SELECT ${YELLOW}GONERD${NC} #
+  #####################\\n
+  "
+
+	read -r -p "[+] Project name for gonerd? " getvar
+
+	printf "\\n...wait a sec... "
+	clone_projectlol &>/dev/null
+	cp -r ./projectlol/gonerd .
+	mv ./gonerd "$getvar"
+	rm -rf ./projectlol
+	printf "${GREEN}%s${NC}\\n\\n" "Done!"
+}
+
+function getpysel() {
+	echo -e "\\n
+  ##############################
+  # YOU SELECT ${RED}PYTHON SELENIUM${NC} #
+  ##############################\\n
+  "
+
+	read -r -p "[+] Project name for pysel? " getvar
+	mkdir -p "$getvar"
+	virtualenv "$getvar"/.venv
+
+	clone_projectlol >/dev/null
+	mv ./projectlol/pysel/* ./"$getvar"
+	rm -rf ./projectlol
+}
+
+function init_setup() {
+	if [ "$1" == "Android" ]; then
+		getandroid
+	elif [ "$1" == "Wordpress" ]; then
+		getwordpress
+	elif [ "$1" == "React" ]; then
+		getreact
+	elif [ "$1" == "Pynerd" ]; then
+		getpynerd
+	elif [ "$1" == "Pysel" ]; then
+		getpysel
+	elif [ "$1" == "Gonerd" ]; then
+		getgonerd
+	fi
+}
+
+clear
+PS3='Select your project number? '
+options=("Android" "Wordpress" "Pynerd" "Pysel" "Gonerd" "React" "Quit")
+select opt in "${options[@]}"; do
+	case $opt in
+	"Android")
+		init_setup "$opt"
+		break
+		;;
+	"Wordpress")
+		init_setup "$opt"
+		break
+		;;
+	"Pynerd")
+		init_setup "$opt"
+		break
+		;;
+	"Pysel")
+		init_setup "$opt"
+		break
+		;;
+	"React")
+		init_setup "$opt"
+		break
+		;;
+	"Gonerd")
+		init_setup "$opt"
+		break
+		;;
+	"Quit") break ;;
+	*) echo "invalid option $REPLY" ;;
+	esac
+done

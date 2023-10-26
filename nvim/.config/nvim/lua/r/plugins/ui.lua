@@ -14,6 +14,7 @@ return {
       exclude = {
         filetypes = {
           "dbout",
+          "dashboard",
           "neo-tree-popup",
           "log",
           "gitcommit",
@@ -33,11 +34,10 @@ return {
       },
     },
     config = function(_, opts)
-      require("ibl").setup(opts)
-
       require("r.config.highlights").plugin("ibl_indentline", {
-        { ["@ibl.indent.char.1"] = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
+        { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 9 } } },
       })
+      require("ibl").setup(opts)
     end,
   },
   -- DRESSING
@@ -265,10 +265,10 @@ return {
     },
     opts = function()
       local col_base_bg_attr = "Normal"
-      local col_base_fg_attr = "Pmenu"
+      local col_base_fg_attr = "Comment"
 
       local col_unselected_bg_attr = "bufferline_unselected"
-      local col_unselected_fg_attr = "Pmenu"
+      local col_unselected_fg_attr = "Boolean"
 
       local col_selected_fg_attr = "PmenuSel"
       local col_selected_bg_attr = "@field"
@@ -404,7 +404,7 @@ return {
             italic = true,
           },
           background = {
-            fg = { attribute = "fg", highlight = "Directory" },
+            fg = { attribute = "fg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
             italic = true,
           },
@@ -771,11 +771,22 @@ return {
     --   require("scrollbar").setup(opts)
     -- end,
   },
-  -- BLOCK NVIM
+  -- BLOCK NVIM (disabled)
   {
     "HampusHauffman/block.nvim",
     enabled = false,
     cmd = { "BlockOn", "BlockOff", "Block" },
     opts = {},
+  },
+  -- SCROLLEOF (disabled)
+  {
+    "Aasim-A/scrollEOF.nvim",
+    enabled = false,
+    opts = {
+      pattern = "*",
+    },
+    config = function(_, opts)
+      require("scrollEOF").setup(opts)
+    end,
   },
 }

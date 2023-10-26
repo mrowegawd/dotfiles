@@ -1,21 +1,22 @@
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                       SET OPTIONS                        ║
+#  ╚══════════════════════════════════════════════════════════╝
 
-# Basic vars
 set shell zsh
-# set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
 set icons
 set hidden
 set period 1
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
-
-# Make parent cursor a bit less strident, to make it obvious focus isn't there.
-set cursorparentfmt "\033[7;90m"
-
+set cursorparentfmt "\033[7;90m" # Make parent cursor a bit less strident, to make it obvious focus isn't there.
 set previewer ~/.config/lf/preview
 set cleaner ~/.config/lf/cleaner
 
-# cmds/functions
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                         COMMAND                          ║
+#  ╚══════════════════════════════════════════════════════════╝
+
 cmd open ${{ case $(file --mime-type $f -b) in
 	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
 	text/*|application/json) $EDITOR $fx;;
@@ -28,9 +29,19 @@ cmd open ${{ case $(file --mime-type $f -b) in
     esac
 }}
 
-cmd mkdir $mkdir -p "$(echo $* | tr ' ' '\ ')"
+cmd mkdir ${{
+    printf "\nDirectory Name: "
+    read name
+    mkdir $name
+}}
 
-cmd delete ${{
+cmd touch ${{
+    printf "File Name: "
+    read name
+    $EDITOR $name
+}}
+
+cmd Delete ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
 	printf "%s\n\t" "$fx"
@@ -73,11 +84,12 @@ cmd fzf_search ${{
     [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
 }}
 
-
-# cmd setbg "$1"
 cmd bulkrename $vidir
 
-# Bindings ====================================================================
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                         BINDINGS                         ║
+#  ╚══════════════════════════════════════════════════════════╝
+
 # Remove defaults
 # map "'"
 # map '"'
@@ -95,41 +107,46 @@ cmd bulkrename $vidir
 # map g
 # map q
 
-# map <enter> shell
-map e $$EDITOR "$f"                           # enter with nvim/vim
-map J $lf -remote "send $id cd $(cut -d'	' -f2 ${XDG_CONFIG_HOME:-$HOME/.config}/directories | fzf)"
-# map <c-f> $lf -remote "send $id select '$(fzf)'"    # search file and folders (fzf)
-map <c-g> fzf_search                                # search grep text (fzf)
-# map <c-n> push :mkdir<space>
-map <enter> open
-map <f5> reload
 map P set preview!
-
-map yy copy
-map dd cut
-
-map x $$f
-map X !$f
-map o &mimeopen $f
-map O $mimeopen --ask $f
 map H set hidden!
-map p paste
-map D delete
-map C copyto
-map M moveto
-map R bulkrename
-map r rename
-map <c-c> quit
-map V push :!nvim<space>
 
 map <c-e> down
 map <c-y> up
 
-# Basic Functions
+map u unselect    # clear select jika di mark sebagai visual selection
+map U clear       # clear select jika items di mark sebagai cut,copy
+
+map <enter> open
+map <f5> reload
+
+map y copy
+map yp %readlink -f "$f" | clipper c # Copy selected file's path
+
+map x cut
+map d delete
+map p paste
+map A mkdir
+map a touch
+map D Delete
+map C copyto
+map M moveto
+map R bulkrename
+map r rename
+map e $$EDITOR "$f"                           # enter with nvim/vim
+map <c-g> fzf_search                          # search string/text with grep
+map <c-c> quit
+map c
 map cd push :cd<space>
+map i $edit "$f"
+map I $nvr -cc call TermOpen(&shell,'v')
+
+#  ╔══════════════════════════════════════════════════════════╗
+#  ║                         JUMP TO                          ║
+#  ╚══════════════════════════════════════════════════════════╝
+
 map gc cd ~/moxconf/development/dotfiles
 map gd cd ~/Downloads
-map gD cd ~/Documents
+map gD cd ~/Downloads/dotfilesxc
 map gv cd ~/Downloads/Video
 map gs cd ~/Downloads/screenshot
 map gt cd ~/moxconf/media_and_tuts/torrents           # path ini bisa dynamic

@@ -200,39 +200,6 @@ return {
       }
     end,
     config = function(_, opts)
-      highlight.plugin("NeoTree", {
-        theme = {
-          ["*"] = {
-            { NeoTreeNormal = { link = "PanelBackground" } },
-            { NeoTreeNormalNC = { link = "PanelBackground" } },
-            { NeoTreeCursorLine = { link = "CursorLine" } },
-            { NeoTreeRootName = { underline = false } },
-            { NeoTreeStatusLine = { link = "PanelSt" } },
-            { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-            {
-              NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },
-            },
-            { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
-            {
-              NeoTreeTabSeparatorInactive = {
-                inherit = "NeoTreeTabInactive",
-                fg = { from = "PanelDarkBackground", attr = "bg" },
-              },
-            },
-          },
-          -- NOTE: panel background colours don't get ignored by tint.nvim so avoid using them for now
-          horizon = {
-            { NeoTreeWinSeparator = { link = "WinSeparator" } },
-            { NeoTreeTabActive = { link = "VisibleTab" } },
-            { NeoTreeTabSeparatorActive = { link = "VisibleTab" } },
-            { NeoTreeTabInactive = { inherit = "Comment", italic = false } },
-            { NeoTreeTabSeparatorInactive = { bg = "bg", fg = "bg" } },
-          },
-        },
-      })
-
-      vim.g.neo_tree_remove_legacy_commands = 1
-
       local function on_move(data)
         Util.lsp.on_rename(data.source, data.destination)
       end
@@ -253,6 +220,27 @@ return {
           end
         end,
       })
+
+      highlight.plugin("NeoTree", {
+        { NeoTreeNormal = { link = "PanelBackground" } },
+        { NeoTreeNormalNC = { link = "PanelBackground" } },
+        { NeoTreeCursorLine = { link = "CursorLine" } },
+        { NeoTreeRootName = { underline = false } },
+        { NeoTreeStatusLine = { link = "PanelSt" } },
+        { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
+        {
+          NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },
+        },
+        { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
+        {
+          NeoTreeTabSeparatorInactive = {
+            inherit = "NeoTreeTabInactive",
+            fg = { from = "PanelDarkBackground", attr = "bg" },
+          },
+        },
+      })
+
+      vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
   -- EDGY.NVIM

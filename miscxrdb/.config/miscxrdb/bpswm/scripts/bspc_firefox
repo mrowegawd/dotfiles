@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# file ini dibuat untuk sebagai toggle
+MARK_FILE="/tmp/.keep_bspwm_firefox"
+
+for VAR in $(bspc query -N); do
+  # output dari $VAR adalah 0x041xx (number window id)
+  # output dari xdotool getwindowname "$VAR" (berupa string)
+
+  # check apakah getwindowname name dari $VAR contains string mozilla
+  if [[ $(xdotool getwindowname "$VAR") == *"Mozilla"* ]]; then
+    if [ ! -f $MARK_FILE ]; then
+      touch "$MARK_FILE"
+      bspc node "$VAR" -d "^1"
+    else
+      bspc node "$VAR" -d "^2"
+      rm "$MARK_FILE"
+    fi
+  fi
+done

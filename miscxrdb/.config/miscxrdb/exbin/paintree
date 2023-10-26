@@ -1,0 +1,398 @@
+#!/bin/bash
+
+FZF_PATH="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
+
+getcolors() {
+	NAMEIS=$(grep theme <~/.Xresources | awk -F"/" '{print $4}' | cut -d '"' -f 1 | xargs)
+
+	FOREGROUND="$(xrdb -query | grep 'foreground:' | awk '{print $NF}' | head -1)"
+	BACKGROUND="$(xrdb -query | grep 'background:' | awk '{print $NF}' | head -1)"
+	CURSOR="$(xrdb -query | grep 'cursorColor:' | awk '{print $NF}' | head -1)"
+	BLACK="$(xrdb -query | grep 'color0:' | awk '{print $NF}' | head -1)"
+	RED="$(xrdb -query | grep 'color1:' | awk '{print $NF}' | head -1)"
+	GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
+	YELLOW="$(xrdb -query | grep 'color3:' | awk '{print $NF}' | head -1)"
+	BLUE="$(xrdb -query | grep 'color4:' | awk '{print $NF}' | head -1)"
+	MAGENTA="$(xrdb -query | grep 'color5:' | awk '{print $NF}' | head -1)"
+	CYAN="$(xrdb -query | grep 'color6:' | awk '{print $NF}' | head -1)"
+	WHITE="$(xrdb -query | grep 'color7:' | awk '{print $NF}' | head -1)"
+	ALTBLACK="$(xrdb -query | grep 'color8:' | awk '{print $NF}' | head -1)"
+	ALTRED="$(xrdb -query | grep 'color9:' | awk '{print $NF}' | head -1)"
+	ALTGREEN="$(xrdb -query | grep 'color10:' | awk '{print $NF}' | head -1)"
+	ALTYELLOW="$(xrdb -query | grep 'color11:' | awk '{print $NF}' | head -1)"
+	ALTBLUE="$(xrdb -query | grep 'color12:' | awk '{print $NF}' | head -1)"
+	ALTMAGENTA="$(xrdb -query | grep 'color13:' | awk '{print $NF}' | head -1)"
+	ALTCYAN="$(xrdb -query | grep 'color14:' | awk '{print $NF}' | head -1)"
+	ALTWHITE="$(xrdb -query | grep 'color15:' | awk '{print $NF}' | head -1)"
+	FONTSIZE="18"
+	FONT="mononoki Nerd Font"
+
+	#BACKGROUND_ACTIVE_WINDOW: get bg dari 'hi Normal'
+	#BACKGROUND_NON_ACTIVE_WINDOW: get bg dari colorcolumn
+
+	#BACKGROUND_ACTIVE_STATUSLINE: get bg dari `hi StatusLine`
+	#BACKGROUND_NON_ACTIVE_STATUSLINE: sama kan dengan BACKGROUND_NON_ACTIVE_WINDOW,
+	#                                  atau -1 hex dari bg 'hi Normal'
+
+	#FOREGROUND_WINSEPARATOR: get bg dari `hi WinSepator`
+	#FZF_BG_SELECTION: get bg dari `hi PmenuSel`
+	# Note: color FZF_BG_SELECTION juga digunakan untuk bg selection di rofi
+
+	case "$NAMEIS" in
+	# urutan theme yang ditulis disini berdasarkan urutan index tbl _cohelper
+
+	"solarized")
+		BACKGROUND_ACTIVE_WINDOW=#002b36
+		BACKGROUND_NON_ACTIVE_WINDOW=#002b36
+
+		BACKGROUND_ACTIVE_STATUSLINE=#002b36
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#002b36
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#003746
+		FOREGROUND_WINSEPARATOR=#003746
+
+		FZF_BG_SELECTION=#004051
+		FZF_FG_SELECTION=#00ffff
+		FZF_FG_FUZZY_SELECTION=#ff413d
+
+		FZF_FG_BORDER=#003746
+
+		# Non selection fzf
+		FZF_BG=#002b36
+		FZF_FG=#00566c
+		FZF_FG_FUZZY=#9a2320
+		;;
+
+	"darcubox")
+		BACKGROUND_ACTIVE_WINDOW=#0e1214
+		BACKGROUND_NON_ACTIVE_WINDOW=#0e1214
+
+		BACKGROUND_ACTIVE_STATUSLINE=#0e1214
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#002b36
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#1b2327
+		FOREGROUND_WINSEPARATOR=#1b2327
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#151b1e
+		FZF_FG_SELECTION=#d2ffff
+		FZF_FG_FUZZY_SELECTION=#ff7b89
+
+		FZF_FG_BORDER=#1b2327
+
+		# Non selection fzf
+		FZF_BG=#0e1214
+		FZF_FG=#2a363c
+		FZF_FG_FUZZY=#a4424a
+		;;
+
+	"miasma")
+		BACKGROUND_ACTIVE_WINDOW=#222222
+		BACKGROUND_NON_ACTIVE_WINDOW=#222222
+
+		BACKGROUND_ACTIVE_STATUSLINE=#222222
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#222222
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#2c2c2c
+		FOREGROUND_WINSEPARATOR=#2c2c2c
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#333333
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#d68250
+
+		FZF_FG_BORDER=#2c2c2c
+
+		# Non selection fzf
+		FZF_BG=#222222
+		FZF_FG=#444444
+		FZF_FG_FUZZY=#7d4c2e
+		;;
+
+	"darcula-dark")
+		BACKGROUND_ACTIVE_WINDOW=#2b2b2b
+		BACKGROUND_NON_ACTIVE_WINDOW=#2b2b2b
+
+		BACKGROUND_ACTIVE_STATUSLINE=#2b2b2b
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#2b2b2b
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#333333
+		FOREGROUND_WINSEPARATOR=#333333
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#404040
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#ff4263
+
+		FZF_FG_BORDER=#333333
+
+		# Non selection fzf
+		FZF_BG=#2b2b2b
+		FZF_FG=#4d4d4d
+		FZF_FG_FUZZY=#aa263a
+		;;
+
+	"doom-one")
+		BACKGROUND_ACTIVE_WINDOW=#282c34
+		BACKGROUND_NON_ACTIVE_WINDOW=#282c34
+
+		BACKGROUND_ACTIVE_STATUSLINE=#282c34
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#282c34
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#343944
+		FOREGROUND_WINSEPARATOR=#2c3039
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#38354b
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#ff8180
+
+		# Non selection fzf
+		FZF_BG=#282c34
+		FZF_FG=#666289
+		FZF_FG_FUZZY=#b24b4a
+		;;
+
+	"everforest")
+		BACKGROUND_ACTIVE_WINDOW=#2d353b
+		BACKGROUND_NON_ACTIVE_WINDOW=#2d353b
+
+		BACKGROUND_ACTIVE_STATUSLINE=#2d353b
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#2d353b
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#363f46
+		FOREGROUND_WINSEPARATOR=#363f46
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#434f58
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#ffa3a6
+
+		FZF_FG_BORDER=#363f46
+
+		# Non selection fzf
+		FZF_BG=#2d353b
+		FZF_FG=#515f6a
+		FZF_FG_FUZZY=#a15859
+		;;
+
+	"tokyonight")
+		BACKGROUND_ACTIVE_WINDOW=#24283b
+		BACKGROUND_NON_ACTIVE_WINDOW=#24283b
+
+		BACKGROUND_ACTIVE_STATUSLINE=#24283b
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#24283b
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#323852
+		FOREGROUND_WINSEPARATOR=#323852
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#363c58
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#ff6161
+
+		FZF_FG_BORDER=#323852
+
+		# Non selection fzf
+		FZF_BG=#24283b
+		FZF_FG=#5a6493
+		FZF_FG_FUZZY=#993434
+		;;
+
+	"tokyonight-night")
+		BACKGROUND_ACTIVE_WINDOW=#1a1b26
+		BACKGROUND_NON_ACTIVE_WINDOW=#1a1b26
+
+		BACKGROUND_ACTIVE_STATUSLINE=#1a1b26
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#1a1b26
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#242535
+		FOREGROUND_WINSEPARATOR=#242535
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#272839
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#ff6161
+
+		FZF_FG_BORDER=#242535
+
+		# Non selection fzf
+		FZF_BG=#1a1b26
+		FZF_FG=#41435f
+		FZF_FG_FUZZY=#993434
+		;;
+
+	"night-owl")
+		BACKGROUND_ACTIVE_WINDOW=#011627
+		BACKGROUND_NON_ACTIVE_WINDOW=#011627
+
+		BACKGROUND_ACTIVE_STATUSLINE=#011627
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#076fc2
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#011e36
+		FOREGROUND_WINSEPARATOR=#011e36
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#01213a
+		FZF_FG_SELECTION=#0cffff
+		FZF_FG_FUZZY_SELECTION=#ff6b68
+
+		FZF_FG_BORDER=#011e36
+
+		# Non selection fzf
+		FZF_BG=#011c32
+		FZF_FG=#023965
+		FZF_FG_FUZZY=#a73a38
+		;;
+
+	"gruvbox-material")
+		BACKGROUND_ACTIVE_WINDOW=#282828
+		BACKGROUND_NON_ACTIVE_WINDOW=#282828
+
+		BACKGROUND_ACTIVE_STATUSLINE=#282828
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#282828
+
+		ACTIVE_FOREGROUND_WINSEPARATOR=#343434
+		FOREGROUND_WINSEPARATOR=#343434
+
+		# Selection item fzf
+		FZF_BG_SELECTION=#3c3c3c
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#ff887f
+
+		FZF_FG_BORDER=#343434
+
+		# Non selection fzf
+		FZF_BG=#282828
+		FZF_FG=#505050
+		FZF_FG_FUZZY=#a34944
+		;;
+
+	*)
+		BACKGROUND_NON_ACTIVE_WINDOW=#3a3836
+		BACKGROUND_ACTIVE_WINDOW=#43454f
+		BACKGROUND_ACTIVE_STATUSLINE=#131A24
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#d4d4d4
+		ACTIVE_FOREGROUND_WINSEPARATOR=#0d0f14
+		FOREGROUND_WINSEPARATOR=#242437
+		FZF_BG_SELECTION=#5b736a
+		FZF_FG=#94856a
+
+		dunstify "paintree: color $NAMEIS not found <br> check /tmp/notfound-paintree"
+		echo "[warn] paintre: cannot find name $NAMEIS on the list" >/tmp/notfound-paintree
+		;;
+
+	esac
+
+}
+
+_check_size_screen() {
+	size=$(xrandr | grep "*" | xargs | cut -d" " -f1)
+
+	if [[ $size == '1024x768' ]]; then
+		FONTSIZE="12"
+	fi
+}
+
+cachecolors() {
+	read -r -d '' cache <<-EOF
+		  FOREGROUND="${FOREGROUND}"
+		  BACKGROUND="${BACKGROUND}"
+
+		  BACKGROUND_ACTIVE_WINDOW="${BACKGROUND_ACTIVE_WINDOW}"
+		  BACKGROUND_NON_ACTIVE_WINDOW="${BACKGROUND_NON_ACTIVE_WINDOW}"
+
+		  BACKGROUND_ACTIVE_STATUSLINE="${BACKGROUND_ACTIVE_STATUSLINE}"
+		  BACKGROUND_NON_ACTIVE_STATUSLINE="${BACKGROUND_NON_ACTIVE_STATUSLINE}"
+
+		  FOREGROUND_WINSEPARATOR="${FOREGROUND_WINSEPARATOR}"
+		  ACTIVE_FOREGROUND_WINSEPARATOR=${ACTIVE_FOREGROUND_WINSEPARATOR}
+
+		  FZF_BG_SELECTION="${FZF_BG_SELECTION}"
+
+		  CURSOR="${CURSOR}"
+		  BLACK="${BLACK}"
+		  RED="${RED}"
+		  GREEN="${GREEN}"
+		  YELLOW="${YELLOW}"
+		  BLUE="${BLUE}"
+		  MAGENTA="${MAGENTA}"
+		  CYAN="${CYAN}"
+		  WHITE="${WHITE}"
+		  ALTBLACK="${BLACK}"
+		  ALTRED="${RED}"
+		  ALTGREEN="${GREEN}"
+		  ALTYELLOW="${YELLOW}"
+		  ALTBLUE="${BLUE}"
+		  ALTMAGENTA="${MAGENTA}"
+		  ALTCYAN="${CYAN}"
+		  ALTWHITE="${WHITE}"
+		  FONT="${FONT}"
+		  FONTSIZE="${FONTSIZE}"
+	EOF
+}
+cachecolorfzf() {
+	read -r -d "" cachefzf <<-EOF
+
+		  function _gen_fzf_default_opts() {
+
+				    # --files: List files that would be searched but do not search
+				    # --no-ignore: Do not respect .gitignore, etc...
+				    # --hidden: Search hidden files and folders
+				    export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden --smart-case'
+
+				    # export FZF_DEFAULT_COMMAND='rg --no-heading --hidden --follow --no-ignore-vcs --smart-case '
+		        export FZF_CTRL_T_COMMAND='fd --hidden --follow --exclude .git'
+
+				    export FZF_DEFAULT_OPTS='
+		        --bind ctrl-a:toggle-all,ctrl-l:clear-query,ctrl-d:preview-down,ctrl-u:preview-up,ctrl-n:down,ctrl-p:up,ctrl-g:top,F4:toggle-preview,ctrl-f:half-page-down,ctrl-b:half-page-up
+				    --color=bg:,fg:$FZF_FG,hl:$FZF_FG_FUZZY,border:$FZF_FG_BORDER --height=65%
+				    --color=bg+:$FZF_BG_SELECTION,fg+:$FZF_FG_SELECTION,hl+:$FZF_FG_FUZZY_SELECTION,gutter:$FZF_BG,pointer:$GREEN
+		        --preview "bat --style=plain --color=always {}" --preview-window right:50%:hidden:wrap --border --reverse
+				    --cycle --prompt="> "'
+				}
+
+				_gen_fzf_default_opts
+	EOF
+}
+
+sendescape() {
+	for term in /dev/pts/[0-9]*; do
+		printf "%b" "\\033]10;$FOREGROUND\\007" >"$term" &
+		printf "%b" "\\033]11;$BACKGROUND\\007" >"$term" &
+		printf "%b" "\\033]708;$BACKGROUND\\007" >"$term" &
+		printf "%b" "\\033]12;$CURSOR\\007" >"$term" &
+		printf "%b" "\\033]4;0;$BLACK\\007" >"$term" &
+		printf "%b" "\\033]4;1;$RED\\007" >"$term" &
+		printf "%b" "\\033]4;2;$GREEN\\007" >"$term" &
+		printf "%b" "\\033]4;3;$YELLOW\\007" >"$term" &
+		printf "%b" "\\033]4;4;$BLUE\\007" >"$term" &
+		printf "%b" "\\033]4;5;$MAGENTA\\007" >"$term" &
+		printf "%b" "\\033]4;6;$CYAN\\007" >"$term" &
+		printf "%b" "\\033]4;7;$WHITE\\007" >"$term" &
+		printf "%b" "\\033]4;8;$ALTBLACK\\007" >"$term" &
+		printf "%b" "\\033]4;9;$ALTRED\\007" >"$term" &
+		printf "%b" "\\033]4;10;$ALTGREEN\\007" >"$term" &
+		printf "%b" "\\033]4;11;$ALTYELLOW\\007" >"$term" &
+		printf "%b" "\\033]4;12;$ALTBLUE\\007" >"$term" &
+		printf "%b" "\\033]4;13;$ALTMAGENTA\\007" >"$term" &
+		printf "%b" "\\033]4;14;$ALTCYAN\\007" >"$term" &
+		printf "%b" "\\033]4;15;$ALTWHITE\\007" >"$term" &
+	done
+}
+
+main() {
+	if [ -e ~/.cache/paintee ]; then
+		rm ~/.cache/paintee
+	fi
+
+	getcolors
+	_check_size_screen
+	cachecolors
+	echo "$cache" >~/.cache/paintee
+
+	cachecolorfzf
+	echo "$cachefzf" >"$FZF_PATH/fzf.config"
+}
+
+main

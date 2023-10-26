@@ -2,7 +2,7 @@ return {
   -- STTUSLINE
   {
     "sontungexpt/sttusline",
-    event = "VeryLazy",
+    event = "BufEnter",
     de1endencies = {
       "nvim-tree/nvim-web-devicons",
     },

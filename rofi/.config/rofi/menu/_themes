@@ -3,7 +3,7 @@
 set -e -u
 
 #shellcheck source=/dev/null
-. ~/Dropbox/exbin/for-local-bin/load-vars-rofi
+. ~/.config/miscxrdb/exbin/load-vars-rofi
 
 DOTFILES_PATH="$HOME/moxconf/development/dotfiles"
 MISCXRDB_PATH="$HOME/.config/miscxrdb"
@@ -185,25 +185,6 @@ wm_bspwm() {
 	~/.config/bspwm/bspwmrc &>/dev/null
 	~/.config/polybar/runpolybar.sh &>/dev/null
 }
-wm_i3() {
-	cat ~/Dropbox/exbin/xfiles/cfg_i3/config ~/Dropbox/exbin/xfiles/cfg_i3/i3theme \
-		>~/.config/i3/config
-
-	sed -i -e "s/%%bg_%%/$GETBACKGROUND/g" "$HOME/.config/i3/config"
-	sed -i -e "s/%%fg_%%/$GETFOREGROUND/g" "$HOME/.config/i3/config"
-
-	sed -i -e "s/%%bg_fc%%/$GETBLUE/g" "$HOME/.config/i3/config"
-	sed -i -e "s/%%fg_fc%%/$GETFOREGROUND/g" "$HOME/.config/i3/config"
-
-	sed -i -e "s/%%indic_%%/$GETBACKGROUND/g" "$HOME/.config/i3/config"
-	sed -i -e "s/%%indic_fc%%/$GETRED/g" "$HOME/.config/i3/config"
-
-	sed -i -e "s/%%bg_border%%/$GETWHITE/g" "$HOME/.config/i3/config"
-	sed -i -e "s/%%bg_border_urg%%/$GETRED/g" "$HOME/.config/i3/config"
-
-	i3-msg restart
-
-}
 wm_awesome() {
 	echo "awesome.restart()" | awesome-client
 }
@@ -247,9 +228,9 @@ rofi_command="rofi -theme $dir/$theme"
 	fi
 
 	# reload paintree before updating themes
-	~/Dropbox/exbin/for-local-bin/paintree
+	~/.config/miscxrdb/exbin/paintree
 	# shellcheck source=/dev/null
-	. ~/Dropbox/exbin/for-local-bin/get_var_paintee
+	. ~/.config/miscxrdb/exbin/get_var_paintee
 
 	sleep 1
 
@@ -273,7 +254,6 @@ rofi_command="rofi -theme $dir/$theme"
 
 	case "$XDG_SESSION_DESKTOP" in
 	"bspwm") wm_bspwm ;;
-	"i3") wm_i3 ;;
 	"awesome") wm_awesome ;;
 	esac
 

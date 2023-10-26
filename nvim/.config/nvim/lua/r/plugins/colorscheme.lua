@@ -152,7 +152,8 @@ return {
     "sainnhe/gruvbox-material",
     lazy = false,
     init = function()
-      vim.g.gruvbox_material_background = "hard"
+      vim.g.gruvbox_material_background = "medium"
+      vim.g.gruvbox_material_better_performance = 1
     end,
     enabled = function()
       if colorscheme == "gruvbox-material" then
@@ -193,6 +194,7 @@ return {
           functions = {},
           variables = {},
         },
+        dim_inactive = false, -- dims inactive windows
         transparent = false, -- true
       }
 

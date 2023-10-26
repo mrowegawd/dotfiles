@@ -1,3 +1,5 @@
+vim.opt.list = false
+
 -- local keymap = vim.keymap
 -- local overseer = require "overseer"
 --

@@ -59,7 +59,7 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = { { "<a-m>", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
+    keys = { { "<leader>m", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },

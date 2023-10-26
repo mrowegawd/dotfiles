@@ -205,8 +205,10 @@ export MANPAGER="/bin/sh -c \"col -b | \
 bindkey '^y'        autosuggest-accept
 bindkey "^[[89;5u"  autosuggest-accept
 bindkey '^?'        backward-delete-char
-bindkey '^b'        backward-char            # backward (c-b)
-bindkey '^f'        forward-char             # forward char (c-f)
+bindkey '^h'        backward-char            # backward (c-b)
+bindkey '^l'        forward-char             # forward char (c-f)
+bindkey '^b'        backward-word            # backward (c-b)
+bindkey '^f'        forward-word             # forward char (c-f)
 # bindkey '^w'      backward-kill-word
 # bindkey '^u'      backward-kill-line
 bindkey '^a'        beginning-of-line
@@ -216,7 +218,7 @@ bindkey '^e'        end-of-line
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey -M viins '^[e' edit-command-line    # alt-e
-# bindkey -M viins 'jk' vi-cmd-mode         # 'jk' to <esc>
+bindkey -M viins 'jk' vi-cmd-mode         # 'jk' to <esc>
 # bindkey -M vicmd v edit-command-line
 
 bindkey ‘^R’ history-incremental-search-backward

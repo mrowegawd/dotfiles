@@ -1,0 +1,131 @@
+#!/bin/bash
+
+#set -e -u
+
+# Var COLORS --------------------------------------------------- {{{
+
+# Reset
+Color_Off='\033[0m' # Text Reset
+
+# Regular Colors
+Red='\033[0;31m'  # Red
+Cyan='\033[0;36m' # Cyan
+
+# Bold
+BRed='\033[1;31m' # Red
+
+# Underline
+UWhite='\033[4;37m' # White
+
+# Background
+
+# High Intensity
+
+# Bold High Intensity
+
+# High Intensity backgrounds
+
+# }}}
+
+# Var FONTS-STYLE ---------------------------------------------- {{{
+NORMAL=$(tput sgr0)
+# }}}
+
+# Var GLOBAL --------------------------------------------------- {{{
+COLUMNS=$(tput cols)
+# }}}
+
+# Var PKGS ----------------------------------------------------- {{{
+
+checkPkgsDevs=(
+  "ansible"
+  "cmake"
+  "composer"
+  "docker"
+  "g++"
+  "git"
+  "go"
+  "jenkins"
+  "make"
+  "node"
+  "npm"
+  "php"
+  "pip"
+  "pip3"
+  "pip3.4"
+  "pip3.5"
+  "pip3.6"
+  "python"
+  "python3"
+  "python3.4"
+  "python3.5"
+  "python3.6"
+  "rbenv"
+  "ruby"
+  "vagrant"
+)
+
+checkPkgsTools=(
+  "ccze"   # check di ansible workspace for localhost
+  "figlet" # for banner
+  "htop"
+  "jp2a" # ascii to text, for banner
+  "lolcat"
+  "lsof"
+  "nmap"
+  "nvim"
+  "screenfetch"
+  "screenkey"
+  "ss"
+  "tar"
+  "tmux"
+  "toilet"
+  "tor"
+  "vim"
+  "xclip"
+)
+
+# }}}
+
+# BANNER ------------------------------------------------------- {{{
+function banner() {
+  figlet -f slant "$1" | lolcat
+}
+# }}}
+
+# SCRIPTS ------------------------------------------------------ {{{
+if ! type lolcat >/dev/null; then
+  gem install lolcat
+  if ! type figlet >/dev/null; then
+    sudo apt install figlet
+  fi
+fi
+
+banner Devs
+
+printf "%*s" "${COLUMNS}" | tr " " "x"
+for pkg in "${checkPkgsDevs[@]}"; do
+  printf " [+] ${Cyan}Chekcing${Color_Off} ${UWhite}%s${Color_Off}: " "$pkg"
+  if ! type "$pkg" &>/dev/null; then
+    printf "${BRed}%s${Color_Off}${NORMAL} -> " "$pkg"
+    echo -e "${Red}not installed${Color_Off}"
+  else
+    type "$pkg"
+  fi
+done
+
+banner Tools
+
+printf "%*s" "${COLUMNS}" | tr " " "x"
+for pkg in "${checkPkgsTools[@]}"; do
+  printf " [+] ${Cyan}Chekcing${Color_Off} ${UWhite}%s${Color_Off}: " "$pkg"
+  if ! type "$pkg" &>/dev/null; then
+    printf "${BRed}%s${Color_Off}${NORMAL} -> " "$pkg"
+    echo -e "${Red}not installed${Color_Off}"
+  else
+    type "$pkg"
+  fi
+done
+# }}}
+
+$SHELL

@@ -26,7 +26,10 @@
 # esac
 
 export DOTFILES="${HOME}/moxconf/development/dotfiles"
-[[ -d ${DOTFILES} ]] && source "${DOTFILES}/miscxrdb/global-exports/variables.sh"
+DOT_VARS="$HOME/miscxrdb/.config/miscxrdb/global-exports/variables.sh"
+[[ -f ${DOT_VARS} ]] && source "$DOT_VARS"
+
+source "${DOTFILES}/miscxrdb/.config/miscxrdb/global-exports/variables.sh"
 
 # EXPORT: ----------------------------------------------------------------- {{{
 #

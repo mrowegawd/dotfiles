@@ -13,7 +13,7 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 (
 	[[ -z $chosen ]] && exit
 
-	MYBIN_PATH="$HOME/Dropbox/exbin"
+	MYBIN_PATH="$HOME/.config/miscxrdb/exbin"
 
 	[[ ! -d $MYBIN_PATH ]] && dunstify "Path not found:" "$MYBIN_PATH"
 
@@ -22,7 +22,7 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 		rofi -theme "$dir/$theme" -show drun
 		;;
 	"Emojis") "$dir/_emoji" ;;
-	"Email") "$MYBIN_PATH/for-local-bin/muttmail" ;;
+	"Email") "$MYBIN_PATH/muttmail" ;;
 	"Guide linux") "$dir/_glinux" ;;
 	"Snippet") "$dir/_snippet" ;;
 	"Themes") "$dir/_themes" ;;

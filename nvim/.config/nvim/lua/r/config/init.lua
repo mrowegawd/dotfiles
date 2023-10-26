@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "doom-one"
+local colorscheme = "gruvbox-material"
 
 _G.base = {}
 
@@ -83,7 +83,7 @@ local defaults = {
   icons = {
     border = {
       line = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" },
-      rectangle = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+      retangle = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
     },
     misc = {
       dots = "󰇘",

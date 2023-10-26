@@ -22,28 +22,28 @@ return {
     "mrjones2014/smart-splits.nvim",
     keys = {
       {
-        "<c-k>",
+        "<a-k>",
         function()
           return require("smart-splits").move_cursor_up()
         end,
         desc = "Navigations(smart-splits): move up",
       },
       {
-        "<c-j>",
+        "<a-j>",
         function()
           return require("smart-splits").move_cursor_down()
         end,
         desc = "Navigations(smart-splits): move down",
       },
       {
-        "<c-h>",
+        "<a-h>",
         function()
           return require("smart-splits").move_cursor_left()
         end,
         desc = "Navigations(smart-splits): move left",
       },
       {
-        "<c-l>",
+        "<a-l>",
         function()
           return require("smart-splits").move_cursor_right()
         end,

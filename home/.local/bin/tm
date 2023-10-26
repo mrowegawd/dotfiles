@@ -7,33 +7,41 @@ not_in_tmux() {
 	[ -z "$TMUX" ]
 }
 
-if [[ -z "$TMUX" ]]; then
-	select=$(fzf <"$MARKED_PWD")
-else
-	select=$(fzf-tmux -xC -w '50%' -h '40%' <"$MARKED_PWD")
-fi
+path_name="$(basename "$PWD" | tr . -)"
+session_name=${1-$path_name}
 
-[[ -z $select ]] && exit
-[[ ! -d $select ]] && dunstify "Path: $select" "Not found!" && exit
-
-session_name=$(basename "$select")
-
-ss_name=$(echo "$session_name" | sed -e "s/\./\_/g")
-
-session_exists() {
-	tmux has-session -t "=$ss_name"
+create_detached_session() {
+	(TMUX='' tmux new-session -Ad -s "$session_name")
 }
 
 create_if_needed_and_attach() {
-
 	if not_in_tmux; then
-		tmux new-session -As "$ss_name" -c "$select"
+		tmux new-session -As "$session_name" -c "$session_name"
 	else
+
+		if [[ -z "$TMUX" ]]; then
+			select=$(fzf --prompt='Cretsess: ' <"$MARKED_PWD")
+		else
+			select=$(fzf-tmux -xC -w '50%' -h '40%' --prompt='Cretsess: ' <"$MARKED_PWD")
+		fi
+
+		[[ -z $select ]] && exit
+		[[ ! -d $select ]] && dunstify "Path: $select" "Not found!" && exit
+
+		select_basename=$(basename "$select")
+
+		ss_name=$(echo "$select_basename" | sed -e "s/\./\_/g")
+
+		session_exists() {
+			tmux has-session -t "=$ss_name"
+		}
+
 		if ! session_exists; then
 			tmux new-session -d -s "$ss_name" -c "$select"
 		fi
 
 		tmux switch-client -t "$ss_name"
+		# dunstify "create new session and detach $ss_name"
 	fi
 }
 

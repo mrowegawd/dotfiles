@@ -81,10 +81,12 @@ function M.lazy_file()
 
   local events = {} ---@type {event: string, buf: number, data?: any}[]
 
+  local done = false
   local function load()
-    if #events == 0 then
+    if #events == 0 or done then
       return
     end
+    done = true
     vim.api.nvim_del_augroup_by_name "lazy_file"
 
     ---@type table<string,string[]>
@@ -251,63 +253,107 @@ end
 function M.infoBaseColorsTheme()
   local normal = "Normal"
   local colorcolumn = "ColorColumn"
-
-  local pmenu = "Pmenu"
   local pmenusel = "PmenuSel"
-
+  -- local pmenu = "Pmenu"
+  local cmpitemabbr = "CmpItemAbbr"
+  local cmpmatchabbr = "CmpItemAbbrMatch"
+  local fzfluaborder = "FzfLuaBorder"
+  local cmpmatchabbrFuzzy = "CmpItemAbbrMatchFuzzy"
   local winseparator = "WinSeparator"
 
-  local cmpmatchabbr = "CmpItemAbbrMatch"
-  local cmpitemabbr = "CmpItemAbbr"
-  local cmpitemabbrmatchfuzzy = "CmpItemAbbrMatchFuzzy"
+  local normal_fg = "Normal color_fg: " .. highlight.get(normal, "fg")
+  local normal_bg = "Normal color_bg: " .. highlight.get(normal, "bg")
 
-  local normal_bg = highlight.get(normal, "bg")
-  local normal_fg = highlight.get(normal, "fg")
+  local colorcolumn_bg = "ColorColumn: " .. highlight.get(colorcolumn, "bg")
 
-  local colorcolumn_bg = highlight.get(colorcolumn, "bg")
+  -- fzf selection
+  local fzf_selection_fg = "Fzf selection fg: " .. highlight.get(pmenusel, "fg")
+  local fzf_selection_bg = "fzf selection bg: " .. highlight.get(pmenusel, "bg")
 
-  local pmenu_bg = highlight.get(pmenu, "bg")
-  local pmenu_fg = highlight.get(pmenu, "fg")
+  -- fzf non selection
+  local fzf_non_sel_fg = "Fzf default fg: " .. highlight.get(cmpitemabbr, "fg")
 
-  local pmenusel_bg = highlight.get(pmenusel, "bg")
+  -- fzf match matching
+  local fzf_matching = "Fzf matching: " .. highlight.get(cmpmatchabbr, "fg")
+  local fzf_matching_fuzzy = "Fzf matching fuzzy: " .. highlight.get(cmpmatchabbrFuzzy, "fg")
 
-  local winseparator_fg = highlight.get(winseparator, "fg")
+  -- fzf match matching
+  local fzf_border_fg = "Fzf border fg: " .. highlight.get(fzfluaborder, "fg")
 
-  local cmpmatchabbr_fg = highlight.get(cmpmatchabbr, "fg")
-  local cmpitemabbr_fg = highlight.get(cmpitemabbr, "fg")
-
-  local cmpmatchabbrfuzzy_fg = highlight.get(cmpitemabbrmatchfuzzy, "fg")
+  local fzf_border_tmux_fg = "Tmux border fg: " .. highlight.get(winseparator, "fg")
 
   print(
     fmt(
       [[
-BG_ACTIVE_WINDOW (Normal) bg: %s
-BG_ACTIVE_WINDOW (Normal) fg: %s
+  %s
+  %s
 
-BACKGROUND_ACTIVE_STATUSLINE (ColorColumn) bg: %s
+  %s
 
-FZF_BG (Pmenu) bg: %s
-FZF_FG (Pmenu) fg: %s
+  #--- FUZZY
+  %s
+  %s
 
-FZF_BG_SELECTION (PmenuSel) bg: %s
+  %s
 
-ACTIVE_FOREGROUND_WINSEPARATOR (WinSeparator) fg: %s
+  %s
+  %s
 
-FZF_BG_MATCH (CmpItemAbbrMatch) fg: %s
-FZF_FG_ITEM (CmpItemAbbr) fg: %s
-FZF_FG_ITEM_FUZZY (CmpItemAbbrMatchFuzzy) fg: %s ]],
-      normal_bg,
+  %s
+
+  %s
+  ]],
       normal_fg,
+      normal_bg,
       colorcolumn_bg,
-      pmenu_bg,
-      pmenu_fg,
-      pmenusel_bg,
-      winseparator_fg,
-      cmpmatchabbr_fg,
-      cmpitemabbr_fg,
-      cmpmatchabbrfuzzy_fg
+
+      fzf_selection_bg,
+      fzf_selection_fg,
+      fzf_non_sel_fg,
+      fzf_matching,
+      fzf_matching_fuzzy,
+
+      fzf_border_fg,
+      fzf_border_tmux_fg
     )
   )
+
+  -- local pmenu_bg = highlight.get(pmenu, "bg")
+  -- local cmpmatchabbr_fg = highlight.get(cmpmatchabbr, "fg")
+  -- local cmpitemabbr_fg = highlight.get(cmpitemabbr, "fg")
+  -- local cmpmatchabbrfuzzy_fg = highlight.get(cmpitemabbrmatchfuzzy, "fg")
+
+  --   print(
+  --     fmt(
+  --       [[
+  -- BG_ACTIVE_WINDOW (Normal) bg: %s
+  -- BG_ACTIVE_WINDOW (Normal) fg: %s
+
+  -- BACKGROUND_ACTIVE_STATUSLINE (ColorColumn) bg: %s
+
+  -- # fzf selection
+  -- FZF_BG (Pmenu) bg: %s
+  -- FZF_FG (Pmenu) fg: %s
+  -- FZF_BG_SELECTION (PmenuSel) bg: %s
+
+  -- # fzf normal
+  -- FZF_BG_SELECTION (PmenuSel) bg: %s
+
+  -- FZF_BG_MATCH (CmpItemAbbrMatch) fg: %s
+  -- FZF_FG_ITEM (CmpItemAbbr) fg: %s
+  -- FZF_FG_ITEM_FUZZY (CmpItemAbbrMatchFuzzy) fg: %s ]],
+  --       normal_bg,
+  --       normal_fg,
+
+  --       colorcolumn_bg,
+  --       pmenu_bg,
+  --       pmenu_fg,
+  --       pmenusel_bg,
+  --       cmpmatchabbr_fg,
+  --       cmpitemabbr_fg,
+  --       cmpmatchabbrfuzzy_fg
+  --     )
+  --   )
 end
 
 function M.infoFoldPreview()

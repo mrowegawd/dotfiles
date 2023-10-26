@@ -1,0 +1,33 @@
+#!/bin/bash
+
+set -u -e
+
+# Date Created: 13 Aug 2019
+# Last Modified: 13 Aug 2019 (13:08:37)
+# Summary:
+# Author: Gitmox
+# License:
+
+# switch capslock to backspace
+setxkbmap -option caps:backspace
+
+# xbacklight -inc 40
+
+# killall -q compton mpd
+# mpd &
+# compton --config ~/.config/compton.conf &
+
+# dont panic, urxvtd will spawn 2 (default bilang begitu)
+# pidof urxvtd && killall urxvtd
+# urxvtd -q &
+
+# [[ -f "$HOME/.config/polybar/runpolybar" ]] && "$HOME/.config/polybar/runpolybar"
+# [[ -f "$HOME/.config/dunst/rundust" ]] && "$HOME/.config/dunst/rundust"
+
+[[ -f ~/.lesskey ]] && lesskey               # loading lesskey
+[[ -f /usr/local/bin/telegram ]] && telegram # run telegram
+
+# case word in
+#   pattern )
+#     ;;
+# esac

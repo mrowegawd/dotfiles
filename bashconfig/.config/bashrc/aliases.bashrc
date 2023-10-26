@@ -36,18 +36,16 @@ alias lt="eza --icons --all --color=always -T"
 # 	alias lt="tree ."
 # fi
 
-alias :q!=exitq
-alias :Q!=exitq
-alias :c=exit
 alias :C=exit
-alias :c!=exit
-alias :C!=exit
+alias :c=exit
+alias :Q=exit
+alias :q=exit
 
 if [ "${USER}" = "root" ]; then
 	alias v="vim"
 	alias sv="sudo vim"
 	alias ttext='vim /tmp/dump_text.txt'
-	alias tbash='vim /tmp/dump_bash.sh'
+	# alias tbash='vim /tmp/dump_bash.sh'
 else
 	if command -v nvim >/dev/null; then
 		alias v="nvim"
@@ -55,14 +53,14 @@ else
 		alias vvg="vv --multigrid"
 		alias svi="sudo nvim"
 		alias ttext='nvim /tmp/dump_text.txt'
-		alias tbash='nvim /tmp/dump_bash.sh'
+		# alias tbash='nvim /tmp/dump_bash.sh'
 	else
 		alias v="vim"
 		alias vv="vim"
 		alias vvg="vim"
 		alias svi="sudo vim"
 		alias ttext='vim /tmp/dump_text.txt'
-		alias tbash='vim /tmp/dump_bash.sh'
+		# alias tbash='vim /tmp/dump_bash.sh'
 	fi
 fi
 
@@ -149,7 +147,7 @@ c_units() {
 	echo -n '\e[1;32mListing Units:\e[0m ' | pv -qL 10 && systemctl list-units
 }
 
-# check: usage bencweb <URL>
+# check: usage benchmark web <URL>
 c_bencweb() {
 	curl -s -w 'Testing Website Response Time for:%{url_effective}\n\nLookup Time:\t\t%{time_namelookup}\nConnect Time:\t\t%{time_connect}\nPre-transfer Time:\t%{time_pretransfer}\nStart-transfer Time:\t%{time_starttransfer}\n\nTotal Time:\t\t%{time_total}\n' -o /dev/null "$1"
 }
@@ -341,6 +339,11 @@ c_summary() {
 # │                        RUN SCRIPT                        │
 # ╰──────────────────────────────────────────────────────────╯
 
+# run: fzf ps aux
+r_fzf_ps() {
+	ps aux --sort=-%mem | grcat ps.grc | fzf --ansi
+}
+
 # run: youtube download <$URL_YOUTUBE>
 r_ytdl() {
 	tsp yt-dlp --output "$(date +%s)-%(uploader)s%(title)s.%(ext)s" "$1"
@@ -354,11 +357,6 @@ r_ytmp3() {
 # run: hapus file all <$1>
 r_hapus() {
 	find "$1" -type f -name "*" -exec shred -v -n 25 -u -z {} \;
-}
-
-# run: run calculator by python
-r_calc() {
-	python -ic "from __future__ import division; from math import *; from random import *"
 }
 
 # run: open lf
@@ -909,7 +907,7 @@ yarn_i_saveDev() {
 # ╞══════════════════════════════════════════════════════════╡
 
 # yarn: install package for global directory <$PACKAGE>
-yarn_i_saveGlobal() {
+pr_yarn_i_saveGlobal() {
 
 	if [ -n "$1" ]; then
 		yarn global add "$1"
@@ -920,7 +918,7 @@ yarn_i_saveGlobal() {
 }
 
 # yarn: run with <$SCRIPT_NAME>
-yarn_run() {
+pr_yarn_run() {
 
 	if [ -n "$1" ]; then
 		yarn run "$1"
@@ -931,7 +929,7 @@ yarn_run() {
 }
 
 # npm: install package for global directory <$PACKAGE>
-npm_i_saveGlobal() {
+pr_npm_i_saveGlobal() {
 
 	if [ -n "$1" ]; then
 		npm install -g "$1"
@@ -942,7 +940,7 @@ npm_i_saveGlobal() {
 }
 
 # npm: check: outdated global packages
-npm_c_goutdated() {
+pr_npm_c_goutdated() {
 	npm outdated -g
 }
 
@@ -951,7 +949,7 @@ npm_c_goutdated() {
 # ╞══════════════════════════════════════════════════════════╡
 
 # pip: install package <$PACKAGE>++
-pip_i() {
+pr_pip_i() {
 	if [ -n "$1" ]; then
 		pip install "$1"
 	else
@@ -960,7 +958,7 @@ pip_i() {
 }
 
 # pip: search package <$PACKAGE>++
-pip_search() {
+pr_pip_search() {
 	if [ -n "$1" ]; then
 		pip search "$1"
 	else
@@ -969,7 +967,7 @@ pip_search() {
 }
 
 # pip: check: show package <$PACKAGE>++
-pip_show() {
+pr_pip_show() {
 	if [ -n "$1" ]; then
 		pip show "$1"
 	else
@@ -978,12 +976,12 @@ pip_show() {
 }
 
 # pip: check: list packages <$PACKAGE>++
-pip_c_ls() {
+pr_pip_c_ls() {
 	pip list | less
 }
 
 # pip: install from requirments <$REQUIRMENTS.TXT>
-pip_i_requirments() {
+pr_pip_i_requirments() {
 
 	if [ -n "$1" ]; then
 		pip install -r "$1"
@@ -993,7 +991,7 @@ pip_i_requirments() {
 }
 
 # pip: export packages installed to <$REQUIRMENTS.TXT>
-pip_frez_requirments() {
+pr_pip_frez_requirments() {
 
 	if [ -n "$1" ]; then
 		pip freeze >"$1"
@@ -1008,7 +1006,7 @@ pip_frez_requirments() {
 # ╞══════════════════════════════════════════════════════════╡
 
 # pipenv: install package <$PACKAGES>++
-pipenv_i() {
+pr_pipenv_i() {
 
 	if [ -n "$1" ]; then
 		pipenv install "$1"
@@ -1019,7 +1017,7 @@ pipenv_i() {
 }
 
 # pipenv: install package as dev <$PACKAGES>++
-pipenv_i_savedev() {
+pr_pipenv_i_savedev() {
 
 	if [ -n "$1" ]; then
 		pipenv install --dev "$1"
@@ -1030,12 +1028,12 @@ pipenv_i_savedev() {
 }
 
 # pipenv: just do 'pipenv install' will install from pipfile
-pipenv_i_pipfile() {
+pr_pipenv_i_pipfile() {
 	pipenv install
 }
 
 # pipenv: uninstall package <$PACKAGES>++
-pipenv_unins() {
+pr_pipenv_unins() {
 
 	if [ -n "$1" ]; then
 		pipenv uninstall "$1"
@@ -1046,7 +1044,7 @@ pipenv_unins() {
 }
 
 # pipenv: install from requirments <$REQUIRMENTS.TXT>
-pipenv_i_requirments() {
+pr_pipenv_i_requirments() {
 
 	if [ -n "$1" ]; then
 		pipenv install -r "$1"
@@ -1056,12 +1054,12 @@ pipenv_i_requirments() {
 }
 
 # pipenv: check: security vulnerabilities
-pipenv_c_vuln() {
+pr_pipenv_c_vuln() {
 	pipenv check
 }
 
 # pipenv: exit from virtualenvs
-pipenv_exit() {
+pr_pipenv_exit() {
 	exit
 }
 
@@ -1072,13 +1070,13 @@ pipenv_exit() {
 # }
 
 # pipenv: create virtualenvs with pipenv
-pipenv_shell() {
+pr_pipenv_shell() {
 	pipenv shell
 	# pipenv shell
 }
 
 # pipenv: remove or delete current virtualenvs
-pipenv_del() {
+pr_pipenv_del() {
 	pipenv --rm
 }
 

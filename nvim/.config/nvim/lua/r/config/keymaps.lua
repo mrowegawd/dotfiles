@@ -63,9 +63,6 @@ nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 inoremap("jk", "<ESC>", silent)
 inoremap("kj", "<ESC>", silent)
 
-inoremap("<c-f>", "<Right>", silent)
-inoremap("<c-b>", "<Left>", silent)
-
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
 inoremap("<c-d>", "<c-O>dw", silent)
@@ -75,8 +72,10 @@ inoremap("<c-k>", "<Up>", silent)
 nnoremap("g,", "g,zvzz", silent) -- go last edit
 nnoremap("g;", "g;zvzz", silent) -- go prev edit
 
--- inoremap("<C-w>", "<C-o>E<C-o>l")
--- inoremap("<C-b>", "<C-o>B")
+inoremap("<c-l>", "<Right>", silent)
+inoremap("<c-h>", "<Left>", silent)
+inoremap("<c-f>", "<C-o>E<C-o>l")
+inoremap("<c-b>", "<C-o>B")
 
 nnoremap("<c-f>", "/", nosilent)
 vnoremap("<c-f>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
@@ -195,7 +194,7 @@ local ignore_alternate_ft = {
   ["neo-tree"] = true,
   ["OverseerList"] = true,
 }
-nnoremap("<bs>", function()
+nnoremap("<leader>bb", function()
   local bufnr = vim.api.nvim_get_current_buf()
 
   local ft = vim.bo[bufnr].filetype
@@ -297,15 +296,10 @@ nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 nnoremap("<c-w>v", "<CMD>vsplit<CR>", silent)
 nnoremap("<c-w>s", "<CMD>split<CR>", silent)
 nnoremap("<c-w>y", "<CMD>wincmd =<CR>", silent)
-
+nnoremap("<Leader>ww", "<C-W>p", silent)
 nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
-
-nnoremap("<c-w>J", "<C-W>t <C-W>K", {
-  desc = "Windows: change two horizontally split windows to vertical splits",
-})
-nnoremap("<c-w>L", "<C-W>t <C-W>H", {
-  desc = "Windows: change two vertically split windows to horizontal splits",
-})
+nnoremap("<c-w>J", "<C-W>t <C-W>K", { desc = "Windows: change two horizontally split windows to vertical splits" })
+nnoremap("<c-w>L", "<C-W>t <C-W>H", { desc = "Windows: change two vertically split windows to horizontal splits" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ NAVIGATIONS                                              │
@@ -327,15 +321,16 @@ end
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │
 --  ╰──────────────────────────────────────────────────────────╯
-cnoremap("jk", "<c-c>", { desc = "Cmdline: exit from cmdline" })
-cnoremap("<c-a>", "<Home>", { desc = "Cmdline: go to the first" })
-cnoremap("<c-e>", "<End>", { desc = "Cmdline: go to the last" })
+cnoremap("jk", "<c-c>", { desc = "Commandline: exit from cmdline" })
+cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
+cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last" })
+cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist" })
+cnoremap("<c-p>", "<Up>", { desc = "Commandline: prev hist" })
 
-cnoremap("<c-f>", "<Right>", { desc = "Cmdline: next word" })
-cnoremap("<c-b>", "<Left>", { desc = "Cmdline: prev word" })
-
-cnoremap("<c-n>", "<Down>", { desc = "Cmdline: next hist" })
-cnoremap("<c-p>", "<Up>", { desc = "Cmdline: prev hist" })
+cnoremap("<c-l>", "<Right>", { desc = "Commandline: next word" })
+cnoremap("<c-h>", "<Left>", { desc = "Commandline: prev word" })
+cnoremap("<c-f>", "<S-Right>")
+cnoremap("<c-b>", "<S-Left>")
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ TERMINAL                                                 │
@@ -347,11 +342,12 @@ Util.cmd.augroup("AddTerminalMappings", {
   command = function()
     if vim.bo.filetype == "" or vim.bo.filetype == "toggleterm" then
       tnoremap("<F1>", "<C-w>w", { desc = "Terminal change window" })
-      tnoremap("<esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
-      tnoremap("<C-h>", "<C-\\><C-n><C-w>h", { desc = "Terminal left window navigation" })
-      tnoremap("<C-j>", "<C-\\><C-n><C-w>j", { desc = "Terminal down window navigation" })
-      tnoremap("<C-k>", "<C-\\><C-n><C-w>k", { desc = "Terminal up window navigation" })
-      tnoremap("<C-l>", "<C-\\><C-n><C-w>l", { desc = "Terminal right window naviation" })
+      tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
+      tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal left window navigation" })
+      tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal down window navigation" })
+      tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal up window navigation" })
+      tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal right window naviation" })
+      tnoremap("<a-/>", "<cmd>close<cr>", { desc = "Terminal close" })
     end
   end,
 })
