@@ -1,7 +1,0 @@
-#!/bin/bash
-
-counter=1
-while IFS='' read -r line || [[ -n "$line" ]]; do
-    printf "\uf00c %s. $line\n" $counter
-    counter="$((counter+1))"
-done < "$1"
