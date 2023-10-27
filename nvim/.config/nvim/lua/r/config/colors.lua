@@ -228,14 +228,40 @@ end
 -- stylua: ignore
 local function colorscheme_overrides()
   local overrides = {
-    -- Theme dengan nama ini, tidak perlu diinstall karena tidak bisa di custom
-    -- pada function ini (I dont use it anymore)
-    -- {"kanagawa", "catppuccin"}
+    -- {"kanagawa", "catppuccin"} -- remove this
     ["doom-one"] = {
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.4 } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.4 } } },
+
       { CursorLine = { bg = { from = "ColorColumn", attr= "bg", alter = 0.2 } } },
       { Substitute = { strikethrough = false } },
+
+      { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1 }, bg = "NONE" } },
+      { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
+      { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.3 }, bg = "NONE"  } },
+      { FzfLuaBorder = { inherit = "WinSeparator" } },
+      { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.15 }, bg = "NONE" } },
+      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.3 } } },
+
+      { Comment = { fg = { from = "ColorColumn", attr = "bg", alter = 0.9 }, italic = true } },
+      { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
+
+      { TelescopeNormal = { fg = { from= "CmpItemAbbr", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescoeePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+      { TelescopePromptBorder = { inherit = "FloatBorder" } },
+      { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
+      { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
+      { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+      { TelescopeSelection = { inherit = "PmenuSel" } },
+      { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
+
+      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.1 } } },
     },
     ["gruvbox-material"] = {
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.4 } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.4 } } },
+
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
       { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.3 }, bg = "NONE"  } },
