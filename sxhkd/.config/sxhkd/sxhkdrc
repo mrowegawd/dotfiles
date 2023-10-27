@@ -94,7 +94,7 @@ super + ctrl + {Right,Up,Down,Left}
 
 # misc: open rofi_call
 super + u
-        $HOME/.config/rofi/menu/menu.sh
+        $HOME/.config/rofi/menu/menu
 
 # misc: open terminal
 super + Return
@@ -155,19 +155,13 @@ super + shift + n
 super + F4
         $HOME/.config/miscxrdb/bpswm/scripts/bspc_firefox
 
-# misc: open taskwarrior
-# super + shift + u
-#         bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "taskwarrior-tui"
-        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
-        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && sh -e bash -c "/usr/local/bin/nvim --noplugin -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
-
 # misc: run bookmark
 super + shift + p
         $HOME/.config/miscxrdb/bpswm/scripts/websearch
 
 # misc: poweroff
 super + shift + q
-        $HOME/.config/rofi/powermenu/poweroff.sh
+        $HOME/.config/rofi/powermenu/poweroff
 
 # misc: run mpv
 super + shift + y

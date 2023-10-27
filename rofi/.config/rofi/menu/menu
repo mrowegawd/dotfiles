@@ -6,7 +6,7 @@ dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
 
-options="@\nEmail\nEmojis\nEarnings\nGames\nGhosted\nGuide linux\nSnippet\nThemes\nTools\nRasp-on"
+options="@\nEmail\nEmojis\nEarnings\nGames\nGhosted\nSnippet\nThemes\nTools\nRasp-on"
 
 chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 
@@ -23,7 +23,6 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 		;;
 	"Emojis") "$dir/_emoji" ;;
 	"Email") "$MYBIN_PATH/muttmail" ;;
-	"Guide linux") "$dir/_glinux" ;;
 	"Snippet") "$dir/_snippet" ;;
 	"Themes") "$dir/_themes" ;;
 	"Tools") "$dir/_tools" ;;
