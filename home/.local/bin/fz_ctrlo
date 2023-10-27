@@ -111,11 +111,11 @@ open_ps_lsof() {
 	fi
 }
 open_systemctl_ui() {
-	# TODO: create fzfcommand nya harus full
+	session="tmp_szy"
 
-	# tmux display-popup -w '80%' -h '60%' -y '50%' -E
-	tmux popup -w '80%' -h '60%' -y '40%' -E "$HOME/.local/bin/sysz"
-	# "$HOME/.local/bin/sysz"
+	tmux display-popup -d '#{pane_current_path}' -w '80%' -h '90%' -y '80%' \
+		-E -d "#{pane_current_path}" \
+		-E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.local/bin/sysz;'"
 }
 
 #  +----------------------------------------------------------+
