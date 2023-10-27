@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -e
-
-/usr/bin/notify-send "⭐ Time to drink!!<br><b>👀 Mata jangan terlalu dekat dengan layar!!</b>" -i ~/Dropbox/mytodo/icons/drink-time.png

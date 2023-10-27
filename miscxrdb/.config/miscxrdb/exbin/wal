@@ -1,3 +1,0 @@
-#!/bin/bash
-
-~/.pyenv/shims/wal --iterative --theme base16-onedark
