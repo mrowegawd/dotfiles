@@ -141,7 +141,7 @@ super + shift + t
 
 # misc: open ncmpcpp
 super + shift + n
-        $HOME/.config/miscxrdb/bspwm/scripts/bspwmfloat ncmpcpp
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
 
 # misc: run glinux
 # super + shift + g
