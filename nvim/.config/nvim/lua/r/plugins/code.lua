@@ -6,6 +6,8 @@ OverseerConfig.fnpane_run = 0
 OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
+local callme = 0
+
 return {
   -- LUASNIP
   {
@@ -139,6 +141,45 @@ return {
               cmp.select_next_item()
             elseif has_words_before() then
               cmp.complete()
+            else
+              if callme == 0 then
+                callme = 1
+                cmp.complete {
+                  config = {
+                    sources = {
+                      { name = "luasnip" },
+                    },
+                  },
+                }
+              elseif callme == 1 then
+                callme = 2
+                cmp.complete {
+                  config = {
+                    sources = {
+                      { name = "cmp_tabnine" },
+                      {
+                        name = "buffer",
+                        option = {
+                          get_bufnrs = function()
+                            return vim.api.nvim_list_bufs()
+                          end,
+                        },
+                      },
+                    },
+                  },
+                }
+              else
+                if callme == 2 then
+                  callme = 0
+                  cmp.complete {
+                    config = {
+                      sources = {
+                        { name = "nvim_lsp" },
+                      },
+                    },
+                  }
+                end
+              end
             end
           end, { "i", "s" }),
           ["<c-p>"] = cmp.mapping(function(fallback)
@@ -168,7 +209,7 @@ return {
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<cr>"] = cmp.mapping.confirm { select = false },
           ["<C-y>"] = cmp.mapping.confirm { select = true },
-          -- ["<C-y>"] = cmp.mapping(function(_)
+          -- ["<C-space>"] = cmp.mapping(function(_)
           --   -- if c_cmp.visible() then
           --   --   c_cmp.abort()
           --   if callme == 0 then
@@ -212,6 +253,7 @@ return {
           -- end, {
           --   "i",
           --   "s",
+          --   "c",
           -- }),
         },
 

@@ -61,7 +61,7 @@ nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 --  │ EDITING TEXT                                             │
 --  ╰──────────────────────────────────────────────────────────╯
 inoremap("jk", "<ESC>", silent)
-inoremap("kj", "<ESC>", silent)
+-- inoremap("kj", "<ESC>", silent)
 
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
@@ -74,8 +74,8 @@ nnoremap("g;", "g;zvzz", silent) -- go prev edit
 
 inoremap("<c-l>", "<Right>", silent)
 inoremap("<c-h>", "<Left>", silent)
-inoremap("<c-f>", "<C-o>E<C-o>l")
-inoremap("<c-b>", "<C-o>B")
+inoremap("<c-b>", "<S-Left>", silent)
+inoremap("<c-f>", "<S-Right>", silent)
 
 nnoremap("<c-f>", "/", nosilent)
 vnoremap("<c-f>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })

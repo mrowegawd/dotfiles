@@ -35,6 +35,12 @@ getxrdb_font() {
 	GET_ACTIVE_FOREGROUND_WINSEPARATOR="$(grep -i active_foreground_winseparator <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
 
+	GET_TMUX_FG="$(grep -i tmux_fg <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_TMUX_BORDER_FG="$(grep -i tmux_border_fg <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
 	GET_FZF_BG_SELECTION="$(grep -i fzf_bg_selection <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
 

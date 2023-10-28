@@ -4,7 +4,9 @@ return {
   -- INDENTBLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "LazyFile",
+    lazy = false, -- butuh seperti ini? Karena setup indent-blankline terbaru harus diload sebelum colorscheme
+    priority = 1000,
+    -- event = "LazyFile",
     main = "ibl",
     opts = {
       scope = { enabled = false },
@@ -35,7 +37,7 @@ return {
     },
     config = function(_, opts)
       require("r.config.highlights").plugin("ibl_indentline", {
-        { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 9 } } },
+        { ["@ibl.indent.char.1"] = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 } } },
       })
       require("ibl").setup(opts)
     end,

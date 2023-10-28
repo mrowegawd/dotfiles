@@ -12,6 +12,27 @@ build-nvim() {
   popd
 }
 
+build-install(){
+  # TODO: install apt seperti urlview
+  apt_install="urlview"
+
+  # TODO: install cargo seperti eza, lazygit, etc
+  cargo_install="eza"
+
+  # TODO: buil yang khusus apt dan juga cargo
+  sudo apt install "$apt_install"
+}
+
+build-react() {
+  echo "Clone the react-starter..."
+  git clone git@github.com:mrowegawd/react-starter.git $@
+}
+
+build-go() {
+  echo "Clone the go development..."
+  echo "not implemented yet..."
+}
+
 run-mark() {
   local cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
 

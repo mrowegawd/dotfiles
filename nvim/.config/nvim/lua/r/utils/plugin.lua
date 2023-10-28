@@ -280,7 +280,8 @@ function M.infoBaseColorsTheme()
   -- fzf match matching
   local fzf_border_fg = "Fzf border fg: " .. highlight.get(fzfluaborder, "fg")
 
-  local fzf_border_tmux_fg = "Tmux border fg: " .. highlight.get(winseparator, "fg")
+  local tmux_fg = "Tmux fg: " .. highlight.tint(highlight.get(colorcolumn, "bg"), 0.8)
+  local tmux_border_fg = "Tmux border fg: " .. highlight.get(winseparator, "fg")
 
   print(
     fmt(
@@ -302,6 +303,7 @@ function M.infoBaseColorsTheme()
   %s
 
   %s
+  %s
   ]],
       normal_fg,
       normal_bg,
@@ -314,7 +316,9 @@ function M.infoBaseColorsTheme()
       fzf_matching_fuzzy,
 
       fzf_border_fg,
-      fzf_border_tmux_fg
+
+      tmux_fg,
+      tmux_border_fg
     )
   )
 

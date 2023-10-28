@@ -698,6 +698,29 @@ return {
             ["ctrl-y"] = function(_, opts)
               print "not implementation yet"
             end,
+            ["ctrl-d"] = function(_, args)
+              print "not implementation yet"
+              -- if args.cmd:find "--type f" then
+              --   args.cmd = args.cmd:gsub("--type f", "", 1)
+              --   args.cmd:gsub("%s*\\*$", "")
+              --   args.cmd = args.cmd .. " --type d"
+              --   args.winopts = {
+              --     preview = { hidden = "hidden" },
+              --     title = format_title("Grep on directory", ""),
+              --   }
+              -- elseif args.cmd:find "--type d" then
+              --   args.cmd = args.cmd:gsub("--type d", "", 1)
+              --   args.cmd:gsub("%s*\\*$", "")
+              --   args.cmd = args.cmd .. " --type f"
+              --   args.winopts = {
+              --     preview = { hidden = "nohidden" },
+              --   }
+              -- end
+              -- require("fzf-lua").files {
+              --   cmd = args.cmd,
+              --   winopts = args.winopts,
+              -- }
+            end,
           },
         },
         args = {

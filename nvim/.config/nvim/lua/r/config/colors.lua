@@ -12,8 +12,8 @@ local general_overrides = function()
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
     { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
     { Type = { italic = true, bold = true } },
-    { NormalFloat = { bg = { from = "ColorColumn", attr = "bg", alter = -0.05 }, fg = { from = "ColorColumn", attr = "fg", alter = -0.56 } } },
-    { FloatBorder = { bg = { from = "ColorColumn", attr = "bg", alter = -0.05 }, fg = { from = "ColorColumn", attr = "fg", alter = -0.56 } } },
+    { NormalFloat = { bg = { from = "ColorColumn", attr = "bg", alter = -0.2 }, fg = { from = "ColorColumn", attr = "bg", alter = 0.6 } } },
+    { FloatBorder = { bg = { from = "ColorColumn", attr = "bg", alter = -0.2 }, fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
     { Comment = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, italic = true } },
     { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = -0.2 }, underline = false } },
     { EndOfBuffer = { bg = "NONE" } },
@@ -121,7 +121,7 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- CREATED HIGHLIGHTS
     -----------------------------------------------------------------------
-    { MyCursorline = { bg = { from = "Normal", alter = 0.2 } } },
+    { MyStatusline = { fg = { from = "ColorColumn", alter = 0.5 } } },
     { Mystatusline_fg = { fg = { from = "LineNr", alter = 0.1 } } },
     { Mystatusline_bg = { bg = { from = "Normal", alter = -0.1 } } },
     { bufferline_unselected = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
@@ -131,8 +131,6 @@ local general_overrides = function()
     { MyQuickFixLineEnter = { bg = { from = "CursorLine", alter = 0.6 }, fg = { from = "CursorLine", attr = "bg", alter = 2 }, bold = true } },
     { CodeBlock1 = { bg = { from = "ColorColumn", alter = -0.15 } } },
     { CodeBlock2 = { bg = "cyan" } },
-    { BorderDirectory = { bg = { from = "Directory", attr = "fg" }, fg = "NONE" } },
-    { WinSeparatorCUS = { fg = { from = "WinSeparator", attr = "bg", alter = 0.2 } } },
 
     -----------------------------------------------------------------------
     -- PLUGINS
@@ -230,10 +228,13 @@ local function colorscheme_overrides()
   local overrides = {
     -- {"kanagawa", "catppuccin"} -- remove this
     ["doom-one"] = {
+
       { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.4 } } },
       { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.4 } } },
 
-      { CursorLine = { bg = { from = "ColorColumn", attr= "bg", alter = 0.2 } } },
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 1.05 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.15 }, reverse= false } },
+
+      { CursorLine = { bg = { from = "StatusLine", attr= "bg", alter = 0.2 } } },
       { Substitute = { strikethrough = false } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1 }, bg = "NONE" } },
@@ -243,7 +244,7 @@ local function colorscheme_overrides()
       { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.15 }, bg = "NONE" } },
       { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.3 } } },
 
-      { Comment = { fg = { from = "ColorColumn", attr = "bg", alter = 0.9 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.1 }, italic = true } },
       { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
 
       { TelescopeNormal = { fg = { from= "CmpItemAbbr", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
@@ -256,11 +257,13 @@ local function colorscheme_overrides()
       { TelescopeSelection = { inherit = "PmenuSel" } },
       { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
 
-      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.1 } } },
+      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.05 } } },
     },
     ["gruvbox-material"] = {
       { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.4 } } },
       { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.4 } } },
+
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.2 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
@@ -283,10 +286,17 @@ local function colorscheme_overrides()
       { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
     },
     ["solarized"] = {
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.4 }, sp = { from = "Directory", attr = "fg" } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.4 }, sp = { from = "Directory", attr = "fg" } } },
+
       { Folded = { underline = false, bg = { from = "ColorColumn", attr = "bg", alter = -0.5 } } },
       { WinBar = { bg = "NONE" } },
       { Directory = { bg = "NONE" } },
       { CursorLine = { bg = { from = "ColorColumn", attr = "bg",  alter = 0.4 } } },
+
+      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.1 } } },
+
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
@@ -309,8 +319,14 @@ local function colorscheme_overrides()
       { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
     },
     ["miasma"] = {
+
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" } } },
+
       { Directory = { bg = "NONE" } },
       { CursorLine = { bg = { from = "ColorColumn", attr = "bg",  alter = 0.5 } } },
+
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.25 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
@@ -349,7 +365,14 @@ local function colorscheme_overrides()
       -- { PmenuSel = { bold = true, fg = "NONE", bg = { from = "ColorColumn", alter = -0.2 } } },
     },
     ["darcubox"] = {
-      { Comment = { fg = { from = "ColorColumnn", attr = "fg", alter = -0.6 }, italic = true } },
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 }, sp = { from = "Directory", attr = "fg" } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 }, sp = { from = "Directory", attr = "fg" } } },
+
+      { Comment = { fg = { from = "ColorColumnn", attr = "bg", alter = -2 }, italic = true } },
+
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 2 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.6 } } },
+
+      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.7 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 2 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
@@ -376,9 +399,10 @@ local function colorscheme_overrides()
       { FlashMatch = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.3 }, bold = true } },
       -- { MyQuickFixLineLeave = { bg = { from = "CursorLine", alter = -0.15 } } },
       -- { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.5 } } },
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" } } },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" } } },
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 }, sp = { from = "Directory", attr = "fg" } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 }, sp = { from = "Directory", attr = "fg" } } },
 
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 0.8 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
@@ -404,6 +428,8 @@ local function colorscheme_overrides()
 
       { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.1 } } },
 
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
+
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 0.8 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
       { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.2 }, bg = "NONE"  } },
@@ -422,10 +448,18 @@ local function colorscheme_overrides()
       { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
     },
     ["night-owl"] = {
+      { LspCodeLens = { fg = { from = "Comment", attr = "fg", alter = 0.4 , bold = true } } },
+
+      { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 0.3 }, bold = true } },
+
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 } } },
+
       { Comment = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.6 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 5 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 2 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.25 }, reverse= false } },
 
       { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.4 }, bg = "NONE"  } },
       { FzfLuaBorder = { inherit = "WinSeparator" } },
@@ -442,8 +476,6 @@ local function colorscheme_overrides()
       { TelescopeBorder = { inherit = "FzfLuaBorder" } },
       { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
 
-      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.3 }, bg = { from = "ColorColumn" , attr = "bg", alter = 2 } } },
-
       -- Prompt
       { TelescoeePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
       { TelescopePromptBorder = { inherit = "FloatBorder" } },
@@ -457,10 +489,19 @@ local function colorscheme_overrides()
       { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
     },
     ["tokyonight"] = {
+      { MyStatusline = { fg = { from = "ColorColumn", alter = 0.5 } } },
+
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.6 } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.6 } } },
+
       { Folded = { underline = false, bg = { from = "ColorColumn", attr = "bg", alter = -0.15 } } },
 
       { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
       { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 5 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
+
+      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.8 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
+
+      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.1 } } },
 
       { Comment = { fg = { from = "ColorColumn", attr = "bg", alter = 0.8 } } },
       { CursorLine = { bg = { from = "ColorColumn", alter = 0.4 } } },
