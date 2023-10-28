@@ -227,7 +227,7 @@ return {
     "folke/persistence.nvim",
     event = "BufReadPre",
     opts = {
-      options = { "buffers", "curdir", "tabpages", "winsize", "help" },
+      opts = { options = vim.opt.sessionoptions:get() },
       pre_save = function()
         for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
           if vim.fn.buflisted(bufnr) == 1 then
@@ -240,14 +240,9 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>sl", function() require("persistence").load() end,                desc =
-      "Misc(persistence): restore session" },
-      { "<Leader>sL", function() require("persistence").load({ last = true }) end,
-                                                                                     desc =
-        "Misc(persistence): restore last session" },
-      { "<Leader>ss", function() require("persistence").stop() end,
-                                                                                     desc =
-        "Misc(persistence): don't save current session" },
+      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
+      { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
+      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
     },
   },
   --  ╭──────────────────────────────────────────────────────────╮

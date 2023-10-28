@@ -246,15 +246,7 @@ local options = {
       "indent-heuristic",
       "linematch:60",
     },
-
-    sessionoptions = {
-      "globals",
-      "buffers",
-      "curdir",
-      "help",
-      "winpos",
-      "tabpages",
-    },
+    sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" },
   },
 }
 
