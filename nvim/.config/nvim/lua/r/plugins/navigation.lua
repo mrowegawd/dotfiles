@@ -186,8 +186,8 @@ return {
             -- ["<CR>"] = "child_or_open",
             -- ["<c-s>"] = "split_with_window_picker",
             -- ["<c-v>"] = "vsplit_with_window_picker",
-            ["<c-s>"] = "open",
-            ["<c-v>"] = "open",
+            ["<c-s>"] = "open_split",
+            ["<c-v>"] = "open_vsplit",
             ["<esc>"] = "revert_preview",
             -- ["<c-c>"] = "clear_filter",
 
