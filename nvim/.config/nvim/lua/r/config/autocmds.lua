@@ -168,43 +168,43 @@ Util.cmd.augroup("CheckOutsideTime", {
   command = "silent! checktime",
 })
 
--- Util.cmd.augroup("WindowDim", {
---   event = { "BufRead" },
---   pattern = { "*" },
---   command = function()
---     Util.windowdim.buf_enter()
---   end,
--- }, {
---   event = { "BufEnter" },
---   pattern = { "*" },
---   command = function()
---     Util.windowdim.buf_enter()
---   end,
--- }, {
---   event = { "FocusGained" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.focus_gained()
---   end,
--- }, {
---   event = { "FocusLost" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.focus_lost()
---   end,
--- }, {
---   event = { "WinEnter" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.win_enter()
---   end,
--- }, {
---   event = { "WinLeave" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.win_leave()
---   end,
--- })
+Util.cmd.augroup("WindowDim", {
+  event = { "BufRead" },
+  pattern = { "*" },
+  command = function()
+    Util.windowdim.buf_enter()
+  end,
+}, {
+  event = { "BufEnter" },
+  pattern = { "*" },
+  command = function()
+    Util.windowdim.buf_enter()
+  end,
+}, {
+  event = { "FocusGained" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.focus_gained()
+  end,
+}, {
+  event = { "FocusLost" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.focus_lost()
+  end,
+}, {
+  event = { "WinEnter" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.win_enter()
+  end,
+}, {
+  event = { "WinLeave" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.win_leave()
+  end,
+})
 
 -- Util.cmd.augroup("UnwareCursorLine", {
 --   event = { "InsertLeave" },

@@ -110,10 +110,10 @@ nnoremap / /\v
 vnoremap / <Esc>/\%V
 
 " keymap: [search] open search
-nnoremap <c-f> /\v
+nnoremap <c-g> /\v
 
 " keymap: [search][quickfix] search current word (with quickfix)
-" nmap <silent> <c-f> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
+" nmap <silent> <c-g> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
 
 " keymap: [substitute] start search and replace
 nmap <leader>sw :%s///g<left><left><left>

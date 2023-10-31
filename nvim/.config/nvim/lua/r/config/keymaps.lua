@@ -61,7 +61,7 @@ nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 --  │ EDITING TEXT                                             │
 --  ╰──────────────────────────────────────────────────────────╯
 inoremap("jk", "<ESC>", silent)
--- inoremap("kj", "<ESC>", silent)
+inoremap("kj", "<ESC>", silent)
 
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
@@ -77,8 +77,8 @@ inoremap("<c-h>", "<Left>", silent)
 inoremap("<c-b>", "<S-Left>", silent)
 inoremap("<c-f>", "<S-Right>", silent)
 
-nnoremap("<c-f>", "/", nosilent)
-vnoremap("<c-f>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
+nnoremap("<c-g>", "/", nosilent)
+vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MARKS                                                    │
@@ -208,7 +208,6 @@ end, { desc = "Buffer: alternate file" })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ TABS                                                     │
 --  ╰──────────────────────────────────────────────────────────╯
--- TODO: check ini apakah, <leader>t conflict dengan
 nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab" })
 nnoremap("tl", "<CMD>tabn<CR>", { desc = "Tab: next tab" })
 nnoremap("th", "<CMD>tabp<CR>", { desc = "Tab: prev tab" })
