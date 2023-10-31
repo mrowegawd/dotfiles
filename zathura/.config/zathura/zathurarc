@@ -18,10 +18,10 @@ unmap -
 # unmap f
 
 # base: zoom in
-map <C-+> zoom in
+map <C-=> zoom in
 
 # base: zoom out
-map <C-_> zoom out
+map <C--> zoom out
 
 map <c-f> search forward
 

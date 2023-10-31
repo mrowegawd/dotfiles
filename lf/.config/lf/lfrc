@@ -13,6 +13,8 @@ set cursorparentfmt "\033[7;90m" # Make parent cursor a bit less strident, to ma
 set previewer ~/.config/lf/preview
 set cleaner ~/.config/lf/cleaner
 
+set waitmsg ""      # get rid message "press any key to continue"
+
 #  ╔══════════════════════════════════════════════════════════╗
 #  ║                         COMMAND                          ║
 #  ╚══════════════════════════════════════════════════════════╝
