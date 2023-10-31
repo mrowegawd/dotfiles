@@ -104,34 +104,23 @@ return {
       -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
       -- Be aware that you also will need to properly configure your LSP server to
       -- provide the inlay hints.
-      inlay_hints = {
-        enabled = false,
-      },
+      inlay_hints = { enabled = false },
       -- add any global capabilities here
       capabilities = {},
       -- options for vim.lsp.buf.format
       -- `bufnr` and `filter` is handled by the LazyVim formatter,
       -- but can be also overridden when specified
-      format = {
-        formatting_options = nil,
-        timeout_ms = nil,
-      },
+      format = { formatting_options = nil, timeout_ms = nil },
       servers = {
         lua_ls = {
           settings = {
             Lua = {
               codeLens = { enable = true },
-              workspace = {
-                checkThirdParty = false,
-              },
-              completion = {
-                callSnippet = "Replace",
-              },
+              workspace = { checkThirdParty = false },
+              completion = { callSnippet = "Replace" },
               telemetry = { enable = false },
               hint = { enable = false },
-              diagnostics = {
-                globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
-              },
+              diagnostics = { globals = { "vim", "it", "describe", "before_each", "after_each", "a" } },
             },
           },
         },

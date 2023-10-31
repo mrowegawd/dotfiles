@@ -370,9 +370,6 @@ return {
               require("aerial").setup(opts.opts)
 
               Util.buf._only()
-              -- vim.schedule(function()
-              --   vim.cmd [[:e]]
-              -- end)
             end)
           end,
           desc = "Open(aerial): change filter_kind",

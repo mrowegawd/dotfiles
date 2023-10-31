@@ -232,9 +232,9 @@ M.filename = function()
       if buftype == "terminal" then
         icon, color_icon = "", sttsline_colors.magenta
       elseif filetype == "NvimTree" then
-        icon, color_icon = "󱏒", sttsline_colors.red
+        icon, color_icon = "󱏒", colors.base_bg
       elseif filetype == "neo-tree" then
-        icon, color_icon = "󱏒", sttsline_colors.magenta
+        icon, color_icon = "󱏒", colors.base_bg
       elseif filetype == "TelescopePrompt" then
         icon, color_icon = "", sttsline_colors.yellow
         parts = "TelescopePromp"

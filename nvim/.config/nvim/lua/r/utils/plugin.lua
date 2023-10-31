@@ -264,8 +264,6 @@ function M.infoBaseColorsTheme()
   local normal_fg = "Normal color_fg: " .. highlight.get(normal, "fg")
   local normal_bg = "Normal color_bg: " .. highlight.get(normal, "bg")
 
-  local colorcolumn_bg = "ColorColumn: " .. highlight.get(colorcolumn, "bg")
-
   -- fzf selection
   local fzf_selection_fg = "Fzf selection fg: " .. highlight.get(pmenusel, "fg")
   local fzf_selection_bg = "fzf selection bg: " .. highlight.get(pmenusel, "bg")
@@ -280,6 +278,9 @@ function M.infoBaseColorsTheme()
   -- fzf match matching
   local fzf_border_fg = "Fzf border fg: " .. highlight.get(fzfluaborder, "fg")
 
+  local tmux_pane_active_bg = "Tmux pane active bg: " .. highlight.get(colorcolumn, "bg")
+  local tmux_pane_bg = "Tmux pane bg: " .. highlight.get(normal, "bg")
+
   local tmux_fg = "Tmux fg: " .. highlight.tint(highlight.get(colorcolumn, "bg"), 0.8)
   local tmux_border_fg = "Tmux border fg: " .. highlight.get(winseparator, "fg")
 
@@ -287,8 +288,6 @@ function M.infoBaseColorsTheme()
     fmt(
       [[
   %s
-  %s
-
   %s
 
   #--- FUZZY
@@ -302,12 +301,15 @@ function M.infoBaseColorsTheme()
 
   %s
 
+  #--- TMUX
+  %s
+  %s
+
   %s
   %s
   ]],
       normal_fg,
       normal_bg,
-      colorcolumn_bg,
 
       fzf_selection_bg,
       fzf_selection_fg,
@@ -316,6 +318,9 @@ function M.infoBaseColorsTheme()
       fzf_matching_fuzzy,
 
       fzf_border_fg,
+
+      tmux_pane_active_bg,
+      tmux_pane_bg,
 
       tmux_fg,
       tmux_border_fg

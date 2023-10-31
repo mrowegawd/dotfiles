@@ -86,7 +86,7 @@ return {
           -- header = vim.split(ascii_img[1], "\n"),
           header = ascii_img[1],
           center = {
-            { action = "Telescope find_files", desc = " Find file", icon = " ", key = "f" },
+            { action = "FzfLua files", desc = " Find file", icon = " ", key = "f" },
             { action = "ene | startinsert", desc = " New file", icon = " ", key = "n" },
             { action = "Telescope oldfiles", desc = " Recent files", icon = " ", key = "r" },
             { action = "FzfLua live_grep", desc = " Find text", icon = " ", key = "g" },

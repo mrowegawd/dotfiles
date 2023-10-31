@@ -256,7 +256,7 @@ return {
       { "<Leader>bo", "<CMD>FzfLua oldfiles<CR>", desc = "Buffer(Fzflua): oldfiles" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
       { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
-      { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
+      -- { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
       { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
@@ -290,18 +290,18 @@ return {
         end,
         desc = "Fzflua: dotfiles",
       },
-      {
-        "<Leader>fF",
-        function()
-          local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
-          return require("fzf-lua").files {
-            prompt = "  ",
-            winopts = { title = format_title("Plugin Files", "󰈙") },
-            cwd = plugins_directory,
-          }
-        end,
-        desc = "Fzflua: plugin files",
-      },
+      -- {
+      --   "<Leader>fF",
+      --   function()
+      --     local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
+      --     return require("fzf-lua").files {
+      --       prompt = "  ",
+      --       winopts = { title = format_title("Plugin Files", "󰈙") },
+      --       cwd = plugins_directory,
+      --     }
+      --   end,
+      --   desc = "Fzflua: plugin files",
+      -- },
       -- {
       --   "<Leader>fG",
       --   function()
@@ -940,7 +940,7 @@ return {
           callback = function(e)
             vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
             vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
-            vim.keymap.set("t", "<C-c>", "<C-c>", { buffer = e.buf, silent = true })
+            vim.keymap.set("t", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
             vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
           end,
         })
@@ -962,8 +962,12 @@ return {
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
     keys = {
+      -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
       { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
       { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
+      { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
+      { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
+      { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
       {
         "gs",
         function()
@@ -1084,28 +1088,13 @@ return {
       --         },
     },
     dependencies = {
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-        enabled = vim.fn.executable "make" == 1,
-        config = function()
-          Util.on_load("telescope.nvim", function()
-            require("telescope").load_extension "fzf"
-            require("telescope").load_extension "grepqf"
-            require("telescope").load_extension "harpoon"
-            require("telescope").load_extension "file_browser"
-            require("telescope").load_extension "live_grep_args"
-            require("telescope").load_extension "menufacture"
-          end)
-        end,
-      },
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make", enabled = vim.fn.executable "make" == 1 },
       "nvim-telescope/telescope-symbols.nvim",
-      "molecule-man/telescope-menufacture",
       "debugloop/telescope-undo.nvim", -- Visualise undotree
       "nvim-telescope/telescope-live-grep-args.nvim",
       "tsakirist/telescope-lazy.nvim",
-      "nvim-telescope/telescope-file-browser.nvim",
       "benfowler/telescope-luasnip.nvim",
+      "fdschmidt93/telescope-corrode.nvim",
     },
     opts = function()
       -- local trouble = require "trouble.providers.telescope"
@@ -1217,16 +1206,7 @@ return {
             "bottom_pane",
             "center",
           },
-          borderchars = {
-            "─",
-            "│",
-            "─",
-            "│",
-            "┌",
-            "┐",
-            "┘",
-            "└",
-          },
+          borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
           mappings = {
             i = {
               ["<esc>"] = actions.close,
@@ -1240,6 +1220,8 @@ return {
               ["<c-f>"] = actions.results_scrolling_up,
               ["<c-b>"] = actions.results_scrolling_down,
 
+              ["<c-l>"] = false,
+
               ["<a-a>"] = actions.toggle_all,
 
               ["<CR>"] = stopinsert(actions.select_default),
@@ -1250,8 +1232,11 @@ return {
               ["<c-r>"] = actions.to_fuzzy_refine,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
-              ["<F6>"] = layout_actions.cycle_layout_next,
-              ["<F4>"] = layout_actions.toggle_preview,
+              ["<c-j>"] = layout_actions.cycle_layout_next,
+              ["<c-k>"] = layout_actions.cycle_layout_prev,
+
+              ["<F4>"] = layout_actions.cycle_layout_next,
+              ["<F3>"] = layout_actions.toggle_preview,
 
               ["<jk>"] = function()
                 vim.cmd.stopinsert()
@@ -1269,9 +1254,7 @@ return {
           },
         },
         pickers = {
-          highlights = {
-            theme = "ivy",
-          },
+          highlights = themes.get_ivy {},
           buffers = themes.get_ivy {
             sort_mru = true,
             sort_lastused = true,
@@ -1313,25 +1296,28 @@ return {
             },
           },
         },
-
         extensions = {
-          file_browser = {
-            theme = "ivy",
-            mappings = {
-              i = {
-                ["<CR>"] = stopinsert(actions.select_default),
-                ["<C-x>"] = stopinsert(actions.select_horizontal),
-                ["<C-v>"] = stopinsert(actions.select_vertical),
-                ["<C-t>"] = stopinsert(actions.select_tab),
-              },
-            },
-          },
-          persisted = dropdown {},
-          live_grep_args = {
+          lazy = themes.get_ivy {},
+          undo = themes.get_ivy {},
+          live_grep_args = themes.get_ivy {
             auto_quoting = false, -- enable/disable auto-quoting
           },
         },
       }
+    end,
+    config = function(_, opts)
+      local telescope = require "telescope"
+      telescope.setup(opts)
+      telescope.load_extension "corrode"
+      telescope.load_extension "fzf"
+      telescope.load_extension "grepqf"
+      telescope.load_extension "harpoon"
+      telescope.load_extension "lazy"
+      telescope.load_extension "undo"
+      telescope.load_extension "live_grep_args"
+
+      local corrode_cfg = require "telescope._extensions.corrode.config"
+      corrode_cfg.values = { theme = "ivy" }
     end,
   },
   -- SPECTRE

@@ -1,17 +1,19 @@
-WINDOW_STYLE_BG="#282c34"
-WINDOW_ACTIVE_STYLE_BG="#282c34"
+WINDOW_STYLE_BG="#24283b"
+WINDOW_ACTIVE_STYLE_BG="#24283b"
 
 COL_WHITE="#626262"
-COL_RED="#a9a1e1"
+COL_RED="#bb9af7"
 
-COL_ACTIVE_BORDER_SEPERATOR="#343943"
-COL_BORDER_SEPERATOR="#343943"
+COL_ACTIVE_BORDER_SEPERATOR="#323852"
 
-TMUX_FG="#484f5d"
-TMUX_BORDER_FG="#343943"
+TMUX_PANE_ACTIVE_BG="#272c40"
+TMUX_PANE_BG="#24283b"
 
-BG_STATUSLINE="#282c34"
-BG_ACTIVE_STATUSLINE="#a9a1e1"
+TMUX_FG="#464f73"
+TMUX_BORDER_FG="#323852"
+
+BG_STATUSLINE="#24283b"
+BG_ACTIVE_STATUSLINE="#bb9af7"
 
 left_separator=''
 left_separator_black=''
@@ -19,11 +21,12 @@ right_separator=''
 right_separator_black=''
 session_symbol=''
 
-# setw -g window-style bg=$WINDOW_ACTIVE_STYLE_BG
-# setw -g window-active-style bg=$WINDOW_STYLE_BG
+setw -g window-style bg=$TMUX_PANE_ACTIVE_BG
+setw -g window-active-style bg=$TMUX_PANE_BG
+
 # setw -g pane-border-status bottom
-setw -g pane-active-border-style fg=$TMUX_BORDER_FG
-setw -g pane-border-style fg=$TMUX_BORDER_FG
+setw -g pane-active-border-style "fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG"
+setw -g pane-border-style "fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG"
 set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
   #{?pane_active,❐ #S:#I/#{session_windows} ,}#{?window_zoomed_flag,⬢,❄} #P ⇒ #{pane_tty} #{pane_current_command}'
 

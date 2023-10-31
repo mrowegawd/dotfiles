@@ -95,6 +95,8 @@ return {
   -- DARCUBOX
   {
     "dotsilas/darcubox-nvim",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
       local colordarcubox = { "darcubox" }
       if vim.tbl_contains(colordarcubox, colorscheme) then
@@ -151,6 +153,7 @@ return {
   {
     "sainnhe/gruvbox-material",
     lazy = false,
+    priority = 1000,
     init = function()
       vim.g.gruvbox_material_background = "medium"
       vim.g.gruvbox_material_better_performance = 1
@@ -167,6 +170,7 @@ return {
     "folke/tokyonight.nvim",
     name = "tokyonight",
     lazy = false,
+    priority = 1000,
     enabled = function()
       local colorstokyonight = { "tokyonight", "tokyonight-night" }
       if vim.tbl_contains(colorstokyonight, colorscheme) then

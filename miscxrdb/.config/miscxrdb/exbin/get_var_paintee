@@ -10,36 +10,18 @@ set -u -e
 
 getxrdb_font() {
 	GET_FONT="$(grep -i font <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
-
-	GET_FONTSIZE="$(grep -i fontsize <~/.cache/paintee | head -1 | awk -F= '{print $2}' |
-		xargs)"
-
-	GET_BACKGROUND="$(grep -i background <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_BACKGROUND_ACTIVE_WINDOW="$(grep -i background_active_window <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_BACKGROUND_NON_ACTIVE_WINDOW="$(grep -i background_non_active_window <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_BACKGROUND_ACTIVE_STATUSLINE="$(grep -i background_active_statusline <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_BACKGROUND_NON_ACTIVE_STATUSLINE="$(grep -i background_non_active_statusline <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_FOREGROUND_WINSEPARATOR="$(grep -i foreground_winseparator <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_ACTIVE_FOREGROUND_WINSEPARATOR="$(grep -i active_foreground_winseparator <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_TMUX_FG="$(grep -i tmux_fg <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
-
-	GET_TMUX_BORDER_FG="$(grep -i tmux_border_fg <~/.cache/paintee | head -1 |
-		awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_FONTSIZE="$(grep -i fontsize <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
+	GET_BACKGROUND="$(grep -i background <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_ACTIVE_WINDOW="$(grep -i background_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_NON_ACTIVE_WINDOW="$(grep -i background_non_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_ACTIVE_STATUSLINE="$(grep -i background_active_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_NON_ACTIVE_STATUSLINE="$(grep -i background_non_active_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_FOREGROUND_WINSEPARATOR="$(grep -i foreground_winseparator <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_ACTIVE_FOREGROUND_WINSEPARATOR="$(grep -i active_foreground_winseparator <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_PANE_ACTIVE_BG="$(grep -i tmux_pane_active_bg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_PANE_BG="$(grep -i tmux_pane_bg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_FG="$(grep -i tmux_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_BORDER_FG="$(grep -i tmux_border_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 
 	GET_FZF_BG_SELECTION="$(grep -i fzf_bg_selection <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"

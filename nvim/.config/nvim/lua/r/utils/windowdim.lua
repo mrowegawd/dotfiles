@@ -16,6 +16,7 @@ local winhighlight_blurred = table.concat({
   "SignColumn:ColorColumn",
   --
   -- "Float:ColorColumn",
+  "WinBar:ColorColumn",
   "NormalFloat:ColorColumn",
 }, ",")
 
@@ -157,7 +158,7 @@ local focus_window = function()
     if ft == "markdown" or ft == "org" then
       colorcolumn_width = 120
     else
-      colorcolumn_width = 80
+      colorcolumn_width = 100
     end
     focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
@@ -217,27 +218,27 @@ local set_cursorline = function(active)
 end
 
 autocmds.buf_enter = function()
-  -- focus_window()
+  focus_window()
 end
 
 autocmds.focus_gained = function()
-  set_cursorline(true)
-  -- focus_window()
+  -- set_cursorline(true)
+  focus_window()
 end
 
 autocmds.focus_lost = function()
-  set_cursorline(true)
-  -- blur_window()
+  -- set_cursorline(true)
+  blur_window()
 end
 
 autocmds.win_enter = function()
-  set_cursorline(true)
-  -- focus_window()
+  -- set_cursorline(true)
+  focus_window()
 end
 
 autocmds.win_leave = function()
-  set_cursorline(false)
-  -- blur_window()
+  -- set_cursorline(false)
+  blur_window()
 end
 
 return autocmds
