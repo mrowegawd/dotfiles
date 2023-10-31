@@ -107,6 +107,9 @@ function M.statuscolumn()
     vim.api.nvim_win_call(win, function()
       if vim.fn.foldclosed(vim.v.lnum) >= 0 then
         fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded" }
+        if vim.bo.filetype == "norg" then
+          fold = { text = "", texthl = "" }
+        end
       end
     end)
     -- Left: mark or non-git sign

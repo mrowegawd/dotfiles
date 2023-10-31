@@ -24,9 +24,9 @@ local grepqf = function(opts)
   opts = {
     vimgrep_arguments = require("r.config").vimgrep_arguments,
     path_display = { "smart" },
-    theme = "ivy",
+    -- theme = "ivy",
     search_dirs = require("r.utils").cmd.rm_duplicates_tbl(path), -- much better, unique path
-    prompt_title = "Live Grep Quickfix",
+    prompt_title = "Live Grep Qf",
 
     attach_mappings = function(_)
       action_set.select:enhance {
