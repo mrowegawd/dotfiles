@@ -429,6 +429,28 @@ nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
       \ 'zt' : (winline() == 1) ? 'zb' : 'zz'
   ]]
 
+-- TODO: check ini nanti, copy paste selection dan killPopups
+local function getPopups()
+  return vim.fn.filter(vim.api.nvim_tabpage_list_wins(0), function(_, e)
+    return vim.api.nvim_win_get_config(e).zindex
+  end)
+end
+
+local function killPopups()
+  vim.fn.map(getPopups(), function(_, e)
+    vim.api.nvim_win_close(e, false)
+  end)
+end
+
+vim.keymap.set("n", "<esc>", function()
+  vim.cmd.noh()
+  killPopups()
+end)
+
+-- vim.keymap.set("n", "<F5>", function()
+--   return "`[" .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. "`]"
+-- end, { expr = true })
+
 -- vim.cmd [[
 -- noremap <expr> <C-f> max([winheight(0) - 2, 1])
 --       \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")

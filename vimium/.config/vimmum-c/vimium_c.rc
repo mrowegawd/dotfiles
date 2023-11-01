@@ -191,13 +191,13 @@ map P           scrollToRight
 ###############################
 
 # zoom: in
-map <c-s-=>     zoomIn
+map <c-=>       zoomIn
 
 # zoom: out
-map <c-s-->     zoomOut
+map <c-->       zoomOut
 
 # zoom: reset
-map <c-s-HOME>  zoomReset
+map <c-home>    zoomReset
 
 # NOTE!
 # ctrl-n ctrl-p untuk select next dan prev ketika vomnibar is active,

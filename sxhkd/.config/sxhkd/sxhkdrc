@@ -98,8 +98,8 @@ super + u
 
 # misc: open terminal
 super + Return
-        kitty
-        # alacritty
+        alacritty
+        # kitty
         # wezterm
         # st -e tmux
         # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty
@@ -151,9 +151,13 @@ super + shift + n
 # super + shift + o
 #         bspc rule -a \* -o state=floating st && st
 
-# misc: panggil firefox lalu set di sisi kiri (side by side)
-super + F4
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc_firefox
+# misc: call firefox (side by side)
+super + F8
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin firefox 2
+
+# misc: call zathura (side by side)
+super + F6
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin zathura 3
 
 # misc: run bookmark
 super + shift + p
@@ -165,7 +169,7 @@ super + shift + q
 
 # misc: run mpv
 super + shift + y
-        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=400x300 --geometry=-15-60 "$3" $(xclip -o -sel clip)
+        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
 # misc: backward, below, normal window or z-index
 # super + shift + p

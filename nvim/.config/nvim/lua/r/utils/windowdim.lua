@@ -14,8 +14,6 @@ local winhighlight_blurred = table.concat({
   "Normal:ColorColumn",
   "NormalNC:ColorColumn",
   "SignColumn:ColorColumn",
-  --
-  -- "Float:ColorColumn",
   "WinBar:ColorColumn",
   "NormalFloat:ColorColumn",
 }, ",")

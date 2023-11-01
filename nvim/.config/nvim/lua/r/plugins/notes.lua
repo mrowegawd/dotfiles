@@ -250,7 +250,7 @@ return {
         end,
         desc = "Note(orgmode): directly edit todos org",
       },
-      -- "<localleader>fa",
+      "<localleader>fc",
     },
     dependencies = {
       {
@@ -449,8 +449,8 @@ return {
             org_archive_subtree = "<prefix>$",
             org_set_tags_command = "<Leader>t",
             org_toggle_archive_tag = "<Leader>T",
-            org_next_visible_heading = "<down>",
-            org_previous_visible_heading = "<up>",
+            org_next_visible_heading = "<a-n>",
+            org_previous_visible_heading = "<a-p>",
             org_toggle_heading = "<leader>o*",
             org_show_help = "?",
 

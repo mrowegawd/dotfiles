@@ -305,8 +305,18 @@ export AUTOENVME="$HOME/.autoenv"
 
 # export TERM=screen-256color-bce
 
-export PATH="$HOME/.poetry/bin:$PATH"
+# GOLANG: ------------------------------------------------------------------ {{{
+#
+# Check issue ini https://github.com/asdf-community/asdf-golang/issues/28
+# `asdf plugin golang` tidak menambahkan $GOPATH dan $GOROOT (hanya empty field,
+# check via `go env`) dan solusi dari link tersebut:
+export GOPATH=$(asdf where golang)/packages
+export GOROOT=$(asdf where golang)/go
+export PATH="${PATH}:$(go env GOPATH)/bin"
+#
+# }}}
 
+# export PATH="$HOME/.poetry/bin:$PATH"
 export XDG_RUNTIME_DIR="/run/user/$UID"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 

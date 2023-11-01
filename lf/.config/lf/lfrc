@@ -25,7 +25,7 @@ cmd open ${{ case $(file --mime-type $f -b) in
 	image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
 	image/*) sxiv -a $fx& 2>/dev/null ;;
 	audio/*) mpv --audio-display=no $f ;;
-	video/*) setsid -f mpv -ontop -no-border -force-window --autofit=400x300 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
+	video/*) setsid -f mpv -ontop -no-border -force-window --autofit=600x500 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
 	application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
 	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
     esac

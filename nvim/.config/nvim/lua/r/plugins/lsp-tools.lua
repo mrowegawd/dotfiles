@@ -466,7 +466,7 @@ return {
     keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
     init = function()
       highlight.plugin("DropBar", {
-        { DropBarIconUISeparator = { link = "Delimiter" } },
+        { DropBarIconUISeparator = { bg = { from = "ColorColumn" } } },
         { DropBarMenuNormalFloat = { inherit = "Pmenu" } },
       })
     end,

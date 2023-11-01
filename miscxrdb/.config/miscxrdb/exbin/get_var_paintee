@@ -14,7 +14,6 @@ getxrdb_font() {
 	GET_BACKGROUND="$(grep -i background <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_BACKGROUND_ACTIVE_WINDOW="$(grep -i background_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_BACKGROUND_NON_ACTIVE_WINDOW="$(grep -i background_non_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
-	GET_BACKGROUND_ACTIVE_STATUSLINE="$(grep -i background_active_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_BACKGROUND_NON_ACTIVE_STATUSLINE="$(grep -i background_non_active_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_FOREGROUND_WINSEPARATOR="$(grep -i foreground_winseparator <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_ACTIVE_FOREGROUND_WINSEPARATOR="$(grep -i active_foreground_winseparator <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"

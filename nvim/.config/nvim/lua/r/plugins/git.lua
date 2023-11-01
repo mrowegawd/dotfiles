@@ -224,15 +224,16 @@ return {
     event = "LazyFile",
     opts = {
       -- Experimental ------------------------------------------------------------------------------
+      _inline2 = false,
       _extmark_signs = true,
       _signs_staged_enable = false,
       signs = {
-        add = { hl = "GitSignsAdd", text = "▎" },
-        change = { hl = "GitSignsChange", text = "▎" },
-        delete = { hl = "GitSignsDelete", text = "▎" },
-        topdelete = { hl = "GitSignsDelete", text = "▎" },
-        changedelete = { hl = "GitSignsChange", text = "▎" },
-        untracked = { hl = "GitSignsAdd", text = "▎" },
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "▎" },
+        topdelete = { text = "▎" },
+        changedelete = { text = "▎" },
+        untracked = { text = "▎" },
       },
       -- on_attach = nil,
       on_attach = function(bufnr)
@@ -251,9 +252,9 @@ return {
     end,
     opts = function()
       highlight.plugin("diffview", {
-        { DiffAddedChar = { bg = "NONE", fg = { from = "diffAdd", attr = "fg", alter = 0.3 } } },
-        { DiffChangedChar = { bg = "NONE", fg = { from = "diffChanged", attr = "fg", alter = 0.3 } } },
-        { DiffDeletedChar = { bg = "NONE", fg = { from = "diffRemoved", attr = "fg", alter = 0.3 } } },
+        { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.3 } } },
+        { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.3 } } },
+        { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.3 } } },
         { DiffviewStatusAdded = { link = "DiffAddedChar" } },
         { DiffviewStatusModified = { link = "DiffChangedChar" } },
         { DiffviewStatusRenamed = { link = "DiffChangedChar" } },

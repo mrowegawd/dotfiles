@@ -38,7 +38,7 @@ return {
     },
     config = function(_, opts)
       require("r.config.highlights").plugin("ibl_indentline", {
-        { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+        { ["@ibl.indent.char.1"] = { fg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } },
       })
       require("ibl").setup(opts)
     end,
@@ -258,7 +258,7 @@ return {
       { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
       {
-        "<leader>bP",
+        "<leader>bc",
         "<Cmd>BufferLineGroupClose ungrouped<CR>",
         desc = "Buffer(bufferline): delete non-pinned buffers",
       },
@@ -267,7 +267,7 @@ return {
       { "<leader>bh", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
     },
     opts = function()
-      local col_base_bg_attr = "Normal"
+      local col_base_bg_attr = "ColorColumn"
       local col_base_fg_attr = "Comment"
 
       local col_unselected_bg_attr = "bufferline_unselected"

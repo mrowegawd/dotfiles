@@ -6,18 +6,14 @@ local sttsline_utils = require "sttusline.utils"
 local sttsline_colors = require "sttusline.utils.color"
 
 local Util = require "r.utils"
-
 local modules = Util.lsp.lazy_require { sources = "r.plugins.colorthemes.sttusline.diagnostic-sources" }
 
-local highlight = require "r.config.highlights"
 local icons = require("r.config").icons
+local highlight = require "r.config.highlights"
 
 local col_bg_StatusLine = highlight.get("ColorColumn", "bg")
 local col_bg_ErrorMsg = highlight.get("ErrorMsg", "fg")
-
 local col_normal_statusLine = highlight.get("StatusLine", "bg")
-
-local col_disorent = highlight.get("ColorColumn", "bg")
 
 local ICON_HIGHLIGHT = "STTUSLINE_FILE_ICON"
 
@@ -30,7 +26,12 @@ local colors = {
   filename_fg = highlight.tint(col_bg_StatusLine, 6),
   modified_fg = highlight.tint(col_bg_ErrorMsg, 0),
 
-  coldisorent = highlight.tint(col_disorent, 0.5),
+  coldisorent = highlight.tint(col_bg_StatusLine, 0.5),
+
+  mod_norm = highlight.get("@field", "fg"),
+  mod_ins = highlight.tint(col_bg_ErrorMsg, 0),
+  mod_vis = highlight.get("visual", "bg"),
+  mod_term = highlight.get("Boolean", "fg"),
 }
 
 local exclude = {
@@ -122,11 +123,11 @@ M.mode = function()
       ["x"] = { "CONFIRM", "STTUSLINE_CONFIRM_MODE" },
     },
     mode_colors = {
-      ["STTUSLINE_NORMAL_MODE"] = { fg = sttsline_colors.blue, bg = colors.base_bg },
-      ["STTUSLINE_INSERT_MODE"] = { fg = sttsline_colors.green, bg = colors.base_bg },
-      ["STTUSLINE_VISUAL_MODE"] = { fg = sttsline_colors.purple, bg = sttsline_utils.magenta },
-      ["STTUSLINE_NTERMINAL_MODE"] = { fg = sttsline_colors.gray, bg = colors.base_bg },
-      ["STTUSLINE_TERMINAL_MODE"] = { fg = sttsline_colors.cyan, bg = colors.base_bg },
+      ["STTUSLINE_NORMAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_norm, bold = true },
+      ["STTUSLINE_INSERT_MODE"] = { fg = colors.base_bg, bg = colors.mod_ins, bold = true },
+      ["STTUSLINE_VISUAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_vis, bold = true },
+      ["STTUSLINE_NTERMINAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_term, bold = true },
+      ["STTUSLINE_TERMINAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_term, bold = true },
       ["STTUSLINE_REPLACE_MODE"] = { fg = sttsline_colors.red, bg = colors.base_bg },
       ["STTUSLINE_SELECT_MODE"] = { fg = sttsline_colors.magenta, bg = colors.base_bg },
       ["STTUSLINE_COMMAND_MODE"] = { fg = sttsline_colors.yellow, bg = colors.base_bg },

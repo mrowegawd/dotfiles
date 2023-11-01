@@ -119,20 +119,6 @@ return {
       return false
     end,
   },
-  -- DARCULA-DARK
-  {
-    "xiantang/darcula-dark.nvim",
-    lazy = false,
-    priority = 1000,
-    requires = { "nvim-treesitter/nvim-treesitter" },
-    enabled = function()
-      local colordarkuladark = { "darcula-dark" }
-      if vim.tbl_contains(colordarkuladark, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- EVERFOREST
   {
     "neanias/everforest-nvim",
@@ -204,6 +190,21 @@ return {
 
       tokyonight.load()
     end,
+  },
+  -- ONEDARK.NVIM
+  {
+    "navarasu/onedark.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local onedarktheme = { "onedark" }
+      if vim.tbl_contains(onedarktheme, colorscheme) then
+        return true
+      end
+    end,
+    opts = {
+      style = "warmer",
+    },
   },
   ---------------------------------------------------------------------------
   -- Not recommended colorscheme

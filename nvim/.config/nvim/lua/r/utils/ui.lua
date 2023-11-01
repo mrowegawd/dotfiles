@@ -107,7 +107,12 @@ function M.statuscolumn()
     vim.api.nvim_win_call(win, function()
       if vim.fn.foldclosed(vim.v.lnum) >= 0 then
         fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded" }
-        if vim.bo.filetype == "norg" then
+        if
+          vim.tbl_contains(
+            { "norg", "org", "orgagenda", "fzf" },
+            vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
+          )
+        then
           fold = { text = "", texthl = "" }
         end
       end

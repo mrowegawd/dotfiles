@@ -59,7 +59,7 @@ function M.get()
     { "gtd", Util.toggle.diagnostics, desc = "LSP(diagnostic): toggle diagnostics" },
     { "dn", function() diagnostic.goto_next { float = false } end, desc = "LSP(diagnostic): next item" },
     { "dp", function() diagnostic.goto_prev { float = false } end, desc = "LSP(diagnostic): prev item" },
-    { "dP", function() vim.diagnostic.open_float { focusable = true } end, desc = "LSP(diagnostic): open float preview" },
+    { "dP", function() vim.diagnostic.open_float({ scope = "line", border = "rounded", focusable = true }) end, desc = "LSP(diagnostic): open float preview" },
     { "dq",
       function()
         if #vim.diagnostic.get() > 0 then

@@ -262,7 +262,7 @@ function M.infoBaseColorsTheme()
   local winseparator = "WinSeparator"
 
   local normal_fg = "Normal color_fg: " .. highlight.get(normal, "fg")
-  local normal_bg = "Normal color_bg: " .. highlight.get(normal, "bg")
+  local normal_bg = "Normal color_bg: " .. highlight.get(colorcolumn, "bg")
 
   -- fzf selection
   local fzf_selection_fg = "Fzf selection fg: " .. highlight.get(pmenusel, "fg")

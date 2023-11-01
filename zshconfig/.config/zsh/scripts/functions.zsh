@@ -17,7 +17,10 @@ build-install(){
   apt_install="urlview"
 
   # TODO: install cargo seperti eza, lazygit, etc
-  cargo_install="eza lazygit"
+  cargo_install="eza"
+
+  # TODO: install go get
+  cargo_install="lf lazygit"
 
   # TODO: build yang khusus apt dan juga cargo
   sudo apt install "$apt_install"

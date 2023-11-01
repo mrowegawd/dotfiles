@@ -157,7 +157,7 @@ return {
     opts = function()
       return {
         termlist = {
-          winhighlight = "Normal:PanelDarkBackground,WinBar:PanelDarkBackground", -- See :h winhighlight - You can change winbar colors as well
+          winhighlight = "Normal:ColorColumn,WinBar:WinBar", -- See :h winhighlight - You can change winbar colors as well
           enabled = true,
           side = "right",
           width = 25,
