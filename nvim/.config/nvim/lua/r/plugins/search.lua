@@ -256,7 +256,7 @@ return {
       { "<Leader>bo", "<CMD>FzfLua oldfiles<CR>", desc = "Buffer(Fzflua): oldfiles" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
       { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
-      -- { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
+      { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
       { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
@@ -965,7 +965,7 @@ return {
       -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
       { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
       { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
-      { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
+      -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
       { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
       { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
       {
@@ -1093,6 +1093,7 @@ return {
       "debugloop/telescope-undo.nvim", -- Visualise undotree
       "nvim-telescope/telescope-live-grep-args.nvim",
       "tsakirist/telescope-lazy.nvim",
+      "nvim-telescope/telescope-dap.nvim",
       "benfowler/telescope-luasnip.nvim",
       "fdschmidt93/telescope-corrode.nvim",
     },
@@ -1299,6 +1300,7 @@ return {
         extensions = {
           lazy = themes.get_ivy {},
           undo = themes.get_ivy {},
+          -- dap = themes.get_ivy {}, -- not working
           live_grep_args = themes.get_ivy {
             auto_quoting = false, -- enable/disable auto-quoting
           },
@@ -1315,6 +1317,7 @@ return {
       telescope.load_extension "lazy"
       telescope.load_extension "undo"
       telescope.load_extension "live_grep_args"
+      telescope.load_extension "dap"
 
       local corrode_cfg = require "telescope._extensions.corrode.config"
       corrode_cfg.values = { theme = "ivy" }
