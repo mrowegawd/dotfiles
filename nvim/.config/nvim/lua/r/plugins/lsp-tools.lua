@@ -698,7 +698,7 @@ return {
     },
     opts = {},
     keys = {
-      { "<Leader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc(devdocs): open" },
+      { "<Localleader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc(devdocs): open" },
     },
     cmd = {
       "DevdocsFetch",
