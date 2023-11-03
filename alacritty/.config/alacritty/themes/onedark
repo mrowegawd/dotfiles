@@ -3,15 +3,15 @@ colors:
   # Default colors
   primary:
     background: '0x1d1d20'
-    foreground: '0x96999e'
+    foreground: '0x232326'
 
-  cursor:
-    text: '0x21222c'
-    cursor: '0x21222c'
+  # cursor:
+  #   text: '0x21222c'
+  #   cursor: '0x4078f2'
 
   # Normal colors
   normal:
-    black:   '0x000000'
+    black:   '0x232326'
     red:     '0xff5555'
     green:   '0x50fa7b'
     yellow:  '0xf1fa8c'

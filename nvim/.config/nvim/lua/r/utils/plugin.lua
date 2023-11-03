@@ -267,13 +267,12 @@ function M.infoBaseColorsTheme()
   -- fzf selection
   local fzf_selection_fg = "Fzf selection fg: " .. highlight.get(pmenusel, "fg")
   local fzf_selection_bg = "fzf selection bg: " .. highlight.get(pmenusel, "bg")
+  local fzf_selection_match_fg = "Fzf selection match fg: " .. highlight.get(cmpmatchabbr, "fg")
 
   -- fzf non selection
-  local fzf_non_sel_fg = "Fzf default fg: " .. highlight.get(cmpitemabbr, "fg")
-
-  -- fzf match matching
-  local fzf_matching = "Fzf matching: " .. highlight.get(cmpmatchabbr, "fg")
-  local fzf_matching_fuzzy = "Fzf matching fuzzy: " .. highlight.get(cmpmatchabbrFuzzy, "fg")
+  local fzf_bg = "Fzf default bg: " .. highlight.get(colorcolumn, "bg")
+  local fzf_fg = "Fzf default fg: " .. highlight.get(cmpitemabbr, "fg")
+  local fzf_match_fg = "Fzf match fuzzy: " .. highlight.get(cmpmatchabbrFuzzy, "fg")
 
   -- fzf match matching
   local fzf_border_fg = "Fzf border fg: " .. highlight.get(fzfluaborder, "fg")
@@ -293,9 +292,9 @@ function M.infoBaseColorsTheme()
   #--- FUZZY
   %s
   %s
-
   %s
 
+  %s
   %s
   %s
 
@@ -313,9 +312,11 @@ function M.infoBaseColorsTheme()
 
       fzf_selection_bg,
       fzf_selection_fg,
-      fzf_non_sel_fg,
-      fzf_matching,
-      fzf_matching_fuzzy,
+      fzf_selection_match_fg,
+
+      fzf_bg,
+      fzf_fg,
+      fzf_match_fg,
 
       fzf_border_fg,
 
@@ -326,43 +327,6 @@ function M.infoBaseColorsTheme()
       tmux_border_fg
     )
   )
-
-  -- local pmenu_bg = highlight.get(pmenu, "bg")
-  -- local cmpmatchabbr_fg = highlight.get(cmpmatchabbr, "fg")
-  -- local cmpitemabbr_fg = highlight.get(cmpitemabbr, "fg")
-  -- local cmpmatchabbrfuzzy_fg = highlight.get(cmpitemabbrmatchfuzzy, "fg")
-
-  --   print(
-  --     fmt(
-  --       [[
-  -- BG_ACTIVE_WINDOW (Normal) bg: %s
-  -- BG_ACTIVE_WINDOW (Normal) fg: %s
-
-  -- BACKGROUND_ACTIVE_STATUSLINE (ColorColumn) bg: %s
-
-  -- # fzf selection
-  -- FZF_BG (Pmenu) bg: %s
-  -- FZF_FG (Pmenu) fg: %s
-  -- FZF_BG_SELECTION (PmenuSel) bg: %s
-
-  -- # fzf normal
-  -- FZF_BG_SELECTION (PmenuSel) bg: %s
-
-  -- FZF_BG_MATCH (CmpItemAbbrMatch) fg: %s
-  -- FZF_FG_ITEM (CmpItemAbbr) fg: %s
-  -- FZF_FG_ITEM_FUZZY (CmpItemAbbrMatchFuzzy) fg: %s ]],
-  --       normal_bg,
-  --       normal_fg,
-
-  --       colorcolumn_bg,
-  --       pmenu_bg,
-  --       pmenu_fg,
-  --       pmenusel_bg,
-  --       cmpmatchabbr_fg,
-  --       cmpitemabbr_fg,
-  --       cmpmatchabbrfuzzy_fg
-  --     )
-  --   )
 end
 
 function M.infoFoldPreview()

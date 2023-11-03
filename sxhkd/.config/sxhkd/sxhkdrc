@@ -157,7 +157,7 @@ super + F8
 
 # misc: call zathura (side by side)
 super + F6
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin zathura 3
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin zathura 4
 
 # misc: run bookmark
 super + shift + p

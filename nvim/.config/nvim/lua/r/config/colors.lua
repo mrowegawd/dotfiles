@@ -140,7 +140,7 @@ local general_overrides = function()
     -----------------------------------------------------------------------
 
     -- CMP ================================================================
-    { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 0.8 }, bg = "NONE" } },
+    { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.55 }, bg = "NONE" } },
     { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.2 }, bg = "NONE", bold = false } },
     { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", alter = -0.3 } } },
 

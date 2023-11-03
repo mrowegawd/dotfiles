@@ -47,6 +47,11 @@ return {
   {
     "stevearc/dressing.nvim",
     lazy = true,
+    opts = {
+      win_options = {
+        winhighlight = "FloatBorder:FzfLuaBorder",
+      },
+    },
     init = function()
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)

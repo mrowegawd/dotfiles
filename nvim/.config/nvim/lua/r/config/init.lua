@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "tokyonight"
+local colorscheme = "gruvbox-material"
 
 _G.base = {}
 
@@ -22,7 +22,7 @@ local base_options = {
     diagnostics_mode = 3, -- Set code linting (0=off, 1=only show in status line, 2=virtual text off, 3=all on).
     icons_enabled = true, -- Enable icons in the UI (disable if no nerd font is available).
     inlay_hints_enabled = false, -- Enable ayways show function parameter names.
-    lsp_signature_enabled = true, -- Enable automatically showing lsp help as you write function parameters.
+    lsp_signature_enabled = false, -- Enable automatically showing lsp help as you write function parameters.
     notifications_enabled = true, -- Enable notifications.
     semantic_tokens_enabled = true, -- Enable lsp semantic tokens at start.
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
