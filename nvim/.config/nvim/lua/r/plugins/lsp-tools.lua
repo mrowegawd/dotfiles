@@ -377,41 +377,49 @@ return {
       }
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-      attach_mode = "global",
-      backends = { "lsp", "treesitter", "markdown", "man" },
-      layout = { min_width = 28 },
-      -- fold code from tree (overwrites treesitter foldexpr)
-      manage_folds = false,
-      show_guides = true,
-      guides = {
-        mid_item = "├╴",
-        last_item = "└╴",
-        nested_top = "│ ",
+    opts = function()
+      local hg = require "r.config.highlights"
+      hg.plugin("arials", {
+        { ArialGuide = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
+        { ArialGuide1 = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
+      })
+
+      return {
+        attach_mode = "global",
+        backends = { "lsp", "treesitter", "markdown", "man" },
+        layout = { min_width = 28 },
+        -- fold code from tree (overwrites treesitter foldexpr)
+        manage_folds = false,
+        show_guides = true,
+        guides = {
+          mid_item = "├╴",
+          last_item = "└╴",
+          nested_top = "│ ",
+          whitespace = "  ",
+        },
         whitespace = "  ",
-      },
-      whitespace = "  ",
-      filter_kind = false,
-      icons = require("r.config").icons.kinds,
-      keymaps = {
-        ["o"] = "actions.jump",
-        -- ["o"] = "actions.jump",
-        ["O"] = "actions.scroll",
-        -- ["]y"] = "actions.next",
-        -- ["[y"] = "actions.prev",
-        -- ["<c-p>"] = "actions.prev_up",
-        -- ["<c-n>"] = "actions.next_up",
-        ["<c-n>"] = "actions.next",
-        ["<c-p>"] = "actions.prev",
-        -- ["zM"] = "actions.tree_close_all",
-        ["{"] = false,
-        ["}"] = false,
-        ["[["] = false,
-        ["]]"] = false,
-        ["zM"] = false,
-        ["zO"] = false,
-      },
-    },
+        filter_kind = false,
+        icons = require("r.config").icons.kinds,
+        keymaps = {
+          ["o"] = "actions.jump",
+          -- ["o"] = "actions.jump",
+          ["O"] = "actions.scroll",
+          -- ["]y"] = "actions.next",
+          -- ["[y"] = "actions.prev",
+          -- ["<c-p>"] = "actions.prev_up",
+          -- ["<c-n>"] = "actions.next_up",
+          ["<a-n>"] = "actions.next",
+          ["<a-p>"] = "actions.prev",
+          -- ["zM"] = "actions.tree_close_all",
+          ["{"] = false,
+          ["}"] = false,
+          ["[["] = false,
+          ["]]"] = false,
+          ["zM"] = false,
+          ["zO"] = false,
+        },
+      }
+    end,
   },
   -- SYMBOLSOUTLINE (disabled)
   {

@@ -1,8 +1,7 @@
 local silent = { silent = true }
 local nosilent = { silent = false }
--- local opts = { noremap = true, unique = true }
 
-local fn, api, cmd, fmt, map = vim.fn, vim.api, vim.cmd, string.format, vim.keymap.set
+local fn, cmd, fmt, map = vim.fn, vim.cmd, string.format, vim.keymap.set
 
 local Util = require "r.utils"
 
@@ -55,7 +54,7 @@ local function cabbrev(short, long)
   })
 end
 
-nnoremap("<leader>rL", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
+nnoremap("<Localleader>ol", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ EDITING TEXT                                             │
@@ -66,15 +65,16 @@ inoremap("kj", "<ESC>", silent)
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
 inoremap("<c-d>", "<c-O>dw", silent)
-inoremap("<c-j>", "<Down>", silent)
-inoremap("<c-k>", "<Up>", silent)
 
 nnoremap("g,", "g,zvzz", silent) -- go last edit
 nnoremap("g;", "g;zvzz", silent) -- go prev edit
 
+inoremap("<c-j>", "<Down>", silent)
+inoremap("<c-k>", "<Up>", silent)
 inoremap("<c-l>", "<Right>", silent)
 inoremap("<c-h>", "<Left>", silent)
-inoremap("<c-b>", "<S-Left>", silent)
+
+inoremap("<c-b>", "<c-o>B", silent)
 inoremap("<c-f>", "<S-Right>", silent)
 
 nnoremap("<c-g>", "/", nosilent)
@@ -96,17 +96,10 @@ end
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ FOLDS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
--- nnoremap("<space><space>", "za", { desc = "Folds: toggle" })
-
-nnoremap("<a-n>", function()
-  return Util.fold.goNextClosedFold()
-end, { desc = "Folds: go next closed" })
-
-nnoremap("<a-p>", function()
-  return Util.fold.goPreviousClosedFold()
-end, { desc = "Folds: go prev closed" })
 
 nnoremap("zm", "zM", { desc = "Folds: close all" })
+
+-- nnoremap("<space><space>", "za", { desc = "Folds: toggle" })
 
 -- Jump next/prev fold
 -- nnoremap("zn", "zjzz", opts)
@@ -125,84 +118,15 @@ nnoremap("<c-w>b", "<C-w><S-t>", { desc = "Buffer: break buffer into new tab" })
 nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
 nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffer" })
 
--- Exit or delete a buffer
-local function magic_quit()
-  local buf_fts = {
-    ["fugitive"] = "bd",
-    ["Trouble"] = "bd",
-    ["help"] = "bd",
-    -- ["norg"] = "bd",
-    -- ["org"] = "bd",
-    ["octo"] = "bd",
-    ["log"] = "bd",
-
-    ["alpha"] = "q",
-    ["spectre_panel"] = "q",
-    ["OverseerForm"] = "q!",
-    ["orgagenda"] = "q",
-    ["markdown"] = "q",
-    ["NeogitStatus"] = "q",
-    ["checkhealth"] = "q",
-    ["neo-tree"] = "NeoTreeShowClose",
-    ["DiffviewFileHistory"] = "DiffviewClose",
-    ["qf"] = Util.toggle.kill_loc_qf,
-  }
-
-  local alias_mode = { i = "I", c = "C", V = "V", [""] = "V" }
-  if alias_mode[vim.fn.mode()] ~= nil then
-    return Util.cmd.feedkey("<esc>", "n")
-  end
-
-  local list_wins = {}
-
-  for _, winid in pairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_is_valid(winid) then
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-      if filetype ~= "notify" then
-        table.insert(list_wins, winid)
-      end
-    end
-  end
-
-  if #list_wins > 0 then
-    for _, winid in pairs(list_wins) do
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-
-      if buf_fts[filetype] ~= nil and vim.bo[0].filetype == buf_fts[filetype] then
-        if buf_fts[filetype] == "q" then
-          return Util.cmd.feedkey(":q<cr>", "n")
-        elseif buf_fts[filetype] == "bd" then
-          return Util.cmd.feedkey(":bd<cr>", "n")
-        else
-          return vim.cmd(buf_fts[filetype])
-        end
-      else
-        return Util.cmd.feedkey(":q<cr>", "n")
-      end
-    end
-  end
-end
-nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
-vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit [visual]" })
-
 -- Alternate the buffer
-local ignore_alternate_ft = {
-  ["qf"] = true,
-  ["Outline"] = true,
-  ["neo-tree"] = true,
-  ["OverseerList"] = true,
-}
+local dont_alternitefile = { "qf", "Outline", "neo-tree", "OverseerList" }
 nnoremap("<leader>bb", function()
   local bufnr = vim.api.nvim_get_current_buf()
-
   local ft = vim.bo[bufnr].filetype
-
-  if ignore_alternate_ft[ft] then
+  if vim.tbl_contains(dont_alternitefile, ft) then
     return
   end
-  return api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-^>", true, true, true), "n", true)
+  return Util.cmd.feedkey("<C-^>", "n")
 end, { desc = "Buffer: alternate file" })
 
 --  ╭──────────────────────────────────────────────────────────╮
@@ -391,6 +315,81 @@ cabbrev("BD", "bd!")
 cabbrev("bD", "bd!")
 cabbrev("Bd", "bd!")
 cabbrev("bd", "bd!")
+
+--  ┌──────────────────────────────────────────────────────────┐
+--  │                          MAGIC                           │
+--  └──────────────────────────────────────────────────────────┘
+
+-- Dont mess when do jumping
+nnoremap("<a-n>", function()
+  return Util.fold.goNextClosedFold()
+end, { desc = "Folds: go next closed" })
+
+nnoremap("<a-p>", function()
+  return Util.fold.goPreviousClosedFold()
+end, { desc = "Folds: go prev closed" })
+
+-- Exit or delete a buffer
+local function magic_quit()
+  local buf_fts = {
+    ["fugitive"] = "bd",
+    ["Trouble"] = "bd",
+    ["help"] = "bd",
+    -- ["norg"] = "bd",
+    -- ["org"] = "bd",
+    ["octo"] = "bd",
+    ["log"] = "bd",
+
+    ["alpha"] = "q",
+    ["spectre_panel"] = "q",
+    ["OverseerForm"] = "q!",
+    ["orgagenda"] = "q",
+    ["markdown"] = "q",
+    ["NeogitStatus"] = "q",
+    ["checkhealth"] = "q",
+    ["neo-tree"] = "NeoTreeShowClose",
+    ["DiffviewFileHistory"] = "DiffviewClose",
+    ["qf"] = Util.toggle.kill_loc_qf,
+  }
+
+  local alias_mode = { i = "I", c = "C", V = "V", [""] = "V" }
+  if alias_mode[vim.fn.mode()] ~= nil then
+    return Util.cmd.feedkey("<esc>", "n")
+  end
+
+  local list_wins = {}
+
+  for _, winid in pairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_is_valid(winid) then
+      local bufnr = vim.api.nvim_win_get_buf(winid)
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+      if filetype ~= "notify" then
+        table.insert(list_wins, winid)
+      end
+    end
+  end
+
+  if #list_wins > 0 then
+    for _, winid in pairs(list_wins) do
+      local bufnr = vim.api.nvim_win_get_buf(winid)
+      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+
+      if buf_fts[filetype] ~= nil and vim.bo[0].filetype == buf_fts[filetype] then
+        if buf_fts[filetype] == "q" then
+          return Util.cmd.feedkey(":q<cr>", "n")
+        elseif buf_fts[filetype] == "bd" then
+          return Util.cmd.feedkey(":bd<cr>", "n")
+        else
+          return vim.cmd(buf_fts[filetype])
+        end
+      else
+        return Util.cmd.feedkey(":q<cr>", "n")
+      end
+    end
+  end
+end
+nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
+vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit [visual]" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDS                                                 │

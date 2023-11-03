@@ -54,11 +54,9 @@ return {
       },
     },
   },
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │                        MY PLUGINS                        │
-  --  ╰──────────────────────────────────────────────────────────╯
+  -- QFSILET
   {
-    dir = "~/.local/src/nvim_plugins/qfsilet",
+    "mrowegawd/qfsilet",
     event = "LazyFile",
     opts = {
       ext_note = "",

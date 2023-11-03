@@ -1,5 +1,7 @@
 local api, cmd = vim.api, vim.cmd
 
+local Util = require "r.utils"
+
 local M = {}
 
 ---@param winid number
@@ -13,6 +15,8 @@ local function winCall(winid, f)
   end
 end
 
+local ctrlN_and_ctrlP = { "neo-tree", "aerial" }
+
 ---@param winid number
 ---@param lnum number
 ---@return number
@@ -23,6 +27,25 @@ local function foldClosed(winid, lnum)
 end
 
 function M.goPreviousClosedFold()
+  if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
+    return Util.cmd.feedkey("<c-p>", "n")
+  end
+
+  if vim.bo[0].filetype == "qf" then
+    vim.cmd [[
+        try
+            execute  "cprevious"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            " execute "echo 'stop it'"
+        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
+        endtry
+            ]]
+    -- else
+    -- I got lazy convert this logic into lua, so I stole it yehahaa
+    -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
+    return vim.cmd "wincmd p"
+  end
+
   local count = vim.v.count1
   local curLnum = api.nvim_win_get_cursor(0)[1]
   local cnt = 0
@@ -36,6 +59,7 @@ function M.goPreviousClosedFold()
       end
     end
   end
+
   if lnum then
     cmd "norm! m`"
     api.nvim_win_set_cursor(0, { lnum, 0 })
@@ -45,6 +69,22 @@ function M.goPreviousClosedFold()
 end
 
 function M.goNextClosedFold()
+  if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
+    return Util.cmd.feedkey("<c-n>", "n")
+  end
+
+  if vim.bo[0].filetype == "qf" then
+    vim.cmd [[
+        try
+            execute "cnext"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            " execute "echo 'stop it'"
+        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
+        endtry
+            ]]
+    return vim.cmd "wincmd p"
+  end
+
   local count = vim.v.count1
   local curLnum = api.nvim_win_get_cursor(0)[1]
   local lineCount = api.nvim_buf_line_count(0)
@@ -59,6 +99,7 @@ function M.goNextClosedFold()
       end
     end
   end
+
   if lnum then
     cmd "norm! m`"
     api.nvim_win_set_cursor(0, { lnum, 0 })

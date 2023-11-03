@@ -59,15 +59,16 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = { { "<leader>m", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
+    keys = { { "<leader>z", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },
     },
   },
-  -- UNDOTREE
+  -- UNDOTREE (disabled)
   {
-    "mbbill/undotree",
+    "mbbill/undotree", -- use telescope now
+    enabled = false,
     keys = {
       { "<Leader>ru", "<CMD>UndotreeToggle<CR>", desc = "Misc(undotreetoggle): show" },
     },
@@ -98,15 +99,7 @@ return {
   -- NREDIR
   {
     -- Redirect output of vim or external command into scratch buffer,
-    -- awesome plugin!
     "sbulav/nredir.nvim",
     cmd = { "Nredir" },
-  },
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │                        MY PLUGINS                        │
-  --  ╰──────────────────────────────────────────────────────────╯
-  {
-    dir = "~/.local/src/nvim_plugins/nvim-ui-conf",
-    event = "VeryLazy",
   },
 }
