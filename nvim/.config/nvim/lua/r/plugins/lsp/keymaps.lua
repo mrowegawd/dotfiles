@@ -17,7 +17,7 @@ function M.get()
     --  +----------------------------------------------------------+
     { "K", vim.lsp.buf.hover, desc = "Hover" },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
-    { "<c-k>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
+    { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
     { "gd", function() require("telescope.builtin").lsp_definitions { reuse_win = false } end, desc = "LSP(fzflua): definitions", has = "definition" },
     { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
     { "gT", "<cmd>FzfLua lsp_typedefs<cr>", desc = "LSP(fzflua): peek type definitions" },

@@ -595,7 +595,7 @@ return {
     "itchyny/calendar.vim",
     cmd = { "Calendar" },
     keys = {
-      { "<Localleader>oC", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
+      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
     },
   },
   -- IMAGE.NVIM (disabled)

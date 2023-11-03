@@ -616,7 +616,7 @@ return {
     "rest-nvim/rest.nvim",
     ft = "http",
     keys = {
-      { "<Localleader>or", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
+      { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
     },
     opts = { skip_ssl_verification = true },
   },
@@ -681,11 +681,9 @@ return {
       )
     end,
   },
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │                        MY PLUGINS                        │
-  --  ╰──────────────────────────────────────────────────────────╯
+  -- RUNMUX
   {
-    dir = "~/.local/src/nvim_plugins/runmux",
+    "mrowegawd/runmux",
     keys = {
       { "rf", "<Cmd> RmuxRunFile <CR>" },
       { "rP", "<Cmd> RmuxSetPane <CR>" },

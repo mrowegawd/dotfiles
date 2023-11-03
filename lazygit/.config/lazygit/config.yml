@@ -101,10 +101,10 @@ keybinding:
     nextItem-alt: "j" # go one line down
     prevPage: "," # go to next page in list
     nextPage: "." # go to previous page in list
-    gotoTop: "g" # go to top of list
-    gotoBottom: "G" # go to bottom of list
-    scrollLeft: ">" # scroll left within list view
-    scrollRight: "<" # scroll right within list view
+    # gotoTop: "G" # go to top of list
+    # gotoBottom: "G" # go to bottom of list
+    scrollLeft: "h" # scroll left within list view
+    scrollRight: "l" # scroll right within list view
     prevBlock: "<left>" # goto the previous block / panel
     nextBlock: "<right>" # goto the next block / panel
     # prevBlock-alt: "<c-h>" # goto the previous block / panel
@@ -134,8 +134,8 @@ keybinding:
     pullFiles: "p"
     refresh: "<f5>"
     createPatchOptionsMenu: "<c-p>"
-    nextTab: "l"
-    prevTab: "h"
+    nextTab: "]"
+    prevTab: "["
     nextScreenMode: "+"
     prevScreenMode: "_"
     undo: "z"
@@ -147,8 +147,8 @@ keybinding:
     submitEditorText: "<enter>"
     extrasMenu: "@"
     toggleWhitespaceInDiffView: "<c-w>"
-    increaseContextInDiffView: "}"
-    decreaseContextInDiffView: "{"
+    # increaseContextInDiffView: "}"
+    # decreaseContextInDiffView: "{"
   status:
     checkForUpdate: "u"
     recentRepos: "<enter>"
