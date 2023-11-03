@@ -6,27 +6,32 @@ local sttsline_utils = require "sttusline.utils"
 local sttsline_colors = require "sttusline.utils.color"
 
 local Util = require "r.utils"
+local modules = Util.lsp.lazy_require { sources = "r.plugins.colorthemes.sttusline.diagnostic-sources" }
 
-local modules = Util.lsp.lazy_require {
-  sources = "r.plugins.colorthemes.sttusline.diagnostic-sources",
-}
-
-local highlight = require "r.config.highlights"
 local icons = require("r.config").icons
+local highlight = require "r.config.highlights"
 
-local col_bg_StatusLine = highlight.get("StatusLine", "bg")
+local col_bg_StatusLine = highlight.get("ColorColumn", "bg")
 local col_bg_ErrorMsg = highlight.get("ErrorMsg", "fg")
+local col_normal_statusLine = highlight.get("StatusLine", "bg")
 
 local ICON_HIGHLIGHT = "STTUSLINE_FILE_ICON"
 
 local colors = {
-  base_bg = highlight.tint(col_bg_StatusLine, 0),
+  base_bg = col_normal_statusLine,
   base_fg = highlight.tint(col_bg_StatusLine, 3),
 
   branch_fg = highlight.tint(col_bg_StatusLine, 4),
   mode_bg = highlight.tint(col_bg_StatusLine, 1),
   filename_fg = highlight.tint(col_bg_StatusLine, 6),
   modified_fg = highlight.tint(col_bg_ErrorMsg, 0),
+
+  coldisorent = highlight.tint(col_bg_StatusLine, 0.5),
+
+  mod_norm = highlight.get("@field", "fg"),
+  mod_ins = highlight.tint(col_bg_ErrorMsg, 0),
+  mod_vis = highlight.get("visual", "bg"),
+  mod_term = highlight.get("Boolean", "fg"),
 }
 
 local exclude = {
@@ -118,15 +123,15 @@ M.mode = function()
       ["x"] = { "CONFIRM", "STTUSLINE_CONFIRM_MODE" },
     },
     mode_colors = {
-      ["STTUSLINE_NORMAL_MODE"] = { fg = sttsline_colors.blue, bg = colors.mode_bg },
-      ["STTUSLINE_INSERT_MODE"] = { fg = sttsline_colors.green, bg = colors.mode_bg },
-      ["STTUSLINE_VISUAL_MODE"] = { fg = sttsline_colors.purple, bg = sttsline_utils.magenta },
-      ["STTUSLINE_NTERMINAL_MODE"] = { fg = sttsline_colors.gray, bg = colors.mode_bg },
-      ["STTUSLINE_TERMINAL_MODE"] = { fg = sttsline_colors.cyan, bg = colors.mode_bg },
-      ["STTUSLINE_REPLACE_MODE"] = { fg = sttsline_colors.red, bg = colors.mode_bg },
-      ["STTUSLINE_SELECT_MODE"] = { fg = sttsline_colors.magenta, bg = colors.mode_bg },
-      ["STTUSLINE_COMMAND_MODE"] = { fg = sttsline_colors.yellow, bg = colors.mode_bg },
-      ["STTUSLINE_CONFIRM_MODE"] = { fg = sttsline_colors.yellow, bg = colors.mode_bg },
+      ["STTUSLINE_NORMAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_norm, bold = true },
+      ["STTUSLINE_INSERT_MODE"] = { fg = colors.base_bg, bg = colors.mod_ins, bold = true },
+      ["STTUSLINE_VISUAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_vis, bold = true },
+      ["STTUSLINE_NTERMINAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_term, bold = true },
+      ["STTUSLINE_TERMINAL_MODE"] = { fg = colors.base_bg, bg = colors.mod_term, bold = true },
+      ["STTUSLINE_REPLACE_MODE"] = { fg = sttsline_colors.red, bg = colors.base_bg },
+      ["STTUSLINE_SELECT_MODE"] = { fg = sttsline_colors.magenta, bg = colors.base_bg },
+      ["STTUSLINE_COMMAND_MODE"] = { fg = sttsline_colors.yellow, bg = colors.base_bg },
+      ["STTUSLINE_CONFIRM_MODE"] = { fg = sttsline_colors.yellow, bg = colors.base_bg },
     },
     auto_hide_on_vim_resized = true,
   }
@@ -154,6 +159,10 @@ M.datetime = function()
       time_Fmt = "%Y-%m-%d"
     end
     return os.date(time_Fmt) .. ""
+  end)
+
+  Datetime.set_condition(function()
+    return vim.fn.winwidth(0) > 120
   end)
   return Datetime
 end
@@ -224,9 +233,9 @@ M.filename = function()
       if buftype == "terminal" then
         icon, color_icon = "", sttsline_colors.magenta
       elseif filetype == "NvimTree" then
-        icon, color_icon = "󱏒", sttsline_colors.red
+        icon, color_icon = "󱏒", colors.base_bg
       elseif filetype == "neo-tree" then
-        icon, color_icon = "󱏒", sttsline_colors.magenta
+        icon, color_icon = "󱏒", colors.base_bg
       elseif filetype == "TelescopePrompt" then
         icon, color_icon = "", sttsline_colors.yellow
         parts = "TelescopePromp"
@@ -253,7 +262,7 @@ M.filename = function()
 
     hl(0, "STTUSLINE_MODIFIEDC", Filename.get_config().colors.modified)
     hl(0, "STTUSLINE_MOD_FILENAMEC", Filename.get_config().colors.filename)
-    hl(0, ICON_HIGHLIGHT, { fg = color_icon })
+    hl(0, ICON_HIGHLIGHT, { fg = color_icon, bg = colors.base_bg })
 
     if icon and parts ~= nil and type(parts) == "table" then
       return sttsline_utils.add_highlight_name(icon, ICON_HIGHLIGHT)
@@ -408,12 +417,21 @@ end
 M.lsp_notify = function()
   local LSPFormatters = require "sttusline.components.lsps-formatters"
 
-  LSPFormatters.set_colors { fg = sttsline_colors.magenta, bg = colors.mode_bg }
+  LSPFormatters.set_colors { fg = sttsline_colors.magenta, bg = colors.coldisorent }
 
   return LSPFormatters
 end
 M.gitdiff = function()
   local Gitdiff = require "sttusline.components.git-diff"
+
+  Gitdiff.set_config {
+    colors = {
+      added = { bg = colors.base_bg },
+      changed = { bg = colors.base_bg },
+      removed = { bg = colors.base_bg },
+    },
+    order = { "added", "changed", "removed" },
+  }
 
   Gitdiff.set_event(M.set_event)
 
@@ -457,6 +475,9 @@ M.linecount = function()
   Linecount.set_event { "WinEnter", "BufEnter", "SessionLoadPost" }
   Linecount.set_update(function()
     return "ℓ " .. vim.api.nvim_buf_line_count(0)
+  end)
+  Linecount.set_condition(function()
+    return vim.fn.winwidth(0) > 120
   end)
   return Linecount
 end

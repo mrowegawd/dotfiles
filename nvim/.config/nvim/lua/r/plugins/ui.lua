@@ -4,7 +4,10 @@ return {
   -- INDENTBLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "LazyFile",
+    -- enabled = false,
+    lazy = false, -- butuh seperti ini? Karena setup indent-blankline terbaru harus diload sebelum colorscheme
+    priority = 900,
+    -- event = "LazyFile",
     main = "ibl",
     opts = {
       scope = { enabled = false },
@@ -14,6 +17,7 @@ return {
       exclude = {
         filetypes = {
           "dbout",
+          "dashboard",
           "neo-tree-popup",
           "log",
           "gitcommit",
@@ -33,17 +37,21 @@ return {
       },
     },
     config = function(_, opts)
-      require("ibl").setup(opts)
-
       require("r.config.highlights").plugin("ibl_indentline", {
-        { ["@ibl.indent.char.1"] = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
+        { ["@ibl.indent.char.1"] = { fg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } },
       })
+      require("ibl").setup(opts)
     end,
   },
   -- DRESSING
   {
     "stevearc/dressing.nvim",
     lazy = true,
+    opts = {
+      win_options = {
+        winhighlight = "FloatBorder:FzfLuaBorder",
+      },
+    },
     init = function()
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.ui.select = function(...)
@@ -255,7 +263,7 @@ return {
       { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
       {
-        "<leader>bP",
+        "<leader>bc",
         "<Cmd>BufferLineGroupClose ungrouped<CR>",
         desc = "Buffer(bufferline): delete non-pinned buffers",
       },
@@ -264,11 +272,11 @@ return {
       { "<leader>bh", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
     },
     opts = function()
-      local col_base_bg_attr = "Normal"
-      local col_base_fg_attr = "Pmenu"
+      local col_base_bg_attr = "ColorColumn"
+      local col_base_fg_attr = "Comment"
 
       local col_unselected_bg_attr = "bufferline_unselected"
-      local col_unselected_fg_attr = "Pmenu"
+      local col_unselected_fg_attr = "Boolean"
 
       local col_selected_fg_attr = "PmenuSel"
       local col_selected_bg_attr = "@field"
@@ -404,7 +412,7 @@ return {
             italic = true,
           },
           background = {
-            fg = { attribute = "fg", highlight = "Directory" },
+            fg = { attribute = "fg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
             italic = true,
           },
@@ -771,11 +779,22 @@ return {
     --   require("scrollbar").setup(opts)
     -- end,
   },
-  -- BLOCK NVIM
+  -- BLOCK NVIM (disabled)
   {
     "HampusHauffman/block.nvim",
     enabled = false,
     cmd = { "BlockOn", "BlockOff", "Block" },
     opts = {},
+  },
+  -- SCROLLEOF (disabled)
+  {
+    "Aasim-A/scrollEOF.nvim",
+    enabled = false,
+    opts = {
+      pattern = "*",
+    },
+    config = function(_, opts)
+      require("scrollEOF").setup(opts)
+    end,
   },
 }

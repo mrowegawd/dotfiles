@@ -186,8 +186,8 @@ return {
             -- ["<CR>"] = "child_or_open",
             -- ["<c-s>"] = "split_with_window_picker",
             -- ["<c-v>"] = "vsplit_with_window_picker",
-            ["<c-s>"] = "open",
-            ["<c-v>"] = "open",
+            ["<c-s>"] = "open_split",
+            ["<c-v>"] = "open_vsplit",
             ["<esc>"] = "revert_preview",
             -- ["<c-c>"] = "clear_filter",
 
@@ -200,39 +200,6 @@ return {
       }
     end,
     config = function(_, opts)
-      highlight.plugin("NeoTree", {
-        theme = {
-          ["*"] = {
-            { NeoTreeNormal = { link = "PanelBackground" } },
-            { NeoTreeNormalNC = { link = "PanelBackground" } },
-            { NeoTreeCursorLine = { link = "CursorLine" } },
-            { NeoTreeRootName = { underline = false } },
-            { NeoTreeStatusLine = { link = "PanelSt" } },
-            { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-            {
-              NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },
-            },
-            { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
-            {
-              NeoTreeTabSeparatorInactive = {
-                inherit = "NeoTreeTabInactive",
-                fg = { from = "PanelDarkBackground", attr = "bg" },
-              },
-            },
-          },
-          -- NOTE: panel background colours don't get ignored by tint.nvim so avoid using them for now
-          horizon = {
-            { NeoTreeWinSeparator = { link = "WinSeparator" } },
-            { NeoTreeTabActive = { link = "VisibleTab" } },
-            { NeoTreeTabSeparatorActive = { link = "VisibleTab" } },
-            { NeoTreeTabInactive = { inherit = "Comment", italic = false } },
-            { NeoTreeTabSeparatorInactive = { bg = "bg", fg = "bg" } },
-          },
-        },
-      })
-
-      vim.g.neo_tree_remove_legacy_commands = 1
-
       local function on_move(data)
         Util.lsp.on_rename(data.source, data.destination)
       end
@@ -253,9 +220,89 @@ return {
           end
         end,
       })
+
+      highlight.plugin("NeoTree", {
+        { NeoTreeNormal = { link = "PanelBackground" } },
+        { NeoTreeNormalNC = { link = "PanelBackground" } },
+        { NeoTreeCursorLine = { link = "CursorLine" } },
+        { NeoTreeRootName = { underline = false } },
+        { NeoTreeStatusLine = { link = "PanelSt" } },
+        { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
+        {
+          NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },
+        },
+        { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
+        {
+          NeoTreeTabSeparatorInactive = {
+            inherit = "NeoTreeTabInactive",
+            fg = { from = "PanelDarkBackground", attr = "bg" },
+          },
+        },
+      })
+
+      vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- EDGY.NVIM
+  -- NVIM-IDE
+  {
+    "ldelossa/nvim-ide",
+    lazy = false,
+    config = function()
+      -- local bufferlist = require "ide.components.bufferlist"
+      -- local explorer = require "ide.components.explorer"
+      -- local outline = require "ide.components.outline"
+      -- local callhierarchy = require "ide.components.callhierarchy"
+      local timeline = require "ide.components.timeline"
+      -- local terminal = require "ide.components.terminal"
+      -- local terminalbrowser = require "ide.components.terminal.terminalbrowser"
+      local changes = require "ide.components.changes"
+      local commits = require "ide.components.commits"
+      local branches = require "ide.components.branches"
+      -- local bookmarks = require "ide.components.bookmarks"
+
+      require("ide").setup {
+        -- log_level = "debug",
+        components = {
+          global_keymaps = {
+            hide = "h",
+          },
+          -- Explorer = {
+          --   show_file_permissions = false,
+          --   default_height = 30,
+          -- },
+          TerminalBrowser = {
+            hidden = true,
+          },
+        },
+        panel_groups = {
+          -- explorer = { explorer.Name, outline.Name, bookmarks.Name, callhierarchy.Name, terminalbrowser.Name },
+          -- terminal = { terminal.Name },
+          git = { changes.Name, commits.Name, timeline.Name, branches.Name },
+        },
+        workspaces = {
+          auto_open = "none",
+        },
+      }
+    end,
+    keys = {
+      -- set keys based on the components you configured in setup
+      -- { "<leader>Wl", "<cmd>Workspace LeftPanelToggle<cr>", desc = "Toggle Left Panel" },
+      { "<leader>Wr", "<cmd>Workspace RightPanelToggle<cr>", desc = "Right Left Panel" },
+      -- { "<leader>We", "<cmd>Workspace Explorer Focus<cr>", desc = "Focus Explorer" },
+      -- { "<leader>e", "<cmd>Workspace Explorer Focus<cr>", desc = "Focus Explorer" },
+      -- { "<leader>Wo", "<cmd>Workspace Outline Focus<cr>", desc = "Focus Outline" },
+      -- { "<leader>Wbb", "<cmd>Workspace Bookmarks Focus<cr>", desc = "Focus Bookmarks" },
+      -- { "<leader>Wbo", "<cmd>Workspace Bookmarks OpenNotebook<cr>", desc = "Open Notebook" },
+      -- { "<leader>Wbc", "<cmd>Workspace Bookmarks CreateBookmark<cr>", desc = "Create Bookmark" },
+      -- { "<leader>Wgs", "<cmd>Workspace Changes Focus<cr>", desc = "Focus Changed Files" },
+      -- { "<leader>Wgc", "<cmd>Workspace Commits Focus<cr>", desc = "Focus Commits" },
+      -- { "<leader>Wgt", "<cmd>Workspace Timeline Focus<cr>", desc = "Focus Timeline" },
+      -- { "<leader>Wgb", "<cmd>Workspace Branches Focus<cr>", desc = "Focus Branches" },
+      -- { "<leader>gi", "<cmd>Workspace CallHierarchy IncomingCalls<cr>", desc = "Show Incoming Calls" },
+      -- { "<leader>go", "<cmd>Workspace CallHierarchy OutgoingCalls<cr>", desc = "Show Outgoing Calls" },
+    },
+  },
+  -- EDGY.NVIM (disabled)
   {
     "folke/edgy.nvim",
     enabled = false,

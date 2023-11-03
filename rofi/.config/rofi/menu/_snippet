@@ -13,7 +13,7 @@ SELECT="$(echo -e "$SNIPPETS_MENU" | $rofi_command -p "  " -dmenu -i)"
 (
 	[[ -z $SELECT ]] && exit
 
-	"$HOME/Dropbox/exbin/for-local-bin/showlinuxhelp" "$SELECT"
+	"$HOME/.config/miscxrdb/exbin/showlinuxhelp" "$SELECT"
 
 	exit
 )

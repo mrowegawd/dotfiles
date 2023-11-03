@@ -18,6 +18,35 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
+      ["<Leader>fD"] = {
+        function()
+          local opts = {
+            prompt = "  ",
+            winopts = {
+              -- split = "belowright new | wincmd J | resize 40",
+              title = format_title("[Neorg] Link Curbuf", " "),
+              preview = {
+                hidden = "hidden",
+                vertical = "up:55%",
+                horizontal = "right:60%",
+                layout = "vertical",
+              },
+            },
+            actions = {
+              ["default"] = function(selected, _)
+                local selection = selected[1]
+                local str_path = selection:match "%[(.*)%]"
+
+                vim.api.nvim_put({
+                  "[" .. str_path .. "]",
+                }, "c", false, true)
+              end,
+            },
+          }
+          return require("fzf-lua").fzf_exec(Util.neorg_notes.testing(), opts)
+        end,
+        "Note(todocomment): find todo (curbuf)",
+      },
       ["<Leader>tq"] = {
         function()
           return cmd(fmt("TODOQuickfixList cwd=%s", fn.expand "%:p"))

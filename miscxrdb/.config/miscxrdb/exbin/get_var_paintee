@@ -1,0 +1,61 @@
+#!/bin/bash
+
+set -u -e
+
+# Date Created: 16 Jul 2019
+# Last Modified: 16 Jul 2019 (00:36:00)
+# Summary:
+# Author: Gitmox
+# License:
+
+getxrdb_font() {
+	GET_FONT="$(grep -i font <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
+	GET_FONTSIZE="$(grep -i fontsize <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
+	GET_BACKGROUND="$(grep -i background <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_ACTIVE_WINDOW="$(grep -i background_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_NON_ACTIVE_WINDOW="$(grep -i background_non_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_NON_ACTIVE_STATUSLINE="$(grep -i background_non_active_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_FOREGROUND_WINSEPARATOR="$(grep -i foreground_winseparator <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_ACTIVE_FOREGROUND_WINSEPARATOR="$(grep -i active_foreground_winseparator <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_PANE_ACTIVE_BG="$(grep -i tmux_pane_active_bg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_PANE_BG="$(grep -i tmux_pane_bg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_FG="$(grep -i tmux_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_TMUX_BORDER_FG="$(grep -i tmux_border_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_FZF_BG_SELECTION="$(grep -i fzf_bg_selection <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_FOREGROUND="$(grep -i foreground <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_RED="$(grep -i red <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_WHITE="$(grep -i white <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_BLACK="$(grep -i black <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_GREEN="$(grep -i green <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_CYAN="$(grep -i cyan <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_BLUE="$(grep -i blue <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_YELLOW="$(grep -i yellow <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_MAGENTA="$(grep -i magenta <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+}
+
+if [ ! -f ~/.cache/paintee ]; then
+	dunstify "[!] paintee not exists!"
+	exit
+fi
+
+getxrdb_font

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Open a command in float mode
+if [ "$1" == "calcurse" ]; then
+  bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
+elif [ "$1" == 'ncmpcpp-ueberzug' ]; then
+  bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
+elif [ "$1" == 'ncmpcpp' ]; then
+  bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
+else
+  bspc rule -a \* -o state=floating && st -e "$@"
+fi

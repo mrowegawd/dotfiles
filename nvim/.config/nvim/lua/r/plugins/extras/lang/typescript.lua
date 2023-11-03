@@ -17,7 +17,7 @@ return {
         tsserver = {
           keys = {
             {
-              "<leader>co",
+              "<Leader>co",
               function()
                 vim.lsp.buf.code_action {
                   apply = true,
@@ -30,7 +30,7 @@ return {
               desc = "LSP(typescript): organize imports",
             },
             {
-              "<leader>cR",
+              "<Leader>cR",
               function()
                 vim.lsp.buf.code_action {
                   apply = true,
@@ -165,5 +165,11 @@ return {
         package_manager = "yarn",
       }
     end,
+  },
+  -- TYPESCRIPT-VIM (SYNTAX)
+  {
+    "leafgarland/typescript-vim",
+    enabled = false,
+    opts = {},
   },
 }

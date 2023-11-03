@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Date Created: 10 Jul 2019
+# Last Modified: 10 Jul 2019 (02:15:09)
+# Summary:
+# Author: Gitmox
+# License:
+
+# set -u -e
+
+# NOTE: Path ini adalah dir path untuk wallpaper desktop,
+#       jika path wallpaper berbeda atau baru,
+#       ganti path WALLI3IMG ini dengan yang baru tersebut
+
+WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
+
+#####################################
+
+# > TAK PERLU OTAK ATIK KODE DI BAWAH
+
+#####################################
+
+[[ ! -d "$WALLI3IMG" ]] && dunstify "Fehbg:" "Wallpaper path not found.."
+
+numberPath="$HOME/.cache/wallpaper"
+numberFile="imgWall"
+
+pathNumber="$numberPath/$numberFile"
+
+[[ ! -f "$pathNumber" ]] &&
+	mkdir -p "$numberPath" &&
+	touch "$pathNumber" &&
+	echo "0" >"$pathNumber"
+
+# 1. Get all files inside path and then convert all them to array
+array=()
+while IFS= read -r -d $'\0'; do
+	array+=("$REPLY")
+done < <(find "$WALLI3IMG" -type f -name "*" -print0)
+
+# 2. And now starting decrement sum of array
+totalNumImg=$((${#array[@]})) # get total length of array
+numImg="$(cat "$pathNumber")"
+
+if [ "$(cat "$pathNumber")" == 0 ]; then
+	echo "$totalNumImg" >"$pathNumber"
+else
+	((totalNumImg = numImg - 1))
+	echo "$totalNumImg" >"$pathNumber"
+fi
+
+nextImg="$((${#array[@]} - $(cat "$pathNumber")))"
+
+for i in "${!array[@]}"; do
+	if [ "$i" == "$nextImg" ]; then
+		feh --bg-scale "${array[$i]}"
+	fi
+done

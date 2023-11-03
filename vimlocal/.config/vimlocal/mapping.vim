@@ -110,10 +110,10 @@ nnoremap / /\v
 vnoremap / <Esc>/\%V
 
 " keymap: [search] open search
-nnoremap <c-f> /\v
+nnoremap <c-g> /\v
 
 " keymap: [search][quickfix] search current word (with quickfix)
-" nmap <silent> <c-f> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
+" nmap <silent> <c-g> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
 
 " keymap: [substitute] start search and replace
 nmap <leader>sw :%s///g<left><left><left>
@@ -191,7 +191,12 @@ nnoremap <leader>cd :cd %:p:h<cr>
 "
 " }}}
 " insert mode ---------------- {{{
-"
+
+inoremap <c-h> <Left>
+inoremap <c-l> <Right>
+inoremap <c-b> <S-Left>
+inoremap <c-f> <S-Right>
+
 " keymap: [insert] delete line
 " inoremap <c-u> <c-g>u<c-u>
 
@@ -200,10 +205,10 @@ nnoremap <leader>cd :cd %:p:h<cr>
 
 " keymap: [insert][cursor] move prev word
 " inoremap <C-h> <C-\><C-o>h
-inoremap <C-b> <esc><left>a
+" inoremap <C-b> <esc><left>a
 
 " keymap: [insert][cursor] move next word
-inoremap <C-f> <esc><right>a
+" inoremap <C-f> <esc><right>a
 
 " keymap: [insert][cursor] go down
 " inoremap <C-j> <C-\><C-o>j
@@ -449,37 +454,16 @@ end
 " }}}
 " commandline ---------------- {{{
 "
-" keymap: [commandline] sudo on
 cnoremap w!! w !sudo tee % >/dev/null
-
-" keymap: [commandline] history up
 cnoremap <C-p> <Up>
-
-" keymap: [commandline] history down
 cnoremap <C-n> <Down>
-
-" keymap: [commandline] move cursor to right
-cnoremap <C-f> <Right>
-
-" keymap: [commandline] move cursor to left
-cnoremap <C-b> <Left>
-
-" keymap: [commandline] back word
-" cnoremap <C-b> <S-Left>
-
-" keymap: [commandline] forward word
-" cnoremap <C-w> <S-Right>
-
-" keymap: [commandline] got to last line
+cnoremap <C-l> <Right>
+cnoremap <C-h> <Left>
+cnoremap <C-b> <S-Left>
+cnoremap <C-f> <S-Right>
 cnoremap <C-a> <Home>
-
-" keymap: [commandline] got to first line
 cnoremap <C-e> <End>
-
-" keymap: [commandline] delete word
 cnoremap <C-d> <Del>
-
-" keymap: [commandline] expand current path
 cnoremap <C-t> <C-R>=expand("%:p:h") . "/" <CR>
 
 "

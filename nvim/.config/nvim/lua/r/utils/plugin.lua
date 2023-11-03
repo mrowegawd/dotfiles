@@ -81,10 +81,12 @@ function M.lazy_file()
 
   local events = {} ---@type {event: string, buf: number, data?: any}[]
 
+  local done = false
   local function load()
-    if #events == 0 then
+    if #events == 0 or done then
       return
     end
+    done = true
     vim.api.nvim_del_augroup_by_name "lazy_file"
 
     ---@type table<string,string[]>
@@ -251,61 +253,78 @@ end
 function M.infoBaseColorsTheme()
   local normal = "Normal"
   local colorcolumn = "ColorColumn"
-
-  local pmenu = "Pmenu"
   local pmenusel = "PmenuSel"
-
+  -- local pmenu = "Pmenu"
+  local cmpitemabbr = "CmpItemAbbr"
+  local cmpmatchabbr = "CmpItemAbbrMatch"
+  local fzfluaborder = "FzfLuaBorder"
+  local cmpmatchabbrFuzzy = "CmpItemAbbrMatchFuzzy"
   local winseparator = "WinSeparator"
 
-  local cmpmatchabbr = "CmpItemAbbrMatch"
-  local cmpitemabbr = "CmpItemAbbr"
-  local cmpitemabbrmatchfuzzy = "CmpItemAbbrMatchFuzzy"
+  local normal_fg = "Normal color_fg: " .. highlight.get(normal, "fg")
+  local normal_bg = "Normal color_bg: " .. highlight.get(colorcolumn, "bg")
 
-  local normal_bg = highlight.get(normal, "bg")
-  local normal_fg = highlight.get(normal, "fg")
+  -- fzf selection
+  local fzf_selection_fg = "Fzf selection fg: " .. highlight.get(pmenusel, "fg")
+  local fzf_selection_bg = "fzf selection bg: " .. highlight.get(pmenusel, "bg")
+  local fzf_selection_match_fg = "Fzf selection match fg: " .. highlight.get(cmpmatchabbr, "fg")
 
-  local colorcolumn_bg = highlight.get(colorcolumn, "bg")
+  -- fzf non selection
+  local fzf_bg = "Fzf default bg: " .. highlight.get(colorcolumn, "bg")
+  local fzf_fg = "Fzf default fg: " .. highlight.get(cmpitemabbr, "fg")
+  local fzf_match_fg = "Fzf match fuzzy: " .. highlight.get(cmpmatchabbrFuzzy, "fg")
 
-  local pmenu_bg = highlight.get(pmenu, "bg")
-  local pmenu_fg = highlight.get(pmenu, "fg")
+  -- fzf match matching
+  local fzf_border_fg = "Fzf border fg: " .. highlight.get(fzfluaborder, "fg")
 
-  local pmenusel_bg = highlight.get(pmenusel, "bg")
+  local tmux_pane_active_bg = "Tmux pane active bg: " .. highlight.get(colorcolumn, "bg")
+  local tmux_pane_bg = "Tmux pane bg: " .. highlight.get(normal, "bg")
 
-  local winseparator_fg = highlight.get(winseparator, "fg")
-
-  local cmpmatchabbr_fg = highlight.get(cmpmatchabbr, "fg")
-  local cmpitemabbr_fg = highlight.get(cmpitemabbr, "fg")
-
-  local cmpmatchabbrfuzzy_fg = highlight.get(cmpitemabbrmatchfuzzy, "fg")
+  local tmux_fg = "Tmux fg: " .. highlight.tint(highlight.get(colorcolumn, "bg"), 0.8)
+  local tmux_border_fg = "Tmux border fg: " .. highlight.get(winseparator, "fg")
 
   print(
     fmt(
       [[
-BG_ACTIVE_WINDOW (Normal) bg: %s
-BG_ACTIVE_WINDOW (Normal) fg: %s
+  %s
+  %s
 
-BACKGROUND_ACTIVE_STATUSLINE (ColorColumn) bg: %s
+  #--- FUZZY
+  %s
+  %s
+  %s
 
-FZF_BG (Pmenu) bg: %s
-FZF_FG (Pmenu) fg: %s
+  %s
+  %s
+  %s
 
-FZF_BG_SELECTION (PmenuSel) bg: %s
+  %s
 
-ACTIVE_FOREGROUND_WINSEPARATOR (WinSeparator) fg: %s
+  #--- TMUX
+  %s
+  %s
 
-FZF_BG_MATCH (CmpItemAbbrMatch) fg: %s
-FZF_FG_ITEM (CmpItemAbbr) fg: %s
-FZF_FG_ITEM_FUZZY (CmpItemAbbrMatchFuzzy) fg: %s ]],
-      normal_bg,
+  %s
+  %s
+  ]],
       normal_fg,
-      colorcolumn_bg,
-      pmenu_bg,
-      pmenu_fg,
-      pmenusel_bg,
-      winseparator_fg,
-      cmpmatchabbr_fg,
-      cmpitemabbr_fg,
-      cmpmatchabbrfuzzy_fg
+      normal_bg,
+
+      fzf_selection_bg,
+      fzf_selection_fg,
+      fzf_selection_match_fg,
+
+      fzf_bg,
+      fzf_fg,
+      fzf_match_fg,
+
+      fzf_border_fg,
+
+      tmux_pane_active_bg,
+      tmux_pane_bg,
+
+      tmux_fg,
+      tmux_border_fg
     )
   )
 end

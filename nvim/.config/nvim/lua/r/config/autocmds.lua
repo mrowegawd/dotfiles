@@ -23,6 +23,7 @@ Util.cmd.augroup("SmartClose", {
     "notify",
     "qf",
     "query",
+    "noice",
     "spectre_panel",
     "startuptime",
     "tsplayground",
@@ -167,43 +168,43 @@ Util.cmd.augroup("CheckOutsideTime", {
   command = "silent! checktime",
 })
 
--- Util.cmd.augroup("WindowDim", {
---   event = { "BufRead" },
---   pattern = { "*" },
---   command = function()
---     Util.windowdim.buf_enter()
---   end,
--- }, {
---   event = { "BufEnter" },
---   pattern = { "*" },
---   command = function()
---     Util.windowdim.buf_enter()
---   end,
--- }, {
---   event = { "FocusGained" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.focus_gained()
---   end,
--- }, {
---   event = { "FocusLost" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.focus_lost()
---   end,
--- }, {
---   event = { "WinEnter" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.win_enter()
---   end,
--- }, {
---   event = { "WinLeave" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.win_leave()
---   end,
--- })
+Util.cmd.augroup("WindowDim", {
+  event = { "BufRead" },
+  pattern = { "*" },
+  command = function()
+    Util.windowdim.buf_enter()
+  end,
+}, {
+  event = { "BufEnter" },
+  pattern = { "*" },
+  command = function()
+    Util.windowdim.buf_enter()
+  end,
+}, {
+  event = { "FocusGained" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.focus_gained()
+  end,
+}, {
+  event = { "FocusLost" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.focus_lost()
+  end,
+}, {
+  event = { "WinEnter" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.win_enter()
+  end,
+}, {
+  event = { "WinLeave" },
+  pattern = "*",
+  command = function()
+    Util.windowdim.win_leave()
+  end,
+})
 
 -- Util.cmd.augroup("UnwareCursorLine", {
 --   event = { "InsertLeave" },
@@ -216,6 +217,37 @@ Util.cmd.augroup("CheckOutsideTime", {
 --   pattern = { "*" },
 --   command = function()
 --     cmd [[set nocursorline]]
+--   end,
+-- })
+
+-- Util.cmd.augroup("UnwareCursorLine", {
+--   event = { "CmdlineEnter" },
+--   pattern = { "*" },
+--   command = function()
+--     cmd [[set nocursorline]]
+--   end,
+-- }, {
+--   event = { "CmdlineLeave" },
+--   pattern = { "*" },
+--   command = function()
+--     cmd [[set cursorline]]
+--   end,
+-- }, {
+--   -- vim.api.nvim_create_autocmd("ModeChanged
+--   event = { "ModeChanged" },
+--   pattern = "*:c",
+--   command = function()
+--     cmd [[set nocursorline]]
+--   end,
+-- })
+
+-- vim.api.nvim_create_autocmd("CmdlineEnter", {
+--   group = group,
+--   callback = function()
+--     if State.is_search() and M.enabled then
+--       M.start()
+--       M.set_op(vim.fn.mode() == "v")
+--     end
 --   end,
 -- })
 
@@ -234,12 +266,12 @@ Util.cmd.augroup("DisableStatusline", {
 })
 
 -- Automatically resize windows when host resizes
--- Util.cmd.augroup("AutoResizeWindows", {
+-- Util.cmd.augroup("AutoResizeWindowssf", {
 --   event = { "BufNew", "BufRead" },
 --   pattern = "*",
 --   command = "tabdo wincmd =",
 -- })
 
-vim.cmd [[
-  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
-]]
+-- vim.cmd [[
+--   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
+-- ]]

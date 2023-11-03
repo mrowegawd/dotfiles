@@ -15,10 +15,6 @@ local function format_title(str, icon, icon_hl)
   }
 end
 
-local function format_prompt(str, icon)
-  return fmt("%s %s", str, (icon and icon .. " " or ""))
-end
-
 local function dropdown(opts)
   opts = opts or { winopts = {} }
   local title = vim.tbl_get(opts, "winopts", "title") ---@type string?
@@ -252,7 +248,7 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files" },
+      { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>bf", "<CMD>FzfLua buffers<CR>", desc = "Buffer(Fzflua): open" },
       { "<Leader>bg", "<CMD>FzfLua blines<CR>", desc = "Buffer(FzfLua): live_grep on curbuf" },
       { "<Leader>bG", "<CMD>FzfLua lines<CR>", desc = "Buffer(Fzflua): live_grep on buffers" },
@@ -294,40 +290,39 @@ return {
         end,
         desc = "Fzflua: dotfiles",
       },
-      {
-        "<Leader>fF",
-        function()
-          local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
-          return require("fzf-lua").files {
-            prompt = "  ",
-            winopts = { title = format_title("Plugin Files", "󰈙") },
-            cwd = plugins_directory,
-          }
-        end,
-        desc = "Fzflua: plugin files",
-      },
-      {
-        "<Leader>fG",
-        function()
-          return require("fzf-lua").live_grep_glob({
-            prompt = "  ",
-            winopts = { title = format_title("GrepHidden", "󰈭") },
-            filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
-          })
-        end,
-        desc = "Fzflua: live grep ignore hidden",
-      },
-      {
-        "<Leader>fG",
-        function()
-          return require("fzf-lua").grep_visual({
-            prompt = format_prompt("GrepHidden", " "),
-            filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
-          })
-        end,
-        desc = "Fzflua: live grep ignore hidden (visual)",
-        mode = {"v"}
-      },
+      -- {
+      --   "<Leader>fF",
+      --   function()
+      --     local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
+      --     return require("fzf-lua").files {
+      --       prompt = "  ",
+      --       winopts = { title = format_title("Plugin Files", "󰈙") },
+      --       cwd = plugins_directory,
+      --     }
+      --   end,
+      --   desc = "Fzflua: plugin files",
+      -- },
+      -- {
+      --   "<Leader>fG",
+      --   function()
+      --     return require("fzf-lua").live_grep_glob({
+      --       prompt = "  ",
+      --       winopts = { title = format_title("GrepHidden", "󰈭") },
+      --       filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
+      --     })
+      --   end,
+      --   desc = "Fzflua: live grep ignore hidden",
+      -- },
+      -- {
+      --   "<Leader>fG",
+      --   function()
+      --     return require("fzf-lua").grep_visual({
+      --       filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
+      --     })
+      --   end,
+      --   desc = "Fzflua: live grep ignore hidden (visual)",
+      --   mode = {"v"}
+      -- },
       { "<Leader>fQ", [[<CMD>lua require("fzf-lua").quickfix({prompt = "    " })<CR>]], desc = "Fzflua(qf): select qf list" },
       {
         "<Leader>fq",
@@ -436,11 +431,13 @@ return {
         -- PROVIDER SETUP
         files = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`
-          -- prompt = format_prompt("Files", " "),
           prompt = "  ",
           cwd_prompt = false,
           winopts = { title = format_title("Files", "") },
-          find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
+          -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
+          fzf_opts = {
+            ["--header"] = [[Ctrl-g:'grep by directory',Ctrl-h:'toggle hidden']],
+          },
           fd_opts = [[--color never --type f --hidden --follow ]]
             .. [[--exclude .git --exclude node_modules --exclude '*.pyc']]
             .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
@@ -455,33 +452,42 @@ return {
                 require("fzf-lua").actions.file_edit(selected, opts)
               else
                 require("fzf-lua").live_grep {
-                  fzf_opts = {
-                    ["--reverse"] = false,
-                  },
-                  -- winopts = {
-                  --   title = format_title(entry.path, "  "),
-                  --   preview = {
-                  --     vertical = "up:45%",
-                  --     horizontal = "right:60%",
-                  --     layout = "vertical",
-                  --   },
-                  -- },
+                  fzf_opts = { ["--reverse"] = false },
                   cwd = entry.path,
                 }
               end
             end,
-            ["ctrl-x"] = function(_, args)
-              -- local winopts = {
-              --   preview = { hidden = "nohidden" },
-              --   title = format_title("Files", ""),
-              --   split = "botright new",
-              -- }
+            ["ctrl-y"] = function(selected, _)
+              local yank_path = selected[1]:match "[^ ]+"
+              vim.fn.setreg([[+]], yank_path)
+
+              Util.info("Path" .. yank_path .. " copied", { title = "FZFGit" })
+
+              require("fzf-lua").actions.resume()
+            end,
+            ["ctrl-h"] = function(_, args)
+              if args.cmd:find "--hidden" then
+                args.cmd = args.cmd:gsub("--hidden", "", 1)
+                if args.cmd:find "--no-ignore" then
+                  args.cmd = args.cmd:gsub("--no-ignore", "", 1)
+                end
+              else
+                args.cmd = args.cmd .. " --hidden --no-ignore"
+              end
+
+              require("fzf-lua").files {
+                cmd = args.cmd,
+                winopts = { title = format_title("Files hidden", "󰈙") },
+              }
+            end,
+            ["ctrl-g"] = function(_, args)
               if args.cmd:find "--type f" then
                 args.cmd = args.cmd:gsub("--type f", "", 1)
                 args.cmd:gsub("%s*\\*$", "")
                 args.cmd = args.cmd .. " --type d"
                 args.winopts = {
                   preview = { hidden = "hidden" },
+                  title = format_title("Grep on directory", ""),
                 }
               elseif args.cmd:find "--type d" then
                 args.cmd = args.cmd:gsub("--type d", "", 1)
@@ -489,9 +495,6 @@ return {
                 args.cmd = args.cmd .. " --type f"
                 args.winopts = {
                   preview = { hidden = "nohidden" },
-                  title = format_title("Files", ""),
-                  -- title = format_title("Files", ""),
-                  -- split = "botright new",
                 }
               end
               require("fzf-lua").files {
@@ -529,57 +532,51 @@ return {
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = format_title("", "Commits") },
+            fzf_opts = {
+              ["--header"] = [[Ctrl-o:'hash on browser',Ctrl-y:'copy hash',Ctrl-i:'open hash diff',Ctrl-x:'open hash diff buffer']],
+            },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["right"] = actions.git_checkout,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
-
-              -- Open hash on browser
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
 
-                Util.info("Open browser commit hash: " .. commit_hash, { title = "FZFGit" })
+                Util.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
               end,
-              -- Copy hash to clipboard
               ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-
                 vim.fn.setreg("+", commit_hash)
-                vim.fn.setreg("*", commit_hash)
 
-                Util.info("Commit hash: " .. commit_hash .. " copied", { title = "FZFGit" })
+                Util.info("Hash: " .. commit_hash .. " copied", { title = "FZFGit" })
+
+                require("fzf-lua").actions.resume()
               end,
-              -- Open all diff for req commit
               ["ctrl-i"] = function(selected, _)
                 local selection = selected[1]
-
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("Open all diff " .. commit_hash, "FZFGit")
+                Util.info("Open all diff " .. commit_hash, { title = "FZFGit" })
               end,
-              -- Open diff current modified
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
-
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-
                 local filename = Util.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, { title = "FZFGit" })
+                Util.info("Diff hash " .. commit_hash .. " with current file \n" .. filename, { title = "FZFGit" })
               end,
             },
           },
@@ -591,34 +588,34 @@ return {
             winopts = {
               title = format_title("", "Buffer Commits"),
             },
+            fzf_opts = {
+              ["--header"] = [[Ctrl-o:'open browser',Ctrl-y:'copy hash',Ctrl-i:'open commit diff',Ctrl-x:'open curdiff']],
+            },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
-
-              ["ctrl-y"] = function(selected, _)
-                local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-
-                vim.fn.setreg("+", commit_hash)
-                vim.fn.setreg("*", commit_hash)
-
-                Util.info("Commit hash: " .. commit_hash .. " copied", { title = "FZFGit" })
-              end,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
 
-                Util.info("Open browser commit hash: " .. commit_hash, { title = "FZFGit" })
+                Util.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
+              ["ctrl-y"] = function(selected, _)
+                local selection = selected[1]
+                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                vim.fn.setreg("+", commit_hash)
+
+                Util.info("Hash: " .. commit_hash .. " copied", { title = "FZFGit" })
+
+                require("fzf-lua").actions.resume()
+              end,
               ["ctrl-i"] = function(selected, _)
                 local selection = selected[1]
-
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
@@ -627,9 +624,7 @@ return {
               end,
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
-
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-
                 local filename = Util.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
@@ -688,10 +683,9 @@ return {
         },
         grep = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
-          prompt = "  ",
+          prompt = " ",
           winopts = { title = format_title("Grep", "󰈭") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
-
           rg_opts = "--column --line-number -i --hidden --no-heading --color=always --smart-case --max-columns=4096",
           rg_glob = true,
           glob_flag = "--iglob", -- for case sensitive globs use '--glob'
@@ -704,10 +698,33 @@ return {
             ["ctrl-y"] = function(_, opts)
               print "not implementation yet"
             end,
+            ["ctrl-d"] = function(_, args)
+              print "not implementation yet"
+              -- if args.cmd:find "--type f" then
+              --   args.cmd = args.cmd:gsub("--type f", "", 1)
+              --   args.cmd:gsub("%s*\\*$", "")
+              --   args.cmd = args.cmd .. " --type d"
+              --   args.winopts = {
+              --     preview = { hidden = "hidden" },
+              --     title = format_title("Grep on directory", ""),
+              --   }
+              -- elseif args.cmd:find "--type d" then
+              --   args.cmd = args.cmd:gsub("--type d", "", 1)
+              --   args.cmd:gsub("%s*\\*$", "")
+              --   args.cmd = args.cmd .. " --type f"
+              --   args.winopts = {
+              --     preview = { hidden = "nohidden" },
+              --   }
+              -- end
+              -- require("fzf-lua").files {
+              --   cmd = args.cmd,
+              --   winopts = args.winopts,
+              -- }
+            end,
           },
         },
         args = {
-          prompt = "Args❯ ",
+          prompt = "  ",
           files_only = true,
           -- actions inherit from 'actions.files' and merge
           actions = {
@@ -737,7 +754,7 @@ return {
           winopts = { title = format_title("Help", "󰋖") },
         },
         tabs = {
-          prompt = "Tabs❯ ",
+          prompt = "  ",
           tab_title = "Tab",
           tab_marker = "<<",
           file_icons = true, -- show file icons?
@@ -777,7 +794,6 @@ return {
           },
         },
         blines = {
-          -- prompt = format_prompt("Blines", " "),
           prompt = "  ",
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
@@ -812,7 +828,6 @@ return {
           },
         },
         tags = {
-          prompt = format_prompt("Tags", " "),
           ctags_file = nil, -- auto-detect from tags-option
           multiprocess = true,
           file_icons = true,
@@ -830,7 +845,6 @@ return {
           no_header_i = false, -- hide interactive header?
         },
         btags = {
-          prompt = format_prompt("Btags", " "),
           ctags_file = nil, -- auto-detect from tags-option
           ctags_autogen = false, -- dynamically generate ctags each call
           multiprocess = true,
@@ -847,7 +861,6 @@ return {
           -- actions inherit from 'actions.files'
         },
         colorschemes = {
-          prompt = format_prompt("Colorschemes", " "),
           live_preview = true, -- apply the colorscheme on preview?
           actions = { ["default"] = actions.colorscheme },
           winopts = { height = 0.55, width = 0.30 },
@@ -867,16 +880,7 @@ return {
         },
         lsp = {
           cwd_only = true,
-          -- winopts = {
-          --   preview = {
-          --     -- vertical = "up:65%",
-          --     -- horizontal = "left:65%",
-          --     -- split = "botright new",
-          --     -- layout = "flex",
-          --   },
-          -- },
           symbols = {
-            prompt = format_prompt("LSPSimbols", " "),
             symbol_style = 1,
             symbol_icons = require("r.config").icons.kinds,
             fzf_opts = {
@@ -885,12 +889,6 @@ return {
             },
             winopts = {
               title = format_title("Symbols", " "),
-              -- split = "botright new",
-              -- preview = {
-              --   -- vertical = "down:45%",
-              --   -- horizontal = "left:60%",
-              --   -- layout = "flex",
-              -- },
             },
           },
           code_actions = cursor_dropdown {
@@ -913,13 +911,6 @@ return {
           git_icons = false,
           diag_icons = true,
           icon_padding = "", -- add padding for wide diagnostics signs
-          -- winopts = {
-          --   preview = {
-          --     vertical = "up:65%",
-          --     horizontal = "right:45%",
-          --     layout = "vertical",
-          --   },
-          -- },
         },
         complete_path = {
           cmd = nil, -- default: auto detect fd|rg|find
@@ -942,12 +933,15 @@ return {
         fnc(vim.api.nvim_create_augroup(name, { clear = true }))
       end
 
-      augroup("FzfLuaCtrlE", function(g)
+      augroup("FzfluaFixMaps", function(g)
         vim.api.nvim_create_autocmd("FileType", {
           group = g,
           pattern = "fzf",
           callback = function(e)
             vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
+            vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
+            vim.keymap.set("t", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
+            vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
           end,
         })
       end)
@@ -968,8 +962,12 @@ return {
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
     keys = {
+      -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
       { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
       { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
+      -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
+      { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
+      { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
       {
         "gs",
         function()
@@ -1090,28 +1088,14 @@ return {
       --         },
     },
     dependencies = {
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-        enabled = vim.fn.executable "make" == 1,
-        config = function()
-          Util.on_load("telescope.nvim", function()
-            require("telescope").load_extension "fzf"
-            require("telescope").load_extension "grepqf"
-            require("telescope").load_extension "harpoon"
-            require("telescope").load_extension "file_browser"
-            require("telescope").load_extension "live_grep_args"
-            require("telescope").load_extension "menufacture"
-          end)
-        end,
-      },
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make", enabled = vim.fn.executable "make" == 1 },
       "nvim-telescope/telescope-symbols.nvim",
-      "molecule-man/telescope-menufacture",
       "debugloop/telescope-undo.nvim", -- Visualise undotree
       "nvim-telescope/telescope-live-grep-args.nvim",
       "tsakirist/telescope-lazy.nvim",
-      "nvim-telescope/telescope-file-browser.nvim",
+      "nvim-telescope/telescope-dap.nvim",
       "benfowler/telescope-luasnip.nvim",
+      "fdschmidt93/telescope-corrode.nvim",
     },
     opts = function()
       -- local trouble = require "trouble.providers.telescope"
@@ -1223,16 +1207,7 @@ return {
             "bottom_pane",
             "center",
           },
-          borderchars = {
-            "─",
-            "│",
-            "─",
-            "│",
-            "┌",
-            "┐",
-            "┘",
-            "└",
-          },
+          borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
           mappings = {
             i = {
               ["<esc>"] = actions.close,
@@ -1246,6 +1221,8 @@ return {
               ["<c-f>"] = actions.results_scrolling_up,
               ["<c-b>"] = actions.results_scrolling_down,
 
+              ["<c-l>"] = false,
+
               ["<a-a>"] = actions.toggle_all,
 
               ["<CR>"] = stopinsert(actions.select_default),
@@ -1256,8 +1233,11 @@ return {
               ["<c-r>"] = actions.to_fuzzy_refine,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
-              ["<F6>"] = layout_actions.cycle_layout_next,
-              ["<F4>"] = layout_actions.toggle_preview,
+              ["<c-j>"] = layout_actions.cycle_layout_next,
+              ["<c-k>"] = layout_actions.cycle_layout_prev,
+
+              ["<F4>"] = layout_actions.cycle_layout_next,
+              ["<F3>"] = layout_actions.toggle_preview,
 
               ["<jk>"] = function()
                 vim.cmd.stopinsert()
@@ -1275,9 +1255,7 @@ return {
           },
         },
         pickers = {
-          highlights = {
-            theme = "ivy",
-          },
+          highlights = themes.get_ivy {},
           buffers = themes.get_ivy {
             sort_mru = true,
             sort_lastused = true,
@@ -1319,25 +1297,30 @@ return {
             },
           },
         },
-
         extensions = {
-          file_browser = {
-            theme = "ivy",
-            mappings = {
-              i = {
-                ["<CR>"] = stopinsert(actions.select_default),
-                ["<C-x>"] = stopinsert(actions.select_horizontal),
-                ["<C-v>"] = stopinsert(actions.select_vertical),
-                ["<C-t>"] = stopinsert(actions.select_tab),
-              },
-            },
-          },
-          persisted = dropdown {},
-          live_grep_args = {
+          lazy = themes.get_ivy {},
+          undo = themes.get_ivy {},
+          -- dap = themes.get_ivy {}, -- not working
+          live_grep_args = themes.get_ivy {
             auto_quoting = false, -- enable/disable auto-quoting
           },
         },
       }
+    end,
+    config = function(_, opts)
+      local telescope = require "telescope"
+      telescope.setup(opts)
+      telescope.load_extension "corrode"
+      telescope.load_extension "fzf"
+      telescope.load_extension "grepqf"
+      telescope.load_extension "harpoon"
+      telescope.load_extension "lazy"
+      telescope.load_extension "undo"
+      telescope.load_extension "live_grep_args"
+      telescope.load_extension "dap"
+
+      local corrode_cfg = require "telescope._extensions.corrode.config"
+      corrode_cfg.values = { theme = "ivy" }
     end,
   },
   -- SPECTRE

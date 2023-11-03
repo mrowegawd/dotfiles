@@ -35,6 +35,12 @@ return {
       -- },
     },
     config = function(_, opts)
+      require("r.config.highlights").plugin("neotest", {
+        { NeotestPassed = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { NeotestFailed = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { NeotestRunning = { bg = { from = "ColorColumn", attr = "bg" } } },
+      })
+
       local namespace = vim.api.nvim_create_namespace "neotest"
       vim.diagnostic.config({
         virtual_text = {

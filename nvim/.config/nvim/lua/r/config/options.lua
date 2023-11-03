@@ -15,13 +15,13 @@ local options = {
   opt = {
     secure = true,
     modelines = 1, -- read a modeline at EOF
+    confirm = true, -- Confirm to save changes before exiting modified buffer
     errorbells = false, -- disable error bells (no beep/flash)
     termguicolors = true,
     jumpoptions = "view", -- ketika <c-i> dan <c-o>, lebih enak jump last cursor daripada window
     cursorline = true,
     inccommand = "split",
     virtualedit = "block", -- Allow cursor to move where there is no text in visual block mode
-    smoothscroll = true,
     fileformats = { "unix", "mac", "dos" },
 
     clipboard = "unnamedplus",
@@ -33,7 +33,6 @@ local options = {
     infercase = true, -- Infer cases in keyword completion
     concealcursor = "nc",
     guifont = "Fira Code:h7.5",
-    -- guifont = "JetBrainsMono Nerd Font Mono:h9",
     pumheight = 15,
     helpheight = 12,
     previewheight = 12,
@@ -41,8 +40,6 @@ local options = {
     showcmd = false, -- show current command under the cmd line
     cmdheight = 0, -- cmdline height: 0 1 2
     laststatus = 3, -- 2 = always show status line (filename, etc)
-    -- -- buat cursor selalu di tengah window, https://www.reddit.com/r/vim/comments/4kjgmz/weekly_vim_tips_and_tricks_thread_11/d3frprs
-    -- -- tapi ada minus jika open file diff, secara bersebarangan
     textwidth = 80, -- max inserted text width for paste operations
     linespace = 0, -- font spacing
     ruler = true, -- show line,col at the cursor pos
@@ -163,37 +160,13 @@ local options = {
     showmatch = true, -- highlight matching [{()}]
     wrapscan = true, -- begin search from top of the file when nothing is found
     cpoptions = vim.o.cpoptions .. "x", -- stay on search item when <esc>
-    backup = false, -- no backup file
-    writebackup = false, -- do not backup file before write
-    undofile = true, -- don't create root-owned files
-    -- if root then
-    --     opt.undofile = false -- don't create root-owned files
-    --     opt.shada = ""
-    --     opt.shadafile = "none"
-    -- else
-    --     opt.undofile = true -- actually use undo files
-    --     opt.undodir = opt.undodir + "." -- fallback
-    --     opt.shada = {
-    --         "!",
-    --         "'10",
-    --         "/100",
-    --         ":100",
-    --         "<0",
-    --         "@1",
-    --         "f1",
-    --         "h",
-    --         "s1",
-    --     }
-    -- end
     hidden = true, -- do not unload buffer when abandoned
 
     -----------------------------------------------------------------------------//
     -- timings {{{1
     -----------------------------------------------------------------------------//
     updatetime = 50,
-    -- timeout = true,
     timeoutlen = 300,
-    -- ttimeoutlen = 10,
 
     --[[
          shda (info for vim): session data history
@@ -219,8 +192,29 @@ local options = {
     undodir = vim.fn.stdpath "data" .. "/undodir", -- Chooses where to store the undodir
     history = 1000, -- Number of commands to remember in a history table (per buffer).
     swapfile = false, -- Ask what state to recover when opening a file that was not saved.
+    backup = false, -- no backup file
+    writebackup = false, -- do not backup file before write
+    undofile = true, -- don't create root-owned files
+    -- if root then
+    --     opt.undofile = false -- don't create root-owned files
+    --     opt.shada = ""
+    --     opt.shadafile = "none"
+    -- else
+    --     opt.undofile = true -- actually use undo files
+    --     opt.undodir = opt.undodir + "." -- fallback
+    --     opt.shada = {
+    --         "!",
+    --         "'10",
+    --         "/100",
+    --         ":100",
+    --         "<0",
+    --         "@1",
+    --         "f1",
+    --         "h",
+    --         "s1",
+    --     }
+    -- end
     wrap = false, -- Disable wrapping of lines longer than the width of window.
-    -- colorcolumn = "80", -- PEP8 like character limit vertical bar.
     mouse = "a", -- Enable mouse support.
     mousescroll = "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
     guicursor = "n:blinkon200,i-ci-ve:ver25", -- Enable cursor blink.
@@ -229,7 +223,6 @@ local options = {
     sidescrolloff = 3, -- Same but for side scrolling.
     sidescroll = 1,
     selection = "old", -- Don't select the newline symbol when using <End> on visual mode
-    statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]],
 
     -----------------------------------------------------------------------------//
     -- emoji {{{1
@@ -253,15 +246,7 @@ local options = {
       "indent-heuristic",
       "linematch:60",
     },
-
-    sessionoptions = {
-      "globals",
-      "buffers",
-      "curdir",
-      "help",
-      "winpos",
-      "tabpages",
-    },
+    sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" },
   },
 }
 
@@ -271,18 +256,30 @@ for scope, table in pairs(options) do
   end
 end
 
+if vim.fn.has "nvim-0.10" == 1 then
+  opt.smoothscroll = true
+end
+
 if vim.treesitter.foldtext then
-  vim.opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
+  opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
+end
+
+if vim.fn.has "nvim-0.9.0" == 1 then
+  opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
 end
 
 if vim.fn.has "nvim-0.10" == 1 then
-  vim.opt.foldmethod = "expr"
+  opt.foldmethod = "expr"
+  -- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
   vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 else
-  vim.opt.foldmethod = "indent"
+  opt.foldmethod = "indent"
 end
 
 vim.o.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
+
+-- Fix markdown indentation settings
+vim.g.markdown_recommended_style = 0
 
 -- Disable providers we do not care a about
 -- vim.g.loaded_python_provider = 0 -- for python 2
@@ -292,6 +289,3 @@ vim.g.loaded_node_provider = 0
 --
 -- vim.g.glow_binary_path = os.getenv "HOME" .. "/.local/bin"
 vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
-
--- Fix markdown indentation settings
-vim.g.markdown_recommended_style = 0

@@ -18,7 +18,7 @@ function M.get()
     { "K", vim.lsp.buf.hover, desc = "Hover" },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
     { "<c-k>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-    { "gd", function() require("telescope.builtin").lsp_definitions { reuse_win = true } end, desc = "LSP(fzflua): definitions", has = "definition" },
+    { "gd", function() require("telescope.builtin").lsp_definitions { reuse_win = false } end, desc = "LSP(fzflua): definitions", has = "definition" },
     { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
     { "gT", "<cmd>FzfLua lsp_typedefs<cr>", desc = "LSP(fzflua): peek type definitions" },
     -- { "gD", vim.lsp.buf.declaration, desc = "Goto Declaration" },
@@ -59,7 +59,7 @@ function M.get()
     { "gtd", Util.toggle.diagnostics, desc = "LSP(diagnostic): toggle diagnostics" },
     { "dn", function() diagnostic.goto_next { float = false } end, desc = "LSP(diagnostic): next item" },
     { "dp", function() diagnostic.goto_prev { float = false } end, desc = "LSP(diagnostic): prev item" },
-    { "dP", function() vim.diagnostic.open_float { focusable = true } end, desc = "LSP(diagnostic): open float preview" },
+    { "dP", function() vim.diagnostic.open_float({ scope = "line", border = "rounded", focusable = true }) end, desc = "LSP(diagnostic): open float preview" },
     { "dq",
       function()
         if #vim.diagnostic.get() > 0 then

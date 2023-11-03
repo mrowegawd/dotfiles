@@ -59,20 +59,11 @@ return {
   --  ╰──────────────────────────────────────────────────────────╯
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    event = "VeryLazy",
-    keys = {
-      { "<Localleader>ql", "<CMD>LoadQFProject<CR>", desc = "Qf(qfsilet): load project" },
-      { "<Localleader>qL", "<CMD>LoadQFGlobal<CR>", desc = "Qf(qfsilet): load global" },
-      { "<Localleader>qs", "<CMD>SaveQFProject<CR>", desc = "Qf(qfsilet): save project" },
-      { "<Localleader>qS", "<CMD>SaveQFGlobal<CR>", desc = "Qf(qfsilet): save global" },
-    },
+    event = "LazyFile",
     opts = {
       ext_note = "",
       signs = {
         priority = 10,
-      },
-      popup = {
-        winhighlight = "Normal:Pmenu,FloatBorder:FzfLuaBorder",
       },
     },
   },

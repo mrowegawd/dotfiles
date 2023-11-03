@@ -413,7 +413,6 @@ local tile_reorder = function()
       else
         if val.winft == ft then
           vim.cmd(fmt("%d wincmd w", val.winidx))
-          -- as.info(val.winft .. " position " .. opts.position)
           vim.cmd(fmt("wincmd %s", opts.position))
           vim.cmd(opts.resize)
         end

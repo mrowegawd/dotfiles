@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e -u
+set -o nounset
+
+# Date Created: 30 Mar 2019
+# Last Modified: 30 Mar 2019 (02:25:53)
+# Summary:
+# Author: Gitmox
+# License:
+
+chpwd=$(basename "$(pwd)")
+logs="-logs"
+dcompose=$(docker-compose ps | awk -F" " '{print $1}' | awk 'NR>2')
+if [[ ! -z "$dcompose" ]]; then
+  tmux new-window && tmux rename-window "$chpwd$logs"
+  for compose in $dcompose; do
+    if [[ "$TERM" =~ "screen".* ]]; then
+      tmux send-keys "docker-compose logs -f $compose" enter
+      tmux split-window -v
+    fi
+  done
+fi

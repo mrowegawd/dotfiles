@@ -5,7 +5,12 @@ colors:
     # hard contrast: background = '0x0e1214'
     background: '0x0e1214'
     # soft contrast: background = '0x32302f'
-    foreground: '0xebdbb2'
+    foreground: '0xbbb294'
+
+  # Colors the cursor will use if `custom_cursor_colors` is true
+  cursor:
+    text: '0x21222c'
+    cursor: '0x076fc2'
 
   # Normal colors
   normal:

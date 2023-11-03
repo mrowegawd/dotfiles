@@ -1,3 +1,7 @@
+if vim.loader then
+  vim.loader.enable()
+end
+
 require "r.config.lazyconfig"
 require("r.config").setup {}
 

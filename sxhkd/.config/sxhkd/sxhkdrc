@@ -94,13 +94,13 @@ super + ctrl + {Right,Up,Down,Left}
 
 # misc: open rofi_call
 super + u
-        $HOME/.config/rofi/menu/menu.sh
+        $HOME/.config/rofi/menu/menu
 
 # misc: open terminal
 super + Return
         alacritty
-        # wezterm
         # kitty
+        # wezterm
         # st -e tmux
         # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty
 
@@ -133,7 +133,7 @@ super + shift + F12
 
 # misc: change background img
 super + shift + Home
-        $HOME/Dropbox/exbin/for-local-bin/fehbg
+        $HOME/.config/miscxrdb/exbin/fehbg
 
 # misc: open tools
 super + shift + t
@@ -141,7 +141,7 @@ super + shift + t
 
 # misc: open ncmpcpp
 super + shift + n
-        $HOME/Dropbox/exbin/for-local-bin/bspwmfloat ncmpcpp
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
 
 # misc: run glinux
 # super + shift + g
@@ -151,31 +151,29 @@ super + shift + n
 # super + shift + o
 #         bspc rule -a \* -o state=floating st && st
 
-# misc: panggil firefox lalu set di sisi kiri (side by side)
-super + F4
-        $HOME/Dropbox/exbin/for-local-bin/bspc_firefox
+# misc: call firefox (side by side)
+super + F8
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin firefox 2
 
-# misc: open taskwarrior
-super + shift + u
-        bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "taskwarrior-tui"
-        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
-        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && sh -e bash -c "/usr/local/bin/nvim --noplugin -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
+# misc: call zathura (side by side)
+super + F6
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin zathura 4
 
 # misc: run bookmark
 super + shift + p
-        ~/.local/bin/websearch
+        $HOME/.config/miscxrdb/bpswm/scripts/websearch
 
 # misc: poweroff
 super + shift + q
-        $HOME/.config/rofi/powermenu/poweroff.sh
+        $HOME/.config/rofi/powermenu/poweroff
 
 # misc: run mpv
 super + shift + y
-        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=400x300 --geometry=-15-60 "$3" $(xclip -o -sel clip)
+        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
 # misc: backward, below, normal window or z-index
 # super + shift + p
-# 	    $HOME/Dropbox/exbin/for-local-bin/switchLayer
+# 	    $HOME/.config/miscxrdb/bpswm/scripts/switchLayer
 
 # misc: run clipmenu
 # super + shift + c

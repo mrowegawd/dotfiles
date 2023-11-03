@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+wuzz
+
 mpd/.config/mpd/playlist/*
 
 zshconfig/.config/zsh/plugins

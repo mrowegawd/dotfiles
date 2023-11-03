@@ -18,12 +18,10 @@ local M = {}
 -- stylua: ignore
 function M.diffview(bufnr)
   nnoremap("<Leader>gvo", "<CMD>DiffviewOpen<CR>", { desc = "Git(diffview): open", buffer = bufnr })
-  nnoremap("<Leader>gvh", "<CMD>DiffviewFileHistory %<CR>", { desc = "Git(diffview): file history", buffer = bufnr })
-
-  nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): branch history", buffer = bufnr })
-  vnoremap("<Leader>gvH", [[:'<'>DiffviewFileHistory<CR>]],
-    { desc = "Git(diffview): file history (visual)", buffer = bufnr })
-  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git: compare two window with dif", buffer = bufnr })
+  nnoremap("<Leader>gvh", "<CMD>DiffviewFileHistory %<CR>", { desc = "Git(diffview): diff history on buffer", buffer = bufnr })
+  vnoremap("<Leader>gvh", [[:'<'>DiffviewFileHistory<CR>]], { desc = "Git(diffview): diff history on buffer (visual)", buffer = bufnr })
+  nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): diff history on repo", buffer = bufnr })
+  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git: compare two window with diff", buffer = bufnr })
 end
 
 function M.gitlinker(bufnr)

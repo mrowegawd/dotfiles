@@ -5,27 +5,24 @@ local highlight = require "r.config.highlights"
 -- stylua: ignore
 local general_overrides = function()
   highlight.all {
+    -- { Directory = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
+    { ColorColumn = { bg = { from = "Normal" , attr = "bg" } } },
+    { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.1 }, bg = { from = "Normal", attr = "bg", alter= -0.15 } } },
     { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
-    { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
-    { Directory = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
-    { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
-    { CursorLine = { bg = { from = "Normal", alter = -0.5 } } },
-    { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = "NONE" } },
-    { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "Normal", attr = "fg", alter = -0.1 } } },
-    { PmenuSel = { bold = true, fg = "NONE", bg = { from = "ColorColumn", alter = 0.6 } } },
-    { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+    { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
+    { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" } } },
+    { CursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
-    { NormalFloat = { bg = { from = "Normal" } } },
-    { FloatBorder = { bg = { from = "Normal" }, fg = { from = "Directory" } } },
-    { Comment = { fg = { from = "Directory", attr = "fg", alter = -0.3 }, italic = true } },
-    { Folded = { bg = { from = "Directory", attr = "fg", alter = -0.4 } } },
+    { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
+    { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
+    { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
+    { Folded = { bg = { from = "ColorColumn", attr = "bg" } } },
     { EndOfBuffer = { bg = "NONE" } },
-    { Statusline = { inherit = "ColorColumn"} } ,
-    { SignColumn = { bg = "NONE" } },
-    { MarkSignNumHL = { inherit = "SpecialKey", bg = "NONE" } },
-    { Normal = { fg = { from = "Directory", alter = 0.5 } } },
-    { WinSeparator = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
-
+    { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
+    { SignColumn = { bg = { from = "ColorColumn" } } },
+    -- { MarkSignNumHL = { inherit = "SpecialKey" } },
+    { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
+    { WinBar = { bg = { from = "ColorColumn" } } },
     -----------------------------------------------------------------------------//
     --  Spell
     -----------------------------------------------------------------------------//
@@ -63,21 +60,27 @@ local general_overrides = function()
     -- Diff
     -----------------------------------------------------------------------
     -- These highlights are syntax groups that are set in diff.vim
-    { diffAdded = { inherit = "DiffAdd" } },
-    { diffChanged = { inherit = "DiffChange" } },
-    { diffRemoved = { link = "DiffDelete" } },
-    { diffBDiffer = { link = "WarningMsg" } },
-    { diffCommon = { link = "WarningMsg" } },
-    { diffDiffer = { link = "WarningMsg" } },
-    { diffFile = { link = "Directory" } },
-    { diffIdentical = { link = "WarningMsg" } },
-    { diffIndexLine = { link = "Number" } },
-    { diffIsA = { link = "WarningMsg" } },
-    { diffNoEOL = { link = "WarningMsg" } },
-    { diffOnly = { link = "WarningMsg" } },
+    -- { GitSignsAdd = { bg = { from = "ColorColumn"} } },
 
-    { ["@text.diff.add"] = { link = "DiffAdd" } },
-    { ["@text.diff.delete"] = { link = "DiffDelete" } },
+    -- { diffAdded = { inherit = "DiffAdd" } },
+    -- { diffChanged = { inherit = "DiffChange" } },
+    -- { diffRemoved = { link = "DiffDelete" } },
+    -- { diffBDiffer = { link = "WarningMsg" } },
+    -- { diffCommon = { link = "WarningMsg" } },
+    -- { diffDiffer = { link = "WarningMsg" } },
+    -- { diffFile = { link = "Directory" } },
+    -- { diffIdentical = { link = "WarningMsg" } },
+    -- { diffIndexLine = { link = "Number" } },
+    -- { diffIsA = { link = "WarningMsg" } },
+    -- { diffNoEOL = { link = "WarningMsg" } },
+    -- { diffOnly = { link = "WarningMsg" } },
+
+    -- { ["@text.diff.add"] = { link = "DiffAdd" } },
+    -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
+
+    { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+    { GitSignsChange = { bg = { from = "ColorColumn" } } },
+    { GitSignsDelete = { bg = { from = "ColorColumn" } } },
 
     -----------------------------------------------------------------------
     -- LSP
@@ -85,18 +88,18 @@ local general_overrides = function()
     { LspCodeLens = { inherit = "Comment", bold = true, italic = false } },
     { LspCodeLensSeparator = { bold = false, italic = false } },
     { LspReferenceText = { bg = "NONE", underline = true, sp = { from = "Comment", attr = "fg" } } },
-    { LspReferenceRead = { link = "LspReferenceText" } },
-    { LspReferenceWrite = { inherit = "LspReferenceText", bold = true, italic = true, underline = true } },
+    { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
+    { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
+
     { LspSignatureActiveParameter = { link = "Visual" } },
-    { LspInlayhint = { bg = { from = "ColorColumn", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
+    { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
 
-    { TreesitterContextSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
-    { TreesitterContextLineNumber = { inherit = "LineNr" } },
-    { TreesitterContext = { inherit = "ColorColumn" } },
-
-    { illuminatedWordText = { link = "LspReferenceText" } },
-    { illuminatedWordWrite = { bg = { from = "Directory", attr = "fg", alter = -0.25 }, fg = "NONE" } },
-    { illuminatedWordRead = { bg = { from = "Directory", attr = "fg", alter = -0.25 }, fg = "NONE" } },
+    { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+    { TreesitterContext = { bg  = { from = "ColorColumn" } } } ,
+    { TreesitterContextSeparator = {
+      fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+      bg = { from = "ColorColumn" , attr = "bg" }
+    } },
 
     -----------------------------------------------------------------------
     -- DIAGNOSTIC
@@ -105,10 +108,10 @@ local general_overrides = function()
     { DiagnosticError = { bg = "NONE" } },
     { DiagnosticWarning = { bg = "NONE" } },
     { DiagnosticInfo = { bg = "NONE" } },
-    { DiagnosticSignError = { bg = "NONE" } },
-    { DiagnosticSignWarn = { bg = "NONE" } },
-    { DiagnosticSignInfo = { bg = "NONE" } },
-    { DiagnosticSignHint = { bg = "NONE" } },
+    { DiagnosticSignError = { bg = { from = "ColorColumn" } } },
+    { DiagnosticSignWarn = { bg = { from = "ColorColumn" } } },
+    { DiagnosticSignInfo = { bg = { from = "ColorColumn" } } },
+    { DiagnosticSignHint = { bg = { from = "ColorColumn" } } },
 
     -- Floating windows
     { DiagnosticFloatingWarn = { link = "DiagnosticWarn" } },
@@ -118,14 +121,10 @@ local general_overrides = function()
     { DiagnosticFloatTitle = { inherit = "FloatTitle", bold = true } },
     { DiagnosticFloatTitleIcon = { inherit = "FloatTitle", fg = { from = "@character" } } },
 
-    { GitSignsAdd = { bg = "NONE" } },
-    { GitSignsChange = { bg = "NONE" } },
-    { GitSignsDelete = { bg = "NONE" } },
-
     -----------------------------------------------------------------------
     -- CREATED HIGHLIGHTS
     -----------------------------------------------------------------------
-    { MyCursorline = { bg = { from = "Normal", alter = 0.2 } } },
+    { MyStatusline = { fg = { from = "Normal", alter = 0.5 } } },
     { Mystatusline_fg = { fg = { from = "LineNr", alter = 0.1 } } },
     { Mystatusline_bg = { bg = { from = "Normal", alter = -0.1 } } },
     { bufferline_unselected = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
@@ -133,46 +132,54 @@ local general_overrides = function()
     { Mymisc_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 }, bg = { from = "Normal", alter = -0.1 } } },
     { MyQuickFixLineLeave = { bg = { from = "CursorLine", alter = 0.2 } } },
     { MyQuickFixLineEnter = { bg = { from = "CursorLine", alter = 0.6 }, fg = { from = "CursorLine", attr = "bg", alter = 2 }, bold = true } },
-    { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.2 } } },
+    { CodeBlock1 = { bg = { from = "Normal", alter = 0.35 } } },
     { CodeBlock2 = { bg = "cyan" } },
-    { BorderDirectory = { bg = { from = "Directory", attr = "fg" }, fg = "NONE" } },
-    { WinSeparatorCUS = { fg = { from = "WinSeparator", attr = "bg", alter = 0.2 } } },
+
     -----------------------------------------------------------------------
     -- PLUGINS
     -----------------------------------------------------------------------
 
     -- CMP ================================================================
-    { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = -0.3 } } },
-    { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.3 }, bg = "NONE", bold = true } },
-    -- { CmpItemMenu = { fg = { from = "Normal", alter = -0.5 }, italic = true } },
-    { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", alter = -0.3 }, italic = true } },
+    { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.55 }, bg = "NONE" } },
+    { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.2 }, bg = "NONE", bold = false } },
+    { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", alter = -0.3 } } },
+
+    { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "ColorColumn" , attr = "bg" , alter = 0.5 } } },
+    { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
+    { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
 
     -- TELESCOPE ==========================================================
-    { TelescopeNormal = { fg = { from= "Pmenu", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
-    { TelescopeBorder = { fg = { from = "Normal", alter = -0.4 }, bg = { from = "Normal", attr = "bg" } } },
+    { TelescopeNormal = { fg = { from = "CmpItemAbbr", attr = "fg" }, bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+    { TelescopeBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1  } } },
 
     -- Prompt
-    { TelescoeePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.14, bold = true }, bold = true } },
-    { TelescopePromptBorder = { fg = { from = "Normal", alter = -0.4 }, bg = { from = "Normal", attr = "bg" } } },
+    { TelescoeePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+    { TelescopePromptBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
     { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
     { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
 
     -- Preview
-    { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "Normal", alter = 0.14, bold = true }, bold = true } },
-    { TelescopeSelection = { fg = { from = "Normal", attr = "fg" }, standout = false } },
-    { TelescopeMatching = { link = "CmpItemAbbrMatchFuzzy" } },
+    { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
+    { TelescopePreviewBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+    { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+    { TelescopeSelection = { inherit = "PmenuSel" } },
+    { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
 
     -- Results
-    { TelescopeResultsTitle = { bg = "NONE" } },
+    { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
 
     -- FZFLUA =============================================================
-    { FzfLuaNormal = { link = "Normal" } },
-    { FzfLuaBorder = { fg = { from = "Directory", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
+    { FzfLuaNormal = { inherit = "Normal" } },
+    -- { FzfLuaBorder = { inherit = "WinSeparator" } },
+    { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
     { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = -0.3 } } },
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
 
+    -- WHICH-KEY ==========================================================
+    { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
+
     -- NOICE ==============================================================
-    { NoicePopupBorder = { bg = "NONE", fg = { from = "Directory", attr = "fg" } } },
+    { NoicePopupBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.25 } } },
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
@@ -182,6 +189,11 @@ local general_overrides = function()
     -- MINIINDENTSCOPE ====================================================
     { MiniIndentscopeSymbol = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
 
+    -- FLASH ==============================================================
+    { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 5 }, bold = true } },
+    { FlashLable = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
+    { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
+
     -- HLSEARCH ===========================================================
     { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },
   }
@@ -189,9 +201,9 @@ end
 
 local function set_sidebar_highlight()
   highlight.all {
-    { PanelDarkBackground = { bg = { from = "Normal", alter = -0.2 } } },
+    { PanelDarkBackground = { bg = { from = "Normal", alter = -0.05 } } },
     { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
-    { PanelBackground = { bg = { from = "Normal", alter = -0.2 } } },
+    { PanelBackground = { bg = { from = "Normal", alter = -0.05 } } },
     { PanelHeading = { inherit = "PanelBackground", bold = true } },
     { PanelWinSeparator = { inherit = "PanelBackground", fg = { from = "WinSeparator" } } },
     { PanelStNC = { link = "PanelWinSeparator" } },
@@ -224,128 +236,17 @@ end
 -- stylua: ignore
 local function colorscheme_overrides()
   local overrides = {
-    -- Theme dengan nama ini, tidak perlu diinstall karena tidak bisa di custom
-    -- pada function ini (I dont use it anymore)
-    -- {"kanagawa", "catppuccin"}
-    ["doom-one"] = {
-      { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.15 }, bg = "NONE", bold = true } },
-      { WinSeparator = { bg = "NONE" } },
-      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.1 } } },
-      { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
-    },
-    ["gruvbox-material"] = {
-      { bufferline_unselected = { bg = { from = "Normal", attr = "fg", alter = -0.75 } } },
-      { PmenuSel = { bg = { from = "ColorColumn", alter = 0.6 } } },
-      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.1 } } },
-      { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-      { IndentBlanklineChar = { fg = { from = "Directory", attr = "fg", alter = -0.8 } } },
-      { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-    },
-    ["neosolarized"] = {
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 } } },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
-      { MatchParen = { bg = { from = "Normal", alter = 0.25 } } },
-      { WinSeparator = { bg = "NONE" } },
-      { ["@Comment"] = { fg = { from = "Comment" } } },
-      { ["@lsp.type.comment"] = { fg = { from = "Comment" } } },
-    },
-    ["solarized"] = {
-      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.4 } } },
-      { WinBar = { bg = "NONE" } },
-      { MatchParen = { bg = "NONE" } },
-      { Directory = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
-      { ErrorMsg = { standout = false, reverse = false } },
-      { LineNr = { fg = { from = "LineNr", alter = -0.15 } } },
-      { LspReferenceText = { bg = "NONE", standout = false } },
-      { illuminatedWordText = { bg = "NONE" } },
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" } } },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.2 }, sp = { from = "Directory", attr = "fg" } } },
-    },
-    ["miasma"] = {
-      { Directory = { bg = "NONE" } },
-      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
-      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.4 } } },
-      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = -0.5 } } },
-    },
-    ["nano-theme"] = {
-      { Normal = { fg = { from = "Directory", alter = -0.2 } } },
-      { Pmenu = { fg = { from = "Pmenu", attr = "fg", alter = -0.1 }, bg = { from = "Pmenu", attr = "bg", alter = -0.5 } } },
-      { ColorColumn = { bg = { from = "Normal", alter = 0.1 } } },
-      { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
-      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
-      { CursorLine = { bg = { from = "Normal", alter = -0.1 } } },
-      { CjdeBlock1 = { bg = { from = "ColorColumn", alter = 0.4 } } },
-      { FloatBorder = { fg = { from = "Normal", attr = "fg",alter = -0.4 } } },
-      { WinSeparator = { bg = "NONE", fg = {from = "Directory", attr = "fg", alter = -1 } } },
-      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = -0.5 } } },
-      { FzfLuaBorder = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-      { PmenuSel = { bold = true, fg = "NONE", bg = { from = "ColorColumn", alter = -0.2 } } },
-    },
-    ["darcubox"] = {
-      { ["@lsp.type.comment"] = { fg = { from = "Directory", attr = "fg", alter = 0.3 } } },
-      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.5 } } },
-      { LineNr = { fg = { from = "LineNr", alter = 0.4 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 1 } } },
-      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = -0.2 } } },
-    },
-    ["darcula-dark"] = {
-      { Directory = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.5 } } },
-      { MyQuickFixLineLeave = { bg = { from = "CursorLine", alter = -0.15 } } },
-      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.4 } } },
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" } } },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.3 }, sp = { from = "Directory", attr = "fg" } } },
-      { Normal = { fg = { from = "Directory", alter = -0.1 } } },
-      { ["@Comment"] = { fg = { from = "Comment" } } },
-    },
-    ["everforest"] = {
-      { Directory = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
-      { CursorLine = { bg = { from = "CursorLine", attr= "bg", alter = 2 } } },
-      { illuminatedWordWrite = { bg = { from = "ColorColumn", attr = "bg", alter = -0.2 } } },
-      { illuminatedWordRead = { bg = { from = "ColorColumn", attr = "bg", alter = -0.2 } } },
-      { Folded = { bg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
-      { IndentBlanklineChar = { fg = { from = "Directory", attr = "fg", alter = -0.6 } } },
-      { WinSeparator = { bg = "NONE" } },
-      { Comment = { fg = { from = "Comment", alter = -0.15 } } },
-    },
-    ["night-owl"] = {
-      { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
-      { Directory = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
-      { Normal = { fg = { from = "Directory", attr = "fg", alter = 0.8 } } },
-      { Comment = { fg = { from = "Directory", alter = 0.4 } } },
-      { Search = { bg = { from = "WarningMsg", attr = "fg", alter = 5 }, fg = { from= "Normal", attr="fg", alter = 5 }  } },
-      { FlashMatch = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
-      { FlashLable = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
-      { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = -5 }, bold = true } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.8 } } },
-      { TreesitterContextLineNumber = { inherit = "LineNr" } },
-      { TreesitterContext = { bg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } } ,
-      { TreesitterContextSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-      { Statusline = { bg = {from = "ColorColumn", attr = "bg", alter = "0.15" } } },
-      { CmpItemAbbr = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
-      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = -0.15 } } },
-      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.3 } } },
-    },
-    ["tokyonight"] = {
-      { Comment = { fg = { from = "Directory", alter = -0.2 } } },
-      { Folded = { underline = false, bg = { from = "Folded", attr = "bg", alter = -0.35 } } },
-      { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
-      { TreesitterContextLineNumber = { inherit = "LineNr" } },
-      { PmenuSel = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
-      { MyQuickFixLineLeave = { bg = { from = "CursorLine", attr = "bg", alter = 0.5 } } },
-    },
-    ["tokyonight-night"] = {
-      { WinSeparator = { bg = "NONE" } },
-      { Comment = { fg = { from = "Directory", alter = 0.1 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
-      { CmpItemAbbr = { fg = { from = "Directory", attr = "fg", alter = 0.6 } } },
-      { MyQuickFixLineLeave = { bg = { from = "Normal", alter = 0.8 } } },
-      { LineNr = { fg = { from = "LineNr", alter = 0.2 } } },
-      { Normal = { fg = { from = "Directory", alter = 0.8 } } },
-      { CodeBlock1 = { bg = { from = "ColorColumn", alter = 0.3 } } },
-    },
+    -- {"kanagawa", "catppuccin"} -- remove this
+    -- ["doom-one"] = { },
+    -- ["gruvbox-material"] = { },
+    -- ["solarized"] = { }
+    -- ["miasma"] = { },
+    -- ["nano-theme"] = { },
+    -- ["darcubox"] = { },
+    -- ["onedark"] = { },
+    -- ["everforest"] = { },
+    -- ["night-owl"] = { },
+    -- ["tokyonight"] = { }
   }
 
   local hls = overrides[vim.g.colors_name]

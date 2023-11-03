@@ -60,9 +60,6 @@
 [include]
   path = ~/.gitconfig-local
 
-[commit]
-  template = ~/.gitmessage
-
 [diff]
   tool = nvimdiff
 

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e -u
+set -o nounset
+
+# Date Created: 01 Apr 2019
+# Last Modified: 01 Apr 2019 (01:06:30)
+# Summary:
+# Author: Gitmox
+# License:
+
+ROFIJSON="$HOME/.config/rofi/rofi_json.json"
+
+[[ ! -f "$ROFIJSON" ]] && exit
+
+load_vars_rofi() {
+  WIDTH="$(jq -r ."$1".width <"$ROFIJSON")"
+  LOCATION="$(jq -r ."$1".location <"$ROFIJSON")"
+  COLUMNS="$(jq -r ."$1".columns "$ROFIJSON")"
+  LINES="$(jq -r ."$1".lines <"$ROFIJSON")"
+  PROMPT="$(jq -r ."$1".prompt <"$ROFIJSON")" FORMAT="$(jq -r ."$1".format <"$ROFIJSON")"
+  XOFFSET="$(jq -r ."$1".xoffset <"$ROFIJSON")"
+  YOFFSET="$(jq -r ."$1".yoffset <"$ROFIJSON")"
+}

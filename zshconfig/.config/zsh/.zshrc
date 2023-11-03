@@ -205,8 +205,10 @@ export MANPAGER="/bin/sh -c \"col -b | \
 bindkey '^y'        autosuggest-accept
 bindkey "^[[89;5u"  autosuggest-accept
 bindkey '^?'        backward-delete-char
-bindkey '^b'        backward-char            # backward (c-b)
-bindkey '^f'        forward-char             # forward char (c-f)
+bindkey '^h'        backward-char            # backward (c-b)
+bindkey '^l'        forward-char             # forward char (c-f)
+bindkey '^b'        backward-word            # backward (c-b)
+bindkey '^f'        forward-word             # forward char (c-f)
 # bindkey '^w'      backward-kill-word
 # bindkey '^u'      backward-kill-line
 bindkey '^a'        beginning-of-line
@@ -216,7 +218,7 @@ bindkey '^e'        end-of-line
 autoload -U edit-command-line
 zle -N edit-command-line
 bindkey -M viins '^[e' edit-command-line    # alt-e
-# bindkey -M viins 'jk' vi-cmd-mode         # 'jk' to <esc>
+bindkey -M viins 'jk' vi-cmd-mode         # 'jk' to <esc>
 # bindkey -M vicmd v edit-command-line
 
 bindkey ‘^R’ history-incremental-search-backward
@@ -299,12 +301,22 @@ export AUTOENVME="$HOME/.autoenv"
 [[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 
 # Disable virtualenv prompt, it breaks starship
-set -g VIRTUAL_ENV_DISABLE_PROMPT 1
+# set -g VIRTUAL_ENV_DISABLE_PROMPT 1
 
 # export TERM=screen-256color-bce
 
-export PATH="$HOME/.poetry/bin:$PATH"
+# GOLANG: ------------------------------------------------------------------ {{{
+#
+# Check issue ini https://github.com/asdf-community/asdf-golang/issues/28
+# `asdf plugin golang` tidak menambahkan $GOPATH dan $GOROOT (hanya empty field,
+# check via `go env`) dan solusi dari link tersebut:
+export GOPATH=$(asdf where golang)/packages
+export GOROOT=$(asdf where golang)/go
+export PATH="${PATH}:$(go env GOPATH)/bin"
+#
+# }}}
 
+# export PATH="$HOME/.poetry/bin:$PATH"
 export XDG_RUNTIME_DIR="/run/user/$UID"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 

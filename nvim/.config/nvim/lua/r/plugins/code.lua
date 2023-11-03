@@ -6,6 +6,8 @@ OverseerConfig.fnpane_run = 0
 OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
+local callme = 0
+
 return {
   -- LUASNIP
   {
@@ -63,10 +65,10 @@ return {
       vim.g.matchup_matchparen_offscreen = {} -- disable status bar icon
     end,
   },
+  { "rcarriga/cmp-dap" },
   -- CMP
   {
     "hrsh7th/nvim-cmp",
-    -- version = false, -- last release is way too old
     event = "InsertEnter",
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
@@ -77,7 +79,6 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
       "lukas-reineke/cmp-under-comparator",
-      "rcarriga/cmp-dap",
       "saadparwaiz1/cmp_luasnip",
     },
     opts = function()
@@ -103,7 +104,7 @@ return {
 
       local border_opts = {
         border = require("r.config").icons.border.rectangle,
-        winhighlight = "Normal:Normal,FloatBorder:FzfLuaBorder,CursorLine:PmenuSel,Search:None",
+        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
       }
 
       local function has_words_before()
@@ -114,8 +115,7 @@ return {
 
       return {
         enabled = function()
-          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
-          -- or require("cmp_dap").is_dap_buffer()
+          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt" or require("cmp_dap").is_dap_buffer()
         end,
         window = {
           completion = cmp.config.window.bordered(border_opts),
@@ -133,7 +133,7 @@ return {
         },
 
         mapping = {
-          ["<C-q>"] = cmp.mapping.abort(),
+          ["<c-q>"] = cmp.mapping.abort(),
           ["<c-n>"] = cmp.mapping(function()
             if cmp.visible() then
               cmp.select_next_item()
@@ -166,53 +166,57 @@ return {
           end, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<cr>"] = cmp.mapping.confirm { select = false },
-          ["<C-y>"] = cmp.mapping.confirm { select = true },
-          -- ["<C-y>"] = cmp.mapping(function(_)
-          --   -- if c_cmp.visible() then
-          --   --   c_cmp.abort()
-          --   if callme == 0 then
-          --     callme = 1
-          --     cmp.complete {
-          --       config = {
-          --         sources = {
-          --           { name = "luasnip" },
-          --         },
-          --       },
-          --     }
-          --   elseif callme == 1 then
-          --     callme = 2
-          --     cmp.complete {
-          --       config = {
-          --         sources = {
-          --           { name = "cmp_tabnine" },
-          --           {
-          --             name = "buffer",
-          --             option = {
-          --               get_bufnrs = function()
-          --                 return vim.api.nvim_list_bufs()
-          --               end,
-          --             },
-          --           },
-          --         },
-          --       },
-          --     }
-          --   else
-          --     if callme == 2 then
-          --       callme = 0
-          --       cmp.complete {
-          --         config = {
-          --           sources = {
-          --             { name = "nvim_lsp" },
-          --           },
-          --         },
-          --       }
-          --     end
-          --   end
-          -- end, {
-          --   "i",
-          --   "s",
-          -- }),
+          ["<cr>"] = cmp.mapping.confirm { select = true },
+          -- ["<C-y>"] = cmp.mapping.confirm { select = true },
+          ["<C-y>"] = cmp.mapping(function(_)
+            -- if c_cmp.visible() then
+            --   c_cmp.abort()
+            if callme == 0 then
+              callme = 1
+              cmp.complete {
+                config = {
+                  sources = {
+                    { name = "luasnip" },
+                  },
+                },
+              }
+            elseif callme == 1 then
+              callme = 2
+              cmp.complete {
+                config = {
+                  sources = {
+                    { name = "cmp_tabnine" },
+                    {
+                      name = "buffer",
+                      option = {
+                        get_bufnrs = function()
+                          return vim.api.nvim_list_bufs()
+                        end,
+                      },
+                    },
+                  },
+                },
+              }
+            else
+              if callme == 2 then
+                callme = 0
+                if has_words_before() then
+                  cmp.complete()
+                else
+                  cmp.complete {
+                    config = {
+                      sources = {
+                        { name = "nvim_lsp" },
+                      },
+                    },
+                  }
+                end
+              end
+            end
+          end, {
+            "i",
+            "s",
+          }),
         },
 
         experimental = { ghost_text = false },
@@ -280,13 +284,11 @@ return {
       })
 
       ---@diagnostic disable-next-line: missing-fields
-      cmp.setup.filetype({ "dapui_watches", "dapui_hover", "dap-repl" }, {
+      cmp.setup.filetype("dap-repl", {
+        -- NOTE: still not working!!
         sources = {
           { name = "dap" },
-          -- { name = "nvim_lsp" },
-          -- { name = "luasnip" },
-          -- { name = "path" },
-          -- { name = "buffer" },
+          { name = "buffer" },
         },
       })
 
@@ -697,7 +699,15 @@ return {
       { "rC", "<Cmd> RmuxKillAllPanes <CR>" },
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
     },
-    opts = {},
+    opts = {
+      base = {
+        file_rc = ".rmuxrc.json",
+        setnotif = true,
+        auto_run_tasks = true,
+        tbl_opened_panes = {},
+        run_with = "tmux", -- tmux, tt
+      },
+    },
     config = function(_, opts)
       require("rmux").setup(opts)
     end,

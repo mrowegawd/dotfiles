@@ -370,9 +370,6 @@ return {
               require("aerial").setup(opts.opts)
 
               Util.buf._only()
-              -- vim.schedule(function()
-              --   vim.cmd [[:e]]
-              -- end)
             end)
           end,
           desc = "Open(aerial): change filter_kind",
@@ -469,7 +466,7 @@ return {
     keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
     init = function()
       highlight.plugin("DropBar", {
-        { DropBarIconUISeparator = { link = "Delimiter" } },
+        { DropBarIconUISeparator = { bg = { from = "ColorColumn" } } },
         { DropBarMenuNormalFloat = { inherit = "Pmenu" } },
       })
     end,
@@ -701,7 +698,7 @@ return {
     },
     opts = {},
     keys = {
-      { "<Leader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc(devdocs): open" },
+      { "<Localleader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc(devdocs): open" },
     },
     cmd = {
       "DevdocsFetch",
@@ -788,6 +785,10 @@ return {
   -- INCRENAME
   {
     "smjonas/inc-rename.nvim",
-    opts = {},
+    opts = {
+      show_message = false,
+      hl_group = "Substitute", -- the highlight group used for highlighting the identifier's new name
+      preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancell
+    },
   },
 }

@@ -5,7 +5,8 @@ bspc rule -r "*"
 xrdb ~/.Xresources &
 sleep 2
 
-[[ -f "$HOME/Dropbox/exbin/for-local-bin/paintree" ]] && "$HOME/Dropbox/exbin/for-local-bin/paintree"
+pantree="$HOME/.config/miscxrdb/exbin/paintree"
+[[ -f "$pantree" ]] && "$pantree"
 
 # setxkbmap -layout us -variant intl
 setxkbmap -option caps:backspace # switch capslock to backspace
@@ -32,9 +33,8 @@ fi
 
 [[ -f "$HOME/.config/polybar/runpolybar.sh" ]] && "$HOME/.config/polybar/runpolybar.sh"
 [[ -f "$HOME/.config/dunst/rundust.sh" ]] && "$HOME/.config/dunst/rundust.sh"
-[[ -f "$HOME/Dropbox/exbin/for-local-bin/fehbg" ]] && "$HOME/Dropbox/exbin/for-local-bin/fehbg"
 [[ -f ~/.lesskey ]] && lesskey
-[[ -f ~/Dropbox/exbin/for-local-bin/fehbg ]] && ~/Dropbox/exbin/for-local-bin/fehbg
+[[ -f "$HOME/.config/miscxrdb/exbin/fehbg" ]] && "$HOME/.config/miscxrdb/exbin/fehbg"
 if [[ -n $(command -v dropbox) ]]; then
 	killall -q dropbox
 	dropbox start &

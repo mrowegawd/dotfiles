@@ -24,10 +24,9 @@ return {
 
         -- stylua: ignore
         keys = {
-          { "<Leader>dtt", function() require("dapui").toggle() end, desc = "Debug(dapui): toggle UI" },
+          { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug(dapui): toggle UI" },
           { "<Leader>dr", function() return require("dapui").open { reset = true } end, desc = "Debug(dapui): reset UI" },
           { "<leader>dP", function() require("dap.ui.widgets").hover() end, desc = "Debug(dapui): hover" },
-          { "<Leader>de", function() require("dapui").eval() end, mode = { "v", "n" }, desc = "Debug(dapui): evaluate" },
         },
         opts = {
           -- expand_lines = fn.has "nvim-0.7",
@@ -54,7 +53,7 @@ return {
             {
               elements = {
                 "repl",
-                "console",
+                -- "console",
               },
               size = 0.25, -- 25% of total lines
               position = "bottom",
@@ -66,6 +65,12 @@ return {
             border = "single", -- Border style. Can be "single", "double" or "rounded"
             mappings = {
               close = { "q", "<Esc>" },
+              edit = "e",
+              expand = { "<CR>", "<2-LeftMouse>" },
+              open = "o",
+              remove = "d",
+              repl = "r",
+              toggle = "t",
             },
           },
           windows = { indent = 1 },
@@ -82,12 +87,12 @@ return {
           dap.listeners.after.event_initialized["dapui_config"] = function()
             dapui.open {}
           end
-          dap.listeners.before.event_terminated["dapui_config"] = function()
-            dapui.close {}
-          end
-          dap.listeners.before.event_exited["dapui_config"] = function()
-            dapui.close {}
-          end
+          -- dap.listeners.before.event_terminated["dapui_config"] = function()
+          --   dapui.close {}
+          -- end
+          -- dap.listeners.before.event_exited["dapui_config"] = function()
+          --   dapui.close {}
+          -- end
         end,
       },
     },
@@ -96,22 +101,23 @@ return {
       --  +----------------------------------------------------------+
       --    Breakpoints
       --  +----------------------------------------------------------+
-      { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
+      { "<Leader>dc", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug(dap): breakpoint with condition" },
       { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug(dap): clear all breakpoints" },
-      { "<Leader>dC", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug(dap): breakpoint with condition" },
-      -- { "<Leader>dL", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
+      -- { "<Leader>dbl", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
+      { "<Leader>dD", function() require("dap").list_breakpoints(true) end, desc = "Debug(dap): list breakpoint qf", },
       --  +----------------------------------------------------------+
       --    DAP commands
       --  +----------------------------------------------------------+
       { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug(dap): run to cursor" },
-      { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
+      { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
       -- { "<Leader>dr", function() require "dap".repl.toggle(nil, "botright split") end, desc = "Dap: toggle REPL" },
-      { "<Leader>dS", function() print(require("dap").session()) end, desc = "Debug(dap): get session" },
+      -- { "<Leader>dS", function() print(vim.inspect(require("dap").session())) end, desc = "Debug(dap): get session" },
       --  +----------------------------------------------------------+
       --    Close and run debug
       --  +----------------------------------------------------------+
-      { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug(dap): restart" },
-      { "<Leader>dc", function() return require("dap").terminate() end, desc = "Debug(dap): closing or quit debug", },
+      -- { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug(dap): restart" },
+      { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug(dap): closing or quit debug", },
       { "<Leader>dd",
         function()
           if #status_dap(require "dap") > 0 then
@@ -127,12 +133,14 @@ return {
         desc = "Debug(dap): run or disconnect",
       },
       --  +----------------------------------------------------------+
-      --    Step-in, step-out, step-over
+      --    Step-in, step-out, step-over | Stack-up Stack-down
       --    For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       --  +----------------------------------------------------------+
       { "<s-right>", function() require("dap").step_into() end, desc = "Debug(dap): step-into" },
       { "<s-left>", function() require("dap").step_out() end, desc = "Debug(dap): step-out" },
       { "<s-down>", function() require("dap").step_over() end, desc = "Debug(dap): step-over" },
+      { "<leader>dk", function() require'dap'.up() end,  desc = "Debug(dap): stack up" },
+      { "<leader>dj", function() require'dap'.down() end,  desc = "Debug(dap): stack down" }
     },
     config = function()
       local Config = require "r.config"
