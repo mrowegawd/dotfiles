@@ -55,10 +55,7 @@ return {
         },
       },
       { "rmagatti/goto-preview", config = true },
-      -- {
-      --   "folke/neodev.nvim",
-      --   opts = { experimental = { pathStrict = true } },
-      -- },
+      -- { "folke/neodev.nvim", opts = {} },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
     },
@@ -116,7 +113,11 @@ return {
               completion = { callSnippet = "Replace" },
               telemetry = { enable = false },
               hint = { enable = false },
-              diagnostics = { globals = { "vim", "it", "describe", "before_each", "after_each", "a" } },
+              diagnostics = {
+                globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
+                undefined_global = false, -- remove this from diag!
+                missing_parameters = false, -- missing fields :)
+              },
             },
           },
         },

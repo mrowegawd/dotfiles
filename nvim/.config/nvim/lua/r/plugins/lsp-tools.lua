@@ -785,6 +785,10 @@ return {
   -- INCRENAME
   {
     "smjonas/inc-rename.nvim",
-    opts = {},
+    opts = {
+      show_message = false,
+      hl_group = "Substitute", -- the highlight group used for highlighting the identifier's new name
+      preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancell
+    },
   },
 }

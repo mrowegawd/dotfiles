@@ -355,11 +355,15 @@ Util.cmd.augroup("AddTerminalMappings", {
 --  │ DISABLE                                                  │
 --  ╰──────────────────────────────────────────────────────────╯
 
-nnoremap("gQ", "<Nop>") -- disable
-nnoremap("<F1>", "<Nop>") -- disable
-nnoremap("zL", "<Nop>") -- disable
-nnoremap("Q", "<Nop>", {}) -- Disable Ex mode:
-nnoremap("Q", "<F1>", {}) -- Disable Ex mode:
+-- nnoremap("gQ", "<Nop>") -- disable
+-- nnoremap("<F1>", "<Nop>") -- disable
+-- nnoremap("zL", "<Nop>") -- disable
+-- nnoremap("Q", "<Nop>", {}) -- Disable Ex mode:
+-- nnoremap("Q", "<F1>", {}) -- Disable Ex mode:
+
+-- vim.keymap.del("n", "Q")
+-- vim.keymap.del({ "x", "o" }, "x")
+-- vim.keymap.del({ "x", "o" }, "X")
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ CABBREV                                                  │
