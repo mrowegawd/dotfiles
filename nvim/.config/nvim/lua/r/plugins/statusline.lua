@@ -15,6 +15,7 @@ return {
         disabled = {
           filetypes = {
             "alpha",
+            "dashboard",
             -- "NvimTree",
             -- "lazy",
           },
@@ -31,7 +32,8 @@ return {
           "%=",
           component.trailing(),
           component.mixindent(),
-          component.diagnostics(),
+          "diagnostics",
+          component.rootdir(),
           component.lsp_notify(),
           "copilot",
           "encoding",

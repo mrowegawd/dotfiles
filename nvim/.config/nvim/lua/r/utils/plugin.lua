@@ -97,17 +97,19 @@ function M.lazy_file()
 
     vim.api.nvim_exec_autocmds("User", { pattern = "LazyFile", modeline = false })
     for _, event in ipairs(events) do
-      Event.trigger {
-        event = event.event,
-        exclude = skips[event.event],
-        data = event.data,
-        buf = event.buf,
-      }
-      if vim.bo[event.buf].filetype then
+      if vim.api.nvim_buf_is_valid(event.buf) then
         Event.trigger {
-          event = "FileType",
+          event = event.event,
+          exclude = skips[event.event],
+          data = event.data,
           buf = event.buf,
         }
+        if vim.bo[event.buf].filetype then
+          Event.trigger {
+            event = "FileType",
+            buf = event.buf,
+          }
+        end
       end
     end
     vim.api.nvim_exec_autocmds("CursorMoved", { modeline = false })

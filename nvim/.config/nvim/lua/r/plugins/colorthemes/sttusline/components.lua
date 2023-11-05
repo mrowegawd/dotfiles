@@ -4,9 +4,7 @@ local sttsline_utils = require "sttusline.utils"
 local sttsline_colors = require "sttusline.utils.color"
 
 local Util = require "r.utils"
-local modules = Util.lsp.lazy_require { sources = "r.plugins.colorthemes.sttusline.diagnostic-sources" }
 
-local icons = require("r.config").icons
 local highlight = require "r.config.highlights"
 
 local col_bg_StatusLine = highlight.get("ColorColumn", "bg")
@@ -307,6 +305,63 @@ M.filereadonly = function()
 
   return Readonly
 end
+M.rootdir = function()
+  local Rootdir = require("sttusline.component").new()
+
+  Rootdir.set_config {
+    cwd = true,
+    subdirectory = true,
+    parent = false,
+    other = true,
+    icon = "󱉭 ",
+    colors = {
+      special = Util.ui.fg "Boolean",
+      directory = Util.ui.fg "Directory",
+    },
+  }
+
+  Rootdir.set_event(M.set_event)
+
+  Rootdir.set_update(function()
+    local get = function()
+      local cwd = Util.root.cwd()
+      local root = Util.root.get { normalize = true }
+      local name = vim.fs.basename(root) or ""
+
+      if name == nil then
+        name = ""
+      end
+
+      if cwd == nil then
+        cwd = ""
+      end
+
+      if root == cwd then
+        -- root is cwd
+        return Rootdir.get_config().cwd and cwd
+      elseif root:find(cwd, 1, true) == 1 then
+        -- root is subdirectory of cwd
+        return Rootdir.get_config().subdirectory and name
+      elseif cwd:find(root, 1, true) == 1 then
+        -- root is parent directory of cwd
+        return Rootdir.get_config().parent and name
+      else
+        -- root and cwd are not related
+        return Rootdir.get_config().other and name
+      end
+    end
+
+    hl(0, "WADAU", { fg = Rootdir.get_config().colors.special.fg, bg = colors.base_bg })
+    hl(0, "WADIDAU", { fg = Rootdir.get_config().colors.directory.fg, bg = colors.base_bg })
+
+    return sttsline_utils.add_highlight_name(
+      Rootdir.get_config().icon ~= nil and Rootdir.get_config().icon .. " ",
+      "WADIDAU"
+    ) .. sttsline_utils.add_highlight_name(get(), "WADAU")
+  end)
+
+  return Rootdir
+end
 M.branch = function()
   local Branch = require("sttusline.component").new()
 
@@ -341,79 +396,79 @@ M.branch = function()
 
   return Branch
 end
-M.diagnostics = function()
-  local Diagnostics = require("sttusline.component").new()
+-- M.diagnostics = function()
+--   local Diagnostics = require("sttusline.component").new()
 
-  Diagnostics.set_event(M.set_event)
+--   Diagnostics.set_event(M.set_event)
 
-  Diagnostics.set_update(function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local diagnostics_count
-    local last_diagnostics_count = {}
-    local result = {}
+--   Diagnostics.set_update(function()
+--     local bufnr = vim.api.nvim_get_current_buf()
+--     local diagnostics_count
+--     local last_diagnostics_count = {}
+--     local result = {}
 
-    if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "i" then
-      local diag_source = modules.sources.get_diagnostics { "nvim_diagnostic" }
+--     if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "i" then
+--       local diag_source = modules.sources.get_diagnostics { "nvim_diagnostic" }
 
-      local error_count, warning_count, info_count, hint_count = 0, 0, 0, 0
+--       local error_count, warning_count, info_count, hint_count = 0, 0, 0, 0
 
-      for _, data in pairs(diag_source) do
-        error_count = error_count + data.error
-        warning_count = warning_count + data.warn
-        info_count = info_count + data.info
-        hint_count = hint_count + data.hint
-      end
-      diagnostics_count = {
-        error = error_count,
-        warn = warning_count,
-        info = info_count,
-        hint = hint_count,
-      }
-      -- Save count for insert mode
-      last_diagnostics_count[bufnr] = diagnostics_count
-    else -- Use cached count in insert mode with update_in_insert disabled
-      diagnostics_count = last_diagnostics_count[bufnr] or { error = 0, warn = 0, info = 0, hint = 0 }
-    end
+--       for _, data in pairs(diag_source) do
+--         error_count = error_count + data.error
+--         warning_count = warning_count + data.warn
+--         info_count = info_count + data.info
+--         hint_count = hint_count + data.hint
+--       end
+--       diagnostics_count = {
+--         error = error_count,
+--         warn = warning_count,
+--         info = info_count,
+--         hint = hint_count,
+--       }
+--       -- Save count for insert mode
+--       last_diagnostics_count[bufnr] = diagnostics_count
+--     else -- Use cached count in insert mode with update_in_insert disabled
+--       diagnostics_count = last_diagnostics_count[bufnr] or { error = 0, warn = 0, info = 0, hint = 0 }
+--     end
 
-    local always_visible = false
+--     local always_visible = false
 
-    -- format the counts with symbols and highlights
-    local symbols = {
-      error = icons.diagnostics.Error,
-      warn = icons.diagnostics.Warn,
-      info = icons.diagnostics.Info,
-      hint = icons.diagnostics.Hint,
-    }
-    local sections = { "error", "warn", "info", "hint" }
-    -- local colored = true
-    -- local highlight_groups = { "error", "warn", "info", "hint" }
+--     -- format the counts with symbols and highlights
+--     local symbols = {
+--       error = icons.diagnostics.Error,
+--       warn = icons.diagnostics.Warn,
+--       info = icons.diagnostics.Info,
+--       hint = icons.diagnostics.Hint,
+--     }
+--     local sections = { "error", "warn", "info", "hint" }
+--     -- local colored = true
+--     -- local highlight_groups = { "error", "warn", "info", "hint" }
 
-    -- if colored then
-    --   local colorsss, bgs = {}, {}
-    --   for name, hll in pairs(highlight_groups) do
-    --     colorsss[name] = self:format_hl(hll)
-    --     bgs[name] = modules.utils.extract_highlight_colors(colorsss[name]:match "%%#(.-)#", "bg")
-    --   end
-    --   local previous_section, padding
-    --   for _, section in ipairs(sections) do
-    --     if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
-    --       padding = previous_section and (bgs[previous_section] ~= bgs[section]) and " " or ""
-    --       previous_section = section
-    --       table.insert(result, colorsss[section] .. padding .. symbols[section] .. diagnostics_count[section])
-    --     end
-    --   end
-    -- else
-    for _, section in ipairs(sections) do
-      if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
-        table.insert(result, symbols[section] .. diagnostics_count[section])
-      end
-    end
+--     -- if colored then
+--     --   local colorsss, bgs = {}, {}
+--     --   for name, hll in pairs(highlight_groups) do
+--     --     colorsss[name] = self:format_hl(hll)
+--     --     bgs[name] = modules.utils.extract_highlight_colors(colorsss[name]:match "%%#(.-)#", "bg")
+--     --   end
+--     --   local previous_section, padding
+--     --   for _, section in ipairs(sections) do
+--     --     if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
+--     --       padding = previous_section and (bgs[previous_section] ~= bgs[section]) and " " or ""
+--     --       previous_section = section
+--     --       table.insert(result, colorsss[section] .. padding .. symbols[section] .. diagnostics_count[section])
+--     --     end
+--     --   end
+--     -- else
+--     for _, section in ipairs(sections) do
+--       if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
+--         table.insert(result, symbols[section] .. diagnostics_count[section])
+--       end
+--     end
 
-    return table.concat(result, " ")
-  end)
+--     return table.concat(result, " ")
+--   end)
 
-  return Diagnostics
-end
+--   return Diagnostics
+-- end
 M.lsp_notify = function()
   local LSPFormatters = require "sttusline.components.lsps-formatters"
 
