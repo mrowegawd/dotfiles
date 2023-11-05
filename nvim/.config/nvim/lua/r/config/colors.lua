@@ -161,13 +161,14 @@ local general_overrides = function()
 
     -- Preview
     { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
-    { TelescopePreviewBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+    { TelescopePreviewBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
     { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
     { TelescopeSelection = { inherit = "PmenuSel" } },
     { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
 
     -- Results
     { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
+    { TelescopeResultsBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
 
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "Normal" } },

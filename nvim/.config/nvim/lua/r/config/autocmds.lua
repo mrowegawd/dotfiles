@@ -102,7 +102,7 @@ Util.cmd.augroup("WindowBehaviours", {
     "gitcommit",
     -- "help",
     "qf",
-    "Trouble",
+    -- "Trouble",
   },
   command = function()
     cmd "wincmd J"

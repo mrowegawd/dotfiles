@@ -1,18 +1,6 @@
 local Util = require "r.utils"
 
 return {
-  -- NVIM-COLORIZER (disabled)
-  {
-    "NvChad/nvim-colorizer.lua",
-    enabled = false,
-    opts = {},
-    cmd = {
-      "ColorizerToggle",
-      "ColorizerAttachToBuffer",
-      "ColorizerDetachFromBuffer",
-      "ColorizerReloadAllBuffers",
-    },
-  },
   -- CCC
   {
     "uga-rosa/ccc.nvim",

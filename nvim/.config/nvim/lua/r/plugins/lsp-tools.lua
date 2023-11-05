@@ -11,13 +11,13 @@ return {
   -- TROUBLE.NVIM (disabled)
   {
     "folke/trouble.nvim",
-    enabled = false,
+    -- enabled = false,
     cmd = { "TroubleToggle", "Trouble" },
     keys = {
       {
-        "<Leader>tt",
+        "<Localleader>tr",
         "<CMD>TroubleToggle<CR>",
-        desc = "Trouble: toggle",
+        desc = "Misc(trouble): toggle",
       },
     },
     config = function()
