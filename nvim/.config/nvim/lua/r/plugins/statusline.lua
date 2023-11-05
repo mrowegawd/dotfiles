@@ -32,7 +32,7 @@ return {
           "%=",
           component.trailing(),
           component.mixindent(),
-          component.diagnostics(),
+          "diagnostics",
           component.rootdir(),
           component.lsp_notify(),
           "copilot",

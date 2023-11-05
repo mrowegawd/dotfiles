@@ -122,14 +122,37 @@ function M.info()
   return roots[1] and roots[1].paths[1] or vim.loop.cwd()
 end
 
+M.cache = {}
+
+function M.setup()
+  vim.api.nvim_create_user_command("LazyRoot", function()
+    Util.root.info()
+  end, { desc = "LazyVim roots for the current buffer" })
+
+  vim.api.nvim_create_autocmd({ "LspAttach", "BufWritePost" }, {
+    group = vim.api.nvim_create_augroup("lazyvim_root_cache", { clear = true }),
+    callback = function(event)
+      M.cache[event.buf] = nil
+    end,
+  })
+end
+
 function M.get(opts)
-  opts = opts or {}
-  local roots = M.detect { all = false }
-  local ret = roots[1] and roots[1].paths[1] or vim.loop.cwd()
-  if opts.normalize then
+  local buf = vim.api.nvim_get_current_buf()
+  local ret = M.cache[buf]
+  if not ret then
+    local roots = M.detect { all = false }
+    ret = roots[1] and roots[1].paths[1] or vim.loop.cwd()
+    M.cache[buf] = ret
+  end
+  if opts and opts.normalize then
     return ret
   end
   return Util.is_win() and ret:gsub("/", "\\") or ret
+end
+
+function M.pretty_path(opts)
+  return ""
 end
 
 return M
