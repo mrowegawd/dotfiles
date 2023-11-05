@@ -307,6 +307,63 @@ M.filereadonly = function()
 
   return Readonly
 end
+M.rootdir = function()
+  local Rootdir = require("sttusline.component").new()
+
+  Rootdir.set_config {
+    cwd = true,
+    subdirectory = true,
+    parent = false,
+    other = true,
+    icon = "󱉭 ",
+    colors = {
+      special = Util.ui.fg "Boolean",
+      directory = Util.ui.fg "Directory",
+    },
+  }
+
+  Rootdir.set_event(M.set_event)
+
+  Rootdir.set_update(function()
+    local get = function()
+      local cwd = Util.root.cwd()
+      local root = Util.root.get { normalize = true }
+      local name = vim.fs.basename(root) or ""
+
+      if name == nil then
+        name = ""
+      end
+
+      if cwd == nil then
+        cwd = ""
+      end
+
+      if root == cwd then
+        -- root is cwd
+        return Rootdir.get_config().cwd and cwd
+      elseif root:find(cwd, 1, true) == 1 then
+        -- root is subdirectory of cwd
+        return Rootdir.get_config().subdirectory and name
+      elseif cwd:find(root, 1, true) == 1 then
+        -- root is parent directory of cwd
+        return Rootdir.get_config().parent and name
+      else
+        -- root and cwd are not related
+        return Rootdir.get_config().other and name
+      end
+    end
+
+    hl(0, "WADAU", { fg = Rootdir.get_config().colors.special.fg, bg = colors.base_bg })
+    hl(0, "WADIDAU", { fg = Rootdir.get_config().colors.directory.fg, bg = colors.base_bg })
+
+    return sttsline_utils.add_highlight_name(
+      Rootdir.get_config().icon ~= nil and Rootdir.get_config().icon .. " ",
+      "WADIDAU"
+    ) .. sttsline_utils.add_highlight_name(get(), "WADAU")
+  end)
+
+  return Rootdir
+end
 M.branch = function()
   local Branch = require("sttusline.component").new()
 
