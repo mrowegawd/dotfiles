@@ -100,7 +100,7 @@ Util.cmd.augroup("WindowBehaviours", {
     "orgagenda",
     "capture",
     "gitcommit",
-    "help",
+    -- "help",
     "qf",
     "Trouble",
   },

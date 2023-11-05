@@ -26,8 +26,8 @@ return {
       {
         "<Localleader>tc",
         function()
-          Util.info("Toggle highlighter CCC", "CCC.nvim")
-          return vim.cmd.CccHighlighterToggle()
+          Util.info("Toggle highlighter CCC", { title = "CCC.nvim" })
+          return vim.cmd "CccHighlighterToggle"
         end,
         desc = "Misc(ccc): toggle color",
       },

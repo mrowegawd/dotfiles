@@ -1,0 +1,23 @@
+{
+  "name": "luadev",
+  "run_file": {
+    "include_cwd": true,
+    "command": "lua"
+  },
+  "repl": {
+    "open_pane": "tmux split-window -h -p 20",
+    "command": "echo 'foo'"
+  },
+  "tasks": {
+    "layout": [
+      {
+        "open_pane": "tmux split-window -v -p 20",
+        "command": "tail -f '$HOME/.local/state/nvim/log'"
+      },
+      {
+        "open_pane": "tmux split-window -h -p 40",
+        "command": ""
+      }
+    ]
+  }
+}

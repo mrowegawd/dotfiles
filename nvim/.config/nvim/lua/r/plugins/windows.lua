@@ -17,9 +17,94 @@ return {
       require("windows").setup()
     end,
   },
-  -- SMART-SPLITS
+  -- TMUX.NVIM
+  {
+    "aserowy/tmux.nvim",
+    keys = {
+      {
+        "<a-k>",
+        "<cmd>lua require('tmux').move_top()<CR>",
+        desc = "Tmux: Move up",
+      },
+      {
+        "<a-j>",
+        "<cmd>lua require('tmux').move_bottom()<CR>",
+        desc = "Tmux: Move down",
+      },
+      {
+        "<a-h>",
+        "<cmd>lua require('tmux').move_left()<CR>",
+        desc = "Tmux: Move left",
+      },
+      {
+        "<a-l>",
+        "<cmd>lua require('tmux').move_right()<CR>",
+        desc = "Tmux: Move right",
+      },
+
+      -- RESIZE
+      {
+        "<a-K>",
+        function()
+          return require("tmux").resize_top()
+        end,
+        desc = "Windows(tmux): resize window up",
+      },
+      {
+        "<a-J>",
+        function()
+          return require("tmux").resize_bottom()
+        end,
+        desc = "Windows(tmux): resize window down",
+      },
+
+      {
+        "<a-H>",
+        function()
+          return require("tmux").resize_left()
+        end,
+        desc = "Windows(tmux): resize window left",
+      },
+      {
+        "<a-L>",
+        function()
+          return require("tmux").resize_right()
+        end,
+        desc = "Windows(tmux): resize window right",
+      },
+    },
+    config = function(_, opts)
+      require("tmux").setup(opts)
+    end,
+    opts = {
+      -- copy_sync = {
+      -- enables copy sync. by default, all registers are synchronized.
+      -- to control which registers are synced, see the `sync_*` options.
+      --   enable = false,
+      -- },
+      navigation = {
+        -- cycles to opposite pane while navigating into the border
+        -- cycle_navigation = false,
+        -- enables default keybindings (C-hjkl) for normal mode
+        -- enable_default_keybindings = true,
+        -- prevents unzoom tmux when navigating beyond vim border
+        persist_zoom = true,
+      },
+      resize = {
+        -- enables default keybindings (A-hjkl) for normal mode
+        enable_default_keybindings = false,
+        -- sets resize steps for x axis
+        resize_step_x = 4,
+
+        -- sets resize steps for y axis
+        resize_step_y = 4,
+      },
+    },
+  },
+  -- SMART-SPLITS (disabled)
   {
     "mrjones2014/smart-splits.nvim",
+    enabled = false,
     keys = {
       {
         "<a-k>",

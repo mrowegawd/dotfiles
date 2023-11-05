@@ -468,8 +468,12 @@ return {
   },
   -- DROPBAR
   {
+    -- TODO: got error: "not allowed in sandbox"
+    -- but seems already got fixed but still error, dunno
+    -- https://github.com/Bekaboo/dropbar.nvim/pull/25
     "Bekaboo/dropbar.nvim",
-    event = "LazyFile",
+    enabled = false,
+    event = "VeryLazy",
     -- stylua: ignore
     keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
     init = function()

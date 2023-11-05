@@ -683,7 +683,8 @@ return {
   },
   -- RUNMUX
   {
-    "mrowegawd/runmux",
+    -- "mrowegawd/runmux",
+    dir = "~/.local/src/nvim_plugins/runmux",
     keys = {
       { "rf", "<Cmd> RmuxRunFile <CR>" },
       { "rP", "<Cmd> RmuxSetPane <CR>" },
@@ -693,9 +694,12 @@ return {
       { "ri", "<Cmd> RmuxSendInterrupt <CR>" },
       { "rI", "<Cmd> RmuxSendInterruptAll <CR>" },
       { "rt", "<Cmd> RmuxTargetPane <CR>" },
-      { "rL", "<Cmd> RmuxLOADConfig <CR>" },
+
       { "rC", "<Cmd> RmuxKillAllPanes <CR>" },
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
+
+      { "re", "<Cmd> RmuxEDITConfig <CR>" },
+      { "rE", "<Cmd> RmuxREDITConfig <CR>" },
     },
     opts = {
       base = {

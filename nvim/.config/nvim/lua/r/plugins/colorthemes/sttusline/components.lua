@@ -1,6 +1,4 @@
-local fn, fmt = vim.fn, string.format
-local hl = vim.api.nvim_set_hl
-local get_option = vim.api.nvim_buf_get_option
+local fn, fmt, hl, get_option = vim.fn, string.format, vim.api.nvim_set_hl, vim.api.nvim_buf_get_option
 
 local sttsline_utils = require "sttusline.utils"
 local sttsline_colors = require "sttusline.utils.color"
@@ -135,6 +133,8 @@ M.mode = function()
     },
     auto_hide_on_vim_resized = true,
   }
+
+  Mode.set_padding(1)
 
   return Mode
 end
