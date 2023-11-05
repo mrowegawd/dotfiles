@@ -414,6 +414,11 @@ end, { desc = "Misc: echo options" })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ Improve scroll, credits: https://github.com/Shougo       │
 --  ╰──────────────────────────────────────────────────────────╯
+
+-- Scroll step sideways
+nnoremap("zl", "z4l")
+nnoremap("zh", "z4h")
+
 vim.cmd [[
 noremap <expr> <C-b> max([winheight(0) - 2, 1])
       \ ."\<C-u>".(line('w0') <= 1 ? "H" : "M")

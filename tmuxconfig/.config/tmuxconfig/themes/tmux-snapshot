@@ -31,7 +31,7 @@ set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[und
 #  |                      STATUS THEMES                       |
 #  +----------------------------------------------------------+
 set -g status-fg $TMUX_FG
-set -g status-bg $TMUX_PANE_ACTIVE_BG
+set -g status-bg $TMUX_PANE_BG
 set -g status on
 set -g status-interval 5
 

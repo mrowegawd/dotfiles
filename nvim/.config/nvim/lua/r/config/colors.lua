@@ -131,7 +131,8 @@ local general_overrides = function()
     { Mygreen_fg = { fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
     { Mymisc_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 }, bg = { from = "Normal", alter = -0.1 } } },
     { MyQuickFixLineLeave = { bg = { from = "CursorLine", alter = 0.2 } } },
-    { MyQuickFixLineEnter = { bg = { from = "CursorLine", alter = 0.6 }, fg = { from = "CursorLine", attr = "bg", alter = 2 }, bold = true } },
+    { MyQuickFixLineEnter = { bg = { from = "Boolean", attr = "fg", alter = -0.4 } } },
+    { MyCursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = 0.35 } } },
     { CodeBlock2 = { bg = "cyan" } },
 
@@ -160,13 +161,14 @@ local general_overrides = function()
 
     -- Preview
     { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
-    { TelescopePreviewBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+    { TelescopePreviewBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
     { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
     { TelescopeSelection = { inherit = "PmenuSel" } },
     { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
 
     -- Results
     { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
+    { TelescopeResultsBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
 
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "Normal" } },

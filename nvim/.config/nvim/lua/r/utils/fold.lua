@@ -34,7 +34,8 @@ function M.goPreviousClosedFold()
   if vim.bo[0].filetype == "qf" then
     vim.cmd [[
         try
-            execute  "cprevious"
+            execute  "cprev"
+            execute "normal! zz"
         catch /^Vim\%((\a\+)\)\=:E553/
             " execute "echo 'stop it'"
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
@@ -77,6 +78,7 @@ function M.goNextClosedFold()
     vim.cmd [[
         try
             execute "cnext"
+            execute "normal! zz"
         catch /^Vim\%((\a\+)\)\=:E553/
             " execute "echo 'stop it'"
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/

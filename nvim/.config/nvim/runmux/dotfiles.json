@@ -1,0 +1,35 @@
+{
+  "name": "dotfiles",
+  "run_file": {
+    "include_cwd": true,
+    "command": "lua"
+  },
+  "repl": {
+    "open_pane": "tmux split-window -h -p 20",
+    "command": "echo 'foo'"
+  },
+  "tasks": {
+    "layout": [
+      {
+        "open_pane": "tmux split-window -v -p 20",
+        "command": "cat '$HOME/.cache/nvim/diffview.log'"
+      },
+      {
+        "open_pane": "tmux split-window -h -p 80",
+        "command": "cat '$HOME/.local/state/nvim/log'"
+      },
+      {
+        "open_pane": "tmux split-window -h -p 75",
+        "command": "cat '$HOME/.local/state/nvim/lsp.log'"
+      },
+      {
+        "open_pane": "tmux split-window -h -p 65",
+        "command": "tail -f '$HOME/.local/state/nvim/noice.log'"
+      },
+      {
+        "open_pane": "tmux split-window -h -p 55",
+        "command": ""
+      }
+    ]
+  }
+}

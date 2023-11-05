@@ -1,18 +1,6 @@
 local Util = require "r.utils"
 
 return {
-  -- NVIM-COLORIZER (disabled)
-  {
-    "NvChad/nvim-colorizer.lua",
-    enabled = false,
-    opts = {},
-    cmd = {
-      "ColorizerToggle",
-      "ColorizerAttachToBuffer",
-      "ColorizerDetachFromBuffer",
-      "ColorizerReloadAllBuffers",
-    },
-  },
   -- CCC
   {
     "uga-rosa/ccc.nvim",
@@ -26,8 +14,8 @@ return {
       {
         "<Localleader>tc",
         function()
-          Util.info("Toggle highlighter CCC", "CCC.nvim")
-          return vim.cmd.CccHighlighterToggle()
+          Util.info("Toggle highlighter CCC", { title = "CCC.nvim" })
+          return vim.cmd "CccHighlighterToggle"
         end,
         desc = "Misc(ccc): toggle color",
       },

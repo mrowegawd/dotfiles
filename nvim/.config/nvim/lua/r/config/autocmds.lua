@@ -100,9 +100,9 @@ Util.cmd.augroup("WindowBehaviours", {
     "orgagenda",
     "capture",
     "gitcommit",
-    "help",
+    -- "help",
     "qf",
-    "Trouble",
+    -- "Trouble",
   },
   command = function()
     cmd "wincmd J"
