@@ -387,20 +387,18 @@ M.branch = function()
     local config = Branch.get_config()
     local icon = config.icon
 
-    local is_git_branch = io.popen("git rev-parse --is-inside-work-tree 2>/dev/null"):read "*a"
-
-    if is_git_branch == "true\n" then
-      local check_branch = io.popen("git branch 2>/dev/null"):lines()
-      if check_branch() == nil then
-        return ""
+    local git_dir = vim.fn.finddir(".git", ".;")
+    if git_dir ~= "" then
+      local head_file = io.open(git_dir .. "/HEAD", "r")
+      if head_file then
+        local content = head_file:read "*all"
+        head_file:close()
+        -- branch name  or commit hash
+        return sttsline_utils.add_highlight_name(
+          icon .. content:match "ref: refs/heads/(.-)%s*$",
+          "STTUSLINE_GITBRANCHC"
+        ) or content:sub(1, 7) or ""
       end
-      for line in check_branch do
-        local current_branch = line:match "%* (.+)$"
-        if current_branch then
-          return sttsline_utils.add_highlight_name(icon .. current_branch, "STTUSLINE_GITBRANCHC")
-        end
-      end
-    else
       return ""
     end
   end)
