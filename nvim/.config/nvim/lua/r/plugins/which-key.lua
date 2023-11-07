@@ -47,8 +47,8 @@ return {
           { mode = "x", keys = "'" },
           { mode = "x", keys = "`" },
 
-          { mode = "n", keys = "r" },
-          { mode = "x", keys = "r" },
+          -- { mode = "n", keys = "r" },
+          -- { mode = "x", keys = "r" },
 
           -- Registers
           -- { mode = "n", keys = '"' },

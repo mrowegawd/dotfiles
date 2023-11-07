@@ -21,7 +21,6 @@ function M.get()
     { "gd", function() require("telescope.builtin").lsp_definitions { reuse_win = false } end, desc = "LSP(fzflua): definitions", has = "definition" },
     { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
     { "gT", "<cmd>FzfLua lsp_typedefs<cr>", desc = "LSP(fzflua): peek type definitions" },
-    -- { "gD", vim.lsp.buf.declaration, desc = "Goto Declaration" },
     { "gI", "<CMD>FzfLua outgoing_calls<CR>", desc = "LSP(fzflua): outgoing calls" },
     { "gi", "<CMD>FzfLua incoming_calls<CR>", desc = "LSP(fzflua): incoming calls" },
     { "gy", function() require("telescope.builtin").lsp_type_definitions { reuse_win = true } end, desc = "Goto T[y]pe Definition" },
@@ -72,6 +71,18 @@ function M.get()
       desc = "LSP(diagnostic): sending to qf",
     },
   }
+
+  if require("r.utils").has "nvim-gtd" then
+    M._keys[#M._keys + 1] = {
+      "gD",
+      function()
+        require("gtd").exec { command = "split" }
+      end,
+      desc = "LSP(gtd): goto definitions (split)",
+    }
+  else
+    M._keys[#M._keys + 1] = { "gD", vim.lsp.buf.declaration, desc = "LSP: goto declaration" }
+  end
 
   if require("r.utils").has "goto-preview" then
     M._keys[#M._keys + 1] =

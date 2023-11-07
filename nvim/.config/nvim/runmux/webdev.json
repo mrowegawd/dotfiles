@@ -1,21 +1,21 @@
 {
-  "name": "luadev",
+  "name": "webdev",
   "run_file": {
     "include_cwd": true,
-    "command": "lua"
+    "command": "yarn run_tsc"
   },
   "repl": {
     "open_pane": "tmux split-window -h -p 20",
-    "command": "lua"
+    "command": "node"
   },
   "tasks": {
     "layout": [
       {
         "open_pane": "tmux split-window -v -p 20",
-        "command": "tail -f '$HOME/.local/state/nvim/log'"
+        "command": "yarn dev"
       },
       {
-        "open_pane": "tmux split-window -h -p 40",
+        "open_pane": "tmux split-window -h -p 50",
         "command": ""
       }
     ]

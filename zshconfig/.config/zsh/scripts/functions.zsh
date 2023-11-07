@@ -5,7 +5,10 @@ build-nvim() {
   [ ! -d $neovim_dir ] && git clone git@github.com:neovim/neovim.git $neovim_dir
   pushd $neovim_dir
   git checkout master
-  git pull upstream master
+  # git pull upstream master
+  git pull --rebase --prune
+  git fetch --tags -f
+  git checkout nightly
   [ -d "$neovim_dir/build/" ] && rm -r ./build/  # clear the CMake cache
   make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
   make install
@@ -27,6 +30,7 @@ build-install(){
 }
 
 build-react() {
+  echo "usage\n 'build-react [project-name]'\n\n"
   echo "Clone the react-starter..."
   git clone git@github.com:mrowegawd/react-starter.git $@
 }

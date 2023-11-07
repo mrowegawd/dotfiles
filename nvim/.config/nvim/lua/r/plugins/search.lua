@@ -38,6 +38,10 @@ end
 
 local function cursor_dropdown(opts)
   return dropdown(vim.tbl_deep_extend("force", {
+    winopts_fn = {
+      width = 23,
+      height = 23,
+    },
     winopts = {
       row = 1,
       relative = "cursor",
@@ -270,7 +274,7 @@ return {
             cmd = pcmd,
           }
         end,
-        desc = "fzflua(qf): grep qf items",
+        desc = "Fzflua(qf): grep qf items",
       },
     },
     opts = function()
@@ -364,22 +368,24 @@ return {
             ["--header"] = [[Ctrl-g:'grep by directory',Ctrl-h:'toggle hidden']],
           },
           fd_opts = [[--color never --type f --hidden --follow ]]
-            .. [[--exclude .git --exclude node_modules --exclude '*.pyc']]
+            .. [[--exclude .git --exclude '*.pyc']]
             .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
           actions = {
             ["default"] = function(selected, opts)
               local selected_item = selected[1]
               local status, entry = pcall(path.entry_to_file, selected_item, opts, opts.force_uri)
 
-              local file_or_dir = vim.uv.fs_stat(entry.path)
+              if entry.path ~= nil then
+                local file_or_dir = vim.uv.fs_stat(entry.path)
 
-              if file_or_dir and status and file_or_dir.type == "file" then
-                require("fzf-lua").actions.file_edit(selected, opts)
-              else
-                require("fzf-lua").live_grep {
-                  fzf_opts = { ["--reverse"] = false },
-                  cwd = entry.path,
-                }
+                if file_or_dir and status and file_or_dir.type == "file" then
+                  require("fzf-lua").actions.file_edit(selected, opts)
+                else
+                  require("fzf-lua").live_grep {
+                    fzf_opts = { ["--reverse"] = false },
+                    cwd = entry.path,
+                  }
+                end
               end
             end,
             ["ctrl-y"] = function(selected, _)
@@ -609,42 +615,29 @@ return {
         grep = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
           prompt = " ",
-          winopts = { title = format_title("Grep", "󰈭") },
+          winopts = { title = format_title("Grep", " ") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
-          rg_opts = "--column --line-number -i --hidden --no-heading --color=always --smart-case --max-columns=4096",
-          rg_glob = true,
-          glob_flag = "--iglob", -- for case sensitive globs use '--glob'
-          glob_separator = "%s%-%-", -- query separator pattern (lua): ' --'
+          rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096",
+          fzf_opts = {
+            ["--header"] = [[Ctrl-g:'custom hex',Ctrl-h:'toggle hidden']],
+          },
           actions = {
-            -- actions inherit from 'actions.files' and merge
-            -- this action toggles between 'grep' and 'live_grep'
             ["ctrl-g"] = { actions.grep_lgrep },
-            ---@diagnostic disable-next-line: unused-local
-            ["ctrl-y"] = function(_, opts)
-              print "not implementation yet"
-            end,
-            ["ctrl-d"] = function(_, args)
-              print "not implementation yet"
-              -- if args.cmd:find "--type f" then
-              --   args.cmd = args.cmd:gsub("--type f", "", 1)
-              --   args.cmd:gsub("%s*\\*$", "")
-              --   args.cmd = args.cmd .. " --type d"
-              --   args.winopts = {
-              --     preview = { hidden = "hidden" },
-              --     title = format_title("Grep on directory", ""),
-              --   }
-              -- elseif args.cmd:find "--type d" then
-              --   args.cmd = args.cmd:gsub("--type d", "", 1)
-              --   args.cmd:gsub("%s*\\*$", "")
-              --   args.cmd = args.cmd .. " --type f"
-              --   args.winopts = {
-              --     preview = { hidden = "nohidden" },
-              --   }
-              -- end
-              -- require("fzf-lua").files {
-              --   cmd = args.cmd,
-              --   winopts = args.winopts,
-              -- }
+            ["ctrl-h"] = function(_, args)
+              local toggle = 1
+              args.rg_opts =
+                "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
+              if toggle == 1 then
+                args.rg_opts =
+                  "--column --hidden --no-ignore --no-heading --ignore-case -g !.git --smart-case --color=always --max-columns=4096"
+                toggle = 0
+              else
+                toggle = 1
+              end
+              require("fzf-lua").live_grep_glob {
+                rg_opts = args.rg_opts,
+                winopts = { title = format_title("Grep hidden", " ") },
+              }
             end,
           },
         },
@@ -1548,6 +1541,76 @@ return {
 
         -- don't replace the (KEYWORDS) placeholder
         pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
+      },
+    },
+  },
+  -- DRESSING
+  {
+    "stevearc/dressing.nvim",
+    lazy = true,
+    init = function()
+      vim.ui.select = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.select(...)
+      end
+      -- vim.ui.input = function(...)
+      --   require("lazy").load { plugins = { "dressing.nvim" } }
+      --   return vim.ui.input(...)
+      -- end
+    end,
+    opts = {
+      input = { enabled = false },
+      select = {
+        -- priority: use fzf_lua first before anything else
+        backend = { "fzf_lua", "builtin" },
+        builtin = {
+          border = require("r.config").icons.border.rectangle,
+          min_height = 10,
+          win_options = { winblend = 10 },
+          mappings = { n = { ["q"] = "Close" } },
+        },
+        get_config = function(opts)
+          opts.prompt = opts.prompt and opts.prompt:gsub(":", "")
+          if opts.kind == "codeaction" then
+            return {
+              backend = "fzf_lua",
+              fzf_lua = cursor_dropdown {
+                prompt = "  ",
+                winopts = { title = opts.prompt, relative = "cursor" },
+              },
+            }
+          end
+          if opts.kind == "orgmode" then
+            return {
+              backend = "nui",
+              nui = {
+                position = "97%",
+                border = { style = require("r.config").icons.border.rectangle },
+                min_width = vim.o.columns - 2,
+              },
+            }
+          end
+          return {
+            backend = "fzf_lua",
+            fzf_lua = dropdown {
+              winopts = { title = opts.prompt, height = 0.33, row = 0.5 },
+            },
+          }
+        end,
+        nui = {
+          min_height = 10,
+          win_options = {
+            winhighlight = table.concat({
+              "Normal:Italic",
+              "FloatBorder:PickerBorder",
+              "FloatTitle:Title",
+              "CursorLine:Visual",
+            }, ","),
+          },
+        },
+      },
+      win_options = {
+        winhighlight = "FloatBorder:FzfLuaBorder",
       },
     },
   },

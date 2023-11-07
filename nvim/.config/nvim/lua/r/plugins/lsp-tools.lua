@@ -53,15 +53,6 @@ return {
     "hrsh7th/nvim-gtd",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = "neovim/nvim-lspconfig",
-    keys = {
-      {
-        "gD",
-        function()
-          require("gtd").exec { command = "split" }
-        end,
-        desc = "LSP(nvim-gtd): goo to definition or file",
-      },
-    },
     opts = {
       sources = {
         { name = "findup" },
@@ -799,7 +790,7 @@ return {
     "smjonas/inc-rename.nvim",
     opts = {
       show_message = false,
-      hl_group = "Substitute", -- the highlight group used for highlighting the identifier's new name
+      hl_group = "MyQuickFixLineEnter", -- the highlight group used for highlighting the identifier's new name
       preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancell
     },
   },

@@ -243,9 +243,10 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- NVIM-IDE
+  -- NVIM-IDE (disabled)
   {
     "ldelossa/nvim-ide",
+    enabled = false,
     lazy = false,
     config = function()
       -- local bufferlist = require "ide.components.bufferlist"

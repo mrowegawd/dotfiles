@@ -6,7 +6,7 @@
   },
   "repl": {
     "open_pane": "tmux split-window -h -p 20",
-    "command": "echo 'foo'"
+    "command": "lua"
   },
   "tasks": {
     "layout": [
