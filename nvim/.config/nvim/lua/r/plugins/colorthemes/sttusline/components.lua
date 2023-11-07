@@ -399,8 +399,8 @@ M.branch = function()
           "STTUSLINE_GITBRANCHC"
         ) or content:sub(1, 7) or ""
       end
-      return ""
     end
+    return ""
   end)
 
   Branch.set_onhighlight(function()
@@ -409,79 +409,6 @@ M.branch = function()
 
   return Branch
 end
--- M.diagnostics = function()
---   local Diagnostics = require("sttusline.component").new()
-
---   Diagnostics.set_event(M.set_event)
-
---   Diagnostics.set_update(function()
---     local bufnr = vim.api.nvim_get_current_buf()
---     local diagnostics_count
---     local last_diagnostics_count = {}
---     local result = {}
-
---     if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "i" then
---       local diag_source = modules.sources.get_diagnostics { "nvim_diagnostic" }
-
---       local error_count, warning_count, info_count, hint_count = 0, 0, 0, 0
-
---       for _, data in pairs(diag_source) do
---         error_count = error_count + data.error
---         warning_count = warning_count + data.warn
---         info_count = info_count + data.info
---         hint_count = hint_count + data.hint
---       end
---       diagnostics_count = {
---         error = error_count,
---         warn = warning_count,
---         info = info_count,
---         hint = hint_count,
---       }
---       -- Save count for insert mode
---       last_diagnostics_count[bufnr] = diagnostics_count
---     else -- Use cached count in insert mode with update_in_insert disabled
---       diagnostics_count = last_diagnostics_count[bufnr] or { error = 0, warn = 0, info = 0, hint = 0 }
---     end
-
---     local always_visible = false
-
---     -- format the counts with symbols and highlights
---     local symbols = {
---       error = icons.diagnostics.Error,
---       warn = icons.diagnostics.Warn,
---       info = icons.diagnostics.Info,
---       hint = icons.diagnostics.Hint,
---     }
---     local sections = { "error", "warn", "info", "hint" }
---     -- local colored = true
---     -- local highlight_groups = { "error", "warn", "info", "hint" }
-
---     -- if colored then
---     --   local colorsss, bgs = {}, {}
---     --   for name, hll in pairs(highlight_groups) do
---     --     colorsss[name] = self:format_hl(hll)
---     --     bgs[name] = modules.utils.extract_highlight_colors(colorsss[name]:match "%%#(.-)#", "bg")
---     --   end
---     --   local previous_section, padding
---     --   for _, section in ipairs(sections) do
---     --     if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
---     --       padding = previous_section and (bgs[previous_section] ~= bgs[section]) and " " or ""
---     --       previous_section = section
---     --       table.insert(result, colorsss[section] .. padding .. symbols[section] .. diagnostics_count[section])
---     --     end
---     --   end
---     -- else
---     for _, section in ipairs(sections) do
---       if diagnostics_count[section] ~= nil and (always_visible or diagnostics_count[section] > 0) then
---         table.insert(result, symbols[section] .. diagnostics_count[section])
---       end
---     end
-
---     return table.concat(result, " ")
---   end)
-
---   return Diagnostics
--- end
 M.lsp_notify = function()
   local LSPFormatters = require "sttusline.components.lsps-formatters"
 
