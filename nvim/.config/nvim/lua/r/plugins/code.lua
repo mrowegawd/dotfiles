@@ -240,7 +240,7 @@ return {
               cmp.complete {
                 config = {
                   sources = {
-                    { name = "luasnip" },
+                    { name = "nvim_lsp" },
                   },
                 },
               }
@@ -270,7 +270,7 @@ return {
                   cmp.complete {
                     config = {
                       sources = {
-                        { name = "nvim_lsp" },
+                        { name = "luasnip" },
                       },
                     },
                   }
