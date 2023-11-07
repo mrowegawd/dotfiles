@@ -37,16 +37,27 @@ local function dropdown(opts)
 end
 
 local function cursor_dropdown(opts)
+  local height = vim.o.lines - vim.o.cmdheight
+  if vim.o.laststatus ~= 0 then
+    height = height - 1
+  end
+
+  local vim_width = vim.o.columns
+  local vim_height = height
+
+  local widthc = math.floor(vim_width / 2 + 8)
+  local heightc = math.floor(vim_height / 2 - 5)
+
   return dropdown(vim.tbl_deep_extend("force", {
     winopts_fn = {
-      width = 23,
-      height = 23,
+      width = widthc,
+      height = heightc,
     },
     winopts = {
       row = 1,
       relative = "cursor",
       height = 0.33,
-      width = 0.25,
+      width = widthc / (widthc + vim_width - 10),
     },
   }, opts))
 end
