@@ -228,18 +228,18 @@ nnoremap("<c-w>L", "<C-W>t <C-W>H", { desc = "Windows: change two vertically spl
 --  │ NAVIGATIONS                                              │
 --  ╰──────────────────────────────────────────────────────────╯
 
-local isWindows, _ = pcall(require, "smart-splits")
-if not isWindows then
-  nnoremap("<C-h>", "<C-w>h", { desc = "Navigations: move left" })
-  nnoremap("<C-l>", "<C-w>l", { desc = "Navigations: move right" })
-  nnoremap("<C-j>", "<C-w>j", { desc = "Navigations: move down" })
-  nnoremap("<C-k>", "<C-w>k", { desc = "Navigations: move up" })
+-- local isWindows, _ = pcall(require, "windows.nvim")
+-- if not isWindows then
+--   nnoremap("<C-h>", "<C-w>h", { desc = "Navigations: move left" })
+--   nnoremap("<C-l>", "<C-w>l", { desc = "Navigations: move right" })
+--   nnoremap("<C-j>", "<C-w>j", { desc = "Navigations: move down" })
+--   nnoremap("<C-k>", "<C-w>k", { desc = "Navigations: move up" })
 
-  nnoremap("<a-K>", "<cmd>resize +2<cr>", { desc = "Windows: resize window up" })
-  nnoremap("<a-J>", "<cmd>resize -2<cr>", { desc = "Windows: resize window down" })
-  nnoremap("<a-H>", "<cmd>vertical resize +2<cr>", { desc = "Windows: resize window right" })
-  nnoremap("<a-L>", "<cmd>vertical resize -2<cr>", { desc = "Windows: resize window left" })
-end
+--   nnoremap("<a-K>", "<cmd>resize +2<cr>", { desc = "Windows: resize window up" })
+--   nnoremap("<a-J>", "<cmd>resize -2<cr>", { desc = "Windows: resize window down" })
+--   nnoremap("<a-H>", "<cmd>vertical resize +2<cr>", { desc = "Windows: resize window right" })
+--   nnoremap("<a-L>", "<cmd>vertical resize -2<cr>", { desc = "Windows: resize window left" })
+-- end
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │

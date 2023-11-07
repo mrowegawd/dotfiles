@@ -53,15 +53,6 @@ return {
     "hrsh7th/nvim-gtd",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = "neovim/nvim-lspconfig",
-    keys = {
-      {
-        "gD",
-        function()
-          require("gtd").exec { command = "split" }
-        end,
-        desc = "LSP(nvim-gtd): goo to definition or file",
-      },
-    },
     opts = {
       sources = {
         { name = "findup" },
