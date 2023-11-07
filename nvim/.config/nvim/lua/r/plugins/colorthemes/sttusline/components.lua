@@ -315,49 +315,60 @@ M.rootdir = function()
     other = true,
     icon = "󱉭 ",
     colors = {
-      special = Util.ui.fg "Boolean",
+      special = Util.ui.fg "Directory",
       directory = Util.ui.fg "Directory",
     },
   }
 
+  -- Rootdir.set_event { "WinEnter", "BufEnter", "SessionLoadPost" }
   Rootdir.set_event(M.set_event)
 
   Rootdir.set_update(function()
-    local get = function()
-      local cwd = Util.root.cwd()
-      local root = Util.root.get { normalize = true }
-      local name = vim.fs.basename(root) or ""
+    local cwd = Util.root.cwd()
+    local root = Util.root.get { normalize = true }
+    local name = vim.fs.basename(root) or ""
 
-      if name == nil then
-        name = ""
+    if name == nil then
+      name = ""
+    end
+
+    if cwd == nil then
+      cwd = ""
+    end
+
+    local dat
+
+    if root == cwd then
+      -- root is cwd
+      if Rootdir.get_config().cwd and cwd then
+        dat = cwd
       end
-
-      if cwd == nil then
-        cwd = ""
+    elseif root:find(cwd, 1, true) == 1 then
+      -- root is subdirectory of cwd
+      if Rootdir.get_config().subdirectory then
+        dat = name
       end
-
-      if root == cwd then
-        -- root is cwd
-        return Rootdir.get_config().cwd and cwd
-      elseif root:find(cwd, 1, true) == 1 then
-        -- root is subdirectory of cwd
-        return Rootdir.get_config().subdirectory and name
-      elseif cwd:find(root, 1, true) == 1 then
-        -- root is parent directory of cwd
-        return Rootdir.get_config().parent and name
-      else
-        -- root and cwd are not related
-        return Rootdir.get_config().other and name
+    elseif cwd:find(root, 1, true) == 1 then
+      -- root is parent directory of cwd
+      if Rootdir.get_config().parent then
+        dat = name
+      end
+    else
+      -- root and cwd are not related
+      if Rootdir.get_config().other then
+        dat = name
       end
     end
 
     hl(0, "WADAU", { fg = Rootdir.get_config().colors.special.fg, bg = colors.base_bg })
     hl(0, "WADIDAU", { fg = Rootdir.get_config().colors.directory.fg, bg = colors.base_bg })
 
-    return sttsline_utils.add_highlight_name(
-      Rootdir.get_config().icon ~= nil and Rootdir.get_config().icon .. " ",
-      "WADIDAU"
-    ) .. sttsline_utils.add_highlight_name(get(), "WADAU")
+    if dat ~= nil and type(dat) == "string" then
+      return sttsline_utils.add_highlight_name(Rootdir.get_config().icon .. " ", "WADIDAU")
+        .. sttsline_utils.add_highlight_name(dat, "WADAU")
+    else
+      return ""
+    end
   end)
 
   return Rootdir
@@ -379,7 +390,11 @@ M.branch = function()
     local is_git_branch = io.popen("git rev-parse --is-inside-work-tree 2>/dev/null"):read "*a"
 
     if is_git_branch == "true\n" then
-      for line in io.popen("git branch 2>/dev/null"):lines() do
+      local check_branch = io.popen("git branch 2>/dev/null"):lines()
+      if check_branch() == nil then
+        return ""
+      end
+      for line in check_branch do
         local current_branch = line:match "%* (.+)$"
         if current_branch then
           return sttsline_utils.add_highlight_name(icon .. current_branch, "STTUSLINE_GITBRANCHC")
