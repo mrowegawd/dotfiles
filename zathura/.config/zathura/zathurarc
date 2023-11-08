@@ -35,13 +35,21 @@ map [index] q quit
 
 # map <c-f> toggle_fullscreen
 
-map D set "first-page-column 1:1"
-map <C-d> set "first-page-column 1:2"
+# map D set "first-page-column 1:1"
+# map <C-d> set "first-page-column 1:2"
 
 # untuk 2 coloum, press d
 
 # toggle: recolor black/white bg
 map i recolor
+
+unmap y
+map <C-y> scroll up
+
+map <C-g> feedkeys "?"
+
+unmap e
+map <C-e> scroll down 2
 
 # scroll: up
 map k scroll up
