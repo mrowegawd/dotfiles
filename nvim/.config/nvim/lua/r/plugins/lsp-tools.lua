@@ -463,55 +463,36 @@ return {
     end,
     -- stylua: ignore
     keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Misc(symbolsoutline): pick", }, },
-    opts = function()
-      local Config = require "r.config"
-      local defaults = require("symbols-outline.config").defaults
-      local opts = {
-        symbols = {},
-        symbol_blacklist = {},
-        keymaps = { -- These keymaps can be a string or a table for multiple keys
-          close = { "<Esc>", "q", "<leader><TAB>" },
-          goto_location = "<Cr>",
-          focus_location = "o",
-          hover_symbol = "K",
-          toggle_preview = "P",
-          rename_symbol = "r",
-          code_actions = "a",
-          show_help = "?",
-          fold = "h",
-          unfold = "l",
-          fold_all = "zM",
-          unfold_all = "zO",
-          fold_reset = "R",
-        },
-      }
-
-      for kind, symbol in pairs(defaults.symbols) do
-        opts.symbols[kind] = {
-          icon = Config.icons.kinds[kind] or symbol.icon,
-          hl = symbol.hl,
-        }
-        if not vim.tbl_contains(Config.kind_filter.default, kind) then
-          table.insert(opts.symbol_blacklist, kind)
-        end
-      end
-      return opts
-    end,
+    opts = {
+      symbols = {},
+      symbol_blacklist = {},
+      keymaps = { -- These keymaps can be a string or a table for multiple keys
+        close = { "<Esc>", "q", "<leader><TAB>" },
+        goto_location = "<Cr>",
+        focus_location = "o",
+        hover_symbol = "K",
+        toggle_preview = "P",
+        rename_symbol = "r",
+        code_actions = "a",
+        show_help = "?",
+        fold = "h",
+        unfold = "l",
+        fold_all = "zM",
+        unfold_all = "zO",
+        fold_reset = "R",
+      },
+    },
   },
-  -- DROPBAR (disabled)
+  -- DROPBAR
   {
-    -- TODO: got error: "not allowed in sandbox"
-    -- but seems already got fixed but still error, dunno
-    -- https://github.com/Bekaboo/dropbar.nvim/pull/25
     "Bekaboo/dropbar.nvim",
-    enabled = false,
     event = "VeryLazy",
     -- stylua: ignore
     keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
     init = function()
       highlight.plugin("DropBar", {
-        { DropBarIconUISeparator = { bg = { from = "ColorColumn" } } },
-        { DropBarMenuNormalFloat = { inherit = "Pmenu" } },
+        -- { DropBarIconUISeparator = { bg = { from = "ColorColumn" } } },
+        { DropBarMenuNormalFloat = { inherit = "ColorColumn" } },
       })
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -533,7 +514,7 @@ return {
         },
         icons = {
           kinds = {
-            use_devicons = true,
+            use_devicons = false,
             symbols = require("r.config").icons.kinds,
           },
           ui = {
@@ -551,7 +532,7 @@ return {
           sources = function(_, _)
             local sources = require "dropbar.sources"
             return {
-              sources.path,
+              sources.lsp,
             }
           end,
           padding = {

@@ -131,38 +131,33 @@ return {
         },
         ["core.highlights"] = {
           config = {
-            -- highlights = {
-            --     headings = {
-            --         ["1"] = {
-            --             title = "+NeorgCodeBlock",
-            --         },
-            --     },
-            -- },
+            highlights = {
+              markup = {
+                bold = { [""] = "+Boolean" },
+                verbatim = { [""] = "+CodeLine1", delimiter = "+NonText" },
+              },
+              tags = {
+                comment = {
+                  content = "+CodeComment1",
+                },
+              },
+            },
             dim = {
               tags = {
                 ranged_verbatim = {
                   code_block = {
                     reference = "CodeBlock1",
-                    -- percentage = 20,
                     affect = "background",
                   },
                 },
               },
-
-              markup = { -- hi code line
+              markup = {
                 verbatim = {
-                  reference = "ErrorMsg",
-                  percentage = 50,
+                  reference = "CodeLine1",
                 },
-
-                -- inline_comment = {
-                --     reference = "Normal",
-                --     percentage = 90,
-                -- },
               },
             },
           },
-          -- },
         },
         ["core.export"] = {},
         ["core.export.markdown"] = { config = { extensions = "all" } },

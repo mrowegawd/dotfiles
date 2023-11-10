@@ -86,15 +86,12 @@ return {
       },
     },
   },
-  --- CONFORM
   {
-    "stevearc/conform.nvim",
-    optional = true,
-    opts = {
-      formatters_by_ft = {
-        go = { "goimports", "gofumpt" },
-      },
-    },
+    "williamboman/mason.nvim",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { "goimports", "gofumpt" })
+    end,
   },
   -- NONE-LS
   {
@@ -105,7 +102,7 @@ return {
         "williamboman/mason.nvim",
         opts = function(_, opts)
           opts.ensure_installed = opts.ensure_installed or {}
-          vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl", "gomodifytags", "impl", "goimports" })
+          vim.list_extend(opts.ensure_installed, { "gomodifytags", "impl" })
         end,
       },
     },
@@ -118,6 +115,16 @@ return {
         nls.builtins.formatting.gofumpt,
       })
     end,
+  },
+  --- CONFORM
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        go = { "goimports", "gofumpt" },
+      },
+    },
   },
   -- NVIM-DAP
   {

@@ -24,7 +24,7 @@ schemes:
   everforest_dark_medium: &everforest_dark_medium
     primary:
       background: '#2d353b'
-      foreground: '#d3c6aa'
+      foreground: '#bdb299'
     normal:
       black:   '#475258'
       red:     '#e67e80'

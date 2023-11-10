@@ -23,6 +23,7 @@ local general_overrides = function()
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinBar = { bg = { from = "ColorColumn" } } },
+    { WinBarNC = { bg = { from = "ColorColumn" } } },
     -----------------------------------------------------------------------------//
     --  Spell
     -----------------------------------------------------------------------------//
@@ -136,6 +137,8 @@ local general_overrides = function()
     { MyCursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
     { CodeBlock2 = { bg = "cyan" } },
+    { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
+    { CodeComment1 = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
 
     -----------------------------------------------------------------------
     -- PLUGINS
@@ -143,8 +146,8 @@ local general_overrides = function()
 
     -- CMP ================================================================
     { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.55 }, bg = "NONE" } },
-    { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.2 }, bg = "NONE", bold = false } },
-    { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", alter = -0.3 } } },
+    { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
+    { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
 
     { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "ColorColumn" , attr = "bg" , alter = 0.5 } } },
     { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
@@ -155,7 +158,7 @@ local general_overrides = function()
     { TelescopeBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1  } } },
 
     -- Prompt
-    { TelescoeePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+    { TelescopePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
     { TelescopePromptBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
     { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
     { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
@@ -199,6 +202,79 @@ local general_overrides = function()
 
     -- HLSEARCH ===========================================================
     { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },
+
+    -- BUFFERLINE =========================================================
+    { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
+
+    -- DROPBAR ============================================================
+    { DropBarIconKindArray = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindBoolean = { bg = { from = "ColorColumn" }, fg = { from = "@booleanj" } } },
+    { DropBarIconKindBreakStatement = { bg = { from = "ColorColumn" }, fg = { from = "@error" } } },
+    { DropBarIconKindCall = { bg = { from = "ColorColumn" }, fg = { from = "Function" } } },
+    { DropBarIconKindCaseStatement = { bg = { from = "ColorColumn" }, fg = { from = "@conditional" } } },
+    { DropBarIconKindClass = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+    { DropBarIconKindConstant = { bg = { from = "ColorColumn" }, fg = { from = "Constant" } } },
+    { DropBarIconKindConstructor = { bg = { from = "ColorColumn" }, fg = { from = "Special" } } },
+    { DropBarIconKindContinueStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+    { DropBarIconKindDeclaration = { bg = { from = "ColorColumn" }, fg = { from = "CmpItemKindSnippet" } } },
+    { DropBarIconKindDelete = { bg = { from = "ColorColumn" }, fg = { from = "@error" } } },
+    { DropBarIconKindDoStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+    { DropBarIconKindElseStatement = { bg = { from = "ColorColumn" }, fg = { from = "@conditional" } } },
+    { DropBarIconKindEnum = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+    { DropBarIconKindEnumMember = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindEvent = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindField = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindFile = { bg = { from = "ColorColumn" }, fg = { from = "Directory" } } },
+    { DropBarIconKindFolder = { bg = { from = "ColorColumn" }, fg = { from = "Directory" } } },
+    { DropBarIconKindForStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+    { DropBarIconKindFunction = { bg = { from = "ColorColumn" }, fg = { from = "Function" } } },
+    { DropBarIconKindH1Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH1" } } },
+    { DropBarIconKindH2Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH2" } } },
+    { DropBarIconKindH3Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH3" } } },
+    { DropBarIconKindH4Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH4" } } },
+    { DropBarIconKindH5Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH5" } } },
+    { DropBarIconKindH6Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH6" } } },
+    { DropBarIconKindIdentifier = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindIfStatement = { bg = { from = "ColorColumn" }, fg = { from = "Conditional" } } },
+    { DropBarIconKindInterface = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+    { DropBarIconKindKeyword = { bg = { from = "ColorColumn" }, fg = { from = "Keyword" } } },
+    { DropBarIconKindList = { bg = { from = "ColorColumn" }, fg = { from = "SpecialChar" } } },
+    { DropBarIconKindMacro = { bg = { from = "ColorColumn" }, fg = { from = "Macro" } } },
+    { DropBarIconKindMarkdownH1 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH1" } } },
+    { DropBarIconKindMarkdownH2 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH2" } } },
+    { DropBarIconKindMarkdownH3 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH3" } } },
+    { DropBarIconKindMarkdownH4 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH4" } } },
+    { DropBarIconKindMarkdownH5 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH5" } } },
+    { DropBarIconKindMarkdownH6 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH6" } } },
+    { DropBarIconKindMethod = { bg = { from = "ColorColumn" }, fg = { from = "Function" } } },
+    { DropBarIconKindModule = { bg = { from = "ColorColumn" }, fg = { from = "LspKindModule" } } },
+    { DropBarIconKindNamespace = { bg = { from = "ColorColumn" }, fg = { from = "Include" } } },
+    { DropBarIconKindNull = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindNumber = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNumber" } } },
+    { DropBarIconKindObject = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindOperator = { bg = { from = "ColorColumn" }, fg = { from = "Identifiern" } } },
+    { DropBarIconKindPackage = { bg = { from = "ColorColumn" }, fg = { from = "LspKindModule" } } },
+    { DropBarIconKindPair = { bg = { from = "ColorColumn" }, fg = { from = "LspKindString" } } },
+    { DropBarIconKindProperty = { bg = { from = "ColorColumn" }, fg = { from = "LspKindProperty" } } },
+    { DropBarIconKindReference = { bg = { from = "ColorColumn" }, fg = { from = "LspKindReference" } } },
+    { DropBarIconKindRepeat = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+    { DropBarIconKindScope = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNameSpace" } } },
+    { DropBarIconKindSpecifier = { bg = { from = "ColorColumn" }, fg = { from = "Specifier" } } },
+    { DropBarIconKindStatement = { bg = { from = "ColorColumn" }, fg = { from = "Statement" } } },
+    { DropBarIconKindString = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+    { DropBarIconKindStruct = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+    { DropBarIconKindSwitchStatement = { bg = { from = "ColorColumn" }, fg = { from = "Conditional" } } },
+    { DropBarIconKindTerminal = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNumber" } } },
+    { DropBarIconKindType = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+    { DropBarIconKindTypeParameter = { bg = { from = "ColorColumn" }, fg = { from = "LspKindTypeParameter" } } },
+    { DropBarIconKindUnit = { bg = { from = "ColorColumn" }, fg = { from = "LspKindUnit" } } },
+    { DropBarIconKindValue = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNumber" } } },
+    { DropBarIconKindVariable = { bg = { from = "ColorColumn" }, fg = { from = "LspKindVariable" } } },
+    { DropBarIconKindWhileStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+    { DropBarIconUIIndicator = { bg = { from = "ColorColumn" }, fg = { from = "SpecialChar" } } },
+    { DropBarIconUIPickPivot = { bg = { from = "ColorColumn" }, fg = { from = "Error" } } },
+    { DropBarIconUISeparator = { bg = { from = "ColorColumn" }, fg = { from = "SpecialChar" } } },
+    { DropBarIconUISeparatorMenu = { bg = { from = "ColorColumn" }, fg = { from = "DropBarIconUISeparator" } } },
   }
 end
 
@@ -211,6 +287,7 @@ local function set_sidebar_highlight()
     { PanelWinSeparator = { inherit = "PanelBackground", fg = { from = "WinSeparator" } } },
     { PanelStNC = { link = "PanelWinSeparator" } },
     { PanelSt = { bg = { from = "Visual", alter = -0.2 } } },
+    { PanelStusLine = { bg = { from = "StatusLine" }, fg = { from = "Normal", attr = "fg" } } },
   }
 end
 

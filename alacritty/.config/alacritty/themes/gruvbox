@@ -24,8 +24,8 @@ schemes:
       white:   '0xd4be98'
   gruvbox_material_medium_dark: &gruvbox_material_medium_dark
     primary:
-      background: '0xbeab88'
-      foreground: '0x282828'
+      background: '0x222222'
+      foreground: '0xd3c5a0'
     normal:
       black:   '0x3c3836'
       red:     '0xea6962'

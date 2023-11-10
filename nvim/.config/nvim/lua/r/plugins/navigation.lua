@@ -238,7 +238,7 @@ return {
         { NeoTreeNormalNC = { link = "PanelBackground" } },
         { NeoTreeCursorLine = { link = "CursorLine" } },
         { NeoTreeRootName = { underline = false } },
-        { NeoTreeStatusLine = { link = "PanelSt" } },
+        { NeoTreeStatusLine = { link = "PanelStusLine" } },
         { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
         {
           NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },

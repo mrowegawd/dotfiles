@@ -1,7 +1,8 @@
 return {
-  -- TREESITTER- CONTEXT
+  -- TREESITTER-CONTEXT (disabled)
   {
     "nvim-treesitter/nvim-treesitter-context",
+    enabled = false,
     event = "LazyFile",
     opts = {
       multiline_threshold = 2,

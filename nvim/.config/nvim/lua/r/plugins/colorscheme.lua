@@ -4,6 +4,19 @@ return {
   ---------------------------------------------------------------------------
   -- Consistent color
   ---------------------------------------------------------------------------
+  -- FLESH-AND-BLOOD
+  {
+    "sainttttt/flesh-and-blood",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    enabled = function()
+      local fleshtheme = { "flesh-and-blood" }
+      if vim.tbl_contains(fleshtheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NANO-THEME
   {
     "ronisbr/nano-theme.nvim",
@@ -135,21 +148,19 @@ return {
       require("everforest").setup {}
     end,
   },
-  -- GRUVBOX-MATERIAL
+  -- GRUVBOX
   {
-    "sainnhe/gruvbox-material",
+    "ellisonleao/gruvbox.nvim",
     lazy = false,
     priority = 1000,
-    init = function()
-      vim.g.gruvbox_material_background = "medium"
-      vim.g.gruvbox_material_better_performance = 1
-    end,
     enabled = function()
-      if colorscheme == "gruvbox-material" then
+      local gruvboxtheme = { "gruvbox" }
+      if vim.tbl_contains(gruvboxtheme, colorscheme) then
         return true
       end
       return false
     end,
+    config = true,
   },
   -- TOKYONIGHT
   {
