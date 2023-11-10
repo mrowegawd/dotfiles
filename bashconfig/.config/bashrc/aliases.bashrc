@@ -1110,6 +1110,11 @@ tsm_start() {
 	transmission-remote -t "$1" --start
 }
 
+# tsm: run transmission-daemon
+tsm_running() {
+	transmission-daemon
+}
+
 # tsm: transmission-remote will remove torrent and data also
 tsm_purge() {
 	transmission-remote -t "$1" --remove-and-delete
