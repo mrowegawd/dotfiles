@@ -53,7 +53,7 @@ return {
             rg_glob = true,
             file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
             winopts = {
-              fullscreen = true,
+              -- fullscreen = true,
               title = format_title("[Neorg] Files", " "),
             },
           }

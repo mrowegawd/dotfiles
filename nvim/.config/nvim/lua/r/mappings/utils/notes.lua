@@ -18,13 +18,22 @@ function M.neorg_mappings_ft(bufnr)
 
   local mappings = {
     ["n"] = {
-      ["<Leader>fD"] = {
+      ["<Localleader>oa"] = {
+        function()
+          Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+          cmd "Neorg toc right"
+          local vim_width = vim.o.columns
+          vim_width = math.floor(vim_width / 2 - 10)
+          cmd(fmt("vertical resize %s", vim_width))
+        end,
+        "Note(neorg): open toc right(curbuf)",
+      },
+      ["<Localleader>fc"] = {
         function()
           local opts = {
             prompt = "  ",
             winopts = {
-              -- split = "belowright new | wincmd J | resize 40",
-              title = format_title("[Neorg] Link Curbuf", " "),
+              title = format_title("[Neorg] find by categories", " "),
               preview = {
                 hidden = "hidden",
                 vertical = "up:55%",
@@ -35,27 +44,23 @@ function M.neorg_mappings_ft(bufnr)
             actions = {
               ["default"] = function(selected, _)
                 local selection = selected[1]
-                local str_path = selection:match "%[(.*)%]"
-
-                vim.api.nvim_put({
-                  "[" .. str_path .. "]",
-                }, "c", false, true)
+                print(selection)
               end,
             },
           }
-          return require("fzf-lua").fzf_exec(Util.neorg_notes.testing(), opts)
+          return require("fzf-lua").fzf_exec(Util.neorg_notes.find_by_categories(), opts)
         end,
         "Note(todocomment): find todo (curbuf)",
       },
       ["<Leader>tq"] = {
         function()
-          return cmd(fmt("TODOQuickfixList cwd=%s", fn.expand "%:p"))
+          return cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
         end,
         "Note(todocomment): find todo (curbuf)",
       },
       ["<Leader>tQ"] = {
         function()
-          return cmd(fmt([[TODOQuickfixList cwd=%s]], require("r.config").path.wiki_path))
+          return cmd(fmt([[TodoQuickFix cwd=%s]], require("r.config").path.wiki_path))
         end,
         "Note(todocomment): find global todo",
       },
@@ -127,6 +132,34 @@ function M.neorg_mappings_ft(bufnr)
     },
 
     ["i"] = {
+      ["c<cr>"] = {
+        function()
+          local opts = {
+            prompt = "  ",
+            winopts = {
+              -- split = "belowright new | wincmd J | resize 40",
+              title = format_title("[Neorg] Link Curbuf", " "),
+              preview = {
+                hidden = "hidden",
+                vertical = "up:55%",
+                horizontal = "right:60%",
+                layout = "vertical",
+              },
+            },
+            actions = {
+              ["default"] = function(selected, _)
+                local selection = selected[1]
+                -- local str_path = selection:match "%[(.*)%]"
+
+                vim.api.nvim_put({ selection }, "c", false, true)
+              end,
+            },
+          }
+
+          return require("fzf-lua").fzf_exec(Util.neorg_notes.find_by_categories(), opts)
+        end,
+        "Note(fzflua): insert categories (curbuf)",
+      },
       ["l<cr>"] = {
         function()
           local opts = {
