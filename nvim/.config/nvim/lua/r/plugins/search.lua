@@ -796,14 +796,14 @@ return {
         },
         quickfix = {
           winopts = {
-            title = format_title("[QF]", " "),
+            title = format_title("[QF]", "󰈙"),
           },
           file_icons = true,
           git_icons = true,
         },
         quickfix_stack = {
           winopts = {
-            title = format_title("[QF]", " "),
+            title = format_title("[QF]", "󰈙"),
           },
           marker = ">", -- current list marker
         },

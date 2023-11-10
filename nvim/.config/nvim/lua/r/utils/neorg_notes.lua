@@ -256,7 +256,7 @@ function M.find_by_categories()
       require("r.config").path.wiki_path
     ),
     { output = true }
-                             )
+  )
   local categories = {}
   local exile = {}
   if scripts.output ~= nil then
@@ -270,11 +270,11 @@ function M.find_by_categories()
           if not exile[token] then
             exile[token] = true
             table.insert(categories, token)
+          end
+        end
       end
     end
   end
-        end
-      end
   return categories
 end
 
