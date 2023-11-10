@@ -175,6 +175,7 @@ return {
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "path" },
+          { name = "git" },
           {
             name = "buffer",
             keyword_length = 4,

@@ -394,10 +394,12 @@ M.branch = function()
         local content = head_file:read "*all"
         head_file:close()
         -- branch name  or commit hash
-        return sttsline_utils.add_highlight_name(
-          icon .. content:match "ref: refs/heads/(.-)%s*$",
-          "STTUSLINE_GITBRANCHC"
-        ) or content:sub(1, 7) or ""
+        local head = content:match "ref: refs/heads/(.-)%s*$"
+        if head ~= nil then
+          return sttsline_utils.add_highlight_name(icon .. head, "STTUSLINE_GITBRANCHC") or content:sub(1, 7) or ""
+        else
+          return ""
+        end
       end
     end
     return ""
