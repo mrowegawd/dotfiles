@@ -345,6 +345,10 @@ return {
         {
           "<Localleader>oA",
           function()
+            if vim.bo[0].filetype == "norg" then
+              return
+            end
+
             local aerial_selected = {
               "Class",
               "Constructor",
@@ -434,10 +438,10 @@ return {
           ["O"] = "actions.scroll",
           -- ["]y"] = "actions.next",
           -- ["[y"] = "actions.prev",
-          -- ["<c-p>"] = "actions.prev_up",
-          -- ["<c-n>"] = "actions.next_up",
-          ["<a-n>"] = "actions.next",
-          ["<a-p>"] = "actions.prev",
+          ["<a-n>"] = "actions.down_and_scroll",
+          ["<a-p>"] = "actions.up_and_scroll",
+          -- ["<a-n>"] = "actions.next",
+          -- ["<a-p>"] = "actions.prev",
           -- ["zM"] = "actions.tree_close_all",
           ["{"] = false,
           ["}"] = false,
