@@ -18,6 +18,9 @@ return {
       {
         "<Leader>e",
         function()
+          if vim.bo[0].filetype == "neo-tree" then
+            return cmd [[q]]
+          end
           Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
           return cmd "Neotree toggle"
         end,
@@ -26,6 +29,9 @@ return {
       {
         "<Leader>ge",
         function()
+          if vim.bo[0].filetype == "neo-tree" then
+            return cmd [[q]]
+          end
           return cmd "Neotree git_status"
         end,
         desc = "Misc(neotree): open File explore",
