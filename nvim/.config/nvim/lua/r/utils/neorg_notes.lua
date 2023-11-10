@@ -249,93 +249,32 @@ end
 --  ┃                       BROKEN LINKS                       ┃
 --  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function M.testing()
-  local neorg = require "neorg"
-  local neorg_core = require "neorg.core"
-  local utils = neorg_core.utils
-  local lib = neorg_core.lib
-
-  local dirman = neorg.modules.get_module "core.dirman"
-  if not dirman then
-    print "not found"
-    return
-  end
-
-  -- local module = neorg.modules.get_module "core.summary"
-  local ts = neorg.modules.get_module "core.integrations.treesitter"
-
-  local heading_query
-
-  local get_first_heading_title = function(bufnr)
-    local document_root = ts.get_document_root(bufnr)
-    if not heading_query then
-      -- allow second level headings, just in case
-      local heading_query_string = [[
-                         [
-                             (heading1
-                                 title: (paragraph_segment) @next-segment
-                             )
-                             (heading2
-                                 title: (paragraph_segment) @next-segment
-                             )
-                         ]
-                     ]]
-      heading_query = utils.ts_parse_query("norg", heading_query_string)
-    end
-    -- search up to 20 lines (a doc could potentially have metadata without metadata.title)
-    local _, heading = heading_query:iter_captures(document_root, bufnr)()
-    if not heading then
-      return nil
-    end
-    local start_line, _ = heading:start()
-    local lines = vim.api.nvim_buf_get_lines(bufnr, start_line, start_line + 1, false)
-    if #lines > 0 then
-      local title = lines[1]:gsub("^%s*%*+%s*", "") -- strip out '*' prefix (handle '* title', ' **title', etc)
-      if title ~= "" then -- exclude an empty heading like `*` (although the query should have excluded)
-        return title
-      end
-    end
-  end
-
-  local categories = vim.defaulttable()
-  local ws_root = dirman.get_current_workspace()[2]
-  utils.read_files(dirman.get_norg_files(dirman.get_current_workspace()[1]) or {}, function(bufnr, filename)
-    local metadata = ts.get_document_metadata(bufnr)
-
-    if not metadata then
-      metadata = {}
-    end
-
-    local norgname = filename:match "(.+)%.norg$" -- strip extension for link destinations
-    if not norgname then
-      norgname = filename
-    end
-    norgname = string.sub(norgname, string.len(ws_root) + 1)
-
-    -- normalise categories into a list. Could be vim.NIL, a number, a string or a list ...
-    if not metadata.categories or metadata.categories == vim.NIL then
-      metadata.categories = { "Uncategorised" }
-    elseif not vim.tbl_islist(metadata.categories) then
-      metadata.categories = { tostring(metadata.categories) }
-    end
-    for _, category in ipairs(metadata.categories) do
-      if not metadata.title then
-        metadata.title = get_first_heading_title(bufnr)
-        if not metadata.title then
-          metadata.title = vim.fs.basename(norgname)
+function M.find_by_categories()
+  local scripts = vim.api.nvim_exec2(
+    fmt(
+      [[!find %s -type f -exec sed -n '/categories:/s/categories: \(.*\)/\1/p' {} \; ]],
+      require("r.config").path.wiki_path
+    ),
+    { output = true }
+  )
+  local categories = {}
+  local exile = {}
+  if scripts.output ~= nil then
+    local res = vim.split(scripts.output, "\n")
+    for index = 2, #res do
+      local item = res[index]
+      if #item > 0 then
+        -- Output dari item, ex: "git index go" bertype string
+        -- harus di buat split menjadi table lalu dimasukkan ke table categories
+        for token in string.gmatch(item, "[^%s]+") do
+          if not exile[token] then
+            exile[token] = true
+            table.insert(categories, token)
+          end
         end
       end
-      if metadata.description == vim.NIL then
-        metadata.description = nil
-      end
-      table.insert(categories[lib.title(category)], {
-        title = tostring(metadata.title),
-        norgname = norgname,
-        description = metadata.description,
-      })
     end
-  end)
-
+  end
   return categories
 end
 

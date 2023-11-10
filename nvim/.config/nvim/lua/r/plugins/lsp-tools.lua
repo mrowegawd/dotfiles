@@ -8,18 +8,11 @@ local set_icons = function(icons_name)
 end
 
 return {
-  -- TROUBLE.NVIM (disabled)
+  -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
-    -- enabled = false,
     cmd = { "TroubleToggle", "Trouble" },
-    keys = {
-      {
-        "<Localleader>tr",
-        "<CMD>TroubleToggle<CR>",
-        desc = "Misc(trouble): toggle",
-      },
-    },
+    keys = { { "<Localleader>tr", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle" } },
     config = function()
       require("trouble").setup {
         auto_open = false,
@@ -323,47 +316,89 @@ return {
         end,
       })
     end,
-    keys = function(opts)
+    keys = function()
+      local function get_aerial()
+        local ok_aerial, aerial = pcall(require, "aerial")
+        return ok_aerial and aerial or {}
+      end
+
+      local height = vim.o.lines - vim.o.cmdheight
+      if vim.o.laststatus ~= 0 then
+        height = height - 1
+      end
+
+      local vim_width = vim.o.columns
+      local vim_height = height
+
+      local widthc = math.floor(vim_width / 2 + 8)
+      local heightc = math.floor(vim_height / 2 - 5)
+
       return {
         {
           "<Localleader>oa",
           function()
-            -- r_utils.force_win_close({ "Outline" }, false)
-            -- print(vim.inspect(opts.opts))
-            -- require("aerial").setup(opts.opts)
-            require("aerial").open { opts.opts }
+            Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+            vim.cmd [[AerialToggle]]
           end,
-          desc = "Open(aerial): focus toggle",
+          desc = "Misc(aerial): toggle",
         },
         {
           "<Localleader>oA",
           function()
-            local selected = Util.plugin.select({
+            local aerial_selected = {
               "Class",
               "Constructor",
               "Object",
               "Enum",
               "Function",
               "Interface",
+              "Variable",
               "Module",
               "Method",
               "Struct",
               "all",
-            }, { prompt = require("r.config").icons.kinds.Package .. " Filter LSPkind" }, {})
+            }
+            require("fzf-lua").fzf_exec(aerial_selected, {
+              prompt = "  ",
+              no_esc = true,
+              fzf_opts = { ["--layout"] = "reverse" },
+              winopts_fn = {
+                width = widthc,
+                height = heightc,
+              },
+              winopts = {
+                title = "[Aerial] Change filter kind",
+                row = 1,
+                relative = "cursor",
+                height = 0.33,
+                width = widthc / (widthc + vim_width - 10),
+              },
+              actions = {
+                ["default"] = function(selected, _)
+                  local selection = selected[1]
+                  if selection ~= nil and type(selection) == "string" then
+                    local plugin = require("lazy.core.config").plugins["aerial.nvim"]
+                    local Plugin = require "lazy.core.plugin"
+                    local optsc = Plugin.values(plugin, "opts", false)
+                    local aerial = get_aerial()
+                    aerial.close()
 
-            Util.plugin.nui_select(selected, function(choice)
-              if choice == "all" then
-                opts.opts["filter_kind"] = false
-              else
-                opts.opts["filter_kind"] = { choice }
-              end
-
-              require("aerial").setup(opts.opts)
-
-              Util.buf._only()
-            end)
+                    local path = vim.fn.expand "%:p"
+                    vim.cmd [[bd]]
+                    vim.cmd("e " .. path)
+                    if selection == "all" then
+                      optsc.filter_kind = false
+                    else
+                      optsc.filter_kind = { selection }
+                    end
+                    aerial.setup(optsc)
+                    aerial.open()
+                  end
+                end,
+              },
+            })
           end,
-          desc = "Open(aerial): change filter_kind",
+          desc = "Misc(aerial): change filter kind",
         },
       }
     end,
@@ -375,10 +410,12 @@ return {
         { ArialGuide1 = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
       })
 
+      local vim_width = vim.o.columns
+      vim_width = math.floor(vim_width / 2 - 30)
       return {
         attach_mode = "global",
         backends = { "lsp", "treesitter", "markdown", "man" },
-        layout = { min_width = 28 },
+        layout = { min_width = vim_width },
         -- fold code from tree (overwrites treesitter foldexpr)
         manage_folds = false,
         show_guides = true,
@@ -421,7 +458,7 @@ return {
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
     end,
     -- stylua: ignore
-    keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Open(symbolsoutline): pick", }, },
+    keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Misc(symbolsoutline): pick", }, },
     opts = function()
       local Config = require "r.config"
       local defaults = require("symbols-outline.config").defaults
@@ -457,7 +494,7 @@ return {
       return opts
     end,
   },
-  -- DROPBAR
+  -- DROPBAR (disabled)
   {
     -- TODO: got error: "not allowed in sandbox"
     -- but seems already got fixed but still error, dunno
@@ -757,11 +794,12 @@ return {
       }
     end,
   },
-  -- LSP_SIGNATURE.NVIM
+  -- LSP_SIGNATURE.NVIM (disabled)
   {
     -- lsp_signature.nvim [auto params help]
     -- https://github.com/ray-x/lsp_signature.nvim
     "ray-x/lsp_signature.nvim",
+    enabled = false,
     event = "LazyFile",
     opts = function()
       -- Apply globals from 1-options.lua
