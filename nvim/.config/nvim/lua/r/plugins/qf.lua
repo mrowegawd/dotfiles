@@ -36,7 +36,7 @@ return {
         sclear = "z<Tab>",
         filter = "zn",
         filterr = "zN",
-        fzffilter = "<c-f>",
+        fzffilter = "zf",
       },
       filter = {
         fzf = {
@@ -45,6 +45,7 @@ return {
             ["ctrl-t"] = "tab drop",
           },
           extra_opts = {
+            "+i",
             "--bind",
             "ctrl-o:toggle-all",
             "--prompt",
