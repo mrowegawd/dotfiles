@@ -33,8 +33,8 @@ return {
         },
         ["tsconfig.json"] = {
           alternate = {
-            ".cjs",
             "vite.config.ts",
+            ".eslintrc.cjs",
           },
           type = "source",
         },
@@ -45,10 +45,17 @@ return {
           },
           type = "source",
         },
-        [".tailwind.config.cjs"] = {
+        ["tailwind.config.cjs"] = {
+          alternate = {
+            "package.json",
+            ".prettierrc.cjs",
+          },
+          type = "source",
+        },
+        ["package.json"] = {
           alternate = {
             ".eslintrc.cjs",
-            ".prettier.cjs",
+            ".prettierrc.cjs",
           },
           type = "source",
         },

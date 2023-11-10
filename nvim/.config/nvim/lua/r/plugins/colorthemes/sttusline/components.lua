@@ -363,12 +363,15 @@ M.rootdir = function()
     hl(0, "WADAU", { fg = Rootdir.get_config().colors.special.fg, bg = colors.base_bg })
     hl(0, "WADIDAU", { fg = Rootdir.get_config().colors.directory.fg, bg = colors.base_bg })
 
-    if dat ~= nil and type(dat) == "string" then
+    if dat ~= nil and #dat > 1 then
       return sttsline_utils.add_highlight_name(Rootdir.get_config().icon .. " ", "WADIDAU")
         .. sttsline_utils.add_highlight_name(dat, "WADAU")
     else
       return ""
     end
+  end)
+  Rootdir.set_condition(function()
+    return vim.fn.winwidth(0) > 120
   end)
 
   return Rootdir
@@ -394,10 +397,12 @@ M.branch = function()
         local content = head_file:read "*all"
         head_file:close()
         -- branch name  or commit hash
-        return sttsline_utils.add_highlight_name(
-          icon .. content:match "ref: refs/heads/(.-)%s*$",
-          "STTUSLINE_GITBRANCHC"
-        ) or content:sub(1, 7) or ""
+        local head = content:match "ref: refs/heads/(.-)%s*$"
+        if head ~= nil then
+          return sttsline_utils.add_highlight_name(icon .. head, "STTUSLINE_GITBRANCHC") or content:sub(1, 7) or ""
+        else
+          return ""
+        end
       end
     end
     return ""

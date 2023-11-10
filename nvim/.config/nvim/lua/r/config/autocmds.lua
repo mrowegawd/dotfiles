@@ -102,10 +102,14 @@ Util.cmd.augroup("WindowBehaviours", {
     "gitcommit",
     -- "help",
     "qf",
+    "NeogitCommitMessage",
     -- "Trouble",
   },
   command = function()
     cmd "wincmd J"
+    if vim.bo[0].filetype == "NeogitCommitMessage" then
+      cmd [[resize 20]]
+    end
   end,
 }, {
   event = { "FileType" },

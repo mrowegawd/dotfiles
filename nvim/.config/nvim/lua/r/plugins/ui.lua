@@ -47,6 +47,10 @@ return {
   {
     "rcarriga/nvim-notify",
     event = "VeryLazy",
+    init = function()
+      vim.opt.termguicolors = true -- Enable 24-bit RGB color in the TUI
+      vim.notify = require "notify"
+    end,
     opts = {
       timeout = 3000,
       max_width = function()
