@@ -4,7 +4,6 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
-
   -- NETRW (disabled)
   { "prichrd/netrw.nvim", enabled = false, opts = {} },
   -- NEO-TREE
@@ -21,6 +20,13 @@ return {
         function()
           Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
           return cmd "Neotree toggle"
+        end,
+        desc = "Misc(neotree): open File explore",
+      },
+      {
+        "<Leader>ge",
+        function()
+          return cmd "Neotree git_status"
         end,
         desc = "Misc(neotree): open File explore",
       },
