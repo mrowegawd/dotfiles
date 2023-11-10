@@ -8,18 +8,11 @@ local set_icons = function(icons_name)
 end
 
 return {
-  -- TROUBLE.NVIM (disabled)
+  -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
-    -- enabled = false,
     cmd = { "TroubleToggle", "Trouble" },
-    keys = {
-      {
-        "<Localleader>tr",
-        "<CMD>TroubleToggle<CR>",
-        desc = "Misc(trouble): toggle",
-      },
-    },
+    keys = { { "<Localleader>tr", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle" } },
     config = function()
       require("trouble").setup {
         auto_open = false,
