@@ -132,8 +132,9 @@ local general_overrides = function()
     { Mymisc_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 }, bg = { from = "Normal", alter = -0.1 } } },
     { MyQuickFixLineLeave = { bg = { from = "CursorLine", alter = 0.2 } } },
     { MyQuickFixLineEnter = { bg = { from = "Boolean", attr = "fg", alter = -0.4 } } },
+    { MyQuickFixLine = { bg = { from = "MyQuickFixLineEnter", attr = "bg", alter = -0.4 } } },
     { MyCursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
-    { CodeBlock1 = { bg = { from = "Normal", alter = 0.35 } } },
+    { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
     { CodeBlock2 = { bg = "cyan" } },
 
     -----------------------------------------------------------------------
