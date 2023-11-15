@@ -8,6 +8,12 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- FIDGET
+  {
+    "j-hui/fidget.nvim",
+    event = "LazyFile",
+    opts = {},
+  },
   -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
