@@ -1,7 +1,7 @@
 {
   "name": "webdev",
   "run_file": {
-    "include_cwd": true,
+    "include_cwd": false,
     "command": "yarn run_tsc"
   },
   "repl": {
