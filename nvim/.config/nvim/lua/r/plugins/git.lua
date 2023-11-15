@@ -193,24 +193,24 @@ return {
       "sindrets/diffview.nvim",
       "ibhagwan/fzf-lua",
     },
-    -- init = function()
-    --   vim.api.nvim_create_user_command(
-    --     "DiffCommitLine",
-    --     "lua require('advanced_git_search.fzf').diff_commit_line()",
-    --     { range = true }
-    --   )
-    -- end,
+    init = function()
+      vim.api.nvim_create_user_command(
+        "DiffCommitLine",
+        "lua require('advanced_git_search.fzf').diff_commit_line()",
+        { range = true }
+      )
+    end,
     --stylua: ignore
     keys = {
       { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>",      desc = "Git(git-advanced): grep all repo" },
       { "<Leader>gg", "<CMD>AdvancedGitSearch search_log_content_file<CR>", desc = "Git(git-advanced): grep buf repo" },
       { "<Leader>gg", ":'<,'>AdvancedGitSearch diff_commit_line<CR>", mode = "v", desc = "Git(git-advanced): grep buf repo (visual)" },
-      },
+    },
     opts = {
-        diff_plugin = "diffview",
-        git_flags = {},
-        git_diff_flags = {},
-        show_builtin_git_pickers = false,
+      diff_plugin = "diffview",
+      git_flags = {},
+      git_diff_flags = {},
+      show_builtin_git_pickers = false,
     },
   },
   -- GITSIGNS
@@ -393,8 +393,8 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     --stylua: ignore
     keys = {
-      { "<Leader>gS", function() require("neogit").open() end,            desc = "Git(neogit): open", },
-      { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit", },
+      { "<Leader>gS", function() require("neogit").open() end, desc = "Git(neogit): open" },
+      { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit" },
       -- { "<localleader>gl", function() require("neogit").popups.pull.create() end, desc = "Git(neogit): open pull popup", },
       -- { "<localleader>gp", function() require("neogit").popups.push.create() end, desc = "Git(neogit): open push popup", },
     },
