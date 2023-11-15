@@ -27,11 +27,11 @@ return {
       },
     },
   },
-  -- DELIMITERS (Disabled, make nvim slow!)
+  -- DELIMITERS (disabled)
   {
     "HiPhish/rainbow-delimiters.nvim",
-    event = "VeryLazy",
     enabled = false,
+    event = "VeryLazy",
     config = function()
       local rainbow_delimiters = require "rainbow-delimiters"
 
