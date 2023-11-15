@@ -120,11 +120,12 @@ return {
   {
     "stevearc/conform.nvim",
     optional = true,
-    opts = {
-      formatters_by_ft = {
-        go = { "goimports", "gofumpt" },
-      },
-    },
+    opts = function(_, opts)
+      opts.formatters_by_ft.go = opts.formatters_by_ft.go or {}
+      table.insert(opts.formatters_by_ft.go, "goimports")
+      table.insert(opts.formatters_by_ft.go, "gofumpt")
+      return opts
+    end,
   },
   -- NVIM-DAP
   {

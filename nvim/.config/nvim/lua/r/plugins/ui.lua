@@ -256,6 +256,9 @@ return {
     keys = {
       { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
       { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
+      { "H", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer(bufferline): move buffer prev" },
+      { "L", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer(bufferline): move buffer next" },
+
       { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
       {
         "<leader>bc",
