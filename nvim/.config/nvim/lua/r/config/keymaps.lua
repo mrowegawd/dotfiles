@@ -247,8 +247,10 @@ nnoremap("<c-w>L", "<C-W>t <C-W>H", { desc = "Windows: change two vertically spl
 cnoremap("jk", "<c-c>", { desc = "Commandline: exit from cmdline" })
 cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
 cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last" })
-cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist" })
-cnoremap("<c-p>", "<Up>", { desc = "Commandline: prev hist" })
+cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist on text" })
+cnoremap("<c-p>", "<Up>", { desc = "Commandline: prev hist on text" })
+cnoremap("<a-n>", "<S-Down>", { desc = "Commandline: next hist" })
+cnoremap("<a-p>", "<S-Up>", { desc = "Commandline: prev hist" })
 
 cnoremap("<c-l>", "<Right>", { desc = "Commandline: next word" })
 cnoremap("<c-h>", "<Left>", { desc = "Commandline: prev word" })
@@ -349,7 +351,6 @@ local function magic_quit()
     ["checkhealth"] = "q",
     ["neo-tree"] = "NeoTreeShowClose",
     ["DiffviewFileHistory"] = "DiffviewClose",
-    ["qf"] = Util.toggle.kill_loc_qf,
   }
 
   local alias_mode = { i = "I", c = "C", V = "V", [""] = "V" }
