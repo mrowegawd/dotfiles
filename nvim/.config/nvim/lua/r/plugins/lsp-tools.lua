@@ -19,8 +19,19 @@ return {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     keys = { { "<Localleader>tr", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle" } },
-    config = function()
-      require("trouble").setup {
+    opts = function()
+      highlight.plugin("trouble", {
+        { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
+        { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
+        { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
+        { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleIndent = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+        { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
+        { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+      })
+      return {
         auto_open = false,
         use_diagnostic_signs = true, -- en
         action_keys = {
@@ -33,9 +44,9 @@ return {
           open_split = { "<c-s>" }, -- open buffer in new split
           open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
           open_tab = { "<c-t>" }, -- open buffer in new tab
-          jump_close = { "o", "<cr>" }, -- jump to the diagnostic and close the list
+          jump_close = "<cr>", -- jump to the diagnostic and close the list
           toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-          toggle_preview = "P", -- toggle auto_preview
+          toggle_preview = "o", -- toggle auto_preview
           hover = "K", -- opens a small popup with the full multiline message
           preview = "p", -- preview the diagnostic location
           close_folds = { "zM", "zm" }, -- close all folds
@@ -76,7 +87,7 @@ return {
     cmd = "Lspsaga",
     enabled = false,
     init = function()
-      highlight.plugin("LspsagaCustomHi", {
+      highlight.plugin("lspsaga", {
         { SagaBorder = { link = "Directory" } },
         { SagaTitle = { fg = "cyan" } },
         { SagaFileName = { link = "Directory" } },
