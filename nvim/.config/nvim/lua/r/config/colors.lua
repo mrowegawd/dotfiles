@@ -19,7 +19,7 @@ local general_overrides = function()
     { Folded = { bg = { from = "ColorColumn", attr = "bg" } } },
     { EndOfBuffer = { bg = "NONE" } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
-    { SignColumn = { bg = { from = "ColorColumn" } } },
+    -- { SignColumn = { bg = { from = "ColorColumn" } } },
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinBar = { bg = { from = "ColorColumn" } } },
