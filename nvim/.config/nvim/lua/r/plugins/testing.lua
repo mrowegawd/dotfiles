@@ -85,7 +85,7 @@ return {
       { "<Leader>tF", function() require("neotest").run.run(vim.loop.cwd()) end, "Testing(neotest): test all files" },
       { "<Leader>tt", function() require("neotest").run.run() end, desc = "Testing(neotest): test unit" },
       { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing(neotest): stop" },
-      { "<Leader>tO", function() require("neotest").summary.toggle() end, desc = "Testing(neotest): output summary panel" },
+      { "<Leader>to", function() require("neotest").summary.toggle() end, desc = "Testing(neotest): output summary panel" },
       { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false, } end, desc = "Testing(neotest): preview the output" },
       { "<Leader>ts",
         function()
