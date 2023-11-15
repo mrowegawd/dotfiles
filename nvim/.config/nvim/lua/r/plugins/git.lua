@@ -14,20 +14,22 @@ return {
     dependencies = {
       "nvim-telescope/telescope.nvim",
     },
-    --stylua: ignore
     keys = {
       {
         "<leader>gwm",
-        function() require("telescope").extensions.git_worktree.git_worktrees() end,
-        desc =
-        "Git(git-worktree): manage"
+        function()
+          require("telescope").extensions.git_worktree.git_worktrees()
+        end,
+        desc = "Git(git-worktree): manage",
       },
       {
         "<leader>gwc",
-        function() require("telescope").extensions.git_worktree.create_git_worktree() end,
-        desc =
-        "Git(git-worktree): create"
-      }, },
+        function()
+          require("telescope").extensions.git_worktree.create_git_worktree()
+        end,
+        desc = "Git(git-worktree): create",
+      },
+    },
   },
   -- GIT CONFLICT
   {
@@ -182,41 +184,34 @@ return {
       end,
     },
   },
-  -- GIT ADVANCED SEARCH
+  -- GIT ADVANCED SEARCH (disabled)
   {
     "aaronhallaert/advanced-git-search.nvim",
+    enabled = false,
     event = "LazyFile",
     dependencies = {
       "sindrets/diffview.nvim",
       "ibhagwan/fzf-lua",
     },
-    init = function()
-      vim.api.nvim_create_user_command(
-        "DiffCommitLine",
-        "lua require('advanced_git_search.fzf').diff_commit_line()",
-        { range = true }
-      )
-    end,
+    -- init = function()
+    --   vim.api.nvim_create_user_command(
+    --     "DiffCommitLine",
+    --     "lua require('advanced_git_search.fzf').diff_commit_line()",
+    --     { range = true }
+    --   )
+    -- end,
     --stylua: ignore
     keys = {
-      { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>",      desc = "Git(git-advanced): grep all repo", },
-      { "<Leader>gg", "<CMD>AdvancedGitSearch search_log_content_file<CR>", desc = "Git(git-advanced): grep buf repo", },
-      {
-        "<Leader>gg",
-        ":'<,'>AdvancedGitSearch diff_commit_line<CR>",
-        mode = "v",
-        desc =
-        "Git(git-advanced): grep buf repo (visual)",
+      { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>",      desc = "Git(git-advanced): grep all repo" },
+      { "<Leader>gg", "<CMD>AdvancedGitSearch search_log_content_file<CR>", desc = "Git(git-advanced): grep buf repo" },
+      { "<Leader>gg", ":'<,'>AdvancedGitSearch diff_commit_line<CR>", mode = "v", desc = "Git(git-advanced): grep buf repo (visual)" },
       },
-    },
-    config = function()
-      require("advanced_git_search.fzf").setup {
+    opts = {
         diff_plugin = "diffview",
         git_flags = {},
         git_diff_flags = {},
         show_builtin_git_pickers = false,
-      }
-    end,
+    },
   },
   -- GITSIGNS
   {
