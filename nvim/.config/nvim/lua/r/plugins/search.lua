@@ -897,24 +897,24 @@ return {
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
       { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
       { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
-      {
-        "gs",
-        function()
-          require("telescope.builtin").lsp_document_symbols {
-            symbols = require("r.config").get_kind_filter(),
-          }
-        end,
-        desc = "Telescope (lsp): goto symbol",
-      },
-      {
-        "gS",
-        function()
-          require("telescope.builtin").lsp_dynamic_workspace_symbols {
-            symbols = require("r.config").get_kind_filter(),
-          }
-        end,
-        desc = "Telescope(lsp): goto symbol (Workspace)",
-      },
+      -- {
+      --   "gs",
+      --   function()
+      --     require("telescope.builtin").lsp_document_symbols {
+      --       symbols = require("r.config").get_kind_filter(),
+      --     }
+      --   end,
+      --   desc = "Telescope (lsp): goto symbol",
+      -- },
+      -- {
+      --   "gS",
+      --   function()
+      --     require("telescope.builtin").lsp_dynamic_workspace_symbols {
+      --       symbols = require("r.config").get_kind_filter(),
+      --     }
+      --   end,
+      --   desc = "Telescope(lsp): goto symbol (Workspace)",
+      -- },
       -- { "<Leader>bf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps" },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
