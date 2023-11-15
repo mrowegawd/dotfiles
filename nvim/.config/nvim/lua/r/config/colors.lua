@@ -178,7 +178,7 @@ local general_overrides = function()
     { FzfLuaNormal = { inherit = "Normal" } },
     -- { FzfLuaBorder = { inherit = "WinSeparator" } },
     { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
-    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = -0.3 } } },
+    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bold = true } },
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
 
     -- WHICH-KEY ==========================================================

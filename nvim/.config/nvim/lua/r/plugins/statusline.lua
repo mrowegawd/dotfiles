@@ -33,7 +33,7 @@ return {
           component.trailing(),
           component.mixindent(),
           "diagnostics",
-          -- component.rootdir(),
+          component.rootdir(),
           component.lsp_notify(),
           "copilot",
           "encoding",

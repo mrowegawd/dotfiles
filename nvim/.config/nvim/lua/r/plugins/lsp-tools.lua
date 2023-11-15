@@ -939,19 +939,9 @@ return {
   },
   -- LSP-TIMEOUT.NVIM
   {
-    --  lsp-timeout [lsp garbage collector]
-    --  https://github.com/hinell/lsp-timeout.nvim
-    --  Stop inactive lsp servers until the buffer recover the focus.
     "hinell/lsp-timeout.nvim",
     dependencies = { "neovim/nvim-lspconfig" },
     event = "LazyFile",
-    init = function()
-      vim.g["lsp-timeout-config"] = {
-        stopTimeout = 1000 * 60 * 10, -- Stop unused lsp servers after 10 min.
-        startTimeout = 2000, -- Force server restart if nvim can't in 2s.
-        silent = true, -- Notifications disabled
-      }
-    end,
   },
   -- LSP_SIGNATURE.NVIM (disabled)
   {

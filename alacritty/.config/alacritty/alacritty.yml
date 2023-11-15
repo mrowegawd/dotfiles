@@ -397,57 +397,34 @@ key_bindings:
   # - { key: NumpadEnter,             chars: "\n"                              }
 
 # TokyoNight Alacritty Colors
-doom_light: &doom_light
+colors:
+  # Default colors
   primary:
-    foreground: '#383a42'
-    background: '#282c34'
-  cursor:
-    cursor: '#4078f2'
-    text: '#fafafa'
-  normal:
-    black: '#fafafa'
-    red: '#e45649'
-    green: '#50a14f'
-    yellow: '#986801'
-    blue: '#4078f2'
-    magenta: '#b751b6'
-    cyan: '#0184bc'
-    white: '#383a42'
-  bright:
-    black: '#9ca0a4'
-    red: '#e45649'
-    green: '#50a14f'
-    yellow: '#da8548'
-    blue: '#4078f2'
-    magenta: '#b751b6'
-    cyan: '#0184bc'
-    white: '#efefef'
+    background: '0x24283b'
+    foreground: '0xc0caf5'
 
-doom_dark: &doom_dark
-  primary:
-    foreground: '#bbc2cf'
-    background: "#282c34"
-  cursor:
-    cursor: '#51afef'
-    text: '#282c34'
+  # Normal colors
   normal:
-    black: "#282c34"
-    red: "#ff6c6b"
-    green: "#98be65"
-    yellow: "#ecbe7b"
-    blue: "#51afef"
-    magenta: "#a9a1e1"
-    cyan: "#46d9ff"
-    white: "#bbc2cf"
-  bright:
-    black: "#3f444a"
-    red: "#ff6c6b"
-    green: "#98be65"
-    yellow: "#da8548"
-    blue: "#51afef"
-    magenta: "#a9a1e1"
-    cyan: "#46d9ff"
-    white: "#efefef"
+    black:   '0x1D202F'
+    red:     '0xf7768e'
+    green:   '0x9ece6a'
+    yellow:  '0xe0af68'
+    blue:    '0x7aa2f7'
+    magenta: '0xbb9af7'
+    cyan:    '0x7dcfff'
+    white:   '0xa9b1d6'
 
-# Apply
-colors: *doom_dark
+  # Bright colors
+  bright:
+    black:   '0x414868'
+    red:     '0xf7768e'
+    green:   '0x9ece6a'
+    yellow:  '0xe0af68'
+    blue:    '0x7aa2f7'
+    magenta: '0xbb9af7'
+    cyan:    '0x7dcfff'
+    white:   '0xc0caf5'
+
+  indexed_colors:
+    - { index: 16, color: '0xff9e64' }
+    - { index: 17, color: '0xdb4b4b' }

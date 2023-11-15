@@ -8,7 +8,7 @@ local function format_title(str, icon, icon_hl)
   return {
     { " " },
     { (icon and icon .. " " or ""), icon_hl or "Boolean" },
-    { str, "Bold" },
+    { str, "FzfLuaTitle" },
     { " " },
   }
 end
