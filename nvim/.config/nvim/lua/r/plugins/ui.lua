@@ -273,6 +273,8 @@ return {
       local col_unselected_bg_attr = "bufferline_unselected"
       local col_unselected_fg_attr = "Boolean"
 
+      local col_sp_fg_attr = "ErrorMsg"
+
       local col_selected_fg_attr = "PmenuSel"
       local col_selected_bg_attr = "@field"
 
@@ -287,20 +289,12 @@ return {
 
       return {
         options = {
-          -- mode = "tabs",
-          -- show_buffer_close_icon = false,
-          -- buffer_close_icon = "",
-          -- sort_by = "insert_after_current",
-          -- show_close_icon = true,
+          mode = "buffers",
+          buffer_close_icon = "",
           always_show_bufferline = false,
           diagnostics = "nvim_lsp",
-          -- max_name_length = 100,
-          -- max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-          -- truncate_names = true, -- whether or not tab names should be truncated
-          -- max_prefix_length = 5,
-          -- diagnostics_update_in_insert = false,
-          -- hover = { enabled = true, reveal = { "close" } },
-          -- separator_style = "thick",
+          separator_style = "thin",
+          indicator = { style = "underline" },
           diagnostics_indicator = function(_, _, diag)
             local icons = require("r.config").icons.diagnostics
             local ret = (diag.error and icons.Error .. diag.error .. " " or "")
@@ -404,12 +398,10 @@ return {
           fill = {
             fg = { attribute = "bg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
-            italic = true,
           },
           background = {
             fg = { attribute = "fg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
-            italic = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ TAB                                                      ╎
@@ -421,29 +413,33 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           tab_selected = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
             bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            fg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           tab_separator = {
             fg = { attribute = "bg", highlight = col_base_bg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           tab_separator_selected = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
             bg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
             bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ INDICATOR                                                ╎
           --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           indicator_visible = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
+            fg = { attribute = "bg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           indicator_selected = {
+            fg = { attribute = "bg", highlight = col_base_fg_attr },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ SEPARATOR                                                ╎
@@ -458,7 +454,7 @@ return {
           },
           separator_selected = {
             fg = { attribute = "bg", highlight = col_base_bg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ CLOSE                                                    ╎
@@ -468,12 +464,16 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           close_button_visible = {
-            fg = { attribute = "fg", highlight = col_base_fg_attr },
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = false,
           },
           close_button_selected = {
-            fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ BUFFER                                                   ╎
@@ -482,14 +482,15 @@ return {
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
           buffer_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
+            italic = false,
           },
           buffer_selected = {
-            fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
             bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
@@ -519,12 +520,14 @@ return {
           modified_visible = {
             fg = { attribute = "fg", highlight = "ErrorMsg" },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = false,
           },
           modified_selected = {
             fg = { attribute = "fg", highlight = "ErrorMsg" },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            -- sp = { attribute = "fg", highlight = col_selected_sp },
-            -- underline = true,
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ DUPLICATE                                                ╎
@@ -534,15 +537,16 @@ return {
             italic = false,
           },
           duplicate_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             italic = false,
           },
           duplicate_selected = {
-            fg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            -- sp = { attribute = "fg", highlight = col_selected_sp },
-            -- underline = true,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ OFFSET                                                   ╎
@@ -567,15 +571,16 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           warning_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            -- fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            -- bg = { attribute = "fg", highlight = col_selected_bg_attr },
+            italic = false,
           },
           warning_selected = {
-            fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           warning_diagnostic = {
             fg = { attribute = "fg", highlight = "DiagnosticWarn" },
@@ -588,8 +593,10 @@ return {
           },
           warning_diagnostic_selected = {
             fg = { attribute = "fg", highlight = "DiagnosticWarn" },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           --  ╒══════════════════════════════════════════════════════════╕
           --  │ ERROR                                                    │
@@ -602,9 +609,11 @@ return {
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
           error_selected = {
-            fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           error_diagnostic = {
             fg = { attribute = "fg", highlight = "DiagnosticError" },
@@ -617,8 +626,10 @@ return {
           },
           error_diagnostic_selected = {
             fg = { attribute = "fg", highlight = "DiagnosticError" },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           --  ╒══════════════════════════════════════════════════════════╕
           --  │ HINT                                                     │
@@ -632,9 +643,11 @@ return {
             italic = true,
           },
           hint_selected = {
-            fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           hint_diagnostic = {
             fg = { attribute = "fg", highlight = "DiagnosticHint" },
@@ -647,8 +660,10 @@ return {
           },
           hint_diagnostic_selected = {
             fg = { attribute = "fg", highlight = "DiagnosticHint" },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           --  ╒══════════════════════════════════════════════════════════╕
           --  │ INFO                                                     │
@@ -662,11 +677,11 @@ return {
             italic = true,
           },
           info_selected = {
-            fg = { attribute = "bg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            -- sp = { attribute = "fg", highlight = col_selected_sp },
-            -- underline = true,
-            italic = false,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
           info_diagnostic = {
             fg = { attribute = "fg", highlight = "DiagnosticInfo" },
@@ -679,8 +694,10 @@ return {
           },
           info_diagnostic_selected = {
             fg = { attribute = "fg", highlight = "DiagnosticInfo" },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
+            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            sp = { attribute = "fg", highlight = col_sp_fg_attr },
+            italic = true,
+            bold = true,
           },
         },
       }

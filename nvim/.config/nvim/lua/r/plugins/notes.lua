@@ -15,6 +15,34 @@ local function format_title(str, icon, icon_hl)
 end
 
 return {
+  -- HEADLINES.NVIM
+  {
+    "lukas-reineke/headlines.nvim",
+    lazy = false, -- must set to `false`, without this custom color, it does not work
+    ft = { "markdown", "norg", "rmd", "org" },
+    opts = function()
+      highlight.plugin("headlines", {
+        theme = {
+          ["*"] = {
+            { Dash = { bg = "NONE", bold = true } },
+            { CodeBlock = { bg = "NONE" } },
+            { Headline1 = { bg = { from = "@attribute", attr = "fg", alter = -0.8 } } },
+            { Headline2 = { bg = { from = "@label", attr = "fg", alter = -0.8 } } },
+            { Headline3 = { bg = { from = "@constant", attr = "fg", alter = -0.8 } } },
+            { Headline4 = { bg = { from = "Boolean", attr = "fg", alter = -0.8 } } },
+            { Headline5 = { bg = { from = "Orange", attr = "fg", alter = -0.9 } } },
+          },
+        },
+      })
+
+      return {
+        org = { headline_highlights = false },
+        norg = { headline_highlights = { "Headline1", "Headline2" }, codeblock_highlight = false },
+        markdown = { headline_highlights = { "Headline1" } },
+        fat_headline_lower_string = "▔",
+      }
+    end,
+  },
   -- NEORG
   {
     "nvim-neorg/neorg",
@@ -28,6 +56,12 @@ return {
         command = function()
           require("r.mappings.utils.notes").neorg_mappings_ft(api.nvim_get_current_buf())
         end,
+      })
+
+      Util.cmd.augroup("SetNorgFoldLevel", {
+        event = { "FileType" },
+        pattern = { "norg" },
+        command = "setlocal foldlevel=0",
       })
     end,
     keys = {
@@ -84,159 +118,152 @@ return {
       "nvim-lua/plenary.nvim",
       "laher/neorg-exec",
     },
-    opts = {
-      -- configure_parsers = true,
-      load = {
-        ["core.defaults"] = {},
-        -- ["core.concealer"] = {
-        --   -- config = {
-        --   --   icon_preset = "diamond",
-        --   --   fold = true,
-        --   --   dim_code_blocks = {
-        --   --     padding = { left = 2, right = 2 },
-        --   --     width = "content",
-        --   --   },
-        --   -- },
-        -- },
-        ["core.concealer"] = {
-          config = {
-            dim_code_blocks = { width = "content", content_only = true, adaptive = true, conceal = false },
-          },
-        },
-        ["core.ui"] = {},
-        ["core.summary"] = {},
-        ["external.exec"] = {
-          config = {
-            -- default_metadata = {
-            --   enabled = false,
-            --   env = {
-            --     NEORG: "rocks"
-            --   },
-            lang_cmds = {
-              rust = {
-                cmd = "rustc ${0} -o ./a.out && ./a.out && rm ./a.out",
-                type = "compiled",
-                main_wrap = [[
-                ${1}
-                ]],
-              },
-              go = {
-                cmd = "goimports -w ${0} && NO_COLOR=1 go run ${0}",
-                type = "compiled",
-                main_wrap = [[
-                ${1} ]],
+    opts = function()
+      return {
+        load = {
+          ["core.defaults"] = {},
+          ["core.concealer"] = {
+            config = {
+              init_open_folds = "never", -- dont let neorg set the fold
+              icons = {
+                code_block = {
+                  width = "content",
+                  conceal = true,
+                },
               },
             },
           },
-        },
-        ["core.highlights"] = {
-          config = {
-            -- highlights = {
-            --     headings = {
-            --         ["1"] = {
-            --             title = "+NeorgCodeBlock",
-            --         },
-            --     },
-            -- },
-            dim = {
-              tags = {
-                ranged_verbatim = {
-                  code_block = {
-                    reference = "CodeBlock1",
-                    -- percentage = 20,
-                    affect = "background",
+          ["core.ui"] = {},
+          ["core.summary"] = {},
+          ["external.exec"] = {
+            config = {
+              -- default_metadata = {
+              --   enabled = false,
+              --   env = {
+              --     NEORG: "rocks"
+              --   },
+              lang_cmds = {
+                rust = {
+                  cmd = "rustc ${0} -o ./a.out && ./a.out && rm ./a.out",
+                  type = "compiled",
+                  main_wrap = [[
+                ${1}
+                ]],
+                },
+                go = {
+                  cmd = "goimports -w ${0} && NO_COLOR=1 go run ${0}",
+                  type = "compiled",
+                  main_wrap = [[
+                ${1} ]],
+                },
+              },
+            },
+          },
+          ["core.highlights"] = {
+            config = {
+              highlights = {
+                markup = {
+                  bold = { [""] = "+Boolean" },
+                  verbatim = { [""] = "+CodeLine1", delimiter = "+NonText" },
+                },
+                tags = {
+                  comment = {
+                    content = "+CodeComment1",
                   },
                 },
               },
-
-              markup = { -- hi code line
-                verbatim = {
-                  reference = "ErrorMsg",
-                  percentage = 50,
+              dim = {
+                tags = {
+                  ranged_verbatim = {
+                    code_block = {
+                      reference = "CodeBlock1",
+                      affect = "background",
+                    },
+                  },
                 },
-
-                -- inline_comment = {
-                --     reference = "Normal",
-                --     percentage = 90,
-                -- },
+                markup = {
+                  verbatim = {
+                    reference = "CodeLine1",
+                  },
+                },
               },
             },
           },
-          -- },
-        },
-        ["core.export"] = {},
-        ["core.export.markdown"] = { config = { extensions = "all" } },
-        ["core.dirman"] = {
-          config = {
-            workspaces = {
-              gtd = fmt("%s/gtd", require("r.config").path.wiki_path),
-              wiki = require("r.config").path.wiki_path,
+          ["core.export"] = {},
+          ["core.export.markdown"] = { config = { extensions = "all" } },
+          ["core.dirman"] = {
+            config = {
+              workspaces = {
+                gtd = fmt("%s/gtd", require("r.config").path.wiki_path),
+                wiki = require("r.config").path.wiki_path,
+              },
+            },
+          },
+          ["core.esupports.metagen"] = {
+            config = {
+              type = "auto",
+            },
+          },
+          ["core.completion"] = {
+            config = {
+              engine = "nvim-cmp",
+            },
+          },
+          ["core.integrations.nvim-cmp"] = {},
+          -- ["core.integrations.telescope"] = {},
+          ["core.keybinds"] = {
+            config = {
+              default_keybinds = false,
+              hook = function(keybinds)
+                -- EXAMPLE ================================================
+                -- Unmaps any Neorg key from the `norg` mode
+                -- keybinds.unmap("norg", "n", "gtd")
+
+                -- Binds the `gtd` key in `norg` mode to execute `:echo 'Hello'`
+                -- keybinds.map("norg", "n", "gtd", "<cmd>echo 'Hello!'<CR>")
+
+                -- Want to move one keybind into the other? `remap_key` moves the data of the
+                -- first keybind to the second keybind, then unbinds the first keybind.
+                -- keybinds.remap_key("norg", "n", "<C-c>", "<Leader>t")
+
+                -- Remap unbinds the current key then rebinds it to have a different action
+                -- associated with it.
+                -- The following is the equivalent of the `unmap` and `map` calls you saw above:
+                --
+                -- Sometimes you may simply want to rebind the Neorg action something is bound to
+                -- versus remapping the entire keybind. This remap is essentially the same as if you
+                -- did `keybinds.remap("norg", "n", "<C-c>, "<cmd>Neorg keybind norg core.norg.qol.todo_items.todo.task_done<CR>")
+                -- keybinds.remap_event(
+                --     "norg",
+                --     "n",
+                --     "<C-c>",
+                --     "core.norg.qol.todo_items.todo.task_done"
+                -- )
+                -- ========================================================
+
+                keybinds.remap_event("norg", "n", "<TAB>", "core.esupports.hop.hop-link")
+                keybinds.remap_event("norg", "n", "<M-CR>", "core.esupports.hop.hop-link", "vsplit")
+
+                -- go next heading fold
+                keybinds.remap_event("norg", "n", "<a-n>", "core.integrations.treesitter.next.heading")
+                -- go prev heading fold
+                keybinds.remap_event("norg", "n", "<a-p>", "core.integrations.treesitter.previous.heading")
+
+                keybinds.remap_event("norg", "n", "<C-c>", "core.qol.todo_items.todo.task_cycle")
+
+                -- keybinds.remap_event("norg", "n", "<right>", "core.promo.promote")
+                -- keybinds.remap_event("norg", "n", "<left>", "core.promo.demote")
+                keybinds.map("norg", "n", "<right>", "<cmd>Neorg keybind norg core.promo.promote nested<CR>", {})
+                keybinds.map("norg", "n", "rl", "<cmd>Neorg exec cursor<CR>", {})
+                keybinds.map("norg", "n", "<left>", "<cmd>Neorg keybind norg core.promo.demote nested<CR>", {})
+                --
+              end,
             },
           },
         },
-        ["core.esupports.metagen"] = {
-          config = {
-            type = "auto",
-          },
-        },
-        ["core.completion"] = {
-          config = {
-            engine = "nvim-cmp",
-          },
-        },
-        ["core.integrations.nvim-cmp"] = {},
-        -- ["core.integrations.telescope"] = {},
-        ["core.keybinds"] = {
-          config = {
-            default_keybinds = false,
-            hook = function(keybinds)
-              -- EXAMPLE ================================================
-              -- Unmaps any Neorg key from the `norg` mode
-              -- keybinds.unmap("norg", "n", "gtd")
-
-              -- Binds the `gtd` key in `norg` mode to execute `:echo 'Hello'`
-              -- keybinds.map("norg", "n", "gtd", "<cmd>echo 'Hello!'<CR>")
-
-              -- Want to move one keybind into the other? `remap_key` moves the data of the
-              -- first keybind to the second keybind, then unbinds the first keybind.
-              -- keybinds.remap_key("norg", "n", "<C-c>", "<Leader>t")
-
-              -- Remap unbinds the current key then rebinds it to have a different action
-              -- associated with it.
-              -- The following is the equivalent of the `unmap` and `map` calls you saw above:
-              --
-              -- Sometimes you may simply want to rebind the Neorg action something is bound to
-              -- versus remapping the entire keybind. This remap is essentially the same as if you
-              -- did `keybinds.remap("norg", "n", "<C-c>, "<cmd>Neorg keybind norg core.norg.qol.todo_items.todo.task_done<CR>")
-              -- keybinds.remap_event(
-              --     "norg",
-              --     "n",
-              --     "<C-c>",
-              --     "core.norg.qol.todo_items.todo.task_done"
-              -- )
-              -- ========================================================
-
-              keybinds.remap_event("norg", "n", "<TAB>", "core.esupports.hop.hop-link")
-              keybinds.remap_event("norg", "n", "<M-CR>", "core.esupports.hop.hop-link", "vsplit")
-
-              -- go next heading fold
-              keybinds.remap_event("norg", "n", "<a-n>", "core.integrations.treesitter.next.heading")
-              -- go prev heading fold
-              keybinds.remap_event("norg", "n", "<a-p>", "core.integrations.treesitter.previous.heading")
-
-              keybinds.remap_event("norg", "n", "<C-c>", "core.qol.todo_items.todo.task_cycle")
-
-              -- keybinds.remap_event("norg", "n", "<right>", "core.promo.promote")
-              -- keybinds.remap_event("norg", "n", "<left>", "core.promo.demote")
-              keybinds.map("norg", "n", "<right>", "<cmd>Neorg keybind norg core.promo.promote nested<CR>", {})
-              keybinds.map("norg", "n", "rl", "<cmd>Neorg exec cursor<CR>", {})
-              keybinds.map("norg", "n", "<left>", "<cmd>Neorg keybind norg core.promo.demote nested<CR>", {})
-              --
-            end,
-          },
-        },
-      },
-    },
+      }
+    end,
+    -- },
   },
   -- ORGMODE
   {
@@ -558,37 +585,6 @@ return {
       "org",
       "norg",
     },
-  },
-  -- HEADLINES.NVIM
-  {
-    "lukas-reineke/headlines.nvim",
-    ft = { "markdown", "norg", "rmd", "org" },
-    opts = function()
-      -- local opts = {}
-      -- for _, ft in ipairs { "markdown", "norg", "rmd", "org" } do
-      --   opts[ft] = { headline_highlights = {} }
-      --   for i = 1, 6 do
-      --     table.insert(opts[ft].headline_highlights, "Headline" .. i)
-      --   end
-      -- end
-      -- opts.neorg = {
-      --   fat_headline_lower_string = "▔",
-      -- }
-      -- return opts
-
-      highlight.plugin("Headlines", {
-        theme = {
-          ["*"] = {
-            { Dash = { bg = "#0B60A1", bold = true } },
-          },
-        },
-      })
-      return {
-        org = { headline_highlights = false },
-        norg = { headline_highlights = { "Headline" }, codeblock_highlight = false },
-        markdown = { headline_highlights = { "Headline" } },
-      }
-    end,
   },
   -- CALENDAR
   {

@@ -8,13 +8,30 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- FIDGET
+  {
+    "j-hui/fidget.nvim",
+    event = "LazyFile",
+    opts = {},
+  },
   -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     keys = { { "<Localleader>tr", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle" } },
-    config = function()
-      require("trouble").setup {
+    opts = function()
+      highlight.plugin("trouble", {
+        { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
+        { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
+        { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
+        { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleIndent = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+        { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
+        { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+      })
+      return {
         auto_open = false,
         use_diagnostic_signs = true, -- en
         action_keys = {
@@ -27,9 +44,9 @@ return {
           open_split = { "<c-s>" }, -- open buffer in new split
           open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
           open_tab = { "<c-t>" }, -- open buffer in new tab
-          jump_close = { "o", "<cr>" }, -- jump to the diagnostic and close the list
+          jump_close = "<cr>", -- jump to the diagnostic and close the list
           toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-          toggle_preview = "P", -- toggle auto_preview
+          toggle_preview = "o", -- toggle auto_preview
           hover = "K", -- opens a small popup with the full multiline message
           preview = "p", -- preview the diagnostic location
           close_folds = { "zM", "zm" }, -- close all folds
@@ -70,7 +87,7 @@ return {
     cmd = "Lspsaga",
     enabled = false,
     init = function()
-      highlight.plugin("LspsagaCustomHi", {
+      highlight.plugin("lspsaga", {
         { SagaBorder = { link = "Directory" } },
         { SagaTitle = { fg = "cyan" } },
         { SagaFileName = { link = "Directory" } },
@@ -294,6 +311,7 @@ return {
   -- AERIAL
   {
     "stevearc/aerial.nvim",
+    -- enabled = false,
     event = "LazyFile",
     init = function()
       Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -345,6 +363,10 @@ return {
         {
           "<Localleader>oA",
           function()
+            if vim.bo[0].filetype == "norg" then
+              return
+            end
+
             local aerial_selected = {
               "Class",
               "Constructor",
@@ -404,11 +426,12 @@ return {
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      local hg = require "r.config.highlights"
-      hg.plugin("arials", {
-        { ArialGuide = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
-        { ArialGuide1 = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
+      highlight.plugin("arials", {
+        { AerialGuide = { fg = { from = "CodeComment1", attr = "fg" } } },
       })
+
+      ---@diagnostic disable-next-line: undefined-field
+      require("telescope").load_extension "aerial"
 
       local vim_width = vim.o.columns
       vim_width = math.floor(vim_width / 2 - 30)
@@ -429,15 +452,14 @@ return {
         filter_kind = false,
         icons = require("r.config").icons.kinds,
         keymaps = {
-          ["o"] = "actions.jump",
           -- ["o"] = "actions.jump",
-          ["O"] = "actions.scroll",
+          ["o"] = "actions.scroll",
           -- ["]y"] = "actions.next",
           -- ["[y"] = "actions.prev",
-          -- ["<c-p>"] = "actions.prev_up",
-          -- ["<c-n>"] = "actions.next_up",
-          ["<a-n>"] = "actions.next",
-          ["<a-p>"] = "actions.prev",
+          ["<a-n>"] = "actions.down_and_scroll",
+          ["<a-p>"] = "actions.up_and_scroll",
+          -- ["<a-n>"] = "actions.next",
+          -- ["<a-p>"] = "actions.prev",
           -- ["zM"] = "actions.tree_close_all",
           ["{"] = false,
           ["}"] = false,
@@ -451,63 +473,211 @@ return {
   },
   -- SYMBOLSOUTLINE (disabled)
   {
-    "simrat39/symbols-outline.nvim",
+    "hedyhli/outline.nvim",
     enabled = false,
-    cmd = "SymbolsOutline",
+    cmd = "Outline",
     init = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
     end,
-    -- stylua: ignore
-    keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Misc(symbolsoutline): pick", }, },
-    opts = function()
-      local Config = require "r.config"
-      local defaults = require("symbols-outline.config").defaults
-      local opts = {
-        symbols = {},
-        symbol_blacklist = {},
-        keymaps = { -- These keymaps can be a string or a table for multiple keys
-          close = { "<Esc>", "q", "<leader><TAB>" },
-          goto_location = "<Cr>",
-          focus_location = "o",
-          hover_symbol = "K",
-          toggle_preview = "P",
-          rename_symbol = "r",
-          code_actions = "a",
-          show_help = "?",
-          fold = "h",
-          unfold = "l",
-          fold_all = "zM",
-          unfold_all = "zO",
-          fold_reset = "R",
+    keys = function()
+      local function get_outline()
+        local ok_aerial, aerial = pcall(require, "outline")
+        return ok_aerial and aerial or {}
+      end
+
+      local height = vim.o.lines - vim.o.cmdheight
+      if vim.o.laststatus ~= 0 then
+        height = height - 1
+      end
+
+      local vim_width = vim.o.columns
+      local vim_height = height
+
+      local widthc = math.floor(vim_width / 2 + 8)
+      local heightc = math.floor(vim_height / 2 - 5)
+      return {
+
+        { "<Localleader>oa", "<cmd>Outline<CR>", desc = "Misc(outline): toggle" },
+        {
+          "<Localleader>oA",
+          function()
+            if vim.bo[0].filetype == "norg" then
+              return
+            end
+
+            local aerial_selected = {
+              "Class",
+              "Constructor",
+              "Object",
+              "Enum",
+              "Function",
+              "Interface",
+              "Variable",
+              "Module",
+              "Method",
+              "Struct",
+              "all",
+            }
+            require("fzf-lua").fzf_exec(aerial_selected, {
+              prompt = "  ",
+              no_esc = true,
+              fzf_opts = { ["--layout"] = "reverse" },
+              winopts_fn = {
+                width = widthc,
+                height = heightc,
+              },
+              winopts = {
+                title = "[Outline] filter symbols",
+                row = 1,
+                relative = "cursor",
+                height = 0.33,
+                width = widthc / (widthc + vim_width - 10),
+              },
+              actions = {
+                ["default"] = function(selected, _)
+                  local selection = selected[1]
+                  if selection ~= nil and type(selection) == "string" then
+                    local plugin = require("lazy.core.config").plugins["outline.nvim"]
+                    local Plugin = require "lazy.core.plugin"
+                    local optsc = Plugin.values(plugin, "opts", false)
+                    local outline = get_outline()
+                    if outline.is_open then
+                      outline.close_outline()
+                    end
+
+                    local path = vim.fn.expand "%:p"
+                    vim.cmd [[bd]]
+                    vim.cmd("e " .. path)
+                    if selection == "all" then
+                      optsc.symbols.blacklist = {}
+                    else
+                      optsc.symbols.blacklist = { selection }
+                    end
+                    outline.setup(optsc)
+                    outline.open_outline()
+                  end
+                end,
+              },
+            })
+          end,
+          desc = "Misc(aerial): change filter kind",
         },
       }
-
-      for kind, symbol in pairs(defaults.symbols) do
-        opts.symbols[kind] = {
-          icon = Config.icons.kinds[kind] or symbol.icon,
-          hl = symbol.hl,
-        }
-        if not vim.tbl_contains(Config.kind_filter.default, kind) then
-          table.insert(opts.symbol_blacklist, kind)
-        end
-      end
-      return opts
     end,
+    config = function(_, opts)
+      require("outline").setup(opts)
+    end,
+    opts = {
+      symbols = {
+        blacklist = {},
+      },
+      keymaps = {
+        show_help = "?",
+        close = { "<Esc>", "q" },
+        goto_location = "<Cr>",
+        peek_location = "o",
+        goto_and_close = "<S-Cr>",
+        restore_location = "<C-g>",
+        hover_symbol = "K",
+        toggle_preview = "P",
+        rename_symbol = "r",
+        code_actions = "a",
+        fold = "h",
+        fold_toggle = "<tab>",
+        fold_toggle_all = "<S-tab>",
+        unfold = "l",
+        fold_all = "zM",
+        unfold_all = "E",
+        fold_reset = "R",
+        down_and_goto = "<a-n>",
+        up_and_goto = "<a-p>",
+      },
+    },
   },
-  -- DROPBAR (disabled)
+  -- DROPBAR
   {
-    -- TODO: got error: "not allowed in sandbox"
-    -- but seems already got fixed but still error, dunno
-    -- https://github.com/Bekaboo/dropbar.nvim/pull/25
     "Bekaboo/dropbar.nvim",
-    enabled = false,
     event = "VeryLazy",
-    -- stylua: ignore
-    keys = { { "<Localleader>od", function() return require("dropbar.api").pick() end, desc = "Open(dropbar): pick" } },
+    keys = {
+      {
+        "<Localleader>od",
+        function()
+          return require("dropbar.api").pick()
+        end,
+        desc = "Open(dropbar): pick",
+      },
+    },
     init = function()
       highlight.plugin("DropBar", {
-        { DropBarIconUISeparator = { bg = { from = "ColorColumn" } } },
-        { DropBarMenuNormalFloat = { inherit = "Pmenu" } },
+        { DropBarMenuNormalFloat = { inherit = "ColorColumn" } },
+        { DropBarIconKindArray = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindBoolean = { bg = { from = "ColorColumn" }, fg = { from = "@booleanj" } } },
+        { DropBarIconKindBreakStatement = { bg = { from = "ColorColumn" }, fg = { from = "@error" } } },
+        { DropBarIconKindCall = { bg = { from = "ColorColumn" }, fg = { from = "Function" } } },
+        { DropBarIconKindCaseStatement = { bg = { from = "ColorColumn" }, fg = { from = "@conditional" } } },
+        { DropBarIconKindClass = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+        { DropBarIconKindConstant = { bg = { from = "ColorColumn" }, fg = { from = "Constant" } } },
+        { DropBarIconKindConstructor = { bg = { from = "ColorColumn" }, fg = { from = "Special" } } },
+        { DropBarIconKindContinueStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+        { DropBarIconKindDeclaration = { bg = { from = "ColorColumn" }, fg = { from = "CmpItemKindSnippet" } } },
+        { DropBarIconKindDelete = { bg = { from = "ColorColumn" }, fg = { from = "@error" } } },
+        { DropBarIconKindDoStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+        { DropBarIconKindElseStatement = { bg = { from = "ColorColumn" }, fg = { from = "@conditional" } } },
+        { DropBarIconKindEnum = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+        { DropBarIconKindEnumMember = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindEvent = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindField = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindFile = { bg = { from = "ColorColumn" }, fg = { from = "Directory" } } },
+        { DropBarIconKindFolder = { bg = { from = "ColorColumn" }, fg = { from = "Directory" } } },
+        { DropBarIconKindForStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+        { DropBarIconKindFunction = { bg = { from = "ColorColumn" }, fg = { from = "Function" } } },
+        { DropBarIconKindH1Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH1" } } },
+        { DropBarIconKindH2Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH2" } } },
+        { DropBarIconKindH3Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH3" } } },
+        { DropBarIconKindH4Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH4" } } },
+        { DropBarIconKindH5Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH5" } } },
+        { DropBarIconKindH6Marker = { bg = { from = "ColorColumn" }, fg = { from = "markdownH6" } } },
+        { DropBarIconKindIdentifier = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindIfStatement = { bg = { from = "ColorColumn" }, fg = { from = "Conditional" } } },
+        { DropBarIconKindInterface = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+        { DropBarIconKindKeyword = { bg = { from = "ColorColumn" }, fg = { from = "Keyword" } } },
+        { DropBarIconKindList = { bg = { from = "ColorColumn" }, fg = { from = "SpecialChar" } } },
+        { DropBarIconKindMacro = { bg = { from = "ColorColumn" }, fg = { from = "Macro" } } },
+        { DropBarIconKindMarkdownH1 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH1" } } },
+        { DropBarIconKindMarkdownH2 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH2" } } },
+        { DropBarIconKindMarkdownH3 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH3" } } },
+        { DropBarIconKindMarkdownH4 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH4" } } },
+        { DropBarIconKindMarkdownH5 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH5" } } },
+        { DropBarIconKindMarkdownH6 = { bg = { from = "ColorColumn" }, fg = { from = "markdownH6" } } },
+        { DropBarIconKindMethod = { bg = { from = "ColorColumn" }, fg = { from = "Function" } } },
+        { DropBarIconKindModule = { bg = { from = "ColorColumn" }, fg = { from = "LspKindModule" } } },
+        { DropBarIconKindNamespace = { bg = { from = "ColorColumn" }, fg = { from = "Include" } } },
+        { DropBarIconKindNull = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindNumber = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNumber" } } },
+        { DropBarIconKindObject = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindOperator = { bg = { from = "ColorColumn" }, fg = { from = "Identifiern" } } },
+        { DropBarIconKindPackage = { bg = { from = "ColorColumn" }, fg = { from = "LspKindModule" } } },
+        { DropBarIconKindPair = { bg = { from = "ColorColumn" }, fg = { from = "LspKindString" } } },
+        { DropBarIconKindProperty = { bg = { from = "ColorColumn" }, fg = { from = "LspKindProperty" } } },
+        { DropBarIconKindReference = { bg = { from = "ColorColumn" }, fg = { from = "LspKindReference" } } },
+        { DropBarIconKindRepeat = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+        { DropBarIconKindScope = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNameSpace" } } },
+        { DropBarIconKindSpecifier = { bg = { from = "ColorColumn" }, fg = { from = "Specifier" } } },
+        { DropBarIconKindStatement = { bg = { from = "ColorColumn" }, fg = { from = "Statement" } } },
+        { DropBarIconKindString = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
+        { DropBarIconKindStruct = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+        { DropBarIconKindSwitchStatement = { bg = { from = "ColorColumn" }, fg = { from = "Conditional" } } },
+        { DropBarIconKindTerminal = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNumber" } } },
+        { DropBarIconKindType = { bg = { from = "ColorColumn" }, fg = { from = "Type" } } },
+        { DropBarIconKindTypeParameter = { bg = { from = "ColorColumn" }, fg = { from = "LspKindTypeParameter" } } },
+        { DropBarIconKindUnit = { bg = { from = "ColorColumn" }, fg = { from = "LspKindUnit" } } },
+        { DropBarIconKindValue = { bg = { from = "ColorColumn" }, fg = { from = "LspKindNumber" } } },
+        { DropBarIconKindVariable = { bg = { from = "ColorColumn" }, fg = { from = "LspKindVariable" } } },
+        { DropBarIconKindWhileStatement = { bg = { from = "ColorColumn" }, fg = { from = "Repeat" } } },
+        { DropBarIconUIIndicator = { bg = { from = "ColorColumn" }, fg = { from = "SpecialChar" } } },
+        { DropBarIconUIPickPivot = { bg = { from = "ColorColumn" }, fg = { from = "Error" } } },
+        { DropBarIconUISeparator = { bg = { from = "ColorColumn" }, fg = { from = "SpecialChar" } } },
+        { DropBarIconUISeparatorMenu = { bg = { from = "ColorColumn" }, fg = { from = "DropBarIconUISeparator" } } },
       })
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -529,7 +699,7 @@ return {
         },
         icons = {
           kinds = {
-            use_devicons = true,
+            use_devicons = false,
             symbols = require("r.config").icons.kinds,
           },
           ui = {
@@ -547,7 +717,7 @@ return {
           sources = function(_, _)
             local sources = require "dropbar.sources"
             return {
-              sources.path,
+              sources.lsp,
             }
           end,
           padding = {
@@ -682,21 +852,10 @@ return {
         providers = { "lsp" },
       },
     },
+    -- stylua: ignore
     keys = {
-      {
-        "<a-q>",
-        function()
-          require("illuminate").goto_next_reference(nil)
-        end,
-        desc = "LSP(vim-illuminate): go next reference",
-      },
-      {
-        "<a-Q>",
-        function()
-          require("illuminate").goto_prev_reference(nil)
-        end,
-        desc = "LSP(vim-illuminate): go prev reference",
-      },
+      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference" },
+      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference" },
     },
     config = function()
       require("illuminate").configure {
@@ -780,19 +939,9 @@ return {
   },
   -- LSP-TIMEOUT.NVIM
   {
-    --  lsp-timeout [lsp garbage collector]
-    --  https://github.com/hinell/lsp-timeout.nvim
-    --  Stop inactive lsp servers until the buffer recover the focus.
     "hinell/lsp-timeout.nvim",
     dependencies = { "neovim/nvim-lspconfig" },
     event = "LazyFile",
-    init = function()
-      vim.g["lsp-timeout-config"] = {
-        stopTimeout = 1000 * 60 * 10, -- Stop unused lsp servers after 10 min.
-        startTimeout = 2000, -- Force server restart if nvim can't in 2s.
-        silent = true, -- Notifications disabled
-      }
-    end,
   },
   -- LSP_SIGNATURE.NVIM (disabled)
   {

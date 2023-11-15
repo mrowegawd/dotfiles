@@ -20,7 +20,7 @@ local colors = {
   branch_fg = highlight.tint(col_bg_StatusLine, 4),
   mode_bg = highlight.tint(col_bg_StatusLine, 1),
   filename_fg = highlight.tint(col_bg_StatusLine, 6),
-  modified_fg = highlight.tint(col_bg_ErrorMsg, 0),
+  modified_fg = highlight.tint(col_bg_ErrorMsg, 0.3),
 
   coldisorent = highlight.tint(col_bg_StatusLine, 0.5),
 
@@ -217,7 +217,7 @@ M.filename = function()
       if vim.bo[0].modified then
         parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "STTUSLINE_MODIFIEDC")
       elseif vim.bo[0].readonly then
-        parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "Comment")
+        parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "ErrorMsg")
       else
         parts[#parts] = sttsline_utils.add_highlight_name(parts[#parts], "STTUSLINE_MOD_FILENAMEC")
       end
@@ -284,23 +284,31 @@ end
 M.filereadonly = function()
   local Readonly = require("sttusline.component").new()
 
+  -- local col = Util.ui.fg("Error").fg
+  -- if col == nil then
+  --   col = "#610000"
+  -- end
+  -- local col_bg = colors.base_bg
+  -- if col == nil then
+  --   col_bg = "#610000"
+  -- end
+
   Readonly.set_config {
-    color = { fg = colors.modified_fg, bg = colors.base_bg },
+    color = { bg = "#610000", fg = "#b1e0a8" },
   }
+
   Readonly.set_event(M.set_event)
 
   Readonly.set_update(function()
     local nomodified = vim.bo[0].readonly
+
+    hl(0, "STTUSLINE_READONLYC", Readonly.get_config().color)
 
     if nomodified then
       return sttsline_utils.add_highlight_name("[]ReadOnly", "STTUSLINE_READONLYC")
     end
 
     return ""
-  end)
-
-  Readonly.set_onhighlight(function()
-    hl(0, "STTUSLINE_READONLYC", Readonly.get_config().color)
   end)
 
   return Readonly

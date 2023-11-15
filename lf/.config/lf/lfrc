@@ -75,16 +75,30 @@ cmd copyto ${{
 }}
 
 cmd fzf_search ${{
-    res="$( \
-        RG_PREFIX="rg --column --line-number --no-heading --hidden --follow --color=always \
-            --smart-case "
-        FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
-            fzf --bind "change:reload:$RG_PREFIX {q} || true" \
-            --ansi --layout=reverse --header 'Search in files' \
-            | cut -d':' -f1
-    )"
-    [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+    select="$(echo -e 'search_string_in_file\nsearch_name_of_file' | fzf)"
+    [ -z "$select" ] && exit 1
+    if [[ "$select" == "search_string_in_file" ]] then
+      res="$( \
+          RG_PREFIX="rg --column --line-number --no-heading --hidden --follow --color=always \
+              --smart-case "
+          FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+              fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+              --ansi --layout=reverse --header 'Search in files' \
+              | cut -d':' -f1
+      )"
+      [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+    else
+      res="$( \
+          RG_PREFIX="fd --color=never --type f --hidden --follow --exclude .git "
+          FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
+              fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+              --ansi --layout=reverse --header 'Search name file' \
+              | cut -d':' -f1
+      )"
+      [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
+    fi
 }}
+
 
 cmd bulkrename $vidir
 
@@ -135,7 +149,7 @@ map M moveto
 map R bulkrename
 map r rename
 map e $$EDITOR "$f"                           # enter with nvim/vim
-map <c-g> fzf_search                          # search string/text with grep
+map <c-g> fzf_search                          # search string in file or search name of file
 map <c-c> quit
 map c
 map cd push :cd<space>

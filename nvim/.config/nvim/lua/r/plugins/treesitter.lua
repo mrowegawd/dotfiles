@@ -1,7 +1,8 @@
 return {
-  -- TREESITTER- CONTEXT
+  -- TREESITTER-CONTEXT (disabled)
   {
     "nvim-treesitter/nvim-treesitter-context",
+    enabled = false,
     event = "LazyFile",
     opts = {
       multiline_threshold = 2,
@@ -26,11 +27,11 @@ return {
       },
     },
   },
-  -- DELIMITERS (Disabled, make nvim slow!)
+  -- DELIMITERS (disabled)
   {
     "HiPhish/rainbow-delimiters.nvim",
-    event = "VeryLazy",
     enabled = false,
+    event = "VeryLazy",
     config = function()
       local rainbow_delimiters = require "rainbow-delimiters"
 

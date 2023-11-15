@@ -8,14 +8,17 @@ local autocmds = {}
 local focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
 
 local winhighlight_blurred = table.concat({
+  -- -- "IncSearch:ColorColumn",
   "CursorLineNr:LineNr",
+  "SignColumn:ColorColumn",
   "EndOfBuffer:ColorColumn",
-  -- "IncSearch:ColorColumn",
+  "LineNr:ColorColumn",
+  "CursorLineNr:ColorColumn",
+  "IncSearch:ColorColumn",
   "Normal:ColorColumn",
   "NormalNC:ColorColumn",
+  "Search:ColorColumn",
   "SignColumn:ColorColumn",
-  "WinBar:ColorColumn",
-  "NormalFloat:ColorColumn",
 }, ",")
 
 -- Jangan bikin ft ini effect windowdim

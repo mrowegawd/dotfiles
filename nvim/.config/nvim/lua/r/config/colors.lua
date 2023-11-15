@@ -16,13 +16,14 @@ local general_overrides = function()
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
     { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "ColorColumn", attr = "bg" } } },
+    { Folded = { bg = { from = "ColorColumn", attr = "bg" }, underline = false } },
     { EndOfBuffer = { bg = "NONE" } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
-    { SignColumn = { bg = { from = "ColorColumn" } } },
+    -- { SignColumn = { bg = { from = "ColorColumn" } } },
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinBar = { bg = { from = "ColorColumn" } } },
+    { WinBarNC = { bg = { from = "ColorColumn" } } },
     -----------------------------------------------------------------------------//
     --  Spell
     -----------------------------------------------------------------------------//
@@ -136,6 +137,8 @@ local general_overrides = function()
     { MyCursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
     { CodeBlock2 = { bg = "cyan" } },
+    { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
+    { CodeComment1 = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
 
     -----------------------------------------------------------------------
     -- PLUGINS
@@ -143,8 +146,8 @@ local general_overrides = function()
 
     -- CMP ================================================================
     { CmpItemAbbr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.55 }, bg = "NONE" } },
-    { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", alter = 0.2 }, bg = "NONE", bold = false } },
-    { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", alter = -0.3 } } },
+    { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
+    { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
 
     { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = 4 }, bg = { from = "ColorColumn" , attr = "bg" , alter = 0.5 } } },
     { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
@@ -155,7 +158,7 @@ local general_overrides = function()
     { TelescopeBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1  } } },
 
     -- Prompt
-    { TelescoeePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+    { TelescopePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
     { TelescopePromptBorder = { bg = { from = "Normal", attr = "bg", alter = -0.15 }, fg = { from = "ColorColumn", attr = "bg" } } },
     { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
     { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
@@ -175,7 +178,7 @@ local general_overrides = function()
     { FzfLuaNormal = { inherit = "Normal" } },
     -- { FzfLuaBorder = { inherit = "WinSeparator" } },
     { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
-    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = -0.3 } } },
+    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bold = true } },
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
 
     -- WHICH-KEY ==========================================================
@@ -189,16 +192,11 @@ local general_overrides = function()
     -- ORGMODE ============================================================
     { OrgDONE = { fg = "#00FF00" } },
 
-    -- MINIINDENTSCOPE ====================================================
-    { MiniIndentscopeSymbol = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
-
-    -- FLASH ==============================================================
-    { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 5 }, bold = true } },
-    { FlashLable = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
-    { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
-
     -- HLSEARCH ===========================================================
     { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },
+
+    -- BUFFERLINE =========================================================
+    { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
   }
 end
 
@@ -211,6 +209,7 @@ local function set_sidebar_highlight()
     { PanelWinSeparator = { inherit = "PanelBackground", fg = { from = "WinSeparator" } } },
     { PanelStNC = { link = "PanelWinSeparator" } },
     { PanelSt = { bg = { from = "Visual", alter = -0.2 } } },
+    { PanelStusLine = { bg = { from = "StatusLine" }, fg = { from = "Normal", attr = "fg" } } },
   }
 end
 

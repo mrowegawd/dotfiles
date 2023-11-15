@@ -86,8 +86,9 @@ return {
           -- header = vim.split(ascii_img[1], "\n"),
           header = ascii_img[1],
           center = {
-            { action = "FzfLua files", desc = " Find file", icon = " ", key = "f" },
-            { action = "ene | startinsert", desc = " New file", icon = " ", key = "n" },
+            { action = [[lua require("fzf-lua").files()]], desc = " Find file", icon = " ", key = "f" },
+            -- { action = "ene | startinsert", desc = " New file", icon = " ", key = "e" },
+            { action = "Neorg workspace wiki", desc = " Notes", icon = " ", key = "n" },
             { action = "FzfLua oldfiles", desc = " Recent files", icon = " ", key = "r" },
             { action = "FzfLua live_grep", desc = " Find text", icon = " ", key = "g" },
             { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },

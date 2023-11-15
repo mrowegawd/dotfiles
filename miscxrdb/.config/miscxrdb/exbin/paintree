@@ -56,7 +56,7 @@ getcolors() {
 		# Non selection fzf
 		FZF_BG=#002b36
 		FZF_FG=#006d89
-		FZF_FG_FUZZY=#9a2320
+		FZF_FG_FUZZY=#6e1917
 
 		FZF_FG_BORDER=#003c4b
 
@@ -68,32 +68,32 @@ getcolors() {
 		TMUX_BORDER_FG=#003543
 		;;
 
-	"darcubox")
-		BACKGROUND_ACTIVE_WINDOW=#0e1214
-		BACKGROUND_NON_ACTIVE_WINDOW=#0e1214
+	"flesh-and-blood")
+		BACKGROUND_ACTIVE_WINDOW=#181818
+		BACKGROUND_NON_ACTIVE_WINDOW=#181818
 
-		BACKGROUND_ACTIVE_STATUSLINE=#0e1214
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#002b36
+		BACKGROUND_ACTIVE_STATUSLINE=#181818
+		BACKGROUND_NON_ACTIVE_STATUSLINE=#181818
 
 		FOREGROUND_WINSEPARATOR=#1b2327
 
 		# Selection item fzf
-		FZF_BG_SELECTION=#151b1e
-		FZF_FG_SELECTION=#afe1ff
-		FZF_FG_FUZZY_SELECTION=#ff7b89
+		FZF_BG_SELECTION=#242424
+		FZF_FG_SELECTION=#ffffff
+		FZF_FG_FUZZY_SELECTION=#cc3a5c
 		# Non selection fzf
-		FZF_BG=#0e1214
-		FZF_FG=#232d33
-		FZF_FG_FUZZY=#a4424a
+		FZF_BG=#181818
+		FZF_FG=#3d3d3d
+		FZF_FG_FUZZY=#551826
 
-		FZF_FG_BORDER=#13191c
+		FZF_FG_BORDER=#212121
 
 		# TMUX
-		TMUX_PANE_ACTIVE_BG=#0e1214
-		TMUX_PANE_BG=#0b0f11
+		TMUX_PANE_ACTIVE_BG=#181818
+		TMUX_PANE_BG=#141414
 
-		TMUX_FG=#192024
-		TMUX_BORDER_FG=#111619
+		TMUX_FG=#2b2b2b
+		TMUX_BORDER_FG=#1e1e1e
 		;;
 
 	"miasma")
@@ -108,11 +108,11 @@ getcolors() {
 		# Selection item fzf
 		FZF_BG_SELECTION=#333333
 		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#d68250
+		FZF_FG_FUZZY_SELECTION=#e8e8d3
 		# Non selection fzf
 		FZF_BG=#222222
 		FZF_FG=#565656
-		FZF_FG_FUZZY=#7d4c2e
+		FZF_FG_FUZZY=#616158
 
 		FZF_FG_BORDER=#2f2f2f
 
@@ -136,11 +136,11 @@ getcolors() {
 		# Selection item fzf
 		FZF_BG_SELECTION=#343439
 		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff6f7c
+		FZF_FG_FUZZY_SELECTION=#e086fc
 		# Non selection fzf
 		FZF_BG=#232326
 		FZF_FG=#595960
-		FZF_FG_FUZZY=#9b4148
+		FZF_FG_FUZZY=#5d3869
 
 		FZF_FG_BORDER=#313135
 
@@ -168,7 +168,7 @@ getcolors() {
 		# Non selection fzf
 		FZF_BG=#282c34
 		FZF_FG=#667084
-		FZF_FG_FUZZY=#b24b4a
+		FZF_FG_FUZZY=#7f3635
 
 		FZF_FG_BORDER=#383d48
 
@@ -196,7 +196,7 @@ getcolors() {
 		# Non selection fzf
 		FZF_BG=#2d353b
 		FZF_FG=#728796
-		FZF_FG_FUZZY=#a15859
+		FZF_FG_FUZZY=#733f40
 
 		FZF_FG_BORDER=#3e4a52
 
@@ -224,7 +224,7 @@ getcolors() {
 		# Non selection fzf
 		FZF_BG=#24283b
 		FZF_FG=#5b6696
-		FZF_FG_FUZZY=#993434
+		FZF_FG_FUZZY=#6d2525
 
 		FZF_FG_BORDER=#323852
 
@@ -253,7 +253,7 @@ getcolors() {
 		# Non selection fzf
 		FZF_BG=#1a1b26
 		FZF_FG=#424460
-		FZF_FG_FUZZY=#993434
+		FZF_FG_FUZZY=#6d2525
 
 		FZF_FG_BORDER=#242535
 
@@ -281,7 +281,7 @@ getcolors() {
 		# Non selection fzf
 		FZF_BG=#011627
 		FZF_FG=#023863
-		FZF_FG_FUZZY=#a73a38
+		FZF_FG_FUZZY=#772928
 
 		FZF_FG_BORDER=#011e36
 
@@ -293,7 +293,7 @@ getcolors() {
 		TMUX_BORDER_FG=#011b30
 		;;
 
-	"gruvbox-material")
+	"gruvbox")
 		BACKGROUND_ACTIVE_WINDOW=#282828
 		BACKGROUND_NON_ACTIVE_WINDOW=#282828
 
@@ -305,11 +305,11 @@ getcolors() {
 		# Selection item fzf
 		FZF_BG_SELECTION=#3c3c3c
 		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff7e75
+		FZF_FG_FUZZY_SELECTION=#ff573e
 		# Non selection fzf
 		FZF_BG=#282828
 		FZF_FG=#666666
-		FZF_FG_FUZZY=#a34944
+		FZF_FG_FUZZY=#7d241a
 
 		FZF_FG_BORDER=#383838
 
@@ -420,8 +420,8 @@ cachecolorfzf() {
 
 				    export FZF_DEFAULT_OPTS='
 		        --bind ctrl-a:toggle-all,ctrl-l:clear-query,ctrl-d:preview-down,ctrl-u:preview-up,ctrl-n:down,ctrl-p:up,ctrl-g:top,F4:toggle-preview,ctrl-f:half-page-down,ctrl-b:half-page-up
+				    --color=bg+:$FZF_BG_SELECTION,fg+:$FZF_FG_SELECTION,hl+:$FZF_FG_FUZZY_SELECTION,gutter:$TMUX_PANE_BG,pointer:$GREEN
 				    --color=bg:,fg:$FZF_FG,hl:$FZF_FG_FUZZY,border:$FZF_FG_BORDER --height=65%
-				    --color=bg+:$FZF_BG_SELECTION,fg+:$FZF_FG_SELECTION,hl+:$FZF_FG_FUZZY_SELECTION,gutter:$FZF_BG,pointer:$GREEN
 		        --preview "bat --style=plain --color=always {}" --preview-window right:50%:hidden:wrap --border --reverse
 				    --cycle --prompt="> "'
 				}
