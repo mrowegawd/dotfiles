@@ -425,11 +425,12 @@ return {
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      local hg = require "r.config.highlights"
-      hg.plugin("arials", {
-        { ArialGuide = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
-        { ArialGuide1 = { fg = { from = "ColorColumn", attr = "bg", alter = -0.1 } } },
+      highlight.plugin("arials", {
+        { AerialGuide = { fg = { from = "CodeComment1", attr = "fg" } } },
       })
+
+      ---@diagnostic disable-next-line: undefined-field
+      require("telescope").load_extension "aerial"
 
       local vim_width = vim.o.columns
       vim_width = math.floor(vim_width / 2 - 30)
@@ -450,9 +451,8 @@ return {
         filter_kind = false,
         icons = require("r.config").icons.kinds,
         keymaps = {
-          ["o"] = "actions.jump",
           -- ["o"] = "actions.jump",
-          ["O"] = "actions.scroll",
+          ["o"] = "actions.scroll",
           -- ["]y"] = "actions.next",
           -- ["[y"] = "actions.prev",
           ["<a-n>"] = "actions.down_and_scroll",
