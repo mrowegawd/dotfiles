@@ -5,18 +5,18 @@ local fn, cmd, fmt, map = vim.fn, vim.cmd, string.format, vim.keymap.set
 
 local Util = require "r.utils"
 
--- local recursive_map = function(mode, lhs, rhs, opts)
---     opts = opts or {}
---     opts.remap = true
---     map(mode, lhs, rhs, opts)
--- end
---
--- local nmap = function(...)
---     recursive_map("n", ...)
--- end
--- local imap = function(...)
---     recursive_map("i", ...)
--- end
+local recursive_map = function(mode, lhs, rhs, opts)
+  opts = opts or {}
+  opts.remap = true
+  map(mode, lhs, rhs, opts)
+end
+
+local nmap = function(...)
+  recursive_map("n", ...)
+end
+local imap = function(...)
+  recursive_map("i", ...)
+end
 
 local nnoremap = function(...)
   map("n", ...)
@@ -59,8 +59,11 @@ nnoremap("<Localleader>ol", "<Cmd>Lazy<CR>", { desc = "Misc(lazy): manage" })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ EDITING TEXT                                             │
 --  ╰──────────────────────────────────────────────────────────╯
-inoremap("jk", "<ESC>", silent)
-inoremap("kj", "<ESC>", silent)
+-- jk is escape, THEN move to the right to preserve the cursor position, unless
+-- at the first column.  <esc> will continue to work the default way.
+-- NOTE: this is a recursive mapping so anything bound (by a plugin) to <esc> still works
+imap("jk", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
+imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
@@ -83,27 +86,38 @@ vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the f
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MARKS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
--- nnoremap("gm", "`", { noremap = false }) -- Map gm to `. Instead of `a, hit gma. See :help mark-motions as to why we use backtick.
+-- Map gm to `. Instead of `a, hit gma. See :help mark-motions as to why we use backtick.
+-- nnoremap("gm", "`", { noremap = false })
 
--- if FzfLua not installed use this
--- jump using marks to last change, left insert, jump.
-if not pcall(require, "fzf-lua") then
-  nnoremap("<Leader>mc", ":norm `.<CR>", { desc = "Marks: jump to last change" })
-  nnoremap("<Leader>mi", ":norm `^<CR>", { desc = "Marks: jump to last insert" })
-  nnoremap("<Leader>mj", ":norm `'<CR>", { desc = "Marks: jump to last jump" })
-end
+-- Easy to remember when do marks stuff
+-- if not pcall(require, "fzf-lua") then
+--   nnoremap("<Leader>mc", ":norm `.<CR>", { desc = "Marks: jump to last change" })
+--   nnoremap("<Leader>mi", ":norm `^<CR>", { desc = "Marks: jump to last insert" })
+--   nnoremap("<Leader>mj", ":norm `'<CR>", { desc = "Marks: jump to last jump" })
+-- end
+
+-- Always do center win, when do jump <c-o/i>
+nnoremap("<c-o>", "<c-o>zz")
+nnoremap("<c-i>", "<c-i>zz")
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ FOLDS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
 
-nnoremap("zm", "zM", { desc = "Folds: close all" })
+-- Focus the current fold by closing all others
+nnoremap("<space><space>", "zMzvzO", { desc = "fold: focus the current fold by closing all others" })
 
--- nnoremap("<space><space>", "za", { desc = "Folds: toggle" })
+-- Make zO recursively open whatever top level fold we're in, no matter where the
+-- cursor happens to be.
+-- nnoremap("zO", [[zCzO]], { desc = " fold: recursively zO" })
 
--- Jump next/prev fold
--- nnoremap("zn", "zjzz", opts)
--- nnoremap("zp", "zkzz", opts)
+-- Jump next/prev to closing fold
+nnoremap("<a-n>", function()
+  return Util.fold.goNextClosedFold()
+end, { desc = "Folds: go next closed" })
+nnoremap("<a-p>", function()
+  return Util.fold.goPreviousClosedFold()
+end, { desc = "Folds: go prev closed" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ BUFFERS                                                  │
@@ -142,12 +156,10 @@ nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close" })
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ VISUAL                                                   │
 --  ╰──────────────────────────────────────────────────────────╯
--- Ketika dalam mode visual, bisa pindah cursor ke atas dan bawah
+-- Cara mudah untuk cursor dari bawah ke atas dalam visual mode
 xnoremap("il", "$o0", { desc = "Visual: jump in" })
 onoremap("il", "<cmd>normal val<CR>", { desc = "Visual: jump out" })
-
 nnoremap("vv", [[^vg_]], { desc = "Visual: select text lines" })
-
 vnoremap(">", ">gv", { desc = "Visual: next align lines" })
 vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 
@@ -155,6 +167,8 @@ vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 --  │ MISC                                                     │
 --  ╰──────────────────────────────────────────────────────────╯
 nnoremap("~", "%", silent)
+
+nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 
 nnoremap("<Localleader>tb", function()
   return Util.toggle.background()
@@ -184,9 +198,6 @@ nnoremap("<Leader>n", function()
   return cmd.nohl()
 end, { desc = "Misc: clear searches" })
 
--- nnoremap("n", "nzzzv", { desc = "Misc: search next" })
--- nnoremap("N", "Nzzzv", { desc = "Misc: search prev" })
-
 nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
 xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
 onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -194,23 +205,9 @@ nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search 
 xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
--- Allow moving the cursor through wrapped lines using j and k,
--- note that I have line wrapping turned off but turned on only for Markdown
-nnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-
--- Set a mark when moving more than 5 lines upwards/downards
--- this will populate the jumplist enabling us to jump back with Ctrl-O
--- nnoremap(
---     "k",
---     [[(v:count > 5 ? "m'" . v:count : "") . 'k']],
---     { expr = true }
--- )
--- nnoremap(
---     "j",
---     [[(v:count > 5 ? "m'" . v:count : "") . 'j']],
---     { expr = true }
--- )
+-- Store relative line number jumps in the jumplist.
+nnoremap("k", [[ (v:count > 1 ? "m'" . v:count : "") . 'gk' ]], { expr = true })
+nnoremap("j", [[ (v:count > 1 ? "m'" . v:count : "") . 'gj' ]], { expr = true })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS                                                  │
@@ -218,9 +215,8 @@ nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 
 nnoremap("<c-w>v", "<CMD>vsplit<CR>", silent)
 nnoremap("<c-w>s", "<CMD>split<CR>", silent)
-nnoremap("<c-w>y", "<CMD>wincmd =<CR>", silent)
+nnoremap("<c-w><leader>", "<CMD>wincmd =<CR>", silent)
 nnoremap("<Leader>ww", "<C-W>p", silent)
-nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 nnoremap("<c-w>J", "<C-W>t <C-W>K", { desc = "Windows: change two horizontally split windows to vertical splits" })
 nnoremap("<c-w>L", "<C-W>t <C-W>H", { desc = "Windows: change two vertically split windows to horizontal splits" })
 
@@ -278,20 +274,6 @@ Util.cmd.augroup("AddTerminalMappings", {
 })
 
 --  ╭──────────────────────────────────────────────────────────╮
---  │ DISABLE                                                  │
---  ╰──────────────────────────────────────────────────────────╯
-
--- nnoremap("gQ", "<Nop>") -- disable
--- nnoremap("<F1>", "<Nop>") -- disable
--- nnoremap("zL", "<Nop>") -- disable
--- nnoremap("Q", "<Nop>", {}) -- Disable Ex mode:
--- nnoremap("Q", "<F1>", {}) -- Disable Ex mode:
-
--- vim.keymap.del("n", "Q")
--- vim.keymap.del({ "x", "o" }, "x")
--- vim.keymap.del({ "x", "o" }, "X")
-
---  ╭──────────────────────────────────────────────────────────╮
 --  │ CABBREV                                                  │
 --  ╰──────────────────────────────────────────────────────────╯
 
@@ -321,15 +303,6 @@ cabbrev("bd", "bd!")
 --  ┌──────────────────────────────────────────────────────────┐
 --  │                          MAGIC                           │
 --  └──────────────────────────────────────────────────────────┘
-
--- Dont mess when do jumping
-nnoremap("<a-n>", function()
-  return Util.fold.goNextClosedFold()
-end, { desc = "Folds: go next closed" })
-
-nnoremap("<a-p>", function()
-  return Util.fold.goPreviousClosedFold()
-end, { desc = "Folds: go prev closed" })
 
 -- Exit or delete a buffer
 local function magic_quit()
@@ -392,6 +365,22 @@ end
 nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
 vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit [visual]" })
 
+local function getPopups()
+  return vim.fn.filter(vim.api.nvim_tabpage_list_wins(0), function(_, e)
+    return vim.api.nvim_win_get_config(e).zindex
+  end)
+end
+
+local function killPopups()
+  vim.fn.map(getPopups(), function(_, e)
+    vim.api.nvim_win_close(e, false)
+  end)
+end
+
+vim.keymap.set("n", "<ESC>", function()
+  vim.cmd.noh()
+  killPopups()
+end)
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDS                                                 │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -416,51 +405,14 @@ end, { desc = "Misc: echo options" })
 --  │ Improve scroll, credits: https://github.com/Shougo       │
 --  ╰──────────────────────────────────────────────────────────╯
 
+nmap("zz", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']], { expr = true })
+
 -- Scroll step sideways
 nnoremap("zl", "z4l")
 nnoremap("zh", "z4h")
 
-vim.cmd [[
-noremap <expr> <C-b> max([winheight(0) - 2, 1])
-      \ ."\<C-u>".(line('w0') <= 1 ? "H" : "M")
-      ]]
+nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
+nnoremap("<C-f>", [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]], { expr = true })
 
-vim.cmd [[
-noremap <expr> <C-e> (line("w$") >= line('$') ? "2j" : "4\<C-e>")
-]]
-
-vim.cmd [[
-noremap <expr> <C-y> (line("w0") <= 1         ? "2k" : "4\<C-y>")
-]]
-
-vim.cmd [[
-nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
-      \ 'zt' : (winline() == 1) ? 'zb' : 'zz'
-  ]]
-
--- TODO: check ini nanti, copy paste selection dan killPopups
-local function getPopups()
-  return vim.fn.filter(vim.api.nvim_tabpage_list_wins(0), function(_, e)
-    return vim.api.nvim_win_get_config(e).zindex
-  end)
-end
-
-local function killPopups()
-  vim.fn.map(getPopups(), function(_, e)
-    vim.api.nvim_win_close(e, false)
-  end)
-end
-
-vim.keymap.set("n", "<esc>", function()
-  vim.cmd.noh()
-  killPopups()
-end)
-
--- vim.keymap.set("n", "<F5>", function()
---   return "`[" .. vim.fn.strpart(vim.fn.getregtype(), 0, 1) .. "`]"
--- end, { expr = true })
-
--- vim.cmd [[
--- noremap <expr> <C-f> max([winheight(0) - 2, 1])
---       \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
---       ]]
+nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
+nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
