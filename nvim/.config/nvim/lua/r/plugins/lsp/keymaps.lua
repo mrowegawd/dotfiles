@@ -24,6 +24,8 @@ function M.get()
     { "gI", "<CMD>FzfLua outgoing_calls<CR>", desc = "LSP(fzflua): outgoing calls" },
     { "gi", "<CMD>FzfLua incoming_calls<CR>", desc = "LSP(fzflua): incoming calls" },
     { "gy", function() require("telescope.builtin").lsp_type_definitions { reuse_win = true } end, desc = "Goto T[y]pe Definition" },
+    { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP(fzflua): document symbols" },
+    { "gS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP(fzflua): workspaces symbols" },
     { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "LSP: codeAction" },
     {
       "<leader>cA",
@@ -58,15 +60,22 @@ function M.get()
     { "gtd", Util.toggle.diagnostics, desc = "LSP(diagnostic): toggle diagnostics" },
     { "dn", function() diagnostic.goto_next { float = false } end, desc = "LSP(diagnostic): next item" },
     { "dp", function() diagnostic.goto_prev { float = false } end, desc = "LSP(diagnostic): prev item" },
-    { "dP", function() vim.diagnostic.open_float({ scope = "line", border = "rounded", focusable = true }) end, desc = "LSP(diagnostic): open float preview" },
+    { "dP", function() vim.diagnostic.open_float({ scope = "line", border = "rounded", focusable = true }) end, desc = "LSP(diagnostic): preview" },
     { "dq",
       function()
-        if #vim.diagnostic.get() > 0 then
-          Util.info("Open diagnostic setqflist", "Diagnostic")
-          return vim.diagnostic.setqflist()
-        else
-          Util.info("Document its clean..", "Diagnostic")
+        if #vim.diagnostic.get() == 0 then
+          return Util.info("Document its clean", { title= "Diagnostics" } )
         end
+        vim.cmd "Trouble document_diagnostics"
+      end,
+      desc = "LSP(diagnostic): sending to qf",
+    },
+    { "dQ",
+      function()
+        if #vim.diagnostic.get() == 0 then
+          return Util.info("Document its clean", { title= "Diagnostics" } )
+        end
+        vim.cmd "Trouble workspace_diagnostics"
       end,
       desc = "LSP(diagnostic): sending to qf",
     },
