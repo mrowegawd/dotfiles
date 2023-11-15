@@ -16,7 +16,7 @@ local general_overrides = function()
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
     { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "ColorColumn", attr = "bg" } } },
+    { Folded = { bg = { from = "ColorColumn", attr = "bg" }, underline = false } },
     { EndOfBuffer = { bg = "NONE" } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
     -- { SignColumn = { bg = { from = "ColorColumn" } } },
@@ -191,14 +191,6 @@ local general_overrides = function()
 
     -- ORGMODE ============================================================
     { OrgDONE = { fg = "#00FF00" } },
-
-    -- MINIINDENTSCOPE ====================================================
-    { MiniIndentscopeSymbol = { fg = { from = "Directory", attr = "fg", alter = -0.2 } } },
-
-    -- FLASH ==============================================================
-    { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 5 }, bold = true } },
-    { FlashLable = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
-    { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
 
     -- HLSEARCH ===========================================================
     { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },

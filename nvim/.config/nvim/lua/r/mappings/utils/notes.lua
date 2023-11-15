@@ -26,6 +26,18 @@ function M.neorg_mappings_ft(bufnr)
           vim_width = math.floor(vim_width / 2 - 10)
           cmd(fmt("vertical resize %s", vim_width))
         end,
+        "Note(neorg): open toc sidebar",
+      },
+      ["tt"] = {
+        function()
+          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+          -- cmd "Neorg toc right"
+          -- local vim_width = vim.o.columns
+          -- vim_width = math.floor(vim_width / 2 - 10)
+          -- cmd(fmt("vertical resize %s", vim_width))
+
+          return Util.neorg_notes.check_broken_links(neorg)
+        end,
         "Note(neorg): open toc right(curbuf)",
       },
       ["<Localleader>fc"] = {

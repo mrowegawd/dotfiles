@@ -68,12 +68,11 @@ return {
     "ThePrimeagen/harpoon",
     --stylua: ignore
     keys = {
-      { "<Leader>ja", function() require("harpoon.mark").add_file() end,            desc = "Misc(harpoon): add file" },
-      -- { "<Leader>jm", function() require("harpoon.ui").toggle_quick_menu() end,     desc = "Misc(harpoon): file menu" },
-      { "<Leader>jm", "<CMD> Telescope harpoon marks <CR>",                         desc = "Misc(harpoon): file menu" },
+      { "<Leader>ja", function() require("harpoon.mark").add_file() end, desc = "Misc(harpoon): add file" },
+      { "<Leader>jm", function() require("harpoon.ui").toggle_quick_menu() end, desc = "Misc(harpoon): file menu" },
       { "<Leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
-      { "<Leader>1",  function() require("harpoon.ui").nav_file(1) end,             desc = "Misc(harpoon): file 1" },
-      { "<Leader>2",  function() require("harpoon.ui").nav_file(2) end,             desc = "Misc(harpoon): file 2" },
+      { "<Leader>1", function() require("harpoon.ui").nav_file(1) end, desc = "Misc(harpoon): file 1" },
+      { "<Leader>2", function() require("harpoon.ui").nav_file(2) end, desc = "Misc(harpoon): file 2" },
       -- { "<Leader>3", function() require("harpoon.term").gotoTerminal(1) end, desc = "Terminal 1" },
       -- { "<Leader>4", function() require("harpoon.term").gotoTerminal(2) end, desc = "Terminal 2" },
       -- { "<Leader>5", function() require("harpoon.term").sendCommand(1,1) end, desc = "Command 1" },
@@ -89,18 +88,29 @@ return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
-    event = "VeryLazy",
-    opts = {
-      modes = {
-        char = {
-          -- Jika key tidak di set disini, efek key akan di ignore
-          keys = { "f", "F", "t", "T" },
+    event = "LazyFile",
+    opts = function()
+      highlight.plugin("flash.nvim", {
+        { FlashMatch = { bg = { from = "ErrorMsg", attr = "fg", alter = 3 }, bold = true } },
+        {
+          FlashLabel = {
+            fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 },
+            bg = "NONE",
+            bold = true,
+            strikethrough = false,
+          },
         },
-        search = {
-          enabled = false,
+        { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
+      })
+      return {
+        modes = {
+          char = {
+            keys = { "f", "F" },
+          },
+          search = { enabled = false },
         },
-      },
-    },
+      }
+    end,
     -- stylua: ignore
     keys = {
       { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
@@ -1238,14 +1248,23 @@ return {
     end,
     config = function(_, opts)
       local telescope = require "telescope"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.setup(opts)
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "corrode"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "fzf"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "grepqf"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "harpoon"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "lazy"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "undo"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "live_grep_args"
+      ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "dap"
 
       local corrode_cfg = require "telescope._extensions.corrode.config"

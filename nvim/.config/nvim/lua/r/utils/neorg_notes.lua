@@ -163,49 +163,53 @@ function M.finder_linkable(neorg)
   return res
 end
 
-function M.get_check_linkdir(neorg)
-  -- TODO: check link broken di norg
-  -- check jika ada broken link di local dan global
-  -- output masukkan ke quickfix
+function M.check_broken_links(neorg)
+  -- local dirman_utils = neorg.modules.get_module "core.dirman.utils"
+  -- -- 1. regex/grep all links on curbuf
+  -- local scripts =
+  --   vim.api.nvim_exec2(fmt([[!rg ':[a-z|$](.*):' %s -N | cut -d: -f2 ]], vim.fn.expand "%:p"), { output = true })
 
-  -- local mod_hop = neorg.modules.get_module "core.dirman.utils"
-  -- local expanded_link_text = mod_hop.expand_path "$/"
-  --
-  -- if expanded_link_text ~= vim.fn.expand "%:p" then
-  --     print "no"
-  --     -- We are dealing with a foreign file
-  --     -- buf_pointer = vim.uri_to_bufnr("file://" .. expanded_link_text)
+  -- -- local brokenbuf_ids = {}
+  -- if scripts.output ~= nil then
+  --   local res = vim.split(scripts.output, "\n")
+  --   for index = 2, #res do
+  --     local item = res[index]
+  --     if #item > 0 then
+  --       -- 2. validate the links before collect them
+  --       local expanded_link_text = dirman_utils.expand_path(item)
+  --       local buf_pointer = vim.uri_to_bufnr("file://" .. expanded_link_text)
+  --       -- print(buf_pointer)
+  --       if not vim.api.nvim_buf_is_valid(buf_pointer) then
+  --         print(buf_pointer)
+  --         -- table.insert(brokenbuf_ids, buf_pointer)
+  --       end
+  --     end
+  --   end
   -- end
-  --
-  -- print(expanded_link_text)
+  -- print(vim.inspect(brokenbuf_ids))
 
+  -- 2. validate the links before sending to qf
   local module = neorg.modules.get_module "core.esupports.hop"
+  -- local ts_utils = neorg.modules.get_module("core.integrations.treesitter").get_ts_utils()
+  -- local current_node = ts_utils.get_node_at_cursor()
+  -- local found_node = neorg.modules
+  --   .get_module("core.integrations.treesitter")
+  --   .find_parent(current_node, { "link", "anchor_declaration", "anchor_definition" })
+  -- print(found_node:type())
 
-  -- local jj = module.parse_link(module.extract_link_node())
-  -- local mm = module.locate_link_target(jj)
-  local jj = module.locate_anchor_declaration_target(module.extract_link_node())
+  -- `link_node_at_cursor` this just an example,
+  local link_node_at_cursor = module.extract_link_node()
+  print(vim.inspect(link_node_at_cursor))
+  -- local parse_link = module.parse_link(link_node_at_cursor)
+  -- print(vim.inspect(parse_link))
 
-  print(vim.inspect(jj))
-  -- print(vim.inspect(mm))
-
-  -- if not parsed_link_information.link_type then
-  --     return {
-  --         type = "buffer",
-  --         original_title = nil,
-  --         node = nil,
-  --         buffer = buf_pointer,
-  --     }
+  -- local located_link_information = module.locate_link_target(parse_link)
+  -- print(vim.inspect(located_link_information))
+  -- print(vim.api.nvim_buf_is_valid(located_link_information.buffer))
+  -- if vim.api.nvim_buf_is_valid(located_link_information.buffer) then
+  --   print "this link is broken"
+  --   -- collect the broken links
   -- end
-
-  -- local parsed_link = mod_hop.parse_link(mod_hop.extract_link_node())
-  -- vim.notify(vim.inspect(parsed_link))
-
-  -- module.required["core.dirman.utils"].expand_path(
-  --     parsed_link_information.link_file_text
-  -- )
-
-  -- vim.inspect(mod_hop.expand_path "$/mode")
-  -- print(vim.inspect(mod_hop.expand_path "$/mode"))
 end
 
 --  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -303,14 +307,6 @@ end
 --         -- as.absolute_path(vim.api.nvim_get_current_buf()),
 --     }
 --     return vim.tbl_flatten(command)
--- end
---
--- function norg.finder_broken_links(all)
---     if all then
---         return print "get all broken links"
---     end
---
---     return table.concat(set_command(), " ")
 -- end
 
 return M

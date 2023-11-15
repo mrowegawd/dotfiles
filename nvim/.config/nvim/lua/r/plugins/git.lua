@@ -220,7 +220,7 @@ return {
     opts = {
       -- Experimental ------------------------------------------------------------------------------
       _inline2 = false,
-      _extmark_signs = true,
+      _extmark_signs = false,
       _signs_staged_enable = false,
       signs = {
         add = { text = "▎" },
