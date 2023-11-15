@@ -311,6 +311,7 @@ return {
   -- AERIAL
   {
     "stevearc/aerial.nvim",
+    -- enabled = false,
     event = "LazyFile",
     init = function()
       Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -472,31 +473,124 @@ return {
   },
   -- SYMBOLSOUTLINE (disabled)
   {
-    "simrat39/symbols-outline.nvim",
+    "hedyhli/outline.nvim",
     enabled = false,
-    cmd = "SymbolsOutline",
+    cmd = "Outline",
     init = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
     end,
-    -- stylua: ignore
-    keys = { { "<Localleader>oa", "<cmd>SymbolsOutline<CR>", desc = "Misc(symbolsoutline): pick", }, },
+    keys = function()
+      local function get_outline()
+        local ok_aerial, aerial = pcall(require, "outline")
+        return ok_aerial and aerial or {}
+      end
+
+      local height = vim.o.lines - vim.o.cmdheight
+      if vim.o.laststatus ~= 0 then
+        height = height - 1
+      end
+
+      local vim_width = vim.o.columns
+      local vim_height = height
+
+      local widthc = math.floor(vim_width / 2 + 8)
+      local heightc = math.floor(vim_height / 2 - 5)
+      return {
+
+        { "<Localleader>oa", "<cmd>Outline<CR>", desc = "Misc(outline): toggle" },
+        {
+          "<Localleader>oA",
+          function()
+            if vim.bo[0].filetype == "norg" then
+              return
+            end
+
+            local aerial_selected = {
+              "Class",
+              "Constructor",
+              "Object",
+              "Enum",
+              "Function",
+              "Interface",
+              "Variable",
+              "Module",
+              "Method",
+              "Struct",
+              "all",
+            }
+            require("fzf-lua").fzf_exec(aerial_selected, {
+              prompt = "  ",
+              no_esc = true,
+              fzf_opts = { ["--layout"] = "reverse" },
+              winopts_fn = {
+                width = widthc,
+                height = heightc,
+              },
+              winopts = {
+                title = "[Outline] filter symbols",
+                row = 1,
+                relative = "cursor",
+                height = 0.33,
+                width = widthc / (widthc + vim_width - 10),
+              },
+              actions = {
+                ["default"] = function(selected, _)
+                  local selection = selected[1]
+                  if selection ~= nil and type(selection) == "string" then
+                    local plugin = require("lazy.core.config").plugins["outline.nvim"]
+                    local Plugin = require "lazy.core.plugin"
+                    local optsc = Plugin.values(plugin, "opts", false)
+                    local outline = get_outline()
+                    if outline.is_open then
+                      outline.close_outline()
+                    end
+
+                    local path = vim.fn.expand "%:p"
+                    vim.cmd [[bd]]
+                    vim.cmd("e " .. path)
+                    if selection == "all" then
+                      optsc.symbols.blacklist = {}
+                    else
+                      optsc.symbols.blacklist = { selection }
+                    end
+                    outline.setup(optsc)
+                    outline.open_outline()
+                  end
+                end,
+              },
+            })
+          end,
+          desc = "Misc(aerial): change filter kind",
+        },
+      }
+    end,
+    config = function(_, opts)
+      require("outline").setup(opts)
+    end,
     opts = {
-      symbols = {},
-      symbol_blacklist = {},
-      keymaps = { -- These keymaps can be a string or a table for multiple keys
-        close = { "<Esc>", "q", "<leader><TAB>" },
+      symbols = {
+        blacklist = {},
+      },
+      keymaps = {
+        show_help = "?",
+        close = { "<Esc>", "q" },
         goto_location = "<Cr>",
-        focus_location = "o",
+        peek_location = "o",
+        goto_and_close = "<S-Cr>",
+        restore_location = "<C-g>",
         hover_symbol = "K",
         toggle_preview = "P",
         rename_symbol = "r",
         code_actions = "a",
-        show_help = "?",
         fold = "h",
+        fold_toggle = "<tab>",
+        fold_toggle_all = "<S-tab>",
         unfold = "l",
         fold_all = "zM",
-        unfold_all = "zO",
+        unfold_all = "E",
         fold_reset = "R",
+        down_and_goto = "<a-n>",
+        up_and_goto = "<a-p>",
       },
     },
   },
@@ -758,21 +852,10 @@ return {
         providers = { "lsp" },
       },
     },
+    -- stylua: ignore
     keys = {
-      {
-        "<a-q>",
-        function()
-          require("illuminate").goto_next_reference(nil)
-        end,
-        desc = "LSP(vim-illuminate): go next reference",
-      },
-      {
-        "<a-Q>",
-        function()
-          require("illuminate").goto_prev_reference(nil)
-        end,
-        desc = "LSP(vim-illuminate): go prev reference",
-      },
+      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference" },
+      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference" },
     },
     config = function()
       require("illuminate").configure {
