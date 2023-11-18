@@ -37,6 +37,7 @@ function M.goPreviousClosedFold()
             execute  "cprev"
             execute "normal! zz"
         catch /^Vim\%((\a\+)\)\=:E553/
+            execute "wincmd p"
             " execute "echo 'stop it'"
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
         endtry
@@ -80,7 +81,7 @@ function M.goNextClosedFold()
             execute "cnext"
             execute "normal! zz"
         catch /^Vim\%((\a\+)\)\=:E553/
-            " execute "echo 'stop it'"
+            execute "wincmd p"
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
         endtry
             ]]

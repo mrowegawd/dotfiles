@@ -290,6 +290,13 @@ return {
         end,
         desc = "Fold(fold-cycle): cycle fold",
       },
+      {
+        "z<Leader>",
+        function()
+          require("fold-cycle").open()
+        end,
+        desc = "Fold(fold-cycle): cycle fold",
+      },
     },
   },
   -- BUFFERLINE

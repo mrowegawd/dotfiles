@@ -206,7 +206,7 @@ nnoremap("tL", "<CMD>tablast<CR>", { desc = "WinNav(tab): last tab", silent = tr
 
 -- Alternate the buffer
 local dont_alternitefile = { "qf", "Outline", "neo-tree", "OverseerList" }
-nnoremap("sb", function()
+nnoremap("sbb", function()
   local bufnr = vim.api.nvim_get_current_buf()
   local ft = vim.bo[bufnr].filetype
   if vim.tbl_contains(dont_alternitefile, ft) then
