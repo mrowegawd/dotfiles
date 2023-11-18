@@ -10,6 +10,9 @@ function M.get_signs(buf, lnum)
   -- Get regular signs
   ---@type Sign[]
   local signs = vim.tbl_map(function(sign)
+    if vim.bo[0].filetype == "fzf" then
+      return {}
+    end
     ---@type Sign
     local ret = vim.fn.sign_getdefined(sign.name)[1]
     ret.priority = sign.priority
@@ -106,7 +109,7 @@ function M.statuscolumn()
     end
     vim.api.nvim_win_call(win, function()
       if vim.fn.foldclosed(vim.v.lnum) >= 0 then
-        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded" }
+        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldColumn" }
         if
           vim.tbl_contains(
             { "norg", "org", "orgagenda", "fzf" },

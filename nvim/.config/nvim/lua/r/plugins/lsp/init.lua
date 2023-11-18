@@ -198,7 +198,7 @@ return {
         return ret
       end
 
-      -- Uncomment this if you not using 'noice.nvim'
+      -- Uncomment this if you are not using 'noice.nvim'
       -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
       --   border = border,
       -- })

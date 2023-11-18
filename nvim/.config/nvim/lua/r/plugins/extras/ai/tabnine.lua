@@ -1,7 +1,3 @@
-if true then
-  return {}
-end
-
 local Util = require "r.utils"
 
 return {
@@ -30,7 +26,7 @@ return {
       table.insert(opts.sources, 1, {
         name = "cmp_tabnine",
         group_index = 1,
-        priority = 100,
+        -- priority = 100,
       })
 
       opts.formatting.format = Util.inject.args(opts.formatting.format, function(entry, item)

@@ -15,34 +15,6 @@ local function format_title(str, icon, icon_hl)
 end
 
 return {
-  -- HEADLINES.NVIM
-  {
-    "lukas-reineke/headlines.nvim",
-    lazy = false, -- must set to `false`, without this custom color, it does not work
-    ft = { "markdown", "norg", "rmd", "org" },
-    opts = function()
-      highlight.plugin("headlines", {
-        theme = {
-          ["*"] = {
-            { Dash = { bg = "NONE", bold = true } },
-            { CodeBlock = { bg = "NONE" } },
-            { Headline1 = { bg = { from = "@attribute", attr = "fg", alter = -0.8 } } },
-            { Headline2 = { bg = { from = "@label", attr = "fg", alter = -0.8 } } },
-            { Headline3 = { bg = { from = "@constant", attr = "fg", alter = -0.8 } } },
-            { Headline4 = { bg = { from = "Boolean", attr = "fg", alter = -0.8 } } },
-            { Headline5 = { bg = { from = "Orange", attr = "fg", alter = -0.9 } } },
-          },
-        },
-      })
-
-      return {
-        org = { headline_highlights = false },
-        norg = { headline_highlights = { "Headline1", "Headline2" }, codeblock_highlight = false },
-        markdown = { headline_highlights = { "Headline1" } },
-        fat_headline_lower_string = "▔",
-      }
-    end,
-  },
   -- NEORG
   {
     "nvim-neorg/neorg",
@@ -104,7 +76,6 @@ return {
             winopts = {
               title = format_title("[Neorg] Grep", " "),
             },
-            -- cmd = "rg --follow hidden no-heading with-filename line-number column smart-case trim -- remove indentation -g *.norg -g *.org -g !config/ -g !.obsidian/",
           }
         end,
         desc = "Note(fzflua): live grep neorg files",
@@ -263,7 +234,6 @@ return {
         },
       }
     end,
-    -- },
   },
   -- ORGMODE
   {
@@ -593,6 +563,34 @@ return {
     keys = {
       { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
     },
+  },
+  -- HEADLINES.NVIM (disabled)
+  {
+    "lukas-reineke/headlines.nvim",
+    lazy = false, -- must set to `false`, without this custom color, it does not work
+    enabled = false,
+    ft = { "markdown", "norg", "rmd", "org" },
+    opts = function()
+      highlight.plugin("headlines", {
+        theme = {
+          ["*"] = {
+            { Dash = { bg = "NONE", bold = true } },
+            { CodeBlock = { bg = "NONE" } },
+            { Headline1 = { bg = { from = "@attribute", attr = "fg", alter = -0.8 } } },
+            { Headline2 = { bg = { from = "@label", attr = "fg", alter = -0.8 } } },
+            { Headline3 = { bg = { from = "@constant", attr = "fg", alter = -0.8 } } },
+            { Headline4 = { bg = { from = "Boolean", attr = "fg", alter = -0.8 } } },
+            { Headline5 = { bg = { from = "@field", attr = "fg", alter = -0.8 } } },
+          },
+        },
+      })
+      return {
+        org = { headline_highlights = false },
+        norg = { headline_highlights = { "Headline1", "Headline2" }, codeblock_highlight = false },
+        markdown = { headline_highlights = { "Headline1" } },
+        fat_headline_lower_string = "▔",
+      }
+    end,
   },
   -- IMAGE.NVIM (disabled)
   {

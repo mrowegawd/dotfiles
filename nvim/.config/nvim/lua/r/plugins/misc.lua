@@ -56,31 +56,6 @@ return {
     },
     opts = {},
   },
-  -- NEOZOOM
-  {
-    "nyngwang/NeoZoom.lua",
-    keys = { { "<leader>z", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
-    opts = {
-      scrolloff_on_enter = 7,
-      exclude_buftypes = { "terminal" },
-    },
-  },
-  -- UNDOTREE (disabled)
-  {
-    "mbbill/undotree", -- use telescope now
-    enabled = false,
-    keys = {
-      { "<Leader>ru", "<CMD>UndotreeToggle<CR>", desc = "Misc(undotreetoggle): show" },
-    },
-    init = function()
-      vim.g.undotree_SplitWidth = 35
-      vim.g.undotree_DiffpanelHeight = 7
-      vim.g.undotree_WindowLayout = 2 -- Tree on the left, diff on the bottom
-
-      vim.g.undotree_TreeNodeShape = "◉"
-      vim.g.undotree_SetFocusWhenToggle = 1
-    end,
-  },
   -- GKEEP
   {
     -- Check and run: `python3 -m pip install gkeepapi keyring`

@@ -88,7 +88,7 @@ return {
           center = {
             { action = [[lua require("fzf-lua").files()]], desc = " Find file", icon = " ", key = "f" },
             -- { action = "ene | startinsert", desc = " New file", icon = " ", key = "e" },
-            { action = "Neorg workspace wiki", desc = " Notes", icon = " ", key = "n" },
+            { action = "Neorg workspace wiki", desc = " Notes", icon = " ", key = "n" },
             { action = "FzfLua oldfiles", desc = " Recent files", icon = " ", key = "r" },
             { action = "FzfLua live_grep", desc = " Find text", icon = " ", key = "g" },
             { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },

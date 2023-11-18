@@ -171,6 +171,10 @@ super + shift + q
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
+# misc: quit record ffmpeg
+super + F9
+        pkill ffmpeg; dunstify "Record" "Quit.."
+
 # misc: backward, below, normal window or z-index
 # super + shift + p
 # 	    $HOME/.config/miscxrdb/bpswm/scripts/switchLayer

@@ -1,6 +1,39 @@
 local fn = vim.fn
+local highlight = require "r.config.highlights"
 
 return {
+  -- INCLINE.NVIM (disabled)
+  {
+    "b0o/incline.nvim",
+    enabled = false,
+    event = "BufReadPre",
+    opts = function()
+      return {
+        highlight = {
+          groups = {
+            InclineNormal = {
+              guibg = highlight.tint(highlight.get("ErrorMsg", "fg"), 2),
+              guifg = highlight.tint(highlight.get("Normal", "bg"), -2),
+            },
+            -- InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
+          },
+        },
+        window = { margin = { vertical = 0, horizontal = 1 } },
+        hide = {
+          cursorline = true,
+        },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          if vim.bo[props.buf].modified then
+            filename = "[+] " .. filename
+          end
+
+          local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+          return { { icon, guifg = color }, { " " }, { filename } }
+        end,
+      }
+    end,
+  },
   -- INDENTBLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -21,6 +54,7 @@ return {
           "neo-tree-popup",
           "log",
           "gitcommit",
+          "neo-tree",
           "txt",
           "fzf",
           "help",
@@ -37,7 +71,7 @@ return {
       },
     },
     config = function(_, opts)
-      require("r.config.highlights").plugin("ibl_indentline", {
+      highlight.plugin("ibl_indentline", {
         { ["@ibl.indent.char.1"] = { fg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } },
       })
       require("ibl").setup(opts)
@@ -52,7 +86,7 @@ return {
       vim.notify = require "notify"
     end,
     opts = {
-      timeout = 3000,
+      timeout = 5000,
       max_width = function()
         return math.floor(vim.o.columns * 0.6)
       end,
@@ -195,27 +229,36 @@ return {
   -- STATUSCOL
   {
     "luukvbaal/statuscol.nvim",
-    event = "LazyFile",
+    event = "BufRead",
     enabled = false,
     opt = function()
       local builtin = require "statuscol.builtin"
       return {
+        setopt = true,
         relculright = true,
         segments = {
-          { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
-          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
           {
-            sign = {
-              name = { "GitSigns" },
-              maxwidth = 1,
-              colwidth = 1,
-              auto = false,
-              -- fillcharhl = "StatusColumnSeparator",
-            },
+            sign = { name = { ".*" }, maxwidth = 2, colwidth = 1, auto = true },
             click = "v:lua.ScSa",
           },
-          { text = { "%s" } },
+          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+          { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa", hl = "Comment" },
         },
+        -- segments = {
+        --   { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
+        --   { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
+        --   {
+        --     sign = {
+        --       name = { "GitSigns" },
+        --       maxwidth = 1,
+        --       colwidth = 1,
+        --       auto = false,
+        --       -- fillcharhl = "StatusColumnSeparator",
+        --     },
+        --     click = "v:lua.ScSa",
+        --   },
+        --   { text = { "%s" } },
+        -- },
         ft_ignore = {
           "NvimTree",
           "NeogitStatus",
@@ -229,9 +272,9 @@ return {
           "dap-repl",
           "neotest-summary",
         },
-        bt_ignore = {
-          "terminal",
-        },
+        -- bt_ignore = {
+        --   "terminal",
+        -- },
       }
     end,
   },
@@ -241,7 +284,7 @@ return {
     opts = {},
     keys = {
       {
-        "<a-o>",
+        "<Leader>z",
         function()
           require("fold-cycle").open()
         end,
@@ -256,18 +299,18 @@ return {
     keys = {
       { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
       { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
-      { "H", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer(bufferline): move buffer prev" },
-      { "L", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer(bufferline): move buffer next" },
+      { "@", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer(bufferline): move buffer prev" },
+      { "#", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer(bufferline): move buffer next" },
 
-      { "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
+      { "spp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
       {
         "<leader>bc",
         "<Cmd>BufferLineGroupClose ungrouped<CR>",
         desc = "Buffer(bufferline): delete non-pinned buffers",
       },
-      { "<leader>bO", "<Cmd>BufferLineCloseOthers<CR>", desc = "Buffer(bufferline): delete other buffers" },
-      { "<leader>bl", "<Cmd>BufferLineCloseRight<CR>", desc = "Buffer(bufferline): delete buffers to the right" },
-      { "<leader>bh", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
+      { "sO", "<Cmd>BufferLineCloseOthers<CR>", desc = "Buffer(bufferline): delete other buffers" },
+      { "s#", "<Cmd>BufferLineCloseRight<CR>", desc = "Buffer(bufferline): delete buffers to the right" },
+      { "s@", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
     },
     opts = function()
       local col_base_bg_attr = "ColorColumn"

@@ -8,18 +8,18 @@ local general_overrides = function()
     -- { Directory = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
     { ColorColumn = { bg = { from = "Normal" , attr = "bg" } } },
     { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.1 }, bg = { from = "Normal", attr = "bg", alter= -0.15 } } },
-    { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
-    { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
-    { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" } } },
+    { FoldColumn = { bg = { from = "ColorColumn" , attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 1.5 } } },
+    { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
+    { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = { from = "ColorColumn" } } },
     { CursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
     { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "ColorColumn", attr = "bg" }, underline = false } },
+    { Folded = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 2 }, underline = false, bold= true } },
     { EndOfBuffer = { bg = "NONE" } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
-    -- { SignColumn = { bg = { from = "ColorColumn" } } },
+    { SignColumn = { bg = { from = "ColorColumn" } } },
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinBar = { bg = { from = "ColorColumn" } } },
@@ -197,6 +197,8 @@ local general_overrides = function()
 
     -- BUFFERLINE =========================================================
     { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
+    { OctoEditable = { bg = { from = "ColorColumn" } } },
+
   }
 end
 

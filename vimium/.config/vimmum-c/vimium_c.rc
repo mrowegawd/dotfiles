@@ -146,13 +146,13 @@ map <c-o>       goBack
 map <c-i>       goForward
 
 # tab: move tab to the left
-map H           moveTabLeft
+map @           moveTabLeft
 
 # tab: move tab to the right
-map L           moveTabRight
+map #           moveTabRight
 
 # tab: pin tab
-map <space>bp  togglePinTab
+map spp         togglePinTab
 
 ###############################
 #

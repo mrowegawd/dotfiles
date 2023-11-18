@@ -1,5 +1,14 @@
 return {
-  -- STICKYBUF.NVIM (disbaled)
+  -- NEOZOOM
+  {
+    "nyngwang/NeoZoom.lua",
+    keys = { { "sm", "<CMD>NeoZoomToggle<CR>", desc = "WinNav(neozoom): toggle" } },
+    opts = {
+      scrolloff_on_enter = 7,
+      exclude_buftypes = { "terminal" },
+    },
+  },
+  -- STICKYBUF.NVIM (disabled)
   {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
@@ -24,22 +33,22 @@ return {
       {
         "<a-k>",
         "<cmd>lua require('tmux').move_top()<CR>",
-        desc = "Tmux: Move up",
+        desc = "WinNav(tmux): move up",
       },
       {
         "<a-j>",
         "<cmd>lua require('tmux').move_bottom()<CR>",
-        desc = "Tmux: Move down",
+        desc = "WinNav(tmux): move down",
       },
       {
         "<a-h>",
         "<cmd>lua require('tmux').move_left()<CR>",
-        desc = "Tmux: Move left",
+        desc = "WinNav(tmux): move left",
       },
       {
         "<a-l>",
         "<cmd>lua require('tmux').move_right()<CR>",
-        desc = "Tmux: Move right",
+        desc = "WinNav(tmux): move right",
       },
 
       -- RESIZE
@@ -48,14 +57,14 @@ return {
         function()
           return require("tmux").resize_top()
         end,
-        desc = "Windows(tmux): resize window up",
+        desc = "WinNav(tmux): resize up",
       },
       {
         "<a-J>",
         function()
           return require("tmux").resize_bottom()
         end,
-        desc = "Windows(tmux): resize window down",
+        desc = "WinNav(tmux): resize down",
       },
 
       {
@@ -63,14 +72,14 @@ return {
         function()
           return require("tmux").resize_left()
         end,
-        desc = "Windows(tmux): resize window left",
+        desc = "WinNav(tmux): resize left",
       },
       {
         "<a-L>",
         function()
           return require("tmux").resize_right()
         end,
-        desc = "Windows(tmux): resize window right",
+        desc = "WinNav(tmux): resize right",
       },
     },
     config = function(_, opts)

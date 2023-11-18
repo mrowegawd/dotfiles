@@ -381,6 +381,7 @@ return {
   -- COPILOT (disabled)
   {
     "zbirenbaum/copilot.lua",
+    event = "InsertEnter",
     enabled = false,
     config = function()
       require("copilot").setup {}

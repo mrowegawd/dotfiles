@@ -30,6 +30,12 @@ return {
         { TroubleIndent = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
         { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
         { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+        {
+          TroubleCount = {
+            bg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
+            fg = { from = "DiagnosticSignError", attr = "fg", alter = 0.1 },
+          },
+        },
       })
       return {
         auto_open = false,
@@ -598,6 +604,7 @@ return {
   {
     "Bekaboo/dropbar.nvim",
     event = "VeryLazy",
+    -- enabled = false,
     keys = {
       {
         "<Localleader>od",

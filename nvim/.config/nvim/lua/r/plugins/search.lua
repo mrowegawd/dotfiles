@@ -113,8 +113,8 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
-      { "S", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
+      { [[\]], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
+      -- { "<c-s>", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
       -- { "r", mode = "o", function() require("flash").remote() end, desc = "Misc(flash): remote" },
       -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search" },
     },
@@ -199,11 +199,13 @@ return {
     -- stylua: ignore
     keys = {
       { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "<Leader>bf", "<CMD>FzfLua buffers<CR>", desc = "Buffer(Fzflua): open" },
-      { "<Leader>bg", "<CMD>FzfLua blines<CR>", desc = "Buffer(FzfLua): live_grep on curbuf" },
-      { "<Leader>bG", "<CMD>FzfLua lines<CR>", desc = "Buffer(Fzflua): live_grep on buffers" },
+
+      { "sf", "<CMD>FzfLua buffers<CR>", desc = "WinNav(fzflua): open" },
+      { "sg", "<CMD>FzfLua blines<CR>", desc = "WinNav(fzfLua): live_grep on curbuf" },
+      { "sG", "<CMD>FzfLua lines<CR>", desc = "WinNav(fzflua): live_grep on buffers" },
+      { "so", "<CMD>FzfLua oldfiles<CR>", desc = "WinNav(Fzflua): oldfiles" },
+
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
-      { "<Leader>bo", "<CMD>FzfLua oldfiles<CR>", desc = "Buffer(Fzflua): oldfiles" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
       { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
@@ -321,7 +323,7 @@ return {
           ["--height"] = "100%",
           ["--layout"] = "reverse",
           ["--border"] = "none",
-
+          ["--no-separator"] = "",
           -- ["--ansi"] = "",
           -- ["--info"] = "default",
           -- ["--layout"] = "default",
@@ -410,10 +412,11 @@ return {
               end
             end,
             ["ctrl-y"] = function(selected, _)
-              local yank_path = selected[1]:match "[^ ]+"
-              vim.fn.setreg([[+]], yank_path)
+              local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
+              local pth = selected[1]:sub(slice_num_str)
+              vim.fn.setreg([[+]], pth)
 
-              Util.info("Path" .. yank_path .. " copied", { title = "FZFGit" })
+              Util.info("copy: " .. pth, { title = "Path" })
 
               require("fzf-lua").actions.resume()
             end,
@@ -639,15 +642,16 @@ return {
           winopts = { title = format_title("Grep", " ") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
           rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096",
-          fzf_opts = {
-            ["--header"] = [[Ctrl-g:'custom hex',Ctrl-h:'toggle hidden']],
-          },
+          -- fzf_opts = { ["--header"] = [[Ctrl-q:'grep match',Ctrl-h:'toggle hidden',Ctrl-f:'mode files']] },
+          no_header = true, -- disable default header
           actions = {
-            ["ctrl-g"] = { actions.grep_lgrep },
+            -- ["ctrl-g"] = { actions.grep_lgrep },
             ["ctrl-h"] = function(_, args)
               local toggle = 1
+
               args.rg_opts =
                 "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
+
               if toggle == 1 then
                 args.rg_opts =
                   "--column --hidden --no-ignore --no-heading --ignore-case -g !.git --smart-case --color=always --max-columns=4096"
@@ -659,6 +663,50 @@ return {
                 rg_opts = args.rg_opts,
                 winopts = { title = format_title("Grep hidden", " ") },
               }
+            end,
+            ["ctrl-q"] = function(_, args)
+              if args.cmd:find "--fixed-strings" then
+                args.cmd = args.cmd:gsub("--fixed-strings", "", 1)
+              else
+                args.cmd = args.cmd .. " --fixed-strings"
+              end
+
+              local tbl_ops = {
+                cmd = args.cmd,
+                winopts = { title = format_title("Grep match", " ") },
+              }
+
+              if args.cwd ~= nil then
+                tbl_ops = vim.tbl_deep_extend("force", {}, tbl_ops, { cwd = args.cwd })
+              end
+              require("fzf-lua").live_grep_glob(tbl_ops)
+            end,
+            ["ctrl-y"] = function()
+              require("fzf-lua").fzf_exec({}, {
+                fzf_opts = {
+                  ["--preview"] = vim.fn.shellescape [[cat <<EOF 
+Keybindings:
+  TAB           Toggle selection.
+  ctrl-q        Grep match.
+  ctrl-h        Toggle hidden.
+  ctrl-o        Mode files (Fzflua files).
+  ctrl-y        Show keybindings
+                  ]],
+                },
+                winopts = {
+                  title = format_title("Grep Show Keybindings", " "),
+                  preview = { layout = "horizontal", hoizontal = "right:99%" },
+                },
+
+                actions = {
+                  ["ctrl-y"] = function()
+                    require("fzf-lua").live_grep_glob()
+                  end,
+                },
+              })
+            end,
+            ["ctrl-o"] = function()
+              require("fzf-lua").files {}
             end,
           },
         },
@@ -737,12 +785,7 @@ return {
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
           winopts = {
-            --   split = false,
             title = format_title("Blines", " "),
-            --   preview = {
-            --     vertical = "down:45%",
-            --     horizontal = "right:60%",
-            --     layout = "flex",
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -797,7 +840,6 @@ return {
             ["--with-nth"] = "2..",
             ["--tiebreak"] = "index",
           },
-          -- actions inherit from 'actions.files'
         },
         colorschemes = {
           live_preview = true, -- apply the colorscheme on preview?
@@ -885,7 +927,6 @@ return {
         })
       end)
       require("fzf-lua").setup(opts)
-      -- require("fzf-lua").register_ui_select()
     end,
   },
   -- FZF
@@ -925,7 +966,7 @@ return {
       --   end,
       --   desc = "Telescope(lsp): goto symbol (Workspace)",
       -- },
-      -- { "<Leader>bf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
+      -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps" },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
       -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
