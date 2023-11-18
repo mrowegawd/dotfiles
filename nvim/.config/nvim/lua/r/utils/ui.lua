@@ -10,9 +10,6 @@ function M.get_signs(buf, lnum)
   -- Get regular signs
   ---@type Sign[]
   local signs = vim.tbl_map(function(sign)
-    if vim.bo[0].filetype == "fzf" then
-      return {}
-    end
     ---@type Sign
     local ret = vim.fn.sign_getdefined(sign.name)[1]
     ret.priority = sign.priority
@@ -88,9 +85,13 @@ end
 
 function M.statuscolumn()
   local win = vim.g.statusline_winid
-  local buf = vim.api.nvim_win_get_buf(win)
-  local is_file = vim.bo[buf].buftype == ""
-  local show_signs = vim.wo[win].signcolumn ~= "no"
+  local show_signs, buf, is_file
+
+  if win ~= nil then
+    buf = vim.api.nvim_win_get_buf(win)
+    is_file = vim.bo[buf].buftype == ""
+    show_signs = vim.wo[win].signcolumn ~= "no"
+  end
 
   local components = { "", "", "" } -- left, middle, right
 

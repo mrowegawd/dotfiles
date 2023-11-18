@@ -324,6 +324,9 @@ return {
       local col_selected_fg_attr = "PmenuSel"
       local col_selected_bg_attr = "@field"
 
+      local col_selected_fg = highlight.tint(highlight.get("@field", "fg"), 2)
+      local col_select_visible_fg = highlight.tint(highlight.get("@field", "fg"), 0.2)
+
       if require("r.config").colorscheme == "material" then
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
@@ -512,14 +515,11 @@ return {
           close_button_visible = {
             fg = { attribute = "fg", highlight = col_selected_fg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = false,
           },
           close_button_selected = {
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ BUFFER                                                   ╎
@@ -528,16 +528,16 @@ return {
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
           },
           buffer_visible = {
-            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = false,
+            italic = true,
           },
           buffer_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = col_selected_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
-            bold = true,
+            -- bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ PICK                                                     ╎
@@ -566,7 +566,7 @@ return {
           modified_visible = {
             fg = { attribute = "fg", highlight = "ErrorMsg" },
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = false,
+            italic = true,
           },
           modified_selected = {
             fg = { attribute = "fg", highlight = "ErrorMsg" },
@@ -583,12 +583,13 @@ return {
             italic = false,
           },
           duplicate_visible = {
-            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            -- fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = false,
+            italic = true,
           },
           duplicate_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = col_selected_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -617,12 +618,14 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           warning_visible = {
-            fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            -- fg = { attribute = "fg", highlight = col_selected_fg_attr },
+            fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = false,
+            italic = true,
           },
           warning_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            -- fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = col_selected_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -651,11 +654,12 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           error_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
+            italic = true,
           },
           error_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = col_selected_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -684,12 +688,12 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           hint_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             italic = true,
           },
           hint_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = col_selected_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -718,12 +722,12 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           info_visible = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
+            fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             italic = true,
           },
           info_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = col_selected_fg,
             bg = { attribute = "bg", highlight = col_unselected_bg_attr },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,

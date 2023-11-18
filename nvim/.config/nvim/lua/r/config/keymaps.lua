@@ -68,6 +68,7 @@ imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
 inoremap("<c-d>", "<c-O>dw", silent)
+inoremap("<c-c>", "<Esc>", silent)
 
 nnoremap("g,", "g,zvzz", silent) -- go last edit
 nnoremap("g;", "g;zvzz", silent) -- go prev edit

@@ -923,6 +923,7 @@ Keybindings:
             vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
             vim.keymap.set("t", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
             vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
+            vim.keymap.set("i", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
           end,
         })
       end)
