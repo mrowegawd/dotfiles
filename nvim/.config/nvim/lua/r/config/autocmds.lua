@@ -307,7 +307,7 @@ Util.cmd.augroup("DisableStatusline", {
 
 -- Automatically resize windows when host resizes
 Util.cmd.augroup("AutoResizeWindowssf", {
-  event = { "BufNew", "BufRead" },
+  event = { "VimResized" },
   pattern = "*",
   command = "wincmd =",
 })
