@@ -59,16 +59,13 @@ return {
   {
     "pwntester/octo.nvim",
     cmd = "Octo",
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "ibhagwan/fzf-lua",
-    },
     opts = {
       picker = "fzf-lua",
       enable_builtin = true,
       picker_config = {
         mappings = {
           open_in_browser = { lhs = "<C-b>", desc = "open issue in browser" },
+          goto_file = { lhs = "<CR>", desc = "kampang" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
           merge_pr = { lhs = "<C-r>", desc = "merge pull request" },
@@ -193,9 +190,6 @@ return {
           toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
         },
       },
-      config = function(_, opts)
-        require("octo").setup(opts)
-      end,
     },
   },
   -- GIT ADVANCED SEARCH (disabled)

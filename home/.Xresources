@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/solarized-osaka"
+#include ".config/miscxrdb/xresource-theme/gruvbox"
 
 ! --------------
 ! XFT SETTINGS

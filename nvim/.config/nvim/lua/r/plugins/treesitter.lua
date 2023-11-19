@@ -204,8 +204,8 @@ return {
           enable = true,
         },
 
-        -- nvim-ts-context-commentstring plugin
-        context_commentstring = { enable = true },
+        -- Breaking changes, do not need to enable this setting https://github.com/JoosepAlviste/nvim-ts-context-commentstring/issues/82#issuecomment-1817659634
+        -- context_commentstring = { enable = true }, --  nvim-ts-context-commentstring plugin
 
         -- nvim-treesitter-textobjects
         textobjects = {

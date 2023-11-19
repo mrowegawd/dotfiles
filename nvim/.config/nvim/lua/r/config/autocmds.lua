@@ -305,13 +305,12 @@ Util.cmd.augroup("DisableStatusline", {
   end,
 })
 
--- NOTE: but this does not work with open buffer filetype norg
 -- Automatically resize windows when host resizes
--- Util.cmd.augroup("AutoResizeWindowssf", {
---   event = { "BufNew", "BufRead" },
---   pattern = "*",
---   command = "tabdo wincmd =",
--- })
+Util.cmd.augroup("AutoResizeWindowssf", {
+  event = { "BufNew", "BufRead" },
+  pattern = "*",
+  command = "wincmd =",
+})
 
 -- vim.cmd [[
 --   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw

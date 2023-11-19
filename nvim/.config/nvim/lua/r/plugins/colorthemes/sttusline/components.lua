@@ -315,6 +315,7 @@ M.filereadonly = function()
 end
 M.rootdir = function()
   local Rootdir = require("sttusline.component").new()
+  local spesc = Util.ui.fg "Directory" or "#fe8019"
 
   Rootdir.set_config {
     cwd = true,
@@ -323,8 +324,8 @@ M.rootdir = function()
     other = true,
     icon = "󱉭 ",
     colors = {
-      special = Util.ui.fg "Directory",
-      directory = Util.ui.fg "Directory",
+      special = spesc,
+      directory = spesc,
     },
   }
 

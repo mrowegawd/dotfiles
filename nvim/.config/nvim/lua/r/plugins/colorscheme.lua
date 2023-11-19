@@ -189,7 +189,9 @@ return {
       return false
     end,
     config = function()
-      require("everforest").setup {}
+      require("everforest").setup {
+        background = "medium",
+      }
     end,
   },
   -- GRUVBOX
