@@ -130,7 +130,61 @@ return {
         },
 
         mapping = {
-          ["<c-y>"] = cmp.mapping.abort(),
+          ["<C-y>"] = cmp.mapping(function(_)
+            -- if cmp.visible() then
+            --   cmp.abort()
+            if callme == 0 then
+              callme = 1
+              cmp.complete {
+                config = {
+                  sources = {
+                    { name = "luasnip" },
+                  },
+                },
+              }
+            elseif callme == 1 then
+              callme = 2
+              cmp.complete {
+                config = {
+                  sources = {
+                    { name = "cmp_tabnine" },
+                    {
+                      name = "buffer",
+                      option = {
+                        get_bufnrs = function()
+                          local bufs = {}
+                          for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                            -- Don't index giant files
+                            if
+                              vim.api.nvim_buf_is_loaded(bufnr)
+                              and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE
+                            then
+                              table.insert(bufs, bufnr)
+                            end
+                          end
+                          return bufs
+                        end,
+                      },
+                    },
+                  },
+                },
+              }
+            else
+              if callme == 2 then
+                callme = 0
+                cmp.complete {
+                  config = {
+                    sources = {
+                      { name = "nvim_lsp" },
+                    },
+                  },
+                }
+              end
+            end
+          end, {
+            "i",
+            "s",
+          }),
           ["<c-n>"] = cmp.mapping(function()
             if cmp.visible() then
               cmp.select_next_item()

@@ -1,3 +1,5 @@
+" vim: foldmethod=marker foldlevel=0
+
 scriptencoding utf-8
 set linespace=5
 
@@ -176,7 +178,11 @@ if exists('+inccommand')
 endif
 
 " dont change cursor shapes
-set guicursor=
+" set guicursor=n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor2/lCursor2,r-cr:hor20,o:hor20
+set guicursor=n-v-c:block-Cursor
+set guicursor+=i:ver100-iCursor
+set guicursor+=n-v-c:blinkon0
+set guicursor+=i:blinkwait10
 
 " see help 'formatoptions'
 set formatoptions=

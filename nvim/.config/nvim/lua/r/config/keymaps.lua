@@ -1,5 +1,6 @@
 local silent = { silent = true }
 local nosilent = { silent = false }
+local moresilent = { noremap = true, expr = true, silent = true }
 
 local fn, cmd, fmt, map = vim.fn, vim.cmd, string.format, vim.keymap.set
 
@@ -84,6 +85,14 @@ inoremap("<c-f>", "<S-Right>", silent)
 nnoremap("<c-g>", "/", nosilent)
 vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
+-- Automatically indent with i and A made by ycino
+inoremap("i", function()
+  return string.len(vim.api.nvim_get_current_line()) ~= 0 and "i" or '"_cc'
+end, moresilent)
+inoremap("A", function()
+  return string.len(vim.api.nvim_get_current_line()) ~= 0 and "A" or '"_cc'
+end, moresilent)
+
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MARKS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -125,8 +134,12 @@ end, { desc = "Fold: go prev closed" })
 --  │ VISUAL                                                   │
 --  ╰──────────────────────────────────────────────────────────╯
 -- Cara mudah untuk cursor dari bawah ke atas dalam visual mode
-xnoremap("il", "$o0", { desc = "Visual: jump in" })
-onoremap("il", "<cmd>normal val<CR>", { desc = "Visual: jump out" })
+xnoremap("il", "<Esc>^vg_", { desc = "Visual: dont mistake" })
+onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "Visual: mistake" })
+
+xnoremap("al", "$o0", { desc = "Visual: jump in" })
+onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "Visual: jump out" })
+
 nnoremap("vv", [[^vg_]], { desc = "Visual: select text lines" })
 vnoremap(">", ">gv", { desc = "Visual: next align lines" })
 vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
@@ -169,9 +182,10 @@ nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search 
 xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
--- Store relative line number jumps in the jumplist.
-nnoremap("k", [[ (v:count > 1 ? "m'" . v:count : "") . 'gk' ]], { expr = true })
-nnoremap("j", [[ (v:count > 1 ? "m'" . v:count : "") . 'gj' ]], { expr = true })
+-- Save jumps > 5 lines to the jumplist
+-- Jumps <= 5 respect line wraps
+nnoremap("j", [[(v:count > 5 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
+nnoremap("k", [[(v:count > 5 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS AND NAV                                          │
@@ -251,7 +265,6 @@ Util.cmd.augroup("AddTerminalMappings", {
   pattern = { "term://*" },
   command = function()
     if vim.bo.filetype == "" or vim.bo.filetype == "toggleterm" then
-      tnoremap("<F1>", "<C-w>w", { desc = "Terminal change window" })
       tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
       tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal left window navigation" })
       tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal down window navigation" })
@@ -288,6 +301,10 @@ cabbrev("BD", "bd!")
 cabbrev("bD", "bd!")
 cabbrev("Bd", "bd!")
 cabbrev("bd", "bd!")
+
+-- I don't need help to show when I type <F1>.
+nmap("<F1>", "<Nop>")
+imap("<F1>", "<Nop>")
 
 --  ┌──────────────────────────────────────────────────────────┐
 --  │                          MAGIC                           │
@@ -399,6 +416,8 @@ nmap("zz", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? '
 -- Scroll step sideways
 nnoremap("zl", "z4l")
 nnoremap("zh", "z4h")
+nnoremap("zL", "z60l")
+nnoremap("zH", "z60h")
 
 nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
 nnoremap("<C-f>", [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]], { expr = true })
