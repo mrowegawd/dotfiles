@@ -58,10 +58,11 @@ end, {
 -- stylua: ignore
 function M.diffview(bufnr)
   nnoremap("<Leader>gvo", "<CMD>DiffviewOpen<CR>", { desc = "Git(diffview): open repo diff", buffer = bufnr })
+
   nnoremap("<Leader>gvh", "<CMD>DiffviewFileHistory --follow %<CR>", { desc = "Git(diffview): open diff history on curbuf", buffer = bufnr })
   vnoremap("<Leader>gvh", [[:'<'>DiffviewFileHistory --follow<CR>]], { desc = "Git(diffview): open diff history on curbuf (visual)", buffer = bufnr })
-  nnoremap("<Leader>gvl", "<CMD>.DiffviewFileHistory --follow<CR>", { desc = "Git(diffview): open diff history on curline", buffer = bufnr })
   nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): diff repo hisory", buffer = bufnr })
+  nnoremap("<Leader>gvl", "<CMD>.DiffviewFileHistory --follow<CR>", { desc = "Git(diffview): open diff history on curline", buffer = bufnr })
 
   vnoremap("<Leader>gvd", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git(diff): compare clipboard selection" })
   nnoremap("<Leader>gvC", "<cmd>CompareClipboard<cr>", { desc = "Git(diff): compare clipboard", silent = true })
