@@ -12,6 +12,10 @@
 [delta]
   features = decorations
   line-numbers = true
+  light = false
+  tabs = 2
+  navigate = true
+  hyperlinks = true
   side-by-side = true
 
 [delta "interactive"]
