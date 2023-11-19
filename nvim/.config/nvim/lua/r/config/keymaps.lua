@@ -86,12 +86,12 @@ nnoremap("<c-g>", "/", nosilent)
 vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
 -- Automatically indent with i and A made by ycino
-inoremap("i", function()
-  return string.len(vim.api.nvim_get_current_line()) ~= 0 and "i" or '"_cc'
-end, moresilent)
-inoremap("A", function()
-  return string.len(vim.api.nvim_get_current_line()) ~= 0 and "A" or '"_cc'
-end, moresilent)
+-- inoremap("i", function()
+--   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "i" or '"_cc'
+-- end, moresilent)
+-- inoremap("A", function()
+--   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "A" or '"_cc'
+-- end, moresilent)
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MARKS                                                    │
