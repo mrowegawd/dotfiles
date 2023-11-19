@@ -6,14 +6,14 @@ scriptencoding utf-8
 " BASIC ---------------------- {{{
 
 " Use <leader> for basic mapping
-let g:mapleader                              = "\<space>"
+let g:mapleader       = "\<space>"
 
 " Use ',' instead of '\'.
-let g:maplocalleader                         = ','
+let g:maplocalleader  = ','
 
 " Disable Ex-mode.
-nnoremap Q  <Nop>
-nnoremap q  <Nop>
+nnoremap Q            <Nop>
+nnoremap q            <Nop>
 
 " I dont use it these key, so disabled
 imap     <F1>         <Nop>
@@ -24,13 +24,13 @@ nnoremap m            <Nop>
 nnoremap K            <Nop>
 
 " Join lines and keep the cursor in place
-nnoremap J mzJ`z
+nnoremap J            mzJ`z
 
-xnoremap . :normal .<CR>
+xnoremap .            :normal .<CR>
 
 " Allows you to visually select a section and then hit @ to run a macro on all lines
 " https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db#.3dcn9prw6
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+xnoremap @            :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
 function! ExecuteMacroOverVisualRange()
   echo '@'.getcmdline()
@@ -38,10 +38,10 @@ function! ExecuteMacroOverVisualRange()
 endfunction
 
 " keymap: [word] uppercase
-vnoremap <leader>U gU$a
+vnoremap <leader>U    gU$a
 
 " keymap: [word] lowercase
-vnoremap <leader>u gu$a
+vnoremap <leader>u    gu$a
 
 " For moving quickly up and down,
 " Goes to the first line above/below that isn't whitespace
@@ -559,8 +559,8 @@ endfunction
 " keymap: [fold][toggle] open/close all folds
 nnoremap <silent> 1               :call <SID>toggleFold()<CR>
 nnoremap <silent> <space><space>  zMzvzO
-nnoremap zj zjzz
-nnoremap zk zkzz
+nnoremap zj                       zjzz
+nnoremap zk                       zkzz
 nnoremap zm                       zM
 
 nnoremap <silent> <a-n> :call NextClosedFold('j')<cr>
