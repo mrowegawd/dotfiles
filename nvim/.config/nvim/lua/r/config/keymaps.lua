@@ -202,6 +202,9 @@ nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "WinNav: wincmd =", silent = true }
 nnoremap("sJ", "<C-W>t <C-W>K", { desc = "WinNav: force to splits", silent = true })
 nnoremap("sL", "<C-W>t <C-W>H", { desc = "WinNav: force to vsplits", silent = true })
 
+nnoremap("sc", "<CMD>q!<CR>")
+nnoremap("sC", "<CMD>qa!<CR>")
+
 nnoremap("sh", "<C-w>h", { desc = "WinNav: move left", silent = true })
 nnoremap("sl", "<C-w>l", { desc = "WinNav: move right", silent = true })
 nnoremap("sj", "<C-w>j", { desc = "WinNav: move down", silent = true })
