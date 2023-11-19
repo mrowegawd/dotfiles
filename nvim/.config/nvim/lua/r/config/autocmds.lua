@@ -120,6 +120,7 @@ Util.cmd.augroup("WindowBehaviours", {
     -- "help",
     "qf",
     "NeogitCommitMessage",
+    "NeogitPopup",
     -- "Trouble",
   },
   command = function()
