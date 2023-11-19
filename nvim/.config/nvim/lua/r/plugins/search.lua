@@ -664,7 +664,7 @@ return {
                 winopts = { title = format_title("Grep hidden", " ") },
               }
             end,
-            ["ctrl-q"] = function(_, args)
+            ["ctrl-e"] = function(_, args)
               if args.cmd:find "--fixed-strings" then
                 args.cmd = args.cmd:gsub("--fixed-strings", "", 1)
               else
