@@ -319,56 +319,15 @@ local function magic_quit()
     ["fugitive"] = "bd",
     ["Trouble"] = "bd",
     ["help"] = "bd",
-    -- ["norg"] = "bd",
-    -- ["org"] = "bd",
     ["octo"] = "bd",
     ["log"] = "bd",
-
-    ["alpha"] = "q",
-    ["spectre_panel"] = "q",
-    ["OverseerForm"] = "q!",
-    ["orgagenda"] = "q",
-    ["markdown"] = "q",
-    ["NeogitStatus"] = "q",
-    ["checkhealth"] = "q",
-    ["neo-tree"] = "NeoTreeShowClose",
     ["DiffviewFileHistory"] = "DiffviewClose",
   }
 
-  local alias_mode = { i = "I", c = "C", V = "V", [""] = "V" }
-  if alias_mode[vim.fn.mode()] ~= nil then
-    return Util.cmd.feedkey("<esc>", "n")
-  end
-
-  local list_wins = {}
-
-  for _, winid in pairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_is_valid(winid) then
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-      if filetype ~= "notify" then
-        table.insert(list_wins, winid)
-      end
-    end
-  end
-
-  if #list_wins > 0 then
-    for _, winid in pairs(list_wins) do
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-
-      if buf_fts[filetype] ~= nil and vim.bo[0].filetype == buf_fts[filetype] then
-        if buf_fts[filetype] == "q" then
-          return Util.cmd.feedkey(":q<cr>", "n")
-        elseif buf_fts[filetype] == "bd" then
-          return Util.cmd.feedkey(":bd<cr>", "n")
-        else
-          return vim.cmd(buf_fts[filetype])
-        end
-      else
-        return Util.cmd.feedkey(":q<cr>", "n")
-      end
-    end
+  if buf_fts[vim.bo[0].filetype] then
+    vim.cmd(buf_fts[vim.bo[0].filetype])
+  else
+    vim.cmd [[q!]]
   end
 end
 nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
