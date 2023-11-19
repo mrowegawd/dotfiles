@@ -6,7 +6,7 @@ OverseerConfig.fnpane_run = 0
 OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
--- local callme = 0
+local callme = 0
 
 local function get_cmp()
   local ok_cmp, cmp = pcall(require, "cmp")
@@ -47,7 +47,7 @@ return {
       luasnip.filetype_extend("typescript", { "html" })
       luasnip.filetype_extend("typescriptreact", { "html", "react" })
 
-      luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
+      -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     end,
   },
   -- VIM-MATCHUP (disabled)
@@ -72,7 +72,8 @@ return {
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
-      { "petertriho/cmp-git", opts = { filetypes = { "gitcommit", "NeogitCommitMessage" } } },
+      "hrsh7th/cmp-emoji",
+      "petertriho/cmp-git",
       "lukas-reineke/cmp-under-comparator",
       "saadparwaiz1/cmp_luasnip",
       { "abecodes/tabout.nvim", opts = { ignore_beginning = false, completion = false } },
@@ -97,6 +98,7 @@ return {
         elseif col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
           fallback()
         else
+          fallback()
         end
       end
 
@@ -199,8 +201,9 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-          ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
+          ["<c-q>"] = cmp.mapping.abort(),
           ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
+          ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
@@ -229,7 +232,6 @@ return {
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "path" },
-          { name = "git" },
           {
             name = "buffer",
             keyword_length = 4,
@@ -257,62 +259,37 @@ return {
       end
       cmp.setup(opts)
 
-      ---@diagnostic disable-next-line: missing-fields
+      local tbl_custom_sources = {
+        { name = "luasnip" },
+        { name = "path" },
+        { name = "buffer" },
+        { name = "emoji" },
+      }
+
       cmp.setup.filetype("markdown", {
-        sources = cmp.config.sources {
-          { name = "luasnip" },
-          { name = "path" },
-          { name = "buffer" },
-        },
+        sources = cmp.config.sources(tbl_custom_sources),
       })
 
-      ---@diagnostic disable-next-line: missing-fields
-      cmp.setup.filetype("norg", {
-        sources = cmp.config.sources {
-          { name = "neorg" },
-          { name = "luasnip" },
-          { name = "path" },
-          { name = "buffer" },
-        },
+      cmp.setup.filetype({ "norg", "neorg" }, {
+        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
       })
 
-      ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype("org", {
-        sources = cmp.config.sources {
-          { name = "org" },
-          { name = "luasnip" },
-          { name = "path" },
-          { name = "buffer" },
-        },
+        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
       })
 
-      ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype("dap-repl", {
-        -- NOTE: still not working!!
-        sources = {
-          { name = "dap" },
-          { name = "buffer" },
-        },
+        sources = cmp.config.sources { { name = "dap" }, { name = "buffer" } },
       })
 
-      ---@diagnostic disable-next-line: missing-fields
-      cmp.setup.filetype({ "gitcommit", "NeogitPopup" }, {
-        sources = cmp.config.sources {
-          { name = "path" },
-          { name = "emoji" },
-          { name = "buffer" },
-        },
+      cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
+        sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
       })
 
-      ---@diagnostic disable-next-line: missing-fields
       cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = cmp.config.sources {
-          { name = "vim-dadbod-completion" },
-          { name = "buffer" },
-        },
+        sources = cmp.config.sources { { name = "vim-dadbod-completion" }, { name = "buffer" } },
       })
 
-      ---@diagnostic disable-next-line: missing-fields
       cmp.setup.cmdline(":", {
         mapping = {
           ["<esc>"] = {
@@ -350,10 +327,12 @@ return {
         },
         sources = cmp.config.sources({
           { name = "path" },
-        }, { { name = "cmdline" }, { { name = "cmdline_history" } } }),
+        }, {
+          { name = "cmdline" },
+          { { name = "cmdline_history" } },
+        }),
       })
 
-      ---@diagnostic disable-next-line: missing-fields
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = {
           ["<esc>"] = {
@@ -361,15 +340,15 @@ return {
               Util.cmd.feedkey("<c-c>", "n")
             end,
           },
-          -- ["<c-q>"] = {
-          --   c = function(fallback)
-          --     if cmp.visible() then
-          --       cmp.abort()
-          --     else
-          --       fallback()
-          --     end
-          --   end,
-          -- },
+          ["<c-q>"] = {
+            c = function(fallback)
+              if cmp.visible() then
+                cmp.abort()
+              else
+                fallback()
+              end
+            end,
+          },
           ["<TAB>"] = {
             c = function()
               if cmp.visible() then
@@ -389,7 +368,7 @@ return {
             end,
           },
         },
-        sources = {
+        sources = cmp.config.sources {
           { name = "buffer" },
         },
       })
