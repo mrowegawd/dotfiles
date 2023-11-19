@@ -361,8 +361,11 @@ return {
         {
           "<Localleader>oa",
           function()
-            Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
-            vim.cmd [[AerialToggle]]
+            -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+            vim.cmd [[AerialToggle right]]
+            -- if vim.bo[0].filetype == "aerial" then
+            --   vim.cmd [[wincmd L]]
+            -- end
           end,
           desc = "Misc(aerial): toggle",
         },
