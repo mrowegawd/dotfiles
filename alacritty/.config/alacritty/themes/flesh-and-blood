@@ -2,7 +2,7 @@
 colors:
   # Default colors
   primary:
-    # hard contrast: background = '0x0e1214'
+    # hard contrast: background = '0x8b8b8b'
     background: '0x181818'
     # soft contrast: background = '0x32302f'
     foreground: '0x8b8b8b'

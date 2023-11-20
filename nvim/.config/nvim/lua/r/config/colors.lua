@@ -261,11 +261,17 @@ local function colorscheme_overrides()
       { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
       { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.5 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 }, bold = true } },
     },
-    -- ["flesh-and-blood"] = {
-    --   { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "DiffAdd", attr = "fg" } } },
-    --   { GitSignsChange = { bg = { from = "ColorColumn" },  fg = { from = "DiffChange", attr = "fg" } } },
-    --   { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "DiffRemoved", attr = "fg"} } },
-    -- }
+    ["hybrid"] = { -- this name of colorscheme flesh-and-blood
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "DiffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" },  fg = { from = "DiffChange", attr = "fg" } } },
+      { CursorLine = { bg = { from = "ColorColumn", alter = 0.5 } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "DiffRemoved", attr = "fg"} } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 } } },
+    },
     ["gruvbox"] = {
       { GitSignsAdd = { bg = { from = "ColorColumn" } } },
       { GitSignsChange = { bg = { from = "ColorColumn" } } },
@@ -318,7 +324,6 @@ local function colorscheme_overrides()
       { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
       { diffText = { bg = { from = "diffText" , attr = "fg", alter = 0.05 }, fg = { from = "diffText" , attr = "fg", alter = -0.4 } } },
     },
-    -- ["darcubox"] = { },
     ["nano-theme"] = {
       { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "diffAdded" } } },
       { GitSignsChange = { bg = { from = "ColorColumn" }, fg = { from = "diffChanged" } } },

@@ -85,6 +85,11 @@ inoremap("<c-f>", "<S-Right>", silent)
 nnoremap("<c-g>", "/", nosilent)
 vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
+if not Util.has "bufferline.nvim" then
+  nnoremap("gl", "<cmd>bnext<CR>", silent)
+  nnoremap("gh", "<cmd>bprev<CR>", silent)
+end
+
 -- Automatically indent with i and A made by ycino
 -- inoremap("i", function()
 --   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "i" or '"_cc'
@@ -184,8 +189,8 @@ onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search 
 
 -- Save jumps > 5 lines to the jumplist
 -- Jumps <= 5 respect line wraps
-nnoremap("j", [[(v:count > 5 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
-nnoremap("k", [[(v:count > 5 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
+nnoremap("j", [[(v:count > 1 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
+nnoremap("k", [[(v:count > 1 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS AND NAV                                          │

@@ -10,12 +10,13 @@ return {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     enabled = function()
-      local fleshtheme = { "flesh-and-blood" }
+      local fleshtheme = { "flesh-and-blood", "hybrid" }
       if vim.tbl_contains(fleshtheme, colorscheme) then
         return true
       end
       return false
     end,
+    opts = {},
   },
   -- SOLARIZED-OSAKA
   {
@@ -194,7 +195,7 @@ return {
       }
     end,
   },
-  -- GRUVBOX
+  -- GRUVBOX.NVIM
   {
     "ellisonleao/gruvbox.nvim",
     lazy = false,
@@ -206,7 +207,7 @@ return {
       end
       return false
     end,
-    config = true,
+    opts = {},
   },
   -- TOKYONIGHT
   {

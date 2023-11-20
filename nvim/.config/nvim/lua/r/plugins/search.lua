@@ -91,10 +91,10 @@ return {
     event = "LazyFile",
     opts = function()
       highlight.plugin("flash.nvim", {
-        { FlashMatch = { bg = { from = "ErrorMsg", attr = "fg", alter = 3 }, bold = true } },
+        { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 3 }, bold = true } },
         {
           FlashLabel = {
-            fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 },
+            fg = { from = "Error", attr = "fg", alter = 0.1 },
             bg = "NONE",
             bold = true,
             strikethrough = false,

@@ -6,7 +6,7 @@
 #define base02 #504945
 #define base03 #665c54
 #define base04 #bdae93
-#define base05 #d5c4a1
+#define base05 #8b8b8b
 #define base06 #ebdbb2
 #define base07 #fbf1c7
 #define base08 #fb4934
@@ -24,7 +24,7 @@
 #else
 *.background:   base00
 #endif
-*.cursorColor:  base05
+*.cursorColor:  base08
 
 *.color0:       base00
 *.color1:       base08

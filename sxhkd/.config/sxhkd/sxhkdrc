@@ -98,7 +98,8 @@ super + u
 
 # misc: open terminal
 super + Return
-        alacritty
+        st
+        # alacritty
         # kitty
         # wezterm
         # st -e tmux

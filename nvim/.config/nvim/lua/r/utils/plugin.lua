@@ -38,6 +38,7 @@ function M.setup()
   M.fix_imports()
   M.fix_renames()
   M.lazy_file()
+  ---@diagnostic disable-next-line: deprecated
   table.insert(package.loaders, function(module)
     if M.deprecated_modules[module] then
       Util.warn(

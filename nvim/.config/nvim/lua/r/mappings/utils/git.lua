@@ -66,7 +66,7 @@ function M.diffview(bufnr)
 
   vnoremap("<Leader>gvd", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git(diff): compare clipboard selection" })
   nnoremap("<Leader>gvC", "<cmd>CompareClipboard<cr>", { desc = "Git(diff): compare clipboard", silent = true })
-  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare two window with diff", buffer = bufnr })
+  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare two window with diff" })
 end
 
 function M.gitlinker(bufnr)

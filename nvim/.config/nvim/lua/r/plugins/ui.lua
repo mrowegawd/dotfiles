@@ -302,6 +302,7 @@ return {
   -- BUFFERLINE
   {
     "akinsho/bufferline.nvim",
+    enabled = false,
     event = "VeryLazy",
     keys = {
       { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
