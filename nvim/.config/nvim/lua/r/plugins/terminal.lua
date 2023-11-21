@@ -1,6 +1,8 @@
 local cmd = vim.cmd
 local Util = require "r.utils"
 
+local term_count = 0
+
 return {
   -- BUFTERM (disabled)
   {
@@ -43,11 +45,9 @@ return {
       }
     end,
   },
-  -- TOGGLETERM (disabled)
+  -- TOGGLETERM
   {
     "akinsho/nvim-toggleterm.lua",
-    enabled = false,
-    event = "VeryLazy",
     opts = {
       size = 20,
       hide_numbers = true,
@@ -56,18 +56,139 @@ return {
       shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
       start_in_insert = true,
       persist_size = true,
+      open_mapping = [[<Localleader><Localleader>]],
       direction = "horizontal",
     },
-    config = function(_, opts)
-      require("toggleterm").setup(opts)
+    cmd = { "ToggleTerm", "TermExec" },
+    keys = function()
+      local Terminal = require("toggleterm.terminal").Terminal
+      local lazygit = Terminal:new {
+        cmd = "lazygit",
+        hidden = true,
+        direction = "float",
+        float_opts = { width = vim.o.columns, height = vim.o.lines },
+      }
+      local lrfun = Terminal:new { cmd = "lfrun", hidden = true, direction = "float" }
+
+      -- Check and close the toggleterm
+      local function close_term()
+        for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+          local winbufnr = vim.fn.winbufnr(vim.api.nvim_win_get_number(winid))
+
+          if winbufnr > 0 then
+            local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+            if winft == "toggleterm" then
+              cmd "ToggleTerm"
+            end
+          end
+        end
+      end
+
+      local function go_next_or_prev_toggleterm(is_next)
+        is_next = is_next or false
+
+        local terms = require "toggleterm.terminal"
+        local total_term_spawned = #terms.get_all()
+
+        if terms.get_focused_id() == nil then
+          return cmd "ToggleTerm"
+        end
+
+        term_count = terms.get_focused_id()
+
+        if is_next then
+          if total_term_spawned == term_count then
+            return
+          end
+
+          close_term()
+          term_count = term_count + 1
+        else
+          if total_term_spawned == 0 then
+            return
+          end
+
+          close_term()
+          term_count = term_count - 1
+        end
+
+        cmd(string.format("%sToggleTerm", term_count))
+        cmd "startinsert!"
+      end
+
+      return {
+        { "<Localleader><Localleader>" },
+        {
+          "<F7>",
+          function()
+            lrfun:toggle()
+          end,
+          mode = { "n", "v", "t" },
+          desc = "Terminal(toggleterm): lfrun",
+        },
+        {
+          "<F8>",
+          function()
+            lazygit:toggle()
+          end,
+          mode = { "n", "v", "t" },
+          desc = "Terminal(toggleterm): lazygit",
+        },
+        {
+          "<C-PageUp>",
+          function()
+            go_next_or_prev_toggleterm()
+          end,
+          desc = "Terminal(toggleterm): prev",
+          mode = { "n", "t", "v" },
+        },
+        {
+          "<C-PageDown>",
+          function()
+            go_next_or_prev_toggleterm(true)
+          end,
+          desc = "Terminal(toggleterm): next",
+          mode = { "n", "t", "v" },
+        },
+        {
+          "<C-Insert>",
+          function()
+            local terms = require "toggleterm.terminal"
+            local total_term_spawned = #terms.get_all()
+
+            close_term()
+            if total_term_spawned == term_count then
+              term_count = term_count + 1
+            else
+              term_count = total_term_spawned
+            end
+
+            cmd(string.format("%sToggleTerm", term_count))
+            cmd "startinsert!"
+          end,
+          desc = "Terminal(toggleterm): create new term",
+          mode = { "n", "t", "v" },
+        },
+        {
+          "<C-Delete>",
+          function()
+            if vim.bo[0].filetype == "toggleterm" then
+              print "Not implemented yet"
+            end
+          end,
+          desc = "Terminal(toggleterm): remove",
+          mode = { "n", "t", "v" },
+        },
+      }
     end,
   },
-  -- TT.NVIM
+  -- TT.NVIM (disabled)
   {
     "distek/tt.nvim",
+    enabled = false,
     keys = {
       {
-        "<c-t>",
+        "<localleader><localleader>",
         function()
           if vim.bo.filetype == "qf" then
             Util.tiling.force_win_close({ "qf" }, false)
