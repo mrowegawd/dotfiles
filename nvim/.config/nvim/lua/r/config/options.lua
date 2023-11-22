@@ -44,8 +44,8 @@ local options = {
     linespace = 0, -- font spacing
     ruler = true, -- show line,col at the cursor pos
     signcolumn = "yes", -- Always show the sign column
-    number = false, -- show absolute line no. at the cursor pos
-    relativenumber = false, -- otherwise, show relative numbers in the ruler
+    number = true, -- show absolute line no. at the cursor pos
+    relativenumber = true, -- otherwise, show relative numbers in the ruler
     equalalways = false, -- New vim windows created won't make everything back to same sizes
     breakindent = true, -- start wrapped lines indented
     linebreak = true, -- do not break words on line wrap
@@ -126,7 +126,7 @@ local options = {
     -- this gets overwritten by ftplugins (:verb set fo)
     -- we use autocmd to remove 'o' in '/lua/autocmd.lua'
     -- [comments borrowed from tjdevries]
-    formatoptions = "jcroqlnt", -- tcqj
+    formatoptions = "jtcqln", -- tcqj
 
     splitkeep = "screen",
     splitbelow = true, -- ':new' ':split' below current

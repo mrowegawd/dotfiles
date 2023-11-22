@@ -99,6 +99,73 @@ function +vi-git-remotebranch() {
         hook_com[branch]="${hook_com[branch]}→[${remote}]"
     fi
 }
+
+
+vim_insert_mode=""
+vim_normal_mode="%F{green} %f"
+vim_mode=$vim_insert_mode
+
+bindkey -v # enables vi mode, using -e = emacs
+export KEYTIMEOUT=1
+
+# Add vi-mode text objects e.g. da" ca(
+# autoload -Uz select-bracketed select-quoted
+# zle -N select-quoted
+# zle -N select-bracketed
+# for km in viopp visual; do
+#   bindkey -M $km -- '-' vi-up-line-or-history
+#   for c in {a,i}${(s..)^:-\'\"\`\|,./:;=+@}; do
+#     bindkey -M $km $c select-quoted
+#   done
+#   for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+#     bindkey -M $km $c select-bracketed
+#   done
+# done
+
+function zle-line-finish {
+  vim_mode=$vim_insert_mode
+}
+zle -N zle-line-finish
+
+# When you C-c in CMD mode and you'd be prompted with CMD mode indicator,
+# while in fact you would be in INS mode Fixed by catching SIGINT (C-c),
+# set vim_mode to INS and then repropagate the SIGINT,
+# so if anything else depends on it, we will not break it
+function TRAPINT() {
+  vim_mode=$vim_insert_mode
+  return $(( 128 + $1 ))
+}
+
+cursor_mode() {
+  # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
+  cursor_block='\e[2 q'
+  cursor_beam='\e[6 q'
+
+  function zle-keymap-select {
+    vim_mode="${${KEYMAP/vicmd/${vim_normal_mode}}/(main|viins)/${vim_insert_mode}}"
+    zle && zle reset-prompt
+
+    if [[ ${KEYMAP} == vicmd ]] ||
+        [[ $1 = 'block' ]]; then
+        echo -ne $cursor_block
+    elif [[ ${KEYMAP} == main ]] ||
+        [[ ${KEYMAP} == viins ]] ||
+        [[ ${KEYMAP} = '' ]] ||
+        [[ $1 = 'beam' ]]; then
+        echo -ne $cursor_beam
+    fi
+  }
+
+  zle-line-init() {
+    echo -ne $cursor_beam
+  }
+
+  zle -N zle-keymap-select
+  zle -N zle-line-init
+}
+
+cursor_mode
+
 #-------------------------------------------------------------------------------
 #               Prompt
 #-------------------------------------------------------------------------------
@@ -112,7 +179,7 @@ setopt PROMPT_SUBST
 #
 # directory(branch) ● ●
 # ❯  █                                  10:51
-#
+
 # icon options =  ❯   
 function __prompt_eval() {
   local dots_prompt_icon="%F{green}➜ %f"

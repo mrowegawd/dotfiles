@@ -33,6 +33,51 @@
         {
             "before": [ "K" ],
             "commands": [ "editor.action.showHover" ]
+        },
+
+        // Navigate
+        {
+            "before": [ "s", "h" ],
+            "commands": ["workbench.action.focusLeftGroup"]
+        },
+        {
+            "before": [ "s", "l" ],
+            "commands": ["workbench.action.focusRightGroup"]
+        },
+        {
+            "before": [ "s", "k" ],
+            "commands": ["workbench.action.focusAboveGroup"]
+        },
+        {
+            "before": [ "s", "j" ],
+            "commands": ["workbench.action.focusAboveGroup"]
+        },
+        {
+            "before": [ "s", "j" ],
+            "commands": ["workbench.action.focusAboveGroup"]
+        },
+        {
+            "before": [ "s", "v" ],
+            "commands": ["workbench.action.splitEditor"]
+        },
+        {
+            "before": [ "s", "s" ],
+            "commands": ["workbench.action.splitEditorDown"]
+        },
+        {
+            "before": [ "s", "m" ],
+            "commands": ["workbench.action.maximizeEditor"]
+        },
+
+        // Folds
+        // workbench.action.maximizeEditor
+        {
+            "before": [ "z", "m" ],
+            "after": [ "z", "M" ]
+        },
+        {
+            "before": [ "<space>", "<space>" ],
+            "after": [ "z", "M", "z", "v" ]
         }
     ],
     "vim.insertModeKeyBindings": [
@@ -41,18 +86,24 @@
             "after": [ "<Esc>" ]
         },
         {
-            "before": [ "<c-f" ],
+            "before": [ "<c-f>" ],
             "after": [ "<Right>" ]
-        }
-    ],
-    "vim.insertModeKeyBindingsNonRecursive": [
-        {
-            "before": [ "<c-h>" ],
-            "after": [ "<c-o>", "h" ]
         },
         {
             "before": [ "<c-l>" ],
-            "after": [ "<c-o>", "l" ]
+            "commands": [ "cursorRight" ]
+        },
+        {
+            "before": [ "<c-h>" ],
+            "commands": [ "cursorLeft" ]
+        },
+        {
+            "before": [ "<c-j>" ],
+            "commands": [ "cursorDown" ]
+        },
+        {
+            "before": [ "<c-k>" ],
+            "commands": [ "cursorUp" ]
         }
     ],
     "vim.visualModeKeyBindings": [
@@ -95,7 +146,7 @@
             "commands": [ "workbench.action.quickOpen" ]
         },
         {
-            "before": [ "<leader>", "f", "w" ],
+            "before": [ "<leader>", "<s-f>"  ],
             "commands": [ "workbench.view.search" ]
         },
         // {

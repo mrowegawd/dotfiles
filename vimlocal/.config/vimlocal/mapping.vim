@@ -1,44 +1,36 @@
+" vim: foldmethod=marker foldlevel=0
+
 set encoding=utf-8
 scriptencoding utf-8
 
-" basic ---------------------- {{{
-
-" Use ',' instead of '\'.
-"\<Space>"
+" BASIC ---------------------- {{{
 
 " Use <leader> for basic mapping
-let g:mapleader                              = "\<space>"
+let g:mapleader       = "\<space>"
 
-" Use <localleader> for mapping plugins
-let g:maplocalleader                         = ','
-
-" Release key mappings for plug-in.
-
-imap     <F1>     <Nop>
-nmap     <F1>     <Nop>
-nnoremap ,        <Nop>
-nnoremap <space>  <Nop>
-nnoremap m        <Nop>
+" Use ',' instead of '\'.
+let g:maplocalleader  = ','
 
 " Disable Ex-mode.
-nnoremap Q  <Nop>
-nnoremap q  <Nop>
+nnoremap Q            <Nop>
+nnoremap q            <Nop>
 
-" qq to record, q to quit macro, Q to replay
-" keymap: [macro] run repeat the previous macro
-" nnoremap Q @q
-
-nmap <expr> j v:count ? 'j' : 'gj'
-nmap <expr> k v:count ? 'k' : 'gk'
+" I dont use it these key, so disabled
+imap     <F1>         <Nop>
+nmap     <F1>         <Nop>
+nnoremap ,            <Nop>
+nnoremap <space>      <Nop>
+nnoremap m            <Nop>
+nnoremap K            <Nop>
 
 " Join lines and keep the cursor in place
-nnoremap J mzJ`z
+nnoremap J            mzJ`z
 
-xnoremap . :normal .<CR>
+xnoremap .            :normal .<CR>
 
 " Allows you to visually select a section and then hit @ to run a macro on all lines
 " https://medium.com/@schtoeffel/you-don-t-need-more-than-one-cursor-in-vim-2c44117d51db#.3dcn9prw6
-xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+xnoremap @            :<C-u>call ExecuteMacroOverVisualRange()<CR>
 
 function! ExecuteMacroOverVisualRange()
   echo '@'.getcmdline()
@@ -46,10 +38,10 @@ function! ExecuteMacroOverVisualRange()
 endfunction
 
 " keymap: [word] uppercase
-vnoremap <leader>U gU$a
+vnoremap <leader>U    gU$a
 
 " keymap: [word] lowercase
-vnoremap <leader>u gu$a
+vnoremap <leader>u    gu$a
 
 " For moving quickly up and down,
 " Goes to the first line above/below that isn't whitespace
@@ -81,55 +73,47 @@ vmap < <gv
 vmap > >gv
 
 " keymap: [word][visual] move up
-" vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <s-Up> :m '>+1<CR>gv=gv
 
 " keymap: [word][visual] move down
-" vnoremap <A-k> :m '<-2<CR>gv=gv
+vnoremap <s-Down> :m '<-2<CR>gv=gv
 
-" Store relative line number jumps in the jumplist if they exceed a threshold.
-" but this option will break go down/up when wrap is on
-" nnoremap <expr> k (v:count > 5 ? "m'" . v:count : '') . 'k'
-" nnoremap <expr> j (v:count > 5 ? "m'" . v:count : '') . 'j'
-
-" keymap: [yank] copy line from current cursor to left
 nnoremap Y y$
-
-" keymap: [word] delete from current to last line
 nnoremap D d$
 
 " keymap: [word] spell check
 nnoremap <Insert> :set spell!<CR>
 
-" jk for escaping (insert and commandline)
-inoremap jk <Esc>
-" xnoremap jk <Esc>
-cnoremap jk <C-C>
+" qq to record, q to quit macro, Q to replay
+" keymap: [macro] run repeat the previous macro
+" nnoremap Q @q
 
-" keymap: [search] open search
-nnoremap / /\v
-vnoremap / <Esc>/\%V
+nmap <expr> j v:count ? 'j' : 'gj'
+nmap <expr> k v:count ? 'k' : 'gk'
 
-" keymap: [search] open search
-nnoremap <c-g> /\v
+" Store relative line number jumps in the jumplist if they exceed a threshold.
+" but this option will break go down/up when wrap is on
+nnoremap <expr> k (v:count > 5 ? "m'" . v:count : '') . 'k'
+nnoremap <expr> j (v:count > 5 ? "m'" . v:count : '') . 'j'
 
 " keymap: [search][quickfix] search current word (with quickfix)
 " nmap <silent> <c-g> :exe 'vimgrep /\v'.expand('<cword>').'/g %'<CR>:copen<CR>
 
 " keymap: [substitute] start search and replace
-nmap <leader>sw :%s///g<left><left><left>
+" nmap <leader>sw :%s///g<left><left><left>
 
 " keymap: [substitute] start search and replace current word
-nmap <leader>sW :%s/<c-r><c-w>//g<left><left>
+" nmap <leader>sW :%s/<c-r><c-w>//g<left><left>
 
-" keymap: [cursor] to right
-nnoremap zL 10zl
+" keymap: [search] open search
+nnoremap / /\v
+vnoremap / <Esc>/\%V
+nnoremap <c-g> /\v
 
-" keymap: [cursor] to left
-nnoremap zH 10zh
-
-" keymap: [cursor] to left (far)
+cnoremap jk <C-C>
+nnoremap zl 10zl
+nnoremap zh 10zh
 nnoremap zL z60l
-" keymap: [cursor] to right (far)
 nnoremap zH z60h
 
 " keymap: [visual] toggle nohl
@@ -173,12 +157,7 @@ nnoremap ZZ :qa<cr>
 "       \ . synIDattr(synIDtrans(synID(line('.'),col('.'),1)),'name') . '>'<CR>
 
 " keymap: [misc] show/check path current file
-nnoremap <leader>rP :echo expand('%:p:h')<CR>
-
-" nnoremap <leader>rp :echo expand('%')<CR>
-" nnoremap <leader>P :echo expand('%:p:h:t')<CR>
-
-" nnoremap <localleader>p :echo expand('%:t')<CR>
+nnoremap sP :echo expand('%:p:h')<CR>
 
 " keymap: [misc] open MYVIMRC
 " noremap <leader>e :e $MYVIMRC<cr>
@@ -190,12 +169,22 @@ nnoremap <leader>cd :cd %:p:h<cr>
 " nnoremap <leader>f                gg=G``
 "
 " }}}
-" insert mode ---------------- {{{
+" INSERT MODE ---------------- {{{
 
 inoremap <c-h> <Left>
 inoremap <c-l> <Right>
+inoremap <c-j> <Down>
+inoremap <c-k> <Up>
 inoremap <c-b> <S-Left>
 inoremap <c-f> <S-Right>
+
+" jk for escaping (insert and commandline)
+inoremap jk <Esc>
+inoremap kj <Esc>
+xnoremap jk <Esc>
+
+inoremap <c-a> <c-o>^
+inoremap <c-e> <c-o>$
 
 " keymap: [insert] delete line
 " inoremap <c-u> <c-g>u<c-u>
@@ -221,47 +210,60 @@ inoremap <c-f> <S-Right>
 
 " keymap: [insert] move prev word
 " imap <C-b> <C-\><C-o>b
-
-" better vertical movement for wrapped lines
-" inoremap <up> <c-o>gk
-" inoremap <down> <c-o>gj
 "
 " }}}
-" buffer, windows and tabs --- {{{
+" BUFFER, WINDOWS AND TABS --- {{{
 "
-imap <up> <nop>
-imap <down> <nop>
+" imap <up> <nop>
+" imap <down> <nop>
 imap <left> <nop>
 imap <right> <nop>
 
-" keymap: [buffer] kill all buffers but not the current
-map <silent> <c-w>o           :BufOnly!<cr>
+" Navigate the window
+nnoremap sj                     <C-W>j
+nnoremap sk                     <C-W>k
+nnoremap sh                     <C-W>h
+nnoremap sl                     <C-W>l
 
-" keymap: [tab][window] create new
-nnoremap <silent> <c-w>t      :<C-U>tabnew<Space><CR>
-" keymap: [tab][window] convert window to new tab
-nnoremap <silent> <c-w>b      <C-w><S-t>
+" Resize the window
+nnoremap <silent> <S-Up>        :resize -2<CR>
+nnoremap <silent> <S-Down>      :resize +2<CR>
+nnoremap <silent> <S-Right>     :vertical resize -2<CR>
+nnoremap <silent> <S-Left>      :vertical resize +2<CR>
 
-" keymap: [buffer] next
-nnoremap <silent> <TAB>       :bnext<cr>zz
-" keymap: [buffer] prev
-nnoremap <silent> <S-TAB>     :bprev<cr>zz
+nnoremap <silent> sv            :vsplit!<cr>
+nnoremap <silent> ss            :split!<cr>
+nnoremap <silent> sJ            <C-W>t<C-W>K
+nnoremap <silent> sL            <C-W>t<C-W>H
 
-" keymap: [tab] next
-nnoremap <silent> <c-w>l      :tabn<cr>
-" keymap: [tab] last next
-nnoremap <silent> <c-w><s-l>  :tablast<cr>
-" keymap: [tab] prev
-nnoremap <silent> <c-w>h      :tabp<cr>
-" keymap: [tab] first prev
-nnoremap <silent> <c-w><s-h>  :tabfirst<cr>
-" keymap: [tab] move tab to the next
-" nnoremap <silent> <c-@>              <c-a>:+tabmove<cr>
-" keymap: [tab] move tab to the next
-" nnoremap <silent> <c-!>              <c-a>:-tabmove<cr>
+" buffer: alternate file
+nnoremap sbb                    <c-^>
+
+" buffer: kill all buffers but not the current
+nnoremap <silent> sO            :BufOnly!<cr>
+
+nnoremap <silent> gl            :bnext<cr>zz
+nnoremap <silent> gh            :bprev<cr>zz
 
 " keymap: [window] size balance
-nnoremap <leader>=            <C-w>=
+nnoremap <silent> sw            :wincmd =<cr>
+
+" keymap: [tab][window] convert window to new tab
+nnoremap <silent> sT            <C-w><S-t>
+
+" keymap: [tab][window] create new and close
+nnoremap <silent> tn            :<C-U>tabnew<Space><CR>
+nnoremap <silent> tc            :tabclose<CR>
+
+" keymap: [tab] next
+nnoremap <silent> tl            :tabn<cr>
+" keymap: [tab] prev
+nnoremap <silent> th            :tabp<cr>
+
+" keymap: [tab] last next
+nnoremap <silent> tL            :tablast<cr>
+" keymap: [tab] first prev
+nnoremap <silent> tH            :tabfirst<cr>
 
 function! s:maximazeWindow()
   if winnr('$') > 1
@@ -272,20 +274,10 @@ function! s:maximazeWindow()
   endif
 endfunction
 
-nnoremap <C-j> <C-W>j
-nnoremap <C-k> <C-W>k
-nnoremap <C-h> <C-W>h
-nnoremap <C-l> <C-W>l
-
-" nnoremap <silent> J    :resize -2<CR>
-" nnoremap <silent> K    :resize +2<CR>
-" nnoremap <silent> L    :vertical resize -2<CR>
-" nnoremap <silent> H    :vertical resize +2<CR>
-
-nnoremap <silent> <c-p> :call <sid>maximazeWindow()<cr>
+nnoremap <silent> sm            :call <sid>maximazeWindow()<cr>
 
 " }}}
-" toggle,quickfix,location --- {{{
+" TOGGLE,QUICKFIX,LOCATION --- {{{
 " -----------------------
 function! s:handleURL(pat,lucky)
   let s:uri = matchstr(getline('.'), '[a-z]*:\/\/[^ >,;")]*')
@@ -367,9 +359,9 @@ nnoremap <silent> <leader>q   :call ToggleList("Quickfix List", 'c')<CR>
 " keymap: [locationlist][toggle] open
 nnoremap <silent> <leader>Q   :call ToggleList("Quickfix List", 'l')<CR>
 " keymap: [locationlist] next
-nnoremap <silent> <a-j>       :lnext<cr>zz
+" nnoremap <silent> <a-j>       :lnext<cr>zz
 " keymap: [locationlist] prev
-nnoremap <silent> <a-k>       :lprev<cr>zz
+" nnoremap <silent> <a-k>       :lprev<cr>zz
 
 " keymap: [browser] open browser from under cursor
 nmap <silent> <leader>ob :call <SID>handleURL(expand('<cword>'),0)<cr>gv
@@ -383,7 +375,7 @@ endif
 
 "
 " }}}
-" netrw ---------------------- {{{
+" FILEMANAGER----------------- {{{
 " ------------------------
 
 if !has('nvim')
@@ -452,7 +444,7 @@ if !has('nvim')
   nnoremap <leader>E :FindNetrwc<space>
 end
 " }}}
-" commandline ---------------- {{{
+" COMMANDLINE ---------------- {{{
 "
 cnoremap w!! w !sudo tee % >/dev/null
 cnoremap <C-p> <Up>
@@ -462,19 +454,13 @@ cnoremap <C-h> <Left>
 cnoremap <C-b> <S-Left>
 cnoremap <C-f> <S-Right>
 cnoremap <C-a> <Home>
+cnoremap jk    <c-c>
 cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
 cnoremap <C-t> <C-R>=expand("%:p:h") . "/" <CR>
-
 "
 " }}}
-" jump ----------------------- {{{
-"
-" keymap: [jumplist][window] open last buffer
-nnoremap <bs> <c-^>
-"
-" }}}
-" terminal ------------------- {{{
+" TERMINAL ------------------- {{{
 "
 augroup MysetTerm
   autocmd!
@@ -542,7 +528,7 @@ endif
 
 "
 " }}}
-" folding -------------------- {{{
+" FOLDING -------------------- {{{
 "
 " keymap: [fold][toggle] open close fold
 " nnoremap <Tab> za
@@ -571,31 +557,32 @@ function! s:toggleFold()
 endfunction
 
 " keymap: [fold][toggle] open/close all folds
-nmap <silent> 1 :call <SID>toggleFold()<CR>
+nnoremap <silent> 1               :call <SID>toggleFold()<CR>
+nnoremap <silent> <space><space>  zMzvzO
+nnoremap zj                       zjzz
+nnoremap zk                       zkzz
+nnoremap zm                       zM
 
-nnoremap zj zjzz
-nnoremap zk zkzz
+nnoremap <silent> <a-n> :call NextClosedFold('j')<cr>
+nnoremap <silent> <a-p> :call NextClosedFold('k')<cr>
 
-" nnoremap <silent> <leader>zj :call NextClosedFold('j')<cr>
-" nnoremap <silent> <leader>zk :call NextClosedFold('k')<cr>
-
-" function! NextClosedFold(dir)
-"     let cmd = 'norm!z' . a:dir
-"     let view = winsaveview()
-"     let [l0, l, open] = [0, view.lnum, 1]
-"     while l != l0 && open
-"         exe cmd
-"         let [l0, l] = [l, line('.')]
-"         let open = foldclosed(l) < 0
-"     endwhile
-"     if open
-"         call winrestview(view)
-"     endif
-" endfunction
+function! NextClosedFold(dir)
+    let cmd = 'norm!z' . a:dir
+    let view = winsaveview()
+    let [l0, l, open] = [0, view.lnum, 1]
+    while l != l0 && open
+        exe cmd
+        let [l0, l] = [l, line('.')]
+        let open = foldclosed(l) < 0
+    endwhile
+    if open
+        call winrestview(view)
+    endif
+endfunction
 
 "
 " }}}
-" misc ----------------------- {{{
+" MISC ----------------------- {{{
 "
 " profiling
 function! s:profiling(bang)
@@ -651,8 +638,8 @@ nnoremap <expr> zz (winline() == (winheight(0)+1) / 2) ?
       \ 'zt' : (winline() == 1) ? 'zb' : 'zz'
 
 " keymap: [scroll] fast down
-" noremap <expr> <C-f> max([winheight(0) - 2, 1])
-"       \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
+noremap <expr> <C-f> max([winheight(0) - 2, 1])
+      \ ."\<C-d>".(line('w$') >= line('$') ? "L" : "M")
 
 " keymap: [scroll] fast up
 noremap <expr> <C-b> max([winheight(0) - 2, 1])

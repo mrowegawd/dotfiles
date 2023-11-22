@@ -49,31 +49,52 @@ return {
   -- GITLINKER
   {
     "ruifm/gitlinker.nvim", -- generate shareable file permalinks
-    event = "BufReadPre",
+    keys = {
+      {
+        "<Leader>go",
+        "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        { desc = "Git(gitlinker): range URL repo on browser" },
+      },
+      {
+        "<Leader>gO",
+        "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        { desc = "Git(gitlinker): open URL repo" },
+      },
+      {
+        "<Leader>go",
+        "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        {
+          desc = "Git(gitlinker): range URL repo on browser (visual)",
+        },
+      },
+      { "<leader>gy" },
+    },
     opts = { mappings = "<Leader>gy" },
-    config = function(_, opts)
-      require("gitlinker").setup(opts)
-    end,
   },
   -- OCTO
   {
     "pwntester/octo.nvim",
     cmd = "Octo",
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-      "ibhagwan/fzf-lua",
-    },
     opts = {
-      -- picker = "fzf-lua",
-      enable_builtin = false,
+      picker = "fzf-lua",
+      enable_builtin = true,
+      picker_config = {
+        mappings = {
+          open_in_browser = { lhs = "<C-b>", desc = "open issue in browser" },
+          goto_file = { lhs = "<CR>", desc = "kampang" },
+          copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
+          merge_pr = { lhs = "<C-r>", desc = "merge pull request" },
+        },
+      },
       mappings = {
         issue = {
           close_issue = { lhs = "<space>ic", desc = "close issue" },
           reopen_issue = { lhs = "<space>io", desc = "reopen issue" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload issue" },
+          open_in_browser = { lhs = "<leader>gO", desc = "open issue in browser" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
-          open_in_browser = { lhs = "<C-i>", desc = "open issue in browser" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
           remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
           create_label = { lhs = "<space>lc", desc = "create label" },
@@ -106,7 +127,7 @@ return {
           reopen_issue = { lhs = "<space>io", desc = "reopen PR" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload PR" },
-          open_in_browser = { lhs = "<space>gO", desc = "open PR in browser" },
+          open_in_browser = { lhs = "<Leader>gO", desc = "open PR in browser" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           goto_file = { lhs = "gf", desc = "go to file" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
@@ -137,6 +158,8 @@ return {
           prev_comment = { lhs = "[c", desc = "go to previous comment" },
           select_next_entry = { lhs = "]q", desc = "move to previous changed file" },
           select_prev_entry = { lhs = "[q", desc = "move to next changed file" },
+          select_first_entry = { lhs = "[Q", desc = "move to first changed file" },
+          select_last_entry = { lhs = "]Q", desc = "move to last changed file" },
           close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
           react_hooray = { lhs = "<space>rp", desc = "add/remove 🎉 reaction" },
           react_heart = { lhs = "<space>rh", desc = "add/remove ❤️ reaction" },
@@ -162,6 +185,8 @@ return {
           prev_thread = { lhs = "[t", desc = "move to previous thread" },
           select_next_entry = { lhs = "]q", desc = "move to previous changed file" },
           select_prev_entry = { lhs = "[q", desc = "move to next changed file" },
+          select_first_entry = { lhs = "[Q", desc = "move to first changed file" },
+          select_last_entry = { lhs = "]Q", desc = "move to last changed file" },
           close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
           toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
           goto_file = { lhs = "gf", desc = "go to file" },
@@ -171,17 +196,16 @@ return {
           prev_entry = { lhs = "k", desc = "move to previous changed file" },
           select_entry = { lhs = "<cr>", desc = "show selected changed file diffs" },
           refresh_files = { lhs = "R", desc = "refresh changed files panel" },
-          focus_files = { lhs = "<leader>E", desc = "move focus to changed file panel" },
-          toggle_files = { lhs = "<leader>B", desc = "hide/show changed files panel" },
+          focus_files = { lhs = "<leader>e", desc = "move focus to changed file panel" },
+          toggle_files = { lhs = "<leader>b", desc = "hide/show changed files panel" },
           select_next_entry = { lhs = "]q", desc = "move to previous changed file" },
           select_prev_entry = { lhs = "[q", desc = "move to next changed file" },
+          select_first_entry = { lhs = "[Q", desc = "move to first changed file" },
+          select_last_entry = { lhs = "]Q", desc = "move to last changed file" },
           close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
           toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
         },
       },
-      config = function(_, opts)
-        require("octo").setup(opts)
-      end,
     },
   },
   -- GIT ADVANCED SEARCH (disabled)
@@ -239,7 +263,6 @@ return {
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
-    -- event = "VeryLazy",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()

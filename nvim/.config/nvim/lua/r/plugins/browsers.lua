@@ -2,7 +2,6 @@ return {
   -- OPENBROWSER
   {
     "tyru/open-browser.vim",
-    event = "BufReadPre",
     keys = {
       {
         "<Leader>rb",

@@ -1,10 +1,5 @@
 // Place your key bindings in this file to override the defaultsauto[]
 [
-    // {
-    //   "key": "shift+alt+h",
-    //   "command": "-references-view.showCallHierarchy",
-    //   "when": "editorHasCallHierarchyProvider"
-    // },
     {
         "key": "escape",
         "command": "-editor.action.cancelSelectionAnchor",
@@ -12,22 +7,22 @@
     },
     {
       "key": "ctrl+h",
-      "command": "workbench.action.focusLeftGroup",
+      "command": "workbench.action.navigateLeft",
       "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
     {
       "key": "ctrl+l",
-      "command": "workbench.action.focusRightGroup",
+      "command": "workbench.action.navigateRight",
       "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
     {
       "key": "ctrl+k",
-      "command": "workbench.action.focusAboveGroup",
+      "command": "workbench.action.navigateUp",
       "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
     {
       "key": "ctrl+j",
-      "command": "workbench.action.focusBelowGroup",
+      "command": "workbench.action.navigateDown",
       "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
     // {
@@ -56,22 +51,22 @@
     //   "when": "typeHierarchyVisible && typeHierarchyDirection == 'subtypes'"
     // },
     // change split windows
-    {
-        "key": "ctrl+h",
-        "command": "workbench.action.navigateLeft"
-    },
-    {
-        "key": "ctrl+l",
-        "command": "workbench.action.navigateRight"
-    },
-    {
-        "key": "ctrl+k",
-        "command": "workbench.action.navigateUp"
-    },
-    {
-        "key": "ctrl+j",
-        "command": "workbench.action.navigateDown"
-    },
+    // {
+    //     "key": "ctrl+h",
+    //     "command": "workbench.action.navigateLeft"
+    // },
+    // {
+    //     "key": "ctrl+l",
+    //     "command": "workbench.action.navigateRight"
+    // },
+    // {
+    //     "key": "ctrl+k",
+    //     "command": "workbench.action.navigateUp"
+    // },
+    // {
+    //     "key": "ctrl+j",
+    //     "command": "workbench.action.navigateDown"
+    // },
     {
         "key": "ctrl+n",
         "command": "workbench.action.quickOpenNavigateNextInFilePicker",
@@ -111,7 +106,7 @@
     {
         "key": "ctrl+t",
         "command": "workbench.action.terminal.toggleTerminal"
-    }
+    },
     {
         "key": "ctrl+Insert",
         "command": "workbench.action.terminal.new",

@@ -60,7 +60,6 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     opts = {
-      -- options for vim.diagnostic.config()
       diagnostics = {
         underline = true,
         update_in_insert = false,
@@ -165,7 +164,7 @@ return {
         DEFINITION = "definitionProvider",
       }
 
-      -- setup formatting and keymaps
+      -- Setup formatting and keymaps
       Util.lsp.on_attach(function(client, bufnr)
         require("r.plugins.lsp.keymaps").on_attach(client, bufnr)
 
@@ -185,6 +184,24 @@ return {
             end,
           })
         end
+
+        if client.server_capabilities[provider.REFERENCES] then
+          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+            event = { "CursorHold", "CursorHoldI" },
+            buffer = bufnr,
+            desc = "LSP: References",
+            command = function()
+              vim.lsp.buf.document_highlight()
+            end,
+          }, {
+            event = "CursorMoved",
+            desc = "LSP: References Clear",
+            buffer = bufnr,
+            command = function()
+              vim.lsp.buf.clear_references()
+            end,
+          })
+        end
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
@@ -198,7 +215,7 @@ return {
         return ret
       end
 
-      -- Uncomment this if you not using 'noice.nvim'
+      -- Uncomment this if you are not using 'noice.nvim'
       -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
       --   border = border,
       -- })
@@ -214,7 +231,11 @@ return {
       if opts.inlay_hints.enabled and inlay_hint then
         Util.lsp.on_attach(function(client, buffer)
           if client.supports_method "textDocument/inlayHint" then
-            inlay_hint(buffer, true)
+            if vim.fn.has "nvim-0.10" == 1 then
+              inlay_hint.enable(buffer, true)
+            else
+              inlay_hint(buffer, true)
+            end
           end
         end)
       end

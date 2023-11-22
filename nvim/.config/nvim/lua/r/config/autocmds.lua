@@ -12,6 +12,23 @@ Util.cmd.augroup("Wrap_spell", {
   end,
 })
 
+-- Turn off paste mode when leaving insert
+Util.cmd.augroup("SetNopaste", {
+  event = { "InsertLeave" },
+  pattern = "*",
+  command = "set nopaste",
+})
+
+-- Disable the concealing in some file formats
+-- The default conceallevel is 3 in LazyVim
+Util.cmd.augroup("DisableJsonConceal", {
+  event = { "FileType" },
+  pattern = { "json", "jsonc", "markdown" },
+  command = function()
+    vim.opt_local.conceallevel = 0
+  end,
+})
+
 -- Close certain filetypes by pressing q.
 Util.cmd.augroup("SmartClose", {
   event = { "FileType" },
@@ -103,6 +120,7 @@ Util.cmd.augroup("WindowBehaviours", {
     -- "help",
     "qf",
     "NeogitCommitMessage",
+    "NeogitPopup",
     -- "Trouble",
   },
   command = function()
@@ -288,11 +306,11 @@ Util.cmd.augroup("DisableStatusline", {
 })
 
 -- Automatically resize windows when host resizes
--- Util.cmd.augroup("AutoResizeWindowssf", {
---   event = { "BufNew", "BufRead" },
---   pattern = "*",
---   command = "tabdo wincmd =",
--- })
+Util.cmd.augroup("AutoResizeWindowssf", {
+  event = { "VimResized" },
+  pattern = "*",
+  command = "wincmd =",
+})
 
 -- vim.cmd [[
 --   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw

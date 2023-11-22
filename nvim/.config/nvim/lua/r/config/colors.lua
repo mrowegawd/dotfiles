@@ -8,18 +8,18 @@ local general_overrides = function()
     -- { Directory = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
     { ColorColumn = { bg = { from = "Normal" , attr = "bg" } } },
     { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.1 }, bg = { from = "Normal", attr = "bg", alter= -0.15 } } },
-    { FoldColumn = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.2 } } },
-    { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "fg", alter = 0.2 } } },
-    { CursorLineNr = { fg = { from = "ColorColumn", attr = "bg", alter = 1.5 }, bg = { from = "ColorColumn" } } },
+    { FoldColumn = { bg = { from = "ColorColumn" , attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 1.5 } } },
+    { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
+    { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = { from = "ColorColumn" } } },
     { CursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
     { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "ColorColumn", attr = "bg" }, underline = false } },
+    { Folded = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 2 }, underline = false, bold= true } },
     { EndOfBuffer = { bg = "NONE" } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.1 } } },
-    -- { SignColumn = { bg = { from = "ColorColumn" } } },
+    { SignColumn = { bg = { from = "ColorColumn" } } },
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinBar = { bg = { from = "ColorColumn" } } },
@@ -33,29 +33,30 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     --  SEMANTIC TOKENS
     -----------------------------------------------------------------------
+    { String = { italic = true } },
     { ["@lsp.type.variable"] = { clear = true } },
-    -- { ["@lsp.typemod.method"] = { link = "@method" } },
-    -- { ["@lsp.type.parameter"] = { italic = true, fg = { from = "Normal" } } },
-    -- { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
-    -- { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
-    -- { ["@lsp.typemod.variable.readonly.typescript"] = { clear = true } },
-    -- { ["@lsp.type.type.lua"] = { clear = true } },
-    -- { ["@lsp.typemod.number.injected"] = { link = "@number" } },
-    -- { ["@lsp.typemod.operator.injected"] = { link = "@operator" } },
-    -- { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
-    -- { ["@lsp.typemod.string.injected"] = { link = "@string" } },
-    -- { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
+    { ["@lsp.type.parameter"] = { italic = true, fg = { from = "Normal" } } },
+    { ['@lsp.typemod.method'] = { link = '@method' } },
+    { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
+    { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
+    { ["@lsp.typemod.variable.readonly.typescript"] = { clear = true } },
+    { ["@lsp.type.type.lua"] = { clear = true } },
+    { ["@lsp.typemod.number.injected"] = { link = "@number" } },
+    { ["@lsp.typemod.operator.injected"] = { link = "@operator" } },
+    { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
+    { ["@lsp.typemod.string.injected"] = { link = "@string" } },
+    { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
     -----------------------------------------------------------------------
     -- TREESITTER
     -----------------------------------------------------------------------
-    -- { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
-    -- { ["@type.qualifier"] = { inherit = "@keyword", italic = true } },
-    -- { ["@variable"] = { clear = true } },
-    -- { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
-    -- { ["@error"] = { fg = "fg", bg = "NONE" } },
-    -- { ["@text.diff.add"] = { link = "DiffAdd" } },
-    -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
-    -- { ["@text.title.markdown"] = { underdouble = true } },
+    { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
+    { ['@type.qualifier'] = { inherit = '@keyword', italic = true } },
+    { ["@variable"] = { clear = true } },
+    { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
+    { ["@error"] = { fg = "fg", bg = "NONE" } },
+    { ["@text.diff.add"] = { link = "DiffAdd" } },
+    { ["@text.diff.delete"] = { link = "DiffDelete" } },
+    { ["@text.title.markdown"] = { underdouble = true } },
 
     -----------------------------------------------------------------------
     -- Diff
@@ -79,20 +80,23 @@ local general_overrides = function()
     -- { ["@text.diff.add"] = { link = "DiffAdd" } },
     -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
 
-    { GitSignsAdd = { bg = { from = "ColorColumn" } } },
-    { GitSignsChange = { bg = { from = "ColorColumn" } } },
-    { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+    -- { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+    -- { GitSignsChange = { bg = { from = "ColorColumn" } } },
+    -- { GitSignsDelete = { bg = { from = "ColorColumn" } } },
 
     -----------------------------------------------------------------------
     -- LSP
     -----------------------------------------------------------------------
     { LspCodeLens = { inherit = "Comment", bold = true, italic = false } },
     { LspCodeLensSeparator = { bold = false, italic = false } },
-    { LspReferenceText = { bg = "NONE", underline = true, sp = { from = "Comment", attr = "fg" } } },
-    { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
-    { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
 
+    -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
+    -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
+
+    -- { LspReferenceText = { bg = "NONE", underline = true, sp = { from = "Comment", attr = "fg" } } },
+    { LspReferenceWrite = { inherit = 'LspReferenceText', bold = true, italic = true, underline = true } },
     { LspSignatureActiveParameter = { link = "Visual" } },
+
     { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
 
     { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
@@ -197,6 +201,9 @@ local general_overrides = function()
 
     -- BUFFERLINE =========================================================
     { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
+    { OctoEditable = { bg = { from = "ColorColumn" } } },
+    { OctoBubble = { link = "Normal" } } ,
+
   }
 end
 
@@ -239,16 +246,141 @@ end
 local function colorscheme_overrides()
   local overrides = {
     -- {"kanagawa", "catppuccin"} -- remove this
-    -- ["doom-one"] = { },
-    -- ["gruvbox-material"] = { },
-    -- ["solarized"] = { }
-    -- ["miasma"] = { },
-    -- ["nano-theme"] = { },
-    -- ["darcubox"] = { },
-    -- ["onedark"] = { },
-    -- ["everforest"] = { },
-    -- ["night-owl"] = { },
-    -- ["tokyonight"] = { }
+    ["doom-one"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "DiffAddedGutter", attr = "fg" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" },  fg = { from = "DiffModifiedGutter", attr = "fg" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "DiffRemovedGutter", attr = "fg"} } },
+
+      -- { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      -- { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      -- { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      -- { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 } } },
+    },
+    ["everforest"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.5 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 }, bold = true } },
+    },
+    ["hybrid"] = { -- this name of colorscheme flesh-and-blood
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "DiffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" },  fg = { from = "DiffChange", attr = "fg" } } },
+      { CursorLine = { bg = { from = "ColorColumn", alter = 0.5 } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "DiffRemoved", attr = "fg"} } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 } } },
+    },
+    ["gruvbox"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 } } },
+    },
+    ["miasma"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.5 } } },
+    },
+    ["night-owl"] = {
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = -0.26 }, fg = { from = "diffText" , attr = "bg", alter = -0.8 }, bold = true } },
+    },
+    ["onedark"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.4 } } },
+    },
+    ["solarized"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "fg", alter = 0.05 }, fg = { from = "diffText" , attr = "fg", alter = -0.4 } } },
+    },
+    ["solarized-osaka"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "diffAdded" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" }, fg = { from = "diffChanged" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "diffRemoved" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "fg", alter = 0.05 }, fg = { from = "diffText" , attr = "fg", alter = -0.4 } } },
+    },
+    ["nano-theme"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "diffAdded" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" }, fg = { from = "diffChanged" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "diffRemoved" } } },
+
+       -- { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.05 } } },
+       { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.05 }, bg = { from = "Normal", attr = "bg", alter = 0.05 } } },
+       { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "bg", alter = -0.3 } } },
+    },
+    ["seoul256"] = {
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
+
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "diffAdded" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" }, fg = { from = "diffChange" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "diffRemoved" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "fg", alter = 0.05 }, fg = { from = "diffText" , attr = "fg", alter = -0.4 } } },
+    { CodeBlock1 = { bg = { from = "Normal", alter = -0.25 } } },
+    },
+    ["terafox"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" }, fg = { from = "diffAdded" , attr = "fg"} } },
+      { GitSignsChange = { bg = { from = "ColorColumn" }, fg = { from = "diffChanged", attr = "fg" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" },  fg = { from = "diffRemoved" , attr = "fg" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "DiffText" , attr = "bg", alter = 0.05 }, fg = { from = "DiffText" , attr = "bg", alter = -0.4 } } },
+    },
+    ["oxocarbon"] = {
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "DiffText" , attr = "bg", alter = 0.05 }, fg = { from = "DiffText" , attr = "fg", alter = -0.4 } } },
+    },
+    ["tokyonight"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.4 } } },
+    }
   }
 
   local hls = overrides[vim.g.colors_name]

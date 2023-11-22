@@ -7,13 +7,13 @@ local M = {}
 ---@param buf number
 ---@param lnum number
 function M.get_signs(buf, lnum)
-  -- Get regular signs
-  ---@type Sign[]
   local signs = vim.tbl_map(function(sign)
-    ---@type Sign
     local ret = vim.fn.sign_getdefined(sign.name)[1]
-    ret.priority = sign.priority
-    return ret
+    if ret ~= nil then
+      ret.priority = sign.priority
+      return ret
+    end
+    return {}
   end, vim.fn.sign_getplaced(buf, { group = "*", lnum = lnum })[1].signs)
 
   -- Get extmark signs
@@ -106,7 +106,7 @@ function M.statuscolumn()
     end
     vim.api.nvim_win_call(win, function()
       if vim.fn.foldclosed(vim.v.lnum) >= 0 then
-        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "Folded" }
+        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldColumn" }
         if
           vim.tbl_contains(
             { "norg", "org", "orgagenda", "fzf" },
@@ -127,13 +127,14 @@ function M.statuscolumn()
   -- They show when either number or relativenumber is true
   local is_num = vim.wo[win].number
   local is_relnum = vim.wo[win].relativenumber
-  if (is_num or is_relnum) and vim.v.virtnum == 0 then
-    if vim.v.relnum == 0 then
-      components[2] = is_num and "%l" or "%r" -- the current line
-    else
-      components[2] = is_relnum and "%r" or "%l" -- other lines
-    end
-    components[2] = "%=" .. components[2] .. " " -- right align
+  if is_num and is_relnum then
+    components[2] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):(v:virtnum>0?"":v:lnum)} '
+  elseif is_num and not is_relnum then
+    components[2] = '%=%{v:virtnum>0?"":v:lnum} '
+  elseif is_relnum and not is_num then
+    components[2] = '%=%{v:virtnum>0?"":v:relnum} '
+  else
+    components[2] = ""
   end
 
   return table.concat(components, "")

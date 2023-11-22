@@ -1,6 +1,6 @@
-st.font:          JetBrainsMonoNL NF:Regular:pixelsize=10
-st.boldFont:      JetBrainsMonoNL NF:Bold:pixelsize=10
-st.italicFont:    JetBrainsMonoNL NF:Italic:pixelsize=10
+st.font:          SF Mono:Regular:pixelsize=10
+st.boldFont:      SF Mono:Bold:pixelsize=10
+st.italicFont:    VictorMono NFP SemiBold Obl:Italic:pixelsize=10
 
 ! st.borderperc:              100
 ! st.cursorshape:               2

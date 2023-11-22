@@ -254,7 +254,12 @@ return {
     event = "BufWinEnter",
     keys = {
       {
-        "<leader>pp",
+        "<Leader>fP",
+        "<CMD> ProjectRoot <CR>",
+        desc = "Projects(project.nvim): save project",
+      },
+      {
+        "<Leader>fp",
         function()
           local contents = require("project_nvim").get_recent_projects()
           local reverse = {}
@@ -262,18 +267,21 @@ return {
             reverse[#reverse + 1] = contents[i]
           end
           return require("fzf-lua").fzf_exec(reverse, {
+            fzf_opts = {
+              ["--header"] = [[Ctrl-d:'del cwd']],
+            },
             actions = {
               ["default"] = function(e)
                 vim.cmd.cd(e[1])
               end,
               ["ctrl-d"] = function(x)
-                local choice = vim.fn.confirm("Delete '" .. #x .. "' projects? ", "&Yes\n&No", 2)
-                if choice == 1 then
-                  local history = require "project_nvim.utils.history"
-                  for _, v in ipairs(x) do
-                    history.delete_project(v)
-                  end
+                -- local choice = vim.fn.confirm("Delete '" .. #x .. "' projects? ", "&Yes\n&No", 2)
+                -- if choice == 1 then
+                local history = require "project_nvim.utils.history"
+                for _, v in ipairs(x) do
+                  history.delete_project(v)
                 end
+                -- end
               end,
             },
           })

@@ -88,9 +88,9 @@ return {
           center = {
             { action = [[lua require("fzf-lua").files()]], desc = " Find file", icon = " ", key = "f" },
             -- { action = "ene | startinsert", desc = " New file", icon = " ", key = "e" },
-            { action = "Neorg workspace wiki", desc = " Notes", icon = " ", key = "n" },
-            { action = "FzfLua oldfiles", desc = " Recent files", icon = " ", key = "r" },
-            { action = "FzfLua live_grep", desc = " Find text", icon = " ", key = "g" },
+            { action = "Neorg workspace wiki", desc = " Notes", icon = " ", key = "n" },
+            { action = [[lua require("fzf-lua").oldfiles()]], desc = " Recent files", icon = " ", key = "o" },
+            { action = [[lua require("fzf-lua").live_grep()]], desc = " Find text", icon = " ", key = "g" },
             { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },
             { action = 'lua require("persistence").load()', desc = " Restore Session", icon = " ", key = "l" },
             { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "L" },

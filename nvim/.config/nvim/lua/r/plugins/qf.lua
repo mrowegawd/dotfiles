@@ -10,12 +10,9 @@ return {
       preview = {
         auto_preview = false,
         show_title = true,
-        wrap = false,
+        wrap = true,
         buf_label = true,
         should_preview_cb = nil,
-        win_height = 12,
-        win_vheight = 12,
-        delay_syntax = 80,
       },
       -- make `drop` and `tab drop` to become preferred
       func_map = {
@@ -57,7 +54,6 @@ return {
   },
   -- QFSILET
   {
-    -- "mrowegawd/qfsilet",
     dir = "~/.local/src/nvim_plugins/qfsilet",
     event = "LazyFile",
     opts = {

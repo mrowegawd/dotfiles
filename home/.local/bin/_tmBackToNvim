@@ -1,0 +1,7 @@
+#!/bin/bash
+
+[ -z "$TMUX" ] && exit
+
+SELECT=$(tmux list-panes -s -F "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $1; exit }')
+
+tmux select-pane -t "$SELECT" && tmux resize-pane -Z

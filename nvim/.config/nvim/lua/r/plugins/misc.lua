@@ -1,8 +1,8 @@
 return {
   -- NUI
-  { "MunifTanjim/nui.nvim", lazy = true }, -- jangan di delete, karena di utils.init masih yang menggunakan
-  { "nvim-lua/plenary.nvim", lazy = true },
-  { "nvim-tree/nvim-web-devicons", lazy = true },
+  { "MunifTanjim/nui.nvim" }, -- jangan di delete, karena di utils.init masih yang menggunakan
+  { "nvim-lua/plenary.nvim" },
+  { "nvim-tree/nvim-web-devicons" },
   -- VIM-LOG
   { "mtdl9/vim-log-highlighting", lazy = false },
   -- SUDA
@@ -55,31 +55,6 @@ return {
       },
     },
     opts = {},
-  },
-  -- NEOZOOM
-  {
-    "nyngwang/NeoZoom.lua",
-    keys = { { "<leader>z", "<CMD>NeoZoomToggle<CR>", desc = "Misc(neozoom): toggle" } },
-    opts = {
-      scrolloff_on_enter = 7,
-      exclude_buftypes = { "terminal" },
-    },
-  },
-  -- UNDOTREE (disabled)
-  {
-    "mbbill/undotree", -- use telescope now
-    enabled = false,
-    keys = {
-      { "<Leader>ru", "<CMD>UndotreeToggle<CR>", desc = "Misc(undotreetoggle): show" },
-    },
-    init = function()
-      vim.g.undotree_SplitWidth = 35
-      vim.g.undotree_DiffpanelHeight = 7
-      vim.g.undotree_WindowLayout = 2 -- Tree on the left, diff on the bottom
-
-      vim.g.undotree_TreeNodeShape = "◉"
-      vim.g.undotree_SetFocusWhenToggle = 1
-    end,
   },
   -- GKEEP
   {

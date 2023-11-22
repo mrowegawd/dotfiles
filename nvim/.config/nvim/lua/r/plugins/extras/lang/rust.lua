@@ -41,7 +41,6 @@ return {
   -- RUST-TOOLS
   {
     "simrat39/rust-tools.nvim",
-    lazy = true,
     opts = function()
       local ok, mason_registry = pcall(require, "mason-registry")
       local adapter ---@type any

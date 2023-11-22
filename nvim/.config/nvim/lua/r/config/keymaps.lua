@@ -1,5 +1,6 @@
 local silent = { silent = true }
 local nosilent = { silent = false }
+-- local moresilent = { noremap = true, expr = true, silent = true }
 
 local fn, cmd, fmt, map = vim.fn, vim.cmd, string.format, vim.keymap.set
 
@@ -16,6 +17,9 @@ local nmap = function(...)
 end
 local imap = function(...)
   recursive_map("i", ...)
+end
+local vmap = function(...)
+  recursive_map("v", ...)
 end
 
 local nnoremap = function(...)
@@ -68,6 +72,7 @@ imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 inoremap("<c-a>", "<c-O>^", silent)
 inoremap("<c-e>", "<c-O>$", silent)
 inoremap("<c-d>", "<c-O>dw", silent)
+inoremap("<c-c>", "<Esc>", silent)
 
 nnoremap("g,", "g,zvzz", silent) -- go last edit
 nnoremap("g;", "g;zvzz", silent) -- go prev edit
@@ -83,6 +88,19 @@ inoremap("<c-f>", "<S-Right>", silent)
 nnoremap("<c-g>", "/", nosilent)
 vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
+if not Util.has "bufferline.nvim" then
+  nnoremap("gl", "<cmd>bnext<CR>", silent)
+  nnoremap("gh", "<cmd>bprev<CR>", silent)
+end
+
+-- Automatically indent with i and A made by ycino
+-- inoremap("i", function()
+--   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "i" or '"_cc'
+-- end, moresilent)
+-- inoremap("A", function()
+--   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "A" or '"_cc'
+-- end, moresilent)
+
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MARKS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -97,15 +115,16 @@ vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the f
 -- end
 
 -- Always do center win, when do jump <c-o/i>
-nnoremap("<c-o>", "<c-o>zz")
-nnoremap("<c-i>", "<c-i>zz")
+-- nnoremap("<c-o>", "<c-o>zz")
+-- nnoremap("<c-i>", "<c-i>zz")
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ FOLDS                                                    │
 --  ╰──────────────────────────────────────────────────────────╯
 
 -- Focus the current fold by closing all others
-nnoremap("<space><space>", "zMzvzO", { desc = "fold: focus the current fold by closing all others" })
+nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
+nnoremap("zm", "zM")
 
 -- Make zO recursively open whatever top level fold we're in, no matter where the
 -- cursor happens to be.
@@ -114,51 +133,21 @@ nnoremap("<space><space>", "zMzvzO", { desc = "fold: focus the current fold by c
 -- Jump next/prev to closing fold
 nnoremap("<a-n>", function()
   return Util.fold.goNextClosedFold()
-end, { desc = "Folds: go next closed" })
+end, { desc = "Fold: go next closed" })
 nnoremap("<a-p>", function()
   return Util.fold.goPreviousClosedFold()
-end, { desc = "Folds: go prev closed" })
-
---  ╭──────────────────────────────────────────────────────────╮
---  │ BUFFERS                                                  │
---  ╰──────────────────────────────────────────────────────────╯
-if not Util.has "bufferline.nvim" then
-  nnoremap("<Leader>bO", function()
-    return Util.buf._only()
-  end, { desc = "Buffer: bufonly" })
-end
-
-nnoremap("<c-w>b", "<C-w><S-t>", { desc = "Buffer: break buffer into new tab" })
-nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
-nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffer" })
-
--- Alternate the buffer
-local dont_alternitefile = { "qf", "Outline", "neo-tree", "OverseerList" }
-nnoremap("<leader>bb", function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local ft = vim.bo[bufnr].filetype
-  if vim.tbl_contains(dont_alternitefile, ft) then
-    return
-  end
-  return Util.cmd.feedkey("<C-^>", "n")
-end, { desc = "Buffer: alternate file" })
-
---  ╭──────────────────────────────────────────────────────────╮
---  │ TABS                                                     │
---  ╰──────────────────────────────────────────────────────────╯
-nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab" })
-nnoremap("tl", "<CMD>tabn<CR>", { desc = "Tab: next tab" })
-nnoremap("th", "<CMD>tabp<CR>", { desc = "Tab: prev tab" })
-nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab" })
-nnoremap("tL", "<CMD>tabfirst<CR>", { desc = "Tab: last tab" })
-nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close" })
+end, { desc = "Fold: go prev closed" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ VISUAL                                                   │
 --  ╰──────────────────────────────────────────────────────────╯
 -- Cara mudah untuk cursor dari bawah ke atas dalam visual mode
-xnoremap("il", "$o0", { desc = "Visual: jump in" })
-onoremap("il", "<cmd>normal val<CR>", { desc = "Visual: jump out" })
+xnoremap("il", "<Esc>^vg_", { desc = "Visual: dont mistake" })
+onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "Visual: mistake" })
+
+xnoremap("al", "$o0", { desc = "Visual: jump in" })
+onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "Visual: jump out" })
+
 nnoremap("vv", [[^vg_]], { desc = "Visual: select text lines" })
 vnoremap(">", ">gv", { desc = "Visual: next align lines" })
 vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
@@ -182,10 +171,6 @@ nnoremap("<Leader>rd", function()
   end
 end, { desc = "Misc: search devdocs" })
 
-nnoremap("<Leader>rP", function()
-  return print(fn.expand "%:p")
-end, { desc = "Misc: check cwd curfile" })
-
 nnoremap("<Leader>cd", function()
   local filepath = fn.expand "%:p:h" -- code
   cmd(fmt("cd %s", filepath))
@@ -205,37 +190,68 @@ nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search 
 xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
--- Store relative line number jumps in the jumplist.
-nnoremap("k", [[ (v:count > 1 ? "m'" . v:count : "") . 'gk' ]], { expr = true })
-nnoremap("j", [[ (v:count > 1 ? "m'" . v:count : "") . 'gj' ]], { expr = true })
+-- Save jumps > 5 lines to the jumplist
+-- Jumps <= 5 respect line wraps
+-- nnoremap("j", [[(v:count > 1 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
+-- nnoremap("k", [[(v:count > 1 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
+nnoremap("j", [[(v:count > 1 ? "m'" . v:count : '') . 'gj']], { expr = true })
+nnoremap("k", [[(v:count > 1 ? "m'" . v:count : '') . 'gk']], { expr = true })
 
 --  ╭──────────────────────────────────────────────────────────╮
---  │ WINDOWS                                                  │
+--  │ WINDOWS AND NAV                                          │
 --  ╰──────────────────────────────────────────────────────────╯
 
-nnoremap("<c-w>v", "<CMD>vsplit<CR>", silent)
-nnoremap("<c-w>s", "<CMD>split<CR>", silent)
-nnoremap("<c-w><leader>", "<CMD>wincmd =<CR>", silent)
-nnoremap("<Leader>ww", "<C-W>p", silent)
-nnoremap("<c-w>J", "<C-W>t <C-W>K", { desc = "Windows: change two horizontally split windows to vertical splits" })
-nnoremap("<c-w>L", "<C-W>t <C-W>H", { desc = "Windows: change two vertically split windows to horizontal splits" })
+nnoremap("sv", "<CMD>vsplit<CR>", { desc = "WinNav: vsplit", silent = true })
+nnoremap("ss", "<CMD>split<CR>", { desc = "WinNav: split", silent = true })
+nnoremap("<c-w>v", [[<CMD> lua print("not allowed to use c-w v")<CR>]], { desc = "Misc: Remove" })
+nnoremap("<c-w>s", [[<CMD> lua print("not allowed to use c-w s")<CR>]], { desc = "Misc: Remove" })
+-- nnoremap("sa", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']], { expr = true })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ NAVIGATIONS                                              │
---  ╰──────────────────────────────────────────────────────────╯
+nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "WinNav: wincmd =", silent = true })
 
--- local isWindows, _ = pcall(require, "windows.nvim")
--- if not isWindows then
---   nnoremap("<C-h>", "<C-w>h", { desc = "Navigations: move left" })
---   nnoremap("<C-l>", "<C-w>l", { desc = "Navigations: move right" })
---   nnoremap("<C-j>", "<C-w>j", { desc = "Navigations: move down" })
---   nnoremap("<C-k>", "<C-w>k", { desc = "Navigations: move up" })
+nnoremap("sJ", "<C-W>t <C-W>K", { desc = "WinNav: force to splits", silent = true })
+nnoremap("sL", "<C-W>t <C-W>H", { desc = "WinNav: force to vsplits", silent = true })
 
---   nnoremap("<a-K>", "<cmd>resize +2<cr>", { desc = "Windows: resize window up" })
---   nnoremap("<a-J>", "<cmd>resize -2<cr>", { desc = "Windows: resize window down" })
---   nnoremap("<a-H>", "<cmd>vertical resize +2<cr>", { desc = "Windows: resize window right" })
---   nnoremap("<a-L>", "<cmd>vertical resize -2<cr>", { desc = "Windows: resize window left" })
+nnoremap("sc", "<CMD>q!<CR>")
+nnoremap("sC", "<CMD>qa!<CR>")
+
+nnoremap("sh", "<C-w>h", { desc = "WinNav: move left", silent = true })
+nnoremap("sl", "<C-w>l", { desc = "WinNav: move right", silent = true })
+nnoremap("sj", "<C-w>j", { desc = "WinNav: move down", silent = true })
+nnoremap("sk", "<C-w>k", { desc = "WinNav: move up", silent = true })
+
+nnoremap("sP", [[<CMD> lua print(vim.fn.expand "%:p") <CR>]], { desc = "WinNav: printout the path curbuf" })
+
+nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "WinNav(tab): new tab", silent = true })
+nnoremap("tc", "<CMD>tabclose<CR>", { desc = "WinNav(tab): close", silent = true })
+
+nnoremap("tl", "<CMD>tabn<CR>", { desc = "WinNav(tab): next tab", silent = true })
+nnoremap("th", "<CMD>tabp<CR>", { desc = "WinNav(tab): prev tab", silent = true })
+
+nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "WinNav(tab): first tab", silent = true })
+nnoremap("tL", "<CMD>tablast<CR>", { desc = "WinNav(tab): last tab", silent = true })
+
+-- Alternate the buffer
+local dont_alternitefile = { "qf", "Outline", "neo-tree", "OverseerList" }
+nnoremap("sbb", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local ft = vim.bo[bufnr].filetype
+  if vim.tbl_contains(dont_alternitefile, ft) then
+    return
+  end
+  return Util.cmd.feedkey("<C-^>", "n")
+end, { desc = "WinNav(buffer): alternate file" })
+
+-- if not Util.has "bufferline.nvim" then
+--   nnoremap("sO", function()
+--     return Util.buf._only()
+--   end, { desc = "Buffer: bufonly" })
 -- end
+
+nnoremap("sT", "<C-w><S-t>", { desc = "WinNav(buffer): break buffer into new tab" })
+
+nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
+nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffer" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │
@@ -262,13 +278,12 @@ Util.cmd.augroup("AddTerminalMappings", {
   pattern = { "term://*" },
   command = function()
     if vim.bo.filetype == "" or vim.bo.filetype == "toggleterm" then
-      tnoremap("<F1>", "<C-w>w", { desc = "Terminal change window" })
-      tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
-      tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal left window navigation" })
-      tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal down window navigation" })
-      tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal up window navigation" })
-      tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal right window naviation" })
-      tnoremap("<a-/>", "<cmd>close<cr>", { desc = "Terminal close" })
+      tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+      tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window navigation" })
+      tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal; down window navigation" })
+      tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window navigation" })
+      tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window naviation" })
+      -- tnoremap("<a-/>", "<cmd>close<cr>", { desc = "Terminal: close" })
     end
   end,
 })
@@ -300,6 +315,11 @@ cabbrev("bD", "bd!")
 cabbrev("Bd", "bd!")
 cabbrev("bd", "bd!")
 
+-- I don't need help to show when I type <F1>.
+nmap("<F1>", "<Nop>")
+imap("<F1>", "<Nop>")
+vmap("K", "<Nop>")
+
 --  ┌──────────────────────────────────────────────────────────┐
 --  │                          MAGIC                           │
 --  └──────────────────────────────────────────────────────────┘
@@ -310,56 +330,15 @@ local function magic_quit()
     ["fugitive"] = "bd",
     ["Trouble"] = "bd",
     ["help"] = "bd",
-    -- ["norg"] = "bd",
-    -- ["org"] = "bd",
     ["octo"] = "bd",
     ["log"] = "bd",
-
-    ["alpha"] = "q",
-    ["spectre_panel"] = "q",
-    ["OverseerForm"] = "q!",
-    ["orgagenda"] = "q",
-    ["markdown"] = "q",
-    ["NeogitStatus"] = "q",
-    ["checkhealth"] = "q",
-    ["neo-tree"] = "NeoTreeShowClose",
     ["DiffviewFileHistory"] = "DiffviewClose",
   }
 
-  local alias_mode = { i = "I", c = "C", V = "V", [""] = "V" }
-  if alias_mode[vim.fn.mode()] ~= nil then
-    return Util.cmd.feedkey("<esc>", "n")
-  end
-
-  local list_wins = {}
-
-  for _, winid in pairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_is_valid(winid) then
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-      if filetype ~= "notify" then
-        table.insert(list_wins, winid)
-      end
-    end
-  end
-
-  if #list_wins > 0 then
-    for _, winid in pairs(list_wins) do
-      local bufnr = vim.api.nvim_win_get_buf(winid)
-      local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-
-      if buf_fts[filetype] ~= nil and vim.bo[0].filetype == buf_fts[filetype] then
-        if buf_fts[filetype] == "q" then
-          return Util.cmd.feedkey(":q<cr>", "n")
-        elseif buf_fts[filetype] == "bd" then
-          return Util.cmd.feedkey(":bd<cr>", "n")
-        else
-          return vim.cmd(buf_fts[filetype])
-        end
-      else
-        return Util.cmd.feedkey(":q<cr>", "n")
-      end
-    end
+  if buf_fts[vim.bo[0].filetype] then
+    vim.cmd(buf_fts[vim.bo[0].filetype])
+  else
+    vim.cmd [[q!]]
   end
 end
 nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
@@ -410,6 +389,8 @@ nmap("zz", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? '
 -- Scroll step sideways
 nnoremap("zl", "z4l")
 nnoremap("zh", "z4h")
+nnoremap("zL", "z60l")
+nnoremap("zH", "z60h")
 
 nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
 nnoremap("<C-f>", [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]], { expr = true })

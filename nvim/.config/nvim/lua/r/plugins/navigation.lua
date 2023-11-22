@@ -22,7 +22,10 @@ return {
             return cmd [[q]]
           end
           Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-          return cmd "Neotree toggle"
+          if vim.bo[0].filetype == "norg" then
+            return cmd "Neotree toggle "
+          end
+          return cmd "Neotree toggle reveal"
         end,
         desc = "Misc(neotree): open File explore",
       },
@@ -113,12 +116,12 @@ return {
           window = {
             mappings = {
               ["H"] = "toggle_hidden",
-              ["<leader>ff"] = "fuzzy_finder",
-              ["gf"] = "filter_on_submit",
-              ["<C-x>"] = "clear_filter",
+              -- ["<leader>ff"] = "fuzzy_finder",
+              -- ["<Leader>ff"] = "filter_on_submit",
+              -- ["gd"] = "fuzzy_finder_directory",
+              -- ["<C-x>"] = "clear_filter",
               ["gp"] = "prev_git_modified",
               ["gn"] = "next_git_modified",
-              ["gd"] = "fuzzy_finder_directory",
               --["/"] = "filter_as_you_type", -- this was the default until v1.28
               -- ["D"] = "fuzzy_sorter_directory",
               -- ["/"] = "noop",
@@ -128,8 +131,10 @@ return {
         default_component_configs = {
           indent = {
             with_expanders = true, -- if nil and file nesting is enabled, will enable expanders
-            expander_collapsed = "",
-            expander_expanded = "",
+            -- expander_collapsed = "",
+            -- expander_expanded = "",
+            expander_collapsed = "",
+            expander_expanded = "",
             expander_highlight = "NeoTreeExpander",
           },
         },
@@ -195,6 +200,8 @@ return {
               config = { use_float = true },
             },
             ["o"] = "open",
+            ["s"] = "",
+            ["z"] = "noop",
             -- ["<CR>"] = "child_or_open",
             -- ["<c-s>"] = "split_with_window_picker",
             -- ["<c-v>"] = "vsplit_with_window_picker",
@@ -239,10 +246,10 @@ return {
         { NeoTreeCursorLine = { link = "CursorLine" } },
         { NeoTreeRootName = { underline = false } },
         { NeoTreeStatusLine = { link = "PanelStusLine" } },
+        { NeoTreeGitModified = { bg = "NONE" } },
         { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-        {
-          NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } },
-        },
+        { NeoTreeIndentMarker = { fg = { from = "ColorColumn", attr = "bg", alter = 0.2 }, bold = false } },
+        { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
         { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
         {
           NeoTreeTabSeparatorInactive = {
