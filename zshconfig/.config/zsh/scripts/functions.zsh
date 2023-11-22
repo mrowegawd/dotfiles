@@ -18,7 +18,7 @@ build-nvim() {
 build-install(){
   # TODO: install apt seperti urlview
   apt_install="urlview"
-
+V
   # TODO: install cargo seperti eza, lazygit, etc
   cargo_install="eza"
 
@@ -76,42 +76,18 @@ function fg-bg(){
 zle -N fg-bg
 bindkey '^z' fg-bg
 
-cursor_mode() {
-  # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
-  cursor_block='\e[2 q'
-  cursor_beam='\e[6 q'
-
-  function zle-keymap-select {
-    if [[ ${KEYMAP} == vicmd ]] ||
-    [[ $1 = 'block' ]]; then
-      echo -ne $cursor_block
-    elif [[ ${KEYMAP} == main ]] ||
-    [[ ${KEYMAP} == viins ]] ||
-    [[ ${KEYMAP} = '' ]] ||
-    [[ $1 = 'beam' ]]; then
-      echo -ne $cursor_beam
-    fi
-  }
-
-  zle-line-init() {
-    echo -ne $cursor_beam
-  }
-
-  zle -N zle-keymap-select
-  zle -N zle-line-init
-}
-
 find-in-file() {
   local _file="$(rg --color=always --line-number --no-heading --smart-case "${@:-^[^\n]}" \
     | fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
     --preview-window='50%' --height='50%' --with-nth 1,3.. --exact)"
 
   _file="${_file%%:*}"
-  [ -z "$_file" ] && exit
-  exec nvim "$_file"
+  if [[ -n $_file ]]; then
+    exec nvim "$_file"
+  fi
+
+  zle accept-line
 }
 
 zle -N find-in-file
 bindkey '^g' find-in-file
-
-cursor_mode
