@@ -63,7 +63,7 @@ run-mark() {
 }
 
 zle -N run-mark
-bindkey '^g' run-mark
+bindkey '^j' run-mark
 
 function fg-bg(){
   if [[ $#BUFFER -eq 0 ]]; then
@@ -100,5 +100,18 @@ cursor_mode() {
   zle -N zle-keymap-select
   zle -N zle-line-init
 }
+
+find-in-file() {
+  local _file="$(rg --color=always --line-number --no-heading --smart-case "${@:-^[^\n]}" \
+    | fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
+    --preview-window='50%' --height='50%' --with-nth 1,3.. --exact)"
+
+  _file="${_file%%:*}"
+  [ -z "$_file" ] && exit
+  exec nvim "$_file"
+}
+
+zle -N find-in-file
+bindkey '^g' find-in-file
 
 cursor_mode
