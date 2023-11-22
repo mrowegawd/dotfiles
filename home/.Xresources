@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/flesh-and-blood"
+#include ".config/miscxrdb/xresource-theme/tokyonight"
 
 ! --------------
 ! XFT SETTINGS

@@ -637,10 +637,9 @@ return {
     cmd = { "RmuxEDITConfig" },
     keys = {
       { "rf", "<Cmd> RmuxRunFile <CR>" },
-      { "rP", "<Cmd> RmuxSetPane <CR>" },
-      { "rR", "<Cmd> RmuxREPL <CR>" },
+      { "rp", "<Cmd> RmuxREPL <CR>" },
       { "rl", "<Cmd> RmuxSendline <CR>" },
-      { "rl", "<Cmd> VRemuxSendline <CR>", mode = { "v" } },
+      { "rl", "<Cmd> RmuxSendVisualSelection <CR>", mode = { "v" } },
       { "ri", "<Cmd> RmuxSendInterrupt <CR>" },
       { "rI", "<Cmd> RmuxSendInterruptAll <CR>" },
       { "rt", "<Cmd> RmuxTargetPane <CR>" },
@@ -649,7 +648,9 @@ return {
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
+
       { "rE", "<Cmd> RmuxREDITConfig <CR>" },
+      { "<Localleader><Localleader>", "<Cmd> RmuxZoom <CR>", mode = { "n", "v" } },
     },
     opts = {
       base = {
@@ -657,7 +658,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
-        run_with = "tmux", -- tmux, tt
+        run_with = "mux", -- mux, tt, toggleterm
       },
     },
     config = function(_, opts)

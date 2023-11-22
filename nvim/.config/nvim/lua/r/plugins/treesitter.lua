@@ -57,7 +57,6 @@ return {
   -- NVIM-TS-COMMENTSTRING
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = true,
     opts = { enable_autocmd = false },
   },
   -- NVIM-TS-AUTOTAG
@@ -163,7 +162,7 @@ return {
         auto_install = false,
 
         highlight = {
-          enable = false, -- atm disabled it, nvim got slow
+          enable = true, -- atm disabled it, nvim got slow
           -- disable = should_disable,
           additional_vim_regex_highlighting = { "orgmode", "org", "markdown" },
         },

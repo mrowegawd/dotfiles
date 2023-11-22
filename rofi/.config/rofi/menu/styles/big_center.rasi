@@ -1,5 +1,5 @@
 configuration {
-    font: 						            "Iosevka Nerd Font 11";
+    font: 						            "SF Mono 11";
     /* padding: 					            0; */
     fixed-num-lines: 	            true;
     show-icons: 			            false;

@@ -126,7 +126,7 @@ local options = {
     -- this gets overwritten by ftplugins (:verb set fo)
     -- we use autocmd to remove 'o' in '/lua/autocmd.lua'
     -- [comments borrowed from tjdevries]
-    formatoptions = "jcroqlnt", -- tcqj
+    formatoptions = "jtcqln", -- tcqj
 
     splitkeep = "screen",
     splitbelow = true, -- ':new' ':split' below current

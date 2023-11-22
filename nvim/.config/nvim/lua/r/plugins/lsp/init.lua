@@ -60,7 +60,6 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     opts = {
-      -- options for vim.diagnostic.config()
       diagnostics = {
         underline = true,
         update_in_insert = false,
@@ -165,7 +164,7 @@ return {
         DEFINITION = "definitionProvider",
       }
 
-      -- setup formatting and keymaps
+      -- Setup formatting and keymaps
       Util.lsp.on_attach(function(client, bufnr)
         require("r.plugins.lsp.keymaps").on_attach(client, bufnr)
 
@@ -182,6 +181,24 @@ return {
               if vim.g.codelens_enabled then
                 vim.lsp.codelens.refresh()
               end
+            end,
+          })
+        end
+
+        if client.server_capabilities[provider.REFERENCES] then
+          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+            event = { "CursorHold", "CursorHoldI" },
+            buffer = bufnr,
+            desc = "LSP: References",
+            command = function()
+              vim.lsp.buf.document_highlight()
+            end,
+          }, {
+            event = "CursorMoved",
+            desc = "LSP: References Clear",
+            buffer = bufnr,
+            command = function()
+              vim.lsp.buf.clear_references()
             end,
           })
         end

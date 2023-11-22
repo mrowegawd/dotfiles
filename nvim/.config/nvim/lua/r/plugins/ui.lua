@@ -46,6 +46,7 @@ return {
       scope = { enabled = false },
       indent = {
         char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+        tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
       },
       exclude = {
         filetypes = {

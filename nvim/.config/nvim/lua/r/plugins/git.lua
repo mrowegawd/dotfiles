@@ -49,11 +49,27 @@ return {
   -- GITLINKER
   {
     "ruifm/gitlinker.nvim", -- generate shareable file permalinks
-    event = "BufReadPre",
+    keys = {
+      {
+        "<Leader>go",
+        "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        { desc = "Git(gitlinker): range URL repo on browser" },
+      },
+      {
+        "<Leader>gO",
+        "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        { desc = "Git(gitlinker): open URL repo" },
+      },
+      {
+        "<Leader>go",
+        "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
+        {
+          desc = "Git(gitlinker): range URL repo on browser (visual)",
+        },
+      },
+      { "<leader>gy" },
+    },
     opts = { mappings = "<Leader>gy" },
-    config = function(_, opts)
-      require("gitlinker").setup(opts)
-    end,
   },
   -- OCTO
   {
@@ -247,7 +263,6 @@ return {
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
-    -- event = "VeryLazy",
     cmd = { "DiffviewOpen", "DiffviewFileHistory" },
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()

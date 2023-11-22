@@ -1619,7 +1619,6 @@ Keybindings:
   -- DRESSING
   {
     "stevearc/dressing.nvim",
-    lazy = true,
     init = function()
       vim.ui.select = function(...)
         require("lazy").load { plugins = { "dressing.nvim" } }

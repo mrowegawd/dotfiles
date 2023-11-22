@@ -22,6 +22,9 @@ return {
             return cmd [[q]]
           end
           Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+          if vim.bo[0].filetype == "norg" then
+            return cmd "Neotree toggle "
+          end
           return cmd "Neotree toggle reveal"
         end,
         desc = "Misc(neotree): open File explore",
@@ -243,6 +246,7 @@ return {
         { NeoTreeCursorLine = { link = "CursorLine" } },
         { NeoTreeRootName = { underline = false } },
         { NeoTreeStatusLine = { link = "PanelStusLine" } },
+        { NeoTreeGitModified = { bg = "NONE" } },
         { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
         { NeoTreeIndentMarker = { fg = { from = "ColorColumn", attr = "bg", alter = 0.2 }, bold = false } },
         { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },

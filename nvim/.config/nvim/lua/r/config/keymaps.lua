@@ -1,6 +1,6 @@
 local silent = { silent = true }
 local nosilent = { silent = false }
-local moresilent = { noremap = true, expr = true, silent = true }
+-- local moresilent = { noremap = true, expr = true, silent = true }
 
 local fn, cmd, fmt, map = vim.fn, vim.cmd, string.format, vim.keymap.set
 
@@ -17,6 +17,9 @@ local nmap = function(...)
 end
 local imap = function(...)
   recursive_map("i", ...)
+end
+local vmap = function(...)
+  recursive_map("v", ...)
 end
 
 local nnoremap = function(...)
@@ -112,8 +115,8 @@ end
 -- end
 
 -- Always do center win, when do jump <c-o/i>
-nnoremap("<c-o>", "<c-o>zz")
-nnoremap("<c-i>", "<c-i>zz")
+-- nnoremap("<c-o>", "<c-o>zz")
+-- nnoremap("<c-i>", "<c-i>zz")
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ FOLDS                                                    │
@@ -189,8 +192,10 @@ onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search 
 
 -- Save jumps > 5 lines to the jumplist
 -- Jumps <= 5 respect line wraps
-nnoremap("j", [[(v:count > 1 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
-nnoremap("k", [[(v:count > 1 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
+-- nnoremap("j", [[(v:count > 1 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
+-- nnoremap("k", [[(v:count > 1 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
+nnoremap("j", [[(v:count > 1 ? "m'" . v:count : '') . 'gj']], { expr = true })
+nnoremap("k", [[(v:count > 1 ? "m'" . v:count : '') . 'gk']], { expr = true })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS AND NAV                                          │
@@ -273,12 +278,12 @@ Util.cmd.augroup("AddTerminalMappings", {
   pattern = { "term://*" },
   command = function()
     if vim.bo.filetype == "" or vim.bo.filetype == "toggleterm" then
-      tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
-      tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal left window navigation" })
-      tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal down window navigation" })
-      tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal up window navigation" })
-      tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal right window naviation" })
-      tnoremap("<a-/>", "<cmd>close<cr>", { desc = "Terminal close" })
+      tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+      tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window navigation" })
+      tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal; down window navigation" })
+      tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window navigation" })
+      tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window naviation" })
+      -- tnoremap("<a-/>", "<cmd>close<cr>", { desc = "Terminal: close" })
     end
   end,
 })
@@ -313,6 +318,7 @@ cabbrev("bd", "bd!")
 -- I don't need help to show when I type <F1>.
 nmap("<F1>", "<Nop>")
 imap("<F1>", "<Nop>")
+vmap("K", "<Nop>")
 
 --  ┌──────────────────────────────────────────────────────────┐
 --  │                          MAGIC                           │

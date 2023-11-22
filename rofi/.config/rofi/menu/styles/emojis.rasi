@@ -1,6 +1,6 @@
 
 configuration {
-	  font:							              "Iosevka Nerd Font 12";
+	  font:							              "SF Mono 12";
 	  icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
     disable-history:                false;

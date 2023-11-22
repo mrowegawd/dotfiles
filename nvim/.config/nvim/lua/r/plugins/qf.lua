@@ -54,7 +54,6 @@ return {
   },
   -- QFSILET
   {
-    -- "mrowegawd/qfsilet",
     dir = "~/.local/src/nvim_plugins/qfsilet",
     event = "LazyFile",
     opts = {

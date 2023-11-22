@@ -2,8 +2,10 @@ return {
   -- NOUGAT
   {
     "MunifTanjim/nougat.nvim",
-    event = "BufEnter",
+    event = "LazyFile",
     config = function()
+      local highlight = require "r.config.highlights"
+
       local core = require "nougat.core"
       local Bar = require "nougat.bar"
       local bar_util = require "nougat.bar.util"
@@ -36,18 +38,22 @@ return {
       }
 
       local color = {
-        bg = "#1d2021",
+        bg = highlight.get("Normal", "bg") or "#1d2021",
         bg0_h = "#1d2021",
         bg0 = "#282828",
         bg0_s = "#32302f",
-        bg1 = "#3c3836",
-        bg2 = "#504945",
-        bg3 = "#665c54",
+        bg1 = highlight.tint(highlight.get("@field", "fg"), -0.7) or "#3c3836",
+        bg2 = highlight.tint(highlight.get("@attribute", "fg"), -0.25) or "#504945",
+        bg3 = highlight.tint(highlight.get("ColorColumn", "bg"), 0.8) or "#665c54",
         bg4 = "#7c6f64",
+
+        bg5 = highlight.tint(highlight.get("ColorColumn", "bg"), 0.2) or "#665c54",
+        bg5_ft = highlight.tint(highlight.get("ColorColumn", "bg"), -0.2) or "#665c54",
 
         gray = "#928374",
 
-        fg = "#ebdbb2",
+        fg = highlight.tint(highlight.get("ColorColumn", "bg"), -0.4) or "#665c54",
+
         fg0 = "#fbf1c7",
         fg1 = "#ebdbb2",
         fg2 = "#d5c4a1",
@@ -59,10 +65,21 @@ return {
         red = "#fb4934",
         green = "#b8bb26",
         yellow = "#fabd2f",
-        blue = "#83a598",
-        purple = "#d3869b",
+        blue = highlight.tint(highlight.get("@attribute", "fg"), -0.8) or "#83a598",
+
+        purple = highlight.tint(highlight.get("@field", "fg"), 0.2) or "#d3869b",
         aqua = "#8ec07c",
         orange = "#f38019",
+        visual = highlight.tint(highlight.get("Visual", "bg"), 0.8) or "#d3869b",
+
+        ft_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.5) or "#d3869b",
+        insert_bg = highlight.tint(highlight.get("Error", "fg"), -0.1) or "#b8bb26",
+
+        sectionlast_bg = highlight.tint(highlight.get("Function", "fg"), -0.1) or "#b8bb26",
+        sectionlineNum_bg = highlight.tint(highlight.get("@field", "fg"), -0.1) or "#b8bb26",
+        sectionFiletype_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.8) or "#b8bb26",
+        sectionFilename_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 1.5) or "#b8bb26",
+        sectionGitstatus_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.5) or "#b8bb26",
 
         accent = {
           red = "#cc241d",
@@ -86,11 +103,11 @@ return {
               fg = color.bg,
             },
             visual = {
-              bg = color.orange,
+              bg = color.visual,
               fg = color.bg,
             },
             insert = {
-              bg = color.blue,
+              bg = color.insert_bg,
               fg = color.bg,
             },
             replace = {
@@ -119,14 +136,14 @@ return {
         sep_right = sep.right_chevron_solid(true),
       })
       stl:add_item(nut.git.status.create {
-        hl = { bg = color.bg1 },
+        hl = { bg = color.sectionGitstatus_bg },
         content = {
           nut.git.status.count("added", {
             hl = { fg = color.green },
             prefix = " +",
           }),
           nut.git.status.count("changed", {
-            hl = { fg = color.blue },
+            hl = { fg = color.yellow },
             prefix = " ~",
           }),
           nut.git.status.count("removed", {
@@ -138,12 +155,12 @@ return {
         sep_right = sep.right_chevron_solid(true),
       })
       local filename = stl:add_item(nut.buf.filename {
-        hl = { bg = color.bg3 },
+        hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = true },
         prefix = " ",
         suffix = " ",
       })
       local filestatus = stl:add_item(nut.buf.filestatus {
-        hl = { bg = color.bg3 },
+        hl = { bg = color.sectionFilename_bg, fg = color.bg },
         suffix = " ",
         sep_right = sep.right_chevron_solid(true),
         config = {
@@ -177,7 +194,7 @@ return {
       })
       stl:add_item(nut.buf.diagnostic_count {
         hidden = false,
-        hl = { bg = color.blue, fg = color.bg },
+        hl = { bg = "fg", fg = color.bg },
         sep_left = sep.left_chevron_solid(true),
         prefix = " ",
         suffix = " ",
@@ -195,13 +212,13 @@ return {
         },
       })
       stl:add_item(nut.buf.filetype {
-        hl = { bg = color.bg1 },
+        hl = { bg = color.sectionFiletype_bg, fg = color.bg },
         sep_left = sep.left_chevron_solid(true),
         prefix = " ",
         suffix = " ",
       })
       stl:add_item(Item {
-        hl = { bg = color.bg2, fg = color.blue },
+        hl = { bg = color.sectionlineNum_bg, fg = color.fg },
         sep_left = sep.left_chevron_solid(true),
         prefix = "  ",
         content = core.group {
@@ -212,7 +229,7 @@ return {
         suffix = " ",
       })
       stl:add_item(Item {
-        hl = { bg = color.blue, fg = color.bg },
+        hl = { bg = color.sectionlast_bg, fg = color.bg },
         sep_left = sep.left_chevron_solid(true),
         prefix = " ",
         content = core.code "P",
@@ -233,7 +250,8 @@ return {
 
       tal:add_item(nut.tab.tablist.tabs {
         active_tab = {
-          hl = { bg = color.bg0_h, fg = color.blue },
+          -- hl = { bg = color.bg0_h, fg = color.blue },
+          hl = { bg = color.bg3, fg = color.bg },
           prefix = " ",
           suffix = " ",
           content = {
@@ -245,7 +263,7 @@ return {
           sep_right = sep.right_chevron_solid(true),
         },
         inactive_tab = {
-          hl = { bg = color.bg2, fg = color.fg2 },
+          hl = { bg = color.bg5, fg = color.bg5_ft },
           prefix = " ",
           suffix = " ",
           content = {

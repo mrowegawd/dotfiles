@@ -3,7 +3,7 @@
 NORMAL=$(xgetres color12)
 RED=$(xgetres color1)
 
-DATA="󰚰 "
+DATA="󰚰"
 ICON="$HOME/.config/miscxrdb/icons/backup-file.png"
 TITLE="Task And Notes"
 

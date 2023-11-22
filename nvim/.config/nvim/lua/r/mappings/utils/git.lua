@@ -69,33 +69,9 @@ function M.diffview(bufnr)
   nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare two window with diff" })
 end
 
-function M.gitlinker(bufnr)
-  nnoremap(
-    "<Leader>go",
-    "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-    {
-      desc = "Git(gitlinker): range URL repo on browser",
-      buffer = bufnr,
-    }
-  )
-  vnoremap(
-    "<Leader>go",
-    "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-    {
-      desc = "Git(gitlinker): range URL repo on browser (visual)",
-      buffer = bufnr,
-    }
-  )
-  nnoremap(
-    "<Leader>gO",
-    "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-    { desc = "Git(gitlinker): open URL repo", buffer = bufnr }
-  )
-end
 
 -- stylua: ignore
 function M.signs(bufnr, gs)
-  M.gitlinker(bufnr)
   M.diffview(bufnr)
 
   nnoremap("gq", gs.setqflist, { desc = "Git(gitsigns): collect git hunks on qf", buffer = bufnr })

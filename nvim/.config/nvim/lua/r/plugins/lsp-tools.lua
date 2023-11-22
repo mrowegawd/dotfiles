@@ -832,8 +832,6 @@ return {
                 return
               end
 
-              -- vim.notify "not yet implemented"
-
               local cursor = api.nvim_win_get_cursor(menu.win)
               local component = menu.entries[cursor[1]]:first_clickable(cursor[2])
               if component ~= nil then
@@ -854,6 +852,7 @@ return {
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
+    enabled = false,
     event = "LazyFile",
     opts = {
       delay = 200,

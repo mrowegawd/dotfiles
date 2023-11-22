@@ -45,9 +45,10 @@ return {
       }
     end,
   },
-  -- TOGGLETERM
+  -- TOGGLETERM (disabled)
   {
     "akinsho/nvim-toggleterm.lua",
+    enabled = false,
     opts = {
       size = 20,
       hide_numbers = true,
@@ -104,7 +105,7 @@ return {
           close_term()
           term_count = term_count + 1
         else
-          if total_term_spawned == 0 then
+          if total_term_spawned == 1 then
             return
           end
 
@@ -177,6 +178,12 @@ return {
             end
           end,
           desc = "Terminal(toggleterm): remove",
+          mode = { "n", "t", "v" },
+        },
+        {
+          "<Localleader>tl",
+          "<CMD> ToggleTerm direction=vertical size=100 <CR>",
+          desc = "Terminal(toggleterm): open left side",
           mode = { "n", "t", "v" },
         },
       }

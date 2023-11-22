@@ -7,13 +7,13 @@ local M = {}
 ---@param buf number
 ---@param lnum number
 function M.get_signs(buf, lnum)
-  -- Get regular signs
-  ---@type Sign[]
   local signs = vim.tbl_map(function(sign)
-    ---@type Sign
     local ret = vim.fn.sign_getdefined(sign.name)[1]
-    ret.priority = sign.priority
-    return ret
+    if ret ~= nil then
+      ret.priority = sign.priority
+      return ret
+    end
+    return {}
   end, vim.fn.sign_getplaced(buf, { group = "*", lnum = lnum })[1].signs)
 
   -- Get extmark signs
@@ -85,13 +85,9 @@ end
 
 function M.statuscolumn()
   local win = vim.g.statusline_winid
-  local show_signs, buf, is_file
-
-  if win ~= nil then
-    buf = vim.api.nvim_win_get_buf(win)
-    is_file = vim.bo[buf].buftype == ""
-    show_signs = vim.wo[win].signcolumn ~= "no"
-  end
+  local buf = vim.api.nvim_win_get_buf(win)
+  local is_file = vim.bo[buf].buftype == ""
+  local show_signs = vim.wo[win].signcolumn ~= "no"
 
   local components = { "", "", "" } -- left, middle, right
 

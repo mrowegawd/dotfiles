@@ -1,9 +1,6 @@
 local colorscheme = require("r.config").colorscheme
 
 return {
-  ---------------------------------------------------------------------------
-  -- Consistent color
-  ---------------------------------------------------------------------------
   -- FLESH-AND-BLOOD
   {
     "sainttttt/flesh-and-blood",
@@ -150,20 +147,6 @@ return {
       require("solarized").setup()
     end,
   },
-  -- DARCUBOX
-  {
-    "dotsilas/darcubox-nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      local colordarcubox = { "darcubox" }
-      if vim.tbl_contains(colordarcubox, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = true,
-  },
   -- MIASMA
   {
     "xero/miasma.nvim",
@@ -193,6 +176,51 @@ return {
       require("everforest").setup {
         background = "medium",
       }
+    end,
+  },
+  -- NIGHTFOX.NVIM
+  {
+    "EdenEast/nightfox.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local nightfoxtheme = { "dawnfox", "terafox" }
+      if vim.tbl_contains(nightfoxtheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = function()
+      return {
+        styles = { -- Style to be applied to different syntax groups
+          comments = "italic", -- Value is any valid attr-list value `:help attr-list`
+          -- conditionals = "NONE",
+          -- constants = "NONE",
+          -- functions = "NONE",
+          keywords = "bold",
+          -- numbers = "NONE",
+          -- operators = "NONE",
+          -- strings = "NONE",
+          types = "italic,bold",
+          -- variables = "NONE",
+        },
+      }
+    end,
+  },
+  -- SEOUL256
+  {
+    "junegunn/seoul256.vim",
+    lazy = false,
+    priority = 1000,
+    -- init = function()
+    --   vim.g.seoul256_background = 256
+    -- end,
+    enabled = function()
+      local seoul256theme = { "seoul256" }
+      if vim.tbl_contains(seoul256theme, colorscheme) then
+        return true
+      end
+      return false
     end,
   },
   -- GRUVBOX.NVIM
@@ -239,8 +267,8 @@ return {
         },
         styles = {
           comments = { italic = true },
-          functions = {},
-          variables = {},
+          -- functions = { italic = true },
+          -- variables = { italic = true },
         },
         dim_inactive = false, -- dims inactive windows
         transparent = false, -- true
@@ -264,20 +292,16 @@ return {
       style = "warmer",
     },
   },
-  ---------------------------------------------------------------------------
-  -- Not recommended colorscheme
-  ---------------------------------------------------------------------------
   -- OXOCARBON
-  { "shaunsingh/oxocarbon.nvim", lazy = false, enabled = true },
-  -- KYNTELL
   {
-    "romgrk/kyntell.vim",
+    "shaunsingh/oxocarbon.nvim",
     lazy = false,
+    priority = 1000,
     enabled = function()
-      if colorscheme == "kyntell" then
+      local oxocarbontheme = { "oxocarbon" }
+      if vim.tbl_contains(oxocarbontheme, colorscheme) then
         return true
       end
-      return false
     end,
   },
 }

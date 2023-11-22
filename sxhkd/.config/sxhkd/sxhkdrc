@@ -98,10 +98,12 @@ super + u
 
 # misc: open terminal
 super + Return
-        st
-        # alacritty
+        alacritty
+        # wezterm
+        # wezterm
         # kitty
         # wezterm
+        # st
         # st -e tmux
         # kitty -o allow_remote_control=yes --single-instance --listen-on unix:@mykitty
 
