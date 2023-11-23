@@ -103,7 +103,7 @@ cmd fzf_search ${{
 cmd watch_mpv_playlist ${{
     # ls -t1 . | sort > /tmp/mylist_mpv
     IFS=$'\n' ; mpv -ontop -no-border -force-window \
-			--autofit=500x500 --geometry=-15-60 $(ls -t1 . | sort)
+			--autofit=800x900 --geometry=-15-60 $(ls -t1 . | sort)
 }}
 
 cmd bulkrename $vidir

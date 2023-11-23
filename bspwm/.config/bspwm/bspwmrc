@@ -2,40 +2,6 @@
 
 export SXHKD_SHELL=/usr/bin/sh
 
-# remove x cursor
-# xsetroot -cursor_name left_ptr &
-xsetroot -cursor_name left_ptr
-
-run_disowned() {
-	nohup "$@" >/dev/null 2>&1 &
-}
-
-killall sxhkd
-run_disowned sxhkd
-
-# launch auto start application
-startup_lock_file=/tmp/bspwm-startup.lock
-if [ ! -f $startup_lock_file ]; then
-
-	echo "dummy" >$startup_lock_file
-
-	"$HOME/.config/bspwm/autostart.sh"
-
-	# killall mpd
-	# mpd &
-
-	sleep 2
-
-	st &
-
-	sleep 2
-
-	firefox &
-
-	sleep 2
-
-fi
-
 getcolors() {
 	# activate=$(xrdb -query | grep foreground | awk '{print $NF}')
 	inactive=$(xrdb -query | grep background | cut -d':' -f2 | sed 's/ //g' | xargs)
@@ -54,6 +20,7 @@ bspc config presel_feedback_color "$MAGENTA"
 # bspc monitor -d I II III IV V VI VII VIII IX X
 # bspc monitor -d term web todo pdfile code docs music misc
 bspc monitor -d 1 2 3 4 5 6
+# bspc monitor -d ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉
 
 CURRENT_BORDER=2
 CURRENT_GAP=15
@@ -80,6 +47,9 @@ bspc config external_rules_command "$HOME/.config/miscxrdb/bpswm/scripts/bspc-ex
 desk_code="1"
 desk_web="2"
 desk_doc="3"
+
+# remove all rules first
+bspc rule -r "*"
 
 # term
 bspc rule -a URxvt:ncmpcpp state=floating
@@ -113,3 +83,41 @@ bspc rule -a '*:soffice' state=tiled desktop=$desk_doc
 # bspc rule -a 'Zathura' desktop='file' follow=on state=tiled
 
 bspc wm --record-history on
+
+# remove x cursor
+# xsetroot -cursor_name left_ptr &
+xsetroot -cursor_name left_ptr
+
+run_disowned() {
+	nohup "$@" >/dev/null 2>&1 &
+}
+
+#Don't run if it's running
+run_once() {
+	pidof "$(basename "$1")" || run_disowned "$@"
+}
+
+# Reload sxhkd manually cause using USR1 hangs the keyboard frome time to time
+pkill sxhkd
+run_disowned sxhkd
+run_once xsettingsd
+
+setxkbmap -option caps:backspace # switch capslock to backspace
+# export _JAVA_AWT_WM_NONREPARENTING=1
+
+pantree="$HOME/.config/miscxrdb/exbin/paintree"
+[ -f "$pantree" ] && "$pantree"
+
+run_once xrdb ~/.Xresources
+run_once alacritty
+
+startup_lock_file=/tmp/bspwm-startup.lock
+if [ ! -f $startup_lock_file ]; then
+	echo "dummy" >$startup_lock_file
+
+	run_once firefox
+	[ -f ~/.lesskey ] && run_once lesskey
+	[ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
+	[ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
+	[ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
+fi

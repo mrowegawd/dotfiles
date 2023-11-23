@@ -17,15 +17,8 @@ fi
 
 if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
 	export BROWSER="/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe"
-	export TERMINAL="termite"
 else
-	if [ -f ~/.local/bin/kitty ]; then
-		export TERMINAL="kitty"
-	elif [ -f /usr/local/bin/wezterm ]; then
-		export TERMINAL="wezterm"
-	elif [ -n "$(command -v alacritty)" ]; then
-		export TERMINAL="alacritty"
-	fi
+	export TERMINAL="alacritty"
 	export BROWSER="firefox"
 fi
 #

@@ -2,6 +2,23 @@
 
 [ -z "$TMUX" ] && exit
 
-SELECT=$(tmux list-panes -s -F "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $1; exit }')
+JUMP_MAIN=$(tmux list-panes -F "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $1; exit }')
 
-tmux select-pane -t "$SELECT" && tmux resize-pane -Z
+CHECK_TMUX=$(tmux list-panes -F "#{pane_id} #{pane_current_command}" | wc -l)
+
+goback_to_main_pain() {
+	tmux select-pane -t "$JUMP_MAIN"
+	tmux resize-pane -Z
+}
+
+if [[ "$CHECK_TMUX" == 1 ]]; then
+	tmux split-window -v -p 30
+else
+	get_current_id_pane=$(tmux display-message -p "#{pane_id}")
+
+	if [[ "$get_current_id_pane" == "$JUMP_MAIN" ]]; then
+		tmux last-pane
+	else
+		goback_to_main_pain
+	fi
+fi

@@ -949,6 +949,7 @@ return {
   -- LSP-TIMEOUT.NVIM
   {
     "hinell/lsp-timeout.nvim",
+    enabled = false,
     dependencies = { "neovim/nvim-lspconfig" },
     event = "LazyFile",
   },
