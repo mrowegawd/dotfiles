@@ -4,8 +4,6 @@
     "editor.minimap.enabled": false,
     "workbench.startupEditor": "newUntitledFile",
     "editor.suggest.insertMode": "insert",
-    // "vscode-neovim.neovimExecutablePaths.linux": "/usr/local/bin/nvim",
-    // "vscode-neovim.neovimInitVimPaths.linux": "/home/mr00x/.config/nvim/init.vim",
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "python.jediEnabled": false,
@@ -21,6 +19,10 @@
     "vim.leader": "<space>",
     "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
     "snippets.extends": {},
+    "vim.handleKeys":{
+      "<C-a>": false,
+      "<C-f>": true
+    },
     "vim.normalModeKeyBindings": [
         {
             "before": [ "g", "l" ],
@@ -34,12 +36,23 @@
             "before": [ "K" ],
             "commands": [ "editor.action.showHover" ]
         },
-
-        // Navigate
+        {
+            "before": [ "<c-p>" ],
+            "commands": [ "workbench.action.quickOpen" ]
+        },
+        {
+            "before": [ "<leader>", "F"  ],
+            "commands": [ "workbench.view.search" ]
+        },
+        {
+            "before": [ "<c-g>" ],
+            "commands": [ "actions.find" ]
+        },
         {
             "before": [ "s", "h" ],
             "commands": ["workbench.action.focusLeftGroup"]
         },
+
         {
             "before": [ "s", "l" ],
             "commands": ["workbench.action.focusRightGroup"]
@@ -69,8 +82,6 @@
             "commands": ["workbench.action.maximizeEditor"]
         },
 
-        // Folds
-        // workbench.action.maximizeEditor
         {
             "before": [ "z", "m" ],
             "after": [ "z", "M" ]
@@ -118,7 +129,7 @@
     ],
     "vim.normalModeKeyBindingsNonRecursive": [
         {
-            "before": [ "<C-w>", "l" ],
+            "before": [ "s", "f" ],
             "commands": [ "workbench.files.action.focusOpenEditorsView" ]
         },
         {
@@ -128,10 +139,6 @@
         {
             "before": [ "<leader>", "<tab>" ],
             "commands": [ ":q!" ]
-        },
-        {
-            "before": [ "<leader>", "w" ],
-            "commands": [ "workbench.action.splitEditor" ]
         },
         {
             "before": [ "<leader>", "E" ],
@@ -144,48 +151,7 @@
         {
             "before": [ "<leader>", "f", "f" ],
             "commands": [ "workbench.action.quickOpen" ]
-        },
-        {
-            "before": [ "<leader>", "<s-f>"  ],
-            "commands": [ "workbench.view.search" ]
-        },
-        // {
-        //     "before": [
-        //         "<leader>",
-        //         "q",
-        //     ],
-        //     "commands": [
-        //         "workbench.action.quickOpen"
-        //     ]
-        // },
-        // {
-        //     "before": [
-        //         "<c-w>"
-        //     ],
-        //     "after": [],
-        //     "command": [
-        //         "workbench.action.terminal.kill"
-        //     ]
-        // },
-        // {
-        //     "before": [
-        //         "<leader>",
-        //         "<leader>",
-        //     ],
-        //     "commands": [
-        //         "workbench.action.terminal.toggleTerminal"
-        //     ]
-        // },
-        // {
-        //     "before": [
-        //         "<leader>",
-        //         "<leader>",
-        //     ],
-        //     "commands": [
-        //         "workbench.action.terminal.toggleTerminal"
-        //     ],
-        //     "when": "terminalFocus"
-        // }
+        }
     ],
-    "editor.fontSize": 10,
+    "editor.fontSize": 10
 }
