@@ -250,6 +250,18 @@ return {
     config = function(_, opts)
       local cmp = get_cmp()
 
+      vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
+        contents = vim.lsp.util._normalize_markdown(contents, {
+          width = vim.lsp.util._make_floating_popup_size(contents, optsc),
+        })
+
+        vim.bo[bufnr].filetype = "markdown"
+        vim.treesitter.start(bufnr)
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
+
+        return contents
+      end
+
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
       end

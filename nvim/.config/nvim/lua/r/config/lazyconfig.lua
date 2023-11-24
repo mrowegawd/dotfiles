@@ -30,7 +30,7 @@ require("lazy").setup {
     { import = "r.plugins.extras.formatter" },
   },
   defaults = { lazy = true },
-  change_detection = { notify = false },
+  change_detection = { notify = true },
   install = {
     missing = true,
   },
