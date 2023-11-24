@@ -190,12 +190,10 @@ nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search 
 xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
 
--- Save jumps > 5 lines to the jumplist
--- Jumps <= 5 respect line wraps
--- nnoremap("j", [[(v:count > 1 ? "m'" . v:count . 'j' : 'gj')]], { expr = true })
--- nnoremap("k", [[(v:count > 1 ? "m'" . v:count . 'k' : 'gk')]], { expr = true })
-nnoremap("j", [[(v:count > 1 ? "m'" . v:count : '') . 'gj']], { expr = true })
-nnoremap("k", [[(v:count > 1 ? "m'" . v:count : '') . 'gk']], { expr = true })
+-- Save jumps > 3 lines to the jumplist
+-- Jumps <= 3 respect line wraps
+nnoremap("k", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'k' : 'gk']], { expr = true })
+nnoremap("j", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'j' : 'gj']], { expr = true })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS AND NAV                                          │
