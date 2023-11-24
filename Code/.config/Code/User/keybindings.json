@@ -25,48 +25,22 @@
       "command": "workbench.action.navigateDown",
       "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
     },
-    // {
-    //   "key": "shift+alt+h",
-    //   "command": "-editor.showCallHierarchy",
-    //   "when": "editorHasCallHierarchyProvider && editorTextFocus && !inReferenceSearchEditor"
-    // },
-    // {
-    //   "key": "shift+alt+h",
-    //   "command": "-editor.showIncomingCalls",
-    //   "when": "callHierarchyVisible && callHierarchyDirection == 'outgoingCalls'"
-    // },
-    // {
-    //   "key": "shift+alt+h",
-    //   "command": "-editor.showSubtypes",
-    //   "when": "typeHierarchyVisible && typeHierarchyDirection == 'supertypes'"
-    // },
-    // {
-    //   "key": "shift+alt+h",
-    //   "command": "-editor.showOutgoingCalls",
-    //   "when": "callHierarchyVisible && callHierarchyDirection == 'incomingCalls'"
-    // },
-    // {
-    //   "key": "shift+alt+h",
-    //   "command": "-editor.showSupertypes",
-    //   "when": "typeHierarchyVisible && typeHierarchyDirection == 'subtypes'"
-    // },
-    // change split windows
-    // {
-    //     "key": "ctrl+h",
-    //     "command": "workbench.action.navigateLeft"
-    // },
-    // {
-    //     "key": "ctrl+l",
-    //     "command": "workbench.action.navigateRight"
-    // },
-    // {
-    //     "key": "ctrl+k",
-    //     "command": "workbench.action.navigateUp"
-    // },
-    // {
-    //     "key": "ctrl+j",
-    //     "command": "workbench.action.navigateDown"
-    // },
+    {
+        "key": "alt+h",
+        "command": "workbench.action.navigateLeft"
+    },
+    {
+        "key": "alt+l",
+        "command": "workbench.action.navigateRight"
+    },
+    {
+        "key": "alt+k",
+        "command": "workbench.action.navigateUp"
+    },
+    {
+        "key": "alt+j",
+        "command": "workbench.action.navigateDown"
+    },
     {
         "key": "ctrl+n",
         "command": "workbench.action.quickOpenNavigateNextInFilePicker",
