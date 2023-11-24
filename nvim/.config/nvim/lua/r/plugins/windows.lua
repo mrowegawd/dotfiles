@@ -97,7 +97,7 @@ return {
         -- enables default keybindings (C-hjkl) for normal mode
         enable_default_keybindings = false,
         -- prevents unzoom tmux when navigating beyond vim border
-        persist_zoom = true,
+        persist_zoom = false,
       },
       resize = {
         -- enables default keybindings (A-hjkl) for normal mode

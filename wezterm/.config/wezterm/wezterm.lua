@@ -88,14 +88,14 @@ return {
 		},
 		{
 			italic = true,
-			intensity = "Half",
-			font = font_with_fallback("VictorMono Nerd Font", {}),
+			intensity = "Normal",
+			font = font_with_fallback("VictorMono NF Obl", {}),
 		},
-		-- {
-		-- 	italic = true,
-		-- 	intensity = "Half",
-		-- 	font = font_with_fallback("VictorMono Nerd Font", {}),
-		-- },
+		{
+			italic = true,
+			intensity = "Bold",
+			font = font_with_fallback("VictorMono NFP SemiBold Obl", {}),
+		},
 	},
 
 	hide_tab_bar_if_only_one_tab = true,

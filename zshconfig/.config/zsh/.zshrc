@@ -394,8 +394,6 @@ function __prompt_eval() {
   local top="%B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}"
   local character="%(1j.%F{cyan}%j✦%f .)%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
   local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")
-  # local bottom=$(echo "$vim_mode")
-  # local bottom=${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- None --}
   echo $top$'\n'$bottom
 }
 # NOTE: VERY IMPORTANT: the type of quotes used matters greatly. Single quotes MUST be used for these variables

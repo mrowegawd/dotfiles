@@ -100,6 +100,12 @@ cmd fzf_search ${{
 }}
 
 
+cmd watch_mpv_playlist ${{
+    # ls -t1 . | sort > /tmp/mylist_mpv
+    IFS=$'\n' ; mpv -ontop -no-border -force-window \
+			--autofit=800x900 --geometry=-15-60 $(ls -t1 . | sort)
+}}
+
 cmd bulkrename $vidir
 
 #  ╔══════════════════════════════════════════════════════════╗
@@ -153,6 +159,7 @@ map <c-g> fzf_search                          # search string in file or search 
 map <c-c> quit
 map c
 map cd push :cd<space>
+map cw watch_mpv_playlist
 map i $edit "$f"
 map I $nvr -cc call TermOpen(&shell,'v')
 

@@ -1,6 +1,4 @@
-#!/bin/bash
-
-bspc rule -r "*"
+#!/bin/sh
 
 xrdb ~/.Xresources &
 sleep 2
@@ -35,7 +33,9 @@ fi
 [[ -f "$HOME/.config/dunst/rundust.sh" ]] && "$HOME/.config/dunst/rundust.sh"
 [[ -f ~/.lesskey ]] && lesskey
 [[ -f "$HOME/.config/miscxrdb/exbin/fehbg" ]] && "$HOME/.config/miscxrdb/exbin/fehbg"
-if [[ -n $(command -v dropbox) ]]; then
-	killall -q dropbox
-	dropbox start &
-fi
+
+# Use `sync-update` to run dropbox
+# if [[ -n $(command -v dropbox) ]]; then
+# 	killall -q dropbox
+# 	dropbox start &
+# fi

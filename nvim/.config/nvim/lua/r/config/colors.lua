@@ -317,6 +317,7 @@ local function colorscheme_overrides()
       { GitSignsAdd = { bg = { from = "ColorColumn" } } },
       { GitSignsChange = { bg = { from = "ColorColumn" } } },
       { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+      { Visual = { standout = false } },
 
       { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
       { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },

@@ -45,10 +45,9 @@ return {
       }
     end,
   },
-  -- TOGGLETERM (disabled)
+  -- TOGGLETERM
   {
     "akinsho/nvim-toggleterm.lua",
-    enabled = false,
     opts = {
       size = 20,
       hide_numbers = true,
@@ -57,7 +56,7 @@ return {
       shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
       start_in_insert = true,
       persist_size = true,
-      open_mapping = [[<Localleader><Localleader>]],
+      -- open_mapping = [[<Localleader><Localleader>]],
       direction = "horizontal",
     },
     cmd = { "ToggleTerm", "TermExec" },
@@ -118,7 +117,7 @@ return {
       end
 
       return {
-        { "<Localleader><Localleader>" },
+        -- { "<Localleader><Localleader>" },
         {
           "<F7>",
           function()

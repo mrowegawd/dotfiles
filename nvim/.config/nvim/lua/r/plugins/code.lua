@@ -79,22 +79,18 @@ return {
       { "abecodes/tabout.nvim", opts = { ignore_beginning = false, completion = false } },
     },
     opts = function()
-      local cmp = require "cmp"
-      local luasnip = require "luasnip"
+      local cmp = get_cmp()
+      local luasnip = get_luasnip()
       -- local types = require "cmp.types"
       local defaults = require "cmp.config.default"()
       local MAX_INDEX_FILE_SIZE = 4000
 
       local function tab(fallback) -- make TAB behave like Android Studio
-        local cmpx = get_cmp()
-        local luasnipx = get_luasnip()
-
         local col = vim.fn.col "." - 1
-
-        if cmpx.visible() then
-          cmpx.confirm { select = true }
-        elseif luasnipx.expand_or_jumpable() then
-          luasnipx.expand_or_jump()
+        if luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
+        elseif cmp.visible() then
+          cmp.confirm { select = false }
         elseif col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
           fallback()
         else
@@ -103,9 +99,8 @@ return {
       end
 
       local function shift_tab(fallback)
-        local luasnipx = get_luasnip()
-        if luasnipx.jumpable(-1) then
-          luasnipx.jump(-1)
+        if luasnip.jumpable(-1) then
+          luasnip.jump(-1)
         else
           fallback()
         end
@@ -149,7 +144,7 @@ return {
               cmp.complete {
                 config = {
                   sources = {
-                    { name = "cmp_tabnine" },
+                    -- { name = "cmp_tabnine" },
                     {
                       name = "buffer",
                       option = {
@@ -206,7 +201,8 @@ return {
           ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+          -- TODO: ini seharusnya kalau tidak di select jgn di confim
+          -- ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
 
         experimental = { ghost_text = false },
@@ -214,7 +210,7 @@ return {
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
-          cmp_tabnine = 1,
+          -- cmp_tabnine = 1,
           buffer = 1,
           path = 1,
         },
@@ -252,7 +248,19 @@ return {
       }
     end,
     config = function(_, opts)
-      local cmp = require "cmp"
+      local cmp = get_cmp()
+
+      vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
+        contents = vim.lsp.util._normalize_markdown(contents, {
+          width = vim.lsp.util._make_floating_popup_size(contents, optsc),
+        })
+
+        vim.bo[bufnr].filetype = "markdown"
+        vim.treesitter.start(bufnr)
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
+
+        return contents
+      end
 
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
