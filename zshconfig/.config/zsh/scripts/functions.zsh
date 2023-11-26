@@ -2,7 +2,7 @@
 
 build-nvim() {
   neovim_dir="$PROJECTS_DIR/contrib/neovim"
-  [ ! -d $neovim_dir ] && git clone git@github.com:neovim/neovim.git $neovim_dir
+  [ ! -d $neovim_dir ] && git clone https://github.com/neovim/neovim.git $neovim_dir
   pushd $neovim_dir
   git checkout master
   # git pull upstream master

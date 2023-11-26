@@ -40,7 +40,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note(neorg): open toc right(curbuf)",
       },
-      ["<Localleader>fc"] = {
+      ["<Localleader>fC"] = {
         function()
           local opts = {
             prompt = "  ",

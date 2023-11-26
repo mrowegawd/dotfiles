@@ -11,7 +11,7 @@ local general_overrides = function()
     { FoldColumn = { bg = { from = "ColorColumn" , attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 1.5 } } },
     { LineNr = { bg = { from = "ColorColumn" }, fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = { from = "ColorColumn" } } },
-    { CursorLine = { bg = { from = "ColorColumn", alter = 0.3 } } },
+    { CursorLine = { bg = { from = "ColorColumn", alter = -0.4 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
     { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
@@ -202,8 +202,10 @@ local general_overrides = function()
     -- BUFFERLINE =========================================================
     { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
     { OctoEditable = { bg = { from = "ColorColumn" } } },
-    { OctoBubble = { link = "Normal" } } ,
+    { OctoBubble = { link = "Normal" } },
 
+    -- BQF ================================================================
+    { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "@field" } } } },
   }
 end
 

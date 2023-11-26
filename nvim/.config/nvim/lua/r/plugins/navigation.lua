@@ -265,7 +265,7 @@ return {
   -- NVIM-IDE (disabled)
   {
     "ldelossa/nvim-ide",
-    enabled = false,
+    -- enabled = false,
     lazy = false,
     config = function()
       -- local bufferlist = require "ide.components.bufferlist"
@@ -302,13 +302,24 @@ return {
         workspaces = {
           auto_open = "none",
         },
+        panel_sizes = {
+          left = 30,
+          right = 80,
+          bottom = 15,
+        },
       }
     end,
     keys = {
       -- set keys based on the components you configured in setup
-      -- { "<leader>Wl", "<cmd>Workspace LeftPanelToggle<cr>", desc = "Toggle Left Panel" },
-      { "<Localleader>e", "<cmd>Workspace RightPanelToggle<cr>", desc = "misc(nvim-ide): right left panel" },
-      { "<Localleader>r", "<cmd>Workspace Reset<cr>", desc = "misc(nvim-ide): reset window" },
+      {
+        "<Leader>gvo",
+        function()
+          Util.tiling.force_win_close({ "aerial" }, false)
+          vim.cmd "Workspace RightPanelToggle"
+        end,
+        desc = "Git(nvim-ide): open right panel",
+      },
+      { "<Leader>gvr", "<cmd>Workspace Reset<cr>", desc = "Git(nvim-ide): reset panel window" },
       -- { "<Leader>We", "<cmd>Workspace Explorer Focus<cr>", desc = "Focus Explorer" },
       -- { "<Leader>e", "<cmd>Workspace Explorer Focus<cr>", desc = "Focus Explorer" },
       -- { "<Leader>Wo", "<cmd>Workspace Outline Focus<cr>", desc = "Focus Outline" },

@@ -26,9 +26,65 @@ return {
       require("windows").setup()
     end,
   },
-  -- TMUX.NVIM
+  -- VIM-TMUX-NAVIGATOR
+  {
+    "christoomey/vim-tmux-navigator",
+    init = function()
+      vim.g.tmux_navigator_no_mappings = 1
+      vim.g.tmux_navigator_disable_when_zoomed = 1
+    end,
+    keys = {
+
+      -- TmuxNavigatePrevious
+      {
+        "<a-k>",
+        "<cmd>TmuxNavigateUp<CR>",
+        desc = "WinNav(tmux): move up",
+      },
+      {
+        "<a-j>",
+        "<cmd>TmuxNavigateDown<CR>",
+        desc = "WinNav(tmux): move down",
+      },
+      {
+        "<a-h>",
+        "<cmd>TmuxNavigateLeft<CR>",
+        desc = "WinNav(tmux): move left",
+      },
+      {
+        "<a-l>",
+        "<cmd>TmuxNavigateRight<CR>",
+        desc = "WinNav(tmux): move right",
+      },
+
+      -- RESIZE
+      {
+        "<a-K>",
+        "<cmd>resize +2<CR>",
+        desc = "WinNav(tmux): resize up",
+      },
+      {
+        "<a-J>",
+        "<cmd>resize -2<CR>",
+        desc = "WinNav(tmux): resize down",
+      },
+
+      {
+        "<a-H>",
+        "<cmd>vertical resize -2<CR>",
+        desc = "WinNav(tmux): resize left",
+      },
+      {
+        "<a-L>",
+        "<cmd>vertical resize +2<CR>",
+        desc = "WinNav(tmux): resize right",
+      },
+    },
+  },
+  -- TMUX.NVIM (disabled)
   {
     "aserowy/tmux.nvim",
+    enabled = false,
     keys = {
       {
         "<a-k>",
