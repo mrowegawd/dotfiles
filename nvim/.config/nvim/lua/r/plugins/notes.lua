@@ -331,7 +331,7 @@ return {
         },
         -- win_split_mode = "20split",
         org_agenda_skip_scheduled_if_done = true,
-        org_agenda_templates = {
+        org_capture_templates = {
           t = {
             description = "Todo",
             -- template = "\n* TODO %? \n  SCHEDULED: %t",

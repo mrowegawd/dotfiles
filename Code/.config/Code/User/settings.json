@@ -19,6 +19,7 @@
     "vim.leader": "<space>",
     "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
     "snippets.extends": {},
+    "editor.fontSize": 10,
     "vim.handleKeys":{
       "<C-a>": false,
       "<C-f>": true
@@ -49,10 +50,24 @@
             "commands": [ "actions.find" ]
         },
         {
+            "before": [ "<leader>", "q" ],
+            "commands": [ "workbench.actions.view.problems" ]
+        },
+        
+        {
+            "before": [ "g", "S" ],
+            "commands": [ "workbench.action.showAllSymbols" ]
+        },
+        {
+            "before": [ "g", "s" ],
+            "commands": [ "workbench.action.gotoSymbol" ]
+        },
+
+        // Navigate
+        {
             "before": [ "s", "h" ],
             "commands": ["workbench.action.focusLeftGroup"]
         },
-
         {
             "before": [ "s", "l" ],
             "commands": ["workbench.action.focusRightGroup"]
@@ -96,10 +111,8 @@
             "before": [ "j", "k" ],
             "after": [ "<Esc>" ]
         },
-        {
-            "before": [ "<c-f>" ],
-            "after": [ "<Right>" ]
-        },
+    
+        // Navigate
         {
             "before": [ "<c-l>" ],
             "commands": [ "cursorRight" ]
@@ -115,6 +128,14 @@
         {
             "before": [ "<c-k>" ],
             "commands": [ "cursorUp" ]
+        },
+        {
+            "before": [ "<c-f>" ],
+            "after": [ "<Right>" ]
+        },
+        {
+            "before": [ "<c-b>" ],
+            "commands": [ "cursorWordRight" ]
         }
     ],
     "vim.visualModeKeyBindings": [
@@ -153,5 +174,7 @@
             "commands": [ "workbench.action.quickOpen" ]
         }
     ],
-    "editor.fontSize": 10
+    "editor.fontFamily": "'SF Mono', 'monospace', monospace",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Sublime Material Theme - Dark"
 }

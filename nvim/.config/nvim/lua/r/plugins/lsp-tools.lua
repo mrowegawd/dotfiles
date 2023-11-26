@@ -317,7 +317,6 @@ return {
   -- AERIAL
   {
     "stevearc/aerial.nvim",
-    -- enabled = false,
     event = "LazyFile",
     init = function()
       Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -361,7 +360,7 @@ return {
         {
           "<Localleader>oa",
           function()
-            -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+            Util.tiling.force_win_close({}, true)
             vim.cmd [[AerialToggle right]]
             -- if vim.bo[0].filetype == "aerial" then
             --   vim.cmd [[wincmd L]]
@@ -949,9 +948,8 @@ return {
   -- LSP-TIMEOUT.NVIM
   {
     "hinell/lsp-timeout.nvim",
-    enabled = false,
-    dependencies = { "neovim/nvim-lspconfig" },
     event = "LazyFile",
+    dependencies = { "neovim/nvim-lspconfig" },
   },
   -- LSP_SIGNATURE.NVIM (disabled)
   {

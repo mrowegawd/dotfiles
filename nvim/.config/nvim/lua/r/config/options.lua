@@ -16,7 +16,10 @@ local options = {
     secure = true,
     modelines = 1, -- read a modeline at EOF
     confirm = false, -- Confirm to save changes before exiting modified buffer
+
     errorbells = false, -- disable error bells (no beep/flash)
+    visualbell = false,
+
     termguicolors = true,
     jumpoptions = "stack", -- ketika <c-i> dan <c-o>, lebih enak jump last cursor daripada window
     cursorline = true,
@@ -46,7 +49,6 @@ local options = {
     signcolumn = "yes", -- Always show the sign column
     number = true, -- show absolute line no. at the cursor pos
     relativenumber = true, -- otherwise, show relative numbers in the ruler
-    equalalways = false, -- New vim windows created won't make everything back to same sizes
     breakindent = true, -- start wrapped lines indented
     linebreak = true, -- do not break words on line wrap
     showbreak = "↪ ",
@@ -128,9 +130,10 @@ local options = {
     -- [comments borrowed from tjdevries]
     formatoptions = "jtcqln", -- tcqj
 
-    splitkeep = "screen",
+    splitkeep = "cursor", -- cursor, screen
     splitbelow = true, -- ':new' ':split' below current
     splitright = true, -- ':vnew' ':vsplit' right of current
+    equalalways = false, -- New vim windows created won't make everything back to same sizes
     -----------------------------------------------------------------------------//
     -- folds {{{1
     -----------------------------------------------------------------------------//
@@ -216,7 +219,7 @@ local options = {
     -- end
     wrap = false, -- Disable wrapping of lines longer than the width of window.
     mouse = "a", -- Enable mouse support.
-    mousescroll = "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
+    mousescroll = "ver:0,hor:0", -- "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
     guicursor = "n:blinkon200,i-ci-ve:ver25", -- Enable cursor blink.
     autochdir = false, -- Use current file dir as working dir (See project.nvim)
     scrolloff = 5, -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.

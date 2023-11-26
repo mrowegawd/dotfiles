@@ -205,6 +205,8 @@ case $instance.$class in
 stj*.st) stj1 ;;
 *.TelegramDesktop) chatting ;;
 *.Nautilus) file_manager ;;
+Code.*) code ;;
+*.Code) code ;;
 *.java-lang-Thread) misc_floating ;;
 weechatw.*) chatting ;;
 pomotroid.*) stack ;;

@@ -26,16 +26,16 @@ vim.api.nvim_create_user_command("Ns", function()
 end, { nargs = 0 })
 
 -- Compare clipboard to current buffer
-vim.api.nvim_create_user_command("CompareClipboard", function()
-  local ftype = vim.api.nvim_eval "&filetype" -- original filetype
-  vim.cmd [[
-		tabnew %
-		Ns
-		normal! P
-		windo diffthis
-	]]
-  vim.cmd("set filetype=" .. ftype)
-end, { nargs = 0 })
+-- vim.api.nvim_create_user_command("CompareClipboard", function()
+--   local ftype = vim.api.nvim_eval "&filetype" -- original filetype
+--   vim.cmd [[
+-- 		tabnew %
+-- 		Ns
+-- 		normal! P
+-- 		windo diffthis
+-- 	]]
+--   vim.cmd("set filetype=" .. ftype)
+-- end, { nargs = 0 })
 
 -- Compare clipboard to visual selection
 vim.api.nvim_create_user_command("CompareClipboardSelection", function()
@@ -57,16 +57,16 @@ end, {
 
 -- stylua: ignore
 function M.diffview(bufnr)
-  nnoremap("<Leader>gvo", "<CMD>DiffviewOpen<CR>", { desc = "Git(diffview): open repo diff", buffer = bufnr })
+  nnoremap("<Leader>gvs", "<CMD>DiffviewOpen<CR>", { desc = "Git(diffview): git status diff", buffer = bufnr })
 
   nnoremap("<Leader>gvh", "<CMD>DiffviewFileHistory --follow %<CR>", { desc = "Git(diffview): open diff history on curbuf", buffer = bufnr })
   vnoremap("<Leader>gvh", [[:'<'>DiffviewFileHistory --follow<CR>]], { desc = "Git(diffview): open diff history on curbuf (visual)", buffer = bufnr })
   nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): diff repo hisory", buffer = bufnr })
   nnoremap("<Leader>gvl", "<CMD>.DiffviewFileHistory --follow<CR>", { desc = "Git(diffview): open diff history on curline", buffer = bufnr })
 
-  vnoremap("<Leader>gvd", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git(diff): compare clipboard selection" })
-  nnoremap("<Leader>gvC", "<cmd>CompareClipboard<cr>", { desc = "Git(diff): compare clipboard", silent = true })
-  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare two window with diff" })
+  vnoremap("<Leader>gvd", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git(diff): compare selection with diffthis (visual)" })
+  -- nnoremap("<Leader>gvC", "<cmd>CompareClipboard<cr>", { desc = "Git(diff): compare clipboard", silent = true })
+  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare with diffthis" })
 end
 
 

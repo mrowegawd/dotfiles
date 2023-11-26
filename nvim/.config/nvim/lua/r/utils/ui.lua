@@ -107,14 +107,6 @@ function M.statuscolumn()
     vim.api.nvim_win_call(win, function()
       if vim.fn.foldclosed(vim.v.lnum) >= 0 then
         fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldColumn" }
-        if
-          vim.tbl_contains(
-            { "norg", "org", "orgagenda", "fzf" },
-            vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
-          )
-        then
-          fold = { text = "", texthl = "" }
-        end
       end
     end)
     -- Left: mark or non-git sign
@@ -128,7 +120,12 @@ function M.statuscolumn()
   local is_num = vim.wo[win].number
   local is_relnum = vim.wo[win].relativenumber
   if is_num and is_relnum then
-    components[2] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):(v:virtnum>0?"":v:lnum)} '
+    if vim.v.virtnum > 0 then
+      -- components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. vim.opt.showbreak._value
+      components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. "↳ "
+    else
+      components[2] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):(v:virtnum>0?"":v:lnum)} '
+    end
   elseif is_num and not is_relnum then
     components[2] = '%=%{v:virtnum>0?"":v:lnum} '
   elseif is_relnum and not is_num then
