@@ -8,7 +8,7 @@ return {
       exclude_buftypes = { "terminal" },
     },
   },
-  -- STICKYBUF.NVIM (disabled)
+  -- STICKYBUF.NVIM
   {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
@@ -16,68 +16,58 @@ return {
       require("stickybuf").setup()
     end,
   },
-  -- WINDOWS NVIM (disabled)
-  {
-    "anuvyklack/windows.nvim",
-    enabled = false,
-    cmd = { "WindowsToggleAutowidth", "WindowsMaximize" },
-    dependencies = { "anuvyklack/middleclass" },
-    config = function()
-      require("windows").setup()
-    end,
-  },
-  -- VIM-TMUX-NAVIGATOR
+  -- VIM-TMUX-NAVIGATOR (disabled)
   {
     "christoomey/vim-tmux-navigator",
+    enabled = false,
     init = function()
       vim.g.tmux_navigator_no_mappings = 1
       vim.g.tmux_navigator_disable_when_zoomed = 1
     end,
     keys = {
-
       -- TmuxNavigatePrevious
       {
         "<a-k>",
         "<cmd>TmuxNavigateUp<CR>",
-        desc = "WinNav(tmux): move up",
+        desc = "WinNav(vim-tmux-navigator): move up",
       },
       {
         "<a-j>",
         "<cmd>TmuxNavigateDown<CR>",
-        desc = "WinNav(tmux): move down",
+        desc = "WinNav(vim-tmux-navigator): move down",
       },
       {
         "<a-h>",
         "<cmd>TmuxNavigateLeft<CR>",
-        desc = "WinNav(tmux): move left",
+        desc = "WinNav(vim-tmux-navigator): move left",
       },
       {
         "<a-l>",
         "<cmd>TmuxNavigateRight<CR>",
-        desc = "WinNav(tmux): move right",
+        desc = "WinNav(vim-tmux-navigator): move right",
       },
 
       -- RESIZE
       {
         "<a-K>",
         "<cmd>resize +2<CR>",
-        desc = "WinNav(tmux): resize up",
+        desc = "WinNav: resize up",
       },
       {
         "<a-J>",
         "<cmd>resize -2<CR>",
-        desc = "WinNav(tmux): resize down",
+        desc = "WinNav: resize down",
       },
 
       {
         "<a-H>",
         "<cmd>vertical resize -2<CR>",
-        desc = "WinNav(tmux): resize left",
+        desc = "WinNav: resize left",
       },
       {
         "<a-L>",
         "<cmd>vertical resize +2<CR>",
-        desc = "WinNav(tmux): resize right",
+        desc = "WinNav: resize right",
       },
     },
   },
@@ -166,38 +156,37 @@ return {
       },
     },
   },
-  -- SMART-SPLITS (disabled)
+  -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
-    enabled = false,
     keys = {
       {
         "<a-k>",
         function()
           return require("smart-splits").move_cursor_up()
         end,
-        desc = "Navigations(smart-splits): move up",
+        desc = "WinNav(smart-splits): move up",
       },
       {
         "<a-j>",
         function()
           return require("smart-splits").move_cursor_down()
         end,
-        desc = "Navigations(smart-splits): move down",
+        desc = "WinNav(smart-splits): move down",
       },
       {
         "<a-h>",
         function()
           return require("smart-splits").move_cursor_left()
         end,
-        desc = "Navigations(smart-splits): move left",
+        desc = "WinNav(smart-splits): move left",
       },
       {
         "<a-l>",
         function()
           return require("smart-splits").move_cursor_right()
         end,
-        desc = "Navigations(smart-splits): move right",
+        desc = "WinNav(smart-splits): move right",
       },
 
       -- RESIZE
@@ -206,14 +195,14 @@ return {
         function()
           return require("smart-splits").resize_up()
         end,
-        desc = "Windows(smart-splits): resize window up",
+        desc = "WinNav(smart-splits): resize window up",
       },
       {
         "<a-J>",
         function()
           return require("smart-splits").resize_down()
         end,
-        desc = "Windows(smart-splits): resize window down",
+        desc = "WinNav(smart-splits): resize window down",
       },
 
       {
@@ -221,14 +210,14 @@ return {
         function()
           return require("smart-splits").resize_left()
         end,
-        desc = "Windows(smart-splits): resize window left",
+        desc = "WinNav(smart-splits): resize window left",
       },
       {
         "<a-L>",
         function()
           return require("smart-splits").resize_right()
         end,
-        desc = "Windows(smart-splits): resize window right",
+        desc = "WinNav(smart-splits): resize window right",
       },
     },
     opts = {
