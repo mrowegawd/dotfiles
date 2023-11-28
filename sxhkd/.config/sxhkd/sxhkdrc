@@ -46,7 +46,7 @@ super + {h,l,k,j}
 # 	bspc node -{f,s} {west,south,north,east}
 
 # workspace: focus next/prev
-super + ctrl + {l,h}
+super + {Tab,shift + Tab}
         bspc desktop -f {next.local,prev.local}
 
 # workspace: move node workspace to the given workspace number
@@ -92,7 +92,7 @@ super + ctrl + {Right,Up,Down,Left}
 # APPS
 ########################################
 
-# misc: open rofi_call
+# misc: open rofi_menu
 super + u
         $HOME/.config/rofi/menu/menu
 
@@ -100,8 +100,8 @@ super + u
 super + Return
         alacritty
 
-# misc: kill/close window
-super + Tab
+# misc: close/kill current app/window
+super + End
         xdo close
 
 # misc: increase volume
@@ -143,9 +143,9 @@ super + shift + n
 # super + shift + g
 #         $HOME/.config/rofi/menu/_glinux
 
-# misc: run obsidian
-# super + shift + o
-#         bspc rule -a \* -o state=floating st && st
+# misc: open empty float terminal
+super + shift + o
+        bspc rule -a \* -o state=floating st && st
 
 # misc: call firefox (side by side)
 super + F8

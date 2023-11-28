@@ -201,8 +201,7 @@ return {
           ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          -- TODO: ini seharusnya kalau tidak di select jgn di confim
-          -- ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+          ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
         },
 
         experimental = { ghost_text = false },
@@ -641,7 +640,7 @@ return {
   -- RUNMUX
   {
     -- "mrowegawd/runmux",
-    dir = "~/.local/src/nvim_plugins/runmux",
+    dir = "~/.local/src/nvim_plugins/rmux",
     cmd = { "RmuxEDITConfig" },
     keys = {
       { "rf", "<Cmd> RmuxRunFile <CR>" },
@@ -654,6 +653,7 @@ return {
 
       { "rC", "<Cmd> RmuxKillAllPanes <CR>" },
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
+      { "rg", "<Cmd> RmuxGrepErr <CR>" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
 

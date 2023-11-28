@@ -2,21 +2,25 @@
   "name": "luadev",
   "run_file": {
     "include_cwd": true,
-    "command": "lua"
+    "command": "lua",
+    "regex": ""
   },
   "repl": {
     "open_pane": "tmux split-window -h -p 20",
-    "command": "lua"
+    "command": "lua",
+    "regex": ""
   },
   "tasks": {
     "layout": [
       {
         "open_pane": "tmux split-window -v -p 20",
-        "command": "tail -f '$HOME/.local/state/nvim/log'"
+        "command": "tail -f '$HOME/.local/state/nvim/log'",
+        "regex": ""
       },
       {
         "open_pane": "tmux split-window -h -p 40",
-        "command": ""
+        "command": "",
+        "regex": ""
       }
     ]
   }

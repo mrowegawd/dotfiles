@@ -26,6 +26,10 @@
     },
     "vim.normalModeKeyBindings": [
         {
+            "before": [ "s", "w" ],
+            "command": "workbench.action.evenEditorWidths"
+        },
+        {
             "before": [ "g", "l" ],
             "commands": [ "workbench.action.nextEditor" ]
         },
@@ -47,7 +51,8 @@
         },
         {
             "before": [ "<c-g>" ],
-            "commands": [ "actions.find" ]
+            // "commands": [ "actions.find" ]
+            "after": [ "/" ]
         },
         {
             "before": [ "<leader>", "q" ],
@@ -113,6 +118,14 @@
         },
     
         // Navigate
+        {
+            "before": "ctrl+b",
+            "commands": "cursorWordLeft"
+        },
+        {
+            "before": "ctrl+f",
+            "commands": "cursorWordRight"
+        },
         {
             "before": [ "<c-l>" ],
             "commands": [ "cursorRight" ]

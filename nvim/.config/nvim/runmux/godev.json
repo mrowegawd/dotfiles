@@ -2,17 +2,20 @@
   "name": "godev",
   "run_file": {
     "include_cwd": false,
-    "command": "go run ."
+    "command": "go run .",
+    "regex": ""
   },
   "repl": {
     "open_pane": "tmux split-window -h -p 20",
-    "command": ""
+    "command": "",
+    "regex": ""
   },
   "tasks": {
     "layout": [
       {
         "open_pane": "tmux split-window -v -p 20",
-        "command": ""
+        "command": "",
+        "regex": ""
       }
     ]
   }

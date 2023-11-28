@@ -1,5 +1,9 @@
 [
   {
+    "key": "ctrl+Home",
+    "command": "workbench.action.zoomReset"
+  },
+  {
     "key": "escape",
     "command": "-editor.action.cancelSelectionAnchor",
     "when": "editorTextFocus && selectionAnchorSet"
@@ -19,17 +23,22 @@
     "command": "workbench.action.terminal.new",
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
   },
+  {
+    "key": "ctrl+End",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
 
   // Insert Mode
   {
     "key": "ctrl+b",
     "command": "cursorWordLeft",
-    "when": "textInputFocus"
+    "when": "vim.active && vim.mode == 'Insert'"
   },
   {
     "key": "ctrl+f",
     "command": "cursorWordRight",
-    "when": "textInputFocus"
+    "when": "vim.active && vim.mode == 'Insert'"
   },
   {
     "key": "ctrl+a",
@@ -59,12 +68,6 @@
     "key": "alt+j",
     "command": "workbench.action.navigateDown"
   },
-
-  // {
-  //   "key": "ctrl+h",
-  //   "command": "workbench.action.navigateLeft",
-  //   "when": "editorTextFocus && vim.active && vim.mode != 'Insert'"
-  // },
 
   // Resize window
   {
