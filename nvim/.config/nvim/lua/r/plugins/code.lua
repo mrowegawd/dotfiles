@@ -640,7 +640,7 @@ return {
   -- RUNMUX
   {
     -- "mrowegawd/runmux",
-    dir = "~/.local/src/nvim_plugins/runmux",
+    dir = "~/.local/src/nvim_plugins/rmux",
     cmd = { "RmuxEDITConfig" },
     keys = {
       { "rf", "<Cmd> RmuxRunFile <CR>" },
