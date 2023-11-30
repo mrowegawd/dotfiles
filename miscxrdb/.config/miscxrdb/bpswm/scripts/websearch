@@ -113,65 +113,63 @@ open_bookmarked() {
 
 edit_bookmarked() {
 	# kalau bukan bspwm, ini bakal error
-	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 &&
+		kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
 
 	exit
 }
 
 open_pass() {
-
-	timeout=30
-	dir="$HOME/.config/rofi/menu"
-	theme="styles/big_center"
-	rofi_command="rofi -theme $dir/$theme -dmenu -matchin fuzzy -i -sort -sorting-method fzf "
-
-	# kalau bukan bspwm, ini bakal error
-	# bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+	# timeout=30
 
 	select_command() {
-		# contents="$(pass show "$1")"
-		# first_line="$(head -1 <<< "$contents")"
-		# the_password
-		# the_username
-		# the_url
-		# if [[ ! "${first_line}" =~ ": " ]]; then
-		#   options[Copy\ password]="wl-copy ${(q)first_line}"
-		#   options_order+="Copy password"
-		#   the_password="$first_line"
-		# fi
+		copy_pasword_or_username() {
+			selection="username"
+			if [[ $1 == "password" ]]; then
+				selection="$1"
+			elif [[ $1 == "url" ]]; then
+				selection=$1
+			fi
 
-		# grep -P '^[^:]+(?=: .)' <<< "$contents" | while read line; do
-		#   field="${line%%: *}"
-		#   value="${line#*: }"
-		#   if [[ "$field" == "url" ]]; then
-		#     options[Open\ URL]="xdg-open ${(q)value}"
-		#     options_order+="Open URL"
-		#     the_url="$value"
-		#   else
-		#     options[Copy\ $field]="wl-copy ${(q)value}"
-		#     options_order+="Copy $field"
-		#     [[ "$field" == "username" ]] && the_username="$value"
-		#   fi
-		# done
+			mypass=$(cat /tmp/mypass)
+			if [[ $selection == "username" ]]; then
+				pass "$mypass" | grep '^username: ' | cut -b 11- | xclip -sel clip
+			elif [[ $selection == "password" ]]; then
+				pass "$mypass" | grep '^password: ' | cut -b 11- | xclip -sel clip
+			else
+				# pass "$mypass" | grep '^url: ' | cut -b 5- | xargs xdg-open {}
+				url=$(pass "$mypass" | grep '^url: ' | cut -b 6-)
+				firefox "$url"
+			fi
+		}
 
-		# options[Show]="zenity --info --title=${(q)1} --icon-name=password --text=${(q)contents} --width=400"
-		# options_order+="Show"
+		bspwm_open_float() {
+			mypass=$(cat /tmp/mypass)
+			bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass edit $mypass"
+		}
 
-		# if [[ -n "$the_username" ]] && [[ -n "$the_password" ]]; then
-		#   options[Copy\ username\ \&\ password]="wl-copy ${(q)the_username} && wl-copy ${(q)the_password} -p"
-		#   options_order=("Copy username & password" "${options_order[@]}")
-		#   if [[ -n "$the_url" ]]; then
-		#     options[Copy\ username\ \&\ password,\ open\ URL]="xdg-open ${(q)the_url} && wl-copy ${(q)the_username} && wl-copy ${(q)the_password} -p"
-		#     options_order=("Copy username & password, open URL" "${options_order[@]}")
-		#   fi
-		# fi
-		selection="$(echo -e "copy username\ncopy password\nopen url" | $rofi_command -p "$1")"
+		selection="$(echo -e "copy username\ncopy password\nopen url\nedit" | $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p "$1")"
 
 		if [[ -n "$selection" ]]; then
-			dunstify "$selection"
+			if [[ $selection == "copy username" ]]; then
+				copy_pasword_or_username "username"
+			fi
+			if [[ $selection == "copy password" ]]; then
+				copy_pasword_or_username "password"
+			fi
+			if [[ $selection == "open url" ]]; then
+				copy_pasword_or_username "url"
+			fi
+			if [[ $selection == "edit" ]]; then
+				case "$XDG_SESSION_DESKTOP" in
+				"bspwm") bspwm_open_float ;;
+				"awesome") wm_awesome ;;
+				*) exit ;;
+				esac
+			fi
 			# eval "$options[${(q)selection}]"
 		else
-			exit 2
+			exit 1
 		fi
 	}
 
@@ -179,24 +177,20 @@ open_pass() {
 		find "$dir" -not -path '*/.git/*' -type f |
 			grep '\.gpg$' |
 			sed "s:$dir\(.*\)\.gpg$:\1:" |
-			$rofi_command -p 'password' -filter "$1"
+			$ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1"
 	}
 
-	main() {
 		dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
 		password_selection="$(select_password "$1")"
+	echo "$password_selection" >/tmp/mypass
 		if [[ -n "$password_selection" ]]; then
 			select_command "$password_selection" "$1"
-			sleep $timeout && eval "wl-copy -c && wl-copy -cp"
-		else
-			exit
+		[[ -f /tmp/mypass ]] && rm /tmp/mypass
 		fi
-	}
-
-	main "$@"
 
 	exit
 }
+
 main() {
 	for i in $(seq 0 $((OBJ_LENGTH - 1))); do
 		if [ "$OBJ_SELECTED" = "Add:New:Query" ]; then

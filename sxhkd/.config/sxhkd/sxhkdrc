@@ -98,7 +98,7 @@ super + u
 
 # misc: open terminal
 super + Return
-        alacritty
+        $TERMINAL
 
 # misc: close/kill current app/window
 super + End

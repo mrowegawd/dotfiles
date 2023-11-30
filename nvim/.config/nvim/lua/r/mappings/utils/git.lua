@@ -1,4 +1,5 @@
 local map = vim.keymap.set
+local Util = require "r.utils"
 
 local nnoremap = function(...)
   map("n", ...)
@@ -55,40 +56,14 @@ end, {
   range = true,
 })
 
--- stylua: ignore
-function M.diffview(bufnr)
-  nnoremap("<Leader>gvs", "<CMD>DiffviewOpen<CR>", { desc = "Git(diffview): git status diff", buffer = bufnr })
-
-  nnoremap("<Leader>gvh", "<CMD>DiffviewFileHistory --follow %<CR>", { desc = "Git(diffview): open diff history on curbuf", buffer = bufnr })
-  vnoremap("<Leader>gvh", [[:'<'>DiffviewFileHistory --follow<CR>]], { desc = "Git(diffview): open diff history on curbuf (visual)", buffer = bufnr })
-  nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): diff repo hisory", buffer = bufnr })
-  nnoremap("<Leader>gvl", "<CMD>.DiffviewFileHistory --follow<CR>", { desc = "Git(diffview): open diff history on curline", buffer = bufnr })
-
-  vnoremap("<Leader>gvd", "<esc><cmd>CompareClipboardSelection<cr>", { desc = "Git(diff): compare selection with diffthis (visual)" })
-  -- nnoremap("<Leader>gvC", "<cmd>CompareClipboard<cr>", { desc = "Git(diff): compare clipboard", silent = true })
-  nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare with diffthis" })
-end
-
 
 -- stylua: ignore
 function M.signs(bufnr, gs)
-  M.diffview(bufnr)
-
-  nnoremap("gq", gs.setqflist, { desc = "Git(gitsigns): collect git hunks on qf", buffer = bufnr })
-
-  nnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>", { desc = "Git(gitsigns): stage hunk", buffer = bufnr })
   vnoremap("<Leader>ga", "<CMD> Gitsigns stage_hunk <CR>",
     { desc = "Git(gitsigns): stage hunk (visual)", buffer = bufnr })
-  nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): stage entire hunk buffer", buffer = bufnr })
   nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk", buffer = bufnr })
   nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk", buffer = bufnr })
-  nnoremap("<Leader>gR", gs.reset_buffer, { desc = "Git(gitsigns): reset hunk buffer", buffer = bufnr })
   nnoremap("<Leader>gP", gs.preview_hunk, { desc = "Git(gitsigns): preview hunk", buffer = bufnr })
-  nnoremap("<Leader>gl", gs.blame_line, { desc = "Git(gitsigns): blame line", buffer = bufnr })
-
-  nnoremap("<Leader>gtD", gs.toggle_deleted, { desc = "Git(gitsigns): toggle deleted (all)", buffer = bufnr })
-  nnoremap("<Leader>gth", gs.toggle_linehl, { desc = "Git(gitsigns): toggle line highlights", buffer = bufnr })
-  nnoremap("<Leader>gtd", gs.toggle_word_diff, { desc = "Git(gitsigns): toggle word diff", buffer = bufnr })
 
   xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk", buffer = bufnr })
   onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk", buffer = bufnr })
@@ -117,6 +92,99 @@ function M.signs(bufnr, gs)
   nnoremap("<Leader>gts", "<CMD>FzfLua git_stash<CR>", { desc = "Git(fzflua): stash", buffer = bufnr })
   nnoremap("<Leader>gB", "<CMD>FzfLua git_commits<CR>", { desc = "Git(fzflua): open commits repos", buffer = bufnr })
   nnoremap("<Leader>gb", "<CMD>FzfLua git_bcommits<CR>", { desc = "Git(fzflua): open commits buffer", buffer = bufnr })
+
+  -- nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): stage entire hunk buffer", buffer = bufnr })
+  -- nnoremap("<Leader>gR", gs.reset_buffer, { desc = "Git(gitsigns): reset hunk buffer", buffer = bufnr })
+  -- nnoremap("<Leader>gvs", "<CMD>DiffviewOpen<CR>", { desc = "Git(diffview): git status diff", buffer = bufnr })
+  -- nnoremap(
+  --   "<Leader>gvh",
+  --   "<CMD>DiffviewFileHistory --follow %<CR>",
+  --   { desc = "Git(diffview): open diff history on curbuf", buffer = bufnr }
+  -- )
+  vnoremap(
+    "<Leader>gvh",
+    [[:'<'>DiffviewFileHistory --follow<CR>]],
+    { desc = "Git(diffview): open diff history on curbuf (visual)", buffer = bufnr }
+  )
+  -- nnoremap("<Leader>gvH", "<CMD>DiffviewFileHistory<CR>", { desc = "Git(diffview): diff repo hisory", buffer = bufnr })
+  nnoremap(
+    "<Leader>gvl",
+    "<CMD>.DiffviewFileHistory --follow<CR>",
+    { desc = "Git(diffview): open diff history on curline", buffer = bufnr }
+  )
+
+  vnoremap(
+    "<Leader>gvd",
+    "<esc><cmd>CompareClipboardSelection<cr>",
+    { desc = "Git(diff): compare selection with diffthis (visual)" }
+  )
+  -- nnoremap("<Leader>gvC", "<cmd>CompareClipboard<cr>", { desc = "Git(diff): compare clipboard", silent = true })
+  -- nnoremap("<Leader>gvd", [[<CMD>windo diffthis<CR>]], { desc = "Git(diff): compare with diffthis" })
+
+  nnoremap("<Leader>gf", function ()
+    local fn_cmds = {
+      gitsign_blameline = function()
+        gs.blame_line()
+      end,
+      gitsign_toggle_deleted = function()
+        gs.toggle_deleted()
+      end,
+      gitsign_toggle_linehl = function()
+        gs.toggle_linehl()
+      end,
+      gitsign_toggle_word_diff = function()
+        gs.toggle_word_diff()
+      end,
+      gitsign_reset_all = function()
+        gs.reset_buffer()
+      end,
+      gitsign_add_hunk_all = function()
+        gs.stage_buffer()
+      end,
+      gitsign_collect_hunk_qf = function()
+        gs.setqflist()
+      end,
+      diffviewopen = function()
+        vim.cmd[[DiffviewOpen]]
+      end,
+      diffviewfilehistory_on_repo = function()
+        vim.cmd[[DiffviewFileHistory]]
+      end,
+      diffviewfilehistory_on_curbuf = function()
+        vim.cmd[[DiffviewFileHistory --follow %]]
+      end,
+      diffview_windo_this = function()
+        vim.cmd[[windo diffthis]]
+      end,
+      neogit = function()
+        vim.cmd[[Neogit]]
+      end,
+      git_worktree_create = function()
+        vim.cmd[[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
+      end,
+      git_worktree_manage = function()
+        vim.cmd[[lua require("telescope").extensions.git_worktree.git_worktrees()]]
+      end,
+    }
+
+    local cmds = {}
+    for idx, _ in pairs(fn_cmds) do
+      table.insert(cmds, idx)
+    end
+
+    require("fzf-lua").fzf_exec(
+      cmds,
+      Util.fzflua.cursor_dropdown {
+        actions = {
+          ["default"] = function(selected, _)
+            local sel = selected[1]
+            fn_cmds[sel]()
+          end,
+        },
+      }
+    )
+  end, { desc = "Git(fzflua): commnds of git", buffer = bufnr })
+
 end
 
 return M
