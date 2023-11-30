@@ -157,7 +157,7 @@ vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 --  ╰──────────────────────────────────────────────────────────╯
 nnoremap("~", "%", silent)
 
-nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
+-- nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 
 nnoremap("<Localleader>tb", function()
   return Util.toggle.background()

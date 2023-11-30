@@ -1,15 +1,6 @@
 local fmt, cmd, fn = string.format, vim.cmd, vim.fn
 local Util = require "r.utils"
 
-local function format_title(str, icon, icon_hl)
-  return {
-    { " " },
-    { (icon and icon .. " " or ""), icon_hl or "DevIconDefault" },
-    { str, "Bold" },
-    { " " },
-  }
-end
-
 local M = {}
 
 function M.neorg_mappings_ft(bufnr)
@@ -45,7 +36,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              title = format_title("[Neorg] find by categories", " "),
+              title = Util.fzflua.format_title("[Neorg] find by categories", " "),
               preview = {
                 hidden = "hidden",
                 vertical = "up:55%",
@@ -86,7 +77,7 @@ function M.neorg_mappings_ft(bufnr)
             fzf_opts = { ["--layout"] = false },
 
             winopts = {
-              title = format_title("[Neorg] Title Global", " "),
+              title = Util.fzflua.format_title("[Neorg] Title Global", " "),
             },
           }
         end,
@@ -100,7 +91,7 @@ function M.neorg_mappings_ft(bufnr)
             no_esc = true,
             fzf_opts = { ["--layout"] = false },
             winopts = {
-              title = format_title("[Neorg] Title Curbuf", " "),
+              title = Util.fzflua.format_title("[Neorg] Title Curbuf", " "),
             },
           }
         end,
@@ -119,7 +110,7 @@ function M.neorg_mappings_ft(bufnr)
             search = title_trim,
             fzf_opts = { ["--layout"] = "reverse" },
             winopts = {
-              title = format_title("[Neorg] Link Friend", " "),
+              title = Util.fzflua.format_title("[Neorg] Link Friend", " "),
             },
           }
         end,
@@ -135,7 +126,7 @@ function M.neorg_mappings_ft(bufnr)
             no_esc = true,
             fzf_opts = { ["--layout"] = "reverse" },
             winopts = {
-              title = format_title("[Neorg] Link Curbuf", " "),
+              title = Util.fzflua.format_title("[Neorg] Link Curbuf", " "),
             },
           }
         end,
@@ -150,7 +141,7 @@ function M.neorg_mappings_ft(bufnr)
             prompt = "  ",
             winopts = {
               -- split = "belowright new | wincmd J | resize 40",
-              title = format_title("[Neorg] Link Curbuf", " "),
+              title = Util.fzflua.format_title("[Neorg] Link Curbuf", " "),
               preview = {
                 hidden = "hidden",
                 vertical = "up:55%",
@@ -178,7 +169,7 @@ function M.neorg_mappings_ft(bufnr)
             prompt = "  ",
             winopts = {
               -- split = "belowright new | wincmd J | resize 40",
-              title = format_title("[Neorg] Link Curbuf", " "),
+              title = Util.fzflua.format_title("[Neorg] Link Curbuf", " "),
               preview = {
                 hidden = "hidden",
                 vertical = "up:55%",
@@ -207,7 +198,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              title = format_title("[Neorg] Title Curbuf", " "),
+              title = Util.fzflua.format_title("[Neorg] Title Curbuf", " "),
             },
             actions = {
               ["default"] = function(selected, _)
@@ -232,7 +223,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              title = format_title("[Neorg] Title Global", " "),
+              title = Util.fzflua.format_title("[Neorg] Title Global", " "),
             },
             fzf_opts = {
               ["--preview"] = fzf_lua.shell.preview_action_cmd(function(items)

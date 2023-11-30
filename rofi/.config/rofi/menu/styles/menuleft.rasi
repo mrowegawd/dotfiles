@@ -1,5 +1,5 @@
 configuration {
-    font:							              "SF Mono 12";
+    font:							              "SF Mono 14";
     show-icons:                     false;
     icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
@@ -28,10 +28,10 @@ window {
 	  border:							            0px;
 	  border-color:					          @urgent;
     border-radius:                  12px;
-    width: 						              30%;
-    height: 					              70%;
-    y-offset:                       -85;
-    x-offset:                       -12em;
+    width: 						              20%;
+    height: 					              50%;
+    y-offset:                       -10em;
+    x-offset:                       -23em;
 }
 
 prompt {

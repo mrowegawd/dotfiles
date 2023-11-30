@@ -2,16 +2,6 @@ local fn = vim.fn
 
 local Util = require "r.utils"
 
-local function status_dap(req)
-  local ok, _ = pcall(require, req)
-
-  if not ok then
-    return ""
-  end
-
-  return req.status()
-end
-
 return {
   -- NVIM-DAP
   {
@@ -99,27 +89,82 @@ return {
     -- stylua: ignore
     keys = {
       --  +----------------------------------------------------------+
-      --    Breakpoints
-      --  +----------------------------------------------------------+
-      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
-      { "<Leader>dc", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug(dap): breakpoint with condition" },
-      { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug(dap): clear all breakpoints" },
-      -- { "<Leader>dbl", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
-      { "<Leader>dD", function() require("dap").list_breakpoints(true) end, desc = "Debug(dap): list breakpoint qf", },
-      --  +----------------------------------------------------------+
       --    DAP commands
       --  +----------------------------------------------------------+
-      { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug(dap): run to cursor" },
-      { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
+      -- { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug(dap): run to cursor" },
+      -- { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
       -- { "<Leader>dr", function() require "dap".repl.toggle(nil, "botright split") end, desc = "Dap: toggle REPL" },
       -- { "<Leader>dS", function() print(vim.inspect(require("dap").session())) end, desc = "Debug(dap): get session" },
+      --  +----------------------------------------------------------+
+      --    Breakpoints
+      --  +----------------------------------------------------------+
+      -- { "<Leader>dc", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug(dap): breakpoint with condition" },
+      -- { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug(dap): clear all breakpoints" },
+      -- { "<Leader>dbl", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
+      -- { "<Leader>dD", function() require("dap").list_breakpoints(true) end, desc = "Debug(dap): list breakpoint qf", },
+      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
+      { "<Leader>df", function()
+        local fn_cmds = {
+          breakpoint_set = function ()
+            return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
+          end,
+          breakpoint_clear_all = function ()
+            return require("dap").clear_breakpoints()
+          end,
+          breakpoint_lists = function ()
+            return require("dap").list_breakpoints(true)
+          end,
+          dap_run_to_cursor = function ()
+            return require("dap").run_to_cursor()
+          end,
+          dap_run_last = function ()
+            return require("dap").run_last()
+          end,
+          dap_continue_or_run = function ()
+            return require("dap").continue()
+          end,
+          dap_close_or_quit = function ()
+            require("dap").terminate()
+            require("dapui").close()
+          end,
+          dap_printout_session = function ()
+            return print(vim.inspect(require("dap").session()))
+          end,
+        }
+
+        local cmds = {}
+        for idx, _ in pairs(fn_cmds) do
+          table.insert(cmds, idx)
+        end
+
+        require("fzf-lua").fzf_exec(cmds, Util.fzflua.cursor_dropdown {
+          actions = {
+            ["default"] = function(selected, _)
+              local sel = selected[1]
+              fn_cmds[sel]()
+            end
+          }
+
+        })
+
+      end, desc = "Debug(dap): list of debugging dap commands", },
       --  +----------------------------------------------------------+
       --    Close and run debug
       --  +----------------------------------------------------------+
       -- { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug(dap): restart" },
-      { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug(dap): closing or quit debug", },
+      -- { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug(dap): closing or quit debug", },
       { "<Leader>dd",
         function()
+          local function status_dap(req)
+            local ok, _ = pcall(require, req)
+
+            if not ok then
+              return ""
+            end
+
+            return req.status()
+          end
+
           if #status_dap(require "dap") > 0 then
             return require("dap").disconnect()
           else
@@ -144,18 +189,22 @@ return {
     },
     config = function()
       local Config = require "r.config"
-      -- highlight.plugin("dapHi", {
-      --   { DapBreakpoint = { fg = palette.light_red } },
-      --   { DapStopped = { fg = palette.green } },
-      -- })
+      local highlight = require "r.config.highlights"
+      highlight.plugin("dapHi", {
+        { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = { from = "ColorColumn", attr = "bg" } } },
+        { DapStopped = { fg = { from = "@field", attr = "fg" }, bg = { from = "ColorColumn", attr = "bg" } } },
+      })
 
-      for name, sign in pairs(Config.icons.dap) do
-        sign = type(sign) == "table" and sign or { sign }
-        vim.fn.sign_define(
-          "Dap" .. name,
-          { text = sign[1], texthl = sign[2] or "DiagnosticInfo", linehl = sign[3], numhl = sign[3] }
-        )
-      end
+      fn.sign_define {
+        {
+          name = "DapBreakpoint",
+          texthl = "DapBreakpoint",
+          text = Config.icons.dap.Breakpoint,
+          linehl = "",
+          numhl = "",
+        },
+        { name = "DapStopped", texthl = "DapStopped", text = Config.icons.dap.Stopped[1], linehl = "", numhl = "" },
+      }
     end,
   },
   -- MASON-NVIM-DAP.NVIM

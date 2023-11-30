@@ -4,64 +4,6 @@ local highlight = require "r.config.highlights"
 
 local Util = require "r.utils"
 
-local function format_title(str, icon, icon_hl)
-  return {
-    { " " },
-    { (icon and icon .. " " or ""), icon_hl or "Boolean" },
-    { str, "FzfLuaTitle" },
-    { " " },
-  }
-end
-
-local function dropdown(opts)
-  opts = opts or { winopts = {} }
-  local title = vim.tbl_get(opts, "winopts", "title") ---@type string?
-  if title and type(title) == "string" then
-    opts.winopts.title = format_title(title)
-  end
-  return vim.tbl_deep_extend("force", {
-    prompt = require("r.config").icons.misc.dots,
-    fzf_opts = { ["--layout"] = "reverse" },
-    winopts = {
-      title_pos = opts.winopts.title and "center" or nil,
-      height = 0.70,
-      width = 0.60,
-      row = 0.1,
-      preview = {
-        hidden = "hidden",
-        layout = "vertical",
-        vertical = "up:50%",
-      },
-    },
-  }, opts)
-end
-
-local function cursor_dropdown(opts)
-  local height = vim.o.lines - vim.o.cmdheight
-  if vim.o.laststatus ~= 0 then
-    height = height - 1
-  end
-
-  local vim_width = vim.o.columns
-  local vim_height = height
-
-  local widthc = math.floor(vim_width / 2 + 8)
-  local heightc = math.floor(vim_height / 2 - 5)
-
-  return dropdown(vim.tbl_deep_extend("force", {
-    winopts_fn = {
-      width = widthc,
-      height = heightc,
-    },
-    winopts = {
-      row = 1,
-      relative = "cursor",
-      height = 0.33,
-      width = widthc / (widthc + vim_width - 10),
-    },
-  }, opts))
-end
-
 return {
   -- HARPOON
   {
@@ -221,7 +163,7 @@ return {
           return require("fzf-lua").keymaps {
             winopts = {
               preview = {
-                title = format_title("Keymaps", " "),
+                title = Util.fzflua.format_title("Keymaps", " "),
                 vertical = "up:45%",
                 horizontal = "right:30%",
                 layout = "flex",
@@ -236,7 +178,7 @@ return {
         function()
           return require("fzf-lua").files {
             prompt = "  ",
-            winopts = { title = format_title("Dotfiles", "󰈙") },
+            winopts = { title = Util.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
         end,
@@ -293,7 +235,7 @@ return {
 
           return require("fzf-lua").live_grep {
             prompt = "  ",
-            winopts = { title = format_title("[QF] Grep", " ") },
+            winopts = { title = Util.fzflua.format_title("[QF] Grep", " ") },
             cmd = pcmd,
           }
         end,
@@ -324,11 +266,6 @@ return {
           ["--layout"] = "reverse",
           ["--border"] = "none",
           ["--no-separator"] = "",
-          -- ["--ansi"] = "",
-          -- ["--info"] = "default",
-          -- ["--layout"] = "default",
-          -- ["--reverse"] = false,
-          -- ["--border"] = "none",
         },
         keymap = {
           builtin = {
@@ -385,7 +322,7 @@ return {
           -- debug = true, -- jangan lupa: untuk check `rg opt`
           prompt = "  ",
           cwd_prompt = false,
-          winopts = { title = format_title("Files", "") },
+          winopts = { title = Util.fzflua.format_title("Files", "") },
           -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
           fzf_opts = {
             ["--header"] = [[Ctrl-g:'grep by directory',Ctrl-h:'toggle hidden']],
@@ -432,7 +369,7 @@ return {
 
               require("fzf-lua").files {
                 cmd = args.cmd,
-                winopts = { title = format_title("Files hidden", "󰈙") },
+                winopts = { title = Util.fzflua.format_title("Files hidden", "󰈙") },
               }
             end,
             ["ctrl-g"] = function(_, args)
@@ -442,7 +379,7 @@ return {
                 args.cmd = args.cmd .. " --type d"
                 args.winopts = {
                   preview = { hidden = "hidden" },
-                  title = format_title("Grep on directory", ""),
+                  title = Util.fzflua.format_title("Grep on directory", ""),
                 }
               elseif args.cmd:find "--type d" then
                 args.cmd = args.cmd:gsub("--type d", "", 1)
@@ -462,7 +399,7 @@ return {
         git = {
           files = {
             prompt = "  ",
-            winopts = { title = format_title("Git Files", "") },
+            winopts = { title = Util.fzflua.format_title("Git Files", "") },
             cmd = "git ls-files --exclude-standard",
             multiprocess = true, -- run command in a separate process
             git_icons = true, -- show git icons?
@@ -471,7 +408,7 @@ return {
           },
           status = {
             prompt = "  ",
-            winopts = { title = format_title("Git Status", "") },
+            winopts = { title = Util.fzflua.format_title("Git Status", "") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               -- actions inherit from 'actions.files' and merge
@@ -486,7 +423,7 @@ return {
             prompt = "  ",
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = format_title("", "Commits") },
+            winopts = { title = Util.fzflua.format_title("", "Commits") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o:'hash on browser',Ctrl-y:'copy hash',Ctrl-i:'open hash diff',Ctrl-x:'open hash diff buffer']],
             },
@@ -540,9 +477,7 @@ return {
             prompt = "  ",
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = {
-              title = format_title("", "Buffer Commits"),
-            },
+            winopts = { title = Util.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o:'open browser',Ctrl-y:'copy hash',Ctrl-i:'open commit diff',Ctrl-x:'open curdiff']],
             },
@@ -595,7 +530,7 @@ return {
             cmd = "git branch --all --color",
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
             winopts = {
-              title = format_title("Branches", ""),
+              title = Util.fzflua.format_title("Branches", ""),
               height = 0.3,
               row = 0.4,
             },
@@ -639,7 +574,7 @@ return {
         grep = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
           prompt = " ",
-          winopts = { title = format_title("Grep", " ") },
+          winopts = { title = Util.fzflua.format_title("Grep", " ") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
           rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096",
           -- fzf_opts = { ["--header"] = [[Ctrl-q:'grep match',Ctrl-h:'toggle hidden',Ctrl-f:'mode files']] },
@@ -661,7 +596,7 @@ return {
               end
               require("fzf-lua").live_grep_glob {
                 rg_opts = args.rg_opts,
-                winopts = { title = format_title("Grep hidden", " ") },
+                winopts = { title = Util.fzflua.format_title("Grep hidden", " ") },
               }
             end,
             ["ctrl-e"] = function(_, args)
@@ -673,7 +608,7 @@ return {
 
               local tbl_ops = {
                 cmd = args.cmd,
-                winopts = { title = format_title("Grep match", " ") },
+                winopts = { title = Util.fzflua.format_title("Grep match", " ") },
               }
 
               if args.cwd ~= nil then
@@ -694,7 +629,7 @@ Keybindings:
                   ]],
                 },
                 winopts = {
-                  title = format_title("Grep Show Keybindings", " "),
+                  title = Util.fzflua.format_title("Grep Show Keybindings", " "),
                   preview = { layout = "horizontal", hoizontal = "right:99%" },
                 },
 
@@ -719,13 +654,13 @@ Keybindings:
           },
         },
         oldfiles = {
-          winopts = { title = format_title("History", "") },
+          winopts = { title = Util.fzflua.format_title("History", "") },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
         },
         buffers = {
-          winopts = { title = format_title("Buffers", "󰈙") },
+          winopts = { title = Util.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = {
             ["--delimiter"] = "' '",
@@ -734,11 +669,11 @@ Keybindings:
         },
         highlights = {
           prompt = "  ",
-          winopts = { title = format_title "Highlights" },
+          winopts = { title = Util.fzflua.format_title "Highlights" },
         },
         helptags = {
           prompt = "  ",
-          winopts = { title = format_title("Help", "󰋖") },
+          winopts = { title = Util.fzflua.format_title("Help", "󰋖") },
         },
         tabs = {
           prompt = "  ",
@@ -759,7 +694,7 @@ Keybindings:
         },
         lines = {
           prompt = "  ",
-          winopts = { title = format_title("Lines", " ") },
+          winopts = { title = Util.fzflua.format_title("Lines", " ") },
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
             -- tiebreak by line no.
@@ -785,7 +720,7 @@ Keybindings:
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
           winopts = {
-            title = format_title("Blines", " "),
+            title = Util.fzflua.format_title("Blines", " "),
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -848,20 +783,22 @@ Keybindings:
         },
         quickfix = {
           winopts = {
-            title = format_title("[QF]", "󰈙"),
+            title = Util.fzflua.format_title("[QF]", "󰈙"),
           },
           file_icons = true,
           git_icons = true,
         },
         quickfix_stack = {
           winopts = {
-            title = format_title("[QF]", "󰈙"),
+            title = Util.fzflua.format_title("[QF]", "󰈙"),
           },
           marker = ">", -- current list marker
         },
         lsp = {
           cwd_only = true,
+          no_action_zz = true,
           symbols = {
+            no_action_zz = true,
             symbol_style = 1,
             symbol_icons = require("r.config").icons.kinds,
             fzf_opts = {
@@ -869,24 +806,25 @@ Keybindings:
               ["--scrollbar"] = "▓",
             },
             winopts = {
-              title = format_title("Symbols", " "),
+              title = Util.fzflua.format_title("Symbols", " "),
             },
           },
-          code_actions = cursor_dropdown {
+          code_actions = Util.fzflua.cursor_dropdown {
             winopts = {
-              title = format_title("Code Actions", "󰌵", "@type"),
+              title = Util.fzflua.format_title("Code Actions", "󰌵", "@type"),
             },
           },
           finder = {
             prompt = "  ",
+            no_action_zz = true,
             winopts = {
-              title = format_title("LSP Finder", " "),
+              title = Util.fzflua.format_title("LSP Finder", " "),
             },
           },
         },
         diagnostics = {
           prompt = "  ",
-          winopts = { title = format_title("Diagnostics", "", "DiagnosticError") },
+          winopts = { title = Util.fzflua.format_title("Diagnostics", "", "DiagnosticError") },
           cwd_only = false,
           file_icons = true,
           git_icons = false,
@@ -1645,7 +1583,7 @@ Keybindings:
           if opts.kind == "codeaction" then
             return {
               backend = "fzf_lua",
-              fzf_lua = cursor_dropdown {
+              fzf_lua = Util.fzflua.cursor_dropdown {
                 prompt = "  ",
                 winopts = { title = opts.prompt, relative = "cursor" },
               },
@@ -1663,7 +1601,7 @@ Keybindings:
           end
           return {
             backend = "fzf_lua",
-            fzf_lua = dropdown {
+            fzf_lua = Util.fzflua.dropdown {
               winopts = { title = opts.prompt, height = 0.33, row = 0.5 },
             },
           }

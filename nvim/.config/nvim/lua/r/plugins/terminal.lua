@@ -56,7 +56,7 @@ return {
       shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
       start_in_insert = true,
       persist_size = true,
-      -- open_mapping = [[<Localleader><Localleader>]],
+      open_mapping = [[<a-f>]],
       direction = "horizontal",
     },
     cmd = { "ToggleTerm", "TermExec" },
@@ -69,6 +69,7 @@ return {
         float_opts = { width = vim.o.columns, height = vim.o.lines },
       }
       local lrfun = Terminal:new { cmd = "lfrun", hidden = true, direction = "float" }
+      local taskwarrior = Terminal:new { cmd = "taskwarrior-tui", hidden = true, direction = "float" }
 
       -- Check and close the toggleterm
       local function close_term()
@@ -117,7 +118,7 @@ return {
       end
 
       return {
-        -- { "<Localleader><Localleader>" },
+        { "<a-f>" },
         {
           "<F7>",
           function()
@@ -133,6 +134,14 @@ return {
           end,
           mode = { "n", "v", "t" },
           desc = "Terminal(toggleterm): lazygit",
+        },
+        {
+          "<F5>",
+          function()
+            taskwarrior:toggle()
+          end,
+          mode = { "n", "v", "t" },
+          desc = "Terminal(toggleterm): taskwarrior",
         },
         {
           "<C-PageUp>",

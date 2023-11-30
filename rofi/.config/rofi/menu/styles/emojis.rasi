@@ -1,6 +1,6 @@
 
 configuration {
-	  font:							              "SF Mono 12";
+	  font:							              "SF Mono 14";
 	  icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
     disable-history:                false;

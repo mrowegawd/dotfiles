@@ -1,9 +1,10 @@
-local fn = vim.fn
+local Util = require "r.utils"
 
 return {
   -- NEOTEST
   {
     "nvim-neotest/neotest",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
     opts = {
       status = { virtual_text = true },
       output = { open_on_run = true },
@@ -78,34 +79,121 @@ return {
 
       require("neotest").setup(opts)
     end,
-    -- stylua: ignore
     keys = {
-      -- { "<Leader>tL", function() require("neotest").run.run_last { strategy = "dap", } end, desc = "Testing(neotest): run last with debug" },
-      { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing(neotest): test file" },
-      { "<Leader>tF", function() require("neotest").run.run(vim.loop.cwd()) end, "Testing(neotest): test all files" },
-      { "<Leader>tt", function() require("neotest").run.run() end, desc = "Testing(neotest): test unit" },
-      { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing(neotest): stop" },
-      { "<Leader>to", function() require("neotest").summary.toggle() end, desc = "Testing(neotest): output summary panel" },
-      { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false, } end, desc = "Testing(neotest): preview the output" },
-      { "<Leader>ts",
+      -- { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing(neotest): test file" },
+      -- { "<Leader>tF", function() require("neotest").run.run(vim.loop.cwd()) end, "Testing(neotest): test all files" },
+      -- { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing(neotest): stop" },
+      {
+        "<Leader>tl",
+        function()
+          require("neotest").run.run_last()
+        end,
+        desc = "Testing(neotest): run last",
+      },
+      {
+        "<Leader>tt",
+        function()
+          require("neotest").run.run()
+        end,
+        desc = "Testing(neotest): test unit",
+      },
+      {
+        "<Leader>to",
+        function()
+          require("neotest").summary.toggle()
+        end,
+        desc = "Testing(neotest): open output summary",
+      },
+      {
+        "<Leader>tP",
+        function()
+          require("neotest").output.open { enter = true, short = false }
+        end,
+        desc = "Testing(neotest): preview",
+      },
+      {
+        "<Leader>tf",
         function()
           local neotest = require "neotest"
-          for _, adapter_id in ipairs(neotest.state.adapter_ids()) do
-            return neotest.run.run {
-              suite = true,
-              adapter = adapter_id,
-            }
+
+          local fn_cmds = {
+            test_file = function()
+              vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
+            end,
+            test_all_files = function()
+              vim.cmd [[lua require("neotest").run.run(vim.loop.cwd())]]
+            end,
+            test_unit = function()
+              vim.cmd [[lua require("neotest").run.run()]]
+            end,
+            test_stop = function()
+              vim.cmd [[lua require("neotest").run.stop { interactive = true }]]
+            end,
+            test_suit = function()
+              vim.cmd [[lua for _, adapter_id in ipairs(require("neotest").state.adapter_ids()) do require("neotest").run.run { suite = true, adapter = adapter_id, } end]]
+            end,
+            test_open_summary = function()
+              neotest.summary.toggle()
+            end,
+            test_debug_nearest = function()
+              vim.cmd [[lua require("neotest").run.run { strategy = "dap" }]]
+            end,
+            coverage = function()
+              vim.cmd [[CoverageLoad]]
+              vim.cmd [[Coverage]]
+            end,
+            coverage_summary = function()
+              vim.cmd [[CoverageSummary]]
+            end,
+            coverage_load = function()
+              vim.cmd [[CoverageLoad]]
+            end,
+            coverage_show = function()
+              vim.cmd [[CoverageShow]]
+            end,
+            coverage_hide = function()
+              vim.cmd [[CoverageHide]]
+            end,
+            coverage_toggle = function()
+              vim.cmd [[CoverageToggle]]
+            end,
+            coverage_clear = function()
+              vim.cmd [[CoverageClear]]
+            end,
+          }
+
+          local cmds = {}
+          for idx, _ in pairs(fn_cmds) do
+            table.insert(cmds, idx)
           end
+
+          require("fzf-lua").fzf_exec(
+            cmds,
+            Util.fzflua.cursor_dropdown {
+              actions = {
+                ["default"] = function(selected, _)
+                  local sel = selected[1]
+                  fn_cmds[sel]()
+                end,
+              },
+            }
+          )
         end,
-        desc = "Testing(neotest): test suite",
+        desc = "Testing(neotest): list of neotest commands",
       },
     },
   },
-  {
-    "mfussenegger/nvim-dap",
-    optional = true,
-    -- stylua: ignore
-    keys = {
-      { "<Leader>td", function() require("neotest").run.run { strategy = "dap", } end, desc = "Testing(neotest): debug nearest" }, },
-  },
+  -- {
+  --   "mfussenegger/nvim-dap",
+  --   optional = true,
+  --   keys = {
+  --     {
+  --       "<Leader>td",
+  --       function()
+  --         require("neotest").run.run { strategy = "dap" }
+  --       end,
+  --       desc = "Testing(neotest): debug nearest",
+  --     },
+  --   },
+  -- },
 }

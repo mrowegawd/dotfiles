@@ -104,26 +104,26 @@ super + Return
 super + End
         xdo close
 
-# misc: increase volume
+# misc: increase volume audio
 super + shift + equal
         amixer -q sset Master 3%+
 
-# misc: decrease volume
+# misc: decrease volume audio
 super + shift + minus
         amixer -q sset Master 3%-
 
-# misc: mute toggle
+# misc: toggle mute audio
 super + shift + m
         amixer -q sset Master toggle
 
-# misc: reload sxhkd
+# misc: reload/restart sxhkd config
 super + shift + F8
         pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
 
 super + shift + F9
         pkill ffmpeg && dunstify "Record" "quit..."
 
-# misc: restart/reload bspwm
+# misc: reload/restart bspwm config
 super + shift + F12
         bspc wm -r && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
 
@@ -167,7 +167,7 @@ super + shift + q
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
-# misc: quit record ffmpeg
+# misc: close/quit video record
 super + F9
         pkill ffmpeg; dunstify "Record" "Quit.."
 
