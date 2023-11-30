@@ -551,6 +551,7 @@ return {
   -- VIM-TABLE-MODE
   {
     "dhruvasagar/vim-table-mode",
+    enabled = false,
     ft = {
       "markdown",
       "org",

@@ -1,5 +1,7 @@
 local Util = require "r.utils"
 
+local highlight = require "r.config.highlights"
+
 _G.OverseerConfig = {} -- to store error formats
 
 OverseerConfig.fnpane_run = 0
@@ -442,12 +444,18 @@ return {
     },
     config = function()
       require("coverage").setup {
-        commands = false,
         highlights = {
           covered = { fg = "green" },
           uncovered = { fg = "red" },
         },
       }
+
+      highlight.plugin("coverage_hi", {
+        { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
+      })
     end,
   },
   -- OVERSEER.NVIM (disabled)

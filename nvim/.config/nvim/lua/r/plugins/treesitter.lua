@@ -1,3 +1,5 @@
+local Util = require "r.utils"
+
 return {
   -- TREESITTER-CONTEXT (disabled)
   {
@@ -14,7 +16,6 @@ return {
       {
         "<Localleader>tt",
         function()
-          local Util = require "r.utils"
           local tsc = require "treesitter-context"
           tsc.toggle()
           if Util.inject.get_upvalue(tsc.toggle, "enabled") then
@@ -250,7 +251,6 @@ return {
       }
     end,
     config = function(_, opts)
-      local Util = require "r.utils"
       if Util.has "orgmode" then
         require("orgmode").setup_ts_grammar()
       end

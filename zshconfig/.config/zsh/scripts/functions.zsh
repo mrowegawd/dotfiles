@@ -27,6 +27,10 @@ V
 
   # TODO: build yang khusus apt dan juga cargo
   sudo apt install "$apt_install"
+
+  # TODO: install gpg-tui
+  # install depencies apt-get install libgpgme-dev libx11-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
+  # carog install gpg-tui
 }
 
 build-react() {

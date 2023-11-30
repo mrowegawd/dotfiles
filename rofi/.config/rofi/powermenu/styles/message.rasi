@@ -4,11 +4,11 @@
 * {
     background-color:       @background;
     text-color:             @border;
-	  font:				          	"FantasqueSansMono Nerd Font 12";
+    font:                   "SF Mono 18";
 }
 
 window {
-    width:      		        360px;
+    width:      		        650px;
     padding:    		        25px;
     border:					        1px;
     border-radius:          10px;

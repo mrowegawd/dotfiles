@@ -1,5 +1,5 @@
 configuration {
-    font:                           "mononoki Nerd Font 10";
+    font:                           "SF Mono 20";
     show-icons:                     false;
     icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";

@@ -51,8 +51,8 @@ set_dunst() {
 		sed -i -e "s/%%$2%%/$GETCOLOR/g" "$_DUNST_PATH/dunstrc"
 	}
 
-	NEW_FONTS="JetBrainsMono Nerd Font"
-	NEW_FONTS_SIZE=12
+	NEW_FONTS="SF Mono"
+	NEW_FONTS_SIZE=16
 	getxrdb_font() {
 		# set font
 		sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
@@ -132,31 +132,30 @@ set_vim() {
 
 	sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$1\"/" "$PATH_NVIM"
 }
-set_oomox() {
-	if command -v oomox-cli &>/dev/null; then
-		oomox-cli /opt/oomox/scripted_colors/xresources/xresources-reverse
-	fi
+# set_oomox() {
+# 	if command -v oomox-cli &>/dev/null; then
+# 		oomox-cli /opt/oomox/scripted_colors/xresources/xresources-reverse
+# 	fi
 
-	# NOTE: Change font lxappreance seharusnya lewat GUI lxappreance,
-	# but we to change with command line
-	FILE_INI_GTK3=~/.config/gtk-3.0/settings.ini
-	if [ -f $FILE_INI_GTK3 ]; then
-		size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
+# 	# NOTE: Change font lxappreance seharusnya lewat GUI lxappreance,
+# 	# but we to change with command line
+# 	FILE_INI_GTK3=~/.config/gtk-3.0/settings.ini
+# 	if [ -f $FILE_INI_GTK3 ]; then
+# 		size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
 
-		if [[ $size == "1024x768" ]]; then
-			FONTSIZETERM="10"
-		fi
+# 		if [[ $size == "1024x768" ]]; then
+# 			FONTSIZETERM="10"
+# 		fi
 
-		sed -i -e "s/^gtk-font-name=.*$/gtk-font-name=$GET_FONT $FONTSIZETERM/g" $FILE_INI_GTK3
+# 		sed -i -e "s/^gtk-font-name=.*$/gtk-font-name=$GET_FONT $FONTSIZETERM/g" $FILE_INI_GTK3
 
-	fi
-}
+# 	fi
+# }
 set_terminal() {
-	size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
-
-	if [[ $size == "1024x768" ]]; then
-		FONTSIZETERM="9"
-	fi
+	# size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
+	# if [[ $size == "1024x768" ]]; then
+	# 	FONTSIZETERM="9"
+	# fi
 
 	# KITTY
 	# change colorscheme fpr spesific terminal (ex: kitty,st,alacritty)

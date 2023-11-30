@@ -37,7 +37,8 @@ ${FILEOPT}
 [ \"Open:Bookmarked\", \"\" ],
 [ \"Delete:Query\",  \"\" ],
 [ \"Delete:Bookmarked\",  \"\" ],
-[ \"Edit:Bookmarked\",  \"\" ]
+[ \"Edit:Bookmarked\",  \"\" ],
+[ \"Open:Pass\",  \"\" ]
 ]
 "
 
@@ -59,7 +60,7 @@ delete_query() {
 	if [ "$1" == "DMENU" ]; then
 		OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | head -n -2 | $MENU -i -p "Delete Menu:")
 	else
-		OBJ_MENU=$(awk -F"," '{printf "%-10s%s%-10s%s%-10s\n", $1,OFS,$2,OFS,$3}' OFS="," $FILE_BOOKMARKED |
+		OBJ_MENU=$(awk -F"," '{printf "%-10s%s%-10s%s%-10s\n", $1,OFS,$2,OFS,$3}' OFS="," "$FILE_BOOKMARKED" |
 			sort | awk -F"," '{print $1,$3}' |
 			column -t -s"+" | $ROFI_COMMAND -dmenu -i -p "  " | awk -F"[[:space:]][[:space:]][[:space:]]+" '{print $1}')
 	fi
@@ -102,7 +103,7 @@ add_bookmark() {
 open_bookmarked() {
 	# OPTIONS=$(cat "$FILE_BOOKMARKED" | sort | $ROFI_COMMAND -dmenu -i -p "  " | cut -d"," -f2)
 	OPTIONS=$(
-		awk -F"," '{printf "%-10s%s%-10s%s%-10s\n", $1,OFS,$2,OFS,$3}' OFS="," $FILE_BOOKMARKED |
+		awk -F"," '{printf "%-10s%s%-10s%s%-10s\n", $1,OFS,$2,OFS,$3}' OFS="," "$FILE_BOOKMARKED" |
 			sort | column -t -s"," | $ROFI_COMMAND -dmenu -i -p "  " |
 			tr -s " " | awk -F"+" '{print $2}'
 	)
@@ -113,6 +114,86 @@ open_bookmarked() {
 edit_bookmarked() {
 	# kalau bukan bspwm, ini bakal error
 	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+
+	exit
+}
+
+open_pass() {
+
+	timeout=30
+	dir="$HOME/.config/rofi/menu"
+	theme="styles/big_center"
+	rofi_command="rofi -theme $dir/$theme -dmenu -matchin fuzzy -i -sort -sorting-method fzf "
+
+	# kalau bukan bspwm, ini bakal error
+	# bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+
+	select_command() {
+		# contents="$(pass show "$1")"
+		# first_line="$(head -1 <<< "$contents")"
+		# the_password
+		# the_username
+		# the_url
+		# if [[ ! "${first_line}" =~ ": " ]]; then
+		#   options[Copy\ password]="wl-copy ${(q)first_line}"
+		#   options_order+="Copy password"
+		#   the_password="$first_line"
+		# fi
+
+		# grep -P '^[^:]+(?=: .)' <<< "$contents" | while read line; do
+		#   field="${line%%: *}"
+		#   value="${line#*: }"
+		#   if [[ "$field" == "url" ]]; then
+		#     options[Open\ URL]="xdg-open ${(q)value}"
+		#     options_order+="Open URL"
+		#     the_url="$value"
+		#   else
+		#     options[Copy\ $field]="wl-copy ${(q)value}"
+		#     options_order+="Copy $field"
+		#     [[ "$field" == "username" ]] && the_username="$value"
+		#   fi
+		# done
+
+		# options[Show]="zenity --info --title=${(q)1} --icon-name=password --text=${(q)contents} --width=400"
+		# options_order+="Show"
+
+		# if [[ -n "$the_username" ]] && [[ -n "$the_password" ]]; then
+		#   options[Copy\ username\ \&\ password]="wl-copy ${(q)the_username} && wl-copy ${(q)the_password} -p"
+		#   options_order=("Copy username & password" "${options_order[@]}")
+		#   if [[ -n "$the_url" ]]; then
+		#     options[Copy\ username\ \&\ password,\ open\ URL]="xdg-open ${(q)the_url} && wl-copy ${(q)the_username} && wl-copy ${(q)the_password} -p"
+		#     options_order=("Copy username & password, open URL" "${options_order[@]}")
+		#   fi
+		# fi
+		selection="$(echo -e "copy username\ncopy password\nopen url" | $rofi_command -p "$1")"
+
+		if [[ -n "$selection" ]]; then
+			dunstify "$selection"
+			# eval "$options[${(q)selection}]"
+		else
+			exit 2
+		fi
+	}
+
+	select_password() {
+		find "$dir" -not -path '*/.git/*' -type f |
+			grep '\.gpg$' |
+			sed "s:$dir\(.*\)\.gpg$:\1:" |
+			$rofi_command -p 'password' -filter "$1"
+	}
+
+	main() {
+		dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
+		password_selection="$(select_password "$1")"
+		if [[ -n "$password_selection" ]]; then
+			select_command "$password_selection" "$1"
+			sleep $timeout && eval "wl-copy -c && wl-copy -cp"
+		else
+			exit
+		fi
+	}
+
+	main "$@"
 
 	exit
 }
@@ -140,6 +221,10 @@ main() {
 
 		if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
 			edit_bookmarked
+		fi
+
+		if [ "$OBJ_SELECTED" = "Open:Pass" ]; then
+			open_pass ""
 		fi
 
 		if [ "$OBJ_SELECTED" = "$(echo "$OPTIONS" | jq -r --arg i "$i" '.[($i|tonumber)][0]')" ]; then
