@@ -46,18 +46,44 @@ function M.get()
     --  +----------------------------------------------------------+
     --  Toggle
     --  +----------------------------------------------------------+
-    { "gtd", Util.toggle.diagnostics, desc = "LSP(diagnostic): toggle diagnostics" },
-    { "gti", Util.toggle.inlay_hints, desc = "LSP: toggle inlay hint" },
-    { "gtc", Util.toggle.codelens, desc = "LSP: toggle codelens" },
-    { "gtF", Util.format.toggle, desc = "LSP: toggle autoformat" },
-    { "gtf", function() Util.format.toggle(true) end, desc = "LSP: toggle autoformat buffer" },
-    { "gtl", Util.toggle.number, desc = "LSP: toggle number" },
-    { "gts", Util.toggle.semantic_tokens, desc = "LSP: toggle semantic tokens" },
+    { "gt", function ()
+      Util.fzflua.send_cmds {
+        toggle_diagnostics = function()
+          Util.toggle.diagnostics()
+        end,
+        toggle_codelens = function()
+          Util.toggle.codelens()
+        end,
+        toggle_semantic_tokens = function()
+          Util.toggle.semantic_tokens()
+        end,
+        toggle_inlay_hint= function()
+          if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
+            Util.toggle.inlay_hints()
+          else
+            Util.warn("This LSP does not support for inlay_hint", { title = "LSP" })
+          end
+        end,
+        toggle_number = function()
+          Util.toggle.number()
+        end,
+        toggle_format_lspbuffer = function()
+          Util.format.toggle(true)
+        end,
+        toggle_format_lspallbuf = function()
+          Util.format.toggle()
+        end,
+        format_lspinfo = function()
+          vim.cmd [[LazyFormatInfo]]
+        end,
+        format_run = function()
+          vim.cmd [[LazyFormat]]
+        end}
+    end, desc = "LSP: commands of lsp" },
 
     --  +----------------------------------------------------------+
     --  Diagnostics
     --  +----------------------------------------------------------+
-    { "gtd", Util.toggle.diagnostics, desc = "LSP(diagnostic): toggle diagnostics" },
     { "dn", function() diagnostic.goto_next { float = false } end, desc = "LSP(diagnostic): next item" },
     { "dp", function() diagnostic.goto_prev { float = false } end, desc = "LSP(diagnostic): prev item" },
     { "dP", function() vim.diagnostic.open_float({ scope = "line", border = "rounded", focusable = true }) end, desc = "LSP(diagnostic): preview" },

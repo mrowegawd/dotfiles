@@ -14,7 +14,7 @@ local general_overrides = function()
     { CursorLine = { bg = { from = "ColorColumn", alter = -0.4 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
-    { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
+    { FloatBorder = { bg = "NONE", fg = { from = "@field" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
     { Folded = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 2 }, underline = false, bold= true } },
     { EndOfBuffer = { bg = "NONE" } },
@@ -189,7 +189,7 @@ local general_overrides = function()
     { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
 
     -- NOICE ==============================================================
-    { NoicePopupBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.25 } } },
+    { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 

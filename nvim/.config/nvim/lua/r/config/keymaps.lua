@@ -159,10 +159,6 @@ nnoremap("~", "%", silent)
 
 -- nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 
-nnoremap("<Localleader>tb", function()
-  return Util.toggle.background()
-end, { desc = "Misc: toggle background" })
-
 nnoremap("<Leader>rd", function()
   local query = vim.fn.input "Search DevDocs: "
   if #query > 0 then
@@ -395,3 +391,58 @@ nnoremap("<C-f>", [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$')
 
 nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
+
+nnoremap("<F1>", function()
+  print "testing to run async??"
+  local function on_stdout(_, data)
+    if data then
+      for _, line in ipairs(data) do
+        if line ~= "" then
+          vim.api.nvim_buf_set_lines(0, -1, -1, false, { line })
+        end
+      end
+    end
+  end
+
+  local function run_script_async(command)
+    local job_opts = {
+      on_stdout = on_stdout,
+      on_stderr = on_stdout,
+      stdout_buffered = false,
+      stderr_buffered = false,
+    }
+
+    vim.fn.jobstart(command, job_opts)
+  end
+
+  run_script_async { "go", "run", "." }
+end)
+
+nnoremap("<Localleader>r", function()
+  Util.fzflua.send_cmds {
+    -- check_todocurbuf = function()
+    --   cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
+    -- end,
+    -- check_todorepo = function()
+    --   cmd(fmt("TodoQuickFix cwd=%s", fn.getcwd()))
+    -- end,
+    check_todocurbuf = function()
+      cmd(fmt("TodoTrouble cwd=%s", fn.expand "%:p"))
+    end,
+    check_todorepo = function()
+      cmd(fmt("TodoTrouble cwd=%s", fn.getcwd()))
+    end,
+    toggle_background = function()
+      Util.toggle.background()
+    end,
+    ccc_highlight_color = function()
+      vim.cmd "CccHighlighterToggle"
+    end,
+    ccc_pick = function()
+      vim.cmd "CccPick"
+    end,
+    toggleterm_left_side = function()
+      vim.cmd "ToggleTerm direction=vertical size=100"
+    end,
+  }
+end)

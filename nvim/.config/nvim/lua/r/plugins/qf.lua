@@ -57,9 +57,10 @@ return {
     dir = "~/.local/src/nvim_plugins/qfsilet",
     event = "LazyFile",
     opts = {
-      ext_note = "",
-      signs = {
-        priority = 10,
+      keymap = {
+        quickfix = {
+          toggle_open = "",
+        },
       },
     },
   },

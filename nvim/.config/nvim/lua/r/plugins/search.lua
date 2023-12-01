@@ -1,4 +1,4 @@
-local fn, cmd, fmt = vim.fn, vim.cmd, string.format
+local fn, cmd = vim.fn, vim.cmd
 
 local highlight = require "r.config.highlights"
 
@@ -1254,6 +1254,7 @@ Keybindings:
   -- SPECTRE
   {
     "nvim-pack/nvim-spectre",
+    build = false,
     cmd = "Spectre",
     keys = {
       {
@@ -1311,7 +1312,7 @@ Keybindings:
       return {
         open_cmd = "noswapfile vnew",
         color_devicons = true,
-        live_update = false, -- auto excute search again when you write any file in vim
+        live_update = false, -- auto execute search again when you write any file in vim
         line_sep_start = "┌-----------------------------------------",
         result_padding = "¦  ",
         line_sep = "└-----------------------------------------",
@@ -1466,29 +1467,9 @@ Keybindings:
   {
     "folke/todo-comments.nvim",
     event = "LazyFile",
-    keys = {
-      {
-        "<Leader>rt",
-        function()
-          return cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
-        end,
-        desc = "Misc(todocomment): find todo comment curbuf",
-        mode = {
-          "n",
-          "v",
-        },
-      },
-      {
-        "<Leader>rT",
-        fmt("<CMD>TodoQuickFix cwd=%s<CR>", fn.getcwd()),
-        desc = "Misc(todocomment): find all todo comments on repo",
-      },
-    },
     opts = {
-      signs = {
-        enable = true, -- show icons in the sign column
-        priority = 8,
-      },
+      signs = true, -- show icons in the signs column
+      sign_priority = 8, -- sign priority
       keywords = {
         FIX = {
           icon = " ", -- used for the sign, and search results
@@ -1507,7 +1488,7 @@ Keybindings:
         },
         -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
       },
-      merge_keywords = false, -- wheather to merge custom keywords with defaults
+      merge_keywords = false,
       highlight = {
         -- highlights before the keyword (typically comment characters)
         before = "", -- "fg", "bg", or empty
@@ -1518,7 +1499,7 @@ Keybindings:
         after = "fg", -- "fg", "bg", or empty
         -- pattern can be a string, or a table of regexes that will be checked
         -- vim regex
-        pattern = [[.*<(KEYWORDS)\s*:]],
+        pattern = [[.*<(KEYWORDS)*:]],
         comments_only = true, -- highlight only inside comments using treesitter
         max_line_len = 400, -- ignore lines longer than this
         exclude = {}, -- list of file types to exclude highlighting
@@ -1533,24 +1514,22 @@ Keybindings:
         hint = { "DiagnosticHint", "#10B981" },
         default = { "Identifier", "#7C3AED" },
       },
-      -- rg_rege = {
-      --     "--color=always",
-      --     "--no-heading",
-      --     "--follow",
-      --     "--hidden",
-      --     "--with-filename",
-      --     "--line-number",
-      --     "--column",
-      --     "-g",
-      --     "!node_modules/**",
-      --     "-g",
-      --     "!.git/**",
-      -- },
       search = {
         command = "rg",
-
-        -- don't replace the (KEYWORDS) placeholder
-        pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
+        pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+        args = {
+          "--color=never",
+          "--no-heading",
+          "--follow",
+          "--hidden",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "-g",
+          "!node_modules/**",
+          "-g",
+          "!.git/**",
+        },
       },
     },
   },

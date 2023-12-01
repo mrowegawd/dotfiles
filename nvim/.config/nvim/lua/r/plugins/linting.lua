@@ -32,6 +32,16 @@ return {
       local M = {}
 
       local lint = require "lint"
+
+      vim.g.try_lint = function(args)
+        args = args or {}
+        lint.try_lint(nil, args)
+        if vim.g.codespell_active then
+          lint.try_lint("codespell", { ignore_errors = true })
+        end
+      end
+      vim.g.codespell_active = true -- enabled by default
+
       for name, linter in pairs(opts.linters) do
         if type(linter) == "table" and type(lint.linters[name]) == "table" then
           lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name], linter)

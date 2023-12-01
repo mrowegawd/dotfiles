@@ -664,9 +664,7 @@ return {
       { "rg", "<Cmd> RmuxGrepErr <CR>" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
-
       { "rE", "<Cmd> RmuxREDITConfig <CR>" },
-      { "<Localleader><Localleader>", "<Cmd> RmuxZoom <CR>", mode = { "n", "v" } },
     },
     opts = {
       base = {

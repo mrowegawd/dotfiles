@@ -1,7 +1,7 @@
 st.font:              SF Mono:Regular:pixelsize=14
 st.boldFont:          SF Mono:Bold:pixelsize=14
-st.italicFont:        VictorMono NFP SemiBold Obl:Italic:pixelsize=14
-st.italicBoldFont:    VictorMono NFP:ItalicBold:pixelsize=14
+st.italicFont:        Victor Mono medium:Italic:pixelsize=14
+st.italicBoldFont:    Victor Mono:ItalicBold:pixelsize=14
 
 ! st.borderperc:              100
 ! st.cursorshape:               2

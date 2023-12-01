@@ -65,14 +65,15 @@ function M.semantic_tokens(bufnr)
   end
 end
 
-function M.inlay_hints(bufnr)
-  vim.b.semantic_tokens_enabled = vim.b.semantic_tokens_enabled == false
-
-  for _, client in ipairs(vim.lsp.get_clients()) do
-    if client.server_capabilities.semanticTokensProvider then
-      vim.lsp.semantic_tokens[vim.b.semantic_tokens_enabled and "start" or "stop"](bufnr or 0, client.id)
-      Util.info(string.format("Buffer lsp semantic highlighting %s", bool2str(vim.b.semantic_tokens_enabled)))
+function M.inlay_hints(buf, value)
+  local ih = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
+  if type(ih) == "function" then
+    ih(buf, value)
+  elseif type(ih) == "table" and ih.enable then
+    if value == nil then
+      value = not ih.is_enabled(buf)
     end
+    ih.enable(buf, value)
   end
 end
 

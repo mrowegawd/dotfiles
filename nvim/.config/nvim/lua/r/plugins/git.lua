@@ -14,22 +14,22 @@ return {
     dependencies = {
       "nvim-telescope/telescope.nvim",
     },
-    keys = {
-      {
-        "<leader>gwm",
-        function()
-          require("telescope").extensions.git_worktree.git_worktrees()
-        end,
-        desc = "Git(git-worktree): manage",
-      },
-      {
-        "<leader>gwc",
-        function()
-          require("telescope").extensions.git_worktree.create_git_worktree()
-        end,
-        desc = "Git(git-worktree): create",
-      },
-    },
+    -- keys = {
+    --   {
+    --     "<leader>gwm",
+    --     function()
+    --       require("telescope").extensions.git_worktree.git_worktrees()
+    --     end,
+    --     desc = "Git(git-worktree): manage",
+    --   },
+    --   {
+    --     "<leader>gwc",
+    --     function()
+    --       require("telescope").extensions.git_worktree.create_git_worktree()
+    --     end,
+    --     desc = "Git(git-worktree): create",
+    --   },
+    -- },
   },
   -- GIT CONFLICT
   {
@@ -416,10 +416,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     --stylua: ignore
     keys = {
-      { "<Leader>gS", function() require("neogit").open() end, desc = "Git(neogit): open" },
       { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit" },
-      -- { "<localleader>gl", function() require("neogit").popups.pull.create() end, desc = "Git(neogit): open pull popup", },
-      -- { "<localleader>gp", function() require("neogit").popups.push.create() end, desc = "Git(neogit): open push popup", },
     },
     opts = {
       disable_signs = false,

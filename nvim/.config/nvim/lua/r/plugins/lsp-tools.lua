@@ -18,7 +18,10 @@ return {
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
-    keys = { { "<Localleader>tr", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle" } },
+    keys = {
+      { "<Localleader>tt", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle", mode = { "n", "v", "i" } },
+      { "<Leader>q", "<CMD>Trouble quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v", "i" } },
+    },
     opts = function()
       highlight.plugin("trouble", {
         { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },

@@ -118,7 +118,7 @@ return {
       end
 
       return {
-        { "<a-f>" },
+        { "<a-f>", mode = { "n", "v", "t", "i" } },
         {
           "<F7>",
           function()
@@ -186,12 +186,6 @@ return {
             end
           end,
           desc = "Terminal(toggleterm): remove",
-          mode = { "n", "t", "v" },
-        },
-        {
-          "<Localleader>tl",
-          "<CMD> ToggleTerm direction=vertical size=100 <CR>",
-          desc = "Terminal(toggleterm): open left side",
           mode = { "n", "t", "v" },
         },
       }

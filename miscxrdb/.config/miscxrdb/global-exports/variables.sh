@@ -18,7 +18,6 @@ fi
 if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
 	export BROWSER="/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe"
 else
-	export TERMINAL="alacritty"
 	export BROWSER="firefox"
 fi
 #
