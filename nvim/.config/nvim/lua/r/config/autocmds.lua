@@ -38,6 +38,7 @@ Util.cmd.augroup("SmartClose", {
     "lspinfo",
     "man",
     "notify",
+    "filetree",
     "qf",
     "query",
     "noice",
@@ -51,7 +52,11 @@ Util.cmd.augroup("SmartClose", {
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    if vim.bo[event.buf].filetype == "filetree" then
+      vim.keymap.set("n", "q", "<cmd>Workspace RightPanelToggle<cr>", { buffer = event.buf, silent = true })
+    else
+      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    end
   end,
 })
 
@@ -312,6 +317,6 @@ Util.cmd.augroup("AutoResizeWindowssf", {
   command = "wincmd =",
 })
 
--- vim.cmd [[
---   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
--- ]]
+vim.cmd [[
+  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
+]]

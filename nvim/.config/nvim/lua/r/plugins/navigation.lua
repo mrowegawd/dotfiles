@@ -140,10 +140,6 @@ return {
         },
 
         commands = {
-          system_open = function(state)
-            -- TODO: just use vim.ui.open when dropping support for Neovim <0.10
-            (vim.ui.open or require("astronvim.utils").system_open)(state.tree:get_node():get_id())
-          end,
           parent_or_close = function(state)
             local node = state.tree:get_node()
             if (node.type == "directory" or node:has_children()) and node:is_expanded() then
@@ -262,36 +258,44 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- NVIM-IDE (disabled)
+  -- NVIM-IDE
   {
     "ldelossa/nvim-ide",
-    -- enabled = false,
-    lazy = false,
+    event = "LazyFile",
     config = function()
-      -- local bufferlist = require "ide.components.bufferlist"
-      -- local explorer = require "ide.components.explorer"
-      -- local outline = require "ide.components.outline"
-      -- local callhierarchy = require "ide.components.callhierarchy"
       local timeline = require "ide.components.timeline"
-      -- local terminal = require "ide.components.terminal"
-      -- local terminalbrowser = require "ide.components.terminal.terminalbrowser"
       local changes = require "ide.components.changes"
       local commits = require "ide.components.commits"
       local branches = require "ide.components.branches"
-      -- local bookmarks = require "ide.components.bookmarks"
 
       require("ide").setup {
         -- log_level = "debug",
         components = {
-          global_keymaps = {
-            hide = "h",
-          },
-          -- Explorer = {
-          --   show_file_permissions = false,
-          --   default_height = 30,
+          -- global_keymaps = {
+          --   hide = "h",
+          --   details = "P",
+          --   details_tab = "p",
           -- },
           TerminalBrowser = {
             hidden = true,
+          },
+          Commits = {
+            keymaps = {
+              checkout = "c",
+              close = "X",
+              collapse = "zc",
+              collapse_all = "zM",
+              details = "P",
+              details_tab = "p",
+              diff = "<CR>",
+              diff_split = "s",
+              diff_tab = "t",
+              diff_vsplit = "v",
+              expand = "zo",
+              help = "?",
+              hide = "<C-[>",
+              refresh = "r",
+            },
           },
         },
         panel_groups = {
@@ -309,30 +313,6 @@ return {
         },
       }
     end,
-    keys = {
-      -- set keys based on the components you configured in setup
-      {
-        "<Leader>gvo",
-        function()
-          Util.tiling.force_win_close({ "aerial" }, false)
-          vim.cmd "Workspace RightPanelToggle"
-        end,
-        desc = "Git(nvim-ide): open right panel",
-      },
-      { "<Leader>gvr", "<cmd>Workspace Reset<cr>", desc = "Git(nvim-ide): reset panel window" },
-      -- { "<Leader>We", "<cmd>Workspace Explorer Focus<cr>", desc = "Focus Explorer" },
-      -- { "<Leader>e", "<cmd>Workspace Explorer Focus<cr>", desc = "Focus Explorer" },
-      -- { "<Leader>Wo", "<cmd>Workspace Outline Focus<cr>", desc = "Focus Outline" },
-      -- { "<Leader>Wbb", "<cmd>Workspace Bookmarks Focus<cr>", desc = "Focus Bookmarks" },
-      -- { "<Leader>Wbo", "<cmd>Workspace Bookmarks OpenNotebook<cr>", desc = "Open Notebook" },
-      -- { "<Leader>Wbc", "<cmd>Workspace Bookmarks CreateBookmark<cr>", desc = "Create Bookmark" },
-      -- { "<Leader>Wgs", "<cmd>Workspace Changes Focus<cr>", desc = "Focus Changed Files" },
-      -- { "<Leader>Wgc", "<cmd>Workspace Commits Focus<cr>", desc = "Focus Commits" },
-      -- { "<Leader>Wgt", "<cmd>Workspace Timeline Focus<cr>", desc = "Focus Timeline" },
-      -- { "<Leader>Wgb", "<cmd>Workspace Branches Focus<cr>", desc = "Focus Branches" },
-      -- { "<Leader>gi", "<cmd>Workspace CallHierarchy IncomingCalls<cr>", desc = "Show Incoming Calls" },
-      -- { "<Leader>go", "<cmd>Workspace CallHierarchy OutgoingCalls<cr>", desc = "Show Outgoing Calls" },
-    },
   },
   -- EDGY.NVIM (disabled)
   {

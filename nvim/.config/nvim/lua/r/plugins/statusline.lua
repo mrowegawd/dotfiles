@@ -78,8 +78,8 @@ return {
         sectionlast_bg = highlight.tint(highlight.get("Function", "fg"), -0.1) or "#b8bb26",
         sectionlineNum_bg = highlight.tint(highlight.get("@field", "fg"), -0.1) or "#b8bb26",
         sectionFiletype_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.8) or "#b8bb26",
-        sectionFilename_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 1.5) or "#b8bb26",
-        sectionGitstatus_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.5) or "#b8bb26",
+        sectionFilename_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.7) or "#b8bb26",
+        sectionGitstatus_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.2) or "#b8bb26",
 
         accent = {
           red = "#cc241d",
@@ -154,11 +154,31 @@ return {
         suffix = " ",
         sep_right = sep.right_chevron_solid(true),
       })
-      local filename = stl:add_item(nut.buf.filename {
-        hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = true },
+      -- local filename = stl:add_item(nut.buf.filename {
+      --   hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = true },
+      --   prefix = " ",
+      --   suffix = " ",
+      -- })
+      local filename2 = stl:add_item {
+        content = function()
+          local basename = vim.fn.fnamemodify(vim.fn.expand "%:h", ":p:~:.")
+          if basename == "" or basename == "." then
+            return ""
+          else
+            return basename:gsub("/$", "") .. "/"
+          end
+        end,
+        hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = false },
         prefix = " ",
+        -- suffix = " ",
+      }
+      local filename3 = stl:add_item {
+        content = function()
+          return vim.fn.expand "%:p:t"
+        end,
+        hl = { bg = color.sectionFilename_bg, fg = color.purple, bold = true },
         suffix = " ",
-      })
+      }
       local filestatus = stl:add_item(nut.buf.filestatus {
         hl = { bg = color.sectionFilename_bg, fg = color.bg },
         suffix = " ",
@@ -238,7 +258,9 @@ return {
 
       local stl_inactive = Bar "statusline"
       stl_inactive:add_item(mode)
-      stl_inactive:add_item(filename)
+      -- stl_inactive:add_item(filename)
+      stl_inactive:add_item(filename2)
+      stl_inactive:add_item(filename3)
       stl_inactive:add_item(filestatus)
       stl_inactive:add_item(nut.spacer())
 
@@ -392,111 +414,6 @@ return {
           lualine_z = {},
         },
         extensions = { "misc" },
-      }
-    end,
-  },
-  -- HEIRLINE (disabled)
-  {
-    "rebelot/heirline.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    priority = 500,
-    config = function()
-      -- Filetypes where certain elements of the statusline will not be shown
-      local filetypes = {
-        "^git.*",
-        "fugitive",
-        "alpha",
-        "^neo--tree$",
-        "^neotest--summary$",
-        "^neo--tree--popup$",
-        "^NvimTree$",
-        "^toggleterm$",
-      }
-
-      -- Buftypes which should cause elements to be hidden
-      local buftypes = {
-        "nofile",
-        "prompt",
-        "help",
-        "quickfix",
-        "norg",
-        "org",
-      }
-
-      -- Filetypes which force the statusline to be inactive
-      local force_inactive_filetypes = {
-        "^aerial$",
-        "^alpha$",
-        "^chatgpt$",
-        "^DressingInput$",
-        "^frecency$",
-        "^lazy$",
-        "^netrw$",
-        "^oil$",
-        "^TelescopePrompt$",
-        "^undotree$",
-      }
-
-      local align = { provider = "%=" }
-      local spacer = { provider = " " }
-
-      local heirline = require "heirline"
-      local conditions = require "heirline.conditions"
-
-      -- local winbar =
-      --     require(config_namespace .. ".plugins.heirline.winbar")
-      -- local bufferline =
-      --     require(config_namespace .. ".plugins.heirline.bufferline")
-      local statusline = require "r.plugins.colorthemes.heirline.statusline"
-      local statuscolumn = require "r.plugins.colorthemes.heirline.statuscol"
-
-      heirline.setup {
-        statusline = {
-          static = {
-            filetypes = filetypes,
-            buftypes = buftypes,
-            force_inactive_filetypes = force_inactive_filetypes,
-          },
-          condition = function(self)
-            return not conditions.buffer_matches {
-              filetype = self.force_inactive_filetypes,
-            }
-          end,
-          statusline.VimMode,
-          statusline.GitBranch,
-          statusline.FileNameBlock,
-          align,
-          statusline.LspDiagnostics,
-          statusline.Lazy,
-          statusline.LspAttached,
-          -- statusline.Overseer,
-          -- statusline.Dap,
-          -- statusline.FileEncoding,
-          -- statusline.Session,
-          -- statusline.MacroRecording,
-          -- statusline.SearchResults,
-          statusline.FileType,
-          statusline.Ruler,
-          -- statusline.Clock,
-        },
-        statuscolumn = {
-          condition = function()
-            -- TODO: Update this when 0.9 is released
-            return not conditions.buffer_matches {
-              buftype = buftypes,
-              filetype = force_inactive_filetypes,
-            }
-          end,
-          static = statuscolumn.static,
-          init = statuscolumn.init,
-          statuscolumn.signs,
-          align,
-          statuscolumn.line_numbers,
-          spacer,
-          statuscolumn.folds,
-          statuscolumn.git_signs,
-        },
       }
     end,
   },

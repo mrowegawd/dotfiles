@@ -1,5 +1,4 @@
 #!/bin/bash
-# taken from: https://github.com/bandithijo/dmenu-websearch
 
 MENU="dmenu"
 FILE="$HOME/Dropbox/data.programming.forprivate/urlquery"
@@ -8,6 +7,8 @@ FILE_BOOKMARKED="$HOME/Dropbox/data.programming.forprivate/urlbookmarked"
 ROFI_DIR="$HOME/.config/rofi/menu"
 ROFI_THEME="styles/snippets"
 ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME"
+
+MENU_FONT="SF Mono 24"
 
 test_file_dir() {
 	if [ ! -f "$1" ]; then
@@ -43,14 +44,14 @@ ${FILEOPT}
 "
 
 OBJ_LENGTH=$(echo "$OPTIONS" | jq length)
-OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | $MENU -i -p " WebSearch:")
+OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | $MENU -i -p " WebSearch:" -fn "$MENU_FONT")
 OBJ_SELECTED=$(echo "$OBJ_MENU" | cut -d' ' -f1)
 OBJ_KEYWORDS=$(echo "$OBJ_MENU" | cut -d' ' -f2- | tr " " "+")
 
 add_query() {
-	PREFIXMENU=$(echo "" | dmenu -p "Add prefix menu:" <&-)
+	PREFIXMENU=$(echo "" | dmenu -p "Add prefix menu:" -fn "$MENU_FONT" <&-)
 	if [ -n "$PREFIXMENU" ]; then
-		URLQUERY=$(echo "" | dmenu -p "Add url query:" <&-)
+		URLQUERY=$(echo "" | dmenu -p "Add url query:" -fn "$MENU_FONT" <&-)
 		echo "[ \"$PREFIXMENU\", \"$URLQUERY\" ]," >>"$FILE"
 	fi
 	exit
@@ -58,7 +59,7 @@ add_query() {
 
 delete_query() {
 	if [ "$1" == "DMENU" ]; then
-		OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | head -n -2 | $MENU -i -p "Delete Menu:")
+		OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | head -n -2 | $MENU -i -p "Delete Menu:" -fn "$MENU_FONT")
 	else
 		OBJ_MENU=$(awk -F"," '{printf "%-10s%s%-10s%s%-10s\n", $1,OFS,$2,OFS,$3}' OFS="," "$FILE_BOOKMARKED" |
 			sort | awk -F"," '{print $1,$3}' |
@@ -68,7 +69,7 @@ delete_query() {
 	OBJ_SELECTED=$OBJ_MENU
 
 	if [ -n "$OBJ_SELECTED" ]; then
-		CONFIRM_DELETE=$(echo -e "no\nyes" | dmenu -p "Do you want to delete this url?")
+		CONFIRM_DELETE=$(echo -e "no\nyes" | dmenu -p "Do you want to delete this url?" -fn "$MENU_FONT")
 		if [ "$CONFIRM_DELETE" = "yes" ]; then
 			sed -i "/$OBJ_SELECTED/d" "$2"
 		fi
@@ -83,13 +84,13 @@ add_bookmark() {
 		exit
 	fi
 
-	SET_TAGS=$(echo -e "hacky\ndotfiles\ntodo\ntutorial\ntorrent\nforum\ngithub\nTODO\nfun\ntips\ndevs\nmoneygame\nwallpaper" | dmenu -p "Tags:")
+	SET_TAGS=$(echo -e "hacky\ndotfiles\ntodo\ntutorial\ntorrent\nforum\ngithub\nfun\ntips\ndevs\nmoneygame\nwallpaper" | dmenu -p "Tags:" -fn "$MENU_FONT")
 	if [ -z "$SET_TAGS" ]; then
-		dunstify "tags: empty, abort"
+		dunstify "[!] there is no tag insert, so abort it"
 		exit
 	fi
 
-	DESCRIPTION=$(echo "" | dmenu -p "Add description:" <&-)
+	DESCRIPTION=$(echo "" | dmenu -fn "$MENU_FONT" -p "Add description:" <&-)
 
 	if [ -n "$DESCRIPTION" ]; then
 		# PREFIX_DAT=$(echo "$GET_CLIPCOPY" | sed -e 's/[^/]*\/\/\([^@]*@\)\?\([^:/]*\).*/\2/')
@@ -113,90 +114,196 @@ open_bookmarked() {
 
 edit_bookmarked() {
 	# kalau bukan bspwm, ini bakal error
-	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 &&
+		kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
 
 	exit
 }
 
 open_pass() {
+	# timeout=30
+	tmp_mypass="/tmp/mypass"
+	dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
 
-	timeout=30
-	dir="$HOME/.config/rofi/menu"
-	theme="styles/big_center"
-	rofi_command="rofi -theme $dir/$theme -dmenu -matchin fuzzy -i -sort -sorting-method fzf "
+	bspwm_open_float() {
+		path_pass=$(cat /tmp/mypass)
 
-	# kalau bukan bspwm, ini bakal error
-	# bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "/usr/local/bin/nvim ~/Dropbox/data.programming.forprivate/urlbookmarked"
+		if [[ $1 == "create_pass" ]]; then
 
-	select_command() {
-		# contents="$(pass show "$1")"
-		# first_line="$(head -1 <<< "$contents")"
-		# the_password
-		# the_username
-		# the_url
-		# if [[ ! "${first_line}" =~ ": " ]]; then
-		#   options[Copy\ password]="wl-copy ${(q)first_line}"
-		#   options_order+="Copy password"
-		#   the_password="$first_line"
-		# fi
+			get_the_name=$(echo "" | $ROFI_COMMAND -dmenu -p "Create pass")
 
-		# grep -P '^[^:]+(?=: .)' <<< "$contents" | while read line; do
-		#   field="${line%%: *}"
-		#   value="${line#*: }"
-		#   if [[ "$field" == "url" ]]; then
-		#     options[Open\ URL]="xdg-open ${(q)value}"
-		#     options_order+="Open URL"
-		#     the_url="$value"
-		#   else
-		#     options[Copy\ $field]="wl-copy ${(q)value}"
-		#     options_order+="Copy $field"
-		#     [[ "$field" == "username" ]] && the_username="$value"
-		#   fi
-		# done
+			sel=$(echo "$path_pass" | sed -r "s/(.+)\/.+/\1/")
+			if [[ "$sel" == *\/* ]] || [[ "$sel" == *\\* ]]; then
+				new_acc_pass="$sel/$get_the_name"
+			else
+				new_acc_pass="$get_the_name"
+			fi
 
-		# options[Show]="zenity --info --title=${(q)1} --icon-name=password --text=${(q)contents} --width=400"
-		# options_order+="Show"
+			# `new_acc_pass` harus contains some string
+			# untuk memastikan `create pass` dapat berjalan lancar
+			if [[ -n $new_acc_pass ]]; then
+				[[ -d $HOME/.password-store/$new_acc_pass ]] && dunstify "The path; $HOME/.password-store/$new_acc_pass is a directory, you type wrong!"
+				dunstify "Creating new pass: $new_acc_pass"
+				# bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass init $new_acc_pass"
+			fi
 
-		# if [[ -n "$the_username" ]] && [[ -n "$the_password" ]]; then
-		#   options[Copy\ username\ \&\ password]="wl-copy ${(q)the_username} && wl-copy ${(q)the_password} -p"
-		#   options_order=("Copy username & password" "${options_order[@]}")
-		#   if [[ -n "$the_url" ]]; then
-		#     options[Copy\ username\ \&\ password,\ open\ URL]="xdg-open ${(q)the_url} && wl-copy ${(q)the_username} && wl-copy ${(q)the_password} -p"
-		#     options_order=("Copy username & password, open URL" "${options_order[@]}")
-		#   fi
-		# fi
-		selection="$(echo -e "copy username\ncopy password\nopen url" | $rofi_command -p "$1")"
-
-		if [[ -n "$selection" ]]; then
-			dunstify "$selection"
-			# eval "$options[${(q)selection}]"
-		else
-			exit 2
 		fi
 	}
 
-	select_password() {
+	copy_pasword_or_username() {
+		if ! command -v ydotool >/dev/null; then
+			dunstify "[!] install ydotool and ydotoold first!"
+			# sudo apt install ydotool ydotoold
+			exit
+		fi
+
+		# Avoid the error; ydotoold backend unavailable #36
+		# https://github.com/ReimuNotMoe/ydotool/issues/36#issuecomment-788148567
+		if [[ ! -f $HOME/.config/autostart/ydotoold.desktop ]]; then
+			usermod -aG input "$USER"
+
+			echo '## ydotoold fix #     https://github.com/ReimuNotMoe/ydotool/issues/25#issuecomment-535842993
+				KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
+				' | sudo tee /etc/udev/rules.d/80-uinput.rules >/dev/null
+
+			echo "
+[Desktop Entry]
+Type=Application
+Terminal=false
+Name=ydotool deamon
+Exec=/usr/bin/ydotoold
+Comment=Generic Linux command-line automation tool (no X!).
+Categories=GNOME;GTK;System;
+        " >"$HOME/.config/autostart/ydotoold.desktop"
+		fi
+
+		path_pass=$(cat /tmp/mypass)
+
+		[[ ! -f $tmp_mypass ]] && dunstify "no path_pass found???" && exit
+		[[ -z $path_pass ]] && dunstify "var path_pass is empty???" && exit
+
+		case "$1" in
+		"autoinput")
+			username=$(pass show "$path_pass" | grep '^username: ' | cut -b 11-)
+			password=$(pass show "$path_pass" | grep '^password: ' | cut -b 11-)
+			if [[ -n $username ]] && [[ -n $password ]]; then
+				ydotool type "$username" && ydotool key Tab && ydotool type "$password" && ydotool key Enter
+			else
+				dunstify "[autoinput] no password and username? something went wrong!"
+			fi
+			;;
+		"username")
+			username=$(pass show "$path_pass" | grep '^username: ' | cut -b 11-)
+			if [[ -n $username ]]; then
+				dunstify "username $username"
+			else
+				dunstify "[username] no password? something went wrong!"
+			fi
+			;;
+		"password")
+			password=$(pass show "$path_pass" | grep '^password: ' | cut -b 11- | xclip -sel clip)
+			if [[ -n $password ]]; then
+				dunstify "password copied"
+			else
+				dunstify "[password] no password? something went wrong!"
+			fi
+			;;
+		"url")
+			url=$(pass "$path_pass" | grep '^url: ' | cut -b 6-)
+			if [[ -n $url ]]; then
+				firefox "$url"
+			else
+				dunstify "[url] no url? something went wrong"
+			fi
+			;;
+		*)
+			exit
+			;;
+		esac
+
+	}
+
+	select_command() {
+		selection="$(echo -e "auto input\ncopy username\ncopy password\nopen url" |
+			$ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p "$1")"
+
+		if [[ -n "$selection" ]]; then
+			if [[ $selection == "auto input" ]]; then
+				copy_pasword_or_username "autoinput"
+			fi
+			if [[ $selection == "copy username" ]]; then
+				copy_pasword_or_username "username"
+			fi
+			if [[ $selection == "copy password" ]]; then
+				copy_pasword_or_username "password"
+			fi
+			if [[ $selection == "open url" ]]; then
+				copy_pasword_or_username "url"
+			fi
+		else
+			exit 1
+		fi
+	}
+
+	__select_password() {
 		find "$dir" -not -path '*/.git/*' -type f |
 			grep '\.gpg$' |
 			sed "s:$dir\(.*\)\.gpg$:\1:" |
-			$rofi_command -p 'password' -filter "$1"
+			$ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1"
 	}
 
-	main() {
-		dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
-		password_selection="$(select_password "$1")"
-		if [[ -n "$password_selection" ]]; then
-			select_command "$password_selection" "$1"
-			sleep $timeout && eval "wl-copy -c && wl-copy -cp"
-		else
-			exit
-		fi
+	__select_dir_password() {
+		find "$dir" -not -path '*/.git/*' -type d |
+			sed "s:$dir\(.*\):\1:" |
+			grep "\/" |
+			$ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'select dir' -filter "$1"
+		# sed "s:$dir\(.*\)\.gpg$:\1:" |
 	}
 
-	main "$@"
+	selection=$(echo -e "get pass\ninsert new pass\nedit pass" | $ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p 'password' -filter "$1")
+	[[ -z "$selection" ]] && exit
 
+	case $selection in
+	"get pass")
+		password_selection="$(__select_password "$1")"
+		[[ -z $password_selection ]] && exit
+		touch $tmp_mypass
+		echo "$password_selection" >/tmp/mypass
+		select_command "$password_selection"
+		;;
+
+	"insert new pass")
+		dir_selection="$(__select_dir_password "$1")"
+		[[ -z $dir_selection ]] && exit
+		[[ ! -d $HOME/.password-store/$dir_selection ]] && exit
+
+		case "$XDG_SESSION_DESKTOP" in
+		"bspwm")
+			bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -c "cd $HOME/.password-store/$dir_selection"
+			;;
+		*) dunstify "OS $XDG_SESSION_DESKTOP not implemented yet?" ;;
+		esac
+		;;
+
+	"edit pass")
+		edit_selection="$(__select_password "$1")"
+		[[ -z "$edit_selection" ]] && exit
+		touch $tmp_mypass
+		echo "$edit_selection" >/tmp/mypass
+
+		case "$XDG_SESSION_DESKTOP" in
+		"bspwm")
+			bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass edit $edit_selection"
+			;;
+		*) dunstify "OS $XDG_SESSION_DESKTOP not implemented yet?" ;;
+		esac
+		;;
+	esac
+
+	[[ -f $tmp_mypass ]] && rm $tmp_mypass
 	exit
 }
+
 main() {
 	for i in $(seq 0 $((OBJ_LENGTH - 1))); do
 		if [ "$OBJ_SELECTED" = "Add:New:Query" ]; then

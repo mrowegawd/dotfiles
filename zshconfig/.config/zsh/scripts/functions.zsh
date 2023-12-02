@@ -95,3 +95,26 @@ find-in-file() {
 
 zle -N find-in-file
 bindkey '^g' find-in-file
+
+show_alias() {
+  setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
+
+  local select
+	local alias_selected=$(
+		awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
+			column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc |
+			fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
+	)
+
+	if [[ ! -z $SELECT ]]; then
+    return
+  else
+	  select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
+  fi
+
+  LBUFFER="${LBUFFER}$select "
+  zle reset-prompt
+}
+
+zle -N show_alias
+bindkey '^o' show_alias

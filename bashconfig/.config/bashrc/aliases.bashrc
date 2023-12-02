@@ -26,7 +26,7 @@ alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' 
 
 alias l="eza -l -snew"
 alias ll="eza --long --all --git --color=always --group-directories-first --icons"
-alias lt="eza --icons --all --color=always -T"
+alias lt="eza --icons --all -I '*.git' --color=always -T"
 
 # if command -v eza >/dev/null; then
 # 	alias ll="eza --long --all --git --color=always --group-directories-first --icons"
@@ -339,6 +339,15 @@ c_summary() {
 # │                        RUN SCRIPT                        │
 # ╰──────────────────────────────────────────────────────────╯
 
+# run: fz_ctrlo
+r_fz_ctrlo() {
+	if [[ -f "$HOME/.local/bin/fz-ctrlo" ]]; then
+		"$HOME/.local/bin/fz-ctrlo" callme
+	else
+		echo "hmm..you are in tmux mode?"
+	fi
+}
+
 # run: fzf ps aux
 r_fzf_ps() {
 	ps aux --sort=-%mem | grcat ps.grc | fzf --ansi
@@ -645,7 +654,7 @@ doc_im_ls() {
 	docker images
 }
 
-# docker: image: check histroy of docker image <$DOCKER_IMAGE_ID>
+# docker: image: check history of docker image <$DOCKER_IMAGE_ID>
 doc_im_his_id() {
 	if [ -n "$1" ]; then
 		docker history "$1"
@@ -980,23 +989,23 @@ pr_pip_c_ls() {
 	pip list | less
 }
 
-# pip: install from requirments <$REQUIRMENTS.TXT>
+# pip: install from requirements <$REQUIREMENTS.TXT>
 pr_pip_i_requirments() {
 
 	if [ -n "$1" ]; then
 		pip install -r "$1"
 	else
-		printf "\nwrong!\n\tex: pip_i_requirments requirments.txt\n\n"
+		printf "\nwrong!\n\tex: pip_i_requirments requirements.txt\n\n"
 	fi
 }
 
-# pip: export packages installed to <$REQUIRMENTS.TXT>
+# pip: export packages installed to <$REQUIREMENTS.TXT>
 pr_pip_frez_requirments() {
 
 	if [ -n "$1" ]; then
 		pip freeze >"$1"
 	else
-		printf "\nwrong!\n\tex: pip_frez_requirments requirments.txt\n\n"
+		printf "\nwrong!\n\tex: pip_frez_requirments requirements.txt\n\n"
 	fi
 
 }
@@ -1043,13 +1052,13 @@ pr_pipenv_unins() {
 
 }
 
-# pipenv: install from requirments <$REQUIRMENTS.TXT>
+# pipenv: install from requirements <$REQUIREMENTS.TXT>
 pr_pipenv_i_requirments() {
 
 	if [ -n "$1" ]; then
 		pipenv install -r "$1"
 	else
-		printf "\nwrong!\n\tex: pipenv_i_requirments requirments.txt\n\n"
+		printf "\nwrong!\n\tex: pipenv_i_requirments requirements.txt\n\n"
 	fi
 }
 

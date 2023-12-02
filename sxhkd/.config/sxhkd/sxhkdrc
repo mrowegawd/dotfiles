@@ -98,7 +98,7 @@ super + u
 
 # misc: open terminal
 super + Return
-        alacritty
+        $TERMINAL
 
 # misc: close/kill current app/window
 super + End
@@ -145,7 +145,7 @@ super + shift + n
 
 # misc: open empty float terminal
 super + shift + o
-        bspc rule -a \* -o state=floating st && st
+        bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
 
 # misc: call firefox (side by side)
 super + F8

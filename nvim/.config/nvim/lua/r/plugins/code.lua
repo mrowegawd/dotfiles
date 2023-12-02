@@ -190,14 +190,14 @@ return {
             else
               cmp.complete()
             end
-          end, { "i", "s" }),
+          end, { "i" }),
           ["<c-p>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
             else
               fallback()
             end
-          end, { "i", "s" }),
+          end, { "i" }),
           ["<c-q>"] = cmp.mapping.abort(),
           ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
           ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
@@ -566,12 +566,12 @@ return {
       {
         "<Localleader>oS",
         "<CMD>Scratch<CR>",
-        desc = "Open(scratch): open with select language",
+        desc = "Misc(scratch): select language",
       },
       {
         "<Localleader>os",
         "<CMD>ScratchOpen<CR>",
-        desc = "Open(scratch): open",
+        desc = "Misc(scratch): open",
       },
     },
   },
@@ -664,9 +664,7 @@ return {
       { "rg", "<Cmd> RmuxGrepErr <CR>" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
-
       { "rE", "<Cmd> RmuxREDITConfig <CR>" },
-      { "<Localleader><Localleader>", "<Cmd> RmuxZoom <CR>", mode = { "n", "v" } },
     },
     opts = {
       base = {

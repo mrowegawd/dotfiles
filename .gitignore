@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+.session.vim
+
 wuzz
 
 Obsidian*

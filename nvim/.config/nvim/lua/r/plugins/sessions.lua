@@ -26,13 +26,8 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", function() return cmd.SessionLoadLast() end,                                         { desc =
-      "Misc(persisted): load a session" }, },
-      { "<Leader>ps", function()
-        cmd.SessionStart()
-        return vim.notify "Sessions persisted: Started.."
-      end,                                                                                                 { desc =
-      "Misc(persisted): start a session" }, },
+      { "<Leader>pl", function() return cmd.SessionLoadLast() end, { desc = "Misc(persisted): load a session" } },
+      { "<Leader>ps", function() cmd.SessionStart() return vim.notify "Sessions persisted: Started.." end, { desc = "Misc(persisted): start a session" } },
     },
     config = function()
       require("persisted").setup {
@@ -66,21 +61,9 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", function()
-        local possession = require "nvim-possession"
-        return possession.list()
-      end,                                                                                                    desc =
-      "Misc(possession): load a session", },
-      { "<Leader>ps", function()
-        local possession = require "nvim-possession"
-        return possession.new()
-      end,                                                                                                    desc =
-      "Misc(possession): start or save a session name", },
-      { "<Leader>pu", function()
-        local possession = require "nvim-possession"
-        return possession.update()
-      end,                                                                                                    desc =
-      "Misc(possession): save a new session or overwrite it", },
+      { "<Leader>pl", function() local possession = require "nvim-possession" return possession.list() end, desc = "Misc(possession): load a session" },
+      { "<Leader>ps", function() local possession = require "nvim-possession" return possession.new() end, desc = "Misc(possession): start or save a session name" },
+      { "<Leader>pu", function() local possession = require "nvim-possession" return possession.update() end, desc = "Misc(possession): save a new session or overwrite it" },
     },
     opts = {
       autoload = true, -- whether to autoload sessions in the cwd at startup
@@ -222,7 +205,7 @@ return {
       })
     end,
   },
-  -- PERSISTANCE NVIM
+  -- PERSISTENCE NVIM
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
@@ -243,6 +226,25 @@ return {
       { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
       { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
       { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
+    },
+  },
+  -- AUTOSESSION.NVIM (disabled)
+  {
+    "pysan3/autosession.nvim",
+    enabled = false,
+    cmd = {
+      "AutoSession",
+      "AutoSessionRestore",
+      "AutoSessionSave",
+      "AutoSessionAuto",
+      "AutoSessionGlobal",
+      "AutoSessionDelete",
+    },
+    event = "VeryLazy",
+    opts = {
+      restore_on_setup = true,
+      warn_on_setup = false,
+      autosave_on_quit = true,
     },
   },
   --  ╭──────────────────────────────────────────────────────────╮
@@ -268,13 +270,13 @@ return {
           end
           return require("fzf-lua").fzf_exec(reverse, {
             fzf_opts = {
-              ["--header"] = [[Ctrl-d:'del cwd']],
+              ["--header"] = [[Ctrl-x:'del cwd']],
             },
             actions = {
               ["default"] = function(e)
                 vim.cmd.cd(e[1])
               end,
-              ["ctrl-d"] = function(x)
+              ["ctrl-x"] = function(x)
                 -- local choice = vim.fn.confirm("Delete '" .. #x .. "' projects? ", "&Yes\n&No", 2)
                 -- if choice == 1 then
                 local history = require "project_nvim.utils.history"

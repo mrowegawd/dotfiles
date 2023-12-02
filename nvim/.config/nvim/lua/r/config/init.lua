@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "onedark"
+local colorscheme = "bamboo"
 
 _G.base = {}
 
@@ -21,7 +21,7 @@ local base_options = {
     codelens_enabled = true, -- Enable automatic codelens refreshing for lsp that support it.
     diagnostics_mode = 3, -- Set code linting (0=off, 1=only show in status line, 2=virtual text off, 3=all on).
     icons_enabled = true, -- Enable icons in the UI (disable if no nerd font is available).
-    inlay_hints_enabled = false, -- Enable ayways show function parameter names.
+    inlay_hints_enabled = false, -- Enable always show function parameter names.
     lsp_signature_enabled = false, -- Enable automatically showing lsp help as you write function parameters.
     notifications_enabled = true, -- Enable notifications.
     semantic_tokens_enabled = true, -- Enable lsp semantic tokens at start.
@@ -83,7 +83,7 @@ local defaults = {
   icons = {
     border = {
       line = { "🭽", "▔", "🭾", "▕", "🭿", "▁", "🭼", "▏" },
-      retangle = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
+      rectangle = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' },
     },
     misc = {
       dots = "󰇘",
@@ -208,7 +208,7 @@ local defaults = {
       stacked       = " ﬘",
     },
   },
-  palatte = {
+  palette = {
     green = "#98c379",
     dark_green = "#10B981",
     blue = "#82AAFE",

@@ -14,7 +14,7 @@ local general_overrides = function()
     { CursorLine = { bg = { from = "ColorColumn", alter = -0.4 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "Normal", attr = "fg" } } },
-    { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.4 } } },
+    { FloatBorder = { bg = "NONE", fg = { from = "@field" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
     { Folded = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 2 }, underline = false, bold= true } },
     { EndOfBuffer = { bg = "NONE" } },
@@ -189,7 +189,7 @@ local general_overrides = function()
     { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
 
     -- NOICE ==============================================================
-    { NoicePopupBorder = { bg = "NONE", fg = { from = "ColorColumn", attr = "bg", alter = 0.25 } } },
+    { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
@@ -374,10 +374,24 @@ local function colorscheme_overrides()
       { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
       { diffText = { bg = { from = "DiffText" , attr = "bg", alter = 0.05 }, fg = { from = "DiffText" , attr = "fg", alter = -0.4 } } },
     },
+    ["bamboo"] = {
+      { GitSignsAdd = { bg = { from = "ColorColumn" } } },
+      { GitSignsChange = { bg = { from = "ColorColumn" } } },
+      { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+      -- { CursorLine = { bg = { from = "ColorColumn", alter = -0.5 } } },
+      { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
+
+      { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
+      { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },
+      { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = -0.5 } } },
+      { diffText = { bg = { from = "diffText" , attr = "bg", alter = 0.05 }, fg = { from = "diffText" , attr = "bg", alter = -0.4 } } },
+
+    },
     ["tokyonight"] = {
       { GitSignsAdd = { bg = { from = "ColorColumn" } } },
       { GitSignsChange = { bg = { from = "ColorColumn" } } },
       { GitSignsDelete = { bg = { from = "ColorColumn" } } },
+      { CursorLine = { bg = { from = "ColorColumn", alter = -0.5 } } },
 
       { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsChange" , attr = "fg", alter = -0.5 } } },
       { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = 0.05 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = -0.5 } } },

@@ -38,7 +38,7 @@ return {
   {
     "tomiis4/Hypersonic.nvim",
     cmd = { "Hypersonic" },
-    enebled = "false",
+    enabled = false,
     config = true,
   },
   -- SG.NVIM

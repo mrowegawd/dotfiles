@@ -115,8 +115,7 @@ return {
         "<Leader>tf",
         function()
           local neotest = require "neotest"
-
-          local fn_cmds = {
+          Util.fzflua.send_cmds {
             test_file = function()
               vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
             end,
@@ -161,23 +160,6 @@ return {
               vim.cmd [[CoverageClear]]
             end,
           }
-
-          local cmds = {}
-          for idx, _ in pairs(fn_cmds) do
-            table.insert(cmds, idx)
-          end
-
-          require("fzf-lua").fzf_exec(
-            cmds,
-            Util.fzflua.cursor_dropdown {
-              actions = {
-                ["default"] = function(selected, _)
-                  local sel = selected[1]
-                  fn_cmds[sel]()
-                end,
-              },
-            }
-          )
         end,
         desc = "Testing(neotest): list of neotest commands",
       },

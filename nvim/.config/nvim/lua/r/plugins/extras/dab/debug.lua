@@ -103,57 +103,46 @@ return {
       -- { "<Leader>dbl", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
       -- { "<Leader>dD", function() require("dap").list_breakpoints(true) end, desc = "Debug(dap): list breakpoint qf", },
       { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
-      { "<Leader>df", function()
-        local fn_cmds = {
-          breakpoint_set = function ()
-            return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
-          end,
-          breakpoint_clear_all = function ()
-            return require("dap").clear_breakpoints()
-          end,
-          breakpoint_lists = function ()
-            return require("dap").list_breakpoints(true)
-          end,
-          dap_run_to_cursor = function ()
-            return require("dap").run_to_cursor()
-          end,
-          dap_run_last = function ()
-            return require("dap").run_last()
-          end,
-          dap_continue_or_run = function ()
-            return require("dap").continue()
-          end,
-          dap_close_or_quit = function ()
-            require("dap").terminate()
-            require("dapui").close()
-          end,
-          dap_printout_session = function ()
-            return print(vim.inspect(require("dap").session()))
-          end,
-        }
-
-        local cmds = {}
-        for idx, _ in pairs(fn_cmds) do
-          table.insert(cmds, idx)
-        end
-
-        require("fzf-lua").fzf_exec(cmds, Util.fzflua.cursor_dropdown {
-          actions = {
-            ["default"] = function(selected, _)
-              local sel = selected[1]
-              fn_cmds[sel]()
-            end
+      {
+        "<Leader>df",
+        function()
+          Util.fzflua.send_cmds {
+            breakpoint_set = function()
+              return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
+            end,
+            breakpoint_clear_all = function()
+              return require("dap").clear_breakpoints()
+            end,
+            breakpoint_lists = function()
+              return require("dap").list_breakpoints(true)
+            end,
+            dap_run_to_cursor = function()
+              return require("dap").run_to_cursor()
+            end,
+            dap_run_last = function()
+              return require("dap").run_last()
+            end,
+            dap_continue_or_run = function()
+              return require("dap").continue()
+            end,
+            dap_close_or_quit = function()
+              require("dap").terminate()
+              require("dapui").close()
+            end,
+            dap_printout_session = function()
+              return print(vim.inspect(require("dap").session()))
+            end,
           }
-
-        })
-
-      end, desc = "Debug(dap): list of debugging dap commands", },
+        end,
+        desc = "Debug(dap): list of debugging dap commands",
+      },
       --  +----------------------------------------------------------+
-      --    Close and run debug
+      --    Run and close the debug
       --  +----------------------------------------------------------+
       -- { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug(dap): restart" },
       -- { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug(dap): closing or quit debug", },
-      { "<Leader>dd",
+      {
+        "<Leader>dd",
         function()
           local function status_dap(req)
             local ok, _ = pcall(require, req)
@@ -184,8 +173,9 @@ return {
       { "<s-right>", function() require("dap").step_into() end, desc = "Debug(dap): step-into" },
       { "<s-left>", function() require("dap").step_out() end, desc = "Debug(dap): step-out" },
       { "<s-down>", function() require("dap").step_over() end, desc = "Debug(dap): step-over" },
-      { "<leader>dk", function() require'dap'.up() end,  desc = "Debug(dap): stack up" },
-      { "<leader>dj", function() require'dap'.down() end,  desc = "Debug(dap): stack down" }
+
+      { "<leader>dk", function() require("dap").up() end, desc = "Debug(dap): stack up" },
+      { "<leader>dj", function() require("dap").down() end, desc = "Debug(dap): stack down" },
     },
     config = function()
       local Config = require "r.config"

@@ -16,16 +16,16 @@ scrolling:
 # Font configuration (changes require restart)
 font:
   normal:
-    family: "SF Mono"
+    family: "Fisa Code"
     style: Regular
   bold:
-    family: "SF Mono"
+    family: "Fisa Code"
     style: Bold
   italic:
-    family: "VictorMono NFP SemiBold Obl"
+    family: "CamingoCode Nerd Font"
     style: Italic
   bold_italic:
-    family: "VictorMono NFP"
+    family: "Victor Mono"
     style: Bold Italic
 
   size: 11
@@ -398,35 +398,31 @@ key_bindings:
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# Colors (Darcula)
+# Generated with the help of terminal.sexy
 colors:
   # Default colors
   primary:
-    background: '0x232326'
-    foreground: '0x96999e'
-
-  cursor:
-    text: '0x21222c'
-    cursor: '0xe32816'
+    background: '0x252623'
+    foreground: '0xf1e9d2'
 
   # Normal colors
   normal:
-    black:   '0x232326'
-    red:     '0xff5555'
-    green:   '0x50fa7b'
-    yellow:  '0xf1fa8c'
-    blue:    '0xcaa9fa'
-    magenta: '0xff79c6'
-    cyan:    '0x8be9fd'
-    white:   '0xbfbfbf'
+    black:   '0x1c1e1b'
+    red:     '0xe75a7c'
+    green:   '0x8fb573'
+    yellow:  '0xdbb671'
+    blue:    '0x57a5e5'
+    magenta: '0xaaaaff'
+    cyan:    '0x70c2be'
+    white:   '0xf1e9d2'
 
   # Bright colors
   bright:
-    black:   '0x282a35'
-    red:     '0xff6e67'
-    green:   '0x5af78e'
-    yellow:  '0xf4f99d'
-    blue:    '0xcaa9fa'
-    magenta: '0xff92d0'
-    cyan:    '0x9aedfe'
-    white:   '0xe6e6e6'
+    black:   '0x5b5e5a'
+    red:     '0xe75a7c'
+    green:   '0x8fb573'
+    yellow:  '0xdbb671'
+    blue:    '0x57a5e5'
+    magenta: '0xaaaaff'
+    cyan:    '0x70c2be'
+    white:   '0xfff8f0'

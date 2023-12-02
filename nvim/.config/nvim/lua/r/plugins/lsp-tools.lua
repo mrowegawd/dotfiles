@@ -18,7 +18,10 @@ return {
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
-    keys = { { "<Localleader>tr", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle" } },
+    keys = {
+      { "<Localleader>tt", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle", mode = { "n", "v" } },
+      { "<Leader>q", "<CMD>TroubleToggle quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v" } },
+    },
     opts = function()
       highlight.plugin("trouble", {
         { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
@@ -85,165 +88,6 @@ return {
         },
         { name = "lsp" },
       },
-    },
-  },
-  -- LSPSAGA (disabled)
-  {
-    "glepnir/lspsaga.nvim",
-    cmd = "Lspsaga",
-    enabled = false,
-    init = function()
-      highlight.plugin("lspsaga", {
-        { SagaBorder = { link = "Directory" } },
-        { SagaTitle = { fg = "cyan" } },
-        { SagaFileName = { link = "Directory" } },
-        { SagaFolderName = { link = "Directory" } },
-        -- { SagaNormal = { link = "Pmenu" } },
-      })
-    end,
-    dependencies = {
-      { "nvim-tree/nvim-web-devicons" },
-      { "nvim-treesitter/nvim-treesitter" },
-    },
-    config = {
-      ui = {
-        border = "single",
-        title = true,
-        winblend = 0,
-        expand = "",
-        collapse = "",
-        code_action = "💡",
-        incoming = " ",
-        outgoing = " ",
-        actionfix = " ",
-        hover = " ",
-        theme = "arrow",
-        lines = { "┗", "┣", "┃", "━" },
-        kind = {},
-      },
-      diagnostic = {
-        on_insert = false,
-        insert_winblend = 0,
-        show_code_action = true,
-        show_source = true,
-        jump_num_shortcut = true,
-        max_width = 0.7,
-        max_height = 0.6,
-        max_show_width = 0.9,
-        max_show_height = 0.6,
-        text_hl_follow = false,
-        border_follow = true,
-        extend_relatedInformation = false,
-        keys = {
-          exec_action = "o",
-          quit = "q",
-          expand_or_jump = "<CR>",
-          quit_in_show = { "q", "<ESC>" },
-        },
-      },
-      code_action = {
-        num_shortcut = true,
-        show_server_name = false,
-        extend_gitsigns = false,
-        keys = {
-          quit = "q",
-          exec = "<CR>",
-        },
-      },
-      lightbulb = {
-        enable = false,
-        enable_in_insert = true,
-        sign = true,
-        sign_priority = 40,
-        virtual_text = true,
-      },
-      preview = {
-        lines_above = 0,
-        lines_below = 10,
-      },
-      scroll_preview = {
-        scroll_down = "<C-d>",
-        scroll_up = "<C-u>",
-      },
-      request_timeout = 2000,
-      finder = {
-        max_height = 0.5,
-        min_width = 30,
-        force_max_height = false,
-        keys = {
-          jump_to = "o",
-          edit = { "e", "<CR>" },
-          vsplit = "<c-v>",
-          split = "<c-s>",
-          tabe = "<c-t>",
-          quit = {
-            "q",
-            "<ESC>",
-            "<leader><TAB>",
-            "<c-l>",
-            "<c-h>",
-          },
-          close_in_preview = "<ESC>",
-        },
-      },
-      definition = {
-        width = 0.6,
-        height = 0.5,
-        edit = "e",
-        vsplit = "<C-v>",
-        split = "<C-s>",
-        tabe = "<C-t>",
-        quit = "q",
-      },
-      rename = {
-        quit = "<C-c>",
-        exec = "<CR>",
-        mark = "x",
-        confirm = "<CR>",
-        in_select = true,
-      },
-      symbol_in_winbar = {
-        enable = false,
-        ignore_patterns = {},
-        separator = " ",
-        hide_keyword = true,
-        show_file = true,
-        folder_level = 2,
-        respect_root = false,
-        color_mode = true,
-      },
-      outline = {
-        win_position = "right",
-        win_with = "",
-        win_width = 30,
-        auto_preview = true,
-        auto_refresh = true,
-        auto_close = true,
-        custom_sort = nil,
-        preview_width = 0.4,
-        close_after_jump = false,
-        keys = {
-          expand_or_jump = "o",
-          quit = "q",
-        },
-      },
-      callhierarchy = {
-        show_detail = false,
-        keys = {
-          edit = "e",
-          vsplit = "s",
-          split = "i",
-          tabe = "t",
-          jump = "o",
-          quit = "q",
-          expand_collapse = "u",
-        },
-      },
-      beacon = {
-        enable = true,
-        frequency = 7,
-      },
-      server_filetype_map = {},
     },
   },
   -- GLANCE (disabled)
@@ -613,7 +457,7 @@ return {
         function()
           return require("dropbar.api").pick()
         end,
-        desc = "Open(dropbar): pick",
+        desc = "Misc(dropbar): pick",
       },
     },
     init = function()
@@ -965,7 +809,7 @@ return {
       return {
 
         -- Window mode
-        floating_window = is_enabled, -- Dislay it as floating window.
+        floating_window = is_enabled, -- Display it as floating window.
         hi_parameter = "IncSearch", -- Color to highlight floating window.
         handler_opts = round_borders, -- Window style
 
@@ -973,7 +817,7 @@ return {
         hint_enable = false, -- Display it as hint.
         hint_prefix = "👈 ",
 
-        -- Aditionally, you can use <space>ui to toggle inlay hints.
+        -- Additionally, you can use <space>ui to toggle inlay hints.
       }
     end,
     config = function(_, opts)
@@ -986,7 +830,7 @@ return {
     opts = {
       show_message = false,
       hl_group = "MyQuickFixLineEnter", -- the highlight group used for highlighting the identifier's new name
-      preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancell
+      preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancel
     },
   },
 }

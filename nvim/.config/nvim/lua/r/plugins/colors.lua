@@ -1,25 +1,8 @@
-local Util = require "r.utils"
-
 return {
   -- CCC
   {
     "uga-rosa/ccc.nvim",
     cmd = { "CccPick", "CccConvert", "CccHighlighterToggle" },
-    keys = {
-      {
-        "<Leader>rc",
-        "<CMD>CccPick<CR>",
-        desc = "Misc(ccc): open CCCpick",
-      },
-      {
-        "<Localleader>tc",
-        function()
-          Util.info("Toggle highlighter CCC", { title = "CCC.nvim" })
-          return vim.cmd "CccHighlighterToggle"
-        end,
-        desc = "Misc(ccc): toggle color",
-      },
-    },
     opts = function()
       local ccc = require "ccc"
       local p = ccc.picker

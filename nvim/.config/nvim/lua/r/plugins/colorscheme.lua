@@ -1,6 +1,20 @@
 local colorscheme = require("r.config").colorscheme
 
 return {
+  -- BAMBOO.NVIM
+  {
+    "ribru17/bamboo.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local bambootheme = { "bamboo" }
+      if vim.tbl_contains(bambootheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {},
+  },
   -- FLESH-AND-BLOOD
   {
     "sainttttt/flesh-and-blood",

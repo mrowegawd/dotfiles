@@ -96,7 +96,7 @@ return {
       -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
       -- Be aware that you also will need to properly configure your LSP server to
       -- provide the inlay hints.
-      inlay_hints = { enabled = false },
+      inlay_hints = { enabled = true },
       -- add any global capabilities here
       capabilities = {},
       -- options for vim.lsp.buf.format
@@ -139,7 +139,7 @@ return {
 
       Util.format.register(Util.lsp.formatter())
 
-      -- deprectaed options
+      -- deprecated options
       if opts.autoformat ~= nil then
         vim.g.autoformat = opts.autoformat
         Util.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
@@ -202,6 +202,12 @@ return {
             end,
           })
         end
+
+        if opts.inlay_hints.enabled then
+          if client.supports_method "textDocument/inlayHint" then
+            Util.toggle.inlay_hints(bufnr, true)
+          end
+        end
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
@@ -224,20 +230,6 @@ return {
       for name, icon in pairs(require("r.config").icons.diagnostics) do
         name = "DiagnosticSign" .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
-      end
-
-      local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
-
-      if opts.inlay_hints.enabled and inlay_hint then
-        Util.lsp.on_attach(function(client, buffer)
-          if client.supports_method "textDocument/inlayHint" then
-            if vim.fn.has "nvim-0.10" == 1 then
-              inlay_hint.enable(buffer, true)
-            else
-              inlay_hint(buffer, true)
-            end
-          end
-        end)
       end
 
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
