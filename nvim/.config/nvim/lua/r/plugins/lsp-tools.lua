@@ -19,8 +19,8 @@ return {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     keys = {
-      { "<Localleader>tt", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle", mode = { "n", "v", "i" } },
-      { "<Leader>q", "<CMD>Trouble quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v", "i" } },
+      { "<Localleader>tt", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle", mode = { "n", "v" } },
+      { "<Leader>q", "<CMD>TroubleToggle quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v" } },
     },
     opts = function()
       highlight.plugin("trouble", {
@@ -457,7 +457,7 @@ return {
         function()
           return require("dropbar.api").pick()
         end,
-        desc = "Open(dropbar): pick",
+        desc = "Misc(dropbar): pick",
       },
     },
     init = function()

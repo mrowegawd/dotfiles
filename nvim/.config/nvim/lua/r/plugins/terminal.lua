@@ -188,6 +188,24 @@ return {
           desc = "Terminal(toggleterm): remove",
           mode = { "n", "t", "v" },
         },
+        {
+          "<Leader>rl",
+          "<CMD> ToggleTerm direction=vertical size=100 <CR>",
+          desc = "Terminal(toggleterm): open left side",
+          mode = { "n", "t", "v" },
+        },
+        {
+          "<Leader>rt",
+          "<CMD> ToggleTerm direction=tab <CR>",
+          desc = "Terminal(toggleterm): open tab",
+          mode = { "n", "t", "v" },
+        },
+        {
+          "<Leader>rj",
+          "<CMD> ToggleTerm direction=horizontal size=15<CR>",
+          desc = "Terminal(toggleterm): open horizontal",
+          mode = { "n", "t", "v" },
+        },
       }
     end,
   },

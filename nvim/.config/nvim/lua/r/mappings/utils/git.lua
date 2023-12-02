@@ -90,19 +90,18 @@ function M.signs(bufnr, gs)
 
   -- FZFLUA
   nnoremap("<Leader>gs", "<CMD>FzfLua git_status<CR>", { desc = "Git(fzflua): git status", buffer = bufnr })
-  nnoremap("<Leader>gts", "<CMD>FzfLua git_stash<CR>", { desc = "Git(fzflua): stash", buffer = bufnr })
   nnoremap("<Leader>gB", "<CMD>FzfLua git_commits<CR>", { desc = "Git(fzflua): open commits repos", buffer = bufnr })
   nnoremap("<Leader>gb", "<CMD>FzfLua git_bcommits<CR>", { desc = "Git(fzflua): open commits buffer", buffer = bufnr })
 
   vnoremap(
     "<Leader>gvh",
     [[:'<'>DiffviewFileHistory --follow<CR>]],
-    { desc = "Git(diffview): open diff history on curbuf (visual)", buffer = bufnr }
+    { desc = "Git(diffview): diffhistory on curbuf (visual)", buffer = bufnr }
   )
   nnoremap(
     "<Leader>gvl",
     "<CMD>.DiffviewFileHistory --follow<CR>",
-    { desc = "Git(diffview): open diff history on curline", buffer = bufnr }
+    { desc = "Git(diffview): diffhistory curline", buffer = bufnr }
   )
   vnoremap(
     "<Leader>gvd",
@@ -160,11 +159,20 @@ function M.signs(bufnr, gs)
       neogit = function()
         vim.cmd[[Neogit]]
       end,
+      toggle_git_nvimIDE = function()
+        vim.cmd[[Workspace RightPanelToggle]]
+      end,
+      toggle_git_nvimIDE_RESET = function()
+        vim.cmd[[Workspace reset]]
+      end,
       git_worktree_create = function()
         vim.cmd[[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
       end,
       git_worktree_manage = function()
         vim.cmd[[lua require("telescope").extensions.git_worktree.git_worktrees()]]
+      end,
+      git_fzflua_stash = function()
+        vim.cmd[[FzfLua git_stash]]
       end,
     }
   end, { desc = "Git(fzflua): commnds of git", buffer = bufnr })

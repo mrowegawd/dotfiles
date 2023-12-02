@@ -26,7 +26,7 @@ alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' 
 
 alias l="eza -l -snew"
 alias ll="eza --long --all --git --color=always --group-directories-first --icons"
-alias lt="eza --icons --all --color=always -T"
+alias lt="eza --icons --all -I '*.git' --color=always -T"
 
 # if command -v eza >/dev/null; then
 # 	alias ll="eza --long --all --git --color=always --group-directories-first --icons"

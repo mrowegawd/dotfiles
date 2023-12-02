@@ -109,7 +109,7 @@ pantree="$HOME/.config/miscxrdb/exbin/paintree"
 [ -f "$pantree" ] && "$pantree"
 
 run_once xrdb ~/.Xresources
-run_once alacritty
+run_once "$TERMINAL"
 
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then

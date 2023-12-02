@@ -488,7 +488,7 @@ M.create_window = function()
   end
 
   if not state.active then
-    -- TODO: harus bikin logic, jika debugging active
+    -- TODO: logic nya kurang, bakal error jika debuggigng window active
     state.active = true
   end
   M.force_win_close(wins_main_table)

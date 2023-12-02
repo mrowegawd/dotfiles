@@ -433,5 +433,13 @@ return {
         diffview = true,
       },
     },
+    -- config = function(_, opts)
+    --   require("neogit").setup(opts)
+
+    --   highlight.plugin("neogit_hl", {
+    --     { NeogitDiffAddHighlight = { fg = { from = "NeogitDiffAdd", attr = "fg", alter = -1.5 } } },
+    --     { NeogitDiffDeleteHighlight = { fg = { from = "NeogitDiffDelete", attr = "fg", alter = -1.5 } } },
+    --   })
+    -- end,
   },
 }

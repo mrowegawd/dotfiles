@@ -228,6 +228,25 @@ return {
       { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
     },
   },
+  -- AUTOSESSION.NVIM (disabled)
+  {
+    "pysan3/autosession.nvim",
+    enabled = false,
+    cmd = {
+      "AutoSession",
+      "AutoSessionRestore",
+      "AutoSessionSave",
+      "AutoSessionAuto",
+      "AutoSessionGlobal",
+      "AutoSessionDelete",
+    },
+    event = "VeryLazy",
+    opts = {
+      restore_on_setup = true,
+      warn_on_setup = false,
+      autosave_on_quit = true,
+    },
+  },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         PROJECTS                         │
   --  ╰──────────────────────────────────────────────────────────╯
@@ -251,13 +270,13 @@ return {
           end
           return require("fzf-lua").fzf_exec(reverse, {
             fzf_opts = {
-              ["--header"] = [[Ctrl-d:'del cwd']],
+              ["--header"] = [[Ctrl-x:'del cwd']],
             },
             actions = {
               ["default"] = function(e)
                 vim.cmd.cd(e[1])
               end,
-              ["ctrl-d"] = function(x)
+              ["ctrl-x"] = function(x)
                 -- local choice = vim.fn.confirm("Delete '" .. #x .. "' projects? ", "&Yes\n&No", 2)
                 -- if choice == 1 then
                 local history = require "project_nvim.utils.history"

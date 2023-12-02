@@ -7,6 +7,7 @@
 # CUSTOM
 # --------------------
 secrets/*
+.session.vim
 temp/
 tmp/
 tags

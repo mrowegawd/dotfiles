@@ -78,8 +78,8 @@ return {
         sectionlast_bg = highlight.tint(highlight.get("Function", "fg"), -0.1) or "#b8bb26",
         sectionlineNum_bg = highlight.tint(highlight.get("@field", "fg"), -0.1) or "#b8bb26",
         sectionFiletype_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.8) or "#b8bb26",
-        sectionFilename_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 1.5) or "#b8bb26",
-        sectionGitstatus_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.5) or "#b8bb26",
+        sectionFilename_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.7) or "#b8bb26",
+        sectionGitstatus_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.2) or "#b8bb26",
 
         accent = {
           red = "#cc241d",
@@ -154,11 +154,31 @@ return {
         suffix = " ",
         sep_right = sep.right_chevron_solid(true),
       })
-      local filename = stl:add_item(nut.buf.filename {
-        hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = true },
+      -- local filename = stl:add_item(nut.buf.filename {
+      --   hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = true },
+      --   prefix = " ",
+      --   suffix = " ",
+      -- })
+      local filename2 = stl:add_item {
+        content = function()
+          local basename = vim.fn.fnamemodify(vim.fn.expand "%:h", ":p:~:.")
+          if basename == "" or basename == "." then
+            return ""
+          else
+            return basename:gsub("/$", "") .. "/"
+          end
+        end,
+        hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = false },
         prefix = " ",
+        -- suffix = " ",
+      }
+      local filename3 = stl:add_item {
+        content = function()
+          return vim.fn.expand "%:p:t"
+        end,
+        hl = { bg = color.sectionFilename_bg, fg = color.purple, bold = true },
         suffix = " ",
-      })
+      }
       local filestatus = stl:add_item(nut.buf.filestatus {
         hl = { bg = color.sectionFilename_bg, fg = color.bg },
         suffix = " ",
@@ -238,7 +258,9 @@ return {
 
       local stl_inactive = Bar "statusline"
       stl_inactive:add_item(mode)
-      stl_inactive:add_item(filename)
+      -- stl_inactive:add_item(filename)
+      stl_inactive:add_item(filename2)
+      stl_inactive:add_item(filename3)
       stl_inactive:add_item(filestatus)
       stl_inactive:add_item(nut.spacer())
 
