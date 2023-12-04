@@ -49,13 +49,13 @@ return {
           close = { "q", "<leader><Tab>" }, -- close the list
           cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
           refresh = "r", -- manually refresh
-          jump = "<tab>", -- jump to the diagnostic or open / close folds
+          jump = "o", -- jump to the diagnostic or open / close folds
           open_split = { "<c-s>" }, -- open buffer in new split
           open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
           open_tab = { "<c-t>" }, -- open buffer in new tab
           jump_close = "<cr>", -- jump to the diagnostic and close the list
           toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-          toggle_preview = "o", -- toggle auto_preview
+          toggle_preview = "p", -- toggle auto_preview
           hover = "K", -- opens a small popup with the full multiline message
           preview = "p", -- preview the diagnostic location
           close_folds = { "zM", "zm" }, -- close all folds
@@ -789,9 +789,10 @@ return {
       },
     },
   },
-  -- LSP-TIMEOUT.NVIM
+  -- LSP-TIMEOUT.NVIM (disabled)
   {
     "hinell/lsp-timeout.nvim",
+    enabled = false,
     event = "LazyFile",
     dependencies = { "neovim/nvim-lspconfig" },
   },

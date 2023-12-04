@@ -21,10 +21,35 @@ end
 function M.convert_norg_to_markdown()
   local fname = vim.fn.expand "%:t:r"
   local pname = vim.fn.expand "%:p:h"
+  local path_mdfIle = pname .. "/" .. fname .. ".md"
 
-  local msg_cmd = "Neorg export to-file " .. pname .. "/" .. fname .. ".md"
-
+  local msg_cmd = "Neorg export to-file " .. path_mdfIle
   vim.cmd(msg_cmd)
+
+  local Job = require "plenary.job"
+  local data = {}
+  -- sed 's/\[\(.*\)\](#\(.*\))/[\2](\1)/' -i index.md
+  local scc = Job:new({ command = "sed", args = { [[s/\[\(.*\)\](#\(.*\)md)/[\2](\1)/]], "-i", path_mdfIle } }):sync()
+  for i, _ in ipairs(scc) do
+    assert(scc[i] == data[i])
+  end
+
+  local ls = Job:new({ command = "sed", args = { [[s/\[\(.*\)\](#\(.*\))/[#\2]/]], "-i", path_mdfIle } }):sync()
+  for i, _ in ipairs(ls) do
+    assert(ls[i] == data[i])
+  end
+
+  local cc = Job:new({ command = "sed", args = { [[s/\[\(.*\)\](\$.\(.*\))/[[\2\]\]/]], "-i", path_mdfIle } }):sync()
+  for i, _ in ipairs(cc) do
+    assert(cc[i] == data[i])
+  end
+
+  -- \[.*?\]\(.*?)(#)(.*?\))
+  local dcl = Job:new({ command = "sed", args = { [[s/\[\[\(.*\)\(#\)\(.*\)\]\]/\[\[\1|\3\]\]/]], "-i", path_mdfIle } })
+    :sync()
+  for i, _ in ipairs(dcl) do
+    assert(dcl[i] == data[i])
+  end
 end
 
 local function __get_check_dirman(neorg)

@@ -31,6 +31,10 @@ V
   # TODO: install gpg-tui
   # install depencies apt-get install libgpgme-dev libx11-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
   # carog install gpg-tui
+  #
+
+  # TODO: install dive (https://github.com/wagoodman/dive)
+  # go get github.com/wagoodman/dive
 }
 
 build-react() {
@@ -106,7 +110,7 @@ show_alias() {
 			fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
 	)
 
-	if [[ ! -z $SELECT ]]; then
+	if [[ ! -n $alias_selected ]]; then
     return
   else
 	  select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
@@ -118,3 +122,20 @@ show_alias() {
 
 zle -N show_alias
 bindkey '^o' show_alias
+
+
+show_alias_git() {
+  setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
+
+  local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
+
+  if [[ ! -n $alias_sel ]]; then
+    return
+  fi
+
+  LBUFFER="${LBUFFER}git $alias_sel "
+  zle reset-prompt
+}
+
+zle -N show_alias_git
+bindkey '^q' show_alias_git
