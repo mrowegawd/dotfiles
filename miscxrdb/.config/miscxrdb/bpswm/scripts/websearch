@@ -196,7 +196,7 @@ Categories=GNOME;GTK;System;
 			pass show "$path_pass" | grep '^username: ' | cut -b 11- | xclip -selection c
 			get_clip=$(xclip -o -sel clip)
 			if [ -n "$get_clip" ]; then
-				dunstify "copy "
+				dunstify "username copied"
 			else
 				dunstify "[copy username] cant copy!! something went wrong!"
 			fi
@@ -213,7 +213,7 @@ Categories=GNOME;GTK;System;
 			pass show "$path_pass" | grep '^password: ' | cut -b 11- | xclip -selection c
 			get_clip=$(xclip -o -sel clip)
 			if [[ -n $get_clip ]]; then
-				dunstify "copy password"
+				dunstify "password copied"
 			else
 				dunstify "[username] no password? something went wrong!"
 			fi
