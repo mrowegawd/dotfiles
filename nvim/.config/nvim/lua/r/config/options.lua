@@ -219,7 +219,7 @@ local options = {
     -- end
     wrap = false, -- Disable wrapping of lines longer than the width of window.
     mouse = "a", -- Enable mouse support.
-    mousescroll = "ver:0,hor:0", -- "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
+    -- mousescroll = "ver:0,hor:0", -- "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
     guicursor = "n:blinkon200,i-ci-ve:ver25", -- Enable cursor blink.
     autochdir = false, -- Use current file dir as working dir (See project.nvim)
     scrolloff = 5, -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.

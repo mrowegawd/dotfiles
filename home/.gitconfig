@@ -15,20 +15,18 @@
   light = false
   tabs = 2
   navigate = true
-  hyperlinks = true
-  side-by-side = true
+  side-by-side = false
+  whitespace-error-style = 22 reverse
 
 [delta "interactive"]
   keep-plus-minus-markers = false
 
 [delta "decorations"]
-  commit-decoration-style = blue ol
-  commit-style = raw
-  file-style = omit
-  hunk-header-decoration-style = blue box ul
-  hunk-header-file-style = red
-  hunk-header-line-number-style = "#067a00"
-  hunk-header-style = file line-number syntax
+  commit-decoration-style = cyan box ul
+  file-style = cyan ul
+  file-decoration-style = none
+  hunk-header-decoration-style = cyan box
+
 
 [fetch]
   prune = true
@@ -152,6 +150,7 @@
   # Open github repo on browser
   # ex: git open [<remote>]
   openurl = "!f() { URL=$(git config remote.\"${1:-origin}\".url); firefox \"${URL%%.git}\"; }; f"
+  checkurl = "!git remote -v"
 
   # Update submodule
   sub   = submodule update --init --recursive

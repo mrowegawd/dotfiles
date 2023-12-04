@@ -3,16 +3,6 @@ local uv = vim.uv or vim.loop
 
 local Util = require "r.utils"
 local highlight = require "r.config.highlights"
-local is_mac = uv.os_uname().sysname == "Darwin"
-
-local function format_title(str, icon, icon_hl)
-  return {
-    { " " },
-    { (icon and icon .. " " or ""), icon_hl or "DevIconDefault" },
-    { str, "Bold" },
-    { " " },
-  }
-end
 
 return {
   -- NEORG
@@ -60,7 +50,7 @@ return {
             file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
             winopts = {
               -- fullscreen = true,
-              title = format_title("[Neorg] Files", " "),
+              title = Util.fzflua.format_title("[Neorg] Files", " "),
             },
           }
         end,
@@ -73,8 +63,9 @@ return {
           return require("fzf-lua").live_grep_glob {
             prompt = "  ",
             cwd = require("r.config").path.wiki_path,
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
             winopts = {
-              title = format_title("[Neorg] Grep", " "),
+              title = Util.fzflua.format_title("[Neorg] Grep", " "),
             },
           }
         end,
@@ -602,6 +593,7 @@ return {
     build = function()
       local has_magick = pcall(require, "magick")
       if not has_magick and vim.fn.executable "luarocks" == 1 then
+        local is_mac = uv.os_uname().sysname == "Darwin"
         if is_mac then
           vim.fn.system "luarocks --lua-dir=$(brew --prefix)/opt/lua@5.1 --lua-version=5.1 install magick"
         else

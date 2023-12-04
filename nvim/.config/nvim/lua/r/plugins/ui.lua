@@ -1,5 +1,6 @@
 local fn = vim.fn
 local highlight = require "r.config.highlights"
+local Util = require "r.utils"
 
 return {
   -- INCLINE.NVIM (disabled)
@@ -91,36 +92,37 @@ return {
       max_width = function()
         return math.floor(vim.o.columns * 0.6)
       end,
+      top_down = false,
       max_height = function()
         return math.floor(vim.o.lines * 0.8)
       end,
 
-      on_open = function(win)
-        if not vim.api.nvim_win_is_valid(win) then
-          return
-        end
-        vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.rectangle })
-      end,
-      -- render = function(...)
-      --   local notification = select(2, ...)
-      --   local style = falsy(notification.title[1]) and 'minimal' or 'default'
-      --   require('notify.render')[style](...)
-      -- end,
       -- on_open = function(win)
-      --   vim.api.nvim_win_set_config(win, { zindex = 175 })
-      --   if not vim.g.notifications_enabled then
-      --     vim.api.nvim_win_close(win, true)
+      --   if not vim.api.nvim_win_is_valid(win) then
+      --     return
       --   end
-      --   if not package.loaded["nvim-treesitter"] then
-      --     pcall(require, "nvim-treesitter")
-      --   end
-      --   vim.wo[win].conceallevel = 3
-      --   local buf = vim.api.nvim_win_get_buf(win)
-      --   if not pcall(vim.treesitter.start, buf, "markdown") then
-      --     vim.bo[buf].syntax = "markdown"
-      --   end
-      --   vim.wo[win].spell = false
+      --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.rectangle })
       -- end,
+      render = function(...)
+        local notification = select(2, ...)
+        local style = Util.cmd.falsy(notification.title[1]) and "minimal" or "default"
+        require("notify.render")[style](...)
+      end,
+      on_open = function(win)
+        vim.api.nvim_win_set_config(win, { zindex = 175 })
+        if not vim.g.notifications_enabled then
+          vim.api.nvim_win_close(win, true)
+        end
+        if not package.loaded["nvim-treesitter"] then
+          pcall(require, "nvim-treesitter")
+        end
+        vim.wo[win].conceallevel = 3
+        local buf = vim.api.nvim_win_get_buf(win)
+        if not pcall(vim.treesitter.start, buf, "markdown") then
+          vim.bo[buf].syntax = "markdown"
+        end
+        vim.wo[win].spell = false
+      end,
     },
     config = function(_, opts)
       require("r.config.highlights").plugin("notify", {

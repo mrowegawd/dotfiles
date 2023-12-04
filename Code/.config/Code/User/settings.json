@@ -116,7 +116,6 @@
             "before": [ "j", "k" ],
             "after": [ "<Esc>" ]
         },
-    
         // Navigate
         {
             "before": "ctrl+b",

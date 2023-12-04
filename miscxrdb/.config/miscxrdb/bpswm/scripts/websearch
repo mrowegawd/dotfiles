@@ -192,18 +192,36 @@ Categories=GNOME;GTK;System;
 				dunstify "[autoinput] no password and username? something went wrong!"
 			fi
 			;;
-		"username")
+		"copy_username")
+			pass show "$path_pass" | grep '^username: ' | cut -b 11- | xclip -selection c
+			get_clip=$(xclip -o -sel clip)
+			if [ -n "$get_clip" ]; then
+				dunstify "copy "
+			else
+				dunstify "[copy username] cant copy!! something went wrong!"
+			fi
+			;;
+		"input_username")
 			username=$(pass show "$path_pass" | grep '^username: ' | cut -b 11-)
 			if [[ -n $username ]]; then
-				dunstify "username $username"
+				ydotool type "$username" && ydotool key Enter
+			else
+				dunstify "[input username] no username? can't input username, something went wrong!"
+			fi
+			;;
+		"copy_password")
+			pass show "$path_pass" | grep '^password: ' | cut -b 11- | xclip -selection c
+			get_clip=$(xclip -o -sel clip)
+			if [[ -n $get_clip ]]; then
+				dunstify "copy password"
 			else
 				dunstify "[username] no password? something went wrong!"
 			fi
 			;;
-		"password")
-			password=$(pass show "$path_pass" | grep '^password: ' | cut -b 11- | xclip -sel clip)
+		"input_password")
+			password=$(pass show "$path_pass" | grep '^password: ' | cut -b 11-)
 			if [[ -n $password ]]; then
-				dunstify "password copied"
+				ydotool type "$password" && ydotool key Enter
 			else
 				dunstify "[password] no password? something went wrong!"
 			fi
@@ -224,18 +242,24 @@ Categories=GNOME;GTK;System;
 	}
 
 	select_command() {
-		selection="$(echo -e "auto input\ncopy username\ncopy password\nopen url" |
+		selection="$(echo -e "auto input\ninput username\ninput password\ncopy username\ncopy password\nopen url" |
 			$ROFI_COMMAND -dmenu -matchin fuzzy -i -sort -sorting-method fzf -p "$1")"
 
 		if [[ -n "$selection" ]]; then
 			if [[ $selection == "auto input" ]]; then
 				copy_pasword_or_username "autoinput"
 			fi
+			if [[ $selection == "input username" ]]; then
+				copy_pasword_or_username "input_username"
+			fi
 			if [[ $selection == "copy username" ]]; then
-				copy_pasword_or_username "username"
+				copy_pasword_or_username "copy_username"
+			fi
+			if [[ $selection == "input password" ]]; then
+				copy_pasword_or_username "input_password"
 			fi
 			if [[ $selection == "copy password" ]]; then
-				copy_pasword_or_username "password"
+				copy_pasword_or_username "copy_password"
 			fi
 			if [[ $selection == "open url" ]]; then
 				copy_pasword_or_username "url"
