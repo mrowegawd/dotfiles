@@ -55,7 +55,7 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { [[\]], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
+      { [[<Leader>`]], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
       -- { "<c-s>", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
       -- { "r", mode = "o", function() require("flash").remote() end, desc = "Misc(flash): remote" },
       -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search" },

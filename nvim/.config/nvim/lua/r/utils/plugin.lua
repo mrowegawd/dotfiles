@@ -253,7 +253,7 @@ function M.EditSnippet()
   end)
 end
 
-function M.infoBaseColorsTheme()
+function M.change_colors()
   local normal = "Normal"
   local colorcolumn = "ColorColumn"
   local pmenusel = "PmenuSel"
@@ -264,72 +264,61 @@ function M.infoBaseColorsTheme()
   local cmpmatchabbrFuzzy = "CmpItemAbbrMatchFuzzy"
   local winseparator = "WinSeparator"
 
-  local normal_fg = "Normal color_fg: " .. highlight.get(normal, "fg")
-  local normal_bg = "Normal color_bg: " .. highlight.get(colorcolumn, "bg")
+  local jj = fmt(
+    [[
+  normal_fg: %s
+  normal_bg: %s
 
-  -- fzf selection
-  local fzf_selection_fg = "Fzf selection fg: " .. highlight.get(pmenusel, "fg")
-  local fzf_selection_bg = "fzf selection bg: " .. highlight.get(pmenusel, "bg")
-  local fzf_selection_match_fg = "Fzf selection match fg: " .. highlight.get(cmpmatchabbr, "fg")
+  fzf_selection_fg: %s
+  fzf_selection_bg: %s
+  fzf_selection_match_fg: %s
 
-  -- fzf non selection
-  local fzf_bg = "Fzf default bg: " .. highlight.get(colorcolumn, "bg")
-  local fzf_fg = "Fzf default fg: " .. highlight.get(cmpitemabbr, "fg")
-  local fzf_match_fg = "Fzf match fuzzy: " .. highlight.get(cmpmatchabbrFuzzy, "fg")
+  non_fzf_fg: %s
+  non_fzf_bg: %s
+  non_fzf_match_fg: %s
 
-  -- fzf match matching
-  local fzf_border_fg = "Fzf border fg: " .. highlight.get(fzfluaborder, "fg")
+  fzf_border_fg: %s
 
-  local tmux_pane_active_bg = "Tmux pane active bg: " .. highlight.get(colorcolumn, "bg")
-  local tmux_pane_bg = "Tmux pane bg: " .. highlight.get(normal, "bg")
+  tmux_pane_active_bg: %s
+  tmux_pane_bg: %s
 
-  local tmux_fg = "Tmux fg: " .. highlight.tint(highlight.get(colorcolumn, "bg"), 0.8)
-  local tmux_border_fg = "Tmux border fg: " .. highlight.get(winseparator, "fg")
-
-  print(
-    fmt(
-      [[
-  %s
-  %s
-
-  #--- FUZZY
-  %s
-  %s
-  %s
-
-  %s
-  %s
-  %s
-
-  %s
-
-  #--- TMUX
-  %s
-  %s
-
-  %s
-  %s
+  tmux_fg: %s
+  tmux_border_fg: %s
   ]],
-      normal_fg,
-      normal_bg,
+    highlight.tint(highlight.get(normal, "fg"), -0.2),
+    highlight.get(colorcolumn, "bg"),
 
-      fzf_selection_bg,
-      fzf_selection_fg,
-      fzf_selection_match_fg,
+    -- fzf selection
+    highlight.get(pmenusel, "fg"),
+    highlight.get(pmenusel, "bg"),
+    highlight.get(cmpmatchabbr, "fg"),
 
-      fzf_bg,
-      fzf_fg,
-      fzf_match_fg,
+    -- fzf non selection
+    highlight.get(colorcolumn, "bg"),
+    highlight.get(cmpitemabbr, "fg"),
+    highlight.get(cmpmatchabbrFuzzy, "fg"),
 
-      fzf_border_fg,
+    -- fzf match matching
+    highlight.get(fzfluaborder, "fg"),
 
-      tmux_pane_active_bg,
-      tmux_pane_bg,
+    highlight.get(colorcolumn, "bg"),
+    highlight.get(normal, "bg"),
 
-      tmux_fg,
-      tmux_border_fg
-    )
+    highlight.tint(highlight.get(colorcolumn, "bg"), 0.8),
+    highlight.get(winseparator, "fg")
   )
+
+  local master_color_path = "/tmp/masterColors"
+
+  if Util.file.is_file(master_color_path) then
+    vim.fn.system(fmt("rm %s", master_color_path))
+  end
+
+  local fp = io.open(master_color_path, "a")
+  if fp then
+    fp:write(jj)
+    fp:close()
+  end
 end
 
 function M.infoFoldPreview()

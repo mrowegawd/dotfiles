@@ -1,10 +1,11 @@
 #!/bin/bash
 
 FZF_PATH="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
+mastercolors="/tmp/masterColors"
+
+[[ ! -f "$mastercolors" ]] && dunstify "file $mastercolors not exists, so abort" && exit 1
 
 getcolors() {
-	NAMEIS=$(grep theme <~/.Xresources | awk -F"/" '{print $4}' | cut -d '"' -f 1 | xargs)
-
 	FOREGROUND="$(xrdb -query | grep 'foreground:' | awk '{print $NF}' | head -1)"
 	BACKGROUND="$(xrdb -query | grep 'background:' | awk '{print $NF}' | head -1)"
 	CURSOR="$(xrdb -query | grep 'cursorColor:' | awk '{print $NF}' | head -1)"
@@ -38,430 +39,46 @@ getcolors() {
 	#FZF_BG_SELECTION: get bg dari `hi PmenuSel`
 	# Note: color FZF_BG_SELECTION juga digunakan untuk bg selection di rofi
 
-	case "$NAMEIS" in
-	# urutan theme yang ditulis disini berdasarkan urutan index tbl _cohelper
-
-	"solarized")
-		BACKGROUND_ACTIVE_WINDOW=#002b36
-		BACKGROUND_NON_ACTIVE_WINDOW=#002b36
-
-		BACKGROUND_ACTIVE_STATUSLINE=#002b36
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#002b36
-
-		FOREGROUND_WINSEPARATOR=#003746
-
-		FZF_BG_SELECTION=#004051
-		FZF_FG_SELECTION=#00ffff
-		FZF_FG_FUZZY_SELECTION=#ff3c38
-		# Non selection fzf
-		FZF_BG=#002b36
-		FZF_FG=#006d89
-		FZF_FG_FUZZY=#6e1917
-
-		FZF_FG_BORDER=#003c4b
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#002b36
-		TMUX_PANE_BG=#00242d
-
-		TMUX_FG=#004d61
-		TMUX_BORDER_FG=#003543
-		;;
-
-	"solarized-osaka")
-		BACKGROUND_ACTIVE_WINDOW=#00232c
-		BACKGROUND_NON_ACTIVE_WINDOW=#00232c
-
-		BACKGROUND_ACTIVE_STATUSLINE=#00232c
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#002b36
-
-		FOREGROUND_WINSEPARATOR=#002a33
-
-		FZF_BG_SELECTION=#003442
-		FZF_FG_SELECTION=#00ffff
-		FZF_FG_FUZZY_SELECTION=#ff3936
-		# Non selection fzf
-		FZF_BG=#00232c
-		FZF_FG=#005970
-		FZF_FG_FUZZY=#6d1816
-
-		FZF_FG_BORDER=#00313d
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#00232c
-		TMUX_PANE_BG=#001d25
-
-		TMUX_FG=#003f4f
-		TMUX_BORDER_FG=#002b37
-		;;
-	"flesh-and-blood")
-		BACKGROUND_ACTIVE_WINDOW=#181818
-		BACKGROUND_NON_ACTIVE_WINDOW=#181818
-
-		BACKGROUND_ACTIVE_STATUSLINE=#181818
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#181818
-
-		FOREGROUND_WINSEPARATOR=#1b2327
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#242424
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#cc3a5c
-		# Non selection fzf
-		FZF_BG=#181818
-		FZF_FG=#3d3d3d
-		FZF_FG_FUZZY=#551826
-
-		FZF_FG_BORDER=#212121
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#181818
-		TMUX_PANE_BG=#141414
-
-		TMUX_FG=#2b2b2b
-		TMUX_BORDER_FG=#1e1e1e
-		;;
-
-	"miasma")
-		BACKGROUND_ACTIVE_WINDOW=#222222
-		BACKGROUND_NON_ACTIVE_WINDOW=#222222
-
-		BACKGROUND_ACTIVE_STATUSLINE=#222222
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#222222
-
-		FOREGROUND_WINSEPARATOR=#2c2c2c
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#333333
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#e8e8d3
-		# Non selection fzf
-		FZF_BG=#222222
-		FZF_FG=#565656
-		FZF_FG_FUZZY=#616158
-
-		FZF_FG_BORDER=#2f2f2f
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#222222
-		TMUX_PANE_BG=#1c1c1c
-
-		TMUX_FG=#3d3d3d
-		TMUX_BORDER_FG=#2a2a2a
-		;;
-
-	"onedark")
-		BACKGROUND_ACTIVE_WINDOW=#1d1d20
-		BACKGROUND_NON_ACTIVE_WINDOW=#1d1d20
-
-		BACKGROUND_ACTIVE_STATUSLINE=#1d1d20
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#1d1d20
-
-		FOREGROUND_WINSEPARATOR=#333333
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#343439
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#e086fc
-		# Non selection fzf
-		FZF_BG=#232326
-		FZF_FG=#595960
-		FZF_FG_FUZZY=#5d3869
-
-		FZF_FG_BORDER=#313135
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#232326
-		TMUX_PANE_BG=#1d1d20
-
-		TMUX_FG=#3f3f44
-		TMUX_BORDER_FG=#2b2b2f
-		;;
-
-	"terafox")
-		BACKGROUND_ACTIVE_WINDOW=#152528
-		BACKGROUND_NON_ACTIVE_WINDOW=#152528
-
-		BACKGROUND_ACTIVE_STATUSLINE=#152528
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#152528
-
-		FOREGROUND_WINSEPARATOR=#343943
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#1f373c
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff6e61
-		# Non selection fzf
-		FZF_BG=#152528
-		FZF_FG=#355e66
-		FZF_FG_FUZZY=#742e28
-
-		FZF_FG_BORDER=#1d3338
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#152528
-		TMUX_PANE_BG=#111f22
-
-		TMUX_FG=#254248
-		TMUX_BORDER_FG=#1a2e32
-		;;
-
-	"seoul256")
-		BACKGROUND_ACTIVE_WINDOW=#4b4b4b
-		BACKGROUND_NON_ACTIVE_WINDOW=#4b4b4b
-
-		BACKGROUND_ACTIVE_STATUSLINE=#4b4b4b
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#4b4b4b
-
-		FOREGROUND_WINSEPARATOR=#343943
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#707070
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ffffff
-		# Non selection fzf
-		FZF_BG=#4b4b4b
-		FZF_FG=#bfbfbf
-		FZF_FG_FUZZY=#6c6c6c
-
-		FZF_FG_BORDER=#696969
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#4b4b4b
-		TMUX_PANE_BG=#3f3f3f
-
-		TMUX_FG=#878787
-		TMUX_BORDER_FG=#5d5d5d
-		;;
-
-	"doom-one")
-		BACKGROUND_ACTIVE_WINDOW=#282c34
-		BACKGROUND_NON_ACTIVE_WINDOW=#282c34
-
-		BACKGROUND_ACTIVE_STATUSLINE=#282c34
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#282c34
-
-		FOREGROUND_WINSEPARATOR=#343943
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#3c424e
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff8180
-		# Non selection fzf
-		FZF_BG=#282c34
-		FZF_FG=#667084
-		FZF_FG_FUZZY=#7f3635
-
-		FZF_FG_BORDER=#383d48
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#282c34
-		TMUX_PANE_BG=#22252c
-
-		TMUX_FG=#484f5d
-		TMUX_BORDER_FG=#323741
-		;;
-
-	"everforest")
-		BACKGROUND_ACTIVE_WINDOW=#2d353b
-		BACKGROUND_NON_ACTIVE_WINDOW=#2d353b
-
-		BACKGROUND_ACTIVE_STATUSLINE=#2d353b
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#2d353b
-
-		FOREGROUND_WINSEPARATOR=#363f46
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#434f58
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff9799
-		# Non selection fzf
-		FZF_BG=#2d353b
-		FZF_FG=#728796
-		FZF_FG_FUZZY=#733f40
-
-		FZF_FG_BORDER=#3e4a52
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#2d353b
-		TMUX_PANE_BG=#262d32
-
-		TMUX_FG=#515f6a
-		TMUX_BORDER_FG=#384249
-		;;
-
-	"tokyonight")
-		# BACKGROUND_ACTIVE_WINDOW=#24283b
-		# BACKGROUND_NON_ACTIVE_WINDOW=#24283b
-
-		# BACKGROUND_ACTIVE_STATUSLINE=#24283b
-		# BACKGROUND_NON_ACTIVE_STATUSLINE=#24283b
-
-		# FOREGROUND_WINSEPARATOR=#323852
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#363c58
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff5a5a
-		# Non selection fzf
-		FZF_BG=#24283b
-		FZF_FG=#5b6696
-		FZF_FG_FUZZY=#6d2525
-
-		FZF_FG_BORDER=#323852
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#24283b
-		TMUX_PANE_BG=#1e2232
-
-		TMUX_FG=#40486a
-		TMUX_BORDER_FG=#2d3249
-		;;
-
-	"tokyonight-night")
-		BACKGROUND_ACTIVE_WINDOW=#1a1b26
-		BACKGROUND_NON_ACTIVE_WINDOW=#1a1b26
-
-		BACKGROUND_ACTIVE_STATUSLINE=#1a1b26
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#1a1b26
-
-		FOREGROUND_WINSEPARATOR=#242535
-
-		# FZF
-		# Selection item fzf
-		FZF_BG_SELECTION=#272839
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff5a5a
-		# Non selection fzf
-		FZF_BG=#1a1b26
-		FZF_FG=#424460
-		FZF_FG_FUZZY=#6d2525
-
-		FZF_FG_BORDER=#242535
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#1a1b26
-		TMUX_PANE_BG=#161620
-
-		TMUX_FG=#2e3044
-		TMUX_BORDER_FG=#20212f
-		;;
-
-	"night-owl")
-		BACKGROUND_ACTIVE_WINDOW=#011627
-		BACKGROUND_NON_ACTIVE_WINDOW=#011627
-
-		BACKGROUND_ACTIVE_STATUSLINE=#011627
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#076fc2
-
-		FOREGROUND_WINSEPARATOR=#011e36
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#01213a
-		FZF_FG_SELECTION=#0cffff
-		FZF_FG_FUZZY_SELECTION=#ff6360
-		# Non selection fzf
-		FZF_BG=#011627
-		FZF_FG=#023863
-		FZF_FG_FUZZY=#772928
-
-		FZF_FG_BORDER=#011e36
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#011627
-		TMUX_PANE_BG=#001221
-
-		TMUX_FG=#012746
-		TMUX_BORDER_FG=#011b30
-		;;
-
-	"bamboo")
-		BACKGROUND_ACTIVE_WINDOW=#252623
-		BACKGROUND_NON_ACTIVE_WINDOW=#252623
-
-		BACKGROUND_ACTIVE_STATUSLINE=#252623
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#252623
-
-		FOREGROUND_WINSEPARATOR=#011e36
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#373934
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff6c94
-		# Non selection fzf
-		FZF_BG=#252623
-		FZF_FG=#5e6059
-		FZF_FG_FUZZY=#732d3e
-
-		FZF_FG_BORDER=#70c2be
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#252623
-		TMUX_PANE_BG=#1f201d
-
-		TMUX_FG=#42443f
-		TMUX_BORDER_FG=#2e2f2b
-		;;
-
-	"gruvbox")
-		BACKGROUND_ACTIVE_WINDOW=#282828
-		BACKGROUND_NON_ACTIVE_WINDOW=#282828
-
-		BACKGROUND_ACTIVE_STATUSLINE=#282828
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#282828
-
-		FOREGROUND_WINSEPARATOR=#343434
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#3c3c3c
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff573e
-		# Non selection fzf
-		FZF_BG=#282828
-		FZF_FG=#666666
-		FZF_FG_FUZZY=#7d241a
-
-		FZF_FG_BORDER=#383838
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#282828
-		TMUX_PANE_BG=#222222
-
-		TMUX_FG=#484848
-		TMUX_BORDER_FG=#323232
-		;;
-
-	*)
-		BACKGROUND_NON_ACTIVE_WINDOW=#3a3836
-		BACKGROUND_ACTIVE_WINDOW=#43454f
-		BACKGROUND_ACTIVE_STATUSLINE=#131A24
-		BACKGROUND_NON_ACTIVE_STATUSLINE=#d4d4d4
-		FOREGROUND_WINSEPARATOR=#242437
-
-		# Selection item fzf
-		FZF_BG_SELECTION=#3c3c3c
-		FZF_FG_SELECTION=#ffffff
-		FZF_FG_FUZZY_SELECTION=#ff887f
-
-		FZF_FG_BORDER=#343434
-
-		# Non selection fzf
-		FZF_BG=#282828
-		FZF_FG=#505050
-		FZF_FG_FUZZY=#a34944
-
-		# TMUX
-		TMUX_PANE_ACTIVE_BG=#24283b
-		TMUX_PANE_BG=#272c40
-
-		TMUX_FG=#39405e
-		TMUX_BORDER_FG=#323852
-
-		dunstify "paintree: color $NAMEIS not found <br> check /tmp/notfound-paintree"
-		echo "[warn] paintre: cannot find name $NAMEIS on the list" >/tmp/notfound-paintree
-		;;
-
-	esac
+	normal_fg=$(grep "normal_fg" <$mastercolors | awk '{print $NF}' | head -1)
+	normal_bg=$(grep "normal_bg" <$mastercolors | awk '{print $NF}' | head -1)
+	fzf_selection_fg=$(grep "fzf_selection_fg" <$mastercolors | awk '{print $NF}' | head -1)
+	fzf_selection_bg=$(grep "fzf_selection_bg" <$mastercolors | awk '{print $NF}' | head -1)
+	fzf_selection_match_fg=$(grep "fzf_selection_match_fg" <$mastercolors | awk '{print $NF}' | head -1)
+
+	# non_fzf_fg=$(grep "non_fzf_fg" <$mastercolors | awk '{print $NF}' | head -1)
+	# non_fzf_bg=$(grep "non_fzf_bg" <$mastercolors | awk '{print $NF}' | head -1)
+	non_fzf_match_fg=$(grep "non_fzf_match_fg" <$mastercolors | awk '{print $NF}' | head -1)
+	fzf_border_fg=$(grep "fzf_border_fg" <$mastercolors | awk '{print $NF}' | head -1)
+
+	tmux_pane_active_bg=$(grep "tmux_pane_active_bg" <$mastercolors | awk '{print $NF}' | head -1)
+	tmux_pane_bg=$(grep "tmux_pane_bg" <$mastercolors | awk '{print $NF}' | head -1)
+	tmux_fg=$(grep "tmux_fg" <$mastercolors | awk '{print $NF}' | head -1)
+	tmux_border_fg=$(grep "tmux_border_fg" <$mastercolors | awk '{print $NF}' | head -1)
+
+	BACKGROUND_ACTIVE_WINDOW=$normal_bg
+	BACKGROUND_NON_ACTIVE_WINDOW=$normal_bg
+
+	BACKGROUND_ACTIVE_STATUSLINE=$normal_bg
+	BACKGROUND_NON_ACTIVE_STATUSLINE=$normal_bg
+
+	FOREGROUND_WINSEPARATOR=#003746
+
+	FZF_BG_SELECTION=$fzf_selection_bg
+	FZF_FG_SELECTION=$fzf_selection_fg
+	FZF_FG_FUZZY_SELECTION=$fzf_selection_match_fg
+	# Non selection fzf
+	# FZF_BG=$non_fzf_bg
+	FZF_FG=$normal_fg
+	FZF_FG_FUZZY=$non_fzf_match_fg
+
+	FZF_FG_BORDER=$fzf_border_fg
+
+	# TMUX
+	TMUX_PANE_ACTIVE_BG=$tmux_pane_active_bg
+	TMUX_PANE_BG=$tmux_pane_bg
+
+	TMUX_FG=$tmux_fg
+	TMUX_BORDER_FG=$tmux_border_fg
 
 }
 
@@ -470,6 +87,8 @@ _check_size_screen() {
 
 	if [[ $size == '1024x768' ]]; then
 		FONTSIZE="12"
+	else
+		FONTSIZE="16"
 	fi
 }
 

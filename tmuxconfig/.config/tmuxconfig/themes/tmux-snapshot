@@ -3,14 +3,14 @@
 
 COL_WHITE="#626262"
 
-TMUX_PANE_ACTIVE_BG="#252623"
-TMUX_PANE_BG="#1f201d"
+TMUX_PANE_ACTIVE_BG="#282c34"
+TMUX_PANE_BG="#22252c"
 
-TMUX_FG="#42443f"
-TMUX_BORDER_FG="#2e2f2b"
+TMUX_FG="#484f5d"
+TMUX_BORDER_FG="#323741"
 
 BG_STATUSLINE="#24283b"
-BG_ACTIVE_STATUSLINE="#aaaaff"
+BG_ACTIVE_STATUSLINE="#a9a1e1"
 
 left_separator=''
 left_separator_black=''
@@ -31,11 +31,11 @@ set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[und
 #  |                      STATUS THEMES                       |
 #  +----------------------------------------------------------+
 set -g status-fg $TMUX_FG
-set -g status-bg $TMUX_PANE_BG
+set -g status-bg $TMUX_PANE_ACTIVE_BG
 set -g status on
 set -g status-interval 5
 
-# set -g status-position top
+set -g status-position top
 # set -g status-justify 'left'  #left,centre,??
 set-option -g status-justify absolute-centre
 set-option -g message-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"

@@ -5,6 +5,27 @@ local Util = require "r.utils"
 local highlight = require "r.config.highlights"
 
 return {
+  {
+    "epwalsh/obsidian.nvim",
+    cmd = "Obsidian",
+    version = "*", -- recommended, use latest release instead of latest commit
+    lazy = true,
+    ft = "markdown",
+    opts = {
+      workspaces = {
+        {
+          name = "personal",
+          path = require("r.config").path.wiki_path,
+        },
+        {
+          name = "work",
+          path = "~/vaults/work",
+        },
+      },
+
+      -- see below for full list of options 👇
+    },
+  },
   -- NEORG
   {
     "nvim-neorg/neorg",
@@ -322,6 +343,7 @@ return {
         },
         -- win_split_mode = "20split",
         org_agenda_skip_scheduled_if_done = true,
+        org_hide_emphasis_markers = true,
         org_capture_templates = {
           t = {
             description = "Todo",
