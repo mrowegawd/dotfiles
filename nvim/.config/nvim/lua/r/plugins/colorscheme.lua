@@ -174,6 +174,18 @@ return {
       return false
     end,
   },
+  -- NVIM-BASE16
+  {
+    "RRethy/nvim-base16",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local nvimbase16 = { "base16-ayu-dark", "base16-nord", "base16-horizon-terminal-dark" }
+      if vim.tbl_contains(nvimbase16, colorscheme) then
+        return true
+      end
+    end,
+  },
   -- EVERFOREST
   {
     "neanias/everforest-nvim",

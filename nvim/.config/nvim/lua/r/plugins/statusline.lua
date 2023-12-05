@@ -167,7 +167,7 @@ return {
           if basename == "" or basename == "." then
             return ""
           else
-            return basename:gsub("/$", "") .. "/"
+            return basename:gsub("/$", "")
           end
         end,
         hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = false },
@@ -176,7 +176,7 @@ return {
       }
       local filename3 = stl:add_item {
         content = function()
-          return vim.fn.expand "%:p:t"
+          return "/" .. vim.fn.expand "%:p:t"
         end,
         hl = { bg = color.sectionFilename_bg, fg = color.purple, bold = true },
         suffix = " ",

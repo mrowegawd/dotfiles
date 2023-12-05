@@ -18,7 +18,7 @@ return {
             },
 
             InclineNormalNC = {
-              guifg = highlight.tint(highlight.get("@field", "fg"), 0),
+              guifg = highlight.tint(highlight.get("@field", "fg"), -0.2),
               guibg = highlight.tint(highlight.get("Normal", "bg"), 1),
               gui = "bold",
             },

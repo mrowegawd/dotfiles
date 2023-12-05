@@ -19,7 +19,7 @@
     "vim.leader": "<space>",
     "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
     "snippets.extends": {},
-    "editor.fontSize": 10,
+    "editor.fontSize": 16,
     "vim.handleKeys":{
       "<C-a>": false,
       "<C-f>": true

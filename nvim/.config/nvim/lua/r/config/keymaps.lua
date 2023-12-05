@@ -364,8 +364,8 @@ Util.cmd.create_command("CBcatalog", function()
   return require("comment-box").catalog()
 end, { desc = "Comment-box: show catalog" })
 
-Util.cmd.create_command("InfoBaseColorsTheme", function()
-  return Util.plugin.infoBaseColorsTheme()
+Util.cmd.create_command("ChangeMasterTheme", function()
+  return Util.plugin.change_colors()
 end, { desc = "Misc: set theme bspwm" })
 
 Util.cmd.create_command("InfoOption", function()

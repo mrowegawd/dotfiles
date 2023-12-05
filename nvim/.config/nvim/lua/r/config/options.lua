@@ -32,7 +32,7 @@ local options = {
     -- do not use split or vsplit to ensure we don't open any new windows
     switchbuf = "useopen,uselast",
     encoding = "utf-8",
-    conceallevel = 3,
+    conceallevel = 2,
     infercase = true, -- Infer cases in keyword completion
     concealcursor = "nc",
     guifont = "Fira Code:h7.5",
