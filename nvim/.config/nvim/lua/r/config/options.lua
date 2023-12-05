@@ -169,7 +169,12 @@ local options = {
     -- timings {{{1
     -----------------------------------------------------------------------------//
     updatetime = 50,
-    timeoutlen = 300,
+    -- timeoutlen = 300,
+
+    -- wierd tmux esc-j/k line switch issue fix
+    -- https://github.com/LazyVim/LazyVim/discussions/163
+    timeoutlen = 1000,
+    ttimeoutlen = 0,
 
     --[[
          shda (info for vim): session data history
