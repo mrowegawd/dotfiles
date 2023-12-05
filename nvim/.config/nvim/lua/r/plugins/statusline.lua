@@ -1,3 +1,5 @@
+local Util = require "r.utils"
+
 return {
   -- NOUGAT
   {
@@ -191,6 +193,65 @@ return {
         },
       })
       stl:add_item(nut.spacer())
+      local lsp_notify = stl:add_item {
+        hidden = function()
+          return vim.fn.winwidth(0) < 120
+        end,
+        content = function()
+          local clients = vim.lsp.get_active_clients { bufnr = 0 }
+
+          if Util.cmd.falsy(clients) then
+            return { "No LSP clients available" }
+          end
+
+          local buf_ft = vim.bo.filetype
+          local buf_client_names = {}
+
+          local lint_s, lint = pcall(require, "lint")
+          if lint_s then
+            for ft_k, ft_v in pairs(lint.linters_by_ft) do
+              if type(ft_v) == "table" then
+                for _, linter in ipairs(ft_v) do
+                  if buf_ft == ft_k then
+                    table.insert(buf_client_names, linter)
+                  end
+                end
+              elseif type(ft_v) == "string" then
+                if buf_ft == ft_k then
+                  table.insert(buf_client_names, ft_v)
+                end
+              end
+            end
+          end
+          -- This needs to be a string only table so we can use concat below
+          local unique_client_names = {}
+          for _, client_name_target in ipairs(buf_client_names) do
+            local is_duplicate = false
+            for _, client_name_compare in ipairs(unique_client_names) do
+              if client_name_target == client_name_compare then
+                is_duplicate = true
+              end
+            end
+            if not is_duplicate then
+              table.insert(unique_client_names, client_name_target)
+            end
+          end
+
+          for _, server in pairs(clients) do
+            table.insert(unique_client_names, server.name)
+          end
+
+          local client_names_str = table.concat(unique_client_names, ", ")
+
+          local language_servers = string.format("[%s]", client_names_str)
+
+          return language_servers
+        end,
+        hl = { fg = color.bg4 },
+        suffix = " ",
+        prefix = " LSP(s): ",
+        -- sep_right = sep.right_chevron_solid(true),
+      }
       stl:add_item(nut.truncation_point())
       stl:add_item(nut.buf.diagnostic_count {
         hidden = false,
@@ -263,6 +324,7 @@ return {
       stl_inactive:add_item(filename3)
       stl_inactive:add_item(filestatus)
       stl_inactive:add_item(nut.spacer())
+      stl_inactive:add_item(lsp_notify)
 
       bar_util.set_statusline(function(ctx)
         return ctx.is_focused and stl or stl_inactive

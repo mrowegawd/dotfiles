@@ -38,9 +38,16 @@ V
 }
 
 build-react() {
-  echo "usage\n 'build-react [project-name]'\n\n"
-  echo "Clone the react-starter..."
-  git clone git@github.com:mrowegawd/react-starter.git $@
+  Green=$(tput setaf 2)        # Green
+  Color_Off=$(tput sgr0)       # Text Reset
+
+  if [[ $1 == "" ]]; then
+    echo "You can use custom name project:\n 'build-react <name-project>'"
+    echo -e "\n\nCreate default name for your react: '${Green}react-starter${Color_Off}'\n\n"
+  else
+    echo -e "\nName of your project name: '${Green}$1${Color_Off}'\n\n"
+  fi
+  git clone https://github.com/mrowegawd/react-starter.git $@
 }
 
 build-go() {

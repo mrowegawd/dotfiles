@@ -33,6 +33,7 @@ return {
   {
     "stevearc/conform.nvim",
     dependencies = { "mason.nvim" },
+    lazy = true,
     cmd = "ConformInfo",
     keys = {
       {
@@ -102,7 +103,7 @@ return {
           --
           -- # Example of using shfmt with extra args
           -- shfmt = {
-          --   extra_args = { "-i", "2", "-ci" },
+          --   prepend_args = { "-i", "2", "-ci" },
           -- },
         },
       }
