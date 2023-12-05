@@ -3,20 +3,25 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
-  -- INCLINE.NVIM (disabled)
+  -- INCLINE.NVIM
   {
     "b0o/incline.nvim",
-    enabled = false,
     event = "BufReadPre",
     opts = function()
       return {
         highlight = {
           groups = {
             InclineNormal = {
-              guibg = highlight.tint(highlight.get("ErrorMsg", "fg"), 2),
-              guifg = highlight.tint(highlight.get("Normal", "bg"), -2),
+              guibg = highlight.tint(highlight.get("@field", "fg"), 0),
+              guifg = highlight.tint(highlight.get("ColorColumn", "bg"), 0),
+              gui = "bold",
             },
-            -- InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
+
+            InclineNormalNC = {
+              guifg = highlight.tint(highlight.get("@field", "fg"), 0),
+              guibg = highlight.tint(highlight.get("Normal", "bg"), 1),
+              gui = "bold",
+            },
           },
         },
         window = { margin = { vertical = 0, horizontal = 1 } },
