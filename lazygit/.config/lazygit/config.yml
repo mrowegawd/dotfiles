@@ -75,7 +75,7 @@ git:
   overrideGpg: false # prevents lazygit from spawning a separate process when using GPG
   disableForcePushing: false
   parseEmoji: false
-  diffContextSize: 3 # how many lines of context are shown around a change in diffs
+  # diffContextSize: 3 # how many lines of context are shown around a change in diffs
 refresher:
   refreshInterval: 10 # File/submodule refresh interval in seconds. Auto-refresh can be disabled via option 'git.autoRefresh'.
   fetchInterval: 60 # Re-fetch interval in seconds. Auto-fetch can be disabled via option 'git.autoFetch'.
@@ -155,7 +155,7 @@ keybinding:
   files:
     commitChanges: "c"
     commitChangesWithoutHook: "w" # commit changes without pre-commit hook
-    amendLastCommit: "A"
+    # amendLastCommit: "A"
     commitChangesWithEditor: "C"
     ignoreFile: "i"
     refreshFiles: "r"
@@ -196,7 +196,7 @@ keybinding:
     tagCommit: "T"
     checkoutCommit: "<space>"
     resetCherryPick: "<c-R>"
-    copyCommitMessageToClipboard: "<c-y>"
+    # copyCommitMessageToClipboard: "<c-y>"
     openLogMenu: "<c-o>"
     viewBisectOptions: "b"
   stash:

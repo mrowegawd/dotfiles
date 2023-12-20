@@ -18,7 +18,7 @@ build-nvim() {
 build-install(){
   # TODO: install apt seperti urlview
   apt_install="urlview"
-V
+
   # TODO: install cargo seperti eza, lazygit, etc
   cargo_install="eza"
 
@@ -31,10 +31,12 @@ V
   # TODO: install gpg-tui
   # install depencies apt-get install libgpgme-dev libx11-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
   # carog install gpg-tui
-  #
 
   # TODO: install dive (https://github.com/wagoodman/dive)
   # go get github.com/wagoodman/dive
+
+  # TODO: install gifski https://github.com/sindresorhus/Gifski
+  # cargo install gifski
 }
 
 build-react() {

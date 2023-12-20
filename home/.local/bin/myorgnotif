@@ -10,7 +10,7 @@ PATH_NVIM_PLUGINS="$HOME/.local/share/nvim/lazy/orgmode"
 sleep 2
 
 COMMAND_NVIMORG=$(ps -ef | grep -i "headless -c lua require" | grep -v grep | awk '{print $2}')
-if [ ! -z "$COMMAND_NVIMORG" ]; then
+if [ -n "$COMMAND_NVIMORG" ]; then
 	echo "$COMMAND_NVIMORG"
 	kill -9 "$COMMAND_NVIMORG"
 fi

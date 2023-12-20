@@ -1,21 +1,65 @@
-local fmt, cmd, L = string.format, vim.cmd, vim.log.levels
+local Util = require "r.utils"
+
+local scan = require "plenary.scandir"
+local fmt, cmd = string.format, vim.cmd
 
 local M = {}
 
-function M.EditOrgTodo()
-  local org_todos = { "inbox", "refile" }
-  local org_todo_path = require("r.config").path.wiki_path .. "/orgmode/gtd/"
+local separator = function()
+  return "/"
+end
 
-  vim.ui.select(org_todos, { prompt = "Edit OrgTODO's> " }, function(choice)
-    if choice == nil then
-      return
-    end
+local function remove_trailing(path)
+  local p, _ = path:gsub(separator() .. "$", "")
+  return p
+end
 
-    if not require("r.utils").file.exists(org_todo_path .. choice .. ".org") then
-      return vim.notify("Cant find todo path: " .. org_todo_path .. choice .. ".org", L.WARN, { title = "Todo info" })
+function M.basename(path)
+  path = remove_trailing(path)
+  local i = path:match("^.*()" .. separator())
+  if not i then
+    return path
+  end
+  return path:sub(i + 1, #path)
+end
+
+function M.open_orgagenda_paths()
+  local plugin = require("lazy.core.config").plugins["orgmode"]
+  local Plugin = require "lazy.core.plugin"
+  local opts_plugin = Plugin.values(plugin, "opts", false)
+
+  local org_backup = {}
+  local org_todos = {}
+  for _, x in pairs(opts_plugin.org_agenda_files) do
+    local path = string.gsub(x, [[%/%*$]], "")
+    local dirs = scan.scan_dir(path)
+    for _, file_path in pairs(dirs) do
+      if not string.match(file_path, "org_archive") then
+        local basename_file = string.gsub(M.basename(file_path), ".org", "")
+        table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
+        table.insert(org_todos, basename_file)
+      end
     end
-    cmd(":edit " .. org_todo_path .. choice .. ".org")
-  end)
+  end
+
+  vim.ui.select(
+    org_todos,
+    { prompt = require("r.config").icons.misc.pencil .. " Open OrgTodos ", kind = "pojokan" },
+    function(choice)
+      if choice == nil then
+        return
+      end
+      for _, x in pairs(org_backup) do
+        if choice == x.basename_file then
+          if Util.file.exists(x.full_path) then
+            return cmd(":edit " .. x.full_path)
+          else
+            return Util.warn("Path not exists: " .. x.full_path, { title = "orgmode" })
+          end
+        end
+      end
+    end
+  )
 end
 
 function M.convert_norg_to_markdown()

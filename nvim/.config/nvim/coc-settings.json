@@ -1,0 +1,25 @@
+{
+  "Lua.diagnostics.globals": [
+    "vim"
+  ],
+  "[typescript][typescriptreact][php]": {
+    "coc.preferences.formatOnSave": true
+  },
+  "tailwindCSS.jsLanguages": [
+    "javascript",
+    "javascriptreact",
+    "reason",
+    "typescriptreact"
+  ],
+  "stylua.styluaPath": null,
+  "colors.enable": true,
+  "html.filetypes": [
+    "html",
+    "handlebars",
+    "htmldjango",
+    "blade",
+    "typescriptreact",
+    "javascriptreact"
+  ],
+  "snippets.userSnippetsDirectory": "~/Dropbox/friendly-snippets"
+}

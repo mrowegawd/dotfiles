@@ -32,9 +32,14 @@ end
 return {
   {
     "stevearc/conform.nvim",
-    dependencies = { "mason.nvim" },
-    lazy = true,
+    event = { "BufWritePre" },
     cmd = "ConformInfo",
+    enabled = function()
+      if require("r.config").lsp_style == "coc" then
+        return false
+      end
+      return true
+    end,
     keys = {
       {
         "<leader>cF",
@@ -47,8 +52,8 @@ return {
     },
     init = function()
       -- Install the conform formatter on VeryLazy
-      require("r.utils").on_very_lazy(function()
-        require("r.utils").format.register {
+      Util.on_very_lazy(function()
+        Util.format.register {
           name = "conform.nvim",
           priority = 100,
           primary = true,
@@ -88,6 +93,24 @@ return {
           lua = { "stylua" },
           fish = { "fish_indent" },
           sh = { "shfmt" },
+          python = { "black" },
+          go = { "goimports", "gofumpt" },
+          ["javascript"] = { { "prettierd", "prettier" } },
+          ["javascriptreact"] = { { "prettierd", "prettier" } },
+          ["typescript"] = { { "prettierd", "prettier" } },
+          ["typescriptreact"] = { { "prettierd", "prettier" } },
+          ["vue"] = { { "prettierd", "prettier" } },
+          ["css"] = { { "prettierd", "prettier" } },
+          ["scss"] = { { "prettierd", "prettier" } },
+          ["less"] = { { "prettierd", "prettier" } },
+          ["html"] = { { "prettierd", "prettier" } },
+          ["json"] = { { "prettierd", "prettier" } },
+          ["jsonc"] = { { "prettierd", "prettier" } },
+          ["yaml"] = { { "prettierd", "prettier" } },
+          ["markdown"] = { { "prettierd", "prettier" } },
+          ["markdown.mdx"] = { { "prettierd", "prettier" } },
+          ["graphql"] = { { "prettierd", "prettier" } },
+          ["handlebars"] = { { "prettierd", "prettier" } },
           ["_"] = { "trim_whitespace" },
         },
         -- LazyVim will merge the options you set here with builtin formatters.

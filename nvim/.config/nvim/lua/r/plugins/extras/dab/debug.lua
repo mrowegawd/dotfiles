@@ -7,11 +7,78 @@ return {
   {
     "mfussenegger/nvim-dap",
     dependencies = {
-      { "LiadOz/nvim-dap-repl-highlights", opts = {} },
+
+      -- python
+      {
+        "mfussenegger/nvim-dap-python",
+        config = function()
+          local path = require("mason-registry").get_package("debugpy"):get_install_path()
+          require("dap-python").setup(path .. "/venv/bin/python")
+        end,
+      },
+
+      -- golang
+      {
+        "leoluz/nvim-dap-go",
+        opts = {},
+      },
+
       { "theHamsta/nvim-dap-virtual-text", opts = { commented = true } },
       {
-        "rcarriga/nvim-dap-ui",
+        "LiadOz/nvim-dap-repl-highlights",
+        config = true,
+        build = function()
+          if not require("nvim-treesitter.parsers").has_parser "dap_repl" then
+            vim.cmd ":TSInstall dap_repl"
+          end
+        end,
+      },
 
+      {
+        "jbyuki/one-small-step-for-vimkind",
+        -- keys = { } -- Use ftplugin/lua
+        config = function()
+          -- local dap = require "dap"
+          -- dap.adapters.nlua = function(callback, config)
+          --   callback { type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 }
+          -- end
+
+          local dap = require "dap"
+          dap.adapters.nlua = function(callback, conf)
+            local adapter = {
+              type = "server",
+              host = conf.host or "127.0.0.1",
+              port = conf.port or 8086,
+            }
+            if conf.start_neovim then
+              local dap_run = dap.run
+              dap.run = function(c)
+                adapter.port = c.port
+                adapter.host = c.host
+              end
+              require("osv").run_this()
+              dap.run = dap_run
+            end
+            callback(adapter)
+          end
+          dap.configurations.lua = {
+            {
+              type = "nlua",
+              request = "attach",
+              name = "Run this file",
+              start_neovim = {},
+            },
+            {
+              type = "nlua",
+              request = "attach",
+              name = "Attach to running Neovim instance (port = 8086)",
+              port = 8086,
+            },
+          }
+        end,
+      },
+      {
+        "rcarriga/nvim-dap-ui",
         -- stylua: ignore
         keys = {
           { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug(dapui): toggle UI" },
@@ -73,7 +140,9 @@ return {
           -- require("dap.ext.vscode").load_launchjs()
           local dap = require "dap"
           local dapui = require "dapui"
+
           dapui.setup(opts)
+
           dap.listeners.after.event_initialized["dapui_config"] = function()
             dapui.open {}
           end
@@ -106,7 +175,9 @@ return {
       {
         "<Leader>df",
         function()
-          Util.fzflua.send_cmds {
+          local col, row = Util.fzflua.rectangle_win_pojokan()
+
+          Util.fzflua.send_cmds ({
             breakpoint_set = function()
               return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
             end,
@@ -132,7 +203,7 @@ return {
             dap_printout_session = function()
               return print(vim.inspect(require("dap").session()))
             end,
-          }
+          }, { winopts = { title = require("r.config").icons.misc.bug .. " Debug", row = row, col = col } })
         end,
         desc = "Debug(dap): list of debugging dap commands",
       },
@@ -162,7 +233,7 @@ return {
             else
               return require("dap").continue()
             end
-          end
+         end
         end,
         desc = "Debug(dap): run or disconnect",
       },
@@ -177,12 +248,116 @@ return {
       { "<leader>dk", function() require("dap").up() end, desc = "Debug(dap): stack up" },
       { "<leader>dj", function() require("dap").down() end, desc = "Debug(dap): stack down" },
     },
+    opts = {
+      setup = {
+        vscode_js_debug = function()
+          local function get_js_debug()
+            local install_path = require("mason-registry").get_package("js-debug-adapter"):get_install_path()
+            return install_path .. "/js-debug/src/dapDebugServer.js"
+          end
+
+          for _, adapter in ipairs { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" } do
+            require("dap").adapters[adapter] = {
+              type = "server",
+              host = "localhost",
+              port = "${port}",
+              executable = {
+                command = "node",
+                args = {
+                  get_js_debug(),
+                  "${port}",
+                },
+              },
+            }
+          end
+
+          for _, language in ipairs { "typescript", "javascript" } do
+            require("dap").configurations[language] = {
+              {
+                type = "pwa-node",
+                request = "launch",
+                name = "Launch file",
+                program = "${file}",
+                cwd = "${workspaceFolder}",
+              },
+              {
+                type = "pwa-node",
+                request = "attach",
+                name = "Attach",
+                processId = require("dap.utils").pick_process,
+                cwd = "${workspaceFolder}",
+              },
+              {
+                type = "pwa-node",
+                request = "launch",
+                name = "Debug Jest Tests",
+                -- trace = true, -- include debugger info
+                runtimeExecutable = "node",
+                runtimeArgs = {
+                  "./node_modules/jest/bin/jest.js",
+                  "--runInBand",
+                },
+                rootPath = "${workspaceFolder}",
+                cwd = "${workspaceFolder}",
+                console = "integratedTerminal",
+                internalConsoleOptions = "neverOpen",
+              },
+              {
+                type = "pwa-chrome",
+                name = "Attach - Remote Debugging",
+                request = "attach",
+                program = "${file}",
+                cwd = vim.fn.getcwd(),
+                sourceMaps = true,
+                protocol = "inspector",
+                port = 9222, -- Start Chrome google-chrome --remote-debugging-port=9222
+                webRoot = "${workspaceFolder}",
+              },
+              {
+                type = "pwa-chrome",
+                name = "Launch Chrome",
+                request = "launch",
+                url = "http://localhost:5173", -- This is for Vite. Change it to the framework you use
+                webRoot = "${workspaceFolder}",
+                userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir",
+              },
+            }
+          end
+
+          for _, language in ipairs { "typescriptreact", "javascriptreact" } do
+            require("dap").configurations[language] = {
+              {
+                type = "pwa-chrome",
+                name = "Attach - Remote Debugging",
+                request = "attach",
+                program = "${file}",
+                cwd = vim.fn.getcwd(),
+                sourceMaps = true,
+                protocol = "inspector",
+                port = 9222, -- Start Chrome google-chrome --remote-debugging-port=9222
+                webRoot = "${workspaceFolder}",
+              },
+              {
+                type = "pwa-chrome",
+                name = "Launch Chrome",
+                request = "launch",
+                url = "http://localhost:5173", -- This is for Vite. Change it to the framework you use
+                webRoot = "${workspaceFolder}",
+                userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir",
+              },
+            }
+          end
+        end,
+      },
+    },
     config = function()
       local Config = require "r.config"
       local highlight = require "r.config.highlights"
       highlight.plugin("dapHi", {
-        { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = { from = "ColorColumn", attr = "bg" } } },
-        { DapStopped = { fg = { from = "@field", attr = "fg" }, bg = { from = "ColorColumn", attr = "bg" } } },
+        {
+          DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = { from = "Normal", attr = "bg" } },
+        },
+        { DapStopped = { fg = { from = "@field", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
       })
 
       fn.sign_define {
@@ -190,23 +365,12 @@ return {
           name = "DapBreakpoint",
           texthl = "DapBreakpoint",
           text = Config.icons.dap.Breakpoint,
-          linehl = "",
-          numhl = "",
+          -- numhl = "DapBreakpoint",
+          -- linehl = "",
+          -- numhl = "",
         },
-        { name = "DapStopped", texthl = "DapStopped", text = Config.icons.dap.Stopped[1], linehl = "", numhl = "" },
+        { name = "DapStopped", texthl = "DapStopped", text = Config.icons.dap.Stopped, linehl = "", numhl = "" },
       }
     end,
-  },
-  -- MASON-NVIM-DAP.NVIM
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = "mason.nvim",
-    cmd = { "DapInstall", "DapUninstall" },
-    opts = {
-      automatic_setup = true,
-      handlers = {},
-      ensure_installed = {},
-      automatic_installation = true,
-    },
   },
 }

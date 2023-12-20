@@ -13,43 +13,43 @@ super + f
 super + t
         bspc node -t {floating,tiled}
 
-# state: set the node flags (m)arked, (l)ocked, (s)ticky, (p)rivate
-# super + ctrl + {m,l,s,p}
-# 	      bspc node -g {marked,locked,sticky,private}
-
 # state: parent,brother
 super + {p,b}
         bspc node -f @{parent,brother}
 
-# state: focus the older or newer node in the focus history
-# super + {o,i}
-#         bspc wm -h off; \
-#         bspc node {older,newer} -f; \
-#         bspc wm -h on
-
 ########################################
 # WINDOW
 ########################################
+
+# window: backward, below, normal window or z-index
+super + i
+	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
+
 # window: rotate
 super + r
         bspc node @/ -R {90,270}
 
-# window: focus next/prev
+# window: focus next window base on hjkl
 super + {h,l,k,j}
-    dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
+        dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
+
+# window: swap the main window
+super + ctrl + {_,shift + }{h,j,k,l}
+        bspc node -{f,s} {west,south,north,east}
+
+# window: move the window when in float mode
+ctrl + shift + {h,j,k,l}
+        xdotool getwindowfocus windowmove --relative %1 {-20 0, 0 +20, 0 -20, +20 0}
 
 ########################################
 # WORKSPACE
 ########################################
 
-# super + {_,shift + }{h,j,k,l}
-# 	bspc node -{f,s} {west,south,north,east}
+# workspace: focus next/prev workspace
+super + {Tab,shift+Tab}
+	      bspc node -d {next,prev} -f
 
-# workspace: focus next/prev
-super + {Tab,shift + Tab}
-        bspc desktop -f {next.local,prev.local}
-
-# workspace: move node workspace to the given workspace number
+# workspace: goto -n workspace
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
 
@@ -57,24 +57,21 @@ super + {_,shift + }{1-9,0}
 # RESIZE, FLOATING
 ########################################
 
-# resize: move window left/right/up/down [if mode: float]
-super + {Left,Down,Up,Right}
-        bspc node -v {-20 0,0 20,0 -20,20 0}
+# resize: expand vertically
+super + shift + k
+	      bspc node -z top 0 -20; bspc node -z bottom 0 20
 
-# resize: to grow window (super+alt+shift+Up/Down/Left/Down)
-super + shift + {Left,Down,Up,Right}
-        bspc node -z {left -20 0 || bspc node -z right -20 0, \
-                      bottom 0 20 || bspc node -z top 0 20,\
-                      top 0 -20 || bspc node -z bottom 0 -20,\
-                      right 20 0 || bspc node -z left 20 0}
+# resize: shrink vertically
+super + shift + j
+	      bspc node -z top 0 20; bspc node -z bottom 0 -20
 
-# resize: to shrink window (super+ctrl+Up/Down/Left/Down)
-super + ctrl + {Right,Up,Down,Left}
-        bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+# resize: expand horizontally
+super + shift + h
+	      bspc node -z left 20 0; bspc node -z right -20 0
 
-# resize: window gap (super+=/-)
-# super + shift + {minus,equal}
-#         bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+# resize: shrink horizontally
+super + shift + l
+	      bspc node -z left -20 0; bspc node -z right 20 0
 
 ########################################
 # BRIGHTNESS
@@ -92,13 +89,33 @@ super + ctrl + {Right,Up,Down,Left}
 # APPS
 ########################################
 
+# misc: open terminal
+super + Return
+        $TERMINAL
+
+# misc: open tools
+super + shift + t
+        $HOME/.config/rofi/menu/_tools
+
 # misc: open rofi_menu
 super + u
         $HOME/.config/rofi/menu/menu
 
-# misc: open terminal
-super + Return
-        $TERMINAL
+# misc: open ncmpcpp
+super + shift + n
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
+
+# misc: open empty float terminal
+super + shift + o
+        bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
+
+# misc: open inbox capture
+super + shift + c
+        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
+
+# misc: open bookrmark and pass
+super + shift + p
+        $HOME/.config/miscxrdb/bpswm/scripts/bookrmark-pass
 
 # misc: close/kill current app/window
 super + End
@@ -120,6 +137,7 @@ super + shift + m
 super + shift + F8
         pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
 
+# misc: record video quit
 super + shift + F9
         pkill ffmpeg && dunstify "Record" "quit..."
 
@@ -131,49 +149,25 @@ super + shift + F12
 super + shift + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
-# misc: open tools
-super + shift + t
-        $HOME/.config/rofi/menu/_tools
-
-# misc: open ncmpcpp
-super + shift + n
-        $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
-
-# misc: run glinux
-# super + shift + g
-#         $HOME/.config/rofi/menu/_glinux
-
-# misc: open empty float terminal
-super + shift + o
-        bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
-
 # misc: call firefox (side by side)
 super + F8
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin firefox 2
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
 
 # misc: call zathura (side by side)
 super + F6
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc_callwin zathura 4
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
 
-# misc: run bookmark
-super + shift + p
-        $HOME/.config/miscxrdb/bpswm/scripts/websearch
+# misc: close/quit video record
+super + F9
+        pkill ffmpeg; dunstify "Record" "Quit.."
 
-# misc: poweroff
+# misc: run poweroff
 super + shift + q
         $HOME/.config/rofi/powermenu/poweroff
 
 # misc: run mpv
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
-
-# misc: close/quit video record
-super + F9
-        pkill ffmpeg; dunstify "Record" "Quit.."
-
-# misc: backward, below, normal window or z-index
-# super + shift + p
-# 	    $HOME/.config/miscxrdb/bpswm/scripts/switchLayer
 
 # misc: run clipmenu
 # super + shift + c

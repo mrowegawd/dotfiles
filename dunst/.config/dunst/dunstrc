@@ -87,11 +87,11 @@ text_icon_padding = 0
 
 # Defines width in pixels of frame around the notification window.
 # Set to 0 to disable.
-frame_width = 3
+frame_width = 2
 
 # Defines color of the frame around the notification window.
 
-frame_color = "#282c34"
+frame_color = "#152528"
 
 # Define a color for the separator.
 # possible values are:
@@ -302,16 +302,16 @@ timeout = 10
 #default_icon = /path/to/icon
 
 [urgency_normal]
-background = "#282c34"
-foreground = "#bbc2cf"
-# frame_color = "#000004"
+background = "#152528"
+foreground = "#e6eaea"
+frame_color = "#e6eaea"
 timeout = 8
 icon = ~/.config/dunst/warning.png
 
 [urgency_critical]
-background = "#ff6c6b"
-foreground = "#efefef"
-# frame_color = "#ff0000"
+background = "#eb746b"
+foreground = "#eeeeee"
+frame_color = "#ff0000"
 timeout = 10
 icon = ~/.config/dunst/critical.png
 

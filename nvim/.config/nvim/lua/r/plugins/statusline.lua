@@ -8,9 +8,10 @@ return {
     config = function()
       local highlight = require "r.config.highlights"
 
+      local nougat = require "nougat"
+
       local core = require "nougat.core"
       local Bar = require "nougat.bar"
-      local bar_util = require "nougat.bar.util"
       local Item = require "nougat.item"
       local sep = require "nougat.separator"
 
@@ -38,50 +39,30 @@ return {
         spacer = require("nougat.nut.spacer").create,
         truncation_point = require("nougat.nut.truncation_point").create,
       }
-
       local color = {
+        base_fg = highlight.tint(highlight.get("Normal", "fg"), -0.1) or "#1d2021",
+        base_bg = highlight.tint(highlight.get("Normal", "bg"), 0) or "#1d2021",
+
+        base_fg_2 = highlight.tint(highlight.get("LineNr", "fg"), 5) or "#1d2021",
+
+        base_bg_1 = highlight.tint(highlight.get("Normal", "bg"), 0.2) or "#1d2021",
+        base_bg_2 = highlight.tint(highlight.get("Normal", "bg"), 0.4) or "#1d2021",
+        base_bg_3 = highlight.tint(highlight.get("Normal", "bg"), 0.6) or "#1d2021",
+        base_bg_4 = highlight.tint(highlight.get("Normal", "bg"), 0.8) or "#1d2021",
+
+        base_fg_tabline = highlight.tint(highlight.get("Normal", "bg"), 2) or "#1d2021",
+        base_bg_tabline = highlight.get("Normal", "bg") or "#1d2021",
+
         bg = highlight.get("Normal", "bg") or "#1d2021",
-        bg0_h = "#1d2021",
-        bg0 = "#282828",
-        bg0_s = "#32302f",
-        bg1 = highlight.tint(highlight.get("@field", "fg"), -0.7) or "#3c3836",
-        bg2 = highlight.tint(highlight.get("@attribute", "fg"), -0.25) or "#504945",
-        bg3 = highlight.tint(highlight.get("ColorColumn", "bg"), 0.8) or "#665c54",
-        bg4 = "#7c6f64",
-
-        bg5 = highlight.tint(highlight.get("ColorColumn", "bg"), 0.2) or "#665c54",
-        bg5_ft = highlight.tint(highlight.get("ColorColumn", "bg"), -0.2) or "#665c54",
-
-        gray = "#928374",
-
-        fg = highlight.tint(highlight.get("ColorColumn", "bg"), -0.4) or "#665c54",
-
-        fg0 = "#fbf1c7",
-        fg1 = "#ebdbb2",
-        fg2 = "#d5c4a1",
-        fg3 = "#bdae93",
-        fg4 = "#a89984",
-
-        lightgray = "#a89984",
 
         red = "#fb4934",
         green = "#b8bb26",
         yellow = "#fabd2f",
-        blue = highlight.tint(highlight.get("@attribute", "fg"), -0.8) or "#83a598",
 
         purple = highlight.tint(highlight.get("@field", "fg"), 0.2) or "#d3869b",
-        aqua = "#8ec07c",
-        orange = "#f38019",
         visual = highlight.tint(highlight.get("Visual", "bg"), 0.8) or "#d3869b",
 
-        ft_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.5) or "#d3869b",
         insert_bg = highlight.tint(highlight.get("Error", "fg"), -0.1) or "#b8bb26",
-
-        sectionlast_bg = highlight.tint(highlight.get("Function", "fg"), -0.1) or "#b8bb26",
-        sectionlineNum_bg = highlight.tint(highlight.get("@field", "fg"), -0.1) or "#b8bb26",
-        sectionFiletype_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.8) or "#b8bb26",
-        sectionFilename_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.7) or "#b8bb26",
-        sectionGitstatus_bg = highlight.tint(highlight.get("ColorColumn", "bg"), 0.2) or "#b8bb26",
 
         accent = {
           red = "#cc241d",
@@ -97,16 +78,16 @@ return {
       local mode = nut.mode {
         prefix = " ",
         suffix = " ",
-        sep_right = sep.right_chevron_solid(true),
+        sep_right = sep.right_lower_triangle_solid(true),
         config = {
           highlight = {
             normal = {
-              bg = "fg",
-              fg = color.bg,
+              -- bg = color.base_bg,
+              fg = color.base_fg,
             },
             visual = {
               bg = color.visual,
-              fg = color.bg,
+              fg = color.base_fg,
             },
             insert = {
               bg = color.insert_bg,
@@ -130,15 +111,15 @@ return {
       }
 
       local stl = Bar "statusline"
-      stl:add_item(mode)
+      -- stl:add_item(mode)
       stl:add_item(nut.git.branch {
-        hl = { bg = color.purple, fg = color.bg },
+        hl = { bg = color.base_bg_3, fg = color.base_fg, bold = true },
         prefix = "  ",
         suffix = " ",
-        sep_right = sep.right_chevron_solid(true),
+        sep_right = sep.right_lower_triangle_solid(true),
       })
       stl:add_item(nut.git.status.create {
-        hl = { bg = color.sectionGitstatus_bg },
+        hl = { bg = color.base_bg_4 },
         content = {
           nut.git.status.count("added", {
             hl = { fg = color.green },
@@ -154,14 +135,9 @@ return {
           }),
         },
         suffix = " ",
-        sep_right = sep.right_chevron_solid(true),
+        sep_right = sep.right_lower_triangle_solid(true),
       })
-      -- local filename = stl:add_item(nut.buf.filename {
-      --   hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = true },
-      --   prefix = " ",
-      --   suffix = " ",
-      -- })
-      local filename2 = stl:add_item {
+      stl:add_item {
         content = function()
           local basename = vim.fn.fnamemodify(vim.fn.expand "%:h", ":p:~:.")
           if basename == "" or basename == "." then
@@ -170,21 +146,24 @@ return {
             return basename:gsub("/$", "")
           end
         end,
-        hl = { bg = color.sectionFilename_bg, fg = color.bg, bold = false },
+        hl = { fg = color.base_fg, bold = false },
         prefix = " ",
         -- suffix = " ",
       }
-      local filename3 = stl:add_item {
+      stl:add_item {
         content = function()
-          return "/" .. vim.fn.expand "%:p:t"
+          local filename = vim.fn.expand "%:p:t"
+          if #filename > 0 then
+            return "/" .. filename
+          end
         end,
-        hl = { bg = color.sectionFilename_bg, fg = color.purple, bold = true },
+        hl = { fg = color.base_fg_2, bold = true },
         suffix = " ",
       }
-      local filestatus = stl:add_item(nut.buf.filestatus {
-        hl = { bg = color.sectionFilename_bg, fg = color.bg },
+      stl:add_item(nut.buf.filestatus {
+        hl = { fg = color.base_fg },
         suffix = " ",
-        sep_right = sep.right_chevron_solid(true),
+        sep_right = sep.right_lower_triangle_solid(true),
         config = {
           modified = "",
           nomodifiable = "",
@@ -243,20 +222,20 @@ return {
 
           local client_names_str = table.concat(unique_client_names, ", ")
 
-          local language_servers = string.format("[%s]", client_names_str)
+          local language_servers = string.format("%s", client_names_str)
 
           return language_servers
         end,
-        hl = { fg = color.bg4 },
+        hl = { fg = color.base_fg },
         suffix = " ",
         prefix = " LSP(s): ",
         -- sep_right = sep.right_chevron_solid(true),
       }
-      stl:add_item(nut.truncation_point())
+      -- stl:add_item(nut.truncation_point())
       stl:add_item(nut.buf.diagnostic_count {
         hidden = false,
-        hl = { bg = color.red, fg = color.bg },
-        sep_left = sep.left_chevron_solid(true),
+        hl = { bg = color.red, fg = color.base_bg },
+        sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         suffix = " ",
         config = {
@@ -265,8 +244,8 @@ return {
       })
       stl:add_item(nut.buf.diagnostic_count {
         hidden = false,
-        hl = { bg = color.yellow, fg = color.bg },
-        sep_left = sep.left_chevron_solid(true),
+        hl = { bg = color.yellow, fg = color.base_bg },
+        sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         suffix = " ",
         config = {
@@ -275,8 +254,8 @@ return {
       })
       stl:add_item(nut.buf.diagnostic_count {
         hidden = false,
-        hl = { bg = "fg", fg = color.bg },
-        sep_left = sep.left_chevron_solid(true),
+        hl = { bg = "fg", fg = color.base_fg },
+        sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         suffix = " ",
         config = {
@@ -285,48 +264,77 @@ return {
       })
       stl:add_item(nut.buf.diagnostic_count {
         hl = { bg = color.green, fg = color.bg },
-        sep_left = sep.left_chevron_solid(true),
+        sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         suffix = " ",
         config = {
           severity = vim.diagnostic.severity.HINT,
         },
       })
+      -- stl:add_item(nut.git.branch {
+      --   hl = { bg = color.base_bg_3, fg = color.base_fg, bold = true },
+      --   prefix = "  ",
+      --   suffix = " ",
+      --   sep_right = sep.left_lower_triangle_solid(true),
+      --   sep_left = sep.left_lower_triangle_solid(true),
+      -- })
+      -- stl:add_item(nut.git.status.create {
+      --   hl = { bg = color.base_bg_4 },
+      --   content = {
+      --     nut.git.status.count("added", {
+      --       hl = { fg = color.green },
+      --       prefix = " +",
+      --     }),
+      --     nut.git.status.count("changed", {
+      --       hl = { fg = color.yellow },
+      --       prefix = " ~",
+      --     }),
+      --     nut.git.status.count("removed", {
+      --       hl = { fg = color.red },
+      --       prefix = " -",
+      --     }),
+      --   },
+      --   suffix = " ",
+      --   prefix = "",
+      --   sep_right = sep.left_lower_triangle_solid(true),
+      --   -- sep_left = sep.left_lower_triangle_solid(true),
+      -- })
       stl:add_item(nut.buf.filetype {
-        hl = { bg = color.sectionFiletype_bg, fg = color.bg },
-        sep_left = sep.left_chevron_solid(true),
+        hl = { bg = color.base_bg_3, fg = color.base_fg },
+        -- sep_right = sep.left_lower_triangle_solid(true),
+        sep_left = sep.left_lower_triangle_solid(true),
         prefix = " ",
         suffix = " ",
       })
       stl:add_item(Item {
-        hl = { bg = color.sectionlineNum_bg, fg = color.fg },
-        sep_left = sep.left_chevron_solid(true),
-        prefix = "  ",
+        hl = { bg = color.base_bg_2, fg = color.base_fg },
         content = core.group {
           core.code "l",
           ":",
           core.code "c",
         },
+        sep_left = sep.left_lower_triangle_solid(true),
+        prefix = "  ",
         suffix = " ",
       })
       stl:add_item(Item {
-        hl = { bg = color.sectionlast_bg, fg = color.bg },
-        sep_left = sep.left_chevron_solid(true),
-        prefix = " ",
+        hl = { bg = color.base_bg, fg = color.base_fg },
+        sep_left = sep.left_lower_triangle_solid(true),
         content = core.code "P",
+        prefix = " ",
         suffix = " ",
       })
 
       local stl_inactive = Bar "statusline"
       stl_inactive:add_item(mode)
       -- stl_inactive:add_item(filename)
-      stl_inactive:add_item(filename2)
-      stl_inactive:add_item(filename3)
-      stl_inactive:add_item(filestatus)
-      stl_inactive:add_item(nut.spacer())
+      -- stl_inactive:add_item(filename2)
+      -- stl_inactive:add_item(filename3)
+      -- stl_inactive:add_item(filestatus)
+      -- stl_inactive:add_item(nut.spacer())
       stl_inactive:add_item(lsp_notify)
 
-      bar_util.set_statusline(function(ctx)
+      nougat.set_statusline(function(ctx)
         return ctx.is_focused and stl or stl_inactive
       end)
 
@@ -335,7 +343,7 @@ return {
       tal:add_item(nut.tab.tablist.tabs {
         active_tab = {
           -- hl = { bg = color.bg0_h, fg = color.blue },
-          hl = { bg = color.bg3, fg = color.bg },
+          hl = { bg = color.base_bg_4, fg = color.base_fg_2, bold = true },
           prefix = " ",
           suffix = " ",
           content = {
@@ -344,10 +352,10 @@ return {
             nut.tab.tablist.modified { prefix = " ", config = { text = "●" } },
             nut.tab.tablist.close { prefix = " ", config = { text = "󰅖" } },
           },
-          sep_right = sep.right_chevron_solid(true),
+          sep_right = sep.right_lower_triangle_solid(true),
         },
         inactive_tab = {
-          hl = { bg = color.bg5, fg = color.bg5_ft },
+          hl = { bg = color.base_bg_tabline, fg = color.base_fg_tabline, bold = true },
           prefix = " ",
           suffix = " ",
           content = {
@@ -356,127 +364,11 @@ return {
             nut.tab.tablist.modified { prefix = " ", config = { text = "●" } },
             nut.tab.tablist.close { prefix = " ", config = { text = "󰅖" } },
           },
-          sep_right = sep.right_chevron_solid(true),
+          sep_right = { " " },
         },
       })
 
-      bar_util.set_tabline(tal)
-    end,
-  },
-  -- STTUSLINE
-  {
-    "sontungexpt/sttusline",
-    enabled = false,
-    event = "BufEnter",
-    de1endencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
-    opts = function()
-      local component = require "r.plugins.colorthemes.sttusline.components"
-      return {
-        -- 0 | 1 | 2 | 3
-        -- recommended: 3
-        laststatus = 3,
-        disabled = {
-          filetypes = {
-            "alpha",
-            "dashboard",
-            -- "NvimTree",
-            -- "lazy",
-          },
-          buftypes = {
-            -- "terminal",
-          },
-        },
-        components = {
-          component.mode(),
-          component.filename(),
-          component.filereadonly(),
-          component.branch(),
-          component.gitdiff(),
-          "%=",
-          component.trailing(),
-          component.mixindent(),
-          "diagnostics",
-          component.rootdir(),
-          component.lsp_notify(),
-          "copilot",
-          "encoding",
-          "pos-cursor",
-          component.linecount(),
-          "pos-cursor-progress",
-          component.datetime(),
-        },
-      }
-    end,
-  },
-  -- LUALINE
-  {
-    "nvim-lualine/lualine.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    init = function()
-      vim.g.lualine_laststatus = vim.o.laststatus
-      if vim.fn.argc(-1) > 0 then
-        -- set an empty statusline till lualine loads
-        vim.o.statusline = " "
-      else
-        -- hide the statusline on the starter page
-        vim.o.laststatus = 0
-      end
-    end,
-    opts = function()
-      local themes = require "r.plugins.colorthemes.lualine.themes"
-      local component = require "r.plugins.colorthemes.lualine.components"
-      return {
-        options = {
-          -- theme = "auto",
-          theme = themes,
-
-          -- Remove any separators icons
-          component_separators = { left = "", right = "" }, -- "", "", "", "", "", ""
-          section_separators = { left = "", right = "" },
-
-          disabled_filetypes = {
-            statusline = { "alpha", "lazy", "dashboard" },
-            winbar = { "help", "alpha", "lazy", "dashboard" },
-          },
-        },
-        sections = {
-          lualine_a = { component.mode() },
-          lualine_b = {},
-          lualine_c = {
-            component.filename(),
-            component.file_modified(),
-            component.branch(),
-            component.diff(),
-            component.debugger(),
-          },
-          lualine_x = {
-            component.term_akinsho(),
-            component.lazy_updates(),
-            component.trailing(),
-            component.mixindent(),
-            component.diagnostics(),
-            component.python_env(),
-            component.cmp_source(),
-            component.get_lsp_client_notify(),
-            -- components.noice_status(),
-            component.rmux(),
-            component.check_loaded_buf(),
-            component.overseer(),
-            -- components.vmux()
-            component.sessions(),
-            component.root_dir(),
-            component.filetype(),
-            component.location_mod(),
-            -- components.clock()
-          },
-          lualine_y = {},
-          lualine_z = {},
-        },
-        extensions = { "misc" },
-      }
+      nougat.set_tabline(tal)
     end,
   },
 }

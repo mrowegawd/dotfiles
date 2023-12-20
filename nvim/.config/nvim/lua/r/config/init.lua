@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "doom-one"
+local colorscheme = "terafox"
 
 _G.base = {}
 
@@ -38,6 +38,7 @@ end
 
 ---@class LazyVimOptions
 local defaults = {
+  lsp_style = "", -- coc, coq, or "" (for default lsp)
   -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
   -- colorscheme = function()
   --   require("tokyonight").load()
@@ -94,13 +95,14 @@ local defaults = {
       calendar = " ",
       caret_right = " ",
       check = " ",
+      check_big = " ",
       chevron_right = " ",
       circle = " ",
       clock = " ",
       close = " ",
       code = " ",
       comment = " ",
-      dashboard = "  ",
+      dashboard = " ",
       double_chevron_right = "» ",
       down = "⇣ ",
       ellipsis = "… ",
@@ -118,7 +120,7 @@ local defaults = {
       plus = " ",
       project = " ",
       question = " ",
-      robot = "ﮧh ",
+      robot = "ﮧ ",
       search = " ",
       shaded_lock = " ",
       sign_in = " ",
@@ -137,17 +139,30 @@ local defaults = {
       run_program = "省",
     },
     dap = {
-      Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-      Breakpoint          = " ",
-      BreakpointCondition = " ",
-      BreakpointRejected  = { " ", "DiagnosticError" },
+      -- Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
+      -- Breakpoint          = " ",
+      -- BreakpointCondition = " ",
+      -- BreakpointRejected  = { " ", "DiagnosticError" },
+      Breakpoint = ' ',
+      -- Breakpoint           = " ",  -- " "
+      BreakpointCondition  = " ",
+      BreakpointRejected   = " ",
       LogPoint            = ".>",
+      Stopped              = "󰁕 ",
+      Pause                = " ",
+      Play                 = " ",
+      Step_into            = " ",
+      Step_over            = " ",
+      Step_out             = " ",
+      Step_back            = " ",
+      Run_last             = " ",
+      Terminate            = " ",
     },
     diagnostics = {
       Error    = " ",
       Warn     = " ",
       Hint     = " ",
-      Question = " ",
+      -- Question = " ",
       Info     = " ",
     },
     git = {
@@ -344,7 +359,7 @@ function M.setup(opts)
       if lazy_autocmds then
         M.load "autocmds"
       end
-      M.load "keymaps"
+      require "r.keymaps.general"
 
       Util.format.setup()
       -- Util.news.setup()
@@ -353,9 +368,9 @@ function M.setup(opts)
         Util.root.info()
       end, { desc = "LazyVim roots for the current buffer" })
 
-      vim.api.nvim_create_user_command("LazyExtras", function()
-        Util.extras.show()
-      end, { desc = "Manage LazyVim extras" })
+      -- vim.api.nvim_create_user_command("LazyExtras", function()
+      --   Util.extras.show()
+      -- end, { desc = "Manage LazyVim extras" })
     end,
   })
 
@@ -439,7 +454,6 @@ function M.init()
   M.load "options"
 
   Util.plugin.setup()
-  -- M.json.load()
 
   require "r.config.colors"
 end

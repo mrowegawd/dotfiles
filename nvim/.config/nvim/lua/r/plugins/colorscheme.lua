@@ -1,6 +1,33 @@
 local colorscheme = require("r.config").colorscheme
 
 return {
+  -- SELENIZED
+  {
+    "calind/selenized.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local selenizedtheme = { "selenized" }
+      if vim.tbl_contains(selenizedtheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- MOONFLY
+  {
+    "bluz71/vim-moonfly-colors",
+    name = "moonfly",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local moonflytheme = { "moonfly" }
+      if vim.tbl_contains(moonflytheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- BAMBOO.NVIM
   {
     "ribru17/bamboo.nvim",
@@ -13,21 +40,9 @@ return {
       end
       return false
     end,
-    opts = {},
-  },
-  -- FLESH-AND-BLOOD
-  {
-    "sainttttt/flesh-and-blood",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      local fleshtheme = { "flesh-and-blood", "hybrid" }
-      if vim.tbl_contains(fleshtheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = {},
+    opts = {
+      style = "multiplex", -- Choose between 'vulgaris' (regular), 'multiplex' (greener), and 'light'
+    },
   },
   -- SOLARIZED-OSAKA
   {
@@ -61,47 +76,30 @@ return {
       hide_inactive_statusline = false, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard **StatusLine** and **LuaLine**.
       dim_inactive = false, -- dims inactive windows
       lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
-      on_highlights = function(highlights, _)
-        local hl = require "r.config.highlights"
-        highlights.Normal = {
-          bg = hl.tint(highlights.Normal.bg, 0.76),
-          fg = highlights.Normal.fg,
-        }
-        highlights.helpCommand = {
-          bg = "NONE",
-        }
-      end,
+      -- on_highlights = function(highlights, _)
+      -- local hl = require "r.config.highlights"
+      -- highlights.Normal = {
+      --   bg = hl.tint(highlights.Normal.bg, 0.76),
+      --   fg = highlights.Normal.fg,
+      -- }
+      -- highlights.helpCommand = {
+      --   bg = "NONE",
+      -- }
+      -- end,
     },
   },
-  -- NANO-THEME
+  -- MIASMA
   {
-    "ronisbr/nano-theme.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
+    "xero/miasma.nvim",
+    lazy = false,
+    priority = 1000,
     enabled = function()
-      local nanotheme = { "nano-theme" }
-      if vim.tbl_contains(nanotheme, colorscheme) then
+      local colormiasma = { "miasma" }
+      if vim.tbl_contains(colormiasma, colorscheme) then
         return true
       end
       return false
     end,
-    init = function()
-      vim.o.background = "light" -- or "dark".
-    end,
-  },
-  -- NIGHT-OWL
-  {
-    "oxfist/night-owl.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      local mintheme = { "night-owl" }
-      if vim.tbl_contains(mintheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = {},
   },
   -- DOOM-ONE
   {
@@ -145,63 +143,16 @@ return {
       vim.g.doom_one_plugin_lspsaga = true
     end,
   },
-  -- SOLARIZED
-  {
-    "maxmx03/solarized.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      local solarized = { "solarized" }
-      if vim.tbl_contains(solarized, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("solarized").setup()
-    end,
-  },
-  -- MIASMA
-  {
-    "xero/miasma.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local colormiasma = { "miasma" }
-      if vim.tbl_contains(colormiasma, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- NVIM-BASE16
   {
     "RRethy/nvim-base16",
     lazy = false,
     priority = 1000,
     enabled = function()
-      local nvimbase16 = { "base16-ayu-dark", "base16-nord", "base16-horizon-terminal-dark" }
+      local nvimbase16 = { "base16-ayu-dark", "base16-nord", "base16-horizon-terminal-dark", "base16-emil" }
       if vim.tbl_contains(nvimbase16, colorscheme) then
         return true
       end
-    end,
-  },
-  -- EVERFOREST
-  {
-    "neanias/everforest-nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local coloreverforest = { "everforest" }
-      if vim.tbl_contains(coloreverforest, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("everforest").setup {
-        background = "medium",
-      }
     end,
   },
   -- NIGHTFOX.NVIM
@@ -263,14 +214,36 @@ return {
     end,
     opts = {},
   },
+  -- CATPPUCCIN
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    enabled = function()
+      local catppuccintheme = { "catppuccin-latte", "catppuccin" }
+      if vim.tbl_contains(catppuccintheme, colorscheme) then
+        return true
+      end
+    end,
+    opts = {
+      flavour = "mocha", -- latte, frappe, macchiato, mocha
+      background = { -- :h background
+        light = "latte",
+        dark = "mocha",
+      },
+    },
+  },
   -- TOKYONIGHT
   {
     "folke/tokyonight.nvim",
     name = "tokyonight",
     lazy = false,
     priority = 1000,
+    init = function()
+      vim.opt.background = "light"
+    end,
     enabled = function()
-      local colorstokyonight = { "tokyonight", "tokyonight-night" }
+      local colorstokyonight = { "tokyonight", "tokyonight-night", "tokyonight-day" }
       if vim.tbl_contains(colorstokyonight, colorscheme) then
         return true
       end
@@ -322,7 +295,10 @@ return {
   {
     "shaunsingh/oxocarbon.nvim",
     lazy = false,
-    priority = 1000,
+    piority = 1000,
+    init = function()
+      vim.opt.background = "dark" -- set this to dark or light
+    end,
     enabled = function()
       local oxocarbontheme = { "oxocarbon" }
       if vim.tbl_contains(oxocarbontheme, colorscheme) then

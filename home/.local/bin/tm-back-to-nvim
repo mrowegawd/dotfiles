@@ -12,7 +12,7 @@ goback_to_main_pain() {
 }
 
 if [[ "$CHECK_TMUX" == 1 ]]; then
-	tmux split-window -v -p 30
+	tmux split-window -v -p 30 -c '#{pane_current_path}'
 else
 	get_current_id_pane=$(tmux display-message -p "#{pane_id}")
 

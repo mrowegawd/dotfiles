@@ -52,19 +52,15 @@ return {
       -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     end,
   },
-  -- VIM-MATCHUP (disabled)
-  {
-    "andymass/vim-matchup",
-    enabled = false,
-    event = "VeryLazy",
-    config = function()
-      vim.g.matchup_matchparen_deferred = 1 -- work async
-      vim.g.matchup_matchparen_offscreen = {} -- disable status bar icon
-    end,
-  },
-  -- CMP
+  -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
+    enabled = function()
+      if require("r.config").lsp_style == "coc" then
+        return false
+      end
+      return true
+    end,
     event = "InsertEnter",
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
@@ -73,26 +69,58 @@ return {
       "rcarriga/cmp-dap",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-path",
+      -- "hrsh7th/cmp-path",
+      "FelipeLema/cmp-async-path",
       "hrsh7th/cmp-emoji",
       "petertriho/cmp-git",
       "lukas-reineke/cmp-under-comparator",
       "saadparwaiz1/cmp_luasnip",
-      { "abecodes/tabout.nvim", opts = { ignore_beginning = false, completion = false } },
+      { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      {
+        "Saecki/crates.nvim",
+        event = { "BufRead Cargo.toml" },
+        opts = {
+          src = {
+            cmp = { enabled = true },
+          },
+        },
+      },
     },
     opts = function()
       local cmp = get_cmp()
       local luasnip = get_luasnip()
       -- local types = require "cmp.types"
       local defaults = require "cmp.config.default"()
-      local MAX_INDEX_FILE_SIZE = 4000
+
+      local source_buffer = {
+        name = "buffer",
+        option = {
+          get_bufnrs = function()
+            ---@diagnostic disable-next-line: unused-local
+            local is_small_buf = function(index, buf)
+              local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+              return byte_size <= 1024 * 1024 -- 1 Megabyte max
+            end
+            local all_bufs = vim.api.nvim_list_bufs()
+            return vim.fn.filter(all_bufs, is_small_buf)
+          end,
+
+          -- keyword_length =
+          -- keyword_pattern =
+          indexing_interval = 10,
+          indexing_batch_size = 100,
+          max_indexed_line_length = 1024,
+        },
+      }
 
       local function tab(fallback) -- make TAB behave like Android Studio
         local col = vim.fn.col "." - 1
-        if luasnip.expand_or_jumpable() then
-          luasnip.expand_or_jump()
-        elseif cmp.visible() then
-          cmp.confirm { select = false }
+        if require("luasnip").expand_or_jumpable() then -- force to check luasnip
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+          -- elseif cmp.visible() then
+          --   print "cads"
+          --   cmp.confirm { select = false }
         elseif col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
           fallback()
         else
@@ -101,21 +129,22 @@ return {
       end
 
       local function shift_tab(fallback)
-        if luasnip.jumpable(-1) then
-          luasnip.jump(-1)
+        if require("luasnip").jumpable(-1) then
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
         else
           fallback()
         end
       end
 
       local border_opts = {
-        border = require("r.config").icons.border.rectangle,
+        border = require("r.config").icons.border.line,
         winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
       }
 
       return {
         enabled = function()
-          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt" or require("cmp_dap").is_dap_buffer()
+          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
+          -- require("cmp_dap").is_dap_buffer()
         end,
         window = {
           completion = cmp.config.window.bordered(border_opts),
@@ -146,25 +175,7 @@ return {
               cmp.complete {
                 config = {
                   sources = {
-                    -- { name = "cmp_tabnine" },
-                    {
-                      name = "buffer",
-                      option = {
-                        get_bufnrs = function()
-                          local bufs = {}
-                          for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-                            -- Don't index giant files
-                            if
-                              vim.api.nvim_buf_is_loaded(bufnr)
-                              and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE
-                            then
-                              table.insert(bufs, bufnr)
-                            end
-                          end
-                          return bufs
-                        end,
-                      },
-                    },
+                    source_buffer,
                   },
                 },
               }
@@ -217,34 +228,43 @@ return {
         },
         formatting = {
           fields = { "abbr", "kind", "menu" },
-          format = function(_, item)
+          format = function(entry, item)
+            local label_width = 45
+            local label = item.abbr
+            local truncated_label = vim.fn.strcharpart(label, 0, label_width)
+
+            if truncated_label ~= label then
+              item.abbr = truncated_label .. "…"
+            elseif string.len(label) < label_width then
+              local padding = string.rep(" ", label_width - string.len(label))
+              item.abbr = label .. padding
+            end
+
+            item.menu = item.kind
             local icons = require("r.config").icons.kinds
             if icons[item.kind] then
-              item.kind = icons[item.kind] .. item.kind
+              item.kind = icons[item.kind]
             end
+            return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
+          -- format = function(_, item)
+          --   local icons = require("r.config").icons.kinds
+          --   if icons[item.kind] then
+          --     item.kind = icons[item.kind] .. item.kind
+          --   end
+          -- end,
         },
 
         sources = cmp.config.sources {
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "path" },
-          {
-            name = "buffer",
-            keyword_length = 4,
-            options = {
-              get_bufnrs = function()
-                local bufs = {}
-                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-                  -- Don't index giant files
-                  if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE then
-                    table.insert(bufs, bufnr)
-                  end
-                end
-                return bufs
-              end,
-            },
-          },
+          -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
+          -- tailwindcss bikin lambat, jadi mencoba mengurangi `max_item_count`
+          { name = "nvim_lsp", max_item_count = 100 },
+          { name = "luasnip", max_item_count = 100 },
+          { name = "nvim_lsp_signature_help" },
+          source_buffer,
+          { name = "crates" },
+          { name = "async_path" },
+          -- { name = "orgmode" },
         },
       }
     end,
@@ -270,7 +290,7 @@ return {
 
       local tbl_custom_sources = {
         { name = "luasnip" },
-        { name = "path" },
+        { name = "async_path" },
         { name = "buffer" },
         { name = "emoji" },
       }
@@ -283,7 +303,7 @@ return {
         sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
       })
 
-      cmp.setup.filetype("org", {
+      cmp.setup.filetype({ "org", "orgagenda" }, {
         sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
       })
 
@@ -301,11 +321,11 @@ return {
 
       cmp.setup.cmdline(":", {
         mapping = {
-          ["<esc>"] = {
-            c = function()
-              Util.cmd.feedkey("<c-c>", "n")
-            end,
-          },
+          -- ["<esc>"] = {
+          --   c = function()
+          --     Util.cmd.feedkey("<c-c>", "n")
+          --   end,
+          -- },
           ["<c-q>"] = {
             c = function(fallback)
               if cmp.visible() then
@@ -344,11 +364,11 @@ return {
 
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = {
-          ["<esc>"] = {
-            c = function()
-              Util.cmd.feedkey("<c-c>", "n")
-            end,
-          },
+          -- ["<esc>"] = {
+          --   c = function()
+          --     Util.cmd.feedkey("<c-c>", "n")
+          --   end,
+          -- },
           ["<c-q>"] = {
             c = function(fallback)
               if cmp.visible() then
@@ -383,51 +403,58 @@ return {
       })
     end,
   },
-  -- Show TabNine status in lualine
+  -- COMMENTS-TS-CONTEXT
   {
-    "nvim-lualine/lualine.nvim",
-    optional = true,
-    event = "VeryLazy",
-    opts = function(_, opts)
-      local icon = require("lazyvim.config").icons.kinds.TabNine
-      table.insert(opts.sections.lualine_x, 2, require("lazyvim.util").lualine.cmp_source("cmp_tabnine", icon))
-    end,
-  },
-  -- COMMENT.NVIM
-  {
-    "numToStr/Comment.nvim",
-    dependencies = { "JoosepAlviste/nvim-ts-context-commentstring" },
-    keys = { { "gc", mode = { "n", "v" } }, { "gcc", mode = { "n", "v" } }, { "gbc", mode = { "n", "v" } } },
-    config = function(_, _)
-      local opts = {
-        ignore = "^$",
-        pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
-      }
-      require("Comment").setup(opts)
-    end,
-  },
-  -- TREESJ (disabled)
-  {
-    "Wansmer/treesj",
-    enabled = false,
-    cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
-    keys = {
-      { "<leader>rj", "<cmd>TSJToggle<cr>", desc = "Misc(treesj): toggle split/join" },
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    lazy = true,
+    opts = {
+      enable_autocmd = false,
     },
-    config = function()
-      require("treesj").setup {
-        use_default_keymaps = false,
-      }
-    end,
   },
-  -- COPILOT (disabled)
+  -- MINI-SURROUND
   {
-    "zbirenbaum/copilot.lua",
-    event = "InsertEnter",
-    enabled = false,
-    config = function()
-      require("copilot").setup {}
+    "echasnovski/mini.surround",
+    keys = function(_, keys)
+      -- Populate the keys based on the user's options
+      local plugin = require("lazy.core.config").spec.plugins["mini.surround"]
+      local opts = require("lazy.core.plugin").values(plugin, "opts", false)
+      local mappings = {
+        { opts.mappings.add, desc = "Add surrounding", mode = { "n", "v" } },
+        { opts.mappings.delete, desc = "Delete surrounding" },
+        { opts.mappings.find, desc = "Find right surrounding" },
+        { opts.mappings.find_left, desc = "Find left surrounding" },
+        { opts.mappings.highlight, desc = "Highlight surrounding" },
+        { opts.mappings.replace, desc = "Replace surrounding" },
+        { opts.mappings.update_n_lines, desc = "Update `MiniSurround.config.n_lines`" },
+      }
+      mappings = vim.tbl_filter(function(m)
+        return m[1] and #m[1] > 0
+      end, mappings)
+      return vim.list_extend(mappings, keys)
     end,
+    opts = {
+      mappings = {
+        add = "gza", -- Add surrounding in Normal and Visual modes
+        delete = "gzd", -- Delete surrounding
+        find = "gzf", -- Find surrounding (to the right)
+        find_left = "gzF", -- Find surrounding (to the left)
+        highlight = "gzh", -- Highlight surrounding
+        replace = "gzc", -- Replace surrounding
+        update_n_lines = "gzn", -- Update `n_lines`
+      },
+    },
+  },
+  -- MINI.COMMENT
+  {
+    "echasnovski/mini.comment",
+    event = "VeryLazy",
+    opts = {
+      options = {
+        custom_commentstring = function()
+          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+        end,
+      },
+    },
   },
   -- NVIM-COVERAGE
   {
@@ -458,106 +485,6 @@ return {
       })
     end,
   },
-  -- OVERSEER.NVIM (disabled)
-  {
-    "stevearc/overseer.nvim", -- Task runner and job management
-    enabled = false,
-    -- cmd = {
-    --   "OverseerToggle",
-    --   "OverseerOpen",
-    --   "OverseerInfo",
-    --   "OverseerRun",
-    --   "OverseerBuild",
-    --   "OverseerClose",
-    --   "OverseerLoadBundle",
-    --   "OverseerSaveBundle",
-    --   "OverseerDeleteBundle",
-    --   "OverseerRunCmd",
-    --   "OverseerQuickAction",
-    --   "OverseerTaskAction",
-    -- },
-    init = function()
-      -- Util.cmd.augroup("RunOverseerTasks", {
-      --   event = { "FileType" },
-      --   pattern = as.lspfiles,
-      --   command = function()
-      --     -- vim.keymap.set("n", "<F4>", function()
-      --     --   local overseer = require "overseer"
-      --     --   local tasks = overseer.list_tasks {
-      --     --     recent_first = true,
-      --     --   }
-      --     --
-      --     --   if vim.tbl_isempty(tasks) then
-      --     --     return vim.notify("No tasks found", vim.log.levels.WARN)
-      --     --   else
-      --     --     return overseer.run_action(tasks[1], "restart")
-      --     --   end
-      --     -- end, {
-      --     --   desc = "Task(overseer): run or restart the task",
-      --     --   buffer = api.nvim_get_current_buf(),
-      --     -- })
-      --
-      --     vim.keymap.set("n", "<F1>", function()
-      --       if vim.bo.filetype ~= "OverseerList" then
-      --         return cmd "OverseerRun"
-      --       end
-      --       return cmd "OverseerQuickAction"
-      --     end, {
-      --       desc = "Task(overseer): run quick action",
-      --       buffer = api.nvim_get_current_buf(),
-      --     })
-      --   end,
-      -- })
-    end,
-    -- keys = {
-    --   {
-    --     "rt",
-    --     function()
-    --       Util.tiling.force_win_close({ "neo-tree", "undotree" }, false)
-    --       return cmd "OverseerToggle!"
-    --     end,
-    --     desc = "Task(overseer): toggle",
-    --   },
-    -- },
-    opts = {
-      templates = { "builtin", "user" },
-      component_aliases = {
-        log = {
-          {
-            type = "echo",
-            level = vim.log.levels.WARN,
-          },
-          {
-            type = "file",
-            filename = "overseer.log",
-            level = vim.log.levels.DEBUG,
-          },
-        },
-      },
-      task_list = {
-        default_detail = 1,
-        direction = "bottom",
-        min_height = 25,
-        max_height = 25,
-        bindings = {
-          ["<S-tab>"] = "ScrollOutputUp",
-          ["<tab>"] = "ScrollOutputDown",
-          ["q"] = function()
-            vim.cmd "OverseerClose"
-          end,
-          ["<c-k>"] = false,
-          ["<c-j>"] = false,
-        },
-      },
-    },
-  },
-  -- LUAPAD (disabled)
-  {
-    "rafcamlet/nvim-luapad",
-    enabled = false,
-    cmd = { "Luapad" },
-    config = true,
-  },
   -- SCRATCH
   {
     "LintaoAmons/scratch.nvim",
@@ -584,17 +511,15 @@ return {
     },
     opts = { skip_ssl_verification = true },
   },
-  -- ULTIMATE-AUTOPAIR (disabled)
-  {
-    "altermo/ultimate-autopair.nvim",
-    enabled = false,
-    event = { "InsertEnter", "CmdlineEnter" },
-    branch = "v0.6",
-    opts = {},
-  },
   -- NVIM-AUTOPAIRS
   {
     "windwp/nvim-autopairs",
+    enabled = function()
+      if require("r.config").lsp_style == "coc" then
+        return false
+      end
+      return true
+    end,
     event = "InsertEnter",
     dependencies = { "hrsh7th/nvim-cmp" },
     opts = {

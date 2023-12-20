@@ -219,6 +219,15 @@ mylan() {
 
 # check: version of OS
 c_os() {
+	vendor=$(lscpu | awk '/Vendor ID/{print $3}')
+	if [[ "$vendor" == "GenuineIntel" ]]; then
+		VENDOCCPU="Intel cpu"
+	elif [[ "$vendor" == "AuthenticAMD" ]]; then
+		VENDOCCPU="AMD cpu"
+	else
+		VENDOCCPU=""
+	fi
+
 	if [ -f /etc/os-release ]; then
 		# freedesktop.org and systemd
 		. /etc/os-release
@@ -247,9 +256,10 @@ c_os() {
 		OS=$(uname -s)
 		VER=$(uname -r)
 	fi
-	echo "OS        : $OS"
-	echo "version   : $VER"
-
+	echo "OS           : $OS"
+	echo "version      : $VER"
+	echo "CPU Vendor   : $VENDOCCPU"
+	echo "ARM          : $(dpkg --print-architecture)"
 }
 
 # check: listing all the listening ports of tcp and udp connections
@@ -411,6 +421,7 @@ r_extract() {
 		*.gz) gunzip "$1" ;;
 		*.tar) tar xvf "$1" ;;
 		*.tbz2) tar xvjf "$1" ;;
+		*.tbz) tar xjf "$1" ;;
 		*.tgz) tar xvzf "$1" ;;
 		*.zip) unzip "$1" ;;
 		*.Z) uncompress "$1" ;;
@@ -420,6 +431,42 @@ r_extract() {
 	else
 		echo "'$1' is not a valid file!"
 	fi
+}
+
+r_vidToGif() {
+  # Usage: r_vidToGif -i vid.mp4 --- -o file.gif
+
+  delimiter='---'
+
+  trap 'exit 2' SIGINT
+
+  tmp="$(mktemp -td gifski-video.XXXXXX)"
+
+  trap 'rm -rf "$tmp"; exit 1' EXIT
+  trap 'rm -rf "$tmp"; exit 2' INT
+
+  chmod 700 "$tmp"
+
+  ffmpeg_opts=()
+  gifski_opts=()
+
+  is_delimiter_encountered=0
+  for opt in "$@"; do
+    if [[ "$opt" == "$delimiter" ]]; then
+      is_delimiter_encountered=1
+      continue
+    fi
+
+    if (( ! is_delimiter_encountered )); then
+      ffmpeg_opts+=( "$opt" )
+    else
+      gifski_opts+=( "$opt" )
+    fi
+  done
+
+  ffmpeg "${ffmpeg_opts[@]}" -hide_banner "$tmp"/frame%04d.png
+  gifski "${gifski_opts[@]}" "$tmp"/frame*.png
+  echo # gifski doesn't add a newline
 }
 
 # run: run newsboat

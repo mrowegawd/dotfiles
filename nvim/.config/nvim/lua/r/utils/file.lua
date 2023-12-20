@@ -1,3 +1,5 @@
+local plenary_path = require "plenary.path"
+
 local M = {}
 
 --- Returns if the path exists on disk
@@ -21,6 +23,13 @@ end
 
 function M.absolute_path(bufnr)
   return vim.fn.expand("#" .. bufnr .. ":p")
+end
+
+function M.create_dir(path)
+  local p = plenary_path.new(path)
+  if not p:exists() then
+    p:mkdir()
+  end
 end
 
 return M

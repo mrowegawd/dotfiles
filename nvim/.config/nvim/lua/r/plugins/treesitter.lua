@@ -1,71 +1,8 @@
-local Util = require "r.utils"
+local function buf_is_large(_, buf)
+  return vim.b[buf].buf_is_large == true
+end
 
 return {
-  -- TREESITTER-CONTEXT (disabled)
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    enabled = false,
-    event = "LazyFile",
-    opts = {
-      multiline_threshold = 2,
-      separator = "─", -- "─", alternatives: ▁ ─ ▄ '--',
-      mode = "cursor",
-      max_lines = 3,
-    },
-    keys = {
-      {
-        "<Localleader>tt",
-        function()
-          local tsc = require "treesitter-context"
-          tsc.toggle()
-          if Util.inject.get_upvalue(tsc.toggle, "enabled") then
-            Util.info("Enabled Treesitter Context", { title = "Option" })
-          else
-            Util.warn("Disabled Treesitter Context", { title = "Option" })
-          end
-        end,
-        desc = "Misc(treesitter-contex): toggle",
-      },
-    },
-  },
-  -- DELIMITERS (disabled)
-  {
-    "HiPhish/rainbow-delimiters.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    config = function()
-      local rainbow_delimiters = require "rainbow-delimiters"
-
-      vim.g.rainbow_delimiters = {
-        strategy = {
-          [""] = rainbow_delimiters.strategy["global"],
-        },
-        query = {
-          [""] = "rainbow-delimiters",
-        },
-        highlight = {
-          "TSRainbowRed",
-          "TSRainbowYellow",
-          "TSRainbowBlue",
-          "TSRainbowOrange",
-          "TSRainbowGreen",
-          "TSRainbowViolet",
-          "TSRainbowCyan",
-        },
-      }
-    end,
-  },
-  -- NVIM-TS-COMMENTSTRING
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    opts = { enable_autocmd = false },
-  },
-  -- NVIM-TS-AUTOTAG
-  {
-    "windwp/nvim-ts-autotag",
-    event = "LazyFile",
-    opts = {},
-  },
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
@@ -82,14 +19,14 @@ return {
       require("lazy.core.loader").add_to_rtp(plugin)
       require "nvim-treesitter.query_predicates"
     end,
-    keys = {
-      { "v", desc = "Increment selection" },
-      { "V", desc = "Decrement selection", mode = "x" },
-      { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "o" },
-      { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "x" },
-    },
+    -- keys = {
+    --   { "v", desc = "Increment selection" },
+    --   { "V", desc = "Decrement selection", mode = "x" },
+    --   { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "o" },
+    --   { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "x" },
+    -- },
     dependencies = {
-      { "mfussenegger/nvim-treehopper" },
+      -- { "mfussenegger/nvim-treehopper" },
       {
         "nvim-treesitter/nvim-treesitter-textobjects",
         config = function()
@@ -116,145 +53,148 @@ return {
         end,
       },
     },
-    opts = function()
-      -- local disable_max_size = 200000 -- 2MB
+    opts = {
+      ensure_installed = {
+        "c",
+        -- "comment", -- comments are slowing down TS bigtime, so disable for now
 
-      -- local function should_disable(_, bufnr)
-      --   local size = vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr or 0))
-      --   -- size will be -2 if it doesn't fit into a number
-      --   if size > disable_max_size or size == -2 then
-      --     return true
-      --   end
-      --   return false
-      -- end
+        "dockerfile",
 
-      return {
-        ensure_installed = {
-          "c",
-          -- "comment", -- comments are slowing down TS bigtime, so disable for now
-          "cpp",
-          "diff",
-          "gitignore",
-          "graphql",
-          "java",
-          "jsdoc",
-          "latex",
-          "kotlin",
-          "dart",
-          "meson",
-          "ninja",
-          "nix",
-          "norg",
-          "org",
-          "php",
-          "query",
-          "regex",
+        "cpp",
+        "diff",
+        "gitignore",
+        "graphql",
+        "java",
+        "bash",
+        "jsdoc",
+        "latex",
+        "kotlin",
+        "dart",
+        "meson",
+        "ninja",
+        "nix",
+        "norg",
+        "org",
+        "php",
+        "query",
+        "regex",
 
-          "sql",
-          "svelte",
-          "teal",
-          "vhs",
-          "vim",
-          "vue",
-          "ruby",
-          "wgsl",
+        "fish",
+
+        "yaml",
+
+        "sql",
+        "svelte",
+        "teal",
+        "vhs",
+        "vim",
+        "vue",
+        "ruby",
+        "wgsl",
+
+        "cmake",
+        "make",
+
+        "javascript",
+        "typescript",
+        "tsx",
+
+        "go",
+        "gomod",
+        "gowork",
+        "gosum",
+
+        "lua",
+        "luadoc",
+        "luap",
+
+        "python",
+        "ninja",
+        "rst",
+        "toml",
+
+        "css",
+        "html",
+        "http",
+        "scss",
+
+        "ron",
+        "rust",
+
+        "markdown",
+        "markdown_inline",
+      },
+
+      highlight = {
+        enable = true, -- atm disabled it, nvim got slow
+        disable = function(ft, buf)
+          return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
+            or buf_is_large(ft, buf)
+            or vim.fn.win_gettype() == "command"
+        end,
+        additional_vim_regex_highlighting = { "org" },
+      },
+
+      indent = {
+        enable = true,
+        disable = function(ft, buf)
+          return vim.tbl_contains({ "markdown", "tex", "latex" }, ft) or buf_is_large(ft, buf)
+        end,
+      },
+      incremental_selection = {
+        enable = false,
+        disable = buf_is_large,
+        keymaps = {
+          init_selection = false,
+          node_incremental = "v",
+          node_decremental = "V",
         },
+      },
 
-        auto_install = false,
-
-        highlight = {
-          enable = false, -- atm disabled it, nvim got slow
-          -- disable = should_disable,
-          additional_vim_regex_highlighting = { "orgmode", "org", "markdown" },
-        },
-
-        indent = {
-          enable = true,
-          -- disable = function(lang, bufnr)
-          --   return should_disable(lang, bufnr)
-          -- end,
-        },
-
-        incremental_selection = {
-          enable = true,
-          disable = { "help" },
+      -- nvim-treesitter-textobjects
+      textobjects = {
+        select = {
+          disable = buf_is_large,
+          enable = false,
+          lookahead = true,
           keymaps = {
-            init_selection = false,
-            node_incremental = "v",
-            node_decremental = "V",
+            -- You can use the capture groups defined in textobjects.scm
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
           },
         },
-
-        query_linter = {
-          enable = true,
-          use_virtual_text = true,
-          lint_events = { "BufWrite", "CursorHold" },
-        },
-
-        -- vim-matchup
-        matchup = {
-          enable = true,
-        },
-
-        endwise = {
-          enable = true,
-        },
-
-        autotag = {
-          enable = true,
-        },
-
-        -- Breaking changes, do not need to enable this setting https://github.com/JoosepAlviste/nvim-ts-context-commentstring/issues/82#issuecomment-1817659634
-        -- context_commentstring = { enable = true }, --  nvim-ts-context-commentstring plugin
-
-        -- nvim-treesitter-textobjects
-        textobjects = {
-          select = {
-            -- disable = should_disable,
-            enable = false,
-            lookahead = true,
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-            },
+        move = {
+          enable = false,
+          set_jumps = true, -- whether to set jumps in the jumplist
+          goto_next_start = {
+            ["]f"] = "@function.outer",
+            ["]c"] = "@class.outer",
           },
-          move = {
-            enable = false,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              ["]f"] = "@function.outer",
-              ["]c"] = "@class.outer",
-            },
-            goto_next_end = {
-              ["]F"] = "@function.outer",
-              ["]C"] = "@class.outer",
-            },
-            goto_previous_start = {
-              ["[f"] = "@function.outer",
-              ["[c"] = "@class.outer",
-            },
-            goto_previous_end = {
-              ["[F"] = "@function.outer",
-              ["[C"] = "@class.outer",
-            },
+          goto_next_end = {
+            ["]F"] = "@function.outer",
+            ["]C"] = "@class.outer",
           },
-          lsp_interop = {
-            enable = false,
-            peek_definition_code = {
-              ["gD"] = "@function.outer",
-            },
+          goto_previous_start = {
+            ["[f"] = "@function.outer",
+            ["[c"] = "@class.outer",
+          },
+          goto_previous_end = {
+            ["[F"] = "@function.outer",
+            ["[C"] = "@class.outer",
           },
         },
-      }
-    end,
+        lsp_interop = {
+          enable = false,
+          disable = buf_is_large,
+          peek_definition_code = {
+            ["gD"] = "@function.outer",
+          },
+        },
+      },
+    },
     config = function(_, opts)
-      if Util.has "orgmode" then
-        require("orgmode").setup_ts_grammar()
-      end
-
       if type(opts.ensure_installed) == "table" then
         ---@type table<string, boolean>
         local added = {}
@@ -266,7 +206,34 @@ return {
           return true
         end, opts.ensure_installed)
       end
+
       require("nvim-treesitter.configs").setup(opts)
     end,
+  },
+  -- NVIM-TS-AUTOTAG
+  {
+    "windwp/nvim-ts-autotag", -- Autoclose and autorename HTML and Vue tags
+    event = "LazyFile",
+    ft = {
+      "html",
+      "xml",
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "svelte",
+      "vue",
+      "tsx",
+      "jsx",
+      "rescript",
+      "php",
+      "glimmer",
+      "handlebars",
+      "hbs",
+      "markdown",
+    },
+    -- disabled here because I have it overridden somewhere else in order to
+    -- achieve compatibility with luasnip
+    opts = { enable_close_on_slash = false },
   },
 }

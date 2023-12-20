@@ -11,12 +11,8 @@ MARKED_PWD="$DROPBOX_PATH/marked-pwd"
 isdir() {
 	if [[ -f $1 ]]; then
 		is_file="true"
-	else
-		is_dir="true"
 	fi
 }
-
-isdir "$MARKED_PWD"
 
 if [[ "$is_file" = "false" ]]; then
 	touch "$MARKED_PWD"

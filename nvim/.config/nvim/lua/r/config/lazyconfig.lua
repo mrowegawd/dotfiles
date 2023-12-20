@@ -18,6 +18,7 @@ opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
   -- debug = true,
+  -- defaults = { lazy = true },
   lockfile = data .. "/lazy-lock.json",
   concurrency = 20,
   spec = {
@@ -25,17 +26,14 @@ require("lazy").setup {
     { import = "r.plugins.extras.db" },
     -- { import = "r.plugins.extras.ai" },
     { import = "r.plugins.extras.dab" },
-    { import = "r.plugins.extras.lang" },
-    { import = "r.plugins.extras.linting" },
-    { import = "r.plugins.extras.formatter" },
+    -- { import = "r.plugins.extras.lang" },
+    -- { import = "r.plugins.extras.linting" },
+    -- { import = "r.plugins.extras.formatter" },
   },
-  defaults = { lazy = true },
   change_detection = { notify = false },
   install = {
+    colorscheme = { "terafox" },
     missing = true,
-  },
-  diff = {
-    cmd = "terminal_git",
   },
   checker = {
     enabled = true,

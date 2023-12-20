@@ -4,11 +4,24 @@ return {
   -- NEOTEST
   {
     "nvim-neotest/neotest",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-neotest/neotest-go",
+      "nvim-neotest/neotest-python",
+      "rouge8/neotest-rust",
+    },
     opts = {
       status = { virtual_text = true },
       output = { open_on_run = true },
-      adapters = {},
+      adapters = {
+        ["neotest-go"] = {},
+        ["neotest-rust"] = {},
+        ["neotest-python"] = {
+          -- Here you can specify the settings for the adapter, i.e.
+          -- runner = "pytest",
+          -- python = ".venv/bin/python",
+        },
+      },
       summary = {
         mappings = {
           attach = "a",
@@ -37,9 +50,9 @@ return {
     },
     config = function(_, opts)
       require("r.config.highlights").plugin("neotest", {
-        { NeotestPassed = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { NeotestFailed = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { NeotestRunning = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { NeotestPassed = { bg = { from = "Normal", attr = "bg" } } },
+        { NeotestFailed = { bg = { from = "Normal", attr = "bg" } } },
+        { NeotestRunning = { bg = { from = "Normal", attr = "bg" } } },
       })
 
       local namespace = vim.api.nvim_create_namespace "neotest"
@@ -114,8 +127,9 @@ return {
       {
         "<Leader>tf",
         function()
+          local col, row = Util.fzflua.rectangle_win_pojokan()
           local neotest = require "neotest"
-          Util.fzflua.send_cmds {
+          Util.fzflua.send_cmds({
             test_file = function()
               vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
             end,
@@ -159,9 +173,11 @@ return {
             coverage_clear = function()
               vim.cmd [[CoverageClear]]
             end,
-          }
+          }, {
+            winopts = { title = require("r.config").icons.misc.dashboard .. " Testing", row = row, col = col },
+          })
         end,
-        desc = "Testing(neotest): list of neotest commands",
+        desc = "Testing(neotest): list of cmds",
       },
     },
   },

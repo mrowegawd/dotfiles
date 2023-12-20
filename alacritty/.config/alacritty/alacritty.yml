@@ -398,58 +398,34 @@ key_bindings:
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# TokyoNight Alacritty Colors
-doom_light: &doom_light
+# Nightfox Alacritty Colors
+# Style: terafox
+# Upstream: https://github.com/edeneast/nightfox.nvim/raw/main/extra/terafox/nightfox_alacritty.yml
+colors:
+  # Default colors
   primary:
-    foreground: '#383a42'
-    background: '#282c34'
-  cursor:
-    cursor: '#4078f2'
-    text: '#fafafa'
+    background: '0x152528'
+    foreground: '0xe6eaea'
+  # Normal colors
   normal:
-    black: '#fafafa'
-    red: '#e45649'
-    green: '#50a14f'
-    yellow: '#986801'
-    blue: '#4078f2'
-    magenta: '#b751b6'
-    cyan: '#0184bc'
-    white: '#383a42'
+    black:   '0x2f3239'
+    red:     '0xe85c51'
+    green:   '0x7aa4a1'
+    yellow:  '0xfda47f'
+    blue:    '0x5a93aa'
+    magenta: '0xad5c7c'
+    cyan:    '0xa1cdd8'
+    white:   '0xebebeb'
+  # Bright colors
   bright:
-    black: '#9ca0a4'
-    red: '#e45649'
-    green: '#50a14f'
-    yellow: '#da8548'
-    blue: '#4078f2'
-    magenta: '#b751b6'
-    cyan: '#0184bc'
-    white: '#efefef'
-
-doom_dark: &doom_dark
-  primary:
-    foreground: '#bbc2cf'
-    background: "#282c34"
-  cursor:
-    cursor: '#51afef'
-    text: '#282c34'
-  normal:
-    black: "#282c34"
-    red: "#ff6c6b"
-    green: "#98be65"
-    yellow: "#ecbe7b"
-    blue: "#51afef"
-    magenta: "#a9a1e1"
-    cyan: "#46d9ff"
-    white: "#bbc2cf"
-  bright:
-    black: "#3f444a"
-    red: "#ff6c6b"
-    green: "#98be65"
-    yellow: "#da8548"
-    blue: "#51afef"
-    magenta: "#a9a1e1"
-    cyan: "#46d9ff"
-    white: "#efefef"
-
-# Apply
-colors: *doom_dark
+    black:   '0x4e5157'
+    red:     '0xeb746b'
+    green:   '0x8eb2af'
+    yellow:  '0xfdb292'
+    blue:    '0x73a3b7'
+    magenta: '0xb97490'
+    cyan:    '0xafd4de'
+    white:   '0xeeeeee'
+  indexed_colors:
+    - { index: 16, color: '0xff8349' }
+    - { index: 17, color: '0xcb7985' }

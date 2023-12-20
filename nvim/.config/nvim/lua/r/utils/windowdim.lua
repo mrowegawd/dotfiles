@@ -7,6 +7,20 @@ local autocmds = {}
 
 local focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
 
+-- local winhighlight_blurred = table.concat({
+--   -- -- "IncSearch:ColorColumn",
+--   "CursorLineNr:LineNr",
+--   "SignColumn:ColorColumn",
+--   "EndOfBuffer:ColorColumn",
+--   -- "LineNr:ColorColumn",
+--   "CursorLineNr:CursorLineNr",
+--   "IncSearch:ColorColumn",
+--   "Normal:ColorColumn",
+--   "NormalNC:ColorColumn",
+--   "Search:ColorColumn",
+--   "SignColumn:ColorColumn",
+-- }, ",")
+
 local winhighlight_blurred = table.concat({
   -- -- "IncSearch:ColorColumn",
   "CursorLineNr:LineNr",
@@ -15,8 +29,8 @@ local winhighlight_blurred = table.concat({
   -- "LineNr:ColorColumn",
   "CursorLineNr:CursorLineNr",
   "IncSearch:ColorColumn",
-  "Normal:ColorColumn",
-  "NormalNC:ColorColumn",
+  "Normal:Normal",
+  "NormalNC:Normal",
   "Search:ColorColumn",
   "SignColumn:ColorColumn",
 }, ",")
@@ -205,18 +219,18 @@ end
 --     end
 -- end
 
-local set_cursorline = function(active)
-  local filetype, _ = Util.buf.get_bo_buft()
-  if autocmds.cursorline_blacklist[filetype] ~= true then
-    -- check jika window is floating, like TelescopePrompt
-    if api.nvim_win_get_config(0).relative ~= "" then
-      wo.cursorline = false
-    else
-      wo.cursorline = active
-    end
-    -- wo.cursorcolumn = active
-  end
-end
+-- local set_cursorline = function(active)
+--   local filetype, _ = Util.buf.get_bo_buft()
+--   if autocmds.cursorline_blacklist[filetype] ~= true then
+--     -- check jika window is floating, like TelescopePrompt
+--     if api.nvim_win_get_config(0).relative ~= "" then
+--       wo.cursorline = false
+--     else
+--       wo.cursorline = active
+--     end
+--     -- wo.cursorcolumn = active
+--   end
+-- end
 
 autocmds.buf_enter = function()
   focus_window()

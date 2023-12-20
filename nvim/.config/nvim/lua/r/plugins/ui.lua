@@ -3,50 +3,67 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
-  -- INCLINE.NVIM
+  -- MINI.INDENTSCOPE
   {
-    "b0o/incline.nvim",
-    event = "BufReadPre",
-    opts = function()
-      return {
-        highlight = {
-          groups = {
-            InclineNormal = {
-              guibg = highlight.tint(highlight.get("@field", "fg"), 0),
-              guifg = highlight.tint(highlight.get("ColorColumn", "bg"), 0),
-              gui = "bold",
-            },
+    "echasnovski/mini.indentscope",
+    version = "*",
+    main = "mini.indentscope",
+    event = { "VeryLazy" },
+    config = function(_, opts)
+      highlight.plugin("mini.indentscopeUi", {
+        { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+      })
+      require("mini.indentscope").setup(opts)
 
-            InclineNormalNC = {
-              guifg = highlight.tint(highlight.get("@field", "fg"), -0.2),
-              guibg = highlight.tint(highlight.get("Normal", "bg"), 1),
-              gui = "bold",
-            },
-          },
+      Util.cmd.augroup("DetachMiniIndentScope", {
+        event = { "FileType" },
+        pattern = {
+          "NeogitCommitMessage",
+          "NeogitPopup",
+          "NeogitStatus",
+          "NvimTree",
+          "TelescopePrompt",
+          "TelescopeResults",
+          "alpha",
+          "checkhealth",
+          "fzf",
+          "gitcommit",
+          "help",
+          "lazy",
+          "lspinfo",
+          "make",
+          "man",
+          "markdown",
+          "dashboard",
+          "mason",
+          "neorg",
+          "norg",
         },
-        window = { margin = { vertical = 0, horizontal = 1 } },
-        hide = {
-          cursorline = true,
-        },
-        render = function(props)
-          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-          if vim.bo[props.buf].modified then
-            filename = "[+] " .. filename
-          end
-
-          local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-          return { { icon, guifg = color }, { " " }, { filename } }
+        command = function()
+          vim.b.miniindentscope_disable = true
         end,
-      }
+      })
     end,
+    opts = {
+      symbol = "┊",
+      mappings = {
+        goto_top = "<leader>k",
+        goto_bottom = "<leader>j",
+      },
+      options = {
+        try_as_border = true,
+      },
+      draw = {
+        animation = function()
+          return 0
+        end,
+      },
+    },
   },
-  -- INDENTBLANKLINE
+  -- INDENT-BLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
-    -- enabled = false,
-    lazy = false, -- butuh seperti ini? Karena setup indent-blankline terbaru harus diload sebelum colorscheme
-    priority = 900,
-    -- event = "LazyFile",
+    event = { "ColorScheme" },
     main = "ibl",
     opts = {
       scope = { enabled = false },
@@ -79,7 +96,8 @@ return {
     },
     config = function(_, opts)
       highlight.plugin("ibl_indentline", {
-        { ["@ibl.indent.char.1"] = { fg = { from = "ColorColumn", attr = "bg", alter = 0.15 } } },
+        { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+        { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
       })
       require("ibl").setup(opts)
     end,
@@ -106,7 +124,7 @@ return {
       --   if not vim.api.nvim_win_is_valid(win) then
       --     return
       --   end
-      --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.rectangle })
+      --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.line })
       -- end,
       render = function(...)
         local notification = select(2, ...)
@@ -148,7 +166,7 @@ return {
   -- NOICE
   {
     "folke/noice.nvim",
-    -- enabled = false,
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
       "rcarriga/nvim-notify",
@@ -219,6 +237,7 @@ return {
               { event = "msg_show", find = "%d+ line" },
               { event = "msg_show", find = "%d+ more line" },
               -- TODO: investigate the source of this LSP message and disable it happens in typescript files
+              -- https://github.com/nvimdev/lspsaga.nvim/issues/1295
               { event = "notify", find = "No information available" },
             },
           },
@@ -233,58 +252,6 @@ return {
         lsp_doc_border = true, -- add a border to hover docs and signature help
       },
     },
-  },
-  -- STATUSCOL
-  {
-    "luukvbaal/statuscol.nvim",
-    event = "BufRead",
-    enabled = false,
-    opt = function()
-      local builtin = require "statuscol.builtin"
-      return {
-        setopt = true,
-        relculright = true,
-        segments = {
-          {
-            sign = { name = { ".*" }, maxwidth = 2, colwidth = 1, auto = true },
-            click = "v:lua.ScSa",
-          },
-          { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
-          { text = { builtin.foldfunc, " " }, click = "v:lua.ScFa", hl = "Comment" },
-        },
-        -- segments = {
-        --   { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
-        --   { text = { builtin.lnumfunc }, click = "v:lua.ScLa" },
-        --   {
-        --     sign = {
-        --       name = { "GitSigns" },
-        --       maxwidth = 1,
-        --       colwidth = 1,
-        --       auto = false,
-        --       -- fillcharhl = "StatusColumnSeparator",
-        --     },
-        --     click = "v:lua.ScSa",
-        --   },
-        --   { text = { "%s" } },
-        -- },
-        ft_ignore = {
-          "NvimTree",
-          "NeogitStatus",
-          "NeogitCommitMessage",
-          "toggleterm",
-          "dapui_scopes",
-          "dapui_breakpoints",
-          "dapui_stacks",
-          "dapui_watches",
-          "dapui_console",
-          "dap-repl",
-          "neotest-summary",
-        },
-        -- bt_ignore = {
-        --   "terminal",
-        -- },
-      }
-    end,
   },
   -- FOLD CYCLE
   {
@@ -307,572 +274,41 @@ return {
       },
     },
   },
-  -- BUFFERLINE
+  -- INCLINE.NVIM
   {
-    "akinsho/bufferline.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    keys = {
-      { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
-      { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
-      { "@", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer(bufferline): move buffer prev" },
-      { "#", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer(bufferline): move buffer next" },
-
-      { "spp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
-      {
-        "<leader>bc",
-        "<Cmd>BufferLineGroupClose ungrouped<CR>",
-        desc = "Buffer(bufferline): delete non-pinned buffers",
-      },
-      { "sO", "<Cmd>BufferLineCloseOthers<CR>", desc = "Buffer(bufferline): delete other buffers" },
-      { "s#", "<Cmd>BufferLineCloseRight<CR>", desc = "Buffer(bufferline): delete buffers to the right" },
-      { "s@", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
-    },
+    "b0o/incline.nvim",
+    event = "BufReadPre",
     opts = function()
-      local col_base_bg_attr = "ColorColumn"
-      local col_base_fg_attr = "Comment"
-
-      local col_unselected_bg_attr = "bufferline_unselected"
-      local col_unselected_fg_attr = "Boolean"
-
-      local col_sp_fg_attr = "ErrorMsg"
-
-      local col_selected_fg_attr = "PmenuSel"
-      local col_selected_bg_attr = "@field"
-
-      local col_selected_fg = highlight.tint(highlight.get("@field", "fg"), 2)
-      local col_select_visible_fg = highlight.tint(highlight.get("@field", "fg"), 0.2)
-
-      if require("r.config").colorscheme == "material" then
-        col_selected_bg_attr = "PmenuSel"
-        col_selected_fg_attr = "PmenuSel"
-      end
-
-      local col_selected_sp = "bufferline_unselected"
-
-      local bufferline = require "bufferline"
-
       return {
-        options = {
-          mode = "buffers",
-          buffer_close_icon = "",
-          always_show_bufferline = false,
-          diagnostics = "nvim_lsp",
-          separator_style = "thin",
-          indicator = { style = "underline" },
-          diagnostics_indicator = function(_, _, diag)
-            local icons = require("r.config").icons.diagnostics
-            local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-              .. (diag.warning and icons.Warn .. diag.warning or "")
-            return vim.trim(ret)
-          end,
-          offsets = {
-            {
-              text = "EXPLORER",
-              filetype = "NvimTree",
-              highlight = "Directory",
-              text_align = "left",
-            },
-
-            {
-              text = " DIFF VIEW",
-              filetype = "DiffviewFiles",
-              highlight = "PanelHeading",
-              separator = true,
-            },
-
-            {
-              text = " DATABASE VIEWER",
-              filetype = "dbui",
-              highlight = "PanelHeading",
-              separator = true,
-            },
-
-            {
-              text = "EXPLORER",
-              filetype = "neo-tree",
-              highlight = "Directory",
-              text_align = "left",
-            },
-          },
+        highlight = {
           groups = {
-            options = { toggle_hidden_on_enter = true },
-            items = {
-              bufferline.groups.builtin.pinned:with {
-                icon = "",
-              },
-              bufferline.groups.builtin.ungrouped,
-              {
-                name = "Dependencies",
-                icon = "",
-                highlight = { fg = "#ECBE7B" },
-                matcher = function(buf)
-                  return vim.startswith(buf.path, vim.env.VIMRUNTIME)
-                end,
-              },
-              {
-                name = "Terraform",
-                matcher = function(buf)
-                  return buf.name:match "%.tf" ~= nil
-                end,
-              },
-              {
-                name = "Kubernetes",
-                matcher = function(buf)
-                  return buf.name:match "kubernetes" and buf.name:match "%.yaml"
-                end,
-              },
-              {
-                name = "SQL",
-                matcher = function(buf)
-                  return buf.name:match "%.sql$"
-                end,
-              },
-              {
-                name = "tests",
-                icon = "",
-                matcher = function(buf)
-                  local name = buf.name
-                  return name:match "[_%.]spec" or name:match "[_%.]test"
-                end,
-              },
-              {
-                name = "docs",
-                icon = "",
-                matcher = function(buf)
-                  if vim.bo[buf.id].filetype == "man" or buf.path:match "man://" then
-                    return true
-                  end
-                  for _, ext in ipairs {
-                    "md",
-                    "txt",
-                    "org",
-                    "norg",
-                    "wiki",
-                  } do
-                    if ext == fn.fnamemodify(buf.path, ":e") then
-                      return true
-                    end
-                  end
-                end,
-              },
+            InclineNormal = {
+              guifg = highlight.tint(highlight.get("Boolean", "fg"), 0.5),
+              guibg = highlight.tint(highlight.get("Normal", "bg"), 1),
+              gui = "bold",
+            },
+
+            InclineNormalNC = {
+              guifg = highlight.tint(highlight.get("LineNr", "fg"), 1),
+              guibg = highlight.tint(highlight.get("Normal", "bg"), 0.5),
+              gui = "bold",
             },
           },
         },
-        highlights = {
-          fill = {
-            fg = { attribute = "bg", highlight = col_base_fg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          background = {
-            fg = { attribute = "fg", highlight = col_base_fg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ TAB                                                      ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          tab = {
-            bg = { attribute = "bg", highlight = "ColorColumn" },
-          },
-          tab_close = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          tab_selected = {
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            fg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          tab_separator = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          tab_separator_selected = {
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            fg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ INDICATOR                                                ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          indicator_visible = {
-            fg = { attribute = "bg", highlight = col_base_fg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          indicator_selected = {
-            fg = { attribute = "bg", highlight = col_base_fg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ SEPARATOR                                                ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          separator = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          separator_visible = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          separator_selected = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ CLOSE                                                    ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          close_button = {
-            fg = { attribute = "bg", highlight = col_base_bg_attr },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          close_button_visible = {
-            fg = { attribute = "fg", highlight = col_selected_fg_attr },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-          },
-          close_button_selected = {
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ BUFFER                                                   ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          buffer = {
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-          },
-          buffer_visible = {
-            fg = col_select_visible_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          buffer_selected = {
-            fg = col_selected_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            -- bold = true,
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ PICK                                                     ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          pick = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-            italic = false,
-          },
-          pick_selected = {
-            fg = { attribute = "fg", highlight = col_unselected_fg_attr },
-            -- bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = false,
-          },
-          pick_visible = {
-            fg = { attribute = "fg", highlight = col_selected_fg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-            italic = false,
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ MODIFIED                                                 ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          modified = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-            fg = { attribute = "fg", highlight = col_selected_sp },
-          },
-          modified_visible = {
-            fg = { attribute = "fg", highlight = "ErrorMsg" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          modified_selected = {
-            fg = { attribute = "fg", highlight = "ErrorMsg" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ DUPLICATE                                                ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          duplicate = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-            italic = false,
-          },
-          duplicate_visible = {
-            -- fg = { attribute = "fg", highlight = col_selected_fg_attr },
-            fg = col_select_visible_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          duplicate_selected = {
-            fg = col_selected_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          --  ╎ OFFSET                                                   ╎
-          --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          offset_separator = {
-            fg = { attribute = "bg", highlight = col_selected_bg_attr },
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-          },
-          --  ┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑
-          --  │ DIAGNOSTICS                                              │
-          --  ┕━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙
-          diagnostic_visible = {
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-          },
-          diagnostic_selected = {
-            bg = { attribute = "fg", highlight = col_selected_bg_attr },
-          },
-          --  ╒══════════════════════════════════════════════════════════╕
-          --  │ WARNING                                                  │
-          --  ╘══════════════════════════════════════════════════════════╛
-          warning = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          warning_visible = {
-            -- fg = { attribute = "fg", highlight = col_selected_fg_attr },
-            fg = col_select_visible_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          warning_selected = {
-            -- fg = { attribute = "fg", highlight = col_selected_bg_attr },
-            fg = col_selected_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          warning_diagnostic = {
-            fg = { attribute = "fg", highlight = "DiagnosticWarn" },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          warning_diagnostic_visible = {
-            fg = { attribute = "fg", highlight = "DiagnosticWarn" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          warning_diagnostic_selected = {
-            fg = { attribute = "fg", highlight = "DiagnosticWarn" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          --  ╒══════════════════════════════════════════════════════════╕
-          --  │ ERROR                                                    │
-          --  ╘══════════════════════════════════════════════════════════╛
-          error = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          error_visible = {
-            fg = col_select_visible_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          error_selected = {
-            fg = col_selected_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          error_diagnostic = {
-            fg = { attribute = "fg", highlight = "DiagnosticError" },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          error_diagnostic_visible = {
-            fg = { attribute = "fg", highlight = "DiagnosticError" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          error_diagnostic_selected = {
-            fg = { attribute = "fg", highlight = "DiagnosticError" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          --  ╒══════════════════════════════════════════════════════════╕
-          --  │ HINT                                                     │
-          --  ╘══════════════════════════════════════════════════════════╛
-          hint = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          hint_visible = {
-            fg = col_select_visible_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          hint_selected = {
-            fg = col_selected_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          hint_diagnostic = {
-            fg = { attribute = "fg", highlight = "DiagnosticHint" },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          hint_diagnostic_visible = {
-            fg = { attribute = "fg", highlight = "DiagnosticHint" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          hint_diagnostic_selected = {
-            fg = { attribute = "fg", highlight = "DiagnosticHint" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          --  ╒══════════════════════════════════════════════════════════╕
-          --  │ INFO                                                     │
-          --  ╘══════════════════════════════════════════════════════════╛
-          info = {
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          info_visible = {
-            fg = col_select_visible_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          info_selected = {
-            fg = col_selected_fg,
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
-          info_diagnostic = {
-            fg = { attribute = "fg", highlight = "DiagnosticInfo" },
-            bg = { attribute = "bg", highlight = col_base_bg_attr },
-          },
-          info_diagnostic_visible = {
-            fg = { attribute = "fg", highlight = "DiagnosticInfo" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            italic = true,
-          },
-          info_diagnostic_selected = {
-            fg = { attribute = "fg", highlight = "DiagnosticInfo" },
-            bg = { attribute = "bg", highlight = col_unselected_bg_attr },
-            sp = { attribute = "fg", highlight = col_sp_fg_attr },
-            italic = true,
-            bold = true,
-          },
+        window = { margin = { vertical = 0, horizontal = 2 } },
+        hide = {
+          cursorline = true,
         },
+        render = function(props)
+          local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          if vim.bo[props.buf].modified then
+            filename = "[+] " .. filename
+          end
+
+          local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+          return { { icon, guifg = color }, { " " }, { filename } }
+        end,
       }
-    end,
-  },
-  -- NVIM-SCROLLBAR (disabled)
-  {
-    "petertriho/nvim-scrollbar",
-    enabled = false,
-    event = "VimEnter",
-    opts = {
-      show = true,
-      set_highlights = true,
-      handle = {
-        text = " ",
-        color = "#3F4A5A",
-        cterm = nil,
-        highlight = "CursorColumn",
-        hide_if_all_visible = true, -- Hides handle if all lines are visible
-      },
-      marks = {
-        Search = {
-          text = { "-", "=" },
-          priority = 0,
-          color = nil,
-          cterm = nil,
-          highlight = "Search",
-        },
-        Error = {
-          text = { "-", "=" },
-          priority = 1,
-          color = nil,
-          cterm = nil,
-          highlight = "DiagnosticVirtualTextError",
-        },
-        Warn = {
-          text = { "-", "=" },
-          priority = 2,
-          color = nil,
-          cterm = nil,
-          highlight = "DiagnosticVirtualTextWarn",
-        },
-        Info = {
-          text = { "-", "=" },
-          priority = 3,
-          color = nil,
-          cterm = nil,
-          highlight = "DiagnosticVirtualTextInfo",
-        },
-        Hint = {
-          text = { "-", "=" },
-          priority = 4,
-          color = nil,
-          cterm = nil,
-          highlight = "DiagnosticVirtualTextHint",
-        },
-        Misc = {
-          text = { "-", "=" },
-          priority = 5,
-          color = nil,
-          cterm = nil,
-          -- highlight = "Normal",
-        },
-      },
-      excluded_buftypes = {
-        "terminal",
-      },
-      excluded_filetypes = {
-        "prompt",
-        "TelescopePrompt",
-        "lazy",
-      },
-      autocmd = {
-        render = {
-          "BufWinEnter",
-          "TabEnter",
-          "TermEnter",
-          "WinEnter",
-          "CmdwinLeave",
-          -- "TextChanged",
-          "VimResized",
-          "WinScrolled",
-        },
-      },
-      handlers = {
-        diagnostic = true,
-        search = true, -- Requires hlslens to be loaded, will run require("scrollbar.handlers.search").setup() for you
-      },
-    },
-    -- config = function(_, opts)
-    --   require("scrollbar").setup(opts)
-    -- end,
-  },
-  -- BLOCK NVIM (disabled)
-  {
-    "HampusHauffman/block.nvim",
-    enabled = false,
-    cmd = { "BlockOn", "BlockOff", "Block" },
-    opts = {},
-  },
-  -- SCROLLEOF (disabled)
-  {
-    "Aasim-A/scrollEOF.nvim",
-    enabled = false,
-    opts = {
-      pattern = "*",
-    },
-    config = function(_, opts)
-      require("scrollEOF").setup(opts)
     end,
   },
 }

@@ -285,8 +285,8 @@ function M.change_colors()
   tmux_fg: %s
   tmux_border_fg: %s
   ]],
-    highlight.tint(highlight.get(normal, "fg"), -0.2),
-    highlight.get(colorcolumn, "bg"),
+    highlight.tint(highlight.get(normal, "fg"), -0.05),
+    highlight.get(normal, "bg"),
 
     -- fzf selection
     highlight.get(pmenusel, "fg"),
@@ -294,17 +294,17 @@ function M.change_colors()
     highlight.get(cmpmatchabbr, "fg"),
 
     -- fzf non selection
-    highlight.get(colorcolumn, "bg"),
+    highlight.get(normal, "bg"),
     highlight.get(cmpitemabbr, "fg"),
     highlight.get(cmpmatchabbrFuzzy, "fg"),
 
     -- fzf match matching
     highlight.get(fzfluaborder, "fg"),
 
-    highlight.get(colorcolumn, "bg"),
+    highlight.get(normal, "bg"),
     highlight.get(normal, "bg"),
 
-    highlight.tint(highlight.get(colorcolumn, "bg"), 0.8),
+    highlight.tint(highlight.get(normal, "fg"), -0.1),
     highlight.get(winseparator, "fg")
   )
 

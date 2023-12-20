@@ -4,7 +4,12 @@ return {
     "kevinhwang91/nvim-bqf",
     ft = { "qf" },
     dependencies = {
-      "junegunn/fzf",
+      {
+        "junegunn/fzf",
+        build = function()
+          vim.fn["fzf#install"]()
+        end,
+      },
     },
     opts = {
       preview = {
@@ -55,11 +60,24 @@ return {
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    event = "LazyFile",
+    -- dependencies = {
+    --   "MunifTanjim/nui.nvim",
+    -- },
+    ft = { "qf" },
+    keys = {
+      "<Localleader>qT",
+      "<Localleader>qt",
+      "<Leader>q",
+    },
     opts = {
+      theme_list = {
+        enabled = true,
+        maxheight = 10,
+        minheight = 10,
+      },
       keymap = {
         quickfix = {
-          toggle_open = "",
+          toggle_open = "<Leader>q",
         },
       },
     },

@@ -4,29 +4,9 @@ local highlight = require "r.config.highlights"
 
 local Util = require "r.utils"
 
+local Icon = require("r.config").icons
+
 return {
-  -- HARPOON
-  {
-    "ThePrimeagen/harpoon",
-    --stylua: ignore
-    keys = {
-      { "<Leader>ja", function() require("harpoon.mark").add_file() end, desc = "Misc(harpoon): add file" },
-      { "<Leader>jm", function() require("harpoon.ui").toggle_quick_menu() end, desc = "Misc(harpoon): file menu" },
-      { "<Leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
-      { "<Leader>1", function() require("harpoon.ui").nav_file(1) end, desc = "Misc(harpoon): file 1" },
-      { "<Leader>2", function() require("harpoon.ui").nav_file(2) end, desc = "Misc(harpoon): file 2" },
-      -- { "<Leader>3", function() require("harpoon.term").gotoTerminal(1) end, desc = "Terminal 1" },
-      -- { "<Leader>4", function() require("harpoon.term").gotoTerminal(2) end, desc = "Terminal 2" },
-      -- { "<Leader>5", function() require("harpoon.term").sendCommand(1,1) end, desc = "Command 1" },
-      -- { "<Leader>6", function() require("harpoon.term").sendCommand(1,2) end, desc = "Command 2" },
-    },
-    opts = {
-      global_settings = {
-        save_on_toggle = true,
-        enter_on_sendcmd = true,
-      },
-    },
-  },
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
@@ -55,7 +35,8 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { [[<Leader>`]], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
+      { [[;;]], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
+      { [['']], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
       -- { "<c-s>", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
       -- { "r", mode = "o", function() require("flash").remote() end, desc = "Misc(flash): remote" },
       -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search" },
@@ -87,7 +68,6 @@ return {
         if not ok then
           return
         end
-        ---@diagnostic disable-next-line: deprecated
         local _, p_start, p_end = unpack(match)
         -- if the cursor is in a search result, leave highlighting on
         if col < p_start or col > p_end then
@@ -132,21 +112,18 @@ return {
   {
     "ibhagwan/fzf-lua",
     version = false, -- fzflua did only one release, so use HEAD for now
-    cmd = "Fzflua",
+    cmd = { "Fzflua" },
     dependencies = {
-      "sindrets/diffview.nvim",
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
     },
-    -- stylua: ignore
     keys = {
-      { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
-
       { "sf", "<CMD>FzfLua buffers<CR>", desc = "WinNav(fzflua): open" },
       { "sg", "<CMD>FzfLua blines<CR>", desc = "WinNav(fzfLua): live_grep on curbuf" },
       { "sG", "<CMD>FzfLua lines<CR>", desc = "WinNav(fzflua): live_grep on buffers" },
       { "so", "<CMD>FzfLua oldfiles<CR>", desc = "WinNav(Fzflua): oldfiles" },
 
+      { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
       { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
@@ -217,7 +194,18 @@ return {
       --   desc = "Fzflua: live grep ignore hidden (visual)",
       --   mode = {"v"}
       -- },
-      { "<Leader>fQ", [[<CMD>lua require("fzf-lua").quickfix({prompt = "    " })<CR>]], desc = "Fzflua(qf): select qf list" },
+      {
+        "<Leader>fQ",
+        function()
+          require("fzf-lua").quickfix {
+            prompt = "    ",
+            winopts = {
+              title = Util.fzflua.format_title("[QF] Select item", "󰈙"),
+            },
+          }
+        end,
+        desc = "Fzflua(qf): select qf list",
+      },
       {
         "<Leader>fq",
         function()
@@ -848,30 +836,23 @@ Keybindings:
       }
     end,
     config = function(_, opts)
-      local function augroup(name, fnc)
-        fnc(vim.api.nvim_create_augroup(name, { clear = true }))
-      end
+      -- local function augroup(name, fnc)
+      --   fnc(vim.api.nvim_create_augroup(name, { clear = true }))
+      -- end
 
-      augroup("FzfluaFixMaps", function(g)
-        vim.api.nvim_create_autocmd("FileType", {
-          group = g,
-          pattern = "fzf",
-          callback = function(e)
-            vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
-            vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
-            vim.keymap.set("t", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
-            vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
-          end,
-        })
-      end)
+      -- augroup("FzfluaFixMaps", function(g)
+      --   vim.api.nvim_create_autocmd("FileType", {
+      --     group = g,
+      --     pattern = "fzf",
+      --     callback = function(e)
+      --       vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
+      --       vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
+      --       vim.keymap.set("t", "<C-c>", "<C-c>", { buffer = e.buf, silent = true })
+      --       vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
+      --     end,
+      --   })
+      -- end)
       require("fzf-lua").setup(opts)
-    end,
-  },
-  -- FZF
-  {
-    "junegunn/fzf",
-    build = function()
-      vim.fn["fzf#install"]()
     end,
   },
   -- TELESCOPE
@@ -886,24 +867,24 @@ Keybindings:
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
       { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
       { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
-      -- {
-      --   "gs",
-      --   function()
-      --     require("telescope.builtin").lsp_document_symbols {
-      --       symbols = require("r.config").get_kind_filter(),
-      --     }
-      --   end,
-      --   desc = "Telescope (lsp): goto symbol",
-      -- },
-      -- {
-      --   "gS",
-      --   function()
-      --     require("telescope.builtin").lsp_dynamic_workspace_symbols {
-      --       symbols = require("r.config").get_kind_filter(),
-      --     }
-      --   end,
-      --   desc = "Telescope(lsp): goto symbol (Workspace)",
-      -- },
+      {
+        "gs",
+        function()
+          require("telescope.builtin").lsp_document_symbols {
+            symbols = require("r.config").get_kind_filter(),
+          }
+        end,
+        desc = "Telescope (lsp): goto symbol",
+      },
+      {
+        "gS",
+        function()
+          require("telescope.builtin").lsp_dynamic_workspace_symbols {
+            symbols = require("r.config").get_kind_filter(),
+          }
+        end,
+        desc = "Telescope(lsp): goto symbol (Workspace)",
+      },
       -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps" },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
@@ -1236,7 +1217,6 @@ Keybindings:
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "grepqf"
       ---@diagnostic disable-next-line: undefined-field
-      telescope.load_extension "harpoon"
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "lazy"
       ---@diagnostic disable-next-line: undefined-field
@@ -1462,7 +1442,7 @@ Keybindings:
       }
     end,
   },
-  -- TODO-COMMENTS
+  -- TODO-SEARCH-COMMENTS
   {
     "folke/todo-comments.nvim",
     event = "LazyFile",
@@ -1471,7 +1451,7 @@ Keybindings:
       sign_priority = 8, -- sign priority
       keywords = {
         FIX = {
-          icon = " ", -- used for the sign, and search results
+          icon = Icon.misc.tools,
           -- can be a hex color, or a named color
           -- named colors definitions follow below
           color = "error",
@@ -1479,11 +1459,12 @@ Keybindings:
           alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
           -- signs = false -- configure signs for some keywords individually
         },
-        TODO = { icon = " ", color = "info" },
+        TODO = { icon = Icon.misc.check_big, color = "info" },
         WARN = {
-          icon = " ",
+          icon = Icon.misc.bug,
+          -- icon = " ", -- used for the sign, and search results
           color = "warning",
-          alt = { "WARNING" },
+          alt = { "WARNING", "WARN" },
         },
         -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
       },
@@ -1540,18 +1521,18 @@ Keybindings:
         require("lazy").load { plugins = { "dressing.nvim" } }
         return vim.ui.select(...)
       end
-      -- vim.ui.input = function(...)
-      --   require("lazy").load { plugins = { "dressing.nvim" } }
-      --   return vim.ui.input(...)
-      -- end
+      vim.ui.input = function(...)
+        require("lazy").load { plugins = { "dressing.nvim" } }
+        return vim.ui.input(...)
+      end
     end,
     opts = {
-      input = { enabled = false },
+      input = { enabled = true },
       select = {
         -- priority: use fzf_lua first before anything else
         backend = { "fzf_lua", "builtin" },
         builtin = {
-          border = require("r.config").icons.border.rectangle,
+          border = Icon.border.line,
           min_height = 10,
           win_options = { winblend = 10 },
           mappings = { n = { ["q"] = "Close" } },
@@ -1571,9 +1552,24 @@ Keybindings:
             return {
               backend = "nui",
               nui = {
-                position = "97%",
-                border = { style = require("r.config").icons.border.rectangle },
-                min_width = vim.o.columns - 2,
+                position = "90%",
+                border = { style = Icon.border.line },
+                min_width = math.floor(vim.o.columns / 2 - 50),
+              },
+            }
+          end
+          if opts.kind == "pojokan" then
+            local col, row = Util.fzflua.rectangle_win_pojokan()
+            return {
+              backend = "fzf_lua",
+              fzf_lua = Util.fzflua.cursor_dropdown {
+                winopts = {
+                  title = opts.prompt,
+                  relative = "editor",
+                  col = col,
+                  row = row,
+                },
+                prompt = "  ",
               },
             }
           end
@@ -1589,7 +1585,7 @@ Keybindings:
           win_options = {
             winhighlight = table.concat({
               "Normal:Italic",
-              "FloatBorder:PickerBorder",
+              "FloatBorder:FloatBorder",
               "FloatTitle:Title",
               "CursorLine:Visual",
             }, ","),

@@ -7,7 +7,7 @@ getcolors() {
 	inactive=$(xrdb -query | grep background | cut -d':' -f2 | sed 's/ //g' | xargs)
 	MAGENTA=$(xrdb -query | grep 'color5:' | awk '{print $NF}')
 	# BLACK=$(xrdb -query | grep 'color0:' | awk '{print $NF}')
-	GREEN=$(xrdb -query | grep 'color3:' | awk '{print $NF}')
+	GREEN=$(xrdb -query | grep 'color4:' | awk '{print $NF}')
 }
 
 getcolors
@@ -22,7 +22,7 @@ bspc config presel_feedback_color "$MAGENTA"
 bspc monitor -d 1 2 3 4 5 6
 # bspc monitor -d ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉
 
-CURRENT_BORDER=2
+CURRENT_BORDER=4
 CURRENT_GAP=15
 CURRENT_SRATIO='0.50'
 
@@ -120,4 +120,6 @@ if [ ! -f $startup_lock_file ]; then
 	[ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
 	[ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
 	[ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
+	# [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
+	dropbox start &
 fi

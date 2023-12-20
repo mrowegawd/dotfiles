@@ -124,10 +124,11 @@ function M.statuscolumn()
         end
       end
     end)
-    -- Left: mark or non-git sign
-    components[1] = M.icon(M.get_mark(buf, vim.v.lnum) or left)
-    -- Right: fold icon or git sign (only if file)
-    components[3] = is_file and M.icon(fold or right) or ""
+    -- Left: mark git and diagnostic sign
+    components[1] = is_file and M.icon(left or right) or ""
+
+    -- Right: number or fold
+    components[3] = M.icon(M.get_mark(buf, vim.v.lnum) or fold)
   end
 
   -- Numbers in Neovim are weird

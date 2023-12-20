@@ -245,14 +245,14 @@ local options = {
     -----------------------------------------------------------------------------//
     -- use in vertical diff mode, blank lines to keep sides aligned, ignore whitespace changes
     diffopt = opt.diffopt + {
-      "vertical",
-      "iwhite",
-      "hiddenoff",
-      "foldcolumn:0",
-      "context:4",
+      -- "vertical",
+      -- "iwhite",
+      -- "hiddenoff",
+      -- "foldcolumn:0",
+      -- "context:4",
       "algorithm:histogram",
-      "indent-heuristic",
-      "linematch:60",
+      -- "indent-heuristic",
+      -- "linematch:60",
     },
     sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" },
   },
@@ -294,6 +294,10 @@ vim.g.markdown_recommended_style = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
---
--- vim.g.glow_binary_path = os.getenv "HOME" .. "/.local/bin"
-vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
+vim.g.loaded_python_provider = 0
+vim.g.loaded_python3_provider = 0
+
+-- vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
+
+package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
+package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"

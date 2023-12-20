@@ -1,14 +1,85 @@
-local fn, api, cmd = vim.fn, vim.api, vim.cmd
+local cmd = vim.cmd
 
 local Util = require "r.utils"
 
--- wrap and check for spell in text filetypes
-Util.cmd.augroup("Wrap_spell", {
-  event = { "FileType" }, -- map q to close command window on quit
+-- Wrap and check for spell in text filetypes
+Util.cmd.augroup("WrapSpell", {
+  event = { "FileType" },
   pattern = { "gitcommit", "markdown", "NeogitCommitMessage" },
   command = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.relativenumber = false
+    vim.opt_local.number = false
+  end,
+})
+
+Util.cmd.augroup("WrapFt", {
+  event = { "FileType" },
+  pattern = { "typescriptreact", "typescript" },
+  command = function()
+    vim.opt_local.wrap = true
+  end,
+})
+
+Util.cmd.augroup("LargeFileSettings", {
+  event = { "BufReadPre" },
+  desc = "Set settings for large files.",
+  command = function(info)
+    if vim.b.large_file ~= nil then
+      return
+    end
+    vim.b.large_file = false
+    local stat = vim.uv.fs_stat(info.match)
+    if stat and stat.size > 1000000 then
+      vim.b.large_file = true
+      vim.opt_local.spell = false
+      vim.opt_local.swapfile = false
+      vim.opt_local.undofile = false
+      vim.opt_local.breakindent = false
+      vim.opt_local.colorcolumn = ""
+      vim.opt_local.statuscolumn = ""
+      vim.opt_local.signcolumn = "no"
+      vim.opt_local.foldcolumn = "0"
+      vim.opt_local.winbar = ""
+      vim.api.nvim_create_autocmd("BufReadPost", {
+        buffer = info.buf,
+        once = true,
+        callback = function()
+          vim.opt_local.syntax = ""
+          return true
+        end,
+      })
+    end
+  end,
+})
+
+Util.cmd.augroup("ReHighlightFolded", {
+  event = { "BufRead", "BufEnter", "FocusGained" },
+  pattern = "*",
+  command = function()
+    if
+      vim.tbl_contains(
+        { "norg", "org", "markdown" },
+        vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
+      )
+    then
+      require("r.config.highlights").plugin("markdca", {
+        { Folded = { bg = "NONE", fg = { from = "@field" } } },
+      })
+    else
+      require("r.config.highlights").plugin("markdca", {
+        {
+          Folded = {
+            bg = { from = "Normal", attr = "bg", alter = 0.3 },
+            fg = "NONE",
+            underline = false,
+            bold = true,
+          },
+        },
+      })
+    end
   end,
 })
 
@@ -23,7 +94,7 @@ Util.cmd.augroup("SetNopaste", {
 -- The default conceallevel is 3 in LazyVim
 Util.cmd.augroup("DisableJsonConceal", {
   event = { "FileType" },
-  pattern = { "json", "jsonc", "markdown" },
+  pattern = { "json", "jsonc" },
   command = function()
     vim.opt_local.conceallevel = 0
   end,
@@ -38,6 +109,7 @@ Util.cmd.augroup("SmartClose", {
     "lspinfo",
     "man",
     "notify",
+    "DressingSelect",
     "filetree",
     "qf",
     "query",
@@ -61,14 +133,15 @@ Util.cmd.augroup("SmartClose", {
 })
 
 -- Close quick fix window if the file containing it was closed
-Util.cmd.augroup("AutoCloseQf", {
-  event = { "BufEnter" },
-  command = function()
-    if fn.winnr "$" == 1 and vim.bo.buftype == "quickfix" then
-      api.nvim_buf_delete(0, { force = true })
-    end
-  end,
-})
+-- Util.cmd.augroup("AutoCloseQf", {
+--   event = { "BufEnter", "FocusGained" },
+--   command = function()
+--     if vim.bo.buftype == "quickfix" and #vim.api.nvim_list_wins() == 1 then
+--       -- vim.cmd "q"
+--       api.nvim_buf_delete(0, { force = true })
+--     end
+--   end,
+-- })
 
 -- don't execute silently in case of errors
 Util.cmd.augroup("TextYankHighlight", {
@@ -100,6 +173,10 @@ Util.cmd.augroup("WindowBehaviours", {
       vim.diagnostic.enable(args.buf)
     end
   end,
+}, {
+  -- 'Jump to last accessed window on closing the current one.',
+  event = { "WinClosed" },
+  command = "if expand('<amatch>') == win_getid() | wincmd p | endif",
 }, {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
@@ -136,12 +213,6 @@ Util.cmd.augroup("WindowBehaviours", {
   end,
 }, {
   event = { "FileType" },
-  pattern = { "qf" },
-  command = function()
-    cmd "stopinsert"
-  end,
-}, {
-  event = { "FileType" },
   pattern = { "norg", "org", "orgagenda" },
   command = function()
     vim.opt_local.foldcolumn = "0"
@@ -153,24 +224,10 @@ Util.cmd.augroup("WindowBehaviours", {
     vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
   end,
 }, {
-
   event = { "FileType" },
   pattern = { "norg" },
   command = function()
     vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
-  end,
-})
-
-Util.cmd.augroup("DisableWinBf", {
-  event = { "BufRead", "BufWinEnter" },
-  pattern = { "*" },
-  command = function(args)
-    local buf = vim.bo[args.buf].filetype
-
-    if buf == "BufTerm" then
-      vim.opt_local.number = false
-      vim.opt_local.relativenumber = false
-    end
   end,
 })
 
@@ -195,43 +252,43 @@ Util.cmd.augroup("CheckOutsideTime", {
   command = "silent! checktime",
 })
 
-Util.cmd.augroup("WindowDim", {
-  event = { "BufRead" },
-  pattern = { "*" },
-  command = function()
-    Util.windowdim.buf_enter()
-  end,
-}, {
-  event = { "BufEnter" },
-  pattern = { "*" },
-  command = function()
-    Util.windowdim.buf_enter()
-  end,
-}, {
-  event = { "FocusGained" },
-  pattern = "*",
-  command = function()
-    Util.windowdim.focus_gained()
-  end,
-}, {
-  event = { "FocusLost" },
-  pattern = "*",
-  command = function()
-    Util.windowdim.focus_lost()
-  end,
-}, {
-  event = { "WinEnter" },
-  pattern = "*",
-  command = function()
-    Util.windowdim.win_enter()
-  end,
-}, {
-  event = { "WinLeave" },
-  pattern = "*",
-  command = function()
-    Util.windowdim.win_leave()
-  end,
-})
+-- Util.cmd.augroup("WindowDim", {
+--   event = { "BufRead" },
+--   pattern = { "*" },
+--   command = function()
+--     Util.windowdim.buf_enter()
+--   end,
+-- }, {
+--   event = { "BufEnter" },
+--   pattern = { "*" },
+--   command = function()
+--     Util.windowdim.buf_enter()
+--   end,
+-- }, {
+--   event = { "FocusGained" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.focus_gained()
+--   end,
+-- }, {
+--   event = { "FocusLost" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.focus_lost()
+--   end,
+-- }, {
+--   event = { "WinEnter" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.win_enter()
+--   end,
+-- }, {
+--   event = { "WinLeave" },
+--   pattern = "*",
+--   command = function()
+--     Util.windowdim.win_leave()
+--   end,
+-- })
 
 -- local obs = false
 -- local function set_scrolloff(winid)
@@ -301,6 +358,15 @@ Util.cmd.augroup("DisableStatusline", {
   pattern = "*",
   command = function()
     cmd [[set laststatus=0]]
+    -- cmd [[set statusline=]]
+    -- local nougat = require "nougat"
+    -- local Bar = require "nougat.bar"
+    -- local stl = Bar "statusline"
+    --
+    -- local stl_inactive = Bar "statusline"
+    -- nougat.set_statusline(function(ctx)
+    --   return ctx.is_focused and stl or stl_inactive
+    -- end)
   end,
 }, {
   event = { "BufRead", "FocusGained" },
@@ -320,3 +386,5 @@ Util.cmd.augroup("AutoResizeWindowssf", {
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
 ]]
+
+-- vim.cmd [[autocmd FileType * silent! lua if vim.fn.wordcount()['bytes'] > 2048000 then print("syntax off") vim.cmd("setlocal syntax=off") end]]

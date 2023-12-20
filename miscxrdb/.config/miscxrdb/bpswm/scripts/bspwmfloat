@@ -2,11 +2,14 @@
 
 # Open a command in float mode
 if [ "$1" == "calcurse" ]; then
-  bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "export VISUAL=nvim; calcurse"
 elif [ "$1" == 'ncmpcpp-ueberzug' ]; then
-  bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
 elif [ "$1" == 'ncmpcpp' ]; then
-  bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
+elif [ "$1" == 'inbox' ]; then
+	bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && kitty -e \
+		zsh -c "source ~/.fzf.zsh; nvim -c \"lua require('orgmode').action('capture.prompt', { opts = { buffer = false, desc = 'org capture' } })\""
 else
-  bspc rule -a \* -o state=floating && st -e "$@"
+	bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e "$@"
 fi

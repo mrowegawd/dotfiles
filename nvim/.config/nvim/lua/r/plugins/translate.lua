@@ -2,7 +2,7 @@ return {
   -- TRANSLATE.NVIM
   {
     "uga-rosa/translate.nvim",
-    cmd = { "Translate" },
+    event = "VeryLazy",
     keys = {
       {
         "<Leader>rs",
@@ -13,10 +13,14 @@ return {
     },
     config = function()
       require("translate").setup {
+        default = {
+          command = "google",
+        },
         preset = {
           output = {
-            split = {
-              append = true,
+            insert = {
+              base = "top",
+              off = -1,
             },
           },
         },

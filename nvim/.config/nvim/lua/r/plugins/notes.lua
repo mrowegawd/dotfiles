@@ -1,31 +1,11 @@
 local fmt, cmd, api = string.format, vim.cmd, vim.api
 local uv = vim.uv or vim.loop
 
+local Config = require "r.config"
 local Util = require "r.utils"
 local highlight = require "r.config.highlights"
 
 return {
-  {
-    "epwalsh/obsidian.nvim",
-    cmd = "Obsidian",
-    version = "*", -- recommended, use latest release instead of latest commit
-    lazy = true,
-    ft = "markdown",
-    opts = {
-      workspaces = {
-        {
-          name = "personal",
-          path = require("r.config").path.wiki_path,
-        },
-        {
-          name = "work",
-          path = "~/vaults/work",
-        },
-      },
-
-      -- see below for full list of options 👇
-    },
-  },
   -- NEORG
   {
     "nvim-neorg/neorg",
@@ -37,7 +17,7 @@ return {
         event = { "FileType" },
         pattern = { "norg" },
         command = function()
-          require("r.mappings.utils.notes").neorg_mappings_ft(api.nvim_get_current_buf())
+          require("r.keymaps.note").neorg_mappings_ft(api.nvim_get_current_buf())
         end,
       })
 
@@ -48,6 +28,12 @@ return {
       })
     end,
     keys = {
+      {
+        "<Localleader>fL",
+        function()
+          Util.maim.insert "test.png"
+        end,
+      },
       {
         "<Localleader>fo",
         function()
@@ -66,7 +52,7 @@ return {
 
           return require("fzf-lua").files {
             prompt = "  ",
-            cwd = require("r.config").path.wiki_path,
+            cwd = Config.path.wiki_path,
             rg_glob = true,
             file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
             winopts = {
@@ -83,7 +69,7 @@ return {
           cmd [[Lazy load neorg]]
           return require("fzf-lua").live_grep_glob {
             prompt = "  ",
-            cwd = require("r.config").path.wiki_path,
+            cwd = Config.path.wiki_path,
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
             winopts = {
               title = Util.fzflua.format_title("[Neorg] Grep", " "),
@@ -101,7 +87,54 @@ return {
       "nvim-lua/plenary.nvim",
       "laher/neorg-exec",
     },
+    config = function(_, opts)
+      require("neorg").setup(opts)
+
+      -- local path_img = "test.png"
+      --
+      -- local invoke_screenshot_to_neorg = function(output_path, title)
+      --   title = title or "image"
+      --   local maim = require "maim"
+      --
+      --   local command_output = maim.invoke_screenshot(path_img)
+      --   -- invoke_screenshot(output_path)
+      --   -- local image_markdown = "![" .. title .. "](" .. output_path .. ")"
+      --   local image_neorg = ".image" .. command_output
+      --
+      --   if next(command_output) ~= nil then
+      --     vim.notify("Could not write to " .. output_path)
+      --     vim.notify(command_output)
+      --     return
+      --   end
+      --
+      --   if not vim.fn.exists(output_path) then
+      --     vim.notify("could not locate " .. output_path .. " but the command looked successful")
+      --     return
+      --   end
+      --
+      --   vim.cmd("normal A" .. image_neorg)
+      -- end
+      --
+      -- Util.cmd.create_command("MaimNeorg", invoke_screenshot_to_neorg(), { desc = "Maim: put image (neorg)" })
+    end,
     opts = function()
+      -- local invoke_screenshot = function(output_path)
+      --   assert(output_path ~= nil, "output_path must be a provided")
+      --   assert(type(output_path) == "string", "output_path must be a string")
+      --
+      --   local executable = "maim"
+      --   local file_options = "-s"
+      --
+      --   local current_buffer = vim.api.nvim_buf_get_name(0)
+      --   local current_directory = vim.fs.dirname(current_buffer)
+      --   output_path = utils.get_current_buffer_directory(output_path, current_buffer, current_directory)
+      --
+      --   local command = executable .. " " .. file_options .. " " .. output_path
+      --   -- vim.notify(command, 'debug')
+      --
+      --   return vim.fn.systemlist(command)
+      -- end
+
       return {
         load = {
           ["core.defaults"] = {},
@@ -149,11 +182,11 @@ return {
                   bold = { [""] = "+Boolean" },
                   verbatim = { [""] = "+CodeLine1", delimiter = "+NonText" },
                 },
-                tags = {
-                  comment = {
-                    content = "+CodeComment1",
-                  },
-                },
+                -- tags = {
+                --   comment = {
+                --     content = "+CodeComment1",
+                --   },
+                -- },
               },
               dim = {
                 tags = {
@@ -177,8 +210,8 @@ return {
           ["core.dirman"] = {
             config = {
               workspaces = {
-                gtd = fmt("%s/gtd", require("r.config").path.wiki_path),
-                wiki = require("r.config").path.wiki_path,
+                gtd = fmt("%s/gtd", Config.path.wiki_path),
+                wiki = Config.path.wiki_path,
               },
             },
           },
@@ -225,7 +258,7 @@ return {
                 -- )
                 -- ========================================================
 
-                keybinds.remap_event("norg", "n", "<TAB>", "core.esupports.hop.hop-link")
+                keybinds.remap_event("norg", "n", "<Leader>oo", "core.esupports.hop.hop-link")
                 keybinds.remap_event("norg", "n", "<M-CR>", "core.esupports.hop.hop-link", "vsplit")
 
                 -- go next heading fold
@@ -251,18 +284,21 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
+    event = "LazyFile",
     ft = "org",
     keys = {
       {
-        "<Localleader>fO",
+        "<Localleader>fA",
         function()
-          return Util.neorg_notes.EditOrgTodo()
+          return require("r.utils").neorg_notes.open_orgagenda_paths()
         end,
-        desc = "Note(orgmode): directly edit todos org",
+        desc = "Note(orgmode): open orgmode paths",
       },
-      "<localleader>fc",
+      "<Localleader>fc",
+      "<Localleader>fa",
     },
     dependencies = {
+      "hrsh7th/nvim-cmp",
       {
         "akinsho/org-bullets.nvim",
         config = function()
@@ -280,296 +316,218 @@ return {
         end,
       },
     },
-    config = function()
-      local orgmode = require "orgmode"
-
-      orgmode.setup_ts_grammar()
-
-      orgmode.setup {
-        ui = {
-          menu = {
-            handler = function(data)
-              local items = vim
-                .iter(data.items)
-                :map(function(i)
-                  return (i.key and not i.label:lower():match "quit") and i or nil
-                end)
-                :totable()
-
-              vim.ui.select(items, {
-                prompt = fmt(" %s ", data.prompt),
-                kind = "orgmode",
-                format_item = function(item)
-                  return fmt("%s → %s", item.key, item.label)
-                end,
-              }, function(choice)
-                if not choice then
-                  return
-                end
-                if choice.action then
-                  choice.action()
-                end
+    opts = {
+      ui = {
+        menu = {
+          handler = function(data)
+            local items = vim
+              .iter(data.items)
+              :map(function(i)
+                return (i.key and not i.label:lower():match "quit") and i or nil
               end)
-            end,
-          },
-        },
-        win_split_mode = "float",
-        org_agenda_files = {
-          fmt("%s/orgmode/gtd/*", require("r.config").path.wiki_path),
-          fmt("%s/orgmode/journal/homeclean/*", require("r.config").path.wiki_path),
-          fmt("%s/orgmode/journal/HBD/*", require("r.config").path.wiki_path),
-        },
-        org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", require("r.config").path.wiki_path),
-        org_todo_keywords = {
-          "TODO(t)",
-          "NEXT(n)",
-          "CHECK(c)",
-          "UNTASK(o)",
-          "HBD(b)",
-          "HOLD(h)",
-          "INPROGRESS(p)",
-          "|",
-          "DONE(d)",
-        },
-        org_todo_keyword_faces = {
-          CHECK = ":foreground royalblue :weight bold :slant italic",
-          TODO = ":foreground pink :weight bold :slant italic",
-          INPROGRESS = ":foreground red :weight bold :slant italic",
-          UNTASK = ":foreground deeppink :weight bold",
-          HBD = ":foreground magenta :weight bold :slant italic",
-          HOLD = ":foreground gray :weight bold :slant italic",
-          DONE = ":foreground green :weight bold :slant italic",
-          NEXT = ":foreground orange :weight bold",
-        },
-        -- win_split_mode = "20split",
-        org_agenda_skip_scheduled_if_done = true,
-        org_hide_emphasis_markers = true,
-        org_capture_templates = {
-          t = {
-            description = "Todo",
-            -- template = "\n* TODO %? \n  SCHEDULED: %t",
-            template = "* TODO %? \n  SCHEDULED: %t",
-            target = require("r.config").path.wiki_path .. "/orgmode/gtd/refile.org",
-          },
+              :totable()
 
-          i = {
-            description = "Inbox (someday)",
-            template = "* %?",
-            target = require("r.config").path.wiki_path .. "/orgmode/gtd/inbox.org",
-          },
-          l = {
-            description = "Link",
-            -- template = "\n* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
-            template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
-            target = require("r.config").path.wiki_path .. "/orgmode/gtd/inbox.org",
-          },
-          c = {
-            description = "Check",
-            -- template = "\n* CHECK %? \n  SCHEDULED: %t",
-            template = "* CHECK %? \n  SCHEDULED: %t",
-            target = require("r.config").path.wiki_path .. "/orgmode/gtd/inbox.org",
-          },
-          -- j = {
-          --     description = "Journal",
-          --     template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
-          --     target = require("r.config").path.wiki_path.. "/orgmode/gtd/journal.org",
-          -- },
-          -- k = {
-          --     description = "Markdown",
-          --     template = "\n* TODO %? \n  SCHEDULED: %t",
-          --     target = require("r.config").path.wiki_path .. "/orgmode/gtd/base.md",
-          --     filetype = "markdown",
-          -- },
-        },
-
-        -- win_split_mode = function(name)
-        --     local bufnr = vim.api.nvim_create_buf(false, true)
-        --     --- Setting buffer name is required
-        --     vim.api.nvim_buf_set_name(bufnr, name)
-        --     local fill = 0.8
-        --     local width = math.floor((vim.o.columns * fill))
-        --     local height = math.floor((vim.o.lines * fill))
-        --     local row = math.floor((((vim.o.lines - height) / 2) - 1))
-        --     local col = math.floor(((vim.o.columns - width) / 2))
-        --     vim.api.nvim_open_win(bufnr, true, {
-        --         relative = "editor",
-        --         width = width,
-        --         height = height,
-        --         row = row,
-        --         col = col,
-        --         style = "minimal",
-        --         border = "rounded",
-        --     })
-        -- end,
-
-        mappings = {
-          disable_all = false,
-          prefix = "<leader>",
-          global = {
-            org_capture = "<Localleader>fc",
-            org_agenda = "<localleader>fa",
-          },
-          agenda = {
-            org_agenda_later = "f",
-            org_agenda_earlier = "b",
-            org_agenda_goto_today = "~",
-            org_agenda_day_view = "vd",
-            org_agenda_week_view = "vw",
-            org_agenda_month_view = "vm",
-            org_agenda_year_view = "vy",
-            org_agenda_quit = { "q", "<esc>" },
-            org_agenda_goto = { "<TAB>", "<cr>" },
-            org_agenda_show_help = "?",
-            org_agenda_redo = "r",
-            org_agenda_goto_date = "cid",
-            org_agenda_todo = "cit",
-            org_agenda_clock_goto = "<prefix>xj",
-            org_agenda_set_effort = "<prefix>xe",
-            org_agenda_clock_in = "<prefix>I",
-            org_agenda_clock_out = "<prefix>O",
-            org_agenda_clock_cancel = "<prefix>C",
-            org_agenda_clockreport_mode = "R",
-            org_agenda_priority = "<prefix>1",
-            org_agenda_priority_up = "<c-Up>",
-            org_agenda_priority_down = "<c-Down>",
-            org_agenda_archive = "<prefix>$",
-            org_agenda_toggle_archive_tag = "<leader>T",
-            org_agenda_set_tags = "<leader>t",
-            org_agenda_deadline = "<leader>d",
-            org_agenda_schedule = "<leader>s",
-            org_agenda_filter = "/",
-          },
-          capture = {
-            org_capture_finalize = "<C-c>",
-            org_capture_refile = "<Leader>or",
-            org_capture_kill = "q",
-            org_capture_show_help = "?",
-          },
-          org = {
-            org_refile = "<c-i>",
-            org_timestamp_up = "<c-a>",
-            org_timestamp_down = "<c-x>",
-            org_change_date = "cid",
-            org_todo = "cit",
-            org_toggle_checkbox = "<C-c>",
-            org_open_at_point = "<TAB>",
-            org_cycle = "za",
-            org_meta_return = "<F12>", -- Add heading, item or row
-            org_return = "<F11>",
-            org_global_cycle = "<a-o>",
-            org_archive_subtree = "<prefix>$",
-            org_set_tags_command = "<Leader>t",
-            org_toggle_archive_tag = "<Leader>T",
-            org_next_visible_heading = "<a-n>",
-            org_previous_visible_heading = "<a-p>",
-            org_toggle_heading = "<leader>o*",
-            org_show_help = "?",
-
-            org_timestamp_up_day = "<PageUp>",
-            org_timestamp_down_day = "<PageDown>",
-            org_priority = "<prefix>,",
-            org_priority_up = "<c-Up>",
-            org_priority_down = "<c-Down>",
-            org_todo_prev = "ciT",
-            org_edit_special = [[<prefix>']],
-            org_do_promote = "<<",
-            org_do_demote = ">>",
-            org_promote_subtree = "<left>",
-            org_demote_subtree = "<right>",
-            org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
-            org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
-            org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
-            org_move_subtree_up = "<S-UP>",
-            org_move_subtree_down = "<S-DOWN>",
-            org_export = "<leader>a",
-            org_forward_heading_same_level = "]]",
-            org_backward_heading_same_level = "[[",
-            outline_up_heading = "g{",
-            org_time_stamp = "<prefix>it",
-            org_time_stamp_inactive = "<prefix>iT",
-            org_deadline = "<leader>d",
-            org_schedule = "<leader>s",
-            org_clock_in = "<prefix>I",
-            org_clock_out = "<prefix>O",
-            org_clock_cancel = "<prefix>C",
-            org_clock_goto = "<prefix>xj",
-            org_set_effort = "<prefix>xe",
-          },
-        },
-
-        notifications = {
-          reminder_time = { 0, 1, 5, 10 },
-          repeater_reminder_time = { 0, 1, 5, 10 },
-          deadline_warning_reminder_time = { 0, 5 },
-          cron_notifier = function(tasks)
-            for _, task in ipairs(tasks) do
-              local title = fmt("%s (%s)", task.category, task.humanized_duration)
-              local subtitle = fmt("%s %s %s", string.rep("*", task.level), task.todo, task.title)
-              local date = fmt("%s: %s", task.type, task.time:to_string())
-              -- local subtitle = string.format(
-              --     "%s %s %s",
-              --     string.rep("*", task.level),
-              --     task.todo,
-              --     task.title
-              -- )
-
-              if vim.fn.executable "dunstify" == 1 then
-                vim.uv.spawn("dunstify", {
-                  args = {
-                    fmt("--icon=%s/.config/dunst/bell.png", os.getenv "HOME"),
-                    fmt("%s\n%s %s", title, subtitle, date),
-                    -- fmt("%s", subtitle),
-                  },
-                })
+            vim.ui.select(items, {
+              prompt = fmt(Config.icons.misc.fire .. " %s ", data.prompt),
+              kind = "pojokan",
+              format_item = function(item)
+                return fmt("%s → %s", item.key, item.label)
+              end,
+            }, function(choice)
+              if not choice then
+                return
               end
-
-              if vim.fn.executable "mpv" == 1 then
-                vim.uv.spawn("mpv", {
-                  args = {
-                    "--audio-display=no",
-                    fmt("%s/.config/dunst/notif-me.wav", os.getenv "HOME"),
-                    "--volume=50",
-                  },
-                })
+              if choice.action then
+                choice.action()
               end
-
-              -- Linux
-              -- if vim.fn.executable "notify-send" == 1 then
-              --     vim.uv.spawn("notify-send", {
-              --         args = {
-              --             string.format("%s\n%s\n%s", title, subtitle, date),
-              --         },
-              --     })
-              -- end
-
-              -- -- MacOS
-              -- if vim.fn.executable "terminal-notifier" == 1 then
-              --     vim.uv.spawn("terminal-notifier", {
-              --         args = {
-              --             "-title",
-              --             title,
-              --             "-subtitle",
-              --             subtitle,
-              --             "-message",
-              --             date,
-              --         },
-              --     })
-              -- end
-            end
+            end)
           end,
         },
-      }
-    end,
-  },
-  -- VIM-TABLE-MODE
-  {
-    "dhruvasagar/vim-table-mode",
-    enabled = false,
-    ft = {
-      "markdown",
-      "org",
-      "norg",
+      },
+      org_agenda_files = {
+        fmt("%s/orgmode/gtd/*", Config.path.wiki_path),
+        fmt("%s/orgmode/bookmarks/*", Config.path.wiki_path),
+        fmt("%s/orgmode/habit/*", Config.path.wiki_path),
+        fmt("%s/orgmode/day-to-remember/*", Config.path.wiki_path),
+      },
+      org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", Config.path.wiki_path),
+      org_todo_keywords = {
+        "TODO(t)",
+        "HOLD(h)", -- task yang ditangguhkan, no hint to continue
+        "INPROGRESS(i)", -- task yang sedang dikerjakan
+        "CHECK(c)", -- task yang boleh dikerjakan saat free-time
+        "HBD(b)",
+        "|",
+        "DONE(d)",
+        "",
+      },
+      org_todo_keyword_faces = {
+        CHECK = ":foreground royalblue :weight bold :slant",
+        TODO = ":foreground pink :weight bold :slant",
+        INPROGRESS = ":foreground magenta :weight bold :slant italic",
+        UNTASK = ":foreground deeppink :weight bold",
+        HBD = ":foreground magenta :weight bold :slant",
+        HOLD = ":foreground gray :weight bold :slant",
+        DONE = ":foreground green :weight bold :slant",
+        -- NEXT = ":foreground orange :weight bold",
+      },
+      org_agenda_skip_scheduled_if_done = true,
+      org_hide_emphasis_markers = true,
+      org_capture_templates = {
+        t = {
+          description = "Todo",
+          template = "* TODO %? \n  SCHEDULED: %T",
+          target = Config.path.wiki_path .. "/orgmode/gtd/refile.org",
+        },
+        i = {
+          description = "Inbox me (Inbox)",
+          -- template = "* %?",
+          template = "* CHECK %? \n  SCHEDULED: %t",
+          target = Config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+        },
+        l = {
+          description = "Link (Inbox)",
+          -- template = "\n* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
+          template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
+          target = Config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+        },
+        u = {
+          description = "URL bookmarks",
+          template = "* RAPIKAN: %? \n  SCHEDULED: %t",
+          target = Config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
+        },
+        -- j = {
+        --     description = "Journal",
+        --     template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
+        --     target = Config.path.wiki_path.. "/orgmode/gtd/journal.org",
+        -- },
+        -- k = {
+        --     description = "Markdown",
+        --     template = "\n* TODO %? \n  SCHEDULED: %t",
+        --     target = Config.path.wiki_path .. "/orgmode/gtd/base.md",
+        --     filetype = "markdown",
+        -- },
+      },
+      win_split_mode = function(name)
+        local bufnr = vim.api.nvim_create_buf(false, true)
+        --- Setting buffer name is required
+        vim.api.nvim_buf_set_name(bufnr, name)
+        local fill = 0.4
+        local width = math.floor((vim.o.columns * fill))
+        local height = math.floor((vim.o.lines * fill))
+        local row = math.floor((((vim.o.lines - height) / 2) - 1))
+        local col = math.floor(((vim.o.columns - width) / 2))
+        vim.api.nvim_open_win(bufnr, true, {
+          relative = "editor",
+          width = width,
+          height = height,
+          row = row,
+          col = col,
+          style = "minimal",
+          border = "rounded",
+        })
+      end,
+      mappings = {
+        disable_all = false,
+        prefix = "<Leader>o",
+        global = {
+          org_capture = "<Localleader>fc",
+          org_agenda = "<Localleader>fa",
+        },
+        agenda = {
+          org_agenda_later = "f",
+          org_agenda_earlier = "b",
+          org_agenda_goto_today = "~",
+          org_agenda_day_view = "vd",
+          org_agenda_week_view = "vw",
+          org_agenda_month_view = "vm",
+          org_agenda_year_view = "vy",
+          org_agenda_quit = "q",
+          org_agenda_switch_to = nil,
+          org_agenda_goto = "<TAB>",
+          org_agenda_show_help = "?",
+          org_agenda_redo = "r",
+          org_agenda_goto_date = "cid",
+          org_agenda_todo = "cit",
+          org_agenda_clock_goto = "<prefix>xj",
+          org_agenda_set_effort = "<prefix>xe",
+          org_agenda_clock_in = "<prefix>I",
+          org_agenda_clock_out = "<prefix>O",
+          org_agenda_clock_cancel = "<prefix>C",
+          org_agenda_clockreport_mode = "R",
+          org_agenda_priority = "<prefix>1",
+          org_agenda_priority_up = "<c-Up>",
+          org_agenda_priority_down = "<c-Down>",
+          org_agenda_archive = "<prefix>$",
+          org_agenda_toggle_archive_tag = "<leader>T",
+          org_agenda_set_tags = "<leader>t",
+          org_agenda_deadline = "<leader>d",
+          org_agenda_schedule = "<leader>s",
+          org_agenda_filter = "/",
+        },
+        capture = {
+          org_capture_finalize = "<C-c>",
+          org_capture_refile = "<Leader>or",
+          org_capture_kill = "q",
+          org_capture_show_help = "?",
+        },
+        org = {
+          org_refile = "<c-i>",
+          org_timestamp_up = "<c-a>",
+          org_timestamp_down = "<c-x>",
+          org_change_date = "cid",
+          org_todo = "cit",
+          org_toggle_checkbox = "<C-c>",
+          org_open_at_point = "<prefix>o",
+          org_meta_return = "<F12>", -- Add heading, item or row
+          org_return = "<F11>",
+          org_global_cycle = "<a-o>",
+          org_cycle = "<BS>",
+          -- org_cycle = "<TAB>",
+          org_archive_subtree = "<prefix>$",
+          org_set_tags_command = "<Leader>t",
+          org_toggle_archive_tag = "<Leader>T",
+          org_next_visible_heading = "<a-n>",
+          org_previous_visible_heading = "<a-p>",
+          org_toggle_heading = "<leader>o*",
+          org_show_help = "?",
+          org_timestamp_up_day = "<PageUp>",
+          org_timestamp_down_day = "<PageDown>",
+          org_priority = "<prefix>,",
+          org_priority_up = "<c-Up>",
+          org_priority_down = "<c-Down>",
+          org_todo_prev = "ciT",
+          org_edit_special = [[<prefix>']],
+          org_do_promote = "<<",
+          org_do_demote = ">>",
+          org_promote_subtree = "<left>",
+          org_demote_subtree = "<right>",
+          org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
+          org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
+          org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
+          org_move_subtree_up = "<S-UP>",
+          org_move_subtree_down = "<S-DOWN>",
+          org_export = "<leader>a",
+          org_forward_heading_same_level = "]]",
+          org_backward_heading_same_level = "[[",
+          outline_up_heading = "g{",
+          org_time_stamp = "<prefix>it",
+          org_time_stamp_inactive = "<prefix>iT",
+          org_deadline = "<leader>d",
+          org_schedule = "<leader>s",
+          org_clock_in = "<prefix>I",
+          org_clock_out = "<prefix>O",
+          org_clock_cancel = "<prefix>C",
+          org_clock_goto = "<prefix>xj",
+          org_set_effort = "<prefix>xe",
+        },
+      },
     },
+    config = function(_, opts)
+      local orgmode = require "orgmode"
+      orgmode.setup_ts_grammar()
+      orgmode.setup(opts)
+    end,
   },
   -- CALENDAR
   {
@@ -578,6 +536,76 @@ return {
     keys = {
       { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
     },
+  },
+  -- OBSIDIAN.NVIM (disabled)
+  {
+    "epwalsh/obsidian.nvim",
+    enabled = false,
+    cmd = { "ObsidianOpen" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    opts = {
+      dir = Config.path.wiki_path, -- no need to call 'vim.fn.expand' here
+      completion = { nvim_cmp = false },
+
+      -- daily_notes = {
+      --   folder = "Calendar 🗓️/Days 🌄",
+      --   -- Optional, if you want to change the date format for the ID of daily notes.
+      --   -- date_format = "%Y-%m-%d",
+      --   -- Optional, if you want to change the date format of the default alias of daily notes.
+      --   -- alias_format = "%B %-d, %Y",
+      -- },
+
+      -- Optional, alternatively you can customize the frontmatter data.
+      note_frontmatter_func = function(note)
+        -- This is equivalent to the default frontmatter function.
+        local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+        -- `note.metadata` contains any manually added fields in the frontmatter.
+        -- So here we just make sure those fields are kept in the frontmatter.
+        if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
+          for k, v in pairs(note.metadata) do
+            out[k] = v
+          end
+        end
+        return out
+      end,
+
+      -- Optional, for templates (see below).
+      -- templates = {
+      --   subdir = "templates",
+      --   date_format = "%Y-%m-%d-%a",
+      --   time_format = "%H:%M",
+      -- },
+
+      follow_url_func = function(url)
+        vim.fn.jobstart { "open", url }
+      end,
+
+      -- Optional, set to true if you use the Obsidian Advanced URI plugin.
+      -- https://github.com/Vinzent03/obsidian-advanced-uri
+      use_advanced_uri = true,
+
+      -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
+      open_app_foreground = true,
+    },
+
+    -- mappings = {
+    --   ["gf"] = require("obsidian.mapping").gf_passthrough(),
+    -- },
+
+    config = function(_, opts)
+      require("obsidian").setup(opts)
+      -- vim.keymap.set("n", "gd", function()
+      --   if require("obsidian").util.cursor_on_markdown_link() then
+      --     return "<cmd>ObsidianFollowLink<CR>"
+      --   else
+      --     return "gd"
+      --   end
+      -- end, { noremap = false, expr = true })
+    end,
   },
   -- HEADLINES.NVIM (disabled)
   {
@@ -607,10 +635,9 @@ return {
       }
     end,
   },
-  -- IMAGE.NVIM (disabled)
+  -- IMAGE.NVIM
   {
     "3rd/image.nvim",
-    enabled = false,
     ft = { "markdown", "norg", "oil" },
     build = function()
       local has_magick = pcall(require, "magick")
@@ -627,14 +654,41 @@ return {
       end
     end,
     opts = {
-      editor_only_render_when_focused = true,
+      backend = "kitty",
+      editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
       tmux_show_only_in_active_window = true,
+      integrations = {
+        markdown = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+        },
+        neorg = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "norg" },
+        },
+      },
     },
     config = function(_, opts)
+      -- Requirements (linux):
+      -- sudo apt-get install libmagickwand-dev
+      -- sudo apt-get install libgraphicsmagick1-dev
       local has_magick = pcall(require, "magick")
       if has_magick then
         require("image").setup(opts)
       end
     end,
+  },
+  -- MAIM.NVIM
+  {
+    "kiran94/maim.nvim",
+    config = true,
+    -- usage: :Maim <path>
+    cmd = { "Maim", "MaimMarkdown" },
   },
 }

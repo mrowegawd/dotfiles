@@ -1,14 +1,9 @@
 return {
-  -- NUI
-  { "MunifTanjim/nui.nvim" }, -- jangan di delete, karena di utils.init masih yang menggunakan
+  { "MunifTanjim/nui.nvim" },
   { "nvim-lua/plenary.nvim" },
   { "nvim-tree/nvim-web-devicons" },
-  -- VIM-LOG
-  { "mtdl9/vim-log-highlighting", lazy = false },
-  -- SUDA
-  { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } },
-  -- TASKWARRIOR SYNTAX
-  { "framallo/taskwarrior.vim", ft = "taskrc" },
+  { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } }, -- sudo
+
   -- NUMB-NVIM
   {
     "nacro90/numb.nvim",
@@ -34,13 +29,6 @@ return {
       "CBcatalog",
     },
   },
-  -- HYPERSONIC.NVIM (make regex readable) (disabled)
-  {
-    "tomiis4/Hypersonic.nvim",
-    cmd = { "Hypersonic" },
-    enabled = false,
-    config = true,
-  },
   -- SG.NVIM
   {
     "sourcegraph/sg.nvim",
@@ -56,21 +44,15 @@ return {
     },
     opts = {},
   },
-  -- GKEEP
-  {
-    -- Check and run: `python3 -m pip install gkeepapi keyring`
-    "stevearc/gkeep.nvim",
-    build = ":UpdateRemotePlugins",
-    cmd = { "GkeepToggle" },
-    -- event = "BufReadPre gkeep://*",
-  },
-  -- OUTPUT-PANEL
-  {
-    "mhanberg/output-panel.nvim",
-    event = "VeryLazy",
-    keys = { { "<Localleader>oo", "<cmd>OutputPanel<CR>", desc = "Misc(outputpanel): open" } },
-    config = true,
-  },
+  -- GKEEP (disabled)
+  -- {
+  --   -- Check and run: `python3 -m pip install gkeepapi keyring`
+  --   "stevearc/gkeep.nvim",
+  --   enabled = false,
+  --   build = ":UpdateRemotePlugins",
+  --   cmd = { "GkeepToggle" },
+  --   -- event = "BufReadPre gkeep://*",
+  -- },
   -- NREDIR
   {
     -- Redirect output of vim or external command into scratch buffer,

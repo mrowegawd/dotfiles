@@ -11,7 +11,7 @@ return {
         [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]=],
       }
       ccc.setup {
-        win_opts = { border = require("r.config").icons.border.rectangle },
+        win_opts = { border = require("r.config").icons.border.line },
         pickers = {
           p.hex,
           p.css_rgb,

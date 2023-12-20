@@ -4,12 +4,9 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
-  -- NETRW (disabled)
-  { "prichrd/netrw.nvim", enabled = false, opts = {} },
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    -- enabled = false,
     cmd = "Neotree",
     init = function()
       Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
@@ -78,6 +75,7 @@ return {
             { source = "document_symbols" },
           },
         },
+        async_directory_scan = "never", -- "auto"   means refreshes are async, but it's synchronous when called from the Neotree commands.
         enable_git_status = true,
         git_status_async = true,
         nesting_rules = {
@@ -104,7 +102,7 @@ return {
           },
         },
         filesystem = {
-          hijack_netrw_behavior = "open_current",
+          hijack_netrw_behavior = "open_default",
           use_libuv_file_watcher = true,
           group_empty_dirs = false,
           filtered_items = {
@@ -256,226 +254,6 @@ return {
       })
 
       vim.g.neo_tree_remove_legacy_commands = 1
-    end,
-  },
-  -- NVIM-IDE
-  {
-    "ldelossa/nvim-ide",
-    event = "LazyFile",
-    config = function()
-      local timeline = require "ide.components.timeline"
-      local changes = require "ide.components.changes"
-      local commits = require "ide.components.commits"
-      local branches = require "ide.components.branches"
-
-      require("ide").setup {
-        -- log_level = "debug",
-        components = {
-          -- global_keymaps = {
-          --   hide = "h",
-          --   details = "P",
-          --   details_tab = "p",
-          -- },
-          TerminalBrowser = {
-            hidden = true,
-          },
-          Commits = {
-            keymaps = {
-              checkout = "c",
-              close = "X",
-              collapse = "zc",
-              collapse_all = "zM",
-              details = "P",
-              details_tab = "p",
-              diff = "<CR>",
-              diff_split = "s",
-              diff_tab = "t",
-              diff_vsplit = "v",
-              expand = "zo",
-              help = "?",
-              hide = "<C-[>",
-              refresh = "r",
-            },
-          },
-        },
-        panel_groups = {
-          -- explorer = { explorer.Name, outline.Name, bookmarks.Name, callhierarchy.Name, terminalbrowser.Name },
-          -- terminal = { terminal.Name },
-          git = { changes.Name, commits.Name, timeline.Name, branches.Name },
-        },
-        workspaces = {
-          auto_open = "none",
-        },
-        panel_sizes = {
-          left = 30,
-          right = 80,
-          bottom = 15,
-        },
-      }
-    end,
-  },
-  -- EDGY.NVIM (disabled)
-  {
-    "folke/edgy.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    -- stylua: ignore
-    keys = {
-      { "<leader>uu", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
-      { "<leader>us", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
-      { "<leader>ug", "<CMD> Neotree git_status toggle <CR>",  desc = "Misc(edgy): toggle git_status" },
-      { "<leader>ub", "<CMD> Neotree buffers toggle <CR>",     desc = "Misc(edgy): toggle buffers" },
-    },
-    opts = function()
-      local opts = {
-        bottom = {
-          {
-            ft = "toggleterm",
-            size = { height = 0.4 },
-            ---@diagnostic disable-next-line: unused-local
-            filter = function(buf, win)
-              return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
-          {
-            ft = "noice",
-            size = { height = 0.4 },
-            ---@diagnostic disable-next-line: unused-local
-            filter = function(buf, win)
-              return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
-          {
-            ft = "lazyterm",
-            title = "LazyTerm",
-            size = { height = 0.4 },
-            filter = function(buf)
-              return not vim.b[buf].lazyterm_cmd
-            end,
-          },
-          -- "Trouble",
-          { ft = "qf", title = "QuickFix" },
-          {
-            ft = "help",
-            size = { height = 20 },
-            -- don't open help files in edgy that we're editing
-            filter = function(buf)
-              return vim.bo[buf].buftype == "help"
-            end,
-          },
-          { title = "Spectre", ft = "spectre_panel", size = { height = 0.4 } },
-          { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
-        },
-        left = {
-          {
-            title = "Neo-Tree",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "filesystem"
-            end,
-            pinned = true,
-            open = function()
-              vim.api.nvim_input "<esc><space>e"
-            end,
-            size = { height = 0.5 },
-          },
-          { title = "Neotest Summary", ft = "neotest-summary" },
-          {
-            title = "Neo-Tree Git",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "git_status"
-            end,
-            pinned = true,
-            open = "Neotree position=right git_status",
-          },
-          -- {
-          --   title = "Neo-Tree Buffers",
-          --   ft = "neo-tree",
-          --   filter = function(buf)
-          --     return vim.b[buf].neo_tree_source == "buffers"
-          --   end,
-          --   pinned = true,
-          --   open = "Neotree position=top buffers",
-          -- },
-          "neo-tree",
-        },
-        keys = {
-          -- increase width
-          ["<a-L>"] = function(win)
-            win:resize("width", 2)
-          end,
-          -- decrease width
-          ["<a-H>"] = function(win)
-            win:resize("width", -2)
-          end,
-          -- increase height
-          ["<a-K>"] = function(win)
-            win:resize("height", 2)
-          end,
-          -- decrease height
-          ["<a-J>"] = function(win)
-            win:resize("height", -2)
-          end,
-        },
-      }
-      return opts
-    end,
-  },
-  -- use edgy's selection window
-  {
-    "nvim-telescope/telescope.nvim",
-    optional = true,
-    opts = {
-      defaults = {
-        get_selection_window = function()
-          require("edgy").goto_main()
-          return 0
-        end,
-      },
-    },
-  },
-
-  -- prevent neo-tree from opening files in edgy windows
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    optional = true,
-    opts = function(_, opts)
-      opts.open_files_do_not_replace_types = opts.open_files_do_not_replace_types
-        or { "terminal", "Trouble", "qf", "Outline" }
-      table.insert(opts.open_files_do_not_replace_types, "edgy")
-    end,
-  },
-
-  -- Fix bufferline offsets when edgy is loaded
-  {
-    "akinsho/bufferline.nvim",
-    optional = true,
-    opts = function()
-      local Offset = require "bufferline.offset"
-      if not Offset.edgy then
-        local get = Offset.get
-        Offset.get = function()
-          if package.loaded.edgy then
-            local layout = require("edgy.config").layout
-            local ret = { left = "", left_size = 0, right = "", right_size = 0 }
-            for _, pos in ipairs { "left", "right" } do
-              local sb = layout[pos]
-              if sb and #sb.wins > 0 then
-                local title = " Sidebar" .. string.rep(" ", sb.bounds.width - 8)
-                ret[pos] = "%#EdgyTitle#" .. title .. "%*" .. "%#WinSeparator#│%*"
-                ret[pos .. "_size"] = sb.bounds.width
-              end
-            end
-            ret.total_size = ret.left_size + ret.right_size
-            if ret.total_size > 0 then
-              return ret
-            end
-          end
-          return get()
-        end
-        Offset.edgy = true
-      end
     end,
   },
 }

@@ -74,22 +74,22 @@ return {
 	--  ┌╌╌╌╌╌╌╌┐
 	--  ╎ Fonts ╎
 	--  └╌╌╌╌╌╌╌┘
-	font_size = 7.5,
+	font_size = 12,
 	font_rules = {
 		{
 			italic = false,
 			intensity = "Normal",
-			font = font_with_fallback("SF Mono", {}),
+			font = font_with_fallback("JetBrains Mono", {}),
 		},
 		{
 			italic = false,
-			intensity = "Bold",
-			font = font_with_fallback("SF Mono", {}),
+			-- intensity = "Bold",
+			font = font_with_fallback("JetBrains Mono", { weight = "Bold" }),
 		},
 		{
 			italic = true,
-			intensity = "Normal",
-			font = font_with_fallback("VictorMono NF Obl", {}),
+			-- intensity = "Normal",
+			font = font_with_fallback("JetBrains Mono", { weight = "Regular" }),
 		},
 		{
 			italic = true,

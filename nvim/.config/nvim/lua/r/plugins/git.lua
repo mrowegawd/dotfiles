@@ -2,48 +2,33 @@ local Util = require "r.utils"
 local highlight = require "r.config.highlights"
 
 return {
-  -- GITHUB NOTIFICATIONS
-  { "rlch/github-notifications.nvim" },
-  -- GIT-WORKTREE
-  {
-    "ThePrimeagen/git-worktree.nvim",
-    opts = {},
-    config = function()
-      require("telescope").load_extension "git_worktree"
-    end,
-    dependencies = {
-      "nvim-telescope/telescope.nvim",
-    },
-    -- keys = {
-    --   {
-    --     "<leader>gwm",
-    --     function()
-    --       require("telescope").extensions.git_worktree.git_worktrees()
-    --     end,
-    --     desc = "Git(git-worktree): manage",
-    --   },
-    --   {
-    --     "<leader>gwc",
-    --     function()
-    --       require("telescope").extensions.git_worktree.create_git_worktree()
-    --     end,
-    --     desc = "Git(git-worktree): create",
-    --   },
-    -- },
-  },
   -- GIT CONFLICT
   {
     "akinsho/git-conflict.nvim", --- hanya untuk viewer untuk git log, namun bisa di kombinasi dengan fugitive
-    event = "VeryLazy",
-    config = true,
-  },
-  -- FUGITIVE (disabled)
-  {
-    "tpope/vim-fugitive",
-    enabled = false,
-    cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit" },
-    dependencies = {
-      "tpope/vim-rhubarb",
+    cmd = {
+      "GitConflictChooseOurs",
+      "GitConflictChooseTheirs",
+      "GitConflictChooseBoth",
+      "GitConflictChooseNone",
+      "GitConflictNextConflict",
+      "GitConflictPrevConflict",
+      "GitConflictListQf",
+    },
+    keys = {
+      {
+        "<Leader>gn",
+        "<CMD>GitConflictNextConflict<CR>",
+        { desc = "Git(gitconflict): next" },
+      },
+      {
+        "<Leader>gp",
+        "<CMD>GitConflictPrevConflict<CR>",
+        { des = "Git(gitconflict): prev" },
+      },
+    },
+    event = "LazyFile",
+    opts = {
+      default_commands = true, -- disable commands created by this plugin
     },
   },
   -- GITLINKER
@@ -67,7 +52,7 @@ return {
           desc = "Git(gitlinker): range URL repo on browser (visual)",
         },
       },
-      { "<leader>gy" },
+      { "<leader>gy" }, --"Git(gitlinker): copy url git hash"
     },
     opts = { mappings = "<Leader>gy" },
   },
@@ -208,62 +193,33 @@ return {
       },
     },
   },
-  -- GIT ADVANCED SEARCH (disabled)
-  {
-    "aaronhallaert/advanced-git-search.nvim",
-    enabled = false,
-    event = "LazyFile",
-    dependencies = {
-      "sindrets/diffview.nvim",
-      "ibhagwan/fzf-lua",
-    },
-    init = function()
-      vim.api.nvim_create_user_command(
-        "DiffCommitLine",
-        "lua require('advanced_git_search.fzf').diff_commit_line()",
-        { range = true }
-      )
-    end,
-    --stylua: ignore
-    keys = {
-      { "<Leader>gG", "<CMD>AdvancedGitSearch search_log_content<CR>",      desc = "Git(git-advanced): grep all repo" },
-      { "<Leader>gg", "<CMD>AdvancedGitSearch search_log_content_file<CR>", desc = "Git(git-advanced): grep buf repo" },
-      { "<Leader>gg", ":'<,'>AdvancedGitSearch diff_commit_line<CR>", mode = "v", desc = "Git(git-advanced): grep buf repo (visual)" },
-    },
-    opts = {
-      diff_plugin = "diffview",
-      git_flags = {},
-      git_diff_flags = {},
-      show_builtin_git_pickers = false,
-    },
-  },
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
-    event = "LazyFile",
+    event = { "BufRead", "BufNewFile", "BufWritePost" },
     opts = {
       -- Experimental ------------------------------------------------------------------------------
       _inline2 = false,
       _extmark_signs = false,
       _signs_staged_enable = false,
       signs = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "▎" },
-        topdelete = { text = "▎" },
-        changedelete = { text = "▎" },
+        add = { text = "▎", numhl = "GitSignsAddNr" },
+        change = { text = "▎", numhl = "GitSignsChangeNr" },
+        delete = { text = "▎", numhl = "GitSignsDeleteNr" },
+        topdelete = { text = "▎", numhl = "GitSignsDeleteNr" },
+        changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
         untracked = { text = "▎" },
       },
       -- on_attach = nil,
       on_attach = function(bufnr)
-        require("r.mappings.utils.git").signs(bufnr, package.loaded.gitsigns)
+        require("r.keymaps.git").signs(bufnr, package.loaded.gitsigns)
       end,
     },
   },
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
-    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     init = function()
       Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
@@ -412,11 +368,12 @@ return {
   -- NEOGIT
   {
     "NeogitOrg/neogit",
-    cmd = "Neogit",
+    event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     --stylua: ignore
     keys = {
       { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit" },
+      { "<Leader>gN", function() require("neogit").open() end, desc = "Git(neogit): open" },
     },
     opts = {
       disable_signs = false,
@@ -433,13 +390,23 @@ return {
         diffview = true,
       },
     },
-    -- config = function(_, opts)
-    --   require("neogit").setup(opts)
-
+    -- init = function()
     --   highlight.plugin("neogit_hl", {
-    --     { NeogitDiffAddHighlight = { fg = { from = "NeogitDiffAdd", attr = "fg", alter = -1.5 } } },
-    --     { NeogitDiffDeleteHighlight = { fg = { from = "NeogitDiffDelete", attr = "fg", alter = -1.5 } } },
+    --     {
+    --       NeogitDiffAdd = {
+    --         fg = { from = "NeogitDiffAdd", attr = "fg", alter = -2 },
+    --         bg = { from = "NeogitDiffAdd", attr = "bg" },
+    --       },
+    --       NeogitDiffAddHighlight = {
+    --         fg = { from = "NeogitDiffAdd", attr = "fg", alter = -2 },
+    --         bg = { from = "NeogitDiffAdd", attr = "bg" },
+    --       },
+    --     },
+    --     -- { NeogitDiffDelete = { bg = { from = "NeogitDiffDelete", attr = "fg", alter = -1.5 } } },
     --   })
     -- end,
+    config = function(_, opts)
+      require("neogit").setup(opts)
+    end,
   },
 }

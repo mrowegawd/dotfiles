@@ -1,12 +1,24 @@
+local Util = require "r.utils"
+
 return {
   {
     "mfussenegger/nvim-lint",
+    enabled = function()
+      if require("r.config").lsp_style == "coc" then
+        return false
+      end
+      return true
+    end,
     event = "LazyFile",
     opts = {
       -- Event to trigger linters
       events = { "BufWritePost", "BufReadPost", "InsertLeave" },
       linters_by_ft = {
         fish = { "fish" },
+        cmake = { "cmakelint" },
+        markdown = { "markdownlint" },
+        go = { "golangcilint" },
+        docker = { "hadolint" },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ['*'] = { 'global linter' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
@@ -16,7 +28,11 @@ return {
       -- or add custom linters.
       ---@type table<string,table>
       linters = {
-        -- -- Example of using selene only when a selene.toml file is present
+        -- TODO: it not works
+        -- markdownlint = {
+        --   args = { "--stdin", "-c", vim.env.HOME .. "/.config/linters/.markdownlint.json" },
+        -- },
+        -- Example of using selene only when a selene.toml file is present
         -- selene = {
         --   -- `condition` is another LazyVim extension that allows you to
         --   -- dynamically enable/disable linters based on the context.
@@ -26,9 +42,8 @@ return {
         -- },
       },
     },
-    config = function(_, opts)
-      local Util = require "r.utils"
 
+    config = function(_, opts)
       local M = {}
 
       local lint = require "lint"
@@ -57,6 +72,7 @@ return {
           local argv = { ... }
           timer:start(ms, 0, function()
             timer:stop()
+            ---@diagnostic disable-next-line: deprecated
             vim.schedule_wrap(fn)(unpack(argv))
           end)
         end
