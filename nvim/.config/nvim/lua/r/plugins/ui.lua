@@ -38,6 +38,8 @@ return {
           "mason",
           "neorg",
           "norg",
+          "org",
+          "orgagenda",
         },
         command = function()
           vim.b.miniindentscope_disable = true

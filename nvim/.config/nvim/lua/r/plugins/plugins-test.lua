@@ -268,29 +268,46 @@ return {
       }
     end,
   },
-  -- PERSISTENCE NVIM
+  -- PERSISTED NVIM (disabled)
   {
-    "folke/persistence.nvim",
+    "olimorris/persisted.nvim",
+    event = "LazyFile",
     enabled = false,
-    event = "BufReadPre",
-    opts = {
-      opts = { options = vim.opt.sessionoptions:get() },
-      pre_save = function()
-        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-          if vim.fn.buflisted(bufnr) == 1 then
-            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-              vim.api.nvim_buf_delete(bufnr, {})
-            end
-          end
-        end
-      end,
-    },
+    init = function()
+      Util.cmd.augroup("PersistedEvents", {
+        event = "User",
+        pattern = "PersistedSavePre",
+        -- Arguments are always persisted in a session and can't be removed using 'sessionoptions'
+        -- so remove them when saving a session
+        command = function()
+          vim.cmd "%argdelete"
+        end,
+      })
+    end,
     -- stylua: ignore
     keys = {
-      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
-      { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
-      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
+      { "<Leader>pl", function() return vim.cmd.SessionLoadLast() end, { desc = "Misc(persisted): load a session" } },
+      { "<Leader>ps", function() vim.cmd.SessionStart() return vim.notify "Sessions persisted: Started.." end, { desc = "Misc(persisted): start a session" } },
     },
+    config = function()
+      require("persisted").setup {
+        autoload = true,
+        autosave = true,
+        use_git_branch = true,
+        ignored_dirs = {
+          vim.fn.stdpath "data",
+        },
+        should_autosave = function()
+          for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
+            if vim.fn.buflisted(bufnr) == 1 then
+              if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
+                vim.api.nvim_buf_delete(bufnr, {})
+              end
+            end
+          end
+        end,
+      }
+    end,
   },
   -- MINI.CLUE (disabled)
   {
@@ -825,7 +842,6 @@ return {
       },
     },
   },
-
   -- prevent neo-tree from opening files in edgy windows
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -836,7 +852,6 @@ return {
       table.insert(opts.open_files_do_not_replace_types, "edgy")
     end,
   },
-
   -- Fix bufferline offsets when edgy is loaded
   {
     "akinsho/bufferline.nvim",
@@ -1167,47 +1182,6 @@ return {
       show_builtin_git_pickers = false,
     },
   },
-  -- PERSISTED NVIM (disabled)
-  {
-    "olimorris/persisted.nvim",
-    enabled = false,
-    event = "BufEnter",
-    init = function()
-      Util.cmd.augroup("PersistedEvents", {
-        event = "User",
-        pattern = "PersistedSavePre",
-        -- Arguments are always persisted in a session and can't be removed using 'sessionoptions'
-        -- so remove them when saving a session
-        command = function()
-          vim.cmd "%argdelete"
-        end,
-      })
-    end,
-    -- stylua: ignore
-    keys = {
-      { "<Leader>pl", function() return vim.cmd.SessionLoadLast() end, { desc = "Misc(persisted): load a session" } },
-      { "<Leader>ps", function() vim.cmd.SessionStart() return vim.notify "Sessions persisted: Started.." end, { desc = "Misc(persisted): start a session" } },
-    },
-    config = function()
-      require("persisted").setup {
-        autoload = true,
-        autosave = true,
-        use_git_branch = true,
-        ignored_dirs = {
-          vim.fn.stdpath "data",
-        },
-        should_autosave = function()
-          for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-            if vim.fn.buflisted(bufnr) == 1 then
-              if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-                vim.api.nvim_buf_delete(bufnr, {})
-              end
-            end
-          end
-        end,
-      }
-    end,
-  },
   -- NVIM-POSSESSION (disabled)
   {
     "gennaro-tedesco/nvim-possession",
@@ -1247,73 +1221,47 @@ return {
   -- RESESSION (disabled)
   {
     "stevearc/resession.nvim",
-    enabled = false,
-    event = "VeryLazy",
-    dependencies = {
-      "stevearc/aerial.nvim",
-      "stevearc/overseer.nvim",
-      -- "stevearc/three.nvim",
-      "stevearc/oil.nvim",
-    },
+    event = "LazyFile",
+    -- stylua: ignore
     keys = {
-      {
-        "<Leader>pl",
-        function()
-          local resession = require "resession"
-          return resession.load(nil, { reset = false })
-        end,
-        desc = "Misc(possession): load a session",
-      },
-      {
-        "<Leader>ps",
-        function()
-          local resession = require "resession"
-          return resession.save()
-        end,
-        desc = "Misc(possession): start a session",
-      },
-      {
-        "<Leader>pu",
-        function()
-          local possession = require "nvim-possession"
-          return possession.update()
-        end,
-        desc = "Misc(possession): save a new session or overwrite it",
-      },
+      { "<Leader>sl", function() require("resession").load() end, desc = "Misc(resession): load from the list" },
+      { "<Leader>sd", function() require("resession").delete() end, desc = "Misc(resession): delete" },
+      { "<Leader>ss", function() require("resession").save() end, desc = "Misc(resession): save" },
+      { "<Leader>sr", function() require("resession").load(nil, {reset = false}) end, desc = "Misc(resession): save without reset" },
     },
-    config = function()
+    opts = {
+      autosave = {
+        enabled = true,
+        notify = false,
+      },
+      -- extensions = {
+      --   oil = {},
+      -- },
+    },
+    config = function(_, opts)
       local resession = require "resession"
+      local aug = vim.api.nvim_create_augroup("StevearcResession", {})
+      resession.setup(opts)
 
-      -- local aug = vim.api.nvim_create_augroup("StevearcResession", {})
+      vim.api.nvim_create_user_command("SessionDetach", function()
+        resession.detach()
+      end, {})
 
-      local visible_buffers = {}
-
-      resession.setup {
-        autosave = {
-          enabled = true,
-          notify = false,
-        },
-        tab_buf_filter = function(tabpage, bufnr)
-          local dir = vim.fn.getcwd(-1, vim.api.nvim_tabpage_get_number(tabpage))
-          if dir ~= nil then
-            return vim.startswith(vim.api.nvim_buf_get_name(bufnr), dir)
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          -- Only load the session if nvim was started with no args
+          if vim.fn.argc(-1) == 0 then
+            -- Save these to a different directory, so our manual sessions don't get polluted
+            resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
           end
         end,
-        buf_filter = function(bufnr)
-          if not resession.default_buf_filter(bufnr) then
-            return false
-          end
-          return visible_buffers[bufnr] or require("three").is_buffer_in_any_tab(bufnr)
+      })
+      vim.api.nvim_create_autocmd("VimLeavePre", {
+        group = aug,
+        callback = function()
+          resession.save "last"
         end,
-        extensions = {
-          aerial = {},
-          overseer = {},
-          quickfix = {},
-          three = {},
-          config_local = {},
-          -- oil = {},
-        },
-      }
+      })
     end,
   },
   -- NEOVIM-SESSION-MANAGER (disabled)
@@ -1705,45 +1653,6 @@ return {
               end
             end,
           },
-        },
-      }
-    end,
-  },
-  -- ILLUMINATE (disabled)
-  {
-    "RRethy/vim-illuminate",
-    enabled = false,
-    event = "LazyFile",
-    opts = {
-      delay = 200,
-      large_file_cutoff = 2000,
-      large_file_overrides = {
-        providers = { "lsp" },
-      },
-    },
-    -- stylua: ignore
-    keys = {
-      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference" },
-      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference" },
-    },
-    config = function()
-      require("illuminate").configure {
-        filetypes_denylist = {
-          "NeogitStatus",
-          "Outline",
-          "TelescopePrompt",
-          "Trouble",
-          "alpha",
-          "dirvish",
-          "fugitive",
-          "gitcommit",
-          "lazy",
-          "neo-tree",
-          "orgagenda",
-          "aerial",
-          "outline",
-          "sagafinder",
-          "qf",
         },
       }
     end,

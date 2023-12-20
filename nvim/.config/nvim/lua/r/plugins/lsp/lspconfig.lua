@@ -446,15 +446,15 @@ return {
       --   return false
       -- end
 
-      local provider = {
-        HOVER = "hoverProvider",
-        RENAME = "renameProvider",
-        CODELENS = "codeLensProvider",
-        CODEACTIONS = "codeActionProvider",
-        FORMATTING = "documentFormattingProvider",
-        REFERENCES = "documentHighlightProvider",
-        DEFINITION = "definitionProvider",
-      }
+      -- local provider = {
+      --   HOVER = "hoverProvider",
+      --   RENAME = "renameProvider",
+      --   CODELENS = "codeLensProvider",
+      --   CODEACTIONS = "codeActionProvider",
+      --   FORMATTING = "documentFormattingProvider",
+      --   REFERENCES = "documentHighlightProvider",
+      --   DEFINITION = "definitionProvider",
+      -- }
 
       -- Setup formatting and keymaps
       Util.lsp.on_attach(function(client, bufnr)
@@ -477,23 +477,23 @@ return {
         --   })
         -- end
 
-        if client.server_capabilities[provider.REFERENCES] then
-          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
-            event = { "CursorHold", "CursorHoldI" },
-            buffer = bufnr,
-            desc = "LSP: References",
-            command = function()
-              vim.lsp.buf.document_highlight()
-            end,
-          }, {
-            event = "CursorMoved",
-            desc = "LSP: References Clear",
-            buffer = bufnr,
-            command = function()
-              vim.lsp.buf.clear_references()
-            end,
-          })
-        end
+        -- if client.server_capabilities[provider.REFERENCES] then
+        --   Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+        --     event = { "CursorHold", "CursorHoldI" },
+        --     buffer = bufnr,
+        --     desc = "LSP: References",
+        --     command = function()
+        --       vim.lsp.buf.document_highlight()
+        --     end,
+        --   }, {
+        --     event = "CursorMoved",
+        --     desc = "LSP: References Clear",
+        --     buffer = bufnr,
+        --     command = function()
+        --       vim.lsp.buf.clear_references()
+        --     end,
+        --   })
+        -- end
 
         if opts.inlay_hints.enabled then
           if client.supports_method "textDocument/inlayHint" then
@@ -797,7 +797,6 @@ return {
       keymaps = {
         toggle = "dg", -- default '<leader>dd'
         -- go_to_definition = "dG", -- go to problematic type from popup window
-        --   go_to_definition = "<leader>dx",
       },
     },
   },
@@ -876,8 +875,8 @@ return {
   -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
-    ft = { "markdown", "md" },
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    event = "LazyFile",
+    -- cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       vim.fn["mkdp#util#install"]()
     end,

@@ -472,4 +472,42 @@ return {
       "DevdocsUpdateAll",
     },
   },
+  -- ILLUMINATE
+  {
+    "RRethy/vim-illuminate",
+    event = "LazyFile",
+    opts = {
+      delay = 200,
+      large_file_cutoff = 2000,
+      large_file_overrides = {
+        providers = { "lsp" },
+      },
+    },
+    -- stylua: ignore
+    keys = {
+      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference" },
+      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference" },
+    },
+    config = function()
+      require("illuminate").configure {
+        filetypes_denylist = {
+          "NeogitStatus",
+          "Outline",
+          "TelescopePrompt",
+          "Trouble",
+          "alpha",
+          "dirvish",
+          "fugitive",
+          "gitcommit",
+          "lazy",
+          "neo-tree",
+          "orgagenda",
+          "aerial",
+          "outline",
+          "sagafinder",
+          "qf",
+        },
+      }
+    end,
+  },
 }
