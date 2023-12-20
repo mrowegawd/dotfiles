@@ -410,38 +410,72 @@ return {
       enable_autocmd = false,
     },
   },
-  -- MINI-SURROUND
+  -- NVIM-SURROUND
   {
-    "echasnovski/mini.surround",
-    keys = function(_, keys)
-      -- Populate the keys based on the user's options
-      local plugin = require("lazy.core.config").spec.plugins["mini.surround"]
-      local opts = require("lazy.core.plugin").values(plugin, "opts", false)
-      local mappings = {
-        { opts.mappings.add, desc = "Add surrounding", mode = { "n", "v" } },
-        { opts.mappings.delete, desc = "Delete surrounding" },
-        { opts.mappings.find, desc = "Find right surrounding" },
-        { opts.mappings.find_left, desc = "Find left surrounding" },
-        { opts.mappings.highlight, desc = "Highlight surrounding" },
-        { opts.mappings.replace, desc = "Replace surrounding" },
-        { opts.mappings.update_n_lines, desc = "Update `MiniSurround.config.n_lines`" },
-      }
-      mappings = vim.tbl_filter(function(m)
-        return m[1] and #m[1] > 0
-      end, mappings)
-      return vim.list_extend(mappings, keys)
-    end,
-    opts = {
-      mappings = {
-        add = "gza", -- Add surrounding in Normal and Visual modes
-        delete = "gzd", -- Delete surrounding
-        find = "gzf", -- Find surrounding (to the right)
-        find_left = "gzF", -- Find surrounding (to the left)
-        highlight = "gzh", -- Highlight surrounding
-        replace = "gzc", -- Replace surrounding
-        update_n_lines = "gzn", -- Update `n_lines`
-      },
+    "kylechui/nvim-surround",
+    version = "*",
+    keys = {
+      "ys", -- how to use it: ysiw, ds<brackets>, cs<brackets>
+      "yS",
+      "cs",
+      "ds",
+      { "s", "S", remap = true, mode = { "x" } },
+      { "S", mode = { "x" } },
+      { "gS", mode = { "x" } },
+      { "<C-g>s", mode = { "i" } },
+      { "<C-g>S", mode = { "i" } },
     },
+    config = function()
+      local input = require("nvim-surround.input").get_input
+      require("nvim-surround").setup {
+        -- Configuration here, or leave empty to use defaults
+        aliases = {
+          ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- any delimiter
+          ["b"] = { "{", "[", "(", "<" }, -- bracket
+          ["p"] = { "(" },
+        },
+        surrounds = {
+          ["f"] = {
+            change = {
+              target = "^.-([%w_.]+!?)()%(.-%)()()$",
+              replacement = function()
+                local result = input "Enter the function name: "
+                if result then
+                  return { { result }, { "" } }
+                end
+              end,
+            },
+          },
+          ["g"] = {
+            add = function()
+              local result = require("nvim-surround.config").get_input "Enter the generic name: "
+              if result then
+                return {
+                  { result .. "<" },
+                  { ">" },
+                }
+              end
+            end,
+            find = "[%w_]-<.->",
+            delete = "^([%w_]-<)().-(>)()$",
+          },
+          ["G"] = {
+            add = function()
+              local result = require("nvim-surround.config").get_input "Enter the generic name: "
+              if result then
+                return {
+                  { result .. "<" },
+                  { ">" },
+                }
+              end
+            end,
+            find = "[%w_]-<.->",
+            delete = "^([%w_]-<)().-(>)()$",
+          },
+        },
+        move_cursor = false,
+      }
+    end,
   },
   -- MINI.COMMENT
   {
@@ -512,6 +546,8 @@ return {
   },
   -- NVIM-AUTOPAIRS
   {
+    -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5.
+    -- before we move out to ultimate-autopair
     "windwp/nvim-autopairs",
     enabled = function()
       if require("r.config").lsp_style == "coc" then
@@ -519,7 +555,6 @@ return {
       end
       return true
     end,
-    event = "InsertEnter",
     dependencies = { "hrsh7th/nvim-cmp" },
     opts = {
       close_triple_quotes = true,

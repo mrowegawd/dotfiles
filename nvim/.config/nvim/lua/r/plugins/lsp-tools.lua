@@ -501,6 +501,7 @@ return {
           "gitcommit",
           "lazy",
           "neo-tree",
+          "dashboard",
           "orgagenda",
           "aerial",
           "outline",
