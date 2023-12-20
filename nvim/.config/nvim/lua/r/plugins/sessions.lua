@@ -1,52 +1,31 @@
+local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
+
 return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- RESESSION
+  -- PERSISTENCE
   {
-    "stevearc/resession.nvim",
-    event = "LazyFile",
+    "folke/persistence.nvim",
+    event = "BufReadPre",
+    opts = {
+      opts = { options = vim.opt.sessionoptions:get() },
+      pre_save = function()
+        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
+          if vim.fn.buflisted(bufnr) == 1 then
+            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
+              vim.api.nvim_buf_delete(bufnr, {})
+            end
+          end
+        end
+      end,
+    },
     -- stylua: ignore
     keys = {
-      { "<Leader>sl", function() require("resession").load() end, desc = "Misc(resession): load from the list" },
-      { "<Leader>sd", function() require("resession").delete() end, desc = "Misc(resession): delete" },
-      { "<Leader>ss", function() require("resession").save() end, desc = "Misc(resession): save" },
-      { "<Leader>sr", function() require("resession").load(nil, {reset = false}) end, desc = "Misc(resession): save without reset" },
+      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
+      { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
+      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
     },
-    opts = {
-      autosave = {
-        enabled = true,
-        notify = false,
-      },
-      -- extensions = {
-      --   oil = {},
-      -- },
-    },
-    config = function(_, opts)
-      local resession = require "resession"
-      local aug = vim.api.nvim_create_augroup("StevearcResession", {})
-      resession.setup(opts)
-
-      vim.api.nvim_create_user_command("SessionDetach", function()
-        resession.detach()
-      end, {})
-
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          -- Only load the session if nvim was started with no args
-          if vim.fn.argc(-1) == 0 then
-            -- Save these to a different directory, so our manual sessions don't get polluted
-            resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
-          end
-        end,
-      })
-      vim.api.nvim_create_autocmd("VimLeavePre", {
-        group = aug,
-        callback = function()
-          resession.save "last"
-        end,
-      })
-    end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         PROJECTS                         │
