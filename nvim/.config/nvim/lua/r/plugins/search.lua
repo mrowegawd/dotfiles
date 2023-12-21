@@ -122,6 +122,7 @@ return {
       { "sg", "<CMD>FzfLua blines<CR>", desc = "WinNav(fzfLua): live_grep on curbuf" },
       { "sG", "<CMD>FzfLua lines<CR>", desc = "WinNav(fzflua): live_grep on buffers" },
       { "so", "<CMD>FzfLua oldfiles<CR>", desc = "WinNav(Fzflua): oldfiles" },
+      { "z=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell suggest" },
 
       { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
@@ -132,7 +133,6 @@ return {
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
       { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
-      { "<Leader>f=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell" },
       { "<Leader>fH", [[<CMD>FzfLua search_history reverse_search=true<CR>]], desc = "Fzflua: search-history" },
       {
         "<Leader>fk",
