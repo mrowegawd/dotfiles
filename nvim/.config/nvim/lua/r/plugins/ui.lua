@@ -285,8 +285,8 @@ return {
         highlight = {
           groups = {
             InclineNormal = {
-              guifg = highlight.tint(highlight.get("Boolean", "fg"), 0.5),
-              guibg = highlight.tint(highlight.get("Normal", "bg"), 1),
+              guifg = highlight.tint(highlight.get("Normal", "bg"), -0.5),
+              guibg = highlight.tint(highlight.get("Normal", "fg"), 1),
               gui = "bold",
             },
 

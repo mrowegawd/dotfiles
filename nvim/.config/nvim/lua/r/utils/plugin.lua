@@ -255,9 +255,7 @@ end
 
 function M.change_colors()
   local normal = "Normal"
-  local colorcolumn = "ColorColumn"
   local pmenusel = "PmenuSel"
-  -- local pmenu = "Pmenu"
   local cmpitemabbr = "CmpItemAbbr"
   local cmpmatchabbr = "CmpItemAbbrMatch"
   local fzfluaborder = "FzfLuaBorder"
@@ -289,7 +287,7 @@ function M.change_colors()
     highlight.get(normal, "bg"),
 
     -- fzf selection
-    highlight.get(pmenusel, "fg"),
+    highlight.tint(highlight.get(normal, "fg"), -0.05),
     highlight.get(pmenusel, "bg"),
     highlight.get(cmpmatchabbr, "fg"),
 
