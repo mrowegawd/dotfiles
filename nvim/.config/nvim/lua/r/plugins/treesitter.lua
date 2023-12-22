@@ -123,6 +123,8 @@ return {
 
         "markdown",
         "markdown_inline",
+
+        "vimdoc",
       },
 
       highlight = {
