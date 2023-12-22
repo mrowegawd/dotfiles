@@ -20,7 +20,6 @@ local options = {
     errorbells = false, -- disable error bells (no beep/flash)
     visualbell = false,
 
-    termguicolors = true,
     jumpoptions = "stack", -- ketika <c-i> dan <c-o>, lebih enak jump last cursor daripada window
     cursorline = true,
     inccommand = "split",
