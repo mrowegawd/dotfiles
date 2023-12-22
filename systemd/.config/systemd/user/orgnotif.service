@@ -4,7 +4,7 @@ Description=Notify from Nvim-Org
 [Service]
 Type=oneshot
 Environment=DISPLAY=:0
-ExecStart="/home/mr00x/.local/bin/myorgnotif"
+ExecStart="/home/mr00x/.config/miscxrdb/bin/myorgnotif"
 
 [Install]
 WantedBy=default.target

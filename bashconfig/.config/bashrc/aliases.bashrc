@@ -351,8 +351,8 @@ c_summary() {
 
 # run: fz_ctrlo
 r_fz_ctrlo() {
-	if [[ -f "$HOME/.local/bin/fz-ctrlo" ]]; then
-		"$HOME/.local/bin/fz-ctrlo" callme
+	if [[ -f "$HOME/.config/miscxrdb/bin/fz-ctrlo" ]]; then
+		"$HOME/.config/miscxrdb/bin/fz-ctrlo" callme
 	else
 		echo "hmm..you are in tmux mode?"
 	fi
@@ -434,39 +434,39 @@ r_extract() {
 }
 
 r_vidToGif() {
-  # Usage: r_vidToGif -i vid.mp4 --- -o file.gif
+	# Usage: r_vidToGif -i vid.mp4 --- -o file.gif
 
-  delimiter='---'
+	delimiter='---'
 
-  trap 'exit 2' SIGINT
+	trap 'exit 2' SIGINT
 
-  tmp="$(mktemp -td gifski-video.XXXXXX)"
+	tmp="$(mktemp -td gifski-video.XXXXXX)"
 
-  trap 'rm -rf "$tmp"; exit 1' EXIT
-  trap 'rm -rf "$tmp"; exit 2' INT
+	trap 'rm -rf "$tmp"; exit 1' EXIT
+	trap 'rm -rf "$tmp"; exit 2' INT
 
-  chmod 700 "$tmp"
+	chmod 700 "$tmp"
 
-  ffmpeg_opts=()
-  gifski_opts=()
+	ffmpeg_opts=()
+	gifski_opts=()
 
-  is_delimiter_encountered=0
-  for opt in "$@"; do
-    if [[ "$opt" == "$delimiter" ]]; then
-      is_delimiter_encountered=1
-      continue
-    fi
+	is_delimiter_encountered=0
+	for opt in "$@"; do
+		if [[ "$opt" == "$delimiter" ]]; then
+			is_delimiter_encountered=1
+			continue
+		fi
 
-    if (( ! is_delimiter_encountered )); then
-      ffmpeg_opts+=( "$opt" )
-    else
-      gifski_opts+=( "$opt" )
-    fi
-  done
+		if ((!is_delimiter_encountered)); then
+			ffmpeg_opts+=("$opt")
+		else
+			gifski_opts+=("$opt")
+		fi
+	done
 
-  ffmpeg "${ffmpeg_opts[@]}" -hide_banner "$tmp"/frame%04d.png
-  gifski "${gifski_opts[@]}" "$tmp"/frame*.png
-  echo # gifski doesn't add a newline
+	ffmpeg "${ffmpeg_opts[@]}" -hide_banner "$tmp"/frame%04d.png
+	gifski "${gifski_opts[@]}" "$tmp"/frame*.png
+	echo # gifski doesn't add a newline
 }
 
 # run: run newsboat

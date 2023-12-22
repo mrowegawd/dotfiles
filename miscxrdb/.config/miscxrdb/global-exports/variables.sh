@@ -6,6 +6,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.config/miscxrdb/bin:$PATH"
 
 if command -v nvim &>/dev/null; then
 	export VISUAL="nvim"

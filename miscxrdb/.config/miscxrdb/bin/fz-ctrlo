@@ -96,7 +96,7 @@ open_systemctl_ui() {
 
 	tmux display-popup -d '#{pane_current_path}' -w '80%' -h '90%' -y '80%' \
 		-E -d "#{pane_current_path}" \
-		-E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.local/bin/sysz;'"
+		-E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
 }
 
 #  +----------------------------------------------------------+
@@ -113,7 +113,7 @@ tmux_select_sess() {
 	tmux switch-client -t "$SELECT_SESS"
 }
 tmux_create_sess() {
-	tmux run-shell -b "$HOME/.local/bin/tm"
+	tmux run-shell -b "$HOME/.config/miscxrdb/bin/tm"
 }
 
 #  +----------------------------------------------------------+

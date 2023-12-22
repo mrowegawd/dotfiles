@@ -40,7 +40,7 @@ do_action() {
 			--bind="ctrl-x:execute-silent(tmux kill-pane -t {1})+reload($cmd)" \
 			--bind="ctrl-v:execute(tmux move-pane -h -t $last_pane_cmd -s {1})+accept" \
 			--bind="ctrl-s:execute(tmux move-pane -v -t $last_pane_cmd -s {1})+accept" \
-			--bind="ctrl-o:execute($HOME/.local/bin/fz-ctrlo callme)+accept" \
+			--bind="ctrl-o:execute($HOME/.config/miscxrdb/bin/fz-ctrlo callme)+accept" \
 			--bind="ctrl-t:execute-silent(tmux swap-pane -t $last_pane_cmd -s {1})+reload($cmd)" \
 			--bind="enter:execute(tmux switch-client -t {2})+accept"
 	)
