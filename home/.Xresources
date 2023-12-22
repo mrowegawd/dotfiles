@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/bamboo"
+#include ".config/miscxrdb/xresource-theme/catppuccin"
 
 ! --------------
 ! XFT SETTINGS

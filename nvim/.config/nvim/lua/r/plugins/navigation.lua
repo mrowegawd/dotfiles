@@ -4,6 +4,58 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
+  {
+    "stevearc/oil.nvim",
+    enabled = false,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      {
+        "<Leader>e",
+        function()
+          -- if vim.bo[0].filetype == "neo-tree" then
+          --   return cmd [[q]]
+          -- end
+          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+          -- if vim.bo[0].filetype == "norg" then
+          --   return cmd "Neotree toggle "
+          -- end
+          require("oil").open()
+          -- return cmd "Neotree toggle reveal"
+        end,
+        desc = "Misc(oil): open",
+      },
+    },
+    opts = {
+      default_file_explorer = false,
+      use_default_keymaps = false,
+      delete_to_trash = true,
+      keymaps = {
+        ["?"] = "actions.show_help",
+        ["<CR>"] = "actions.select",
+        ["<C-s>"] = "actions.select_vsplit",
+        ["<C-v>"] = "actions.select_split",
+        ["<C-t>"] = "actions.select_tab",
+        ["<C-p>"] = "actions.preview",
+        ["<C-c>"] = "actions.close",
+        ["<Esc>"] = "actions.close",
+        ["<C-l>"] = "actions.refresh",
+        ["-"] = "actions.parent",
+        ["_"] = "actions.open_cwd",
+        ["`"] = "actions.cd",
+        ["~"] = "actions.tcd",
+        ["gs"] = "actions.change_sort",
+        ["gx"] = "actions.open_external",
+        ["I"] = "actions.toggle_hidden",
+        ["g\\"] = "actions.toggle_trash",
+      },
+    },
+    -- config = function(_, opts)
+    --   local oil = require "oil"
+    --   oil.setup(opts)
+    --   vim.keymap.set("n", "<leader>pv", oil.open, { desc = "Open directory view" })
+    -- end,
+    -- cond = not_vscode,
+  },
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",

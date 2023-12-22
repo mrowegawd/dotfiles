@@ -53,8 +53,18 @@ build-react() {
 }
 
 build-go() {
-  echo "Clone the go development..."
-  echo "not implemented yet..."
+  Green=$(tput setaf 2)        # Green
+  Color_Off=$(tput sgr0)       # Text Reset
+
+  if [[ $1 == "" ]]; then
+    echo "Define your project name:\n Ex: 'build-go <name-project>'"
+  else
+    mkdir -p $1
+    cd $1
+    go mod init $1
+  fi
+
+
 }
 
 run-mark() {

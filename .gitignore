@@ -14,7 +14,7 @@ obsidian*
 
 mpd/.config/mpd/playlist/*
 
-zshconfig/.config/zsh/plugins
+# zshconfig/.config/zsh/plugins
 
 .zcompdump
 .chpwd-recent-dirs

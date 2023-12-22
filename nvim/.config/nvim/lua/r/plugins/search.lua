@@ -1234,14 +1234,11 @@ Keybindings:
   {
     "nvim-pack/nvim-spectre",
     build = false,
-    cmd = "Spectre",
+    cmd = { "Spectre" },
     keys = {
       {
         "<Leader><s-f>",
-        function()
-          Util.tiling.force_win_close({ "toggleterm", "termlist" }, true)
-          return require("spectre").open()
-        end,
+        "<CMD>Spectre<CR>",
         desc = "Misc(spectre): open",
       },
       {
