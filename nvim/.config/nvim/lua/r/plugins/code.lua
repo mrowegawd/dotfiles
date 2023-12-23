@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 local highlight = require "r.config.highlights"
 
 _G.OverseerConfig = {} -- to store error formats

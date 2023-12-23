@@ -22,7 +22,7 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE" } },
     -- { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.2 } } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },
-    { SignColumn = { bg = { from = "ColorColumn" } } },
+    { SignColumn = { bg = "NONE" } },
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     -- { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "NONE" } },
@@ -103,12 +103,13 @@ local general_overrides = function()
     { LspCodeLens = { inherit = "Comment", bold = true, italic = false } },
     { LspCodeLensSeparator = { bold = false, italic = false } },
 
-    -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg" } } },
-    -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg" } } },
+    { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.05 } } },
+    { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.05 } } },
+    { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.05 } } },
 
     -- { LspReferenceText = { bg = "NONE", underline = true, sp = { from = "Comment", attr = "fg" } } },
-    { LspReferenceWrite = { inherit = 'LspReferenceText', bold = true, italic = true, underline = true } },
-    { LspSignatureActiveParameter = { link = "Visual" } },
+    -- { LspReferenceWrite = { inherit = 'LspReferenceText', bold = true, italic = true, underline = true } },
+    -- { LspSignatureActiveParameter = { link = "Visual" } },
 
     { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
 

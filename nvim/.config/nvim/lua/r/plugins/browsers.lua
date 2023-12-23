@@ -4,7 +4,7 @@ return {
     "tyru/open-browser.vim",
     keys = {
       {
-        "<Leader>rb",
+        "<Leader>oo",
         "<Plug>(openbrowser-smart-search)",
         mode = { "n", "v" },
         desc = "Misc: open on browser",

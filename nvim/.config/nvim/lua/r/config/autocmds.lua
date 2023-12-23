@@ -156,62 +156,6 @@ Util.cmd.augroup("TextYankHighlight", {
 })
 
 Util.cmd.augroup("WindowBehaviours", {
-  event = { "CmdwinEnter" }, -- map q to close command window on quit
-  pattern = { "*" },
-  command = "nnoremap <silent><buffer><nowait> q <C-W>c",
-}, {
-  event = { "BufWinEnter" },
-  command = function(args)
-    if vim.wo.diff then
-      vim.diagnostic.disable(args.buf)
-    end
-  end,
-}, {
-  event = { "BufWinLeave" },
-  command = function(args)
-    if vim.wo.diff then
-      vim.diagnostic.enable(args.buf)
-    end
-  end,
-}, {
-  -- 'Jump to last accessed window on closing the current one.',
-  event = { "WinClosed" },
-  command = "if expand('<amatch>') == win_getid() | wincmd p | endif",
-}, {
-  -- Go to last loc when opening a buffer
-  event = { "BufReadPost" },
-  command = function(args)
-    local exclude = { "gitcommit", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage" }
-    local buf = args.buf
-    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
-      return
-    end
-    vim.b[buf].lazyvim_last_loc = true
-    local mark = vim.api.nvim_buf_get_mark(buf, '"')
-    local lcount = vim.api.nvim_buf_line_count(buf)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
-  end,
-}, {
-  event = { "FileType" },
-  pattern = {
-    "orgagenda",
-    "capture",
-    "gitcommit",
-    -- "help",
-    "qf",
-    "NeogitCommitMessage",
-    "NeogitPopup",
-    -- "Trouble",
-  },
-  command = function()
-    cmd "wincmd J"
-    if vim.bo[0].filetype == "NeogitCommitMessage" then
-      cmd [[resize 20]]
-    end
-  end,
-}, {
   event = { "FileType" },
   pattern = { "norg", "org", "orgagenda" },
   command = function()
@@ -228,6 +172,44 @@ Util.cmd.augroup("WindowBehaviours", {
   pattern = { "norg" },
   command = function()
     vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
+  end,
+})
+
+Util.cmd.augroup("LocateLastPosition", {
+  -- Go to last loc when opening a buffer
+  event = { "BufReadPost" },
+  command = function(args)
+    local exclude = { "gitcommit", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage" }
+    local buf = args.buf
+    if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
+      return
+    end
+    vim.b[buf].lazyvim_last_loc = true
+    local mark = vim.api.nvim_buf_get_mark(buf, '"')
+    local lcount = vim.api.nvim_buf_line_count(buf)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end,
+})
+
+Util.cmd.augroup("WindowBehaviours", {
+  event = { "FileType" },
+  pattern = {
+    "orgagenda",
+    "capture",
+    "gitcommit",
+    -- "help",
+    "qf",
+    "NeogitCommitMessage",
+    "NeogitPopup",
+    -- "Trouble",
+  },
+  command = function()
+    cmd "wincmd J"
+    if vim.bo[0].filetype == "NeogitCommitMessage" then
+      cmd [[resize 20]]
+    end
   end,
 })
 
@@ -358,15 +340,6 @@ Util.cmd.augroup("DisableStatusline", {
   pattern = "*",
   command = function()
     cmd [[set laststatus=0]]
-    -- cmd [[set statusline=]]
-    -- local nougat = require "nougat"
-    -- local Bar = require "nougat.bar"
-    -- local stl = Bar "statusline"
-    --
-    -- local stl_inactive = Bar "statusline"
-    -- nougat.set_statusline(function(ctx)
-    --   return ctx.is_focused and stl or stl_inactive
-    -- end)
   end,
 }, {
   event = { "BufRead", "FocusGained" },

@@ -7,7 +7,6 @@ return {
   -- AERIAL
   {
     "stevearc/aerial.nvim",
-    -- enabled = false,
     event = "LazyFile",
     init = function()
       Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -172,12 +171,6 @@ return {
   {
     "hedyhli/outline.nvim",
     enabled = false,
-    -- enabled = function()
-    --   if require("r.config").lsp_style == "coc" then
-    --     return false
-    --   end
-    --   return true
-    -- end,
     cmd = "Outline",
     init = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
@@ -321,15 +314,16 @@ return {
   {
     "glepnir/lspsaga.nvim",
     cmd = "Lspsaga",
-    -- init = function()
-    --   highlight.plugin("LspsagaCustomHi", {
-    --     { SagaBorder = { link = "Directory" } },
-    --     { SagaTitle = { fg = "cyan" } },
-    --     { SagaFileName = { link = "Directory" } },
-    --     { SagaFolderName = { link = "Directory" } },
-    --     -- { SagaNormal = { link = "Pmenu" } },
-    --   })
-    -- end,
+    init = function()
+      highlight.plugin("LspsagaCustomHi", {
+        --     { SagaBorder = { link = "Directory" } },
+        -- { SagaTitle = { bg = "cyan" } },
+        { SagaFileName = { link = "Directory" } },
+        -- { SagaFinderFName = { bg = { from = "@field", attr = "fg" }, fg = { from = "Normal", attr = "bg" } } },
+        --     { SagaFolderName = { link = "Directory" } },
+        --     -- { SagaNormal = { link = "Pmenu" } },
+      })
+    end,
     dependencies = {
       { "nvim-tree/nvim-web-devicons" },
       { "nvim-treesitter/nvim-treesitter" },
@@ -385,7 +379,6 @@ return {
             "<c-l>",
             "<c-h>",
           },
-          close_in_preview = "<ESC>",
         },
       },
       definition = {
@@ -510,5 +503,11 @@ return {
         },
       }
     end,
+  },
+  -- SYMBOL-USAGE
+  {
+    "Wansmer/symbol-usage.nvim",
+    event = "BufReadPre", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    config = true,
   },
 }

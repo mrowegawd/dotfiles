@@ -15,7 +15,8 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "K", "<CMD> Lspsaga hover_doc ++silent<CR>", desc = "LSP(lspsaga): hover" },
+    { "K", "<CMD> Lspsaga hover_doc ++silent<CR>", desc = "LSP(lspsaga): hover", nowait = true  },
+    { "<Leader>K", "<CMD>Lspsaga hover_doc ++keep<CR>", desc = "LSP(lspsaga): hover (keep the window)", nowait = true },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
     { "gd", "<CMD> Lspsaga goto_definition<CR>", desc = "LSP(lspsaga): definitions", has = "definition" },
