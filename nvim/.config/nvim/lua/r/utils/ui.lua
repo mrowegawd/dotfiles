@@ -137,8 +137,8 @@ function M.statuscolumn()
   local is_relnum = vim.wo[win].relativenumber
   if is_num and is_relnum then
     if vim.v.virtnum > 0 then
-      -- components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. vim.opt.showbreak._value
-      components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. "↳ "
+      components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum))))
+      -- components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) -- components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. "↳ "
     else
       components[2] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):(v:virtnum>0?"":v:lnum)} '
     end

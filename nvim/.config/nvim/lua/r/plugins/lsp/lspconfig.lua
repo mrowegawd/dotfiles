@@ -28,7 +28,7 @@ return {
         "delve",
         "golangci-lint",
 
-        -- bash
+        -- bash,sh
         "beautysh",
         "shfmt",
 
@@ -41,6 +41,7 @@ return {
         "cmakelang",
         "cmakelint",
 
+        -- markdown
         "markdownlint",
         "marksman",
 
@@ -193,38 +194,38 @@ return {
             },
           },
         },
-        eslint = {
-          settings = {
-            -- workingDirectory = { mode = "location" },
-            -- workingDirectory = { mode = "auto" },
-            -- onIgnoredFiles = "off",
-            codeAction = {
-              disableRuleComment = {
-                enable = true,
-                location = "separateLine",
-              },
-              showDocumentation = {
-                enable = true,
-              },
-            },
-            codeActionOnSave = {
-              enable = false,
-              mode = "all",
-            },
-            format = true,
-            nodePath = "",
-            onIgnoredFiles = "off",
-            -- packageManager = "npm",
-            quiet = false,
-            rulesCustomizations = {},
-            run = "onType",
-            useESLintClass = false,
-            validate = "on",
-            workingDirectory = {
-              mode = "location",
-            },
-          },
-        },
+        -- eslint = {
+        --   settings = {
+        --     -- workingDirectory = { mode = "location" },
+        --     -- workingDirectory = { mode = "auto" },
+        --     -- onIgnoredFiles = "off",
+        --     codeAction = {
+        --       disableRuleComment = {
+        --         enable = true,
+        --         location = "separateLine",
+        --       },
+        --       showDocumentation = {
+        --         enable = true,
+        --       },
+        --     },
+        --     codeActionOnSave = {
+        --       enable = false,
+        --       mode = "all",
+        --     },
+        --     format = true,
+        --     nodePath = "",
+        --     onIgnoredFiles = "off",
+        --     -- packageManager = "npm",
+        --     quiet = false,
+        --     rulesCustomizations = {},
+        --     run = "onType",
+        --     useESLintClass = false,
+        --     validate = "on",
+        --     workingDirectory = {
+        --       mode = "location",
+        --     },
+        --   },
+        -- },
         pyright = {},
         ruff_lsp = {
           keys = {
@@ -876,7 +877,7 @@ return {
   {
     "iamcco/markdown-preview.nvim",
     event = "LazyFile",
-    -- cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       vim.fn["mkdp#util#install"]()
     end,

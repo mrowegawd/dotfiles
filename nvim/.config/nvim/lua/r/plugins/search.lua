@@ -313,7 +313,7 @@ return {
           winopts = { title = Util.fzflua.format_title("Files", "") },
           -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
           fzf_opts = {
-            ["--header"] = [[Ctrl-g:'grep by directory',Ctrl-h:'toggle hidden']],
+            ["--header"] = [[Ctrl-g:'grep by directory',Ctrl-o:'toggle hidden']],
           },
           fd_opts = [[--color never --type f --hidden --follow ]]
             .. [[--exclude .git --exclude '*.pyc']]
@@ -345,7 +345,7 @@ return {
 
               require("fzf-lua").actions.resume()
             end,
-            ["ctrl-h"] = function(_, args)
+            ["ctrl-o"] = function(_, args)
               if args.cmd:find "--hidden" then
                 args.cmd = args.cmd:gsub("--hidden", "", 1)
                 if args.cmd:find "--no-ignore" then
@@ -836,22 +836,22 @@ Keybindings:
       }
     end,
     config = function(_, opts)
-      -- local function augroup(name, fnc)
-      --   fnc(vim.api.nvim_create_augroup(name, { clear = true }))
-      -- end
+      local function augroup(name, fnc)
+        fnc(vim.api.nvim_create_augroup(name, { clear = true }))
+      end
 
-      -- augroup("FzfluaFixMaps", function(g)
-      --   vim.api.nvim_create_autocmd("FileType", {
-      --     group = g,
-      --     pattern = "fzf",
-      --     callback = function(e)
-      --       vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
-      --       vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
-      --       vim.keymap.set("t", "<C-c>", "<C-c>", { buffer = e.buf, silent = true })
-      --       vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
-      --     end,
-      --   })
-      -- end)
+      augroup("FzfluaFixMaps", function(g)
+        vim.api.nvim_create_autocmd("FileType", {
+          group = g,
+          pattern = "fzf",
+          callback = function(e)
+            -- vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
+            -- vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
+            vim.keymap.set("t", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
+            -- vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
+          end,
+        })
+      end)
       require("fzf-lua").setup(opts)
     end,
   },

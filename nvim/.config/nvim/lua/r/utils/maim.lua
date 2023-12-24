@@ -5,19 +5,10 @@ local M = {}
 local executable = "maim"
 local file_options = "-s"
 
-M.build_dir_img = function(output_path, img_dir_path, img_path)
-  assert(output_path ~= nil, "output_path must be a provided")
-  assert(type(output_path) == "string", "output_path must be a string")
+M.build_dir_img = function(input_png)
+  assert(input_png ~= nil, "output_path must be a provided")
+  assert(type(input_png) == "string", "output_path must be a string")
 
-  local current_buffer = vim.api.nvim_buf_get_name(0)
-  local current_directory = vim.fs.dirname(current_buffer)
-  local fullpath = current_directory .. "/" .. img_dir_path
-  Util.file.create_dir(fullpath) -- will create dir if not exists
-
-  return "./" .. img_path .. "/" .. output_path
-end
-
-M.insert = function()
   local img_dir_path, img_for
   if vim.bo.filetype == "norg" then
     img_dir_path = "img"
@@ -30,6 +21,32 @@ M.insert = function()
     return
   end
 
+  local current_buffer = vim.api.nvim_buf_get_name(0)
+  local current_directory = vim.fs.dirname(current_buffer)
+  local fullpath = current_directory .. "/" .. img_dir_path
+  Util.file.create_dir(fullpath) -- will create dir if not exists
+
+  local locate_img_path = "./" .. img_dir_path .. "/" .. input_png -- neorg
+  fullpath = fullpath .. "/" .. input_png
+  local command = executable .. " " .. file_options .. " " .. fullpath
+  local add_string_img = ".image " .. locate_img_path
+  if img_for == "markdown" then
+    locate_img_path = "./" .. img_dir_path .. "/" .. input_png
+    command = executable .. " " .. file_options .. " " .. fullpath
+    add_string_img = "![" .. input_png .. "](" .. locate_img_path .. ")" -- markdown
+  end
+
+  if Util.file.exists(fullpath) then
+    Util.warn "image name already exists"
+    return
+  end
+
+  vim.fn.systemlist(command)
+
+  return add_string_img
+end
+
+M.insert = function()
   vim.ui.input({
     prompt = "Name Image: ",
   }, function(input)
@@ -40,18 +57,10 @@ M.insert = function()
     input = input:gsub("%s", "_")
     input = input:gsub("%.", "_")
     local input_png = input .. ".png"
-    local command_output = M.build_dir_img(input_png, img_dir_path, img_dir_path)
-
-    local add_string_img = ".image " .. command_output -- neorg
-    if img_for == "markdown" then
-      add_string_img = "![" .. input .. "](" .. command_output .. ")" -- markdown
+    local add_string_img = M.build_dir_img(input_png)
+    if add_string_img then
+      vim.cmd("normal A" .. add_string_img)
     end
-
-    local command = executable .. " " .. file_options .. " " .. command_output
-
-    vim.fn.systemlist(command)
-
-    vim.cmd("normal A" .. add_string_img)
   end)
 end
 

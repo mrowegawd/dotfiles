@@ -13,7 +13,7 @@ local general_overrides = function()
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     -- { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = { from = "Normal", attr = "bg", alter = 0.3} } },
     { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = "NONE" } },
-    { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
+    { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg" }, fg = { from = "Normal", attr = "fg" } } },
     -- { FloatBorder = { bg = "NONE", fg = { from = "ColorColumn", attr ="bg", alter = 0.5 } } },
@@ -26,7 +26,7 @@ local general_overrides = function()
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     -- { WinSeparator = { fg = { from = "ColorColumn", attr = "bg", alter = 0.25 }, bg = { from = "ColorColumn" } } },
     { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "NONE" } },
-    { FloatBorder = { bg = "NONE", fg = { from = "WinSeparator" } } },
+    { FloatBorder = { bg = "NONE", fg = { from = "WinSeparator" , attr = "fg", alter = 0.5 } } },
     { WinBar = { bg = { from = "ColorColumn" } , fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn" }, fg = { from = "WinBar", attr = "fg" } } },
 
@@ -208,7 +208,7 @@ local general_overrides = function()
     { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 } } },
 
     -- NOICE ==============================================================
-    { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
+    { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = "NONE" } },
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
@@ -334,6 +334,11 @@ local function colorscheme_overrides()
 
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
       { CodeBlock1 = { bg = { from = "Normal", alter = -0.25 } } },
+    },
+    ["kanagawa"] = {
+      { GitSignsAdd = { bg = "NONE", fg = { from = "GitGutterAdd" , attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "GitGutterChange" , attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "GitGutterDelete" , attr = "fg" } } },
     },
     ["terafox"] = {},
     ["oxocarbon"] = {

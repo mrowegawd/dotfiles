@@ -711,7 +711,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
-        run_with = "mux", -- mux, tt, toggleterm
+        run_with = "mux", -- tmux, tt, toggleterm
       },
     },
     config = function(_, opts)

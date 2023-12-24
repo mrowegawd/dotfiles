@@ -202,7 +202,7 @@ Util.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffe
 --  │ COMMANDLINE                                              │
 --  ╰──────────────────────────────────────────────────────────╯
 Util.map.cnoremap("jk", "<Esc>", { desc = "Commandline: exit from cmdline" })
-Util.map.cnoremap("<c-c>", "<Esc>", { desc = "Commandline: exit" })
+-- Util.map.cnoremap("<c-c>", "<Esc>", { desc = "Commandline: exit" })
 Util.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
 Util.map.cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last" })
 Util.map.cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist on text" })
@@ -326,6 +326,14 @@ Util.cmd.create_command("InfoOption", function()
   return Util.plugin.infoFoldPreview()
 end, { desc = "Misc: echo options" })
 
+Util.cmd.create_command("ImgInsert", function()
+  return Util.maim.insert()
+end, { desc = "Misc: echo options" })
+
+Util.cmd.create_command("E", function()
+  return vim.cmd [[ vnew ]]
+end, { desc = "Misc: echo options" })
+
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ Improve scroll, credits: https://github.com/Shougo       │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -349,13 +357,14 @@ Util.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { ex
 Util.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
 Util.map.nnoremap("<F1>", function()
+  print "just random map, check <keymaps/general>"
   -- local File = require "orgmode.parser.file"
-  local Files = require "orgmode.parser.files"
-  local Notifications = require "orgmode.notifications"
-  local notifications = Notifications:new()
-
-  local Date = require "orgmode.objects.date"
-  local time = Date.now():start_of "minute"
+  -- local Files = require "orgmode.parser.files"
+  -- local Notifications = require "orgmode.notifications"
+  -- local notifications = Notifications:new()
+  --
+  -- local Date = require "orgmode.objects.date"
+  -- local time = Date.now():start_of "minute"
   -- print(vim.inspect(time))
   -- local tasks = Notifications:get_tasks(time:to_string())
 
@@ -363,17 +372,21 @@ Util.map.nnoremap("<F1>", function()
   -- local tasks = notifications:get_tasks(Date.now():start_of "day")
   -- print(vim.inspect(tasks))
 
-  local config = require "orgmode.config"
-  Files.ensure_loaded()
-  config:extend {
-    notifications = {
-      reminder_time = { 10, 0 },
-      deadline_warning_reminder_time = { 10, 5, 0, -5 },
-      repeater_reminder_time = { 10, 5, 0 },
-    },
-  }
-  local tasks = notifications.get_tasks(time:to_string())
-  print(vim.inspect(tasks))
+  for _, winnr in ipairs(fn.range(1, fn.winnr "$")) do
+    print(fn.getwinvar(winnr, "&syntax") == "qf")
+  end
+
+  -- local config = require "orgmode.config"
+  -- Files.ensure_loaded()
+  -- config:extend {
+  --   notifications = {
+  --     reminder_time = { 10, 0 },
+  --     deadline_warning_reminder_time = { 10, 5, 0, -5 },
+  --     repeater_reminder_time = { 10, 5, 0 },
+  --   },
+  -- }
+  -- local tasks = notifications.get_tasks(time:to_string())
+  -- print(vim.inspect(tasks))
 
   -- for _, orgfile in ipairs(Files.all()) do
   --   -- print(file.filename)

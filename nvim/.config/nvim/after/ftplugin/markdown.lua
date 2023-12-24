@@ -18,4 +18,5 @@ local keymap = vim.keymap
 -- end
 
 keymap.set("n", "rf", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true })
+keymap.set("n", "ri", "<CMD>ImgInsert<CR>", { buffer = true })
 -- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]

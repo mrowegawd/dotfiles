@@ -33,13 +33,8 @@ return {
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
+    enabled = false,
     cmd = "ConformInfo",
-    enabled = function()
-      if require("r.config").lsp_style == "coc" then
-        return false
-      end
-      return true
-    end,
     keys = {
       {
         "<leader>cF",

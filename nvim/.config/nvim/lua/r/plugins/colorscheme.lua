@@ -1,6 +1,18 @@
 local colorscheme = require("r.config").colorscheme
 
 return {
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local kanagawatheme = { "kanagawa" }
+      if vim.tbl_contains(kanagawatheme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- SELENIZED
   {
     "calind/selenized.nvim",

@@ -74,7 +74,7 @@ return {
 	--  ┌╌╌╌╌╌╌╌┐
 	--  ╎ Fonts ╎
 	--  └╌╌╌╌╌╌╌┘
-	font_size = 12,
+	font_size = 11.5,
 	font_rules = {
 		{
 			italic = false,

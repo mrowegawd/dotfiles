@@ -1,4 +1,4 @@
-local api, cmd = vim.api, vim.cmd
+local api, cmd, fn = vim.api, vim.cmd, vim.fn
 
 local Util = require "r.utils"
 
@@ -26,26 +26,38 @@ local function foldClosed(winid, lnum)
   end)
 end
 
+local function qf_is_opened()
+  local qf_opened = false
+  for _, winnr in ipairs(fn.range(1, fn.winnr "$")) do
+    if fn.getwinvar(winnr, "&syntax") == "qf" then
+      qf_opened = true
+    end
+  end
+  return qf_opened
+end
+
 function M.goPreviousClosedFold()
   if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
     return Util.cmd.feedkey("<c-p>", "n")
   end
 
-  if vim.bo[0].filetype == "qf" then
-    vim.cmd [[
+  if qf_is_opened() then
+    if vim.bo[0].filetype ~= "qf" then
+      vim.cmd [[
         try
             execute  "cprev"
             execute "normal! zz"
         catch /^Vim\%((\a\+)\)\=:E553/
-            execute "wincmd p"
+            " execute "wincmd p"
             " execute "echo 'stop it'"
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
         endtry
             ]]
-    -- else
-    -- I got lazy convert this logic into lua, so I stole it yehahaa
-    -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
-    return vim.cmd "wincmd p"
+    else
+      -- I got lazy convert this logic into lua, so I stole it yehahaa
+      -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
+      return vim.cmd "wincmd p"
+    end
   end
 
   local count = vim.v.count1
@@ -75,17 +87,20 @@ function M.goNextClosedFold()
     return Util.cmd.feedkey("<c-n>", "n")
   end
 
-  if vim.bo[0].filetype == "qf" then
-    vim.cmd [[
+  if qf_is_opened() then
+    if vim.bo[0].filetype ~= "qf" then
+      vim.cmd [[
         try
             execute "cnext"
             execute "normal! zz"
         catch /^Vim\%((\a\+)\)\=:E553/
-            execute "wincmd p"
+            " execute "wincmd p"
         catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
         endtry
             ]]
-    return vim.cmd "wincmd p"
+    else
+      return vim.cmd "wincmd p"
+    end
   end
 
   local count = vim.v.count1

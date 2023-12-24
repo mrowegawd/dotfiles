@@ -31,6 +31,12 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note(neorg): open toc right(curbuf)",
       },
+      ["ri"] = {
+        function()
+          return Util.maim.insert()
+        end,
+        "Note(neorg): insert image",
+      },
       ["rf"] = {
         function()
           local Job = require "plenary.job"

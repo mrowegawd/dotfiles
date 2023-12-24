@@ -2,13 +2,90 @@ local Util = require "r.utils"
 
 return {
   {
-    "mfussenegger/nvim-lint",
-    enabled = function()
-      if require("r.config").lsp_style == "coc" then
-        return false
-      end
-      return true
+    dir = "~/.local/src/nvim_plugins/null-ls-embedded",
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    event = "LazyFile",
+    dependencies = { "mason.nvim" },
+    init = function()
+      Util.on_very_lazy(function()
+        require("r.utils").format.register {
+          name = "none-ls.nvim",
+          priority = 200, -- set higher than conform, the builtin formatter
+          primary = true,
+          format = function(buf)
+            return Util.lsp.format {
+              bufnr = buf,
+              filter = function(client)
+                return client.name == "null-ls"
+              end,
+            }
+          end,
+          sources = function(buf)
+            local ret = require("null-ls.sources").get_available(vim.bo[buf].filetype, "NULL_LS_FORMATTING") or {}
+            return vim.tbl_map(function(source)
+              return source.name
+            end, ret)
+          end,
+        }
+      end)
     end,
+    opts = function(_, opts)
+      local nls = require "null-ls"
+      opts.root_dir = opts.root_dir
+        or require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
+      opts.sources = vim.list_extend(opts.sources or {}, {
+
+        -- lua
+        nls.builtins.formatting.stylua,
+
+        -- go
+        nls.builtins.formatting.gofumpt,
+        nls.builtins.formatting.goimports,
+        nls.builtins.diagnostics.golangci_lint,
+        nls.builtins.code_actions.gomodifytags,
+        nls.builtins.code_actions.impl,
+
+        nls.builtins.diagnostics.markdownlint,
+
+        -- sh
+        nls.builtins.formatting.shfmt,
+
+        -- ts,js,react
+        nls.builtins.formatting.prettierd,
+        nls.builtins.diagnostics.eslint_d,
+        nls.builtins.code_actions.eslint_d,
+
+        -- docker
+        nls.builtins.diagnostics.hadolint,
+
+        -- ansible
+        nls.builtins.diagnostics.ansiblelint,
+
+        -- cmake
+        nls.builtins.diagnostics.cmake_lint,
+
+        nls.builtins.diagnostics.trail_space.with {
+          filetypes = { "org", "norg", "text" },
+        },
+        nls.builtins.formatting.trim_newlines.with {
+          filetypes = { "org", "norg", "text" },
+        },
+        nls.builtins.formatting.trim_whitespace.with {
+          filetypes = { "org", "norg", "text" },
+        },
+
+        require("null-ls-embedded").nls_source.with {
+          filetypes = { "markdown", "html", "vue", "lua", "org", "norg" },
+        },
+      })
+    end,
+  },
+  -- NVIM-LINT
+  {
+    "mfussenegger/nvim-lint",
+    enabled = false,
     event = "LazyFile",
     opts = {
       -- Event to trigger linters
