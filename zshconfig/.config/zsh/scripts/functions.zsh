@@ -37,6 +37,9 @@ build-install(){
 
   # TODO: install gifski https://github.com/sindresorhus/Gifski
   # cargo install gifski
+  
+  # TODO: install lazydocker https://github.com/jesseduffield/lazydocker#
+  # go install github.com/jesseduffield/lazydocker@latest 
 }
 
 build-react() {
@@ -119,23 +122,61 @@ find-in-file() {
 zle -N find-in-file
 bindkey '^g' find-in-file
 
+# CREDIT: taken from https://github.com/kevinhwang91/dotfiles/blob/main/zsh/lplug/fzf/fzf-completion-widget
+_fps() {
+  ps -eo user,pid,ppid,pgid,stat,command | awk '
+    BEGIN { "ps -p $$ -o pgid= | tr -d \"[:blank:]\"" | getline pgid } {
+  if ($4 != pgid || $2 == pgid) print }' |
+  grcat fps.grc | fzf --header-lines=1 -m \
+    ${commands[grcat]:+--ansi} --height=60% \
+    --min-height=15 --tac --reverse \
+    --preview-window=down:2,border-top |
+  awk -v sep=${myflag:- } '{ printf "%s%c", $2, sep }' |
+  sed -E "s/${myflag:- }$//"
+}
+
+_t_expand_alias_f() {
+  # echo $functions
+  if (( $+functions[_t_expand_alias] )); then
+    print ${functions[_t_expand_alias]#$'\t'}
+    unset -f _t_expand_alias
+  else
+    print $@
+  fi
+}
+
 show_alias() {
   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
 
   local select
-	local alias_selected=$(
-		awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-			column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc |
-			fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
-	)
+  local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
 
-	if [[ ! -n $alias_selected ]]; then
-    return
-  else
-	  select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
+  # check jika first command diawali dengan string `doc_ ..`
+  local sub="doc_"
+ 
+  if [[ $myargs[-1] == "-p" ]]; then
+    select=$(myflag="," _fps)
+
+  # TODO: buatkan untuk juga untuk container, images, volume
+  elif [[ $myargs[-1] == *"$sub"* ]]; then
+    local id="$(docker ps --format '{{.ID}} {{.Image}} ({{.Command}})' | fzf | awk '{print $1}')"
+    dunstify "$id"
+    dunstify "hanya testing, not implemented yet"
+  elif [[ $myargs[-1] == "" ]]; then
+    local alias_selected=$(
+    awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
+      column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc |
+      fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
+    )
+
+    if [[ ! -n $alias_selected ]]; then
+      return
+    else
+      select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
+    fi
   fi
 
-  LBUFFER="${LBUFFER}$select "
+  [[ -n $select ]] && LBUFFER="${LBUFFER}$select "
   zle reset-prompt
 }
 

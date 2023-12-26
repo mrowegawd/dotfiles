@@ -316,12 +316,12 @@ return {
     cmd = "Lspsaga",
     init = function()
       highlight.plugin("LspsagaCustomHi", {
-        --     { SagaBorder = { link = "Directory" } },
-        -- { SagaTitle = { bg = "cyan" } },
+        -- { SagaBorder = { link = "NormalFloat" } },
+        { SagaTitle = { bg = "red" } },
         { SagaFileName = { link = "Directory" } },
         -- { SagaFinderFName = { bg = { from = "@field", attr = "fg" }, fg = { from = "Normal", attr = "bg" } } },
-        --     { SagaFolderName = { link = "Directory" } },
-        --     -- { SagaNormal = { link = "Pmenu" } },
+        -- { SagaFolderName = { link = "Directory" } },
+        -- { SagaNormal = { link = "Pmenu" } },
       })
     end,
     dependencies = {

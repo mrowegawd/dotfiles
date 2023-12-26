@@ -2,6 +2,8 @@ local function buf_is_large(_, buf)
   return vim.b[buf].buf_is_large == true
 end
 
+--  TODO: Check this queries https://github.com/helix-editor/helix/blob/d5e6749fa250f3a7be75c81c7b0611e3c3221d63/runtime/queries/php/highlights.scm
+--  make more readable
 return {
   -- TREESITTER
   {

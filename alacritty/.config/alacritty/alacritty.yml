@@ -398,35 +398,45 @@ key_bindings:
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# Colors (Darcula)
 colors:
-  # Default colors
   primary:
-    background: '0x232326'
-    foreground: '0x96999e'
+    background: "#1f1f1f"
+    foreground: "#cccccc"
 
   cursor:
-    text: '0x21222c'
-    cursor: '0xe32816'
+    text: "#1f1f1f"
+    cursor: "#cccccc"
 
-  # Normal colors
+  selection:
+      text: "#cccccc"
+      background: "#264f78"
+
+  search:
+    matches:
+      foreground: "#cccccc"
+      background: "#1f1f1f"
+    focused_match:
+      foreground: "#cccccc"
+      background: "#613214"
+
   normal:
-    black:   '0x232326'
-    red:     '0xff5555'
-    green:   '0x50fa7b'
-    yellow:  '0xf1fa8c'
-    blue:    '0xcaa9fa'
-    magenta: '0xff79c6'
-    cyan:    '0x8be9fd'
-    white:   '0xbfbfbf'
+    black:   "#000000"
+    red:     "#cd3131"
+    green:   "#0dbc79"
+    yellow:  "#e5e510"
+    blue:    "#2472c8"
+    magenta: "#bc3fbc"
+    cyan:    "#11a8cd"
+    white:   "#e5e5e5"
 
-  # Bright colors
   bright:
-    black:   '0x282a35'
-    red:     '0xff6e67'
-    green:   '0x5af78e'
-    yellow:  '0xf4f99d'
-    blue:    '0xcaa9fa'
-    magenta: '0xff92d0'
-    cyan:    '0x9aedfe'
-    white:   '0xe6e6e6'
+    black:   "#666666"
+    red:     "#f14c4c"
+    green:   "#23d18b"
+    yellow:  "#f5f543"
+    blue:    "#3b8eea"
+    magenta: "#d670d6"
+    cyan:    "#29b8db"
+    white:   "#e5e5e5"
+
+

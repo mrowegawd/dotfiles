@@ -267,7 +267,7 @@ return {
 
       local border_opts = {
         border = require("r.config").icons.border.line,
-        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
       }
 
       opts.mapping = cmp_mappings

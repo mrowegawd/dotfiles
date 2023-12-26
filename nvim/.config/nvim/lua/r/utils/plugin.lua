@@ -255,6 +255,7 @@ end
 
 function M.change_colors()
   local normal = "Normal"
+  local normalfloat = "NormalFloat"
   local pmenusel = "PmenuSel"
   local cmpitemabbr = "CmpItemAbbr"
   local cmpmatchabbr = "CmpItemAbbrMatch"
@@ -284,7 +285,7 @@ function M.change_colors()
   tmux_border_fg: %s
   ]],
     highlight.tint(highlight.get(normal, "fg"), -0.05),
-    highlight.get(normal, "bg"),
+    highlight.get(normalfloat, "bg"),
 
     -- fzf selection
     highlight.tint(highlight.get(normal, "fg"), -0.05),
@@ -292,7 +293,7 @@ function M.change_colors()
     highlight.get(cmpmatchabbr, "fg"),
 
     -- fzf non selection
-    highlight.get(normal, "bg"),
+    highlight.get(normalfloat, "bg"),
     highlight.get(cmpitemabbr, "fg"),
     highlight.get(cmpmatchabbrFuzzy, "fg"),
 
