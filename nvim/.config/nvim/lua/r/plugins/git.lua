@@ -205,8 +205,8 @@ return {
       signs = {
         add = { text = "▎", numhl = "GitSignsAddNr" },
         change = { text = "▎", numhl = "GitSignsChangeNr" },
-        delete = { text = "▎", numhl = "GitSignsDeleteNr" },
-        topdelete = { text = "▎", numhl = "GitSignsDeleteNr" },
+        delete = { text = "_", numhl = "GitSignsDeleteNr" },
+        topdelete = { text = "‾", numhl = "GitSignsDeleteNr" },
         changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
         untracked = { text = "▎" },
       },

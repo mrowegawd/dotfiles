@@ -174,23 +174,26 @@ local general_overrides = function()
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 
     -- TELESCOPE ==========================================================
-    -- { TelescopeNormal = { fg = { from = "CmpItemAbbr", attr = "fg" }, bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-    -- { TelescopeBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1  } } },
+    { TelescopeNormal = { link = "NormalFloat" } },
+    { TelescopeBorder = { link = "NormalFloat" } },
 
     -- Prompt
-    { TelescopePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+    { TelescopePromptNormal = { link = "NormalFloat" } },
+    { TelescopePromptTitle = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
     { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-    { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
-    { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
+    { TelescopePromptPrefix = { bg = { from = "NormalFloat", attr = "bg" } } },
+    { TelescopePromptCounter = { bg = { from = "NormalFloat", attr = "bg" } } },
 
     -- Preview
-    { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
-    { TelescopePreviewBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+    { TelescopePreviewNormal = { link = "NormalFloat" } },
+    { TelescopePreviewTitle = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
+    { TelescopePreviewBorder = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "FloatBorder" } } },
     { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
     { TelescopeSelection = { inherit = "PmenuSel" } },
     { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
 
     -- Results
+    { TelescopeResultsNormal = { link = "NormalFloat" } },
     { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
     { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
 

@@ -156,6 +156,14 @@ show_alias() {
  
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)
+  elif [[ $myargs[-1] == "git" ]]; then
+    local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
+    if [[ ! -n $alias_sel ]]; then
+      return
+    fi
+
+    LBUFFER="git $alias_sel "
+    zle reset-prompt
 
   # TODO: buatkan untuk juga untuk container, images, volume
   elif [[ $myargs[-1] == *"$sub"* ]]; then
@@ -184,18 +192,18 @@ zle -N show_alias
 bindkey '^o' show_alias
 
 
-show_alias_git() {
-  setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
-
-  local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
-
-  if [[ ! -n $alias_sel ]]; then
-    return
-  fi
-
-  LBUFFER="${LBUFFER}git $alias_sel "
-  zle reset-prompt
-}
-
-zle -N show_alias_git
-bindkey '^q' show_alias_git
+# show_alias_git() {
+#   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
+#
+#   local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
+#
+#   if [[ ! -n $alias_sel ]]; then
+#     return
+#   fi
+#
+#   LBUFFER="${LBUFFER}git $alias_sel "
+#   zle reset-prompt
+# }
+#
+# zle -N show_alias_git
+# bindkey '^q' show_alias_git
