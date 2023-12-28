@@ -165,10 +165,23 @@ local defaults = {
       -- Question = " ",
       Info     = " ",
     },
+    documents = {
+      file = "",
+      files = "",
+      folder = "",
+      openfolder = "",
+      emptyfolder = "",
+      emptyopenfolder = "",
+      unknown = "",
+      symlink = "",
+      foldersymlink = ""
+    },
     git = {
       added    = " ",
       modified = " ",
       removed  = " ",
+      untrack = " ",
+      unmerged = " ",
 
       add      = " ", -- '',
       mod      = " ",

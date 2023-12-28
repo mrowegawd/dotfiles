@@ -491,6 +491,7 @@ return {
           "alpha",
           "dirvish",
           "fugitive",
+          "NvimTree",
           "gitcommit",
           "lazy",
           "neo-tree",
