@@ -65,7 +65,7 @@ return {
       enable_builtin = true,
       picker_config = {
         mappings = {
-          open_in_browser = { lhs = "<C-b>", desc = "open issue in browser" },
+          -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
           goto_file = { lhs = "<CR>", desc = "kampang" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
@@ -78,7 +78,7 @@ return {
           reopen_issue = { lhs = "<space>io", desc = "reopen issue" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload issue" },
-          open_in_browser = { lhs = "<leader>gO", desc = "open issue in browser" },
+          open_in_browser = { lhs = "<leader>go", desc = "open issue in browser" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
           remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
@@ -112,7 +112,7 @@ return {
           reopen_issue = { lhs = "<space>io", desc = "reopen PR" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload PR" },
-          open_in_browser = { lhs = "<Leader>gO", desc = "open PR in browser" },
+          open_in_browser = { lhs = "<Leader>go", desc = "open PR in browser" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           goto_file = { lhs = "gf", desc = "go to file" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
