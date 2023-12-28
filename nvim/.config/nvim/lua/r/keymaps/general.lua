@@ -201,7 +201,7 @@ Util.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffe
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │
 --  ╰──────────────────────────────────────────────────────────╯
-Util.map.cnoremap("jk", "<Esc>", { desc = "Commandline: exit from cmdline" })
+-- Util.map.cnoremap("jk", "<Esc>", { desc = "Commandline: exit from cmdline" })
 -- Util.map.cnoremap("<c-c>", "<Esc>", { desc = "Commandline: exit" })
 Util.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
 Util.map.cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last" })
