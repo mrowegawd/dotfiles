@@ -8,6 +8,7 @@ return {
   -- NVIM-TREE
   {
     "nvim-tree/nvim-tree.lua",
+    enabled = false,
     cmd = { "NvimTreeToggle", "NvimTreeClose", "NvimTreeFindFileToggle" },
     -- init = function()
     --   Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
@@ -66,8 +67,13 @@ return {
 
     config = function()
       -- disable netrw at the very start of your init.lua (strongly advised)
-      vim.g.loaded_netrw = 1
-      vim.g.loaded_netrwPlugin = 1
+      -- vim.g.loaded_netrw = 0
+      -- vim.g.loaded_netrwPlugin = 0
+      -- vim.g.loaded_netrw = 0
+      -- vim.g.loaded_netrwPlugin = 0
+
+      vim.g.loaded_netrw = 0
+      vim.g.loaded_netrwPlugin = 0
 
       local function on_attach(bufnr)
         local api = require "nvim-tree.api"
@@ -110,7 +116,7 @@ return {
         vim.keymap.set("n", "H", api.tree.toggle_hidden_filter, opts "Toggle Dotfiles")
         vim.keymap.set("n", "I", api.tree.toggle_gitignore_filter, opts "Toggle Git Ignore")
         vim.keymap.set("n", "J", api.node.navigate.sibling.last, opts "Last Sibling")
-        vim.keymap.set("n", "K", api.node.navigate.sibling.first, opts "First Sibling")
+        -- vim.keymap.set("n", "K", api.node.navigate.sibling.first, opts "First Sibling")
         vim.keymap.set("n", "m", api.marks.toggle, opts "Toggle Bookmark")
         vim.keymap.set("n", "o", api.node.open.edit, opts "Open")
         vim.keymap.set("n", "O", api.node.open.no_window_picker, opts "Open: No Window Picker")
@@ -196,7 +202,7 @@ return {
         },
         filters = {
           custom = {
-            -- ".git", -- folder learning/git tidak kebaca kalau tidak di commented
+            -- ".git", -- folder wiki pada learning/git tidak terbaca kalau tidak di commented
             "node_modules",
             ".cache",
             "__pycache__",
@@ -205,7 +211,7 @@ return {
       }
     end,
   },
-  -- OIL
+  -- OIL (disabled)
   {
     "stevearc/oil.nvim",
     enabled = false,
@@ -261,7 +267,7 @@ return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    enabled = false,
+    -- enabled = false,
     cmd = "Neotree",
     init = function()
       Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
@@ -270,14 +276,24 @@ return {
       {
         "<Leader>e",
         function()
-          if vim.bo[0].filetype == "neo-tree" then
-            return cmd [[q]]
+          local neotree_opened = false
+          for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+            if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
+              neotree_opened = true
+            end
           end
-          Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-          if vim.bo[0].filetype == "norg" then
-            return cmd "Neotree toggle "
+
+          if neotree_opened then
+            if vim.bo[0].filetype == "neo-tree" then
+              return vim.cmd [[q]]
+            end
+            return cmd "Neotree reveal"
+          else
+            if vim.bo[0].filetype == "neo-tree" then
+              return vim.cmd [[q]]
+            end
+            return cmd "Neotree"
           end
-          return cmd "Neotree toggle reveal"
         end,
         desc = "Misc(neotree): open File explore",
       },

@@ -5,17 +5,23 @@ return {
   -- TOGGLETERM
   {
     "akinsho/nvim-toggleterm.lua",
-    opts = {
-      size = 20,
-      hide_numbers = true,
-      shade_filetypes = {},
-      shade_terminals = false,
-      shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
-      start_in_insert = true,
-      persist_size = true,
-      open_mapping = [[<a-f>]],
-      direction = "horizontal",
-    },
+    opts = function()
+      local function win_height_term()
+        local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.5)
+        return win_height - 4
+      end
+      return {
+        size = win_height_term,
+        hide_numbers = true,
+        shade_filetypes = {},
+        shade_terminals = false,
+        shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
+        start_in_insert = true,
+        persist_size = true,
+        open_mapping = [[<a-f>]],
+        direction = "horizontal",
+      }
+    end,
     cmd = { "ToggleTerm", "TermExec" },
     keys = function()
       local Terminal = require("toggleterm.terminal").Terminal
@@ -25,8 +31,15 @@ return {
         direction = "float",
         float_opts = { width = vim.o.columns, height = vim.o.lines },
       }
+      local lazydocker = Terminal:new {
+        cmd = "lazydocker",
+        hidden = true,
+        direction = "float",
+        float_opts = { width = vim.o.columns, height = vim.o.lines },
+      }
+
       local lrfun = Terminal:new { cmd = "lfrun", hidden = true, direction = "float" }
-      local taskwarrior = Terminal:new { cmd = "taskwarrior-tui", hidden = true, direction = "float" }
+      -- local taskwarrior = Terminal:new { cmd = "taskwarrior-tui", hidden = true, direction = "float" }
 
       -- Check and close the toggleterm
       local function close_term()
@@ -76,6 +89,14 @@ return {
 
       return {
         { "<a-f>", mode = { "n", "v", "t", "i" } },
+        -- {
+        --   "<F5>",
+        --   function()
+        --     taskwarrior:toggle()
+        --   end,
+        --   mode = { "n", "v", "t" },
+        --   desc = "Terminal(toggleterm): taskwarrior",
+        -- },
         {
           "<F7>",
           function()
@@ -93,12 +114,12 @@ return {
           desc = "Terminal(toggleterm): lazygit",
         },
         {
-          "<F5>",
+          "<F9>",
           function()
-            taskwarrior:toggle()
+            lazydocker:toggle()
           end,
           mode = { "n", "v", "t" },
-          desc = "Terminal(toggleterm): taskwarrior",
+          desc = "Terminal(toggleterm): lazydocker",
         },
         {
           "<C-PageUp>",

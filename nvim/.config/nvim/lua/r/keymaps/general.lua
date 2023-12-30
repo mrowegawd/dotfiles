@@ -13,8 +13,6 @@ local Util = require "r.utils"
 -- NOTE: this is a recursive mapping so anything bound (by a plugin) to <esc> still works
 Util.map.imap("jk", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 Util.map.imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
--- Util.map.imap("hh", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
--- Util.map.imap("hh", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 
 Util.map.inoremap("<c-a>", "<c-O>^", silent)
 Util.map.inoremap("<c-e>", "<c-O>$", silent)
@@ -142,6 +140,12 @@ Util.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: pre
 Util.map.nnoremap("k", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'k' : 'gk']], { expr = true })
 Util.map.nnoremap("j", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'j' : 'gj']], { expr = true })
 
+Util.map.nnoremap("<Leader>P", function()
+  local cwd = vim.fn.expand "%:p:h"
+  local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
+  print(cwd .. "/" .. fname)
+end)
+
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS AND NAV                                          │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -244,13 +248,13 @@ Util.map.cabbrev("Bd", "bd!")
 Util.map.cabbrev("Q!!", "q!")
 Util.map.cabbrev("Q!", "q!")
 Util.map.cabbrev("Q", "q")
-Util.map.cabbrev("Q1", "q!")
+-- Util.map.cabbrev("Q1", "q!")
 Util.map.cabbrev("Qal", "qal!")
 Util.map.cabbrev("Ql", "qal!")
 Util.map.cabbrev("Qla", "qal!")
 Util.map.cabbrev("W!", "update!")
 Util.map.cabbrev("W", "update!")
-Util.map.cabbrev("W1", "update!")
+-- Util.map.cabbrev("W1", "update!")
 Util.map.cabbrev("W;", "update!")
 Util.map.cabbrev("WQ", "up")
 Util.map.cabbrev("Wq", "wq")
@@ -259,7 +263,7 @@ Util.map.cabbrev("bd", "bd!")
 Util.map.cabbrev("q!!", "q!")
 Util.map.cabbrev("ql", "q!")
 Util.map.cabbrev("qla", "qal!")
-Util.map.cabbrev("w1", "w")
+-- Util.map.cabbrev("w1", "w")
 Util.map.cabbrev("w;", "update!")
 
 -- I don't need help to show when I type <F1>.

@@ -170,14 +170,14 @@ set_terminal() {
 		dunstify "theme kitty [-]"
 	fi
 
-	# ALACRITTY
-	if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
-		cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.yml"
-		cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.yml"
-		dunstify "theme alacritty [+]"
-	else
-		dunstify "theme alacritty [-]"
-	fi
+	# # ALACRITTY
+	# if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
+	# 	cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.yml"
+	# 	cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.yml"
+	# 	dunstify "theme alacritty [+]"
+	# else
+	# 	dunstify "theme alacritty [-]"
+	# fi
 
 }
 wm_bspwm() {

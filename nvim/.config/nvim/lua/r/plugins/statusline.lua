@@ -172,7 +172,7 @@ return {
         },
       })
       stl:add_item(nut.spacer())
-      local lsp_notify = stl:add_item {
+      stl:add_item {
         hidden = function()
           return vim.fn.winwidth(0) < 120
         end,
@@ -327,12 +327,25 @@ return {
 
       local stl_inactive = Bar "statusline"
       stl_inactive:add_item(mode)
+      stl_inactive:add_item(nut.spacer())
+
+      -- stl_inactive:add_item {
+      --   content = function()
+      --     local filename = vim.fn.expand "%:p:t"
+      --     if #filename > 0 then
+      --       return "/" .. filename
+      --     end
+      --   end,
+      --   hl = { fg = color.base_fg_2, bold = true, bg = color.base_bg_3 },
+      --   suffix = " ",
+      -- }
+
       -- stl_inactive:add_item(filename)
       -- stl_inactive:add_item(filename2)
       -- stl_inactive:add_item(filename3)
       -- stl_inactive:add_item(filestatus)
       -- stl_inactive:add_item(nut.spacer())
-      stl_inactive:add_item(lsp_notify)
+      -- stl_inactive:add_item(lsp_notify)
 
       nougat.set_statusline(function(ctx)
         return ctx.is_focused and stl or stl_inactive

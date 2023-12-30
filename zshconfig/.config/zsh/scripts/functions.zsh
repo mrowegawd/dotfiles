@@ -93,7 +93,7 @@ run-mark() {
 }
 
 zle -N run-mark
-bindkey '^j' run-mark
+bindkey '^v' run-mark
 
 function fg-bg(){
   if [[ $#BUFFER -eq 0 ]]; then
@@ -152,7 +152,8 @@ show_alias() {
   local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
 
   # check jika first command diawali dengan string `doc_ ..`
-  local sub="doc_"
+  local doc_con="doc_con"
+  local doc_im="doc_im"
  
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)
@@ -166,10 +167,20 @@ show_alias() {
     zle reset-prompt
 
   # TODO: buatkan untuk juga untuk container, images, volume
-  elif [[ $myargs[-1] == *"$sub"* ]]; then
-    local id="$(docker ps --format '{{.ID}} {{.Image}} ({{.Command}})' | fzf | awk '{print $1}')"
-    dunstify "$id"
-    dunstify "hanya testing, not implemented yet"
+  elif [[ $myargs[-1] == *"$doc_con"* ]]; then
+    #
+    # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
+    #
+    FZF_DOCKER_PS_START_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
+    FZF_DOCKER_PS_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}"
+    select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" | fzf --multi --header-lines=1 | awk '{print $1}' )
+
+  elif [[ $myargs[-1] == *"$doc_im"* ]]; then
+    #
+    # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
+    #
+    select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" | fzf --multi --header-lines=1 | awk '{print $1}' )
+
   elif [[ $myargs[-1] == "" ]]; then
     local alias_selected=$(
     awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |

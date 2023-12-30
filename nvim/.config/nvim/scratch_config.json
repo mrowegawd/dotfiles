@@ -1,6 +1,4 @@
 {
-  "filetypes": ["xml", "go", "lua", "js", "py", "sh"],
-  "scratch_file_dir": "/home/mr00x/.cache/nvim/scratch.nvim",
   "filetype_details": {
     "go": {
       "filename": "main",
@@ -25,6 +23,24 @@
         "🗨:",
         ""
       ]
+    },
+    "yaml": [],
+    "k8s.yaml": { "subdir": "learn-k8s" }
+  },
+  "use_telescope": true,
+  "filetypes": ["xml", "go", "lua", "js", "py", "sh"],
+  "localKeys": [
+    {
+      "filenameContains": ["gp"],
+      "LocalKeys": [
+        {
+          "cmd": "<CMD>GpResponse<CR>",
+          "modes": ["n", "i", "v"],
+          "key": "<C-k>k"
+        }
+      ]
     }
-  }
+  ],
+  "scratch_file_dir": "/home/mr00x/.cache/nvim/scratch.nvim",
+  "window_cmd": "edit"
 }

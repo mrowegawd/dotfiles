@@ -35,7 +35,7 @@ opt.encoding = "utf-8"
 opt.conceallevel = 2
 opt.infercase = true -- Infer cases in keyword completion
 opt.concealcursor = "nc"
-opt.guifont = "Fira Code:h7.5"
+opt.guifont = "JetBrains Mono:h11"
 opt.pumheight = 15
 opt.helpheight = 12
 opt.previewheight = 12
@@ -142,6 +142,7 @@ opt.fillchars = {
   diff = "⣿", -- alternatives = ⣿ ░ ╱
   msgsep = " ", -- alternatives: ‾ ─
   fold = " ",
+  vert = "┃",
   foldopen = "", -- '▼'
   foldclose = "", -- '▶'
   foldsep = " ",
@@ -298,3 +299,9 @@ vim.g.loaded_python3_provider = 0
 
 package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
 package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
+
+-- vim.g.nvim_tree_disable_netrw = 0
+-- vim.g.nvim_tree_hijack_netrw = 0
+-- -- disable netrw at the very start of your init.lua (strongly advised)
+-- vim.g.loaded_netrw = 1
+-- vim.g.loaded_netrwPlugin = 1

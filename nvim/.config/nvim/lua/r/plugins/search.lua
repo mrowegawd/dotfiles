@@ -270,6 +270,7 @@ return {
           fzf = {
             -- fzf '--bind=' options
             ["ctrl-z"] = "abort",
+            ["ctrl-c"] = "abort",
             -- ["ctrl-u"]      = "unix-line-discard",
             ["ctrl-f"] = "half-page-down",
             ["ctrl-b"] = "half-page-up",
@@ -313,7 +314,7 @@ return {
           winopts = { title = Util.fzflua.format_title("Files", "") },
           -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
           fzf_opts = {
-            ["--header"] = [[Ctrl-g:'grep by directory',Ctrl-o:'toggle hidden']],
+            ["--header"] = [[Ctrl-g:'grep dir',Ctrl-y:'copy',Ctrl-x:'togglehidd']],
           },
           fd_opts = [[--color never --type f --hidden --follow ]]
             .. [[--exclude .git --exclude '*.pyc']]
@@ -345,7 +346,7 @@ return {
 
               require("fzf-lua").actions.resume()
             end,
-            ["ctrl-o"] = function(_, args)
+            ["ctrl-x"] = function(_, args)
               if args.cmd:find "--hidden" then
                 args.cmd = args.cmd:gsub("--hidden", "", 1)
                 if args.cmd:find "--no-ignore" then
@@ -413,7 +414,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = Util.fzflua.format_title("", "Commits") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o:'hash on browser',Ctrl-y:'copy hash',Ctrl-i:'open hash diff',Ctrl-x:'open hash diff buffer']],
+              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'open diff',Ctrl-x:'compare diff']],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -438,14 +439,14 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-i"] = function(selected, _)
+              ["ctrl-z"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("Open all diff " .. commit_hash, { title = "FZFGit" })
+                Util.info("All diff " .. commit_hash, { title = "FZFGit: commits" })
               end,
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
@@ -456,7 +457,10 @@ return {
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("Diff hash " .. commit_hash .. " with current file \n" .. filename, { title = "FZFGit" })
+                Util.info(
+                  "Compare diff " .. commit_hash .. " with current file \n" .. filename,
+                  { title = "FZFGit: commits" }
+                )
               end,
             },
           },
@@ -467,7 +471,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = Util.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o:'open browser',Ctrl-y:'copy hash',Ctrl-i:'open commit diff',Ctrl-x:'open curdiff']],
+              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'open curdiff',Ctrl-x:'compare curdiff']],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -491,14 +495,14 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-i"] = function(selected, _)
+              ["ctrl-z"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("Open all diff " .. commit_hash, { title = "FZFGit" })
+                Util.info("All diff " .. commit_hash, { title = "FZFGit: bcommits" })
               end,
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
@@ -509,7 +513,10 @@ return {
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("Compare diff " .. commit_hash .. " with current file \n" .. filename, { title = "FZFGit" })
+                Util.info(
+                  "Compare diff " .. commit_hash .. " with current file \n" .. filename,
+                  { title = "FZFGit: bcommits" }
+                )
               end,
             },
           },
@@ -565,11 +572,28 @@ return {
           winopts = { title = Util.fzflua.format_title("Grep", " ") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
           rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096",
-          -- fzf_opts = { ["--header"] = [[Ctrl-q:'grep match',Ctrl-h:'toggle hidden',Ctrl-f:'mode files']] },
+          fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep string',Ctrl-x:'togglehidd']] },
           no_header = true, -- disable default header
           actions = {
-            -- ["ctrl-g"] = { actions.grep_lgrep },
-            ["ctrl-h"] = function(_, args)
+            ["ctrl-g"] = { actions.grep_lgrep },
+            -- ["ctrl-z"] = function(_, args)
+            --   if args.cmd:find "--fixed-strings" then
+            --     args.cmd = args.cmd:gsub("--fixed-strings", "", 1)
+            --   else
+            --     args.cmd = args.cmd .. " --fixed-strings"
+            --   end
+            --
+            --   local tbl_ops = {
+            --     cmd = args.cmd,
+            --     winopts = { title = Util.fzflua.format_title("Grep match", " ") },
+            --   }
+            --
+            --   if args.cwd ~= nil then
+            --     tbl_ops = vim.tbl_deep_extend("force", {}, tbl_ops, { cwd = args.cwd })
+            --   end
+            --   require("fzf-lua").live_grep_glob(tbl_ops)
+            -- end,
+            ["ctrl-x"] = function(_, args)
               local toggle = 1
 
               args.rg_opts =
@@ -587,50 +611,34 @@ return {
                 winopts = { title = Util.fzflua.format_title("Grep hidden", " ") },
               }
             end,
-            ["ctrl-e"] = function(_, args)
-              if args.cmd:find "--fixed-strings" then
-                args.cmd = args.cmd:gsub("--fixed-strings", "", 1)
-              else
-                args.cmd = args.cmd .. " --fixed-strings"
-              end
 
-              local tbl_ops = {
-                cmd = args.cmd,
-                winopts = { title = Util.fzflua.format_title("Grep match", " ") },
-              }
-
-              if args.cwd ~= nil then
-                tbl_ops = vim.tbl_deep_extend("force", {}, tbl_ops, { cwd = args.cwd })
-              end
-              require("fzf-lua").live_grep_glob(tbl_ops)
-            end,
-            ["ctrl-y"] = function()
-              require("fzf-lua").fzf_exec({}, {
-                fzf_opts = {
-                  ["--preview"] = vim.fn.shellescape [[cat <<EOF 
-Keybindings:
-  TAB           Toggle selection.
-  ctrl-q        Grep match.
-  ctrl-h        Toggle hidden.
-  ctrl-o        Mode files (Fzflua files).
-  ctrl-y        Show keybindings
-                  ]],
-                },
-                winopts = {
-                  title = Util.fzflua.format_title("Grep Show Keybindings", " "),
-                  preview = { layout = "horizontal", hoizontal = "right:99%" },
-                },
-
-                actions = {
-                  ["ctrl-y"] = function()
-                    require("fzf-lua").live_grep_glob()
-                  end,
-                },
-              })
-            end,
-            ["ctrl-o"] = function()
-              require("fzf-lua").files {}
-            end,
+            --             ["ctrl-y"] = function()
+            --               require("fzf-lua").fzf_exec({}, {
+            --                 fzf_opts = {
+            --                   ["--preview"] = vim.fn.shellescape [[cat <<EOF
+            -- Keybindings:
+            --   TAB           Toggle selection.
+            --   ctrl-q        Grep match.
+            --   ctrl-h        Toggle hidden.
+            --   ctrl-o        Mode files (Fzflua files).
+            --   ctrl-y        Show keybindings
+            --                   ]],
+            --                 },
+            --                 winopts = {
+            --                   title = Util.fzflua.format_title("Grep Show Keybindings", " "),
+            --                   preview = { layout = "horizontal", hoizontal = "right:99%" },
+            --                 },
+            --
+            --                 actions = {
+            --                   ["ctrl-y"] = function()
+            --                     require("fzf-lua").live_grep_glob()
+            --                   end,
+            --                 },
+            --               })
+            --             end,
+            --             ["ctrl-o"] = function()
+            --               require("fzf-lua").files {}
+            --             end,
           },
         },
         args = {

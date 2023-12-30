@@ -101,36 +101,36 @@ Util.cmd.augroup("DisableJsonConceal", {
 })
 
 -- Close certain filetypes by pressing q.
-Util.cmd.augroup("SmartClose", {
-  event = { "FileType" },
-  pattern = {
-    "PlenaryTestPopup",
-    "help",
-    "lspinfo",
-    "man",
-    "notify",
-    "DressingSelect",
-    "filetree",
-    "qf",
-    "query",
-    "noice",
-    "spectre_panel",
-    "startuptime",
-    "tsplayground",
-    "neotest-output",
-    "checkhealth",
-    "neotest-summary",
-    "neotest-output-panel",
-  },
-  command = function(event)
-    vim.bo[event.buf].buflisted = false
-    if vim.bo[event.buf].filetype == "filetree" then
-      vim.keymap.set("n", "q", "<cmd>Workspace RightPanelToggle<cr>", { buffer = event.buf, silent = true })
-    else
-      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
-    end
-  end,
-})
+-- Util.cmd.augroup("SmartClose", {
+--   event = { "FileType" },
+--   pattern = {
+--     "PlenaryTestPopup",
+--     "help",
+--     "lspinfo",
+--     "man",
+--     "notify",
+--     "DressingSelect",
+--     "filetree",
+--     "qf",
+--     "query",
+--     "noice",
+--     "spectre_panel",
+--     "startuptime",
+--     "tsplayground",
+--     "neotest-output",
+--     "checkhealth",
+--     "neotest-summary",
+--     "neotest-output-panel",
+--   },
+--   command = function(event)
+--     vim.bo[event.buf].buflisted = false
+--     if vim.bo[event.buf].filetype == "filetree" then
+--       vim.keymap.set("n", "q", "<cmd>Workspace RightPanelToggle<cr>", { buffer = event.buf, silent = true })
+--     else
+--       vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+--     end
+--   end,
+-- })
 
 -- Close quick fix window if the file containing it was closed
 -- Util.cmd.augroup("AutoCloseQf", {

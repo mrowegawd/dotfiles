@@ -59,13 +59,8 @@ return {
     "sbulav/nredir.nvim",
     cmd = { "Nredir" },
   },
-  -- HOUDINI
   {
-    "TheBlob42/houdini.nvim",
-    config = function()
-      require("houdini").setup {
-        mappings = { "jk", "kj" },
-      }
-    end,
+    "tris203/hawtkeys.nvim",
+    config = true,
   },
 }

@@ -10,6 +10,12 @@ return {
   {
     "3rd/image.nvim",
     ft = { "markdown", "norg", "oil" },
+    enabled = function()
+      if vim.g.neovide then
+        return false
+      end
+      return true
+    end,
     build = function()
       local has_magick = pcall(require, "magick")
       if not has_magick and vim.fn.executable "luarocks" == 1 then

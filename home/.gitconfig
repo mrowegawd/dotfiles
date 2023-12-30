@@ -200,7 +200,7 @@
   lastchange = log -p --follow -n 1
   ll = log --cc
   lnm = l --no-merges
-  patch = !git --no-pager diff --no-color | pbcopy | echo "Patch copied to clipboard"
+  ; patch = !git --no-pager diff --no-color | pbcopy | echo "Patch copied to clipboard"
 
   ; l = log --graph --abbrev-commit --decorate --format=lg1
   ; ll = "log --pretty=rlf"
@@ -257,7 +257,7 @@
 
   #### XCDCX ####
 
-  churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
+  ; churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
 
   # summary: print a helpful summary of some typical metrics
   summary = "!f() { \
@@ -282,3 +282,5 @@
     printf \"\nMost-active files, with churn count\n\"; git churn | head -7; \
   }; f"
 
+# [http]
+# 	postBuffer = 157286400

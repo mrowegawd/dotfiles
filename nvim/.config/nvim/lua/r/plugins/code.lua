@@ -661,6 +661,7 @@ return {
   -- SCRATCH
   {
     "LintaoAmons/scratch.nvim",
+    event = "VeryLazy",
     cmd = { "Scratch", "ScratchOpen" },
     keys = {
       {
@@ -711,7 +712,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
-        run_with = "mux", -- tmux, tt, toggleterm
+        -- run_with = "tmux", -- tmux, tt, toggleterm
       },
     },
     config = function(_, opts)

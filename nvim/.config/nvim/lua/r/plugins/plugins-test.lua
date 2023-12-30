@@ -18,6 +18,16 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- HOUDINI
+  {
+    "TheBlob42/houdini.nvim",
+    enabled = false,
+    config = function()
+      require("houdini").setup {
+        mappings = { "jk", "kj" },
+      }
+    end,
+  },
   -- HARPOON (disabled)
   {
     "ThePrimeagen/harpoon",

@@ -82,12 +82,12 @@ function M.signs(bufnr, gs)
   Util.map.nnoremap("<Leader>gb", "<CMD>lua require('fzf-lua').git_bcommits()<CR>", { desc = "Git(fzflua): open commits buffer", buffer = bufnr })
 
   Util.map.vnoremap(
-    "<Leader>gvh",
+    "<Leader>gvv",
     [[:'<'>DiffviewFileHistory --follow<CR>]],
     { desc = "Git(diffview): view the history diff of the selection (visual)", buffer = bufnr }
   )
   Util.map.vnoremap(
-    "<Leader>gvd",
+    "<Leader>gvc",
     "<esc><cmd>CompareClipboardSelection<cr>",
     { desc = "Git(diff): compare selection (visual) with clipboard ", buffer = bufnr }
   )

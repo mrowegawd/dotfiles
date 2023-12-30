@@ -20,6 +20,8 @@ local general_overrides = function()
     -- { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.2 } } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
+    { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
+
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
     { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "NONE" } },
     { FloatBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "WinSeparator" , attr = "fg", alter = 0.5 } } },
@@ -36,30 +38,30 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     --  SEMANTIC TOKENS
     -----------------------------------------------------------------------
-    { String = { italic = true } },
-    { ["@lsp.type.variable"] = { clear = true } },
-    { ["@lsp.type.parameter"] = { italic = true, fg = { from = "Normal" } } },
-    { ['@lsp.typemod.method'] = { link = '@method' } },
-    { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
-    { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
-    { ["@lsp.typemod.variable.readonly.typescript"] = { clear = true } },
-    { ["@lsp.type.type.lua"] = { clear = true } },
-    { ["@lsp.typemod.number.injected"] = { link = "@number" } },
-    { ["@lsp.typemod.operator.injected"] = { link = "@operator" } },
-    { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
-    { ["@lsp.typemod.string.injected"] = { link = "@string" } },
-    { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
+    -- { String = { italic = true } },
+    -- { ["@lsp.type.variable"] = { clear = true } },
+    -- { ["@lsp.type.parameter"] = { italic = true, fg = { from = "Normal" } } },
+    -- { ['@lsp.typemod.method'] = { link = '@method' } },
+    -- { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
+    -- { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
+    -- { ["@lsp.typemod.variable.readonly.typescript"] = { clear = true } },
+    -- { ["@lsp.type.type.lua"] = { clear = true } },
+    -- { ["@lsp.typemod.number.injected"] = { link = "@number" } },
+    -- { ["@lsp.typemod.operator.injected"] = { link = "@operator" } },
+    -- { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
+    -- { ["@lsp.typemod.string.injected"] = { link = "@string" } },
+    -- { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
     -----------------------------------------------------------------------
     -- TREESITTER
     -----------------------------------------------------------------------
-    { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
-    { ['@type.qualifier'] = { inherit = '@keyword', italic = true } },
-    { ["@variable"] = { clear = true } },
-    { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
-    { ["@error"] = { fg = "fg", bg = "NONE" } },
-    { ["@text.diff.add"] = { link = "DiffAdd" } },
-    { ["@text.diff.delete"] = { link = "DiffDelete" } },
-    { ["@text.title.markdown"] = { underdouble = true } },
+    -- { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
+    -- { ['@type.qualifier'] = { inherit = '@keyword', italic = true } },
+    -- { ["@variable"] = { clear = true } },
+    -- { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
+    -- { ["@error"] = { fg = "fg", bg = "NONE" } },
+    -- { ["@text.diff.add"] = { link = "DiffAdd" } },
+    -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
+    -- { ["@text.title.markdown"] = { underdouble = true } },
 
     -----------------------------------------------------------------------
     -- Diff
