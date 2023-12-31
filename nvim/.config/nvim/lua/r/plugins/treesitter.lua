@@ -135,7 +135,7 @@ return {
           -- return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
           return vim.tbl_contains({ "tex", "latex" }, ft) or buf_is_large(ft, buf) or vim.fn.win_gettype() == "command"
         end,
-        additional_vim_regex_highlighting = { "org" },
+        additional_vim_regex_highlighting = { "org", "markdown" },
       },
 
       indent = {

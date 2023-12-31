@@ -152,8 +152,8 @@ show_alias() {
   local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
 
   # check jika first command diawali dengan string `doc_ ..`
-  local doc_con="doc_con"
-  local doc_im="doc_im"
+  local doc_con="doc_con_"
+  local doc_im="doc_im_"
  
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)

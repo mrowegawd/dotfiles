@@ -4,10 +4,11 @@ local highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
-  -- AERIAL
+  -- AERIAL (disabled)
   {
     "stevearc/aerial.nvim",
     event = "LazyFile",
+    enabled = false,
     init = function()
       Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
 
@@ -167,10 +168,10 @@ return {
       }
     end,
   },
-  -- SYMBOLSOUTLINE (disabled)
+  -- SYMBOLSOUTLINE
   {
     "hedyhli/outline.nvim",
-    enabled = false,
+    -- enabled = false,
     cmd = "Outline",
     init = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
@@ -266,6 +267,7 @@ return {
         position = "right",
         split_command = nil,
         width = 25,
+        focus_on_open = false,
       },
       symbols = {
         filter = nil,
@@ -285,12 +287,12 @@ return {
         rename_symbol = "r",
         code_actions = "a",
         fold = "h",
-        fold_toggle = "<tab>",
+        fold_toggle = { "<tab>", "za" },
         fold_toggle_all = "<S-tab>",
         unfold = "l",
-        fold_all = "zm",
-        unfold_all = "zO",
-        fold_reset = "R",
+        fold_all = { "zm", "zM" },
+        unfold_all = { "zO", "zR" },
+        fold_reset = "<space><space>",
         down_and_goto = "<a-n>",
         up_and_goto = "<a-p>",
       },
@@ -509,6 +511,15 @@ return {
   {
     "Wansmer/symbol-usage.nvim",
     event = "BufReadPre", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
-    config = true,
+    opts = {
+      disable = { filetypes = { "dockerfile" } },
+    },
+  },
+  -- GENTAGS
+  {
+    "linrongbin16/gentags.nvim",
+    event = "VeryLazy",
+    cond = vim.fn.executable "ctags" == 1,
+    opts = {},
   },
 }

@@ -121,22 +121,22 @@ return {
       local cmp = get_cmp()
       local luasnip = get_luasnip()
 
-      local escape_next = function()
-        local current_line = vim.api.nvim_get_current_line()
-        local _, col = unpack(vim.api.nvim_win_get_cursor(0))
-        local next_char = string.sub(current_line, col + 1, col + 1)
-        return next_char == ")"
-          or next_char == '"'
-          or next_char == "'"
-          or next_char == "`"
-          or next_char == "]"
-          or next_char == "}"
-      end
-
-      local move_right = function()
-        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-        vim.api.nvim_win_set_cursor(0, { row, col + 1 })
-      end
+      -- local escape_next = function()
+      --   local current_line = vim.api.nvim_get_current_line()
+      --   local _, col = unpack(vim.api.nvim_win_get_cursor(0))
+      --   local next_char = string.sub(current_line, col + 1, col + 1)
+      --   return next_char == ")"
+      --     or next_char == '"'
+      --     or next_char == "'"
+      --     or next_char == "`"
+      --     or next_char == "]"
+      --     or next_char == "}"
+      -- end
+      --
+      -- local move_right = function()
+      --   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+      --   vim.api.nvim_win_set_cursor(0, { row, col + 1 })
+      -- end
 
       local is_in_bullet = function()
         local line = vim.api.nvim_get_current_line()
@@ -158,8 +158,8 @@ return {
         elseif require("luasnip").expand_or_jumpable() then -- force to check luasnip
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
           -- elseif col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
-        elseif escape_next() then
-          move_right()
+          -- elseif escape_next() then
+          --   move_right()
         elseif is_in_bullet() then
           vim.cmd.BulletDemote()
           local row, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -172,8 +172,8 @@ return {
       local function shift_tab(fallback)
         if require("luasnip").jumpable(-1) then
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
-        elseif escape_next() then
-          move_right()
+        -- elseif escape_next() then
+        --   move_right()
         elseif is_in_bullet() then
           vim.cmd.BulletDemote()
           local row, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -701,7 +701,7 @@ return {
 
       { "rC", "<Cmd> RmuxKillAllPanes <CR>" },
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
-      { "rg", "<Cmd> RmuxGrepErr <CR>" },
+      -- { "rg", "<Cmd> RmuxGrepErr <CR>" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
       { "rE", "<Cmd> RmuxREDITConfig <CR>" },

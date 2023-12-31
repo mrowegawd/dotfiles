@@ -188,5 +188,6 @@
     ],
     "editor.fontFamily": "'SF Mono', 'monospace', monospace",
     "workbench.iconTheme": "material-icon-theme",
-    "workbench.colorTheme": "Sublime Material Theme - Dark"
+    "workbench.colorTheme": "Sublime Material Theme - Dark",
+    "window.zoomLevel": 1
 }

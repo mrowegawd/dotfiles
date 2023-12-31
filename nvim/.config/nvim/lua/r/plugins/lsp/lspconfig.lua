@@ -44,6 +44,7 @@ return {
         -- markdown
         "markdownlint",
         "marksman",
+        "codespell",
 
         -- docker
         "hadolint",

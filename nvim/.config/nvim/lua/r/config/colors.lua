@@ -156,7 +156,7 @@ local general_overrides = function()
     { MyQuickFixLineEnter = { bg = { from = "Boolean", attr = "fg", alter = -0.4 } } },
     { MyQuickFixLine = { bg = { from = "MyQuickFixLineEnter", attr = "bg", alter = -0.4 } } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.1 } } },
-    { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
+    { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
     { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
     -- { CodeComment1 = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },

@@ -108,6 +108,109 @@ return {
     end,
     config = true,
   },
+  {
+    "mangelozzi/nvim-rgflow.lua",
+    -- event = "VeryLazy",
+    -- enabled = false,
+    dependencies = {
+      "kevinhwang91/nvim-bqf",
+    },
+    keys = {
+      {
+        "<Localleader>fg",
+        function()
+          require("rgflow").open(nil, vim.b.grep_flags or nil, vim.uv.cwd(), {
+            custom_start = function(pattern, flags, path)
+              require("r.utils").fzflua.grep { cwd = path, query = pattern, rg_opts = flags }
+            end,
+          })
+        end,
+        desc = "Grep search in all project",
+      },
+      {
+        "<Localleader>gg",
+        '<cmd>lua require("rgflow").open_again()<cr>',
+        desc = "Open rg flow with previous pattern",
+      },
+    },
+    opts = {
+      default_trigger_mappings = false,
+      default_ui_mappings = true,
+      cmd_flags = "--smart-case --hidden --fixed-strings --no-fixed-strings -M 500",
+      colors = {
+        RgFlowInputPath = { link = "NormalFloat" },
+        RgFlowInputBg = { link = "NormalFloat" },
+        RgFlowInputFlags = { link = "NormalFloat" },
+        RgFlowInputPattern = { link = "NormalFloat" },
+      },
+
+      -- mappings = {
+      --   trigger = {
+      --     -- Normal mode maps
+      --     n = {
+      --       ["<leader>rG"] = "open_blank", -- open UI - search pattern = blank
+      --       ["<leader>rg"] = "open_cword", -- open UI - search pattern = <cword>
+      --       ["<leader>rp"] = "open_paste", -- open UI - search pattern = First line of unnamed register as the search pattern
+      --       ["<leader>ra"] = "open_again", -- open UI - search pattern = Previous search pattern
+      --       ["<leader>rx"] = "abort", -- close UI / abort searching / abortadding results
+      --       ["<leader>rc"] = "print_cmd", -- Print a version of last run rip grep that can be pasted into a shell
+      --       ["<leader>r?"] = "print_status", -- Print info about the current state of rgflow (mostly useful for deving on rgflow)
+      --     },
+      --     -- Visual/select mode maps
+      --     x = {
+      --       ["<leader>rg"] = "open_visual", -- open UI - search pattern = current visual selection
+      --     },
+      --   },
+      --   -- Mappings that are local only to the RgFlow UI
+      --   ui = {
+      --     -- Normal mode maps
+      --     n = {
+      --       ["<CR>"] = "start", -- With the ui open, start a search with the current parameters
+      --       ["<ESC>"] = "close", -- With the ui open, discard and close the UI window
+      --       ["?"] = "show_rg_help", -- Show the rg help in a floating window, which can be closed with q or <ESC> or the usual <C-W><C-C>
+      --       ["<BS>"] = "nop", -- No operation
+      --       ["<C-^>"] = "nop", -- No operation
+      --       ["<C-6>"] = "nop", -- No operation
+      --     },
+      --     -- Insert mode maps i = {
+      --     ["<CR>"] = "start", -- With the ui open, start a search with the current parameters (from insert mode)
+      --     -- ["<TAB>"] = "auto_complete", -- start autocomplete if PUM not visible, if visible use own hotkeys to select an option
+      --     -- ["<C-N>"] = "auto_complete", -- start autocomplete if PUM not visible, if visible use own hotkeys to select an option
+      --     -- ["<C-P>"] = "auto_complete", -- start autocomplete if PUM not visible, if visible use own hotkeys to select an option
+      --   },
+      -- },
+      -- -- Mapping that are local only to the QuickFix window
+      -- quickfix = {
+      --   -- Normal
+      --   n = {
+      --     ["d"] = "qf_delete", -- QuickFix normal mode delete operator
+      --     ["dd"] = "qf_delete_line", -- QuickFix delete a line from quickfix
+      --     ["<TAB>"] = "qf_mark", -- QuickFix mark a line in the quickfix
+      --     ["<S-TAB>"] = "qf_unmark", -- QuickFix unmark a line in the quickfix window
+      --     ["<BS>"] = "nop", -- No operation
+      --     ["<C-^>"] = "nop", -- No operation - Probably don't want to switch to a buffer in the little quickfix window
+      --     ["<C-6>"] = "nop", -- No operation
+      --   },
+      --   -- Visual/select mode maps
+      --   x = {
+      --     ["d"] = "qf_delete_visual", -- QuickFix visual mode delete operator
+      --     ["<TAB>"] = "qf_mark_visual", -- QuickFix visual mode mark operator
+      --     ["<S-TAB>"] = "qf_unmark_visual", -- QuickFix visual mode unmark operator
+      --   },
+      -- },
+      -- default_quickfix_mappings = true,
+
+      -- WARNING !!! Glob for '-g *{*}' will not use .gitignore file: https://github.com/BurntSushi/ripgrep/issues/2252
+      -- cmd_flags = (
+      --   "--smart-case -g *.{*,py} -g !*.{min.js,pyc} --fixed-strings --no-fixed-strings --no-ignore -M 500"
+      --   -- Exclude globs
+      --   .. " -g !**/.angular/"
+      --   .. " -g !**/node_modules/"
+      --   .. " -g !**/static/*/jsapp/"
+      --   .. " -g !**/static/*/wcapp/"
+      -- ),
+    },
+  },
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
@@ -234,6 +337,12 @@ return {
       local actions = require "fzf-lua.actions"
       local path = require "fzf-lua.path"
 
+      local img_preview_command = vim.fn.executable "ueberzug" == 1 and { "ueberzug" } or nil
+      local html_preview_command = vim.fn.executable "w3m" == 1 and { "w3m", "-dump" } or nil
+      local pdf_preview_command = vim.fn.executable "pdftotext" == 1
+          and { "pdftotext", "-l", "10", "-nopgbrk", "-nodiag", "-q", "<file>", "-" }
+        or nil
+
       return {
         winopts_fn = function()
           local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.5)
@@ -254,6 +363,21 @@ return {
           ["--layout"] = "reverse",
           ["--border"] = "none",
           ["--no-separator"] = "",
+        },
+        previewers = {
+          builtin = {
+            treesitter = {
+              enable = true,
+              disable = { "tex", "markdown" },
+            },
+            extensions = {
+              ["html"] = html_preview_command,
+              ["jpg"] = img_preview_command,
+              ["png"] = img_preview_command,
+              ["svg"] = img_preview_command,
+              ["pdf"] = pdf_preview_command,
+            },
+          },
         },
         keymap = {
           builtin = {
@@ -316,9 +440,8 @@ return {
           fzf_opts = {
             ["--header"] = [[Ctrl-g:'grep dir',Ctrl-y:'copy',Ctrl-x:'togglehidd']],
           },
-          fd_opts = [[--color never --type f --hidden --follow ]]
-            .. [[--exclude .git --exclude '*.pyc']]
-            .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
+          fd_opts = [[--color never --type f --hidden --follow ]] .. [[--exclude .git --exclude '*.pyc']],
+          -- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
           actions = {
             ["default"] = function(selected, opts)
               local selected_item = selected[1]
@@ -844,23 +967,17 @@ return {
       }
     end,
     config = function(_, opts)
-      local function augroup(name, fnc)
-        fnc(vim.api.nvim_create_augroup(name, { clear = true }))
-      end
-
-      augroup("FzfluaFixMaps", function(g)
-        vim.api.nvim_create_autocmd("FileType", {
-          group = g,
-          pattern = "fzf",
-          callback = function(e)
-            -- vim.keymap.set("t", "<C-t>", "<C-t>", { buffer = e.buf, silent = true })
-            -- vim.keymap.set("t", "<C-h>", "<C-h>", { buffer = e.buf, silent = true })
-            vim.keymap.set("t", "<C-c>", "<Esc>", { buffer = e.buf, silent = true })
-            -- vim.keymap.set("t", "<C-g>", "<C-g>", { buffer = e.buf, silent = true })
-          end,
-        })
-      end)
       require("fzf-lua").setup(opts)
+      -- vim.api.nvim_create_autocmd("FileType", {
+      --   group = vim.api.nvim_create_augroup("FzfSetTMap", {}),
+      --   desc = "Set terminal mappings in fzf buffer.",
+      --   pattern = "fzf",
+      --   callback = function()
+      --     -- vim.keymap.set("t", "<C-_>", require("fzf-lua").builtin)
+      --     vim.keymap.set("t", "<C-c>", require("fzf-lua").builtin)
+      --     -- vim.keymap.set("t", "<C-t>", require("fzf-lua").builtin)
+      --   end,
+      -- })
     end,
   },
   -- TELESCOPE

@@ -696,13 +696,16 @@ ps_kill_all() {
 #   Docker image
 # ╞══════════════════════════════════════════════════════════╡
 
-# docker: show list of docker images
+# docker: image: show list images
 doc_im_ls() {
+	__send_msg "docker images"
 	docker images
 }
 
-# docker: image: check history of docker image <$DOCKER_IMAGE_ID>
+# docker: image: show history $1
 doc_im_his_id() {
+	__send_msg "docker history \$1"
+
 	if [ -n "$1" ]; then
 		docker history "$1"
 	else
@@ -710,8 +713,10 @@ doc_im_his_id() {
 	fi
 }
 
-# docker: image: build images with <$YOUR_NEW_DOCKER_TAG>
+# docker: image: build image $1
 doc_im_build_tag() {
+	__send_msg "docker build -t \$1:<tag> ."
+
 	if [ -n "$1" ]; then
 		docker build -t "$1" .
 	else
@@ -719,25 +724,28 @@ doc_im_build_tag() {
 	fi
 }
 
-# docker: image: remove all images
-doc_im_rall() {
+# docker: image: remove all
+doc_im_rm_all() {
+	__send_msg "docker rmi -f \$(docker images -q)"
+
 	docker rmi -f "$(docker images -q)"
 }
 
-# docker: image: remove images only contains the string 'none'
-doc_im_rnone() {
+# docker: image: remove all by state'none'
+doc_im_rm_none() {
 	docker rmi -f "$(docker images | grep '^<none>' | awk '{print $3}')"
 }
 
-# docker: image: remove all dangling images
-doc_im_rdang() {
+# docker: image: remove all dangling
+doc_im_rm_dangling() {
 	docker rmi -f "$(docker images -f 'dangling=true' -q)"
 }
 
-# docker: image: remove docker image <$ID_DOCKER_IMAGE>
-doc_im_rid() {
+# docker: image: remove by $id
+doc_im_rm_id() {
+	__send_msg "docker rmi -f \$id"
+
 	if [ -n "$1" ]; then
-		__send_msg "docker rmi -f <id>"
 		docker rmi -f "$1"
 	else
 		echo "warn - [docker image] need image_id"
@@ -748,26 +756,33 @@ doc_im_rid() {
 #   Docker Container
 # ╞══════════════════════════════════════════════════════════╡
 
-# docker: container: show list or containers
+# docker: container: show list containers
 doc_con_ls() {
 	__send_msg "docker ps -a"
 	docker ps -a
 }
 
-# docker: container: run container <$DOCKER_TARGET_IMAGE_ID> (run -it)
+# docker: container: show list containers that contain the string 'exited'
+doc_con_ls_exited() {
+	__send_msg "docker container ls -a --filter status=exited --filter status=created"
+	docker container ls -a --filter status=exited --filter status=created
+}
+
+# docker: container: run it $@
 doc_con_run_it() {
-	__send_msg "docker run -it <id>"
+	__send_msg "docker run -it -d --name test-ssh2 -p 2200:22 testansible:03
+"
 
 	if [ -n "$1" ]; then
-		docker run -it "$@"
+		docker run -it -d "$@"
 	else
-		echo "warn - [docker image] need image_id"
+		echo "ex: doc_con_run_it --name test-ssh2 -p 2200:22 myimage:mytag"
 	fi
 }
 
-# docker: container: run container but destroy <$DOCKER_TARGET_IMAGE_ID> (run --rm)
-doc_con_run_rmit() {
-	__send_msg "docker run -it --rm  <id>"
+# docker: container: run -it but destroy after being used by $1#
+doc_con_run_rm_it() {
+	__send_msg "docker run -it --rm \$1"
 
 	if [ -n "$1" ]; then
 		docker run -it --rm "$1"
@@ -776,34 +791,9 @@ doc_con_run_rmit() {
 	fi
 }
 
-# docker: container: check inspect container <$DOCKER_CONTAINER_ID>
-doc_con_inspect_id() {
-	if [ -n "$1" ]; then
-		__send_msg "docker container inspect <id>"
-		docker container inspect "$1"
-	else
-		echo "warn - [docker inspect] need container_id"
-	fi
-}
-
-# docker: container: show list of containers with contains the string 'exited'
-doc_con_showex() {
-	docker container ls -a --filter status=exited --filter status=created
-}
-
-# docker: container: check log container <$DOCKER_CONTAINER_ID>
-doc_con_log_id() {
-	if [ -n "$1" ]; then
-		docker container logs "$1"
-	else
-		echo "[warn] doc_con_log: need container id"
-	fi
-}
-
-# docker: container: start container <$DOCKER_CONTAINER_ID>
-doc_con_start_id() {
-
-	__send_msg "docker start <id>"
+# docker: container: start $id
+doc_con_run_start_id() {
+	__send_msg "docker start \$id"
 
 	if [ -n "$1" ]; then
 		docker start "$1"
@@ -812,10 +802,9 @@ doc_con_start_id() {
 	fi
 }
 
-# docker: container: stop container <$DOCKER_CONTAINER_ID>
-doc_con_stop_id() {
-
-	__send_msg "docker stop <id>"
+# docker: container: stop $id
+doc_con_run_stop_id() {
+	__send_msg "docker stop \$id"
 
 	if [ -n "$1" ]; then
 		docker stop "$1"
@@ -824,10 +813,9 @@ doc_con_stop_id() {
 	fi
 }
 
-# docker: container: restart container <$DOCKER_CONTAINER_ID>
-doc_con_restart_id() {
-
-	__send_msg "docker restart <id>"
+# docker: container: restart $id
+doc_con_run_restart_id() {
+	__send_msg "docker restart \$id"
 
 	if [ -n "$1" ]; then
 		docker restart "$1"
@@ -836,13 +824,50 @@ doc_con_restart_id() {
 	fi
 }
 
-# docker: container: remove all containers
-doc_con_rall() {
+# docker: container: enter and attach $@
+doc_con_run_enter_id() {
+	__send_msg "docker exec -it \$id /bin/bash"
+	docker exec -it "$@"
+}
+
+# docker: container: inspect $id
+doc_con_log_inspect_id() {
+	__send_msg "docker container inspect \$id"
+	if [ -n "$1" ]; then
+		docker container inspect "$1"
+	else
+		echo "warn - [docker inspect] need container_id"
+	fi
+}
+
+# docker: container: log $id
+doc_con_log_id() {
+	__send_msg "docker container logs \$id"
+
+	if [ -n "$1" ]; then
+		docker container logs "$1"
+	else
+		echo "[warn] doc_con_log: need container id"
+	fi
+}
+
+# docker: container: remove all
+doc_con_rm_all() {
+	__send_msg "docker rm -f '\$(docker ps -aq)'"
+
 	docker rm -f "$(docker ps -aq)"
 }
 
-# docker: container: remove container by id <$DOCKER_CONTAINER_ID>
-doc_con_rid() {
+# docker: container: remove all containers by state 'exit'
+doc_con_rm_all_exit() {
+	__send_msg "docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm"
+	docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
+}
+
+# docker: container: remove by $id
+doc_con_rm_id() {
+	__send_msg "docker rm \$i"
+
 	if [ -n "$1" ]; then
 		docker rm "$1"
 	else
@@ -850,34 +875,26 @@ doc_con_rid() {
 	fi
 }
 
-# docker: container: remove container with contains the string  'exit'
-doc_con_rallex() {
-	__send_msg "docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm"
-	docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
-}
-
-# docker: container: enter/login the container <$DOCKER_CONTAINER_ID>
-doc_con_enter_id() {
-	__send_msg "docker exec -it <id> /bin/bash"
-	docker exec -it "$1" /bin/bash
-}
-
 # ╞══════════════════════════════════════════════════════════╡
 #   Docker Volume
 # ╞══════════════════════════════════════════════════════════╡
 
-# docker: volume: show list of docker volumes
+# docker: volume: show list volumes
 doc_vol() {
 	docker volume ls
 }
 
-# docker: volume: remove all docker volumes
-doc_vol_rall() {
+# docker: volume: remove all
+doc_vol_rm_all() {
+	__send_msg "docker rm all"
+
 	docker volume rm "$(docker volume ls -qf dangling=true)"
 }
 
-# docker: volume: remove docker volume by <$DOCKER_VOLUME_ID>
-doc_vol_rid() {
+# docker: volume: remove by $id
+doc_vol_rm_id() {
+	__send_msg "docker rm by \$id"
+
 	if [ -n "$1" ]; then
 		docker volume rm "$1"
 	else
@@ -885,12 +902,12 @@ doc_vol_rid() {
 	fi
 }
 
-# docker: volume: remove all dangling volumes
-doc_vol_rdang() {
+# docker: volume: remove all dangling
+doc_vol_rm_dangling() {
 	docker volume rm "$(docker volume ls -f dangling=true -q)"
 }
 
-# docker: volume: inspect volume by id <$DOCKER_VOLUME_ID>
+# docker: volume: inspect volume by $id
 doc_vol_inspect_id() {
 	docker volume inspect "$1"
 }
@@ -905,7 +922,7 @@ doc_net_ls() {
 }
 
 # docker: network: remove all docker network
-doc_net_rall() {
+doc_net_rm_all() {
 	docker network rm "$(docker network ls -q)"
 }
 
@@ -914,44 +931,39 @@ doc_net_rall() {
 # ╞══════════════════════════════════════════════════════════╡
 
 # docker: compose: show list of docker compose
-doc_comp_ps() {
+doc_comp_ls() {
+	__send_msg "docker-compose ps"
 	docker-compose ps
 }
 
 # docker: compose: docker compose up -d
-doc_comp_upd() {
+doc_comp_run_up_deamon() {
+	__send_msg "docker-compose up -d"
 	docker-compose up -d
 }
 
 # docker: compose: stop service docker compose
-doc_comp_down() {
+doc_comp_run_down() {
+	__send_msg "docker-compose down"
 	docker-compose down
 }
 
 # docker: compose: stop service and remove the container
-doc_comp_stop() {
+doc_comp_run_stop() {
+	__send_msg "docker-compose stop"
 	docker-compose stop
 }
 
 # docker: compose: run
 doc_comp_run() {
+	__send_msg "docker-compose run"
 	docker-compose run
 }
 
 # docker: compose: run with flag --rm
-doc_comp_run_rm() {
+doc_comp_rm() {
+	__send_msg "docker-compose run --rm"
 	docker-compose run --rm
-}
-
-# yarn: install package local directory <$PACKAGE>
-yarn_i_saveDev() {
-
-	if [ -n "$1" ]; then
-		yarn add -D "$1"
-	else
-		printf "\nwrong!\n\tex: yarn_i_savedev lodash\n\n"
-	fi
-
 }
 
 # ╭──────────────────────────────────────────────────────────╮
@@ -961,6 +973,15 @@ yarn_i_saveDev() {
 # ╞══════════════════════════════════════════════════════════╡
 #   Npm and Yarn
 # ╞══════════════════════════════════════════════════════════╡
+
+# yarn: install package local directory <$PACKAGE>
+pr_yarn_i_saveDev() {
+	if [ -n "$1" ]; then
+		yarn add -D "$1"
+	else
+		printf "\nwrong!\n\tex: yarn_i_savedev lodash\n\n"
+	fi
+}
 
 # yarn: install package for global directory <$PACKAGE>
 pr_yarn_i_saveGlobal() {

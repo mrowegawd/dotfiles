@@ -89,50 +89,50 @@ return {
       --     Util.maim.insert "test.png"
       --   end,
       -- },
-      {
-        "<Localleader>fo",
-        function()
-          if vim.bo.filetype == "norg" then
-            return cmd [[Neorg return]]
-          else
-            return cmd [[Neorg workspace wiki]]
-          end
-        end,
-        desc = "Note(neorg): open neorg workspace",
-      },
-      {
-        "<Localleader>ff",
-        function()
-          cmd [[Lazy load neorg]]
-
-          return require("fzf-lua").files {
-            prompt = "  ",
-            cwd = Config.path.wiki_path,
-            rg_glob = true,
-            file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
-            winopts = {
-              -- fullscreen = true,
-              title = Util.fzflua.format_title("[Neorg] Files", " "),
-            },
-          }
-        end,
-        desc = "Note(fzflua): find neorg files",
-      },
-      {
-        "<Localleader>fg",
-        function()
-          cmd [[Lazy load neorg]]
-          return require("fzf-lua").live_grep_glob {
-            prompt = "  ",
-            cwd = Config.path.wiki_path,
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
-            winopts = {
-              title = Util.fzflua.format_title("[Neorg] Grep", " "),
-            },
-          }
-        end,
-        desc = "Note(fzflua): live grep neorg files",
-      },
+      -- {
+      --   "<Localleader>fo",
+      --   function()
+      --     if vim.bo.filetype == "norg" then
+      --       return cmd [[Neorg return]]
+      --     else
+      --       return cmd [[Neorg workspace wiki]]
+      --     end
+      --   end,
+      --   desc = "Note(neorg): open neorg workspace",
+      -- },
+      -- {
+      --   "<Localleader>ff",
+      --   function()
+      --     cmd [[Lazy load neorg]]
+      --
+      --     return require("fzf-lua").files {
+      --       prompt = "  ",
+      --       cwd = Config.path.wiki_path,
+      --       rg_glob = true,
+      --       file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
+      --       winopts = {
+      --         -- fullscreen = true,
+      --         title = Util.fzflua.format_title("[Neorg] Files", " "),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note(fzflua): find neorg files",
+      -- },
+      -- {
+      --   "<Localleader>fg",
+      --   function()
+      --     cmd [[Lazy load neorg]]
+      --     return require("fzf-lua").live_grep_glob {
+      --       prompt = "  ",
+      --       cwd = Config.path.wiki_path,
+      --       rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
+      --       winopts = {
+      --         title = Util.fzflua.format_title("[Neorg] Grep", " "),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note(fzflua): live grep neorg files",
+      -- },
     },
     dependencies = {
       "nvim-telescope/telescope.nvim",
@@ -592,11 +592,31 @@ return {
       { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
     },
   },
-  -- OBSIDIAN.NVIM (disabled)
+  -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
-    enabled = false,
-    cmd = { "ObsidianOpen" },
+    cmd = {
+      "ObsidianOpen",
+      "ObsidianNew",
+      "ObsidianQuickSwitch",
+      "ObsidianFollowLink",
+      "ObsidianBacklinks",
+      "ObsidianToday",
+      "ObsidianYesterday",
+      "ObsidianTemplate",
+      "ObsidianSearch",
+      "ObsidianLink",
+      "ObsidianLinkNew",
+    },
+    keys = {
+      {
+        "<Localleader>ff",
+        function()
+          vim.cmd [[ObsidianSearch]]
+        end,
+        desc = "Note(fzflua): obsidian search",
+      },
+    },
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
@@ -604,7 +624,34 @@ return {
     },
     opts = {
       dir = Config.path.wiki_path, -- no need to call 'vim.fn.expand' here
-      completion = { nvim_cmp = false },
+      -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
+      completion = {
+        -- Set to false to disable completion.
+        nvim_cmp = true,
+
+        -- Trigger completion at 2 chars.
+        min_chars = 2,
+
+        -- Where to put new notes created from completion. Valid options are
+        --  * "current_dir" - put new notes in same directory as the current buffer.
+        --  * "notes_subdir" - put new notes in the default notes subdirectory.
+        new_notes_location = "current_dir",
+
+        -- Control how wiki links are completed with these (mutually exclusive) options:
+        --
+        -- 1. Whether to add the note ID during completion.
+        -- E.g. "[[Foo" completes to "[[foo|Foo]]" assuming "foo" is the ID of the note.
+        -- Mutually exclusive with 'prepend_note_path' and 'use_path_only'.
+        prepend_note_id = true,
+        -- 2. Whether to add the note path during completion.
+        -- E.g. "[[Foo" completes to "[[notes/foo|Foo]]" assuming "notes/foo.md" is the path of the note.
+        -- Mutually exclusive with 'prepend_note_id' and 'use_path_only'.
+        prepend_note_path = false,
+        -- 3. Whether to only use paths during completion.
+        -- E.g. "[[Foo" completes to "[[notes/foo]]" assuming "notes/foo.md" is the path of the note.
+        -- Mutually exclusive with 'prepend_note_id' and 'prepend_note_path'.
+        use_path_only = false,
+      },
 
       -- daily_notes = {
       --   folder = "Calendar 🗓️/Days 🌄",
@@ -614,6 +661,7 @@ return {
       --   -- alias_format = "%B %-d, %Y",
       -- },
 
+      finder = "fzf-lua",
       -- Optional, alternatively you can customize the frontmatter data.
       note_frontmatter_func = function(note)
         -- This is equivalent to the default frontmatter function.
@@ -653,39 +701,81 @@ return {
 
     config = function(_, opts)
       require("obsidian").setup(opts)
-      -- vim.keymap.set("n", "gd", function()
-      --   if require("obsidian").util.cursor_on_markdown_link() then
-      --     return "<cmd>ObsidianFollowLink<CR>"
-      --   else
-      --     return "gd"
-      --   end
-      -- end, { noremap = false, expr = true })
+      vim.keymap.set("n", "<Leader>oo", function()
+        if require("obsidian").util.cursor_on_markdown_link() then
+          return "<cmd>ObsidianFollowLink<CR>"
+        else
+          return "<Leader>oo"
+        end
+      end, { noremap = false, expr = true })
     end,
   },
-  -- HEADLINES.NVIM (disabled)
+  -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
     lazy = false, -- must set to `false`, without this custom color, it does not work
-    enabled = false,
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
       highlight.plugin("headlines", {
         theme = {
           ["*"] = {
             { Dash = { bg = "NONE", bold = true } },
-            { CodeBlock = { bg = "NONE" } },
-            { Headline1 = { bg = { from = "@attribute", attr = "fg", alter = -0.8 } } },
-            { Headline2 = { bg = { from = "@label", attr = "fg", alter = -0.8 } } },
-            { Headline3 = { bg = { from = "@constant", attr = "fg", alter = -0.8 } } },
-            { Headline4 = { bg = { from = "Boolean", attr = "fg", alter = -0.8 } } },
-            { Headline5 = { bg = { from = "@field", attr = "fg", alter = -0.8 } } },
+            { CodeBlock = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+            {
+              Headline1 = {
+                bg = { from = "Normal", attr = "bg" },
+                -- fg = { from = "@attribute", attr = "fg", alter = 0.1 },
+                -- bg = { from = "@attribute", attr = "fg", alter = -0.9 },
+                fg = { from = "@attribute", attr = "fg", alter = 1 },
+              },
+            },
+            {
+              Headline2 = {
+                bg = { from = "Normal", attr = "bg" },
+                -- fg = { from = "@attribute", attr = "fg", alter = 0.1 },
+                -- bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                fg = { from = "@attribute", attr = "fg", alter = 0.8 },
+              },
+            },
+
+            {
+              Headline3 = {
+                bg = { from = "Normal", attr = "bg" },
+                -- fg = { from = "@constant", attr = "fg", alter = -0.1 },
+                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                fg = { from = "@attribute", attr = "fg", alter = 0.6 },
+              },
+            },
+            {
+
+              Headline4 = {
+                bg = { from = "Normal", attr = "bg" },
+
+                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "@attribute", attr = "fg", alter = 0.4 },
+              },
+            },
+            {
+              Headline5 = {
+                bg = { from = "Normal", attr = "bg" },
+
+                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "@attribute", attr = "fg", alter = 0.2 },
+              },
+            },
           },
         },
       })
       return {
         org = { headline_highlights = false },
-        norg = { headline_highlights = { "Headline1", "Headline2" }, codeblock_highlight = false },
-        markdown = { headline_highlights = { "Headline1" } },
+        norg = { headline_highlights = false, codeblock_highlight = false },
+        markdown = {
+          headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4", "Headline5" },
+          -- fat_headline_lower_string = "▔",
+          codeblock_highlight = "CodeBlock",
+        },
         fat_headline_lower_string = "▔",
       }
     end,

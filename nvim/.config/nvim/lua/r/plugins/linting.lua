@@ -47,7 +47,13 @@ return {
         nls.builtins.code_actions.gomodifytags,
         nls.builtins.code_actions.impl,
 
-        nls.builtins.diagnostics.markdownlint,
+        -- nls.builtins.diagnostics.markdownlint.args {
+        --   -- { "--stdin", "--config=" .. vim.env.HOME .. "/.markdownlint.json" },
+        --   { "--stdin", "--config=~/.markdownlint.json" },
+        -- },
+        nls.builtins.diagnostics.markdownlint.with {
+          extra_args = { "--stdin", "--config=" .. vim.env.HOME .. "/.markdownlint.json" },
+        },
 
         -- sh
         nls.builtins.formatting.shfmt,
@@ -74,6 +80,10 @@ return {
         },
         nls.builtins.formatting.trim_whitespace.with {
           filetypes = { "org", "norg", "text" },
+        },
+
+        nls.builtins.diagnostics.codespell.with {
+          filetypes = { "org", "norg", "text", "markdown" },
         },
 
         require("null-ls-embedded").nls_source.with {

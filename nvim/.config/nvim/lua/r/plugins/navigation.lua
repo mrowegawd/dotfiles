@@ -5,7 +5,7 @@ local Util = require "r.utils"
 local Icon = require("r.config").icons
 
 return {
-  -- NVIM-TREE
+  -- NVIM-TREE (disabled)
   {
     "nvim-tree/nvim-tree.lua",
     enabled = false,
@@ -267,7 +267,6 @@ return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    -- enabled = false,
     cmd = "Neotree",
     init = function()
       Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
@@ -285,13 +284,13 @@ return {
 
           if neotree_opened then
             if vim.bo[0].filetype == "neo-tree" then
-              return vim.cmd [[q]]
+              return vim.cmd [[wincmd p]]
             end
             return cmd "Neotree reveal"
           else
-            if vim.bo[0].filetype == "neo-tree" then
-              return vim.cmd [[q]]
-            end
+            -- if vim.bo[0].filetype == "neo-tree" then
+            --   return vim.cmd [[q]]
+            -- end
             return cmd "Neotree"
           end
         end,
