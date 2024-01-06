@@ -1,16 +1,15 @@
+vim.g.translator_target_lang = "id"
+
 return {
   -- TRANSLATE.NVIM
   {
     "voldikss/vim-translator",
-    event = "VeryLazy",
-    keys = { "<Plug>TranslateW", "<Plug>TranslateWV" },
-    init = function()
-      vim.g.translator_target_lang = "id"
-      vim.api.nvim_set_keymap("n", "<Leader>rs", "<Plug>TranslateW", { noremap = true, silent = true })
-      vim.api.nvim_set_keymap("v", "<Leader>rs", "<Plug>TranslateWV", { noremap = true, silent = true })
-    end,
+    keys = {
+      { "<Leader>rs", "<Plug>TranslateW", desc = "misc(translate): translate" },
+      { "<Leader>rs", "<Plug>TranslateWV", desc = "misc(translate): translate", mode = { "v" } },
+    },
   },
-  -- VIM-GRAMMAROUS
+  -- VIM-GRAMMAROUS (disabled)
   {
     "rhysd/vim-grammarous",
     cmd = { "GrammarousCheck" },

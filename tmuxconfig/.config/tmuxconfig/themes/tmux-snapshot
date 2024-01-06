@@ -54,7 +54,7 @@ set -g window-status-format " #[fg=$TMUX_FG,bold]#I:#{b:pane_current_path}"
 # set -g window-status-current-format "#[fg=red,bold] #I:#{b:pane_current_path}#[bg=$TMUX_FG,bold]#{?window_zoomed_flag, ZOOM #[fg=$COL_ACTIVE_BORDER_SEPERATOR](#(tmux list-panes | wc -l)) ,}"
 # set -g window-status-current-format "#{?window_zoomed_flag,#[fg=red](,}#W#{?window_zoomed_flag,#[fg=red]),}"
 # set -g window-status-current-format "#{?window_zoomed_flag,(,}#[fg=$BG_ACTIVE_STATUSLINE,bold]^#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
-set -g window-status-current-format "#{?window_zoomed_flag,(,}#[fg=red,bold]^#[fg=white]#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
+set -g window-status-current-format "#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE](,}#[fg=red,bold]^#[fg=white]#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
 
 #  ╓
 #  ║  RIGHT

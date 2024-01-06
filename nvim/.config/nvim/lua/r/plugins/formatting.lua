@@ -30,6 +30,7 @@ function M.setup(_, opts)
 end
 
 return {
+  -- CONFORM (disabled)
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },

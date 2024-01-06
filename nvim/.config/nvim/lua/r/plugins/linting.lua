@@ -1,9 +1,11 @@
 local Util = require "r.utils"
 
 return {
+  -- NULL-LS-EMBEDDED
   {
     dir = "~/.local/src/nvim_plugins/null-ls-embedded",
   },
+  -- NONE-LS
   {
     "nvimtools/none-ls.nvim",
     event = "LazyFile",
@@ -92,7 +94,7 @@ return {
       })
     end,
   },
-  -- NVIM-LINT
+  -- NVIM-LINT (disabled)
   {
     "mfussenegger/nvim-lint",
     enabled = false,

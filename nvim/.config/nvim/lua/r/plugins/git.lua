@@ -221,10 +221,9 @@ return {
     "sindrets/diffview.nvim",
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
-    init = function()
-      Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
-    end,
     opts = function()
+      Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+
       highlight.plugin("diffview", {
         { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.3 } } },
         { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.3 } } },

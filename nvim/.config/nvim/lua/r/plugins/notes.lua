@@ -1,4 +1,4 @@
-local fmt, cmd, api = string.format, vim.cmd, vim.api
+local fmt, api = string.format, vim.api
 local uv = vim.uv or vim.loop
 
 local Config = require "r.config"
@@ -6,82 +6,12 @@ local Util = require "r.utils"
 local highlight = require "r.config.highlights"
 
 return {
-  -- IMAGE.NVIM
-  {
-    "3rd/image.nvim",
-    ft = { "markdown", "norg", "oil" },
-    enabled = function()
-      if vim.g.neovide then
-        return false
-      end
-      return true
-    end,
-    build = function()
-      local has_magick = pcall(require, "magick")
-      if not has_magick and vim.fn.executable "luarocks" == 1 then
-        local is_mac = uv.os_uname().sysname == "Darwin"
-        if is_mac then
-          vim.fn.system "luarocks --lua-dir=$(brew --prefix)/opt/lua@5.1 --lua-version=5.1 install magick"
-        else
-          vim.fn.system "luarocks --local --lua-version=5.1 install magick"
-        end
-        if vim.v.shell_error ~= 0 then
-          vim.notify("Error installing magick with luarocks", vim.log.levels.WARN)
-        end
-      end
-    end,
-    opts = {
-      backend = "kitty",
-      editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
-      tmux_show_only_in_active_window = true,
-      integrations = {
-        markdown = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-        },
-        neorg = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "norg" },
-        },
-      },
-    },
-    config = function(_, opts)
-      -- Requirements (linux):
-      -- sudo apt-get install libmagickwand-dev
-      -- sudo apt-get install libgraphicsmagick1-dev
-      local has_magick = pcall(require, "magick")
-      if has_magick then
-        require("image").setup(opts)
-      end
-    end,
-  },
   -- NEORG
   {
     "nvim-neorg/neorg",
     cmd = "Neorg",
     ft = "norg",
     build = ":Neorg sync-parsers", -- This is the important bit!
-    init = function()
-      Util.cmd.augroup("ManageNotesNeorg", {
-        event = { "FileType" },
-        pattern = { "norg" },
-        command = function()
-          require("r.keymaps.note").neorg_mappings_ft(api.nvim_get_current_buf())
-        end,
-      })
-
-      Util.cmd.augroup("SetNorgFoldLevel", {
-        event = { "FileType" },
-        pattern = { "norg" },
-        command = "setlocal foldlevel=0",
-      })
-    end,
     keys = {
       -- {
       --   "<Localleader>fL",
@@ -143,6 +73,19 @@ return {
       "laher/neorg-exec",
     },
     config = function(_, opts)
+      Util.cmd.augroup("ManageNotesNeorg", {
+        event = { "FileType" },
+        pattern = { "norg" },
+        command = function()
+          require("r.keymaps.note").neorg_mappings_ft(api.nvim_get_current_buf())
+        end,
+      })
+
+      Util.cmd.augroup("SetNorgFoldLevel", {
+        event = { "FileType" },
+        pattern = { "norg" },
+        command = "setlocal foldlevel=0",
+      })
       require("neorg").setup(opts)
 
       -- local path_img = "test.png"
@@ -584,14 +527,6 @@ return {
       orgmode.setup(opts)
     end,
   },
-  -- CALENDAR
-  {
-    "itchyny/calendar.vim",
-    cmd = { "Calendar" },
-    keys = {
-      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
-    },
-  },
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
@@ -713,7 +648,7 @@ return {
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
-    lazy = false, -- must set to `false`, without this custom color, it does not work
+    -- lazy = false, -- must set to `false`, without this custom color, it does not work
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
       highlight.plugin("headlines", {
@@ -779,5 +714,68 @@ return {
         fat_headline_lower_string = "▔",
       }
     end,
+  },
+  -- IMAGE.NVIM
+  {
+    "3rd/image.nvim",
+    ft = { "markdown", "norg", "oil" },
+    enabled = function()
+      if vim.g.neovide then
+        return false
+      end
+      return true
+    end,
+    build = function()
+      local has_magick = pcall(require, "magick")
+      if not has_magick and vim.fn.executable "luarocks" == 1 then
+        local is_mac = uv.os_uname().sysname == "Darwin"
+        if is_mac then
+          vim.fn.system "luarocks --lua-dir=$(brew --prefix)/opt/lua@5.1 --lua-version=5.1 install magick"
+        else
+          vim.fn.system "luarocks --local --lua-version=5.1 install magick"
+        end
+        if vim.v.shell_error ~= 0 then
+          vim.notify("Error installing magick with luarocks", vim.log.levels.WARN)
+        end
+      end
+    end,
+    opts = {
+      backend = "kitty",
+      editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
+      tmux_show_only_in_active_window = true,
+      integrations = {
+        markdown = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+        },
+        neorg = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "norg" },
+        },
+      },
+    },
+    config = function(_, opts)
+      -- Requirements (linux):
+      -- sudo apt-get install libmagickwand-dev
+      -- sudo apt-get install libgraphicsmagick1-dev
+      local has_magick = pcall(require, "magick")
+      if has_magick then
+        require("image").setup(opts)
+      end
+    end,
+  },
+  -- CALENDAR
+  {
+    "itchyny/calendar.vim",
+    cmd = { "Calendar" },
+    keys = {
+      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
+    },
   },
 }

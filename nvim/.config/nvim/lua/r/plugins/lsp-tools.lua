@@ -173,9 +173,6 @@ return {
     "hedyhli/outline.nvim",
     -- enabled = false,
     cmd = "Outline",
-    init = function()
-      Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
-    end,
     keys = function()
       local function get_outline()
         local ok_outline, outline = pcall(require, "outline")
@@ -260,6 +257,8 @@ return {
       }
     end,
     config = function(_, opts)
+      Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+
       require("outline").setup(opts)
     end,
     opts = {
@@ -316,7 +315,11 @@ return {
   {
     "glepnir/lspsaga.nvim",
     cmd = "Lspsaga",
-    init = function()
+    dependencies = {
+      { "nvim-tree/nvim-web-devicons" },
+      { "nvim-treesitter/nvim-treesitter" },
+    },
+    config = function(_, opts)
       highlight.plugin("LspsagaCustomHi", {
         -- { SagaBorder = { link = "NormalFloat" } },
         { SagaTitle = { bg = "red" } },
@@ -325,11 +328,9 @@ return {
         -- { SagaFolderName = { link = "Directory" } },
         -- { SagaNormal = { link = "Pmenu" } },
       })
+
+      require("lspsaga").setup(opts)
     end,
-    dependencies = {
-      { "nvim-tree/nvim-web-devicons" },
-      { "nvim-treesitter/nvim-treesitter" },
-    },
     opts = {
       ui = {
         expand = "",

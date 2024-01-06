@@ -268,9 +268,6 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
-    init = function()
-      Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
-    end,
     keys = {
       {
         "<Leader>e",
@@ -334,6 +331,8 @@ return {
       -- },
     },
     opts = function()
+      Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
+
       return {
         sources = { "filesystem", "buffers", "git_status", "document_symbols" },
         source_selector = {
