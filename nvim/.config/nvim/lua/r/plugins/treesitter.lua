@@ -1,9 +1,7 @@
-local function buf_is_large(_, buf)
-  return vim.b[buf].buf_is_large == true
-end
+-- local function buf_is_large(_, buf)
+--   return vim.b[buf].buf_is_large == true
+-- end
 
---  TODO: Check this queries https://github.com/helix-editor/helix/blob/d5e6749fa250f3a7be75c81c7b0611e3c3221d63/runtime/queries/php/highlights.scm
---  make more readable
 return {
   -- TREESITTER
   {
@@ -12,6 +10,29 @@ return {
     build = ":TSUpdate",
     event = { "LazyFile", "VeryLazy" },
     cmd = { "TSUpdateSync", "TSUdate", "TSIntsall" },
+    --  TODO: Check this queries https://github.com/helix-editor/helix/blob/d5e6749fa250f3a7be75c81c7b0611e3c3221d63/runtime/queries/php/highlights.scm
+    --  make more readable
+
+    init = function()
+      vim.api.nvim_create_augroup("treesitter_start", { clear = true })
+      vim.api.nvim_create_autocmd("User", {
+        group = "treesitter_start",
+        pattern = "TreeSitterStart",
+        callback = function(ctx)
+          local buf = ctx.data.bufnr
+          if vim.b[buf].treesitter_disable then
+            return
+          end
+          local lines = vim.api.nvim_buf_line_count(buf)
+          if vim.b[buf].is_big_file or lines > 10000 then
+            vim.bo[buf].indentexpr = ""
+            return
+          end
+          vim.bo[buf].indentexpr = [[v:lua.require('nvim-treesitter').indentexpr()]]
+        end,
+      })
+    end,
+
     -- init = function(plugin)
     --   -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
     --   -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
@@ -131,22 +152,24 @@ return {
 
       highlight = {
         enable = true, -- atm disabled it, nvim got slow
-        disable = function(ft, buf)
+        disable = function(ft)
           -- return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
-          return vim.tbl_contains({ "tex", "latex" }, ft) or buf_is_large(ft, buf) or vim.fn.win_gettype() == "command"
+          return vim.tbl_contains({ "tex", "latex" }, ft)
+
+          -- or buf_is_large(ft, buf) or vim.fn.win_gettype() == "command"
         end,
         additional_vim_regex_highlighting = { "org", "markdown" },
       },
 
       indent = {
         enable = true,
-        disable = function(ft, buf)
-          return vim.tbl_contains({ "markdown", "tex", "latex" }, ft) or buf_is_large(ft, buf)
+        disable = function(ft)
+          return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
         end,
       },
       incremental_selection = {
         enable = false,
-        disable = buf_is_large,
+        -- disable = buf_is_large,
         keymaps = {
           init_selection = false,
           node_incremental = "v",
@@ -157,7 +180,7 @@ return {
       -- nvim-treesitter-textobjects
       textobjects = {
         select = {
-          disable = buf_is_large,
+          -- disable = buf_is_large,
           enable = false,
           lookahead = true,
           keymaps = {
@@ -190,7 +213,7 @@ return {
         },
         lsp_interop = {
           enable = false,
-          disable = buf_is_large,
+          -- disable = buf_is_large,
           peek_definition_code = {
             ["gD"] = "@function.outer",
           },
@@ -238,23 +261,23 @@ return {
         metadata.conceal = icon(node_text) or "󰡯"
       end
 
-      local offset_first_n = function(match, _, _, pred, metadata)
-        ---@cast pred integer[]
-        local capture_id = pred[2]
-        if not metadata[capture_id] then
-          metadata[capture_id] = {}
-        end
-
-        local range = metadata[capture_id].range or { match[capture_id]:range() }
-        local offset = pred[3] or 0
-
-        range[4] = range[2] + offset
-        metadata[capture_id].range = range
-      end
-
-      vim.treesitter.query.add_directive("offset-first-n!", offset_first_n, true)
-
-      vim.treesitter.query.add_directive("ft-conceal!", ft_conceal, true)
+      -- local offset_first_n = function(match, _, _, pred, metadata)
+      --   ---@cast pred integer[]
+      --   local capture_id = pred[2]
+      --   if not metadata[capture_id] then
+      --     metadata[capture_id] = {}
+      --   end
+      --
+      --   local range = metadata[capture_id].range or { match[capture_id]:range() }
+      --   local offset = pred[3] or 0
+      --
+      --   range[4] = range[2] + offset
+      --   metadata[capture_id].range = range
+      -- end
+      --
+      -- vim.treesitter.query.add_directive("offset-first-n!", offset_first_n, true)
+      --
+      -- vim.treesitter.query.add_directive("ft-conceal!", ft_conceal, true)
 
       require("nvim-treesitter.configs").setup(opts)
     end,

@@ -30,11 +30,10 @@ function M.setup(_, opts)
 end
 
 return {
-  -- CONFORM (disabled)
+  -- CONFORM.NVIM
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
-    enabled = false,
     cmd = "ConformInfo",
     keys = {
       {
@@ -103,7 +102,7 @@ return {
           ["json"] = { { "prettierd", "prettier" } },
           ["jsonc"] = { { "prettierd", "prettier" } },
           ["yaml"] = { { "prettierd", "prettier" } },
-          ["markdown"] = { { "prettierd", "prettier" } },
+          ["markdown"] = { { "prettierd", "prettier", "cbfmt" } },
           ["markdown.mdx"] = { { "prettierd", "prettier" } },
           ["graphql"] = { { "prettierd", "prettier" } },
           ["handlebars"] = { { "prettierd", "prettier" } },
@@ -114,6 +113,10 @@ return {
         formatters = {
           injected = { options = { ignore_errors = true } },
           -- # Example of using dprint only when a dprint.json file is present
+          cbfmt = {
+            args = { "--config=" .. vim.env.HOME .. "/.config/miscxrdb/linters/.cbfmt.toml" },
+          },
+
           -- dprint = {
           --   condition = function(ctx)
           --     return vim.fs.find({ "dprint.json" }, { path = ctx.filename, upward = true })[1]

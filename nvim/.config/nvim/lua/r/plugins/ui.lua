@@ -315,10 +315,25 @@ return {
       }
     end,
   },
-  -- NEO-SCROLL
+  -- NEOSCROLL.NVIM
   {
     "karb94/neoscroll.nvim", -- NOTE: alternative: 'declancm/cinnamon.nvim'
     event = "VeryLazy",
-    opts = { hide_cursor = true, mappings = { "<C-d>", "<C-u>", "zt", "zz", "zb" } },
+    opts = {
+      hide_cursor = true,
+      mappings = { "<C-d>", "<C-u>", "zt", "zz", "zb" },
+      pre_hook = function()
+        vim.opt.eventignore:append {
+          "WinScrolled",
+          "CursorMoved",
+        }
+      end,
+      post_hook = function()
+        vim.opt.eventignore:remove {
+          "WinScrolled",
+          "CursorMoved",
+        }
+      end,
+    },
   },
 }

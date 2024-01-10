@@ -45,6 +45,7 @@ return {
         "markdownlint",
         "marksman",
         "codespell",
+        "cbfmt",
 
         -- docker
         "hadolint",
@@ -889,6 +890,7 @@ return {
   -- RASI
   {
     "Fymyte/rasi.vim",
+    event = "LazyFile",
     ft = "rasi",
   },
   -- LOG SYNTAX

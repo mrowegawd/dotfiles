@@ -168,7 +168,7 @@ return {
       }
     end,
   },
-  -- SYMBOLSOUTLINE
+  -- OUTLINE.NVIM
   {
     "hedyhli/outline.nvim",
     -- enabled = false,
@@ -313,7 +313,7 @@ return {
   },
   -- LSPSAGA
   {
-    "glepnir/lspsaga.nvim",
+    "nvimdev/lspsaga.nvim",
     cmd = "Lspsaga",
     dependencies = {
       { "nvim-tree/nvim-web-devicons" },

@@ -5,6 +5,7 @@ return {
   {
     "MunifTanjim/nougat.nvim",
     event = "LazyFile",
+    -- enabled = false,
     config = function()
       local highlight = require "r.config.highlights"
 

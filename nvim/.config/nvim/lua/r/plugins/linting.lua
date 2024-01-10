@@ -9,6 +9,7 @@ return {
   {
     "nvimtools/none-ls.nvim",
     event = "LazyFile",
+    enabled = false,
     dependencies = { "mason.nvim" },
     init = function()
       Util.on_very_lazy(function()
@@ -49,12 +50,8 @@ return {
         nls.builtins.code_actions.gomodifytags,
         nls.builtins.code_actions.impl,
 
-        -- nls.builtins.diagnostics.markdownlint.args {
-        --   -- { "--stdin", "--config=" .. vim.env.HOME .. "/.markdownlint.json" },
-        --   { "--stdin", "--config=~/.markdownlint.json" },
-        -- },
         nls.builtins.diagnostics.markdownlint.with {
-          extra_args = { "--stdin", "--config=" .. vim.env.HOME .. "/.markdownlint.json" },
+          extra_args = { "--stdin", "--config=" .. vim.env.HOME .. "/.config/miscxrdb/linters/.markdownlint.json" },
         },
 
         -- sh
@@ -94,10 +91,9 @@ return {
       })
     end,
   },
-  -- NVIM-LINT (disabled)
+  -- NVIM-LINT
   {
     "mfussenegger/nvim-lint",
-    enabled = false,
     event = "LazyFile",
     opts = {
       -- Event to trigger linters
@@ -105,7 +101,7 @@ return {
       linters_by_ft = {
         fish = { "fish" },
         cmake = { "cmakelint" },
-        markdown = { "markdownlint" },
+        markdown = { "markdownlint", "codespell" },
         go = { "golangcilint" },
         docker = { "hadolint" },
         -- Use the "*" filetype to run linters on all filetypes.
@@ -117,10 +113,10 @@ return {
       -- or add custom linters.
       ---@type table<string,table>
       linters = {
-        -- TODO: it not works
-        -- markdownlint = {
-        --   args = { "--stdin", "-c", vim.env.HOME .. "/.config/linters/.markdownlint.json" },
-        -- },
+        markdownlint = {
+          args = { "--config=" .. vim.env.HOME .. "/.config/miscxrdb/linters/.markdownlint.json" },
+        },
+
         -- Example of using selene only when a selene.toml file is present
         -- selene = {
         --   -- `condition` is another LazyVim extension that allows you to

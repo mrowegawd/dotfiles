@@ -14,6 +14,7 @@ local Util = require "r.utils"
 Util.map.imap("jk", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 Util.map.imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 
+Util.map.inoremap("<c-c>", "<Esc>", silent)
 Util.map.inoremap("<c-a>", "<c-O>^", silent)
 Util.map.inoremap("<c-e>", "<c-O>$", silent)
 Util.map.inoremap("<c-d>", "<c-O>dw", silent)
@@ -361,72 +362,45 @@ Util.map.nnoremap(
 Util.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 Util.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
+local buf, win
 Util.map.nnoremap("<F1>", function()
-  print "just random map, check <keymaps/general>"
-  -- local File = require "orgmode.parser.file"
-  -- local Files = require "orgmode.parser.files"
-  -- local Notifications = require "orgmode.notifications"
-  -- local notifications = Notifications:new()
-  --
-  -- local Date = require "orgmode.objects.date"
-  -- local time = Date.now():start_of "minute"
-  -- print(vim.inspect(time))
-  -- local tasks = Notifications:get_tasks(time:to_string())
+  local function create_win()
+    vim.api.nvim_command "botright vnew"
+    win = vim.api.nvim_get_current_win()
+    buf = vim.api.nvim_get_current_buf()
 
-  -- local time = Date.from_string "2023-12-18 Mon 03:16"
-  -- local tasks = notifications:get_tasks(Date.now():start_of "day")
-  -- print(vim.inspect(tasks))
+    vim.api.nvim_buf_set_name(0, "result #" .. buf)
 
-  for _, winnr in ipairs(fn.range(1, fn.winnr "$")) do
-    print(fn.getwinvar(winnr, "&syntax") == "qf")
+    vim.api.nvim_buf_set_option(0, "buftype", "nofile")
+    vim.api.nvim_buf_set_option(0, "swapfile", false)
+    -- vim.api.nvim_buf_set_option(0, "filetype", filetype)
+    vim.api.nvim_buf_set_option(0, "bufhidden", "wipe")
+
+    vim.api.nvim_command "setlocal wrap"
+  end
+  local function on_stdout(_, data)
+    if data then
+      for _, line in ipairs(data) do
+        if line ~= "" then
+          vim.api.nvim_buf_set_lines(buf, -1, -1, false, { line })
+        end
+      end
+    end
   end
 
-  -- local config = require "orgmode.config"
-  -- Files.ensure_loaded()
-  -- config:extend {
-  --   notifications = {
-  --     reminder_time = { 10, 0 },
-  --     deadline_warning_reminder_time = { 10, 5, 0, -5 },
-  --     repeater_reminder_time = { 10, 5, 0 },
-  --   },
-  -- }
-  -- local tasks = notifications.get_tasks(time:to_string())
-  -- print(vim.inspect(tasks))
+  if win and vim.api.nvim_win_is_valid(win) then
+    vim.api.nvim_win_close(win, true)
+  end
+  create_win()
 
-  -- for _, orgfile in ipairs(Files.all()) do
-  --   -- print(file.filename)
-  --   for _, headline in ipairs(orgfile:get_opened_unfinished_headlines()) do
-  --     for _, date in ipairs(headline:get_deadline_and_scheduled_dates()) do
-  --       print(vim.inspect(date))
-  --     end
-  --   end
-  -- end
+  vim.fn.jobstart({ "cargo", "run" }, {
+    on_stdout = on_stdout,
+    on_stderr = on_stdout,
+    stdout_buffered = false,
+    stderr_buffered = false,
+  })
 
-  -- local headline_dates = {}
-  -- for _, orgfile in ipairs(Files.all()) do
-  --   for _, headline in ipairs(orgfile:get_opened_headlines()) do
-  --     for _, headline_date in ipairs(headline:get_valid_dates_for_agenda()) do
-  --       table.insert(headline_dates, {
-  --         headline_date = headline_date,
-  --         headline = headline,
-  --       })
-  --     end
-  --   end
-  -- end
-  --
-  -- -- print(vim.inspect(headline_dates))
-  -- print(vim.inspect(#headline_dates))
-
-  -- local date = Date.now():start_of "minute"
-  --
-  -- local function generate(content_line, keyword)
-  --   keyword = keyword or "TODO"
-  --   local parsed = File.from_content({
-  --     "* " .. keyword .. " This is some content",
-  --     content_line,
-  --   }, "", "")
-  --   return parsed:get_section(1)
-  -- end
+  vim.cmd [[wincmd p]]
 end)
 
 local checkconceallevel = false

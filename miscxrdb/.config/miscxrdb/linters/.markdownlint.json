@@ -4,12 +4,12 @@
   },
   "MD012": false,
   "MD013": {
-    "line_length": 80,
+    "line_length": 120,
     "code_block_line_length": 120
   },
   "MD018": false,
-  "MD024": false,
   "MD025": false,
+  "MD024": false,
   "MD032": false,
   "MD034": false
 }

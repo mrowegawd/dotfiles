@@ -56,4 +56,33 @@ function M.smart_quit()
   end
 end
 
+function M.getfsize(bufnr)
+  local file = nil
+  if bufnr == nil then
+    file = vim.fn.expand "%:p"
+  else
+    file = vim.api.nvim_buf_get_name(bufnr)
+  end
+
+  local size = vim.fn.getfsize(file)
+  if size <= 0 then
+    return 0
+  end
+  return size
+end
+
+function M.is_big_file(buf, opts)
+  opts = opts or {}
+  local size = opts.size or (1024 * 1000)
+  local lines = opts.lines or 3500
+
+  if M.getfsize(buf) > size then
+    return true
+  end
+
+  if vim.api.nvim_buf_line_count(buf) > lines then
+    return true
+  end
+end
+
 return M

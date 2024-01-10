@@ -257,7 +257,7 @@ return {
                 -- ========================================================
 
                 keybinds.remap_event("norg", "n", "<Leader>oo", "core.esupports.hop.hop-link")
-                keybinds.remap_event("norg", "n", "<M-CR>", "core.esupports.hop.hop-link", "vsplit")
+                -- keybinds.remap_event("norg", "n", "<M-CR>", "core.esupports.hop.hop-link", "vsplit")
 
                 -- go next heading fold
                 keybinds.remap_event("norg", "n", "<a-n>", "core.integrations.treesitter.next.heading")
@@ -527,9 +527,57 @@ return {
       orgmode.setup(opts)
     end,
   },
+  -- MKDNFLOW.NVIM
+  {
+    "jakewvincent/mkdnflow.nvim",
+    ft = { "markdown" },
+    keys = {
+      { "<Tab>" },
+    },
+    opts = {
+      mappings = {
+        MkdnEnter = false,
+        MkdnTab = false,
+        MkdnSTab = false,
+        MkdnNextLink = false,
+        MkdnPrevLink = false,
+        MkdnNextHeading = { "n", "<c-n>" },
+        MkdnPrevHeading = { "n", "<a-p>" },
+        MkdnGoBack = false,
+        MkdnGoForward = false,
+        MkdnCreateLink = false, -- see MkdnEnter
+        MkdnCreateLinkFromClipboard = false,
+        MkdnFollowLink = false, -- see MkdnEnter
+        MkdnDestroyLink = false,
+        MkdnTagSpan = false,
+        MkdnMoveSource = false,
+        MkdnYankAnchorLink = false,
+        MkdnYankFileAnchorLink = false,
+        MkdnIncreaseHeading = false,
+        MkdnDecreaseHeading = false,
+        MkdnToggleToDo = false,
+        MkdnNewListItem = false,
+        MkdnNewListItemBelowInsert = false,
+        MkdnNewListItemAboveInsert = false,
+        MkdnExtendList = false,
+        MkdnUpdateNumbering = false,
+        MkdnTableNextCell = false,
+        MkdnTablePrevCell = false,
+        MkdnTableNextRow = false,
+        MkdnTablePrevRow = false,
+        MkdnTableNewRowBelow = false,
+        MkdnTableNewRowAbove = false,
+        MkdnTableNewColAfter = false,
+        MkdnTableNewColBefore = false,
+        MkdnFoldSection = false,
+        MkdnUnfoldSection = false,
+      },
+    },
+  },
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
+    ft = { "markdown" },
     cmd = {
       "ObsidianOpen",
       "ObsidianNew",
@@ -547,8 +595,16 @@ return {
       {
         "<Localleader>ff",
         function()
-          vim.cmd [[ObsidianSearch]]
+          return require("fzf-lua").live_grep_glob {
+            prompt = "  ",
+            cwd = Config.path.wiki_path,
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
+            winopts = {
+              title = Util.fzflua.format_title("[Obsidian] Grep", " "),
+            },
+          }
         end,
+
         desc = "Note(fzflua): obsidian search",
       },
     },
@@ -709,7 +765,7 @@ return {
         markdown = {
           headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4", "Headline5" },
           -- fat_headline_lower_string = "▔",
-          codeblock_highlight = "CodeBlock",
+          codeblock_highlight = "CodeBlock1",
         },
         fat_headline_lower_string = "▔",
       }
@@ -770,10 +826,10 @@ return {
       end
     end,
   },
-  -- CALENDAR
+  -- CALENDAR-VIM
   {
-    "itchyny/calendar.vim",
-    cmd = { "Calendar" },
+    "mattn/calendar-vim",
+    event = "LazyFile",
     keys = {
       { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
     },

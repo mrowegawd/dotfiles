@@ -1,23 +1,23 @@
-local fn, cmd = vim.fn, vim.cmd
-
 local highlight = require "r.config.highlights"
 
 local Util = require "r.utils"
 
 local Icon = require("r.config").icons
 
+local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
+local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
+
 return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
-    event = "LazyFile",
     opts = function()
       highlight.plugin("flash.nvim", {
         { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 3 }, bold = true } },
         {
           FlashLabel = {
-            fg = { from = "Error", attr = "fg", alter = 0.1 },
-            bg = "NONE",
+            bg = { from = "Error", attr = "fg", alter = 0.1 },
+            fg = { from = "Normal", attr = "bg", alter = 0.5 },
             bold = true,
             strikethrough = false,
           },
@@ -27,188 +27,24 @@ return {
       return {
         modes = {
           char = {
-            keys = { "f", "F" },
+            keys = { "F", "t", "T", ";" }, -- remove "," from keys
           },
-          search = { enabled = false },
+          search = {
+            enabled = false,
+          },
+        },
+        jump = {
+          nohlsearch = true,
         },
       }
     end,
     -- stylua: ignore
     keys = {
-      { [[;;]], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
-      { [['']], mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Misc(flash)" },
-      -- { "<c-s>", mode = { "n", "o", "x" }, function() require("flash").treesitter() end, desc = "Misc(flash): treesitter" },
-      -- { "r", mode = "o", function() require("flash").remote() end, desc = "Misc(flash): remote" },
-      -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Misc(flash): toggle search" },
-    },
-  },
-  -- NVIM-HLSLENS (disabled)
-  {
-    "kevinhwang91/nvim-hlslens",
-    enabled = false,
-    event = "VeryLazy",
-    opts = function()
-      vim.keymap.set({ "n", "v", "o", "i", "c" }, "<Plug>(StopHL)", 'execute("nohlsearch")[-1]', { expr = true })
-
-      local function stop_hl()
-        if vim.v.hlsearch == 0 or vim.api.nvim_get_mode().mode ~= "n" then
-          return
-        end
-        Util.cmd.feedkey("<Plug>(StopHL)", "n")
-      end
-
-      local function hl_search()
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        local curr_line = vim.api.nvim_get_current_line()
-        local ok, match = pcall(fn.matchstrpos, curr_line, fn.getreg "/", 0)
-        if pcall(require, "hlslens") then
-          require("hlslens").start()
-        end
-
-        if not ok then
-          return
-        end
-        local _, p_start, p_end = unpack(match)
-        -- if the cursor is in a search result, leave highlighting on
-        if col < p_start or col > p_end then
-          stop_hl()
-        end
-      end
-
-      Util.cmd.augroup("VimrcIncSearchHighlight", {
-        event = { "CursorMoved" },
-        command = function()
-          hl_search()
-        end,
-      }, {
-        event = { "InsertEnter" },
-        command = function()
-          stop_hl()
-        end,
-      }, {
-        event = { "OptionSet" },
-        pattern = { "hlsearch" },
-        command = function()
-          vim.schedule(function()
-            cmd.redrawstatus()
-          end)
-        end,
-      }, {
-        event = "RecordingEnter",
-        command = function()
-          vim.o.hlsearch = false
-        end,
-      }, {
-        event = "RecordingLeave",
-        command = function()
-          vim.o.hlsearch = true
-        end,
-      })
-      return {}
-    end,
-    config = true,
-  },
-  {
-    "mangelozzi/nvim-rgflow.lua",
-    -- event = "VeryLazy",
-    -- enabled = false,
-    dependencies = {
-      "kevinhwang91/nvim-bqf",
-    },
-    keys = {
-      {
-        "<Localleader>fg",
-        function()
-          require("rgflow").open(nil, vim.b.grep_flags or nil, vim.uv.cwd(), {
-            custom_start = function(pattern, flags, path)
-              require("r.utils").fzflua.grep { cwd = path, query = pattern, rg_opts = flags }
-            end,
-          })
-        end,
-        desc = "Grep search in all project",
-      },
-      {
-        "<Localleader>gg",
-        '<cmd>lua require("rgflow").open_again()<cr>',
-        desc = "Open rg flow with previous pattern",
-      },
-    },
-    opts = {
-      default_trigger_mappings = false,
-      default_ui_mappings = true,
-      cmd_flags = "--smart-case --hidden --fixed-strings --no-fixed-strings -M 500",
-      colors = {
-        RgFlowInputPath = { link = "NormalFloat" },
-        RgFlowInputBg = { link = "NormalFloat" },
-        RgFlowInputFlags = { link = "NormalFloat" },
-        RgFlowInputPattern = { link = "NormalFloat" },
-      },
-
-      -- mappings = {
-      --   trigger = {
-      --     -- Normal mode maps
-      --     n = {
-      --       ["<leader>rG"] = "open_blank", -- open UI - search pattern = blank
-      --       ["<leader>rg"] = "open_cword", -- open UI - search pattern = <cword>
-      --       ["<leader>rp"] = "open_paste", -- open UI - search pattern = First line of unnamed register as the search pattern
-      --       ["<leader>ra"] = "open_again", -- open UI - search pattern = Previous search pattern
-      --       ["<leader>rx"] = "abort", -- close UI / abort searching / abortadding results
-      --       ["<leader>rc"] = "print_cmd", -- Print a version of last run rip grep that can be pasted into a shell
-      --       ["<leader>r?"] = "print_status", -- Print info about the current state of rgflow (mostly useful for deving on rgflow)
-      --     },
-      --     -- Visual/select mode maps
-      --     x = {
-      --       ["<leader>rg"] = "open_visual", -- open UI - search pattern = current visual selection
-      --     },
-      --   },
-      --   -- Mappings that are local only to the RgFlow UI
-      --   ui = {
-      --     -- Normal mode maps
-      --     n = {
-      --       ["<CR>"] = "start", -- With the ui open, start a search with the current parameters
-      --       ["<ESC>"] = "close", -- With the ui open, discard and close the UI window
-      --       ["?"] = "show_rg_help", -- Show the rg help in a floating window, which can be closed with q or <ESC> or the usual <C-W><C-C>
-      --       ["<BS>"] = "nop", -- No operation
-      --       ["<C-^>"] = "nop", -- No operation
-      --       ["<C-6>"] = "nop", -- No operation
-      --     },
-      --     -- Insert mode maps i = {
-      --     ["<CR>"] = "start", -- With the ui open, start a search with the current parameters (from insert mode)
-      --     -- ["<TAB>"] = "auto_complete", -- start autocomplete if PUM not visible, if visible use own hotkeys to select an option
-      --     -- ["<C-N>"] = "auto_complete", -- start autocomplete if PUM not visible, if visible use own hotkeys to select an option
-      --     -- ["<C-P>"] = "auto_complete", -- start autocomplete if PUM not visible, if visible use own hotkeys to select an option
-      --   },
-      -- },
-      -- -- Mapping that are local only to the QuickFix window
-      -- quickfix = {
-      --   -- Normal
-      --   n = {
-      --     ["d"] = "qf_delete", -- QuickFix normal mode delete operator
-      --     ["dd"] = "qf_delete_line", -- QuickFix delete a line from quickfix
-      --     ["<TAB>"] = "qf_mark", -- QuickFix mark a line in the quickfix
-      --     ["<S-TAB>"] = "qf_unmark", -- QuickFix unmark a line in the quickfix window
-      --     ["<BS>"] = "nop", -- No operation
-      --     ["<C-^>"] = "nop", -- No operation - Probably don't want to switch to a buffer in the little quickfix window
-      --     ["<C-6>"] = "nop", -- No operation
-      --   },
-      --   -- Visual/select mode maps
-      --   x = {
-      --     ["d"] = "qf_delete_visual", -- QuickFix visual mode delete operator
-      --     ["<TAB>"] = "qf_mark_visual", -- QuickFix visual mode mark operator
-      --     ["<S-TAB>"] = "qf_unmark_visual", -- QuickFix visual mode unmark operator
-      --   },
-      -- },
-      -- default_quickfix_mappings = true,
-
-      -- WARNING !!! Glob for '-g *{*}' will not use .gitignore file: https://github.com/BurntSushi/ripgrep/issues/2252
-      -- cmd_flags = (
-      --   "--smart-case -g *.{*,py} -g !*.{min.js,pyc} --fixed-strings --no-fixed-strings --no-ignore -M 500"
-      --   -- Exclude globs
-      --   .. " -g !**/.angular/"
-      --   .. " -g !**/node_modules/"
-      --   .. " -g !**/static/*/jsapp/"
-      --   .. " -g !**/static/*/wcapp/"
-      -- ),
+      { "f", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
+      -- { "S", function() require("flash").treesitter() end, mode = { "o", "x" } },
+      -- { "r", function() require("flash").remote() end, mode = "o", desc = "Remote Flash" },
+      -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Toggle Flash Search" },
+      -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
     },
   },
   -- FZF-LUA
@@ -219,6 +55,25 @@ return {
     dependencies = {
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
+      {
+        "mangelozzi/nvim-rgflow.lua",
+        event = "LazyFile",
+        dependencies = {
+          "kevinhwang91/nvim-bqf",
+          "ibhagwan/fzf-lua",
+        },
+        opts = {
+          default_trigger_mappings = false,
+          default_ui_mappings = true,
+          cmd_flags = rg_opts,
+          colors = {
+            RgFlowInputPath = { link = "NormalFloat" },
+            RgFlowInputBg = { link = "NormalFloat" },
+            RgFlowInputFlags = { link = "NormalFloat" },
+            RgFlowInputPattern = { link = "NormalFloat" },
+          },
+        },
+      },
     },
     keys = {
       { "sf", "<CMD>FzfLua buffers<CR>", desc = "WinNav(fzflua): open" },
@@ -314,7 +169,7 @@ return {
         function()
           local path = require "fzf-lua.path"
 
-          local qf_items = fn.getqflist()
+          local qf_items = vim.fn.getqflist()
 
           local qf_ntbl = {}
           for _, qf_item in pairs(qf_items) do
@@ -335,7 +190,6 @@ return {
     },
     opts = function()
       local actions = require "fzf-lua.actions"
-      local path = require "fzf-lua.path"
 
       local img_preview_command = vim.fn.executable "ueberzug" == 1 and { "ueberzug" } or nil
       local html_preview_command = vim.fn.executable "w3m" == 1 and { "w3m", "-dump" } or nil
@@ -440,10 +294,11 @@ return {
           fzf_opts = {
             ["--header"] = [[Ctrl-g:'grep dir',Ctrl-y:'copy',Ctrl-x:'togglehidd']],
           },
-          fd_opts = [[--color never --type f --hidden --follow ]] .. [[--exclude .git --exclude '*.pyc']],
+          fd_opts = fd_opts,
           -- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
           actions = {
             ["default"] = function(selected, opts)
+              local path = require "fzf-lua.path"
               local selected_item = selected[1]
               local status, entry = pcall(path.entry_to_file, selected_item, opts, opts.force_uri)
 
@@ -460,6 +315,18 @@ return {
                 end
               end
             end,
+            ["ctrl-e"] = function(_, args)
+              require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
+                custom_start = function(pattern, flags, path)
+                  args.cwd = path
+                  args.rg_opts = flags
+                  args.cmd = "fd" .. " " .. flags
+                  args.query = pattern
+                  return require("fzf-lua").files(args)
+                end,
+              })
+            end,
+
             ["ctrl-y"] = function(selected, _)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
               local pth = selected[1]:sub(slice_num_str)
@@ -469,43 +336,43 @@ return {
 
               require("fzf-lua").actions.resume()
             end,
-            ["ctrl-x"] = function(_, args)
-              if args.cmd:find "--hidden" then
-                args.cmd = args.cmd:gsub("--hidden", "", 1)
-                if args.cmd:find "--no-ignore" then
-                  args.cmd = args.cmd:gsub("--no-ignore", "", 1)
-                end
-              else
-                args.cmd = args.cmd .. " --hidden --no-ignore"
-              end
-
-              require("fzf-lua").files {
-                cmd = args.cmd,
-                winopts = { title = Util.fzflua.format_title("Files hidden", "󰈙") },
-              }
-            end,
-            ["ctrl-g"] = function(_, args)
-              if args.cmd:find "--type f" then
-                args.cmd = args.cmd:gsub("--type f", "", 1)
-                args.cmd:gsub("%s*\\*$", "")
-                args.cmd = args.cmd .. " --type d"
-                args.winopts = {
-                  preview = { hidden = "hidden" },
-                  title = Util.fzflua.format_title("Grep on directory", ""),
-                }
-              elseif args.cmd:find "--type d" then
-                args.cmd = args.cmd:gsub("--type d", "", 1)
-                args.cmd:gsub("%s*\\*$", "")
-                args.cmd = args.cmd .. " --type f"
-                args.winopts = {
-                  preview = { hidden = "nohidden" },
-                }
-              end
-              require("fzf-lua").files {
-                cmd = args.cmd,
-                winopts = args.winopts,
-              }
-            end,
+            -- ["ctrl-x"] = function(_, args)
+            --   if args.cmd:find "--hidden" then
+            --     args.cmd = args.cmd:gsub("--hidden", "", 1)
+            --     if args.cmd:find "--no-ignore" then
+            --       args.cmd = args.cmd:gsub("--no-ignore", "", 1)
+            --     end
+            --   else
+            --     args.cmd = args.cmd .. " --hidden --no-ignore"
+            --   end
+            --
+            --   require("fzf-lua").files {
+            --     cmd = args.cmd,
+            --     winopts = { title = Util.fzflua.format_title("Files hidden", "󰈙") },
+            --   }
+            -- end,
+            -- ["ctrl-g"] = function(_, args)
+            --   if args.cmd:find "--type f" then
+            --     args.cmd = args.cmd:gsub("--type f", "", 1)
+            --     args.cmd:gsub("%s*\\*$", "")
+            --     args.cmd = args.cmd .. " --type d"
+            --     args.winopts = {
+            --       preview = { hidden = "hidden" },
+            --       title = Util.fzflua.format_title("Grep on directory", ""),
+            --     }
+            --   elseif args.cmd:find "--type d" then
+            --     args.cmd = args.cmd:gsub("--type d", "", 1)
+            --     args.cmd:gsub("%s*\\*$", "")
+            --     args.cmd = args.cmd .. " --type f"
+            --     args.winopts = {
+            --       preview = { hidden = "nohidden" },
+            --     }
+            --   end
+            --   require("fzf-lua").files {
+            --     cmd = args.cmd,
+            --     winopts = args.winopts,
+            --   }
+            -- end,
           },
         },
         git = {
@@ -694,11 +561,25 @@ return {
           prompt = " ",
           winopts = { title = Util.fzflua.format_title("Grep", " ") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
-          rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096",
+          rg_opts = rg_opts,
           fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep string',Ctrl-x:'togglehidd']] },
+
           no_header = true, -- disable default header
           actions = {
             ["ctrl-g"] = { actions.grep_lgrep },
+            ["ctrl-e"] = function(_, args)
+              -- bring up rgflow ui to change rg args.
+              require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
+                custom_start = function(pattern, flags, path)
+                  args.cwd = path
+                  args.rg_opts = flags
+                  args.cmd = "rg" .. " " .. flags
+                  args.query = pattern
+                  return require("fzf-lua").live_grep_glob(args)
+                end,
+              })
+            end,
+
             -- ["ctrl-z"] = function(_, args)
             --   if args.cmd:find "--fixed-strings" then
             --     args.cmd = args.cmd:gsub("--fixed-strings", "", 1)
@@ -716,24 +597,25 @@ return {
             --   end
             --   require("fzf-lua").live_grep_glob(tbl_ops)
             -- end,
-            ["ctrl-x"] = function(_, args)
-              local toggle = 1
 
-              args.rg_opts =
-                "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
-
-              if toggle == 1 then
-                args.rg_opts =
-                  "--column --hidden --no-ignore --no-heading --ignore-case -g !.git --smart-case --color=always --max-columns=4096"
-                toggle = 0
-              else
-                toggle = 1
-              end
-              require("fzf-lua").live_grep_glob {
-                rg_opts = args.rg_opts,
-                winopts = { title = Util.fzflua.format_title("Grep hidden", " ") },
-              }
-            end,
+            -- ["ctrl-x"] = function(_, args)
+            --   local toggle = 1
+            --
+            --   args.rg_opts =
+            --     "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
+            --
+            --   if toggle == 1 then
+            --     args.rg_opts =
+            --       "--column --hidden --no-ignore --no-heading --ignore-case -g !.git --smart-case --color=always --max-columns=4096"
+            --     toggle = 0
+            --   else
+            --     toggle = 1
+            --   end
+            --   require("fzf-lua").live_grep_glob {
+            --     rg_opts = args.rg_opts,
+            --     winopts = { title = Util.fzflua.format_title("Grep hidden", " ") },
+            --   }
+            -- end,
 
             --             ["ctrl-y"] = function()
             --               require("fzf-lua").fzf_exec({}, {

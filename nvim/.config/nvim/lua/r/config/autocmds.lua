@@ -25,16 +25,19 @@ Util.cmd.augroup("WrapFt", {
 })
 
 Util.cmd.augroup("LargeFileSettings", {
-  event = { "BufReadPre" },
+  event = { "BufRead" },
   desc = "Set settings for large files.",
-  command = function(info)
-    if vim.b.large_file ~= nil then
-      return
-    end
-    vim.b.large_file = false
-    local stat = vim.uv.fs_stat(info.match)
-    if stat and stat.size > 1000000 then
-      vim.b.large_file = true
+  command = function(ctx)
+    local buf = ctx.buf
+
+    if Util.buf.is_big_file(ctx.buf) then
+      vim.b[buf].is_big_file = true
+      vim.b[buf].copilot_enabled = false
+      vim.b[buf].autoformat_disable = true
+      vim.b[buf].minicursorword_disable = true
+      vim.b[buf].diagnostic_disable = true
+      vim.b[buf].lsp_disable = true
+
       vim.opt_local.spell = false
       vim.opt_local.swapfile = false
       vim.opt_local.undofile = false
@@ -44,13 +47,18 @@ Util.cmd.augroup("LargeFileSettings", {
       vim.opt_local.signcolumn = "no"
       vim.opt_local.foldcolumn = "0"
       vim.opt_local.winbar = ""
+
+      vim.api.nvim_create_augroup("disable_syntax_on_buf_" .. buf, { clear = true })
       vim.api.nvim_create_autocmd("BufReadPost", {
-        buffer = info.buf,
+        group = "disable_syntax_on_buf_" .. buf,
+        buffer = buf,
         once = true,
-        callback = function()
-          vim.opt_local.syntax = ""
-          return true
-        end,
+        callback = vim.schedule_wrap(function()
+          local current_buf = vim.api.nvim_get_current_buf()
+          if current_buf == buf then
+            vim.bo[buf].syntax = ""
+          end
+        end),
       })
     end
   end,
@@ -224,15 +232,12 @@ Util.cmd.augroup("ConvertNorg", {
 
 Util.cmd.augroup("CheckOutsideTime", {
   -- automatically check for changed files outside vim
-  event = {
-    "WinEnter",
-    "BufWinEnter",
-    "BufWinLeave",
-    "BufRead",
-    "BufEnter",
-    "FocusGained",
-  },
-  command = "silent! checktime",
+  event = { "FocusGained", "TermClose", "TermLeave" },
+  command = function()
+    if vim.o.buftype ~= "nofile" then
+      vim.cmd "checktime"
+    end
+  end,
 })
 
 -- Util.cmd.augroup("WindowDim", {
