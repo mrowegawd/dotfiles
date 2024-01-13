@@ -4,6 +4,9 @@ local nosilent = { silent = false }
 local fn, cmd, fmt = vim.fn, vim.cmd, string.format
 
 local Util = require "r.utils"
+local function not_vscode()
+  return vim.fn.exists "g:vscode" == 0
+end
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ EDITING TEXT                                             │
@@ -146,6 +149,49 @@ Util.map.nnoremap("<Leader>P", function()
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
   print(cwd .. "/" .. fname)
 end)
+
+local function replace_keymap(confirmation, visual)
+  local text = [[:%s/]]
+  local search_string = ""
+  if visual then
+    search_string = Util.map.getVisualSelection()
+  else
+    text = text .. [[\<]]
+    search_string = vim.fn.expand "<cword>"
+  end
+  text = text .. Util.map.escape(search_string, "[]")
+  if not visual then
+    text = text .. [[\>]]
+  end
+  text = text .. "/" .. Util.map.escape(search_string, "&")
+  if confirmation then
+    text = text .. [[/gcI]]
+  else
+    text = text .. [[/gI]]
+  end
+  Util.map.type_no_escape(text)
+
+  if not_vscode() then
+    local move_text = [[<Left><Left><Left>]]
+    if confirmation then
+      move_text = move_text .. [[<Left>]]
+    end
+    Util.map.type_escape(move_text)
+  end
+end
+
+Util.map.nnoremap("sr", function()
+  replace_keymap(false, false)
+end, { desc = "Misc: find and [r]eplace word under cursor" })
+-- Util.map.nnoremap("sc", function()
+--   replace_keymap(true, false)
+-- end, { desc = "Misc: find and [r]eplace word under cursor with [c]onfirmation" })
+-- Util.map.nnoremap("<leader>r", function()
+--   replace_keymap(false, true)
+-- end, { desc = "Misc: find and [r]eplace selected" })
+-- Util.map.nnoremap("<leader>rc", function()
+--   replace_keymap(true, true)
+-- end, { desc = "Misc: find and [r]eplace selected with [c]onfirmation" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ WINDOWS AND NAV                                          │

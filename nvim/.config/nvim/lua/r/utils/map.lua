@@ -102,4 +102,28 @@ function M.on_attach(_, buffer, spec_maps)
   end
 end
 
+function M.type_no_escape(text)
+  vim.api.nvim_feedkeys(text, "n", false)
+end
+function M.type_escape(text)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(text, true, true, true), "n", false)
+end
+function M.escape(text, additional_char)
+  if not additional_char then
+    additional_char = ""
+  end
+  return vim.fn.escape(text, "/" .. additional_char)
+end
+function M.getVisualSelection()
+  vim.cmd 'noau normal! "vy"'
+  local text = vim.fn.getreg "v"
+  vim.fn.setreg("v", {})
+  text = string.gsub(text, "\n", "")
+  if #text > 0 then
+    return text
+  else
+    return ""
+  end
+end
+
 return M
