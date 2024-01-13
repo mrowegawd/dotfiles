@@ -530,10 +530,11 @@ return {
   -- MKDNFLOW.NVIM
   {
     "jakewvincent/mkdnflow.nvim",
+    event = "LazyFile",
     ft = { "markdown" },
-    keys = {
-      { "<Tab>" },
-    },
+    -- keys = {
+    --   { "<Tab>" },
+    -- },
     opts = {
       mappings = {
         MkdnEnter = false,

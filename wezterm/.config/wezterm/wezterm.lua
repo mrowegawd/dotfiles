@@ -87,7 +87,7 @@ return {
 			font = font_with_fallback("JetBrains Mono", { weight = "Bold" }),
 		},
 		{
-			italic = true,
+			italic = false,
 			-- intensity = "Normal",
 			font = font_with_fallback("JetBrains Mono", { weight = "Regular" }),
 		},

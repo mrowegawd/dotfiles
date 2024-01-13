@@ -327,7 +327,7 @@ return {
       })
 
       local stl_inactive = Bar "statusline"
-      stl_inactive:add_item(mode)
+      -- stl_inactive:add_item(mode)
       stl_inactive:add_item(nut.spacer())
 
       -- stl_inactive:add_item {

@@ -102,7 +102,7 @@ return {
           ["json"] = { { "prettierd", "prettier" } },
           ["jsonc"] = { { "prettierd", "prettier" } },
           ["yaml"] = { { "prettierd", "prettier" } },
-          ["markdown"] = { { "prettierd", "prettier", "cbfmt" } },
+          ["markdown"] = { "prettierd", "cbfmt" },
           ["markdown.mdx"] = { { "prettierd", "prettier" } },
           ["graphql"] = { { "prettierd", "prettier" } },
           ["handlebars"] = { { "prettierd", "prettier" } },
@@ -114,7 +114,7 @@ return {
           injected = { options = { ignore_errors = true } },
           -- # Example of using dprint only when a dprint.json file is present
           cbfmt = {
-            args = { "--config=" .. vim.env.HOME .. "/.config/miscxrdb/linters/.cbfmt.toml" },
+            prepend_args = { "--config=" .. vim.env.HOME .. "/.config/linters/.cbfmt.toml" },
           },
 
           -- dprint = {

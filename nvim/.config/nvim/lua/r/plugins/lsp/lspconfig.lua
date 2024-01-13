@@ -41,6 +41,9 @@ return {
         "cmakelang",
         "cmakelint",
 
+        -- kotlin
+        -- "ktlint",
+
         -- markdown
         "markdownlint",
         "marksman",

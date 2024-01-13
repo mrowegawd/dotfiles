@@ -1,6 +1,7 @@
-vim.opt.wrap = true
+local opt, keymap = vim.opt_local, vim.keymap
 
-local keymap = vim.keymap
+opt.wrap = true
+opt.list = false
 
 -- local set_toggle = 1
 

@@ -1,6 +1,8 @@
 [languages]
 rust = ["rustfmt"]
 go = ["gofmt"]
+sh = ["shfmt"]
+bash = ["shfmt"]
 lua = ["stylua -s -"]
 python = ["black --fast -"]
 

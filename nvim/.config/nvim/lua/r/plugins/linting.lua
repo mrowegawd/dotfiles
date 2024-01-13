@@ -51,7 +51,10 @@ return {
         nls.builtins.code_actions.impl,
 
         nls.builtins.diagnostics.markdownlint.with {
-          extra_args = { "--stdin", "--config=" .. vim.env.HOME .. "/.config/miscxrdb/linters/.markdownlint.json" },
+          extra_args = {
+            "--stdin",
+            "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json",
+          },
         },
 
         -- sh
@@ -114,7 +117,7 @@ return {
       ---@type table<string,table>
       linters = {
         markdownlint = {
-          args = { "--config=" .. vim.env.HOME .. "/.config/miscxrdb/linters/.markdownlint.json" },
+          args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
         },
 
         -- Example of using selene only when a selene.toml file is present

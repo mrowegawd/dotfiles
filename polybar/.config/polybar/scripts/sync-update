@@ -9,11 +9,11 @@ TITLE="Task And Notes"
 
 start_docker_syncthing() {
 
-	if [[ -n $(command -v dropbox) ]]; then
-		/usr/local/bin/dunstify "Dropbox running.."
-		killall -q dropbox
-		dropbox start &
-	fi
+	# if [[ -n $(command -v dropbox) ]]; then
+	# 	/usr/local/bin/dunstify "Dropbox running.."
+	# 	killall -q dropbox
+	# 	dropbox start &
+	# fi
 
 	# check jika ada container `mysyncthing`, yang telah dibuat dari docker image
 	DOCKER_CON_ID=$(docker ps -aqf "name=mysyncthing")

@@ -16,8 +16,8 @@ return {
         { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 3 }, bold = true } },
         {
           FlashLabel = {
-            bg = { from = "Error", attr = "fg", alter = 0.1 },
-            fg = { from = "Normal", attr = "bg", alter = 0.5 },
+            bg = { from = "Normal", attr = "fg", alter = 0.1 },
+            fg = { from = "Error", attr = "fg" },
             bold = true,
             strikethrough = false,
           },

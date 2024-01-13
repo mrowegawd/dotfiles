@@ -280,16 +280,17 @@ return {
           luasnip.lsp_expand(args.body)
         end,
       }
-      opts.sources = cmp.config.sources {
+      opts.sources = cmp.config.sources({
         -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
         -- tailwindcss bikin lambat, jadi mencoba mengurangi `max_item_count`
         { name = "nvim_lsp", max_item_count = 100 },
         { name = "luasnip", max_item_count = 100 },
         { name = "nvim_lsp_signature_help" },
-        source_buffer,
         { name = "crates" },
         { name = "async_path" },
-      }
+      }, {
+        source_buffer,
+      })
 
       vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
         contents = vim.lsp.util._normalize_markdown(contents, {
