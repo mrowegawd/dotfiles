@@ -24,6 +24,18 @@ Util.cmd.augroup("WrapFt", {
   end,
 })
 
+Util.cmd.augroup("TerminalDefaults", {
+  event = { "TermOpen" },
+  pattern = "*",
+  command = function()
+    vim.defer_fn(function()
+      if vim.bo.buftype == "terminal" then
+        vim.cmd [[startinsert]]
+      end
+    end, 100)
+  end,
+})
+
 Util.cmd.augroup("LargeFileSettings", {
   event = { "BufRead" },
   desc = "Set settings for large files.",
