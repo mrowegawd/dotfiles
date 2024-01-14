@@ -148,7 +148,7 @@ cachecolorfzf() {
 		        export FZF_CTRL_T_COMMAND='fd --hidden --follow --exclude .git'
 
 				    export FZF_DEFAULT_OPTS='
-		        --bind ctrl-a:toggle-all,ctrl-l:clear-query,ctrl-d:preview-down,ctrl-u:preview-up,ctrl-n:down,ctrl-p:up,ctrl-g:top,F4:toggle-preview,ctrl-f:half-page-down,ctrl-b:half-page-up
+		        --bind ctrl-a:toggle-all,ctrl-l:clear-query,ctrl-d:preview-down,ctrl-u:preview-up,ctrl-n:down,ctrl-p:up,ctrl-g:top,F3:toggle-preview,ctrl-f:half-page-down,ctrl-b:half-page-up
 				    --color=bg+:$FZF_BG_SELECTION,fg+:$FZF_FG_SELECTION,hl+:$FZF_FG_FUZZY_SELECTION,gutter:$TMUX_PANE_BG,pointer:$GREEN
 				    --color=bg:$BACKGROUND_NON_ACTIVE_WINDOW,fg:$FZF_FG,hl:$FZF_FG_FUZZY,border:$FZF_FG_BORDER --height=65%
 		        --preview "bat --style=plain --color=always {}" --preview-window right:50%:hidden:wrap --border --reverse
