@@ -76,40 +76,40 @@ return {
         },
       }
 
-      local mode = nut.mode {
-        prefix = " ",
-        suffix = " ",
-        sep_right = sep.right_lower_triangle_solid(true),
-        config = {
-          highlight = {
-            normal = {
-              -- bg = color.base_bg,
-              fg = color.base_fg,
-            },
-            visual = {
-              bg = color.visual,
-              fg = color.base_fg,
-            },
-            insert = {
-              bg = color.insert_bg,
-              fg = color.bg,
-            },
-            replace = {
-              bg = color.purple,
-              fg = color.bg,
-            },
-            commandline = {
-              bg = color.green,
-              fg = color.bg,
-            },
-            terminal = {
-              bg = color.accent.green,
-              fg = color.bg,
-            },
-            inactive = {},
-          },
-        },
-      }
+      -- local mode = nut.mode {
+      --   prefix = " ",
+      --   suffix = " ",
+      --   sep_right = sep.right_lower_triangle_solid(true),
+      --   config = {
+      --     highlight = {
+      --       normal = {
+      --         -- bg = color.base_bg,
+      --         fg = color.base_fg,
+      --       },
+      --       visual = {
+      --         bg = color.visual,
+      --         fg = color.base_fg,
+      --       },
+      --       insert = {
+      --         bg = color.insert_bg,
+      --         fg = color.bg,
+      --       },
+      --       replace = {
+      --         bg = color.purple,
+      --         fg = color.bg,
+      --       },
+      --       commandline = {
+      --         bg = color.green,
+      --         fg = color.bg,
+      --       },
+      --       terminal = {
+      --         bg = color.accent.green,
+      --         fg = color.bg,
+      --       },
+      --       inactive = {},
+      --     },
+      --   },
+      -- }
 
       local stl = Bar "statusline"
       -- stl:add_item(mode)
@@ -328,18 +328,17 @@ return {
 
       local stl_inactive = Bar "statusline"
       -- stl_inactive:add_item(mode)
-      stl_inactive:add_item(nut.spacer())
-
       -- stl_inactive:add_item {
       --   content = function()
       --     local filename = vim.fn.expand "%:p:t"
       --     if #filename > 0 then
-      --       return "/" .. filename
+      --       return " " .. filename
       --     end
       --   end,
       --   hl = { fg = color.base_fg_2, bold = true, bg = color.base_bg_3 },
       --   suffix = " ",
       -- }
+      stl_inactive:add_item(nut.spacer())
 
       -- stl_inactive:add_item(filename)
       -- stl_inactive:add_item(filename2)

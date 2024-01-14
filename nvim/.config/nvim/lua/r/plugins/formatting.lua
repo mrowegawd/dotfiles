@@ -90,6 +90,7 @@ return {
           sh = { "shfmt" },
           python = { "black" },
           go = { "goimports", "gofumpt" },
+
           ["javascript"] = { { "prettierd", "prettier" } },
           ["javascriptreact"] = { { "prettierd", "prettier" } },
           ["typescript"] = { { "prettierd", "prettier" } },
@@ -102,10 +103,13 @@ return {
           ["json"] = { { "prettierd", "prettier" } },
           ["jsonc"] = { { "prettierd", "prettier" } },
           ["yaml"] = { { "prettierd", "prettier" } },
-          ["markdown"] = { "prettierd", "cbfmt" },
-          ["markdown.mdx"] = { { "prettierd", "prettier" } },
           ["graphql"] = { { "prettierd", "prettier" } },
           ["handlebars"] = { { "prettierd", "prettier" } },
+
+          ["markdown"] = { "prettierd", "cbfmt" },
+          ["markdown.mdx"] = { { "prettierd", "prettier" } },
+          ["org"] = { "trim_whitespace", "trim_newlines" },
+
           ["_"] = { "trim_whitespace" },
         },
         -- LazyVim will merge the options you set here with builtin formatters.

@@ -19,6 +19,7 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE" } },
     -- { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.2 } } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },
+    { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
 
