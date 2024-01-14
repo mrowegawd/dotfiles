@@ -5,7 +5,7 @@ local Util = require "r.utils"
 -- Wrap and check for spell in text filetypes
 Util.cmd.augroup("WrapSpell", {
   event = { "FileType" },
-  pattern = { "gitcommit", "markdown", "NeogitCommitMessage" },
+  pattern = { "gitcommit", "markdown", "NeogitCommitMessage", "norg" },
   command = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
@@ -212,6 +212,17 @@ Util.cmd.augroup("LocateLastPosition", {
       pcall(vim.api.nvim_win_set_cursor, 0, mark)
     end
   end,
+})
+
+Util.cmd.augroup("DisableHiBGNormal", {
+  event = { "BufReadPost" },
+  pattern = "*",
+  command = function()
+    if os.getenv "TERMINAL" == "wezterm" then
+      cmd "hi Normal guibg=NONE"
+    end
+  end,
+  once = true,
 })
 
 Util.cmd.augroup("WindowBehaviours", {

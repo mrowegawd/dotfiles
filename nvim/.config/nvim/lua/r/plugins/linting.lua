@@ -105,6 +105,7 @@ return {
         fish = { "fish" },
         cmake = { "cmakelint" },
         markdown = { "markdownlint", "codespell" },
+        norg = { "codespell" },
         go = { "golangcilint" },
         docker = { "hadolint" },
         -- Use the "*" filetype to run linters on all filetypes.

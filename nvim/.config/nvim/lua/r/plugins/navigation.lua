@@ -2,271 +2,13 @@ local cmd = vim.cmd
 
 local highlight = require "r.config.highlights"
 local Util = require "r.utils"
-local Icon = require("r.config").icons
+-- local Icon = require("r.config").icons
 
 return {
-  -- NVIM-TREE (disabled)
-  {
-    "nvim-tree/nvim-tree.lua",
-    enabled = false,
-    cmd = { "NvimTreeToggle", "NvimTreeClose", "NvimTreeFindFileToggle" },
-    -- init = function()
-    --   Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
-    -- end,
-    keys = {
-      {
-        "<Leader>e",
-        function()
-          --   if vim.bo[0].filetype == "neo-tree" then
-          --     return cmd [[q]]
-          --   end
-          --   Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-          --   if vim.bo[0].filetype == "norg" then
-          --     return cmd "Neotree toggle "
-          --   end
-          return cmd "NvimTreeToggle"
-        end,
-        desc = "Misc(nvimtree): open toggle",
-      },
-      -- {
-      --   "<Leader>ge",
-      --   function()
-      --     -- if vim.bo[0].filetype == "neo-tree" then
-      --     --   return cmd [[q]]
-      --     -- end
-      --     return cmd "NvimTreeFindFileToggle"
-      --   end,
-      --   desc = "Misc(neotree): open File explore",
-      -- },
-      {
-        "<Leader>E",
-        function()
-          return cmd "NvimTreeFindFileToggle"
-        end,
-        desc = "Misc(nvimtree): find file toggle",
-      },
-    },
-    dependencies = {
-      "mrbjarksen/neo-tree-diagnostics.nvim",
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      -- {
-      --   "ten3roberts/window-picker.nvim",
-      --   name = "window-picker",
-      --   config = function()
-      --     local picker = require "window-picker"
-      --     picker.setup()
-      --     picker.pick_window = function()
-      --       return picker.select({ hl = "WindowPicker", prompt = "Pick window: " }, function(winid)
-      --         return winid or nil
-      --       end)
-      --     end
-      --   end,
-      -- },
-    },
-
-    config = function()
-      -- disable netrw at the very start of your init.lua (strongly advised)
-      -- vim.g.loaded_netrw = 0
-      -- vim.g.loaded_netrwPlugin = 0
-      -- vim.g.loaded_netrw = 0
-      -- vim.g.loaded_netrwPlugin = 0
-
-      vim.g.loaded_netrw = 0
-      vim.g.loaded_netrwPlugin = 0
-
-      local function on_attach(bufnr)
-        local api = require "nvim-tree.api"
-
-        local function opts(desc)
-          return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-        end
-
-        vim.keymap.set("n", "<C-]>", api.tree.change_root_to_node, opts "CD")
-        vim.keymap.set("n", "<space-e>", api.node.open.replace_tree_buffer, opts "Open: In Place")
-        vim.keymap.set("n", "<C-k>", api.node.show_info_popup, opts "Info")
-        vim.keymap.set("n", "<C-r>", api.fs.rename_sub, opts "Rename: Omit Filename")
-        vim.keymap.set("n", "<C-t>", api.node.open.tab, opts "Open: New Tab")
-        vim.keymap.set("n", "<C-v>", api.node.open.vertical, opts "Open: Vertical Split")
-        vim.keymap.set("n", "<C-s>", api.node.open.horizontal, opts "Open: Horizontal Split")
-        vim.keymap.set("n", "<BS>", api.node.navigate.parent_close, opts "Close Directory")
-        vim.keymap.set("n", "<CR>", api.node.open.edit, opts "Open")
-        vim.keymap.set("n", "<Tab>", api.node.open.preview, opts "Open Preview")
-        vim.keymap.set("n", ">", api.node.navigate.sibling.next, opts "Next Sibling")
-        vim.keymap.set("n", "<", api.node.navigate.sibling.prev, opts "Previous Sibling")
-        vim.keymap.set("n", ".", api.node.run.cmd, opts "Run Command")
-        vim.keymap.set("n", "-", api.tree.change_root_to_parent, opts "Up")
-        vim.keymap.set("n", "a", api.fs.create, opts "Create")
-        vim.keymap.set("n", "bmv", api.marks.bulk.move, opts "Move Bookmarked")
-        vim.keymap.set("n", "B", api.tree.toggle_no_buffer_filter, opts "Toggle No Buffer")
-        vim.keymap.set("n", "c", api.fs.copy.node, opts "Copy")
-        vim.keymap.set("n", "C", api.tree.toggle_git_clean_filter, opts "Toggle Git Clean")
-        vim.keymap.set("n", "gp", api.node.navigate.git.prev, opts "Prev Git")
-        vim.keymap.set("n", "gn", api.node.navigate.git.next, opts "Next Git")
-        vim.keymap.set("n", "d", api.fs.remove, opts "Delete")
-        vim.keymap.set("n", "D", api.fs.trash, opts "Trash")
-        vim.keymap.set("n", "E", api.tree.expand_all, opts "Expand All")
-        vim.keymap.set("n", "e", api.fs.rename_basename, opts "Rename: Basename")
-        vim.keymap.set("n", "]e", api.node.navigate.diagnostics.next, opts "Next Diagnostic")
-        vim.keymap.set("n", "[e", api.node.navigate.diagnostics.prev, opts "Prev Diagnostic")
-        vim.keymap.set("n", "F", api.live_filter.clear, opts "Clean Filter")
-        vim.keymap.set("n", "f", api.live_filter.start, opts "Filter")
-        vim.keymap.set("n", "g?", api.tree.toggle_help, opts "Help")
-        vim.keymap.set("n", "gy", api.fs.copy.absolute_path, opts "Copy Absolute Path")
-        vim.keymap.set("n", "H", api.tree.toggle_hidden_filter, opts "Toggle Dotfiles")
-        vim.keymap.set("n", "I", api.tree.toggle_gitignore_filter, opts "Toggle Git Ignore")
-        vim.keymap.set("n", "J", api.node.navigate.sibling.last, opts "Last Sibling")
-        -- vim.keymap.set("n", "K", api.node.navigate.sibling.first, opts "First Sibling")
-        vim.keymap.set("n", "m", api.marks.toggle, opts "Toggle Bookmark")
-        vim.keymap.set("n", "o", api.node.open.edit, opts "Open")
-        vim.keymap.set("n", "O", api.node.open.no_window_picker, opts "Open: No Window Picker")
-        vim.keymap.set("n", "p", api.fs.paste, opts "Paste")
-        vim.keymap.set("n", "P", api.node.navigate.parent, opts "Parent Directory")
-        vim.keymap.set("n", "q", api.tree.close, opts "Close")
-        vim.keymap.set("n", "r", api.fs.rename, opts "Rename")
-        vim.keymap.set("n", "R", api.tree.reload, opts "Refresh")
-        vim.keymap.set("n", "s", function()
-          vim.cmd [[wincmd p]]
-        end, opts "Run System")
-        vim.keymap.set("n", "S", api.tree.search_node, opts "Search")
-        vim.keymap.set("n", "U", api.tree.toggle_custom_filter, opts "Toggle Hidden")
-        vim.keymap.set("n", "W", api.tree.collapse_all, opts "Collapse")
-        vim.keymap.set("n", "x", api.fs.cut, opts "Cut")
-        vim.keymap.set("n", "y", api.fs.copy.filename, opts "Copy Name")
-        vim.keymap.set("n", "Y", api.fs.copy.relative_path, opts "Copy Relative Path")
-        vim.keymap.set("n", "<2-LeftMouse>", api.node.open.edit, opts "Open")
-        vim.keymap.set("n", "<2-RightMouse>", api.tree.change_root_to_node, opts "CD")
-      end
-
-      local nvimtree = require "nvim-tree"
-      nvimtree.setup {
-        on_attach = on_attach,
-        select_prompts = true,
-        disable_netrw = false,
-        hijack_netrw = true,
-        respect_buf_cwd = true,
-        actions = {
-          open_file = {
-            quit_on_open = false,
-            window_picker = {
-              enable = true,
-              picker = "default",
-              chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-              exclude = {
-                filetype = { "notify", "packer", "qf", "diff", "fugitive", "fugitiveblame" },
-                buftype = { "nofile", "terminal", "help" },
-              },
-            },
-          },
-        },
-        view = {
-          preserve_window_proportions = true,
-        },
-        renderer = {
-          indent_markers = {
-            enable = false,
-          },
-          root_folder_modifier = ":t",
-          highlight_git = true,
-          icons = {
-            show = {
-              git = true,
-              folder = true,
-              file = true,
-              folder_arrow = true,
-            },
-            webdev_colors = true,
-            git_placement = "after",
-
-            glyphs = {
-              default = Icon.documents.unknown,
-              symlink = Icon.documents.symlink,
-              git = {
-                unstaged = Icon.git.added,
-                staged = Icon.git.added,
-                unmerged = Icon.git.unmerged,
-                renamed = Icon.git.rename,
-                deleted = Icon.git.removed,
-                untracked = Icon.git.untrack,
-                ignored = "",
-              },
-              folder = {
-                default = Icon.documents.folder,
-                open = Icon.documents.openfolder,
-                empty = Icon.documents.emptyfolder,
-                empty_open = Icon.documents.emptyopenfolder,
-                symlink = Icon.documents.foldersymlink,
-              },
-            },
-          },
-        },
-        filters = {
-          custom = {
-            -- ".git", -- folder wiki pada learning/git tidak terbaca kalau tidak di commented
-            "node_modules",
-            ".cache",
-            "__pycache__",
-          },
-        },
-      }
-    end,
-  },
-  -- OIL (disabled)
-  {
-    "stevearc/oil.nvim",
-    enabled = false,
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    keys = {
-      {
-        "<Leader>e",
-        function()
-          -- if vim.bo[0].filetype == "neo-tree" then
-          --   return cmd [[q]]
-          -- end
-          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-          -- if vim.bo[0].filetype == "norg" then
-          --   return cmd "Neotree toggle "
-          -- end
-          require("oil").open()
-          -- return cmd "Neotree toggle reveal"
-        end,
-        desc = "Misc(oil): open",
-      },
-    },
-    opts = {
-      default_file_explorer = false,
-      use_default_keymaps = false,
-      delete_to_trash = true,
-      keymaps = {
-        ["?"] = "actions.show_help",
-        ["<CR>"] = "actions.select",
-        ["<C-s>"] = "actions.select_vsplit",
-        ["<C-v>"] = "actions.select_split",
-        ["<C-t>"] = "actions.select_tab",
-        ["<C-p>"] = "actions.preview",
-        ["<C-c>"] = "actions.close",
-        ["<Esc>"] = "actions.close",
-        ["<C-l>"] = "actions.refresh",
-        ["-"] = "actions.parent",
-        ["_"] = "actions.open_cwd",
-        ["`"] = "actions.cd",
-        ["~"] = "actions.tcd",
-        ["gs"] = "actions.change_sort",
-        ["gx"] = "actions.open_external",
-        ["I"] = "actions.toggle_hidden",
-        ["g\\"] = "actions.toggle_trash",
-      },
-    },
-    -- config = function(_, opts)
-    --   local oil = require "oil"
-    --   oil.setup(opts)
-    --   vim.keymap.set("n", "<leader>pv", oil.open, { desc = "Open directory view" })
-    -- end,
-    -- cond = not_vscode,
-  },
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
+    event = "VeryLazy",
     cmd = "Neotree",
     keys = {
       {
@@ -432,9 +174,9 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["ga"] = "git_add_file",
+              ["<Left>"] = "git_add_file",
               ["gA"] = "git_add_all",
-              ["gu"] = "git_unstage_file",
+              ["<Right>"] = "git_unstage_file",
               ["gr"] = "git_revert_file",
               ["gc"] = "git_commit",
               ["gp"] = "noop",
@@ -525,4 +267,155 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
+  -- EDGY.NVIM
+  {
+    "folke/edgy.nvim",
+    event = "VeryLazy",
+    -- stylua: ignore
+    keys = {
+      { "<Leader>uu", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
+      -- { "<Leader>us", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
+      { "<Leader>ug", "<CMD> Neotree git_status toggle <CR>",  desc = "Misc(edgy): toggle git_status" },
+      { "<Leader>ub", "<CMD> Neotree buffers toggle <CR>",     desc = "Misc(edgy): toggle buffers" },
+      { "<Leader>uo", "<CMD> OutlineClose <CR>",     desc = "Misc(edgy): toggle close" },
+    },
+    opts = function()
+      highlight.plugin("NeoEdgyHi", {
+        { WinBar = { bg = "NONE" } },
+        { WinBarNC = { bg = "NONE" } },
+        { EdgyTitle = { fg = { from = "Boolean", attr = "fg" }, bold = true } },
+      })
+
+      return {
+        animate = { enabled = false },
+        bottom = {
+          -- {
+          --   ft = "toggleterm",
+          --   size = { height = 0.4 },
+          --   ---@diagnostic disable-next-line: unused-local
+          --   filter = function(buf, win)
+          --     return vim.api.nvim_win_get_config(win).relative == ""
+          --   end,
+          -- },
+          -- {
+          --   ft = "noice",
+          --   size = { height = 0.4 },
+          --   ---@diagnostic disable-next-line: unused-local
+          --   filter = function(buf, win)
+          --     return vim.api.nvim_win_get_config(win).relative == ""
+          --   end,
+          -- },
+          -- {
+          --   ft = "lazyterm",
+          --   title = "LazyTerm",
+          --   size = { height = 0.4 },
+          --   filter = function(buf)
+          --     return not vim.b[buf].lazyterm_cmd
+          --   end,
+          -- },
+          -- "Trouble",
+          -- { ft = "qf", title = "QuickFix" },
+          -- {
+          --   ft = "help",
+          --   size = { height = 20 },
+          --   -- don't open help files in edgy that we're editing
+          --   filter = function(buf)
+          --     return vim.bo[buf].buftype == "help"
+          --   end,
+          -- },
+          -- { title = "Spectre", ft = "spectre_panel", size = { height = 0.4 } },
+          -- { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
+        },
+        right = {
+          {
+            ft = "Outline",
+            pinned = true,
+            open = "Outline",
+            -- size = {
+            --   height = 0.5,
+            -- },
+          },
+        },
+        left = {
+          -- { title = "Neotest Summary", ft = "neotest-summary" },
+          {
+            title = "Neo-Tree",
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "filesystem"
+            end,
+            pinned = true,
+            open = function()
+              vim.api.nvim_input "<esc><space>e"
+            end,
+            size = { height = 0.6 },
+          },
+          {
+            title = "Neo-Tree Git",
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "git_status"
+            end,
+            pinned = true,
+            open = "Neotree position=right git_status",
+          },
+          -- {
+          --   title = "Neo-Tree Buffers",
+          --   ft = "neo-tree",
+          --   filter = function(buf)
+          --     return vim.b[buf].neo_tree_source == "buffers"
+          --   end,
+          --   pinned = true,
+          --   open = "Neotree position=top buffers",
+          -- },
+          -- "neo-tree",
+        },
+        keys = {
+          -- increase width
+          ["<a-L>"] = function(win)
+            win:resize("width", 2)
+          end,
+          -- decrease width
+          ["<a-H>"] = function(win)
+            win:resize("width", -2)
+          end,
+          -- increase height
+          ["<a-K>"] = function(win)
+            win:resize("height", 2)
+          end,
+          -- decrease height
+          ["<a-J>"] = function(win)
+            win:resize("height", -2)
+          end,
+        },
+      }
+    end,
+  },
+  -- EDGY-GROUP
+  -- {
+  --   "lucobellic/edgy-group.nvim",
+  --   event = "VeryLazy",
+  --   -- dependencies = { "folke/edgy.nvim" },
+  --   keys = {
+  --     {
+  --       "<leader>el",
+  --       function()
+  --         require("edgy-group").open_group("left", 1)
+  --       end,
+  --       desc = "Edgy Group Next Left",
+  --     },
+  --     {
+  --       "<leader>eh",
+  --       function()
+  --         require("edgy-group").open_group("left", -1)
+  --       end,
+  --       desc = "Edgy Group Prev Left",
+  --     },
+  --   },
+  --   opts = {
+  --     { icon = "", pos = "left", titles = { "Neo-Tree", "Neo-Tree Buffers" } },
+  --     { icon = "", pos = "left", titles = { "Neo-Tree Git" } },
+  --     { icon = "", pos = "left", titles = { "Outline" } },
+  --   },
+  -- },
 }

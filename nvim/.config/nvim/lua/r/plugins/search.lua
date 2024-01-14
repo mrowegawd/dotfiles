@@ -82,6 +82,23 @@ return {
       { "so", "<CMD>FzfLua oldfiles<CR>", desc = "WinNav(Fzflua): oldfiles" },
       { "z=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell suggest" },
 
+      {
+        "sg",
+        function()
+          require("fzf-lua").blines { query = vim.fn.expand "<cword>" }
+        end,
+        desc = "WinNav(fzfLua): live_grep on curbuf [visual]",
+        mode = { "v" },
+      },
+      {
+        "sG",
+        function()
+          require("fzf-lua").lines { query = vim.fn.expand "<cword>" }
+        end,
+        desc = "WinNav(fzflua): live_grep on buffers [visual]",
+        mode = { "v" },
+      },
+
       { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
@@ -98,7 +115,7 @@ return {
           return require("fzf-lua").keymaps {
             winopts = {
               preview = {
-                title = Util.fzflua.format_title("Keymaps", " "),
+                title = Util.fzflua.format_title("Keymaps", ""),
                 vertical = "up:45%",
                 horizontal = "right:30%",
                 layout = "flex",
@@ -181,7 +198,7 @@ return {
 
           return require("fzf-lua").live_grep {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("[QF] Grep", " ") },
+            winopts = { title = Util.fzflua.format_title("[QF] Grep", "") },
             cmd = pcmd,
           }
         end,
@@ -208,6 +225,10 @@ return {
             height = win_height,
             row = row,
             col = col,
+            preview = {
+              vertical = "down:55%", -- up|down:size
+              horizontal = "right:45%", -- right|left:size
+            },
           }
         end,
         fzf_opts = {
@@ -290,12 +311,14 @@ return {
           prompt = "  ",
           cwd_prompt = false,
           winopts = { title = Util.fzflua.format_title("Files", "") },
+          -- winopts = { title = "Files" },
           -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
           fzf_opts = {
-            ["--header"] = [[Ctrl-g:'grep dir',Ctrl-y:'copy',Ctrl-x:'togglehidd']],
+            ["--header"] = [[Ctrl-g:'grep dir',Ctrl-y:'copy path',Ctrl-e:'edit rgflow']],
           },
           fd_opts = fd_opts,
           -- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
+          no_header = true, -- disable default header
           actions = {
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
@@ -559,10 +582,10 @@ return {
         grep = {
           -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
           prompt = " ",
-          winopts = { title = Util.fzflua.format_title("Grep", " ") },
+          winopts = { title = Util.fzflua.format_title("Grep", "") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep string',Ctrl-x:'togglehidd']] },
+          fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep string',Ctrl-e:'edit rgflow']] },
 
           no_header = true, -- disable default header
           actions = {
@@ -589,7 +612,7 @@ return {
             --
             --   local tbl_ops = {
             --     cmd = args.cmd,
-            --     winopts = { title = Util.fzflua.format_title("Grep match", " ") },
+            --     winopts = { title = Util.fzflua.format_title("Grep match", "") },
             --   }
             --
             --   if args.cwd ~= nil then
@@ -613,7 +636,7 @@ return {
             --   end
             --   require("fzf-lua").live_grep_glob {
             --     rg_opts = args.rg_opts,
-            --     winopts = { title = Util.fzflua.format_title("Grep hidden", " ") },
+            --     winopts = { title = Util.fzflua.format_title("Grep hidden", "") },
             --   }
             -- end,
 
@@ -630,7 +653,7 @@ return {
             --                   ]],
             --                 },
             --                 winopts = {
-            --                   title = Util.fzflua.format_title("Grep Show Keybindings", " "),
+            --                   title = Util.fzflua.format_title("Grep Show Keybindings", ""),
             --                   preview = { layout = "horizontal", hoizontal = "right:99%" },
             --                 },
             --
@@ -695,7 +718,7 @@ return {
         },
         lines = {
           prompt = "  ",
-          winopts = { title = Util.fzflua.format_title("Lines", " ") },
+          winopts = { title = Util.fzflua.format_title("Lines", "") },
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
             -- tiebreak by line no.
@@ -721,7 +744,7 @@ return {
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
           winopts = {
-            title = Util.fzflua.format_title("Blines", " "),
+            title = Util.fzflua.format_title("Blines", ""),
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -807,7 +830,7 @@ return {
               ["--scrollbar"] = "▓",
             },
             winopts = {
-              title = Util.fzflua.format_title("Symbols", " "),
+              title = Util.fzflua.format_title("Symbols", ""),
             },
           },
           code_actions = Util.fzflua.cursor_dropdown {
@@ -819,7 +842,7 @@ return {
             prompt = "  ",
             no_action_zz = true,
             winopts = {
-              title = Util.fzflua.format_title("LSP Finder", " "),
+              title = Util.fzflua.format_title("LSP Finder", ""),
             },
           },
         },

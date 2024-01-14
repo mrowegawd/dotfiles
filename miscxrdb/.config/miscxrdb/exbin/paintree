@@ -76,6 +76,9 @@ getcolors() {
 	# TMUX
 	TMUX_PANE_ACTIVE_BG=$tmux_pane_active_bg
 	TMUX_PANE_BG=$tmux_pane_bg
+	if [ "$TMUX_PANE_BG" == "NONE" ]; then
+		TMUX_PANE_BG=""
+	fi
 
 	TMUX_FG=$tmux_fg
 	TMUX_BORDER_FG=$tmux_border_fg

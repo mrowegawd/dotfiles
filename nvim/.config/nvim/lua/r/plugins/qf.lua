@@ -60,6 +60,7 @@ return {
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
+    -- enabled = false,
     -- dependencies = {
     --   "MunifTanjim/nui.nvim",
     -- },

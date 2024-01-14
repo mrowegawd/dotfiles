@@ -90,6 +90,7 @@ return {
           "log",
           "markdown",
           "neo-tree",
+          "man",
           "neo-tree-popup",
           "norg",
           "org",
@@ -111,9 +112,8 @@ return {
   -- NVIM-NOTIFY
   {
     "rcarriga/nvim-notify",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     init = function()
-      vim.opt.termguicolors = true -- Enable 24-bit RGB color in the TUI
       vim.notify = require "notify"
     end,
     opts = {
@@ -192,6 +192,7 @@ return {
     init = function()
       require("r.config.highlights").plugin("notify", {
         { NoiceCmdlinePopupBorder = { fg = { from = "Directory" } } },
+        { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
       })
     end,
     opts = {

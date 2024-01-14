@@ -8,6 +8,7 @@ local general_overrides = function()
     -- { Directory = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
     -- { ColorColumn = { bg = { from = "Normal" , attr = "bg" } } },
     -- { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.1 }, bg = { from = "Normal", attr = "bg", alter= -0.15 } } },
+    -- { Normal = { bg = "NONE", fg = { from = "Normal", attr = "fg" } } },
     { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = 1.5 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = "NONE" } },
@@ -203,7 +204,8 @@ local general_overrides = function()
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "NormalFloat" } },
     { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "NormalFloat", attr = "bg" } } },
-    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bold = true } },
+    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    { FzfLuaTitleIcon = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
 
     -- WHICH-KEY ==========================================================

@@ -47,7 +47,7 @@ local is_gitsigns_attach = true
 -- stylua: ignore
 function M.signs(bufnr, gs)
  Util.map.vnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk (visual)", buffer = bufnr })
- Util.map.nnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk (visual)", buffer = bufnr })
+ Util.map.nnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk", buffer = bufnr })
  Util.map.nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk", buffer = bufnr })
  Util.map.nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk", buffer = bufnr })
  Util.map.nnoremap("<Leader>gP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk", buffer = bufnr })

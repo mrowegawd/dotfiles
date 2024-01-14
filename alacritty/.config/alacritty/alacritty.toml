@@ -35,19 +35,19 @@ size = 11.5
 # style = "Regular"
 
 [font.normal]
-family = "JetBrains Mono"
+family = "SF Mono"
 style = "Regular"
 
 [font.bold]
-family = "JetBrains Mono"
+family = "SF Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrains Mono"
+family = "SF Mono"
 style = "Bold Italic"
 
 [font.italic]
-family = "JetBrains Mono"
+family = "Victor Mono medium"
 style = "Italic"
 
 [[keyboard.bindings]]

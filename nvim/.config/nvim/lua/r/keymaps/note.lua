@@ -1,213 +1,261 @@
-local fmt, cmd, fn = string.format, vim.cmd, vim.fn
+local fmt, cmd = string.format, vim.cmd
 local Util = require "r.utils"
+local Config = require "r.config"
 
 local M = {}
 
 function M.neorg_mappings_ft(bufnr)
-  local neorg = require "neorg"
   local fzf_lua = require "fzf-lua"
 
   local mappings = {
     ["n"] = {
-      ["<Localleader>oa"] = {
-        function()
-          Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
-          cmd "Neorg toc right"
-          local vim_width = vim.o.columns
-          vim_width = math.floor(vim_width / 2 - 10)
-          cmd(fmt("vertical resize %s", vim_width))
-        end,
-        "Note(neorg): open toc sidebar",
-      },
-      ["tt"] = {
-        function()
-          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
-          -- cmd "Neorg toc right"
-          -- local vim_width = vim.o.columns
-          -- vim_width = math.floor(vim_width / 2 - 10)
-          -- cmd(fmt("vertical resize %s", vim_width))
-
-          return Util.neorg_notes.check_broken_links(neorg)
-        end,
-        "Note(neorg): open toc right(curbuf)",
-      },
       ["ri"] = {
         function()
           return Util.maim.insert()
         end,
-        "Note(neorg): insert image",
+        "Note: insert image",
       },
       ["rf"] = {
         function()
-          local Job = require "plenary.job"
-          -- async
-          local data = {}
-          Job:new({
-            command = "obsidian",
-            -- args = { "-a" },
-            on_stdout = function(_, line)
-              table.insert(data, line)
-            end,
-            on_exit = function()
-              print "done"
-            end,
-          }):start()
-          -- sync
-          -- local ls = Job:new({ command = "ls", args = { "-a" } }):sync()
-          -- for i, _ in ipairs(ls) do
-          --   assert(ls[i] == data[i])
-          -- end
+          local note_ext = "norg"
+          if vim.bo[0].filetype == "markdown" then
+            note_ext = "md"
+          end
 
-          -- print(fn.expand "%:p")
-          -- cmd [[MarkdownPreviewToggle]]
+          if note_ext == "norg" then
+            return
+          else
+            -- vim.cmd [[ObsidianOpen]]
+            local Job = require "plenary.job"
+            -- async
+            local data = {}
+            Job:new({
+              command = "obsidian",
+              -- args = { "-a" },
+              on_stdout = function(_, line)
+                table.insert(data, line)
+              end,
+              on_exit = function()
+                print "done"
+              end,
+            }):start()
+          end
         end,
+        "Note: run file",
+      },
+      ["<Localleader>oa"] = {
+        function()
+          if vim.bo[0].filetype == "neorg" then
+            Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+            cmd "Neorg toc right"
+            local vim_width = vim.o.columns
+            vim_width = math.floor(vim_width / 2 - 10)
+            cmd(fmt("vertical resize %s", vim_width))
+          else
+            vim.cmd [[Outline]]
+          end
+        end,
+        "Note: open toc",
       },
       ["<Localleader>ff"] = {
         function()
-          local col, row = Util.fzflua.rectangle_win_pojokan()
-          Util.fzflua.send_cmds({
-            grep_string_note = function()
-              cmd [[Lazy load neorg]]
-              return require("fzf-lua").live_grep_glob {
-                prompt = "  ",
-                cwd = require("r.config").path.wiki_path,
-                rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
-                winopts = {
-                  title = Util.fzflua.format_title("[Neorg] Grep", " "),
-                },
-              }
-            end,
-            find_norg_files = function()
-              cmd [[Lazy load neorg]]
+          local opts = {
+            prompt = "  ",
+            cwd = Config.path.wiki_path,
+            winopts = {
+              title = Util.fzflua.format_title("Note: files", "󰈙"),
+            },
+          }
 
-              return require("fzf-lua").files {
-                prompt = "  ",
-                cwd = require("r.config").path.wiki_path,
-                rg_glob = true,
-                file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
-                winopts = {
-                  -- fullscreen = true,
-                  title = Util.fzflua.format_title("[Neorg] Files", " "),
-                },
-              }
-            end,
-            find_site_links = function()
-              -- Karena use grep utk curbuf, agar bisa menggunakan regex
-              -- pakai `lgrep_curbuf`
-              require("fzf-lua").grep_curbuf {
-                prompt = "  ",
-                search = [[(\{:\$|\{http)]],
-                no_esc = true,
-                fzf_opts = { ["--layout"] = "reverse" },
-                winopts = {
-                  title = Util.fzflua.format_title("[Neorg] site links", " "),
-                },
-              }
-            end,
+          if vim.bo[0].filetype == "neorg" then
+            cmd [[Lazy load neorg]]
+            opts.rg_opts =
+              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
+          else
+            opts.rg_opts =
+              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
+          end
 
-            find_link_friends = function()
-              cmd "normal yi}"
-              local title = vim.fn.getreg '"0'
-              local title_trim = title:gsub([[^:%$]], [[:\$]])
-
-              require("fzf-lua").grep {
-                prompt = "  ",
-                cwd = require("r.config").path.wiki_path,
-                no_esc = true,
-                search = title_trim,
-                fzf_opts = { ["--layout"] = "reverse" },
-                winopts = {
-                  title = Util.fzflua.format_title("[Neorg] Link Friends", " "),
-                },
-              }
-            end,
-            find_title_curbuf = function()
-              require("fzf-lua").grep_curbuf {
-                prompt = "  ",
-                search = [[^(\*|\*\*|\*\*\*|\*\*\*\*).*$]],
-                no_esc = true,
-                fzf_opts = { ["--layout"] = false },
-                winopts = {
-                  title = Util.fzflua.format_title("[Neorg] Title Curbuf", " "),
-                },
-              }
-            end,
-            find_title_global = function()
-              require("fzf-lua").grep {
-                prompt = "  ",
-                cwd = require("r.config").path.wiki_path,
-                no_esc = true,
-                search = [[^(\*|\*\*|\*\*\*|\*\*\*\*).*$]],
-                fzf_opts = { ["--layout"] = false },
-
-                winopts = {
-                  title = Util.fzflua.format_title("[Neorg] Title Global", " "),
-                },
-              }
-            end,
-            find_categories_links = function()
-              local opts = {
-                prompt = "  ",
-                winopts = {
-                  title = Util.fzflua.format_title("[Neorg] find by categories", " "),
-                  preview = {
-                    hidden = "hidden",
-                    vertical = "up:55%",
-                    horizontal = "right:60%",
-                    layout = "vertical",
-                  },
-                },
-                actions = {
-                  ["default"] = function(selected, _)
-                    local selection = selected[1]
-                    print(selection)
-                  end,
-                },
-              }
-              return require("fzf-lua").fzf_exec(Util.neorg_notes.find_by_categories(), opts)
-            end,
-            find_todo_curbuf = function()
-              cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
-            end,
-            find_todo_global = function()
-              cmd(fmt([[TodoQuickFix cwd=%s]], require("r.config").path.wiki_path))
-            end,
-          }, {
-            winopts = { title = require("r.config").icons.misc.list .. " Neorg", col = col, row = row },
-          })
+          return require("fzf-lua").files(opts)
         end,
-        "Note(neorg): list of cmds",
+        "Note: file",
       },
+      ["<Localleader>fg"] = {
+        function()
+          local opts = {
+            prompt = "  ",
+            cwd = Config.path.wiki_path,
+            winopts = {
+              title = Util.fzflua.format_title("Note: grep", ""),
+            },
+          }
+
+          if vim.bo[0].filetype == "neorg" then
+            cmd [[Lazy load neorg]]
+            opts.rg_opts =
+              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
+          else
+            opts.rg_opts =
+              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
+          end
+          return require("fzf-lua").live_grep_glob(opts)
+        end,
+        "Note: grep",
+      },
+
+      --   ["<Localleader>fg"] = {
+      --     function()
+      --       local col, row = Util.fzflua.rectangle_win_pojokan()
+      --       Util.fzflua.send_cmds({
+      --         grep_string_note = function()
+      --           cmd [[Lazy load neorg]]
+      --           return require("fzf-lua").live_grep_glob {
+      --             prompt = "  ",
+      --             cwd = require("r.config").path.wiki_path,
+      --             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
+      --             winopts = {
+      --               title = Util.fzflua.format_title("Note: grep", ""),
+      --             },
+      --           }
+      --         end,
+      --         find_norg_files = function()
+      --           cmd [[Lazy load neorg]]
+      --
+      --           return require("fzf-lua").files {
+      --             prompt = "  ",
+      --             cwd = require("r.config").path.wiki_path,
+      --             rg_glob = true,
+      --             file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
+      --             winopts = {
+      --               -- fullscreen = true,
+      --               title = Util.fzflua.format_title("Note: files", ""),
+      --             },
+      --           }
+      --         end,
+      --         find_site_links = function()
+      --           -- Karena use grep utk curbuf, agar bisa menggunakan regex
+      --           -- pakai `lgrep_curbuf`
+      --           require("fzf-lua").grep_curbuf {
+      --             prompt = "  ",
+      --             search = [[(\{:\$|\{http)]],
+      --             no_esc = true,
+      --             fzf_opts = { ["--layout"] = "reverse" },
+      --             winopts = {
+      --               title = Util.fzflua.format_title("Note: site links", ""),
+      --             },
+      --           }
+      --         end,
+      --
+      --         find_link_friends = function()
+      --           cmd "normal yi}"
+      --           local title = vim.fn.getreg '"0'
+      --           local title_trim = title:gsub([[^:%$]], [[:\$]])
+      --
+      --           require("fzf-lua").grep {
+      --             prompt = "  ",
+      --             cwd = require("r.config").path.wiki_path,
+      --             no_esc = true,
+      --             search = title_trim,
+      --             fzf_opts = { ["--layout"] = "reverse" },
+      --             winopts = {
+      --               title = Util.fzflua.format_title("Note: link friends", ""),
+      --             },
+      --           }
+      --         end,
+      --         find_title_curbuf = function()
+      --           require("fzf-lua").grep_curbuf {
+      --             prompt = "  ",
+      --             search = [[^(\*|\*\*|\*\*\*|\*\*\*\*).*$]],
+      --             no_esc = true,
+      --             fzf_opts = { ["--layout"] = false },
+      --             winopts = {
+      --               title = Util.fzflua.format_title("Note: title curbuf", ""),
+      --             },
+      --           }
+      --         end,
+      --         find_title_global = function()
+      --           require("fzf-lua").grep {
+      --             prompt = "  ",
+      --             cwd = require("r.config").path.wiki_path,
+      --             no_esc = true,
+      --             search = [[^(\*|\*\*|\*\*\*|\*\*\*\*).*$]],
+      --             fzf_opts = { ["--layout"] = false },
+      --
+      --             winopts = {
+      --               title = Util.fzflua.format_title("Note: title global", ""),
+      --             },
+      --           }
+      --         end,
+      --         find_categories_links = function()
+      --           local opts = {
+      --             prompt = "  ",
+      --             winopts = {
+      --               title = Util.fzflua.format_title("Note: find by categories", ""),
+      --               preview = {
+      --                 hidden = "hidden",
+      --                 vertical = "up:55%",
+      --                 horizontal = "right:60%",
+      --                 layout = "vertical",
+      --               },
+      --             },
+      --             actions = {
+      --               ["default"] = function(selected, _)
+      --                 local selection = selected[1]
+      --                 print(selection)
+      --               end,
+      --             },
+      --           }
+      --           return require("fzf-lua").fzf_exec(Util.neorg.find_by_categories(), opts)
+      --         end,
+      --         find_todo_curbuf = function()
+      --           cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
+      --         end,
+      --         find_todo_global = function()
+      --           cmd(fmt([[TodoQuickFix cwd=%s]], require("r.config").path.wiki_path))
+      --         end,
+      --       }, {
+      --         winopts = { title = require("r.config").icons.misc.list .. " Neorg", col = col, row = row },
+      --       })
+      --     end,
+      --     "Note: list commands",
+      --   },
     },
 
     ["i"] = {
       ["c<cr>"] = {
         function()
-          local opts = {
-            prompt = "  ",
-            winopts = {
-              -- split = "belowright new | wincmd J | resize 40",
-              title = Util.fzflua.format_title("[Neorg] Link Curbuf", " "),
-              preview = {
-                hidden = "hidden",
-                vertical = "up:55%",
-                horizontal = "right:60%",
-                layout = "vertical",
+          local note_ext = "norg"
+          if vim.bo[0].filetype == "markdown" then
+            note_ext = "md"
+          end
+
+          if note_ext == "md" then
+            local opts = {
+              prompt = "  ",
+              winopts = {
+                -- split = "belowright new | wincmd J | resize 40",
+                title = Util.fzflua.format_title("Note: link curbuf", ""),
+                preview = {
+                  hidden = "hidden",
+                  vertical = "up:55%",
+                  horizontal = "right:60%",
+                  layout = "vertical",
+                },
               },
-            },
-            actions = {
-              ["default"] = function(selected, _)
-                local selection = selected[1]
-                -- local str_path = selection:match "%[(.*)%]"
+              actions = {
+                ["default"] = function(selected, _)
+                  local selection = selected[1]
+                  -- local str_path = selection:match "%[(.*)%]"
 
-                vim.api.nvim_put({ selection }, "c", false, true)
-              end,
-            },
-          }
+                  vim.api.nvim_put({ selection }, "c", false, true)
+                end,
+              },
+            }
 
-          return require("fzf-lua").fzf_exec(Util.neorg_notes.find_by_categories(), opts)
+            return require("fzf-lua").fzf_exec(Util.neorg.find_by_categories(), opts)
+          end
         end,
-        "Note(fzflua): insert categories (curbuf)",
+        "Note: insert categories (curbuf)",
       },
       ["l<cr>"] = {
         function()
@@ -215,7 +263,7 @@ function M.neorg_mappings_ft(bufnr)
             prompt = "  ",
             winopts = {
               -- split = "belowright new | wincmd J | resize 40",
-              title = Util.fzflua.format_title("[Neorg] Link Curbuf", " "),
+              title = Util.fzflua.format_title("Note: link curbuf", ""),
               preview = {
                 hidden = "hidden",
                 vertical = "up:55%",
@@ -235,16 +283,16 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg_notes.finder_sitelinkable(neorg), opts)
+          return require("fzf-lua").fzf_exec(Util.neorg.finder_sitelinkable(), opts)
         end,
-        "Note(fzflua): insert link (curbuf)",
+        "Note: insert link (curbuf)",
       },
       ["t<cr>"] = {
         function()
           local opts = {
             prompt = "  ",
             winopts = {
-              title = Util.fzflua.format_title("[Neorg] Title Curbuf", " "),
+              title = Util.fzflua.format_title("Note: title curbuf", ""),
             },
             actions = {
               ["default"] = function(selected, _)
@@ -260,45 +308,79 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg_notes.finder_linkable(neorg), opts)
+          return require("fzf-lua").fzf_exec(Util.neorg.finder_linkable(), opts)
         end,
-        "Note(fzflua): insert title (curbuf)",
+        "Note: insert title (curbuf)",
       },
       ["T<cr>"] = {
         function()
+          local note_ext = "norg"
+          if vim.bo[0].filetype == "markdown" then
+            note_ext = "md"
+          end
+
           local opts = {
             prompt = "  ",
             winopts = {
-              title = Util.fzflua.format_title("[Neorg] Title Global", " "),
+              title = Util.fzflua.format_title("Note: title global", ""),
             },
-            fzf_opts = {
-              ["--preview"] = fzf_lua.shell.preview_action_cmd(function(items)
-                local selection = items[1]:match "[^%s]+" .. ".norg"
-                selection = os.getenv "HOME" .. "/Dropbox/neorg/" .. selection
-
-                return "cat " .. selection
-              end),
-            },
-
             actions = {
               ["default"] = function(selected, _)
                 local selection = selected[1]
 
-                local link_path = selection:match "[^%s]+"
+                if note_ext == "norg" then
+                  local link_path = selection:match "[^%s]+"
 
-                local title = selection:match "*.+$"
-                local trim_title = string.gsub(title, "*", "")
+                  local title = selection:match "*.+$"
+                  local trim_title = string.gsub(title, "*", "")
 
-                vim.api.nvim_put({
-                  "[" .. trim_title .. "]" .. "{:$/" .. link_path .. ":" .. title .. "}",
-                }, "c", false, true)
+                  vim.api.nvim_put({
+                    "[" .. trim_title .. "]" .. "{:$/" .. link_path .. ":" .. title .. "}",
+                  }, "c", false, true)
+                else
+                  local parts = vim.split(selection, ".md")
+                  local path_name = vim.split(parts[1], "/")
+                  local path_file = path_name[#path_name]
+
+                  local path_heading = vim.split(parts[2], "#")
+                  -- remove space
+                  local path_linkheading = string.gsub(path_heading[#path_heading], "^%s", "")
+
+                  vim.api.nvim_put({
+                    "[[" .. path_file .. "#" .. path_linkheading .. "]]",
+                  }, "c", false, true)
+                end
               end,
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg_notes.finder_linkableGlobal(neorg), opts)
+          if note_ext == "neorg" then
+            opts.fzf_opts = {
+
+              ["--preview"] = fzf_lua.shell.preview_action_cmd(function(items)
+                local selection = items[1]:match "[^%s]+" .. "." .. note_ext
+                selection = os.getenv "HOME" .. "/Dropbox/neorg/" .. selection
+
+                return "cat " .. selection
+              end),
+            }
+          end
+
+          if note_ext == "md" then
+            opts.search = [[^#.*]]
+            opts.cwd = Config.path.wiki_path
+            opts.rg_opts =
+              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" -e ]]
+          end
+
+          opts.no_esc = true
+          if note_ext == "norg" then
+            return require("fzf-lua").fzf_exec(Util.neorg.finder_linkableGlobal(), opts)
+          else
+            return require("fzf-lua").live_grep_glob(opts)
+          end
         end,
-        "Note(fzflua): insert title (global)",
+        "Note: insert title (global)",
       },
     },
   }

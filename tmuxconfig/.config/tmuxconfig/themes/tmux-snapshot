@@ -18,12 +18,10 @@ right_separator=''
 right_separator_black=''
 session_symbol=''
 
-setw -g window-style bg=$TMUX_PANE_ACTIVE_BG
-setw -g window-active-style bg=$TMUX_PANE_BG
+setw -g pane-active-border-style fg=$TMUX_BORDER_FG
+setw -g pane-border-style fg=$TMUX_BORDER_FG
 
 # setw -g pane-border-status bottom
-setw -g pane-active-border-style "fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG"
-setw -g pane-border-style "fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG"
 set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
   #{?pane_active,❐ #S:#I/#{session_windows} ,}#{?window_zoomed_flag,⬢,❄} #P ⇒ #{pane_tty} #{pane_current_command}'
 

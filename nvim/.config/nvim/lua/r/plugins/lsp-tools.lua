@@ -243,7 +243,7 @@ return {
                       outline.close_outline()
                     end
 
-                    -- local path = vim.fn.expand "%:p"
+                    local path = vim.fn.expand "%:p"
                     -- vim.cmd [[close]]
                     -- vim.cmd("e " .. path)
                     if selection == "all" then
@@ -252,7 +252,12 @@ return {
                       opts_outline.symbols.filter = { selection }
                     end
                     outline.setup(opts_outline)
-                    outline.open_outline()
+
+                    vim.schedule(function()
+                      outline.open_outline()
+
+                      vim.cmd("e " .. path)
+                    end)
                   end
                 end,
               },
@@ -287,12 +292,12 @@ return {
         close = { "<Esc>", "q", "<Leader><TAB>" },
         goto_location = "<Cr>",
         peek_location = "o",
-        goto_and_close = "<S-Cr>",
-        restore_location = "<C-g>",
-        hover_symbol = "K",
+        goto_and_close = {},
+        restore_location = {},
+        hover_symbol = {},
         toggle_preview = "P",
         rename_symbol = {},
-        code_actions = "a",
+        code_actions = {},
         fold = "h",
         fold_toggle = { "<tab>", "za" },
         fold_toggle_all = "<S-tab>",

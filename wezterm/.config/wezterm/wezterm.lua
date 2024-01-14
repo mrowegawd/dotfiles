@@ -24,37 +24,38 @@ local function font_with_fallback(name, params)
 	return wezterm.font_with_fallback(names, params)
 end
 
--- local function get_random_entry(tbl)
--- 	local keys = {}
--- 	for key, _ in ipairs(tbl) do
--- 		table.insert(keys, key)
--- 	end
--- 	local randomKey = keys[math.random(1, #keys)]
--- 	return tbl[randomKey]
--- end
---
--- local function get_wallpaper()
--- 	local wallpapers = {}
--- 	local wallpapers_glob = os.getenv("HOME") .. "/Downloads/wezterm-walli3/**"
---
--- 	for _, v in ipairs(wezterm.glob(wallpapers_glob)) do
--- 		table.insert(wallpapers, v)
--- 	end
--- 	return {
--- 		source = { File = { path = get_random_entry(wallpapers) } },
---
--- 		-- height = "Contain",
--- 		-- width = "Contain",
---
--- 		repeat_y = "Repeat",
--- 		repeat_x = "NoRepeat",
--- 		-- repeat_x = "Repeat",
---
--- 		width = "100%",
--- 		hsb = { brightness = 0.05 },
--- 		opacity = 1,
--- 	}
--- end
+local function get_random_entry(tbl)
+	if tbl ~= "table" then
+		return tbl
+	end
+
+	local keys = {}
+	for key, _ in ipairs(tbl) do
+		table.insert(keys, key)
+	end
+	local randomKey = keys[math.random(1, #keys)]
+	return tbl[randomKey]
+end
+
+local function get_wallpaper()
+	-- local wallpapers = {}
+	-- local wallpapers_glob = os.getenv("HOME") .. "/Downloads/wezterm-walli3/**"
+	-- for _, v in ipairs(wezterm.glob(wallpapers_glob)) do
+	-- table.insert(wallpapers, wallpapers)
+	-- end
+
+	local wallpapers_glob = cmd_call("cat /tmp/bg-windows | xargs")
+	return {
+		source = { File = { path = get_random_entry(wallpapers_glob) } },
+		height = "Cover",
+		width = "Cover",
+		horizontal_align = "Center",
+		repeat_x = "Repeat",
+		repeat_y = "Repeat",
+		opacity = 1,
+		hsb = { brightness = 0.033 },
+	}
+end
 
 return {
 	-- [1.0] alpha channel value with floating point numbers in the range 0.0
@@ -122,17 +123,17 @@ return {
 		active_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 		inactive_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
 	},
-	-- background = {
-	-- 	get_wallpaper(),
-	-- },
-	colors = {
-		foreground = cmd_call("xrdb -query | grep -i foreground| cut -d':' -f2 | xargs"),
-		background = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
-		tab_bar = {
-			active_tab = {
-				bg_color = "red",
-				fg_color = "black",
-			},
-		},
+	background = {
+		get_wallpaper(),
 	},
+	-- colors = {
+	-- 	foreground = cmd_call("xrdb -query | grep -i foreground| cut -d':' -f2 | xargs"),
+	-- 	background = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
+	-- 	tab_bar = {
+	-- 		active_tab = {
+	-- 			bg_color = "red",
+	-- 			fg_color = "black",
+	-- 		},
+	-- 	},
+	-- },
 }

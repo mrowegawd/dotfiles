@@ -300,8 +300,8 @@ function M.change_colors()
     -- fzf match matching
     highlight.get(fzfluaborder, "fg"),
 
-    highlight.get(normal, "bg"),
-    highlight.get(normal, "bg"),
+    highlight.get(normalfloat, "bg"),
+    highlight.get(normalfloat, "bg"),
 
     highlight.tint(highlight.get(normal, "fg"), -0.1),
     highlight.get(winseparator, "fg")

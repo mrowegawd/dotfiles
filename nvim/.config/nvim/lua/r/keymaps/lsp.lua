@@ -19,7 +19,6 @@ function M.get()
     { "<Leader>K", "<CMD>Lspsaga hover_doc ++keep<CR>", desc = "LSP(lspsaga): hover (keep the window)", nowait = true },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-    { "gd", "<CMD> Lspsaga goto_definition<CR>", desc = "LSP(lspsaga): definitions", has = "definition" },
     -- { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
     { "gr", "<cmd> Lspsaga finder<cr>", desc = "LSP(lspsaga): references" },
     { "gT", [[<cmd>lua require('fzf-lua').lsp_typedefs()<cr>]], desc = "LSP(fzflua): peek type definitions" },
@@ -29,6 +28,7 @@ function M.get()
     -- { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP(fzflua): document symbols" },
     -- { "gS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP(fzflua): workspaces symbols" },
     { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "LSP: codeAction" },
+    -- { "gd", "<CMD> Lspsaga goto_definition<CR>", desc = "LSP(lspsaga): definitions", has = "definition" },
     {
       "<leader>cA",
       function()

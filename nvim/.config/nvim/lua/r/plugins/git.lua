@@ -196,12 +196,11 @@ return {
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
-    event = { "BufRead", "BufNewFile", "BufWritePost" },
+    event = { "BufReadPre", "BufNewFile" },
+    enabled = false,
     opts = {
-      -- Experimental ------------------------------------------------------------------------------
       _inline2 = false,
-      _extmark_signs = false,
-      _signs_staged_enable = false,
+      _extmark_signs = true,
       signs = {
         add = { text = "▎", numhl = "GitSignsAddNr" },
         change = { text = "▎", numhl = "GitSignsChangeNr" },

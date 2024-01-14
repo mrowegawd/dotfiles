@@ -73,7 +73,7 @@ return {
       "laher/neorg-exec",
     },
     config = function(_, opts)
-      Util.cmd.augroup("ManageNotesNeorg", {
+      Util.cmd.augroup("ManageNoteMappingNeorg", {
         event = { "FileType" },
         pattern = { "norg" },
         command = function()
@@ -288,7 +288,7 @@ return {
       {
         "<Localleader>fA",
         function()
-          return require("r.utils").neorg_notes.open_orgagenda_paths()
+          return require("r.utils").neorg.open_orgagenda_paths()
         end,
         desc = "Note(orgmode): open orgmode paths",
       },
@@ -470,7 +470,7 @@ return {
           org_capture_show_help = "?",
         },
         org = {
-          org_refile = "<c-i>",
+          org_refile = "<prefix>r",
           org_timestamp_up = "<c-a>",
           org_timestamp_down = "<c-x>",
           org_change_date = "cid",
@@ -479,9 +479,11 @@ return {
           org_open_at_point = "<prefix>o",
           org_meta_return = "<F12>", -- Add heading, item or row
           org_return = "<F11>",
-          org_global_cycle = "<a-o>",
-          org_cycle = "<BS>",
+          -- org_global_cycle = "<a-o>",
+          -- org_cycle = "<BS>",
           -- org_cycle = "<TAB>",
+          org_cycle = "<BS>",
+          org_global_cycle = "<S-TAB>",
           org_archive_subtree = "<prefix>$",
           org_set_tags_command = "<Leader>t",
           org_toggle_archive_tag = "<Leader>T",
@@ -530,16 +532,13 @@ return {
   -- MKDNFLOW.NVIM
   {
     "jakewvincent/mkdnflow.nvim",
-    event = "LazyFile",
+    event = "VimEnter",
     ft = { "markdown" },
-    -- keys = {
-    --   { "<Tab>" },
-    -- },
     opts = {
       mappings = {
         MkdnEnter = false,
-        MkdnTab = false,
-        MkdnSTab = false,
+        -- MkdnTab = false,
+        -- MkdnSTab = false,
         MkdnNextLink = false,
         MkdnPrevLink = false,
         MkdnNextHeading = { "n", "<c-n>" },
@@ -575,6 +574,70 @@ return {
       },
     },
   },
+  -- CALENDAR-VIM
+  {
+    "renerocksai/calendar-vim",
+    -- event = "LazyFile",
+    cmd = "Calendar",
+    -- keys = {
+    --   { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
+    -- },
+  },
+  -- IMAGE.NVIM
+  {
+    "3rd/image.nvim",
+    ft = { "markdown", "norg", "oil" },
+    enabled = function()
+      if vim.g.neovide then
+        return false
+      end
+      return true
+    end,
+    build = function()
+      local has_magick = pcall(require, "magick")
+      if not has_magick and vim.fn.executable "luarocks" == 1 then
+        local is_mac = uv.os_uname().sysname == "Darwin"
+        if is_mac then
+          vim.fn.system "luarocks --lua-dir=$(brew --prefix)/opt/lua@5.1 --lua-version=5.1 install magick"
+        else
+          vim.fn.system "luarocks --local --lua-version=5.1 install magick"
+        end
+        if vim.v.shell_error ~= 0 then
+          vim.notify("Error installing magick with luarocks", vim.log.levels.WARN)
+        end
+      end
+    end,
+    opts = {
+      backend = "kitty",
+      editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
+      tmux_show_only_in_active_window = true,
+      integrations = {
+        markdown = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
+        },
+        neorg = {
+          enabled = true,
+          clear_in_insert_mode = false,
+          download_remote_images = true,
+          only_render_image_at_cursor = false,
+          filetypes = { "norg" },
+        },
+      },
+    },
+    config = function(_, opts)
+      -- Requirements (linux):
+      -- sudo apt-get install libmagickwand-dev
+      -- sudo apt-get install libgraphicsmagick1-dev
+      local has_magick = pcall(require, "magick")
+      if has_magick then
+        require("image").setup(opts)
+      end
+    end,
+  },
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
@@ -594,14 +657,14 @@ return {
     },
     keys = {
       {
-        "<Localleader>ff",
+        "<Localleader>fg",
         function()
           return require("fzf-lua").live_grep_glob {
             prompt = "  ",
             cwd = Config.path.wiki_path,
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
             winopts = {
-              title = Util.fzflua.format_title("[Obsidian] Grep", " "),
+              title = Util.fzflua.format_title("[Obsidian] Grep", ""),
             },
           }
         end,
@@ -693,19 +756,23 @@ return {
 
     config = function(_, opts)
       require("obsidian").setup(opts)
+
+      Util.cmd.augroup("ManageNoteMappingMarkdown", {
+        event = { "FileType" },
+        pattern = { "markdown" },
+        command = function()
+          require("r.keymaps.note").neorg_mappings_ft(api.nvim_get_current_buf())
+        end,
+      })
       vim.keymap.set("n", "<Leader>oo", function()
-        if require("obsidian").util.cursor_on_markdown_link() then
-          return "<cmd>ObsidianFollowLink<CR>"
-        else
-          return "<Leader>oo"
-        end
-      end, { noremap = false, expr = true })
+        Util.markdown.followLink(Config)
+      end)
     end,
   },
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
-    -- lazy = false, -- must set to `false`, without this custom color, it does not work
+    event = "VeryLazy",
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
       highlight.plugin("headlines", {
@@ -719,6 +786,7 @@ return {
                 -- fg = { from = "@attribute", attr = "fg", alter = 0.1 },
                 -- bg = { from = "@attribute", attr = "fg", alter = -0.9 },
                 fg = { from = "@attribute", attr = "fg", alter = 1 },
+                bold = true,
               },
             },
             {
@@ -728,6 +796,7 @@ return {
                 -- bg = { from = "Normal", attr = "bg", alter = 0.5 },
                 -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
                 fg = { from = "@attribute", attr = "fg", alter = 0.8 },
+                bold = true,
               },
             },
 
@@ -738,6 +807,7 @@ return {
                 -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
                 -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
                 fg = { from = "@attribute", attr = "fg", alter = 0.6 },
+                bold = true,
               },
             },
             {
@@ -747,6 +817,7 @@ return {
 
                 -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
                 fg = { from = "@attribute", attr = "fg", alter = 0.4 },
+                bold = true,
               },
             },
             {
@@ -755,6 +826,7 @@ return {
 
                 -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
                 fg = { from = "@attribute", attr = "fg", alter = 0.2 },
+                bold = true,
               },
             },
           },
@@ -771,68 +843,5 @@ return {
         fat_headline_lower_string = "▔",
       }
     end,
-  },
-  -- IMAGE.NVIM
-  {
-    "3rd/image.nvim",
-    ft = { "markdown", "norg", "oil" },
-    enabled = function()
-      if vim.g.neovide then
-        return false
-      end
-      return true
-    end,
-    build = function()
-      local has_magick = pcall(require, "magick")
-      if not has_magick and vim.fn.executable "luarocks" == 1 then
-        local is_mac = uv.os_uname().sysname == "Darwin"
-        if is_mac then
-          vim.fn.system "luarocks --lua-dir=$(brew --prefix)/opt/lua@5.1 --lua-version=5.1 install magick"
-        else
-          vim.fn.system "luarocks --local --lua-version=5.1 install magick"
-        end
-        if vim.v.shell_error ~= 0 then
-          vim.notify("Error installing magick with luarocks", vim.log.levels.WARN)
-        end
-      end
-    end,
-    opts = {
-      backend = "kitty",
-      editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
-      tmux_show_only_in_active_window = true,
-      integrations = {
-        markdown = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-        },
-        neorg = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "norg" },
-        },
-      },
-    },
-    config = function(_, opts)
-      -- Requirements (linux):
-      -- sudo apt-get install libmagickwand-dev
-      -- sudo apt-get install libgraphicsmagick1-dev
-      local has_magick = pcall(require, "magick")
-      if has_magick then
-        require("image").setup(opts)
-      end
-    end,
-  },
-  -- CALENDAR-VIM
-  {
-    "mattn/calendar-vim",
-    event = "LazyFile",
-    keys = {
-      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
-    },
   },
 }

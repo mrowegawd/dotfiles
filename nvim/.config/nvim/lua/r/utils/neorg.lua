@@ -2,6 +2,7 @@ local Util = require "r.utils"
 
 local scan = require "plenary.scandir"
 local fmt, cmd = string.format, vim.cmd
+local neorg = require "neorg"
 
 local M = {}
 
@@ -96,7 +97,7 @@ function M.convert_norg_to_markdown()
   end
 end
 
-local function __get_check_dirman(neorg)
+local function __get_check_dirman()
   local dirman = neorg.modules.get_module "core.dirman"
 
   if not dirman then
@@ -190,8 +191,8 @@ end
 --  ┃                         LINKABLE                         ┃
 --  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function M.finder_linkableGlobal(neorg)
-  local tbl_files = __get_norg_files(__get_check_dirman(neorg))
+function M.finder_linkableGlobal()
+  local tbl_files = __get_norg_files(__get_check_dirman())
 
   local tb_rt = {}
 
@@ -202,7 +203,7 @@ function M.finder_linkableGlobal(neorg)
   return tb_rt
 end
 
-function M.finder_linkable(neorg)
+function M.finder_linkable()
   local res = {}
   local dirman = neorg.modules.get_module "core.dirman"
 
@@ -232,7 +233,7 @@ function M.finder_linkable(neorg)
   return res
 end
 
-function M.check_broken_links(neorg)
+function M.check_broken_links()
   -- local dirman_utils = neorg.modules.get_module "core.dirman.utils"
   -- -- 1. regex/grep all links on curbuf
   -- local scripts =
@@ -285,7 +286,7 @@ end
 --  ┃                       SITELINKABLE                       ┃
 --  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-function M.finder_sitelinkable(neorg)
+function M.finder_sitelinkable()
   local dirman = neorg.modules.get_module "core.dirman"
 
   if not dirman then

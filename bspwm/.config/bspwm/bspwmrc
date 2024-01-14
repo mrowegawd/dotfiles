@@ -108,9 +108,6 @@ setxkbmap -option caps:backspace # switch capslock to backspace
 pantree="$HOME/.config/miscxrdb/exbin/paintree"
 [ -f "$pantree" ] && "$pantree"
 
-run_once xrdb ~/.Xresources
-run_once "$TERMINAL"
-
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
 	echo "dummy" >$startup_lock_file
@@ -123,3 +120,6 @@ if [ ! -f $startup_lock_file ]; then
 	# [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
 	dropbox start &
 fi
+
+run_once xrdb ~/.Xresources
+run_once "$TERMINAL"

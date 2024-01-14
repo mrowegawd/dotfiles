@@ -18,7 +18,7 @@ return {
         shading_factor = 0.3, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
         start_in_insert = true,
         persist_size = true,
-        open_mapping = [[<a-f>]],
+        -- open_mapping = [[<a-f>]],
         direction = "horizontal",
       }
     end,
@@ -88,7 +88,7 @@ return {
       end
 
       return {
-        { "<a-f>", mode = { "n", "v", "t", "i" } },
+        -- { "<a-f>", mode = { "n", "v", "t", "i" } },
         -- {
         --   "<F5>",
         --   function()
@@ -187,11 +187,36 @@ return {
       }
     end,
   },
+  -- NVIM-TERMINAL
   {
     "s1n7ax/nvim-terminal",
-    config = function()
+    keys = {
+      { "<a-f>", mode = { "n", "v", "t", "i" } },
+      { "<a-1>", mode = { "n", "v", "t", "i" } },
+      { "<a-2>", mode = { "n", "v", "t", "i" } },
+      { "<a-3>", mode = { "n", "v", "t", "i" } },
+      { "<a-4>", mode = { "n", "v", "t", "i" } },
+      { "<a-5>", mode = { "n", "v", "t", "i" } },
+    },
+    opts = {
+      -- keymap to disablesb all the default keymaps
+      disable_default_keymaps = false,
+
+      -- keymap to toggle open and close terminal window
+      toggle_keymap = "<a-f>",
+
+      terminals = {
+        -- keymaps to open nth terminal
+        { keymap = "<a-1>" },
+        { keymap = "<a-2>" },
+        { keymap = "<a-3>" },
+        { keymap = "<a-4>" },
+        { keymap = "<a-5>" },
+      },
+    },
+    config = function(_, opts)
       vim.o.hidden = true
-      require("nvim-terminal").setup()
+      require("nvim-terminal").setup(opts)
     end,
   },
 }

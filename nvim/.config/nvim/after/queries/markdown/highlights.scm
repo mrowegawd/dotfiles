@@ -102,7 +102,8 @@
 ((atx_h2_marker) @text.title.2.conceal (#set! conceal "◆"))
 ((atx_h3_marker) @text.title.3.conceal (#set! conceal "✿"))
 ((atx_h4_marker) @text.title.4.conceal (#set! conceal "▶"))
-((atx_h5_marker) @text.title.5.conceal (#set! conceal "⤷"))
+((atx_h5_marker) @text.title.5.conceal (#set! conceal "⟡"))
+((atx_h6_marker) @text.title.6.conceal (#set! conceal "⤷"))
 
 ; Ease fenced code block conceals a bit
 ((fenced_code_block_delimiter) @punctuation.delimiter (#set! conceal "~"))
