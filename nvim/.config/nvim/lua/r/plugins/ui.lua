@@ -40,6 +40,7 @@ return {
           "norg",
           "org",
           "orgagenda",
+          "Outline",
           "sagafinder",
         },
         command = function()

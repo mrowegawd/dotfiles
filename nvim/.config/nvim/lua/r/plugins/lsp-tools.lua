@@ -195,21 +195,27 @@ return {
         {
           "<Localleader>oA",
           function()
-            if vim.bo[0].filetype == "norg" then
+            if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
               return
             end
 
+            if vim.bo[0].filetype == "outline" then
+              vim.cmd "wincmd w"
+            end
+
             local aerial_selected = {
+              "Array",
               "Class",
               "Constructor",
-              "Object",
               "Enum",
+              "Field",
               "Function",
+              "Package",
               "Interface",
-              "Variable",
-              "Module",
               "Method",
+              "Object",
               "Struct",
+              "Variable",
               "all",
             }
             require("fzf-lua").fzf_exec(aerial_selected, {
@@ -237,9 +243,9 @@ return {
                       outline.close_outline()
                     end
 
-                    local path = vim.fn.expand "%:p"
-                    vim.cmd [[bd]]
-                    vim.cmd("e " .. path)
+                    -- local path = vim.fn.expand "%:p"
+                    -- vim.cmd [[close]]
+                    -- vim.cmd("e " .. path)
                     if selection == "all" then
                       opts_outline.symbols.filter = nil
                     else
@@ -274,16 +280,18 @@ return {
       preview_window = {
         live = true,
       },
+      -- These keymaps can be a string or a table for multiple keys.
+      -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
       keymaps = {
         show_help = "?",
-        close = { "<Esc>", "q" },
+        close = { "<Esc>", "q", "<Leader><TAB>" },
         goto_location = "<Cr>",
         peek_location = "o",
         goto_and_close = "<S-Cr>",
         restore_location = "<C-g>",
         hover_symbol = "K",
         toggle_preview = "P",
-        rename_symbol = "r",
+        rename_symbol = {},
         code_actions = "a",
         fold = "h",
         fold_toggle = { "<tab>", "za" },
