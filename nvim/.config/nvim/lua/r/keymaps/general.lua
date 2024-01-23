@@ -129,7 +129,8 @@ end, { desc = "Misc: change cur pwd to curfile" })
 Util.map.nnoremap("<Leader>n", function()
   ---@diagnostic disable-next-line: missing-fields
   require("notify").dismiss {}
-  return cmd.nohl()
+  cmd.nohl()
+  return vim.cmd [[let @/ = ""]]
 end, { desc = "Misc: clear searches" })
 
 Util.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -450,7 +451,7 @@ Util.map.nnoremap("<F1>", function()
 end)
 
 local checkconceallevel = false
-Util.map.nnoremap("<Localleader>r", function()
+Util.map.nnoremap("<Localleader>g", function()
   local col, row = Util.fzflua.rectangle_win_pojokan()
   Util.fzflua.send_cmds({
     check_todocurbuf = function()

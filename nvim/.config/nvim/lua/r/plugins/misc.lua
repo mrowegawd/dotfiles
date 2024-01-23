@@ -1,7 +1,4 @@
 return {
-  { "MunifTanjim/nui.nvim" },
-  { "nvim-lua/plenary.nvim" },
-  { "nvim-tree/nvim-web-devicons" },
   { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } }, -- sudo
 
   -- NUMB-NVIM
@@ -61,6 +58,7 @@ return {
   },
   {
     "tris203/hawtkeys.nvim",
+    enabled = false,
     config = true,
   },
 }

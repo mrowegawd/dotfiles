@@ -532,7 +532,7 @@ return {
   -- MKDNFLOW.NVIM
   {
     "jakewvincent/mkdnflow.nvim",
-    event = "VimEnter",
+    event = "LazyFile",
     ft = { "markdown" },
     opts = {
       mappings = {
@@ -670,6 +670,22 @@ return {
         end,
 
         desc = "Note(fzflua): obsidian search",
+      },
+      {
+        "<Localleader>ff",
+        function()
+          return require("fzf-lua").files {
+            prompt = "  ",
+            cwd = Config.path.wiki_path,
+            rg_glob = true,
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            winopts = {
+              -- fullscreen = true,
+              title = Util.fzflua.format_title("Note Files", ""),
+            },
+          }
+        end,
+        desc = "Note(fzflua): find neorg files",
       },
     },
     dependencies = {

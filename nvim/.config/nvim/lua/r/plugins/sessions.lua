@@ -8,6 +8,7 @@ return {
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
+    -- enabled = false,
     opts = {
       opts = { options = vim.opt.sessionoptions:get() },
       pre_save = function()

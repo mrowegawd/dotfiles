@@ -7,37 +7,6 @@ OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
 return {
-  -- LUASNIP
-  {
-    "L3MON4D3/LuaSnip",
-    ---@diagnostic disable-next-line: undefined-global
-    build = (not jit.os:find "Windows")
-        and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
-      or nil,
-    opts = {
-      history = true,
-      delete_check_events = "TextChanged",
-    },
-    config = function()
-      local luasnip = require "luasnip"
-
-      require("luasnip.loaders.from_vscode").lazy_load {
-        paths = "~/Dropbox/friendly-snippets",
-      }
-
-      luasnip.filetype_extend("python", { "django" })
-      luasnip.filetype_extend("django-html", { "html" })
-      luasnip.filetype_extend("htmldjango", { "html" })
-
-      luasnip.filetype_extend("javascript", { "html" })
-      luasnip.filetype_extend("javascript", { "javascriptreact" })
-      luasnip.filetype_extend("javascriptreact", { "html" })
-      luasnip.filetype_extend("typescript", { "html" })
-      luasnip.filetype_extend("typescriptreact", { "html", "react" })
-
-      -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
-    end,
-  },
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
@@ -70,6 +39,134 @@ return {
             cmp = { enabled = true },
           },
         },
+      },
+      -- NVIM-AUTOPAIRS
+      {
+        -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5.
+        -- before we use ultimate-autopair
+        "windwp/nvim-autopairs",
+        enabled = function()
+          if require("r.config").lsp_style == "coc" then
+            return false
+          end
+          return true
+        end,
+        -- dependencies = { "hrsh7th/nvim-cmp" },
+        opts = {
+          close_triple_quotes = true,
+          check_ts = true,
+          ts_config = {
+            lua = { "string" },
+            dart = { "string" },
+            javascript = { "template_string" },
+          },
+          disable_filetype = {
+            "TelescopePrompt",
+            "spectre_panel",
+            "neo-tree-popup",
+            "vim",
+          },
+          fast_wrap = { map = "<c-g>" },
+          -- fast_wrap = { map = nil },
+          chars = { "{", "[", "(", '"', "'" },
+          pattern = [=[[%'%"%>%]%)%}%,]]=],
+          end_key = "$",
+          before_key = "h",
+          after_key = "l",
+          manual_position = true,
+          highlight = "PmenuSel",
+          highlight_grey = "LineNr",
+        },
+        config = function(_, opts)
+          local npairs = require "nvim-autopairs"
+          local Rule = require "nvim-autopairs.rule"
+          local cond = require "nvim-autopairs.conds"
+          npairs.setup(opts)
+
+          -- rule for: `(|)` -> Space -> `( | )` and associated deletion options
+          local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
+          npairs.add_rules {
+            Rule(" ", " ", "-markdown")
+              :with_pair(function(optsc)
+                local pair = optsc.line:sub(optsc.col - 1, optsc.col)
+                return vim.tbl_contains({
+                  brackets[1][1] .. brackets[1][2],
+                  brackets[2][1] .. brackets[2][2],
+                  brackets[3][1] .. brackets[3][2],
+                }, pair)
+              end)
+              :with_move(cond.none())
+              :with_cr(cond.none())
+              :with_del(function(optsc)
+                -- We only want to delete the pair of spaces when the cursor is as such: ( | )
+                local col = vim.api.nvim_win_get_cursor(0)[2]
+                local context = optsc.line:sub(col - 1, col + 2)
+                return vim.tbl_contains({
+                  brackets[1][1] .. "  " .. brackets[1][2],
+                  brackets[2][1] .. "  " .. brackets[2][2],
+                  brackets[3][1] .. "  " .. brackets[3][2],
+                }, context)
+              end),
+          }
+
+          for _, bracket in pairs(brackets) do
+            npairs.add_rules {
+              -- add move for brackets with pair of spaces inside
+              Rule(bracket[1] .. " ", " " .. bracket[2])
+                :with_pair(function()
+                  return false
+                end)
+                :with_del(function()
+                  return false
+                end)
+                :with_move(function(optsc)
+                  return optsc.prev_char:match(".%" .. bracket[2]) ~= nil
+                end)
+                :use_key(bracket[2]),
+
+              -- add closing brackets even if next char is '$'
+              Rule(bracket[1], bracket[2]):with_pair(cond.after_text "$"),
+
+              -- `()|` -> <BS> -> `|`
+              Rule(bracket[1] .. bracket[2], ""):with_pair(function()
+                return false
+              end):with_cr(function()
+                return false
+              end),
+            }
+          end
+        end,
+      },
+      -- LUASNIP
+      {
+        "L3MON4D3/LuaSnip",
+        ---@diagnostic disable-next-line: undefined-global
+        build = (not jit.os:find "Windows")
+            and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
+          or nil,
+        opts = {
+          history = true,
+          delete_check_events = "TextChanged",
+        },
+        config = function()
+          local luasnip = require "luasnip"
+
+          require("luasnip.loaders.from_vscode").lazy_load {
+            paths = "~/Dropbox/friendly-snippets",
+          }
+
+          luasnip.filetype_extend("python", { "django" })
+          luasnip.filetype_extend("django-html", { "html" })
+          luasnip.filetype_extend("htmldjango", { "html" })
+
+          luasnip.filetype_extend("javascript", { "html" })
+          luasnip.filetype_extend("javascript", { "javascriptreact" })
+          luasnip.filetype_extend("javascriptreact", { "html" })
+          luasnip.filetype_extend("typescript", { "html" })
+          luasnip.filetype_extend("typescriptreact", { "html", "react" })
+
+          -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
+        end,
       },
     },
     opts = {
@@ -428,101 +525,8 @@ return {
           { name = "buffer" },
         },
       })
-    end,
-  },
-  -- NVIM-AUTOPAIRS
-  {
-    -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5.
-    -- before we use ultimate-autopair
-    "windwp/nvim-autopairs",
-    enabled = function()
-      if require("r.config").lsp_style == "coc" then
-        return false
-      end
-      return true
-    end,
-    dependencies = { "hrsh7th/nvim-cmp" },
-    opts = {
-      close_triple_quotes = true,
-      check_ts = true,
-      ts_config = {
-        lua = { "string" },
-        dart = { "string" },
-        javascript = { "template_string" },
-      },
-      disable_filetype = {
-        "TelescopePrompt",
-        "spectre_panel",
-        "neo-tree-popup",
-        "vim",
-      },
       --
-      fast_wrap = { map = "<c-g" },
-      -- fast_wrap = { map = nil },
-      highlight = "PmenuSel",
-      highlight_grey = "LineNr",
-    },
-    config = function(_, opts)
-      local npairs = require "nvim-autopairs"
-      local Rule = require "nvim-autopairs.rule"
-      local cond = require "nvim-autopairs.conds"
-      npairs.setup(opts)
-
-      -- rule for: `(|)` -> Space -> `( | )` and associated deletion options
-      local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
-      npairs.add_rules {
-        Rule(" ", " ", "-markdown")
-          :with_pair(function(optsc)
-            local pair = optsc.line:sub(optsc.col - 1, optsc.col)
-            return vim.tbl_contains({
-              brackets[1][1] .. brackets[1][2],
-              brackets[2][1] .. brackets[2][2],
-              brackets[3][1] .. brackets[3][2],
-            }, pair)
-          end)
-          :with_move(cond.none())
-          :with_cr(cond.none())
-          :with_del(function(optsc)
-            -- We only want to delete the pair of spaces when the cursor is as such: ( | )
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            local context = optsc.line:sub(col - 1, col + 2)
-            return vim.tbl_contains({
-              brackets[1][1] .. "  " .. brackets[1][2],
-              brackets[2][1] .. "  " .. brackets[2][2],
-              brackets[3][1] .. "  " .. brackets[3][2],
-            }, context)
-          end),
-      }
-
-      for _, bracket in pairs(brackets) do
-        npairs.add_rules {
-          -- add move for brackets with pair of spaces inside
-          Rule(bracket[1] .. " ", " " .. bracket[2])
-            :with_pair(function()
-              return false
-            end)
-            :with_del(function()
-              return false
-            end)
-            :with_move(function(optsc)
-              return optsc.prev_char:match(".%" .. bracket[2]) ~= nil
-            end)
-            :use_key(bracket[2]),
-
-          -- add closing brackets even if next char is '$'
-          Rule(bracket[1], bracket[2]):with_pair(cond.after_text "$"),
-
-          -- `()|` -> <BS> -> `|`
-          Rule(bracket[1] .. bracket[2], ""):with_pair(function()
-            return false
-          end):with_cr(function()
-            return false
-          end),
-        }
-      end
-
       -- Taken from https://github.com/altermo/ultimate-autopair.nvim/issues/5#issuecomment-1772186460
-      local cmp = require "cmp"
       local ind = cmp.lsp.CompletionItemKind
 
       local function ls_name_from_event(event)

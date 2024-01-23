@@ -196,7 +196,7 @@ return {
           local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case {q} ]]
             .. table.concat(qf_ntbl, " ")
 
-          return require("fzf-lua").live_grep {
+          return require("fzf-lua").live_grep_glob {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("[QF] Grep", "") },
             cmd = pcmd,
@@ -1543,16 +1543,17 @@ return {
   -- DRESSING
   {
     "stevearc/dressing.nvim",
-    init = function()
-      vim.ui.select = function(...)
-        require("lazy").load { plugins = { "dressing.nvim" } }
-        return vim.ui.select(...)
-      end
-      vim.ui.input = function(...)
-        require("lazy").load { plugins = { "dressing.nvim" } }
-        return vim.ui.input(...)
-      end
-    end,
+    event = "VimEnter",
+    -- init = function()
+    --   vim.ui.select = function(...)
+    --     require("lazy").load { plugins = { "dressing.nvim" } }
+    --     return vim.ui.select(...)
+    --   end
+    --   vim.ui.input = function(...)
+    --     require("lazy").load { plugins = { "dressing.nvim" } }
+    --     return vim.ui.input(...)
+    --   end
+    -- end,
     opts = {
       input = { enabled = true },
       select = {

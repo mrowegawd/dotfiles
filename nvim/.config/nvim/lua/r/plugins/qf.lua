@@ -61,9 +61,10 @@ return {
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
     -- enabled = false,
-    -- dependencies = {
-    --   "MunifTanjim/nui.nvim",
-    -- },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+    },
     ft = { "qf" },
     keys = {
       "<Localleader>qT",

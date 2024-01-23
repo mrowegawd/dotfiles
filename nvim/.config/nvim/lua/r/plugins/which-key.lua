@@ -2,7 +2,8 @@ return {
   -- WHICH-KEY
   {
     "folke/which-key.nvim",
-    lazy = false,
+    event = "LazyFile",
+    -- lazy = false,
     opts = {
       setup = {
         show_help = true,

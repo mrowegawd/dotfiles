@@ -28,6 +28,6 @@ if [ -d "$HOME/.local/bin" ]; then
 fi
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
-export TERMINAL="st"
+export TERMINAL="wezterm"
 
 export PATH="$HOME/.poetry/bin:$PATH"

@@ -69,9 +69,9 @@ require("lazy").setup {
       -- To fix `:changes` showing invalid, remove `netrw*` from `disabled_plugins` field
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
         "tarPlugin",
         "tohtml",
         "tutor",

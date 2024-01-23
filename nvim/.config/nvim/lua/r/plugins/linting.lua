@@ -1,16 +1,12 @@
 local Util = require "r.utils"
 
 return {
-  -- NULL-LS-EMBEDDED
-  {
-    dir = "~/.local/src/nvim_plugins/null-ls-embedded",
-  },
   -- NONE-LS
   {
     "nvimtools/none-ls.nvim",
     event = "LazyFile",
     enabled = false,
-    dependencies = { "mason.nvim" },
+    dependencies = { "mason.nvim", dir = "~/.local/src/nvim_plugins/null-ls-embedded" },
     init = function()
       Util.on_very_lazy(function()
         require("r.utils").format.register {
@@ -119,6 +115,9 @@ return {
       linters = {
         markdownlint = {
           args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
+        },
+        cspell = {
+          args = { "--config=" .. vim.env.HOME .. "/.config/linters/cspell.json" },
         },
 
         -- Example of using selene only when a selene.toml file is present

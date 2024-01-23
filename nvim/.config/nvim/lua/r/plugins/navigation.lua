@@ -8,52 +8,27 @@ return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    event = "VeryLazy",
     cmd = "Neotree",
-    keys = {
-      {
-        "<Leader>e",
-        function()
-          local neotree_opened = false
-          for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
-            if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
-              neotree_opened = true
-            end
-          end
-
-          if neotree_opened then
-            if vim.bo[0].filetype == "neo-tree" then
-              return vim.cmd [[wincmd p]]
-            end
-            return cmd "Neotree reveal"
-          else
-            -- if vim.bo[0].filetype == "neo-tree" then
-            --   return vim.cmd [[q]]
-            -- end
-            return cmd "Neotree"
-          end
-        end,
-        desc = "Misc(neotree): open File explore",
-      },
-      {
-        "<Leader>ge",
-        function()
-          if vim.bo[0].filetype == "neo-tree" then
-            return cmd [[q]]
-          end
-          return cmd "Neotree git_status"
-        end,
-        desc = "Misc(neotree): open File explore",
-      },
-      {
-        "<Leader>E",
-        function()
-          Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-          return cmd "Neotree reveal toggle"
-        end,
-        desc = "Misc(neotree): open find file on File Explore",
-      },
-    },
+    -- keys = {
+    --   {
+    --     "<Leader>ge",
+    --     function()
+    --       if vim.bo[0].filetype == "neo-tree" then
+    --         return cmd [[q]]
+    --       end
+    --       return cmd "Neotree git_status"
+    --     end,
+    --     desc = "Misc(neotree): open File explore",
+    --   },
+    --   {
+    --     "<Leader>E",
+    --     function()
+    --       Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+    --       return cmd "Neotree reveal toggle"
+    --     end,
+    --     desc = "Misc(neotree): open find file on File Explore",
+    --   },
+    -- },
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
@@ -270,14 +245,43 @@ return {
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
-    event = "VeryLazy",
-    -- stylua: ignore
     keys = {
-      { "<Leader>uu", function() require("edgy").toggle() end, desc = "Misc(edgy): toggle explore", },
+      {
+        "<Leader>e",
+        function()
+          local neotree_opened = false
+          for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+            if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
+              neotree_opened = true
+            end
+          end
+
+          if neotree_opened then
+            if vim.bo[0].filetype == "neo-tree" then
+              vim.cmd [[wincmd p]]
+              if vim.bo[0].filetype == "noo-tree" then
+                vim.print "aye"
+              end
+              return
+            end
+            return cmd "Neotree reveal"
+          else
+            return cmd "Neotree"
+          end
+        end,
+        desc = "Misc(neotree): open File explore",
+      },
+      {
+        "<Leader>uu",
+        function()
+          require("edgy").toggle()
+        end,
+        desc = "Misc(edgy): toggle explore",
+      },
       -- { "<Leader>us", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
-      { "<Leader>ug", "<CMD> Neotree git_status toggle <CR>",  desc = "Misc(edgy): toggle git_status" },
-      { "<Leader>ub", "<CMD> Neotree buffers toggle <CR>",     desc = "Misc(edgy): toggle buffers" },
-      { "<Leader>uo", "<CMD> OutlineClose <CR>",     desc = "Misc(edgy): toggle close" },
+      { "<Leader>ug", "<CMD> Neotree git_status toggle <CR>", desc = "Misc(edgy): toggle git_status" },
+      { "<Leader>ub", "<CMD> Neotree buffers toggle <CR>", desc = "Misc(edgy): toggle buffers" },
+      { "<Leader>uo", "<CMD> OutlineClose <CR>", desc = "Misc(edgy): toggle close" },
     },
     opts = function()
       highlight.plugin("NeoEdgyHi", {
@@ -331,9 +335,9 @@ return {
             ft = "Outline",
             pinned = true,
             open = "Outline",
-            -- size = {
-            --   height = 0.5,
-            -- },
+            size = {
+              width = 0.2,
+            },
           },
         },
         left = {

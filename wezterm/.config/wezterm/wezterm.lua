@@ -53,7 +53,7 @@ local function get_wallpaper()
 		repeat_x = "Repeat",
 		repeat_y = "Repeat",
 		opacity = 1,
-		hsb = { brightness = 0.033 },
+		hsb = { brightness = 0.030 },
 	}
 end
 
@@ -75,27 +75,28 @@ return {
 	--  ┌╌╌╌╌╌╌╌┐
 	--  ╎ Fonts ╎
 	--  └╌╌╌╌╌╌╌┘
-	font_size = 11.5,
+	font_size = 11,
 	font_rules = {
 		{
 			italic = false,
 			intensity = "Normal",
-			font = font_with_fallback("JetBrains Mono", {}),
+			font = font_with_fallback("SF Mono", {}),
 		},
 		{
 			italic = false,
 			-- intensity = "Bold",
-			font = font_with_fallback("JetBrains Mono", { weight = "Bold" }),
+			font = font_with_fallback("SF Mono", { weight = "Bold" }),
 		},
 		{
 			italic = false,
 			-- intensity = "Normal",
-			font = font_with_fallback("JetBrains Mono", { weight = "Regular" }),
+			font = font_with_fallback("SF Mono", { weight = "Regular" }),
 		},
 		{
 			italic = true,
 			intensity = "Bold",
-			font = font_with_fallback("VictorMono NFP SemiBold Obl", {}),
+			-- font = font_with_fallback("VictorMono NFP SemiBold Obl", {}),
+			font = font_with_fallback("JetBrains Mono", {}),
 		},
 	},
 

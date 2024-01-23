@@ -203,6 +203,7 @@ local defaults = {
       Collapsed     = " ",
       Constant      = "󰏿 ",
       Constructor   = " ",
+      Component     = '󰅴',
       Copilot       = " ",
       Enum          = " ",
       EnumMember    = " ",
@@ -212,6 +213,7 @@ local defaults = {
       Folder        = " ",
       Function      = "󰊕 ",
       Interface     = " ",
+      Fragment      = "󰅴",
       Key           = " ",
       Keyword       = " ",
       Method        = "󰊕 ",
@@ -377,13 +379,10 @@ function M.setup(opts)
       Util.format.setup()
       -- Util.news.setup()
 
-      vim.api.nvim_create_user_command("LazyRoot", function()
-        Util.root.info()
-      end, { desc = "LazyVim roots for the current buffer" })
-
-      -- vim.api.nvim_create_user_command("LazyExtras", function()
-      --   Util.extras.show()
-      -- end, { desc = "Manage LazyVim extras" })
+      vim.api.nvim_create_user_command("LazyHealth", function()
+        vim.cmd [[Lazy! load all]]
+        vim.cmd [[checkhealth]]
+      end, { desc = "Load all plugins and run :checkhealth" })
     end,
   })
 

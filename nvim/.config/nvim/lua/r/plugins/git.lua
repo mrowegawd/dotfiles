@@ -197,7 +197,6 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    enabled = false,
     opts = {
       _inline2 = false,
       _extmark_signs = true,
@@ -209,9 +208,8 @@ return {
         changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
         untracked = { text = "▎" },
       },
-      -- on_attach = nil,
-      on_attach = function(bufnr)
-        require("r.keymaps.git").signs(bufnr, package.loaded.gitsigns)
+      on_attach = function()
+        require("r.keymaps.git").gitsigns()
       end,
     },
   },

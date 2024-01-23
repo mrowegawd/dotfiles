@@ -109,72 +109,75 @@ return {
       require("ibl").setup(opts)
     end,
   },
-  -- NVIM-NOTIFY
-  {
-    "rcarriga/nvim-notify",
-    -- event = "VeryLazy",
-    init = function()
-      vim.notify = require "notify"
-    end,
-    opts = {
-      timeout = 5000,
-      max_width = function()
-        return math.floor(vim.o.columns * 0.6)
-      end,
-      top_down = false,
-      max_height = function()
-        return math.floor(vim.o.lines * 0.8)
-      end,
-
-      -- on_open = function(win)
-      --   if not vim.api.nvim_win_is_valid(win) then
-      --     return
-      --   end
-      --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.line })
-      -- end,
-      render = function(...)
-        local notification = select(2, ...)
-        local style = Util.cmd.falsy(notification.title[1]) and "minimal" or "default"
-        require("notify.render")[style](...)
-      end,
-      on_open = function(win)
-        vim.api.nvim_win_set_config(win, { zindex = 175 })
-        if not vim.g.notifications_enabled then
-          vim.api.nvim_win_close(win, true)
-        end
-        if not package.loaded["nvim-treesitter"] then
-          pcall(require, "nvim-treesitter")
-        end
-        vim.wo[win].conceallevel = 3
-        local buf = vim.api.nvim_win_get_buf(win)
-        if not pcall(vim.treesitter.start, buf, "markdown") then
-          vim.bo[buf].syntax = "markdown"
-        end
-        vim.wo[win].spell = false
-      end,
-    },
-    config = function(_, opts)
-      -- require("r.config.highlights").plugin("notify", {
-      --   { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-      --   { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-      --   { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-      --   { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-      --   { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-      --   { NotifyERRORBody = { link = "NormalFloat" } },
-      --   { NotifyWARNBody = { link = "NormalFloat" } },
-      --   { NotifyINFOBody = { link = "NormalFloat" } },
-      --   { NotifyDEBUGBody = { link = "NormalFloat" } },
-      --   { NotifyTRACEBody = { link = "NormalFloat" } },
-      -- })
-      require("notify").setup(opts)
-    end,
-  },
   -- NOICE
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
-      "rcarriga/nvim-notify",
+      -- NVIM-NOTIFY
+      {
+        "rcarriga/nvim-notify",
+        -- event = "VeryLazy",
+        -- init = function()
+        --   vim.notify = require "notify"
+        -- end,
+        opts = function()
+          vim.notify = require "notify"
+
+          return {
+            timeout = 5000,
+            max_width = function()
+              return math.floor(vim.o.columns * 0.6)
+            end,
+            top_down = false,
+            max_height = function()
+              return math.floor(vim.o.lines * 0.8)
+            end,
+
+            -- on_open = function(win)
+            --   if not vim.api.nvim_win_is_valid(win) then
+            --     return
+            --   end
+            --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.line })
+            -- end,
+            render = function(...)
+              local notification = select(2, ...)
+              local style = Util.cmd.falsy(notification.title[1]) and "minimal" or "default"
+              require("notify.render")[style](...)
+            end,
+            on_open = function(win)
+              vim.api.nvim_win_set_config(win, { zindex = 175 })
+              if not vim.g.notifications_enabled then
+                vim.api.nvim_win_close(win, true)
+              end
+              if not package.loaded["nvim-treesitter"] then
+                pcall(require, "nvim-treesitter")
+              end
+              vim.wo[win].conceallevel = 3
+              local buf = vim.api.nvim_win_get_buf(win)
+              if not pcall(vim.treesitter.start, buf, "markdown") then
+                vim.bo[buf].syntax = "markdown"
+              end
+              vim.wo[win].spell = false
+            end,
+          }
+        end,
+        -- config = function(_, opts)
+        --   -- require("r.config.highlights").plugin("notify", {
+        --   --   { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+        --   --   { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+        --   --   { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+        --   --   { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+        --   --   { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+        --   --   { NotifyERRORBody = { link = "NormalFloat" } },
+        --   --   { NotifyWARNBody = { link = "NormalFloat" } },
+        --   --   { NotifyINFOBody = { link = "NormalFloat" } },
+        --   --   { NotifyDEBUGBody = { link = "NormalFloat" } },
+        --   --   { NotifyTRACEBody = { link = "NormalFloat" } },
+        --   -- })
+        --   require("notify").setup(opts)
+        -- end,
+      },
       "MunifTanjim/nui.nvim",
     },
     -- stylua: ignore

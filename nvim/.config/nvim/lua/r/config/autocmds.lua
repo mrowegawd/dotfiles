@@ -122,36 +122,36 @@ Util.cmd.augroup("DisableJsonConceal", {
 })
 
 -- Close certain filetypes by pressing q.
--- Util.cmd.augroup("SmartClose", {
---   event = { "FileType" },
---   pattern = {
---     "PlenaryTestPopup",
---     "help",
---     "lspinfo",
---     "man",
---     "notify",
---     "DressingSelect",
---     "filetree",
---     "qf",
---     "query",
---     "noice",
---     "spectre_panel",
---     "startuptime",
---     "tsplayground",
---     "neotest-output",
---     "checkhealth",
---     "neotest-summary",
---     "neotest-output-panel",
---   },
---   command = function(event)
---     vim.bo[event.buf].buflisted = false
---     if vim.bo[event.buf].filetype == "filetree" then
---       vim.keymap.set("n", "q", "<cmd>Workspace RightPanelToggle<cr>", { buffer = event.buf, silent = true })
---     else
---       vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
---     end
---   end,
--- })
+Util.cmd.augroup("SmartClose", {
+  event = { "FileType" },
+  pattern = {
+    "PlenaryTestPopup",
+    "help",
+    "lspinfo",
+    "man",
+    "notify",
+    "DressingSelect",
+    "filetree",
+    "qf",
+    "query",
+    "noice",
+    "spectre_panel",
+    "startuptime",
+    "tsplayground",
+    "neotest-output",
+    "checkhealth",
+    "neotest-summary",
+    "neotest-output-panel",
+  },
+  command = function(event)
+    vim.bo[event.buf].buflisted = false
+    if vim.bo[event.buf].filetype == "filetree" then
+      vim.keymap.set("n", "q", "<cmd>Workspace RightPanelToggle<cr>", { buffer = event.buf, silent = true })
+    else
+      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    end
+  end,
+})
 
 -- Close quick fix window if the file containing it was closed
 -- Util.cmd.augroup("AutoCloseQf", {
@@ -214,16 +214,16 @@ Util.cmd.augroup("LocateLastPosition", {
   end,
 })
 
-Util.cmd.augroup("DisableHiBGNormal", {
-  event = { "BufReadPost" },
-  pattern = "*",
-  command = function()
-    if os.getenv "TERMINAL" == "wezterm" then
-      cmd "hi Normal guibg=NONE"
-    end
-  end,
-  once = true,
-})
+-- Util.cmd.augroup("DisableHiBGNormal", {
+--   event = { "BufReadPost" },
+--   pattern = "*",
+--   command = function()
+--     if os.getenv "TERMINAL" == "wezterm" then
+--       cmd "hi Normal guibg=NONE"
+--     end
+--   end,
+--   once = true,
+-- })
 
 Util.cmd.augroup("WindowBehaviours", {
   event = { "FileType" },
@@ -378,11 +378,15 @@ Util.cmd.augroup("DisableStatusline", {
   end,
 })
 
--- Automatically resize windows when host resizes
-Util.cmd.augroup("AutoResizeWindowssf", {
+Util.cmd.augroup("UpdateVim", {
+  -- Automatically resize windows when host resizes
   event = { "VimResized" },
   pattern = "*",
   command = "wincmd =",
+}, {
+  event = { "FocusLost" },
+  pattern = { "*" },
+  command = "silent! wall",
 })
 
 vim.cmd [[

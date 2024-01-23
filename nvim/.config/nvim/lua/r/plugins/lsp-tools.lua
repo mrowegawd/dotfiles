@@ -2,6 +2,7 @@ local api = vim.api
 
 local highlight = require "r.config.highlights"
 local Util = require "r.utils"
+local Icon = require("r.config").icons
 
 return {
   -- AERIAL (disabled)
@@ -172,6 +173,7 @@ return {
   {
     "hedyhli/outline.nvim",
     -- enabled = false,
+    event = "LspAttach",
     cmd = "Outline",
     keys = function()
       local function get_outline()
@@ -267,48 +269,96 @@ return {
         },
       }
     end,
-    config = function(_, opts)
+    opts = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      highlight.plugin("OutlineAuHi", {
+        {
+          OutlineCurrent = {
+            fg = { from = "Boolean", attr = "fg", alter = -0.5 },
+            -- bg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+            bold = true,
+          },
+        },
+      })
 
-      require("outline").setup(opts)
+      local kind = Icon.kinds
+
+      return {
+        outline_window = {
+          position = "right",
+          split_command = nil,
+          width = 25,
+          focus_on_open = false,
+        },
+        symbols = {
+          filter = nil,
+          -- icons = require("r.config").icons.kinds,
+          icons = {
+            File = { icon = kind.File, hl = "Identifier" },
+            Module = { icon = kind.Module, hl = "Include" },
+            Namespace = { icon = kind.Namespace, hl = "Include" },
+            Package = { icon = kind.Package, hl = "Include" },
+            Class = { icon = kind.Class, hl = "Type" },
+            Method = { icon = kind.Method, hl = "Function" },
+            Property = { icon = kind.Property, hl = "Identifier" },
+            Field = { icon = kind.Field, hl = "Identifier" },
+            Constructor = { icon = kind.Constructor, hl = "Special" },
+            Enum = { icon = kind.Enum, hl = "Type" },
+            Interface = { icon = kind.Interface, hl = "Type" },
+            Function = { icon = kind.Function, hl = "Function" },
+            Variable = { icon = kind.Variable, hl = "Constant" },
+            Constant = { icon = kind.Constant, hl = "Constant" },
+            String = { icon = kind.String, hl = "String" },
+            Number = { icon = kind.number, hl = "Number" },
+            Boolean = { icon = kind.Boolean, hl = "Boolean" },
+            Array = { icon = kind.Array, hl = "Constant" },
+            Object = { icon = kind.Object, hl = "Type" },
+            Key = { icon = kind.Key, hl = "Type" },
+            Null = { icon = kind.Null, hl = "Type" },
+            EnumMember = { icon = kind.EnumNumber, hl = "Identifier" },
+            Struct = { icon = kind.Struct, hl = "Structure" },
+            Event = { icon = kind.Event, hl = "Type" },
+            Operator = { icon = kind.Operator, hl = "Identifier" },
+            TypeParameter = { icon = kind.TypeParameter, hl = "Identifier" },
+            Component = { icon = kind.Component, hl = "Function" },
+            Fragment = { icon = "󰅴", hl = "Constant" },
+
+            -- ccls
+            TypeAlias = { icon = " ", hl = "Type" },
+            Parameter = { icon = " ", hl = "Identifier" },
+            StaticMethod = { icon = " ", hl = "Function" },
+            Macro = { icon = " ", hl = "Function" },
+          },
+          --
+        },
+        preview_window = {
+          live = true,
+        },
+        -- These keymaps can be a string or a table for multiple keys.
+        -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
+        keymaps = {
+          show_help = "?",
+          close = { "<Esc>", "q", "<Leader><TAB>" },
+          goto_location = "<Cr>",
+          peek_location = "o",
+          goto_and_close = {},
+          restore_location = {},
+          hover_symbol = {},
+          toggle_preview = "P",
+          rename_symbol = {},
+          code_actions = {},
+          fold = "h",
+          fold_toggle = { "<tab>", "za" },
+          fold_toggle_all = "<S-tab>",
+          unfold = "l",
+          fold_all = { "zm", "zM" },
+          unfold_all = { "zO", "zR" },
+          fold_reset = "<space><space>",
+          down_and_goto = "<a-n>",
+          up_and_goto = "<a-p>",
+        },
+      }
     end,
-    opts = {
-      outline_window = {
-        position = "right",
-        split_command = nil,
-        width = 25,
-        focus_on_open = false,
-      },
-      symbols = {
-        filter = nil,
-      },
-      preview_window = {
-        live = true,
-      },
-      -- These keymaps can be a string or a table for multiple keys.
-      -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
-      keymaps = {
-        show_help = "?",
-        close = { "<Esc>", "q", "<Leader><TAB>" },
-        goto_location = "<Cr>",
-        peek_location = "o",
-        goto_and_close = {},
-        restore_location = {},
-        hover_symbol = {},
-        toggle_preview = "P",
-        rename_symbol = {},
-        code_actions = {},
-        fold = "h",
-        fold_toggle = { "<tab>", "za" },
-        fold_toggle_all = "<S-tab>",
-        unfold = "l",
-        fold_all = { "zm", "zM" },
-        unfold_all = { "zO", "zR" },
-        fold_reset = "<space><space>",
-        down_and_goto = "<a-n>",
-        up_and_goto = "<a-p>",
-      },
-    },
   },
   -- VISTA.NVIM
   {

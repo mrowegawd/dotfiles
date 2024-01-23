@@ -53,7 +53,9 @@ function M.goPreviousClosedFold()
       --   catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
       --   endtry
       --       ]]
-      return vim.cmd.cprevious()
+      Util.try(function()
+        return vim.cmd.cprevious()
+      end)
     else
       -- I got lazy convert this logic into lua, so I stole it yehahaa
       -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
@@ -99,7 +101,9 @@ function M.goNextClosedFold()
       --   catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
       --   endtry
       --       ]]
-      return vim.cmd.cnext()
+      Util.try(function()
+        return vim.cmd.cnext()
+      end)
     else
       return vim.cmd "wincmd p"
     end
