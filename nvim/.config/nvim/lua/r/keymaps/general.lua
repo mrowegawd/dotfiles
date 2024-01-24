@@ -127,7 +127,6 @@ Util.map.nnoremap("<Leader>cd", function()
 end, { desc = "Misc: change cur pwd to curfile" })
 
 Util.map.nnoremap("<Leader>n", function()
-  ---@diagnostic disable-next-line: missing-fields
   require("notify").dismiss {}
   cmd.nohl()
   return vim.cmd [[let @/ = ""]]

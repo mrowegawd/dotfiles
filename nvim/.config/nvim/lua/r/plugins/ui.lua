@@ -192,75 +192,76 @@ return {
       },
       { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
     },
-    init = function()
+    opts = function()
       require("r.config.highlights").plugin("notify", {
         { NoiceCmdlinePopupBorder = { fg = { from = "Directory" } } },
         { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
       })
-    end,
-    opts = {
-      -- debug = true,
-      lsp = {
-        documentation = {
-          opts = {
-            border = { style = "rounded" },
-            position = { row = 2 },
-          },
-        },
-        progress = {
-          enabled = false,
-        },
-        signature = { auto_open = { enabled = true }, enabled = false },
-        hover = { enabled = true },
-        override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = false,
-          ["cmp.entry.get_documentation"] = false,
-        },
-      },
-      cmdline = {
-        view = "cmdline",
-      },
-      messages = {
-        -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
-        view_search = false,
-      },
-      popupmenu = {
-        backend = "cmp",
-      },
-      routes = {
-        {
-          opts = { skip = true },
-          filter = {
-            any = {
-              { find = "%d+L, %d+B" },
-              { find = "; after #%d+" },
-              { find = "; before #%d+" },
-              { event = { "msg_showmode", "msg_showcmd", "msg_ruler" } },
-              { event = "msg_show", find = "written" },
-              { event = "msg_show", find = "%d+ lines, %d+ bytes" },
-              { event = "msg_show", kind = "search_count" },
-              { event = "msg_show", find = "%d+L, %d+B" },
-              { event = "msg_show", find = "^Hunk %d+ of %d" },
-              { event = "msg_show", find = "%d+ change" },
-              { event = "msg_show", find = "%d+ line" },
-              { event = "msg_show", find = "%d+ more line" },
-              -- TODO: investigate the source of this LSP message and disable it happens in typescript files
-              -- https://github.com/nvimdev/lspsaga.nvim/issues/1295
-              { event = "notify", find = "No information available" },
+
+      return {
+        -- debug = true,
+        lsp = {
+          documentation = {
+            opts = {
+              border = { style = "rounded" },
+              position = { row = 2 },
             },
           },
-          view = "mini",
+          progress = {
+            enabled = false,
+          },
+          signature = { auto_open = { enabled = true }, enabled = false },
+          hover = { enabled = true },
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = false,
+            ["cmp.entry.get_documentation"] = false,
+          },
         },
-      },
-      presets = {
-        command_palette = true, -- position the cmdline and popupmenu together
-        bottom_search = true, -- use a classic bottom cmdline for search
-        inc_rename = true, -- enables an input dialog for inc-rename.nvim
-        long_message_to_split = true, -- long messages will be sent to a split
-        lsp_doc_border = true, -- add a border to hover docs and signature help
-      },
-    },
+        cmdline = {
+          view = "cmdline",
+        },
+        messages = {
+          -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
+          view_search = false,
+        },
+        popupmenu = {
+          backend = "cmp",
+        },
+        routes = {
+          {
+            opts = { skip = true },
+            filter = {
+              any = {
+                { find = "%d+L, %d+B" },
+                { find = "; after #%d+" },
+                { find = "; before #%d+" },
+                { event = { "msg_showmode", "msg_showcmd", "msg_ruler" } },
+                { event = "msg_show", find = "written" },
+                { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+                { event = "msg_show", kind = "search_count" },
+                { event = "msg_show", find = "%d+L, %d+B" },
+                { event = "msg_show", find = "^Hunk %d+ of %d" },
+                { event = "msg_show", find = "%d+ change" },
+                { event = "msg_show", find = "%d+ line" },
+                { event = "msg_show", find = "%d+ more line" },
+                -- TODO: investigate the source of this LSP message and disable it happens in typescript files
+                -- https://github.com/nvimdev/lspsaga.nvim/issues/1295
+                { event = "notify", find = "No information available" },
+              },
+            },
+            view = "mini",
+          },
+        },
+        presets = {
+          command_palette = true, -- position the cmdline and popupmenu together
+          bottom_search = true, -- use a classic bottom cmdline for search
+          inc_rename = true, -- enables an input dialog for inc-rename.nvim
+          long_message_to_split = true, -- long messages will be sent to a split
+          lsp_doc_border = true, -- add a border to hover docs and signature help
+        },
+      }
+    end,
   },
   -- FOLD CYCLE
   {
