@@ -26,7 +26,7 @@ Util.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 Util.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
 -- Avoid or don't yank on visual paste
 Util.map.nnoremap("p", function()
-  vim.cmd.normal { vim.v.count1 .. "P`[", bang = true }
+  cmd.normal { vim.v.count1 .. "P`[", bang = true }
 end, silent)
 
 Util.map.inoremap("<c-j>", "<Down>", silent)
@@ -129,7 +129,7 @@ end, { desc = "Misc: change cur pwd to curfile" })
 Util.map.nnoremap("<Leader>n", function()
   require("notify").dismiss {}
   cmd.nohl()
-  return vim.cmd [[let @/ = ""]]
+  return cmd [[let @/ = ""]]
 end, { desc = "Misc: clear searches" })
 
 Util.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -334,9 +334,9 @@ local function magic_quit()
   }
 
   if buf_fts[vim.bo[0].filetype] then
-    vim.cmd(buf_fts[vim.bo[0].filetype])
+    cmd(buf_fts[vim.bo[0].filetype])
   else
-    vim.cmd [[q!]]
+    cmd [[q!]]
   end
 end
 Util.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
@@ -355,7 +355,7 @@ local function killPopups()
 end
 
 vim.keymap.set("n", "<ESC>", function()
-  vim.cmd.noh()
+  cmd.noh()
   killPopups()
 end)
 --  ╭──────────────────────────────────────────────────────────╮
@@ -383,7 +383,7 @@ Util.cmd.create_command("ImgInsert", function()
 end, { desc = "Misc: echo options" })
 
 Util.cmd.create_command("E", function()
-  return vim.cmd [[ vnew ]]
+  return cmd [[ vnew ]]
 end, { desc = "Misc: echo options" })
 
 --  ╭──────────────────────────────────────────────────────────╮
@@ -446,7 +446,7 @@ Util.map.nnoremap("<F1>", function()
     stderr_buffered = false,
   })
 
-  vim.cmd [[wincmd p]]
+  cmd [[wincmd p]]
 end)
 
 local checkconceallevel = false
@@ -465,36 +465,36 @@ Util.map.nnoremap("<Localleader>g", function()
       Util.toggle.background()
     end,
     ccc_highlight_color = function()
-      vim.cmd "CccHighlighterToggle"
+      cmd "CccHighlighterToggle"
     end,
     ccc_pick = function()
-      vim.cmd "CccPick"
+      cmd "CccPick"
     end,
     toggleterm_left_side = function()
-      vim.cmd "ToggleTerm direction=vertical size=100"
+      cmd "ToggleTerm direction=vertical size=100"
     end,
 
     qf_save = function()
-      vim.cmd "SaveQfLocal"
+      cmd "SaveQfLocal"
     end,
     qf_save_global = function()
-      vim.cmd "SaveQfGlobal"
+      cmd "SaveQfGlobal"
     end,
     qf_load = function()
-      vim.cmd "LoadQfLocal"
+      cmd "LoadQfLocal"
     end,
     qf_load_global = function()
-      vim.cmd "LoadQfGlobal"
+      cmd "LoadQfGlobal"
     end,
     lazy = function()
-      vim.cmd "Lazy"
+      cmd "Lazy"
     end,
     toggle_conceallevel = function()
       if checkconceallevel then
-        vim.cmd [[setlocal conceallevel=2]]
+        cmd [[setlocal conceallevel=2]]
         checkconceallevel = false
       else
-        vim.cmd [[setlocal conceallevel=0]]
+        cmd [[setlocal conceallevel=0]]
         checkconceallevel = true
       end
     end,

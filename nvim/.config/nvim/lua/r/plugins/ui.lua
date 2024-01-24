@@ -114,7 +114,7 @@ return {
     "folke/noice.nvim",
     event = "VeryLazy",
     dependencies = {
-      -- NVIM-NOTIFY
+      "MunifTanjim/nui.nvim",
       {
         "rcarriga/nvim-notify",
         -- event = "VeryLazy",
@@ -178,7 +178,6 @@ return {
         --   require("notify").setup(opts)
         -- end,
       },
-      "MunifTanjim/nui.nvim",
     },
     -- stylua: ignore
     keys = {
