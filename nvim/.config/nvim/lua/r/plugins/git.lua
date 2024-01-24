@@ -189,7 +189,7 @@ return {
           close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
           toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
         },
-        repo = {}
+        repo = {},
       },
     },
   },

@@ -128,6 +128,7 @@ function M.gitsigns()
 
   Util.map.vnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk (visual)" })
   Util.map.nnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk" })
+  Util.map.nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): stage hunk buffer" })
   Util.map.nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk" })
   Util.map.nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk" })
   Util.map.nnoremap("<Leader>gP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })

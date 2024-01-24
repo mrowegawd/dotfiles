@@ -391,18 +391,6 @@ return {
     event = "LazyFile",
     config = function()
       local comp = require "r.plugins.colorthemes.heirline.components"
-
-      -- require("heirline").load_colors(comp.setup_colors())
-      -- local aug = vim.api.nvim_create_augroup("Heirline", { clear = true })
-      -- vim.api.nvim_create_autocmd("ColorScheme", {
-      --   desc = "Update Heirline colors",
-      --   group = aug,
-      --   callback = function()
-      --     local colors = comp.setup_colors()
-      --     utils.on_colorscheme(colors)
-      --   end,
-      -- })
-
       require("heirline").setup {
         statusline = {
           comp.Mode,
@@ -419,28 +407,21 @@ return {
           comp.BufferCwd,
           comp.Ruler,
         },
-        -- winbar = {
-        --   comp.FilePath,
-        -- },
       }
 
-      -- opts = {
-      --   disable_winbar_cb = function(args)
-      --     local buf = args.buf
-      --     local ignore_buftype = vim.tbl_contains({ "prompt", "nofile", "terminal", "quickfix" }, vim.bo[buf].buftype)
-      --     local filetype = vim.bo[buf].filetype
-      --     local ignore_filetype = filetype == "fugitive" or filetype == "qf" or filetype:match "^git"
-      --     local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
-      --     return ignore_buftype or ignore_filetype or is_float
-      --   end,
-      -- },
+      local group = vim.api.nvim_create_augroup("Heirline", { clear = true })
+      -- vim.cmd [[au Heirline FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]]
 
-      -- vim.api.nvim_create_user_command("HeirlineResetStatusline", function()
-      --   vim.o.statusline = "%{%v:lua.require'heirline'.eval_statusline()%}"
-      -- end, {})
-
-      -- Because heirline is lazy loaded, we need to manually set the winbar on startup
-      -- vim.opt_local.winbar = "%{%v:lua.require'heirline'.eval_winbar()%}"
+      vim.api.nvim_create_autocmd("FileType", {
+        group = group,
+        pattern = "*",
+        callback = function()
+          local bh = vim.bo.bufhidden
+          if bh == "wipe" or bh == "delete" then
+            vim.bo.buflisted = false
+          end
+        end,
+      })
     end,
   },
 }
