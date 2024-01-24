@@ -26,6 +26,31 @@ return {
       "CBcatalog",
     },
   },
+  {
+    "azabiong/vim-highlighter",
+    event = "LazyFile",
+    init = function()
+      vim.cmd [[
+      let HiSet   = 't<CR>'
+      let HiErase = 't<BS>'
+      let HiClear = 't<C-L>'
+      let HiFind  = 't<Tab>'
+      let HiSetSL = 'T<CR>'
+      ]]
+    end,
+    keys = {
+      {
+        "fn",
+        "<CMD> Hi} <CR>",
+        desc = "Misc(sq): search",
+      },
+      {
+        "fp",
+        "<CMD> Hi{ <CR>",
+        desc = "Misc(sq): search",
+      },
+    },
+  },
   -- SG.NVIM
   {
     "sourcegraph/sg.nvim",
