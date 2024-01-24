@@ -62,7 +62,6 @@ return {
     cmd = "Octo",
     opts = {
       picker = "fzf-lua",
-      enable_builtin = true,
       picker_config = {
         mappings = {
           -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
@@ -190,6 +189,7 @@ return {
           close_review_tab = { lhs = "<C-c>", desc = "close review tab" },
           toggle_viewed = { lhs = "<leader><space>", desc = "toggle viewer viewed state" },
         },
+        repo = {}
       },
     },
   },
