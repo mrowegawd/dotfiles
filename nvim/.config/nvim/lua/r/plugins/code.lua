@@ -355,6 +355,12 @@ return {
           end
         end, { "i" }),
         ["<c-q>"] = cmp.mapping.abort(),
+        ["<c-g>"] = cmp.mapping(function()
+          require("fzf-lua").complete_file {
+            cmd = "rg --files --hidden",
+            winopts = { preview = { hidden = "nohidden" } },
+          }
+        end, { "i" }),
         ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
         ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
         ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
@@ -441,6 +447,38 @@ return {
 
       cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
         sources = cmp.config.sources { { name = "vim-dadbod-completion" }, { name = "buffer" } },
+      })
+
+      cmp.setup.filetype({ "rgflow" }, {
+        sources = cmp.config.sources { { name = "buffer" }, { name = "async_path" } },
+        mapping = {
+          ["<c-p>"] = {
+            i = function(fallback)
+              if cmp.visible() then
+                cmp.select_prev_item()
+              else
+                fallback()
+              end
+            end,
+          },
+          ["<c-g>"] = {
+            i = function()
+              require("fzf-lua").complete_file {
+                cmd = "rg --files --hidden",
+                winopts = { preview = { hidden = "nohidden" } },
+              }
+            end,
+          },
+          ["<c-n>"] = {
+            i = function(fallback)
+              if cmp.visible() then
+                cmp.select_next_item()
+              else
+                fallback()
+              end
+            end,
+          },
+        },
       })
 
       cmp.setup.cmdline(":", {

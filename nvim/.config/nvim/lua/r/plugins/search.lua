@@ -57,20 +57,15 @@ return {
       "onsails/lspkind.nvim",
       {
         "mangelozzi/nvim-rgflow.lua",
-        event = "LazyFile",
-        dependencies = {
-          "kevinhwang91/nvim-bqf",
-          "ibhagwan/fzf-lua",
-        },
         opts = {
-          default_trigger_mappings = false,
+          default_trigger_mappings = true,
           default_ui_mappings = true,
-          cmd_flags = rg_opts,
+          nicmd_flags = rg_opts,
           colors = {
             RgFlowInputPath = { link = "NormalFloat" },
             RgFlowInputBg = { link = "NormalFloat" },
             RgFlowInputFlags = { link = "NormalFloat" },
-            RgFlowInputPattern = { link = "NormalFloat" },
+            RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
           },
         },
       },
@@ -108,7 +103,7 @@ return {
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
       { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
       { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
-      { "<Leader>fH", [[<CMD>FzfLua search_history reverse_search=true<CR>]], desc = "Fzflua: search-history" },
+      { "<Leader>fs", "<CMD>FzfLua search_history<CR>", desc = "Fzflua: search-history" },
       {
         "<Leader>fk",
         function()
@@ -691,7 +686,7 @@ return {
             ["--with-nth"] = "-1..",
           },
         },
-        highlights = {
+        fighlights = {
           prompt = "  ",
           winopts = { title = Util.fzflua.format_title "Highlights" },
         },
