@@ -4,7 +4,7 @@ local fn, fmt = vim.fn, string.format
 
 local Util = require "r.utils"
 
-local icons = require("r.config").icons
+local Icons = require("r.config").icons
 
 local term_count = 1
 
@@ -177,9 +177,9 @@ M.diff = function()
   return {
     "diff",
     symbols = {
-      added = icons.git.add,
-      modified = icons.git.mod,
-      removed = icons.git.remove,
+      added = Icons.git.add,
+      modified = Icons.git.mod,
+      removed = Icons.git.remove,
     },
 
     source = function()
@@ -360,10 +360,10 @@ M.diagnostics = function()
     "diagnostics",
     sources = { "nvim_diagnostic" },
     symbols = {
-      error = icons.diagnostics.error,
-      warn = icons.diagnostics.warn,
-      info = icons.diagnostics.info,
-      hint = icons.diagnostics.hint,
+      error = Icons.diagnostics.error,
+      warn = Icons.diagnostics.warn,
+      info = Icons.diagnostics.info,
+      hint = Icons.diagnostics.hint,
     },
   }
 end
@@ -455,7 +455,7 @@ M.check_loaded_buf = function()
       end
       return loaded_bufs
     end,
-    icon = icons.kinds.stacked,
+    icon = Icons.kinds.stacked,
     cond = conditions.debugger_status_run,
     color = { fg = "DarkCyan", gui = "bold" },
   }

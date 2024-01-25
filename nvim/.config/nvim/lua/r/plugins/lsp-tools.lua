@@ -2,7 +2,7 @@ local api = vim.api
 
 local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
-local Icon = require("r.config").icons
+local Icons = require("r.config").icons
 
 return {
   -- AERIAL (disabled)
@@ -148,7 +148,7 @@ return {
         },
         whitespace = "  ",
         filter_kind = false,
-        icons = require("r.config").icons.kinds,
+        icons = Icons.kinds,
         keymaps = {
           -- ["o"] = "actions.jump",
           ["o"] = "actions.scroll",
@@ -281,7 +281,7 @@ return {
         },
       })
 
-      local kind = Icon.kinds
+      local kind = Icons.kinds
 
       return {
         outline_window = {

@@ -40,14 +40,14 @@ return {
     end,
     keys = {
       {
-        "fn",
+        "sn",
         "<CMD> Hi} <CR>",
-        desc = "Misc(sq): search",
+        desc = "Misc(vim-highlighter): next",
       },
       {
-        "fp",
+        "sp",
         "<CMD> Hi{ <CR>",
-        desc = "Misc(sq): search",
+        desc = "Misc(vim-highlighter): prev",
       },
     },
   },

@@ -1,5 +1,5 @@
 local Util = require "r.utils"
-local icons = require("r.config").icons
+local Icons = require("r.config").icons
 
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
@@ -53,7 +53,7 @@ return {
         -- docker
         "hadolint",
       },
-      ui = { border = require("r.config").icons.border.line, height = 0.8 },
+      ui = { border = Icons.border.line, height = 0.8 },
     },
 
     config = function(_, opts)
@@ -118,10 +118,10 @@ return {
         severity_sort = true,
         signs = {
           text = {
-            [vim.diagnostic.severity.ERROR] = icons.diagnostics.Error,
-            [vim.diagnostic.severity.WARN] = icons.diagnostics.Warn,
-            [vim.diagnostic.severity.HINT] = icons.diagnostics.Hint,
-            [vim.diagnostic.severity.INFO] = icons.diagnostics.Info,
+            [vim.diagnostic.severity.ERROR] = Icons.diagnostics.Error,
+            [vim.diagnostic.severity.WARN] = Icons.diagnostics.Warn,
+            [vim.diagnostic.severity.HINT] = Icons.diagnostics.Hint,
+            [vim.diagnostic.severity.INFO] = Icons.diagnostics.Info,
           },
         },
         float = {
@@ -133,14 +133,14 @@ return {
           },
           focusable = false,
           style = "minimal",
-          border = require("r.config").icons.border.line,
+          border = Icons.border.line,
           source = "always",
           header = "",
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
             local prefix = string.format(
               "%s ",
-              icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
+              Icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
                 return first:upper() .. rest:lower()
               end)]
             )
@@ -850,8 +850,8 @@ return {
         icons = {
           enable = true, -- Whether to display icons
           style = {
-            up_to_date = icons.misc.check, -- Icon for up to date packages
-            outdated = icons.git.remove, -- Icon for outdated packages
+            up_to_date = Icons.misc.check, -- Icon for up to date packages
+            outdated = Icons.git.remove, -- Icon for outdated packages
           },
         },
         autostart = true, -- Whether to autostart when `package.json` is opened
