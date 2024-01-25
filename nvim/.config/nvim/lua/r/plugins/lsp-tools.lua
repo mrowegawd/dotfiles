@@ -532,6 +532,31 @@ return {
       "DevdocsUpdateAll",
     },
   },
+  -- NVIM-GTD
+  {
+    "hrsh7th/nvim-gtd",
+    -- enabled = false,
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = "neovim/nvim-lspconfig",
+    opts = {
+      sources = {
+        { name = "findup" },
+        {
+          name = "walk",
+          root_markers = {
+            ".git",
+            ".neoconf.json",
+            "Makefile",
+            "package.json",
+            "tsconfig.json",
+          },
+          ignore_patterns = { "/node_modules", "/.git" },
+        },
+        { name = "lsp" },
+      },
+    },
+  },
+
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",

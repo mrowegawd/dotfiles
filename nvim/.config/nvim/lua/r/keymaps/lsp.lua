@@ -28,7 +28,7 @@ function M.get()
     -- { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP(fzflua): document symbols" },
     -- { "gS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP(fzflua): workspaces symbols" },
     { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "LSP: codeAction" },
-    -- { "gd", "<CMD> Lspsaga goto_definition<CR>", desc = "LSP(lspsaga): definitions", has = "definition" },
+    { "gd", "<CMD> Lspsaga goto_definition<CR>", desc = "LSP(lspsaga): definitions", has = "definition" },
     {
       "<leader>cA",
       function()

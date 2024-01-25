@@ -1258,7 +1258,6 @@ return {
   -- SPECTRE
   {
     "nvim-pack/nvim-spectre",
-    build = false,
     cmd = { "Spectre" },
     keys = {
       {
