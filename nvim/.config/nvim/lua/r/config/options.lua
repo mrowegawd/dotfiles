@@ -17,6 +17,7 @@ local options = {
 opt.secure = true
 opt.modelines = 1 -- read a modeline at EOF
 opt.confirm = false -- Confirm to save changes before exiting modified buffer
+opt.completeopt = "menu,menuone,noselect"
 
 opt.errorbells = false -- disable error bells (no beep/flash)
 opt.visualbell = false
