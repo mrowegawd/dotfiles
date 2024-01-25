@@ -278,72 +278,6 @@ return {
       }
     end,
   },
-  -- NVIM-HLSLENS (disabled)
-  {
-    "kevinhwang91/nvim-hlslens",
-    enabled = false,
-    event = "VeryLazy",
-    opts = function()
-      vim.keymap.set({ "n", "v", "o", "i", "c" }, "<Plug>(StopHL)", 'execute("nohlsearch")[-1]', { expr = true })
-
-      local function stop_hl()
-        if vim.v.hlsearch == 0 or vim.api.nvim_get_mode().mode ~= "n" then
-          return
-        end
-        Util.cmd.feedkey("<Plug>(StopHL)", "n")
-      end
-
-      local function hl_search()
-        local col = vim.api.nvim_win_get_cursor(0)[2]
-        local curr_line = vim.api.nvim_get_current_line()
-        local ok, match = pcall(vim.fn.matchstrpos, curr_line, vim.fn.getreg "/", 0)
-        if pcall(require, "hlslens") then
-          require("hlslens").start()
-        end
-
-        if not ok then
-          return
-        end
-        local _, p_start, p_end = unpack(match)
-        -- if the cursor is in a search result, leave highlighting on
-        if col < p_start or col > p_end then
-          stop_hl()
-        end
-      end
-
-      Util.cmd.augroup("VimrcIncSearchHighlight", {
-        event = { "CursorMoved" },
-        command = function()
-          hl_search()
-        end,
-      }, {
-        event = { "InsertEnter" },
-        command = function()
-          stop_hl()
-        end,
-      }, {
-        event = { "OptionSet" },
-        pattern = { "hlsearch" },
-        command = function()
-          vim.schedule(function()
-            cmd.redrawstatus()
-          end)
-        end,
-      }, {
-        event = "RecordingEnter",
-        command = function()
-          vim.o.hlsearch = false
-        end,
-      }, {
-        event = "RecordingLeave",
-        command = function()
-          vim.o.hlsearch = true
-        end,
-      })
-      return {}
-    end,
-    config = true,
-  },
   -- CALENDAR
   {
     "itchyny/calendar.vim",
@@ -1680,6 +1614,99 @@ return {
         { name = "lsp" },
       },
     },
+  },
+  -- NVIM-HLSLENS
+  {
+    "kevinhwang91/nvim-hlslens",
+    enabled = false,
+    event = { "BufReadPre", "BufNewFile" },
+    keys = {
+      { "n", [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], mode = "n" },
+      { "N", [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], mode = "n" },
+
+      -- Fix * and # behavior to respect smartcase
+      {
+        "*",
+        [[:let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=1<CR>:lua require('hlslens').start()<CR>nzv]],
+        mode = "n",
+      },
+      {
+        "#",
+        [[:let @/='\v<'.expand('<cword>').'>'<CR>:let v:searchforward=0<CR>:lua require('hlslens').start()<CR>nzv]],
+        mode = "n",
+      },
+      {
+        "g*",
+        [[:let @/='\v'.expand('<cword>')<CR>:let v:searchforward=1<CR>:lua require('hlslens').start()<CR>nzv]],
+        mode = "n",
+      },
+      {
+        "g#",
+        [[:let @/='\v'.expand('<cword>')<CR>:let v:searchforward=0<CR>:lua require('hlslens').start()<CR>nzv]],
+        mode = "n",
+      },
+    },
+
+    opts = function()
+      vim.keymap.set({ "n", "v", "o", "i", "c" }, "<Plug>(StopHL)", 'execute("nohlsearch")[-1]', { expr = true })
+
+      local function stop_hl()
+        if vim.v.hlsearch == 0 or vim.api.nvim_get_mode().mode ~= "n" then
+          return
+        end
+        Util.cmd.feedkey("<Plug>(StopHL)", "n")
+      end
+
+      local function hl_search()
+        local col = vim.api.nvim_win_get_cursor(0)[2]
+        local curr_line = vim.api.nvim_get_current_line()
+        local ok, match = pcall(vim.fn.matchstrpos, curr_line, vim.fn.getreg "/", 0)
+        if pcall(require, "hlslens") then
+          require("hlslens").start()
+        end
+
+        if not ok then
+          return
+        end
+        local _, p_start, p_end = unpack(match)
+        -- if the cursor is in a search result, leave highlighting on
+        if col < p_start or col > p_end then
+          stop_hl()
+        end
+      end
+
+      Util.cmd.augroup("VimrcIncSearchHighlight", {
+        event = { "CursorMoved" },
+        command = function()
+          hl_search()
+        end,
+      }, {
+        event = { "InsertEnter" },
+        command = function()
+          stop_hl()
+        end,
+      }, {
+        event = { "OptionSet" },
+        pattern = { "hlsearch" },
+        command = function()
+          vim.schedule(function()
+            vim.cmd.redrawstatus()
+          end)
+        end,
+      }, {
+        event = "RecordingEnter",
+        command = function()
+          vim.o.hlsearch = false
+        end,
+      }, {
+        event = "RecordingLeave",
+        command = function()
+          vim.o.hlsearch = true
+        end,
+      })
+      return {}
+    end,
+    config = true,
   },
   -- GLANCE (disabled)
   {
