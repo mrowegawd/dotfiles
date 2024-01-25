@@ -1,4 +1,5 @@
 local Highlight = require "r.config.highlights"
+local Icons = require("r.config").icons
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -196,9 +197,9 @@ return {
           end
 
           item.menu = item.kind
-          local icons = require("r.config").icons.kinds
-          if icons[item.kind] then
-            item.kind = icons[item.kind]
+          local kind = Icons.kinds
+          if kind[item.kind] then
+            item.kind = kind[item.kind]
           end
           return require("tailwindcss-colorizer-cmp").formatter(entry, item)
         end,
@@ -379,7 +380,7 @@ return {
       }
 
       local border_opts = {
-        border = require("r.config").icons.border.line,
+        border = Icons.border.line,
         winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
       }
 
