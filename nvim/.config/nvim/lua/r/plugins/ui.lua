@@ -1,5 +1,5 @@
 local fn = vim.fn
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
@@ -10,7 +10,7 @@ return {
     main = "mini.indentscope",
     event = { "VeryLazy" },
     config = function(_, opts)
-      highlight.plugin("mini.indentscopeUi", {
+      Highlight.plugin("mini.indentscopeUi", {
         { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
       })
       require("mini.indentscope").setup(opts)
@@ -102,7 +102,7 @@ return {
       },
     },
     config = function(_, opts)
-      highlight.plugin("ibl_indentline", {
+      Highlight.plugin("ibl_indentline", {
         { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
         { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
       })
@@ -292,14 +292,14 @@ return {
         highlight = {
           groups = {
             InclineNormal = {
-              guifg = highlight.tint(highlight.get("Normal", "bg"), -0.5),
-              guibg = highlight.tint(highlight.get("Normal", "fg"), 1),
+              guifg = Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
+              guibg = Highlight.tint(Highlight.get("Normal", "fg"), 1),
               gui = "bold",
             },
 
             InclineNormalNC = {
-              guifg = highlight.tint(highlight.get("LineNr", "fg"), 1),
-              guibg = highlight.tint(highlight.get("Normal", "bg"), 0.5),
+              guifg = Highlight.tint(Highlight.get("LineNr", "fg"), 1),
+              guibg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5),
               gui = "bold",
             },
           },

@@ -3,7 +3,7 @@ local fmt, cmd = string.format, vim.cmd
 
 local L = vim.log.levels
 
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
 local Util = require "r.utils"
 
@@ -284,27 +284,27 @@ function M.change_colors()
   tmux_fg: %s
   tmux_border_fg: %s
   ]],
-    highlight.tint(highlight.get(normal, "fg"), -0.05),
-    highlight.get(normalfloat, "bg"),
+    Highlight.tint(Highlight.get(normal, "fg"), -0.05),
+    Highlight.get(normalfloat, "bg"),
 
     -- fzf selection
-    highlight.tint(highlight.get(normal, "fg"), -0.05),
-    highlight.get(pmenusel, "bg"),
-    highlight.get(cmpmatchabbr, "fg"),
+    Highlight.tint(Highlight.get(normal, "fg"), -0.05),
+    Highlight.get(pmenusel, "bg"),
+    Highlight.get(cmpmatchabbr, "fg"),
 
     -- fzf non selection
-    highlight.get(normalfloat, "bg"),
-    highlight.get(cmpitemabbr, "fg"),
-    highlight.get(cmpmatchabbrFuzzy, "fg"),
+    Highlight.get(normalfloat, "bg"),
+    Highlight.get(cmpitemabbr, "fg"),
+    Highlight.get(cmpmatchabbrFuzzy, "fg"),
 
     -- fzf match matching
-    highlight.get(fzfluaborder, "fg"),
+    Highlight.get(fzfluaborder, "fg"),
 
-    highlight.get(normalfloat, "bg"),
-    highlight.get(normalfloat, "bg"),
+    Highlight.get(normalfloat, "bg"),
+    Highlight.get(normalfloat, "bg"),
 
-    highlight.tint(highlight.get(normal, "fg"), -0.1),
-    highlight.get(winseparator, "fg")
+    Highlight.tint(Highlight.get(normal, "fg"), -0.1),
+    Highlight.get(winseparator, "fg")
   )
 
   local master_color_path = "/tmp/masterColors"

@@ -3,7 +3,7 @@ local uv = vim.uv or vim.loop
 
 local Config = require "r.config"
 local Util = require "r.utils"
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
 return {
   -- NEORG
@@ -791,7 +791,7 @@ return {
     event = "VeryLazy",
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
-      highlight.plugin("headlines", {
+      Highlight.plugin("headlines", {
         theme = {
           ["*"] = {
             { Dash = { bg = "NONE", bold = true } },

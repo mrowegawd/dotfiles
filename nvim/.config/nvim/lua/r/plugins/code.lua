@@ -1,4 +1,4 @@
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -731,7 +731,7 @@ return {
         },
       }
 
-      highlight.plugin("coverage_hi", {
+      Highlight.plugin("coverage_hi", {
         { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
         { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
         { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },

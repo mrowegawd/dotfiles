@@ -9,7 +9,7 @@ local cmd = vim.cmd
 -- NOTE: Just do some testing for new nvim plugin
 -------------------------------------------------------------------------------
 
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
@@ -569,7 +569,7 @@ return {
       { "<Leader>q", "<CMD>TroubleToggle quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v" } },
     },
     opts = function()
-      highlight.plugin("trouble", {
+      Highlight.plugin("trouble", {
         { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
         { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
         { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
@@ -1771,7 +1771,7 @@ return {
       },
     },
     init = function()
-      highlight.plugin("DropBar", {
+      Highlight.plugin("DropBar", {
         { DropBarMenuNormalFloat = { inherit = "ColorColumn" } },
         { DropBarIconKindArray = { bg = { from = "ColorColumn" }, fg = { from = "Identifier" } } },
         { DropBarIconKindBoolean = { bg = { from = "ColorColumn" }, fg = { from = "@booleanj" } } },
@@ -2115,8 +2115,8 @@ return {
       local col_selected_fg_attr = "PmenuSel"
       local col_selected_bg_attr = "@field"
 
-      local col_selected_fg = highlight.tint(highlight.get("@field", "fg"), 2)
-      local col_select_visible_fg = highlight.tint(highlight.get("@field", "fg"), 0.2)
+      local col_selected_fg = Highlight.tint(Highlight.get("@field", "fg"), 2)
+      local col_select_visible_fg = Highlight.tint(Highlight.get("@field", "fg"), 0.2)
 
       if require("r.config").colorscheme == "material" then
         col_selected_bg_attr = "PmenuSel"

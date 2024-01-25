@@ -1,5 +1,6 @@
 local fn = vim.fn
 
+local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
 
 return {
@@ -352,8 +353,7 @@ return {
     },
     config = function()
       local Config = require "r.config"
-      local highlight = require "r.config.highlights"
-      highlight.plugin("dapHi", {
+      Highlight.plugin("dapHi", {
         {
           DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = { from = "Normal", attr = "bg" } },
         },

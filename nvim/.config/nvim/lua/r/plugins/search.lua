@@ -1,4 +1,4 @@
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
 local Util = require "r.utils"
 
@@ -12,7 +12,7 @@ return {
   {
     "folke/flash.nvim",
     opts = function()
-      highlight.plugin("flash.nvim", {
+      Highlight.plugin("flash.nvim", {
         { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 3 }, bold = true } },
         {
           FlashLabel = {
@@ -1279,7 +1279,7 @@ return {
       },
     },
     opts = function()
-      highlight.plugin("Spectre", {
+      Highlight.plugin("Spectre", {
         {
           TargetKeyword = {
             fg = "DarkYellow",

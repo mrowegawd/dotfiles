@@ -1,17 +1,17 @@
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
-local col_bg_default = highlight.get("Normal", "bg")
-local col_fg_default = highlight.get("Comment", "fg")
-local col_cmd_default = highlight.get("StatusLine", "bg")
-local col_visual_default = highlight.get("Visual", "bg")
+local col_bg_default = Highlight.get("Normal", "bg")
+local col_fg_default = Highlight.get("Comment", "fg")
+local col_cmd_default = Highlight.get("StatusLine", "bg")
+local col_visual_default = Highlight.get("Visual", "bg")
 
-local col_bg = highlight.tint(col_bg_default, -0.1)
-local col_fg = highlight.tint(col_fg_default, 0.2)
+local col_bg = Highlight.tint(col_bg_default, -0.1)
+local col_fg = Highlight.tint(col_fg_default, 0.2)
 
-local col_cmd = highlight.tint(col_cmd_default, 0.3)
-local col_cmd_fg = highlight.tint(col_cmd_default, 0.8)
-local col_visual = highlight.tint(col_visual_default, -0.2)
-local col_visual_fg = highlight.tint(col_visual_default, 0.3)
+local col_cmd = Highlight.tint(col_cmd_default, 0.3)
+local col_cmd_fg = Highlight.tint(col_cmd_default, 0.8)
+local col_visual = Highlight.tint(col_visual_default, -0.2)
+local col_visual_fg = Highlight.tint(col_visual_default, 0.3)
 
 local colors = {
   normal_bg = col_bg,

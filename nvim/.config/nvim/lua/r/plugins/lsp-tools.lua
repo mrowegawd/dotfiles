@@ -1,6 +1,6 @@
 local api = vim.api
 
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
 local Icon = require("r.config").icons
 
@@ -124,7 +124,7 @@ return {
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      highlight.plugin("arials", {
+      Highlight.plugin("arials", {
         { AerialGuide = { fg = { from = "CodeComment1", attr = "fg" } } },
       })
 
@@ -271,7 +271,7 @@ return {
     end,
     opts = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
-      highlight.plugin("OutlineAuHi", {
+      Highlight.plugin("OutlineAuHi", {
         {
           OutlineCurrent = {
             fg = { from = "Boolean", attr = "fg", alter = -0.5 },
@@ -383,7 +383,7 @@ return {
       { "nvim-treesitter/nvim-treesitter" },
     },
     config = function(_, opts)
-      highlight.plugin("LspsagaCustomHi", {
+      Highlight.plugin("LspsagaCustomHi", {
         -- { SagaBorder = { link = "NormalFloat" } },
         { SagaTitle = { bg = "red" } },
         { SagaFileName = { link = "Directory" } },

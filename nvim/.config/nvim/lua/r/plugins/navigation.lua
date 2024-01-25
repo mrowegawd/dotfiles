@@ -1,6 +1,6 @@
 local cmd = vim.cmd
 
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
 -- local Icon = require("r.config").icons
 
@@ -71,19 +71,19 @@ return {
           {
             event = "neo_tree_buffer_enter",
             handler = function()
-              highlight.set("Cursor", { blend = 100 })
+              Highlight.set("Cursor", { blend = 100 })
             end,
           },
           {
             event = "neo_tree_buffer_leave",
             handler = function()
-              highlight.set("Cursor", { blend = 0 })
+              Highlight.set("Cursor", { blend = 0 })
             end,
           },
           {
             event = "neo_tree_window_after_close",
             handler = function()
-              highlight.set("Cursor", { blend = 0 })
+              Highlight.set("Cursor", { blend = 0 })
             end,
           },
         },
@@ -220,7 +220,7 @@ return {
         end,
       })
 
-      highlight.plugin("NeoTree", {
+      Highlight.plugin("NeoTree", {
         { NeoTreeNormal = { link = "PanelBackground" } },
         { NeoTreeNormalNC = { link = "PanelBackground" } },
         { NeoTreeCursorLine = { link = "CursorLine" } },
@@ -284,7 +284,7 @@ return {
       { "<Leader>uo", "<CMD> OutlineClose <CR>", desc = "Misc(edgy): toggle close" },
     },
     opts = function()
-      highlight.plugin("NeoEdgyHi", {
+      Highlight.plugin("NeoEdgyHi", {
         { WinBar = { bg = "NONE" } },
         { WinBarNC = { bg = "NONE" } },
         { EdgyTitle = { fg = { from = "Boolean", attr = "fg" }, bold = true } },

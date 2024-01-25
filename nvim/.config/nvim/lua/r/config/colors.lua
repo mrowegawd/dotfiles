@@ -1,10 +1,10 @@
 local Util = require "r.utils"
 
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
 -- stylua: ignore
 local general_overrides = function()
-  highlight.all {
+  Highlight.all {
     -- { Directory = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
     -- { ColorColumn = { bg = { from = "Normal" , attr = "bg" } } },
     -- { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.1 }, bg = { from = "Normal", attr = "bg", alter= -0.15 } } },
@@ -240,7 +240,7 @@ local general_overrides = function()
 end
 
 local function set_sidebar_highlight()
-  highlight.all {
+  Highlight.all {
     { PanelDarkBackground = { bg = { from = "Normal", alter = -0.05 } } },
     { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
     { PanelBackground = { bg = { from = "Normal", alter = -0.05 } } },
@@ -456,7 +456,7 @@ local function colorscheme_overrides()
   }
 
   local hls = overrides[vim.g.colors_name]
-  if hls then highlight.all(hls) end
+  if hls then Highlight.all(hls) end
 end
 
 local function user_highlights()

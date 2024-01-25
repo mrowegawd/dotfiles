@@ -1,5 +1,5 @@
 local Util = require "r.utils"
-local highlight = require "r.config.highlights"
+local Highlight = require "r.config.highlights"
 
 return {
   -- GIT CONFLICT
@@ -229,7 +229,7 @@ return {
     opts = function()
       Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
 
-      highlight.plugin("diffview", {
+      Highlight.plugin("diffview", {
         { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.3 } } },
         { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.3 } } },
         { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.3 } } },
