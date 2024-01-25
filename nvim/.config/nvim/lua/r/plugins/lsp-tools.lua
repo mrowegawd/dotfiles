@@ -442,6 +442,7 @@ return {
             "q",
             "<ESC>",
             "<leader><TAB>",
+            "<c-c>",
             "<c-l>",
             "<c-h>",
           },
