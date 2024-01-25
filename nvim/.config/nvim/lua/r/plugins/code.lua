@@ -217,6 +217,7 @@ return {
 
       local cmp = get_cmp()
       local luasnip = get_luasnip()
+      local types = require "cmp.types"
 
       -- local escape_next = function()
       --   local current_line = vim.api.nvim_get_current_line()
@@ -234,6 +235,15 @@ return {
       --   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       --   vim.api.nvim_win_set_cursor(0, { row, col + 1 })
       -- end
+
+      local function deprioritize_snippet(entry1, entry2)
+        if entry1:get_kind() == types.lsp.CompletionItemKind.Snippet then
+          return false
+        end
+        if entry2:get_kind() == types.lsp.CompletionItemKind.Snippet then
+          return true
+        end
+      end
 
       local is_in_bullet = function()
         local line = vim.api.nvim_get_current_line()
@@ -383,6 +393,34 @@ return {
           luasnip.lsp_expand(args.body)
         end,
       }
+      opts.sorting = {
+        comparators = {
+          -- require("copilot_cmp.comparators").prioritize,
+          cmp.config.compare.offset,
+          cmp.config.compare.exact,
+          cmp.config.compare.score,
+
+          deprioritize_snippet,
+          function(entry1, entry2)
+            local _, entry1_under = entry1.completion_item.label:find "^_+"
+            local _, entry2_under = entry2.completion_item.label:find "^_+"
+            entry1_under = entry1_under or 0
+            entry2_under = entry2_under or 0
+            if entry1_under > entry2_under then
+              return false
+            elseif entry1_under < entry2_under then
+              return true
+            end
+          end,
+          cmp.config.compare.recently_used,
+          cmp.config.compare.kind,
+          cmp.config.compare.sort_text,
+          cmp.config.compare.length,
+          cmp.config.compare.order,
+          cmp.config.compare.locality,
+        },
+      }
+
       opts.sources = cmp.config.sources({
         -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
         -- tailwindcss bikin lambat, jadi mencoba mengurangi `max_item_count`
