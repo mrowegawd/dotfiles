@@ -2,7 +2,6 @@ local cmd = vim.cmd
 
 local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
--- local Icon = require("r.config").icons
 
 return {
   -- NEO-TREE
@@ -391,31 +390,4 @@ return {
       }
     end,
   },
-  -- EDGY-GROUP
-  -- {
-  --   "lucobellic/edgy-group.nvim",
-  --   event = "VeryLazy",
-  --   -- dependencies = { "folke/edgy.nvim" },
-  --   keys = {
-  --     {
-  --       "<leader>el",
-  --       function()
-  --         require("edgy-group").open_group("left", 1)
-  --       end,
-  --       desc = "Edgy Group Next Left",
-  --     },
-  --     {
-  --       "<leader>eh",
-  --       function()
-  --         require("edgy-group").open_group("left", -1)
-  --       end,
-  --       desc = "Edgy Group Prev Left",
-  --     },
-  --   },
-  --   opts = {
-  --     { icon = "", pos = "left", titles = { "Neo-Tree", "Neo-Tree Buffers" } },
-  --     { icon = "", pos = "left", titles = { "Neo-Tree Git" } },
-  --     { icon = "", pos = "left", titles = { "Outline" } },
-  --   },
-  -- },
 }
