@@ -1,25 +1,25 @@
 local fn, opt = vim.fn, vim.opt
 
-local data = fn.stdpath "data"
-local lazypath = data .. "/lazy/lazy.nvim"
+local Data_path = fn.stdpath "data"
+local Lazypath = Data_path .. "/lazy/lazy.nvim"
 
-if not vim.uv.fs_stat(lazypath) then
+if not vim.uv.fs_stat(Lazypath) then
   fn.system {
     "git",
     "clone",
     "--filter=blob:none",
     "--single-branch",
     "https://github.com/folke/lazy.nvim.git",
-    lazypath,
+    Lazypath,
   }
 end
 
-opt.rtp:prepend(lazypath)
+opt.rtp:prepend(Lazypath)
 
 require("lazy").setup {
   -- debug = true,
   -- defaults = { lazy = true },
-  lockfile = data .. "/lazy-lock.json",
+  lockfile = Data_path .. "/lazy-lock.json",
   concurrency = 20,
   spec = {
     { import = "r.plugins" },

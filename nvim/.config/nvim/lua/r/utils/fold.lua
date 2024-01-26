@@ -43,19 +43,15 @@ function M.goPreviousClosedFold()
 
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
-      -- vim.cmd [[
-      --   try
-      --       execute  "cprev"
-      --       execute "normal! zz"
-      --   catch /^Vim\%((\a\+)\)\=:E553/
-      --       " execute "wincmd p"
-      --       " execute "echo 'stop it'"
-      --   catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
-      --   endtry
-      --       ]]
-      Util.try(function()
-        return vim.cmd.cprevious()
-      end)
+      return vim.cmd [[
+        try
+            execute "cprevious"
+            execute "normal! zz"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute "clast"
+        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
+        endtry
+            ]]
     else
       -- I got lazy convert this logic into lua, so I stole it yehahaa
       -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
@@ -92,18 +88,16 @@ function M.goNextClosedFold()
 
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
-      -- vim.cmd [[
-      --   try
-      --       execute "cnext"
-      --       execute "normal! zz"
-      --   catch /^Vim\%((\a\+)\)\=:E553/
-      --       " execute "wincmd p"
-      --   catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
-      --   endtry
-      --       ]]
-      Util.try(function()
-        return vim.cmd.cnext()
-      end)
+      return vim.cmd [[
+        try
+            execute "cnext"
+            execute "normal! zz"
+        catch /^Vim\%((\a\+)\)\=:E553/
+            execute "cfirst"
+        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
+        endtry
+
+            ]]
     else
       return vim.cmd "wincmd p"
     end
