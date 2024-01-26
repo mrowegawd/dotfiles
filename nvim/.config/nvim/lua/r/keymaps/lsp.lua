@@ -19,8 +19,6 @@ function M.get()
     { "<Leader>K", "<CMD>Lspsaga hover_doc ++keep<CR>", desc = "LSP(lspsaga): hover (keep the window)", nowait = true },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-    -- { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
-    { "gr", "<cmd> Lspsaga finder<cr>", desc = "LSP(lspsaga): references" },
     { "gT", [[<cmd>lua require('fzf-lua').lsp_typedefs()<cr>]], desc = "LSP(fzflua): peek type definitions" },
     { "gO", [[<cmd>lua require('fzf-lua').lsp_outgoing_calls()<cr>]], desc = "LSP(fzflua): outgoing calls" },
     { "gI", [[<cmd>lua require('fzf-lua').lsp_incoming_calls()<cr>]], desc = "LSP(fzflua): incoming calls" },
@@ -28,7 +26,6 @@ function M.get()
     -- { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP(fzflua): document symbols" },
     -- { "gS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP(fzflua): workspaces symbols" },
     { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "LSP: codeAction" },
-    { "gd", "<CMD> Lspsaga goto_definition<CR>", desc = "LSP(lspsaga): definitions", has = "definition" },
     {
       "<leader>cA",
       function()
@@ -170,11 +167,61 @@ function M.get()
     M._keys[#M._keys + 1] = { "gD", vim.lsp.buf.declaration, desc = "LSP: goto declaration" }
   end
 
+  if Util.has "fzf-lua" then
+    M._keys[#M._keys + 1] = {
+      "gd",
+      function()
+        require("fzf-lua").lsp_definitions()
+      end,
+      desc = "LSP(fzflua): goto definitions",
+    }
+  elseif Util.has "glance.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gd",
+      "<CMD>Glance definitions<CR>",
+      desc = "LSP(glance): goto definitions",
+    }
+  elseif Util.has "lspsaga.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gd",
+      "<CMD>Lspsaga goto_definition <CR>",
+      desc = "LSP(lspsaga): goto definition",
+    }
+  else
+    M._keys[#M._keys + 1] = { "gd", vim.lsp.buf.definition, desc = "LSP: goto declaration" }
+  end
+
+  if Util.has "fzf-lua" then
+    M._keys[#M._keys + 1] = {
+      "gr",
+      function()
+        require("fzf-lua").lsp_finder()
+      end,
+      desc = "LSP(fzflua): references",
+    }
+  elseif Util.has "glance.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gr",
+      "<CMD>Glance references<CR>",
+      desc = "LSP(glance): references",
+    }
+  elseif Util.has "lspsaga.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gr",
+      "<CMD>Lspsaga finder<CR>",
+      desc = "LSP(lspsaga): references",
+    }
+  else
+    -- { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
+    M._keys[#M._keys + 1] = { "gr", vim.lsp.buf.definition, desc = "LSP: references" }
+  end
+
   if Util.has "goto-preview" then
     M._keys[#M._keys + 1] =
-      { "gP", require("goto-preview").goto_preview_definition, desc = "LSP(goto-preview): preview definitions" }
+      { "gP", require("goto-preview").goto_preview_definition, desc = "LSP(goto-preview): peek preview definitions" }
   elseif Util.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] = { "gP", "<cmd>Lspsaga peek_definition<cr>", desc = "LSP[lspsaga]", has = "rename" }
+    M._keys[#M._keys + 1] =
+      { "gP", "<cmd>Lspsaga peek_definition<cr>", desc = "LSP[lspsaga]: peek preview definitions" }
   end
 
   if Util.has "inc-rename.nvim" then

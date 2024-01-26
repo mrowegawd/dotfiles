@@ -1708,74 +1708,6 @@ return {
     end,
     config = true,
   },
-  -- GLANCE (disabled)
-  {
-    "DNLHC/glance.nvim",
-    cmd = { "Glance" },
-    enabled = false,
-    opts = function()
-      local actions = require("glance").actions
-      return {
-        -- height = 18, -- Height of the window
-        zindex = 100,
-        preview_win_opts = { relativenumber = false, wrap = false },
-        theme = { enable = true, mode = "darken" },
-        folds = {
-          fold_closed = "",
-          fold_open = "",
-          folded = true, -- Automatically fold list on startup
-        },
-        -- Taken from https://github.com/DNLHC/glance.nvim#hooks
-        -- Don't open glance when there is only one result and it is
-        -- located in the current buffer, open otherwise
-        hooks = {
-          ---@diagnostic disable-next-line: unused-local
-          before_open = function(results, open, jump, method)
-            local uri = vim.uri_from_bufnr(0)
-            if #results == 1 then
-              local target_uri = results[1].uri or results[1].targetUri
-
-              if target_uri == uri then
-                jump(results[1])
-              else
-                open(results)
-              end
-            else
-              open(results)
-            end
-          end,
-        },
-        mappings = {
-          list = {
-            ["<C-u>"] = actions.preview_scroll_win(5),
-            ["<C-d>"] = actions.preview_scroll_win(-5),
-            ["<c-v>"] = actions.jump_vsplit,
-            ["<c-s>"] = actions.jump_split,
-            ["<c-t>"] = actions.jump_tab,
-            ["<c-n>"] = actions.next_location,
-            ["<c-p>"] = actions.previous_location,
-            ["h"] = actions.close_fold,
-            ["l"] = actions.open_fold,
-            ["p"] = actions.enter_win "preview",
-            ["<C-l>"] = "",
-            ["<C-h>"] = "",
-            ["<C-j>"] = "",
-            ["<C-k>"] = "",
-          },
-          preview = {
-            ["q"] = actions.close,
-            ["p"] = actions.enter_win "list",
-            ["<c-n>"] = actions.next_location,
-            ["<c-p>"] = actions.previous_location,
-            ["C-l"] = "",
-            ["<C-h>"] = "",
-            ["<C-j>"] = "",
-            ["<C-k>"] = "",
-          },
-        },
-      }
-    end,
-  },
   -- FIDGET (disabled)
   {
     "j-hui/fidget.nvim",
@@ -2740,6 +2672,34 @@ return {
         },
       }
     end,
+  },
+  -- EDGY-GROUP
+  {
+    "lucobellic/edgy-group.nvim",
+    event = "VeryLazy",
+    enabled = false,
+    -- dependencies = { "folke/edgy.nvim" },
+    keys = {
+      {
+        "<leader>el",
+        function()
+          require("edgy-group").open_group("left", 1)
+        end,
+        desc = "Edgy Group Next Left",
+      },
+      {
+        "<leader>eh",
+        function()
+          require("edgy-group").open_group("left", -1)
+        end,
+        desc = "Edgy Group Prev Left",
+      },
+    },
+    opts = {
+      { icon = "", pos = "left", titles = { "Neo-Tree", "Neo-Tree Buffers" } },
+      { icon = "", pos = "left", titles = { "Neo-Tree Git" } },
+      { icon = "", pos = "left", titles = { "Outline" } },
+    },
   },
   -- MINI-SURROUND
   {

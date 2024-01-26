@@ -258,11 +258,7 @@ return {
 
           if neotree_opened then
             if vim.bo[0].filetype == "neo-tree" then
-              vim.cmd [[wincmd p]]
-              if vim.bo[0].filetype == "noo-tree" then
-                vim.print "aye"
-              end
-              return
+              return vim.cmd [[wincmd p]]
             end
             return cmd "Neotree reveal"
           else

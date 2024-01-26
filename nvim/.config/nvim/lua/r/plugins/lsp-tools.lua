@@ -172,7 +172,6 @@ return {
   -- OUTLINE.NVIM
   {
     "hedyhli/outline.nvim",
-    -- enabled = false,
     event = "LspAttach",
     cmd = "Outline",
     keys = function()
@@ -274,7 +273,7 @@ return {
       Highlight.plugin("OutlineAuHi", {
         {
           OutlineCurrent = {
-            fg = { from = "Boolean", attr = "fg", alter = -0.5 },
+            fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
             -- bg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
             bold = true,
           },
@@ -372,6 +371,78 @@ return {
     end,
     config = function()
       vim.g.vista_icon_indent = { "╰─▸ ", "├─▸ " }
+    end,
+  },
+  -- GLANCE
+  {
+    "DNLHC/glance.nvim",
+    event = { "LspAttach", "VeryLazy" },
+    cmd = { "Glance" },
+    opts = function()
+      local actions = require("glance").actions
+      return {
+        -- height = 18, -- Height of the window
+        zindex = 100,
+        preview_win_opts = { relativenumber = false, wrap = false },
+        theme = { enable = true, mode = "darken" },
+        folds = {
+          fold_closed = "",
+          fold_open = "",
+          folded = true, -- Automatically fold list on startup
+        },
+        -- -- Taken from https://github.com/DNLHC/glance.nvim#hooks
+        -- -- Don't open glance when there is only one result and it is
+        -- -- located in the current buffer, open otherwise
+        -- hooks = {
+        --   ---@diagnostic disable-next-line: unused-local
+        --   before_open = function(results, open, jump, method)
+        --     local uri = vim.uri_from_bufnr(0)
+        --     if #results == 1 then
+        --       local target_uri = results[1].uri or results[1].targetUri
+        --
+        --       if target_uri == uri then
+        --         jump(results[1])
+        --       else
+        --         open(results)
+        --       end
+        --     else
+        --       open(results)
+        --     end
+        --   end,
+        -- },
+        mappings = {
+          list = {
+            ["<C-u>"] = actions.preview_scroll_win(5),
+            ["<C-d>"] = actions.preview_scroll_win(-5),
+            ["<c-v>"] = actions.jump_vsplit,
+            ["<c-s>"] = actions.jump_split,
+            ["<c-t>"] = actions.jump_tab,
+            ["<c-n>"] = actions.next_location,
+            ["<c-p>"] = actions.previous_location,
+            ["<a-n>"] = actions.next_location,
+            ["<a-p>"] = actions.previous_location,
+            ["h"] = actions.close_fold,
+            ["l"] = actions.open_fold,
+            ["p"] = actions.enter_win "preview",
+            ["<C-l>"] = "",
+            ["<C-h>"] = "",
+            ["<C-j>"] = "",
+            ["<C-k>"] = "",
+          },
+          preview = {
+            ["ql"] = actions.close,
+            ["p"] = actions.enter_win "list",
+            ["<c-n>"] = actions.next_location,
+            ["<c-p>"] = actions.previous_location,
+            ["<a-n>"] = actions.next_location,
+            ["<a-p>"] = actions.previous_location,
+            ["C-l"] = "",
+            ["<C-h>"] = "",
+            ["<C-j>"] = "",
+            ["<C-k>"] = "",
+          },
+        },
+      }
     end,
   },
   -- LSPSAGA
@@ -556,7 +627,6 @@ return {
       },
     },
   },
-
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
