@@ -783,7 +783,7 @@ return {
 
       { "rC", "<Cmd> RmuxKillAllPanes <CR>" },
       { "rA", "<Cmd> RmuxRunTaskAll <CR>" },
-      -- { "rg", "<Cmd> RmuxGrepErr <CR>" },
+      { "rg", "<Cmd> RmuxGrepErr <CR>" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
       { "rE", "<Cmd> RmuxREDITConfig <CR>" },
