@@ -116,9 +116,11 @@ function M.followLink(Config)
     end
     -- local search = require "obsidian.search"
     -- search.find_notes_async(".", title .. ".md")
+    local rg_opts =
+      [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
 
     local fzflua = require "fzf-lua"
-    fzflua.grep { cwd = Config.path.wiki_path, search = title }
+    fzflua.grep { cwd = Config.path.wiki_path, search = title, rg_opts = rg_opts }
   else
     if require("obsidian").util.cursor_on_markdown_link() then
       vim.cmd "ObsidianFollowLink"
