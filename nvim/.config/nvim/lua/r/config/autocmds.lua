@@ -93,7 +93,7 @@ Util.cmd.augroup("ReHighlightFolded", {
       require("r.config.highlights").plugin("markdca", {
         {
           Folded = {
-            bg = { from = "Normal", attr = "bg", alter = 0.3 },
+            bg = { from = "Normal", attr = "bg", alter = 0.5 },
             fg = "NONE",
             underline = false,
             bold = true,

@@ -47,7 +47,7 @@ opt.laststatus = 3 -- 2 = always show status line (filename, etc)
 opt.textwidth = 80 -- max inserted text width for paste operations
 opt.linespace = 0 -- font spacing
 opt.ruler = true -- show line,col at the cursor pos
-opt.signcolumn = "yes" -- Always show the sign column
+opt.signcolumn = "yes:1" -- Always show the sign column
 opt.number = true -- show absolute line no. at the cursor pos
 opt.relativenumber = true -- otherwise, show relative numbers in the ruler
 opt.breakindent = true -- start wrapped lines indented
@@ -306,3 +306,26 @@ package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share
 -- -- disable netrw at the very start of your init.lua (strongly advised)
 -- vim.g.loaded_netrw = 1
 -- vim.g.loaded_netrwPlugin = 1
+
+if vim.g.neovide then
+  vim.g.neovide_scroll_animation_length = 0.15
+  vim.g.neovide_cursor_animation_length = 0.1
+  vim.g.neovide_cursor_trail_size = 0.5
+  vim.g.neovide_cursor_animate_in_insert_mode = false
+  vim.g.neovide_cursor_vfx_mode = "railgun"
+
+  vim.keymap.set("", "<C-=>", function()
+    local _, _, font_size = vim.o.guifont:find ".*:h(%d+)$"
+    font_size = tostring(tonumber(font_size) + 1)
+    vim.o.guifont = string.gsub(vim.o.guifont, "%d+$", font_size)
+  end, { noremap = true })
+  vim.keymap.set("", "<C-->", function()
+    local _, _, font_size = vim.o.guifont:find ".*:h(%d+)$"
+    if tonumber(font_size) > 1 then
+      font_size = tostring(tonumber(font_size) - 1)
+      vim.o.guifont = string.gsub(vim.o.guifont, "%d+$", font_size)
+    end
+  end, { noremap = true })
+
+  vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
+end
