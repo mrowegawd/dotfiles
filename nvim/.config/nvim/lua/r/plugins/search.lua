@@ -93,11 +93,18 @@ return {
         desc = "WinNav(fzflua): live_grep on buffers [visual]",
         mode = { "v" },
       },
-
       { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
       { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
-      { "<Leader>fl", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
+      {
+        "<Leader>fh",
+        function()
+          require("fzf-lua").help_tags { query = vim.fn.expand "<cword>" }
+        end,
+        mode = { "v" },
+        desc = "Fzflua: help tags (visual)",
+      },
+      { "<Leader>b", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
       { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
