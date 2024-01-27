@@ -3,7 +3,7 @@
   "run_file": {
     "include_cwd": true,
     "command": "lua",
-    "regex": ""
+    "regex": "/[a-z].*.lua:[0-9]+:"
   },
   "repl": {
     "open_pane": "tmux split-window -h -p 20",
