@@ -320,25 +320,101 @@ return {
       }
     end,
   },
-  -- NEOSCROLL.NVIM
+  -- SMOOTHCURSOR.NVIM
   {
-    "karb94/neoscroll.nvim", -- NOTE: alternative: 'declancm/cinnamon.nvim'
-    event = "VeryLazy",
+    "gen740/SmoothCursor.nvim",
+    event = "BufWinEnter",
+    cond = vim.g.neovide == nil,
+    opts = function()
+      return {
+        type = "default", -- Cursor movement calculation method, choose "default", "exp" (exponential) or "matrix".
+
+        cursor = "", -- Cursor shape (requires Nerd Font). Disabled in fancy mode.
+        texthl = "SmoothCursor", -- Highlight group. Default is { bg = nil, fg = "#FFD400" }. Disabled in fancy mode.
+        linehl = nil, -- Highlights the line under the cursor, similar to 'cursorline'. "CursorLine" is recommended. Disabled in fancy mode.
+
+        fancy = {
+          enable = true, -- enable fancy mode
+          head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
+          body = {
+            { cursor = "󰝥", texthl = "SmoothCursorRed" },
+            { cursor = "󰝥", texthl = "SmoothCursorOrange" },
+            { cursor = "●", texthl = "SmoothCursorYellow" },
+            { cursor = "●", texthl = "SmoothCursorGreen" },
+            { cursor = "•", texthl = "SmoothCursorAqua" },
+            { cursor = ".", texthl = "SmoothCursorBlue" },
+            { cursor = ".", texthl = "SmoothCursorPurple" },
+          },
+          tail = { cursor = nil, texthl = "SmoothCursor" }, -- false to disable fancy tail
+        },
+
+        matrix = { -- Loaded when 'type' is set to "matrix"
+          head = {
+            -- Picks a random character from this list for the cursor text
+            cursor = require "smoothcursor.matrix_chars",
+            -- Picks a random highlight from this list for the cursor text
+            texthl = {
+              "SmoothCursor",
+            },
+            linehl = nil, -- No line highlight for the head
+          },
+          body = {
+            length = 6, -- Specifies the length of the cursor body
+            -- Picks a random character from this list for the cursor body text
+            cursor = require "smoothcursor.matrix_chars",
+            -- Picks a random highlight from this list for each segment of the cursor body
+            texthl = {
+              "SmoothCursorGreen",
+            },
+          },
+          tail = {
+            -- Picks a random character from this list for the cursor tail (if any)
+            cursor = nil,
+            -- Picks a random highlight from this list for the cursor tail
+            texthl = {
+              "SmoothCursor",
+            },
+          },
+          unstop = false, -- Determines if the cursor should stop or not (false means it will stop)
+        },
+
+        autostart = true, -- Automatically start SmoothCursor
+        always_redraw = true, -- Redraw the screen on each update
+        flyin_effect = nil, -- Choose "bottom" or "top" for flying effect
+        speed = 25, -- Max speed is 100 to stick with your current position
+        intervals = 35, -- Update intervals in milliseconds
+        priority = 1, -- Set marker priority
+        timeout = 3000, -- Timeout for animations in milliseconds
+        threshold = 3, -- Animate only if cursor moves more than this many lines
+        disable_float_win = false, -- Disable in floating windows
+        enabled_filetypes = nil, -- Enable only for specific file types, e.g., { "lua", "vim" }
+        disabled_filetypes = { "fzf", "dashboard", "alpha", "rgflow" }, -- Disable for these file types, ignored if enabled_filetypes is set. e.g., { "TelescopePrompt", "NvimTree" }
+      }
+    end,
+  },
+  -- NVIM-TRANSPARENT
+  {
+    "xiyaowong/nvim-transparent",
+    cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
+    cond = vim.g.neovide == nil,
     opts = {
-      hide_cursor = true,
-      mappings = { "<C-d>", "<C-u>", "zt", "zz", "zb" },
-      pre_hook = function()
-        vim.opt.eventignore:append {
-          "WinScrolled",
-          "CursorMoved",
-        }
-      end,
-      post_hook = function()
-        vim.opt.eventignore:remove {
-          "WinScrolled",
-          "CursorMoved",
-        }
-      end,
+      extra_groups = { -- table/string: additional groups that should be cleared
+        -- In particular, when you set it to 'all', that means all available groups
+
+        -- example of akinsho/nvim-bufferline.lua
+        "BufferLineTabClose",
+        "BufferlineBufferSelected",
+        "BufferLineFill",
+        "BufferLineBackground",
+        "BufferLineSeparator",
+        "BufferLineIndicatorSelected",
+
+        "Normal",
+      },
+      exclude_groups = { "Folded" }, -- table: groups you don't want to clear
     },
+    config = function(_, opts)
+      require("transparent").setup(opts)
+    end,
   },
 }

@@ -26,6 +26,7 @@ return {
       "CBcatalog",
     },
   },
+  -- VIM-HIGHLIGHTER
   {
     "azabiong/vim-highlighter",
     event = "LazyFile",
@@ -35,7 +36,7 @@ return {
       let HiErase = 't<BS>'
       let HiClear = 't<C-L>'
       let HiFind  = 't<Tab>'
-      let HiSetSL = 'T<CR>'
+      let HiSetSL = 'S<CR>'
       ]]
     end,
     keys = {

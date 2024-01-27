@@ -198,8 +198,6 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      _inline2 = false,
-      _extmark_signs = true,
       signs = {
         add = { text = "▎", numhl = "GitSignsAddNr" },
         change = { text = "▎", numhl = "GitSignsChangeNr" },
