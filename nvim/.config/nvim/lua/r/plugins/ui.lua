@@ -309,13 +309,15 @@ return {
           cursorline = true,
         },
         render = function(props)
+          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":h:t")
           local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          local full_name = dirname .. "/" .. filename
           if vim.bo[props.buf].modified then
-            filename = "[+] " .. filename
+            filename = "[+] " .. full_name
           end
 
           local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-          return { { icon, guifg = color }, { " " }, { filename } }
+          return { { icon, guifg = color }, { " " }, { full_name } }
         end,
       }
     end,
