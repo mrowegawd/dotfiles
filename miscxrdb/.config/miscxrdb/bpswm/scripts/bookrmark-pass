@@ -8,6 +8,7 @@ ROFI_THEME="styles/snippets"
 ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME"
 
 MENU_FONT="SF Mono 24"
+TERMC="st"
 
 [ ! -f "$FILE_BOOKMARKED" ] && dunstify "file $FILE_BOOKMARKED not found" && exit
 
@@ -233,9 +234,16 @@ Categories=GNOME;GTK;System;
 		[[ -z $dir_selection ]] && exit
 		[[ ! -d $HOME/.password-store/$dir_selection ]] && exit
 
+		dunstify "$dir_selection"
+
 		case "$XDG_SESSION_DESKTOP" in
 		"bspwm")
-			bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -c "cd $HOME/.password-store/$dir_selection"
+			if [[ "$TERMINAL" == "wezterm" ]]; then
+				bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMC" -c "cd $HOME/.password-store/$dir_selection"
+			else
+				bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -c "cd $HOME/.password-store/$dir_selection"
+			fi
+
 			;;
 		*) dunstify "OS $XDG_SESSION_DESKTOP not implemented yet?" ;;
 		esac
