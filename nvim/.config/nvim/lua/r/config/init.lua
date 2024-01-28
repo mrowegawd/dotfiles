@@ -47,6 +47,7 @@ local defaults = {
     dropbox_path = fmt("%s/Dropbox", home, "Dropbox"),
     wiki_path = fmt("%s/neorg", dropbox_path),
     snippet_path = snippet_path,
+    home = home,
   },
 
   colorscheme = colorscheme,
