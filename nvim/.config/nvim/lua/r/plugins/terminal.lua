@@ -191,12 +191,73 @@ return {
   {
     "s1n7ax/nvim-terminal",
     keys = {
-      { "<a-f>", mode = { "n", "v", "t", "i" } },
-      { "<a-1>", mode = { "n", "v", "t", "i" } },
-      { "<a-2>", mode = { "n", "v", "t", "i" } },
-      { "<a-3>", mode = { "n", "v", "t", "i" } },
-      { "<a-4>", mode = { "n", "v", "t", "i" } },
-      { "<a-5>", mode = { "n", "v", "t", "i" } },
+      {
+        "<a-f>",
+        function()
+          if not vim.bo.buftype == "terminal" then
+            vim.cmd.Normal()
+          end
+          ---@diagnostic disable-next-line: undefined-global
+          return NTGlobal["terminal"]:toggle()
+        end,
+        mode = { "n", "v", "t", "i" },
+      },
+      {
+        "<a-1>",
+        function()
+          if not vim.bo.buftype == "terminal" then
+            vim.cmd.Normal()
+          end
+          ---@diagnostic disable-next-line: undefined-global
+          return NTGlobal["terminal"]:open(1)
+        end,
+        mode = { "n", "v", "t", "i" },
+      },
+      {
+        "<a-2>",
+        function()
+          if not vim.bo.buftype == "terminal" then
+            vim.cmd.Normal()
+          end
+          ---@diagnostic disable-next-line: undefined-global
+          return NTGlobal["terminal"]:open(2)
+        end,
+        mode = { "n", "v", "t", "i" },
+      },
+      {
+        "<a-3>",
+        function()
+          if not vim.bo.buftype == "terminal" then
+            vim.cmd.Normal()
+          end
+
+          ---@diagnostic disable-next-line: undefined-global
+          return NTGlobal["terminal"]:open(3)
+        end,
+        mode = { "n", "v", "t", "i" },
+      },
+      {
+        "<a-4>",
+        function()
+          if not vim.bo.buftype == "terminal" then
+            vim.cmd.Normal()
+          end
+          ---@diagnostic disable-next-line: undefined-global
+          return NTGlobal["terminal"]:open(4)
+        end,
+        mode = { "n", "v", "t", "i" },
+      },
+      {
+        "<a-5>",
+        function()
+          if not vim.bo.buftype == "terminal" then
+            vim.cmd.Normal()
+          end
+          ---@diagnostic disable-next-line: undefined-global
+          return NTGlobal["terminal"]:open(5)
+        end,
+        mode = { "n", "v", "t", "i" },
+      },
     },
     opts = {
       -- keymap to disablesb all the default keymaps
@@ -207,7 +268,7 @@ return {
 
       terminals = {
         -- keymaps to open nth terminal
-        { keymap = "<a-1>" },
+        -- { keymap = "<a-1>" },
         { keymap = "<a-2>" },
         { keymap = "<a-3>" },
         { keymap = "<a-4>" },
