@@ -388,7 +388,7 @@ return {
         threshold = 3, -- Animate only if cursor moves more than this many lines
         disable_float_win = false, -- Disable in floating windows
         enabled_filetypes = nil, -- Enable only for specific file types, e.g., { "lua", "vim" }
-        disabled_filetypes = { "fzf", "dashboard", "alpha", "rgflow" }, -- Disable for these file types, ignored if enabled_filetypes is set. e.g., { "TelescopePrompt", "NvimTree" }
+        disabled_filetypes = { "fzf", "dashboard", "alpha", "rgflow", "orgagenda" },
       }
     end,
   },
