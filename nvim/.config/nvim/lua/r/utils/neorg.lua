@@ -32,7 +32,13 @@ function M.open_orgagenda_paths()
   local org_backup = {}
   local org_todos = {}
   for _, x in pairs(opts_plugin.org_agenda_files) do
-    local path = string.gsub(x, [[%/%*$]], "")
+    local path
+    if string.match(x, [[%*%*]], 1) then
+      path = string.gsub(x, [[%/%*%*/%*$]], "")
+    else
+      path = string.gsub(x, [[%/%*$]], "")
+    end
+    -- local path = string.gsub(x, [[%/%*$]], "")
     local dirs = scan.scan_dir(path)
     for _, file_path in pairs(dirs) do
       if not string.match(file_path, "org_archive") then
