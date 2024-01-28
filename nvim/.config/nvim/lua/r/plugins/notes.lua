@@ -347,6 +347,7 @@ return {
         fmt("%s/orgmode/bookmarks/*", Config.path.wiki_path),
         fmt("%s/orgmode/habit/*", Config.path.wiki_path),
         fmt("%s/orgmode/day-to-remember/*", Config.path.wiki_path),
+        fmt("%s/orgmode/project-todo/**/*", Config.path.wiki_path),
       },
       org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", Config.path.wiki_path),
       org_todo_keywords = {
@@ -798,19 +799,14 @@ return {
             { CodeBlock = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
             {
               Headline1 = {
-                bg = { from = "Normal", attr = "bg" },
-                -- fg = { from = "@attribute", attr = "fg", alter = 0.1 },
-                -- bg = { from = "@attribute", attr = "fg", alter = -0.9 },
+                bg = "#332F46",
                 fg = { from = "@attribute", attr = "fg", alter = 1 },
                 bold = true,
               },
             },
             {
               Headline2 = {
-                bg = { from = "Normal", attr = "bg" },
-                -- fg = { from = "@attribute", attr = "fg", alter = 0.1 },
-                -- bg = { from = "Normal", attr = "bg", alter = 0.5 },
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                bg = "#3F2F46",
                 fg = { from = "@attribute", attr = "fg", alter = 0.8 },
                 bold = true,
               },
@@ -818,10 +814,7 @@ return {
 
             {
               Headline3 = {
-                bg = { from = "Normal", attr = "bg" },
-                -- fg = { from = "@constant", attr = "fg", alter = -0.1 },
-                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                bg = "#462F42",
                 fg = { from = "@attribute", attr = "fg", alter = 0.6 },
                 bold = true,
               },
@@ -829,19 +822,24 @@ return {
             {
 
               Headline4 = {
-                bg = { from = "Normal", attr = "bg" },
-
-                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                bg = "#462F37",
                 fg = { from = "@attribute", attr = "fg", alter = 0.4 },
                 bold = true,
               },
             },
             {
               Headline5 = {
-                bg = { from = "Normal", attr = "bg" },
-
-                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                bg = "#46332F",
                 fg = { from = "@attribute", attr = "fg", alter = 0.2 },
+                bold = true,
+              },
+            },
+            {
+              Headline6 = {
+                -- bg = { from = "Normal", attr = "bg" },
+                bg = "#463F2F",
+                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "@attribute", attr = "fg", alter = 0 },
                 bold = true,
               },
             },

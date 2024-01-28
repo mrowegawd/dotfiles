@@ -1,3 +1,4 @@
+local Config = require "r.config"
 return {
   -- NVIM-BQF
   {
@@ -60,18 +61,19 @@ return {
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    -- enabled = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
     },
     ft = { "qf" },
+    cmd = { "LoadQfLocal", "SaveQfLocal", "LoadQfGlobal", "SaveQfGlobal" },
     keys = {
       "<Localleader>qT",
       "<Localleader>qt",
       "<Leader>q",
     },
     opts = {
+      save_dir = Config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
       theme_list = {
         enabled = true,
         maxheight = 10,
