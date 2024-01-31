@@ -140,10 +140,12 @@ opt.equalalways = false -- New vim windows created won't make everything back to
 -----------------------------------------------------------------------------//
 opt.fillchars = {
   eob = " ", -- suppress ~ at endofbuffer
-  diff = "⣿", -- alternatives = ⣿ ░ ╱
+  diff = "╱", -- alternatives = ⣿ ░ ╱
   msgsep = " ", -- alternatives: ‾ ─
-  fold = " ",
-  vert = "┃",
+  -- fold = " ",
+  --
+  vert = "¦", -- "┃",
+  -- verthoriz = "--",
   foldopen = "", -- '▼'
   foldclose = "", -- '▶'
   foldsep = " ",

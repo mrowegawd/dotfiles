@@ -542,7 +542,7 @@ return {
         -- MkdnSTab = false,
         MkdnNextLink = false,
         MkdnPrevLink = false,
-        MkdnNextHeading = { "n", "<c-n>" },
+        MkdnNextHeading = { "n", "<a-n>" },
         MkdnPrevHeading = { "n", "<a-p>" },
         MkdnGoBack = false,
         MkdnGoForward = false,

@@ -8,26 +8,18 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
-    -- keys = {
-    --   {
-    --     "<Leader>ge",
-    --     function()
-    --       if vim.bo[0].filetype == "neo-tree" then
-    --         return cmd [[q]]
-    --       end
-    --       return cmd "Neotree git_status"
-    --     end,
-    --     desc = "Misc(neotree): open File explore",
-    --   },
-    --   {
-    --     "<Leader>E",
-    --     function()
-    --       Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-    --       return cmd "Neotree reveal toggle"
-    --     end,
-    --     desc = "Misc(neotree): open find file on File Explore",
-    --   },
-    -- },
+    keys = {
+      --   {
+      --     "<Leader>ge",
+      --     function()
+      --       if vim.bo[0].filetype == "neo-tree" then
+      --         return cmd [[q]]
+      --       end
+      --       return cmd "Neotree git_status"
+      --     end,
+      --     desc = "Misc(neotree): open File explore",
+      --   },
+    },
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
@@ -259,12 +251,22 @@ return {
             if vim.bo[0].filetype == "neo-tree" then
               return vim.cmd [[wincmd p]]
             end
-            return cmd "Neotree reveal"
+            return cmd "Neotree"
+
+            -- return cmd "Neotree reveal"
           else
             return cmd "Neotree"
           end
         end,
         desc = "Misc(neotree): open File explore",
+      },
+      {
+        "<Leader>E",
+        function()
+          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+          return cmd "Neotree reveal"
+        end,
+        desc = "Misc(neotree): open find file on File Explore",
       },
       {
         "<Leader>uu",

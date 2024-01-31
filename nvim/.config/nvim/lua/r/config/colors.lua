@@ -16,7 +16,7 @@ local general_overrides = function()
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.5 }, fg = "NONE" } },
+    { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.5 }, fg = { from = "Normal", attr = "bg", alter = 1.6 } } },
     { EndOfBuffer = { bg = "NONE" } },
     -- { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "ColorColumn" , attr = "bg", alter = 0.2 } } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },

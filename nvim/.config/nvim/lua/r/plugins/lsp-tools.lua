@@ -244,7 +244,7 @@ return {
                       outline.close_outline()
                     end
 
-                    local path = vim.fn.expand "%:p"
+                    -- local path = vim.fn.expand "%:p"
                     -- vim.cmd [[close]]
                     -- vim.cmd("e " .. path)
                     if selection == "all" then
@@ -257,7 +257,7 @@ return {
                     vim.schedule(function()
                       outline.open_outline()
 
-                      vim.cmd("e " .. path)
+                      -- vim.cmd("e " .. path)
                     end)
                   end
                 end,

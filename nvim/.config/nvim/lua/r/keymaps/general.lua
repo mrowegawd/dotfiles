@@ -333,6 +333,16 @@ local function magic_quit()
     ["DiffviewFileHistory"] = "DiffviewClose",
   }
 
+  -- for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+  --   local bufnr = vim.api.nvim_win_get_buf(winid)
+  --   local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+  --   if vim.bo[0].filetype ~= buf_ft then
+  --     return print(bufnr)
+  --   else
+  --     return cmd [[q!]]
+  --   end
+  -- end
+
   if buf_fts[vim.bo[0].filetype] then
     cmd(buf_fts[vim.bo[0].filetype])
   else

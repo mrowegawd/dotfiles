@@ -26,7 +26,7 @@ super + i
 	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
 
 # window: rotate
-super + r
+super + R
         bspc node @/ -R {90,270}
 
 # window: focus next window base on hjkl

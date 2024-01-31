@@ -19,6 +19,146 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- VIM-TMUX-NAVIGATOR (disabled)
+  {
+    "christoomey/vim-tmux-navigator",
+    enabled = false,
+    init = function()
+      vim.g.tmux_navigator_no_mappings = 1
+      vim.g.tmux_navigator_disable_when_zoomed = 1
+    end,
+    keys = {
+      -- TmuxNavigatePrevious
+      {
+        "<a-k>",
+        "<cmd>TmuxNavigateUp<CR>",
+        desc = "WinNav(vim-tmux-navigator): move up",
+      },
+      {
+        "<a-j>",
+        "<cmd>TmuxNavigateDown<CR>",
+        desc = "WinNav(vim-tmux-navigator): move down",
+      },
+      {
+        "<a-h>",
+        "<cmd>TmuxNavigateLeft<CR>",
+        desc = "WinNav(vim-tmux-navigator): move left",
+      },
+      {
+        "<a-l>",
+        "<cmd>TmuxNavigateRight<CR>",
+        desc = "WinNav(vim-tmux-navigator): move right",
+      },
+
+      -- RESIZE
+      {
+        "<a-K>",
+        "<cmd>resize +2<CR>",
+        desc = "WinNav: resize up",
+      },
+      {
+        "<a-J>",
+        "<cmd>resize -2<CR>",
+        desc = "WinNav: resize down",
+      },
+
+      {
+        "<a-H>",
+        "<cmd>vertical resize -2<CR>",
+        desc = "WinNav: resize left",
+      },
+      {
+        "<a-L>",
+        "<cmd>vertical resize +2<CR>",
+        desc = "WinNav: resize right",
+      },
+    },
+  },
+  -- TMUX.NVIM (disabled)
+  {
+    "aserowy/tmux.nvim",
+    enabled = false,
+    keys = {
+      {
+        "<a-k>",
+        "<cmd>lua require('tmux').move_top()<CR>",
+        desc = "WinNav(tmux): move up",
+      },
+      {
+        "<a-j>",
+        "<cmd>lua require('tmux').move_bottom()<CR>",
+        desc = "WinNav(tmux): move down",
+      },
+      {
+        "<a-h>",
+        "<cmd>lua require('tmux').move_left()<CR>",
+        desc = "WinNav(tmux): move left",
+      },
+      {
+        "<a-l>",
+        "<cmd>lua require('tmux').move_right()<CR>",
+        desc = "WinNav(tmux): move right",
+      },
+
+      -- RESIZE
+      {
+        "<a-K>",
+        function()
+          return require("tmux").resize_top()
+        end,
+        desc = "WinNav(tmux): resize up",
+      },
+      {
+        "<a-J>",
+        function()
+          return require("tmux").resize_bottom()
+        end,
+        desc = "WinNav(tmux): resize down",
+      },
+
+      {
+        "<a-H>",
+        function()
+          return require("tmux").resize_left()
+        end,
+        desc = "WinNav(tmux): resize left",
+      },
+      {
+        "<a-L>",
+        function()
+          return require("tmux").resize_right()
+        end,
+        desc = "WinNav(tmux): resize right",
+      },
+    },
+    config = function(_, opts)
+      require("tmux").setup(opts)
+    end,
+    opts = {
+      -- copy_sync = {
+      -- enables copy sync. by default, all registers are synchronized.
+      -- to control which registers are synced, see the `sync_*` options.
+      --   enable = false,
+      -- },
+      navigation = {
+        -- cycles to opposite pane while navigating into the border
+        -- cycle_navigation = false,
+        -- enables default keybindings (C-hjkl) for normal mode
+        enable_default_keybindings = false,
+        -- prevents unzoom tmux when navigating beyond vim border
+        persist_zoom = false,
+      },
+      resize = {
+        -- enables default keybindings (A-hjkl) for normal mode
+        enable_default_keybindings = false,
+        -- sets resize steps for x axis
+        resize_step_x = 4,
+
+        -- sets resize steps for y axis
+        resize_step_y = 4,
+      },
+    },
+  },
   -- OIL (disabled)
   {
     "stevearc/oil.nvim",
@@ -1190,7 +1330,79 @@ return {
       end,
     },
   },
+  -- SMOOTHCURSOR.NVIM
+  {
+    "gen740/SmoothCursor.nvim",
+    event = "BufWinEnter",
+    cond = vim.g.neovide == nil,
+    enabled = false,
+    opts = function()
+      return {
+        type = "default", -- Cursor movement calculation method, choose "default", "exp" (exponential) or "matrix".
 
+        cursor = "", -- Cursor shape (requires Nerd Font). Disabled in fancy mode.
+        texthl = "SmoothCursor", -- Highlight group. Default is { bg = nil, fg = "#FFD400" }. Disabled in fancy mode.
+        linehl = nil, -- Highlights the line under the cursor, similar to 'cursorline'. "CursorLine" is recommended. Disabled in fancy mode.
+
+        fancy = {
+          enable = true, -- enable fancy mode
+          head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
+          body = {
+            { cursor = "󰝥", texthl = "SmoothCursorRed" },
+            { cursor = "󰝥", texthl = "SmoothCursorOrange" },
+            { cursor = "●", texthl = "SmoothCursorYellow" },
+            { cursor = "●", texthl = "SmoothCursorGreen" },
+            { cursor = "•", texthl = "SmoothCursorAqua" },
+            { cursor = ".", texthl = "SmoothCursorBlue" },
+            { cursor = ".", texthl = "SmoothCursorPurple" },
+          },
+          tail = { cursor = nil, texthl = "SmoothCursor" }, -- false to disable fancy tail
+        },
+
+        matrix = { -- Loaded when 'type' is set to "matrix"
+          head = {
+            -- Picks a random character from this list for the cursor text
+            cursor = require "smoothcursor.matrix_chars",
+            -- Picks a random highlight from this list for the cursor text
+            texthl = {
+              "SmoothCursor",
+            },
+            linehl = nil, -- No line highlight for the head
+          },
+          body = {
+            length = 6, -- Specifies the length of the cursor body
+            -- Picks a random character from this list for the cursor body text
+            cursor = require "smoothcursor.matrix_chars",
+            -- Picks a random highlight from this list for each segment of the cursor body
+            texthl = {
+              "SmoothCursorGreen",
+            },
+          },
+          tail = {
+            -- Picks a random character from this list for the cursor tail (if any)
+            cursor = nil,
+            -- Picks a random highlight from this list for the cursor tail
+            texthl = {
+              "SmoothCursor",
+            },
+          },
+          unstop = false, -- Determines if the cursor should stop or not (false means it will stop)
+        },
+
+        autostart = true, -- Automatically start SmoothCursor
+        always_redraw = true, -- Redraw the screen on each update
+        flyin_effect = nil, -- Choose "bottom" or "top" for flying effect
+        speed = 25, -- Max speed is 100 to stick with your current position
+        intervals = 35, -- Update intervals in milliseconds
+        priority = 1, -- Set marker priority
+        timeout = 3000, -- Timeout for animations in milliseconds
+        threshold = 3, -- Animate only if cursor moves more than this many lines
+        disable_float_win = false, -- Disable in floating windows
+        enabled_filetypes = nil, -- Enable only for specific file types, e.g., { "lua", "vim" }
+        disabled_filetypes = { "fzf", "dashboard", "alpha", "rgflow", "orgagenda" },
+      }
+    end,
+  },
   -- NVIM-IDE (disabled)
   {
     "ldelossa/nvim-ide",

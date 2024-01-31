@@ -13,11 +13,17 @@ return {
     "folke/flash.nvim",
     opts = function()
       Highlight.plugin("flash.nvim", {
-        { FlashMatch = { bg = { from = "Error", attr = "fg", alter = 3 }, bold = true } },
+        {
+          FlashMatch = {
+            bg = "white",
+            fg = "black",
+            bold = true,
+          },
+        },
         {
           FlashLabel = {
-            bg = { from = "Normal", attr = "fg", alter = 0.1 },
-            fg = { from = "Error", attr = "fg" },
+            bg = { from = "Normal", attr = "bg", alter = -0.1 },
+            fg = { from = "ErrorMsg", attr = "fg" },
             bold = true,
             strikethrough = false,
           },

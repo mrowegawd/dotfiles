@@ -2,59 +2,6 @@ local Util = require "r.utils"
 
 local M = {}
 
--- Create a new scratch buffer
-vim.api.nvim_create_user_command("Ns", function()
-  vim.cmd [[
-		execute 'vsplit | enew'
-		setlocal buftype=nofile
-		setlocal bufhidden=hide
-		setlocal noswapfile
-	]]
-end, { nargs = 0 })
-
--- Compare clipboard to current buffer
-vim.api.nvim_create_user_command("CompareClipboard", function()
-  local ftype = vim.api.nvim_eval "&filetype" -- original filetype
-  vim.cmd [[
-		tabnew %
-		Ns
-		normal! P
-		windo diffthis
-	]]
-  vim.cmd("set filetype=" .. ftype)
-end, { nargs = 0 })
-
--- Compare clipboard to visual selection
-vim.api.nvim_create_user_command("CompareClipboardSelection", function()
-  vim.cmd [[
-		" yank visual selection to z register
-		normal! gv"zy
-		" open new tab, set options to prevent save prompt when closing
-		execute 'tabnew | setlocal buftype=nofile bufhidden=hide noswapfile'
-		" paste z register into new buffer
-		normal! V"zp
-		Ns
-		normal! Vp
-		windo diffthis
-	]]
-end, {
-  nargs = 0,
-  range = true,
-})
-
-local function gitdiffview()
-  Util.map.vnoremap(
-    "<Leader>gvv",
-    [[:'<'>DiffviewFileHistory --follow<CR>]],
-    { desc = "Git(diffview): view the history diff of the selection (visual)" }
-  )
-  Util.map.vnoremap(
-    "<Leader>gvc",
-    "<esc><cmd>CompareClipboardSelection<cr>",
-    { desc = "Git(diff): compare selection (visual) with clipboard " }
-  )
-end
-
 local function gitfzflua(opts)
   Util.map.nnoremap("<Leader>gs", "<CMD>lua require('fzf-lua').git_status()<CR>", { desc = "Git(fzflua): git status" })
   Util.map.nnoremap("<Leader>gS", "<CMD>lua require('fzf-lua').git_stash()<CR>", { desc = "Git(fzflua): git stash" })
@@ -119,6 +66,101 @@ local function gitfzflua(opts)
       { winopts = { title = require("r.config").icons.git.branch .. "Git ", row = row, col = col } }
     )
   end, { desc = "Git(fzflua): list of cmds" })
+end
+
+-- Create a new scratch buffer
+vim.api.nvim_create_user_command("Ns", function()
+  vim.cmd [[
+		execute 'vsplit | enew'
+		setlocal buftype=nofile
+		setlocal bufhidden=hide
+		setlocal noswapfile
+	]]
+end, { nargs = 0 })
+
+-- Compare the clipboard to the current buffer
+vim.api.nvim_create_user_command("CompareClipboard", function()
+  local ftype = vim.api.nvim_eval "&filetype" -- original filetype
+  vim.cmd [[
+		tabnew %
+		Ns
+		normal! P
+		windo diffthis
+	]]
+  vim.cmd("set filetype=" .. ftype)
+end, { nargs = 0 })
+
+-- Compare the clipboard to a visual selection
+vim.api.nvim_create_user_command("CompareClipboardSelection", function()
+  vim.cmd [[
+		" yank visual selection to z register
+		normal! gv"zy
+		" open new tab, set options to prevent save prompt when closing
+		execute 'tabnew | setlocal buftype=nofile bufhidden=hide noswapfile'
+		" paste z register into new buffer
+		normal! V"zp
+		Ns
+		normal! Vp
+    " alternative: diffview
+		windo diffthis 
+	]]
+end, {
+  nargs = 0,
+  range = true,
+})
+
+local function exit_visual_mode()
+  -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
+  local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+  vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+  vim.api.nvim_feedkeys("gv", "x", false)
+  vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+end
+
+local function get_visual_selection_info()
+  exit_visual_mode()
+
+  local _, start_row, start_col, _ = unpack(vim.fn.getpos "'<")
+  local _, end_row, end_col, _ = unpack(vim.fn.getpos "'>")
+  start_row = start_row - 1
+  end_row = end_row - 1
+
+  return {
+    start_row = start_row,
+    start_col = start_col,
+    end_row = end_row,
+    end_col = end_col,
+  }
+end
+
+local function gitdiffview()
+  Util.map.vnoremap(
+    "<Leader>gvc",
+    "<esc><cmd>CompareClipboardSelection<cr>",
+    { desc = "Git(diff): compare selection (visual) with clipboard " }
+  )
+
+  Util.map.nnoremap("gvh", function()
+    local current_line = vim.fn.line "."
+    local file = vim.fn.expand "%"
+    -- DiffviewFileHistory --follow -L{current_line},{current_line}:{file}
+    local cmd = string.format("DiffviewFileHistory --follow -L%s,%s:%s", current_line, current_line, file)
+    vim.cmd(cmd)
+  end, { desc = "Git(diffview): line history" })
+
+  -- Util.map.vnoremap(
+  --   "<Leader>gvv",
+  --   [[:'<'>DiffviewFileHistory --follow<CR>]],
+  --   { desc = "Git(diffview): view the history diff of the selection (visual)" }
+  -- )
+
+  Util.map.vnoremap("<Leader>gvv", function()
+    local v = get_visual_selection_info()
+    local file = vim.fn.expand "%"
+    -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
+    local cmd = string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
+    vim.cmd(cmd)
+  end, { desc = "Git(diffview): range history" })
 end
 
 local is_gitsigns_attach = true

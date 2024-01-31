@@ -293,14 +293,14 @@ return {
           groups = {
             InclineNormal = {
               guifg = Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
-              guibg = Highlight.tint(Highlight.get("Normal", "fg"), 1),
+              guibg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5),
               gui = "bold",
             },
 
             InclineNormalNC = {
-              guifg = Highlight.tint(Highlight.get("LineNr", "fg"), 1),
+              guifg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5),
               guibg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5),
-              gui = "bold",
+              -- gui = "bold",
             },
           },
         },
@@ -319,78 +319,6 @@ return {
           local icon, color = require("nvim-web-devicons").get_icon_color(filename)
           return { { icon, guifg = color }, { " " }, { full_name } }
         end,
-      }
-    end,
-  },
-  -- SMOOTHCURSOR.NVIM
-  {
-    "gen740/SmoothCursor.nvim",
-    event = "BufWinEnter",
-    cond = vim.g.neovide == nil,
-    opts = function()
-      return {
-        type = "default", -- Cursor movement calculation method, choose "default", "exp" (exponential) or "matrix".
-
-        cursor = "", -- Cursor shape (requires Nerd Font). Disabled in fancy mode.
-        texthl = "SmoothCursor", -- Highlight group. Default is { bg = nil, fg = "#FFD400" }. Disabled in fancy mode.
-        linehl = nil, -- Highlights the line under the cursor, similar to 'cursorline'. "CursorLine" is recommended. Disabled in fancy mode.
-
-        fancy = {
-          enable = true, -- enable fancy mode
-          head = { cursor = "▷", texthl = "SmoothCursor", linehl = nil }, -- false to disable fancy head
-          body = {
-            { cursor = "󰝥", texthl = "SmoothCursorRed" },
-            { cursor = "󰝥", texthl = "SmoothCursorOrange" },
-            { cursor = "●", texthl = "SmoothCursorYellow" },
-            { cursor = "●", texthl = "SmoothCursorGreen" },
-            { cursor = "•", texthl = "SmoothCursorAqua" },
-            { cursor = ".", texthl = "SmoothCursorBlue" },
-            { cursor = ".", texthl = "SmoothCursorPurple" },
-          },
-          tail = { cursor = nil, texthl = "SmoothCursor" }, -- false to disable fancy tail
-        },
-
-        matrix = { -- Loaded when 'type' is set to "matrix"
-          head = {
-            -- Picks a random character from this list for the cursor text
-            cursor = require "smoothcursor.matrix_chars",
-            -- Picks a random highlight from this list for the cursor text
-            texthl = {
-              "SmoothCursor",
-            },
-            linehl = nil, -- No line highlight for the head
-          },
-          body = {
-            length = 6, -- Specifies the length of the cursor body
-            -- Picks a random character from this list for the cursor body text
-            cursor = require "smoothcursor.matrix_chars",
-            -- Picks a random highlight from this list for each segment of the cursor body
-            texthl = {
-              "SmoothCursorGreen",
-            },
-          },
-          tail = {
-            -- Picks a random character from this list for the cursor tail (if any)
-            cursor = nil,
-            -- Picks a random highlight from this list for the cursor tail
-            texthl = {
-              "SmoothCursor",
-            },
-          },
-          unstop = false, -- Determines if the cursor should stop or not (false means it will stop)
-        },
-
-        autostart = true, -- Automatically start SmoothCursor
-        always_redraw = true, -- Redraw the screen on each update
-        flyin_effect = nil, -- Choose "bottom" or "top" for flying effect
-        speed = 25, -- Max speed is 100 to stick with your current position
-        intervals = 35, -- Update intervals in milliseconds
-        priority = 1, -- Set marker priority
-        timeout = 3000, -- Timeout for animations in milliseconds
-        threshold = 3, -- Animate only if cursor moves more than this many lines
-        disable_float_win = false, -- Disable in floating windows
-        enabled_filetypes = nil, -- Enable only for specific file types, e.g., { "lua", "vim" }
-        disabled_filetypes = { "fzf", "dashboard", "alpha", "rgflow", "orgagenda" },
       }
     end,
   },
@@ -417,6 +345,33 @@ return {
     },
     config = function(_, opts)
       require("transparent").setup(opts)
+    end,
+  },
+  -- BEACON
+  {
+    "rainbowhxch/beacon.nvim",
+    event = "LazyFile",
+    cond = vim.g.neovide == nil,
+    opts = function()
+      Highlight.plugin("beaconHiC", {
+        { ["BeaconDefault"] = { bg = { from = "ErrorMsg", attr = "fg", alter = 0.2 } } },
+      })
+
+      return {
+        minimal_jump = 20,
+        ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
+        ignore_filetypes = {
+          "qf",
+          "dap_watches",
+          "dap_scopes",
+          -- "neo-tree",
+          "fzf",
+          "lazy",
+          "NeogitCommitMessage",
+          "NeogitPopup",
+          "NeogitStatus",
+        },
+      }
     end,
   },
 }

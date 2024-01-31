@@ -12,7 +12,8 @@
 #       jika path wallpaper berbeda atau baru,
 #       ganti path WALLI3IMG ini dengan yang baru tersebut
 
-WALLI3IMG="$HOME/moxconf/media_and_tuts/wallOldIndoPejuang"
+# WALLI3IMG="$HOME/moxconf/media_and_tuts/wallOldIndoPejuang"
+WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
 # WALLI3IMG="$HOME/Downloads/wezterm-walli3"
 
 #####################################

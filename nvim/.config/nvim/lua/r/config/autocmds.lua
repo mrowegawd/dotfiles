@@ -94,7 +94,7 @@ Util.cmd.augroup("ReHighlightFolded", {
         {
           Folded = {
             bg = { from = "Normal", attr = "bg", alter = 0.5 },
-            fg = "NONE",
+            fg = { from = "Normal", attr = "bg", alter = 1.6 },
             underline = false,
             bold = true,
           },
@@ -364,19 +364,19 @@ Util.cmd.augroup("CheckOutsideTime", {
 --   end,
 -- })
 
-Util.cmd.augroup("DisableStatusline", {
-  event = { "FocusLost" },
-  pattern = "*",
-  command = function()
-    cmd [[set laststatus=0]]
-  end,
-}, {
-  event = { "BufRead", "FocusGained" },
-  pattern = "*",
-  command = function()
-    cmd [[set laststatus=3]]
-  end,
-})
+-- Util.cmd.augroup("DisableStatusline", {
+--   event = { "FocusLost" },
+--   pattern = "*",
+--   command = function()
+--     cmd [[set laststatus=0]]
+--   end,
+-- }, {
+--   event = { "BufRead", "FocusGained" },
+--   pattern = "*",
+--   command = function()
+--     cmd [[set laststatus=3]]
+--   end,
+-- })
 
 Util.cmd.augroup("UpdateVim", {
   -- Automatically resize windows when host resizes
