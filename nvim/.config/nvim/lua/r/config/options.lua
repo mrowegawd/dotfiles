@@ -145,7 +145,7 @@ opt.fillchars = {
   -- fold = " ",
   --
   vert = "¦", -- "┃",
-  -- verthoriz = "--",
+  horiz = "-",
   foldopen = "", -- '▼'
   foldclose = "", -- '▶'
   foldsep = " ",

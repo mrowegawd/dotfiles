@@ -25,7 +25,7 @@ local general_overrides = function()
     { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
 
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "ErrorMsg", attr = "fg", alter = -0.4 }, bg = "NONE" } },
     { FloatBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "WinSeparator" , attr = "fg", alter = 0.5 } } },
     { WinBar = { bg = { from = "ColorColumn" } , fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn" }, fg = { from = "WinBar", attr = "fg" } } },
