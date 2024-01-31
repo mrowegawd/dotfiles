@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+# Usage example (crontab -e):
+# */40 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_task_doit_now >/dev/null 2>&1
+
+NORG_PATH="$HOME/Dropbox/neorg/orgmode"
+ICON_PATH="$HOME/.config/miscxrdb/icons/todo-list.png"
+
+# find 'inprogress' tasks
+TASK="$("/home/mr00x/.asdf/shims/rg" -i "\*\sinprogres" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* INPROGRESS " '{print $2}')"
+
+[[ -z $TASK ]] && /usr/local/bin/dunstify "No task:" "What are you doing??" && exit 1
+
+/usr/local/bin/dunstify -i "$ICON_PATH" "Do it Now:" "$TASK"
+
+sound_man="$HOME/.config/dunst/smile-ringtone.mp3"
+if [ -f "$sound_man" ]; then
+	/usr/local/bin/mpv "$sound_man" --volume=100 2 >/dev/null
+fi
