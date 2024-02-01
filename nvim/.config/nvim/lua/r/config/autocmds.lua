@@ -7,7 +7,7 @@ Util.cmd.augroup("WrapSpell", {
   event = { "FileType" },
   pattern = { "gitcommit", "markdown", "NeogitCommitMessage", "norg" },
   command = function()
-    vim.opt_local.wrap = true
+    -- vim.opt_local.wrap = true
     vim.opt_local.spell = true
     vim.opt_local.spelllang = { "en_us", "id" }
     vim.opt_local.conceallevel = 2
