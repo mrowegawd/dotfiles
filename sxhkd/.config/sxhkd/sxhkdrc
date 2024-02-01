@@ -25,9 +25,6 @@ super + {p,b}
 super + i
 	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
 
-# window: rotate
-super + R
-        bspc node @/ -R {90,270}
 
 # window: focus next window base on hjkl
 super + {h,l,k,j}
@@ -37,9 +34,17 @@ super + {h,l,k,j}
 super + ctrl + {_,shift + }{h,j,k,l}
         bspc node -{f,s} {west,south,north,east}
 
-# window: move the window when in float mode
-ctrl + shift + {h,j,k,l}
+# window: move the window (float)
+super + {Left,Down,Up,Right}
         xdotool getwindowfocus windowmove --relative %1 {-20 0, 0 +20, 0 -20, +20 0}
+
+# window: rotate the parent of current focused
+super + R
+	      bspc node @parent -R 90
+
+# window: rotate
+# super + R
+#         bspc node @/ -R {90,270}
 
 ########################################
 # WORKSPACE
@@ -48,6 +53,14 @@ ctrl + shift + {h,j,k,l}
 # workspace: focus next/prev workspace
 super + {Tab,shift+Tab}
 	      bspc node -d {next,prev} -f
+
+# focus the next/previous node in the current desktop
+# super + {_,shift + }c
+# 	      bspc node -f {next,prev}.local
+
+# workspace: focus next/prev workspace
+super + {H,L}
+	      bspc desktop -f {prev,next}.local
 
 # workspace: goto -n workspace
 super + {_,shift + }{1-9,0}
@@ -58,19 +71,19 @@ super + {_,shift + }{1-9,0}
 ########################################
 
 # resize: expand vertically
-super + shift + k
+super + shift + Up
 	      bspc node -z top 0 -20; bspc node -z bottom 0 20
 
 # resize: shrink vertically
-super + shift + j
+super + shift + Down
 	      bspc node -z top 0 20; bspc node -z bottom 0 -20
 
 # resize: expand horizontally
-super + shift + h
+super + shift + Left
 	      bspc node -z left 20 0; bspc node -z right -20 0
 
 # resize: shrink horizontally
-super + shift + l
+super + shift + Right
 	      bspc node -z left -20 0; bspc node -z right 20 0
 
 ########################################

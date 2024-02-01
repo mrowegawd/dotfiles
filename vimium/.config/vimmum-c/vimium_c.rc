@@ -121,10 +121,10 @@ map c           LinkHints.activateModeToCopyLinkUrl
 ###############################
 
 # tab: next tab
-map gl          nextTab
+map <a-L>       nextTab
 
 # tab: prev tab
-map gh          previousTab
+map <a-H>       previousTab
 
 # tab: first tab
 map gH          firstTab
@@ -145,10 +145,10 @@ map <c-o>       goBack
 map <c-i>       goForward
 
 # tab: move tab to the left
-map @           moveTabLeft
+map <a-Left>    moveTabLeft
 
 # tab: move tab to the right
-map #           moveTabRight
+map <a-Right>   moveTabRight
 
 # tab: pin tab
 map spp         togglePinTab

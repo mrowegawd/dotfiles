@@ -1,5 +1,7 @@
-local wezterm = require("wezterm")
+local Util = require("utils")
+local Color = require("colors")
 
+local wezterm = require("wezterm")
 local act = wezterm.action
 
 -- Link for checking mapping keys:
@@ -10,16 +12,6 @@ local act = wezterm.action
 
 -- Example wezterm lua configurations:
 -- https://github.com/wez/wezterm/discussions/628
-
-local cmd_call = function(params)
-	local handle = io.popen(params)
-	if handle == nil then
-		return
-	end
-	local result = handle:read("*a")
-	handle:close()
-	return result:gsub("\n", "")
-end
 
 local function font_with_fallback(name, params)
 	local names = { name, "FiraCode Nerd Font" }
@@ -46,7 +38,7 @@ local function get_wallpaper()
 	-- table.insert(wallpapers, wallpapers)
 	-- end
 
-	local wallpapers_glob = cmd_call("cat /tmp/bg-windows | xargs")
+	local wallpapers_glob = Util.cmd_call("cat /tmp/bg-windows | xargs")
 	return {
 		source = { File = { path = get_random_entry(wallpapers_glob) } },
 		height = "Cover",
@@ -119,7 +111,149 @@ local function split_nav(resize_or_move, mods, key, dir)
 	}
 end
 
+-- local function active_pane(tab)
+-- 	for _, item in ipairs(tab:panes_with_info()) do
+-- 		if item.is_active then
+-- 			return item.pane
+-- 		end
+-- 	end
+-- end
+
+local function nav_numbers(key)
+	return {
+		key = key,
+		mods = "ALT",
+		action = wezterm.action_callback(function(window, pane)
+			if is_tmux(pane) then
+				window:perform_action({ SendKey = { key = key, mods = "ALT" } }, pane)
+			else
+				-- number pane wezterm itu dimulai dari 0, makanya di kurangin 1
+				window:perform_action(act.ActivateTab(tonumber(key) - 1), pane)
+			end
+		end),
+	}
+end
+
 -- local mods = wezterm.target_triple:find("windows") and "SHIFT|CTRL" or "SHIFT|SUPER"
+
+-- local function strip_home_name(text)
+-- 	local username = os.getenv("USER")
+-- 	local clean_text = text:gsub("/home/" .. username, "~")
+-- 	return clean_text
+-- end
+
+local scrollback_lines = 5000 -- default is 3500
+
+local function edit_in_new_tab(window, pane, text)
+	if not text then
+		return nil
+	end
+	local path = os.tmpname()
+	local f = io.open(path, "w+")
+	if not f then
+		wezterm.log_error("could not open temp file for writing")
+		return
+	end
+	f:write(text)
+	f:flush()
+	f:close()
+	local args = {
+		"zsh",
+		"-ic",
+		'nvim "$0"; ' .. 'wezterm cli activate-pane --pane-id "$1"',
+		path,
+		tostring(pane:pane_id()),
+	}
+	window:perform_action(act.SpawnCommandInNewTab({ args = args }), pane)
+	wezterm.sleep_ms(1000)
+	os.remove(path)
+end
+
+wezterm.on("trigger-nvim-with-scrollback", function(window, pane)
+	local scrollback = pane:get_lines_as_text(scrollback_lines)
+	edit_in_new_tab(window, pane, scrollback)
+end)
+
+-- wezterm.on("update-right-status", function(window, pane)
+-- 	local date = wezterm.strftime("%Y-%m-%d %H:%M:%S")
+--
+-- 	-- Make it italic and underlined
+-- 	window:set_right_status(wezterm.format({
+-- 		{ Attribute = { Underline = "Single" } },
+-- 		{ Attribute = { Italic = true } },
+-- 		{ Text = "Hello " .. date },
+-- 	}))
+-- end)
+wezterm.on("update-right-status", function(window, pane)
+	local name = window:active_key_table()
+	if name then
+		name = "TABLE: " .. name
+	end
+	window:set_right_status(name or "")
+end)
+
+wezterm.on("format-window-title", function(tab, pane, tabs, panes, config)
+	local zoomed = ""
+	if tab.active_pane.is_zoomed then
+		zoomed = "[Z] "
+	end
+
+	local index = ""
+	if #tabs > 1 then
+		index = string.format("[%d/%d] ", tab.tab_index + 1, #tabs)
+	end
+
+	return zoomed .. index .. tab.active_pane.title
+end)
+
+-- This function returns the suggested title for a tab.
+-- It prefers the title that was set via `tab:set_title()`
+-- or `wezterm cli set-tab-title`, but falls back to the
+-- title of the active pane in that tab.
+local function tab_title(tab_info)
+	local title = tab_info.tab_title
+	-- if the tab title is explicitly set, take that
+	if title and #title > 0 then
+		return title
+	end
+	-- Otherwise, use the title from the active pane
+	-- in that tab
+	return tab_info.active_pane.title
+end
+
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+	if config.use_fancy_tab_bar or not config.enable_tab_bar then
+		return
+	end
+
+	local title = tab_title(tab)
+	if tab.is_active then
+		return {
+			{ Background = { Color = Color.red_alt } },
+			{ Foreground = { Color = Color.bg } },
+			{ Attribute = { Intensity = "Bold" } },
+			{ Text = " " .. title .. " " },
+		}
+	end
+
+	local has_unseen_output = false
+	for _, pane in ipairs(tab.panes) do
+		if pane.has_unseen_output then
+			has_unseen_output = true
+			break
+		end
+	end
+
+	if has_unseen_output then
+		return {
+			{ Background = { Color = Color.white } },
+			{ Foreground = { Color = Color.black_alt } },
+			{ Text = " " .. tab.active_pane.title .. " " },
+		}
+	end
+
+	return title
+end)
 
 return {
 	-- [1.0] alpha channel value with floating point numbers in the range 0.0
@@ -130,9 +264,20 @@ return {
 	-- window_decorations = "RESIZE",
 	window_decorations = "NONE",
 	exit_behavior = "Close",
-	hide_tab_bar_if_only_one_tab = true,
 	cursor_blink_rate = 400,
-	adjust_window_size_when_changing_font_size = false,
+	warn_about_missing_glyphs = false,
+
+	-- ├┤ BAR ├───────────────────────────────────────────────────────────┤
+	-- tab_bar_at_bottom = true,
+	show_new_tab_button_in_tab_bar = true,
+	show_tab_index_in_tab_bar = false,
+	hide_tab_bar_if_only_one_tab = true,
+	show_tabs_in_tab_bar = true,
+	switch_to_last_active_tab_when_closing_tab = false,
+	tab_and_split_indices_are_zero_based = false,
+	tab_bar_at_bottom = false,
+	tab_max_width = 25,
+	use_fancy_tab_bar = false, -- disable ini membuat bar jadi polos
 
 	window_padding = {
 		left = 0,
@@ -147,26 +292,54 @@ return {
 
 	-- ├┤ FRAME ├───────────────────────────────────────────────────────────┤
 	window_frame = {
-		active_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
-		inactive_titlebar_bg = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
+		active_titlebar_bg = Color.bg,
+		inactive_titlebar_bg = Color.bg,
 	},
+
+	-- ├┤ COLORS ├────────────────────────────────────────────────────────┤
 	background = {
 		get_wallpaper(),
 	},
-	-- colors = {
-	-- 	foreground = cmd_call("xrdb -query | grep -i foreground| cut -d':' -f2 | xargs"),
-	-- 	background = cmd_call("xrdb -query | grep -i background| cut -d':' -f2 | xargs"),
-	-- 	tab_bar = {
-	-- 		active_tab = {
-	-- 			bg_color = "red",
-	-- 			fg_color = "black",
-	-- 		},
-	-- 	},
-	-- },
+	colors = {
+		tab_bar = {
+			background = Color.bg,
+		},
+	},
+
+	-- ├┤ RULES ├─────────────────────────────────────────────────────────┤
+	-- TODO: doesnt work!, Ga tau cara paakai `hyperlink_rules`
+	hyperlink_rules = {
+		-- Matches: a URL in parens: (URL)
+		{
+			regex = "\\((\\w+://\\S+)\\)",
+			format = "$0",
+			highlight = 1,
+		},
+		-- Matches: a URL in brackets: [URL]
+		{
+			regex = "\\[(\\w+://\\S+)\\]",
+			format = "$0",
+			highlight = 1,
+		},
+		-- Matches: a URL in curly braces: {URL}
+		{
+			regex = "\\{(\\w+://\\S+)\\}",
+			format = "$0",
+			highlight = 1,
+		},
+		-- Matches: a URL in angle brackets: <URL>
+		{
+			regex = "<(\\w+://\\S+)>",
+			format = "$0",
+			-- highlight = 1,
+		},
+	},
 
 	-- ├┤ FONTS ├───────────────────────────────────────────────────────────┤
-	font_size = 11.5,
+	font_size = 11,
 	line_height = 1,
+	font_shaper = "Harfbuzz",
+	adjust_window_size_when_changing_font_size = false,
 	font_rules = {
 		{
 			italic = false,
@@ -192,7 +365,7 @@ return {
 
 	-- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
 	disable_default_key_bindings = true,
-	disable_default_mouse_bindings = false,
+	-- disable_default_mouse_bindings = false,
 
 	leader = { key = "`", mods = "CTRL" },
 	keys = {
@@ -225,6 +398,13 @@ return {
 		split_nav("resize", "ALT", "H", "Left"),
 		split_nav("resize", "ALT", "K", "Up"),
 		split_nav("resize", "ALT", "J", "Down"),
+
+		nav_numbers("1"), -- first window
+		nav_numbers("2"),
+		nav_numbers("3"),
+		nav_numbers("4"),
+		nav_numbers("5"),
+		nav_numbers("6"),
 
 		-- ╭─────╮
 		-- │ TAB │
@@ -322,7 +502,9 @@ return {
 					if not is_zoomed then
 						window:perform_action(act.SplitVertical({ domain = "CurrentPaneDomain" }), pane)
 					else
-						window:perform_action({ SetPaneZoomState = is_zoomed }, pane)
+						-- window:toast_notification("wezterm", "hello", nil, 4000)
+						window:perform_action({ SetPaneZoomState = false }, pane)
+						window:perform_action(act.SplitVertical({ domain = "CurrentPaneDomain" }), pane)
 					end
 
 					-- window:perform_action(
@@ -373,6 +555,31 @@ return {
 		{ key = "Home", mods = "CTRL", action = "ResetFontSize" },
 
 		{ mods = "ALT", key = "P", action = act.ActivateCommandPalette },
+		{ mods = "ALT", key = "m", action = act.TogglePaneZoomState },
+
+		{ -- capture pane
+			mods = "ALT",
+			key = "c",
+			action = wezterm.action_callback(function(window, pane)
+				if is_tmux(pane) then
+					window:perform_action({ SendKey = { key = "c", mods = "ALT" } }, pane)
+				else
+					window:perform_action(act.EmitEvent("trigger-nvim-with-scrollback"), pane)
+				end
+			end),
+		},
+
+		{ -- open pane-tree
+			mods = "ALT",
+			key = "w",
+			action = wezterm.action_callback(function(window, pane)
+				if is_tmux(pane) then
+					window:perform_action({ SendKey = { key = "w", mods = "ALT" } }, pane)
+				else
+					window:perform_action(act.ShowTabNavigator, pane)
+				end
+			end),
+		},
 
 		-- vim - command prompt
 		-- {
