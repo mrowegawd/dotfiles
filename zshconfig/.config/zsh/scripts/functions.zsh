@@ -37,9 +37,17 @@ build-install(){
 
   # TODO: install gifski https://github.com/sindresorhus/Gifski
   # cargo install gifski
-  
+
   # TODO: install lazydocker https://github.com/jesseduffield/lazydocker#
-  # go install github.com/jesseduffield/lazydocker@latest 
+  # go install github.com/jesseduffield/lazydocker@latest
+
+  # TODO: install pomodoro, didapat dari link youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
+  # https://github.com/caarlos0/timer
+  # cara install `timer`:
+  # echo 'deb [trusted=yes] https://repo.caarlos0.dev/apt/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
+  # sudo apt update
+  # sudo apt install timer
+
 }
 
 build-react() {
@@ -154,7 +162,7 @@ show_alias() {
   # check jika first command diawali dengan string `doc_ ..`
   local doc_con="doc_con_"
   local doc_im="doc_im_"
- 
+
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)
   elif [[ $myargs[-1] == "git" ]]; then

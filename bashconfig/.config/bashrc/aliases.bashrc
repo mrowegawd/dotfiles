@@ -28,6 +28,13 @@ alias l="eza -l -snew"
 alias ll="eza --long --all --git --color=always --group-directories-first --icons"
 alias lt="eza --icons --all -I '*.git' --color=always -T"
 
+# pomodoro
+alias wo_60="timer 60m && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+alias wo_30="timer 30m && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+alias wo_30_fullscreen="timer 30m -f && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+alias wo_60_fullscreen="timer 60m -f && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+alias wo_rest="timer 10m && dunstify \"Pomodoro:\" \"Break is over! Get back to work\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
+
 # if command -v eza >/dev/null; then
 # 	alias ll="eza --long --all --git --color=always --group-directories-first --icons"
 # 	alias lt="eza --icons --all --color=always -T"
