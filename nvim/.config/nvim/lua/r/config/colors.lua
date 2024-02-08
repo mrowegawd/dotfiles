@@ -25,7 +25,7 @@ local general_overrides = function()
     { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
 
     -- { MarkSignNumHL = { inherit = "SpecialKey" } },
-    { WinSeparator = { fg = { from = "ErrorMsg", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "@constructor", attr = "fg", alter = -0.5 }, bg = "NONE" } },
     { FloatBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "WinSeparator" , attr = "fg", alter = 0.5 } } },
     { WinBar = { bg = { from = "ColorColumn" } , fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn" }, fg = { from = "WinBar", attr = "fg" } } },
@@ -83,13 +83,9 @@ local general_overrides = function()
     -- { diffNoEOL = { link = 'WarningMsg' } },
     -- { diffOnly = { link = 'WarningMsg' } },
 
-    -- { DiffAdd = { bg = { from = "NeogitDiffAdd" , attr = "bg" } } },
-    -- { DiffChange = { bg = { from = "NeogitDiffChangeAdded", attr = "bg" } } },
-    -- { DiffDelete = { bg = { from = "NeogitDiffChangeDeleted", attr = "bg" } } },
-
     { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = 0.5 } } },
-    { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsChange" , attr = "fg", alter = 0.5 } } },
-    { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsDelete" , attr = "fg", alter = 0.5 } } },
+    { diffChange = { bg = { from = "WarningMsg" , attr = "fg", alter = -0.3 }, fg = { from = "WarningMsg"  } } },
+    { diffDelete = { bg = { from = "ErrorMsg" , attr = "fg", alter = -0.3 }, fg = { from = "ErrorMsg" } } },
     { diffText = { bg = { from = "diffText" , attr = "bg", alter = -0.3 }, fg = { from = "diffText" , attr = "bg", alter = 0.5 } } },
 
     { NeogitDiffAdd =  { link = "diffAdd"} } ,
@@ -151,7 +147,12 @@ local general_overrides = function()
     { MyStatusline = { fg = { from = "Normal", alter = 0.5 } } },
     { Mystatusline_fg = { fg = { from = "LineNr", alter = 0.1 } } },
     { Mystatusline_bg = { bg = { from = "Normal", alter = -0.1 } } },
-    { bufferline_unselected = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+
+    { bufferline_unselected = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+    { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
+    { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+    { bufferline_fill_fg = { bg = { from = "Normal", attr = "fg", alter = -0.1 } } },
+
     { Mygreen_fg = { fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
     { MyStatusLine_red_fg = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
     { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
@@ -337,14 +338,16 @@ local function colorscheme_overrides()
       { NeogitDiffAddHighlight = { link = "diffAdd" } },
       { NeogitDiffDelete =  { link = "diffDelete" } } ,
       { NeogitDiffDeleteHighlight =  { link = "diffDelete" } } ,
+      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+
 
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
       { CodeBlock1 = { bg = { from = "Normal", alter = -0.25 } } },
     },
     ["kanagawa"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "GitGutterAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "GitGutterChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "GitGutterDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
     },
     ["terafox"] = {},
     ["oxocarbon"] = {

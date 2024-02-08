@@ -214,10 +214,37 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit" },
+    cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit", "OverDispatch" },
     dependencies = {
       "tpope/vim-rhubarb",
     },
+    keys = {
+      {
+        "<Leader>gN",
+        "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
+        desc = "Git(fugitive): open",
+      },
+      -- { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git(fugitive): commit" },
+      {
+        "<Leader>gc",
+        function()
+          -- use vim.ui.input to write commit message and then commit with the
+          -- message.
+          vim.ui.input({
+            prompt = "Commit message: ",
+          }, function(input)
+            -- if input is trimmed empty
+            if vim.trim(input or "") == "" then
+              vim.notify("Empty commit message", vim.log.levels.ERROR)
+              return
+            end
+            vim.cmd(string.format('OverDispatch! Git commit -m "%s"', input))
+          end)
+        end,
+        desc = "Git(fugitive) commit",
+      },
+    },
+    config = function() end,
   },
   -- DIFFVIEW
   {
@@ -370,8 +397,17 @@ return {
   -- NEOGIT
   {
     "NeogitOrg/neogit",
-    event = "LazyFile",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    enabled = false,
+    -- event = "LazyFile",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim", -- optional - Diff integration
+
+      -- Only one of these is needed, not both.
+      "nvim-telescope/telescope.nvim", -- optional
+      "ibhagwan/fzf-lua", -- optional
+    },
+    cmd = "Neogit",
     --stylua: ignore
     keys = {
       { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit" },

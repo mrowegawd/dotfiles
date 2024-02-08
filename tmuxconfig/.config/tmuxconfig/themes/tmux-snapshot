@@ -3,14 +3,14 @@
 
 COL_WHITE="#626262"
 
-TMUX_PANE_ACTIVE_BG="#1f1f1f"
-TMUX_PANE_BG="#1f1f1f"
+TMUX_PANE_ACTIVE_BG="#1b1b29"
+TMUX_PANE_BG="#1b1b29"
 
-TMUX_FG="#b7b7b7"
-TMUX_BORDER_FG="#282828"
+TMUX_FG="#b8c0db"
+TMUX_BORDER_FG="#3a6376"
 
-BG_STATUSLINE="#24283b"
-BG_ACTIVE_STATUSLINE="#c678dd"
+BG_STATUSLINE="#1e1e2e"
+BG_ACTIVE_STATUSLINE="#F5C2E7"
 
 left_separator=''
 left_separator_black=''
@@ -29,7 +29,7 @@ set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[und
 #  |                      STATUS THEMES                       |
 #  +----------------------------------------------------------+
 set -g status-fg $TMUX_FG
-set -g status-bg $TMUX_PANE_BG
+set -g status-bg $BG_STATUSLINE
 set -g status on
 set -g status-interval 5
 
@@ -46,7 +46,6 @@ set-option -g mode-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
 # set -g status-left-length 40
 # set -g status-style bg="colour238",fg="colour255"
 set -g status-left "#[fg=$TMUX_FG,bold] ❐ #S 👨#(whoami) "
-set -g window-status-format "#[fg=$TMUX_FG] #W"
 
 set -g window-status-format " #[fg=$TMUX_FG,bold]#I:#{b:pane_current_path}"
 # set -g window-status-current-format "#[fg=red,bold] #I:#{b:pane_current_path}#[bg=$TMUX_FG,bold]#{?window_zoomed_flag, ZOOM #[fg=$COL_ACTIVE_BORDER_SEPERATOR](#(tmux list-panes | wc -l)) ,}"

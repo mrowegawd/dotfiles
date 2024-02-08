@@ -6,23 +6,25 @@ local Highlight = require "r.config.highlights"
 
 local M = {}
 
-local col_bg_StatusLine = Highlight.get("ColorColumn", "bg")
-local col_bg_ErrorMsg = Highlight.get("ErrorMsg", "fg")
-local col_normal_statusLine = Highlight.get("StatusLine", "bg")
+local col_errormsg_bg = Highlight.get("ErrorMsg", "fg")
+local col_statusline_bg = Highlight.get("StatusLine", "bg")
+local col_statusline_fg = Highlight.get("StatusLine", "fg")
+local col_normal_fg = Highlight.get("Normal", "fg")
 
 local colors = {
-  base_bg = col_normal_statusLine,
-  base_fg = Highlight.tint(col_bg_StatusLine, 3),
+  base_bg = col_statusline_bg,
+  base_fg = Highlight.tint(col_statusline_fg, 0.8),
 
-  branch_fg = Highlight.tint(col_bg_StatusLine, 4),
-  mode_bg = Highlight.tint(col_bg_StatusLine, 1),
-  filename_fg = Highlight.tint(col_bg_StatusLine, 6),
-  modified_fg = Highlight.tint(col_bg_ErrorMsg, 0.3),
+  branch_fg = Highlight.tint(col_normal_fg, 4),
 
-  coldisorent = Highlight.tint(col_bg_StatusLine, 0.5),
+  mode_bg = Highlight.tint(col_statusline_bg, 1),
+  filename_fg = Highlight.tint(col_statusline_bg, 6),
+  modified_fg = Highlight.tint(col_errormsg_bg, 0.3),
 
-  mod_norm = Highlight.get("@field", "fg"),
-  mod_ins = Highlight.tint(col_bg_ErrorMsg, 0),
+  coldisorent = Highlight.tint(col_statusline_bg, 0.5),
+
+  mod_norm = Highlight.get("Boolean", "fg"),
+  mod_ins = Highlight.tint(col_errormsg_bg, 0),
   mod_vis = Highlight.get("visual", "bg"),
   mod_term = Highlight.get("Boolean", "fg"),
 
@@ -155,18 +157,6 @@ M.Mode = {
   --   end,
   -- },
 }
-M.Branch = {
-  condition = function()
-    return git_branch() ~= nil
-  end,
-
-  {
-    provider = function()
-      return string.format("  %s", git_branch())
-    end,
-    hl = { fg = colors.base_fg, bg = colors.base_bg, bold = true },
-  },
-}
 M.Git = {
   condition = Conditions.is_git_repo,
   provider = " ",
@@ -182,7 +172,7 @@ M.Git = {
     provider = function(self)
       return "  " .. self.status_dict.head .. " "
     end,
-    hl = { bold = true },
+    hl = { fg = colors.branch_fg, bg = colors.base_bg, bold = true },
   },
   {
     provider = function(self)
@@ -263,6 +253,7 @@ M.FilePath = {
       end
       return filename
     end,
+    hl = { fg = colors.base_fg, bg = colors.base_bg },
   },
 }
 M.FileFlags = {
@@ -271,12 +262,14 @@ M.FileFlags = {
       return vim.bo.modified
     end,
     provider = " [+]",
+    hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
   },
   {
     condition = function()
       return not vim.bo.modifiable or vim.bo.readonly
     end,
     provider = " ",
+    hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
   },
 }
 M.LSPActive = {
@@ -324,6 +317,7 @@ M.LSPActive = {
         return " [" .. table.concat(self.names, " ") .. "] "
       end
     end,
+    hl = { fg = colors.base_fg, bg = colors.base_bg },
   },
   {
     condition = Conditions.lsp_attached,
@@ -354,10 +348,10 @@ M.SearchCount = {
   end,
 
   provider = function(self)
-    if vim.tbl_isempty(self.result) then
+    if self and self.result and vim.tbl_isempty(self.result) then
       return ""
     end
-    if self.result.current > 0 then
+    if self and self.result and self.result.current > 0 then
       return " "
     end
   end,

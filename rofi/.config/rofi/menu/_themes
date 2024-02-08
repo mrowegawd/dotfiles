@@ -84,31 +84,30 @@ set_dunst() {
 	"$HOME/.config/dunst/rundust.sh" >/dev/null
 }
 set_tmux() {
-	# TMUX_PATH="$DOTFILES_PATH/rofi/.config/rofi"
 	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot"
 
-	if [ "$TERMINAL" == "wezterm" ]; then
-		if [ -f "$_PATH_TMUX_THEMES" ]; then
+	if [ -f "$_PATH_TMUX_THEMES" ]; then
+		sleep 1
+		sed -i -e "s/^WINDOW_STYLE_BG=.*$/WINDOW_STYLE_BG=\"$GET_BACKGROUND_ACTIVE_WINDOW\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BG_ACTIVE_STATUSLINE=.*$/BG_ACTIVE_STATUSLINE=\"$GET_MAGENTA\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BG_STATUSLINE=.*$/BG_STATUSLINE=\"$GET_BACKGROUND_VIM\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^COL_BORDER_SEPERATOR=.*$/COL_BORDER_SEPERATOR=\"$GET_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$GET_TMUX_FG\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^TMUX_BORDER_FG=.*$/TMUX_BORDER_FG=\"$GET_TMUX_BORDER_FG\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^TMUX_PANE_ACTIVE_BG=.*$/TMUX_PANE_ACTIVE_BG=\"$GET_TMUX_PANE_ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^TMUX_PANE_BG=.*$/TMUX_PANE_BG=\"$GET_TMUX_PANE_BG\"/g" "$_PATH_TMUX_THEMES"
+
+		sed -i -e "s/^setw -g pane-active-border-style.*$/setw -g pane-active-border-style fg=\$TMUX_BORDER_FG,bg=\$TMUX_PANE_ACTIVE_BG/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^setw -g pane-border-style.*$/setw -g pane-border-style fg=\$TMUX_BORDER_FG,bg=\$TMUX_PANE_ACTIVE_BG/g" "$_PATH_TMUX_THEMES"
+
+		if [ "$TERMINAL" == "wezterm" ]; then
 			sleep 1
 			sed -i -e "s/^setw -g pane-active-border-style.*$/setw -g pane-active-border-style fg=\$TMUX_BORDER_FG/g" "$_PATH_TMUX_THEMES"
 			sed -i -e "s/^setw -g pane-border-style.*$/setw -g pane-border-style fg=\$TMUX_BORDER_FG/g" "$_PATH_TMUX_THEMES"
 		fi
-	else
-		if [ -f "$_PATH_TMUX_THEMES" ]; then
-			sleep 1
-			sed -i -e "s/^WINDOW_STYLE_BG=.*$/WINDOW_STYLE_BG=\"$GET_BACKGROUND_ACTIVE_WINDOW\"/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^BG_ACTIVE_STATUSLINE=.*$/BG_ACTIVE_STATUSLINE=\"$GET_MAGENTA\"/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^COL_BORDER_SEPERATOR=.*$/COL_BORDER_SEPERATOR=\"$GET_FOREGROUND_WINSEPARATOR\"/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$GET_TMUX_FG\"/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^TMUX_BORDER_FG=.*$/TMUX_BORDER_FG=\"$GET_TMUX_BORDER_FG\"/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^TMUX_PANE_ACTIVE_BG=.*$/TMUX_PANE_ACTIVE_BG=\"$GET_TMUX_PANE_ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^TMUX_PANE_BG=.*$/TMUX_PANE_BG=\"$GET_TMUX_PANE_BG\"/g" "$_PATH_TMUX_THEMES"
 
-			sed -i -e "s/^setw -g pane-active-border-style.*$/setw -g pane-active-border-style fg=\$TMUX_BORDER_FG,bg=\$TMUX_PANE_ACTIVE_BG/g" "$_PATH_TMUX_THEMES"
-			sed -i -e "s/^setw -g pane-border-style.*$/setw -g pane-border-style fg=\$TMUX_BORDER_FG,bg=\$TMUX_PANE_ACTIVE_BG/g" "$_PATH_TMUX_THEMES"
-		else
-			dunstify "$_PATH_TMUX_THEMES not found"
-		fi
+	else
+		dunstify "$_PATH_TMUX_THEMES not found"
 	fi
 
 }

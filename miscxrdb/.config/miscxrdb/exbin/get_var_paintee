@@ -12,6 +12,7 @@ getxrdb_font() {
 	GET_FONT="$(grep -i font <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
 	GET_FONTSIZE="$(grep -i fontsize <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
 	GET_BACKGROUND="$(grep -i background <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_BACKGROUND_VIM="$(grep -i background_vim <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_BACKGROUND_ACTIVE_WINDOW="$(grep -i background_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_BACKGROUND_NON_ACTIVE_WINDOW="$(grep -i background_non_active_window <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_BACKGROUND_NON_ACTIVE_STATUSLINE="$(grep -i background_non_active_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"

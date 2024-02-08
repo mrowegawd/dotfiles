@@ -268,6 +268,8 @@ function M.change_colors()
   normal_fg: %s
   normal_bg: %s
 
+  norma_bg_vim: %s
+
   fzf_selection_fg: %s
   fzf_selection_bg: %s
   fzf_selection_match_fg: %s
@@ -284,11 +286,13 @@ function M.change_colors()
   tmux_fg: %s
   tmux_border_fg: %s
   ]],
-    Highlight.tint(Highlight.get(normal, "fg"), -0.05),
+    Highlight.tint(Highlight.get(normal, "fg"), -0.25),
     Highlight.get(normalfloat, "bg"),
 
+    Highlight.get(normal, "bg"),
+
     -- fzf selection
-    Highlight.tint(Highlight.get(normal, "fg"), -0.05),
+    Highlight.tint(Highlight.get(normal, "fg"), 0.5),
     Highlight.get(pmenusel, "bg"),
     Highlight.get(cmpmatchabbr, "fg"),
 

@@ -12,6 +12,11 @@ local autocmd_keys = {
   "once",
   "nested",
 }
+local function foreach(callback, list)
+  for k, v in pairs(list) do
+    callback(v, k)
+  end
+end
 
 local function fold(callback, list, accum)
   accum = accum or {}
@@ -60,6 +65,19 @@ local function augroup(name, ...)
   end
   return id
 end
+local function pcall(msg, func, ...)
+  local args = { ... }
+  if type(msg) == "function" then
+    local arg = func
+    args, func, msg = { arg, unpack(args) }, msg, nil
+  end
+  return xpcall(func, function(err)
+    msg = debug.traceback(msg and fmt("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
+    vim.schedule(function()
+      vim.notify(msg, L.ERROR, { title = "ERROR" })
+    end)
+  end, unpack(args))
+end
 
 local attrs = {
   fg = true,
@@ -80,12 +98,14 @@ local attrs = {
   link = true,
   default = true,
 }
-
-local err_warn = vim.schedule_wrap(function(group, attribute)
-  notify(fmt("failed to get highlight %s for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
-    title = fmt("Highlight - get(%s)", group),
-  }) -- stylua: ignore
-end)
+local function get_hl_as_hex(opts, ns)
+  ns, opts = ns or 0, opts or {}
+  opts.link = opts.link ~= nil and opts.link or false
+  local hl = api.nvim_get_hl(ns, opts)
+  hl.fg = hl.fg and ("#%06x"):format(hl.fg)
+  hl.bg = hl.bg and ("#%06x"):format(hl.bg)
+  return hl
+end
 
 --- Change the brightness of a color, negative numbers darken and positive ones brighten
 ---see:
@@ -106,14 +126,11 @@ function M.tint(color, percent)
   return fmt("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
 
-local function get_hl_as_hex(opts, ns)
-  ns, opts = ns or 0, opts or {}
-  opts.link = opts.link ~= nil and opts.link or false
-  local hl = api.nvim_get_hl(ns, opts)
-  hl.fg = hl.fg and ("#%06x"):format(hl.fg)
-  hl.bg = hl.bg and ("#%06x"):format(hl.bg)
-  return hl
-end
+local err_warn = vim.schedule_wrap(function(group, attribute)
+  notify(fmt("failed to get highlight %s for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
+    title = fmt("Highlight - get(%s)", group),
+  }) -- stylua: ignore
+end)
 
 ---Get the value a highlight group whilst handling errors, fallbacks as well as returning a gui value
 ---If no attribute is specified return the entire highlight table
@@ -157,20 +174,6 @@ local function resolve_from_attribute(hl, attr)
   return colour
 end
 
-local function pcall(msg, func, ...)
-  local args = { ... }
-  if type(msg) == "function" then
-    local arg = func
-    args, func, msg = { arg, unpack(args) }, msg, nil
-  end
-  return xpcall(func, function(err)
-    msg = debug.traceback(msg and fmt("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
-    vim.schedule(function()
-      vim.notify(msg, L.ERROR, { title = "ERROR" })
-    end)
-  end, unpack(args))
-end
-
 --- Sets a neovim highlight with some syntactic sugar. It takes a highlight table and converts
 --- any highlights specified as `GroupName = {fg = { from = 'group'}}` into the underlying colour
 --- by querying the highlight property of the from group so it can be used when specifying highlights
@@ -198,12 +201,6 @@ function M.set(ns, name, opts)
   end
 
   pcall(fmt('setting highlight "%s"', name), api.nvim_set_hl, ns, name, hl)
-end
-
-local function foreach(callback, list)
-  for k, v in pairs(list) do
-    callback(v, k)
-  end
 end
 
 ---Apply a list of highlights
@@ -247,16 +244,17 @@ function M.plugin(name, opts)
       return
     end
   end
-  M.all(opts)
 
-  -- capitalise the name for autocommand convention sake
+  vim.schedule(function()
+    M.all(opts)
+  end)
   augroup(fmt("%sHighlightOverrides", name:gsub("^%l", string.upper)), {
     event = "ColorScheme",
     command = function()
       -- Defer resetting these highlights to ensure they apply after other overrides
-      vim.defer_fn(function()
+      vim.schedule(function()
         M.all(opts)
-      end, 1)
+      end)
     end,
   })
 end

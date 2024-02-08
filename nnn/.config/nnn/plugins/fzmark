@@ -1,0 +1,56 @@
+#!/usr/bin/env sh
+
+# IFS="$(printf '\n\r')"
+
+# shellcheck disable=SC1090,SC1091
+. "$(dirname "$0")"/.nnn-plugin-helper
+
+cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+
+. "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+# fpath="$1"
+# pane_id=$(wezterm cli get-pane-direction right)
+# if [ -z "${pane_id}" ]; then
+# 	pane_id=$(wezterm cli split-pane --right --percent 80)
+# fi
+
+if ! type fzf >/dev/null 2>&1; then
+	printf "fzf missing"
+	read -r _
+	exit 1
+fi
+
+if [ ! -f "$cwd" ]; then
+	printf "[warn] path not found: %s\n" "$cwd"
+	exit 1
+else
+
+	pane_id_right=$(wezterm cli get-pane-direction right)
+	wezterm cli split-pane --bottom --move-pane-id "$pane_id_right"
+	wezterm cli activate-pane-direction Up
+
+	select=$(cat "$cwd" | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+		--preview-window right:50%:hidden \
+		--prompt "Jump to> ")
+
+	if [ -n "$select" ]; then
+		# we select directory not a file
+		if [ ! -f "$select" ]; then
+			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85
+			wezterm cli activate-pane-direction Left
+
+			nnn "$select"
+
+		else
+			dunstify "[warn] this not folder??"
+			exit 1
+		fi
+
+		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85
+		wezterm cli activate-pane-direction Left
+
+	fi
+	exit 1
+
+fi
