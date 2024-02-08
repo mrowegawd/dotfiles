@@ -10,12 +10,11 @@ function M.get()
     return M._keys
   end
 
-  -- stylua: ignore
   M._keys = {
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "K", "<CMD>Lspsaga hover_doc ++silent<CR>", desc = "LSP(lspsaga): hover", nowait = true  },
+    { "K", "<CMD>Lspsaga hover_doc ++silent<CR>", desc = "LSP(lspsaga): hover", nowait = true },
     { "<Leader>K", "<CMD>Lspsaga hover_doc ++keep<CR>", desc = "LSP(lspsaga): hover (keep the window)", nowait = true },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
@@ -45,54 +44,53 @@ function M.get()
     --  +----------------------------------------------------------+
     --  Toggle
     --  +----------------------------------------------------------+
-    { "gt", function ()
-      local function check_current_ft(fts)
-        local ft = vim.bo[0].filetype
-        if vim.tbl_contains(fts, ft) then
-          return true
+    {
+      "gt",
+      function()
+        local function check_current_ft(fts)
+          local ft = vim.bo[0].filetype
+          if vim.tbl_contains(fts, ft) then
+            return true
+          end
+          return false
         end
-        return false
-      end
 
-      local ft_ts = {"typescriptreact", "typescript"}
+        local ft_ts = { "typescriptreact", "typescript" }
 
-      local newCmds = {}
-      if check_current_ft(ft_ts) then
-        table.insert(newCmds, {
-          run_TSC = function ()
-            vim.cmd [[TSC]]
-          end,
-          run_organize_imports = function ()
-            vim.cmd [[TSToolsOrganizeImports]]
-          end,
-          run_sort_imports = function ()
-            vim.cmd [[TSToolsSortImports]]
-          end,
-          run_remove_unused_imports = function ()
-            vim.cmd [[TSToolsRemoveUnusedImports]]
-          end,
-          run_tstool_fixall = function ()
-            vim.cmd [[TSToolsFixAll]]
-          end,
-          run_missing_imports = function ()
-            vim.cmd [[TSToolsAddMissingImports]]
-          end
-        })
-      elseif check_current_ft({"go"}) then
-        table.insert(newCmds, {
-          run_gogenerate = function ()
-            vim.cmd [[GoGenerate %]]
-          end,
-          run_gomod_tidy = function ()
-            vim.cmd [[GoMod tidy]]
-          end
+        local newCmds = {}
+        if check_current_ft(ft_ts) then
+          table.insert(newCmds, {
+            run_TSC = function()
+              vim.cmd [[TSC]]
+            end,
+            run_organize_imports = function()
+              vim.cmd [[TSToolsOrganizeImports]]
+            end,
+            run_sort_imports = function()
+              vim.cmd [[TSToolsSortImports]]
+            end,
+            run_remove_unused_imports = function()
+              vim.cmd [[TSToolsRemoveUnusedImports]]
+            end,
+            run_tstool_fixall = function()
+              vim.cmd [[TSToolsFixAll]]
+            end,
+            run_missing_imports = function()
+              vim.cmd [[TSToolsAddMissingImports]]
+            end,
+          })
+        elseif check_current_ft { "go" } then
+          table.insert(newCmds, {
+            run_gogenerate = function()
+              vim.cmd [[GoGenerate %]]
+            end,
+            run_gomod_tidy = function()
+              vim.cmd [[GoMod tidy]]
+            end,
+          })
+        end
 
-        })
-
-      end
-
-      local defaultCmds = vim.tbl_deep_extend("force",
-        {
+        local defaultCmds = vim.tbl_deep_extend("force", {
           toggle_diagnostics = function()
             Util.toggle.diagnostics()
           end,
@@ -102,7 +100,7 @@ function M.get()
           toggle_semantic_tokens = function()
             Util.toggle.semantic_tokens()
           end,
-          toggle_inlay_hint= function()
+          toggle_inlay_hint = function()
             if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
               Util.toggle.inlay_hints()
             else
@@ -123,31 +121,60 @@ function M.get()
           end,
           run_format = function()
             vim.cmd [[LazyFormat]]
-          end}, unpack(newCmds) or {})
+          end,
+        }, unpack(newCmds) or {})
 
-      local col, row = Util.fzflua.rectangle_win_pojokan()
-      Util.fzflua.send_cmds ( defaultCmds, { winopts = { title = require("r.config").icons.misc.smiley .. "LSP", row = row, col = col } } )
-    end, desc = "LSP: commands of lsp" },
+        local col, row = Util.fzflua.rectangle_win_pojokan()
+        Util.fzflua.send_cmds(
+          defaultCmds,
+          { winopts = { title = require("r.config").icons.misc.smiley .. "LSP", row = row, col = col } }
+        )
+      end,
+      desc = "LSP: commands of lsp",
+    },
 
     --  +----------------------------------------------------------+
     --  Diagnostics
     --  +----------------------------------------------------------+
-    { "dn", function() diagnostic.goto_next { float = false } end, desc = "LSP(diagnostic): next item" },
-    { "dp", function() diagnostic.goto_prev { float = false } end, desc = "LSP(diagnostic): prev item" },
-    { "dP", function() vim.diagnostic.open_float({ scope = "line", border = "rounded", focusable = true }) end, desc = "LSP(diagnostic): preview" },
-    { "dq",
+    {
+      "dn",
+      function()
+        diagnostic.goto_next { float = false }
+      end,
+      desc = "LSP(diagnostic): next item",
+    },
+    {
+      "dp",
+      function()
+        diagnostic.goto_prev { float = false }
+      end,
+      desc = "LSP(diagnostic): prev item",
+    },
+    {
+      "dP",
+      function()
+        vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
+      end,
+      desc = "LSP(diagnostic): preview",
+    },
+    {
+      "dq",
       function()
         if #vim.diagnostic.get() == 0 then
-          return Util.info("Document its clean", { title= "Diagnostics" } )
+          return Util.info("Document its clean", { title = "Diagnostics" })
         end
-        vim.cmd "Trouble document_diagnostics"
+
+        if Util.has "trouble" then
+          vim.cmd "Trouble document_diagnostics"
+        end
       end,
       desc = "LSP(diagnostic): sending to qf",
     },
-    { "dQ",
+    {
+      "dQ",
       function()
         if #vim.diagnostic.get() == 0 then
-          return Util.info("Document its clean", { title= "Diagnostics" } )
+          return Util.info("Document its clean", { title = "Diagnostics" })
         end
         vim.cmd "Trouble workspace_diagnostics"
       end,
