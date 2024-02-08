@@ -568,7 +568,7 @@ bindkey '^e'        end-of-line
 # Shortcut bind to edit line text
 autoload -U edit-command-line
 zle -N edit-command-line
-bindkey -M viins '^[e' edit-command-line    # alt-e
+bindkey -M viins '^[q' edit-command-line    # alt-q
 bindkey -M viins 'jk' vi-cmd-mode           # 'jk' to <esc>
 bindkey -M viins 'kj' vi-cmd-mode           # 'jk' to <esc>
 
