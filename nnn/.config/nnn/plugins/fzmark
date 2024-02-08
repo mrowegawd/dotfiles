@@ -27,7 +27,7 @@ if [ ! -f "$cwd" ]; then
 else
 
 	pane_id_right=$(wezterm cli get-pane-direction right)
-	wezterm cli split-pane --bottom --move-pane-id "$pane_id_right"
+	wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
 	wezterm cli activate-pane-direction Up
 
 	select=$(cat "$cwd" | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
@@ -37,17 +37,30 @@ else
 	if [ -n "$select" ]; then
 		# we select directory not a file
 		if [ ! -f "$select" ]; then
-			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85
+			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 			wezterm cli activate-pane-direction Left
 
+			# # Block nesting of nnn in subshells
+			# if [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+			# 	dunstify "nnn is already running"
+			# 	return
+			# fi
+			#
+			# export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
 			nnn "$select"
+
+			# if [ -f "$NNN_TMPFILE" ]; then
+			# 	. "$NNN_TMPFILE"
+			# 	rm -f "$NNN_TMPFILE" >/dev/null
+			# fi
 
 		else
 			dunstify "[warn] this not folder??"
 			exit 1
 		fi
 
-		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85
+		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 		wezterm cli activate-pane-direction Left
 
 	fi

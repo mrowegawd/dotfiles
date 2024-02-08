@@ -7,6 +7,7 @@ return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
+    enabled = false,
     cmd = "Neotree",
     keys = {
       --   {
@@ -236,6 +237,7 @@ return {
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
+    enabled = false,
     keys = {
       {
         "<Leader>e",

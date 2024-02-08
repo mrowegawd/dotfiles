@@ -55,4 +55,16 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 #
 # }}}
 
+export NNN_OPENER=$HOME/.config/miscxrdb/nnn/nnn-opener.sh
+export NNN_PLUG='g:fzmark;o:fzopen;d:diffs;p:preview-tui;q:cdpath'
+
+export NNN_FIFO='/tmp/nnn.fifo'
+export NNN_OPTS="H"
+
+BLK="0B" CHR="0B" DIR="04" EXE="06" REG="00" HARDLINK="06" SYMLINK="06" MISSING="00" ORPHAN="09" FIFO="06" SOCK="0B" OTHER="06"
+export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
+
+# Source cd on quit
+# source $HOME/.config/miscxrdb/bin/quitcd.zsh
+
 # vim: ft=sh sw=2 ts=2 et foldmethod=marker foldlevel=0
