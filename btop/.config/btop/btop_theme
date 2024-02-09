@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e -u
+
+#shellcheck source=/dev/null
+. ~/.config/miscxrdb/exbin/load-vars-rofi
+
+set_btop() {
+
+}

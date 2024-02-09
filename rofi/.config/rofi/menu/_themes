@@ -190,6 +190,103 @@ set_terminal() {
 	# fi
 
 }
+
+lighten_color() {
+	hex_color="$1"
+	factor="$2"
+
+	# Validasi panjang HEX
+	if [[ ${#hex_color} -ne 7 ]]; then
+		echo "Error: HEX color must be in the format '#RRGGBB'."
+		exit 1
+	fi
+
+	# Ekstraksi komponen warna
+	r=$(printf "%d" 0x"${hex_color:1:2}")
+	g=$(printf "%d" 0x"${hex_color:3:2}")
+	b=$(printf "%d" 0x"${hex_color:5:2}")
+
+	# Mencerahkan setiap komponen warna
+	r=$(($r + $factor))
+	g=$(($g + $factor))
+	b=$(($b + $factor))
+
+	# Batasi nilai maksimum ke 255
+	r=$(($r > 255 ? 255 : $r))
+	g=$(($g > 255 ? 255 : $g))
+	b=$(($b > 255 ? 255 : $b))
+
+	# Format kembali ke format HEX
+	printf "#%02x%02x%02x\n" "$r" "$g" "$b"
+}
+darken_color() {
+	hex_color="$1"
+	factor="$2"
+
+	# Validasi panjang HEX
+	if [[ ${#hex_color} -ne 7 ]]; then
+		echo "Error: HEX color must be in the format '#RRGGBB'."
+		exit 1
+	fi
+
+	# Ekstraksi komponen warna
+	r=$(printf "%d" 0x"${hex_color:1:2}")
+	g=$(printf "%d" 0x"${hex_color:3:2}")
+	b=$(printf "%d" 0x"${hex_color:5:2}")
+
+	# Menggelapkan setiap komponen warna
+	r=$(($r - $factor))
+	g=$(($g - $factor))
+	b=$(($b - $factor))
+
+	# Batasi nilai minimum ke 0
+	r=$(($r < 0 ? 0 : $r))
+	g=$(($g < 0 ? 0 : $g))
+	b=$(($b < 0 ? 0 : $b))
+
+	# Format kembali ke format HEX
+	printf "#%02x%02x%02x\n" "$r" "$g" "$b"
+}
+
+set_btop() {
+	_BTOP_PATH="$DOTFILES_PATH/btop/.config/btop"
+
+	if [ ! -d "$_BTOP_PATH" ]; then
+		dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
+	fi
+
+	# theme[main_bg]="%%background%%"
+
+	RED_LIGHT_1=$(lighten_color "$GET_RED" 40) # Misalnya, menambahkan 50 untuk mencerahkan
+	RED_LIGHT_2=$(lighten_color "$GET_RED" 80)
+
+	GREEN_LIGHT_1=$(lighten_color "$GET_ALTGREEN" 40)
+	GREEN_LIGHT_2=$(lighten_color "$GET_ALTGREEN" 80)
+
+	FOREGROUND_DARKEN_1=$(darken_color "$GET_FOREGROUND" 100) # Misalnya, mengurangi 50 untuk menggelapkan
+	BACKGROUND_DARKEN_1=$(darken_color "$GET_BACKGROUND" 100)
+
+	cat "$_BTOP_PATH/themes/_theme.theme" >"$_BTOP_PATH/themes/guard_theme.theme"
+
+	sed -i -e "s/%%background%%/$GET_BACKGROUND/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%foreground%%/$GET_FOREGROUND/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%red_alt%%/$GET_ALTRED/g" "$_BTOP_PATH/themes/guard_theme.theme"
+
+	sed -i -e "s/%%cyan%%/$GET_CYAN/g" "$_BTOP_PATH/themes/guard_theme.theme"
+
+	sed -i -e "s/%%green_alt%%/$GET_ALTGREEN/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
+
+	sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
+
+	sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+	sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+
+}
+
 wm_bspwm() {
 	~/.config/bspwm/bspwmrc &>/dev/null
 	~/.config/polybar/runpolybar.sh &>/dev/null
@@ -252,6 +349,9 @@ rofi_command="rofi -theme $dir/$theme"
 	set_tmux
 	_NOTIF_TMUX="Tmux        ✅"
 
+	set_btop
+	_NOTIF_BTOP="Btop        ✅"
+
 	set_zathura
 	_NOTIF_ZATHURA="Zathura     ✅"
 
@@ -266,7 +366,7 @@ rofi_command="rofi -theme $dir/$theme"
 	"awesome") wm_awesome ;;
 	esac
 
-	dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM"
+	dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP"
 
 )
 

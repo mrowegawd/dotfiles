@@ -1,6 +1,8 @@
 local colorscheme = require("r.config").colorscheme
+local Config = require("r.config").defaults
 
 return {
+  -- VSCODE_MODERN_THEME
   {
     "gmr458/vscode_modern_theme.nvim",
     lazy = false,
@@ -11,7 +13,6 @@ return {
         transparent_background = false,
         nvim_tree_darker = true,
       }
-      -- vim.cmd.colorscheme "vscode_modern"
     end,
   },
   -- KANAGAWA
@@ -35,20 +36,6 @@ return {
     enabled = function()
       local selenizedtheme = { "selenized" }
       if vim.tbl_contains(selenizedtheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- MOONFLY
-  {
-    "bluz71/vim-moonfly-colors",
-    name = "moonfly",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local moonflytheme = { "moonfly" }
-      if vim.tbl_contains(moonflytheme, colorscheme) then
         return true
       end
       return false
@@ -127,118 +114,38 @@ return {
       return false
     end,
   },
-  -- DOOM-ONE
-  {
-    "NTBBloodbath/doom-one.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    enabled = function()
-      if colorscheme == "doom-one" then
-        return true
-      end
-      return false
-    end,
-    init = function()
-      vim.g.doom_one_cursor_coloring = false
-      -- Set :terminal colors
-      vim.g.doom_one_terminal_colors = true
-      -- Enable italic comments
-      vim.g.doom_one_italic_comments = true
-      -- Enable TS support
-      vim.g.doom_one_enable_treesitter = true
-      -- Color whole diagnostic text or only underline
-      vim.g.doom_one_diagnostics_text_color = false
-      -- Enable transparent background
-      vim.g.doom_one_transparent_background = false
-
-      -- Pumblend transparency
-      vim.g.doom_one_pumblend_enable = false
-      vim.g.doom_one_pumblend_transparency = 20
-
-      -- Plugins integration
-      vim.g.doom_one_plugin_neorg = true
-      vim.g.doom_one_plugin_barbar = false
-      vim.g.doom_one_plugin_telescope = true
-      vim.g.doom_one_plugin_neogit = true
-      vim.g.doom_one_plugin_nvim_tree = true
-      vim.g.doom_one_plugin_dashboard = true
-      vim.g.doom_one_plugin_startify = true
-      vim.g.doom_one_plugin_whichkey = true
-      vim.g.doom_one_plugin_indent_blankline = true
-      vim.g.doom_one_plugin_vim_illuminate = true
-      vim.g.doom_one_plugin_lspsaga = true
-    end,
-  },
-  -- NVIM-BASE16
-  {
-    "RRethy/nvim-base16",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local nvimbase16 = { "base16-ayu-dark", "base16-nord", "base16-horizon-terminal-dark", "base16-emil" }
-      if vim.tbl_contains(nvimbase16, colorscheme) then
-        return true
-      end
-    end,
-  },
-  -- NIGHTFOX.NVIM
-  {
-    "EdenEast/nightfox.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local nightfoxtheme = { "dawnfox", "terafox" }
-      if vim.tbl_contains(nightfoxtheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = function()
-      return {
-        styles = { -- Style to be applied to different syntax groups
-          comments = "italic", -- Value is any valid attr-list value `:help attr-list`
-          -- conditionals = "NONE",
-          -- constants = "NONE",
-          -- functions = "NONE",
-          keywords = "bold",
-          -- numbers = "NONE",
-          -- operators = "NONE",
-          -- strings = "NONE",
-          types = "italic,bold",
-          -- variables = "NONE",
-        },
-      }
-    end,
-  },
   -- SEOUL256
+  -- {
+  --   "junegunn/seoul256.vim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   -- init = function()
+  --   --   vim.g.seoul256_background = 256
+  --   -- end,
+  --   enabled = function()
+  --     local seoul256theme = { "seoul256" }
+  --     if vim.tbl_contains(seoul256theme, colorscheme) then
+  --       return true
+  --     end
+  --     return false
+  --   end,
+  -- },
+  -- GRUVBOX-MATERIAL
   {
-    "junegunn/seoul256.vim",
+    "sainnhe/gruvbox-material",
     lazy = false,
     priority = 1000,
-    -- init = function()
-    --   vim.g.seoul256_background = 256
-    -- end,
-    enabled = function()
-      local seoul256theme = { "seoul256" }
-      if vim.tbl_contains(seoul256theme, colorscheme) then
-        return true
-      end
-      return false
+    init = function()
+      vim.g.gruvbox_material_better_performance = 1
     end,
-  },
-  -- GRUVBOX.NVIM
-  {
-    "ellisonleao/gruvbox.nvim",
-    lazy = false,
-    priority = 1000,
     enabled = function()
-      local gruvboxtheme = { "gruvbox" }
+      local gruvboxtheme = { "gruvbox-material" }
       if vim.tbl_contains(gruvboxtheme, colorscheme) then
         return true
       end
       return false
     end,
-    opts = {},
+    -- opts = {},
   },
   -- CATPPUCCIN
   {
@@ -265,19 +172,23 @@ return {
     name = "tokyonight",
     lazy = false,
     priority = 1000,
-    init = function()
-      vim.opt.background = "light"
-    end,
     enabled = function()
-      local colorstokyonight = { "tokyonight", "tokyonight-night", "tokyonight-day" }
+      local colorstokyonight = { "tokyonight", "tokyonight-night", "tokyonight-day", "tokyonight-storm" }
       if vim.tbl_contains(colorstokyonight, colorscheme) then
         return true
       end
     end,
     config = function()
+      local tokyo_style = "strom"
+      if Config.colorscheme == "tokyonight-night" then
+        tokyo_style = "night"
+      elseif Config.colorscheme == "tokyonight-day" then
+        tokyo_style = "day"
+      end
+
       local tokyonight = require "tokyonight"
       tokyonight.setup {
-        style = "storm",
+        style = tokyo_style,
         -- priority = 1000,
         sidebars = {
           --     "qf",
@@ -317,17 +228,14 @@ return {
       style = "warmer",
     },
   },
-  -- OXOCARBON
+  -- NORD
   {
-    "shaunsingh/oxocarbon.nvim",
+    "shaunsingh/nord.nvim",
     lazy = false,
-    piority = 1000,
-    init = function()
-      vim.opt.background = "dark" -- set this to dark or light
-    end,
+    priority = 1000,
     enabled = function()
-      local oxocarbontheme = { "oxocarbon" }
-      if vim.tbl_contains(oxocarbontheme, colorscheme) then
+      local nordtheme = { "nord" }
+      if vim.tbl_contains(nordtheme, colorscheme) then
         return true
       end
     end,

@@ -5,7 +5,7 @@
 ! add this to your ~/.Xresources or import this
 ! by adding: #include "path/to/miasma.xresources"
 
-*.foreground:   #c2c2b0
+*.foreground:   #d7c483
 *.background:   #222222
 *.cursorColor:  #5f875f
 ! black

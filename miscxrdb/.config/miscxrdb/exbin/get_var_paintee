@@ -31,6 +31,8 @@ getxrdb_font() {
 
 	GET_RED="$(grep -i red <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_ALTRED="$(grep -i altred <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
 
 	GET_WHITE="$(grep -i white <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
@@ -40,6 +42,8 @@ getxrdb_font() {
 
 	GET_GREEN="$(grep -i green <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_ALTGREEN="$(grep -i altgreen <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
 
 	GET_CYAN="$(grep -i cyan <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
@@ -48,6 +52,8 @@ getxrdb_font() {
 		awk -F= '{print $2}' | sed 's/\"//g')"
 
 	GET_YELLOW="$(grep -i yellow <~/.cache/paintee | head -1 |
+		awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_ALTYELLOW="$(grep -i altyellow <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"
 
 	GET_MAGENTA="$(grep -i magenta <~/.cache/paintee | head -1 |
