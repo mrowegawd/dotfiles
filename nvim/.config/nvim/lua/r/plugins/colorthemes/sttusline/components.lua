@@ -5,7 +5,7 @@ local sttsline_colors = require "sttusline.utils.color"
 
 local Util = require "r.utils"
 
-local highlight = require "r.config.highlights"
+local highlight = require "r.settings.highlights"
 
 local col_bg_StatusLine = highlight.get("ColorColumn", "bg")
 local col_bg_ErrorMsg = highlight.get("ErrorMsg", "fg")
@@ -24,7 +24,7 @@ local colors = {
 
   coldisorent = highlight.tint(col_bg_StatusLine, 0.5),
 
-  mod_norm = highlight.get("@field", "fg"),
+  mod_norm = highlight.get("Boolean", "fg"),
   mod_ins = highlight.tint(col_bg_ErrorMsg, 0),
   mod_vis = highlight.get("visual", "bg"),
   mod_term = highlight.get("Boolean", "fg"),

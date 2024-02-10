@@ -251,7 +251,6 @@ function M.plugin(name, opts)
   augroup(fmt("%sHighlightOverrides", name:gsub("^%l", string.upper)), {
     event = "ColorScheme",
     command = function()
-      -- Defer resetting these highlights to ensure they apply after other overrides
       vim.schedule(function()
         M.all(opts)
       end)

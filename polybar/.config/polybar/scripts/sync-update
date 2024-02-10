@@ -1,9 +1,10 @@
 #!/bin/bash
 
-NORMAL=$(xgetres color12)
-RED=$(xgetres color1)
+# NORMAL=$(xgetres color12)
+# RED=$(xgetres color1)
 
-DATA=""
+DATA="Sync"
+DATARUN="Re-sync.."
 ICON="$HOME/.config/miscxrdb/icons/backup-file.png"
 TITLE="Task And Notes"
 
@@ -58,14 +59,17 @@ case "$1" in
 	main
 	start_docker_syncthing
 	# polybar-msg hook sync-update 1
-	echo "%{F$RED}$DATA%{F-}"
+	# echo "%{F$RED}$DATA%{F-}"
+	echo "$DATARUN"
 	/usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Backup data, done.."
 	;;
 
 *)
+	DATA="Sync"
 	# main
 	# /usr/local/bin/dunstify --replace=7731 -i "$ICON" "$TITLE" "Backup running.."
 	# polybar-msg hook sync-update 0
-	echo "%{F$NORMAL}$DATA%{F-}"
+	echo "$DATA"
+	# echo "%{F$NORMAL}$DATA%{F-}"
 	;;
 esac

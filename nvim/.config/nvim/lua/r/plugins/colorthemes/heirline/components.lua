@@ -1,8 +1,7 @@
 local fn = vim.fn
--- local Util = require "r.utils"
 local Icon = require("r.config").icons
 local Conditions = require "heirline.conditions"
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 
 local M = {}
 
@@ -23,7 +22,7 @@ local colors = {
 
   coldisorent = Highlight.tint(col_statusline_bg, 0.5),
 
-  mod_norm = Highlight.get("Boolean", "fg"),
+  mod_norm = Highlight.get("Error", "fg"),
   mod_ins = Highlight.tint(col_errormsg_bg, 0),
   mod_vis = Highlight.get("visual", "bg"),
   mod_term = Highlight.get("Boolean", "fg"),
@@ -137,7 +136,7 @@ M.Mode = {
   },
   {
     provider = function(self)
-      return string.format("    %s   ", self.mode_icons[self.mode])
+      return string.format("    %s  ", self.mode_icons[self.mode])
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)

@@ -1,6 +1,6 @@
 local Util = require "r.utils"
 
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 
 -- stylua: ignore
 local general_overrides = function()
@@ -231,7 +231,7 @@ local general_overrides = function()
     { OctoBubble = { link = "Normal" } },
 
     -- BQF ================================================================
-    { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "@field" } } } },
+    { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
 
     -- TODOTROUBLE ========================================================
     { TodoSignWarn = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticWarn" } } },
@@ -275,79 +275,106 @@ local function on_sidebar_enter()
   }
 end
 
--- stylua: ignore
 local function colorscheme_overrides()
   local overrides = {
     ["gruvbox"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
-
-      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 }, reverse = false } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
+      {
+        StatusLine = {
+          fg = { from = "ColorColumn", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          reverse = false,
+        },
+      },
     },
     ["gruvbox-material"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
 
-      { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 }, reverse = false } },
+      {
+        StatusLine = {
+          fg = { from = "ColorColumn", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          reverse = false,
+        },
+      },
     },
     ["nord"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
     },
     ["miasma"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
 
-      { LspReferenceText = { bg = { from = 'Normal', attr = "bg" }, fg = "NONE", underline = false, reverse = false, undercurl = false } },
-      { LspReferenceWrite = { bg = { from = 'Normal', attr = "bg" }, bold = true, italic = true, underline = false, reverse = false, undercurl =false }  },
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg" },
+          bold = true,
+          italic = true,
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
       { LspReferenceRead = { bg = { from = "Normal", attr = "bg" }, underline = false, undercurl = false } },
 
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
     },
     ["onedark"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
     },
     ["solarized-osaka"] = {
       { NormalNC = { inherit = "Normal" } },
       { TroubleNormal = { inherit = "Normal" } },
 
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
 
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1 }, bg = { from = "Normal", attr = "bg" } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
       { MyCursorLine = { bg = { from = "Normal", alter = 0.4 } } },
     },
     ["kanagawa"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
     },
     ["vscode_modern"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
     },
 
     ["selenized"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" }, force = true } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" }, force = true } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.2 } } },
     },
     ["bamboo"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
 
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
     },
@@ -358,61 +385,67 @@ local function colorscheme_overrides()
       { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
       { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
 
-      { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = -4 }, bg = { from = "Normal" , attr = "bg" , alter = 0.5 } } },
+      {
+        PmenuSel = {
+          fg = { from = "CmpItemAbbr", attr = "fg", alter = -4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        },
+      },
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = { from = "CmpItemAbbr" } } },
       { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
     },
     ["tokyonight"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd" , attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange" , attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete" , attr = "fg" } } },
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
 
-    --   { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bg = "NONE" } },
-    --   { FloatBorder = { bg = "NONE", fg = { from = "WinSeparator" } } },
-    --   { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
-    --   { LineNr = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-    --   { CursorLine = { bg = { from = "Normal", alter = 0.03 } } },
-    --   { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = { from = "Normal", attr = "bg", alter = 0.03 } } },
-    --
-    --   { Folded = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
-    --
-    --   { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = -0.5 }, bg = "NONE" } },
-    --   { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
-    --   { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
-    --
-    --   { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = -4 }, bg = { from = "Normal" , attr = "bg" , alter = -0.1 } } },
-    --   { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = { from = "CmpItemAbbr" } } },
-    --   { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg" } } },
-    --
-    --   { TelescopePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
-    --   { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-    --   { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
-    --   { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
-    --
-    --   -- Preview
-    --   { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
-    --   { TelescopePreviewBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-    --   { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
-    --   { TelescopeSelection = { inherit = "PmenuSel" } },
-    --   { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
-    --
-    --   -- Results
-    --   { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
-    --   { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-    --
-    --   -- FZFLUA =============================================================
-    --   { FzfLuaNormal = { inherit = "Normal" } },
-    --   { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
-    --   { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bold = true } },
-    --   { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
-    --
-    --
-    --   { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = -0.05 } } },
+      --   { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bg = "NONE" } },
+      --   { FloatBorder = { bg = "NONE", fg = { from = "WinSeparator" } } },
+      --   { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      --   { LineNr = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+      --   { CursorLine = { bg = { from = "Normal", alter = 0.03 } } },
+      --   { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = { from = "Normal", attr = "bg", alter = 0.03 } } },
+      --
+      --   { Folded = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
+      --
+      --   { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = -0.5 }, bg = "NONE" } },
+      --   { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
+      --   { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
+      --
+      --   { PmenuSel = { fg = { from = "CmpItemAbbr" , attr = "fg", alter = -4 }, bg = { from = "Normal" , attr = "bg" , alter = -0.1 } } },
+      --   { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = { from = "CmpItemAbbr" } } },
+      --   { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg" } } },
+      --
+      --   { TelescopePromptTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+      --   { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+      --   { TelescopePromptPrefix = { bg = { from = "Normal", attr = "bg" } } },
+      --   { TelescopePromptCounter = { bg = { from = "Normal", attr = "bg" } } },
+      --
+      --   -- Preview
+      --   { TelescopePreviewTitle = { bg = { from = "Normal", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
+      --   { TelescopePreviewBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+      --   { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+      --   { TelescopeSelection = { inherit = "PmenuSel" } },
+      --   { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
+      --
+      --   -- Results
+      --   { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
+      --   { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+      --
+      --   -- FZFLUA =============================================================
+      --   { FzfLuaNormal = { inherit = "Normal" } },
+      --   { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "Normal", attr = "bg" } } },
+      --   { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bold = true } },
+      --   { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
+      --
+      --   { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = -0.05 } } },
     },
   }
 
   local hls = overrides[vim.g.colors_name]
-  if hls then Highlight.all(hls) end
+  if hls then
+    Highlight.all(hls)
+  end
 end
 
 local function user_highlights()

@@ -18,11 +18,12 @@
 # Shell: POSIX compliant
 # Author: Léo Villeveygoux, after Arun Prakash Jana's .cbcp
 
-IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}" # protect trailing \n
+IFS="$(printf '%b_' '\n')"
+IFS="${IFS%_}" # protect trailing \n
 
 selection=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
 
-getclip () {
+getclip() {
 	if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
 		# Wayland
 		wl-paste
@@ -41,7 +42,7 @@ getclip () {
 	elif type powershell.exe >/dev/null 2>&1; then
 		# WSL
 		powershell.exe Get-Clipboard
-	elif [ -r /dev/clipboard ] ; then
+	elif [ -r /dev/clipboard ]; then
 		# Cygwin
 		cat /dev/clipboard
 	elif type clipboard >/dev/null 2>&1; then
@@ -53,10 +54,10 @@ getclip () {
 CLIPBOARD=$(getclip)
 
 # Check if clipboard actually contains a file list
-for file in $CLIPBOARD ; do
-	if [ ! -e "$file" ] ; then
-		exit 1;
+for file in $CLIPBOARD; do
+	if [ ! -e "$file" ]; then
+		exit 1
 	fi
 done
 
-printf "%s" "$CLIPBOARD" | tr '\n' '\0' > "$selection"
+printf "%s" "$CLIPBOARD" | tr '\n' '\0' >"$selection"

@@ -21,47 +21,54 @@ if ! type fzf >/dev/null 2>&1; then
 	exit 1
 fi
 
+not_in_tmux() {
+	[ -z "$TMUX" ]
+}
+
 if [ ! -f "$cwd" ]; then
 	printf "[warn] path not found: %s\n" "$cwd"
 	exit 1
 else
 
-	pane_id_right=$(wezterm cli get-pane-direction right)
-	wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
-	wezterm cli activate-pane-direction Up
+	if not_in_tmux; then
+		pane_id_right=$(wezterm cli get-pane-direction right)
+		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+		wezterm cli activate-pane-direction Up
 
-	select=$(cat "$cwd" | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
-		--preview-window right:50%:hidden \
-		--prompt "Jump to> ")
+		select=$(cat "$cwd" | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+			--preview-window right:50%:hidden \
+			--prompt "Jump to> ")
 
-	if [ -n "$select" ]; then
-		# we select directory not a file
-		if [ ! -f "$select" ]; then
+		if [ -n "$select" ]; then
+			# we select directory not a file
+			if [ ! -f "$select" ]; then
+				wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+				wezterm cli activate-pane-direction Left
+
+				nnn "$select"
+
+			else
+				dunstify "[warn] this not folder??"
+				exit 1
+			fi
+
 			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 			wezterm cli activate-pane-direction Left
-
-			# # Block nesting of nnn in subshells
-			# if [ -n "$NNNLVL" ] && [ "${NNNLVL:-0}" -ge 1 ]; then
-			# 	dunstify "nnn is already running"
-			# 	return
-			# fi
-			#
-			# export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
-
-			nnn "$select"
-
-			# if [ -f "$NNN_TMPFILE" ]; then
-			# 	. "$NNN_TMPFILE"
-			# 	rm -f "$NNN_TMPFILE" >/dev/null
-			# fi
-
-		else
-			dunstify "[warn] this not folder??"
-			exit 1
 		fi
+	else
+		select=$(cat "$cwd" | fzf-tmux --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+			--preview-window right:50%:hidden -xC -w '60%' -h '50%' \
+			--prompt "Jump to> ")
 
-		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-		wezterm cli activate-pane-direction Left
+		if [ -n "$select" ]; then
+			if [ ! -f "$select" ]; then
+				nnn "$select"
+			else
+				dunstify "[warn] this not folder??"
+				exit 1
+			fi
+
+		fi
 
 	fi
 	exit 1

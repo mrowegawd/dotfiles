@@ -37,10 +37,11 @@ border-color = #2a2a2a
 ;; Fonts
 font-0              = SF Mono:style=Medium:size=10;1
 font-1              = SF Mono:style=Medium:size=10;1
-font-2              = Siji:size=5:fontformat=truetype;1
-font-3              = Siji:size=10:fontformat=truetype;1
-font-4              = Siji:size=15:fontformat=truetype;1
-font-5              = Wucon Siji:size=8;1
+font-2              = JetBrains Mono:size=18;1
+font-3              = Siji:size=5:fontformat=truetype;1
+font-4              = Siji:size=10:fontformat=truetype;1
+font-5              = Siji:size=15:fontformat=truetype;1
+font-6              = Wucon Siji:size=8;1
 
 modules-left = appmenu bspwm mpd pulseaudio
 ; modules-right = mpd pillar polypomo pillar info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar check-network pillar date pillar powermenu pillar
@@ -49,7 +50,7 @@ modules-left = appmenu bspwm mpd pulseaudio
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update check-network memory filesystem popup-calendar powermenu
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update check-network transmission memory filesystem popup-calendar powermenu
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update transmission memory filesystem popup-calendar powermenu
-modules-right = record-ffmpeg info-docker sync-update memory filesystem popup-calendar powermenu
+modules-right = record-ffmpeg info-docker check-network sync-update memory filesystem popup-calendar powermenu
 ; modules-right = info-docker record-ffmpeg pulseaudio memory filesystem date powermenu
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_

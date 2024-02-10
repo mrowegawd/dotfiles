@@ -2,11 +2,11 @@ local fmt, cmd = string.format, vim.cmd
 local Util = require "r.utils"
 local Config = require "r.config"
 
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
+
 local M = {}
 
 function M.neorg_mappings_ft(bufnr)
-  local fzf_lua = require "fzf-lua"
-
   local mappings = {
     ["n"] = {
       ["ri"] = {
@@ -62,21 +62,20 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             cwd = Config.path.wiki_path,
+            rg_opts = [[-g "*.md" --column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e]],
             winopts = {
               title = Util.fzflua.format_title("Note: files", "󰈙"),
             },
           }
 
-          if vim.bo[0].filetype == "neorg" then
-            cmd [[Lazy load neorg]]
-            opts.rg_opts =
-              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
-          else
-            opts.rg_opts =
-              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
-          end
+          -- if vim.bo[0].filetype == "norg" then
+          --   cmd [[Lazy load neorg]]
+          --   opts.rg_opts =
+          --     [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
+          -- else
+          -- end
 
-          return require("fzf-lua").files(opts)
+          return fzf_lua.files(opts)
         end,
         "Note: file",
       },
@@ -90,7 +89,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          if vim.bo[0].filetype == "neorg" then
+          if vim.bo[0].filetype == "norg" then
             cmd [[Lazy load neorg]]
             opts.rg_opts =
               [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
@@ -98,7 +97,7 @@ function M.neorg_mappings_ft(bufnr)
             opts.rg_opts =
               [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
           end
-          return require("fzf-lua").live_grep_glob(opts)
+          return fzf_lua.live_grep_glob(opts)
         end,
         "Note: grep",
       },
@@ -109,7 +108,7 @@ function M.neorg_mappings_ft(bufnr)
       --       Util.fzflua.send_cmds({
       --         grep_string_note = function()
       --           cmd [[Lazy load neorg]]
-      --           return require("fzf-lua").live_grep_glob {
+      --           return fzf_lua.live_grep_glob {
       --             prompt = "  ",
       --             cwd = require("r.config").path.wiki_path,
       --             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
@@ -121,7 +120,7 @@ function M.neorg_mappings_ft(bufnr)
       --         find_norg_files = function()
       --           cmd [[Lazy load neorg]]
       --
-      --           return require("fzf-lua").files {
+      --           return fzf_lua.files {
       --             prompt = "  ",
       --             cwd = require("r.config").path.wiki_path,
       --             rg_glob = true,
@@ -135,7 +134,7 @@ function M.neorg_mappings_ft(bufnr)
       --         find_site_links = function()
       --           -- Karena use grep utk curbuf, agar bisa menggunakan regex
       --           -- pakai `lgrep_curbuf`
-      --           require("fzf-lua").grep_curbuf {
+      --           fzf_lua.grep_curbuf {
       --             prompt = "  ",
       --             search = [[(\{:\$|\{http)]],
       --             no_esc = true,
@@ -151,7 +150,7 @@ function M.neorg_mappings_ft(bufnr)
       --           local title = vim.fn.getreg '"0'
       --           local title_trim = title:gsub([[^:%$]], [[:\$]])
       --
-      --           require("fzf-lua").grep {
+      --           fzf_lua.grep {
       --             prompt = "  ",
       --             cwd = require("r.config").path.wiki_path,
       --             no_esc = true,
@@ -163,7 +162,7 @@ function M.neorg_mappings_ft(bufnr)
       --           }
       --         end,
       --         find_title_curbuf = function()
-      --           require("fzf-lua").grep_curbuf {
+      --           fzf_lua.grep_curbuf {
       --             prompt = "  ",
       --             search = [[^(\*|\*\*|\*\*\*|\*\*\*\*).*$]],
       --             no_esc = true,
@@ -174,7 +173,7 @@ function M.neorg_mappings_ft(bufnr)
       --           }
       --         end,
       --         find_title_global = function()
-      --           require("fzf-lua").grep {
+      --           fzf_lua.grep {
       --             prompt = "  ",
       --             cwd = require("r.config").path.wiki_path,
       --             no_esc = true,
@@ -205,7 +204,7 @@ function M.neorg_mappings_ft(bufnr)
       --               end,
       --             },
       --           }
-      --           return require("fzf-lua").fzf_exec(Util.neorg.find_by_categories(), opts)
+      --           return fzf_lua.fzf_exec(Util.neorg.find_by_categories(), opts)
       --         end,
       --         find_todo_curbuf = function()
       --           cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
@@ -252,7 +251,7 @@ function M.neorg_mappings_ft(bufnr)
               },
             }
 
-            return require("fzf-lua").fzf_exec(Util.neorg.find_by_categories(), opts)
+            return fzf_lua.fzf_exec(Util.neorg.find_by_categories(), opts)
           end
         end,
         "Note: insert categories (curbuf)",
@@ -283,7 +282,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg.finder_sitelinkable(), opts)
+          return fzf_lua.fzf_exec(Util.neorg.finder_sitelinkable(), opts)
         end,
         "Note: insert link (curbuf)",
       },
@@ -308,7 +307,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg.finder_linkable(), opts)
+          return fzf_lua.fzf_exec(Util.neorg.finder_linkable(), opts)
         end,
         "Note: insert title (curbuf)",
       },
@@ -375,9 +374,9 @@ function M.neorg_mappings_ft(bufnr)
 
           opts.no_esc = true
           if note_ext == "norg" then
-            return require("fzf-lua").fzf_exec(Util.neorg.finder_linkableGlobal(), opts)
+            return fzf_lua.fzf_exec(Util.neorg.finder_linkableGlobal(), opts)
           else
-            return require("fzf-lua").live_grep_glob(opts)
+            return fzf_lua.live_grep_glob(opts)
           end
         end,
         "Note: insert title (global)",

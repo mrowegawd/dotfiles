@@ -8,6 +8,7 @@ function M.cmd_call(params)
 	handle:close()
 	return result:gsub("\n", "")
 end
+
 function M.get_random_entry(tbl)
 	if tbl ~= "table" then
 		return tbl

@@ -20,7 +20,7 @@ return {
             highlight! link semshiParameter @lsp.type.parameter
             highlight! link semshiParameterUnused DiagnosticUnnecessary
             highlight! link semshiBuiltin @function.builtin
-            highlight! link semshiAttribute @field
+            highlight! link semshiAttribute Boolean
             highlight! link semshiSelf @lsp.type.selfKeyword
             highlight! link semshiUnresolved @lsp.type.unresolvedReference
             highlight! link semshiFree @none

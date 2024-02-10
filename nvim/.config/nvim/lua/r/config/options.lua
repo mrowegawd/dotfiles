@@ -331,3 +331,11 @@ if vim.g.neovide then
 
   vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
 end
+
+-- untuk plugin: azabiong/vim-highlighter
+-- delete jika tidak dibutuhkan
+vim.g.HiSet = "t<CR>"
+vim.g.HiErase = "t<BS>"
+vim.g.HiClear = "t<C-L>"
+vim.g.HiFind = "t<Tab>"
+vim.g.HiSetSL = "S<CR>"

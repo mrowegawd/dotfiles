@@ -49,7 +49,7 @@ return {
       -- },
     },
     config = function(_, opts)
-      require("r.config.highlights").plugin("neotest", {
+      require("r.settings.highlights").plugin("neotest", {
         { NeotestPassed = { bg = { from = "Normal", attr = "bg" } } },
         { NeotestFailed = { bg = { from = "Normal", attr = "bg" } } },
         { NeotestRunning = { bg = { from = "Normal", attr = "bg" } } },

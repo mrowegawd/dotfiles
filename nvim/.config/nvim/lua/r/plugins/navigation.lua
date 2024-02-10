@@ -1,6 +1,6 @@
 local cmd = vim.cmd
 
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 local Util = require "r.utils"
 
 return {

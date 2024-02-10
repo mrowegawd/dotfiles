@@ -1,6 +1,8 @@
 local diagnostic = vim.diagnostic
 local Util = require "r.utils"
 
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
+
 local M = {}
 
 M._keys = nil
@@ -18,12 +20,12 @@ function M.get()
     { "<Leader>K", "<CMD>Lspsaga hover_doc ++keep<CR>", desc = "LSP(lspsaga): hover (keep the window)", nowait = true },
     { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-    { "gT", [[<cmd>lua require('fzf-lua').lsp_typedefs()<cr>]], desc = "LSP(fzflua): peek type definitions" },
-    { "gO", [[<cmd>lua require('fzf-lua').lsp_outgoing_calls()<cr>]], desc = "LSP(fzflua): outgoing calls" },
-    { "gI", [[<cmd>lua require('fzf-lua').lsp_incoming_calls()<cr>]], desc = "LSP(fzflua): incoming calls" },
+    { "gT", fzf_lua.lsp_typedefs, desc = "LSP(fzflua): peek type definitions" },
+    { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP(fzflua): outgoing calls" },
+    { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP(fzflua): incoming calls" },
     -- { "gy", function() require("telescope.builtin").lsp_type_definitions { reuse_win = true } end, desc = "Goto T[y]pe Definition" },
-    -- { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP(fzflua): document symbols" },
-    -- { "gS", "<CMD>FzfLua lsp_workspace_symbols<CR>", desc = "LSP(fzflua): workspaces symbols" },
+    -- { "gs", fzf_lua.lsp_document_symbols, desc = "LSP(fzflua): document symbols" },
+    -- { "gS", fzf_lua.lsp_workspace_symbols, desc = "LSP(fzflua): workspaces symbols" },
     { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "LSP: codeAction" },
     {
       "<leader>cA",
@@ -198,7 +200,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "gd",
       function()
-        require("fzf-lua").lsp_definitions()
+        fzf_lua.lsp_definitions()
       end,
       desc = "LSP(fzflua): goto definitions",
     }
@@ -222,7 +224,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "gr",
       function()
-        require("fzf-lua").lsp_finder()
+        fzf_lua.lsp_finder()
       end,
       desc = "LSP(fzflua): references",
     }

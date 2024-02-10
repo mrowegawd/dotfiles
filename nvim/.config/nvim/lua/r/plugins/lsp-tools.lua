@@ -1,8 +1,10 @@
 local api = vim.api
 
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 local Util = require "r.utils"
 local Icons = require("r.config").icons
+
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
 
 return {
   -- AERIAL (disabled)
@@ -80,7 +82,7 @@ return {
               "Struct",
               "all",
             }
-            require("fzf-lua").fzf_exec(aerial_selected, {
+            fzf_lua.fzf_exec(aerial_selected, {
               prompt = "  ",
               no_esc = true,
               fzf_opts = { ["--layout"] = "reverse" },
@@ -124,9 +126,9 @@ return {
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      Highlight.plugin("arials", {
-        { AerialGuide = { fg = { from = "CodeComment1", attr = "fg" } } },
-      })
+      -- Highlight.plugin("arials", {
+      --   { AerialGuide = { fg = { from = "CodeComment1", attr = "fg" } } },
+      -- })
 
       ---@diagnostic disable-next-line: undefined-field
       require("telescope").load_extension "aerial"
@@ -219,7 +221,7 @@ return {
               "Variable",
               "all",
             }
-            require("fzf-lua").fzf_exec(aerial_selected, {
+            fzf_lua.fzf_exec(aerial_selected, {
               prompt = "  ",
               no_esc = true,
               fzf_opts = { ["--layout"] = "reverse" },
@@ -458,7 +460,7 @@ return {
         -- { SagaBorder = { link = "NormalFloat" } },
         { SagaTitle = { bg = "red" } },
         { SagaFileName = { link = "Directory" } },
-        -- { SagaFinderFName = { bg = { from = "@field", attr = "fg" }, fg = { from = "Normal", attr = "bg" } } },
+        -- { SagaFinderFName = { bg = { from = "Boolean", attr = "fg" }, fg = { from = "Normal", attr = "bg" } } },
         -- { SagaFolderName = { link = "Directory" } },
         -- { SagaNormal = { link = "Pmenu" } },
       })

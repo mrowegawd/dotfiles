@@ -2,7 +2,7 @@ local M = {}
 
 local fmt, api = string.format, vim.api
 
-local hg = require "r.config.highlights"
+local hg = require "r.settings.highlights"
 
 -- local clock = function()
 --     return " " .. os.date "%H:%M"

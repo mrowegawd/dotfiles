@@ -38,7 +38,6 @@ Util.map.inoremap("<c-b>", "<Esc>ba", silent)
 Util.map.inoremap("<c-f>", "<Esc>ea", silent)
 
 Util.map.nnoremap("<c-g>", "/", nosilent)
-Util.map.vnoremap("<c-g>", [["zy:%s/<C-r><C-o>"/]], { desc = "Search and replace on the fly" })
 
 if not Util.has "bufferline.nvim" then
   Util.map.nnoremap("gl", "<cmd>bnext<CR>", silent)
@@ -129,7 +128,7 @@ end, { desc = "Misc: change cur pwd to curfile" })
 Util.map.nnoremap("<Leader>n", function()
   require("notify").dismiss {}
   cmd.nohl()
-  return cmd [[let @/ = ""]]
+  -- return cmd [[let @/ = ""]]
 end, { desc = "Misc: clear searches" })
 
 Util.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -183,6 +182,8 @@ end
 Util.map.nnoremap("sr", function()
   replace_keymap(false, false)
 end, { desc = "Misc: find and [r]eplace word under cursor" })
+Util.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and [r]eplace word (visual)" })
+
 -- Util.map.nnoremap("sc", function()
 --   replace_keymap(true, false)
 -- end, { desc = "Misc: find and [r]eplace word under cursor with [c]onfirmation" })
@@ -198,7 +199,7 @@ end, { desc = "Misc: find and [r]eplace word under cursor" })
 --  ╰──────────────────────────────────────────────────────────╯
 
 Util.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "WinNav: vsplit", silent = true })
-Util.map.nnoremap("ss", "<CMD>split<CR>", { desc = "WinNav: split", silent = true })
+Util.map.nnoremap("ss", "<CMD>split|wincmd p<CR>", { desc = "WinNav: split", silent = true })
 Util.map.nnoremap("<c-w>v", [[<CMD> lua print("not allowed to use c-w v")<CR>]], { desc = "Misc: Remove" })
 Util.map.nnoremap("<c-w>s", [[<CMD> lua print("not allowed to use c-w s")<CR>]], { desc = "Misc: Remove" })
 -- nnoremap("sa", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']], { expr = true })
@@ -418,45 +419,17 @@ Util.map.nnoremap(
 Util.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 Util.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
-local buf, win
 Util.map.nnoremap("<F1>", function()
-  local function create_win()
-    vim.api.nvim_command "botright vnew"
-    win = vim.api.nvim_get_current_win()
-    buf = vim.api.nvim_get_current_buf()
-
-    vim.api.nvim_buf_set_name(0, "result #" .. buf)
-
-    vim.api.nvim_buf_set_option(0, "buftype", "nofile")
-    vim.api.nvim_buf_set_option(0, "swapfile", false)
-    -- vim.api.nvim_buf_set_option(0, "filetype", filetype)
-    vim.api.nvim_buf_set_option(0, "bufhidden", "wipe")
-
-    vim.api.nvim_command "setlocal wrap"
-  end
-  local function on_stdout(_, data)
-    if data then
-      for _, line in ipairs(data) do
-        if line ~= "" then
-          vim.api.nvim_buf_set_lines(buf, -1, -1, false, { line })
-        end
-      end
-    end
-  end
-
-  if win and vim.api.nvim_win_is_valid(win) then
-    vim.api.nvim_win_close(win, true)
-  end
-  create_win()
-
-  vim.fn.jobstart({ "cargo", "run" }, {
-    on_stdout = on_stdout,
-    on_stderr = on_stdout,
-    stdout_buffered = false,
-    stderr_buffered = false,
-  })
-
-  cmd [[wincmd p]]
+  -- local wins = vim.api.nvim_list_wins()
+  -- table.insert(wins, 1, vim.api.nvim_get_current_win())
+  -- for _, win in ipairs(wins) do
+  --   -- local buf = vim.api.nvim_win_get_buf(win)
+  --   print(win)
+  --
+  --   -- if vim.bo[buf].buftype == "" then
+  --   -- end
+  -- end
+  print(#vim.api.nvim_tabpage_list_wins(0))
 end)
 
 local checkconceallevel = false
@@ -509,4 +482,39 @@ Util.map.nnoremap("<Localleader>g", function()
       end
     end,
   }, { winopts = { title = "Cmds", row = row, col = col } })
+end)
+
+local function normalize_return(str)
+  ---@diagnostic disable-next-line: redefined-local
+  local str_slice = string.gsub(str, "\n", "")
+  local res = vim.split(str_slice, "\n")
+  if res[1] then
+    return res[1]
+  end
+
+  return str_slice
+end
+--
+-- local function get_current_pane_id()
+--   return tonumber(normalize_return(vim.fn.system "wezterm cli list-clients | tail -1 | awk '{print $NF}'"))
+-- end
+
+Util.map.nnoremap("<a-E>", function()
+  local TMUX = os.getenv "TMUX"
+  if not TMUX then
+    local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+    local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
+
+    if pane_left_id then
+      vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+    end
+
+    vim.fn.system "wezterm cli split-pane --left --percent 15"
+    vim.fn.system "wezterm cli activate-pane-direction Right"
+
+    local pane_left_id2 = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+    vim.fn.system(string.format("wezterm cli send-text --no-paste 'nnn -c %s\r' --pane-id %s", dirname, pane_left_id2))
+
+    vim.fn.system "wezterm cli activate-pane-direction Left"
+  end
 end)

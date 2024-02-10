@@ -19,67 +19,7 @@ return {
   -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
-    keys = {
-      {
-        "<a-k>",
-        function()
-          return require("smart-splits").move_cursor_up()
-        end,
-        desc = "WinNav(smart-splits): move up",
-      },
-      {
-        "<a-j>",
-        function()
-          return require("smart-splits").move_cursor_down()
-        end,
-        desc = "WinNav(smart-splits): move down",
-      },
-      {
-        "<a-h>",
-        function()
-          return require("smart-splits").move_cursor_left()
-        end,
-        desc = "WinNav(smart-splits): move left",
-      },
-      {
-        "<a-l>",
-        function()
-          return require("smart-splits").move_cursor_right()
-        end,
-        desc = "WinNav(smart-splits): move right",
-      },
-
-      -- RESIZE
-      {
-        "<a-K>",
-        function()
-          return require("smart-splits").resize_up()
-        end,
-        desc = "WinNav(smart-splits): resize window up",
-      },
-      {
-        "<a-J>",
-        function()
-          return require("smart-splits").resize_down()
-        end,
-        desc = "WinNav(smart-splits): resize window down",
-      },
-
-      {
-        "<a-H>",
-        function()
-          return require("smart-splits").resize_left()
-        end,
-        desc = "WinNav(smart-splits): resize window left",
-      },
-      {
-        "<a-L>",
-        function()
-          return require("smart-splits").resize_right()
-        end,
-        desc = "WinNav(smart-splits): resize window right",
-      },
-    },
+    event = "LazyFile",
     opts = {
       -- Ignored filetypes (only while resizing)
       ignored_filetypes = {
@@ -110,31 +50,31 @@ return {
       -- when calling the Lua function.
       cursor_follows_swapped_bufs = false,
       -- resize mode options
-      resize_mode = {
-        -- key to exit persistent resize mode
-        quit_key = "<ESC>",
-        -- keys to use for moving in resize mode
-        -- in order of left, down, up' right
-        resize_keys = { "h", "j", "k", "l" },
-        -- set to true to silence the notifications
-        -- when entering/exiting persistent resize mode
-        silent = false,
-        -- must be functions, they will be executed when
-        -- entering or exiting the resize mode
-        hooks = {
-          on_enter = nil,
-          on_leave = nil,
-        },
-      },
+      -- resize_mode = {
+      --   -- key to exit persistent resize mode
+      --   quit_key = "<ESC>",
+      --   -- keys to use for moving in resize mode
+      --   -- in order of left, down, up' right
+      --   resize_keys = { "h", "j", "k", "l" },
+      --   -- set to true to silence the notifications
+      --   -- when entering/exiting persistent resize mode
+      --   silent = false,
+      --   -- must be functions, they will be executed when
+      --   -- entering or exiting the resize mode
+      --   hooks = {
+      --     on_enter = nil,
+      --     on_leave = nil,
+      --   },
+      -- },
       -- ignore these autocmd events (via :h eventignore) while processing
       -- smart-splits.nvim computations, which involve visiting different
       -- buffers and windows. These events will be ignored during processing,
       -- and un-ignored on completed. This only applies to resize events,
       -- not cursor movement events.
-      ignored_events = {
-        "BufEnter",
-        "WinEnter",
-      },
+      -- ignored_events = {
+      --   "BufEnter",
+      --   "WinEnter",
+      -- },
       -- enable or disable a multiplexer integration;
       -- automatically determined, unless explicitly disabled or set,
       -- by checking the $TERM_PROGRAM environment variable,
@@ -149,5 +89,153 @@ return {
       -- see https://sw.kovidgoyal.net/kitty/conf/#opt-kitty.remote_control_password
       kitty_password = nil,
     },
+    config = function(_, opts)
+      require("smart-splits").setup(opts)
+
+      local TMUX = os.getenv "TMUX"
+      if TMUX then
+        local nav = {
+          ["a-h"] = function()
+            require("smart-splits").move_cursor_left()
+          end,
+          ["a-H"] = function()
+            require("smart-splits").resize_left()
+          end,
+          ["a-j"] = function()
+            require("smart-splits").move_cursor_down()
+          end,
+          ["a-J"] = function()
+            require("smart-splits").resize_down()
+          end,
+          ["a-k"] = function()
+            require("smart-splits").move_cursor_up()
+          end,
+          ["<a-K>"] = function()
+            require("smart-splits").resize_up()
+          end,
+          ["a-l"] = function()
+            require("smart-splits").move_cursor_right()
+          end,
+          ["a-L"] = function()
+            require("smart-splits").resize_right()
+          end,
+        }
+        for key, func in pairs(nav) do
+          vim.keymap.set("n", "<" .. key .. ">", func)
+        end
+      end
+
+      if not TMUX then
+        local nav = {
+          ["a-h"] = "Left",
+          ["a-j"] = "Down",
+          ["a-k"] = "Up",
+          ["a-l"] = "Right",
+        }
+        local nav2 = {
+          ["a-H"] = "Left",
+          ["a-J"] = "Down",
+          ["a-K"] = "Up",
+          ["a-L"] = "Right",
+        }
+
+        local navVim = {
+          ["a-h"] = "h",
+          ["a-j"] = "j",
+          ["a-k"] = "k",
+          ["a-l"] = "l",
+        }
+        local function tbl_length(T)
+          local count = 0
+          for _ in pairs(T) do
+            count = count + 1
+          end
+          return count
+        end
+
+        local function detect_opened_windows()
+          -- local is_resize = 2 > tbl_length(vim.fn.win_findbuf(vim.fn.bufnr "%"))
+
+          local tbl_nc = {}
+          for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+            if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
+              -- print(vim.fn.getwinvar(winnr, "&syntax"))
+              local winbufnr = vim.fn.winbufnr(winnr)
+
+              if winbufnr > 0 then
+                local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+                if not vim.tbl_contains({ "notify" }, winft) then
+                  -- print(winft)
+                  table.insert(tbl_nc, winft)
+                end
+              end
+            end
+          end
+
+          if #tbl_nc > 1 then
+            return false
+          end
+          return true
+        end
+
+        local function navigate(dir, is_resize)
+          is_resize = is_resize or false
+          return function()
+            local winn = vim.api.nvim_get_current_win()
+            if not is_resize then
+              vim.cmd.wincmd(navVim[dir])
+            end
+
+            local pane = vim.env.WEZTERM_PANE
+            if pane and winn == vim.api.nvim_get_current_win() then
+              if not is_resize then
+                local pane_dir = nav[dir]
+                vim.system({ "wezterm", "cli", "activate-pane-direction", pane_dir }, { text = true }, function(p)
+                  if p.code ~= 0 then
+                    vim.notify(
+                      "Failed to move to pane " .. pane_dir .. "\n" .. p.stderr,
+                      vim.log.levels.ERROR,
+                      { title = "Wezterm" }
+                    )
+                  end
+                end)
+              end
+
+              if is_resize then
+                local pane_dir2 = nav2[dir]
+
+                if detect_opened_windows() then
+                  vim.system(
+                    { "wezterm", "cli", "adjust-pane-size", "--amount", "5", pane_dir2 },
+                    { text = true },
+                    function(p)
+                      if p.code ~= 0 then
+                        vim.notify(
+                          "Failed to resize pane " .. pane_dir2 .. "\n" .. p.stderr,
+                          vim.log.levels.ERROR,
+                          { title = "Wezterm" }
+                        )
+                      end
+                    end
+                  )
+                else
+                  local commands = string.format([[require("smart-splits").resize_%s()]], pane_dir2:lower())
+                  vim.cmd(" lua " .. commands)
+                end
+              end
+            end
+          end
+        end
+
+        -- Move to window using the movement keys
+        for key, _ in pairs(nav) do
+          vim.keymap.set("n", "<" .. key .. ">", navigate(key))
+        end
+
+        for key, _ in pairs(nav2) do
+          vim.keymap.set("n", "<" .. key .. ">", navigate(key, true))
+        end
+      end
+    end,
   },
 }

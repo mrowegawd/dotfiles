@@ -86,11 +86,11 @@ Util.cmd.augroup("ReHighlightFolded", {
         vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
       )
     then
-      require("r.config.highlights").plugin("markdca", {
-        { Folded = { bg = "NONE", fg = { from = "@field" } } },
+      require("r.settings.highlights").plugin("markdca", {
+        { Folded = { bg = "NONE", fg = { from = "Boolean" } } },
       })
     else
-      require("r.config.highlights").plugin("markdca", {
+      require("r.settings.highlights").plugin("markdca", {
         {
           Folded = {
             bg = { from = "Normal", attr = "bg", alter = 0.5 },

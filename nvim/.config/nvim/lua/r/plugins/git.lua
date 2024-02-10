@@ -1,5 +1,5 @@
 local Util = require "r.utils"
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 
 return {
   -- GIT CONFLICT
@@ -196,7 +196,7 @@ return {
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPre" },
     opts = {
       signs = {
         add = { text = "▎", numhl = "GitSignsAddNr" },
@@ -214,7 +214,7 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit", "OverDispatch" },
+    cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit" },
     dependencies = {
       "tpope/vim-rhubarb",
     },
@@ -224,27 +224,8 @@ return {
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
         desc = "Git(fugitive): open",
       },
-      -- { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git(fugitive): commit" },
-      {
-        "<Leader>gc",
-        function()
-          -- use vim.ui.input to write commit message and then commit with the
-          -- message.
-          vim.ui.input({
-            prompt = "Commit message: ",
-          }, function(input)
-            -- if input is trimmed empty
-            if vim.trim(input or "") == "" then
-              vim.notify("Empty commit message", vim.log.levels.ERROR)
-              return
-            end
-            vim.cmd(string.format('OverDispatch! Git commit -m "%s"', input))
-          end)
-        end,
-        desc = "Git(fugitive) commit",
-      },
+      { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git(fugitive): commit" },
     },
-    config = function() end,
   },
   -- DIFFVIEW
   {
@@ -411,14 +392,16 @@ return {
     --stylua: ignore
     keys = {
       { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit" },
-      { "<Leader>gN", function() require("neogit").open() end, desc = "Git(neogit): open" },
+      { "<Leader>gN", function ()
+        vim.cmd("Neogit kind=split")
+      end, desc = "Git(neogit): open split" },
     },
     opts = {
-      disable_signs = false,
-      disable_hint = true,
-      disable_commit_confirmation = true,
-      disable_builtin_notifications = true,
-      disable_insert_on_commit = false,
+      -- disable_signs = false,
+      -- disable_hint = true,
+      -- disable_commit_confirmation = true,
+      -- disable_builtin_notifications = true,
+      -- disable_insert_on_commit = false,
       signs = {
         section = { "", "" }, -- "󰁙", "󰁊"
         item = { "▸", "▾" },

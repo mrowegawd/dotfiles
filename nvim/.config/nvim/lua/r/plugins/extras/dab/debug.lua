@@ -1,6 +1,6 @@
 local fn = vim.fn
 
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 local Util = require "r.utils"
 
 return {
@@ -26,15 +26,15 @@ return {
       },
 
       { "theHamsta/nvim-dap-virtual-text", opts = { commented = true } },
-      {
-        "LiadOz/nvim-dap-repl-highlights",
-        config = true,
-        build = function()
-          if not require("nvim-treesitter.parsers").has_parser "dap_repl" then
-            vim.cmd ":TSInstall dap_repl"
-          end
-        end,
-      },
+      -- {
+      --   "LiadOz/nvim-dap-repl-highlights",
+      --   config = true,
+      --   build = function()
+      --     if not require("nvim-treesitter.parsers").has_parser "dap_repl" then
+      --       vim.cmd ":TSInstall dap_repl"
+      --     end
+      --   end,
+      -- },
 
       {
         "jbyuki/one-small-step-for-vimkind",
@@ -358,7 +358,7 @@ return {
         {
           DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = { from = "Normal", attr = "bg" } },
         },
-        { DapStopped = { fg = { from = "@field", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
+        { DapStopped = { fg = { from = "Boolean", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
       })
 
       fn.sign_define {

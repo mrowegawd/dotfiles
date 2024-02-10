@@ -3,7 +3,7 @@ local fmt, cmd = string.format, vim.cmd
 
 local L = vim.log.levels
 
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 
 local Util = require "r.utils"
 

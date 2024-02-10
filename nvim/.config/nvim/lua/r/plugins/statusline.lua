@@ -7,7 +7,7 @@ return {
     event = "LazyFile",
     enabled = false,
     config = function()
-      local highlight = require "r.config.highlights"
+      local highlight = require "r.settings.highlights"
 
       local nougat = require "nougat"
 
@@ -60,7 +60,7 @@ return {
         green = "#b8bb26",
         yellow = "#fabd2f",
 
-        purple = highlight.tint(highlight.get("@field", "fg"), 0.2) or "#d3869b",
+        purple = highlight.tint(highlight.get("Boolean", "fg"), 0.2) or "#d3869b",
         visual = highlight.tint(highlight.get("Visual", "bg"), 0.8) or "#d3869b",
 
         insert_bg = highlight.tint(highlight.get("Error", "fg"), -0.1) or "#b8bb26",

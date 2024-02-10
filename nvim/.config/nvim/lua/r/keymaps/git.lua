@@ -1,20 +1,14 @@
 local Util = require "r.utils"
 
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
+
 local M = {}
 
 local function gitfzflua(opts)
-  Util.map.nnoremap("<Leader>gs", "<CMD>lua require('fzf-lua').git_status()<CR>", { desc = "Git(fzflua): git status" })
-  Util.map.nnoremap("<Leader>gS", "<CMD>lua require('fzf-lua').git_stash()<CR>", { desc = "Git(fzflua): git stash" })
-  Util.map.nnoremap(
-    "<Leader>gB",
-    "<CMD>lua require('fzf-lua').git_commits()<CR>",
-    { desc = "Git(fzflua): open commits repos" }
-  )
-  Util.map.nnoremap(
-    "<Leader>gb",
-    "<CMD>lua require('fzf-lua').git_bcommits()<CR>",
-    { desc = "Git(fzflua): open commits buffer" }
-  )
+  Util.map.nnoremap("<Leader>gs", fzf_lua.git_status, { desc = "Git(fzflua): git status" })
+  Util.map.nnoremap("<Leader>gS", fzf_lua.git_stash, { desc = "Git(fzflua): git stash" })
+  Util.map.nnoremap("<Leader>gB", fzf_lua.git_commits, { desc = "Git(fzflua): open commits repos" })
+  Util.map.nnoremap("<Leader>gb", fzf_lua.git_bcommits, { desc = "Git(fzflua): open commits buffer" })
 
   Util.map.nnoremap("<Leader>gf", function()
     local col, row = Util.fzflua.rectangle_win_pojokan()

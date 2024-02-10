@@ -1,0 +1,31 @@
+#!/bin/bash
+
+pane_left=$(tmux display-message -p '#{window_panes}')
+
+if (("$pane_left" == 1)); then
+	tmux split-window -h -p 83
+	tmux select-pane -L
+
+	# current_pane=$(tmux display-message -p '#{window_panes}')
+
+	oj=$(tmux display -p '#{pane_current_command}')
+
+	if [[ $oj != "zsh" ]]; then
+		tmux swap-pane -U
+	fi
+
+	tmux send-keys -t 1 "'$HOME/.local/bin/nnn' -c" Enter
+	tmux select-pane -L
+else
+	jj=$(tmux display -p '#{pane_current_command}')
+	if [[ $jj == "nnn" ]]; then
+		tmux kill-pane
+	else
+		ojc=$(tmux display -p '#{pane_current_command}')
+		if [[ $ojc == "zsh" ]]; then
+			tmux send-keys -t 1 "'$HOME/.local/bin/nnn' -c" Enter
+		else
+			tmux select-pane -L
+		fi
+	fi
+fi

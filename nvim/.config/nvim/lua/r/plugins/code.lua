@@ -1,4 +1,4 @@
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 local Icons = require("r.config").icons
 
 _G.OverseerConfig = {} -- to store error formats
@@ -46,12 +46,12 @@ return {
         -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5.
         -- before we use ultimate-autopair
         "windwp/nvim-autopairs",
-        enabled = function()
-          if require("r.config").lsp_style == "coc" then
-            return false
-          end
-          return true
-        end,
+        -- enabled = function()
+        --   if require("r.config").lsp_style == "coc" then
+        --     return false
+        --   end
+        --   return true
+        -- end,
         -- dependencies = { "hrsh7th/nvim-cmp" },
         opts = {
           close_triple_quotes = true,
@@ -67,8 +67,8 @@ return {
             "neo-tree-popup",
             "vim",
           },
-          fast_wrap = { map = "<c-g>" },
-          -- fast_wrap = { map = nil },
+          -- fast_wrap = { map = "<c-g>" },
+          fast_wrap = { map = nil },
           chars = { "{", "[", "(", '"', "'" },
           pattern = [=[[%'%"%>%]%)%}%,]]=],
           end_key = "$",
@@ -794,7 +794,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
-        -- run_with = "tmux", -- tmux, tt, toggleterm
+        run_with = "wez", -- mux, tt, wez, toggleterm
       },
     },
     config = function(_, opts)

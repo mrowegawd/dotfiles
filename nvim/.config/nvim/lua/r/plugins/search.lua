@@ -1,4 +1,4 @@
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
 
 local Util = require "r.utils"
 
@@ -6,6 +6,11 @@ local Icon = require("r.config").icons
 
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
+
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local file_picker = function(cwd)
+  fzf_lua.files { cwd = cwd }
+end
 
 return {
   -- FLASH.NVIM
@@ -56,11 +61,11 @@ return {
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
-    version = false, -- fzflua did only one release, so use HEAD for now
-    cmd = { "Fzflua" },
+    --  version = false, -- fzflua did only one release, so use HEAD for now
+    -- cmd = { "Fzflua" },
     dependencies = {
       "nvim-tree/nvim-web-devicons",
-      "onsails/lspkind.nvim",
+      -- "onsails/lspkind.nvim",
       {
         "mangelozzi/nvim-rgflow.lua",
         opts = {
@@ -77,16 +82,16 @@ return {
       },
     },
     keys = {
-      { "sf", "<CMD>FzfLua buffers<CR>", desc = "WinNav(fzflua): open" },
-      { "sg", "<CMD>FzfLua blines<CR>", desc = "WinNav(fzfLua): live_grep on curbuf" },
-      { "sG", "<CMD>FzfLua lines<CR>", desc = "WinNav(fzflua): live_grep on buffers" },
-      { "so", "<CMD>FzfLua oldfiles<CR>", desc = "WinNav(Fzflua): oldfiles" },
-      { "z=", "<CMD>FzfLua spell_suggest<CR>", desc = "Fzflua: spell suggest" },
+      { "sf", fzf_lua.buffers, desc = "WinNav(fzflua): open" },
+      { "sG", fzf_lua.lines, desc = "WinNav(fzflua): live_grep on buffers" },
+      { "so", fzf_lua.oldfiles, desc = "WinNav(Fzflua): oldfiles" },
+      { "z=", fzf_lua.spell_suggest, desc = "Fzflua: spell suggest" },
 
+      { "sg", fzf_lua.blines, desc = "WinNav(fzfLua): live_grep on curbuf" },
       {
         "sg",
         function()
-          require("fzf-lua").blines { query = vim.fn.expand "<cword>" }
+          fzf_lua.blines { query = vim.fn.expand "<cword>" }
         end,
         desc = "WinNav(fzfLua): live_grep on curbuf [visual]",
         mode = { "v" },
@@ -94,33 +99,33 @@ return {
       {
         "sG",
         function()
-          require("fzf-lua").lines { query = vim.fn.expand "<cword>" }
+          fzf_lua.lines { query = vim.fn.expand "<cword>" }
         end,
         desc = "WinNav(fzflua): live_grep on buffers [visual]",
         mode = { "v" },
       },
-      { "<Leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "<Leader>fC", "<CMD>FzfLua commands<CR>", desc = "Fzflua: commands" },
-      { "<Leader>fh", "<CMD>FzfLua help_tags<CR>", desc = "Fzflua: help tags" },
+      { "<Leader>ff", file_picker, desc = "Fzflua: find files", mode = { "n", "v" } },
+      { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands" },
+      { "<Leader>fh", fzf_lua.help_tags, desc = "Fzflua: help tags" },
       {
         "<Leader>fh",
         function()
-          require("fzf-lua").help_tags { query = vim.fn.expand "<cword>" }
+          fzf_lua.help_tags { query = vim.fn.expand "<cword>" }
         end,
         mode = { "v" },
         desc = "Fzflua: help tags (visual)",
       },
-      { "<Leader>b", "<CMD>FzfLua resume<CR>", desc = "Fzflua: resume (last search)" },
-      { "<Leader>fg", "<CMD>FzfLua live_grep_glob<CR>", desc = "Fzflua: live grep" },
-      { "<Leader>fg", "<CMD>FzfLua grep_visual<CR>", desc = "Fzflua: live grep (visual)", mode = { "v" } },
-      { "<Leader>fc", "<CMD>FzfLua changes<CR>", desc = "Fzflua: changes" },
-      { "<Leader>fj", "<CMD>FzfLua jumps<CR>", desc = "Fzflua: jumps" },
-      { "<Leader>fm", "<CMD>FzfLua marks<CR>", desc = "Fzflua: marks" },
-      { "<Leader>fs", "<CMD>FzfLua search_history<CR>", desc = "Fzflua: search-history" },
+      { "<Leader>b", fzf_lua.resume, desc = "Fzflua: resume (last search)" },
+      { "<Leader>fg", fzf_lua.live_grep_glob, desc = "Fzflua: live grep" },
+      { "<Leader>fg", fzf_lua.grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
+      { "<Leader>fc", fzf_lua.changes, desc = "Fzflua: changes" },
+      { "<Leader>fj", fzf_lua.jumps, desc = "Fzflua: jumps" },
+      { "<Leader>fm", fzf_lua.marks, desc = "Fzflua: marks" },
+      { "<Leader>fs", fzf_lua.search_history, desc = "Fzflua: search-history" },
       {
         "<Leader>fk",
         function()
-          return require("fzf-lua").keymaps {
+          return fzf_lua.keymaps {
             winopts = {
               preview = {
                 title = Util.fzflua.format_title("Keymaps", ""),
@@ -136,7 +141,7 @@ return {
       {
         "<Leader>fo",
         function()
-          return require("fzf-lua").files {
+          return fzf_lua.files {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
@@ -148,7 +153,7 @@ return {
       --   "<Leader>fF",
       --   function()
       --     local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
-      --     return require("fzf-lua").files {
+      --     return fzf_lua.files {
       --       prompt = "  ",
       --       winopts = { title = format_title("Plugin Files", "󰈙") },
       --       cwd = plugins_directory,
@@ -159,7 +164,7 @@ return {
       -- {
       --   "<Leader>fG",
       --   function()
-      --     return require("fzf-lua").live_grep_glob({
+      --     return fzf_lua.live_grep_glob({
       --       prompt = "  ",
       --       winopts = { title = format_title("GrepHidden", "󰈭") },
       --       filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
@@ -170,7 +175,7 @@ return {
       -- {
       --   "<Leader>fG",
       --   function()
-      --     return require("fzf-lua").grep_visual({
+      --     return fzf_lua.grep_visual({
       --       filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
       --     })
       --   end,
@@ -180,7 +185,7 @@ return {
       {
         "<Leader>fQ",
         function()
-          require("fzf-lua").quickfix {
+          fzf_lua.quickfix {
             prompt = "    ",
             winopts = {
               title = Util.fzflua.format_title("[QF] Select item", "󰈙"),
@@ -204,7 +209,7 @@ return {
           local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case {q} ]]
             .. table.concat(qf_ntbl, " ")
 
-          return require("fzf-lua").live_grep_glob {
+          return fzf_lua.live_grep_glob {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("[QF] Grep", "") },
             cmd = pcmd,
@@ -377,7 +382,7 @@ return {
             --     args.cmd = args.cmd .. " --hidden --no-ignore"
             --   end
             --
-            --   require("fzf-lua").files {
+            --   fzf_lua.files {
             --     cmd = args.cmd,
             --     winopts = { title = Util.fzflua.format_title("Files hidden", "󰈙") },
             --   }
@@ -399,7 +404,7 @@ return {
             --       preview = { hidden = "nohidden" },
             --     }
             --   end
-            --   require("fzf-lua").files {
+            --   fzf_lua.files {
             --     cmd = args.cmd,
             --     winopts = args.winopts,
             --   }
@@ -642,14 +647,14 @@ return {
             --   else
             --     toggle = 1
             --   end
-            --   require("fzf-lua").live_grep_glob {
+            --   fzf_lua.live_grep_glob {
             --     rg_opts = args.rg_opts,
             --     winopts = { title = Util.fzflua.format_title("Grep hidden", "") },
             --   }
             -- end,
 
             --             ["ctrl-y"] = function()
-            --               require("fzf-lua").fzf_exec({}, {
+            --               fzf_lua.fzf_exec({}, {
             --                 fzf_opts = {
             --                   ["--preview"] = vim.fn.shellescape [[cat <<EOF
             -- Keybindings:
@@ -667,13 +672,13 @@ return {
             --
             --                 actions = {
             --                   ["ctrl-y"] = function()
-            --                     require("fzf-lua").live_grep_glob()
+            --                     fzf_lua.live_grep_glob()
             --                   end,
             --                 },
             --               })
             --             end,
             --             ["ctrl-o"] = function()
-            --               require("fzf-lua").files {}
+            --               fzf_lua.files {}
             --             end,
           },
         },
@@ -881,16 +886,6 @@ return {
     end,
     config = function(_, opts)
       require("fzf-lua").setup(opts)
-      -- vim.api.nvim_create_autocmd("FileType", {
-      --   group = vim.api.nvim_create_augroup("FzfSetTMap", {}),
-      --   desc = "Set terminal mappings in fzf buffer.",
-      --   pattern = "fzf",
-      --   callback = function()
-      --     -- vim.keymap.set("t", "<C-_>", require("fzf-lua").builtin)
-      --     vim.keymap.set("t", "<C-c>", require("fzf-lua").builtin)
-      --     -- vim.keymap.set("t", "<C-t>", require("fzf-lua").builtin)
-      --   end,
-      -- })
     end,
   },
   -- TELESCOPE

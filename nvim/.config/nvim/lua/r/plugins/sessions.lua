@@ -1,5 +1,9 @@
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
 
+local Util = require "r.utils"
+
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
+
 return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
@@ -49,7 +53,7 @@ return {
           for i = #contents, 1, -1 do
             reverse[#reverse + 1] = contents[i]
           end
-          return require("fzf-lua").fzf_exec(reverse, {
+          return fzf_lua.fzf_exec(reverse, {
             fzf_opts = {
               ["--header"] = [[Ctrl-x:'del cwd']],
             },

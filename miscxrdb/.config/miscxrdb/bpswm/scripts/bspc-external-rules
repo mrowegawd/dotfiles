@@ -121,8 +121,10 @@ libreoffice() {
 }
 
 zathura() {
-	state=tiled
-	desktop=$desktop_doc
+	state=floating
+	rectangle=731x500+1150+500 # --- sudut window
+	focus=off
+	# desktop=$desktop_doc
 }
 
 videos() {

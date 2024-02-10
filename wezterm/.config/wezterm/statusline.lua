@@ -4,11 +4,17 @@ local wezterm = require("wezterm")
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("update-right-status", function(window, pane)
-	local name = window:active_key_table()
-	if name then
-		name = "TABLE: " .. name
-	end
-	window:set_right_status(name or "")
+	local edge_background = Color.blue
+
+	-- local date = wezterm.strftime("%Y-%m-%d %H:%M")
+	local date = wezterm.strftime("%H:%M")
+
+	window:set_right_status(wezterm.format({
+		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = edge_background } },
+		{ Text = "[Prefix:Alt]  " },
+		{ Text = " " .. date .. " " },
+	}))
 end)
 
 -- Equivalent to POSIX basename(3)

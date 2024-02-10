@@ -1,5 +1,5 @@
 local Color = require("colors")
-local Background = require("background")
+-- local Background = require("background")
 local Hyperlinks = require("hyperlinks")
 
 local Key = require("keymaps.keys")
@@ -32,14 +32,15 @@ local color_schemes = {
 		foreground = Color.fg,
 		cursor_bg = Color.magenta,
 		cursor_border = Color.blue,
+		split = Color.black_alt,
 		ansi = {
 			Color.black,
 			Color.red,
 			Color.green,
 			Color.yellow,
 			Color.blue,
-			Color.blue,
 			Color.cyan,
+			Color.magenta,
 			Color.white,
 		},
 		brights = {
@@ -48,8 +49,8 @@ local color_schemes = {
 			Color.green_alt,
 			Color.yellow_alt,
 			Color.blue_alt,
-			Color.magenta_alt,
 			Color.cyan_alt,
+			Color.magenta_alt,
 			Color.white_alt,
 		},
 	},
@@ -123,8 +124,8 @@ return {
 	hyperlink_rules = Hyperlinks,
 
 	-- ├┤ FONTS ├───────────────────────────────────────────────────────────┤
-	font_size = 11,
-	line_height = 1,
+	font_size = 10.9, -- pengaturan font agar mudah dibaca
+	line_height = 0.9, -- dan juga ini
 	-- font_shaper = "Harfbuzz",
 	harfbuzz_features = { "calt=0" },
 	adjust_window_size_when_changing_font_size = false,
@@ -132,12 +133,12 @@ return {
 		{
 			italic = false,
 			intensity = "Normal",
-			font = font_with_fallback("JetBrains Mono", {}),
+			font = font_with_fallback("SF Mono", {}),
 		},
 		{
 			italic = false,
 			-- intensity = "Bold",
-			font = font_with_fallback("JetBrains Mono", { weight = "Bold" }),
+			font = font_with_fallback("SF Mono", { weight = "Bold" }),
 		},
 		{
 			italic = false,

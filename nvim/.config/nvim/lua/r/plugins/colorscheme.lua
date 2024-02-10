@@ -7,6 +7,13 @@ return {
     "gmr458/vscode_modern_theme.nvim",
     lazy = false,
     priority = 1000,
+    enabled = function()
+      local vscode_modern_theme = { "vscode_modern" }
+      if vim.tbl_contains(vscode_modern_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
     config = function()
       require("vscode_modern").setup {
         cursorline = true,
@@ -90,7 +97,7 @@ return {
       dim_inactive = false, -- dims inactive windows
       lualine_bold = false, -- When `true`, section headers in the lualine theme will be bold
       -- on_highlights = function(highlights, _)
-      -- local hl = require "r.config.highlights"
+      -- local hl = require "r.settings.highlights"
       -- highlights.Normal = {
       --   bg = hl.tint(highlights.Normal.bg, 0.76),
       --   fg = highlights.Normal.fg,
@@ -145,7 +152,6 @@ return {
       end
       return false
     end,
-    -- opts = {},
   },
   -- CATPPUCCIN
   {

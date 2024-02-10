@@ -14,36 +14,36 @@ sel=${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection}
 OPENER="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins/nuke"
 
 if [ -s "$sel" ]; then
-    targets=()
-    while IFS= read -r -d '' entry || [ -n "$entry" ]; do
-        targets+=( "$entry" )
-    done < "$sel"
+	targets=()
+	while IFS= read -r -d '' entry || [ -n "$entry" ]; do
+		targets+=("$entry")
+	done <"$sel"
 
-    elements=${#targets[@]}
+	elements=${#targets[@]}
 
-    if (( elements == 1 )); then
-        # If there's only one file selected, open without prompts
-        "$OPENER" "${targets[0]}"
-    else
-        printf "open [A]ll? "
-        read -r all
+	if ((elements == 1)); then
+		# If there's only one file selected, open without prompts
+		"$OPENER" "${targets[0]}"
+	else
+		printf "open [A]ll? "
+		read -r all
 
-        for ((index=0; index <= ${#targets[@]}; index++)); do
-            "$OPENER" "${targets[index]}"
-            if [ "$all" != "A" ] && (( index+1 < elements )); then
-                printf "press Enter to open '%s'\n" "${targets[index+1]}"
-                read -r -s -n 1 key
-                if [[ $key != "" ]]; then
-                    break
-                fi
-            fi
-        done
-    fi
+		for ((index = 0; index <= ${#targets[@]}; index++)); do
+			"$OPENER" "${targets[index]}"
+			if [ "$all" != "A" ] && ((index + 1 < elements)); then
+				printf "press Enter to open '%s'\n" "${targets[index + 1]}"
+				read -r -s -n 1 key
+				if [[ $key != "" ]]; then
+					break
+				fi
+			fi
+		done
+	fi
 
-    # Clear selection
-    if [ -s "$sel" ] && [ -p "$NNN_PIPE" ]; then
-        printf "-" > "$NNN_PIPE"
-    fi
+	# Clear selection
+	if [ -s "$sel" ] && [ -p "$NNN_PIPE" ]; then
+		printf "-" >"$NNN_PIPE"
+	fi
 elif [ -n "$1" ]; then
-    "$OPENER" "$1"
+	"$OPENER" "$1"
 fi

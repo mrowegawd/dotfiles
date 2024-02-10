@@ -20,7 +20,7 @@ function M.split_nav(resize_or_move, mods, key, dir)
 				win:perform_action({ SendKey = { key = key, mods = mods } }, pane)
 			else
 				if resize_or_move == "resize" then
-					win:perform_action({ AdjustPaneSize = { dir, 3 } }, pane)
+					win:perform_action({ AdjustPaneSize = { dir, 5 } }, pane)
 				else
 					local panes = pane:tab():panes_with_info()
 					local is_zoomed = false

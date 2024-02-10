@@ -3,19 +3,22 @@
 
 COL_WHITE="#626262"
 
-TMUX_PANE_ACTIVE_BG="#0e3640"
-TMUX_PANE_BG="#0e3640"
+TMUX_PANE_ACTIVE_BG="#1b1b24"
+TMUX_PANE_BG="#1b1b24"
 
-TMUX_FG="#9ba9a9"
-TMUX_BORDER_FG="#7d2b28"
+TMUX_FG="#c6c1a7"
+TMUX_BORDER_FG="#3f5a65"
 
-BG_STATUSLINE="#103c48"
-BG_ACTIVE_STATUSLINE="#c678dd"
+BG_STATUSLINE="#1f1f28"
+BG_ACTIVE_STATUSLINE="#957fb8"
 
 left_separator=''
 left_separator_black=''
 right_separator=''
 right_separator_black=''
+left_slant_separator=""
+right_slant_separator=""
+
 session_symbol=''
 
 setw -g pane-active-border-style fg=$TMUX_BORDER_FG
@@ -28,7 +31,7 @@ set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[und
 #  +----------------------------------------------------------+
 #  |                      STATUS THEMES                       |
 #  +----------------------------------------------------------+
-set -g status-fg $TMUX_FG
+set -g status-fg $BG_ACTIVE_STATUSLINE
 set -g status-bg $BG_STATUSLINE
 set -g status on
 set -g status-interval 5
@@ -45,19 +48,20 @@ set-option -g mode-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
 #  ╙
 # set -g status-left-length 40
 # set -g status-style bg="colour238",fg="colour255"
-set -g status-left "#[fg=$TMUX_FG,bold] ❐ #S 👨#(whoami) "
+# set -g status-left "#[fg=$TMUX_FG,bold] ❐ #S 👨#(whoami) "
+set -g status-left ""
 
-set -g window-status-format " #[fg=$TMUX_FG,bold]#I:#{b:pane_current_path}"
+set -g window-status-format "#[fg=$BG_STATUSLINE]$left_slant_separator#[fg=$BG_ACTIVE_STATUSLINE,bold]#I:#{b:pane_current_path}#[fg=$BG_STATUSLINE]$left_slant_separator"
 # set -g window-status-current-format "#[fg=red,bold] #I:#{b:pane_current_path}#[bg=$TMUX_FG,bold]#{?window_zoomed_flag, ZOOM #[fg=$COL_ACTIVE_BORDER_SEPERATOR](#(tmux list-panes | wc -l)) ,}"
 # set -g window-status-current-format "#{?window_zoomed_flag,#[fg=red](,}#W#{?window_zoomed_flag,#[fg=red]),}"
 # set -g window-status-current-format "#{?window_zoomed_flag,(,}#[fg=$BG_ACTIVE_STATUSLINE,bold]^#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
-set -g window-status-current-format "#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE](,}#[fg=red,bold]^#[fg=white]#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
+set -g window-status-current-format "#[fg=red]$left_slant_separator#[fg=black,bg=red,bold]#{?window_zoomed_flag,#[fg=black][ZOOM],}#I:#{b:pane_current_path}#{?window_zoomed_flag,#[bg=$BG_STATUSLINE]),}#[bg=red,fg=$BG_STATUSLINE]$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT
 #  ╙
 set -g status-right-length 40
-set -g status-right " - #{prefix} -  #(date +"%H:%M")#[fg=$TMUX_FG,bold] #{pomodoro_status}"
+set -g status-right "#[fg=$TMUX_FG,bold]#{pomodoro_status} #[fg=$BG_ACTIVE_STATUSLINE,bold][Prefix:#{prefix}] #[fg=$BG_ACTIVE_STATUSLINE,bold] #(date +"%H:%M") #[fg=$BG_STATUSLINE,bg=$TMUX_BORDER_FG,bold] ❐ #S "
 
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

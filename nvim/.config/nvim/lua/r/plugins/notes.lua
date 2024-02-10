@@ -3,7 +3,9 @@ local uv = vim.uv or vim.loop
 
 local Config = require "r.config"
 local Util = require "r.utils"
-local Highlight = require "r.config.highlights"
+local Highlight = require "r.settings.highlights"
+
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
 
 return {
   -- NEORG
@@ -35,7 +37,7 @@ return {
       --   function()
       --     cmd [[Lazy load neorg]]
       --
-      --     return require("fzf-lua").files {
+      --     return fzf_lua.files {
       --       prompt = "  ",
       --       cwd = Config.path.wiki_path,
       --       rg_glob = true,
@@ -52,7 +54,7 @@ return {
       --   "<Localleader>fg",
       --   function()
       --     cmd [[Lazy load neorg]]
-      --     return require("fzf-lua").live_grep_glob {
+      --     return fzf_lua.live_grep_glob {
       --       prompt = "  ",
       --       cwd = Config.path.wiki_path,
       --       rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
@@ -660,7 +662,7 @@ return {
       {
         "<Localleader>fg",
         function()
-          return require("fzf-lua").live_grep_glob {
+          return fzf_lua.live_grep_glob {
             prompt = "  ",
             cwd = Config.path.wiki_path,
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
@@ -669,17 +671,17 @@ return {
             },
           }
         end,
-
         desc = "Note(fzflua): obsidian search",
       },
       {
         "<Localleader>ff",
         function()
-          return require("fzf-lua").files {
+          return fzf_lua.files {
             prompt = "  ",
             cwd = Config.path.wiki_path,
-            rg_glob = true,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
+
             winopts = {
               -- fullscreen = true,
               title = Util.fzflua.format_title("Note Files", ""),
@@ -800,14 +802,14 @@ return {
             {
               Headline1 = {
                 bg = "#332F46",
-                fg = { from = "@attribute", attr = "fg", alter = 1 },
+                fg = { from = "PreProc", attr = "fg", alter = 1 },
                 bold = true,
               },
             },
             {
               Headline2 = {
                 bg = "#3F2F46",
-                fg = { from = "@attribute", attr = "fg", alter = 0.8 },
+                fg = { from = "PreProc", attr = "fg", alter = 0.8 },
                 bold = true,
               },
             },
@@ -815,7 +817,7 @@ return {
             {
               Headline3 = {
                 bg = "#462F42",
-                fg = { from = "@attribute", attr = "fg", alter = 0.6 },
+                fg = { from = "PreProc", attr = "fg", alter = 0.6 },
                 bold = true,
               },
             },
@@ -823,14 +825,14 @@ return {
 
               Headline4 = {
                 bg = "#462F37",
-                fg = { from = "@attribute", attr = "fg", alter = 0.4 },
+                fg = { from = "PreProc", attr = "fg", alter = 0.4 },
                 bold = true,
               },
             },
             {
               Headline5 = {
                 bg = "#46332F",
-                fg = { from = "@attribute", attr = "fg", alter = 0.2 },
+                fg = { from = "PreProc", attr = "fg", alter = 0.2 },
                 bold = true,
               },
             },
@@ -839,7 +841,7 @@ return {
                 -- bg = { from = "Normal", attr = "bg" },
                 bg = "#463F2F",
                 -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "@attribute", attr = "fg", alter = 0 },
+                fg = { from = "PreProc", attr = "fg", alter = 0 },
                 bold = true,
               },
             },

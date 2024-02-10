@@ -1,7 +1,7 @@
 local M = {}
 
 local fmt = string.format
-local hg = require "r.config.highlights"
+local hg = require "r.settings.highlights"
 
 local function title()
   if vim.bo.filetype ~= "qf" then
