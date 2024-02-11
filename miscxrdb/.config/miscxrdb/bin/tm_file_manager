@@ -14,7 +14,7 @@ if (("$pane_left" == 1)); then
 		tmux swap-pane -U
 	fi
 
-	tmux send-keys -t 1 "'$HOME/.local/bin/nnn' -c" Enter
+	tmux send-keys -t 1 "nnn -c" Enter
 	tmux select-pane -L
 else
 	jj=$(tmux display -p '#{pane_current_command}')
@@ -23,7 +23,7 @@ else
 	else
 		ojc=$(tmux display -p '#{pane_current_command}')
 		if [[ $ojc == "zsh" ]]; then
-			tmux send-keys -t 1 "'$HOME/.local/bin/nnn' -c" Enter
+			tmux send-keys -t 1 "nnn -c" Enter
 		else
 			tmux select-pane -L
 		fi

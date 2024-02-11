@@ -307,6 +307,19 @@ local function colorscheme_overrides()
       { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
       { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
     },
+    ["farout"] = {
+      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
+
+      { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
+      { StatusLine = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
+
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 } } },
+      { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
+    },
+
     ["miasma"] = {
       { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
       { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },

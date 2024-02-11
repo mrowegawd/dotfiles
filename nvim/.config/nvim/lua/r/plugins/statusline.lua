@@ -394,7 +394,6 @@ return {
       require("heirline").setup {
         statusline = {
           comp.Mode,
-          -- comp.Branch,
           comp.Git,
           comp.FilePath,
           comp.FileIcon,

@@ -2,6 +2,19 @@ local colorscheme = require("r.config").colorscheme
 local Config = require("r.config").defaults
 
 return {
+
+  {
+    "thallada/farout.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local farout_theme = { "farout", "farout-night", "farout-day", "farout-moon", "farout-storm" }
+      if vim.tbl_contains(farout_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- VSCODE_MODERN_THEME
   {
     "gmr458/vscode_modern_theme.nvim",
