@@ -107,8 +107,30 @@ return {
       { "<Leader>ff", file_picker, desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands" },
       { "<Leader>fh", fzf_lua.help_tags, desc = "Fzflua: help tags" },
-      { "gs", fzf_lua.lsp_document_symbols, desc = "Fzflua: help tags" },
-      { "gS", fzf_lua.lsp_workspace_symbols, desc = "Fzflua: help tags" },
+      { "df", fzf_lua.lsp_document_diagnostics, desc = "Fzflua(LSP): document diagnostics" },
+      { "dF", fzf_lua.lsp_workspace_diagnostics, desc = "Fzflua(LSP): document diagnostics" },
+      {
+        "gs",
+        function()
+          fzf_lua.lsp_document_symbols {
+            winopts = {
+              fullscreen = true,
+            },
+          }
+        end,
+        desc = "Fzflua(LSP): document symbols",
+      },
+      {
+        "gS",
+        function()
+          fzf_lua.lsp_workspace_symbols {
+            winopts = {
+              fullscreen = true,
+            },
+          }
+        end,
+        desc = "Fzflua(LSP): workspace symbols",
+      },
       {
         "<Leader>fh",
         function()
@@ -884,9 +906,9 @@ return {
           -- previewer hidden by default
           winopts = { preview = { hidden = "hidden" } },
         },
-        commands = {
-          debug = true,
-        },
+        -- commands = {
+        --   debug = true,
+        -- },
       }
     end,
     config = function(_, opts)
@@ -900,8 +922,8 @@ return {
     version = false, -- telescope did only one release, so use HEAD for now
     keys = {
       -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
-      { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
-      { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
+      -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
+      -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
       { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
       { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },

@@ -130,6 +130,11 @@ video/*)
 	exit 1
 	;;
 
+## gif
+image/gif)
+	mpv --force-window=immediate --autofit=800x800 --loop-file "${FPATH}"
+	;;
+
 ## Image
 image/*)
 	# if [ "$GUI" -ne 0 ]; then

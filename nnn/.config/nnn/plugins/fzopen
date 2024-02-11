@@ -25,6 +25,14 @@ USE_NUKE=0
 
 . "$HOME/.config/miscxrdb/fzf/fzf.config"
 
+not_in_tmux() {
+	[ -z "$TMUX" ]
+}
+
+is_mac() {
+	uname | grep -q "Darwin"
+}
+
 if type fzf >/dev/null 2>&1; then
 	cmd="$FZF_DEFAULT_COMMAND"
 	if type fd >/dev/null 2>&1; then
@@ -32,14 +40,19 @@ if type fzf >/dev/null 2>&1; then
 	else
 		[ -z "$cmd" ] && cmd="find . -type f 2>/dev/null"
 	fi
-	pane_id_right=$(wezterm cli get-pane-direction right)
-	wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
-	wezterm cli activate-pane-direction Up
 
-	entry="$(eval "$cmd" | fzf --no-height -m --prompt 'FzOpen: ')"
+	if not_in_tmux; then
+		pane_id_right=$(wezterm cli get-pane-direction right)
+		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+		wezterm cli activate-pane-direction Up
 
-	wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-	wezterm cli activate-pane-direction Left
+		entry="$(eval "$cmd" | fzf --no-height -m --prompt 'FzOpen: ')"
+
+		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+		wezterm cli activate-pane-direction Left
+	else
+		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'FzOpen: ')"
+	fi
 
 	# To show only the file name
 	# entry=$(find . -type f 2>/dev/null | fzf --delimiter / --with-nth=-1 --tiebreak=begin --info=hidden)
@@ -68,14 +81,6 @@ if [ "$3" ]; then
 
 	exit 0
 fi
-
-not_in_tmux() {
-	[ -z "$TMUX" ]
-}
-
-is_mac() {
-	uname | grep -q "Darwin"
-}
 
 handle_video() {
 	# if [ "$GUI" -ne 0 ]; then
@@ -122,6 +127,58 @@ handle_pdf() {
 	# 	return
 	# fi
 	exit 0
+}
+
+# sets the variable abs_target, this should be faster than calling printf
+abspath() {
+	case "$1" in
+	/*) abs_target="$1" ;;
+	*) abs_target="$PWD/$1" ;;
+	esac
+}
+
+# storing the result to a tmp file is faster than calling listimages twice
+listimages() {
+	find -L "${1%/*}" -maxdepth 1 -type f -print0 |
+		grep -izZE '\.(jpe?g|png|gif|webp|tiff|bmp|ico|svg)$' |
+		sort -z | tee "$tmp"
+}
+
+load_dir() {
+	abspath "$2"
+	tmp="${TMPDIR:-/tmp}/nuke_$$"
+	trap 'rm -f $tmp' EXIT
+	count="$(listimages "$abs_target" | grep -a -m 1 -ZznF "$abs_target" | cut -d: -f1)"
+
+	if [ -n "$count" ]; then
+		if [ "$GUI" -ne 0 ]; then
+			xargs -0 nohup "$1" -n "$count" -- <"$tmp"
+		else
+			xargs -0 "$1" -n "$count" -- <"$tmp"
+		fi
+	else
+		shift
+		"$1" -- "$@" # fallback
+	fi
+}
+
+load_dir_with_flag() {
+	abspath "$3"
+
+	tmp="${TMPDIR:-/tmp}/nuke_$$"
+	trap 'rm -f $tmp' EXIT
+	count="$(listimages "$abs_target" | grep -a -m 1 -ZznF "$abs_target" | cut -d: -f1)"
+
+	if [ -n "$count" ]; then
+		if [ "$GUI" -ne 0 ]; then
+			xargs -0 nohup "$1" -n "$count" -- <"$tmp"
+		else
+			xargs -0 "$1" "$2" -n "$count" -- <"$tmp"
+		fi
+	else
+		shift
+		"$1" -- "$@" # fallback
+	fi
 }
 
 if [ "$entry" ]; then
@@ -186,6 +243,15 @@ if [ "$entry" ]; then
 		handle_pdf "${entry}"
 		exit 1
 		;;
+
+	*gif*)
+		if type sxiv >/dev/null 2>&1; then
+			load_dir_with_flag sxiv -a "${entry}" >/dev/null 2>&1 &
+			# sxiv -a "${entry}" >/dev/null 2>&1 &
+			exit 1
+		fi
+		;;
+
 	*image/*)
 		# if [ "$GUI" -ne 0 ]; then
 		if is_mac; then

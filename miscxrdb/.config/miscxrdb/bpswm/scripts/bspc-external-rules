@@ -165,6 +165,7 @@ signal() {
 svix() {
 	state=floating
 	layer=above
+	focus=off
 }
 
 file_manager() {

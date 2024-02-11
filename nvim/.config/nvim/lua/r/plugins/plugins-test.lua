@@ -11,6 +11,7 @@ local cmd = vim.cmd
 
 local Highlight = require "r.config.highlights"
 local Util = require "r.utils"
+local Icon = require("r.config").icons
 
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
 
@@ -549,6 +550,7 @@ return {
     enabled = false,
     opts = {},
     config = function()
+      ---@diagnostic disable-next-line: undefined-field
       require("telescope").load_extension "git_worktree"
     end,
     dependencies = {
