@@ -23,6 +23,7 @@ local colors = {
   coldisorent = Highlight.tint(col_statusline_bg, 0.5),
 
   mod_norm = Highlight.get("Error", "fg"),
+  mod_norm_bg = Highlight.get("Normal", "bg"),
   mod_ins = Highlight.tint(col_errormsg_bg, 0),
   mod_vis = Highlight.get("visual", "bg"),
   mod_term = Highlight.get("Boolean", "fg"),
@@ -56,16 +57,6 @@ local exclude = {
   ["toggleterm"] = true,
   ["TelescopePrompt"] = true,
 } -- Ignore float windows and exclude filetype
-
-local function git_branch()
-  local status
-  if vim.b.mdpreview_session then
-    status = vim.b[vim.b.mdpreview_session.source_buf].gitsigns_status_dict
-  else
-    status = vim.b.gitsigns_status_dict
-  end
-  return vim.tbl_get(status or {}, "head")
-end
 
 M.Mode = {
   init = function(self)
@@ -119,7 +110,7 @@ M.Mode = {
       t = "",
     },
     mode_colors = {
-      n = colors.mod_norm,
+      n = "red",
       i = colors.mod_ins,
       v = colors.mod_vis,
       V = colors.mod_vis,
@@ -136,11 +127,21 @@ M.Mode = {
   },
   {
     provider = function(self)
-      return string.format("    %s  ", self.mode_icons[self.mode])
+      return string.format("    %s  ", self.mode_icons[self.mode])
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      return { bg = self.mode_colors[mode], fg = colors.base_bg, bold = true }
+      -- return { bg = self.mode_colors[mode], fg = colors.base_bg, bold = true }
+      return { bg = self.mode_colors[mode], fg = colors.mod_norm_bg, bold = true }
+    end,
+  },
+  {
+    -- provider = "",
+    provider = "",
+
+    hl = function(self)
+      local mode = self.mode:sub(1, 1)
+      return { fg = self.mode_colors[mode], bg = colors.base_bg }
     end,
   },
 
@@ -176,21 +177,21 @@ M.Git = {
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and ("+" .. count .. "")
+      return count > 0 and ("A+" .. count .. "")
     end,
     hl = { fg = colors.diff_add },
   },
   {
     provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and (" -" .. count .. "")
+      return count > 0 and (" D-" .. count .. "")
     end,
     hl = { fg = colors.diff_delete },
   },
   {
     provider = function(self)
       local count = self.status_dict.changed or 0
-      return count > 0 and (" ~" .. count .. "")
+      return count > 0 and (" M~" .. count .. "")
     end,
     hl = { fg = colors.diff_change },
   },

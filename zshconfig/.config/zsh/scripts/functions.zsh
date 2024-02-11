@@ -21,7 +21,7 @@ build-install(){
   apt_install="urlview"
 
   # TODO: install cargo seperti eza, lazygit, etc
-  cargo_install="eza"
+  cargo_install="eza, git-delta"
 
   # TODO: install go get
   cargo_install="lf lazygit"

@@ -1,10 +1,13 @@
-local cmd = vim.cmd
+-- local cmd = vim.cmd
 
 local Highlight = require "r.settings.highlights"
 local Util = require "r.utils"
+local Icons = require("r.config").icons
+
+local fzf_lua = Util.cmd.reqcall "fzf-lua"
 
 return {
-  -- NEO-TREE
+  -- NEO-TREE (disabled)
   {
     "nvim-neo-tree/neo-tree.nvim",
     enabled = false,
@@ -234,54 +237,239 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
+  -- OUTLINE.NVIM
+  {
+    "hedyhli/outline.nvim",
+    event = "LspAttach",
+    cmd = "Outline",
+    opts = function()
+      Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      Highlight.plugin("OutlineAuHi", {
+        {
+          OutlineCurrent = {
+            fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
+            -- bg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+            bold = true,
+          },
+        },
+      })
+
+      local kind = Icons.kinds
+
+      return {
+        outline_window = {
+          position = "right",
+          split_command = nil,
+          width = 25,
+          focus_on_open = false,
+        },
+        symbols = {
+          filter = nil,
+          -- icons = require("r.config").icons.kinds,
+          icons = {
+            File = { icon = kind.File, hl = "Identifier" },
+            Module = { icon = kind.Module, hl = "Include" },
+            Namespace = { icon = kind.Namespace, hl = "Include" },
+            Package = { icon = kind.Package, hl = "Include" },
+            Class = { icon = kind.Class, hl = "Type" },
+            Method = { icon = kind.Method, hl = "Function" },
+            Property = { icon = kind.Property, hl = "Identifier" },
+            Field = { icon = kind.Field, hl = "Identifier" },
+            Constructor = { icon = kind.Constructor, hl = "Special" },
+            Enum = { icon = kind.Enum, hl = "Type" },
+            Interface = { icon = kind.Interface, hl = "Type" },
+            Function = { icon = kind.Function, hl = "Function" },
+            Variable = { icon = kind.Variable, hl = "Constant" },
+            Constant = { icon = kind.Constant, hl = "Constant" },
+            String = { icon = kind.String, hl = "String" },
+            Number = { icon = kind.number, hl = "Number" },
+            Boolean = { icon = kind.Boolean, hl = "Boolean" },
+            Array = { icon = kind.Array, hl = "Constant" },
+            Object = { icon = kind.Object, hl = "Type" },
+            Key = { icon = kind.Key, hl = "Type" },
+            Null = { icon = kind.Null, hl = "Type" },
+            EnumMember = { icon = kind.EnumNumber, hl = "Identifier" },
+            Struct = { icon = kind.Struct, hl = "Structure" },
+            Event = { icon = kind.Event, hl = "Type" },
+            Operator = { icon = kind.Operator, hl = "Identifier" },
+            TypeParameter = { icon = kind.TypeParameter, hl = "Identifier" },
+            Component = { icon = kind.Component, hl = "Function" },
+            Fragment = { icon = "󰅴", hl = "Constant" },
+
+            -- ccls
+            TypeAlias = { icon = " ", hl = "Type" },
+            Parameter = { icon = " ", hl = "Identifier" },
+            StaticMethod = { icon = " ", hl = "Function" },
+            Macro = { icon = " ", hl = "Function" },
+          },
+          --
+        },
+        preview_window = {
+          live = true,
+        },
+        -- These keymaps can be a string or a table for multiple keys.
+        -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
+        keymaps = {
+          show_help = "?",
+          close = { "<Esc>", "q", "<Leader><TAB>" },
+          goto_location = "<Cr>",
+          peek_location = "o",
+          goto_and_close = {},
+          restore_location = {},
+          hover_symbol = {},
+          toggle_preview = "P",
+          rename_symbol = {},
+          code_actions = {},
+          fold = "h",
+          fold_toggle = { "<tab>", "za" },
+          fold_toggle_all = "<S-tab>",
+          unfold = "l",
+          fold_all = { "zm", "zM" },
+          unfold_all = { "zO", "zR" },
+          fold_reset = "<space><space>",
+          down_and_goto = "<a-n>",
+          up_and_goto = "<a-p>",
+        },
+      }
+    end,
+  },
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
-    enabled = false,
-    keys = {
-      {
-        "<Leader>e",
-        function()
-          local neotree_opened = false
-          for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
-            if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
-              neotree_opened = true
-            end
-          end
+    -- enabled = false,
+    keys = function()
+      local function get_outline()
+        local ok_outline, outline = pcall(require, "outline")
+        return ok_outline and outline or {}
+      end
 
-          if neotree_opened then
-            if vim.bo[0].filetype == "neo-tree" then
-              return vim.cmd [[wincmd p]]
-            end
-            return cmd "Neotree"
+      local height = vim.o.lines - vim.o.cmdheight
+      if vim.o.laststatus ~= 0 then
+        height = height - 1
+      end
 
-            -- return cmd "Neotree reveal"
-          else
-            return cmd "Neotree"
-          end
-        end,
-        desc = "Misc(neotree): open File explore",
-      },
-      {
-        "<Leader>E",
-        function()
-          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-          return cmd "Neotree reveal"
-        end,
-        desc = "Misc(neotree): open find file on File Explore",
-      },
-      {
-        "<Leader>uu",
-        function()
-          require("edgy").toggle()
-        end,
-        desc = "Misc(edgy): toggle explore",
-      },
-      -- { "<Leader>us", function() require("edgy").select() end, desc = "Misc(edgy): select window" },
-      { "<Leader>ug", "<CMD> Neotree git_status toggle <CR>", desc = "Misc(edgy): toggle git_status" },
-      { "<Leader>ub", "<CMD> Neotree buffers toggle <CR>", desc = "Misc(edgy): toggle buffers" },
-      { "<Leader>uo", "<CMD> OutlineClose <CR>", desc = "Misc(edgy): toggle close" },
-    },
+      local vim_width = vim.o.columns
+      local vim_height = height
+
+      local widthc = math.floor(vim_width / 2 + 8)
+      local heightc = math.floor(vim_height / 2 - 5)
+      return {
+        -- {
+        --   "<Leader>e",
+        --   function()
+        --     local neotree_opened = false
+        --     for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+        --       if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
+        --         neotree_opened = true
+        --       end
+        --     end
+        --
+        --     if neotree_opened then
+        --       if vim.bo[0].filetype == "neo-tree" then
+        --         return vim.cmd [[wincmd p]]
+        --       end
+        --       return cmd "Neotree"
+        --
+        --       -- return cmd "Neotree reveal"
+        --     else
+        --       return cmd "Neotree"
+        --     end
+        --   end,
+        --   desc = "Misc(neotree): open File explore",
+        -- },
+        -- {
+        --   "<Leader>E",
+        --   function()
+        --     -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+        --     return cmd "Neotree reveal"
+        --   end,
+        --   desc = "Misc(neotree): open find file on File Explore",
+        -- },
+
+        {
+          "<Leader>uu",
+          function()
+            require("edgy").toggle()
+          end,
+          desc = "Misc(edgy): toggle explore",
+        },
+
+        { "<Localleader>oa", "<cmd>Outline<CR>", desc = "Misc(outline): toggle" },
+        {
+          "<Localleader>oA",
+          function()
+            if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
+              return
+            end
+
+            if vim.bo[0].filetype == "outline" then
+              vim.cmd "wincmd w"
+            end
+
+            local aerial_selected = {
+              "Array",
+              "Class",
+              "Constructor",
+              "Enum",
+              "Field",
+              "Function",
+              "Package",
+              "Interface",
+              "Method",
+              "Object",
+              "Struct",
+              "Variable",
+              "all",
+            }
+            fzf_lua.fzf_exec(aerial_selected, {
+              prompt = "  ",
+              no_esc = true,
+              fzf_opts = { ["--layout"] = "reverse" },
+              winopts_fn = {
+                width = widthc,
+                height = heightc,
+              },
+              winopts = {
+                title = "[Outline] filter symbols",
+                row = 1,
+                relative = "cursor",
+                height = 0.33,
+                width = widthc / (widthc + vim_width - 10),
+              },
+              actions = {
+                ["default"] = function(selected, _)
+                  local selection = selected[1]
+                  if selection ~= nil and type(selection) == "string" then
+                    local opts_outline = Util.opts "outline.nvim"
+                    local outline = get_outline()
+                    if outline.is_open then
+                      outline.close_outline()
+                    end
+
+                    -- local path = vim.fn.expand "%:p"
+                    -- vim.cmd [[close]]
+                    -- vim.cmd("e " .. path)
+                    if selection == "all" then
+                      opts_outline.symbols.filter = nil
+                    else
+                      opts_outline.symbols.filter = { selection }
+                    end
+                    outline.setup(opts_outline)
+
+                    vim.schedule(function()
+                      outline.open_outline()
+
+                      -- vim.cmd("e " .. path)
+                    end)
+                  end
+                end,
+              },
+            })
+          end,
+          desc = "Misc(aerial): change filter kind",
+        },
+      }
+    end,
     opts = function()
       Highlight.plugin("NeoEdgyHi", {
         { WinBar = { bg = "NONE" } },
@@ -375,11 +563,11 @@ return {
         },
         keys = {
           -- increase width
-          ["<a-L>"] = function(win)
+          ["<a-H>"] = function(win)
             win:resize("width", 2)
           end,
           -- decrease width
-          ["<a-H>"] = function(win)
+          ["<a-L>"] = function(win)
             win:resize("width", -2)
           end,
           -- increase height
