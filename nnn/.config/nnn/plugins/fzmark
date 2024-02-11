@@ -35,15 +35,16 @@ else
 		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
 		wezterm cli activate-pane-direction Up
 
-		select=$(cat "$cwd" | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
+		select=$(cat "$cwd" | fzf --no-height --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
 			--preview-window right:50%:hidden \
-			--prompt "Jump to> ")
+			--prompt "Jump To: ")
+
+		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+		wezterm cli activate-pane-direction Left
 
 		if [ -n "$select" ]; then
 			# we select directory not a file
 			if [ ! -f "$select" ]; then
-				wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-				wezterm cli activate-pane-direction Left
 
 				nnn "$select"
 
@@ -51,9 +52,6 @@ else
 				dunstify "[warn] this not folder??"
 				exit 1
 			fi
-
-			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-			wezterm cli activate-pane-direction Left
 		fi
 	else
 		select=$(cat "$cwd" | fzf-tmux --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \

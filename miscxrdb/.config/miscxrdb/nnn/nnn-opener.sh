@@ -117,7 +117,8 @@ application/pdf)
 	handle_pdf
 	exit 1
 	;;
-	## Audio
+
+## Audio
 audio/*)
 	handle_audio
 	exit 1
@@ -128,6 +129,7 @@ video/*)
 	handle_video
 	exit 1
 	;;
+
 ## Image
 image/*)
 	# if [ "$GUI" -ne 0 ]; then

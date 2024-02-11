@@ -114,6 +114,7 @@ ENVVARS=(
 	"NNN_PREVIEWIMGPROG=${NNN_PREVIEWIMGPROG:-}"             # program used to preview images
 	"NNN_PREVIEWVIDEO=${NNN_PREVIEWVIDEO:-}"                 # mpv backend used to preview video
 )
+
 # Non-configurable environment variables
 NNN_PARENT=${NNN_FIFO#*.}
 [ "$NNN_PARENT" -eq "$NNN_PARENT" ] 2>/dev/null || NNN_PARENT="" # Make empty if non-numeric
@@ -296,7 +297,7 @@ print_bin_info() {
 handle_mime() {
 	case "$2" in
 	image/jpeg) image_preview "$cols" "$lines" "$1" ;;
-	image/gif) generate_preview "$cols" "$lines" "$1" "gif" ;;
+	image/gif) image_preview "$cols" "$lines" "$1" ;;
 	image/vnd.djvu) generate_preview "$cols" "$lines" "$1" "djvu" ;;
 	image/*) generate_preview "$cols" "$lines" "$1" "image" ;;
 	video/*) generate_preview "$cols" "$lines" "$1" "video" ;;
@@ -405,17 +406,6 @@ preview_file() {
 	fi
 }
 
-# test_dong() {
-# 	# Run Zathura in floating mode
-# 	zathura "$@" &
-#
-# 	# Get the window ID of Zathura
-# 	win_id=$(xdotool search --name "Zathura")
-#
-# 	# Set the focus attribute to false for the Zathura window
-# 	bspc rule -a Zathura:"$(echo "$win_id")" focus=false
-# }
-
 generate_preview() {
 	if [ -n "$QLPATH" ] && stat "$3"; then
 		f="$(wslpath -w "$3")" && "$QLPATH" "$f" &
@@ -424,6 +414,7 @@ generate_preview() {
 		video_preview "$1" "$2" "$3" "${args[@]}" && return
 	elif [ ! -f "$NNN_PREVIEWDIR/$3.jpg" ] || [ -n "$(find -L "$3" -newer "$NNN_PREVIEWDIR/$3.jpg")" ]; then
 		mkdir -p "$NNN_PREVIEWDIR/${3%/*}"
+
 		case $4 in
 		audio) ffmpeg -i "$3" -filter_complex "scale=iw*min(1\,min($NNN_PREVIEWWIDTH/iw\,ih)):-1" "$NNN_PREVIEWDIR/$3.jpg" -y ;;
 		epub) gnome-epub-thumbnailer "$3" "$NNN_PREVIEWDIR/$3.jpg" ;;
@@ -432,12 +423,15 @@ generate_preview() {
 			frameprefix="$NNN_PREVIEWDIR/$3/${3##*/}"
 			if [ ! -d "$NNN_PREVIEWDIR/$3" ]; then
 				mkdir -p "$NNN_PREVIEWDIR/$3"
+
 				convert -coalesce -resize "$NNN_PREVIEWWIDTH"x"$NNN_PREVIEWHEIGHT"\> "$3" "$frameprefix.jpg" ||
 					MAGICK_TMPDIR="/tmp" convert -coalesce -resize "$NNN_PREVIEWWIDTH"x"$NNN_PREVIEWHEIGHT"\> "$3" "$frameprefix.jpg"
 			fi
 			frames=$(($(find "$NNN_PREVIEWDIR/$3" | wc -l) - 2))
+
 			[ $frames -lt 0 ] && return
 			while true; do
+
 				for i in $(seq 0 $frames); do
 					image_preview "$1" "$2" "$frameprefix-$i.jpg"
 					sleep 0.1
@@ -448,9 +442,11 @@ generate_preview() {
 		elif [ -n "$NNN_PREVIEWVIDEO" ]; then
 			video_preview "$1" "$2" "$3" && return
 		else
+
 			image_preview "$1" "$2" "$3" && return
 		fi ;;
 		image) if exists convert; then
+
 			convert "$3" -flatten -resize "$NNN_PREVIEWWIDTH"x"$NNN_PREVIEWHEIGHT"\> "$NNN_PREVIEWDIR/$3.jpg"
 		else
 			image_preview "$1" "$2" "$3" && return
