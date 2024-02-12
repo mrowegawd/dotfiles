@@ -22,7 +22,35 @@ local function spawn_toggle_pane(window, pane)
 	})
 end
 
-local set_local = true
+local function spawn_nnn(window, pane)
+	window:perform_action(
+		act.SplitPane({
+			direction = "Left",
+			command = {
+				args = {
+					os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
+					"-c",
+					"nnn",
+				},
+			},
+			size = { Percent = 15 },
+		}),
+		pane
+	)
+	-- Constant.update_ctrl_f_panes({
+	-- 	pane_id = tonumber(pane:tab():active_pane():pane_id()),
+	-- 	tab_id = pane:window():active_tab():tab_id(),
+	-- 	run_as = "file_manager",
+	-- })
+end
+
+local function is_in_nvim(pane)
+	return string.match(pane:get_foreground_process_name(), "nvim")
+end
+
+local function is_in_nnn(pane)
+	return string.match(pane:get_foreground_process_name(), "nnn")
+end
 
 return {
 	-- ╭──────╮
@@ -205,76 +233,25 @@ return {
 						spawn_toggle_pane(window, pane)
 					end
 				elseif #panes == 2 then
-					-- window:toast_notification("wezterm", "Left", nil, 4000)
-					window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-
-					local pane_id = pane:tab():get_pane_direction("Left")
-					if pane_id == nil then
-						-- window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-						spawn_toggle_pane(window, pane)
+					if is_in_nvim(pane) then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					elseif is_in_nnn(pane) then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					else
+						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
 					end
 				elseif #panes == 3 then
+					if is_in_nvim(pane) then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					elseif is_in_nnn(pane) then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					else
+						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+					end
 				end
 
-				-- if not Constant.config.ctrl_f_pane_actived then
-				-- 	wezterm.log_info("go left")
-				--
-				-- 	window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-				-- 	Constant.config.ctrl_f_pane_actived = true
-				-- else
-				-- 	wezterm.log_info("go right")
-				--
-				-- 	window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-				-- 	Constant.config.ctrl_f_pane_actived = false
-				-- end
-				--
 				-- window:toast_notification("wezterm", tostring(pane:tab():get_title()), nil, 4000)
 				wezterm.log_info(Constant.get_tbl_ctrl_f_panes())
-
-				-- window:toast_notification("wezterm", tostring(Constant.config.ctrl_f_pane_actived), nil, 4000)
-				-- window:toast_notification("wezterm", tostring(Constant.config.ctrl_f_pane_id), nil, 4000)
-
-				-- if not Constant.config.ctrl_f_pane_actived and set_local then
-				-- 	-- if #panes == 1 then
-				-- 	spawn_toggle_pane(window, pane)
-				-- 	Constant.update_ctrl_f_panes({
-				-- 		pane_id = tonumber(pane:tab():active_pane():pane_id()),
-				-- 		tab_id = pane:window():active_tab():tab_id(),
-				-- 		run_as = "toggle_term",
-				-- 	})
-				-- 	set_local = true
-				-- else
-				-- 	set_local = false
-				-- 	window:toast_notification("wezterm", "hore", nil, 4000)
-				-- end
-
-				-- if Constant.config.ctrl_f_pane_id == 0 or not Constant.config.ctrl_f_pane_actived or #panes == 2 then
-				-- 	window:perform_action(
-				-- 		act.SplitPane({
-				-- 			direction = "Right", -- Down
-				-- 			-- command = { args = { "top" } },
-				-- 			size = { Percent = 25 },
-				-- 		}),
-				-- 		pane
-				-- 	)
-				-- 	Constant.config.ctrl_f_pane_id = pane:tab():active_pane():pane_id()
-				-- end
-				--
-				-- -- local pane_id = pane:tab():get_pane_direction("Right")
-				-- -- if pane_id then
-				-- -- 	window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-				-- -- end
-				--
-				-- if Constant.config.set_last_pane then
-				-- 	local current_cursor = pane:tab():active_pane():pane_id()
-				-- 	-- local pane_right = pane:tab():get_pane_direction("Right")
-				--
-				-- 	if Constant.config.ctrl_f_pane_actived and (current_cursor == Constant.config.ctrl_f_pane_id) then
-				-- 		window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-				-- 	else
-				-- 		window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-				-- 	end
-				-- end
 
 				-- window:perform_action(
 				-- 	act.SplitPane({
@@ -375,37 +352,45 @@ return {
 			else
 				local panes = pane:tab():panes_with_info()
 
-				local is_pane_nnn_spawned
-				for _, p in ipairs(panes) do
-					wezterm.log_info(p)
-					if p.pane:get_title() == "nnn" then
-						is_pane_nnn_spawned = true
-					end
+				if #panes == 1 then
+					spawn_nnn(window, pane)
+				elseif #panes == 2 then
+					window:toast_notification("wezterm", "mantap", nil, 4000)
 				end
+
+				-- local panes = pane:tab():panes_with_info()
+
+				-- local is_pane_nnn_spawned
+				-- for _, p in ipairs(panes) do
+				-- 	wezterm.log_info(p)
+				-- 	if p.pane:get_title() == "nnn" then
+				-- 		is_pane_nnn_spawned = true
+				-- 	end
+				-- end
 
 				-- window:toast_notification("wezterm", tostring(pane_nnn_spawned), nil, 4000)
 
-				if not is_pane_nnn_spawned then
-					window:perform_action(
-						act.SplitPane({
-							direction = "Left",
-							command = {
-								args = {
-									os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
-									"-c",
-									"nnn",
-								},
-							},
-							size = { Percent = 15 },
-						}),
-						pane
-					)
-				else
-					local pane_id = pane:tab():get_pane_direction("Right")
-					if pane_id then
-						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-					end
-				end
+				-- 	if not is_pane_nnn_spawned then
+				-- 		window:perform_action(
+				-- 			act.SplitPane({
+				-- 				direction = "Left",
+				-- 				command = {
+				-- 					args = {
+				-- 						os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
+				-- 						"-c",
+				-- 						"nnn",
+				-- 					},
+				-- 				},
+				-- 				size = { Percent = 15 },
+				-- 			}),
+				-- 			pane
+				-- 		)
+				-- 	else
+				-- 		local pane_id = pane:tab():get_pane_direction("Right")
+				-- 		if pane_id then
+				-- 			window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+				-- 		end
+				-- 	end
 			end
 		end),
 	},
