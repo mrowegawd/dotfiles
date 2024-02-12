@@ -42,23 +42,20 @@ GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
 
 CURRENT_WINDOW=$(tmux display-message -p "#{window_id}")
 PANE_MAIN_FILE_MANAGER="/tmp/.tmux_file_manager_id_main_$CURRENT_WINDOW"
-PANE_MAIN_STATUS_ZOOM_FILE_MANAGER="/tmp/.tmux_file_manager_status_zoom_$CURRENT_WINDOW"
+# PANE_MAIN_STATUS_ZOOM_FILE_MANAGER="/tmp/.tmux_file_manager_status_zoom_$CURRENT_WINDOW"
 
 [[ ! -f $PANE_MAIN_STATUS_FILE_MANAGER ]] && touch "$PANE_MAIN_STATUS_FILE_MANAGER"
 # GET_PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM=$(cat "$PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM")
-GET_PANE_MAIN_ID_FILE_MANAGER=$(cat "$PANE_MAIN_FILE_MANAGER")
+# GET_PANE_MAIN_ID_FILE_MANAGER=$(cat "$PANE_MAIN_FILE_MANAGER")
 
 # Check pane: jika ada 1 atau pane yang lebih dari 3
 # kenapa lebih dari 3: karena [1, 2, 3] adalah uratan `nnn` `nvim` `terminal`
 if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
 	tmux split-pane -hb -p 15 -c '#{pane_current_path}'
-	NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")
-	echo "$NEXT_PANE_ID" >"$PANE_MAIN_FILE_MANAGER"
-
+	# NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")
+	# echo "$NEXT_PANE_ID" >"$PANE_MAIN_FILE_MANAGER"
 	tmux send-keys -t "$NEXT_PANE_ID" "nnn -c" Enter
-
-elif [[ $GET_TOTAL_ACTIVE_PANES == 2 ]]; then
-
+else
 	if _check_pane_is_nnn; then
 		tmux kill-pane
 		exit
@@ -67,36 +64,48 @@ elif [[ $GET_TOTAL_ACTIVE_PANES == 2 ]]; then
 	if _check_pane_is_nvim; then
 		_create_nnn_window "$PANE_MAIN_FILE_MANAGER"
 		exit
-
-	fi
-	if _check_pane_is_zsh; then
-		_go_left
 	fi
 
-elif [[ $GET_TOTAL_ACTIVE_PANES == 3 ]]; then
-	tmux select-pane -t "$GET_PANE_MAIN_ID_FILE_MANAGER"
-	if _check_pane_is_nnn; then
-		tmux kill-pane
-		exit
-	fi
-
-elif [[ $GET_TOTAL_ACTIVE_PANES -gt 3 ]]; then
-	# dunstify "mantap"
-
-	CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
-	if [ "$CURRENT_PANE" != "$GET_PANE_MAIN_ID_FILE_MANAGER" ]; then
-		TEST_PANE=$(tmux has-session -t "$GET_PANE_MAIN_ID_FILE_MANAGER" 2>/dev/null && echo 123)
-
-		if [[ $TEST_PANE == 123 ]]; then
-			tmux select-pane -t "$GET_PANE_MAIN_ID_FILE_MANAGER"
-			_create_nnn_window "$PANE_MAIN_FILE_MANAGER"
-			exit
-
-		fi
-
-	else
-		_go_right
-	fi
+# elif [[ $GET_TOTAL_ACTIVE_PANES == 2 ]]; then
+#
+# 	if _check_pane_is_nnn; then
+# 		tmux kill-pane
+# 		exit
+# 	fi
+#
+# 	if _check_pane_is_nvim; then
+# 		_create_nnn_window "$PANE_MAIN_FILE_MANAGER"
+# 		exit
+#
+# 	fi
+# 	if _check_pane_is_zsh; then
+# 		_go_left
+# 	fi
+#
+# elif [[ $GET_TOTAL_ACTIVE_PANES == 3 ]]; then
+# 	tmux select-pane -t "$GET_PANE_MAIN_ID_FILE_MANAGER"
+# 	if _check_pane_is_nnn; then
+# 		tmux kill-pane
+# 		exit
+# 	fi
+#
+# elif [[ $GET_TOTAL_ACTIVE_PANES -gt 3 ]]; then
+# 	# dunstify "mantap"
+#
+# 	CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
+# 	if [ "$CURRENT_PANE" != "$GET_PANE_MAIN_ID_FILE_MANAGER" ]; then
+# 		TEST_PANE=$(tmux has-session -t "$GET_PANE_MAIN_ID_FILE_MANAGER" 2>/dev/null && echo 123)
+#
+# 		if [[ $TEST_PANE == 123 ]]; then
+# 			tmux select-pane -t "$GET_PANE_MAIN_ID_FILE_MANAGER"
+# 			_create_nnn_window "$PANE_MAIN_FILE_MANAGER"
+# 			exit
+#
+# 		fi
+#
+# 	else
+# 		_go_right
+# 	fi
 
 fi
 

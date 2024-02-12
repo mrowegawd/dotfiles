@@ -33,44 +33,62 @@ _check_pane_is_zsh() {
 GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
 
 CURRENT_WINDOW=$(tmux display-message -p "#{window_id}")
-PANE_MAIN_TOGGLE_TERM="/tmp/.tmux_toggle_term_id_main_$CURRENT_WINDOW"
+# PANE_MAIN_TOGGLE_TERM="/tmp/.tmux_toggle_term_id_main_$CURRENT_WINDOW"
 PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM="/tmp/.tmux_toggle_term_status_zoom_$CURRENT_WINDOW"
 
 [[ ! -f $PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM ]] && touch "$PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM"
 # GET_PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM=$(cat "$PANE_MAIN_STATUS_ZOOM_TOGGLE_TERM")
-GET_PANE_MAIN_ID_ZOOM_TOGGLE_TERM=$(cat "$PANE_MAIN_TOGGLE_TERM")
+# GET_PANE_MAIN_ID_ZOOM_TOGGLE_TERM=$(cat "$PANE_MAIN_TOGGLE_TERM")
 
 # Check pane: jika ada 1 atau pane yang lebih dari 3
 # kenapa lebih dari 3: karena [1, 2, 3] adalah uratan `nnn` `nvim` `terminal`
 if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
 	tmux split-pane -h -p 25 -c '#{pane_current_path}'
-	pane_id=$(tmux display-message -p "#{pane_id}")
-	echo "$pane_id" >"$PANE_MAIN_TOGGLE_TERM"
-elif [[ $GET_TOTAL_ACTIVE_PANES == 2 ]]; then
-	_go_left
-
+	# pane_id=$(tmux display-message -p "#{pane_id}")
+	# echo "$pane_id" >"$PANE_MAIN_TOGGLE_TERM"
+else
 	if _check_pane_is_nnn; then
 		_go_right
-		tmux split-pane -h -p 25 -c '#{pane_current_path}'
-		pane_id=$(tmux display-message -p "#{pane_id}")
-		echo "$pane_id" >"$PANE_MAIN_TOGGLE_TERM"
+		# tmux split-pane -h -p 25 -c '#{pane_current_path}'
+		# pane_id=$(tmux display-message -p "#{pane_id}")
+		# echo "$pane_id" >"$PANE_MAIN_TOGGLE_TERM"
 	fi
-elif [[ $GET_TOTAL_ACTIVE_PANES == 3 ]]; then
 	if _check_pane_is_nvim; then
-		_go_right
-	elif _check_pane_is_nnn; then
-		_go_left
-	elif _check_pane_is_zsh; then
-		_go_left
+		tmux split-pane -h -p 25 -c '#{pane_current_path}'
+		exit
 	fi
-elif [[ $GET_TOTAL_ACTIVE_PANES -gt 3 ]]; then
-	# dunstify "mantap"
 
-	CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
-	if [ "$CURRENT_PANE" != "$GET_PANE_MAIN_ID_ZOOM_TOGGLE_TERM" ]; then
-		tmux select-pane -t "$GET_PANE_MAIN_ID_ZOOM_TOGGLE_TERM"
-	else
-		_go_left
+	if ! _check_pane_is_nvim || ! _check_pane_is_nnn; then
+		tmux kill-pane
+		exit
 	fi
 
 fi
+# elif [[ $GET_TOTAL_ACTIVE_PANES == 2 ]]; then
+# 	_go_left
+#
+# 	if _check_pane_is_nnn; then
+# 		_go_right
+# 		tmux split-pane -h -p 25 -c '#{pane_current_path}'
+# 		pane_id=$(tmux display-message -p "#{pane_id}")
+# 		echo "$pane_id" >"$PANE_MAIN_TOGGLE_TERM"
+# 	fi
+# elif [[ $GET_TOTAL_ACTIVE_PANES == 3 ]]; then
+# 	if _check_pane_is_nvim; then
+# 		_go_right
+# 	elif _check_pane_is_nnn; then
+# 		_go_left
+# 	elif _check_pane_is_zsh; then
+# 		_go_left
+# 	fi
+# elif [[ $GET_TOTAL_ACTIVE_PANES -gt 3 ]]; then
+# 	# dunstify "mantap"
+#
+# 	CURRENT_PANE=$(tmux display-message -p "#{pane_id}")
+# 	if [ "$CURRENT_PANE" != "$GET_PANE_MAIN_ID_ZOOM_TOGGLE_TERM" ]; then
+# 		tmux select-pane -t "$GET_PANE_MAIN_ID_ZOOM_TOGGLE_TERM"
+# 	else
+# 		_go_left
+# 	fi
+#
+# fi
