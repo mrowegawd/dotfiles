@@ -33,7 +33,7 @@ return {
   -- CONFORM.NVIM
   {
     "stevearc/conform.nvim",
-    event = { "BufWritePre" },
+    event = { "LspAttach" },
     cmd = "ConformInfo",
     keys = {
       {

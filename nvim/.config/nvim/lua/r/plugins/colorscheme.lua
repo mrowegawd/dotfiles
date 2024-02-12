@@ -2,7 +2,6 @@ local colorscheme = require("r.config").colorscheme
 local Config = require("r.config").defaults
 
 return {
-
   {
     "thallada/farout.nvim",
     lazy = false,
@@ -134,22 +133,6 @@ return {
       return false
     end,
   },
-  -- SEOUL256
-  -- {
-  --   "junegunn/seoul256.vim",
-  --   lazy = false,
-  --   priority = 1000,
-  --   -- init = function()
-  --   --   vim.g.seoul256_background = 256
-  --   -- end,
-  --   enabled = function()
-  --     local seoul256theme = { "seoul256" }
-  --     if vim.tbl_contains(seoul256theme, colorscheme) then
-  --       return true
-  --     end
-  --     return false
-  --   end,
-  -- },
   -- GRUVBOX-MATERIAL
   {
     "sainnhe/gruvbox-material",

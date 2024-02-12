@@ -186,12 +186,12 @@ image/*)
 	else
 
 		tmux select-pane -R
-		current_pane=$(tmux display-message -p '#{window_panes}')
+		current_pane=$(tmux display-message -p '#{pane_id}')
 		# output current_pane selalu 1
 		if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
 			# dunstify "mantap"
 			tmux split-window -h -p 83
-			current_pane=$(tmux display-message -p '#{window_panes}')
+			current_pane=$(tmux display-message -p '#{pane_id}')
 		fi
 
 		program=$(tmux display -p '#{pane_current_command}')

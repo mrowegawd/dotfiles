@@ -6,6 +6,24 @@ local Util = require("utils")
 local wezterm = require("wezterm")
 local act = wezterm.action
 
+local function spawn_toggle_pane(window, pane)
+	window:perform_action(
+		act.SplitPane({
+			direction = "Right", -- Down
+			-- command = { args = { "top" } },
+			size = { Percent = 25 },
+		}),
+		pane
+	)
+	Constant.update_ctrl_f_panes({
+		pane_id = tonumber(pane:tab():active_pane():pane_id()),
+		tab_id = pane:window():active_tab():tab_id(),
+		run_as = "toggle_term",
+	})
+end
+
+local set_local = true
+
 return {
 	-- ╭──────╮
 	-- │ PANE │
@@ -153,55 +171,110 @@ return {
 				window:perform_action({ SendKey = { key = "f", mods = "ALT" } }, pane)
 			else
 				local panes = pane:tab():panes_with_info()
-				local set_zoom = true
 
-				Constant.config.set_zoom = false
-				Constant.config.ctrl_f_pane_actived = false
-				for _, p in ipairs(panes) do
-					-- wezterm.log_info(p)
-					if p.is_zoomed then
-						Constant.config.set_zoom = true
+				-- local current_tab_id = pane:window():active_tab():tab_id()
+				-- wezterm.log_info("current tab " .. tostring(current_tab_id))
+
+				-- for _, p in ipairs(panes) do
+				-- 	if #Constant.get_tbl_ctrl_f_panes() > 0 then
+				-- 		for _, pane_ctrl_f in pairs(Constant.get_tbl_ctrl_f_panes()) do
+				-- 			if p.pane:pane_id() == pane_ctrl_f.pane_id then
+				-- 				if current_tab_id == pane_ctrl_f.tab_id then
+				-- 					wezterm.log_info("delete window")
+				-- 					Util.removebyKey(Constant.get_tbl_ctrl_f_panes(), p.pane:pane_id())
+				-- 					Constant.config.ctrl_f_pane_actived = false
+				-- 				end
+				-- 			end
+				-- 		end
+				-- 		-- else
+				-- 		-- 	if #Constant.get_tbl_ctrl_f_panes() == 0 then
+				-- 		-- 		Constant.config.ctrl_f_pane_actived = true
+				-- 		-- 	end
+				-- 	end
+				-- end
+
+				if #panes == 1 then
+					local pane_nnn = pane:tab():get_pane_direction("Left")
+					if pane_nnn then
+						return
 					end
-					if p.pane:pane_id() == Constant.config.ctrl_f_pane_id then
-						Constant.config.ctrl_f_pane_actived = true
+					local pane_id = pane:tab():get_pane_direction("Right")
+					if pane_id then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					else
+						spawn_toggle_pane(window, pane)
 					end
-				end
-
-				-- window:toast_notification("wezterm", tostring(Constant.config.set_zoom), nil, 4000)
-
-				if Constant.config.ctrl_f_pane_id == 0 or not Constant.config.ctrl_f_pane_actived then
-					window:perform_action(
-						act.SplitPane({
-							direction = "Right", -- Down
-							-- command = { args = { "top" } },
-							size = { Percent = 30 },
-						}),
-						pane
-					)
-					Constant.config.ctrl_f_pane_id = pane:tab():active_pane():pane_id()
-
-					set_zoom = false
-				end
-
-				local pane_id = pane:tab():get_pane_direction("Right")
-				if pane_id then
-					window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-				end
-
-				if not Constant.config.set_zoom and set_zoom then
-					set_zoom = false
-
-					local current_cursor = pane:tab():active_pane():pane_id()
-
+				elseif #panes == 2 then
+					-- window:toast_notification("wezterm", "Left", nil, 4000)
 					window:perform_action({ ActivatePaneDirection = "Left" }, pane)
 
-					if current_cursor == Constant.config.ctrl_f_pane_id then
-						window:perform_action({ SetPaneZoomState = true }, pane)
+					local pane_id = pane:tab():get_pane_direction("Left")
+					if pane_id == nil then
+						-- window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+						spawn_toggle_pane(window, pane)
 					end
-				else
-					set_zoom = true
-					window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+				elseif #panes == 3 then
 				end
+
+				-- if not Constant.config.ctrl_f_pane_actived then
+				-- 	wezterm.log_info("go left")
+				--
+				-- 	window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+				-- 	Constant.config.ctrl_f_pane_actived = true
+				-- else
+				-- 	wezterm.log_info("go right")
+				--
+				-- 	window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+				-- 	Constant.config.ctrl_f_pane_actived = false
+				-- end
+				--
+				-- window:toast_notification("wezterm", tostring(pane:tab():get_title()), nil, 4000)
+				wezterm.log_info(Constant.get_tbl_ctrl_f_panes())
+
+				-- window:toast_notification("wezterm", tostring(Constant.config.ctrl_f_pane_actived), nil, 4000)
+				-- window:toast_notification("wezterm", tostring(Constant.config.ctrl_f_pane_id), nil, 4000)
+
+				-- if not Constant.config.ctrl_f_pane_actived and set_local then
+				-- 	-- if #panes == 1 then
+				-- 	spawn_toggle_pane(window, pane)
+				-- 	Constant.update_ctrl_f_panes({
+				-- 		pane_id = tonumber(pane:tab():active_pane():pane_id()),
+				-- 		tab_id = pane:window():active_tab():tab_id(),
+				-- 		run_as = "toggle_term",
+				-- 	})
+				-- 	set_local = true
+				-- else
+				-- 	set_local = false
+				-- 	window:toast_notification("wezterm", "hore", nil, 4000)
+				-- end
+
+				-- if Constant.config.ctrl_f_pane_id == 0 or not Constant.config.ctrl_f_pane_actived or #panes == 2 then
+				-- 	window:perform_action(
+				-- 		act.SplitPane({
+				-- 			direction = "Right", -- Down
+				-- 			-- command = { args = { "top" } },
+				-- 			size = { Percent = 25 },
+				-- 		}),
+				-- 		pane
+				-- 	)
+				-- 	Constant.config.ctrl_f_pane_id = pane:tab():active_pane():pane_id()
+				-- end
+				--
+				-- -- local pane_id = pane:tab():get_pane_direction("Right")
+				-- -- if pane_id then
+				-- -- 	window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+				-- -- end
+				--
+				-- if Constant.config.set_last_pane then
+				-- 	local current_cursor = pane:tab():active_pane():pane_id()
+				-- 	-- local pane_right = pane:tab():get_pane_direction("Right")
+				--
+				-- 	if Constant.config.ctrl_f_pane_actived and (current_cursor == Constant.config.ctrl_f_pane_id) then
+				-- 		window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+				-- 	else
+				-- 		window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+				-- 	end
+				-- end
 
 				-- window:perform_action(
 				-- 	act.SplitPane({

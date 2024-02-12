@@ -110,7 +110,7 @@ return {
           ["a-k"] = function()
             require("smart-splits").move_cursor_up()
           end,
-          ["<a-K>"] = function()
+          ["a-K"] = function()
             require("smart-splits").resize_up()
           end,
           ["a-l"] = function()

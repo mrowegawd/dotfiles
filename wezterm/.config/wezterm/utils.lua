@@ -1,3 +1,5 @@
+local wezterm = require("wezterm")
+
 local M = {}
 function M.cmd_call(params)
 	local handle = io.popen(params)
@@ -61,6 +63,15 @@ M.tbl_merge = function(t1, ...)
 	end
 
 	return t1
+end
+
+-- https://stackoverflow.com/questions/52922469/remove-specific-entry-from-lua-table
+M.removebyKey = function(tab, val)
+	for i, v in ipairs(tab) do
+		if v.pane_id == val then
+			tab[i] = nil
+		end
+	end
 end
 
 return M

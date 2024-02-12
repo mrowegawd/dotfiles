@@ -243,6 +243,9 @@ c_ii() {
 	df -Th
 	echo -e "\\n${RED}LAN Information :$NC"
 	mylan
+
+	echo -e "\\n${RED}XDG SESSION TYPE (XDG_SESSION_TYPE): $NC"
+	echo -e "$XDG_SESSION_TYPE\n"
 }
 
 mylan() {

@@ -107,7 +107,14 @@ return {
       { "<Leader>ff", file_picker, desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands" },
       { "<Leader>fh", fzf_lua.help_tags, desc = "Fzflua: help tags" },
-      { "df", fzf_lua.lsp_document_diagnostics, desc = "Fzflua(LSP): document diagnostics" },
+      {
+        "df",
+        function()
+          fzf_lua.lsp_document_diagnostics {}
+        end,
+
+        desc = "Fzflua(LSP): document diagnostics",
+      },
       { "dF", fzf_lua.lsp_workspace_diagnostics, desc = "Fzflua(LSP): document diagnostics" },
       {
         "gs",

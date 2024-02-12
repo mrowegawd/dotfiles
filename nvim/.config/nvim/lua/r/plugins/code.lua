@@ -787,6 +787,7 @@ return {
 
       { "re", "<Cmd> RmuxEDITConfig <CR>" },
       { "rE", "<Cmd> RmuxREDITConfig <CR>" },
+      -- { "<a-f>", "<Cmd> RmuxToggleTerm <CR>" },
     },
     opts = {
       base = {

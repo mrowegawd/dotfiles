@@ -191,17 +191,17 @@ return {
   {
     "s1n7ax/nvim-terminal",
     keys = {
-      {
-        "<a-f>",
-        function()
-          if not vim.bo.buftype == "terminal" then
-            vim.cmd.Normal()
-          end
-          ---@diagnostic disable-next-line: undefined-global
-          return NTGlobal["terminal"]:toggle()
-        end,
-        mode = { "n", "v", "t", "i" },
-      },
+      -- {
+      --   "<a-f>",
+      --   function()
+      --     if not vim.bo.buftype == "terminal" then
+      --       vim.cmd.Normal()
+      --     end
+      --     ---@diagnostic disable-next-line: undefined-global
+      --     return NTGlobal["terminal"]:toggle()
+      --   end,
+      --   mode = { "n", "v", "t", "i" },
+      -- },
       {
         "<a-1>",
         function()
