@@ -234,7 +234,14 @@ return {
 					end
 				elseif #panes == 2 then
 					if is_in_nvim(pane) then
+						local pane_id = pane:tab():get_pane_direction("Right")
+						if not pane_id then
+							spawn_toggle_pane(window, pane)
+							return
+						end
+
 						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+						return
 					elseif is_in_nnn(pane) then
 						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
 					else
@@ -355,7 +362,28 @@ return {
 				if #panes == 1 then
 					spawn_nnn(window, pane)
 				elseif #panes == 2 then
-					window:toast_notification("wezterm", "mantap", nil, 4000)
+					if is_in_nnn(pane) then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+						return
+					end
+					if is_in_nvim(pane) then
+						local pane_id = pane:tab():get_pane_direction("Left")
+						if not pane_id then
+							spawn_nnn(window, pane)
+							return
+						end
+
+						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+						return
+					end
+				elseif #panes == 3 then
+					if is_in_nvim(pane) then
+						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+					elseif is_in_nnn(pane) then
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					else
+						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+					end
 				end
 
 				-- local panes = pane:tab():panes_with_info()
