@@ -2,7 +2,7 @@ local M = {}
 
 local Util = require("utils")
 local wezterm = require("wezterm")
--- local act = wezterm.action
+local act = wezterm.action
 
 function M.split_nav(resize_or_move, mods, key, dir)
 	local event = "SplitNav_" .. resize_or_move .. "_" .. dir
@@ -77,5 +77,52 @@ end
 -- 	local clean_text = text:gsub("/home/" .. username, "~")
 -- 	return clean_text
 -- end
+
+function M.spawn_toggle_pane(window, pane)
+	window:perform_action(
+		act.SplitPane({
+			direction = "Right", -- Down
+			-- command = { args = { "top" } },
+			size = { Percent = 25 },
+		}),
+		pane
+	)
+	-- Constant.update_ctrl_f_panes({ pane_id = tonumber(pane:tab():active_pane():pane_id()),
+	-- 	tab_id = pane:window():active_tab():tab_id(),
+	-- 	run_as = "toggle_term",
+	-- })
+end
+
+function M.spawn_nnn(window, pane, percent_size)
+	percent_size = percent_size or 15
+
+	window:perform_action(
+		act.SplitPane({
+			direction = "Left",
+			command = {
+				args = {
+					os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
+					"-c",
+					"nnn",
+				},
+			},
+			size = { Percent = 15 },
+		}),
+		pane
+	)
+	-- Constant.update_ctrl_f_panes({
+	-- 	pane_id = tonumber(pane:tab():active_pane():pane_id()),
+	-- 	tab_id = pane:window():active_tab():tab_id(),
+	-- 	run_as = "file_manager",
+	-- })
+end
+
+function M.is_in_nvim(pane)
+	return string.match(pane:get_foreground_process_name(), "nvim")
+end
+
+function M.is_in_nnn(pane)
+	return string.match(pane:get_foreground_process_name(), "nnn")
+end
 
 return M
