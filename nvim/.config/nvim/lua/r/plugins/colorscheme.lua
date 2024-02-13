@@ -154,6 +154,9 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
+    init = function()
+      vim.g.background = "light"
+    end,
     enabled = function()
       local catppuccintheme = { "catppuccin-latte", "catppuccin" }
       if vim.tbl_contains(catppuccintheme, colorscheme) then
@@ -161,7 +164,7 @@ return {
       end
     end,
     opts = {
-      flavour = "mocha", -- latte, frappe, macchiato, mocha
+      flavour = "latte", -- latte, frappe, macchiato, mocha
       background = { -- :h background
         light = "latte",
         dark = "mocha",

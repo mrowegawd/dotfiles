@@ -392,20 +392,115 @@ local function colorscheme_overrides()
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
     },
     ["catppuccin-latte"] = {
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
 
-      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = -0.5 }, bg = "NONE" } },
-      { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
-      { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
+      { WinSeparator = { fg = { from = "@constructor", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+
+      { itSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
+
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 } } },
+
+      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
+      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
+      { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = 0.1 } } },
+
+      {
+        StatusLine = {
+          fg = { from = "LineNr", attr = "fg", alter = -0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+        },
+      },
+      {
+        MyStatusLine_directory_fg = {
+          fg = { from = "Directory", atrr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      {
+        MyStatusLine_notif_fg = {
+          fg = { from = "Boolean", atrr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      {
+        MyStatusLine_red_fg = {
+          fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+
+      { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.45 } } },
+      { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
+
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.5 }, bg = "NONE" } },
+      { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = true } },
+      { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.2 } } },
 
       {
         PmenuSel = {
-          fg = { from = "CmpItemAbbr", attr = "fg", alter = -4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "CmpItemAbbr", attr = "fg", alter = 0.4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
         },
       },
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = { from = "CmpItemAbbr" } } },
       { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+
+      -- TELESCOPE ==========================================================
+      { TelescopeNormal = { link = "NormalFloat" } },
+      { TelescopeBorder = { link = "NormalFloat" } },
+
+      -- Prompt
+      { TelescopePromptNormal = { link = "NormalFloat" } },
+      {
+        TelescopePromptTitle = {
+          bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "WarningMsg", alter = 0.5, bold = true },
+          bold = true,
+        },
+      },
+      { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+      { TelescopePromptPrefix = { bg = { from = "NormalFloat", attr = "bg" } } },
+      { TelescopePromptCounter = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+      -- Preview
+      { TelescopePreviewNormal = { link = "NormalFloat" } },
+      {
+        TelescopePreviewTitle = {
+          bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "ColorColumn", alter = 0.14, bold = true },
+          bold = true,
+        },
+      },
+      { TelescopePreviewBorder = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "FloatBorder" } } },
+      { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+      { TelescopeSelection = { inherit = "PmenuSel" } },
+      { TelescopeTitle = { fg = { from = "Boolean", attr = "fg" } } },
+
+      -- Results
+      { TelescopeResultsNormal = { link = "NormalFloat" } },
+      { TelescopeResultsTitle = { fg = { from = "FloatBorder" }, bg = "NONE" } },
+      { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+
+      -- FZFLUA =============================================================
+      { FzfLuaNormal = { inherit = "NormalFloat" } },
+      { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "NormalFloat", attr = "bg" } } },
+      {
+        FzfLuaTitle = {
+          fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+          bg = { from = "FzfLuaNormal", attr = "bg" },
+        },
+      },
+      {
+        FzfLuaTitleIcon = {
+          fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+          bg = { from = "FzfLuaNormal", attr = "bg" },
+        },
+      },
+      { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
+
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 }, bg = { from = "Normal", attr = "bg" } } },
+      { CursorLine = { bg = { from = "Normal", alter = -0.1 } } },
     },
     ["tokyonight"] = {
       { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },

@@ -1,6 +1,7 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 local Util = require "r.utils"
+local Config = require "r.config"
 
 return {
   -- MINI.INDENTSCOPE
@@ -11,7 +12,14 @@ return {
     event = { "VeryLazy" },
     config = function(_, opts)
       Highlight.plugin("mini.indentscopeUi", {
-        { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+        theme = {
+          ["*"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["catppuccin-latte"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = -0.5 } } },
+          },
+        },
       })
       require("mini.indentscope").setup(opts)
 
@@ -103,8 +111,16 @@ return {
     },
     config = function(_, opts)
       Highlight.plugin("ibl_indentline", {
-        { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-        { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+        theme = {
+          ["*"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["catppuccin-latte"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -1 } } },
+          },
+        },
       })
       require("ibl").setup(opts)
     end,
@@ -301,13 +317,23 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     opts = function()
+      local incnormal_guifg, incnormal_guifg_guibg, incnormal_guifg_gui
+      if vim.g.colorscheme == "catppuccin-latte" then
+        incnormal_guifg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
+        incnormal_guifg_guibg = Highlight.tint(Highlight.get("Normal", "fg"), -0.5)
+        incnormal_guifg_gui = "bold"
+      else
+        incnormal_guifg = Highlight.tint(Highlight.get("Boolean", "bg"), 0.5)
+        incnormal_guifg_guibg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5)
+        incnormal_guifg_gui = "bold"
+      end
       return {
         highlight = {
           groups = {
             InclineNormal = {
-              guifg = Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
-              guibg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5),
-              gui = "bold",
+              guifg = incnormal_guifg,
+              guibg = incnormal_guifg_guibg,
+              gui = incnormal_guifg_gui,
             },
 
             InclineNormalNC = {
@@ -484,7 +510,9 @@ return {
       local col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 2)
       local col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 0.2)
 
-      if require("r.config").colorscheme == "material" then
+      if Config.colorscheme == "catppuccin-latte" then
+        col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.1)
+        col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.2)
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
       end

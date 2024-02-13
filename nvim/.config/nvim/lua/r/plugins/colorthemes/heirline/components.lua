@@ -10,17 +10,30 @@ local col_statusline_bg = Highlight.get("StatusLine", "bg")
 local col_statusline_fg = Highlight.get("StatusLine", "fg")
 local col_normal_fg = Highlight.get("Normal", "fg")
 
+local branch_fg = Highlight.tint(col_normal_fg, 4)
+local separator_fg = Highlight.tint(col_errormsg_bg, 1)
+local separator_fg_alt = Highlight.tint(col_statusline_bg, -0.5)
+if vim.g.background == "light" then
+  branch_fg = Highlight.tint(col_normal_fg, 0.5)
+
+  separator_fg = Highlight.tint(col_errormsg_bg, 0.2)
+  separator_fg_alt = Highlight.tint(col_statusline_bg, -0.05)
+end
+
 local colors = {
   base_bg = col_statusline_bg,
   base_fg = Highlight.tint(col_statusline_fg, 0.8),
 
-  branch_fg = Highlight.tint(col_normal_fg, 4),
+  branch_fg = branch_fg,
 
   mode_bg = Highlight.tint(col_statusline_bg, 1),
   filename_fg = Highlight.tint(col_statusline_bg, 6),
   modified_fg = Highlight.tint(col_errormsg_bg, 0.3),
 
   coldisorent = Highlight.tint(col_statusline_bg, 0.5),
+
+  separator_fg = separator_fg,
+  separator_fg_alt = separator_fg_alt,
 
   mod_norm = Highlight.get("Error", "fg"),
   mod_norm_bg = Highlight.get("Normal", "bg"),
@@ -110,7 +123,7 @@ M.Mode = {
       t = "",
     },
     mode_colors = {
-      n = "red",
+      n = colors.separator_fg,
       i = colors.mod_ins,
       v = colors.mod_vis,
       V = colors.mod_vis,
@@ -141,7 +154,17 @@ M.Mode = {
 
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      return { fg = self.mode_colors[mode], bg = colors.base_bg }
+      return { fg = self.mode_colors[mode], bg = colors.separator_fg_alt }
+    end,
+  },
+
+  {
+    -- provider = "",
+    provider = "",
+
+    hl = function()
+      -- local mode = self.mode:sub(1, 1)
+      return { fg = colors.separator_fg_alt, bg = colors.base_bg }
     end,
   },
 
@@ -170,7 +193,7 @@ M.Git = {
 
   {
     provider = function(self)
-      return "  " .. self.status_dict.head .. " "
+      return " " .. self.status_dict.head .. " "
     end,
     hl = { fg = colors.branch_fg, bg = colors.base_bg, bold = true },
   },

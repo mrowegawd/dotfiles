@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "gruvbox-material"
+local colorscheme = "catppuccin-latte"
 
 _G.base = {}
 
@@ -27,6 +27,7 @@ local base_options = {
     semantic_tokens_enabled = true, -- Enable lsp semantic tokens at start.
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
     autoformat = true, -- Highlight URLs with an underline effect.
+    colorscheme = colorscheme, -- Highlight URLs with an underline effect.
   },
 }
 

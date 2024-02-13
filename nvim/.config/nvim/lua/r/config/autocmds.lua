@@ -91,12 +91,26 @@ Util.cmd.augroup("ReHighlightFolded", {
       })
     else
       require("r.settings.highlights").plugin("markdca", {
-        {
-          Folded = {
-            bg = { from = "Normal", attr = "bg", alter = 0.5 },
-            fg = { from = "Normal", attr = "bg", alter = 1.6 },
-            underline = false,
-            bold = true,
+        theme = {
+          ["*"] = {
+            {
+              Folded = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "Normal", attr = "bg", alter = 1.6 },
+                underline = false,
+                bold = true,
+              },
+            },
+          },
+          ["catppuccin-latte"] = {
+            {
+              Folded = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "Normal", attr = "bg", alter = -0.5 },
+                underline = false,
+                bold = true,
+              },
+            },
           },
         },
       })
