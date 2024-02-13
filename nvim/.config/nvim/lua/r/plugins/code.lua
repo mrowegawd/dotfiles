@@ -357,14 +357,14 @@ return {
           else
             cmp.complete()
           end
-        end, { "i" }),
+        end, { "i", "c" }),
         ["<c-p>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
           else
             fallback()
           end
-        end, { "i" }),
+        end, { "i", "c" }),
         ["<c-q>"] = cmp.mapping.abort(),
         ["<c-g>"] = cmp.mapping(function()
           require("fzf-lua").complete_file {
@@ -536,24 +536,24 @@ return {
               end
             end,
           },
-          ["<TAB>"] = {
-            c = function()
-              if cmp.visible() then
-                cmp.select_next_item()
-              else
-                cmp.complete()
-              end
-            end,
-          },
-          ["<S-TAB>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
+          -- ["<TAB>"] = {
+          --   c = function()
+          --     if cmp.visible() then
+          --       cmp.select_next_item()
+          --     else
+          --       cmp.complete()
+          --     end
+          --   end,
+          -- },
+          -- ["<S-TAB>"] = {
+          --   c = function(fallback)
+          --     if cmp.visible() then
+          --       cmp.select_prev_item()
+          --     else
+          --       fallback()
+          --     end
+          --   end,
+          -- },
         },
         sources = cmp.config.sources({
           { name = "path" },
@@ -579,24 +579,24 @@ return {
               end
             end,
           },
-          ["<TAB>"] = {
-            c = function()
-              if cmp.visible() then
-                cmp.select_next_item()
-              else
-                cmp.complete()
-              end
-            end,
-          },
-          ["<S-TAB>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
+          -- ["<TAB>"] = {
+          --   c = function()
+          --     if cmp.visible() then
+          --       cmp.select_next_item()
+          --     else
+          --       cmp.complete()
+          --     end
+          --   end,
+          -- },
+          -- ["<S-TAB>"] = {
+          --   c = function(fallback)
+          --     if cmp.visible() then
+          --       cmp.select_prev_item()
+          --     else
+          --       fallback()
+          --     end
+          --   end,
+          -- },
         },
         sources = cmp.config.sources {
           { name = "buffer" },
