@@ -405,7 +405,7 @@ if !has('nvim')
   endfunction
 
   " Toggle netrw
-  noremap <silent> <leader>e :call ToggleNetrw()<CR>
+  noremap <silent> <a-e> :call ToggleNetrw()<CR>
 
   " Find file in current directory and edit it.
   function! FindNetrw(name)
@@ -441,7 +441,7 @@ if !has('nvim')
 
   command! -nargs=1 FindNetrwc :call FindNetrw('<args>')
 
-  nnoremap <leader>E :FindNetrwc<space>
+  nnoremap <a-E> :FindNetrwc<space>
 end
 " }}}
 " COMMANDLINE ---------------- {{{
@@ -475,12 +475,12 @@ if exists(':tnoremap')
 
     if PluginLoaded('nvim-toggleterm.lua')
       " keymap: [terminal] open split
-      nnoremap <silent> <c-t>  :ToggleTerm<cr>
+      nnoremap <silent> <a-f>  :ToggleTerm<cr>
 
       " keymap: [terminal] open vertical
       " nnoremap <silent> <leader>tv  :TerminalV<cr>
 
-      tnoremap <silent> <c-t>  <C-\><C-n>:q<cr>
+      tnoremap <silent> <a-f>  <C-\><C-n>:q<cr>
       tnoremap <ESC>                <C-\><C-n>
 
     " else
@@ -505,8 +505,8 @@ if exists(':tnoremap')
     endif
 
   else
-    nnoremap <c-t> :terminal<cr>
-    tnoremap <silent> <c-t> exit<cr>
+    nnoremap <a-c> :terminal<CR>
+    tnoremap <silent> <a-f> exit<cr>
     tnoremap   <ESC><ESC>     <C-w>N
     " tnoremap   <ESC>          <C-w>N
 

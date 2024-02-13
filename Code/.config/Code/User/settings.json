@@ -1,193 +1,194 @@
 {
-    "editor.lineNumbers": "relative",
-    "editor.stickyScroll.enabled": true,
-    "editor.minimap.enabled": false,
-    "workbench.startupEditor": "newUntitledFile",
-    "editor.suggest.insertMode": "insert",
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "python.jediEnabled": false,
-    "vim.easymotion": true,
-    "vim.incsearch": true,
-    "vim.useSystemClipboard": true,
-    "vim.useCtrlKeys": true,
-    "vim.hlsearch": true,
-    "vim.sneak": true,
-    "vim.highlightedyank.enable": true,
-    "vim.easymotionMarkerooundColor": "#020202",
-    "vim.foldfix": true,
-    "vim.leader": "<space>",
-    "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
-    "snippets.extends": {},
-    "editor.fontSize": 16,
-    "vim.handleKeys":{
-      "<C-a>": false,
-      "<C-f>": true
+  "editor.lineNumbers": "relative",
+  "editor.stickyScroll.enabled": true,
+  "editor.minimap.enabled": false,
+  "workbench.startupEditor": "newUntitledFile",
+  "editor.suggest.insertMode": "insert",
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "workbench.panel.defaultLocation": "right",
+  "python.jediEnabled": false,
+  "vim.easymotion": true,
+  "vim.incsearch": true,
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "vim.hlsearch": true,
+  "vim.sneak": true,
+  "vim.highlightedyank.enable": true,
+  "vim.easymotionMarkerooundColor": "#020202",
+  "vim.foldfix": true,
+  "vim.leader": "<space>",
+  "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
+  "snippets.extends": {},
+  "editor.fontSize": 16,
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-f>": true
+  },
+  "vim.normalModeKeyBindings": [
+    {
+      "before": ["s", "w"],
+      "command": "workbench.action.evenEditorWidths"
     },
-    "vim.normalModeKeyBindings": [
-        {
-            "before": [ "s", "w" ],
-            "command": "workbench.action.evenEditorWidths"
-        },
-        {
-            "before": [ "g", "l" ],
-            "commands": [ "workbench.action.nextEditor" ]
-        },
-        {
-            "before": [ "g", "h" ],
-            "commands": [ "workbench.action.previousEditor" ]
-        },
-        {
-            "before": [ "K" ],
-            "commands": [ "editor.action.showHover" ]
-        },
-        {
-            "before": [ "<c-p>" ],
-            "commands": [ "workbench.action.quickOpen" ]
-        },
-        {
-            "before": [ "<leader>", "F"  ],
-            "commands": [ "workbench.view.search" ]
-        },
-        {
-            "before": [ "<c-g>" ],
-            // "commands": [ "actions.find" ]
-            "after": [ "/" ]
-        },
-        {
-            "before": [ "<leader>", "q" ],
-            "commands": [ "workbench.actions.view.problems" ]
-        },
-        
-        {
-            "before": [ "g", "S" ],
-            "commands": [ "workbench.action.showAllSymbols" ]
-        },
-        {
-            "before": [ "g", "s" ],
-            "commands": [ "workbench.action.gotoSymbol" ]
-        },
+    {
+      "before": ["g", "l"],
+      "commands": ["workbench.action.nextEditor"]
+    },
+    {
+      "before": ["g", "h"],
+      "commands": ["workbench.action.previousEditor"]
+    },
+    {
+      "before": ["K"],
+      "commands": ["editor.action.showHover"]
+    },
+    {
+      "before": ["<c-p>"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["<leader>", "F"],
+      "commands": ["workbench.view.search"]
+    },
+    {
+      "before": ["<c-g>"],
+      // "commands": [ "actions.find" ]
+      "after": ["/"]
+    },
+    {
+      "before": ["<leader>", "q"],
+      "commands": ["workbench.actions.view.problems"]
+    },
 
-        // Navigate
-        {
-            "before": [ "s", "h" ],
-            "commands": ["workbench.action.focusLeftGroup"]
-        },
-        {
-            "before": [ "s", "l" ],
-            "commands": ["workbench.action.focusRightGroup"]
-        },
-        {
-            "before": [ "s", "k" ],
-            "commands": ["workbench.action.focusAboveGroup"]
-        },
-        {
-            "before": [ "s", "j" ],
-            "commands": ["workbench.action.focusAboveGroup"]
-        },
-        {
-            "before": [ "s", "j" ],
-            "commands": ["workbench.action.focusAboveGroup"]
-        },
-        {
-            "before": [ "s", "v" ],
-            "commands": ["workbench.action.splitEditor"]
-        },
-        {
-            "before": [ "s", "s" ],
-            "commands": ["workbench.action.splitEditorDown"]
-        },
-        {
-            "before": [ "s", "m" ],
-            "commands": ["workbench.action.maximizeEditor"]
-        },
+    {
+      "before": ["g", "S"],
+      "commands": ["workbench.action.showAllSymbols"]
+    },
+    {
+      "before": ["g", "s"],
+      "commands": ["workbench.action.gotoSymbol"]
+    },
 
-        {
-            "before": [ "z", "m" ],
-            "after": [ "z", "M" ]
-        },
-        {
-            "before": [ "<space>", "<space>" ],
-            "after": [ "z", "M", "z", "v" ]
-        }
-    ],
-    "vim.insertModeKeyBindings": [
-        {
-            "before": [ "j", "k" ],
-            "after": [ "<Esc>" ]
-        },
-        // Navigate
-        {
-            "before": "ctrl+b",
-            "commands": "cursorWordLeft"
-        },
-        {
-            "before": "ctrl+f",
-            "commands": "cursorWordRight"
-        },
-        {
-            "before": [ "<c-l>" ],
-            "commands": [ "cursorRight" ]
-        },
-        {
-            "before": [ "<c-h>" ],
-            "commands": [ "cursorLeft" ]
-        },
-        {
-            "before": [ "<c-j>" ],
-            "commands": [ "cursorDown" ]
-        },
-        {
-            "before": [ "<c-k>" ],
-            "commands": [ "cursorUp" ]
-        },
-        {
-            "before": [ "<c-f>" ],
-            "after": [ "<Right>" ]
-        },
-        {
-            "before": [ "<c-b>" ],
-            "commands": [ "cursorWordRight" ]
-        }
-    ],
-    "vim.visualModeKeyBindings": [
-        {
-            "before": [ ">" ],
-            "after": [ ">", "g", "v" ]
-        },
-        {
-            "before": [ "<" ],
-            "after": [ "<", "g", "v" ]
-        }
-    ],
-    "vim.normalModeKeyBindingsNonRecursive": [
-        {
-            "before": [ "s", "f" ],
-            "commands": [ "workbench.files.action.focusOpenEditorsView" ]
-        },
-        {
-            "before": [ "<leader>", "n" ],
-            "commands": [ ":nohl" ] 
-        },
-        {
-            "before": [ "<leader>", "<tab>" ],
-            "commands": [ ":q!" ]
-        },
-        {
-            "before": [ "<leader>", "E" ],
-            "commands": [ "revealInExplorer" ] 
-        },
-        {
-            "before": [ "<leader>", "e" ],
-            "commands": [ "workbench.action.toggleSidebarVisibility" ]
-        },
-        {
-            "before": [ "<leader>", "f", "f" ],
-            "commands": [ "workbench.action.quickOpen" ]
-        }
-    ],
-    "editor.fontFamily": "'SF Mono', 'monospace', monospace",
-    "workbench.iconTheme": "material-icon-theme",
-    "workbench.colorTheme": "Sublime Material Theme - Dark",
-    "window.zoomLevel": 1
+    // Navigate
+    {
+      "before": ["s", "h"],
+      "commands": ["workbench.action.focusLeftGroup"]
+    },
+    {
+      "before": ["s", "l"],
+      "commands": ["workbench.action.focusRightGroup"]
+    },
+    {
+      "before": ["s", "k"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    {
+      "before": ["s", "j"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    {
+      "before": ["s", "j"],
+      "commands": ["workbench.action.focusAboveGroup"]
+    },
+    {
+      "before": ["s", "v"],
+      "commands": ["workbench.action.splitEditor"]
+    },
+    {
+      "before": ["s", "s"],
+      "commands": ["workbench.action.splitEditorDown"]
+    },
+    {
+      "before": ["s", "m"],
+      "commands": ["workbench.action.maximizeEditor"]
+    },
+
+    {
+      "before": ["z", "m"],
+      "after": ["z", "M"]
+    },
+    {
+      "before": ["<space>", "<space>"],
+      "after": ["z", "M", "z", "v"]
+    }
+  ],
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["j", "k"],
+      "after": ["<Esc>"]
+    },
+    // Navigate
+    {
+      "before": "ctrl+b",
+      "commands": "cursorWordLeft"
+    },
+    {
+      "before": "ctrl+f",
+      "commands": "cursorWordRight"
+    },
+    {
+      "before": ["<c-l>"],
+      "commands": ["cursorRight"]
+    },
+    {
+      "before": ["<c-h>"],
+      "commands": ["cursorLeft"]
+    },
+    {
+      "before": ["<c-j>"],
+      "commands": ["cursorDown"]
+    },
+    {
+      "before": ["<c-k>"],
+      "commands": ["cursorUp"]
+    },
+    {
+      "before": ["<c-f>"],
+      "after": ["<Right>"]
+    },
+    {
+      "before": ["<c-b>"],
+      "commands": ["cursorWordRight"]
+    }
+  ],
+  "vim.visualModeKeyBindings": [
+    {
+      "before": [">"],
+      "after": [">", "g", "v"]
+    },
+    {
+      "before": ["<"],
+      "after": ["<", "g", "v"]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["s", "f"],
+      "commands": ["workbench.files.action.focusOpenEditorsView"]
+    },
+    {
+      "before": ["<leader>", "n"],
+      "commands": [":nohl"]
+    },
+    {
+      "before": ["<leader>", "<tab>"],
+      "commands": [":q!"]
+    },
+    // {
+    //     "before": [ "<leader>", "E" ],
+    //     "commands": [ "revealInExplorer" ]
+    // },
+    // {
+    //     "before": [ "<leader>", "e" ],
+    //     "commands": [ "workbench.action.toggleSidebarVisibility" ]
+    // },
+    {
+      "before": ["<leader>", "f", "f"],
+      "commands": ["workbench.action.quickOpen"]
+    }
+  ],
+  "editor.fontFamily": "'SF Mono', 'monospace', monospace",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Sublime Material Theme - Dark",
+  "window.zoomLevel": 1
 }

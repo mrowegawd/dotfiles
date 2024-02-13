@@ -69,6 +69,14 @@
     "command": "workbench.action.navigateDown"
   },
 
+  {
+    "key": "alt+e",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "alt+shift+e",
+    "command": "revealInExplorer"
+  },
   // Resize window
   {
     "key": "shift+alt+l",
