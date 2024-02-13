@@ -17,6 +17,8 @@ build-nvim() {
 }
 
 build-install(){
+  # fix mouse lagging coba install `xinpunt` (sudo apt install xiinput)
+
   # TODO: install apt seperti urlview
   apt_install="urlview"
 

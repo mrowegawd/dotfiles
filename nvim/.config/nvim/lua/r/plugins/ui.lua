@@ -116,7 +116,7 @@ return {
     dependencies = {
       "MunifTanjim/nui.nvim",
       {
-        "rcarriga/nvim-notify",
+        "ls-devs/nvim-notify",
         -- event = "VeryLazy",
         -- init = function()
         --   vim.notify = require "notify"
@@ -124,7 +124,7 @@ return {
         -- TODO: nanti hapus ini,
         -- kalau ini sudah di merge
         -- https://github.com/rcarriga/nvim-notify/pull/253
-        pin = true,
+        -- pin = true,
         opts = function()
           vim.notify = require "notify"
 

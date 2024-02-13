@@ -1,7 +1,7 @@
 #!/bin/bash
 
-RUN_ON="On.."
-RUN_OFF="Off.."
+RUN_ON="On"
+RUN_OFF="Off"
 
 dir="$HOME/.config/rofi/menu"
 theme="styles/emojis"
@@ -76,7 +76,14 @@ case "$1" in
 	main
 	echo -e "$RUN_ON"
 	;;
-*)
-	echo -e "$RUN_OFF"
+--check-status)
+	if pgrep -f timer >/dev/null 2>&1; then
+		blink=$(date +%s)
+		if [ $((blink % 2)) -eq 0 ]; then
+			echo "Pomodoro: $RUN_ON"
+		# else
+		# 	echo "$RUN_OFF"
+		fi
+	fi
 	;;
 esac
