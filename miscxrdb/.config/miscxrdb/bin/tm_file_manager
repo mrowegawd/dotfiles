@@ -33,6 +33,8 @@ _create_nnn_window() {
 
 }
 
+GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
+
 [[ ! -f $PANE_MAIN_STATUS_FILE_MANAGER ]] && touch "$PANE_MAIN_STATUS_FILE_MANAGER"
 # Check pane: jika ada 1 atau pane yang lebih dari 3
 # kenapa lebih dari 3: karena [1, 2, 3] adalah uratan `nnn` `nvim` `terminal`

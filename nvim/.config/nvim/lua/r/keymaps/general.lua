@@ -494,17 +494,13 @@ local function normalize_return(str)
 
   return str_slice
 end
---
--- local function get_current_pane_id()
---   return tonumber(normalize_return(vim.fn.system "wezterm cli list-clients | tail -1 | awk '{print $NF}'"))
--- end
 
 Util.map.nnoremap("<a-E>", function()
+  local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
+
   local TMUX = os.getenv "TMUX"
   if not TMUX then
     local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-    local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
-
     if pane_left_id then
       vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
     end
@@ -516,5 +512,20 @@ Util.map.nnoremap("<a-E>", function()
     vim.fn.system(string.format("wezterm cli send-text --no-paste 'nnn -c %s\r' --pane-id %s", dirname, pane_left_id2))
 
     vim.fn.system "wezterm cli activate-pane-direction Left"
+  else
+    vim.fn.system [[tmux select-pane -L]]
+
+    local pane_left_current_cmd = normalize_return(
+      vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }']]
+    )
+
+    if pane_left_current_cmd == "nnn" then
+      vim.fn.system "tmux kill-pane"
+    end
+
+    vim.fn.system "tmux split-pane -hb -p 15 -c '#{pane_current_path}'"
+    local current_pane = normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}" ]])
+
+    vim.fn.system(string.format("tmux send-keys -t %s 'nnn -c %s' Enter", current_pane, dirname))
   end
 end)

@@ -231,61 +231,22 @@ return {
 
 				if #panes == 1 then
 					KeymapUtil.spawn_nnn(window, pane)
-				elseif #panes == 2 then
-					if KeymapUtil.is_in_nvim(pane) then
-						local pane_id = pane:tab():get_pane_direction("Left")
-						if not pane_id then
-							KeymapUtil.spawn_nnn(window, pane)
-							return
-						end
-						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-					elseif KeymapUtil.is_in_nnn(pane) then
-						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-					else
-						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-					end
-				elseif #panes == 3 then
-					if KeymapUtil.is_in_nvim(pane) then
-						local pane_id = pane:tab():get_pane_direction("Left")
-						if pane_id then
-							KeymapUtil.spawn_nnn(window, pane)
-							return
-						else
-							window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-						end
-					elseif KeymapUtil.is_in_nnn(pane) then
-						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-					else
-						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-					end
-				end
-			end
-		end),
-	},
-	{ -- open pane-tree (custom)
-		mods = "ALT",
-		key = "u",
-		action = wezterm.action_callback(function(window, pane)
-			if Util.is_tmux(pane) then
-				window:perform_action({ SendKey = { key = "e", mods = "ALT" } }, pane)
-			else
-				if KeymapUtil.is_in_nvim(pane) then
-					local pane_id = pane:tab():get_pane_direction("Left")
-					if pane_id then
-						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-						pane_id = pane:tab():get_pane_direction("Left")
+				else
+					if KeymapUtil.is_in_nnn(pane) then
+						-- window:toast_notification("wezterm", "hello bro", nil, 4000)
 
-						if KeymapUtil.is_in_nvim(pane) then
-							window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
 
-							-- window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-							KeymapUtil.spawn_nnn(window, pane, 70)
-							return
-						end
+						-- TODO: ketika closing, cursor mouse pada wezterm tidak berada
+						-- posisi "last position", tapi malah maju kedepan
+						-- dan solusi ke `right` ini tidak berhasil
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+						return
 					end
-					window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-				elseif KeymapUtil.is_in_nnn(pane) then
-					window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+					if KeymapUtil.is_in_nvim(pane) then
+						KeymapUtil.spawn_nnn(window, pane)
+						return
+					end
 				end
 			end
 		end),
