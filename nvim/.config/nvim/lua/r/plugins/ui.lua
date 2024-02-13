@@ -318,12 +318,12 @@ return {
     },
     opts = function()
       local incnormal_guifg, incnormal_guifg_guibg, incnormal_guifg_gui
-      if vim.g.colorscheme == "catppuccin-latte" then
+      if Config.defaults.colorscheme == "catppuccin-latte" then
         incnormal_guifg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
         incnormal_guifg_guibg = Highlight.tint(Highlight.get("Normal", "fg"), -0.5)
         incnormal_guifg_gui = "bold"
       else
-        incnormal_guifg = Highlight.tint(Highlight.get("Boolean", "bg"), 0.5)
+        incnormal_guifg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
         incnormal_guifg_guibg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5)
         incnormal_guifg_gui = "bold"
       end

@@ -12,7 +12,7 @@ local col_normal_fg = Highlight.get("Normal", "fg")
 
 local branch_fg = Highlight.tint(col_normal_fg, 4)
 local separator_fg = Highlight.tint(col_errormsg_bg, 1)
-local separator_fg_alt = Highlight.tint(col_statusline_bg, -0.5)
+local separator_fg_alt = Highlight.tint(col_statusline_bg, 0.5)
 if vim.g.background == "light" then
   branch_fg = Highlight.tint(col_normal_fg, 0.5)
 

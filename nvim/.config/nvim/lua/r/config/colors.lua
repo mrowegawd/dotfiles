@@ -1,6 +1,11 @@
 local Util = require "r.utils"
+local UIPallette = require("r.utils").uisec
 
 local Highlight = require "r.settings.highlights"
+
+local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, -0.1)
+local dark_green = Highlight.tint(UIPallette.palette.dark_green, -0.1)
+local dark_red = Highlight.tint(UIPallette.palette.dark_red, -0.1)
 
 -- stylua: ignore
 local general_overrides = function()
@@ -83,15 +88,19 @@ local general_overrides = function()
     -- { diffNoEOL = { link = 'WarningMsg' } },
     -- { diffOnly = { link = 'WarningMsg' } },
 
-    { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = 0.5 } } },
-    { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsChange"  } } },
-    { diffDelete = { bg = { from = "GitSignsDelete" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsDelete" } } },
-    -- { diffText = { bg = { from = "diffText" , attr = "bg", alter = -0.3 }, fg = { from = "diffText" , attr = "bg", alter = 0.5 } } },
+    -- { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = 0.5 } } },
+    -- { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsChange"  } } },
+
+    { diffAdd = { bg = UIPallette.palette.green, fg = dark_green } },
+    { diffChange = { bg = UIPallette.palette.light_yellow, fg = dark_orange } },
+    { diffDelete = { bg = UIPallette.palette.light_red, fg = dark_red } },
+    { diffText = { bg = UIPallette.palette.dark_blue, fg = UIPallette.palette.grey } },
 
     { NeogitDiffAdd =  { link = "diffAdd"} } ,
     { NeogitDiffAddHighlight = { link = "diffAdd" } },
     { NeogitDiffDelete =  { link = "diffDelete" } } ,
     { NeogitDiffDeleteHighlight =  { link = "diffDelete" } } ,
+    { DiffText =  { link = "diffText" } } ,
 
     -----------------------------------------------------------------------
     -- LSP
@@ -506,6 +515,7 @@ local function colorscheme_overrides()
       { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
       { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
       { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
+      { DiffText = { bg = { from = "diffText", attr = "bg" }, fg = { from = "diffText", attr = "fg" } } },
 
       --   { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bg = "NONE" } },
       --   { FloatBorder = { bg = "NONE", fg = { from = "WinSeparator" } } },

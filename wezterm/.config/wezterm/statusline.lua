@@ -1,4 +1,5 @@
 local Color = require("colors")
+local Util = require("utils")
 
 local wezterm = require("wezterm")
 
@@ -58,10 +59,11 @@ local SUB_IDX = {"₁","₂","₃","₄","₅","₆","₇","₈","₉","₁₀",
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-	local edge_background = "#121212"
+	local edge_background = Util.tint(Color.bg, 0.5)
+	-- local edge_background = Color.cyan
 	local background = Color.bg
 	local foreground = Color.blue
-	local dim_foreground = "#3A3A3A"
+	local dim_foreground = Color.red_alt
 
 	if tab.is_active then
 		background = Color.red_alt
