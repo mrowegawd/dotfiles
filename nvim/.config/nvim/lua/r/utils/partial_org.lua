@@ -27,7 +27,7 @@ return {
           vim.uv.spawn("dunstify", {
             args = {
               fmt("TODO: %s\n%s\n%s", subtitle, date, title),
-              fmt("--icon=%s/.config/dunst/bell.png", os.getenv "HOME"),
+              fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
               "-u",
               "normal",
             },
@@ -38,7 +38,7 @@ return {
           vim.loop.spawn("mpv", {
             args = {
               "--audio-display=no",
-              fmt("%s/.config/dunst/notif-me.wav", os.getenv "HOME"),
+              fmt("%s/.config/miscxrdb/mp3-wav/notif-me.mp3", os.getenv "HOME"),
               "--volume=50",
             },
           })

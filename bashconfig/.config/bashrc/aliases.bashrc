@@ -28,13 +28,6 @@ alias l="eza -l -snew"
 alias ll="eza --long --all --git --color=always --group-directories-first --icons"
 alias lt="eza --icons --all -I '*.git' --color=always -T"
 
-# pomodoro
-alias wo_60="timer 60m && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
-alias wo_30="timer 30m && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
-alias wo_30_fullscreen="timer 30m -f && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
-alias wo_60_fullscreen="timer 60m -f && dunstify \"Pomodoro:\" \"Work timer is up! Take to break\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
-alias wo_rest="timer 10m && dunstify \"Pomodoro:\" \"Break is over! Get back to work\" -i ~/.config/dunst/checklist.png && mpv ~/.config/dunst/smile-ringtone.mp3 --volume=100 2 >/dev/null"
-
 alias nnn='nnn -e -H -r'
 
 # if command -v eza >/dev/null; then
@@ -245,7 +238,7 @@ c_ii() {
 	mylan
 
 	echo -e "\\n${RED}XDG SESSION TYPE (XDG_SESSION_TYPE): $NC"
-	echo -e "$XDG_SESSION_TYPE\n"
+	echo -e "$XDG_SESSION_TYPE\n" # use `X11` or `Wayland`
 }
 
 mylan() {

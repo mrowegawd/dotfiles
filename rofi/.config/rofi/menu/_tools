@@ -3,7 +3,7 @@
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager\nKeyboard\nRecording Fullscreen\nRecording Rectangle\nRecording Gif\nStop Recording Vid\nStop Recording Gif\nScreenshot\nDrawing"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecording Fullscreen\nRecording Rectangle\nRecording Gif\nStop Recording Vid\nStop Recording Gif\nScreenshot\nDrawing"
 
 # For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
@@ -114,6 +114,14 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		nautilus
 	}
 
+	run_pomodoro() {
+		script_pomodoro_path="$HOME/.config/polybar/scripts/pomodoro"
+
+		[[ ! -f $script_pomodoro_path ]] && dunstify "file pomodoro not found"
+
+		"$HOME/.config/polybar/scripts/pomodoro" --toggle
+	}
+
 	case "$SELECT" in
 	"Calendar") gnome-calendar ;;
 	"Keyboard") run_screenkey ;;
@@ -122,9 +130,10 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 	"Recording Fullscreen") run_ffmpeg_record_fullscreen ;;
 	"Recording Rectangle") run_ffmpeg_record_with_rectangle ;;
 	"Recording Gif") run_simplegif ;;
+	"Pomodoro") run_pomodoro ;;
 	"Stop Recording Vid") run_ffmpeg_stop ;;
 	"Stop Recording Gif") run_simplegif_stop ;;
-	"File manager") run_filemanager ;;
+	"File manager [UI]") run_filemanager ;;
 
 	esac
 

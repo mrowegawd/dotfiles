@@ -14,14 +14,14 @@ background = "%%normal_bg%%"
 foreground = "%%normal_fore_bg%%"
 frame_color = "#e6eaea"
 timeout = 8
-icon = ~/.config/dunst/warning.png
+icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_critical]
 background = "%%critical_bg%%"
 foreground = "%%critical_fore_bg%%"
 # frame_color = "#ff0000"
 timeout = 10
-icon = ~/.config/dunst/critical.png
+icon = ~/.config/miscxrdb/icons/critical-danger.png
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

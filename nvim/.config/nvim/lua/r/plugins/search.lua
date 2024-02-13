@@ -146,7 +146,7 @@ return {
         mode = { "v" },
         desc = "Fzflua: help tags (visual)",
       },
-      { "<Leader>b", fzf_lua.resume, desc = "Fzflua: resume (last search)" },
+      { "<Leader>fl", fzf_lua.resume, desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", fzf_lua.live_grep_glob, desc = "Fzflua: live grep" },
       { "<Leader>fg", fzf_lua.grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", fzf_lua.changes, desc = "Fzflua: changes" },

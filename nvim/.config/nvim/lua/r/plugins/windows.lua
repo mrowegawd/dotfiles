@@ -2,7 +2,7 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = { { "sm", "<CMD>NeoZoomToggle<CR>", desc = "WinNav(neozoom): toggle" } },
+    keys = { { "<leader>M", "<CMD>NeoZoomToggle<CR>", desc = "WinNav(neozoom): toggle" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },
@@ -145,13 +145,13 @@ return {
           ["a-k"] = "k",
           ["a-l"] = "l",
         }
-        local function tbl_length(T)
-          local count = 0
-          for _ in pairs(T) do
-            count = count + 1
-          end
-          return count
-        end
+        -- local function tbl_length(T)
+        --   local count = 0
+        --   for _ in pairs(T) do
+        --     count = count + 1
+        --   end
+        --   return count
+        -- end
 
         local function detect_opened_windows()
           -- local is_resize = 2 > tbl_length(vim.fn.win_findbuf(vim.fn.bufnr "%"))
