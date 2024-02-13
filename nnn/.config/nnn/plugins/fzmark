@@ -15,10 +15,6 @@ if ! type fzf >/dev/null 2>&1; then
 	exit 1
 fi
 
-not_in_tmux() {
-	[ -z "$TMUX" ]
-}
-
 if [ ! -f "$cwd" ]; then
 	printf "[warn] path not found: %s\n" "$cwd"
 	exit 1
