@@ -55,6 +55,7 @@ __wezterm_set_user_var() {
 		fi
 	fi
 }
+
 function _run_prog() {
 	# set PROG to the program being run
 	__wezterm_set_user_var "PROG" "$1"

@@ -51,15 +51,19 @@ super + R
 ########################################
 
 # workspace: focus next/prev workspace
-super + {Tab,shift+Tab}
-	      bspc node -d {next,prev} -f
+# super + {Tab,shift+Tab}
+# 	      bspc node -d {next,prev} -f
 
 # focus the next/previous node in the current desktop
 # super + {_,shift + }c
 # 	      bspc node -f {next,prev}.local
 
 # workspace: focus next/prev workspace
-super + {H,L}
+# super + {H,L}
+# 	      bspc desktop -f {prev,next}.local
+
+# workspace: focus next/prev workspace
+alt + {shift+Tab,Tab}
 	      bspc desktop -f {prev,next}.local
 
 # workspace: goto -n workspace
