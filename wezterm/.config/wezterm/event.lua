@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
+local mux = wezterm.mux
 
 local scrollback_lines = 5000 -- default is 3500
 
@@ -104,3 +105,10 @@ wezterm.on("window-resized", function(window, pane)
 		window_size_cache_file:close()
 	end
 end)
+
+-- wezterm.on("gui-startup", function()
+-- 	local _, _, window = mux.spawn_window({})
+-- 	window:gui_window():maximize()
+-- end)
+
+return {}

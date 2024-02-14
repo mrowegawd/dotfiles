@@ -4,6 +4,8 @@ g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
 g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
 g.os = loop.os_uname().sysname
 
+local plat = require "r.utils.platform"
+
 local options = {
   g = {
     open_command = g.os == "Darwin" and "open" or "xdg-open",
@@ -28,7 +30,37 @@ opt.inccommand = "split"
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
 opt.fileformats = { "unix", "mac", "dos" }
 
-opt.clipboard = "unnamedplus"
+opt.clipboard:append "unnamed"
+opt.clipboard:append "unnamedplus"
+if plat.is_mac then
+  vim.g.clipboard = {
+    name = "macOS-clipboard",
+    copy = {
+      ["+"] = "pbcopy",
+      ["*"] = "pbcopy",
+    },
+    paste = {
+      ["+"] = "pbpaste",
+      ["*"] = "pbpaste",
+    },
+    cache_enabled = 0,
+  }
+elseif plat.is_wsl then
+  -- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
+  --NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
+  vim.g.clipboard = {
+    name = "win32yank-wsl",
+    copy = {
+      ["+"] = "win32yank.exe -i --crlf",
+      ["*"] = "win32yank.exe -i --crlf",
+    },
+    paste = {
+      ["+"] = "win32yank.exe -o --lf",
+      ["*"] = "win32yank.exe -o --lf",
+    },
+    cache_enabled = 0,
+  }
+end
 -- -- Exclude usetab as we do not want to jump to buffers in already open tabs
 -- -- do not use split or vsplit to ensure we don't open any new windows
 opt.switchbuf = "useopen,uselast"

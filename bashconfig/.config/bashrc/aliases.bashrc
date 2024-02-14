@@ -22,6 +22,24 @@ md() {
 	mkdir -p "$@"
 }
 
+# asdf() {
+# 	if [ -f "$HOME/.asdf/asdf.sh" ]; then
+# 		source "$HOME/.asdf/asdf.sh"
+# 		# fpath=(${ASDF_DIR}/completions $fpath)
+# 	fi
+# 	asdf "$@"
+# }
+
+# lf() {
+# 	LF_TEMPDIR="$(mktemp -d -t lf-tempdir-XXXXXX)"
+# 	LF_TEMPDIR="$LF_TEMPDIR" lf-run -last-dir-path="$LF_TEMPDIR/lastdir" "$@"
+# 	if [ "$(cat "$LF_TEMPDIR/cdtolastdir" 2>/dev/null)" = "1" ]; then
+# 		cd "$(cat "$LF_TEMPDIR/lastdir")"
+# 	fi
+# 	rm -r "$LF_TEMPDIR"
+# 	unset LF_TEMPDIR
+# }
+
 alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
 
 alias l="eza -l -snew"
@@ -81,32 +99,32 @@ alias :c=exit
 alias :Q=exit
 alias :q=exit
 
-if [ "${USER}" = "root" ]; then
-	alias v="vim"
-	alias sv="sudo vim"
-	alias ttext='vim /tmp/dump_text.txt'
-	# alias tbash='vim /tmp/dump_bash.sh'
-else
-	if command -v nvim >/dev/null; then
-		alias v="nvim"
-		alias vv="vv"
-		alias vvg="vv --multigrid"
-		alias svi="sudo nvim"
-		alias ttext='nvim /tmp/dump_text.txt'
-		# alias tbash='nvim /tmp/dump_bash.sh'
-	else
-		alias v="vim"
-		alias vv="vim"
-		alias vvg="vim"
-		alias svi="sudo vim"
-		alias ttext='vim /tmp/dump_text.txt'
-		# alias tbash='vim /tmp/dump_bash.sh'
-	fi
-fi
+# if [ "${USER}" = "root" ]; then
+# alias v="vim"
+# alias sv="sudo vim"
+# alias ttext='vim /tmp/dump_text.txt'
+# alias tbash='vim /tmp/dump_bash.sh'
+# else
+# if command -v nvim >/dev/null; then
+# 	alias v="nvim"
+# 	alias vv="vv"
+# 	alias vvg="vv --multigrid"
+# 	alias svi="sudo nvim"
+# 	alias ttext='nvim /tmp/dump_text.txt'
+# 	# alias tbash='nvim /tmp/dump_bash.sh'
+# else
+# 	alias v="vim"
+# 	alias vv="vim"
+# 	alias vvg="vim"
+# 	alias svi="sudo vim"
+# 	alias ttext='vim /tmp/dump_text.txt'
+# 	# alias tbash='vim /tmp/dump_bash.sh'
+# fi
+# fi
 
-if command -v emacs >/dev/null; then
-	alias e="emacs --insecure"
-fi
+# if command -v emacs >/dev/null; then
+# 	alias e="emacs --insecure"
+# fi
 
 # ╭──────────────────────────────────────────────────────────╮
 # │                          CHECK                           │

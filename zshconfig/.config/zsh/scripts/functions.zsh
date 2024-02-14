@@ -83,6 +83,9 @@ build-go() {
 
 run-mark() {
   local cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+  if grep -qi microsoft /proc/version; then # --> check for WSL
+    cwd="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
+  fi
 
   if [[ ! -f $cwd  ]]; then
     echo -ne "[warn] path not found: $cwd\n"

@@ -69,4 +69,23 @@ export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SO
 # Source cd on quit
 # source $HOME/.config/miscxrdb/bin/quitcd.zsh
 
+# CHECK: Source dari plugin seperti `asdf` or `git` or harus diload sebelum line
+# -> 'autoload -Uz compinit; compinit'
+# Jadi jika kamu ingin mendapatkan completion dari plugins (contoh `asdf`),
+# taruh dibagian ini:
+#  ┌
+#  │ ASDF
+#  └
+# if [ -f "$HOME/.asdf/asdf.sh" ]; then
+#   source "$HOME/.asdf/asdf.sh"
+#   fpath=(${ASDF_DIR}/completions $fpath)
+#   # Check issue ini https://github.com/asdf-community/asdf-golang/issues/28
+#   # `asdf plugin golang` tidak menambahkan $GOPATH dan $GOROOT (hanya empty field,
+#   # check via `go env`) dan solusi dari link tersebut:
+# if [ -d $(asdf where golang) ]; then
+# export GOPATH=$(asdf where golang)/packages
+# export GOROOT=$(asdf where golang)/go
+# export PATH="${PATH}:$(go env GOPATH)/bin"
+
 # vim: ft=sh sw=2 ts=2 et foldmethod=marker foldlevel=0
+# j

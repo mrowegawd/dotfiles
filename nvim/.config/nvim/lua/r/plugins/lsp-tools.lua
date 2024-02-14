@@ -188,6 +188,7 @@ return {
   -- GLANCE
   {
     "DNLHC/glance.nvim",
+    enabled = false,
     event = { "LspAttach", "VeryLazy" },
     cmd = { "Glance" },
     opts = function()

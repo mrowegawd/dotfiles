@@ -89,4 +89,10 @@ function M.tint(color, percent)
 	return string.format("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
 
+-- M.home = (os.getenv("USERPROFILE") or os.getenv("HOME") or wez.home_dir or ""):gsub("\\", "/")
+
+-- function M.is_windows()
+-- 	return false
+-- end
+
 return M

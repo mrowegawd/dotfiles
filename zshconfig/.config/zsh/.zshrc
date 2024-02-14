@@ -5,6 +5,7 @@
 #░▀▀▀░▀▀▀░▀░▀░▀░▀░▀▀▀░▀░░▀░▀░▀▀▀ +
 # --------------------------------
 
+# zmodload zsh/zprof
 [[ $- == *i* ]] && stty -ixon
 
 #-------------------------------------------------------------------------------
@@ -17,7 +18,7 @@
 # https://unix.stackexchange.com/questions/33255/how-to-define-and-load-your-own-shell-function-in-zsh
 # Git prompt script: https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
 
-zmodload zsh/datetime
+# zmodload zsh/datetime
 
 # Create a hash table for globally stashing variables without polluting main
 # scope with a bunch of identifiers.
@@ -55,23 +56,18 @@ zsh_add_plugin    "zsh-users/zsh-syntax-highlighting"
 #  ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 #  ╏ SOURCE PLUGIN                                            ╏
 #  ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
-# source "$ZDOTDIR/11-prompt.zsh"
-
-# CHECK: Source dari plugin seperti `asdf` or `git` or harus diload sebelum line
-# -> 'autoload -Uz compinit; compinit'
-# Jadi jika kamu ingin mendapatkan completion dari plugins (contoh `asdf`),
-# taruh dibagian ini:
-#  ┌
-#  │ ASDF
-#  └
-source "$HOME/.asdf/asdf.sh"
-fpath=(${ASDF_DIR}/completions $fpath)
 
 #  ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 #  ╏ COMPLETION                                               ╏
 #  ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-autoload -Uz compinit ;compinit
+
+# autoload -Uz compinit
+# for dump in ~/.zcompdump(N.mh+24); do
+#   compinit
+# done
+# compinit -C
+autoload -U compinit && (compinit &; compinit -C)
+
 _comp_options+=(globdots) # Include hidden files, when do 'cd ..<tab>'
 
 setopt ALWAYS_TO_END
@@ -289,89 +285,89 @@ zle -N zle-keymap-select
 # %u - git untracked
 # %b - git branch
 # %r - git repo
-autoload -Uz vcs_info
-
-# Using named colors means that the prompt automatically adapts to how these
-# are set by the current terminal theme
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' stagedstr "%F{green} ●%f"
-zstyle ':vcs_info:*' unstagedstr "%F{red} ●%f" # alternative: ✘
-zstyle ':vcs_info:*' use-simple true
-zstyle ':vcs_info:git+set-message:*' hooks git-untracked git-stash git-compare git-remotebranch
-zstyle ':vcs_info:git*:*' actionformats '(%B%F{red}%b|%a%c%u%%b%f) '
-zstyle ':vcs_info:git:*' formats "%F{249}(%f%F{blue}%{$__DOTS[ITALIC_ON]%}%b%{$__DOTS[ITALIC_OFF]%}%f%F{249})%f%c%u%m"
-
-__in_git() {
-    [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == "true" ]]
-}
-
-# on the output of the git command adds an indicator to the the vcs info
-# use --directory and --no-empty-directory to speed up command
-# https://stackoverflow.com/questions/11122410/fastest-way-to-get-git-status-in-bash
-function +vi-git-untracked() {
-  emulate -L zsh
-  if __in_git; then
-    if [[ -n $(git ls-files --directory --no-empty-directory --exclude-standard --others 2> /dev/null) ]]; then
-      hook_com[unstaged]+="%F{blue} %f" # alternatives ●
-    fi
-  fi
-}
-
-function +vi-git-stash() {
-  local stash_icon=""
-  emulate -L zsh
-  if __in_git; then
-    if [[ -n $(git rev-list --walk-reflogs --count refs/stash 2> /dev/null) ]]; then
-      hook_com[unstaged]+=" %F{yellow}$stash_icon%f "
-    fi
-  fi
-}
-# git: Show +N/-N when your local branch is ahead-of or behind remote HEAD.
-# Make sure you have added misc to your 'formats':  %m
-# source: https://github.com/zsh-users/zsh/blob/545c42cdac25b73134a9577e3c0efa36d76b4091/Misc/vcs_info-examples#L180
-function +vi-git-compare() {
-  local ahead behind
-  local -a gitstatus
-
-  # Exit early in case the worktree is on a detached HEAD
-  git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
-
-  local -a ahead_and_behind=(
-      $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
-  )
-
-  ahead=${ahead_and_behind[1]}
-  behind=${ahead_and_behind[2]}
-
-  local ahead_symbol="%{$fg[red]%}⇡%{$reset_color%}${ahead}"
-  local behind_symbol="%{$fg[cyan]%}⇣%{$reset_color%}${behind}"
-  (( $ahead )) && gitstatus+=( "${ahead_symbol}" )
-  (( $behind )) && gitstatus+=( "${behind_symbol}" )
-  # `(j:<char>:)` represents joining the items of a list with a character
-  # similar to a string.join type operation this can also be written as
-  # (j./.) the character representing each part is interchangeable, and the
-  # middle character represents the string to use to join the items
-  # https://zsh.sourceforge.io/Guide/zshguide05.html#l124
-  hook_com[misc]+="${(j: :)gitstatus}"
-}
-
-## git: Show remote branch name for remote-tracking branches
-function +vi-git-remotebranch() {
-    local remote
-
-    # Are we on a remote-tracking branch?
-    remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
-        --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
-
-    # The first test will show a tracking branch whenever there is one. The
-    # second test, however, will only show the remote branch's name if it
-    # differs from the local one.
-    # if [[ -n ${remote} ]] ; then
-    if [[ -n ${remote} && ${remote#*/} != ${hook_com[branch]} ]] ; then
-        hook_com[branch]="${hook_com[branch]}→[${remote}]"
-    fi
-}
+# autoload -Uz vcs_info
+#
+# # Using named colors means that the prompt automatically adapts to how these
+# # are set by the current terminal theme
+# zstyle ':vcs_info:*' enable git
+# zstyle ':vcs_info:*' check-for-changes true
+# zstyle ':vcs_info:*' stagedstr "%F{green} ●%f"
+# zstyle ':vcs_info:*' unstagedstr "%F{red} ●%f" # alternative: ✘
+# zstyle ':vcs_info:*' use-simple true
+# zstyle ':vcs_info:git+set-message:*' hooks git-untracked git-stash git-compare git-remotebranch
+# zstyle ':vcs_info:git*:*' actionformats '(%B%F{red}%b|%a%c%u%%b%f) '
+# zstyle ':vcs_info:git:*' formats "%F{249}(%f%F{blue}%{$__DOTS[ITALIC_ON]%}%b%{$__DOTS[ITALIC_OFF]%}%f%F{249})%f%c%u%m"
+#
+# __in_git() {
+#     [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == "true" ]]
+# }
+#
+# # on the output of the git command adds an indicator to the the vcs info
+# # use --directory and --no-empty-directory to speed up command
+# # https://stackoverflow.com/questions/11122410/fastest-way-to-get-git-status-in-bash
+# function +vi-git-untracked() {
+#   emulate -L zsh
+#   if __in_git; then
+#     if [[ -n $(git ls-files --directory --no-empty-directory --exclude-standard --others 2> /dev/null) ]]; then
+#       hook_com[unstaged]+="%F{blue} %f" # alternatives ●
+#     fi
+#   fi
+# }
+#
+# function +vi-git-stash() {
+#   local stash_icon=""
+#   emulate -L zsh
+#   if __in_git; then
+#     if [[ -n $(git rev-list --walk-reflogs --count refs/stash 2> /dev/null) ]]; then
+#       hook_com[unstaged]+=" %F{yellow}$stash_icon%f "
+#     fi
+#   fi
+# }
+# # git: Show +N/-N when your local branch is ahead-of or behind remote HEAD.
+# # Make sure you have added misc to your 'formats':  %m
+# # source: https://github.com/zsh-users/zsh/blob/545c42cdac25b73134a9577e3c0efa36d76b4091/Misc/vcs_info-examples#L180
+# function +vi-git-compare() {
+#   local ahead behind
+#   local -a gitstatus
+#
+#   # Exit early in case the worktree is on a detached HEAD
+#   git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
+#
+#   local -a ahead_and_behind=(
+#       $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
+#   )
+#
+#   ahead=${ahead_and_behind[1]}
+#   behind=${ahead_and_behind[2]}
+#
+#   local ahead_symbol="%{$fg[red]%}⇡%{$reset_color%}${ahead}"
+#   local behind_symbol="%{$fg[cyan]%}⇣%{$reset_color%}${behind}"
+#   (( $ahead )) && gitstatus+=( "${ahead_symbol}" )
+#   (( $behind )) && gitstatus+=( "${behind_symbol}" )
+#   # `(j:<char>:)` represents joining the items of a list with a character
+#   # similar to a string.join type operation this can also be written as
+#   # (j./.) the character representing each part is interchangeable, and the
+#   # middle character represents the string to use to join the items
+#   # https://zsh.sourceforge.io/Guide/zshguide05.html#l124
+#   hook_com[misc]+="${(j: :)gitstatus}"
+# }
+#
+# ## git: Show remote branch name for remote-tracking branches
+# function +vi-git-remotebranch() {
+#     local remote
+#
+#     # Are we on a remote-tracking branch?
+#     remote=${$(git rev-parse --verify ${hook_com[branch]}@{upstream} \
+#         --symbolic-full-name 2>/dev/null)/refs\/remotes\/}
+#
+#     # The first test will show a tracking branch whenever there is one. The
+#     # second test, however, will only show the remote branch's name if it
+#     # differs from the local one.
+#     # if [[ -n ${remote} ]] ; then
+#     if [[ -n ${remote} && ${remote#*/} != ${hook_com[branch]} ]] ; then
+#         hook_com[branch]="${hook_com[branch]}→[${remote}]"
+#     fi
+# }
 #-------------------------------------------------------------------------------
 #               Prompt
 #-------------------------------------------------------------------------------
@@ -400,9 +396,9 @@ function __prompt_eval() {
 # NOTE: VERY IMPORTANT: the type of quotes used matters greatly. Single quotes MUST be used for these variables
 export PROMPT='$(__prompt_eval)'
 # Right prompt
-export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{240}%*%f'
+# export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{240}%*%f'
 # Correction prompt
-export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
+# export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
 
 #-------------------------------------------------------------------------------
 #           Execution time
@@ -412,41 +408,41 @@ export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo,
 # Turns seconds into human readable time.
 # 165392 => 1d 21h 56m 32s
 # https://github.com/sindresorhus/pretty-time-zsh
-__human_time_to_var() {
-  local human total_seconds=$1 var=$2
-  local days=$(( total_seconds / 60 / 60 / 24 ))
-  local hours=$(( total_seconds / 60 / 60 % 24 ))
-  local minutes=$(( total_seconds / 60 % 60 ))
-  local seconds=$(( total_seconds % 60 ))
-  (( days > 0 )) && human+="${days}d "
-  (( hours > 0 )) && human+="${hours}h "
-  (( minutes > 0 )) && human+="${minutes}m "
-  human+="${seconds}s"
-
-  # Store human readable time in a variable as specified by the caller
-  typeset -g "${var}"="${human}"
-}
-
-# Stores (into cmd_exec_time) the execution
-# time of the last command if set threshold was exceeded.
-__check_cmd_exec_time() {
-  integer elapsed
-  (( elapsed = EPOCHSECONDS - ${cmd_timestamp:-$EPOCHSECONDS} ))
-  typeset -g cmd_exec_time=
-  (( elapsed > 1 )) && {
-    __human_time_to_var $elapsed "cmd_exec_time"
-  }
-}
-
-__timings_preexec() {
-  emulate -L zsh
-  typeset -g cmd_timestamp=$EPOCHSECONDS
-}
-
-__timings_precmd() {
-  __check_cmd_exec_time
-  unset cmd_timestamp
-}
+#__human_time_to_var() {
+#  local human total_seconds=$1 var=$2
+#  local days=$(( total_seconds / 60 / 60 / 24 ))
+#  local hours=$(( total_seconds / 60 / 60 % 24 ))
+#  local minutes=$(( total_seconds / 60 % 60 ))
+#  local seconds=$(( total_seconds % 60 ))
+#  (( days > 0 )) && human+="${days}d "
+#  (( hours > 0 )) && human+="${hours}h "
+#  (( minutes > 0 )) && human+="${minutes}m "
+#  human+="${seconds}s"
+#
+#  # Store human readable time in a variable as specified by the caller
+#  typeset -g "${var}"="${human}"
+#}
+#
+## Stores (into cmd_exec_time) the execution
+## time of the last command if set threshold was exceeded.
+#__check_cmd_exec_time() {
+#  integer elapsed
+#  (( elapsed = EPOCHSECONDS - ${cmd_timestamp:-$EPOCHSECONDS} ))
+#  typeset -g cmd_exec_time=
+#  (( elapsed > 1 )) && {
+#    __human_time_to_var $elapsed "cmd_exec_time"
+#  }
+#}
+#
+#__timings_preexec() {
+#  emulate -L zsh
+#  typeset -g cmd_timestamp=$EPOCHSECONDS
+#}
+#
+#__timings_precmd() {
+#  __check_cmd_exec_time
+#  unset cmd_timestamp
+#}
 
 #-------------------------------------------------------------------------------
 #           HOOKS
@@ -469,70 +465,70 @@ autoload -Uz add-zsh-hook
 # https://www.zsh.org/mla/users/2018/msg00424.html
 # https://github.com/sorin-ionescu/prezto/pull/1805/files#diff-6a24e7644c4c0969110e86872283ec82L79
 # https://github.com/zsh-users/zsh-autosuggestions/pull/338/files
-__async_vcs_start() {
-  # Close the last file descriptor to invalidate old requests
-  if [[ -n "$__prompt_async_fd" ]] && { true <&$__prompt_async_fd } 2>/dev/null; then
-    exec {__prompt_async_fd}<&-
-    zle -F $__prompt_async_fd
-  fi
-  # fork a process to fetch the vcs status and open a pipe to read from it
-  exec {__prompt_async_fd}< <(
-    __async_vcs_info $PWD
-  )
-
-  # When the fd is readable, call the response handler
-  zle -F "$__prompt_async_fd" __async_vcs_info_done
-}
-
-__async_vcs_info() {
-  cd -q "$1"
-  vcs_info
-  print ${vcs_info_msg_0_}
-}
-
-# Called when new data is ready to be read from the pipe
-__async_vcs_info_done() {
-  # Read everything from the fd
-  _git_status_prompt="$(<&$1)"
-  # check if vcs info is returned, if not set the prompt
-  # to a non visible character to clear the placeholder
-  # NOTE: -z returns true if a string value has a length of 0
-  if [[ -z $_git_status_prompt ]]; then
-    _git_status_prompt=" "
-  fi
-  # remove the handler and close the file descriptor
-  zle -F "$1"
-  exec {1}<&-
-  zle && zle reset-prompt
-}
-
-# When the terminal is resized, the shell receives a SIGWINCH signal.
-# So redraw the prompt in a trap.
-# https://unix.stackexchange.com/questions/360600/reload-zsh-when-resizing-terminator-window
+# __async_vcs_start() {
+#   # Close the last file descriptor to invalidate old requests
+#   if [[ -n "$__prompt_async_fd" ]] && { true <&$__prompt_async_fd } 2>/dev/null; then
+#     exec {__prompt_async_fd}<&-
+#     zle -F $__prompt_async_fd
+#   fi
+#   # fork a process to fetch the vcs status and open a pipe to read from it
+#   exec {__prompt_async_fd}< <(
+#     __async_vcs_info $PWD
+#   )
 #
-# Resource: [TRAP functions]
-# http://zsh.sourceforge.net/Doc/Release/Functions.html#Trap-Functions
-function TRAPWINCH () {
-  zle && zle reset-prompt
-}
+#   # When the fd is readable, call the response handler
+#   zle -F "$__prompt_async_fd" __async_vcs_info_done
+# }
+#
+# __async_vcs_info() {
+#   cd -q "$1"
+#   vcs_info
+#   print ${vcs_info_msg_0_}
+# }
+#
+# # Called when new data is ready to be read from the pipe
+# __async_vcs_info_done() {
+#   # Read everything from the fd
+#   _git_status_prompt="$(<&$1)"
+#   # check if vcs info is returned, if not set the prompt
+#   # to a non visible character to clear the placeholder
+#   # NOTE: -z returns true if a string value has a length of 0
+#   if [[ -z $_git_status_prompt ]]; then
+#     _git_status_prompt=" "
+#   fi
+#   # remove the handler and close the file descriptor
+#   zle -F "$1"
+#   exec {1}<&-
+#   zle && zle reset-prompt
+# }
+#
+# # When the terminal is resized, the shell receives a SIGWINCH signal.
+# # So redraw the prompt in a trap.
+# # https://unix.stackexchange.com/questions/360600/reload-zsh-when-resizing-terminator-window
+# #
+# # Resource: [TRAP functions]
+# # http://zsh.sourceforge.net/Doc/Release/Functions.html#Trap-Functions
+# function TRAPWINCH () {
+#   zle && zle reset-prompt
+# }
+#
+# add-zsh-hook precmd () {
+#   # __timings_precmd
+#   __async_vcs_start # start async job to populate git info
+# }
+#
+# autoload -Uz chpwd_recent_dirs cdr
+# add-zsh-hook chpwd
+#
+# add-zsh-hook chpwd () {
+#   _git_status_prompt="" # clear current vcs_info
+#   chpwd_last_working_dir
+#   chpwd_recent_dirs
+# }
 
-add-zsh-hook precmd () {
-  __timings_precmd
-  __async_vcs_start # start async job to populate git info
-}
-
-autoload -Uz chpwd_recent_dirs cdr
-add-zsh-hook chpwd
-
-add-zsh-hook chpwd () {
-  _git_status_prompt="" # clear current vcs_info
-  chpwd_last_working_dir
-  chpwd_recent_dirs
-}
-
-add-zsh-hook preexec () {
-  __timings_preexec
-}
+# add-zsh-hook preexec () {
+#   __timings_preexec
+# }
 
 #  ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 #  ╏ LESS                                                     ╏
@@ -589,120 +585,98 @@ for script in $ZDOTDIR/scripts/*; do
   source $script
 done
 
-#  +----------------------------------------------------------+
-#  | FZF                                                      |
-#  +----------------------------------------------------------+
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
-ZSH_AUTOSUGGEST_USE_ASYNC=1
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[ -f ~/.config/miscxrdb/fzf/fzf.config ] && source ~/.config/miscxrdb/fzf/fzf.config
 
 last_working_dir
-
-#  +----------------------------------------------------------+
-#  | PLUGINS                                                  |
-#  +----------------------------------------------------------+
-[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
-  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ] \
-  && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 ###########################################
 # AUTO SSH-ADD (for git master)
 ###########################################
-if [ ! -f /tmp/auto-ssh  ]; then
-  SSH_GITHUB="$HOME/.ssh/GITHUB2JAN2022.pub"
+# if [ ! -f /tmp/auto-ssh  ]; then
+#   SSH_GITHUB="$HOME/.ssh/GITHUB2JAN2022.pub"
+#
+#   if [ -f "$SSH_GITHUB" ]; then
+#     sshenv=$HOME/.ssh/agent.env
+#
+#     agent_load_env () { test -f "$sshenv" && . "$sshenv" >| /dev/null; }
+#
+#     agent_start () {
+#       (umask 077; ssh-agent >| "$sshenv")
+#       . "$sshenv" >| /dev/null ;
+#     }
+#
+#     agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
+#
+#     if [ ! -z "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
+#       agent_load_env
+#       agent_start
+#       ssh-add
+#       ssh-add "$SSH_GITHUB"
+#     elif ["$SSH_AUTH_SOCK"] && [$agent_run_state = 1]; then
+#       ssh-add "$SSH_GITHUB"
+#     fi
+#
+#     unset sshenv
+#   fi
+#
+#   touch /tmp/auto-ssh
+# fi
 
-  if [ -f "$SSH_GITHUB" ]; then
-    sshenv=$HOME/.ssh/agent.env
+source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
+# source "$ZDOTDIR/11-prompt.zsh"
 
-    agent_load_env () { test -f "$sshenv" && . "$sshenv" >| /dev/null; }
-
-    agent_start () {
-      (umask 077; ssh-agent >| "$sshenv")
-      . "$sshenv" >| /dev/null ;
-    }
-
-    agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
-
-    if [ ! -z "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
-      agent_load_env
-      agent_start
-      ssh-add
-      ssh-add "$SSH_GITHUB"
-    elif ["$SSH_AUTH_SOCK"] && [$agent_run_state = 1]; then
-      ssh-add "$SSH_GITHUB"
-    fi
-
-    unset sshenv
+# CHECK: Source dari plugin seperti `asdf` or `git` or harus diload sebelum line
+# -> 'autoload -Uz compinit; compinit'
+# Jadi jika kamu ingin mendapatkan completion dari plugins (contoh `asdf`),
+# taruh dibagian ini:
+#  ┌
+#  │ ASDF
+#  └
+if [ -f "$HOME/.asdf/asdf.sh" ]; then
+  source "$HOME/.asdf/asdf.sh"
+  fpath=(${ASDF_DIR}/completions $fpath)
+  # Check issue ini https://github.com/asdf-community/asdf-golang/issues/28
+  # `asdf plugin golang` tidak menambahkan $GOPATH dan $GOROOT (hanya empty field,
+  # check via `go env`) dan solusi dari link tersebut:
+  if [ -d $(asdf where golang) ]; then
+  export GOPATH=$(asdf where golang)/packages
+  export GOROOT=$(asdf where golang)/go
+  export PATH="${PATH}:$(go env GOPATH)/bin"
   fi
-
-  touch /tmp/auto-ssh
 fi
 
-# AUTOENV: ---------------------------------------------------------------- {{{
-#
-# Link install: https://github.com/inishchith/autoenv
-export AUTOENVME="$HOME/.autoenv"
-[ -s "$AUTOENVME/activate.sh" ] && . "$AUTOENVME/activate.sh"
-#
-# }}}
+# FZF
+if [ -f "$HOME/.fzf.zsh" ]; then
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
+  ZSH_AUTOSUGGEST_USE_ASYNC=1
 
-[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+  [ -f ~/.config/miscxrdb/fzf/fzf.config ] && source ~/.config/miscxrdb/fzf/fzf.config
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+  [ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ] \
+    && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+  [ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ] \
+    && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+
+# AUTOENV
+# link install: https://github.com/inishchith/autoenv
+# if [ -d "$HOME/.autoenv" ]; then
+# export AUTOENVME="$HOME/.autoenv"
+# [ -s "$AUTOENVME/activate.sh" ] && . "$AUTOENVME/activate.sh"
+# fi
+
+# GRCAT
+#if [ -f "/etc/grc.zsh" ]; then
+# export GRCHPATH="/etc/grc.zsh"
+# [ -s "$GRCHPATH" ] && . "$GRCHPATH"
+#
+#  source /etc/grc.zsh
+#fi
 
 # Disable virtualenv prompt, it breaks starship
 # set -g VIRTUAL_ENV_DISABLE_PROMPT 1
+# export XDG_RUNTIME_DIR="/run/user/$UID"
+# export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 
-# export TERM=screen-256color-bce
-
-# GOLANG: ------------------------------------------------------------------ {{{
-#
-# Check issue ini https://github.com/asdf-community/asdf-golang/issues/28
-# `asdf plugin golang` tidak menambahkan $GOPATH dan $GOROOT (hanya empty field,
-# check via `go env`) dan solusi dari link tersebut:
-export GOPATH=$(asdf where golang)/packages
-export GOROOT=$(asdf where golang)/go
-export PATH="${PATH}:$(go env GOPATH)/bin"
-#
-# }}}
-
-# export PATH="$HOME/.poetry/bin:$PATH"
-export XDG_RUNTIME_DIR="/run/user/$UID"
-export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
-
-# [[ $TERM != "screen" ]] && exec tmux
-
-# [ -z "$TMUX"  ] && { tmux attach || exec tmux new-session && exit;}
-
-# lf-ueberzug() {
-# 	cleanup() {
-# 		lf-ueberzug-cleaner
-# 		kill "$UEBERZUGPID"
-# 		pkill -f "tail -f $LF_UEBERZUG_TEMPDIR/fifo"
-# 		rm -rf "$LF_UEBERZUG_TEMPDIR"
-# 	}
-# 	trap cleanup INT HUP
-
-# 	# Set up temporary directory.
-# 	export LF_UEBERZUG_TEMPDIR="$(mktemp -d -t lf-ueberzug-XXXXXX)"
-
-# 	# Launch ueberzug.
-# 	mkfifo "$LF_UEBERZUG_TEMPDIR/fifo"
-# 	tail -f "$LF_UEBERZUG_TEMPDIR/fifo" | ueberzug layer --silent &
-# 	UEBERZUGPID=$!
-
-# 	lf "$@"
-# 	cleanup
-# }
-# alias lf=lf-ueberzug
-lf () {
-  LF_TEMPDIR="$(mktemp -d -t lf-tempdir-XXXXXX)"
-  LF_TEMPDIR="$LF_TEMPDIR" lf-run -last-dir-path="$LF_TEMPDIR/lastdir" "$@"
-  if [ "$(cat "$LF_TEMPDIR/cdtolastdir" 2>/dev/null)" = "1" ]; then
-    cd "$(cat "$LF_TEMPDIR/lastdir")"
-  fi
-  rm -r "$LF_TEMPDIR"
-  unset LF_TEMPDIR
-}
+# zprof
