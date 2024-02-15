@@ -21,9 +21,9 @@ require("statusline")
 -- https://github.com/wez/wezterm/discussions/628
 
 local function font_with_fallback(name, params)
-	local names = { name, "FiraCode Nerd Font" }
+	-- local names = { name, "FiraCode Nerd Font" }
 
-	return wezterm.font_with_fallback(names, params)
+	return wezterm.font_with_fallback({ name }, params)
 end
 
 local color_schemes = {
@@ -97,6 +97,7 @@ if wezterm.target_triple:find("windows") then
 		},
 	}
 	-- config.default_prog = { "pwsh" }
+	config.font_size = 9 -- pengaturan font agar mudah dibaca
 	config.window_decorations = "RESIZE|TITLE"
 	wezterm.on("gui-startup", function(cmd)
 		local screen = wezterm.gui.screens().active
@@ -110,6 +111,7 @@ if wezterm.target_triple:find("windows") then
 else
 	-- config.term = "wezterm"
 	config.window_decorations = "RESIZE"
+	config.font_size = 11.5 -- pengaturan font agar mudah dibaca
 end
 
 -- [1.0] alpha channel value with floating point numbers in the range 0.0
@@ -182,7 +184,6 @@ config.colors = {
 config.hyperlink_rules = Hyperlinks
 
 -- ├┤ FONTS ├───────────────────────────────────────────────────────────┤
-config.font_size = 10.9 -- pengaturan font agar mudah dibaca
 config.line_height = 0.9 -- dan juga ini
 -- font_shaper = "Harfbuzz",
 config.harfbuzz_features = { "calt=0" }
@@ -204,8 +205,8 @@ config.font_rules = {
 		font = font_with_fallback("JetBrains Mono", { weight = "Regular" }),
 	},
 	{
-		italic = true,
-		intensity = "Bold",
+		italic = false,
+		-- intensity = "Bold",
 		font = font_with_fallback("JetBrains Mono", {}),
 	},
 }
