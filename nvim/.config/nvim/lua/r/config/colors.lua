@@ -3,9 +3,14 @@ local UIPallette = require("r.utils").uisec
 
 local Highlight = require "r.settings.highlights"
 
-local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, -0.5)
-local dark_green = Highlight.tint(UIPallette.palette.dark_green, -0.5)
-local dark_red = Highlight.tint(UIPallette.palette.dark_red, -0.5)
+local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, 0.5)
+local dark_green = Highlight.tint(UIPallette.palette.dark_green, 0.5)
+local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
+
+-- local dad_green = Highlight.tint(UIPallette.palette.green, 0.8)
+-- local dad_orange = Highlight.tint(UIPallette.palette.light_yellow, 0.5)
+-- local dad_red = Highlight.tint(UIPallette.palette.light_red, 0.6)
+-- local dad_text = Highlight.tint(UIPallette.palette.dark_blue, 0.6)
 
 -- stylua: ignore
 local general_overrides = function()
@@ -91,10 +96,14 @@ local general_overrides = function()
     -- { diffAdd = { bg = { from = "GitSignsAdd" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsAdd" , attr = "fg", alter = 0.5 } } },
     -- { diffChange = { bg = { from = "GitSignsChange" , attr = "fg", alter = -0.3 }, fg = { from = "GitSignsChange"  } } },
 
-    { diffAdd = { bg = UIPallette.palette.green, fg = dark_green } },
-    { diffChange = { bg = UIPallette.palette.light_yellow, fg = dark_orange } },
-    { diffDelete = { bg = UIPallette.palette.light_red, fg = dark_red } },
-    { diffText = { bg = UIPallette.palette.dark_blue, fg = UIPallette.palette.grey } },
+    { diffAdd = { bg = UIPallette.palette.green_git_bg, fg = "NONE", bold =true } },
+    { diffChange = { bg = UIPallette.palette.yellow_git_bg, fg = "NONE", bold =true } },
+    { diffDelete = { bg = UIPallette.palette.red_git_bg, fg = "NONE", bold =true } },
+    { diffText = { bg = UIPallette.palette.text_git_bg, fg = "NONE",bold =true } },
+
+    { GitSignsAdd = { bg = "NONE", fg =  dark_green } },
+    { GitSignsChange = { bg = "NONE", fg = dark_orange } },
+    { GitSignsDelete = { bg = "NONE", fg = dark_red } },
 
     { NeogitDiffAdd =  { link = "diffAdd"} } ,
     { NeogitDiffAddHighlight = { link = "diffAdd" } },
@@ -512,9 +521,9 @@ local function colorscheme_overrides()
       { CursorLine = { bg = { from = "Normal", alter = -0.1 } } },
     },
     ["tokyonight"] = {
-      { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
-      { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
-      { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
+      -- { GitSignsAdd = { bg = "NONE", fg = { from = "diffAdd", attr = "fg" } } },
+      -- { GitSignsChange = { bg = "NONE", fg = { from = "diffChange", attr = "fg" } } },
+      -- { GitSignsDelete = { bg = "NONE", fg = { from = "diffDelete", attr = "fg" } } },
       { DiffText = { bg = { from = "diffText", attr = "bg" }, fg = { from = "diffText", attr = "fg" } } },
 
       --   { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bg = "NONE" } },

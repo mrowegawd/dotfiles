@@ -120,7 +120,7 @@
     plus-emph-style = syntax "#03a4ff"
     plus-style = syntax "#450eff"
     side-by-side = true
-    syntax-theme = Vibrant Sunburst
+    # syntax-theme = Vibrant Sunburst
 
 [delta "villsau"]
     # author: https://github.com/torarnv
@@ -145,12 +145,12 @@
 
 [delta "woolly-mammoth"]
     # author: https://github.com/Kr1ss-XD
-    commit-decoration-style = 232 130 box
+    # commit-decoration-style = 232 130 box
     commit-style = 232 bold italic 130
     dark = true
     file-added-label = [+]
     file-copied-label = [C]
-    file-decoration-style = "#606018" overline
+    # file-decoration-style = "#606018" overline
     file-modified-label = [M]
     file-removed-label = [-]
     file-renamed-label = [R]
@@ -165,11 +165,11 @@
     line-numbers-right-format = "{np:>1}┊"
     line-numbers-right-style = green
     line-numbers-zero-style = "#545474" italic
-    minus-emph-style = syntax bold "#780000"
-    minus-style = syntax "#400000"
-    plus-emph-style = syntax bold "#007800"
-    plus-style = syntax "#004000"
-    syntax-theme = Vibrant Sunburst
+    minus-emph-style = syntax bold "#800000"
+    minus-style = syntax "#500000"
+    plus-emph-style = syntax bold "#7f8000"
+    plus-style = syntax "#505000"
+    syntax-theme = TwoDark
     whitespace-error-style = "#280050" reverse
     zero-style = syntax
     blame-format = "{author:<18} ({commit:>7}) ┊{timestamp:^16}┊ "
@@ -233,10 +233,10 @@
     line-numbers-right-format = "{np:>1}|"
     line-numbers-right-style = "#1688f0"
     line-numbers-zero-style = "#aaaaaa" italic
-    minus-emph-style = syntax bold "#c43e1f"
-    minus-style = syntax "#ab483f"
-    plus-emph-style = syntax bold "#0ea674"
-    plus-style = syntax "#98c379"
+    minus-emph-style = syntax bold "#800000"
+    minus-style = syntax "#500000"
+    plus-emph-style = syntax bold "#7f8000"
+    plus-style = syntax "#505000"
     whitespace-error-style = "#280050"
 
 [delta "mantis-shrimp-lite"]

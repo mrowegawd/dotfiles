@@ -10,7 +10,7 @@
   diffFilter = delta --color-only
 
 [delta]
-  features = mantis-shrimpc
+  features = woolly-mammoth
   side-by-side = false
   ; line-numbers = true
   ; light = false

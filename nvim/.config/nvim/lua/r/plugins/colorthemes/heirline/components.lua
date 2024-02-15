@@ -41,9 +41,9 @@ local colors = {
   mod_vis = Highlight.get("visual", "bg"),
   mod_term = Highlight.get("Boolean", "fg"),
 
-  diff_add = Highlight.get("diffAdd", "fg"),
-  diff_delete = Highlight.get("diffDelete", "fg"),
-  diff_change = Highlight.get("diffChange", "fg"),
+  diff_add = Highlight.get("GitSignsAdd", "fg"),
+  diff_delete = Highlight.get("GitSignsChange", "fg"),
+  diff_change = Highlight.get("GitSignsDelete", "fg"),
 
   diagnostic_warn = Highlight.get("DiagnosticSignWarn", "fg"),
   diagnostic_err = Highlight.get("DiagnosticSignError", "fg"),
