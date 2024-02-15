@@ -98,15 +98,19 @@ if wezterm.target_triple:find("windows") then
 	}
 	-- config.default_prog = { "pwsh" }
 	config.font_size = 9 -- pengaturan font agar mudah dibaca
-	config.window_decorations = "RESIZE|TITLE"
-	wezterm.on("gui-startup", function(cmd)
-		local screen = wezterm.gui.screens().active
-		local _, _, window = wezterm.mux.spawn_window(cmd or {})
-		local gui = window:gui_window()
-		local width = 0.7 * screen.width
-		local height = 0.7 * screen.height
-		gui:set_inner_size(width, height)
-		gui:set_position((screen.width - width) / 2, (screen.height - height) / 2)
+	config.window_decorations = "RESIZE"
+	-- wezterm.on("gui-startup", function(cmd)
+	-- 	local screen = wezterm.gui.screens().active
+	-- 	local _, _, window = wezterm.mux.spawn_window(cmd or {})
+	-- 	local gui = window:gui_window()
+	-- 	local width = 0.7 * screen.width
+	-- 	local height = 0.7 * screen.height
+	-- 	gui:set_inner_size(width, height)
+	-- 	gui:set_position((screen.width - width) / 2, (screen.height - height) / 2)
+	-- end)
+	wezterm.on("gui-startup", function()
+		local _, _, window = mux.spawn_window({})
+		window:gui_window():maximize()
 	end)
 else
 	-- config.term = "wezterm"
@@ -202,12 +206,12 @@ config.font_rules = {
 	{
 		italic = false,
 		-- intensity = "Normal",
-		font = font_with_fallback("JetBrains Mono", { weight = "Regular" }),
+		font = font_with_fallback("Victor Mono", { weight = "Regular" }),
 	},
 	{
 		italic = false,
 		-- intensity = "Bold",
-		font = font_with_fallback("JetBrains Mono", {}),
+		font = font_with_fallback("Victor Mono", {}),
 	},
 }
 

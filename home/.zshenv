@@ -16,12 +16,6 @@ export PERSONAL_PROJECTS_DIR=${PROJECTS_DIR}/project-testing
 export MANPATH="/usr/local/man:$MANPATH"
 if which nvim >/dev/null; then
   export MANPAGER='nvim +Man!'
-		alias v="nvim"
-		alias vv="vv"
-		alias vvg="vv --multigrid"
-		alias svi="sudo nvim"
-		alias ttext='nvim /tmp/dump_text.txt'
-
 fi
 
 source "${DOTFILES}/miscxrdb/.config/miscxrdb/global-exports/variables.sh"

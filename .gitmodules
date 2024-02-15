@@ -16,3 +16,6 @@
 [submodule "zshconfig/.config/zsh/plugins/autoenv"]
 	path = zshconfig/.config/zsh/plugins/autoenv
 	url = https://github.com/hyperupcall/autoenv.git
+[submodule "zshconfig/.config/zsh/plugins/fzf-marks"]
+	path = zshconfig/.config/zsh/plugins/fzf-marks
+	url = https://github.com/urbainvaes/fzf-marks.git

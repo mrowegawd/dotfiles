@@ -26,7 +26,10 @@ Util.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 Util.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
 -- Avoid or don't yank on visual paste
 Util.map.nnoremap("p", function()
-  cmd.normal { vim.v.count1 .. "P`[", bang = true }
+  if vim.bo.modifiable then
+    return cmd.normal { vim.v.count1 .. "P`[", bang = true }
+  end
+  print(fmt("file: %s is not modifiable", vim.bo.filetype))
 end, silent)
 
 Util.map.inoremap("<c-j>", "<Down>", silent)

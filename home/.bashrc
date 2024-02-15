@@ -27,9 +27,11 @@
 
 export DOTFILES="${HOME}/moxconf/development/dotfiles"
 DOT_VARS="$HOME/miscxrdb/.config/miscxrdb/global-exports/variables.sh"
-[[ -f ${DOT_VARS} ]] && source "$DOT_VARS"
+# shellcheck source=/dev/null
+[[ -f ${DOT_VARS} ]] && . "DOT_VARS"
 
-source "${DOTFILES}/miscxrdb/.config/miscxrdb/global-exports/variables.sh"
+# shellcheck source=/dev/null
+. "${DOTFILES}/miscxrdb/.config/miscxrdb/global-exports/variables.sh"
 
 # EXPORT: ----------------------------------------------------------------- {{{
 #
@@ -50,7 +52,9 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # }}}
 # ASDF: ------------------------------------------------------------------- {{{
 #
+# shellcheck source=/dev/null
 [ -s "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
+# shellcheck source=/dev/null
 [ -s "$HOME/.asdf/completions/asdf.bash" ] && . "$HOME/.asdf/completions/asdf.bash"
 #
 # }}}
@@ -58,28 +62,37 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 #
 # AUTOENV: https://github.com/inishchith/autoenv
 export AUTOENVME="$HOME/.autoenv"
+# shellcheck source=/dev/null
 [ -s "$AUTOENVME/activate.sh" ] && \. "$AUTOENVME/activate.sh"
 #
 # }}}
 # FZF: -------------------------------------------------------------------- {{{
 #
+# shellcheck source=/dev/null
 [ -f ~/.fzf.bash ] && . ~/.fzf.bash
+
+# shellcheck source=/dev/null
 [ -f ~/.config/miscxrdb/fzf/fzf.config ] && source ~/.config/miscxrdb/fzf/fzf.config
-[ -f ~/.cache/zsh/plugins/fzf-marks/fzf-marks.plugin.bash ] &&
-	source ~/.cache/zsh/plugins/fzf-marks/fzf-marks.plugin.bash
+
+# shellcheck source=/dev/null
+[ -f ~/.config/zsh/plugins/fzf-marks/fzf-marks.plugin.bash ] &&
+	source ~/.config/zsh/plugins/fzf-marks/fzf-marks.plugin.bash
 
 # export FZF_MARKS_FILE="$HOME/.cache/fzf-marks"
-export FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/fzf-marks"
+export FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
 export FZF_MARKS_COMMAND="fzf"
 export FZF_MARKS_COLOR_RHS="249"
 #
 # }}}
 
+# shellcheck source=/dev/null
 [[ -f "$HOME/.config/bashrc/aliases.bashrc" ]] && . "$HOME/.config/bashrc/aliases.bashrc"
+# shellcheck source=/dev/null
 [[ -f "$HOME/.config/bashrc/bash_prompt.bashrc" ]] && . "$HOME/.config/bashrc/bash_prompt.bashrc"
 
 # vim: foldmethod=marker
 
 # BEGIN_KITTY_SHELL_INTEGRATION
+# shellcheck source=/dev/null
 if test -n "$KITTY_INSTALLATION_DIR" -a -e "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; then source "$KITTY_INSTALLATION_DIR/shell-integration/bash/kitty.bash"; fi
 # END_KITTY_SHELL_INTEGRATION
