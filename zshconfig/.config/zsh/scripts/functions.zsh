@@ -77,8 +77,6 @@ build-go() {
     cd $1
     go mod init $1
   fi
-
-
 }
 
 run-mark() {

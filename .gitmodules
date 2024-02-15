@@ -10,3 +10,9 @@
 [submodule "zshconfig/.config/zsh/plugins/zsh-auto-notify"]
 	path = zshconfig/.config/zsh/plugins/zsh-auto-notify
 	url = https://github.com/MichaelAquilina/zsh-auto-notify.git
+[submodule "zshconfig/.config/zsh/plugins/fzf-tab"]
+	path = zshconfig/.config/zsh/plugins/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git
+[submodule "zshconfig/.config/zsh/plugins/autoenv"]
+	path = zshconfig/.config/zsh/plugins/autoenv
+	url = https://github.com/hyperupcall/autoenv.git

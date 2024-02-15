@@ -22,29 +22,22 @@ md() {
 	mkdir -p "$@"
 }
 
-# asdf() {
-# 	if [ -f "$HOME/.asdf/asdf.sh" ]; then
-# 		source "$HOME/.asdf/asdf.sh"
-# 		# fpath=(${ASDF_DIR}/completions $fpath)
-# 	fi
-# 	asdf "$@"
-# }
+logs() {
+	echo -e "\nit will take some time..\n"
+	sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f
+}
 
-# lf() {
-# 	LF_TEMPDIR="$(mktemp -d -t lf-tempdir-XXXXXX)"
-# 	LF_TEMPDIR="$LF_TEMPDIR" lf-run -last-dir-path="$LF_TEMPDIR/lastdir" "$@"
-# 	if [ "$(cat "$LF_TEMPDIR/cdtolastdir" 2>/dev/null)" = "1" ]; then
-# 		cd "$(cat "$LF_TEMPDIR/lastdir")"
-# 	fi
-# 	rm -r "$LF_TEMPDIR"
-# 	unset LF_TEMPDIR
-# }
+lt() {
+	eza --icons --all -I '*.git' --color=always -T
+}
 
-alias logs="sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+l() {
+	eza -l -snew
+}
 
-alias l="eza -l -snew"
-alias ll="eza --long --all --git --color=always --group-directories-first --icons"
-alias lt="eza --icons --all -I '*.git' --color=always -T"
+ll() {
+	eza --long --all --git --color=always --group-directories-first --icons
+}
 
 alias nnn='nnn -e -H -r'
 
