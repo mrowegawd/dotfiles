@@ -2,6 +2,22 @@ local Util = require "r.utils"
 local Highlight = require "r.settings.highlights"
 
 return {
+  -- GH.NVIM
+  {
+    "ldelossa/gh.nvim",
+    event = "BufReadPre",
+    dependencies = {
+      {
+        "ldelossa/litee.nvim",
+        config = function()
+          require("litee.lib").setup()
+        end,
+      },
+    },
+    config = function()
+      require("litee.gh").setup()
+    end,
+  },
   -- GIT CONFLICT
   {
     "akinsho/git-conflict.nvim", --- hanya untuk viewer untuk git log, namun bisa di kombinasi dengan fugitive

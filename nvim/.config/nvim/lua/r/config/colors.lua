@@ -3,9 +3,9 @@ local UIPallette = require("r.utils").uisec
 
 local Highlight = require "r.settings.highlights"
 
-local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, -0.1)
-local dark_green = Highlight.tint(UIPallette.palette.dark_green, -0.1)
-local dark_red = Highlight.tint(UIPallette.palette.dark_red, -0.1)
+local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, -0.5)
+local dark_green = Highlight.tint(UIPallette.palette.dark_green, -0.5)
+local dark_red = Highlight.tint(UIPallette.palette.dark_red, -0.5)
 
 -- stylua: ignore
 local general_overrides = function()
@@ -14,7 +14,7 @@ local general_overrides = function()
     -- { ColorColumn = { bg = { from = "Normal" , attr = "bg" } } },
     -- { Normal = { fg = { from = "Normal", attr = "fg", alter = -0.1 }, bg = { from = "Normal", attr = "bg", alter= -0.15 } } },
     -- { Normal = { bg = "NONE", fg = { from = "Normal", attr = "fg" } } },
-    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "ColorColumn", attr = "bg", alter = -0.5 } } },
+    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = "NONE" } },
     { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },

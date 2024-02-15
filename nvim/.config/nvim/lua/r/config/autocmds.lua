@@ -392,16 +392,16 @@ Util.cmd.augroup("CheckOutsideTime", {
 --   end,
 -- })
 
-Util.cmd.augroup("UpdateVim", {
-  -- Automatically resize windows when host resizes
-  event = { "VimResized" },
-  pattern = "*",
-  command = "wincmd =",
-}, {
-  event = { "FocusLost" },
-  pattern = { "*" },
-  command = "silent! wall",
-})
+-- Util.cmd.augroup("UpdateVim", {
+--   -- Automatically resize windows when host resizes
+--   event = { "VimResized" },
+--   pattern = "*",
+--   command = "wincmd =",
+-- }, {
+--   event = { "FocusLost" },
+--   pattern = { "*" },
+--   command = "silent! wall",
+-- })
 
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
