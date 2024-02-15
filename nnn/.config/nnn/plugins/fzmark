@@ -6,6 +6,9 @@
 . "$(dirname "$0")"/.nnn-plugin-helper
 
 cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+if grep -qi microsoft /proc/version; then # --> check for WSL
+	cwd="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
+fi
 
 . "$HOME/.config/miscxrdb/fzf/fzf.config"
 

@@ -79,7 +79,12 @@ export AUTOENVME="$HOME/.autoenv"
 	source ~/.config/zsh/plugins/fzf-marks/fzf-marks.plugin.bash
 
 # export FZF_MARKS_FILE="$HOME/.cache/fzf-marks"
-export FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+if grep -qi microsoft /proc/version; then # --> check for WSL
+	export FZF_MARKS_FILE="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
+else
+	export FZF_MARKS_FILE="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
+fi
+
 export FZF_MARKS_COMMAND="fzf"
 export FZF_MARKS_COLOR_RHS="249"
 #

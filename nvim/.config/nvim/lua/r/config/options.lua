@@ -49,16 +49,21 @@ elseif plat.is_wsl then
   -- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
   --NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
   vim.g.clipboard = {
-    name = "win32yank-wsl",
-    copy = {
-      ["+"] = "win32yank.exe -i --crlf",
-      ["*"] = "win32yank.exe -i --crlf",
-    },
-    paste = {
-      ["+"] = "win32yank.exe -o --lf",
-      ["*"] = "win32yank.exe -o --lf",
-    },
-    cache_enabled = 0,
+    -- name = "win32yank-wsl",
+    -- copy = {
+    --   ["+"] = "win32yank.exe -i --crlf",
+    --   ["*"] = "win32yank.exe -i --crlf",
+    -- },
+    -- paste = {
+    --   ["+"] = "win32yank.exe -o --lf",
+    --   ["*"] = "win32yank.exe -o --lf",
+    -- },
+    -- cache_enabled = 0,
+    --
+    name = "wsl clipboard",
+    copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
+    paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
+    cache_enabled = true,
   }
 end
 -- -- Exclude usetab as we do not want to jump to buffers in already open tabs

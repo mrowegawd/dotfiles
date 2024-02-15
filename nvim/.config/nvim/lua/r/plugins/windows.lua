@@ -145,13 +145,6 @@ return {
           ["a-k"] = "k",
           ["a-l"] = "l",
         }
-        -- local function tbl_length(T)
-        --   local count = 0
-        --   for _ in pairs(T) do
-        --     count = count + 1
-        --   end
-        --   return count
-        -- end
 
         local function detect_opened_windows()
           -- local is_resize = 2 > tbl_length(vim.fn.win_findbuf(vim.fn.bufnr "%"))
@@ -182,6 +175,7 @@ return {
           is_resize = is_resize or false
           return function()
             local winn = vim.api.nvim_get_current_win()
+
             if not is_resize then
               vim.cmd.wincmd(navVim[dir])
               return
@@ -191,6 +185,9 @@ return {
             local pane_dir = nav[dir]
 
             local pane = vim.env.WEZTERM_PANE
+            local pane_dir2 = nav2[dir]
+            local pane_dir = nav[dir]
+
             if pane and winn == vim.api.nvim_get_current_win() then
               if not is_resize then
                 vim.system({ "wezterm", "cli", "activate-pane-direction", pane_dir }, { text = true }, function(p)

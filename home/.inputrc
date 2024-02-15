@@ -56,7 +56,7 @@ $if mode=vi
     "\C-h": backward-char
     "\C-a": beginning-of-line
     "\C-e": end-of-line
-    "\C-j": "fzm\n"
+    # "\C-j": "fzm\n"
     "\eq": edit-and-execute-command
 $endif
 

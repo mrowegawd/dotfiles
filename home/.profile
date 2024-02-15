@@ -32,7 +32,7 @@ export TERMINAL="wezterm"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
-if [ -f "/etc/wsl.conf" ]; then
+if grep -qi microsoft /proc/version; then
 	sudo_autopasswd() {
 		echo "<add password here>" | sudo -Svp ""
 		# Default timeout for caching your sudo password: 15 minutes

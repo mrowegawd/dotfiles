@@ -17,6 +17,6 @@ M.sysname = uname.sysname
 M.is_mac = M.sysname == "Darwin"
 M.is_linux = M.sysname == "Linux"
 M.is_windows = M.sysname == "Windows_NT"
-M.is_wsl = not (string.find(uname.release, "microsoft") == nil)
+M.is_wsl = os.getenv "WSL_DISTRO_NAME" ~= nil
 
 return M

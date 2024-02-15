@@ -10,6 +10,10 @@ local snippet_path = dropbox_path .. "/friendly-snippets"
 
 local colorscheme = "tokyonight-night"
 
+if Util.platform.is_wsl then
+  dropbox_path = "/mnt/c/Users/moxli/Dropbox"
+end
+
 _G.base = {}
 
 local base_options = {
@@ -45,7 +49,7 @@ local defaults = {
   --   require("tokyonight").load()
   -- end,
   path = {
-    dropbox_path = fmt("%s/Dropbox", home, "Dropbox"),
+    dropbox_path = dropbox_path,
     wiki_path = fmt("%s/neorg", dropbox_path),
     snippet_path = snippet_path,
     home = home,

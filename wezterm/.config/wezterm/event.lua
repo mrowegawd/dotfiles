@@ -87,24 +87,26 @@ wezterm.on("open-uri", function(window, pane, uri)
 	end
 end)
 
-local cache_dir = os.getenv("HOME") .. "/.cache"
-local window_size_cache_path = cache_dir .. "wezterm-window_size_cache.txt"
+if not wezterm.target_triple:find("windows") then
+	local cache_dir = os.getenv("HOME") .. "/.cache"
+	local window_size_cache_path = cache_dir .. "wezterm-window_size_cache.txt"
 
--- Mengatasi window saat resize dimana pengaturan size nya berubah
--- Taken from: https://github.com/wez/wezterm/issues/256#issuecomment-1501101484
----@diagnostic disable-next-line: unused-local
-wezterm.on("window-resized", function(window, pane)
-	local window_size_cache_file = io.open(window_size_cache_path, "r")
-	if window_size_cache_file == nil then
-		local tab_size = pane:tab():get_size()
-		local cols = tab_size["cols"]
-		local rows = tab_size["rows"] + 2 -- Without adding the 2 here, the window doesn't maximize
-		local contents = string.format("%d,%d", cols, rows)
-		window_size_cache_file = assert(io.open(window_size_cache_path, "w"))
-		window_size_cache_file:write(contents)
-		window_size_cache_file:close()
-	end
-end)
+	-- Mengatasi window saat resize dimana pengaturan size nya berubah
+	-- Taken from: https://github.com/wez/wezterm/issues/256#issuecomment-1501101484
+	---@diagnostic disable-next-line: unused-local
+	wezterm.on("window-resized", function(window, pane)
+		local window_size_cache_file = io.open(window_size_cache_path, "r")
+		if window_size_cache_file == nil then
+			local tab_size = pane:tab():get_size()
+			local cols = tab_size["cols"]
+			local rows = tab_size["rows"] + 2 -- Without adding the 2 here, the window doesn't maximize
+			local contents = string.format("%d,%d", cols, rows)
+			window_size_cache_file = assert(io.open(window_size_cache_path, "w"))
+			window_size_cache_file:write(contents)
+			window_size_cache_file:close()
+		end
+	end)
+end
 
 -- wezterm.on("gui-startup", function()
 -- 	local _, _, window = mux.spawn_window({})

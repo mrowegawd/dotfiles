@@ -109,7 +109,7 @@ if wezterm.target_triple:find("windows") then
 	-- 	gui:set_position((screen.width - width) / 2, (screen.height - height) / 2)
 	-- end)
 	wezterm.on("gui-startup", function()
-		local _, _, window = mux.spawn_window({})
+		local _, _, window = wezterm.mux.spawn_window({})
 		window:gui_window():maximize()
 	end)
 else
