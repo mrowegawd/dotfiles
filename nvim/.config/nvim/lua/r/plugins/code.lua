@@ -1,5 +1,6 @@
 local Highlight = require "r.settings.highlights"
 local Icons = require("r.config").icons
+local Config = require "r.config"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -153,7 +154,7 @@ return {
           local luasnip = require "luasnip"
 
           require("luasnip.loaders.from_vscode").lazy_load {
-            paths = "~/Dropbox/friendly-snippets",
+            paths = Config.path.dropbox_path .. "/friendly-snippets",
           }
 
           luasnip.filetype_extend("python", { "django" })

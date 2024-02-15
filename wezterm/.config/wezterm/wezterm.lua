@@ -99,19 +99,19 @@ if wezterm.target_triple:find("windows") then
 	-- config.default_prog = { "pwsh" }
 	config.font_size = 9 -- pengaturan font agar mudah dibaca
 	config.window_decorations = "RESIZE"
-	-- wezterm.on("gui-startup", function(cmd)
-	-- 	local screen = wezterm.gui.screens().active
-	-- 	local _, _, window = wezterm.mux.spawn_window(cmd or {})
-	-- 	local gui = window:gui_window()
-	-- 	local width = 0.7 * screen.width
-	-- 	local height = 0.7 * screen.height
-	-- 	gui:set_inner_size(width, height)
-	-- 	gui:set_position((screen.width - width) / 2, (screen.height - height) / 2)
-	-- end)
-	wezterm.on("gui-startup", function()
-		local _, _, window = wezterm.mux.spawn_window({})
-		window:gui_window():maximize()
+	wezterm.on("gui-startup", function(cmd)
+		local screen = wezterm.gui.screens().active
+		local _, _, window = wezterm.mux.spawn_window(cmd or {})
+		local gui = window:gui_window()
+		local width = 0.9 * screen.width
+		local height = 0.9 * screen.height
+		gui:set_inner_size(width, height)
+		gui:set_position((screen.width - width) / 2, (screen.height - height) / 2)
 	end)
+	-- wezterm.on("gui-startup", function()
+	-- 	local _, _, window = wezterm.mux.spawn_window({})
+	-- 	window:gui_window():maximize()
+	-- end)
 else
 	-- config.term = "wezterm"
 	config.window_decorations = "RESIZE"
