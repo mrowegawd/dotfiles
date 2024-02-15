@@ -184,12 +184,15 @@ return {
             local winn = vim.api.nvim_get_current_win()
             if not is_resize then
               vim.cmd.wincmd(navVim[dir])
+              return
             end
+
+            local pane_dir2 = nav2[dir]
+            local pane_dir = nav[dir]
 
             local pane = vim.env.WEZTERM_PANE
             if pane and winn == vim.api.nvim_get_current_win() then
               if not is_resize then
-                local pane_dir = nav[dir]
                 vim.system({ "wezterm", "cli", "activate-pane-direction", pane_dir }, { text = true }, function(p)
                   if p.code ~= 0 then
                     vim.notify(
@@ -202,8 +205,6 @@ return {
               end
 
               if is_resize then
-                local pane_dir2 = nav2[dir]
-
                 if detect_opened_windows() then
                   vim.system(
                     { "wezterm", "cli", "adjust-pane-size", "--amount", "5", pane_dir2 },
@@ -223,6 +224,9 @@ return {
                   vim.cmd(" lua " .. commands)
                 end
               end
+            else
+              local commands = string.format([[require("smart-splits").resize_%s()]], pane_dir2:lower())
+              vim.cmd(" lua " .. commands)
             end
           end
         end
