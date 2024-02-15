@@ -314,7 +314,7 @@ return {
 
       local callme = 0
       local cmp_mappings = {
-        ["<C-y>"] = cmp.mapping(function(_)
+        ["<C-r>"] = cmp.mapping(function(_)
           -- if cmp.visible() then
           --   cmp.abort()
           if callme == 0 then
@@ -377,6 +377,7 @@ return {
         ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
         ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
         ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+        ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
       }
 
       local border_opts = {

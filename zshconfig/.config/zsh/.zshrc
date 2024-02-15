@@ -7,7 +7,6 @@
 
 # For debug:
 # zmodload zsh/zprof
-[[ $- == *i* ]] && stty -ixon
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -15,7 +14,6 @@
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ OPTIONS                                                  ╏
@@ -177,6 +175,9 @@ export MANPAGER="/bin/sh -c \"col -b | \
 
 # @see: https://thevaluable.dev/zsh-install-configure-mouseless/
 bindkey -v # enables vi mode, using -e = emacs
+
+zle -N autosuggest-accept
+bindkey '^y'                  autosuggest-accept       # enter autosugest (c-y)
 
 bindkey '^?'                  backward-delete-char
 bindkey '^h'                  backward-char            # backward (c-b)
