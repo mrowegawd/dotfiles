@@ -56,6 +56,9 @@ getcolors() {
 	tmux_fg=$(grep "tmux_fg" <$mastercolors | awk '{print $NF}' | head -1)
 	tmux_border_fg=$(grep "tmux_border_fg" <$mastercolors | awk '{print $NF}' | head -1)
 
+	separator_statusline=$(grep "separator_statusline" <$mastercolors | awk '{print $NF}' | head -1)
+	statusline_fg=$(grep "statusline_fg" <$mastercolors | awk '{print $NF}' | head -1)
+
 	BACKGROUND_ACTIVE_WINDOW=$normal_bg
 	BACKGROUND_NON_ACTIVE_WINDOW=$normal_bg
 	BACKGROUND_VIM=$normal_bg_vim
@@ -85,6 +88,8 @@ getcolors() {
 	TMUX_FG=$tmux_fg
 	TMUX_BORDER_FG=$tmux_border_fg
 
+	SEPARATOR_STATUSLINE=$separator_statusline
+	STATUSLINE_FG=$statusline_fg
 }
 
 _check_size_screen() {
@@ -119,6 +124,9 @@ cachecolors() {
 
 		  TMUX_PANE_ACTIVE_BG="${TMUX_PANE_ACTIVE_BG}"
 		  TMUX_PANE_BG="${TMUX_PANE_BG}"
+
+		  SEPARATOR_STATUSLINE="${SEPARATOR_STATUSLINE}"
+		  STATUSLINE_FG="${STATUSLINE_FG}"
 
 		  CURSOR="${CURSOR}"
 		  BLACK="${BLACK}"

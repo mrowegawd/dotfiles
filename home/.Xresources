@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/tokyonight-night"
+#include ".config/miscxrdb/xresource-theme/miasma"
 
 ! --------------
 ! XFT SETTINGS

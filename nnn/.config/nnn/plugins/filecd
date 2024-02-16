@@ -9,6 +9,13 @@ current_path="$2/$(basename "$2/$1")"
 
 get_target_path="$(dirname "${current_path[0]}")"
 
+_is_nvim() {
+	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
+}
+_is_nnn() {
+	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
+}
+
 if not_in_tmux; then
 	pane_id=$(wezterm cli get-pane-direction right)
 	if [ -z "${pane_id}" ]; then
@@ -30,21 +37,16 @@ if not_in_tmux; then
 
 else
 	tmux select-pane -R
-	current_pane=$(tmux display-message -p '#{window_panes}')
-	# output current_pane selalu 1
-	if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
-		# dunstify "mantap"
+	current_pane=$(tmux display-message -p '#{pane_id}')
+
+	if _is_nvim; then
+		tmux send-keys -t "$current_pane" ":qa!" Enter
+	elif _is_nnn; then
 		tmux split-window -h -p 83
-		current_pane=$(tmux display-message -p '#{window_panes}')
 	fi
 
-	program=$(tmux display -p '#{pane_current_command}')
-	if [ "$program" = "nvim" ]; then
-		tmux send-keys -t "$current_pane" ":qa!" Enter
-		sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
-	fi
+	sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
 
 	tmux send-keys -t "$current_pane" "cd ${get_target_path}" Enter
 	tmux send-keys -t "$current_pane" "nvim" Enter
-
 fi

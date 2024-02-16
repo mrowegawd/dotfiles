@@ -9,7 +9,7 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias grep="grep --color=auto"
+# alias grep="grep --color=auto"
 alias rg="rg --hidden"
 
 alias v="nvim"
@@ -320,6 +320,27 @@ c_os() {
 	echo "version      : $VER"
 	echo "CPU Vendor   : $VENDOCCPU"
 	echo "ARM          : $(dpkg --print-architecture)"
+
+	# Informasi OS
+	echo -e "\n\n\nInformasi OS:"
+	cat /etc/*release | uniq
+
+	# Versi kernel
+	echo -e "\nVersi Kernel:"
+	uname -r
+
+	# Informasi CPU
+	echo -e "\nInformasi CPU:"
+	lscpu
+
+	# Informasi RAM
+	echo -e "\nInformasi RAM:"
+	free -h
+
+	# Informasi VGA
+	echo -e "\nInformasi VGA:"
+	lspci | grep -i vga
+
 }
 
 # check: listing all the listening ports of tcp and udp connections
@@ -550,8 +571,8 @@ r_news() {
 	fi
 }
 
-# run: multitail
-r_logsys() {
+# run: log multitail
+r_log_with_multitail() {
 	if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
 		if tmux list-window | grep logging >/dev/null; then
 			tmuxWindowName=$(tmux list-windows | grep logging | cut -d: -f1)
@@ -562,6 +583,58 @@ r_logsys() {
 	else
 		sudo multitail -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
 	fi
+}
+
+# run: grep error log
+r_log_run() {
+
+	# # Definisikan direktori log
+	# log_directory="/var/log"
+	#
+	# # Mencari file log dalam direktori log
+	# log_files=$(sudo find "$log_directory" -type f)
+	#
+	# # Loop melalui setiap file log
+	# for log_file in $log_files; do
+	# 	# Mengecek apakah file log mengandung kata "error"
+	# 	if sudo grep -q "error" "$log_file"; then
+	# 		echo "--------------------------------------------------------------------"
+	# 		echo "Error ditemukan dalam file: $log_file"
+	# 		echo "--------------------------------------------------------------------"
+	# 		sudo grep "error" "$log_file" | sed 's/^/  /'
+	# 		echo "--------------------------------------------------------------------"
+	# 		echo
+	# 	fi
+	# done
+
+	# ask sudo first
+	sudo -v
+
+	# Definisikan direktori log
+	log_directory="/var/log"
+
+	# Mencari file log dalam direktori log dengan akses sudo
+	log_files=$(sudo find "$log_directory" -type f | fzf --multi)
+
+	# Loop melalui setiap file log yang dipilih
+	for log_file in $log_files; do
+		# Mengecek apakah file log mengandung kata "error"
+		if sudo grep -q "error" "$log_file"; then
+			echo "--------------------------------------------------------------------"
+			echo "Error ditemukan dalam file: $log_file"
+			echo "--------------------------------------------------------------------"
+			# sudo grep "error" "$log_file" | sed 's/^/  /' | ccze
+			sudo grep "error" "$log_file" | ccze -A | sed 's/^/  /'
+			echo "--------------------------------------------------------------------"
+			echo
+		else
+			echo "--------------------------------------------------------------------"
+			echo "Tidak ada error dalam file: $log_file"
+			echo "--------------------------------------------------------------------"
+			echo
+		fi
+	done
+
 }
 
 # run: generate pass key

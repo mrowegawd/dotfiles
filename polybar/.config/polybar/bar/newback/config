@@ -5,8 +5,8 @@
 ; #########################################
 ; check --> https://github.com/polybar/polybar-scripts/tree/master/polybar-scripts
 [global/wm]
-margin-bottom       = 0
-margin-top          = 0
+margin-bottom       =
+margin-top          =
 
 include-file = ~/.config/polybar/bar/newback/modules.ini
 
@@ -20,30 +20,24 @@ bottom = false
 fixed-center = true
 width = 100%
 height = 25
-; offset bikin bar jadi floating : 1 %
+
 offset-x = 0%
 offset-y = 0%
 background = ${color.background}
 foreground = ${color.foreground}
-padding = 0
-radius-top = 0.0
-radius-bottom = 0.0
-underline-size = 2
-underline-color = #bebebe
-border-size = 0
-border-color = #2a2a2a
+
+border-size =
+border-color =
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;; Fonts
-font-0              = SF Mono:style=Medium:size=10;1
-font-1              = SF Mono:style=Medium:size=10;1
-font-2              = JetBrains Mono:size=18;1
-font-3              = Siji:size=5:fontformat=truetype;1
-font-4              = Siji:size=10:fontformat=truetype;1
-font-5              = Siji:size=15:fontformat=truetype;1
-font-6              = Wucon Siji:size=8;1
+font-0              = SF Mono:size=10
+font-1              = JetBrains Mono:size=10
+font-2              = Siji:size=5:fontformat=truetype
+font-3              = SF Mono:size=25;10
+font-4              = Wucon Siji:size=8
 
-modules-left = appmenu bspwm mpd pulseaudio
+modules-left = appmenu separator-right1 bspwm mpd pulseaudio
 ; modules-right = mpd pillar polypomo pillar info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar check-network pillar date pillar powermenu pillar
 ; modules-right = mpd info-docker record-ffmpeg pillar pulseaudio pillar memory pillar filesystem pillar date pillar powermenu pillar
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio check-network transmission memory filesystem date powermenu
@@ -83,10 +77,9 @@ cursor-scroll =
 [settings]
 throttle-output = 5
 throttle-output-for = 10
-screenchange-reload = false
-compositing-background = source
+screenchange-reload = true
+compositing-background = over
 compositing-foreground = over
 compositing-overline = over
 compositing-underline = over
 compositing-border = over
-pseudo-transparency = false

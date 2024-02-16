@@ -7,7 +7,6 @@ Util.cmd.augroup("WrapSpell", {
   event = { "FileType" },
   pattern = { "gitcommit", "markdown", "NeogitCommitMessage", "norg" },
   command = function()
-    -- vim.opt_local.wrap = true
     vim.opt_local.spell = true
     vim.opt_local.spelllang = { "en_us", "id" }
     vim.opt_local.conceallevel = 2
@@ -102,6 +101,17 @@ Util.cmd.augroup("ReHighlightFolded", {
               },
             },
           },
+          ["farout"] = {
+            {
+              Folded = {
+                bg = { from = "Normal", attr = "bg", alter = 2 },
+                fg = { from = "Normal", attr = "bg", alter = 4 },
+                underline = false,
+                bold = true,
+              },
+            },
+          },
+
           ["catppuccin-latte"] = {
             {
               Folded = {
@@ -167,15 +177,15 @@ Util.cmd.augroup("SmartClose", {
   end,
 })
 
--- Close quick fix window if the file containing it was closed
--- Util.cmd.augroup("AutoCloseQf", {
---   event = { "BufEnter", "FocusGained" },
+-- Util.cmd.augroup("DisableHiBGNormal", {
+--   event = { "BufReadPost" },
+--   pattern = "*",
 --   command = function()
---     if vim.bo.buftype == "quickfix" and #vim.api.nvim_list_wins() == 1 then
---       -- vim.cmd "q"
---       api.nvim_buf_delete(0, { force = true })
+--     if os.getenv "TERMINAL" == "wezterm" then
+--       cmd "hi Normal guibg=NONE"
 --     end
 --   end,
+--   once = true,
 -- })
 
 -- don't execute silently in case of errors
@@ -228,17 +238,6 @@ Util.cmd.augroup("LocateLastPosition", {
   end,
 })
 
--- Util.cmd.augroup("DisableHiBGNormal", {
---   event = { "BufReadPost" },
---   pattern = "*",
---   command = function()
---     if os.getenv "TERMINAL" == "wezterm" then
---       cmd "hi Normal guibg=NONE"
---     end
---   end,
---   once = true,
--- })
-
 Util.cmd.augroup("WindowBehaviours", {
   event = { "FileType" },
   pattern = {
@@ -276,132 +275,6 @@ Util.cmd.augroup("CheckOutsideTime", {
     end
   end,
 })
-
--- Util.cmd.augroup("WindowDim", {
---   event = { "BufRead" },
---   pattern = { "*" },
---   command = function()
---     Util.windowdim.buf_enter()
---   end,
--- }, {
---   event = { "BufEnter" },
---   pattern = { "*" },
---   command = function()
---     Util.windowdim.buf_enter()
---   end,
--- }, {
---   event = { "FocusGained" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.focus_gained()
---   end,
--- }, {
---   event = { "FocusLost" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.focus_lost()
---   end,
--- }, {
---   event = { "WinEnter" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.win_enter()
---   end,
--- }, {
---   event = { "WinLeave" },
---   pattern = "*",
---   command = function()
---     Util.windowdim.win_leave()
---   end,
--- })
-
--- local obs = false
--- local function set_scrolloff(winid)
---   if obs then
---     vim.wo[winid].scrolloff = math.floor(math.max(4, vim.api.nvim_win_get_height(winid) / 2))
---   else
---     vim.wo[winid].scrolloff = 1 + math.floor(vim.api.nvim_win_get_height(winid) / 2)
---   end
--- end
-
--- Util.cmd.augroup("SetScrollOff", {
---   event = { "BufEnter", "WinEnter", "WinNew", "VimResized" },
---   -- desc = "Always keep the cursor vertically centered",
---   pattern = "*",
---   command = function()
---     set_scrolloff(0)
---   end,
--- })
-
--- Util.cmd.augroup("UnwareCursorLine", {
---   event = { "InsertLeave" },
---   pattern = { "*" },
---   command = function()
---     cmd [[set cursorline]]
---   end,
--- }, {
---   event = { "InsertEnter" },
---   pattern = { "*" },
---   command = function()
---     cmd [[set nocursorline]]
---   end,
--- })
-
--- Util.cmd.augroup("UnwareCursorLine", {
---   event = { "CmdlineEnter" },
---   pattern = { "*" },
---   command = function()
---     cmd [[set nocursorline]]
---   end,
--- }, {
---   event = { "CmdlineLeave" },
---   pattern = { "*" },
---   command = function()
---     cmd [[set cursorline]]
---   end,
--- }, {
---   -- vim.api.nvim_create_autocmd("ModeChanged
---   event = { "ModeChanged" },
---   pattern = "*:c",
---   command = function()
---     cmd [[set nocursorline]]
---   end,
--- })
-
--- vim.api.nvim_create_autocmd("CmdlineEnter", {
---   group = group,
---   callback = function()
---     if State.is_search() and M.enabled then
---       M.start()
---       M.set_op(vim.fn.mode() == "v")
---     end
---   end,
--- })
-
--- Util.cmd.augroup("DisableStatusline", {
---   event = { "FocusLost" },
---   pattern = "*",
---   command = function()
---     cmd [[set laststatus=0]]
---   end,
--- }, {
---   event = { "BufRead", "FocusGained" },
---   pattern = "*",
---   command = function()
---     cmd [[set laststatus=3]]
---   end,
--- })
-
--- Util.cmd.augroup("UpdateVim", {
---   -- Automatically resize windows when host resizes
---   event = { "VimResized" },
---   pattern = "*",
---   command = "wincmd =",
--- }, {
---   event = { "FocusLost" },
---   pattern = { "*" },
---   command = "silent! wall",
--- })
 
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw

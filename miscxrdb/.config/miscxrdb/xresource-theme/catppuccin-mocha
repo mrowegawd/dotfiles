@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 *background: #1E1E2E
 *foreground: #CDD6F4
 

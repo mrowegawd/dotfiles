@@ -13,59 +13,25 @@ local file_picker = function(cwd)
 end
 
 return {
-  -- FLASH.NVIM
+  -- LIGHTSPEED
   {
-    "folke/flash.nvim",
-    opts = function()
-      Highlight.plugin("flash.nvim", {
-        {
-          FlashMatch = {
-            bg = "white",
-            fg = "black",
-            bold = true,
-          },
-        },
-        {
-          FlashLabel = {
-            bg = { from = "Normal", attr = "bg", alter = -0.1 },
-            fg = { from = "ErrorMsg", attr = "fg" },
-            bold = true,
-            strikethrough = false,
-          },
-        },
-        { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
-      })
-      return {
-        modes = {
-          char = {
-            keys = { "F", "t", "T", ";" }, -- remove "," from keys
-          },
-          search = {
-            enabled = false,
-          },
-        },
-        jump = {
-          nohlsearch = true,
-        },
-      }
-    end,
-    -- stylua: ignore
+    "ggandor/lightspeed.nvim",
     keys = {
-      { "f", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
-      -- { "S", function() require("flash").treesitter() end, mode = { "o", "x" } },
-      -- { "r", function() require("flash").remote() end, mode = "o", desc = "Remote Flash" },
-      -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Toggle Flash Search" },
-      -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
+      { "f", "<Plug>Lightspeed_omni_s", desc = "Lightspeed search", mode = { "n", "v" } },
     },
+    opts = {
+      jump_to_unique_chars = false,
+      safe_labels = {},
+    },
+    config = function(_, opts)
+      require("lightspeed").setup(opts)
+    end,
   },
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
-    --  version = false, -- fzflua did only one release, so use HEAD for now
-    -- cmd = { "Fzflua" },
     dependencies = {
       "nvim-tree/nvim-web-devicons",
-      -- "onsails/lspkind.nvim",
       {
         "mangelozzi/nvim-rgflow.lua",
         opts = {
@@ -180,39 +146,18 @@ return {
         end,
         desc = "Fzflua: dotfiles",
       },
-      -- {
-      --   "<Leader>fF",
-      --   function()
-      --     local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
-      --     return fzf_lua.files {
-      --       prompt = "  ",
-      --       winopts = { title = format_title("Plugin Files", "󰈙") },
-      --       cwd = plugins_directory,
-      --     }
-      --   end,
-      --   desc = "Fzflua: plugin files",
-      -- },
-      -- {
-      --   "<Leader>fG",
-      --   function()
-      --     return fzf_lua.live_grep_glob({
-      --       prompt = "  ",
-      --       winopts = { title = format_title("GrepHidden", "󰈭") },
-      --       filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
-      --     })
-      --   end,
-      --   desc = "Fzflua: live grep ignore hidden",
-      -- },
-      -- {
-      --   "<Leader>fG",
-      --   function()
-      --     return fzf_lua.grep_visual({
-      --       filter = [[rg --invert-match "node_modules|dist|lib|.git|package-lock.json|LICENSES.txt|LICENSES.json"]]
-      --     })
-      --   end,
-      --   desc = "Fzflua: live grep ignore hidden (visual)",
-      --   mode = {"v"}
-      -- },
+      {
+        "<Leader>fF",
+        function()
+          local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
+          return fzf_lua.files {
+            prompt = "  ",
+            winopts = { title = Util.fzflua.format_title("Plugin Files", "󰈙") },
+            cwd = plugins_directory,
+          }
+        end,
+        desc = "Fzflua: plugin files",
+      },
       {
         "<Leader>fQ",
         function()
@@ -358,7 +303,7 @@ return {
           -- winopts = { title = "Files" },
           -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
           fzf_opts = {
-            ["--header"] = [[Ctrl-g:'grep dir',Ctrl-y:'copy path',Ctrl-e:'edit rgflow']],
+            ["--header"] = [[Ctrl-g:'ignore rules',Ctrl-y:'copy',Ctrl-e:'rgflow']],
           },
           fd_opts = fd_opts,
           -- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
@@ -471,7 +416,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = Util.fzflua.format_title("", "Commits") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'open diff',Ctrl-x:'compare diff']],
+              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -528,7 +473,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = Util.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'open curdiff',Ctrl-x:'compare curdiff']],
+              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -629,7 +574,7 @@ return {
           winopts = { title = Util.fzflua.format_title("Grep", "") },
           grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep string',Ctrl-e:'edit rgflow']] },
+          fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep',Ctrl-e:'rgflow']] },
 
           no_header = true, -- disable default header
           actions = {
@@ -932,7 +877,7 @@ return {
       -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
       -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
-      { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
+      -- { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
       { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
       -- {
       --   "gs",
@@ -1058,7 +1003,6 @@ return {
       "nvim-telescope/telescope-symbols.nvim",
       "debugloop/telescope-undo.nvim", -- Visualise undotree
       "nvim-telescope/telescope-live-grep-args.nvim",
-      "tsakirist/telescope-lazy.nvim",
       "nvim-telescope/telescope-dap.nvim",
       "benfowler/telescope-luasnip.nvim",
       "fdschmidt93/telescope-corrode.nvim",
@@ -1283,9 +1227,6 @@ return {
       telescope.load_extension "fzf"
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "grepqf"
-      ---@diagnostic disable-next-line: undefined-field
-      ---@diagnostic disable-next-line: undefined-field
-      telescope.load_extension "lazy"
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "undo"
       ---@diagnostic disable-next-line: undefined-field

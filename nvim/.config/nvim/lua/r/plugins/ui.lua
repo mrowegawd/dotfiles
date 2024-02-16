@@ -132,7 +132,7 @@ return {
     dependencies = {
       "MunifTanjim/nui.nvim",
       {
-        "ls-devs/nvim-notify",
+        "rcarriga/nvim-notify",
         -- event = "VeryLazy",
         -- init = function()
         --   vim.notify = require "notify"
@@ -311,39 +311,24 @@ return {
   -- INCLINE.NVIM
   {
     "b0o/incline.nvim",
-    -- event = "BufReadPre",
     event = "LazyFile",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
     },
     opts = function()
-      local incnormal_guifg, incnormal_guifg_guibg, incnormal_guifg_gui
-      if Config.defaults.colorscheme == "catppuccin-latte" then
-        incnormal_guifg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
-        incnormal_guifg_guibg = Highlight.tint(Highlight.get("Normal", "fg"), -0.5)
-        incnormal_guifg_gui = "bold"
-      else
-        incnormal_guifg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
-        incnormal_guifg_guibg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5)
-        incnormal_guifg_gui = "bold"
-      end
+      local incnormal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
       return {
         highlight = {
           groups = {
             InclineNormal = {
-              guifg = incnormal_guifg,
-              guibg = incnormal_guifg_guibg,
-              gui = incnormal_guifg_gui,
+              guifg = incnormal_fg,
             },
-
             InclineNormalNC = {
-              guifg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5),
-              guibg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5),
-              -- gui = "bold",
+              guifg = incnormal_fg,
             },
           },
         },
-        window = { margin = { vertical = 0, horizontal = 2 } },
+        window = { margin = { vertical = 0, horizontal = 0 } },
         hide = {
           cursorline = false,
           focused_win = false,
@@ -358,67 +343,85 @@ return {
         },
 
         render = function(props)
-          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":h:t")
-          local fnc = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-          local filename = dirname .. "/" .. fnc
-
-          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
-          local modified = vim.api.nvim_buf_get_option(props.buf, "modified") and "bold,italic" or "bold"
-
-          -- local function get_diagnostic_label(props)
-          --   local icons = require "config.icons"
-          --   local label = {}
-          --   for severity, icon in pairs(icons.diagnostics) do
-          --     local n = #vim.diagnostic.get(props.buf, { severity = vim.diagnostic.severity[string.upper(severity)] })
-          --     if n > 0 then
-          --       table.insert(label, { icon .. "" .. n .. " ", group = "DiagnosticSign" .. severity })
-          --     end
-          --   end
-          --   return label
-          -- end
-
-          -- local function get_git_diff(gprops)
-          --   local icons = { added = "", removed = "", changed = "" }
-          --   local labels = {}
-          --   local signs
-          --   if vim.bo[gprops.buf].filetype == "lua" then
-          --     signs = vim.api.nvim_buf_get_var(gprops.buf, "gitsigns_status_dict")
-          --   end
-          --   if signs then
-          --     for name, icon in pairs(icons) do
-          --       if signs[name] and tonumber(signs[name]) and signs[name] > 0 then
-          --         table.insert(labels, { icon .. " " .. signs[name] .. " ", group = "Diff" .. name })
-          --       end
-          --     end
-          --   end
-          --   return labels
-          -- end
-
           local function file_modified()
-            if vim.bo[props.buf].modified then
-              return { " [+] ", group = "Error" }
+            if props.focused then
+              if vim.bo[props.buf].modified then
+                return {
+                  " " .. Config.icons.misc.boldclose,
+                  guifg = Highlight.get("DiagnosticSignError", "fg"),
+                  gui = "bold",
+                  guibg = Highlight.tint(Highlight.get("Error", "fg"), -0.2),
+                }
+              end
             else
               return { "" }
             end
           end
 
-          local buffer = {
-            -- { get_git_diff(props) },
-            -- { get_diagnostic_label(props) },
-            {
-              file_modified(),
-            },
-            {
-              ft_icon,
-              guifg = ft_color,
-            },
-            { " " },
-            {
-              filename,
-              gui = modified,
-            },
-          }
-          return buffer
+          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":h:t")
+          local fnc = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          local filename = dirname .. "/" .. fnc
+
+          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
+          if ft_icon == nil then
+            ft_icon = ""
+          end
+
+          local modified = vim.api.nvim_buf_get_option(props.buf, "modified") and "bold,italic" or "bold"
+
+          if props.focused then
+            return {
+              {
+                guibg = Util.colortbl.separator_fg,
+                guifg = Util.colortbl.norm_bg,
+                Config.icons.misc.separator_up,
+              },
+              {
+                file_modified(),
+              },
+              {
+                ft_icon .. " ",
+                guifg = ft_color,
+                guibg = Util.colortbl.separator_fg,
+              },
+              {
+                filename,
+                guibg = Util.colortbl.separator_fg,
+                gui = modified,
+              },
+              {
+                guifg = Util.colortbl.separator_fg,
+                Config.icons.misc.separator_up,
+              },
+            }
+          else
+            return {
+              {
+                guifg = Util.colortbl.norm_bg,
+                guibg = Util.colortbl.separator_fg_alt,
+                Config.icons.misc.separator_up,
+              },
+              {
+                file_modified(),
+              },
+              {
+                ft_icon .. " ",
+                guifg = ft_color,
+                guibg = Util.colortbl.separator_fg_alt,
+              },
+              {
+                filename,
+                guifg = Highlight.tint(Highlight.get("Normal", "fg"), -0.9),
+                guibg = Util.colortbl.separator_fg_alt,
+                gui = modified,
+              },
+              {
+                guifg = Util.colortbl.separator_fg_alt,
+                guibg = Util.colortbl.norm_bg,
+                Config.icons.misc.separator_up,
+              },
+            }
+          end
         end,
       }
     end,
@@ -525,6 +528,7 @@ return {
         options = {
           mode = "tabs",
           buffer_close_icon = "󰒲",
+          modified_icon = Config.icons.misc.boldclose,
           always_show_bufferline = false,
           diagnostics = "nvim_lsp",
           separator_style = "slant", -- "slant" | "slope" | "thick" | "thin" | { 'any', 'any' },

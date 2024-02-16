@@ -1,6 +1,6 @@
 return {
   { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } }, -- sudo
-
+  { "dstein64/vim-startuptime", cmd = "StartupTime" },
   -- NUMB-NVIM
   {
     "nacro90/numb.nvim",

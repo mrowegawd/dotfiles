@@ -12,9 +12,8 @@ return {
   {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
-    config = function()
-      require("stickybuf").setup()
-    end,
+    cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
+    opts = {},
   },
   -- SMART-SPLITS
   {

@@ -22,6 +22,53 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- FLASH.NVIM
+  {
+    "folke/flash.nvim",
+    enabled = false,
+    opts = function()
+      Highlight.plugin("flash.nvim", {
+        {
+          FlashMatch = {
+            bg = "white",
+            fg = "black",
+            bold = true,
+          },
+        },
+        {
+          FlashLabel = {
+            bg = { from = "Normal", attr = "bg", alter = -0.1 },
+            fg = { from = "ErrorMsg", attr = "fg" },
+            bold = true,
+            strikethrough = false,
+          },
+        },
+        { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
+      })
+      return {
+        modes = {
+          char = {
+            keys = { "F", "t", "T", ";" }, -- remove "," from keys
+          },
+          search = {
+            enabled = false,
+          },
+        },
+        jump = {
+          nohlsearch = true,
+        },
+      }
+    end,
+    -- stylua: ignore
+    keys = {
+      { "f", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
+      -- { "S", function() require("flash").treesitter() end, mode = { "o", "x" } },
+      -- { "r", function() require("flash").remote() end, mode = "o", desc = "Remote Flash" },
+      -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Toggle Flash Search" },
+      -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
+    },
+  },
+
   -- AERIAL (disabled)
   {
     "stevearc/aerial.nvim",
@@ -141,10 +188,6 @@ return {
     end,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      -- Highlight.plugin("arials", {
-      --   { AerialGuide = { fg = { from = "CodeComment1", attr = "fg" } } },
-      -- })
-
       ---@diagnostic disable-next-line: undefined-field
       require("telescope").load_extension "aerial"
 

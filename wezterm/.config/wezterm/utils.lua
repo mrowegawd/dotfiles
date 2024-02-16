@@ -1,5 +1,3 @@
--- local wezterm = require("wezterm")
-
 local M = {}
 function M.cmd_call(params)
 	local handle = io.popen(params)

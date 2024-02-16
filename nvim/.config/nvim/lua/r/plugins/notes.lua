@@ -182,11 +182,6 @@ return {
                   bold = { [""] = "+Boolean" },
                   verbatim = { [""] = "+CodeLine1", delimiter = "+NonText" },
                 },
-                -- tags = {
-                --   comment = {
-                --     content = "+CodeComment1",
-                --   },
-                -- },
               },
               dim = {
                 tags = {
@@ -527,6 +522,14 @@ return {
       },
     },
     config = function(_, opts)
+      Highlight.plugin("Org_HiCus", {
+        theme = {
+          ["miasma"] = {
+            { OrgAgendaScheduled = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
+          },
+        },
+      })
+
       local orgmode = require "orgmode"
       orgmode.setup_ts_grammar()
       orgmode.setup(opts)

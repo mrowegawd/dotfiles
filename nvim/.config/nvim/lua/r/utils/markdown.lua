@@ -1,8 +1,8 @@
 local M = {}
 
 local title, kind
-local search_mode = "files"
-local filename_part = ""
+-- local search_mode = "files"
+-- local filename_part = ""
 
 local function remove_alias(link)
   local split_index = string.find(link, "%s*|")

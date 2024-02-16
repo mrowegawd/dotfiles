@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "tokyonight-night"
+local colorscheme = "miasma"
 
 if Util.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"
@@ -105,6 +105,7 @@ local defaults = {
       circle = " ",
       clock = " ",
       close = " ",
+      boldclose = " ",
       code = " ",
       comment = " ",
       dashboard = " ",
@@ -135,6 +136,7 @@ local defaults = {
       tab = "⇥ ",
       table = " ",
       telescope = " ",
+      telescope2 = " ",
       terminal = " ",
       tools = " ",
       up = "⇡ ",
@@ -142,7 +144,11 @@ local defaults = {
       tag = " ",
       watch = " ",
       run_program = "省",
+
+      separator_up = "",
+      separator_down = "",
     },
+
     dap = {
       -- Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
       -- Breakpoint          = " ",
@@ -242,78 +248,6 @@ local defaults = {
       Variable = "󰀫 ",
       stacked = " ﬘",
     },
-  },
-  palette = {
-    green = "#98c379",
-    dark_green = "#10B981",
-    blue = "#82AAFE",
-    dark_blue = "#4e88ff",
-    bright_blue = "#51afef",
-    teal = "#15AABF",
-    pale_pink = "#b490c0",
-    magenta = "#c678dd",
-    pale_red = "#E06C75",
-    light_red = "#c43e1f",
-    dark_red = "#be5046",
-    dark_orange = "#FF922B",
-    bright_yellow = "#FAB005",
-    light_yellow = "#e5c07b",
-    whitesmoke = "#9E9E9E",
-    light_gray = "#626262",
-    comment_grey = "#5c6370",
-    grey = "#3E4556",
-  },
-  misc = {
-    -- 
-    arrow_right = " ",
-    block = "▌ ",
-    bookmark = " ",
-    bug = " ", --  'ﴫ'
-    calendar = " ",
-    caret_right = " ",
-    check = " ",
-    chevron_right = " ",
-    circle = " ",
-    clock = " ",
-    close = " ",
-    code = " ",
-    comment = " ",
-    dashboard = "  ",
-    double_chevron_right = "» ",
-    down = "⇣ ",
-    dots = "󰇘",
-    ellipsis = "… ",
-    fire = " ",
-    gear = " ",
-    history = " ",
-    indent = "Ξ ",
-    lightbulb = " ",
-    line = "ℓ ", -- ''
-    list = " ",
-    lock = " ",
-    note = " ",
-    package = "  ",
-    pencil = " ", -- '',
-    plus = " ",
-    project = " ",
-    question = " ",
-    robot = "ﮧh ",
-    search = " ",
-    shaded_lock = " ",
-    sign_in = " ",
-    sign_out = " ",
-    smiley = "ﲃ ",
-    squirrel = " ",
-    tab = "⇥ ",
-    table = " ",
-    telescope = " ",
-    terminal = " ",
-    tools = " ",
-    up = "⇡ ",
-
-    tag = " ",
-    watch = " ",
-    run_program = "省",
   },
   ---@type table<string, string[]>?
   kind_filter = {

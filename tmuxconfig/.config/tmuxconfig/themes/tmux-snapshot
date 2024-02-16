@@ -1,16 +1,15 @@
-# WINDOW_STYLE_BG=""
-# WINDOW_ACTIVE_STYLE_BG=""
-
 COL_WHITE="#626262"
 
-TMUX_PANE_ACTIVE_BG="#171822"
-TMUX_PANE_BG="#171822"
+TMUX_PANE_ACTIVE_BG="#1e1e1e"
+TMUX_PANE_BG="#1e1e1e"
 
-TMUX_FG="#acb5dc"
-TMUX_BORDER_FG="#5d4d7b"
+TMUX_FG="#c1b075"
+TMUX_BORDER_FG="#5d3b22"
 
-BG_STATUSLINE="#1a1b26"
-BG_ACTIVE_STATUSLINE="#bb9af7"
+BG_STATUSLINE="#222222"
+FG_STATUSLINE="#c2c2b0"
+FG_STATUSLINE_SEPARATOR="#4c4c4c"
+BG_ACTIVE_STATUSLINE="#bb7744"
 
 left_separator=''
 left_separator_black=''
@@ -19,10 +18,8 @@ right_separator_black=''
 left_slant_separator=""
 right_slant_separator=""
 
-session_symbol=''
-
-setw -g pane-active-border-style fg=$TMUX_BORDER_FG
-setw -g pane-border-style fg=$TMUX_BORDER_FG
+setw -g pane-active-border-style fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG
+setw -g pane-border-style fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG
 
 # setw -g pane-border-status bottom
 set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
@@ -55,7 +52,7 @@ set -g window-status-format "#[fg=$BG_STATUSLINE]$left_slant_separator#[fg=$BG_A
 # set -g window-status-current-format "#[fg=red,bold] #I:#{b:pane_current_path}#[bg=$TMUX_FG,bold]#{?window_zoomed_flag, ZOOM #[fg=$COL_ACTIVE_BORDER_SEPERATOR](#(tmux list-panes | wc -l)) ,}"
 # set -g window-status-current-format "#{?window_zoomed_flag,#[fg=red](,}#W#{?window_zoomed_flag,#[fg=red]),}"
 # set -g window-status-current-format "#{?window_zoomed_flag,(,}#[fg=$BG_ACTIVE_STATUSLINE,bold]^#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
-set -g window-status-current-format "#[fg=red]$left_slant_separator#[fg=$BG_STATUSLINE,bg=red,bold]#{?window_zoomed_flag,#[fg=$BG_STATUSLINE][ZOOM],}#I:#{b:pane_current_path}#{?window_zoomed_flag,#[bg=red],}#[bg=red,fg=$BG_STATUSLINE]$left_slant_separator"
+set -g window-status-current-format "#[fg=$FG_STATUSLINE]$left_slant_separator#[fg=$BG_STATUSLINE,bg=$FG_STATUSLINE,bold]#{?window_zoomed_flag,#[fg=$BG_STATUSLINE][ZOOM],} #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$FG_STATUSLINE],}#[bg=$FG_STATUSLINE,fg=$FG_STATUSLINE_SEPARATOR]$left_slant_separator#[bg=$FG_STATUSLINE_SEPARATOR,fg=$BG_STATUSLINE]$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT

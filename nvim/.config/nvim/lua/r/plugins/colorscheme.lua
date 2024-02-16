@@ -158,7 +158,7 @@ return {
       vim.g.background = "light"
     end,
     enabled = function()
-      local catppuccintheme = { "catppuccin-latte", "catppuccin" }
+      local catppuccintheme = { "catppuccin-latte", "catppuccin-mocha" }
       if vim.tbl_contains(catppuccintheme, colorscheme) then
         return true
       end

@@ -262,6 +262,14 @@ function M.change_colors()
   local fzfluaborder = "FzfLuaBorder"
   local cmpmatchabbrFuzzy = "CmpItemAbbrMatchFuzzy"
   local winseparator = "WinSeparator"
+  local statusline = "StatusLine"
+  local error = "Error"
+
+  local set_statusline = Highlight.get(statusline, "fg")
+  local separator_statusline = Highlight.tint(set_statusline, 0.5)
+  if vim.g.background and vim.g.background == "light" then
+    separator_statusline = Highlight.tint(set_statusline, -0.05)
+  end
 
   local jj = fmt(
     [[
@@ -285,6 +293,9 @@ function M.change_colors()
 
   tmux_fg: %s
   tmux_border_fg: %s
+
+  separator_statusline: %s
+  statusline_fg: %s
   ]],
     Highlight.tint(Highlight.get(normal, "fg"), -0.25),
     Highlight.get(normalfloat, "bg"),
@@ -308,7 +319,10 @@ function M.change_colors()
     Highlight.get(normalfloat, "bg"),
 
     Highlight.tint(Highlight.get(normal, "fg"), -0.1),
-    Highlight.get(winseparator, "fg")
+    Highlight.get(winseparator, "fg"),
+
+    separator_statusline,
+    Highlight.get(error, "fg")
   )
 
   local master_color_path = "/tmp/masterColors"

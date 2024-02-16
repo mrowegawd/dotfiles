@@ -22,6 +22,10 @@ getxrdb_font() {
 	GET_TMUX_PANE_BG="$(grep -i tmux_pane_bg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_TMUX_FG="$(grep -i tmux_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 	GET_TMUX_BORDER_FG="$(grep -i tmux_border_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_STATUSLINE="$(grep -i statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+
+	GET_SEPARATOR_STATUSLINE="$(grep -i separator_statusline <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
+	GET_STATUSLINE_FG="$(grep -i statusline_fg <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 
 	GET_FZF_BG_SELECTION="$(grep -i fzf_bg_selection <~/.cache/paintee | head -1 |
 		awk -F= '{print $2}' | sed 's/\"//g')"

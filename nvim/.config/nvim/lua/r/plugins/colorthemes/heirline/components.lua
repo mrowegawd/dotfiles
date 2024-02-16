@@ -1,54 +1,39 @@
 local fn = vim.fn
 local Icon = require("r.config").icons
 local Conditions = require "heirline.conditions"
-local Highlight = require "r.settings.highlights"
+local Col = require("r.utils").colortbl
 
 local M = {}
 
-local col_errormsg_bg = Highlight.get("ErrorMsg", "fg")
-local col_statusline_bg = Highlight.get("StatusLine", "bg")
-local col_statusline_fg = Highlight.get("StatusLine", "fg")
-local col_normal_fg = Highlight.get("Normal", "fg")
-
-local branch_fg = Highlight.tint(col_normal_fg, 4)
-local separator_fg = Highlight.tint(col_errormsg_bg, 1)
-local separator_fg_alt = Highlight.tint(col_statusline_bg, 0.5)
-if vim.g.background == "light" then
-  branch_fg = Highlight.tint(col_normal_fg, 0.5)
-
-  separator_fg = Highlight.tint(col_errormsg_bg, 0.2)
-  separator_fg_alt = Highlight.tint(col_statusline_bg, -0.05)
-end
-
 local colors = {
-  base_bg = col_statusline_bg,
-  base_fg = Highlight.tint(col_statusline_fg, 0.8),
+  base_bg = Col.statusline_bg,
+  base_fg = Col.statusline_fg,
 
-  branch_fg = branch_fg,
+  branch_fg = Col.branch_fg,
 
-  mode_bg = Highlight.tint(col_statusline_bg, 1),
-  filename_fg = Highlight.tint(col_statusline_bg, 6),
-  modified_fg = Highlight.tint(col_errormsg_bg, 0.3),
+  mode_bg = Col.mode_bg,
+  filename_fg = Col.mode_bg,
+  modified_fg = Col.modified_fg,
 
-  coldisorent = Highlight.tint(col_statusline_bg, 0.5),
+  coldisorent = Col.disorent,
 
-  separator_fg = separator_fg,
-  separator_fg_alt = separator_fg_alt,
+  separator_fg = Col.separator_fg,
+  separator_fg_alt = Col.separator_fg_alt,
 
-  mod_norm = Highlight.get("Error", "fg"),
-  mod_norm_bg = Highlight.get("Normal", "bg"),
-  mod_ins = Highlight.tint(col_errormsg_bg, 0),
-  mod_vis = Highlight.get("visual", "bg"),
-  mod_term = Highlight.get("Boolean", "fg"),
+  mod_norm = Col.error_fg,
+  mod_norm_bg = Col.norm_bg,
+  mod_ins = Col.mod_ins,
+  mod_vis = Col.mod_vis,
+  mod_term = Col.mod_term,
 
-  diff_add = Highlight.get("GitSignsAdd", "fg"),
-  diff_delete = Highlight.get("GitSignsChange", "fg"),
-  diff_change = Highlight.get("GitSignsDelete", "fg"),
+  diff_add = Col.diff_add,
+  diff_delete = Col.diff_delete,
+  diff_change = Col.diff_change,
 
-  diagnostic_warn = Highlight.get("DiagnosticSignWarn", "fg"),
-  diagnostic_err = Highlight.get("DiagnosticSignError", "fg"),
-  diagnostic_info = Highlight.get("DiagnosticSignInfo", "fg"),
-  diagnostic_hint = Highlight.get("DiagnosticSignHint", "fg"),
+  diagnostic_warn = Col.diagnostic_warn,
+  diagnostic_err = Col.diagnostic_err,
+  diagnostic_info = Col.diagnostic_info,
+  diagnostic_hint = Col.diagnostic_hint,
 }
 local exclude = {
   ["NvimTree"] = true,
@@ -140,7 +125,7 @@ M.Mode = {
   },
   {
     provider = function(self)
-      return string.format("    %s  ", self.mode_icons[self.mode])
+      return string.format("   %s ", self.mode_icons[self.mode])
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
@@ -149,36 +134,18 @@ M.Mode = {
     end,
   },
   {
-    -- provider = "",
-    provider = "",
-
+    provider = Icon.misc.separator_up,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       return { fg = self.mode_colors[mode], bg = colors.separator_fg_alt }
     end,
   },
-
   {
-    -- provider = "",
-    provider = "",
-
+    provider = Icon.misc.separator_up,
     hl = function()
-      -- local mode = self.mode:sub(1, 1)
       return { fg = colors.separator_fg_alt, bg = colors.base_bg }
     end,
   },
-
-  -- {
-  --   provider = sep.rounded_right,
-  --   hl = function(self)
-  --     local mode = self.mode:sub(1, 1)
-  --     if conditions.is_git_repo() then
-  --       return { fg = self.mode_colors[mode], bg = "gray" }
-  --     else
-  --       return { fg = self.mode_colors[mode], bg = "bg_statusline" }
-  --     end
-  --   end,
-  -- },
 }
 M.Git = {
   condition = Conditions.is_git_repo,
@@ -261,9 +228,6 @@ M.FilePath = {
   end,
   provider = " ",
   {
-    -- condition = function(self)
-    --   return require("my.configure.heirline.conditions").should_show_filename(self.bufname)
-    -- end,
     provider = function()
       local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
       if filename == "" then
@@ -284,7 +248,7 @@ M.FileFlags = {
     condition = function()
       return vim.bo.modified
     end,
-    provider = " [+]",
+    provider = " " .. Icon.misc.boldclose,
     hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
   },
   {
@@ -523,9 +487,6 @@ M.Sessions = {
 
       return "%#MyStatusLine_notif_fg# off%* "
     end,
-    -- hl = function(self)
-    --   return { fg = self.icon_color, bg = colors.base_bg }
-    -- end,
   },
 }
 M.BufferCwd = {

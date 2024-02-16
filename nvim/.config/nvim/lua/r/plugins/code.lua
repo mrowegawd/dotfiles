@@ -1,6 +1,7 @@
 local Highlight = require "r.settings.highlights"
 local Icons = require("r.config").icons
 local Config = require "r.config"
+local Util = require "r.utils"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -207,6 +208,8 @@ return {
       },
     },
     config = function(_, opts)
+      local MAX_INDEX_FILE_SIZE = 4000
+
       local function get_cmp()
         local ok_cmp, cmp = pcall(require, "cmp")
         return ok_cmp and cmp or {}
@@ -292,26 +295,24 @@ return {
         end
       end
 
-      local source_buffer = {
-        name = "buffer",
-        option = {
-          get_bufnrs = function()
-            ---@diagnostic disable-next-line: unused-local
-            local is_small_buf = function(index, buf)
-              local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
-              return byte_size <= 1024 * 1024 -- 1 Megabyte max
-            end
-            local all_bufs = vim.api.nvim_list_bufs()
-            return vim.fn.filter(all_bufs, is_small_buf)
-          end,
-
-          -- keyword_length =
-          -- keyword_pattern =
-          indexing_interval = 10,
-          indexing_batch_size = 100,
-          max_indexed_line_length = 1024,
-        },
-      }
+      local function source_buffer()
+        return {
+          name = "buffer",
+          keyword_length = 2,
+          options = {
+            get_bufnrs = function()
+              local bufs = {}
+              for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                -- Don't index giant files
+                if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE then
+                  table.insert(bufs, bufnr)
+                end
+              end
+              return bufs
+            end,
+          },
+        }
+      end
 
       local callme = 0
       local cmp_mappings = {
@@ -331,9 +332,7 @@ return {
             callme = 2
             cmp.complete {
               config = {
-                sources = {
-                  source_buffer,
-                },
+                sources = { source_buffer() },
               },
             }
           else
@@ -424,17 +423,26 @@ return {
         },
       }
 
-      opts.sources = cmp.config.sources({
-        -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
-        -- tailwindcss bikin lambat, jadi mencoba mengurangi `max_item_count`
-        { name = "nvim_lsp", max_item_count = 100 },
+      opts.sources = cmp.config.sources {
+        {
+          name = "nvim_lsp",
+          entry_filter = function(entry, ctx)
+            local kind = require("cmp.types").lsp.CompletionItemKind[entry:get_kind()]
+            if ctx.filetype == "markdown" then
+              -- Marksman uses Text kind for completion as per
+              -- https://github.com/artempyanykh/marksman/issues/204#issuecomment-1751657224
+              return (kind ~= "Snippet")
+            else
+              return ((kind ~= "Text") and (kind ~= "Snippet"))
+            end
+          end,
+        },
         { name = "luasnip", max_item_count = 100 },
         { name = "nvim_lsp_signature_help" },
         { name = "crates" },
         { name = "async_path" },
-      }, {
-        source_buffer,
-      })
+        source_buffer(),
+      }
 
       vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
         contents = vim.lsp.util._normalize_markdown(contents, {
@@ -524,11 +532,10 @@ return {
 
       cmp.setup.cmdline(":", {
         mapping = {
-          -- ["<esc>"] = {
-          --   c = function()
-          --     Util.cmd.feedkey("<c-c>", "n")
-          --   end,
-          -- },
+          ["<C-y>"] = cmp.mapping(function()
+            cmp.confirm { select = true }
+            Util.map.feedkey("<CR>", "")
+          end, { "c" }),
           ["<c-q>"] = {
             c = function(fallback)
               if cmp.visible() then
@@ -538,24 +545,6 @@ return {
               end
             end,
           },
-          -- ["<TAB>"] = {
-          --   c = function()
-          --     if cmp.visible() then
-          --       cmp.select_next_item()
-          --     else
-          --       cmp.complete()
-          --     end
-          --   end,
-          -- },
-          -- ["<S-TAB>"] = {
-          --   c = function(fallback)
-          --     if cmp.visible() then
-          --       cmp.select_prev_item()
-          --     else
-          --       fallback()
-          --     end
-          --   end,
-          -- },
         },
         sources = cmp.config.sources({
           { name = "path" },
@@ -567,11 +556,6 @@ return {
 
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = {
-          -- ["<esc>"] = {
-          --   c = function()
-          --     Util.cmd.feedkey("<c-c>", "n")
-          --   end,
-          -- },
           ["<c-q>"] = {
             c = function(fallback)
               if cmp.visible() then
@@ -581,24 +565,6 @@ return {
               end
             end,
           },
-          -- ["<TAB>"] = {
-          --   c = function()
-          --     if cmp.visible() then
-          --       cmp.select_next_item()
-          --     else
-          --       cmp.complete()
-          --     end
-          --   end,
-          -- },
-          -- ["<S-TAB>"] = {
-          --   c = function(fallback)
-          --     if cmp.visible() then
-          --       cmp.select_prev_item()
-          --     else
-          --       fallback()
-          --     end
-          --   end,
-          -- },
         },
         sources = cmp.config.sources {
           { name = "buffer" },
