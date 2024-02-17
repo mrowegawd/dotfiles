@@ -34,7 +34,7 @@ border-color =
 font-0              = SF Mono:size=10
 font-1              = JetBrains Mono:size=10
 font-2              = Siji:size=5:fontformat=truetype
-font-3              = SF Mono:size=25;10
+font-3              = SF Mono:size=25
 font-4              = Wucon Siji:size=8
 
 modules-left = appmenu separator-right1 bspwm mpd pulseaudio

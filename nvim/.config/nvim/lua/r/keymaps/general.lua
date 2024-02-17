@@ -243,11 +243,9 @@ Util.map.nnoremap("sbb", function()
   return Util.cmd.feedkey("<C-^>", "n")
 end, { desc = "WinNav(buffer): alternate file" })
 
-if not Util.has "bufferline.nvim" then
-  Util.map.nnoremap("sO", function()
-    return Util.buf._only()
-  end, { desc = "Buffer: bufonly" })
-end
+Util.map.nnoremap("sO", function()
+  return Util.buf._only()
+end, { desc = "Buffer: bufonly" })
 
 Util.map.nnoremap("sT", "<C-w><S-t>", { desc = "WinNav(buffer): break buffer into new tab" })
 
@@ -424,16 +422,21 @@ Util.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { ex
 Util.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
 Util.map.nnoremap("<F1>", function()
-  -- local wins = vim.api.nvim_list_wins()
-  -- table.insert(wins, 1, vim.api.nvim_get_current_win())
-  -- for _, win in ipairs(wins) do
-  --   -- local buf = vim.api.nvim_win_get_buf(win)
-  --   print(win)
-  --
-  --   -- if vim.bo[buf].buftype == "" then
-  --   -- end
-  -- end
-  print(#vim.api.nvim_tabpage_list_wins(0))
+  local tbl_nc = {}
+  local win_amount = vim.api.nvim_tabpage_list_wins(0)
+  for _, winnr in ipairs(win_amount) do
+    if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
+      local winbufnr = vim.fn.winbufnr(winnr)
+
+      if winbufnr > 0 then
+        local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+        if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
+          table.insert(tbl_nc, winft)
+        end
+      end
+    end
+  end
+  print(tostring(vim.inspect(tbl_nc)) .. " " .. tostring(#tbl_nc == 1))
 end)
 
 local checkconceallevel = false

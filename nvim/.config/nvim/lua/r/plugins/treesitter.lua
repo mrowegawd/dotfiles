@@ -281,19 +281,39 @@ return {
   },
   -- NVIM-TREESITTER-CONTEXT
   {
-    "nvim-treesitter/nvim-treesitter-context",
+    "mrowegawd/context-nvim-zero",
     event = "LazyFile",
     opts = function()
       local Highlight = require "r.settings.highlights"
       Highlight.plugin("treesitter-context", {
         { TreesitterContextSeparator = { link = "WinSeparator" } },
         { TreesitterContext = { inherit = "Normal" } },
-        { TreesitterContextLineNumber = { inherit = "LineNr" } },
+        { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       })
       return {
         multiline_threshold = 4,
-        separator = "─", -- alternatives: ▁ ─ ▄
+        separator = "━", -- alternatives: ▁ ─ ▄ 󰇘  󰇘
+        -- separator = "▁", -- alternatives: ▁ ─ ▄
         mode = "cursor",
+        ---@diagnostic disable-next-line: unused-local
+        on_attach = function(buf)
+          local tbl_winft = {}
+          local win_amount = vim.api.nvim_tabpage_list_wins(0)
+
+          for _, winnr in ipairs(win_amount) do
+            if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
+              local winbufnr = vim.fn.winbufnr(winnr)
+
+              if winbufnr > 0 then
+                local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+                if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
+                  table.insert(tbl_winft, winft)
+                end
+              end
+            end
+          end
+          return #tbl_winft < 3
+        end,
       }
     end,
   },

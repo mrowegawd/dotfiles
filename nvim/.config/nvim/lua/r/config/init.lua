@@ -106,6 +106,7 @@ local defaults = {
       clock = " ",
       close = " ",
       boldclose = " ",
+      largeclose = " ",
       code = " ",
       comment = " ",
       dashboard = " ",

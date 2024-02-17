@@ -26,6 +26,7 @@ function M._only()
     end
   end
 
+  vim.cmd [[only]]
   vim.notify("BufOnly: " .. deleted .. " deleted buffer(s), " .. modified .. " modified buffer(s)")
 end
 

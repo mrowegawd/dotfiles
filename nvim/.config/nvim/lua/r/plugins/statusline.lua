@@ -16,7 +16,7 @@ return {
           { provider = "%=" },
           comp.LSPActive,
           comp.Diagnostics,
-          comp.SearchCount,
+          -- comp.SearchCount, -- this func make nvim slow!
           comp.Sessions,
           comp.BufferCwd,
           comp.Ruler,
