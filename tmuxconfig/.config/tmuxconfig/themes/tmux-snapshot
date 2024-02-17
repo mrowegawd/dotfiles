@@ -18,8 +18,14 @@ right_separator_black=''
 left_slant_separator=""
 right_slant_separator=""
 
-setw -g pane-active-border-style fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG
-setw -g pane-border-style fg=$TMUX_BORDER_FG,bg=$TMUX_PANE_ACTIVE_BG
+bind E set-window-option synchronize-panes on \;\
+  set-option -g status-bg red \; display 'synchronize begin'
+
+bind e set-window-option synchronize-panes off \;\
+  set-option -g status-bg $BG_STATUSLINE \; display 'synchronize end'
+
+setw -g pane-active-border-style fg=$TMUX_BORDER_FG,bg=$BG_STATUSLINE
+setw -g pane-border-style fg=$TMUX_BORDER_FG,bg=$BG_STATUSLINE
 
 # setw -g pane-border-status bottom
 set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
@@ -32,33 +38,37 @@ set -g status-fg $BG_ACTIVE_STATUSLINE
 set -g status-bg $BG_STATUSLINE
 set -g status on
 set -g status-interval 5
-
 set -g status-position top
-# set -g status-justify 'left'  #left,centre,??
-# set-option -g status-justify absolute-centre
-set-option -g status-justify left
-set-option -g message-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
-set-option -g mode-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
+set -g status-justify left # left,centre, absolute-centre
+set -g status-left ""
+
+set -g message-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
+set -g mode-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
 
 #  ╓
 #  ║ LEFT
 #  ╙
-# set -g status-left-length 40
-# set -g status-style bg="colour238",fg="colour255"
-# set -g status-left "#[fg=$TMUX_FG,bold] ❐ #S 👨#(whoami) "
-set -g status-left ""
+set -g window-status-format "#[fg=$BG_STATUSLINE]\
+#{?pane_synchronized,#[bg=red],}$left_slant_separator\
+#{?pane_synchronized,#[bg=red],}#[fg=$BG_ACTIVE_STATUSLINE,bold] #I: #{b:pane_current_path} #[fg=$BG_STATUSLINE]\
+#{?pane_synchronized,#[bg=red],}$left_slant_separator#[fg=$BG_STATUSLINE]\
+#{?pane_synchronized,#[fg=red],}$left_slant_separator"
 
-set -g window-status-format "#[fg=$BG_STATUSLINE]$left_slant_separator#[fg=$BG_ACTIVE_STATUSLINE,bold]#I:#{b:pane_current_path}#[fg=$BG_STATUSLINE]$left_slant_separator"
-# set -g window-status-current-format "#[fg=red,bold] #I:#{b:pane_current_path}#[bg=$TMUX_FG,bold]#{?window_zoomed_flag, ZOOM #[fg=$COL_ACTIVE_BORDER_SEPERATOR](#(tmux list-panes | wc -l)) ,}"
-# set -g window-status-current-format "#{?window_zoomed_flag,#[fg=red](,}#W#{?window_zoomed_flag,#[fg=red]),}"
-# set -g window-status-current-format "#{?window_zoomed_flag,(,}#[fg=$BG_ACTIVE_STATUSLINE,bold]^#I:#{b:pane_current_path}#{?window_zoomed_flag,#[fg=$BG_ACTIVE_STATUSLINE]),}"
-set -g window-status-current-format "#[fg=$FG_STATUSLINE]$left_slant_separator#[fg=$BG_STATUSLINE,bg=$FG_STATUSLINE,bold]#{?window_zoomed_flag,#[fg=$BG_STATUSLINE][ZOOM],} #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$FG_STATUSLINE],}#[bg=$FG_STATUSLINE,fg=$FG_STATUSLINE_SEPARATOR]$left_slant_separator#[bg=$FG_STATUSLINE_SEPARATOR,fg=$BG_STATUSLINE]$left_slant_separator"
+set -g window-status-current-format "#[fg=$FG_STATUSLINE]\
+#{?pane_synchronized,#[fg=blue],}$left_slant_separator#[fg=$BG_STATUSLINE,bg=$FG_STATUSLINE,bold]\
+#{?pane_synchronized,#[bg=blue][SYNC],}#{?window_zoomed_flag,#[fg=$BG_STATUSLINE] [ZOOM],}\
+ #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$FG_STATUSLINE],}#[bg=$FG_STATUSLINE,fg=$FG_STATUSLINE_SEPARATOR]\
+#{?pane_synchronized,#[bg=blue],}$left_slant_separator#[bg=$FG_STATUSLINE_SEPARATOR,fg=$BG_STATUSLINE]\
+#{?pane_synchronized,#[fg=red],}$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT
 #  ╙
-set -g status-right-length 40
-set -g status-right "#[fg=$TMUX_FG,bold]#{pomodoro_status} #[fg=$BG_ACTIVE_STATUSLINE,bold][Prefix:#{prefix}] #[fg=$BG_ACTIVE_STATUSLINE,bold] #(date +"%H:%M") #[fg=$BG_STATUSLINE,bg=$TMUX_BORDER_FG,bold] ❐ #S "
-
+set -g status-right-length 50
+set -g status-right "#[fg=$TMUX_FG,bold]#{pomodoro_status}\
+  #[fg=$BG_ACTIVE_STATUSLINE,bold][Prefix:#{prefix}]\
+  #[fg=$BG_ACTIVE_STATUSLINE,bold] #(date +"%H:%M")\
+  👨#(whoami)\
+  #[fg=$BG_STATUSLINE,bg=$TMUX_BORDER_FG,bold] ❐ #S "
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

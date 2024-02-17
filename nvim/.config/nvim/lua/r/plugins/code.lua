@@ -45,16 +45,9 @@ return {
       },
       -- NVIM-AUTOPAIRS
       {
-        -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5.
+        -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5
         -- before we use ultimate-autopair
         "windwp/nvim-autopairs",
-        -- enabled = function()
-        --   if require("r.config").lsp_style == "coc" then
-        --     return false
-        --   end
-        --   return true
-        -- end,
-        -- dependencies = { "hrsh7th/nvim-cmp" },
         opts = {
           close_triple_quotes = true,
           check_ts = true,
