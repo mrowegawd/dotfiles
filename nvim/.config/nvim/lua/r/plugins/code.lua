@@ -69,8 +69,8 @@ return {
             "neo-tree-popup",
             "vim",
           },
-          -- fast_wrap = { map = "<c-g>" },
-          fast_wrap = { map = nil },
+          fast_wrap = { map = "<c-q>" },
+          -- fast_wrap = { map = nil },
           chars = { "{", "[", "(", '"', "'" },
           pattern = [=[[%'%"%>%]%)%}%,]]=],
           end_key = "$",
@@ -605,19 +605,32 @@ return {
     "kylechui/nvim-surround",
     version = "*",
     keys = {
-      "ys", -- how to use it: ysiw, ds<brackets>, cs<brackets>
+      "ys", -- how to use it: ysiw, yd<brackets>, yc<brackets>
       "yS",
-      "cs",
-      "ds",
+      "yc",
+      "yd",
       { "s", "S", remap = true, mode = { "x" } },
       { "S", mode = { "x" } },
       { "gS", mode = { "x" } },
-      { "<C-g>s", mode = { "i" } },
-      { "<C-g>S", mode = { "i" } },
+      { "<C-v>s", mode = { "i" } },
+      { "<C-v>S", mode = { "i" } },
     },
     config = function()
       local input = require("nvim-surround.input").get_input
       require("nvim-surround").setup {
+        keymaps = {
+          insert = "<C-v>s",
+          insert_line = "<C-v>S",
+          normal = "ys",
+          normal_cur = "yss",
+          normal_line = "yS",
+          normal_cur_line = "ySS",
+          visual = "S",
+          visual_line = "gS",
+          delete = "yd",
+          change = "yc",
+          change_line = "yC",
+        },
         -- Configuration here, or leave empty to use defaults
         aliases = {
           ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- any delimiter

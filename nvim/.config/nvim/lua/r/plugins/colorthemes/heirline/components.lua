@@ -35,6 +35,7 @@ local colors = {
   diagnostic_info = Col.diagnostic_info,
   diagnostic_hint = Col.diagnostic_hint,
 }
+
 local exclude = {
   ["NvimTree"] = true,
   ["capture"] = true,

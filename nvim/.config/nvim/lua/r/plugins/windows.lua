@@ -184,8 +184,6 @@ return {
             local pane_dir = nav[dir]
 
             local pane = vim.env.WEZTERM_PANE
-            local pane_dir2 = nav2[dir]
-            local pane_dir = nav[dir]
 
             if pane and winn == vim.api.nvim_get_current_win() then
               if not is_resize then
