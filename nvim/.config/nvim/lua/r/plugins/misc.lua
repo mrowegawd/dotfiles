@@ -73,9 +73,15 @@ return {
     "sbulav/nredir.nvim",
     cmd = { "Nredir" },
   },
+  -- NVIM-CHEAT
   {
-    "tris203/hawtkeys.nvim",
-    enabled = false,
-    config = true,
+    "RishabhRD/nvim-cheat.sh",
+    cmd = { "Cheat", "CheatWithoutComments", "CheatList", "CheatListWithoutComments" },
+    dependencies = {
+      "RishabhRD/popfix",
+    },
+    config = function()
+      vim.g.cheat_default_window_layout = "vertical_split"
+    end,
   },
 }

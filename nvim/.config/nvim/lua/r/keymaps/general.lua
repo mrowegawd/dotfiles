@@ -25,12 +25,13 @@ Util.map.inoremap("<c-d>", "<c-O>dw", silent)
 Util.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 Util.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
 -- Avoid or don't yank on visual paste
-Util.map.nnoremap("p", function()
-  if vim.bo.modifiable then
-    return cmd.normal { vim.v.count1 .. "P`[", bang = true }
-  end
-  print(fmt("file: %s is not modifiable", vim.bo.filetype))
-end, silent)
+Util.map.vnoremap("p", "pgvy")
+Util.map.nnoremap("<Leader>Y", function()
+  local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
+  vim.fn.setreg("+", path)
+  vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
+end, { silent = true, desc = "Misc: yank absolute path" })
+Util.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
 
 Util.map.inoremap("<c-j>", "<Down>", silent)
 Util.map.inoremap("<c-k>", "<Up>", silent)
