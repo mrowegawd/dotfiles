@@ -1,16 +1,21 @@
 return {
   -- OPENBROWSER
   {
-    "tyru/open-browser.vim",
-    keys = {
-      {
-        "<Leader>oo",
-        "<Plug>(openbrowser-smart-search)",
-        mode = { "n", "v" },
-        desc = "Misc: open on browser",
+    {
+      "sontungexpt/url-open",
+      cmd = "URLOpenUnderCursor",
+      opts = {},
+      keys = {
+        {
+          "<Leader>oo",
+          "<CMD>URLOpenUnderCursor<CR>",
+          mode = { "n", "v" },
+          desc = "Misc: open on browser",
+        },
       },
     },
   },
+
   -- FIRENVIM
   -- {
   --   "glacambre/firenvim", -- embed neovim in browsers
