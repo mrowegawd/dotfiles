@@ -121,7 +121,8 @@ M.Mode = {
       R = "purple",
       r = "purple",
       ["!"] = "green",
-      t = colors.mod_term,
+      -- t = colors.mod_term,
+      t = "yellow",
     },
   },
   {

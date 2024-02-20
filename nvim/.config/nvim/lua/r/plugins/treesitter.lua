@@ -1,7 +1,3 @@
--- local function buf_is_large(_, buf)
---   return vim.b[buf].buf_is_large == true
--- end
-
 return {
   -- TREESITTER
   {
@@ -229,53 +225,6 @@ return {
           return true
         end, opts.ensure_installed)
       end
-
-      -- local non_filetype_match_injection_language_aliases = {
-      --   ex = "elixir",
-      --   pl = "perl",
-      --   bash = "sh", -- reversing these two from the treesitter source
-      --   uxn = "uxntal",
-      --   ts = "typescript",
-      -- }
-      -- local icon = nil
-
-      -- local ft_conceal = function(match, _, source, pred, metadata)
-      --   ---@cast pred integer[]
-      --   local capture_id = pred[2]
-      --   if not metadata[capture_id] then
-      --     metadata[capture_id] = {}
-      --   end
-      --
-      --   local node = match[pred[2]]
-      --   local node_text = vim.treesitter.get_node_text(node, source)
-      --
-      --   local ft = vim.filetype.match { filename = "a." .. node_text }
-      --   node_text = ft or non_filetype_match_injection_language_aliases[node_text] or node_text
-      --
-      --   if not icon then
-      --     icon = require("nvim-web-devicons").get_icon_by_filetype
-      --   end
-      --   metadata.conceal = icon(node_text) or "󰡯"
-      -- end
-
-      -- local offset_first_n = function(match, _, _, pred, metadata)
-      --   ---@cast pred integer[]
-      --   local capture_id = pred[2]
-      --   if not metadata[capture_id] then
-      --     metadata[capture_id] = {}
-      --   end
-      --
-      --   local range = metadata[capture_id].range or { match[capture_id]:range() }
-      --   local offset = pred[3] or 0
-      --
-      --   range[4] = range[2] + offset
-      --   metadata[capture_id].range = range
-      -- end
-      --
-      -- vim.treesitter.query.add_directive("offset-first-n!", offset_first_n, true)
-      --
-      -- vim.treesitter.query.add_directive("ft-conceal!", ft_conceal, true)
-
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
@@ -286,9 +235,16 @@ return {
     opts = function()
       local Highlight = require "r.settings.highlights"
       Highlight.plugin("treesitter-context", {
-        { TreesitterContextSeparator = { link = "WinSeparator" } },
-        { TreesitterContext = { inherit = "Normal" } },
-        { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+        theme = {
+          ["*"] = {
+            { TreesitterContextSeparator = { link = "WinSeparator" } },
+            { TreesitterContext = { inherit = "Normal" } },
+            { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+          },
+          ["catppuccin-latte"] = {
+            { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = -0.3 } } },
+          },
+        },
       })
       return {
         multiline_threshold = 4,
@@ -297,7 +253,7 @@ return {
         mode = "cursor",
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(buf)
-          local tbl_winft = {}
+          local tbl_winsplits = {}
           local win_amount = vim.api.nvim_tabpage_list_wins(0)
 
           for _, winnr in ipairs(win_amount) do
@@ -307,12 +263,22 @@ return {
               if winbufnr > 0 then
                 local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
                 if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
-                  table.insert(tbl_winft, winft)
+                  table.insert(tbl_winsplits, winft)
                 end
               end
             end
           end
-          return #tbl_winft < 3
+
+          if #tbl_winsplits < 3 then
+            -- check split or no split (`leaf`, `col` , `row`)
+            local layout = vim.fn.winlayout()
+            if layout[1] == "col" then -- a split window
+              local nwin = #layout[2]
+              return nwin < 2
+            end
+          else
+            return false
+          end
         end,
       }
     end,

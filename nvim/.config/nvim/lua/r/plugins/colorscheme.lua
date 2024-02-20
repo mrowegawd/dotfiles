@@ -1,5 +1,4 @@
 local colorscheme = require("r.config").colorscheme
-local Config = require("r.config").defaults
 
 return {
   {
@@ -82,7 +81,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local solarizedosaka = { "solarized-osaka" }
+      local solarizedosaka = { "solarized-osaka-night" }
       if vim.tbl_contains(solarizedosaka, colorscheme) then
         return true
       end
@@ -91,7 +90,6 @@ return {
     opts = {
       transparent = false, -- Enable this to disable setting the background color
       terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
-      style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
       styles = {
         -- Style to be applied to different syntax groups
         -- Value is any valid attr-list value for `:help nvim_set_hl`
@@ -178,22 +176,22 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local colorstokyonight = { "tokyonight", "tokyonight-night", "tokyonight-day", "tokyonight-storm" }
+      local colorstokyonight = { "tokyonight-night", "tokyonight-storm" }
       if vim.tbl_contains(colorstokyonight, colorscheme) then
         return true
       end
     end,
     config = function()
-      local tokyo_style = "strom"
-      if Config.colorscheme == "tokyonight-night" then
-        tokyo_style = "night"
-      elseif Config.colorscheme == "tokyonight-day" then
-        tokyo_style = "day"
-      end
+      -- local tokyo_style = "strom"
+      -- if Config.colorscheme == "tokyonight-night" then
+      --   tokyo_style = "night"
+      -- elseif Config.colorscheme == "tokyonight-day" then
+      --   tokyo_style = "day"
+      -- end
 
       local tokyonight = require "tokyonight"
       tokyonight.setup {
-        style = tokyo_style,
+        style = "night",
         -- priority = 1000,
         sidebars = {
           --     "qf",
@@ -230,7 +228,7 @@ return {
       end
     end,
     opts = {
-      style = "warmer",
+      style = "darker",
     },
   },
   -- NORD

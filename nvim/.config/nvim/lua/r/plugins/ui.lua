@@ -125,79 +125,81 @@ return {
       require("ibl").setup(opts)
     end,
   },
+
+  {
+    "rcarriga/nvim-notify",
+    -- event = "VeryLazy",
+    -- init = function()
+    --   vim.notify = require "notify"
+    -- end,
+    -- TODO: nanti hapus ini,
+    -- kalau ini sudah di merge
+    -- https://github.com/rcarriga/nvim-notify/pull/253
+    -- pin = true,
+    opts = function()
+      vim.notify = require "notify"
+
+      return {
+        timeout = 5000,
+        max_width = function()
+          return math.floor(vim.o.columns * 0.6)
+        end,
+        top_down = false,
+        max_height = function()
+          return math.floor(vim.o.lines * 0.8)
+        end,
+
+        -- on_open = function(win)
+        --   if not vim.api.nvim_win_is_valid(win) then
+        --     return
+        --   end
+        --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.line })
+        -- end,
+        render = function(...)
+          local notification = select(2, ...)
+          local style = Util.cmd.falsy(notification.title[1]) and "minimal" or "default"
+          require("notify.render")[style](...)
+        end,
+        on_open = function(win)
+          vim.api.nvim_win_set_config(win, { zindex = 175 })
+          if not vim.g.notifications_enabled then
+            vim.api.nvim_win_close(win, true)
+          end
+          if not package.loaded["nvim-treesitter"] then
+            pcall(require, "nvim-treesitter")
+          end
+          vim.wo[win].conceallevel = 3
+          local buf = vim.api.nvim_win_get_buf(win)
+          if not pcall(vim.treesitter.start, buf, "markdown") then
+            vim.bo[buf].syntax = "markdown"
+          end
+          vim.wo[win].spell = false
+        end,
+      }
+    end,
+    -- config = function(_, opts)
+    --   -- require("r.settings.highlights").plugin("notify", {
+    --   --   { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+    --   --   { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+    --   --   { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+    --   --   { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+    --   --   { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+    --   --   { NotifyERRORBody = { link = "NormalFloat" } },
+    --   --   { NotifyWARNBody = { link = "NormalFloat" } },
+    --   --   { NotifyINFOBody = { link = "NormalFloat" } },
+    --   --   { NotifyDEBUGBody = { link = "NormalFloat" } },
+    --   --   { NotifyTRACEBody = { link = "NormalFloat" } },
+    --   -- })
+    --   require("notify").setup(opts)
+    -- end,
+  },
   -- NOICE
   {
     "folke/noice.nvim",
     event = "VeryLazy",
+    enabled = false,
     dependencies = {
       "MunifTanjim/nui.nvim",
-      {
-        "rcarriga/nvim-notify",
-        -- event = "VeryLazy",
-        -- init = function()
-        --   vim.notify = require "notify"
-        -- end,
-        -- TODO: nanti hapus ini,
-        -- kalau ini sudah di merge
-        -- https://github.com/rcarriga/nvim-notify/pull/253
-        -- pin = true,
-        opts = function()
-          vim.notify = require "notify"
-
-          return {
-            timeout = 5000,
-            max_width = function()
-              return math.floor(vim.o.columns * 0.6)
-            end,
-            top_down = false,
-            max_height = function()
-              return math.floor(vim.o.lines * 0.8)
-            end,
-
-            -- on_open = function(win)
-            --   if not vim.api.nvim_win_is_valid(win) then
-            --     return
-            --   end
-            --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.line })
-            -- end,
-            render = function(...)
-              local notification = select(2, ...)
-              local style = Util.cmd.falsy(notification.title[1]) and "minimal" or "default"
-              require("notify.render")[style](...)
-            end,
-            on_open = function(win)
-              vim.api.nvim_win_set_config(win, { zindex = 175 })
-              if not vim.g.notifications_enabled then
-                vim.api.nvim_win_close(win, true)
-              end
-              if not package.loaded["nvim-treesitter"] then
-                pcall(require, "nvim-treesitter")
-              end
-              vim.wo[win].conceallevel = 3
-              local buf = vim.api.nvim_win_get_buf(win)
-              if not pcall(vim.treesitter.start, buf, "markdown") then
-                vim.bo[buf].syntax = "markdown"
-              end
-              vim.wo[win].spell = false
-            end,
-          }
-        end,
-        -- config = function(_, opts)
-        --   -- require("r.settings.highlights").plugin("notify", {
-        --   --   { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-        --   --   { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-        --   --   { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-        --   --   { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-        --   --   { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-        --   --   { NotifyERRORBody = { link = "NormalFloat" } },
-        --   --   { NotifyWARNBody = { link = "NormalFloat" } },
-        --   --   { NotifyINFOBody = { link = "NormalFloat" } },
-        --   --   { NotifyDEBUGBody = { link = "NormalFloat" } },
-        --   --   { NotifyTRACEBody = { link = "NormalFloat" } },
-        --   -- })
-        --   require("notify").setup(opts)
-        -- end,
-      },
     },
     -- stylua: ignore
     keys = {
@@ -242,10 +244,17 @@ return {
         },
         messages = {
           -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
-          view_search = false,
+          -- view_search = false,
+          enabled = true, -- enables the Noice messages UI
+          view = "notify", -- default view for messages
+          view_error = "notify", -- view for errors
+          view_warn = "notify", -- view for warnings
+          view_history = "messages", -- view for :messages
+          view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
         popupmenu = {
-          backend = "cmp",
+          enabled = true,
+          backend = "nui",
         },
         redirect = { view = "popup", filter = { event = "msg_show" } },
         routes = {
@@ -316,15 +325,15 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     opts = function()
-      local incnormal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5)
       return {
         highlight = {
           groups = {
             InclineNormal = {
-              guifg = incnormal_fg,
+              guifg = Util.colortbl.norm_bg,
             },
             InclineNormalNC = {
-              guifg = incnormal_fg,
+              guifg = Util.colortbl.separator_fg_alt,
+              guibg = Util.colortbl.norm_bg,
             },
           },
         },
@@ -350,11 +359,18 @@ return {
                   " " .. Config.icons.misc.boldclose,
                   guifg = Highlight.get("DiagnosticSignError", "fg"),
                   gui = "bold",
-                  guibg = Highlight.tint(Highlight.get("Error", "fg"), -0.2),
+                  guibg = Util.colortbl.separator_fg,
                 }
               end
             else
-              return { "" }
+              if vim.bo[props.buf].modified then
+                return {
+                  " " .. Config.icons.misc.boldclose,
+                  guifg = Highlight.get("DiagnosticSignError", "fg"),
+                  gui = "bold",
+                  guibg = Util.colortbl.separator_fg_alt,
+                }
+              end
             end
           end
 
@@ -380,12 +396,12 @@ return {
                 file_modified(),
               },
               {
-                ft_icon .. " ",
+                " " .. ft_icon .. " ",
                 guifg = ft_color,
                 guibg = Util.colortbl.separator_fg,
               },
               {
-                filename,
+                filename .. " ",
                 guibg = Util.colortbl.separator_fg,
                 gui = modified,
               },
@@ -405,13 +421,14 @@ return {
                 file_modified(),
               },
               {
-                ft_icon .. " ",
+                " " .. ft_icon .. " ",
                 guifg = ft_color,
                 guibg = Util.colortbl.separator_fg_alt,
               },
               {
-                filename,
-                guifg = Highlight.tint(Highlight.get("Normal", "fg"), -0.9),
+                filename .. " ",
+                -- guifg = Highlight.tint(Highlight.get("Normal", "fg"), -0.9),
+                guifg = Util.colortbl.norm_fg,
                 guibg = Util.colortbl.separator_fg_alt,
                 gui = modified,
               },
@@ -458,11 +475,11 @@ return {
     cond = vim.g.neovide == nil,
     opts = function()
       Highlight.plugin("beaconHiC", {
-        { ["BeaconDefault"] = { bg = { from = "ErrorMsg", attr = "fg", alter = 0.2 } } },
+        { ["BeaconDefault"] = { bg = "red" } },
       })
 
       return {
-        minimal_jump = 20,
+        -- minimal_jump = 20,
         ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
         ignore_filetypes = {
           "qf",

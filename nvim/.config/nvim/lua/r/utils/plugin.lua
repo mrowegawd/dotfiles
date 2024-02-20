@@ -254,75 +254,35 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
-  local normal = "Normal"
-  local normalfloat = "NormalFloat"
-  local pmenusel = "PmenuSel"
-  local cmpitemabbr = "CmpItemAbbr"
-  local cmpmatchabbr = "CmpItemAbbrMatch"
-  local fzfluaborder = "FzfLuaBorder"
-  local cmpmatchabbrFuzzy = "CmpItemAbbrMatchFuzzy"
-  local winseparator = "WinSeparator"
-  local statusline = "StatusLine"
-  local error = "Error"
-
-  local set_statusline = Highlight.get(statusline, "fg")
-  local separator_statusline = Highlight.tint(set_statusline, 0.5)
-  if vim.g.background and vim.g.background == "light" then
-    separator_statusline = Highlight.tint(set_statusline, -0.05)
-  end
-
   local jj = fmt(
     [[
-  normal_fg: %s
-  normal_bg: %s
+# -----------------------------
+# -----------------------------
 
-  norma_bg_vim: %s
+# color mode, sebagai main color
+*color16: %s
 
-  fzf_selection_fg: %s
-  fzf_selection_bg: %s
-  fzf_selection_match_fg: %s
+# color sebagai main separator dan second separator
+*color17: %s
+*color18: %s
 
-  non_fzf_fg: %s
-  non_fzf_bg: %s
-  non_fzf_match_fg: %s
+# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+*color19: %s
+*color20: %s
+*color21: %s
 
-  fzf_border_fg: %s
+# color FZF: sebagai fzf_selection_bg 
+*color22: %s]],
+    Util.colortbl.separator_fg,
 
-  tmux_pane_active_bg: %s
-  tmux_pane_bg: %s
+    Highlight.get("WinSeparator", "fg"),
+    Util.colortbl.separator_fg_alt,
 
-  tmux_fg: %s
-  tmux_border_fg: %s
+    Highlight.get("NormalFloat", "bg"),
+    Highlight.get("CmpItemAbbr", "fg"),
+    Highlight.get("CmpItemAbbrMatchFuzzy", "fg"),
 
-  separator_statusline: %s
-  statusline_fg: %s
-  ]],
-    Highlight.tint(Highlight.get(normal, "fg"), -0.25),
-    Highlight.get(normalfloat, "bg"),
-
-    Highlight.get(normal, "bg"),
-
-    -- fzf selection
-    Highlight.tint(Highlight.get(normal, "fg"), 0.5),
-    Highlight.get(pmenusel, "bg"),
-    Highlight.get(cmpmatchabbr, "fg"),
-
-    -- fzf non selection
-    Highlight.get(normalfloat, "bg"),
-    Highlight.get(cmpitemabbr, "fg"),
-    Highlight.get(cmpmatchabbrFuzzy, "fg"),
-
-    -- fzf match matching
-    Highlight.get(fzfluaborder, "fg"),
-
-    Highlight.get(normalfloat, "bg"),
-    Highlight.get(normalfloat, "bg"),
-
-    Highlight.tint(Highlight.get(normal, "fg"), -0.1),
-    Highlight.get(winseparator, "fg"),
-
-    separator_statusline,
-    Highlight.get(error, "fg")
+    Highlight.get("PmenuSel", "bg")
   )
 
   local master_color_path = "/tmp/masterColors"

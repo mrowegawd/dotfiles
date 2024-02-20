@@ -1,20 +1,21 @@
 local Highlight = require "r.settings.highlights"
 
-local error_fg = Highlight.get("Error", "fg")
+local error_fg = Highlight.get("Error", "fg") or Highlight.get("Error", "bg")
+local keyword_fg = Highlight.get("Keyword", "fg")
 local statusline_bg = Highlight.get("StatusLine", "bg")
 local statusline_fg = Highlight.get("StatusLine", "fg")
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 
 local branch_fg = Highlight.tint(normal_fg, 4)
-local separator_fg = Highlight.tint(error_fg, -0.2)
+local separator_fg = Highlight.tint(keyword_fg, -0.2)
 local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
 
-if vim.g.background and vim.g.background == "light" then
-  branch_fg = Highlight.tint(normal_fg, 0.5)
-
-  separator_fg = Highlight.tint(error_fg, 0.2)
-  separator_fg_alt = Highlight.tint(statusline_bg, -0.05)
+if vim.tbl_contains({ "solarized-osaka-night", "farout-night" }, vim.g.colorscheme) then
+  separator_fg_alt = Highlight.tint(statusline_fg, 0.05)
+elseif vim.g.colorscheme == "catppuccin-latte" then
+  separator_fg_alt = Highlight.tint(statusline_fg, 0.8)
+  normal_fg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5)
 end
 
 return {

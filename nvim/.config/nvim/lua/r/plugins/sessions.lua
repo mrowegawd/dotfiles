@@ -38,14 +38,10 @@ return {
   {
     "ahmedkhalf/project.nvim",
     event = "LazyFile",
+    cond = vim.g.neovide ~= nil,
     keys = {
       {
-        "<Leader>fP",
-        "<CMD> ProjectRoot <CR>",
-        desc = "Projects(project.nvim): save project",
-      },
-      {
-        "<Leader>fp",
+        "<a-g>",
         function()
           local contents = require("project_nvim").get_recent_projects()
           local reverse = {}
@@ -78,6 +74,7 @@ return {
     opts = {
       manual_mode = true,
       detection_methods = { "pattern" },
+      datapath = "~/Dropbox",
       silent_chdir = false,
       exclude_dirs = {
         "~/",

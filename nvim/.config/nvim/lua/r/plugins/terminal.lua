@@ -187,97 +187,16 @@ return {
       }
     end,
   },
-  -- NVIM-TERMINAL
+  -- TERMIM.NVIM
   {
-    "s1n7ax/nvim-terminal",
+    "2kabhishek/termim.nvim",
+    cmd = { "Fterm", "FTerm", "Sterm", "STerm", "Vterm", "VTerm" },
     keys = {
-      -- {
-      --   "<a-f>",
-      --   function()
-      --     if not vim.bo.buftype == "terminal" then
-      --       vim.cmd.Normal()
-      --     end
-      --     ---@diagnostic disable-next-line: undefined-global
-      --     return NTGlobal["terminal"]:toggle()
-      --   end,
-      --   mode = { "n", "v", "t", "i" },
-      -- },
       {
-        "<a-1>",
-        function()
-          if not vim.bo.buftype == "terminal" then
-            vim.cmd.Normal()
-          end
-          ---@diagnostic disable-next-line: undefined-global
-          return NTGlobal["terminal"]:open(1)
-        end,
-        mode = { "n", "v", "t", "i" },
-      },
-      {
-        "<a-2>",
-        function()
-          if not vim.bo.buftype == "terminal" then
-            vim.cmd.Normal()
-          end
-          ---@diagnostic disable-next-line: undefined-global
-          return NTGlobal["terminal"]:open(2)
-        end,
-        mode = { "n", "v", "t", "i" },
-      },
-      {
-        "<a-3>",
-        function()
-          if not vim.bo.buftype == "terminal" then
-            vim.cmd.Normal()
-          end
-
-          ---@diagnostic disable-next-line: undefined-global
-          return NTGlobal["terminal"]:open(3)
-        end,
-        mode = { "n", "v", "t", "i" },
-      },
-      {
-        "<a-4>",
-        function()
-          if not vim.bo.buftype == "terminal" then
-            vim.cmd.Normal()
-          end
-          ---@diagnostic disable-next-line: undefined-global
-          return NTGlobal["terminal"]:open(4)
-        end,
-        mode = { "n", "v", "t", "i" },
-      },
-      {
-        "<a-5>",
-        function()
-          if not vim.bo.buftype == "terminal" then
-            vim.cmd.Normal()
-          end
-          ---@diagnostic disable-next-line: undefined-global
-          return NTGlobal["terminal"]:open(5)
-        end,
-        mode = { "n", "v", "t", "i" },
+        "<a-f>",
+        "<CMD>Vterm<CR>",
+        desc = "Terminal(termim): open",
       },
     },
-    opts = {
-      -- keymap to disablesb all the default keymaps
-      disable_default_keymaps = false,
-
-      -- keymap to toggle open and close terminal window
-      toggle_keymap = "<a-f>",
-
-      terminals = {
-        -- keymaps to open nth terminal
-        -- { keymap = "<a-1>" },
-        { keymap = "<a-2>" },
-        { keymap = "<a-3>" },
-        { keymap = "<a-4>" },
-        { keymap = "<a-5>" },
-      },
-    },
-    config = function(_, opts)
-      vim.o.hidden = true
-      require("nvim-terminal").setup(opts)
-    end,
   },
 }

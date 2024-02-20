@@ -144,8 +144,18 @@ Util.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: pre
 
 -- Save jumps > 3 lines to the jumplist
 -- Jumps <= 3 respect line wraps
-Util.map.nnoremap("k", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'k' : 'gk']], { expr = true })
-Util.map.nnoremap("j", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'j' : 'gj']], { expr = true })
+-- Util.map.nnoremap("k", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'k' : 'gk']], { expr = true })
+-- Util.map.nnoremap("j", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'j' : 'gj']], { expr = true })
+
+-- allow moving the cursor through wrapped lines using j and k,
+-- note that I have line wrapping turned off but turned on only for Markdown
+Util.map.nnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+Util.map.nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+Util.map.vnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+Util.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+
+-- Util.map.nnoremap("j", [[(v:count > 1 ? 'm`' . v:count : '') . 'gj']], { expr = true, silent = true })
+-- Util.map.nnoremap("k", [[(v:count > 1 ? 'm`' . v:count : '') . 'gk']], { expr = true, silent = true })
 
 Util.map.nnoremap("<Leader>P", function()
   local cwd = vim.fn.expand "%:p:h"
@@ -333,6 +343,7 @@ local function magic_quit()
     ["help"] = "bd",
     ["octo"] = "bd",
     ["log"] = "bd",
+    -- ["qf"] = "bnext | bdelete #",
     ["DiffviewFileHistory"] = "DiffviewClose",
   }
 
@@ -422,21 +433,29 @@ Util.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { ex
 Util.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
 Util.map.nnoremap("<F1>", function()
-  local tbl_nc = {}
-  local win_amount = vim.api.nvim_tabpage_list_wins(0)
-  for _, winnr in ipairs(win_amount) do
-    if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
-      local winbufnr = vim.fn.winbufnr(winnr)
+  -- local tbl_nc = {}
+  -- local win_amount = vim.api.nvim_tabpage_list_wins(0)
+  -- for _, winnr in ipairs(win_amount) do
+  --   if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
+  --     local winbufnr = vim.fn.winbufnr(winnr)
+  --
+  --     if winbufnr > 0 then
+  --       local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+  --       if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
+  --         table.insert(tbl_nc, winft)
+  --       end
+  --     end
+  --   end
+  -- end
+  local layout = vim.fn.winlayout()
 
-      if winbufnr > 0 then
-        local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
-        if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
-          table.insert(tbl_nc, winft)
-        end
-      end
-    end
+  local nwin
+  if layout[1] == "col" then -- a split window
+    nwin = #layout[2]
   end
-  print(tostring(vim.inspect(tbl_nc)) .. " " .. tostring(#tbl_nc == 1))
+  print(tostring(nwin) .. " " .. layout[1])
+
+  -- print(tostring(vim.inspect(tbl_nc)) .. " " .. tostring(#tbl_nc == 1))
 end)
 
 local checkconceallevel = false

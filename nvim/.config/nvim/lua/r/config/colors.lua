@@ -24,7 +24,7 @@ local general_overrides = function()
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
 
-    { WinSeparator = { fg = { from = "@constructor", attr = "fg", alter = -0.5 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.5 }, bg = "NONE" } },
     { FloatBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "WinSeparator" , attr = "fg", alter = 0.5 } } },
     { WinBar = { bg = { from = "ColorColumn" } , fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn" }, fg = { from = "WinBar", attr = "fg" } } },
@@ -170,11 +170,11 @@ local general_overrides = function()
     -----------------------------------------------------------------------
 
     -- CMP ================================================================
-    { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 1.55 }, bg = "NONE" } },
+    { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = -0.25 }, bg = "NONE" } },
     { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
     { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
 
-    { PmenuSel = { fg = "NONE", bg = { from = "@keyword", attr = "fg", alter = -0.5 } } },
+    { PmenuSel = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "yellow" } },
     { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 
@@ -327,12 +327,18 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
     },
     ["solarized-osaka"] = {
-      { NormalNC = { inherit = "Normal" } },
+      -- { NormalNC = { inherit = "Normal" } },
       { TroubleNormal = { inherit = "Normal" } },
 
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1 }, bg = { from = "Normal", attr = "bg" } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
       { MyCursorLine = { bg = { from = "Normal", alter = 0.4 } } },
+      {
+        StatusLine = {
+          fg = { from = "LineNr", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
     },
     ["selenized"] = {
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.2 } } },
@@ -384,16 +390,6 @@ local function colorscheme_overrides()
       { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.45 } } },
       { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
 
-      { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.5 }, bg = "NONE" } },
-      { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = true } },
-      { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.2 } } },
-
-      {
-        PmenuSel = {
-          fg = { from = "CmpItemAbbr", attr = "fg", alter = 0.4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-        },
-      },
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -1 }, fg = { from = "CmpItemAbbr" } } },
       { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
 

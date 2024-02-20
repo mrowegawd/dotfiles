@@ -7,10 +7,10 @@ local Icons = require("r.config").icons
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
 
 return {
-  -- NEO-TREE (disabled)
+  -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    enabled = false,
+    cond = vim.g.neovide ~= nil,
     cmd = "Neotree",
     keys = {
       --   {
@@ -169,7 +169,7 @@ return {
 
             ["<2-LeftMouse>"] = "open",
             ["l"] = "child_or_open",
-            ["h"] = "close_node",
+            ["h"] = "parent_or_close",
             ["P"] = {
               "toggle_preview",
               config = { use_float = true },
@@ -336,7 +336,6 @@ return {
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
-    -- enabled = false,
     keys = function()
       local function get_outline()
         local ok_outline, outline = pcall(require, "outline")
@@ -354,29 +353,29 @@ return {
       local widthc = math.floor(vim_width / 2 + 8)
       local heightc = math.floor(vim_height / 2 - 5)
       return {
-        -- {
-        --   "<Leader>e",
-        --   function()
-        --     local neotree_opened = false
-        --     for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
-        --       if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
-        --         neotree_opened = true
-        --       end
-        --     end
-        --
-        --     if neotree_opened then
-        --       if vim.bo[0].filetype == "neo-tree" then
-        --         return vim.cmd [[wincmd p]]
-        --       end
-        --       return cmd "Neotree"
-        --
-        --       -- return cmd "Neotree reveal"
-        --     else
-        --       return cmd "Neotree"
-        --     end
-        --   end,
-        --   desc = "Misc(neotree): open File explore",
-        -- },
+        {
+          "<a-e>",
+          function()
+            local neotree_opened = false
+            for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+              if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
+                neotree_opened = true
+              end
+            end
+
+            if neotree_opened then
+              if vim.bo[0].filetype == "neo-tree" then
+                return vim.cmd [[wincmd p]]
+              end
+              return vim.cmd "Neotree"
+
+              -- return cmd "Neotree reveal"
+            else
+              return vim.cmd "Neotree"
+            end
+          end,
+          desc = "Misc(neotree): open File explore",
+        },
         -- {
         --   "<Leader>E",
         --   function()

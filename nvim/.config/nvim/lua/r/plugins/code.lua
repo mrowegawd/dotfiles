@@ -1,7 +1,7 @@
 local Highlight = require "r.settings.highlights"
 local Icons = require("r.config").icons
 local Config = require "r.config"
-local Util = require "r.utils"
+-- local Util = require "r.utils"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -10,6 +10,26 @@ OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
 return {
+  -- COMMAND-COMPLETION
+  {
+    "smolck/command-completion.nvim",
+    -- event = { "CmdlineEnter" },
+    config = function()
+      require("command-completion").setup {
+        border = "single", -- What kind of border to use, passed through directly to `nvim_open_win()`,
+        -- see `:help nvim_open_win()` for available options (e.g. 'single', 'double', etc.)
+        max_col_num = 5, -- Maximum number of columns to display in the completion window
+        min_col_width = 20, -- Minimum width of completion window columns
+        use_matchfuzzy = true, -- Whether or not to use `matchfuzzy()` (see `:help matchfuzzy()`)
+        -- to order completion results
+        highlight_selection = true, -- Whether or not to highlight the currently
+        -- selected item, not sure why this is an option tbh
+        highlight_directories = true, -- Whether or not to higlight directories with
+        -- the Directory highlight group (`:help hl-Directory`)
+        tab_completion = true, -- Whether or not tab completion on displayed items is enabled
+      }
+    end,
+  },
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
@@ -21,14 +41,14 @@ return {
     end,
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
-      "FelipeLema/cmp-async-path",
+      "hrsh7th/cmp-path",
       "davidsierradz/cmp-conventionalcommits",
-      "dmitmel/cmp-cmdline-history",
+      -- "dmitmel/cmp-cmdline-history",
       "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-cmdline",
+      -- "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-nvim-lsp-signature-help",
+      -- "hrsh7th/cmp-nvim-lsp-signature-help",
       "lukas-reineke/cmp-under-comparator",
       "petertriho/cmp-git",
       "rcarriga/cmp-dap",
@@ -433,7 +453,7 @@ return {
         { name = "luasnip", max_item_count = 100 },
         { name = "nvim_lsp_signature_help" },
         { name = "crates" },
-        { name = "async_path" },
+        { name = "path" },
         source_buffer(),
       }
 
@@ -523,46 +543,46 @@ return {
         },
       })
 
-      cmp.setup.cmdline(":", {
-        mapping = {
-          ["<C-y>"] = cmp.mapping(function()
-            cmp.confirm { select = true }
-            Util.map.feedkey("<CR>", "")
-          end, { "c" }),
-          ["<c-q>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.abort()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
-        sources = cmp.config.sources({
-          { name = "path" },
-        }, {
-          { name = "cmdline" },
-          { { name = "cmdline_history" } },
-        }),
-      })
+      -- cmp.setup.cmdline(":", {
+      --   mapping = {
+      --     ["<C-y>"] = cmp.mapping(function()
+      --       cmp.confirm { select = true }
+      --       Util.map.feedkey("<CR>", "")
+      --     end, { "c" }),
+      --     ["<c-q>"] = {
+      --       c = function(fallback)
+      --         if cmp.visible() then
+      --           cmp.abort()
+      --         else
+      --           fallback()
+      --         end
+      --       end,
+      --     },
+      --   },
+      --   sources = cmp.config.sources({
+      --     { name = "path" },
+      --   }, {
+      --     { name = "cmdline" },
+      --     { { name = "cmdline_history" } },
+      --   }),
+      -- })
 
-      cmp.setup.cmdline({ "/", "?" }, {
-        mapping = {
-          ["<c-q>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.abort()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
-        sources = cmp.config.sources {
-          { name = "buffer" },
-        },
-      })
+      -- cmp.setup.cmdline({ "/", "?" }, {
+      --   mapping = {
+      --     ["<c-q>"] = {
+      --       c = function(fallback)
+      --         if cmp.visible() then
+      --           cmp.abort()
+      --         else
+      --           fallback()
+      --         end
+      --       end,
+      --     },
+      --   },
+      --   sources = cmp.config.sources {
+      --     { name = "buffer" },
+      --   },
+      -- })
       --
       -- Taken from https://github.com/altermo/ultimate-autopair.nvim/issues/5#issuecomment-1772186460
       local ind = cmp.lsp.CompletionItemKind

@@ -2,7 +2,6 @@ local cmd = vim.cmd
 
 local Util = require "r.utils"
 
--- Wrap and check for spell in text filetypes
 Util.cmd.augroup("WrapSpell", {
   event = { "FileType" },
   pattern = { "gitcommit", "markdown", "NeogitCommitMessage", "norg" },
@@ -115,8 +114,8 @@ Util.cmd.augroup("ReHighlightFolded", {
           ["catppuccin-latte"] = {
             {
               Folded = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "bg", alter = -0.5 },
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+                fg = { from = "Normal", attr = "bg", alter = -0.3 },
                 underline = false,
                 bold = true,
               },
@@ -128,15 +127,12 @@ Util.cmd.augroup("ReHighlightFolded", {
   end,
 })
 
--- Turn off paste mode when leaving insert
 Util.cmd.augroup("SetNopaste", {
   event = { "InsertLeave" },
   pattern = "*",
   command = "set nopaste",
 })
 
--- Disable the concealing in some file formats
--- The default conceallevel is 3 in LazyVim
 Util.cmd.augroup("DisableJsonConceal", {
   event = { "FileType" },
   pattern = { "json", "jsonc" },
@@ -145,7 +141,6 @@ Util.cmd.augroup("DisableJsonConceal", {
   end,
 })
 
--- Close certain filetypes by pressing q.
 Util.cmd.augroup("SmartClose", {
   event = { "FileType" },
   pattern = {
@@ -188,7 +183,6 @@ Util.cmd.augroup("SmartClose", {
 --   once = true,
 -- })
 
--- don't execute silently in case of errors
 Util.cmd.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()

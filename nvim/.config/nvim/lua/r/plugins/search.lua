@@ -4,7 +4,8 @@ local Util = require "r.utils"
 
 local Icon = require("r.config").icons
 
-local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
+local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --max-columns=4096 -e "
+
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
@@ -13,19 +14,50 @@ local file_picker = function(cwd)
 end
 
 return {
-  -- LIGHTSPEED
+  -- FLASH.NVIM
   {
-    "ggandor/lightspeed.nvim",
-    keys = {
-      { "f", "<Plug>Lightspeed_omni_s", desc = "Lightspeed search", mode = { "n", "v" } },
-    },
-    opts = {
-      jump_to_unique_chars = false,
-      safe_labels = {},
-    },
-    config = function(_, opts)
-      require("lightspeed").setup(opts)
+    "folke/flash.nvim",
+    opts = function()
+      Highlight.plugin("flash.nvim", {
+        {
+          FlashMatch = {
+            bg = "white",
+            fg = "black",
+            bold = true,
+          },
+        },
+        {
+          FlashLabel = {
+            bg = { from = "Normal", attr = "bg", alter = -0.1 },
+            fg = "yellow",
+            bold = true,
+            strikethrough = false,
+          },
+        },
+        { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
+      })
+      return {
+        modes = {
+          char = {
+            keys = { "F", "t", "T", ";" }, -- remove "," from keys
+          },
+          search = {
+            enabled = false,
+          },
+        },
+        jump = {
+          nohlsearch = true,
+        },
+      }
     end,
+    -- stylua: ignore
+    keys = {
+      { "f", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
+      -- { "S", function() require("flash").treesitter() end, mode = { "o", "x" } },
+      -- { "r", function() require("flash").remote() end, mode = "o", desc = "Remote Flash" },
+      -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Toggle Flash Search" },
+      -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
+    },
   },
   -- FZF-LUA
   {
@@ -413,6 +445,8 @@ return {
           commits = {
             prompt = "  ",
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
+            cmd = "git log --color --pretty=format:'%C(black)%h%Creset "
+              .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = Util.fzflua.format_title("", "Commits") },
             fzf_opts = {
@@ -471,6 +505,8 @@ return {
             prompt = "  ",
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
+            cmd = "git log --color --pretty=format:'%C(black)%h%Creset "
+              .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = Util.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
@@ -572,10 +608,24 @@ return {
           -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
           prompt = " ",
           winopts = { title = Util.fzflua.format_title("Grep", "") },
-          grep_opts = "--binary-files=without-match --line-number --recursive --color=auto --perl-regexp",
           rg_opts = rg_opts,
           fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep',Ctrl-e:'rgflow']] },
-
+          winopts_fn = function()
+            local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.8)
+            local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
+            local col = math.ceil((vim.api.nvim_get_option "columns" - win_width) * 1)
+            local row = math.ceil((vim.api.nvim_get_option "lines" - win_height) * 1 - 3)
+            return {
+              width = win_width,
+              height = win_height,
+              row = row,
+              col = col,
+              preview = {
+                vertical = "down:55%", -- up|down:size
+                horizontal = "up:45%", -- right|left:size
+              },
+            }
+          end,
           no_header = true, -- disable default header
           actions = {
             ["ctrl-g"] = { actions.grep_lgrep },
