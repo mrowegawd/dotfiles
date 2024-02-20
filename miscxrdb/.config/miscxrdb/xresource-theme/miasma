@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! ┏┏┓o┳━┓┓━┓┏┏┓┳━┓
 ! ┃┃┃┃┃━┫┗━┓┃┃┃┃━┫
 ! ┛ ┇┇┛ ┇━━┛┛ ┇┛ ┇
@@ -36,3 +37,21 @@
 URxvt.colorIT:  #5f875f
 URxvt.colorBD:  #5f875f
 URxvt.colorUL:  #5f875f
+
+# -----------------------------
+# -----------------------------
+
+# color mode, sebagai main color
+*.color16: #4c6c4c
+
+# color sebagai main separator dan second separator
+*.color17: #2f432f
+*.color18: #3c3c3c
+
+# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+*.color19: #1e1e1e
+*.color20: #a19362
+*.color21: #616158
+
+# color FZF: sebagai fzf_selection_bg
+*.color22: #78834b

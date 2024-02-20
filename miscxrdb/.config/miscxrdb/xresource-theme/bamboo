@@ -22,3 +22,21 @@
 ! *cursor #51afef
 ! *cursor_text_color #282c34
 ! *url_color #98be65
+
+# -----------------------------
+# -----------------------------
+
+# color mode, sebagai main color
+*color16: #8b75b3
+
+# color sebagai main separator dan second separator
+*color17: #574970
+*color18: #3f493f
+
+# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+*color19: #1f241f
+*color20: #b1a890
+*color21: #6e2731
+
+# color FZF: sebagai fzf_selection_bg
+*color22: #d99058

@@ -9,31 +9,31 @@ rofi_command="rofi -theme $dir/$theme"
 
 aliases() {
 	awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc | sed 's/#//' | sed 's/()//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 surfingkeys() {
 	awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/surfingkeys/guidekeys.conf |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 vimiumc() {
 	awk '/^[a-zA-Z?.]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/vimmum-c/vimium_c.rc | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 calcurse() {
 	awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^/{last=$0}' ~/.calcurse/keys |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 ncmpcpp() {
 	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/ncmpcpp/bindings | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 newsboat() {
 	awk '/^[a-z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.newsboat/helpmappings | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 sxhkdrc() {
 	awk '/^[a-zA-Z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' <~/.config/sxhkd/sxhkdrc | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 tmux() {
 	awk '/^[a-z]/ && last {
@@ -48,23 +48,23 @@ tmux() {
   }
   {last=""} /^#/{last=$0}' ~/.tmux.conf | sort |
 		awk -F"#" '{print $2}' | awk -F"(" '{printf "%s %s\n", $2,$1}' |
-		column -t -s ")" | $rofi_command -dmenu -p "$1"
+		column -t -s ")" | $rofi_command -dmenu -p "snippet[$1]"
 }
 zathura() {
 	awk '/^[a-z]/ && last {print $1,$2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/zathura/zathurarc | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 terminal_st() {
 	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/miscxrdb/terminal/st/binding | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 terminal_alacritty() {
 	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/miscxrdb/terminal/binding/alacritty |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 terminal_kitty() {
 	awk '/^[a-zA-Z]/ && last {print $2,"\t",last} {last=""} /^#/{last=$0}' ~/.config/kitty/mappings.conf | sed 's/#//' |
-		column -t -s $'\t' | $rofi_command -dmenu -p "$1"
+		column -t -s $'\t' | $rofi_command -dmenu -p "snippet[$1]"
 }
 vim() {
 

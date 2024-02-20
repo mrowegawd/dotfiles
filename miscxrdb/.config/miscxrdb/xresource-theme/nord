@@ -41,3 +41,20 @@
 *.color14: nord7
 *.color15: nord6
 
+# -----------------------------
+# -----------------------------
+
+# color mode, sebagai main color
+*.color16: #67809a
+
+# color sebagai main separator dan second separator
+*.color17: #405060
+*.color18: #525d72
+
+# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+*.color19: #292e39
+*.color20: #a2a6ae
+*.color21: #5f3035
+
+# color FZF: sebagai fzf_selection_bg
+*.color22: #81a1c1

@@ -1,6 +1,6 @@
 ! Dracula Xresources palette
-*.foreground: #96999e
-*.background: #1d1d20
+*.foreground: #a0a8b7
+*.background: #1f2329
 *.color0:     #000000
 *.color8:     #4D4D4D
 *.color1:     #FF5555
@@ -17,3 +17,21 @@
 *.color14:    #9AEDFE
 *.color7:     #BFBFBF
 *.color15:    #E6E6E6
+
+# -----------------------------
+# -----------------------------
+
+# color mode, sebagai main color
+*.color16: #9853ad
+
+# color sebagai main separator dan second separator
+*.color17: #5f346c
+*.color18: #373f49
+
+# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+*.color19: #1b1f24
+*.color20: #787e89
+*.color21: #5f346c
+
+# color FZF: sebagai fzf_selection_bg
+*.color22: #cc9057

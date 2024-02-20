@@ -32,3 +32,21 @@
 #: white
 *color7:  #72898f
 *color15: #cad8d9
+
+# -----------------------------
+# -----------------------------
+
+# color mode, sebagai main color
+*color16: #bc9a30
+
+# color sebagai main separator dan second separator
+*color17: #75601e
+*color18: #1c6c81
+
+# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+*color19: #0e3640
+*color20: #818d8d
+*color21: #7d2b28
+
+# color FZF: sebagai fzf_selection_bg
+*color22: #41c7b9
