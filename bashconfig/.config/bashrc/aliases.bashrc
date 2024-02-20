@@ -28,11 +28,6 @@ md() {
 	mkdir -p "$@"
 }
 
-logs() {
-	echo -e "\nit will take some time..\n"
-	sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f
-}
-
 lt() {
 	eza --icons --all -I '*.git' --color=always -T
 }
@@ -129,16 +124,17 @@ alias :q=exit
 # │                          CHECK                           │
 # ╰──────────────────────────────────────────────────────────╯
 # prefix: _c
-#
-# check: size current dir
-c_ducks() {
-	sudo du -cks "$(ls -A)" | sort -rn | head -20
+
+# check: size of disk currrent dir
+c_disk_du() {
+	sudo du -a | sort -rn | head -30
 }
 
-c_size_cd() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
+# check: size of disk currrent dir (but human readable)
+c_disk_inhuman() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
 
-# check: size of the target path/file <$YOUR_PATH>
-c_size_tfile() {
+# check: size of disk with target <file-or-path>
+c_disk_target() {
 	if [ -n "$1" ]; then
 		sudo du -a "$1" 2>/dev/null | sort -n -r | head -n 20 | awk -F" " '{printf "%-15s %-10s\n",$1,$2}'
 	else
@@ -146,23 +142,13 @@ c_size_tfile() {
 	fi
 }
 
-# check: sniff HTTP traffic (ngrep)
-c_sniff() {
-	sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'
-}
-
-# check: sniff HTTP traffic 2 (tcpdump)
-c_httpdump() {
-	sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\\: .* | GET \\/.*\"
-}
-
 # check: owner and permission file/folder
-c_size_owner_filefolder() {
+c_disk_owner_perm() {
 	stat -L -c "%a %G %U" "$1"
 }
 
 # check: size of disks system
-c_size_disks() {
+c_disk_summary_system() {
 	echo "╓───── m o u n t . p o i n t s"
 	echo "╙────────────────────────────────────── ─ ─ "
 	lsblk -a
@@ -176,6 +162,16 @@ c_size_disks() {
 	lsblk -f
 }
 
+# check: sniff HTTP traffic (ngrep)
+c_sniff() {
+	sudo ngrep -d 'en1' -t '^(GET|POST) ' 'tcp and port 80'
+}
+
+# check: sniff HTTP traffic 2 (tcpdump)
+c_httpdump() {
+	sudo tcpdump -i en1 -n -s 0 -w - | grep -a -o -E \"Host\\: .* | GET \\/.*\"
+}
+
 function __send_msg() {
 	printf "\n=====================================\n"
 	printf "command:\t%s\n" "$1"
@@ -183,7 +179,7 @@ function __send_msg() {
 }
 
 # check: size memory usage
-c_size_memuse() {
+c_mem_usage() {
 	ps -eo size,pid,user,command --sort -size |
 		awk '{ hr=$1/1024 ; printf("%13.2f Mb ",hr) } { for ( x=4 ; x<=NF ; x++ ) { printf("%s ",$x) } print "" }' |
 		cut -d "" -f2 | cut -d "-" -f1 | less
@@ -583,6 +579,12 @@ r_log_with_multitail() {
 	else
 		sudo multitail -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
 	fi
+}
+
+# run: log af
+r_logs() {
+	echo -e "\nit will take some time..\n"
+	sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f
 }
 
 # run: grep error log
