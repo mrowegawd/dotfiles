@@ -2,7 +2,7 @@
 
 set -e -u
 
-SNIPPETS_MENU="aliases\ncalcurse\nncmpcpp\nnewsboat\nsurfingkeys\nsxhkdrc\nterm-alacritty\nterm-kitty\nterm-st\ntmux\nvimium\nzathura\n"
+SNIPPETS_MENU="aliases\ncalcurse\nncmpcpp\nnewsboat\nsurfingkeys\nsxhkdrc\ntmux\nvimium\nzathura"
 
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"

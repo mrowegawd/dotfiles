@@ -113,8 +113,6 @@ handle_pdf() {
 		nohup open "$1" >/dev/null 2>&1 &
 	elif type zathura >/dev/null 2>&1; then
 		nohup zathura "$1" >/dev/null 2>&1 &
-	else
-		return
 	fi
 	# elif type pdftotext >/dev/null 2>&1; then
 	# 	## Preview as text conversion
@@ -126,7 +124,7 @@ handle_pdf() {
 	# else
 	# 	return
 	# fi
-	exit 0
+	# exit 0
 }
 
 # sets the variable abs_target, this should be faster than calling printf
@@ -240,7 +238,59 @@ if [ "$entry" ]; then
 		fi
 		;;
 	*pdf*)
-		handle_pdf "${entry}"
+		pane_id_right=$(wezterm cli get-pane-direction right)
+		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+		wezterm cli activate-pane-direction Up
+
+		# entry="$(eval "$entry" | fzf --no-height -m --prompt 'FzOpen: ')"}
+		select_open="$(printf "Open\nConvert To Text" | fzf --no-height -m --prompt 'FzOpen: ')"
+
+		if [ -n "$select_open" ]; then
+
+			if [ "$select_open" = "Open" ]; then
+				handle_pdf "${entry}"
+				wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+				wezterm cli activate-pane-direction Left
+				exit 1
+			else
+				tmp_pdf="/tmp/pdf_dump.txt"
+
+				# install: `apt install ghostcript`
+				gs -sDEVICE=txtwrite -o $tmp_pdf "${entry}"
+
+				# git: `https://github.com/VikParuchuri/marker`
+				# convert_single.py $tmp_pdf "${entry}" --parallel_factor 2 --max_pages 20
+
+				wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+				wezterm cli activate-pane-direction Left
+
+				if [ -f "$tmp_pdf" ]; then
+					pane_id=$(wezterm cli get-pane-direction right)
+					if [ -z "${pane_id}" ]; then
+						pane_id=$(wezterm cli split-pane --right --percent 85)
+					fi
+
+					program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+
+					if [ "$program" = "nvim" ]; then
+						dunstify "Load the file: $tmp_pdf"
+						# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+						echo ":e ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+					else
+						dunstify "gila"
+						echo "nvim ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+					fi
+
+					wezterm cli activate-pane-direction --pane-id "$pane_id" right
+				fi
+
+				exit 1
+			fi
+		fi
+
+		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+		wezterm cli activate-pane-direction Left
+
 		exit 1
 		;;
 

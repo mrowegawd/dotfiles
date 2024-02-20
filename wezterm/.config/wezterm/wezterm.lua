@@ -32,7 +32,7 @@ local color_schemes = {
 		foreground = Color.fg,
 		cursor_bg = Color.magenta,
 		cursor_border = Color.blue,
-		split = Color.black_alt,
+		split = Color.separator_fg,
 		ansi = {
 			Color.black,
 			Color.red,
@@ -218,7 +218,7 @@ config.font_rules = {
 -- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
 config.disable_default_key_bindings = true
 -- front_end = "OpenGL",
-config.leader = { key = "`", mods = "CTRL" }
+-- config.leader = { key = "`", mods = "CTRL" }
 config.keys = Key
 config.mouse_bindings = KeyMouse
 config.key_tables = KeyTbl

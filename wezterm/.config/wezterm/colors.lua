@@ -24,7 +24,10 @@ if not string.find(wezterm.target_triple, "windows") then
 		cyan_alt = Util.cmd_call("xrdb -query | grep -i .color14| cut -d':' -f2 | head -1 | xargs"),
 		white = Util.cmd_call("xrdb -query | grep -i .color7| cut -d':' -f2 | head -1 | xargs"),
 		white_alt = Util.cmd_call("xrdb -query | grep -i .color15| cut -d':' -f2 | head -1 | xargs"),
-		-- white_alt = Util.cmd_call("xrdb -query | grep -i .color15| cut -d':' -f2 | head -1 | xargs"),
+
+		mode = Util.cmd_call("xrdb -query | grep -i .color16| cut -d':' -f2 | head -1 | xargs"),
+		separator_fg = Util.cmd_call("xrdb -query | grep -i .color17| cut -d':' -f2 | head -1 | xargs"),
+		separator_second_fg = Util.cmd_call("xrdb -query | grep -i .color18| cut -d':' -f2 | head -1 | xargs"),
 	}
 else
 	return {

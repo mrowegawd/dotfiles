@@ -109,9 +109,6 @@ run_once xsettingsd
 setxkbmap -option caps:backspace # switch capslock to backspace
 # export _JAVA_AWT_WM_NONREPARENTING=1
 
-pantree="$HOME/.config/miscxrdb/exbin/paintree"
-[ -f "$pantree" ] && "$pantree"
-
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
 	echo "dummy" >$startup_lock_file
@@ -123,7 +120,7 @@ if [ ! -f $startup_lock_file ]; then
 	[ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
 	# [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
 	dropbox start &
+	run_once "$TERMINAL"
 fi
 
 run_once xrdb ~/.Xresources
-run_once "$TERMINAL"

@@ -1,11 +1,10 @@
 local Color = require("colors")
-local Util = require("utils")
 
 local wezterm = require("wezterm")
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("update-right-status", function(window, pane)
-	local edge_background = Color.blue
+	local edge_background = Color.cyan
 
 	-- local date = wezterm.strftime("%Y-%m-%d %H:%M")
 	local date = wezterm.strftime("%H:%M")
@@ -59,14 +58,13 @@ local SUB_IDX = {"₁","₂","₃","₄","₅","₆","₇","₈","₉","₁₀",
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-	local edge_background = Util.tint(Color.bg, 0.5)
-	-- local edge_background = Color.cyan
+	local edge_background = Color.separator_second_fg
 	local background = Color.bg
-	local foreground = Color.blue
+	local foreground = Color.cyan
 	local dim_foreground = Color.red_alt
 
 	if tab.is_active then
-		background = Color.red_alt
+		background = Color.mode
 		foreground = Color.bg
 	elseif hover then
 		background = Color.magenta

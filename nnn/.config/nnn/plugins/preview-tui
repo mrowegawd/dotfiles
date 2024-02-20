@@ -191,6 +191,7 @@ start_preview() {
 		ENVVARS=("${ENVVARS[@]/#/-e}")
 		if [ "$NNN_SPLIT" = "v" ]; then split="h"; else split="v"; fi
 		tmux select-pane -R
+		# echo "tmux split-window -l\"$NNN_SPLITSIZE\"% -d\"$split\" -p\"$NNN_SPLITSIZE\" \"$0\" \"$1\"" >>/tmp/test_dong
 		tmux split-window -l"$NNN_SPLITSIZE"% "${ENVVARS[@]}" -d"$split" -p"$NNN_SPLITSIZE" "$0" "$1"
 		tmux select-pane -L
 

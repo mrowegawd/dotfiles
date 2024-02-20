@@ -21,20 +21,19 @@ super + {p,b}
 # WINDOW
 ########################################
 
-# window: backward, below, normal window or z-index
+# window: select (backward/below)/z-index
 super + i
 	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
 
-
-# window: focus next window base on hjkl
+# window: navigate hjkl
 super + {h,l,k,j}
         dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
 
-# window: swap the main window
+# window: swap window
 super + ctrl + {_,shift + }{h,j,k,l}
         bspc node -{f,s} {west,south,north,east}
 
-# window: move the window (float)
+# window: move window (float)
 super + {Left,Down,Up,Right}
         xdotool getwindowfocus windowmove --relative %1 {-20 0, 0 +20, 0 -20, +20 0}
 
@@ -66,7 +65,7 @@ super + R
 alt + {shift+Tab,Tab}
 	      bspc desktop -f {prev,next}.local
 
-# workspace: goto -n workspace
+# workspace: select workspace by number 1-9
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
 

@@ -13,6 +13,7 @@ return {
 			}),
 		},
 		{ key = "q", mods = "NONE", action = act.CopyMode("Close") },
+		{ key = "c", mods = "CTRL", action = act.CopyMode("Close") },
 		-- move cursor
 		{ key = "h", mods = "NONE", action = act.CopyMode("MoveLeft") },
 		{ key = "LeftArrow", mods = "NONE", action = act.CopyMode("MoveLeft") },
@@ -52,20 +53,11 @@ return {
 		{ key = "^", mods = "SHIFT", action = act.CopyMode("MoveToStartOfLineContent") },
 		{ key = "^", mods = "NONE", action = act.CopyMode("MoveToStartOfLineContent") },
 		{ key = "a", mods = "CTRL", action = act.CopyMode("MoveToStartOfLineContent") },
-		-- select
-		{ key = " ", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Cell" }) },
+		-- visual mode
 		{ key = "v", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Cell" }) },
-		{
-			key = "v",
-			mods = "SHIFT",
-			action = act({
-				Multiple = {
-					act.CopyMode("MoveToStartOfLineContent"),
-					act.CopyMode({ SetSelectionMode = "Cell" }),
-					act.CopyMode("MoveToEndOfLineContent"),
-				},
-			}),
-		},
+		{ key = "V", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Line" }) },
+		{ key = "v", mods = "CTRL", action = act.CopyMode({ SetSelectionMode = "Block" }) },
+
 		-- copy
 		{
 			key = "y",
@@ -102,10 +94,14 @@ return {
 		{ key = "o", mods = "NONE", action = act.CopyMode("MoveToSelectionOtherEnd") },
 		{ key = "O", mods = "NONE", action = act.CopyMode("MoveToSelectionOtherEndHoriz") },
 		{ key = "O", mods = "SHIFT", action = act.CopyMode("MoveToSelectionOtherEndHoriz") },
+		{ key = "y", mods = "CTRL", action = act.CopyMode({ MoveByPage = -0.2 }) },
+		{ key = "e", mods = "CTRL", action = act.CopyMode({ MoveByPage = 0.2 }) },
+		{ key = "u", mods = "CTRL", action = act.CopyMode({ MoveByPage = -0.5 }) },
+		{ key = "d", mods = "CTRL", action = act.CopyMode({ MoveByPage = 0.5 }) },
+		{ key = "b", mods = "CTRL", action = act.CopyMode({ MoveByPage = -0.8 }) },
+		{ key = "f", mods = "CTRL", action = act.CopyMode({ MoveByPage = 0.8 }) },
 		{ key = "PageUp", mods = "NONE", action = act.CopyMode("PageUp") },
 		{ key = "PageDown", mods = "NONE", action = act.CopyMode("PageDown") },
-		{ key = "b", mods = "CTRL", action = act.CopyMode("PageUp") },
-		{ key = "f", mods = "CTRL", action = act.CopyMode("PageDown") },
 		{
 			key = "Enter",
 			mods = "NONE",

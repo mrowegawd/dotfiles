@@ -2,6 +2,8 @@
 
 set -u -e
 
+LC_TIME=id_ID.UTF-8
+
 _notifysend() {
 	# COL_MSG="$(xrdb -query | grep "color6" | head -n 1 |
 	#   cut -d":" -f2 | xargs)"
@@ -47,7 +49,7 @@ _maimfullscreen() {
 (
 
 	# shellcheck source=/dev/null
-	NAME_PATH_PNG=$(date "+%d-%b-%Y_%H%S")
+	NAME_PATH_PNG=$(date "+%d-%B-%Y_%H%S")
 	NAME_FILE="screenshot_$NAME_PATH_PNG.png"
 	IMGTEMP="$HOME/Downloads/screenshot"
 

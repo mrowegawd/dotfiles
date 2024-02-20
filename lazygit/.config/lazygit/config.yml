@@ -17,8 +17,6 @@ gui:
     selectedLineBgColor:
       - "#495257"
       - bold
-    selectedRangeBgColor:
-      - "#89ddff"
   #   activeBorderColor:
   #     - white
   #     - bold
@@ -91,7 +89,7 @@ promptToReturnFromSubprocess: true # display confirmation when subprocess termin
 keybinding:
   universal:
     quit: "<c-c>"
-    quit-alt1: "<c-c>" # alternative/alias of quit
+    quit-alt1: "q" # alternative/alias of quit
     return: "<esc>" # return to previous menu, will quit if there's nowhere to return
     quitWithoutChangingDirectory: "Q"
     togglePanel: "<tab>" # goto the next panel
@@ -101,10 +99,10 @@ keybinding:
     nextItem-alt: "j" # go one line down
     prevPage: "," # go to next page in list
     nextPage: "." # go to previous page in list
-    # gotoTop: "G" # go to top of list
-    # gotoBottom: "G" # go to bottom of list
-    scrollLeft: "h" # scroll left within list view
-    scrollRight: "l" # scroll right within list view
+    gotoTop: "" # go to top of list
+    gotoBottom: "" # go to bottom of list
+    scrollLeft: "H" # scroll left within list view
+    scrollRight: "L" # scroll right within list view
     prevBlock: "<left>" # goto the previous block / panel
     nextBlock: "<right>" # goto the next block / panel
     # prevBlock-alt: "<c-h>" # goto the previous block / panel
@@ -124,8 +122,8 @@ keybinding:
     openFile: "o"
     scrollUpMain: "<pgup>" # main panel scroll up
     scrollDownMain: "<pgdown>" # main panel scroll down
-    scrollUpMain-alt1: "K" # main panel scroll up
-    scrollDownMain-alt1: "J" # main panel scroll down
+    scrollUpMain-alt1: "" # main panel scroll up
+    scrollDownMain-alt1: "" # main panel scroll down
     scrollUpMain-alt2: "<c-u>" # main panel scroll up
     scrollDownMain-alt2: "<c-d>" # main panel scroll down
     executeCustomCommand: ":"
@@ -147,8 +145,8 @@ keybinding:
     submitEditorText: "<enter>"
     extrasMenu: "@"
     toggleWhitespaceInDiffView: "<c-w>"
-    # increaseContextInDiffView: "}"
-    # decreaseContextInDiffView: "{"
+    increaseContextInDiffView: "}"
+    decreaseContextInDiffView: "{"
   status:
     checkForUpdate: "u"
     recentRepos: "<enter>"
@@ -191,7 +189,6 @@ keybinding:
     pickCommit: "p" # pick commit (when mid-rebase)
     revertCommit: "t"
     cherryPickCopy: "c"
-    cherryPickCopyRange: "C"
     pasteCommits: "v"
     tagCommit: "T"
     checkoutCommit: "<space>"
@@ -204,8 +201,6 @@ keybinding:
   commitFiles:
     checkoutCommitFile: "c"
   main:
-    toggleDragSelect: "v"
-    toggleDragSelect-alt: "V"
     toggleSelectHunk: "a"
     pickBothHunks: "b"
   submodules:

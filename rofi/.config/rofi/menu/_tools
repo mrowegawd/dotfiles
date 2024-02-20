@@ -1,14 +1,16 @@
 #!/bin/bash
 
+LC_TIME=id_ID.UTF-8
+
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecording Fullscreen\nRecording Rectangle\nRecording Gif\nStop Recording Vid\nStop Recording Gif\nScreenshot\nDrawing"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Fullscreen\nRecord Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing"
 
 # For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
-FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-$(date +%d_%m_%Y_%s).mp4"
-FILE_NAME_RECORD="ffmpeg-$(date +%d_%m_%Y_%s).mp4"
+FILE_RECORDING_BAK="$PATH_VIDEOS/ffmpeg-bak-$(date +%d_%B_%Y_%s).mp4"
+FILE_NAME_RECORD="ffmpeg-$(date +%d_%B_%Y_%s).mp4"
 FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 # COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
 
@@ -35,7 +37,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 			dunstify "Record" "starting.."
 		fi
 
-		ffmpeg -f x11grab -s "$GEOMETRY" -r "$FPS" -i :0.0 -f alsa -ac 2 \
+		ffmpeg -f x11grab -s "$GEOMETRY" -r "$FPS" -i :1.0 -f alsa -ac 2 \
 			-i default -vcodec libx264 -s "$GEOMETRY" \
 			-acodec libmp3lame -ab 128k -ar 44100 \
 			-threads 0 -f flv "$FILE_RECORDING_BAK"
@@ -53,7 +55,10 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 
 	run_ffmpeg_record_with_rectangle() {
 		GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-		SLOP_INFO=$(slop -f "%wx%h+%x,%y")
+		SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+
+		GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+		OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
 
 		FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
 		if [ -f "$FILE_ICONS" ]; then
@@ -62,10 +67,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 			dunstify "Record" "starting.."
 		fi
 
-		GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
-		OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
-
-		ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0.0"$OFFSET" -f alsa -ac 2 \
+		ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :1.0"$OFFSET" -f alsa -ac 2 \
 			-i default -vcodec libx264 -s "$GEOMETRY" \
 			-acodec libmp3lame -ab 128k -ar 44100 \
 			-threads 0 -f flv "$FILE_RECORDING_BAK"
@@ -87,24 +89,42 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		dunstify "Record" "quit.."
 	}
 
-	filegif="$HOME/Downloads/screenshot/$(date +%s).gif"
 	run_simplegif() {
-		if [ -n "$(command -v giph)" ]; then
-			# Dunstify "Gif will start in 3 sec, create 10 sec"
-			# -d waktu mulai dari n
-			# -t jumlah waktu ngerekam gif
-			# giph -f 30 -s -l -c 0.3,0,0.5,0.3 -d 3 -t 10 "$filegif"
-			giph -f 30 -s -l "$filegif"
+
+		GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+		SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+		FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+		if [ -f "$FILE_ICONS" ]; then
+			dunstify "Record" "starting.." -i "$FILE_ICONS"
 		else
-			# Check install here: https://github.com/phisch/giph
-			dunstify ":you need install giph"
+			dunstify "Record" "starting.."
 		fi
 
-	}
+		GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+		OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
 
-	run_simplegif_stop() {
-		giph --stop
-		dunstify "Gif created:" "$filegif"
+		ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :1.0"$OFFSET" -f alsa -ac 2 \
+			-i default -vcodec libx264 -s "$GEOMETRY" \
+			-acodec libmp3lame -ab 128k -ar 44100 \
+			-threads 0 -f flv "$FILE_RECORDING_BAK"
+
+		# For telegram
+		ffmpeg -i "$FILE_RECORDING_BAK" -crf 23 -preset veryfast -vcodec libx264 -acodec aac \
+			-vf 'scale=-2:min(1080\,bitand(ih\,-2))' \
+			-pix_fmt yuv420p "$FILE_RECORDING"
+
+		if [[ -f $FILE_RECORDING ]]; then
+			PATHGIF="$FILE_RECORDING.gif"
+			"$HOME/.config/miscxrdb/exbin/gifgenerator" -o "$PATHGIF" "$FILE_RECORDING"
+
+			dunstify "Gif created:" "$PATHGIF"
+		fi
+
+		if [ -f "$FILE_RECORDING_BAK" ]; then
+			rm -rf "$FILE_RECORDING_BAK"
+			rm -rf "$FILE_RECORDING"
+		fi
+
 	}
 
 	run_filemanager() {
@@ -127,12 +147,11 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 	"Keyboard") run_screenkey ;;
 	"Drawing") gromit-mpx ;; # install: sudo apt install gromit-mpx
 	"Screenshot") "$HOME/.config/rofi/scripts/takescreenshot" ;;
-	"Recording Fullscreen") run_ffmpeg_record_fullscreen ;;
-	"Recording Rectangle") run_ffmpeg_record_with_rectangle ;;
-	"Recording Gif") run_simplegif ;;
+	"Record Fullscreen") run_ffmpeg_record_fullscreen ;;
+	"Record Rectangle") run_ffmpeg_record_with_rectangle ;;
+	"Record Gif") run_simplegif ;;
 	"Pomodoro") run_pomodoro ;;
-	"Stop Recording Vid") run_ffmpeg_stop ;;
-	"Stop Recording Gif") run_simplegif_stop ;;
+	"Stop Record") run_ffmpeg_stop ;;
 	"File manager [UI]") run_filemanager ;;
 
 	esac

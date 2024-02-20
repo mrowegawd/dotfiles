@@ -4,10 +4,10 @@
     foreground:                     %%foreground%%;
     background-alt:                 %%normal-foreground%%;
     border:               			    %%border%%;
-    border-alt:               		  #45E3FFff;
+    border-alt:               		  %%border_alt%%;
     selected:               		    %%selected-normal-background%%;
     selected-alt:               		%%selected-alt%%;
-    urgent:                         #DA4453FF;
+    urgent:                         %%urgent%%;
 
     green:                          %%green%%;
     red:                            %%red%%;

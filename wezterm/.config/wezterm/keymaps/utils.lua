@@ -16,7 +16,6 @@ function M.split_nav(resize_or_move, mods, key, dir)
 			win:perform_action({ SendKey = { key = key, mods = mods } }, pane)
 		else
 			if Util.is_nvim(pane) then
-				-- win:toast_notification("wezterm", mods .. " keys " .. key, nil, 4000)
 				win:perform_action({ SendKey = { key = key, mods = mods } }, pane)
 			else
 				if resize_or_move == "resize" then
@@ -29,7 +28,6 @@ function M.split_nav(resize_or_move, mods, key, dir)
 							is_zoomed = true
 						end
 					end
-					-- wezterm.log_info("is_zoomed: " .. tostring(is_zoomed))
 					if is_zoomed then
 						dir = dir == "Up" or dir == "Right" and "Next" or "Prev"
 						-- wezterm.log_info("dir: " .. dir)

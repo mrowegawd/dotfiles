@@ -1,15 +1,14 @@
-COL_WHITE="#626262"
+STATUSLINE_BG_ACTIVE="#a284c5"
+STATUSLINE_BG="#1E1E2E"
+STATUSLINE_FG="#94E2D5"
 
-TMUX_PANE_ACTIVE_BG="#1e1e1e"
-TMUX_PANE_BG="#1e1e1e"
+TMUX_BORDER_FG="#65537b"
+TMUX_BORDER_BG="#1E1E2E"
 
-TMUX_FG="#c1b075"
-TMUX_BORDER_FG="#5d3b22"
+SEPARATOR_FG="#363652"
 
-BG_STATUSLINE="#222222"
-FG_STATUSLINE="#c2c2b0"
-FG_STATUSLINE_SEPARATOR="#4c4c4c"
-BG_ACTIVE_STATUSLINE="#bb7744"
+RED="#F38BA8"
+BLUE="#89B4FA"
 
 left_separator=''
 left_separator_black=''
@@ -22,10 +21,10 @@ bind E set-window-option synchronize-panes on \;\
   set-option -g status-bg red \; display 'synchronize begin'
 
 bind e set-window-option synchronize-panes off \;\
-  set-option -g status-bg $BG_STATUSLINE \; display 'synchronize end'
+  set-option -g status-bg $STATUSLINE_BG \; display 'synchronize end'
 
-setw -g pane-active-border-style fg=$TMUX_BORDER_FG,bg=$BG_STATUSLINE
-setw -g pane-border-style fg=$TMUX_BORDER_FG,bg=$BG_STATUSLINE
+setw -g pane-active-border-style fg=$TMUX_BORDER_FG
+setw -g pane-border-style fg=$TMUX_BORDER_FG
 
 # setw -g pane-border-status bottom
 set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
@@ -34,41 +33,41 @@ set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[und
 #  +----------------------------------------------------------+
 #  |                      STATUS THEMES                       |
 #  +----------------------------------------------------------+
-set -g status-fg $BG_ACTIVE_STATUSLINE
-set -g status-bg $BG_STATUSLINE
+set -g status-fg $STATUSLINE_BG_ACTIVE
+set -g status-bg $STATUSLINE_BG
 set -g status on
 set -g status-interval 5
 set -g status-position top
 set -g status-justify left # left,centre, absolute-centre
 set -g status-left ""
 
-set -g message-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
-set -g mode-style "bg=$BG_ACTIVE_STATUSLINE,fg=$TMUX_PANE_BG,bold"
+set -g message-style "bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG,bold"
+set -g mode-style "bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG,bold"
 
 #  ╓
 #  ║ LEFT
 #  ╙
-set -g window-status-format "#[fg=$BG_STATUSLINE]\
-#{?pane_synchronized,#[bg=red],}$left_slant_separator\
-#{?pane_synchronized,#[bg=red],}#[fg=$BG_ACTIVE_STATUSLINE,bold] #I: #{b:pane_current_path} #[fg=$BG_STATUSLINE]\
-#{?pane_synchronized,#[bg=red],}$left_slant_separator#[fg=$BG_STATUSLINE]\
-#{?pane_synchronized,#[fg=red],}$left_slant_separator"
+set -g window-status-format "#[fg=$STATUSLINE_BG]\
+#{?pane_synchronized,#[bg=$RED],}$left_slant_separator\
+#{?pane_synchronized,#[bg=$RED],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
+#{?pane_synchronized,#[bg=$RED],}$left_slant_separator#[fg=$STATUSLINE_BG]\
+#{?pane_synchronized,#[fg=$RED],}$left_slant_separator"
 
-set -g window-status-current-format "#[fg=$FG_STATUSLINE]\
-#{?pane_synchronized,#[fg=blue],}$left_slant_separator#[fg=$BG_STATUSLINE,bg=$FG_STATUSLINE,bold]\
-#{?pane_synchronized,#[bg=blue][SYNC],}#{?window_zoomed_flag,#[fg=$BG_STATUSLINE] [ZOOM],}\
- #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$FG_STATUSLINE],}#[bg=$FG_STATUSLINE,fg=$FG_STATUSLINE_SEPARATOR]\
-#{?pane_synchronized,#[bg=blue],}$left_slant_separator#[bg=$FG_STATUSLINE_SEPARATOR,fg=$BG_STATUSLINE]\
-#{?pane_synchronized,#[fg=red],}$left_slant_separator"
+set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
+#{?pane_synchronized,#[fg=$BLUE],}$left_slant_separator#[fg=$STATUSLINE_BG,bg=$STATUSLINE_BG_ACTIVE,bold]\
+#{?pane_synchronized,#[bg=$BLUE][SYNC],}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],}\
+ #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$STATUSLINE_BG_ACTIVE],}#[bg=$STATUSLINE_BG_ACTIVE,fg=$SEPARATOR_FG]\
+#{?pane_synchronized,#[bg=$BLUE],}$left_slant_separator#[bg=$SEPARATOR_FG,fg=$STATUSLINE_BG]\
+#{?pane_synchronized,#[fg=$RED],}$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT
 #  ╙
 set -g status-right-length 50
-set -g status-right "#[fg=$TMUX_FG,bold]#{pomodoro_status}\
-  #[fg=$BG_ACTIVE_STATUSLINE,bold][Prefix:#{prefix}]\
-  #[fg=$BG_ACTIVE_STATUSLINE,bold] #(date +"%H:%M")\
+set -g status-right "#[fg=$STATUSLINE_BG_ACTIVE,bold]#{pomodoro_status}\
+  #[fg=$STATUSLINE_FG,bold][Prefix:#{prefix}]\
+  #[fg=$STATUSLINE_FG,bold] #(date +"%H:%M")\
   👨#(whoami)\
-  #[fg=$BG_STATUSLINE,bg=$TMUX_BORDER_FG,bold] ❐ #S "
+  #[fg=$STATUSLINE_BG,bg=$TMUX_BORDER_FG,bold] ❐ #S "
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

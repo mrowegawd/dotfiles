@@ -117,13 +117,9 @@ element {
 }
 
 element-text {
-    expand:                       true;
-    /* horizontal-align:             0; */
-    background-color:             inherit;
-    text-color:                   @border;
-    highlight:                   @red;
-    /* vertical-align:               0.5; */
-    margin:                       0% 0.25% 0.25% 1.5%;
+    background-color:           inherit;
+    text-color:                 inherit;
+    margin:                     0% 0.25% 0.25% 1.5%;
 }
 
 element normal.normal {
@@ -142,8 +138,8 @@ element normal.active {
 }
 
 element selected.normal {
-    background-color: 		        @selected-alt;
-    text-color:       		        @border;
+    background-color: 		          @selected-alt;
+    text-color:       		          @background;
 }
 element selected.urgent {
     background-color: 		        @red;
