@@ -162,8 +162,8 @@ if not wezterm.target_triple:find("windows") then
 end
 
 config.inactive_pane_hsb = {
-	saturation = 1,
-	brightness = 1,
+	saturation = 0.7,
+	brightness = 0.7,
 }
 
 -- ├┤ FRAME ├───────────────────────────────────────────────────────────┤

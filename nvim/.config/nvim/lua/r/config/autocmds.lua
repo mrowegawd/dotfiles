@@ -270,6 +270,51 @@ Util.cmd.augroup("CheckOutsideTime", {
   end,
 })
 
+-- Util.cmd.augroup(
+--   "WindowDim",
+--   -- {
+--   --   event = { "BufRead" },
+--   --   pattern = { "*" },
+--   --   command = function()
+--   --     Util.windowdim.buf_enter()
+--   --   end,
+--   -- }, {
+--   --   event = { "BufEnter" },
+--   --   pattern = { "*" },
+--   --   command = function()
+--   --     Util.windowdim.buf_enter()
+--   --   end,
+--   -- },
+--   {
+--     event = { "VimEnter", "FocusGained", "WinEnter" },
+--     pattern = "*",
+--     command = function()
+--       Util.windowdim.focus_gained()
+--     end,
+--   },
+--   {
+--     event = { "VimLeave", "FocusLost", "WinLeave" },
+--     pattern = "*",
+--     command = function()
+--       Util.windowdim.focus_lost()
+--     end,
+--   }
+--   -- {
+--   --   event = { "WinEnter" },
+--   --   pattern = "*",
+--   --   command = function()
+--   --     Util.windowdim.win_enter()
+--   --   end,
+--   -- },
+--   -- {
+--   --   event = { "WinLeave" },
+--   --   pattern = "*",
+--   --   command = function()
+--   --     Util.windowdim.win_leave()
+--   --   end,
+--   -- }
+-- )
+
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
 ]]

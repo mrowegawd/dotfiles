@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! special
 *.foreground:   #dcd7ba
 *.background:   #1f1f28
@@ -51,4 +52,11 @@
 *.color21: #741212
 
 # color FZF: sebagai fzf_selection_bg
-*.color22: #ffa066
+*.color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*.color23: #0f0f14
+
+# color TMUX: sebagai main window dan second window
+*.color24: #1f1f28
+*.color25: #1b1b24

@@ -71,10 +71,14 @@ set_tmux() {
 		sed -i -e "s/^STATUSLINE_BG=.*$/STATUSLINE_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$GET_CYAN\"/g" "$_PATH_TMUX_THEMES"
 
-		sed -i -e "s/^TMUX_BORDER_BG=.*$/TMUX_BORDER_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^TMUX_BORDER_FG=.*$/TMUX_BORDER_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
 
 		sed -i -e "s/^SEPARATOR_FG=.*$/SEPARATOR_FG=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^SEPARATOR_ACTIVE_BG=.*$/SEPARATOR_ACTIVE_BG=\"$GET_COL_23\"/g" "$_PATH_TMUX_THEMES"
+
+		sed -i -e "s/^WINDOW_BG_ACTIVE=.*$/WINDOW_BG_ACTIVE=\"$GET_COL_24\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^WINDOW_BG=.*$/WINDOW_BG=\"$GET_COL_25\"/g" "$_PATH_TMUX_THEMES"
 
 		sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
@@ -201,7 +205,7 @@ set_fzf() {
 
 	sed -i -e "s/%%color_border%%/$GET_COL_18/g" "$FZF_PATH_CONFIG/fzf.config"
 	sed -i -e "s/%%color_gutter%%/$GET_COL_19/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_pointer%%/$GET_GREEN/g" "$FZF_PATH_CONFIG/fzf.config"
+	sed -i -e "s/%%color_pointer%%/$GET_RED/g" "$FZF_PATH_CONFIG/fzf.config"
 
 }
 

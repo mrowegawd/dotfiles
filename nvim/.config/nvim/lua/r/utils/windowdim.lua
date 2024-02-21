@@ -21,18 +21,29 @@ local focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
 --   "SignColumn:ColorColumn",
 -- }, ",")
 
+-- local winhighlight_blurred = table.concat({
+--   -- -- "IncSearch:ColorColumn",
+--   "CursorLineNr:LineNr",
+--   "SignColumn:ColorColumn",
+--   "EndOfBuffer:ColorColumn",
+--   -- "LineNr:ColorColumn",
+--   "CursorLineNr:CursorLineNr",
+--   "IncSearch:ColorColumn",
+--   "Normal:ColorColumn",
+--   "NormalNC:Normal",
+--   "Search:ColorColumn",
+--   "SignColumn:ColorColumn",
+-- }, ",")
+
 local winhighlight_blurred = table.concat({
-  -- -- "IncSearch:ColorColumn",
   "CursorLineNr:LineNr",
-  "SignColumn:ColorColumn",
   "EndOfBuffer:ColorColumn",
-  -- "LineNr:ColorColumn",
-  "CursorLineNr:CursorLineNr",
-  "IncSearch:ColorColumn",
-  "Normal:Normal",
-  "NormalNC:Normal",
-  "Search:ColorColumn",
+  -- "IncSearch:ColorColumn",
+  "Normal:ColorColumn",
+  "NormalNC:ColorColumn",
   "SignColumn:ColorColumn",
+  "WinBar:ColorColumn",
+  "NormalFloat:ColorColumn",
 }, ",")
 
 -- Jangan bikin ft ini effect windowdim
@@ -169,12 +180,11 @@ local focus_window = function()
       return
     end
   else
-    local ft = api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
-    if ft == "markdown" or ft == "org" then
-      colorcolumn_width = 120
-    else
-      colorcolumn_width = 100
-    end
+    -- local ft = api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
+    -- if ft == "markdown" or ft == "org" then
+    colorcolumn_width = 200 -- 120
+    -- colorcolumn_width = 200 -- 120
+    -- end
     focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
   end

@@ -767,6 +767,7 @@ return {
   {
     "lukas-reineke/headlines.nvim",
     event = "VeryLazy",
+    -- enabled = false,
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
       Highlight.plugin("headlines", {

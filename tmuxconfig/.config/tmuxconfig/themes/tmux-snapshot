@@ -1,14 +1,18 @@
-STATUSLINE_BG_ACTIVE="#a284c5"
-STATUSLINE_BG="#1E1E2E"
-STATUSLINE_FG="#94E2D5"
+STATUSLINE_BG_ACTIVE="#64a5cc"
+STATUSLINE_BG="#24283b"
+STATUSLINE_FG="#7dcfff"
 
-TMUX_BORDER_FG="#65537b"
-TMUX_BORDER_BG="#1E1E2E"
+BORDER_FG="#3e677f"
+BORDER_BG="#24283b"
 
-SEPARATOR_FG="#363652"
+SEPARATOR_FG="#404869"
+SEPARATOR_ACTIVE_BG="#12141d"
 
-RED="#F38BA8"
-BLUE="#89B4FA"
+WINDOW_BG_ACTIVE="#24283b"
+WINDOW_BG="#202435"
+
+RED="#f7768e"
+BLUE="#7aa2f7"
 
 left_separator=''
 left_separator_black=''
@@ -23,8 +27,11 @@ bind E set-window-option synchronize-panes on \;\
 bind e set-window-option synchronize-panes off \;\
   set-option -g status-bg $STATUSLINE_BG \; display 'synchronize end'
 
-setw -g pane-active-border-style fg=$TMUX_BORDER_FG
-setw -g pane-border-style fg=$TMUX_BORDER_FG
+setw -g window-style bg=$WINDOW_BG
+setw -g window-active-style bg=$WINDOW_BG_ACTIVE
+
+setw -g pane-active-border-style bg=$WINDOW_BG,fg=$BORDER_FG
+setw -g pane-border-style bg=$WINDOW_BG,fg=$BORDER_FG
 
 # setw -g pane-border-status bottom
 set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
@@ -68,6 +75,6 @@ set -g status-right "#[fg=$STATUSLINE_BG_ACTIVE,bold]#{pomodoro_status}\
   #[fg=$STATUSLINE_FG,bold][Prefix:#{prefix}]\
   #[fg=$STATUSLINE_FG,bold] #(date +"%H:%M")\
   👨#(whoami)\
-  #[fg=$STATUSLINE_BG,bg=$TMUX_BORDER_FG,bold] ❐ #S "
+  #[fg=$STATUSLINE_BG,bg=$BORDER_FG,bold] ❐ #S "
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

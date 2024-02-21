@@ -272,7 +272,15 @@ function M.change_colors()
 *color21: %s
 
 # color FZF: sebagai fzf_selection_bg 
-*color22: %s]],
+*color22: %s
+
+# color TMUX: sebagai main separator bg
+*color23: %s
+
+# color TMUX: sebagai main window dan second window
+*color24: %s
+*color25: %s
+]],
     Util.colortbl.separator_fg,
 
     Highlight.get("WinSeparator", "fg"),
@@ -282,7 +290,12 @@ function M.change_colors()
     Highlight.get("CmpItemAbbr", "fg"),
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"),
 
-    Highlight.get("PmenuSel", "bg")
+    Highlight.get("PmenuSel", "bg"),
+
+    Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
+
+    Highlight.get("Normal", "bg"),
+    Highlight.get("ColorColumn", "bg")
   )
 
   local master_color_path = "/tmp/masterColors"

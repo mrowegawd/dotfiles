@@ -34,4 +34,11 @@
 *.color21: #5f346c
 
 # color FZF: sebagai fzf_selection_bg
-*.color22: #cc9057
+*.color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*.color23: #0f1114
+
+# color TMUX: sebagai main window dan second window
+*.color24: #1f2329
+*.color25: #1b1f24

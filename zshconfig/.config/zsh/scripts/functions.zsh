@@ -169,14 +169,20 @@ show_alias() {
 
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)
+    LBUFFER="${LBUFFER}$select "
+    zle reset-prompt
+    return
   elif [[ $myargs[-1] == "git" ]]; then
     local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
-    if [[ ! -n $alias_sel ]]; then
+    if [[ -n $alias_sel ]]; then
+      LBUFFER="git $alias_sel "
+      zle reset-prompt
+      return
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
       return
     fi
-
-    LBUFFER="git $alias_sel "
-    zle reset-prompt
 
   # TODO: buatkan untuk juga untuk container, images, volume
   elif [[ $myargs[-1] == *"$doc_con"* ]]; then
@@ -186,6 +192,15 @@ show_alias() {
     FZF_DOCKER_PS_START_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
     FZF_DOCKER_PS_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}"
     select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" | fzf --multi --header-lines=1 | awk '{print $1}' )
+    if [[ -n $select ]]; then
+      LBUFFER="${LBUFFER}$select "
+      zle reset-prompt
+      return
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
+      return
+    fi
 
   elif [[ $myargs[-1] == *"$doc_im"* ]]; then
     #
@@ -200,15 +215,22 @@ show_alias() {
       fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
     )
 
-    if [[ ! -n $alias_selected ]]; then
-      return
-    else
+    if [[ -n $alias_selected ]]; then
       select=$(echo "$alias_selected" | cut -d" " -f1 | cut -d"(" -f1)
+      if [[ -n $select ]]; then
+        LBUFFER="${LBUFFER}$select "
+        zle reset-prompt
+      else
+        LBUFFER="${LBUFFER}"
+        zle reset-prompt
+        return
+      fi
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
     fi
-  fi
 
-  [[ -n $select ]] && LBUFFER="${LBUFFER}$select "
-  zle reset-prompt
+  fi
 }
 
 zle -N show_alias

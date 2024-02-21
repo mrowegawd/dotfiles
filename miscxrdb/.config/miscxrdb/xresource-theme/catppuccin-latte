@@ -42,7 +42,7 @@
 
 # color sebagai main separator dan second separator
 *color17: #26bed9
-*color18: #ffffff
+*color18: #b7b7b7
 
 # color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
 *color19: #d7d8dc
@@ -50,4 +50,11 @@
 *color21: #69071c
 
 # color FZF: sebagai fzf_selection_bg
-*color22: #fe640b
+*color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*color23: #77787a
+
+# color TMUX: sebagai main window dan second window
+*color24: #eff1f5
+*color25: #d7d8dc

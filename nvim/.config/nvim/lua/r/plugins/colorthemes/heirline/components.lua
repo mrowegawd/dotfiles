@@ -10,6 +10,7 @@ local colors = {
   base_fg = Col.statusline_fg,
 
   branch_fg = Col.branch_fg,
+  terminal_fg = Col.terminal_fg,
 
   mode_bg = Col.mode_bg,
   filename_fg = Col.mode_bg,
@@ -122,7 +123,7 @@ M.Mode = {
       r = "purple",
       ["!"] = "green",
       -- t = colors.mod_term,
-      t = "yellow",
+      t = colors.terminal_fg,
     },
   },
   {

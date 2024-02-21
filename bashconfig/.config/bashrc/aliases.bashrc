@@ -173,9 +173,32 @@ c_httpdump() {
 }
 
 function __send_msg() {
-	printf "\n=====================================\n"
-	printf "command:\t%s\n" "$1"
-	printf "=====================================\n\n"
+	if [ -n "$2" ]; then
+		if [ "$2" = "\n" ]; then
+			printf "yes"
+		fi
+	else
+		printf "\n=====================================\n"
+		printf "command:\t%s\n" "$1"
+		printf "=====================================\n\n"
+	fi
+
+}
+
+function __output_cmd() {
+	if [ $# -eq 3 ] && [ -n "$2" ]; then
+		printf "\n=====================================\n"
+		printf "Command:\t\033[1;32m%s\033[0m\n" "$1"  # Green color for command
+		printf "Option:\t\t\033[1;34m%s\033[0m\n" "$2" # Blue color for option
+		printf "Example:\t\033[1;33m%s\033[0m\n" "$3"  # Yellow color for argument
+		printf "=====================================\n\n"
+	elif [ $# -eq 1 ]; then
+		printf "\n=====================================\n"
+		printf "Command:\t\033[1;32m%s\033[0m\n" "$1" # Green color for command
+		printf "=====================================\n\n"
+	else
+		echo "Invalid input"
+	fi
 }
 
 # check: size memory usage
@@ -402,7 +425,6 @@ c_ipvnat() {
 
 # check: error journalctl
 c_jurnalerr() {
-
 	echo -n '\e[1;32mJournal Errors:\e[0m ' | pv -qL 10 && journalctl -b -p err | ccze -A
 }
 
@@ -410,28 +432,22 @@ c_jurnalerr() {
 c_summary() {
 	printf "
 \t\e[1;32mc_\e[0m       -> checking
-\t\e[1;32md_\e[0m       -> download
-\t\e[1;32mr_\e[0m       -> run task
-\t\e[1;32mps_\e[0m      -> ps tree
-\t\e[1;32mw_\e[0m       -> watch
-\t\e[1;32mfz_\e[0m      -> fzf
-\t\e[1;32myarn_\e[0m    -> yarn
-\t\e[1;32mnpm_\e[0m     -> npm
-\t\e[1;32mpip_\e[0m     -> pip (python)
-\t\e[1;32mpipenv_\e[0m  -> pipenv (python)
-\t\e[1;32mdoc_\e[0m     -> docker\n\n"
+\t\e[1;32mdoc_\e[0m     -> docker
+\t\e[1;32mgpg_\e[0m     -> gpg
+\t\e[1;32mps_\e[0m      -> ps
+\t\e[1;32mr_\e[0m       -> run..
+
+\t\e[1;32mpr_\e[0m      -> yarn (command programming; pr_pip, pr_yarn, ...\n\n"
 }
 
 # ╭──────────────────────────────────────────────────────────╮
-# │                        RUN SCRIPT                        │
+# │                         RUN                              │
 # ╰──────────────────────────────────────────────────────────╯
 
 # run: fz_ctrlo
 r_fz_ctrlo() {
 	if [[ -f "$HOME/.config/miscxrdb/bin/fz-ctrlo" ]]; then
 		"$HOME/.config/miscxrdb/bin/fz-ctrlo" callme
-	else
-		echo "hmm..you are in tmux mode?"
 	fi
 }
 
@@ -450,8 +466,8 @@ r_ytmp3() {
 	tsp youtube-dl --extract-audio --audio-format mp3 "$1"
 }
 
-# run: hapus file all <$1>
-r_hapus() {
+# run: hapus all current items all <$1>
+r_rm_all() {
 	find "$1" -type f -name "*" -exec shred -v -n 25 -u -z {} \;
 }
 
@@ -582,7 +598,7 @@ r_log_with_multitail() {
 }
 
 # run: log af
-r_logs() {
+r_logs_preview() {
 	echo -e "\nit will take some time..\n"
 	sudo find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f
 }
@@ -677,24 +693,24 @@ r_create_sshkeygen() {
 }
 
 # run: remove comment of the file <$YOUR_FILE>
-r_uncommentfile() {
+r_rm_uncommentfile() {
 	sudo cat "$1" | sed '/^#.*$/d;/^;.*$/d'
 }
 
 # run: create minimal tmux pane split
-r_iide() {
-	# check if tmux ses exists
-	printf "..launch ide: "
-	if [ -n "$TMUX" ]; then
-		tmux split-window -v -p 34
-		tmux split-window -h -p 66
-		tmux split-window -h -p 34
-		tmux rename-window 'ide'
-		echo "Done"
-	else
-		echo "Tmux session off !!"
-	fi
-}
+# r_iide() {
+# 	# check if tmux ses exists
+# 	printf "..launch ide: "
+# 	if [ -n "$TMUX" ]; then
+# 		tmux split-window -v -p 34
+# 		tmux split-window -h -p 66
+# 		tmux split-window -h -p 34
+# 		tmux rename-window 'ide'
+# 		echo "Done"
+# 	else
+# 		echo "Tmux session off !!"
+# 	fi
+# }
 
 # run: kill pid
 r_kill() {
@@ -738,77 +754,79 @@ r_mpv() {
 	fi
 }
 
+# PS TREE
+
 # ps: tree ls system try
-ps_ls() {
-	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		echo "$PROC_ID_ORIGIN"
-	fi
-}
-
-# ps: ls system try
-ps_ls_all() {
-	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		echo "$PROC_ID_ORIGIN"
-	fi
-}
-
-# ps: check: with top command info selected
-ps_i() {
-	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		top -p "$PROC_ID"
-	fi
-}
-
-# ps: check: with top all command
-ps_info_all() {
-	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		top -p "$PROC_ID"
-	fi
-}
-
-# ps: tree
-ps_tree() {
-	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		pstree -p "$PROC_ID"
-	fi
-}
-
-# ps: tree all
-ps_tree_all() {
-	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		pstree -p "$PROC_ID"
-	fi
-}
-
-# ps: kill
-ps_kill() {
-	PROC_ID_ORIGIN=$(ps -alf | grcat fps.grc | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		kill -9 "$PROC_ID"
-	fi
-}
-
-# ps: kill
-ps_kill_all() {
-	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-		kill -9 "$PROC_ID"
-	fi
-}
+# ps_ls() {
+# 	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		echo "$PROC_ID_ORIGIN"
+# 	fi
+# }
+#
+# # ps: ls system try
+# ps_ls_all() {
+# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		echo "$PROC_ID_ORIGIN"
+# 	fi
+# }
+#
+# # ps: check: with top command info selected
+# ps_i() {
+# 	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		top -p "$PROC_ID"
+# 	fi
+# }
+#
+# # ps: check: with top all command
+# ps_info_all() {
+# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		top -p "$PROC_ID"
+# 	fi
+# }
+#
+# # ps: tree
+# ps_tree() {
+# 	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		pstree -p "$PROC_ID"
+# 	fi
+# }
+#
+# # ps: tree all
+# ps_tree_all() {
+# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		pstree -p "$PROC_ID"
+# 	fi
+# }
+#
+# # ps: kill
+# ps_kill() {
+# 	PROC_ID_ORIGIN=$(ps -alf | grcat fps.grc | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		kill -9 "$PROC_ID"
+# 	fi
+# }
+#
+# # ps: kill
+# ps_kill_all() {
+# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
+# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+# 		kill -9 "$PROC_ID"
+# 	fi
+# }
 
 # alias py_pipl="pip list --format=columns"
 # alias py_pips="pip show"
@@ -831,7 +849,7 @@ ps_kill_all() {
 # ╰──────────────────────────────────────────────────────────╯
 
 # ╞══════════════════════════════════════════════════════════╡
-#   Docker image
+#   Docker Image
 # ╞══════════════════════════════════════════════════════════╡
 
 # docker: image: show list images
@@ -1104,6 +1122,216 @@ doc_comp_rm() {
 	docker-compose run --rm
 }
 
+# ╞══════════════════════════════════════════════════════════╡
+#   Transmission (torrent)
+# ╞══════════════════════════════════════════════════════════╡
+
+# tsm: torrent transmission-remote -l
+tsm_ls() {
+	transmission-remote -l
+}
+
+# tsm: torrent transmission-remote alt speed enable
+tsm_altspeedenable() {
+	transmission-remote --alt-speed
+}
+
+# tsm: torrent transmission-remote alt speed disable
+tsm_noaltspeedenable() {
+	transmission-remote --no-alt-speed
+}
+
+# tsm: torrent transmission-remote add torrent links <$1>
+tsm_add() {
+	transmission-remote -a "$1"
+}
+
+# tsm: torrent transmission-remote pause with ID <$1>
+tsm_pause() {
+	transmission-remote -t "$1" --stop
+}
+
+# tsm: transmission-remote start with ID <$1>
+tsm_start() {
+	transmission-remote -t "$1" --start
+}
+
+# tsm: run transmission-daemon
+tsm_running() {
+	transmission-daemon
+}
+
+# tsm: transmission-remote will remove torrent and data also
+tsm_purge() {
+	transmission-remote -t "$1" --remove-and-delete
+}
+
+# tsm: transmission-remote remove, remove torrent but not the data
+tsm_rm() {
+	chosen=$(
+		transmission-remote -l | tail -n +2 >/tmp/test
+		sed -i '$ d' /tmp/test
+		cat /tmp/test | fzf-tmux -p 80% | xargs | cut -d" " -f1
+	)
+	if [ -n "$chosen" ]; then
+		transmission-remote -t "$chosen" -r
+	fi
+
+	rm /tmp/test
+}
+
+# tsm: transmission-remote info with ID <$1>
+tsm_i() {
+	transmission-remote -t "$1" -i
+}
+
+# ╭──────────────────────────────────────────────────────────╮
+# │                          GPG                             │
+# ╰──────────────────────────────────────────────────────────╯
+
+__fzf_gpg() {
+	keys=""
+	while IFS= read -r line; do
+		if [[ $line == pub* ]]; then
+			date_created=$(echo "$line" | cut -d" " -f5)
+		elif [[ $line == " "* ]]; then
+			pub_key=$(echo "$line" | cut -d" " -f1- | xargs)
+		elif [[ $line == uid* ]]; then
+			uid=$(echo "$line" | xargs | cut -d"]" -f2 | xargs)
+		elif [[ $line == sub* ]]; then
+			expire_date=$(echo "$line" | cut -d":" -f2 | xargs | sed 's/[]]//g')
+			keys+="UID: $uid | PubKey: $pub_key | Created: $date_created | Expired: $expire_date"$'\n'
+		fi
+	done < <(gpg --list-keys)
+	# echo "$keys"
+
+	# Memfilter ID kunci, tanggal dibuat, tanggal kedaluwarsa, nama ID, dan UID menggunakan fzf
+	selected_key=$(echo "$keys" | fzf)
+
+	[[ -z $selected_key ]] && exit 1
+	selected_key_id=$(echo "$selected_key" | sed 's/.*PubKey: \([^ ]*\) .*/\1/')
+	echo "$selected_key_id"
+}
+
+# gpg: show list key, can use `--all`
+gpg_ls() {
+	if [ -n "$1" ]; then
+		if [ "$1" = "--all" ]; then
+			__output_cmd "gpg --list-secret-keys"
+			gpg --list-secret-keys
+		else
+			__output_cmd "gpg --list-secret-keys"
+		fi
+	else
+		__output_cmd "gpg --list-keys" "--all" "'gpg_ls --all'"
+		gpg --list-keys
+	fi
+}
+
+# gpg: generate gen key
+gpg_generate_key() {
+	__output_cmd "gpg --gen-key"
+	gpg --gen-key
+}
+
+# gpg: export/create pubkey
+gpg_export_pubkey() {
+	if [ -n "$1" ]; then
+		key_id=$(__fzf_gpg)
+		if [ -n "$key_id" ]; then
+			__output_cmd "gpg --export -a <keyID> > key.pub"
+			gpg --export -a "$key_id" >"$1"
+			# Dengan key.pub, kamu bisa share ke PC lain
+			# atau berbagi dengan teman
+			echo -e "..done $1\n"
+		fi
+	else
+		echo -e "\nwrong input!"
+		__output_cmd "Example: gpg_export_pubkey <nama_file.pub>"
+	fi
+}
+
+# gpg: export/create secret key
+gpg_export_secretkey() {
+	if [ -n "$1" ]; then
+		key_id=$(__fzf_gpg)
+		if [ -n "$key_id" ]; then
+			__output_cmd "gpg --export-secret-keys -a <keyID> > key.asc"
+			gpg --export-secret-keys -a "$key_id" >"$1"
+			# Dengan key.asc, jangan share ke PC lain,
+			# simpan dan aman kan
+			echo -e "..done $1\n"
+		fi
+	else
+		echo -e "\nwrong input!"
+		__output_cmd "Example: gpg_export_secretkey <nama_file.asc>"
+	fi
+}
+
+# gpg: cara import key, baik secretkey or pubkey
+gpg_import_key() {
+	if [ -n "$1" ]; then
+		__output_cmd "gpg --import <key.pub_or_key.asc>"
+		gpg --import "$1"
+		echo -e "..done $1\n"
+	else
+		echo -e "\nwrong input!"
+		__output_cmd "Example: gpg_import_key <key.pub_or_key.asc>"
+	fi
+}
+
+# gpg: delete/remove public key tetapi secret key masih disimpan
+gpg_rm_public_key() {
+	key_id=$(__fzf_gpg)
+	if [ -n "$key_id" ]; then
+		__output_cmd "gpg --delete-key <key_id>"
+		gpg --delete-key "$key_id"
+	fi
+}
+
+# gpg: delete/remove secret key nya
+gpg_rm_secret_key() {
+	key_id=$(__fzf_gpg)
+	if [ -n "$key_id" ]; then
+		__output_cmd "gpg --delete-secret-keys <key_id>"
+		gpg --delete-secret-keys "$key_id"
+	fi
+}
+
+# gpg: encrpyt file or folder
+gpg_encrypt_data() {
+	if [ -n "$1" ]; then
+		key_id=$(__fzf_gpg)
+		if [ -n "$key_id" ]; then
+			__output_cmd "gpg -e -r <key_pub> <file_name_or_folder>"
+			gpg -e -r "$key_id" "$1"
+			echo -e "..encrypt done: $1.gpg\n"
+		fi
+	else
+		echo -e "\ninvalid input"
+		__output_cmd "gpg_encrypt_data <file_name_or_folder>"
+	fi
+}
+
+# gpg: decript file or folder
+gpg_decript_data() {
+	if [ -n "$1" ]; then
+		key_id=$(__fzf_gpg)
+		if [ -n "$key_id" ]; then
+			gpg -d -r "$key_id" "$1"
+		fi
+	fi
+}
+
+# gpg: change password key PUB
+gpg_change_pass() {
+	key_id=$(__fzf_gpg)
+	if [ -n "$key_id" ]; then
+		__output_cmd "gpg --passwd <keyID>"
+		gpg --passwd "$key_id"
+	fi
+}
+
 # ╭──────────────────────────────────────────────────────────╮
 # │                   COMMAND PROGRAMMING                    │
 # ╰──────────────────────────────────────────────────────────╯
@@ -1278,12 +1506,6 @@ pr_pipenv_exit() {
 	exit
 }
 
-# pipenv: enter virtualenvs base on pipenv path
-# pipenv_r_source_active() {
-# 	source "$(pipenv --venv)/bin/activate"
-# 	# pipenv shell
-# }
-
 # pipenv: create virtualenvs with pipenv
 pr_pipenv_shell() {
 	pipenv shell
@@ -1293,65 +1515,6 @@ pr_pipenv_shell() {
 # pipenv: remove or delete current virtualenvs
 pr_pipenv_del() {
 	pipenv --rm
-}
-
-# tsm: torrent transmission-remote -l
-tsm_ls() {
-	transmission-remote -l
-}
-
-# tsm: torrent transmission-remote alt speed enable
-tsm_altspeedenable() {
-	transmission-remote --alt-speed
-}
-
-# tsm: torrent transmission-remote alt speed disable
-tsm_noaltspeedenable() {
-	transmission-remote --no-alt-speed
-}
-
-# tsm: torrent transmission-remote add torrent links <$1>
-tsm_add() {
-	transmission-remote -a "$1"
-}
-
-# tsm: torrent transmission-remote pause with ID <$1>
-tsm_pause() {
-	transmission-remote -t "$1" --stop
-}
-
-# tsm: transmission-remote start with ID <$1>
-tsm_start() {
-	transmission-remote -t "$1" --start
-}
-
-# tsm: run transmission-daemon
-tsm_running() {
-	transmission-daemon
-}
-
-# tsm: transmission-remote will remove torrent and data also
-tsm_purge() {
-	transmission-remote -t "$1" --remove-and-delete
-}
-
-# tsm: transmission-remote remove, remove torrent but not the data
-tsm_remove() {
-	chosen=$(
-		transmission-remote -l | tail -n +2 >/tmp/test
-		sed -i '$ d' /tmp/test
-		cat /tmp/test | fzf-tmux -p 80% | xargs | cut -d" " -f1
-	)
-	if [ -n "$chosen" ]; then
-		transmission-remote -t "$chosen" -r
-	fi
-
-	rm /tmp/test
-}
-
-# tsm: transmission-remote info with ID <$1>
-tsm_i() {
-	transmission-remote -t "$1" -i
 }
 
 # vim: set ft=sh:

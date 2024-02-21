@@ -51,6 +51,7 @@ if type fzf >/dev/null 2>&1; then
 		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 		wezterm cli activate-pane-direction Left
 	else
+		dunstify "gelo"
 		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'FzOpen: ')"
 	fi
 
@@ -238,59 +239,63 @@ if [ "$entry" ]; then
 		fi
 		;;
 	*pdf*)
-		pane_id_right=$(wezterm cli get-pane-direction right)
-		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
-		wezterm cli activate-pane-direction Up
+		if not_in_tmux; then
+			pane_id_right=$(wezterm cli get-pane-direction right)
+			wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+			wezterm cli activate-pane-direction Up
 
-		# entry="$(eval "$entry" | fzf --no-height -m --prompt 'FzOpen: ')"}
-		select_open="$(printf "Open\nConvert To Text" | fzf --no-height -m --prompt 'FzOpen: ')"
+			# entry="$(eval "$entry" | fzf --no-height -m --prompt 'FzOpen: ')"}
+			select_open="$(printf "Open\nConvert To Text" | fzf --no-height -m --prompt 'FzOpen: ')"
 
-		if [ -n "$select_open" ]; then
+			if [ -n "$select_open" ]; then
 
-			if [ "$select_open" = "Open" ]; then
-				handle_pdf "${entry}"
-				wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-				wezterm cli activate-pane-direction Left
-				exit 1
-			else
-				tmp_pdf="/tmp/pdf_dump.txt"
+				if [ "$select_open" = "Open" ]; then
+					handle_pdf "${entry}"
+					wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+					wezterm cli activate-pane-direction Left
+					exit 1
+				else
+					tmp_pdf="/tmp/pdf_dump.txt"
 
-				# install: `apt install ghostcript`
-				gs -sDEVICE=txtwrite -o $tmp_pdf "${entry}"
+					# install: `apt install ghostcript`
+					gs -sDEVICE=txtwrite -o $tmp_pdf "${entry}"
 
-				# git: `https://github.com/VikParuchuri/marker`
-				# convert_single.py $tmp_pdf "${entry}" --parallel_factor 2 --max_pages 20
+					# git: `https://github.com/VikParuchuri/marker`
+					# convert_single.py $tmp_pdf "${entry}" --parallel_factor 2 --max_pages 20
 
-				wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-				wezterm cli activate-pane-direction Left
+					wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+					wezterm cli activate-pane-direction Left
 
-				if [ -f "$tmp_pdf" ]; then
-					pane_id=$(wezterm cli get-pane-direction right)
-					if [ -z "${pane_id}" ]; then
-						pane_id=$(wezterm cli split-pane --right --percent 85)
+					if [ -f "$tmp_pdf" ]; then
+						pane_id=$(wezterm cli get-pane-direction right)
+						if [ -z "${pane_id}" ]; then
+							pane_id=$(wezterm cli split-pane --right --percent 85)
+						fi
+
+						program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+
+						if [ "$program" = "nvim" ]; then
+							dunstify "Load the file: $tmp_pdf"
+							# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+							echo ":e ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+						else
+							dunstify "gila"
+							echo "nvim ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+						fi
+
+						wezterm cli activate-pane-direction --pane-id "$pane_id" right
 					fi
-
-					program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
-
-					if [ "$program" = "nvim" ]; then
-						dunstify "Load the file: $tmp_pdf"
-						# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-						echo ":e ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-					else
-						dunstify "gila"
-						echo "nvim ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-					fi
-
-					wezterm cli activate-pane-direction --pane-id "$pane_id" right
+					exit 1
 				fi
-
-				exit 1
 			fi
+
+			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+			wezterm cli activate-pane-direction Left
+		else
+			dunstify "mantap"
 		fi
 
-		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-		wezterm cli activate-pane-direction Left
-
+		dunstify "gila"
 		exit 1
 		;;
 

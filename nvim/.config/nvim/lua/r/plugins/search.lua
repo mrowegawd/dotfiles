@@ -4,7 +4,7 @@ local Util = require "r.utils"
 
 local Icon = require("r.config").icons
 
-local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --max-columns=4096 -e "
+local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 

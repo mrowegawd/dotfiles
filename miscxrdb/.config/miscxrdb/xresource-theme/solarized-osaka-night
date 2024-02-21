@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! TokyoNight colors for Xresources
 
 *background: #001419
@@ -29,7 +30,7 @@
 
 # color sebagai main separator dan second separator
 *color17: #424c00
-*color18: #095264
+*color18: #002e39
 
 # color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
 *color19: #001216
@@ -37,4 +38,11 @@
 *color21: #6d1816
 
 # color FZF: sebagai fzf_selection_bg
-*color22: #29a298
+*color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*color23: #000a0c
+
+# color TMUX: sebagai main window dan second window
+*color24: #001419
+*color25: #001216

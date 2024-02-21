@@ -11,6 +11,7 @@ local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
 local general_overrides = function()
   Highlight.all {
     { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+    { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = "NONE" } },
     { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
@@ -174,7 +175,7 @@ local general_overrides = function()
     { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
     { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
 
-    { PmenuSel = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "yellow" } },
+    { PmenuSel = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "white" } },
     { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck disable=SC1090,SC1091
-. "$(dirname "$0")"/.nnn-plugin-helper
+# . "$(dirname "$0")"/.nnn-plugin-helper
 
 . "$HOME/.config/miscxrdb/fzf/fzf.config"
 
@@ -21,6 +21,7 @@ case "$XDG_SESSION_DESKTOP" in
 "bspwm")
 	bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
 		st -c "$get_target_path"
+	exit 0
 	;;
 *) echo "none" ;;
 esac

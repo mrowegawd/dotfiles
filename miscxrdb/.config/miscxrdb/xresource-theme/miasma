@@ -54,4 +54,11 @@ URxvt.colorUL:  #5f875f
 *.color21: #616158
 
 # color FZF: sebagai fzf_selection_bg
-*.color22: #78834b
+*.color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*.color23: #111111
+
+# color TMUX: sebagai main window dan second window
+*.color24: #222222
+*.color25: #1e1e1e

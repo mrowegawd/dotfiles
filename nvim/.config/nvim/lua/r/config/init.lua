@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "catppuccin-mocha"
+local colorscheme = "tokyonight-storm"
 
 if Util.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"

@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! vscode dark .Xresources
 
 *.foreground: #cccccc
@@ -25,16 +26,23 @@
 # -----------------------------
 
 # color mode, sebagai main color
-*color16: #447cab
+*.color16: #447cab
 
 # color sebagai main separator dan second separator
-*color17: #2b4e6b
-*color18: #373737
+*.color17: #2b4e6b
+*.color18: #373737
 
 # color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
-*color19: #1b1b1b
-*color20: #999999
-*color21: #7c2824
+*.color19: #1b1b1b
+*.color20: #999999
+*.color21: #7c2824
 
 # color FZF: sebagai fzf_selection_bg
-*color22: #569cd6
+*.color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*.color23: #0f0f0f
+
+# color TMUX: sebagai main window dan second window
+*.color24: #1f1f1f
+*.color25: #1b1b1b

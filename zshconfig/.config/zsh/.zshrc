@@ -104,6 +104,12 @@ zstyle ':completion:*' verbose yes
 zstyle ':completion:*' expand suffix
 zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' list-suffixes true
+
+# disable sort when completing options of any command
+zstyle ':completion:complete:*:options' sort false
+# zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:*' fzf-min-height 60
+
 # Make completion:
 # (stolen from Wincent)
 # - Try exact (case-sensitive) match first.

@@ -50,4 +50,7 @@
 *color21: #794554
 
 # color FZF: sebagai fzf_selection_bg
-*color22: #ffff00
+*color22: #ffffff
+
+# color TMUX: sebagai main separator bg
+*color23: #0f0f17
