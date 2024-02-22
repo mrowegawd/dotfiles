@@ -5,14 +5,14 @@ return {
       "sontungexpt/url-open",
       cmd = "URLOpenUnderCursor",
       opts = {},
-      keys = {
-        {
-          "<Leader>oo",
-          "<CMD>URLOpenUnderCursor<CR>",
-          mode = { "n", "v" },
-          desc = "Misc: open on browser",
-        },
-      },
+      -- keys = {
+      --   {
+      --     "<Leader>oo",
+      --     "<CMD>URLOpenUnderCursor<CR>",
+      --     mode = { "n", "v" },
+      --     desc = "Misc: open on browser",
+      --   },
+      -- },
     },
   },
 
