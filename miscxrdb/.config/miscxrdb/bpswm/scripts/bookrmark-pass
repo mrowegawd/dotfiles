@@ -1,29 +1,24 @@
 #!/bin/bash
 
-MENU="dmenu"
+# MENU="dmenu"
 FILE_BOOKMARKED="$HOME/Dropbox/neorg/orgmode/bookmarks/urls.org"
 
 ROFI_DIR="$HOME/.config/rofi/menu"
 ROFI_THEME="styles/snippets"
 ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME"
 
-MENU_FONT="SF Mono 24"
-TERMC="st"
+# MENU_FONT="SF Mono 24"
+# TERMC="st"
 
 [ ! -f "$FILE_BOOKMARKED" ] && dunstify "file $FILE_BOOKMARKED not found" && exit
 
-OPTIONS="
-[
-${FILEOPT}
-[ \"Open:Bookmarked\", \"\" ],
-[ \"Open:Pass\",  \"\" ],
-[ \"Edit:Bookmarked\",  \"\" ]
-]
-"
+OPTIONS="Open:Bookmarked\nOpen:Pass\nEdit:Bookmarked"
 
-OBJ_LENGTH=$(echo "$OPTIONS" | jq length)
-OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | $MENU -i -p " WebSearch:" -fn "$MENU_FONT")
-OBJ_SELECTED=$(echo "$OBJ_MENU" | cut -d' ' -f1)
+# OBJ_LENGTH=$(echo "$OPTIONS" | jq length)
+# OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | $ROFI_COMMAND -dmenu -i -p " WebSearch:" -fn "$MENU_FONT")
+OBJ_MENU=$(echo -e "$OPTIONS" | $ROFI_COMMAND -dmenu -sorting-method fzf -p " WebSearch:")
+
+OBJ_SELECTED=$(echo "$OBJ_MENU" | xargs)
 
 open_bookmarked() {
 	SELECTIONOPS=$(
@@ -45,7 +40,7 @@ edit_bookmarked() {
 	case "$XDG_SESSION_DESKTOP" in
 	"bspwm")
 		bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
-			kitty -e bash -c "/usr/local/bin/nvim $FILE_BOOKMARKED"
+			st -e bash -c "/usr/local/bin/nvim $FILE_BOOKMARKED"
 		;;
 	*)
 		dunstify "cannot edit bookmarks, OS $XDG_SESSION_DESKTOP not implemented yet?"
@@ -271,30 +266,26 @@ Categories=GNOME;GTK;System;
 }
 
 main() {
-	for i in $(seq 0 $((OBJ_LENGTH - 1))); do
+	if [ "$OBJ_SELECTED" = "Open:Bookmarked" ]; then
+		open_bookmarked
+	fi
 
-		if [ "$OBJ_SELECTED" = "Open:Bookmarked" ]; then
-			open_bookmarked
-		fi
+	# if [ "$OBJ_SELECTED" = "Delete:Query" ]; then
+	# 	delete_query "DMENU" "$FILE"
+	# fi
 
-		if [ "$OBJ_SELECTED" = "Delete:Query" ]; then
-			delete_query "DMENU" "$FILE"
-		fi
+	# if [ "$OBJ_SELECTED" = "Delete:Bookmarked" ]; then
+	# 	delete_query "ROFI" "$FILE_BOOKMARKED"
+	# fi
 
-		# if [ "$OBJ_SELECTED" = "Delete:Bookmarked" ]; then
-		# 	delete_query "ROFI" "$FILE_BOOKMARKED"
-		# fi
+	if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
+		edit_bookmarked
+	fi
 
-		if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
-			edit_bookmarked
-		fi
+	if [ "$OBJ_SELECTED" = "Open:Pass" ]; then
+		open_pass ""
+	fi
 
-		if [ "$OBJ_SELECTED" = "Open:Pass" ]; then
-			open_pass ""
-		fi
-
-		echo "$i"
-	done
 }
 
 main
