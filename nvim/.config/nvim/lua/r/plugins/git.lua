@@ -77,7 +77,7 @@ return {
     "pwntester/octo.nvim",
     cmd = "Octo",
     opts = {
-      picker = "telescope",
+      picker = "fzf-lua",
       picker_config = {
         mappings = {
           -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
@@ -224,6 +224,9 @@ return {
       },
       on_attach = function()
         require("r.keymaps.git").gitsigns()
+        if vim.bo.ft == "markdown" then
+          return false
+        end
       end,
     },
   },
@@ -312,8 +315,8 @@ return {
           },
           file_panel = {
 
-            ["<c-d>"] = actions.scroll_view(0.25), -- Scroll the view down
-            ["<c-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
+            ["<a-d>"] = actions.scroll_view(0.25), -- Scroll the view down
+            ["<a-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
 
             ["j"] = actions.next_entry,
             ["k"] = actions.prev_entry,
@@ -351,8 +354,8 @@ return {
           file_history_panel = {
             ["?"] = actions.options, -- Open the option panel
 
-            ["<c-d>"] = actions.scroll_view(0.25), -- Scroll the view down
-            ["<c-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
+            ["<a-d>"] = actions.scroll_view(0.25), -- Scroll the view down
+            ["<a-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
 
             ["zR"] = actions.open_all_folds,
             ["zM"] = actions.close_all_folds,

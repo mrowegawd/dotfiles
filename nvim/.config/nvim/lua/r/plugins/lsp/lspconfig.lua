@@ -8,7 +8,6 @@ return {
   -- MASON NVIM
   {
     "williamboman/mason.nvim",
-    cmd = "Mason",
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
@@ -55,7 +54,6 @@ return {
       },
       ui = { border = Icons.border.line, height = 0.8 },
     },
-
     config = function(_, opts)
       require("mason").setup(opts)
       local mr = require "mason-registry"
@@ -630,12 +628,12 @@ return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   CMAKE                                                  │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- CMAKE-TOOLS
-  {
-    "civitasv/cmake-tools.nvim",
-    event = "LazyFile",
-    opts = {},
-  },
+  -- CMAKE-TOOLS (closed)
+  -- {
+  --   "civitasv/cmake-tools.nvim",
+  --   event = "LazyFile",
+  --   opts = {},
+  -- },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   RUST                                                   │
   --  ╰──────────────────────────────────────────────────────────╯

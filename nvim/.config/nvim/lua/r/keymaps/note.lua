@@ -15,7 +15,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
-      ["rf"] = {
+      ["ro"] = {
         function()
           local note_ext = "norg"
           if vim.bo[0].filetype == "markdown" then

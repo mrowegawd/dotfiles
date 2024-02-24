@@ -125,10 +125,10 @@ return {
       require("ibl").setup(opts)
     end,
   },
-
+  -- NVIM-NOTIFY
   {
     "rcarriga/nvim-notify",
-    -- event = "VeryLazy",
+    event = "VeryLazy",
     -- init = function()
     --   vim.notify = require "notify"
     -- end,
@@ -197,7 +197,7 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    enabled = false,
+    -- enabled = false,
     dependencies = {
       "MunifTanjim/nui.nvim",
     },
@@ -254,7 +254,7 @@ return {
         },
         popupmenu = {
           enabled = true,
-          backend = "nui",
+          backend = "cmp",
         },
         redirect = { view = "popup", filter = { event = "msg_show" } },
         routes = {
@@ -339,7 +339,7 @@ return {
         },
         window = { margin = { vertical = 0, horizontal = 0 } },
         hide = {
-          cursorline = false,
+          cursorline = true,
           focused_win = false,
           only_win = false,
         },

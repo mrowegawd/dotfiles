@@ -33,8 +33,9 @@ Util.map.nnoremap("<Leader>Y", function()
 end, { silent = true, desc = "Misc: yank absolute path" })
 Util.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
 
-Util.map.inoremap("<c-j>", "<Down>", silent)
-Util.map.inoremap("<c-k>", "<Up>", silent)
+-- Util.map.inoremap("<c-j>", "<Down>", silent)
+-- Util.map.inoremap("<c-k>", "<Up>", silent)
+
 Util.map.inoremap("<c-l>", "<Right>", silent)
 Util.map.inoremap("<c-h>", "<Left>", silent)
 
@@ -381,6 +382,14 @@ end
 vim.keymap.set("n", "<ESC>", function()
   cmd.noh()
   killPopups()
+end)
+
+Util.map.nnoremap("<Leader>oo", function()
+  return Util.markdown.followLink(false)
+end)
+
+Util.map.vnoremap("<Leader>oo", function()
+  return Util.markdown.followLink(true)
 end)
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDS                                                 │

@@ -39,24 +39,26 @@
 # -----------------------------
 # -----------------------------
 
-# color mode, sebagai main color
+# MODE color
 *.color16: #776593
 
-# color sebagai main separator dan second separator
+# SEPARATOR: separator_bg, separator_fg
 *.color17: #4a3f5c
 *.color18: #373748
 
-# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+# FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #1b1b24
 *.color20: #a5a18b
-*.color21: #741212
+*.color21: #ffb49d
 
-# color FZF: sebagai fzf_selection_bg
-*.color22: #ffffff
+# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*.color22: #4b4b4b
+*.color23: #ffffe8
+*.color24: #ff7869
 
-# color TMUX: sebagai main separator bg
-*.color23: #0f0f14
+# TMUX: main separator bg
+*.color25: #0f0f14
 
-# color TMUX: sebagai main window dan second window
-*.color24: #1f1f28
-*.color25: #1b1b24
+# TMUX: main window dan second window
+*.color26: #1f1f28
+*.color27: #1b1b24

@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! Copyright (c) 2016-present Sven Greb <development@svengreb.de>
 ! This source code is licensed under the MIT license found in the license file.
 
@@ -44,24 +45,26 @@
 # -----------------------------
 # -----------------------------
 
-# color mode, sebagai main color
+# MODE color
 *.color16: #67809a
 
-# color sebagai main separator dan second separator
+# SEPARATOR: separator_bg, separator_fg
 *.color17: #405060
 *.color18: #525d72
 
-# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+# FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #292e39
 *.color20: #a2a6ae
-*.color21: #5f3035
+*.color21: #ffb49d
 
-# color FZF: sebagai fzf_selection_bg
-*.color22: #ffffff
+# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*.color22: #4b4b4b
+*.color23: #ffffff
+*.color24: #ff7869
 
-# color TMUX: sebagai main separator bg
-*.color23: #171a20
+# TMUX: main separator bg
+*.color25: #171a20
 
-# color TMUX: sebagai main window dan second window
-*.color24: #2e3440
-*.color25: #292e39
+# TMUX: main window dan second window
+*.color26: #2e3440
+*.color27: #292e39

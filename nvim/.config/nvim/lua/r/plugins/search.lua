@@ -5,8 +5,8 @@ local Util = require "r.utils"
 local Icon = require("r.config").icons
 
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
-
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
+-- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
 
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
 local file_picker = function(cwd)
@@ -59,32 +59,36 @@ return {
       -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
     },
   },
+  -- NVIM-RGFLOW
+  {
+    "mangelozzi/nvim-rgflow.lua",
+    opts = {
+      default_trigger_mappings = true,
+      default_ui_mappings = true,
+      cmd_flags = rg_opts,
+      colors = {
+        RgFlowInputPath = { link = "NormalFloat" },
+        RgFlowInputBg = { link = "NormalFloat" },
+        RgFlowHeadLine = { link = "Error" },
+        RgFlowInputFlags = { link = "NormalFloat" },
+        RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
+      },
+    },
+  },
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
+    cmd = "FzfLua",
     dependencies = {
+      "sindrets/diffview.nvim",
       "nvim-tree/nvim-web-devicons",
-      {
-        "mangelozzi/nvim-rgflow.lua",
-        opts = {
-          default_trigger_mappings = true,
-          default_ui_mappings = true,
-          nicmd_flags = rg_opts,
-          colors = {
-            RgFlowInputPath = { link = "NormalFloat" },
-            RgFlowInputBg = { link = "NormalFloat" },
-            RgFlowInputFlags = { link = "NormalFloat" },
-            RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
-          },
-        },
-      },
+      "onsails/lspkind.nvim",
     },
     keys = {
       { "sf", fzf_lua.buffers, desc = "WinNav(fzflua): open" },
       { "sG", fzf_lua.lines, desc = "WinNav(fzflua): live_grep on buffers" },
       { "so", fzf_lua.oldfiles, desc = "WinNav(Fzflua): oldfiles" },
       { "z=", fzf_lua.spell_suggest, desc = "Fzflua: spell suggest" },
-
       { "sg", fzf_lua.blines, desc = "WinNav(fzfLua): live_grep on curbuf" },
       {
         "sg",
@@ -103,7 +107,7 @@ return {
         mode = { "v" },
       },
       { "<Leader>ff", file_picker, desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands" },
+      { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands", mode = "n" },
       { "<Leader>fh", fzf_lua.help_tags, desc = "Fzflua: help tags" },
       {
         "df",
@@ -252,13 +256,20 @@ return {
             },
           }
         end,
-        fzf_opts = {
-          ["--ansi"] = "",
-          ["--info"] = "inline",
-          ["--height"] = "100%",
-          ["--layout"] = "reverse",
-          ["--border"] = "none",
-          ["--no-separator"] = "",
+        fzf_colors = {
+          ["fg"] = { "fg", "CmpItemAbbr" },
+          ["bg"] = { "bg", "NormalFloat" },
+          ["hl"] = { "fg", "CmpItemAbbrMatch" },
+          ["fg+"] = { "fg", "PmenuSel" },
+          ["bg+"] = { "bg", "PmenuSel" },
+          ["hl+"] = { "fg", "CmpItemAbbrMatchFuzzy" },
+          ["info"] = { "fg", "PreProc" },
+          ["prompt"] = { "fg", "Conditional" },
+          ["pointer"] = { "fg", "CmpItemAbbrMatch" },
+          ["marker"] = { "fg", "Keyword" },
+          ["spinner"] = { "fg", "Label" },
+          ["header"] = { "fg", "Comment" },
+          ["gutter"] = { "bg", "NormalFloat" },
         },
         previewers = {
           builtin = {
@@ -278,68 +289,26 @@ return {
         keymap = {
           builtin = {
             ["<F1>"] = "toggle-help",
-            ["<F3>"] = "toggle-preview",
             ["<F4>"] = "toggle-fullscreen",
-            -- ["<c-w>"] = "toggle-preview-wrap",
-            -- ["<F5>"] = "toggle-preview-ccw",
-            ["<c-j>"] = "toggle-preview-cw",
-            ["<c-k>"] = "toggle-preview-ccw",
+            ["<a-p>"] = "toggle-preview",
+            ["<c-p>"] = "toggle-preview",
             ["<c-d>"] = "preview-page-down",
             ["<c-u>"] = "preview-page-up",
-          },
-          fzf = {
-            -- fzf '--bind=' options
-            ["ctrl-z"] = "abort",
-            ["ctrl-c"] = "abort",
-            -- ["ctrl-u"]      = "unix-line-discard",
-            ["ctrl-f"] = "half-page-down",
-            ["ctrl-b"] = "half-page-up",
-            ["ctrl-a"] = "beginning-of-line",
-            ["ctrl-e"] = "end-of-line",
-            ["alt-a"] = "toggle-all",
-            -- Only valid with fzf previewers (bat/cat/git/etc)
-            ["f3"] = "toggle-preview-wrap",
-            ["f4"] = "toggle-preview",
-            ["ctrl-d"] = "preview-page-down",
-            ["ctrl-u"] = "preview-page-up",
-          },
-        },
-        actions = {
-          files = {
-            -- providers that inherit these actions:
-            --   files, git_files, git_status, grep, lsp
-            --   oldfiles, quickfix, loclist, tags, btags
-            --   args
-            ["default"] = actions.file_edit_or_qf,
-            ["ctrl-s"] = actions.file_split,
-            ["ctrl-v"] = actions.file_vsplit,
-            ["ctrl-t"] = actions.file_tabedit,
-            ["ctrl-q"] = actions.file_sel_to_qf,
-          },
-          buffers = {
-            -- providers that inherit these actions:
-            --   buffers, tabs, lines, blines
-            ["default"] = actions.file_edit_or_qf,
-            ["ctrl-q"] = actions.file_sel_to_qf,
-            ["ctrl-s"] = actions.buf_split,
-            ["ctrl-v"] = actions.buf_vsplit,
-            ["ctrl-t"] = actions.buf_tabedit,
+            ["<a-s>"] = "toggle-sort",
+            ["<a-j>"] = "toggle-preview-cw",
+            ["<a-k>"] = "toggle-preview-ccw",
+            ["<a-l>"] = "toggle-preview-cw",
+            ["<a-h>"] = "toggle-preview-ccw",
           },
         },
         -- PROVIDER SETUP
         files = {
-          -- debug = true, -- jangan lupa: untuk check `rg opt`
+          -- debug = true,
           prompt = "  ",
           cwd_prompt = false,
           winopts = { title = Util.fzflua.format_title("Files", "") },
-          -- winopts = { title = "Files" },
-          -- find_opts = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
-          fzf_opts = {
-            ["--header"] = [[Ctrl-g:'ignore rules',Ctrl-y:'copy',Ctrl-e:'rgflow']],
-          },
+          fzf_opts = { ["--header"] = [[Ctrl-g:'ignore rules',Ctrl-y:'copy',Ctrl-e:'rgflow']] },
           fd_opts = fd_opts,
-          -- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
-          no_header = true, -- disable default header
           actions = {
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
@@ -370,7 +339,6 @@ return {
                 end,
               })
             end,
-
             ["ctrl-y"] = function(selected, _)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
               local pth = selected[1]:sub(slice_num_str)
@@ -380,43 +348,6 @@ return {
 
               require("fzf-lua").actions.resume()
             end,
-            -- ["ctrl-x"] = function(_, args)
-            --   if args.cmd:find "--hidden" then
-            --     args.cmd = args.cmd:gsub("--hidden", "", 1)
-            --     if args.cmd:find "--no-ignore" then
-            --       args.cmd = args.cmd:gsub("--no-ignore", "", 1)
-            --     end
-            --   else
-            --     args.cmd = args.cmd .. " --hidden --no-ignore"
-            --   end
-            --
-            --   fzf_lua.files {
-            --     cmd = args.cmd,
-            --     winopts = { title = Util.fzflua.format_title("Files hidden", "󰈙") },
-            --   }
-            -- end,
-            -- ["ctrl-g"] = function(_, args)
-            --   if args.cmd:find "--type f" then
-            --     args.cmd = args.cmd:gsub("--type f", "", 1)
-            --     args.cmd:gsub("%s*\\*$", "")
-            --     args.cmd = args.cmd .. " --type d"
-            --     args.winopts = {
-            --       preview = { hidden = "hidden" },
-            --       title = Util.fzflua.format_title("Grep on directory", ""),
-            --     }
-            --   elseif args.cmd:find "--type d" then
-            --     args.cmd = args.cmd:gsub("--type d", "", 1)
-            --     args.cmd:gsub("%s*\\*$", "")
-            --     args.cmd = args.cmd .. " --type f"
-            --     args.winopts = {
-            --       preview = { hidden = "nohidden" },
-            --     }
-            --   end
-            --   fzf_lua.files {
-            --     cmd = args.cmd,
-            --     winopts = args.winopts,
-            --   }
-            -- end,
           },
         },
         git = {
@@ -445,7 +376,7 @@ return {
           commits = {
             prompt = "  ",
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
-            cmd = "git log --color --pretty=format:'%C(black)%h%Creset "
+            cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = Util.fzflua.format_title("", "Commits") },
@@ -505,7 +436,7 @@ return {
             prompt = "  ",
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            cmd = "git log --color --pretty=format:'%C(black)%h%Creset "
+            cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = Util.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
@@ -605,11 +536,10 @@ return {
           },
         },
         grep = {
-          -- debug = true, -- jangan lupa: untuk check `rg opt`, use debug
+          -- debug = true,
           prompt = " ",
-          winopts = { title = Util.fzflua.format_title("Grep", "") },
+          no_header = false, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g:'lgrep',Ctrl-e:'rgflow']] },
           winopts_fn = function()
             local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.8)
             local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
@@ -626,11 +556,9 @@ return {
               },
             }
           end,
-          no_header = true, -- disable default header
           actions = {
             ["ctrl-g"] = { actions.grep_lgrep },
             ["ctrl-e"] = function(_, args)
-              -- bring up rgflow ui to change rg args.
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -641,77 +569,11 @@ return {
                 end,
               })
             end,
-
-            -- ["ctrl-z"] = function(_, args)
-            --   if args.cmd:find "--fixed-strings" then
-            --     args.cmd = args.cmd:gsub("--fixed-strings", "", 1)
-            --   else
-            --     args.cmd = args.cmd .. " --fixed-strings"
-            --   end
-            --
-            --   local tbl_ops = {
-            --     cmd = args.cmd,
-            --     winopts = { title = Util.fzflua.format_title("Grep match", "") },
-            --   }
-            --
-            --   if args.cwd ~= nil then
-            --     tbl_ops = vim.tbl_deep_extend("force", {}, tbl_ops, { cwd = args.cwd })
-            --   end
-            --   require("fzf-lua").live_grep_glob(tbl_ops)
-            -- end,
-
-            -- ["ctrl-x"] = function(_, args)
-            --   local toggle = 1
-            --
-            --   args.rg_opts =
-            --     "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096"
-            --
-            --   if toggle == 1 then
-            --     args.rg_opts =
-            --       "--column --hidden --no-ignore --no-heading --ignore-case -g !.git --smart-case --color=always --max-columns=4096"
-            --     toggle = 0
-            --   else
-            --     toggle = 1
-            --   end
-            --   fzf_lua.live_grep_glob {
-            --     rg_opts = args.rg_opts,
-            --     winopts = { title = Util.fzflua.format_title("Grep hidden", "") },
-            --   }
-            -- end,
-
-            --             ["ctrl-y"] = function()
-            --               fzf_lua.fzf_exec({}, {
-            --                 fzf_opts = {
-            --                   ["--preview"] = vim.fn.shellescape [[cat <<EOF
-            -- Keybindings:
-            --   TAB           Toggle selection.
-            --   ctrl-q        Grep match.
-            --   ctrl-h        Toggle hidden.
-            --   ctrl-o        Mode files (Fzflua files).
-            --   ctrl-y        Show keybindings
-            --                   ]],
-            --                 },
-            --                 winopts = {
-            --                   title = Util.fzflua.format_title("Grep Show Keybindings", ""),
-            --                   preview = { layout = "horizontal", hoizontal = "right:99%" },
-            --                 },
-            --
-            --                 actions = {
-            --                   ["ctrl-y"] = function()
-            --                     fzf_lua.live_grep_glob()
-            --                   end,
-            --                 },
-            --               })
-            --             end,
-            --             ["ctrl-o"] = function()
-            --               fzf_lua.files {}
-            --             end,
           },
         },
         args = {
           prompt = "  ",
           files_only = true,
-          -- actions inherit from 'actions.files' and merge
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
           },
@@ -726,7 +588,7 @@ return {
           winopts = { title = Util.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = {
-            ["--delimiter"] = "' '",
+            -- ["--delimiter"] = "' '",
             ["--with-nth"] = "-1..",
           },
         },
@@ -751,7 +613,7 @@ return {
           },
           fzf_opts = {
             -- hide tabnr
-            ["--delimiter"] = "'[\\):]'",
+            -- ["--delimiter"] = "'[\\):]'",
             ["--with-nth"] = "2..",
           },
         },
@@ -761,7 +623,7 @@ return {
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
             -- tiebreak by line no.
-            ["--delimiter"] = "'[\\]:]'",
+            -- ["--delimiter"] = "'[\\]:]'",
             ["--nth"] = "2..",
             ["--tiebreak"] = "index",
             ["--tabstop"] = "1",
@@ -788,7 +650,7 @@ return {
           fzf_opts = {
             -- Cara menghilangkan filepath
             -- https://github.com/ibhagwan/fzf-lua/issues/228#issuecomment-983262485
-            ["--delimiter"] = "'[\\]:]'",
+            -- ["--delimiter"] = "[:]",
             ["--with-nth"] = "3..",
             ["--tiebreak"] = "index",
             ["--tabstop"] = "1",
@@ -834,7 +696,7 @@ return {
           rg_opts = "--no-heading --color=always",
           grep_opts = "--color=auto --perl-regexp",
           fzf_opts = {
-            ["--delimiter"] = "'[\\]:]'",
+            -- ["--delimiter"] = "'[\\]:]'",
             ["--with-nth"] = "2..",
             ["--tiebreak"] = "index",
           },
@@ -866,7 +728,7 @@ return {
             symbol_icons = require("r.config").icons.kinds,
             fzf_opts = {
               ["--reverse"] = false,
-              ["--scrollbar"] = "▓",
+              -- ["--scrollbar"] = "▓",
             },
             winopts = {
               title = Util.fzflua.format_title("Symbols", ""),
@@ -903,14 +765,9 @@ return {
           file_icons = true,
           color_icons = true,
           git_icons = false,
-          -- actions inherit from 'actions.files' and merge
           actions = { ["default"] = actions.complete_insert },
-          -- previewer hidden by default
           winopts = { preview = { hidden = "hidden" } },
         },
-        -- commands = {
-        --   debug = true,
-        -- },
       }
     end,
     config = function(_, opts)
@@ -1181,7 +1038,7 @@ return {
               ["<c-f>"] = actions.results_scrolling_up,
               ["<c-b>"] = actions.results_scrolling_down,
 
-              ["<c-l>"] = false,
+              -- ["<c-l>"] = false, -- use `false` to disable mapping
 
               ["<a-a>"] = actions.toggle_all,
 
@@ -1193,8 +1050,11 @@ return {
               ["<c-r>"] = actions.to_fuzzy_refine,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
-              ["<c-j>"] = layout_actions.cycle_layout_next,
-              ["<c-k>"] = layout_actions.cycle_layout_prev,
+              ["<c-l>"] = layout_actions.cycle_layout_next,
+              ["<c-h>"] = layout_actions.cycle_layout_prev,
+
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
 
               ["<F4>"] = layout_actions.cycle_layout_next,
               ["<F3>"] = layout_actions.toggle_preview,

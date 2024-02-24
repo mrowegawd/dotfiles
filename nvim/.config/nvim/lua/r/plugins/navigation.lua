@@ -1,5 +1,3 @@
--- local cmd = vim.cmd
-
 local Highlight = require "r.settings.highlights"
 local Util = require "r.utils"
 local Icons = require("r.config").icons

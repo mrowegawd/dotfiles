@@ -141,7 +141,38 @@ local general_overrides = function()
     { DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" } },
     { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
     { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
-
+    {
+      DiagnosticError = {
+        fg = { from = "DiagnosticSignError", attr = "fg" },
+        bg = { from = "DiagnosticSignError", attr = "fg", alter = -0.7 },
+        italic = true,
+        -- undercurl = false,
+      },
+    },
+    {
+      DiagnosticWarn = {
+        fg = { from = "DiagnosticSignWarn", attr = "fg" },
+        bg = { from = "DiagnosticSignWarn", attr = "fg", alter = -0.7 },
+        italic = true,
+        -- undercurl = false,
+      },
+    },
+    {
+      DiagnosticHint = {
+        fg = { from = "DiagnosticSignHint", attr = "fg" },
+        bg = { from = "DiagnosticSignHint", attr = "fg", alter = -0.7 },
+        italic = true,
+        -- undercurl = false,
+      },
+    },
+    {
+      DiagnosticInfo = {
+        fg = { from = "DiagnosticSignInfo", attr = "fg" },
+        bg = { from = "DiagnosticSignInfo", attr = "fg", alter = -0.7 },
+        italic = true,
+        -- undercurl = false,
+      },
+    },
     -----------------------------------------------------------------------
     -- CREATED HIGHLIGHTS
     -----------------------------------------------------------------------
@@ -172,10 +203,12 @@ local general_overrides = function()
 
     -- CMP ================================================================
     { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = -0.25 }, bg = "NONE" } },
-    { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
-    { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", alter = -0.5 } } },
+    -- { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
+    -- { CmpItemAbbrMatchFuzzy = { fg = "red", bg = "NONE", bold = false } },
+    { CmpItemAbbrMatchFuzzy = { fg = dark_red } },
+    { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
 
-    { PmenuSel = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "white" } },
+    { PmenuSel = { bg = "#4b4b4b", fg = { from = "Normal", attr = "fg", alter = 0.25 } } },
     { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 
@@ -205,7 +238,7 @@ local general_overrides = function()
 
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "NormalFloat" } },
-    { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "NormalFloat", attr = "bg" } } },
+    { FzfLuaBorder = { fg = { from = "WinSeparator" }, bg = { from = "NormalFloat", attr = "bg" } } },
     { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
     { FzfLuaTitleIcon = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
@@ -285,15 +318,18 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["gruvbox-material"] = {
+    ["ayu"] = {
+      { CursorLine = { bg = { from = "Normal", alter = 1 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 }, bg = { from = "Normal", attr = "bg" } } },
       {
         StatusLine = {
-          fg = { from = "ColorColumn", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
           reverse = false,
         },
       },
     },
+    ["gruvbox-material"] = {},
     ["farout"] = {
       { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
       { StatusLine = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },

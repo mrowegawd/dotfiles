@@ -1,0 +1,71 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! Generated with :
+! XRDB2Xreources.py
+!
+*.foreground:  #b3b1ad
+*.background:  #0a0e14
+*.cursorColor: #f29718
+!
+! Black
+*.color0:      #000000
+*.color8:      #323232
+!
+! Red
+*.color1:      #ff3333
+*.color9:      #ff6565
+!
+! Green
+*.color2:      #b8cc52
+*.color10:     #eafe84
+!
+! Yellow
+*.color3:      #e7c547
+*.color11:     #fff779
+!
+! Blue
+*.color4:      #36a3d9
+*.color12:     #68d5ff
+!
+! Magenta
+*.color5:      #f07178
+*.color13:     #ffa3aa
+!
+! Cyan
+*.color6:      #95e6cb
+*.color14:     #c7fffd
+!
+! White
+*.color7:      #ffffff
+*.color15:     #ffffff
+!
+! Bold, Italic, Underline
+*.colorBD:     #e6e1cf
+!*.colorIT:
+!*.colorUL:
+
+# -----------------------------
+# -----------------------------
+
+# MODE color
+*color16: #cc7233
+
+# SEPARATOR: separator_bg, separator_fg
+*color17: #7f4720
+*color18: #121824
+
+# FZF: fzf_bg, fzf_fg, fzf_match,
+*color19: #090c12
+*color20: #868481
+*color21: #ffb49d
+
+# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*color22: #4b4b4b
+*color23: #dfddd8
+*color24: #ff7869
+
+# TMUX: main separator bg
+*color25: #05070a
+
+# TMUX: main window dan second window
+*color26: #0a0e14
+*color27: #090c12

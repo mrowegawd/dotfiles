@@ -24,7 +24,7 @@ opt.completeopt = "menu,menuone,noselect"
 opt.errorbells = false -- disable error bells (no beep/flash)
 opt.visualbell = false
 
-opt.jumpoptions = "stack" -- ketika <c-i> dan <c-o>, lebih enak jump last cursor daripada window
+opt.jumpoptions = "stack" -- mapping jump c-i/o is suck, so I use `stack` mode (agar level insane berkurang diotak)
 opt.cursorline = true
 opt.inccommand = "split"
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
@@ -166,7 +166,24 @@ opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 -- this gets overwritten by ftplugins (:verb set fo)
 -- we use autocmd to remove 'o' in '/lua/autocmd.lua'
 -- [comments borrowed from tjdevries]
-opt.formatoptions = "jtcqln" -- tcqj
+-- opt.formatoptions = "jtcqln" -- tcqj
+opt.formatoptions = {
+  ["1"] = false,
+  ["2"] = false, -- Use indent from 2nd line of a paragraph
+  a = false, -- Auto formatting is BAD.
+  q = true, -- continue comments with gq"
+  c = false, -- Auto-wrap comments using textwidth
+  r = false, -- Continue comments when pressing Enter
+  o = false, -- Automatically insert the current comment leader after hitting 'o' or 'O'
+  n = true, -- Recognize numbered lists
+  t = false, -- autowrap lines using text width value
+  j = true, -- remove a comment leader when joining lines.
+  -- Only break if the line was not longer than 'textwidth' when the insert
+  -- started and only at a white character that has been entered during the
+  -- current insert command.
+  l = false,
+  v = false,
+}
 
 opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
@@ -176,11 +193,11 @@ opt.equalalways = false -- New vim windows created won't make everything back to
 -- folds {{{1
 -----------------------------------------------------------------------------//
 opt.fillchars = {
-  eob = " ", -- suppress ~ at endofbuffer
+  -- eob = " ", -- suppress ~ at endofbuffer
   diff = " ", -- alternatives = ⣿ ░ ╱
-  msgsep = " ", -- alternatives: ‾ ─
-  -- fold = " ",
+  -- msgsep = " ", -- alternatives: ‾ ─
   --
+  fold = " ",
   vert = "¦", -- "┃",
   horiz = "-",
   foldopen = "", -- '▼'
@@ -285,14 +302,13 @@ opt.emoji = false
 -- use in vertical diff mode, blank lines to keep sides aligned, ignore whitespace changes
 opt.diffopt = opt.diffopt
   + {
-    -- "vertical",
-    -- "iwhite",
-    -- "hiddenoff",
-    -- "foldcolumn:0",
-    -- "context:4",
-    "algorithm:histogram",
-    -- "indent-heuristic",
-    -- "linematch:60",
+    "vertical",
+    "iwhite",
+    "hiddenoff",
+    "foldcolumn:0",
+    "context:1000000",
+    "algorithm:histogram", -- "algorithm:patience"
+    "indent-heuristic",
   }
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 
@@ -337,8 +353,8 @@ vim.g.loaded_python3_provider = 0
 
 -- vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
 
-package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
-package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
+-- package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
+-- package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
 
 -- vim.g.nvim_tree_disable_netrw = 0
 -- vim.g.nvim_tree_hijack_netrw = 0

@@ -37,31 +37,20 @@ else
 
 		if [ -n "$select" ]; then
 			# we select directory not a file
-			if [ ! -f "$select" ]; then
-
-				nnn "$select"
-
-			else
-				dunstify "[warn] this not folder??"
-				exit 1
-			fi
+			nnn "$select"
 		fi
+		exit 1
 	else
 		select=$(cat "$cwd" | fzf-tmux --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
 			--preview-window right:50%:hidden -xC -w '60%' -h '50%' \
 			--prompt "Jump to> ")
 
 		if [ -n "$select" ]; then
-			if [ ! -f "$select" ]; then
-				nnn "$select"
-			else
-				dunstify "[warn] this not folder??"
-				exit 1
-			fi
-
+			nnn "$select"
+		else
+			dunstify "[warn] this not folder??"
+			exit 1
 		fi
-
 	fi
 	exit 1
-
 fi

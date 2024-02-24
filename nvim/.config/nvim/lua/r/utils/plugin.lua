@@ -259,41 +259,51 @@ function M.change_colors()
 # -----------------------------
 # -----------------------------
 
-# color mode, sebagai main color
+# MODE color
 *color16: %s
 
-# color sebagai main separator dan second separator
+# SEPARATOR: separator_bg, separator_fg
 *color17: %s
 *color18: %s
 
-# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+# FZF: fzf_bg, fzf_fg, fzf_match, 
 *color19: %s
 *color20: %s
 *color21: %s
 
-# color FZF: sebagai fzf_selection_bg 
+# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
 *color22: %s
-
-# color TMUX: sebagai main separator bg
 *color23: %s
-
-# color TMUX: sebagai main window dan second window
 *color24: %s
+
+# TMUX: main separator bg
 *color25: %s
+
+# TMUX: main window dan second window
+*color26: %s
+*color27: %s
 ]],
+    -- Mode
     Util.colortbl.separator_fg,
 
+    -- Separator
     Highlight.get("WinSeparator", "fg"),
     Util.colortbl.separator_fg_alt,
 
+    -- FZF
     Highlight.get("NormalFloat", "bg"),
     Highlight.get("CmpItemAbbr", "fg"),
+    Highlight.get("CmpItemAbbrMatch", "fg"),
+
+    -- FZF
+    Highlight.get("PmenuSel", "bg"),
+    Highlight.get("PmenuSel", "fg"),
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"),
 
-    Highlight.get("PmenuSel", "bg"),
-
+    -- Tmux
     Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
 
+    -- Tmux
     Highlight.get("Normal", "bg"),
     Highlight.get("ColorColumn", "bg")
   )

@@ -12,13 +12,13 @@ return {
       -- python
       {
         "mfussenegger/nvim-dap-python",
-        dependencies = { "williamboman/mason.nvim" },
+        -- dependencies = { "williamboman/mason.nvim" },
         config = function()
-          local path = require("mason-registry").get_package("debugpy"):get_install_path()
-          require("dap-python").setup(path .. "/venv/bin/python")
+          -- local path = require("mason-registry").get_package("debugpy"):get_install_path()
+          local path = vim.fn.stdpath "data" .. "/mason/packages/debugpy/venv/bin/python3"
+          require("dap-python").setup(path)
         end,
       },
-
       -- golang
       {
         "leoluz/nvim-dap-go",
@@ -26,6 +26,7 @@ return {
       },
 
       { "theHamsta/nvim-dap-virtual-text", opts = { commented = true } },
+
       -- {
       --   "LiadOz/nvim-dap-repl-highlights",
       --   config = true,
@@ -356,9 +357,17 @@ return {
       local Config = require "r.config"
       Highlight.plugin("dapHi", {
         {
-          DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = { from = "Normal", attr = "bg" } },
+          DapBreakpoint = {
+            fg = { from = "Error", attr = "fg" },
+            bg = { from = "Normal", attr = "bg" },
+          },
         },
-        { DapStopped = { fg = { from = "Boolean", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
+        {
+          DapStopped = {
+            fg = { from = "Boolean", attr = "fg" },
+            bg = { from = "Normal", attr = "bg" },
+          },
+        },
       })
 
       fn.sign_define {
@@ -366,11 +375,12 @@ return {
           name = "DapBreakpoint",
           texthl = "DapBreakpoint",
           text = Config.icons.dap.Breakpoint,
-          -- numhl = "DapBreakpoint",
-          -- linehl = "",
-          -- numhl = "",
         },
-        { name = "DapStopped", texthl = "DapStopped", text = Config.icons.dap.Stopped, linehl = "", numhl = "" },
+        {
+          name = "DapStopped",
+          texthl = "DapStopped",
+          text = Config.icons.dap.Stopped,
+        },
       }
     end,
   },

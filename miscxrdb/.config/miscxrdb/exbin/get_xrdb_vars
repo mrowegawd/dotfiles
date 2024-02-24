@@ -41,6 +41,8 @@ GET_COL_22=$(xrdb -query | grep -i .color22 | cut -d':' -f2 | head -1 | xargs)
 GET_COL_23=$(xrdb -query | grep -i .color23 | cut -d':' -f2 | head -1 | xargs)
 GET_COL_24=$(xrdb -query | grep -i .color24 | cut -d':' -f2 | head -1 | xargs)
 GET_COL_25=$(xrdb -query | grep -i .color25 | cut -d':' -f2 | head -1 | xargs)
+GET_COL_26=$(xrdb -query | grep -i .color26 | cut -d':' -f2 | head -1 | xargs)
+GET_COL_27=$(xrdb -query | grep -i .color27 | cut -d':' -f2 | head -1 | xargs)
 
 # GET_FONT="$(grep -i font <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
 # GET_FONTSIZE="$(grep -i fontsize <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"

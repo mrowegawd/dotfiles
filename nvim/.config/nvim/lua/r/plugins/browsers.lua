@@ -3,6 +3,7 @@ return {
   {
     {
       "sontungexpt/url-open",
+      enabled = false,
       cmd = "URLOpenUnderCursor",
       opts = {},
       -- keys = {

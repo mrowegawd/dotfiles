@@ -697,21 +697,6 @@ r_rm_uncommentfile() {
 	sudo cat "$1" | sed '/^#.*$/d;/^;.*$/d'
 }
 
-# run: create minimal tmux pane split
-# r_iide() {
-# 	# check if tmux ses exists
-# 	printf "..launch ide: "
-# 	if [ -n "$TMUX" ]; then
-# 		tmux split-window -v -p 34
-# 		tmux split-window -h -p 66
-# 		tmux split-window -h -p 34
-# 		tmux rename-window 'ide'
-# 		echo "Done"
-# 	else
-# 		echo "Tmux session off !!"
-# 	fi
-# }
-
 # run: kill pid
 r_kill() {
 	local pid
@@ -753,84 +738,6 @@ r_mpv() {
 		printf "\\t or w_mpv link_youtube\\n"
 	fi
 }
-
-# PS TREE
-
-# ps: tree ls system try
-# ps_ls() {
-# 	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		echo "$PROC_ID_ORIGIN"
-# 	fi
-# }
-#
-# # ps: ls system try
-# ps_ls_all() {
-# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		echo "$PROC_ID_ORIGIN"
-# 	fi
-# }
-#
-# # ps: check: with top command info selected
-# ps_i() {
-# 	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		top -p "$PROC_ID"
-# 	fi
-# }
-#
-# # ps: check: with top all command
-# ps_info_all() {
-# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		top -p "$PROC_ID"
-# 	fi
-# }
-#
-# # ps: tree
-# ps_tree() {
-# 	PROC_ID_ORIGIN=$(ps -alf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		pstree -p "$PROC_ID"
-# 	fi
-# }
-#
-# # ps: tree all
-# ps_tree_all() {
-# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		pstree -p "$PROC_ID"
-# 	fi
-# }
-#
-# # ps: kill
-# ps_kill() {
-# 	PROC_ID_ORIGIN=$(ps -alf | grcat fps.grc | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		kill -9 "$PROC_ID"
-# 	fi
-# }
-#
-# # ps: kill
-# ps_kill_all() {
-# 	PROC_ID_ORIGIN=$(ps -elf | fzf-tmux -p 80%)
-# 	if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
-# 		PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
-# 		kill -9 "$PROC_ID"
-# 	fi
-# }
-
-# alias py_pipl="pip list --format=columns"
-# alias py_pips="pip show"
-# alias py_pudb="python -m pudb"
 
 # alias py_sourcesme="source ./.venv/bin/activate"
 

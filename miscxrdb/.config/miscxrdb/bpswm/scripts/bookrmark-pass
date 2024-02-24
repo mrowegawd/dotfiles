@@ -234,14 +234,14 @@ Categories=GNOME;GTK;System;
 		[[ -z $dir_selection ]] && exit
 		[[ ! -d $HOME/.password-store/$dir_selection ]] && exit
 
-		dunstify "$dir_selection"
-
 		case "$XDG_SESSION_DESKTOP" in
 		"bspwm")
 			if [[ "$TERMINAL" == "wezterm" ]]; then
-				bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMC" -c "cd $HOME/.password-store/$dir_selection"
+				dunstify -t 10000 "ex: 'pass insert $dir_selection/<pass_baru>'"
+				bspc rule -a \* -o state=floating st && st -e zsh -c "cd $HOME/.password-store/$dir_selection; exec zsh"
 			else
 				bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -c "cd $HOME/.password-store/$dir_selection"
+
 			fi
 
 			;;

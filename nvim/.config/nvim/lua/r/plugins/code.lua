@@ -1,7 +1,7 @@
 local Highlight = require "r.settings.highlights"
 local Icons = require("r.config").icons
 local Config = require "r.config"
--- local Util = require "r.utils"
+local Util = require "r.utils"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -10,26 +10,6 @@ OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
 return {
-  -- COMMAND-COMPLETION
-  {
-    "smolck/command-completion.nvim",
-    -- event = { "CmdlineEnter" },
-    config = function()
-      require("command-completion").setup {
-        border = "single", -- What kind of border to use, passed through directly to `nvim_open_win()`,
-        -- see `:help nvim_open_win()` for available options (e.g. 'single', 'double', etc.)
-        max_col_num = 5, -- Maximum number of columns to display in the completion window
-        min_col_width = 20, -- Minimum width of completion window columns
-        use_matchfuzzy = true, -- Whether or not to use `matchfuzzy()` (see `:help matchfuzzy()`)
-        -- to order completion results
-        highlight_selection = true, -- Whether or not to highlight the currently
-        -- selected item, not sure why this is an option tbh
-        highlight_directories = true, -- Whether or not to higlight directories with
-        -- the Directory highlight group (`:help hl-Directory`)
-        tab_completion = true, -- Whether or not tab completion on displayed items is enabled
-      }
-    end,
-  },
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
@@ -45,7 +25,7 @@ return {
       "davidsierradz/cmp-conventionalcommits",
       -- "dmitmel/cmp-cmdline-history",
       "hrsh7th/cmp-buffer",
-      -- "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
       -- "hrsh7th/cmp-nvim-lsp-signature-help",
@@ -364,14 +344,14 @@ return {
           "i",
           "s",
         }),
-        ["<c-n>"] = cmp.mapping(function()
+        ["<c-j>"] = cmp.mapping(function()
           if cmp.visible() then
             cmp.select_next_item()
           else
             cmp.complete()
           end
         end, { "i", "c" }),
-        ["<c-p>"] = cmp.mapping(function(fallback)
+        ["<c-k>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_prev_item()
           else
@@ -451,8 +431,8 @@ return {
           end,
         },
         { name = "luasnip", max_item_count = 100 },
-        { name = "nvim_lsp_signature_help" },
-        { name = "crates" },
+        -- { name = "nvim_lsp_signature_help" },
+        -- { name = "crates" },
         { name = "path" },
         source_buffer(),
       }
@@ -511,79 +491,83 @@ return {
         sources = cmp.config.sources { { name = "vim-dadbod-completion" }, { name = "buffer" } },
       })
 
-      cmp.setup.filetype({ "rgflow" }, {
-        sources = cmp.config.sources { { name = "buffer" }, { name = "async_path" } },
+      -- cmp.setup.filetype({ "rgflow" }, {
+      --   sources = cmp.config.sources { { name = "buffer" }, { name = "async_path" } },
+      --   mapping = {
+      --     ["<c-p>"] = {
+      --       i = function(fallback)
+      --         if cmp.visible() then
+      --           cmp.select_prev_item()
+      --         else
+      --           fallback()
+      --         end
+      --       end,
+      --     },
+      --     ["<c-g>"] = {
+      --       i = function()
+      --         require("fzf-lua").complete_file {
+      --           cmd = "rg --files --hidden",
+      --           winopts = { preview = { hidden = "nohidden" } },
+      --         }
+      --       end,
+      --     },
+      --     ["<c-n>"] = {
+      --       i = function(fallback)
+      --         if cmp.visible() then
+      --           cmp.select_next_item()
+      --         else
+      --           fallback()
+      --         end
+      --       end,
+      --     },
+      --   },
+      -- })
+
+      cmp.setup.cmdline(":", {
         mapping = {
-          ["<c-p>"] = {
-            i = function(fallback)
+          ["<C-y>"] = cmp.mapping(function()
+            cmp.confirm { select = true }
+            Util.map.feedkey("<CR>", "")
+          end, { "c" }),
+          ["<c-q>"] = {
+            c = function(fallback)
               if cmp.visible() then
-                cmp.select_prev_item()
-              else
-                fallback()
-              end
-            end,
-          },
-          ["<c-g>"] = {
-            i = function()
-              require("fzf-lua").complete_file {
-                cmd = "rg --files --hidden",
-                winopts = { preview = { hidden = "nohidden" } },
-              }
-            end,
-          },
-          ["<c-n>"] = {
-            i = function(fallback)
-              if cmp.visible() then
-                cmp.select_next_item()
+                cmp.abort()
               else
                 fallback()
               end
             end,
           },
         },
+        sources = cmp.config.sources {
+          { name = "path" },
+          -- { name = "cmdline_history" },
+          {
+            name = "cmdline",
+            option = {
+              ignore_cmds = { "Man", "!" },
+            },
+          },
+        },
       })
 
-      -- cmp.setup.cmdline(":", {
-      --   mapping = {
-      --     ["<C-y>"] = cmp.mapping(function()
-      --       cmp.confirm { select = true }
-      --       Util.map.feedkey("<CR>", "")
-      --     end, { "c" }),
-      --     ["<c-q>"] = {
-      --       c = function(fallback)
-      --         if cmp.visible() then
-      --           cmp.abort()
-      --         else
-      --           fallback()
-      --         end
-      --       end,
-      --     },
-      --   },
-      --   sources = cmp.config.sources({
-      --     { name = "path" },
-      --   }, {
-      --     { name = "cmdline" },
-      --     { { name = "cmdline_history" } },
-      --   }),
-      -- })
+      cmp.setup.cmdline({ "/", "?" }, {
+        mapping = {
+          ["<c-q>"] = {
+            c = function(fallback)
+              if cmp.visible() then
+                cmp.abort()
+              else
+                fallback()
+              end
+            end,
+          },
+        },
+        sources = cmp.config.sources {
+          { name = "buffer" },
+        },
+      })
 
-      -- cmp.setup.cmdline({ "/", "?" }, {
-      --   mapping = {
-      --     ["<c-q>"] = {
-      --       c = function(fallback)
-      --         if cmp.visible() then
-      --           cmp.abort()
-      --         else
-      --           fallback()
-      --         end
-      --       end,
-      --     },
-      --   },
-      --   sources = cmp.config.sources {
-      --     { name = "buffer" },
-      --   },
-      -- })
-      --
       -- Taken from https://github.com/altermo/ultimate-autopair.nvim/issues/5#issuecomment-1772186460
       local ind = cmp.lsp.CompletionItemKind
 
@@ -603,6 +587,29 @@ return {
           vim.api.nvim_feedkeys("()" .. left, "n", false)
         end
       end)
+    end,
+  },
+  -- CMP-RG
+  {
+    "lukas-reineke/cmp-rg",
+    cond = function()
+      return vim.fn.executable "rg" == 1
+    end,
+    ft = "rgflow",
+    dependencies = {
+      "hrsh7th/nvim-cmp",
+    },
+    config = function()
+      local cmp = require "cmp"
+      cmp.setup.filetype("rgflow", {
+        sources = cmp.config.sources {
+          { name = "rg" },
+          { name = "path" },
+        },
+        --   {
+        --   { name = "buffer" },
+        -- }
+      })
     end,
   },
   -- COMMENTS-TS-CONTEXT

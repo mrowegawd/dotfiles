@@ -41,24 +41,26 @@ URxvt.colorUL:  #5f875f
 # -----------------------------
 # -----------------------------
 
-# color mode, sebagai main color
+# MODE color
 *.color16: #4c6c4c
 
-# color sebagai main separator dan second separator
+# SEPARATOR: separator_bg, separator_fg
 *.color17: #2f432f
 *.color18: #3c3c3c
 
-# color FZF: sebagai fzf_bg dan fzf_fg, fzf_fuzzy_abbr_match
+# FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #1e1e1e
 *.color20: #a19362
-*.color21: #616158
+*.color21: #ffb49d
 
-# color FZF: sebagai fzf_selection_bg
-*.color22: #ffffff
+# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*.color22: #4b4b4b
+*.color23: #fff5a3
+*.color24: #ff7869
 
-# color TMUX: sebagai main separator bg
-*.color23: #111111
+# TMUX: main separator bg
+*.color25: #111111
 
-# color TMUX: sebagai main window dan second window
-*.color24: #222222
-*.color25: #1e1e1e
+# TMUX: main window dan second window
+*.color26: #222222
+*.color27: #1e1e1e

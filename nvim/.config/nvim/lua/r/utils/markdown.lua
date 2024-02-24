@@ -96,18 +96,20 @@ local function check_for_link_or_tag()
   return is_tag_or_link_at(line, col, M.Cfg)
 end
 
-function M.followLink()
-  if vim.bo.filetype == "markdown" then
-    local saved_reg = vim.fn.getreg '"0'
-    kind, _ = check_for_link_or_tag()
+function M.followLink(is_selection)
+  is_selection = is_selection or false
 
-    if kind == "link" then
-      vim.cmd "normal yi]"
-      title = vim.fn.getreg '"0'
-      title = title:gsub("^(%[)(.+)(%])$", "%2")
-      title = remove_alias(title)
-    end
+  local saved_reg = vim.fn.getreg '"0'
+  kind, _ = check_for_link_or_tag()
 
+  if kind == "link" then
+    vim.cmd "normal yi]"
+    title = vim.fn.getreg '"0'
+    title = title:gsub("^(%[)(.+)(%])$", "%2")
+    title = remove_alias(title)
+  end
+
+  if kind ~= nil then
     vim.fn.setreg('"0', saved_reg)
 
     local parts = vim.split(title, "#")
@@ -132,7 +134,32 @@ function M.followLink()
       end
     end
   else
-    vim.cmd "URLOpenUnderCursor"
+    local url = vim.fn.expand "<cWORD>"
+
+    -- check jika terdapat `https` pada `url`
+    local uri = vim.fn.matchstr(url, [[https\?:\/\/[A-Za-z0-9-_\.#\/=\?%]\+]])
+
+    -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
+    --   url = string.format("https://github.com/%s", url)
+    if uri ~= "" then
+      url = url
+    else
+      if is_selection then
+        vim.cmd "normal yy"
+        title = vim.fn.getreg '"0'
+        title = title:gsub("^(%[)(.+)(%])$", "%2")
+        title = remove_alias(title)
+
+        local parts = vim.split(title, "#")
+        if #parts > 0 then
+          url = string.format("https://google.com/search?q=%s", parts[1])
+        end
+      else
+        url = string.format("https://google.com/search?q=%s", url)
+      end
+    end
+
+    vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "firefox", url }, { detach = true })
   end
 end
 

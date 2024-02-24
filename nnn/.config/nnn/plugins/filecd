@@ -25,6 +25,7 @@ if not_in_tmux; then
 	program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
 	if [ "$program" = "nvim" ]; then
 		echo ":qa!" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+		wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
 		sleep 0.5 # --> need this? cari cara lain agar bisa quit dari nvim tanpa menggunakan `sleep`
 	fi
 
@@ -32,7 +33,6 @@ if not_in_tmux; then
 	wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
 	echo "nvim" | wezterm cli send-text --pane-id "$pane_id"
 	wezterm cli send-text --pane-id "$pane_id" --no-paste $'\r'
-
 	wezterm cli activate-pane-direction --pane-id "$pane_id" right
 
 else

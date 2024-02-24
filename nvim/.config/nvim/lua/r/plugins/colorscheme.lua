@@ -1,6 +1,37 @@
 local colorscheme = require("r.config").colorscheme
 
 return {
+  -- NEOVIM-AYU
+  {
+    "Shatur/neovim-ayu",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local ayu_theme = { "ayu-dark", "ayu-light" }
+      if vim.tbl_contains(ayu_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      require("ayu").setup {
+        mirage = true,
+        overrides = {},
+        -- overrides = {
+        --   Normal = { bg = "None" },
+        --   ColorColumn = { bg = "None" },
+        --   SignColumn = { bg = "None" },
+        --   Folded = { bg = "None" },
+        --   FoldColumn = { bg = "None" },
+        --   CursorLine = { bg = "None" },
+        --   CursorColumn = { bg = "None" },
+        --   WhichKeyFloat = { bg = "None" },
+        --   VertSplit = { bg = "None" },
+        -- },
+      }
+    end,
+  },
+  -- FAROUT
   {
     "thallada/farout.nvim",
     lazy = false,

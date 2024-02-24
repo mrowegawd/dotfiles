@@ -42,6 +42,7 @@ keymap.set("n", "gd", "<c-]>", {
 -- vim.opt_local.statuscolumn = ""
 
 -- open help buffers in new tabs by default
-vim.cmd.wincmd "T"
+-- vim.cmd.wincmd "T"
+
 -- get highlighted code examples
-vim.treesitter.start()
+-- vim.treesitter.start()

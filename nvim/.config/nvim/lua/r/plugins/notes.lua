@@ -758,16 +758,12 @@ return {
           require("r.keymaps.note").neorg_mappings_ft(api.nvim_get_current_buf())
         end,
       })
-      vim.keymap.set("n", "<Leader>oo", function()
-        Util.markdown.followLink(Config)
-      end)
     end,
   },
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
     event = "VeryLazy",
-    -- enabled = false,
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
       Highlight.plugin("headlines", {
