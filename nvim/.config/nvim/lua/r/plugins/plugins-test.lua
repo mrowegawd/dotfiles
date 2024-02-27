@@ -22,6 +22,14 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- GENTAGS (disabled)
+  {
+    "linrongbin16/gentags.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    cond = vim.fn.executable "ctags" == 1,
+    opts = {},
+  },
   -- COMMAND-COMPLETION
   {
     "smolck/command-completion.nvim",

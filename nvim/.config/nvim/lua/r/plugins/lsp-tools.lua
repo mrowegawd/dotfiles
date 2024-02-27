@@ -226,16 +226,9 @@ return {
   -- SYMBOL-USAGE
   {
     "Wansmer/symbol-usage.nvim",
-    event = "BufReadPre", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
     opts = {
       disable = { filetypes = { "dockerfile" } },
     },
-  },
-  -- GENTAGS
-  {
-    "linrongbin16/gentags.nvim",
-    event = "VeryLazy",
-    cond = vim.fn.executable "ctags" == 1,
-    opts = {},
   },
 }
