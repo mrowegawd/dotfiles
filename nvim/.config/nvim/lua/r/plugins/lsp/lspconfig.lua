@@ -8,6 +8,7 @@ return {
   -- MASON NVIM
   {
     "williamboman/mason.nvim",
+    cmd = "Mason",
     build = ":MasonUpdate",
     opts = {
       ensure_installed = {
@@ -658,13 +659,13 @@ return {
           -- require("illuminate").on_attach(client)
           require("r.keymaps.lsp").on_attach(client, bufnr)
 
-          local bufopts = {
-            noremap = true,
-            silent = true,
-            buffer = bufnr,
-          }
-          vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
-          vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
+          -- local bufopts = {
+          --   noremap = true,
+          --   silent = true,
+          --   buffer = bufnr,
+          -- }
+          -- vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
+          -- vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
         end,
         settings = {
           -- rust-analyzer language server configuration

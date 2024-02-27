@@ -74,6 +74,7 @@ return {
   },
   -- OCTO
   {
+    -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
     "pwntester/octo.nvim",
     cmd = "Octo",
     opts = {

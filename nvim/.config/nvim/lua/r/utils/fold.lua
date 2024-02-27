@@ -37,21 +37,29 @@ local function qf_is_opened()
 end
 
 function M.goPreviousClosedFold()
+  if vim.bo.filetype == "markdown" then
+    vim.cmd [[MkdnPrevHeading]]
+    return
+  end
+
   if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
     return Util.cmd.feedkey("<c-p>", "n")
   end
 
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
-      return vim.cmd [[
-        try
-            execute "cprevious"
-            execute "normal! zz"
-        catch /^Vim\%((\a\+)\)\=:E553/
-            execute "clast"
-        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
-        endtry
-            ]]
+      local success, err = pcall(function()
+        vim.cmd "cprevious"
+        vim.cmd "normal! zz"
+      end)
+
+      if not success and type(err) == "string" then
+        if string.match(err, "^Vim%((%a+)%)=:E553") then
+          vim.cmd "clast"
+        elseif string.match(err, "^Vim%((%a+)%)=:E%(325%|776%|42%)") then
+          -- handle error appropriately
+        end
+      end
     else
       -- I got lazy convert this logic into lua, so I stole it yehahaa
       -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
@@ -82,22 +90,29 @@ function M.goPreviousClosedFold()
 end
 
 function M.goNextClosedFold()
+  if vim.bo.filetype == "markdown" then
+    vim.cmd [[MkdnNextHeading]]
+    return
+  end
+
   if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
     return Util.cmd.feedkey("<c-n>", "n")
   end
 
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
-      return vim.cmd [[
-        try
-            execute "cnext"
-            execute "normal! zz"
-        catch /^Vim\%((\a\+)\)\=:E553/
-            execute "cfirst"
-        catch /^Vim\%((\a\+)\)\=:E\%(325\|776\|42\):/
-        endtry
+      local success, err = pcall(function()
+        vim.cmd "cnext"
+        vim.cmd "normal! zz"
+      end)
 
-            ]]
+      if not success and type(err) == "string" then
+        if string.match(err, "^Vim%((%a+)%)=:E553") then
+          vim.cmd "cfirst"
+        elseif string.match(err, "^Vim%((%a+)%)=:E%(325%|776%|42%)") then
+          -- handle error appropriately
+        end
+      end
     else
       return vim.cmd "wincmd p"
     end

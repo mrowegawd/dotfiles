@@ -79,7 +79,8 @@ end
 --  ╰──────────────────────────────────────────────────────────╯
 
 -- Focus the current fold by closing all others
-Util.map.nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
+-- Util.map.nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
+Util.map.nnoremap("<space><space>", "zo", { desc = "Fold: open fold" })
 Util.map.nnoremap("zm", "zM")
 -- Util.map.nnoremap("<BS>", "za")
 
@@ -456,13 +457,18 @@ Util.map.nnoremap("<F1>", function()
   --     end
   --   end
   -- end
-  local layout = vim.fn.winlayout()
 
-  local nwin
-  if layout[1] == "col" then -- a split window
-    nwin = #layout[2]
-  end
-  print(tostring(nwin) .. " " .. layout[1])
+  -- Util.ui.callme()
+  local jj = 123
+  print(string.rep("helloo: ", #tostring(jj)))
+
+  -- local layout = vim.fn.winlayout()
+  --
+  -- local nwin
+  -- if layout[1] == "col" then -- a split window
+  --   nwin = #layout[2]
+  -- end
+  -- print(tostring(nwin) .. " " .. layout[1])
 
   -- print(tostring(vim.inspect(tbl_nc)) .. " " .. tostring(#tbl_nc == 1))
 end)

@@ -10,10 +10,10 @@ local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
 -- stylua: ignore
 local general_overrides = function()
   Highlight.all {
-    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
-    { CursorLineNr = { fg = { from = "Boolean", attr = "fg", alter = 0.4 }, bg = "NONE" } },
+    { CursorLineNr = { fg = { from = "Keyword", attr = "fg", alter = -0.2 }, bg = "NONE", bold = true } },
     { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
@@ -189,10 +189,11 @@ local general_overrides = function()
     { MyStatusLine_red_fg = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
     { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
     { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
-    { MyQuickFixLineLeave = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 } } },
+    { MyQuickFixLineLeave = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 } } },
-    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.6 } } },
+    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
+    { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
     { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
@@ -235,7 +236,6 @@ local general_overrides = function()
     { TelescopeResultsNormal = { link = "NormalFloat" } },
     { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
     { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "NormalFloat" } },
     { FzfLuaBorder = { fg = { from = "WinSeparator" }, bg = { from = "NormalFloat", attr = "bg" } } },
@@ -323,8 +323,8 @@ local function colorscheme_overrides()
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 }, bg = { from = "Normal", attr = "bg" } } },
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
           reverse = false,
         },
       },

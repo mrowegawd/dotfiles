@@ -62,7 +62,8 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             cwd = Config.path.wiki_path,
-            rg_opts = [[-g "*.md" --column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e]],
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
             winopts = {
               title = Util.fzflua.format_title("Note: files", "󰈙"),
             },

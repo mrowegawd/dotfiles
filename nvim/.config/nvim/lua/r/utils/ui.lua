@@ -1,5 +1,11 @@
 local M = {}
 
+local fcs = vim.opt.fillchars:get()
+local v = vim.v
+
+local space, big_spaces = " ", ""
+local separator = "│"
+
 ---@alias Sign {name:string, text:string, texthl:string, priority:number}
 
 -- Returns a list of regular and extmark signs sorted by priority (low to high)
@@ -63,38 +69,34 @@ end
 
 ---@param sign? Sign
 ---@param len? number
-function M.icon(sign, len)
+function M.icon(sign, len, spaces)
+  spaces = spaces or " "
   sign = sign or {}
   len = len or 2
   local text = vim.fn.strcharpart(sign.text or "", 0, len) ---@type string
-  text = text .. string.rep(" ", len - vim.fn.strchars(text))
+  text = text .. string.rep(spaces, len - vim.fn.strchars(text))
   return sign.texthl and ("%#" .. sign.texthl .. "#" .. text .. "%*") or text
 end
 
-function M.foldtext()
-  local ok = pcall(vim.treesitter.get_parser, vim.api.nvim_get_current_buf())
-  local ret = ok and vim.treesitter.foldtext and vim.treesitter.foldtext()
-  if not ret or type(ret) == "string" then
-    ret = { { vim.api.nvim_buf_get_lines(0, vim.v.lnum - 1, vim.v.lnum, false)[1], {} } }
-  end
-  table.insert(ret, { " " .. require("r.config").icons.misc.dots })
+function _G.custom_fold_text()
+  local line = vim.fn.getline(vim.v.foldstart)
 
-  if not vim.treesitter.foldtext then
-    return table.concat(
-      vim.tbl_map(function(line)
-        return line[1]
-      end, ret),
-      " "
-    )
-  end
-  return ret
+  local line_count = vim.v.foldend - vim.v.foldstart + 1
+
+  return " ⚡ " .. line .. ": " .. line_count .. " lines"
 end
 
 function M.statuscolumn()
+  -- local lnum, relnum, virtnum = v.lnum, v.relnum, v.virtnum
+  local lnum = v.lnum
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
   local is_file = vim.bo[buf].buftype == ""
   local show_signs = vim.wo[win].signcolumn ~= "no"
+
+  local height = vim.api.nvim_buf_line_count(0)
+  local totalSpaces = #tostring(height)
+  big_spaces = string.rep(" ", totalSpaces)
 
   local components = { "", "", "" } -- left, middle, right
 
@@ -112,23 +114,25 @@ function M.statuscolumn()
       left = nil
     end
     vim.api.nvim_win_call(win, function()
-      if vim.fn.foldclosed(vim.v.lnum) >= 0 then
-        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldColumn" }
-        if
-          vim.tbl_contains(
-            { "norg", "org", "orgagenda", "fzf" },
-            vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
-          )
-        then
-          fold = { text = "", texthl = "" }
-        end
+      if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then
+        fold = { text = space, texthl = "FoldColumn" }
+      else
+        fold = { text = vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose, texthl = "FoldColumn" }
       end
     end)
-    -- Left: mark git and diagnostic sign
-    components[1] = is_file and M.icon(left or right) or ""
+
+    -- Left: mark or non-git sign
+    components[1] = " "
 
     -- Right: number or fold
-    components[3] = M.icon(M.get_mark(buf, vim.v.lnum) or fold)
+    components[2] = is_file and M.icon(left or right) or big_spaces .. " "
+
+    if not vim.tbl_contains({ "norg", "markdown" }, vim.bo.filetype) then
+      components[4] = M.icon({ text = separator, texthl = "MySeparator" }, 1, big_spaces)
+    else
+      components[4] = " "
+    end
+    components[5] = M.icon(M.get_mark(buf, vim.v.lnum) or fold) or big_spaces
   end
 
   -- Numbers in Neovim are weird
@@ -137,17 +141,23 @@ function M.statuscolumn()
   local is_relnum = vim.wo[win].relativenumber
   if is_num and is_relnum then
     if vim.v.virtnum > 0 then
-      components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum))))
-      -- components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) -- components[2] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. "↳ "
+      -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum))))
+      components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
+    elseif v.virtnum < 0 then
+      if not vim.tbl_contains({ "norg", "org", "markdown" }, vim.bo.filetype) then
+        components[3] = "%=" .. separator .. " "
+      end
     else
-      components[2] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):(v:virtnum>0?"":v:lnum)} '
+      components[3] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):v:lnum} '
     end
   elseif is_num and not is_relnum then
-    components[2] = '%=%{v:virtnum>0?"":v:lnum} '
+    components[3] = '%=%{v:virtnum>0?"":v:lnum} '
+    -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
   elseif is_relnum and not is_num then
-    components[2] = '%=%{v:virtnum>0?"":v:relnum} '
+    components[3] = '%=%{v:virtnum>0?"":v:relnum} '
+    -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
   else
-    components[2] = ""
+    components[3] = ""
   end
 
   return table.concat(components, "")

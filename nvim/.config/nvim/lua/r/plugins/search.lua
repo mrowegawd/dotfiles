@@ -59,22 +59,6 @@ return {
       -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
     },
   },
-  -- NVIM-RGFLOW
-  {
-    "mangelozzi/nvim-rgflow.lua",
-    opts = {
-      default_trigger_mappings = true,
-      default_ui_mappings = true,
-      cmd_flags = rg_opts,
-      colors = {
-        RgFlowInputPath = { link = "NormalFloat" },
-        RgFlowInputBg = { link = "NormalFloat" },
-        RgFlowHeadLine = { link = "Error" },
-        RgFlowInputFlags = { link = "NormalFloat" },
-        RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
-      },
-    },
-  },
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
@@ -83,6 +67,21 @@ return {
       "sindrets/diffview.nvim",
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
+      {
+        "mangelozzi/nvim-rgflow.lua",
+        opts = {
+          default_trigger_mappings = true,
+          default_ui_mappings = true,
+          cmd_flags = rg_opts,
+          colors = {
+            RgFlowInputPath = { link = "NormalFloat" },
+            RgFlowInputBg = { link = "NormalFloat" },
+            RgFlowHeadLine = { link = "Error" },
+            RgFlowInputFlags = { link = "NormalFloat" },
+            RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
+          },
+        },
+      },
     },
     keys = {
       { "sf", fzf_lua.buffers, desc = "WinNav(fzflua): open" },
@@ -538,7 +537,7 @@ return {
         grep = {
           -- debug = true,
           prompt = " ",
-          no_header = false, -- disable default header
+          -- no_header = false, -- disable default header
           rg_opts = rg_opts,
           winopts_fn = function()
             local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.8)

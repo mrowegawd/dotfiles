@@ -1,6 +1,26 @@
-local api, fmt = vim.api, string.format
+local api, fmt, L = vim.api, string.format, vim.log.levels
 
 local M = {}
+
+function M.foreach(callback, list)
+  for k, v in pairs(list) do
+    callback(v, k)
+  end
+end
+
+function M.pcall(msg, func, ...)
+  local args = { ... }
+  if type(msg) == "function" then
+    local arg = func
+    args, func, msg = { arg, unpack(args) }, msg, nil
+  end
+  return xpcall(func, function(err)
+    msg = debug.traceback(msg and fmt("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
+    vim.schedule(function()
+      vim.notify(msg, L.ERROR, { title = "ERROR" })
+    end)
+  end, unpack(args))
+end
 
 function M.fold(callback, list, accum)
   accum = accum or {}

@@ -150,6 +150,30 @@ M.Mode = {
     end,
   },
 }
+
+-- local function qflabel()
+--   return require("r.utils").qf.is_loclist() and "Location List" or "Quickfix List"
+-- end
+--
+-- local function ft_()
+--   return vim.bo.filetype
+-- end
+
+--
+-- M.quickfix = {
+--   condition = function()
+--     return vim.bo[0].filetype == "qf"
+--   end,
+--   provider = function()
+--     if is_loclist() then
+--       return vim.fn.getloclist(0, { title = 0 }).title
+--     end
+--
+--     return string.format("Id:%s Title:%s", vim.fn.getqflist({ id = 0 }).id, vim.fn.getqflist({ title = 0 }).title)
+--   end,
+--
+--   hl = { fg = colors.branch_fg, bg = colors.base_bg, bold = true },
+-- }
 M.Git = {
   condition = Conditions.is_git_repo,
   provider = " ",
@@ -164,6 +188,9 @@ M.Git = {
   {
     provider = function(self)
       return " " .. self.status_dict.head .. " "
+    end,
+    condition = function()
+      return vim.bo[0].filetype ~= "qf"
     end,
     hl = { fg = colors.branch_fg, bg = colors.base_bg, bold = true },
   },
@@ -225,6 +252,11 @@ M.Mixindent = {
     end,
   },
 }
+
+local function is_loclist()
+  return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0
+end
+
 M.FilePath = {
   init = function(self)
     self.bufname = vim.api.nvim_buf_get_name(0)
@@ -232,6 +264,18 @@ M.FilePath = {
   provider = " ",
   {
     provider = function()
+      if vim.bo[0].filetype == "qf" then
+        if is_loclist() then
+          return vim.fn.getloclist(0, { title = 0 }).title
+        else
+          return string.format(
+            "Id:%s Title:<<%s>>",
+            vim.fn.getqflist({ id = 0 }).id,
+            vim.fn.getqflist({ title = 0 }).title
+          )
+        end
+      end
+
       local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
       if filename == "" then
         return "[No Name]"
@@ -256,7 +300,7 @@ M.FileFlags = {
   },
   {
     condition = function()
-      return not vim.bo.modifiable or vim.bo.readonly
+      return (vim.bo.filetype ~= "fzf") and (vim.bo.filetype ~= "qf") and (not vim.bo.modifiable or vim.bo.readonly)
     end,
     provider = " ",
     hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
@@ -319,13 +363,16 @@ M.LSPActive = {
   },
 }
 M.FileIcon = {
+  condition = function()
+    return vim.bo.filetype ~= "qf"
+  end,
   init = function(self)
     local filename = vim.api.nvim_buf_get_name(0)
     local extension = vim.fn.fnamemodify(filename, ":e")
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
   end,
   provider = function(self)
-    return self.icon and (" " .. self.icon)
+    return self.icon and (" " .. self.icon .. " ")
   end,
   hl = function(self)
     return { fg = self.icon_color, bg = colors.base_bg }

@@ -763,10 +763,14 @@ return {
   {
     "rest-nvim/rest.nvim",
     ft = "http",
-    keys = {
-      { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
-    },
+    requires = { "nvim-lua/plenary.nvim" },
+    -- keys = {
+    --   { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
+    -- },
     opts = { skip_ssl_verification = true },
+    config = function(_, opts)
+      require("rest-nvim").setup(opts)
+    end,
   },
   -- RUNMUX
   {

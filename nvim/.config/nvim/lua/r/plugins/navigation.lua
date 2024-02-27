@@ -4,6 +4,11 @@ local Icons = require("r.config").icons
 
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
 
+local function get_outline()
+  local ok_outline, outline = pcall(require, "outline")
+  return ok_outline and outline or {}
+end
+
 return {
   -- NEO-TREE
   {
@@ -294,11 +299,10 @@ return {
             Component = { icon = kind.Component, hl = "Function" },
             Fragment = { icon = "󰅴", hl = "Constant" },
 
-            -- ccls
-            TypeAlias = { icon = " ", hl = "Type" },
-            Parameter = { icon = " ", hl = "Identifier" },
-            StaticMethod = { icon = " ", hl = "Function" },
-            Macro = { icon = " ", hl = "Function" },
+            TypeAlias = { icon = kind.TypeAlias, hl = "Type" },
+            Parameter = { icon = kind.Parameter, hl = "Identifier" },
+            StaticMethod = { icon = kind.StaticMethod, hl = "Function" },
+            Macro = { icon = kind.Macro, hl = "Function" },
           },
           --
         },
@@ -310,8 +314,8 @@ return {
         keymaps = {
           show_help = "?",
           close = { "<Esc>", "q", "<Leader><TAB>" },
-          goto_location = "<Cr>",
-          peek_location = "o",
+          goto_location = { "<Cr>", "o" },
+          peek_location = {},
           goto_and_close = {},
           restore_location = {},
           hover_symbol = {},
@@ -335,11 +339,6 @@ return {
   {
     "folke/edgy.nvim",
     keys = function()
-      local function get_outline()
-        local ok_outline, outline = pcall(require, "outline")
-        return ok_outline and outline or {}
-      end
-
       local height = vim.o.lines - vim.o.cmdheight
       if vim.o.laststatus ~= 0 then
         height = height - 1
@@ -374,24 +373,35 @@ return {
           end,
           desc = "Misc(neotree): open File explore",
         },
-        -- {
-        --   "<Leader>E",
-        --   function()
-        --     -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
-        --     return cmd "Neotree reveal"
-        --   end,
-        --   desc = "Misc(neotree): open find file on File Explore",
-        -- },
-
-        {
-          "<Leader>uu",
-          function()
-            require("edgy").toggle()
-          end,
-          desc = "Misc(edgy): toggle explore",
-        },
-
         { "<Localleader>oa", "<cmd>Outline<CR>", desc = "Misc(outline): toggle" },
+        {
+          "<Localleader>O",
+          function()
+            if vim.bo.filetype ~= "Outline" then
+              local outline_tbl = { found = false, winbufnr = 0, winnr = 0, winid = 0 }
+              for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+                if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
+                  local winbufnr = vim.fn.winbufnr(winnr)
+
+                  local winid = vim.fn.win_findbuf(winbufnr)[1] -- yang dibutuhkan itu winid (example winid: 1004, 1005)
+
+                  if winbufnr > 0 then
+                    local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+                    if winft == "Outline" then
+                      outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid }
+                    end
+                  end
+                end
+              end
+
+              if outline_tbl.found then
+                -- print(vim.inspect(outline_tbl))
+                vim.api.nvim_set_current_win(outline_tbl.winid)
+              end
+            end
+          end,
+          desc = "Misc(outline): jump back-to-back",
+        },
         {
           "<Localleader>oA",
           function()
@@ -403,21 +413,12 @@ return {
               vim.cmd "wincmd w"
             end
 
-            local aerial_selected = {
-              "Array",
-              "Class",
-              "Constructor",
-              "Enum",
-              "Field",
-              "Function",
-              "Package",
-              "Interface",
-              "Method",
-              "Object",
-              "Struct",
-              "Variable",
-              "all",
-            }
+            local aerial_selected = { "all" }
+
+            for key, icon in pairs(Icons.kinds) do
+              table.insert(aerial_selected, key .. " " .. icon)
+            end
+
             fzf_lua.fzf_exec(aerial_selected, {
               prompt = "  ",
               no_esc = true,
@@ -435,7 +436,12 @@ return {
               },
               actions = {
                 ["default"] = function(selected, _)
-                  local selection = selected[1]
+                  local sel = {}
+                  for word in selected[1]:gmatch "%w+" do
+                    table.insert(sel, word)
+                  end
+                  local selection = sel[1]
+
                   if selection ~= nil and type(selection) == "string" then
                     local opts_outline = Util.opts "outline.nvim"
                     local outline = get_outline()

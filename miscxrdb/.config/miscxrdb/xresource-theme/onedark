@@ -19,29 +19,29 @@
 *.color7:     #BFBFBF
 *.color15:    #E6E6E6
 
-# -----------------------------
-# -----------------------------
+! -----------------------------
+! -----------------------------
 
-# MODE color
+! MODE color
 *.color16: #9853ad
 
-# SEPARATOR: separator_bg, separator_fg
+! SEPARATOR: separator_bg, separator_fg
 *.color17: #5f346c
 *.color18: #373f49
 
-# FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #1b1f24
 *.color20: #787e89
 *.color21: #ffb49d
 
-# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
 *.color22: #4b4b4b
 *.color23: #c8d2e4
 *.color24: #ff7869
 
-# TMUX: main separator bg
+! TMUX: main separator bg
 *.color25: #0f1114
 
-# TMUX: main window dan second window
+! TMUX: main window dan second window
 *.color26: #1f2329
 *.color27: #1b1f24

@@ -42,29 +42,29 @@
 *.color14: nord7
 *.color15: nord6
 
-# -----------------------------
-# -----------------------------
+! -----------------------------
+! -----------------------------
 
-# MODE color
+! MODE color
 *.color16: #67809a
 
-# SEPARATOR: separator_bg, separator_fg
+! SEPARATOR: separator_bg, separator_fg
 *.color17: #405060
 *.color18: #525d72
 
-# FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #292e39
 *.color20: #a2a6ae
 *.color21: #ffb49d
 
-# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
 *.color22: #4b4b4b
 *.color23: #ffffff
 *.color24: #ff7869
 
-# TMUX: main separator bg
+! TMUX: main separator bg
 *.color25: #171a20
 
-# TMUX: main window dan second window
+! TMUX: main window dan second window
 *.color26: #2e3440
 *.color27: #292e39

@@ -24,7 +24,7 @@ opt.completeopt = "menu,menuone,noselect"
 opt.errorbells = false -- disable error bells (no beep/flash)
 opt.visualbell = false
 
-opt.jumpoptions = "stack" -- mapping jump c-i/o is suck, so I use `stack` mode (agar level insane berkurang diotak)
+opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so I use `stack` mode (agar level insane berkurang diotak)
 opt.cursorline = true
 opt.inccommand = "split"
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
@@ -197,7 +197,7 @@ opt.fillchars = {
   diff = " ", -- alternatives = ⣿ ░ ╱
   -- msgsep = " ", -- alternatives: ‾ ─
   --
-  fold = " ",
+  -- fold = " ",
   vert = "¦", -- "┃",
   horiz = "-",
   foldopen = "", -- '▼'
@@ -322,9 +322,9 @@ if vim.fn.has "nvim-0.10" == 1 then
   opt.smoothscroll = true
 end
 
-if vim.treesitter.foldtext then
-  opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
-end
+opt.foldtext = "v:lua.custom_fold_text()"
+
+-- opt.foldtext       = "v:lua.vim.treesitter.foldtext()"
 
 if vim.fn.has "nvim-0.9.0" == 1 then
   opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
@@ -332,7 +332,6 @@ end
 
 if vim.fn.has "nvim-0.10" == 1 then
   opt.foldmethod = "expr"
-  -- opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
   vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 else
   opt.foldmethod = "indent"

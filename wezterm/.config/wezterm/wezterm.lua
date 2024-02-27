@@ -161,10 +161,10 @@ if not wezterm.target_triple:find("windows") then
 	-- 	config.set_environment_variables = {}
 end
 
-config.inactive_pane_hsb = {
-	saturation = 0.7,
-	brightness = 0.7,
-}
+-- config.inactive_pane_hsb = {
+-- 	saturation = 0.7,
+-- 	brightness = 0.7,
+-- }
 
 -- ├┤ FRAME ├───────────────────────────────────────────────────────────┤
 config.window_frame = {

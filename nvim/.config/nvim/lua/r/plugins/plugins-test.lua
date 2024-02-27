@@ -2369,7 +2369,7 @@ return {
           update_interval = 100,
           enable = function(buf, win)
             local b, w = vim.bo[buf], vim.wo[win]
-            local decor = Util.uisec.decoration_get { ft = b.ft, bt = b.bt, setting = "winbar" }
+            local decor = Util.uisec.decorations.decoration_get { ft = b.ft, bt = b.bt, setting = "winbar" }
             return decor ~= nil
               and decor.ft ~= false
               and decor.bt ~= false

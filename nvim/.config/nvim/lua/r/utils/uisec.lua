@@ -135,7 +135,7 @@ local filenames = Util.cmd.p_table {
 
 M.decorations = {}
 
-function M.decoration_get(opts)
+function M.decorations.decoration_get(opts)
   local ft, bt, fname, setting = opts.ft, opts.bt, opts.fname, opts.setting
   if (not ft and not bt and not fname) or not setting then
     return nil
@@ -147,9 +147,9 @@ function M.decoration_get(opts)
   }
 end
 
-function M.decorations_set_colorcolumn(bufnr, fn)
+function M.decorations.set_colorcolumn(bufnr, fn)
   local buf = vim.bo[bufnr]
-  local decor = M.decoration_get {
+  local decor = M.decorations.decoration_get {
     ft = buf.ft,
     bt = buf.bt,
     setting = "colorcolumn",

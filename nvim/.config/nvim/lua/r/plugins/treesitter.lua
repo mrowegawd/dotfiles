@@ -102,6 +102,9 @@ return {
 
         "yaml",
 
+        "json",
+        "jsonc",
+
         "sql",
         "svelte",
         "teal",
@@ -151,7 +154,7 @@ return {
         disable = function(ft)
           return vim.tbl_contains({ "tex", "latex" }, ft)
         end,
-        additional_vim_regex_highlighting = { "org", "markdown" },
+        additional_vim_regex_highlighting = { "markdown" },
       },
 
       indent = {
@@ -225,7 +228,12 @@ return {
           return true
         end, opts.ensure_installed)
       end
+
+      -- require("orgmode").setup_ts_grammar()
+
       require("nvim-treesitter.configs").setup(opts)
+
+      -- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
     end,
   },
   -- NVIM-TREESITTER-CONTEXT
@@ -239,7 +247,12 @@ return {
           ["*"] = {
             { TreesitterContextSeparator = { link = "WinSeparator" } },
             { TreesitterContext = { inherit = "Normal" } },
-            { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.8 },
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+              },
+            },
           },
           ["catppuccin-latte"] = {
             { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = -0.3 } } },

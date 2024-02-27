@@ -8,7 +8,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "ayu-dark"
+local colorscheme = "tokyonight-storm"
 
 if Util.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"
@@ -226,9 +226,11 @@ local defaults = {
       Function = "󰊕 ",
       Interface = " ",
       Fragment = "󰅴",
+      Macro = " ",
       Key = " ",
       Keyword = " ",
       Method = "󰊕 ",
+      StaticMethod = " ",
       Module = " ",
       Namespace = "󰦮 ",
       Null = " ",
@@ -244,7 +246,9 @@ local defaults = {
       TabNine = "󰏚 ",
       Text = " ",
       TypeParameter = " ",
+      Parameter = " ",
       Unit = " ",
+      TypeAlias = " ",
       Value = " ",
       Variable = "󰀫 ",
       stacked = " ﬘",
@@ -382,6 +386,7 @@ function M.load(name)
 end
 
 M.did_init = false
+
 function M.init()
   if M.did_init then
     return

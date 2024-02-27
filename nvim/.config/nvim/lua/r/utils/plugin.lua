@@ -256,30 +256,30 @@ end
 function M.change_colors()
   local jj = fmt(
     [[
-# -----------------------------
-# -----------------------------
+! -----------------------------
+! -----------------------------
 
-# MODE color
+! MODE color
 *color16: %s
 
-# SEPARATOR: separator_bg, separator_fg
+! SEPARATOR: separator_bg, separator_fg
 *color17: %s
 *color18: %s
 
-# FZF: fzf_bg, fzf_fg, fzf_match, 
+! FZF: fzf_bg, fzf_fg, fzf_match, 
 *color19: %s
 *color20: %s
 *color21: %s
 
-# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
 *color22: %s
 *color23: %s
 *color24: %s
 
-# TMUX: main separator bg
+! TMUX: main separator bg
 *color25: %s
 
-# TMUX: main window dan second window
+! TMUX: main window dan second window
 *color26: %s
 *color27: %s
 ]],

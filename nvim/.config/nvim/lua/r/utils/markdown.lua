@@ -142,7 +142,14 @@ function M.followLink(is_selection)
     -- if not string.match(url, "[a-z]*://[^ >,;]*") and string.match(url, "[%w%p\\-]*/[%w%p\\-]*") then
     --   url = string.format("https://github.com/%s", url)
     if uri ~= "" then
-      url = url
+      if vim.bo.filetype == "markdown" then
+        if require("obsidian").util.cursor_on_markdown_link() then
+          vim.cmd "ObsidianFollowLink"
+          return
+        end
+      else
+        url = url
+      end
     else
       if is_selection then
         vim.cmd "normal yy"

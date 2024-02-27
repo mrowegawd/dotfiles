@@ -3,25 +3,9 @@ return {
   {
     "uga-rosa/ccc.nvim",
     cmd = { "CccPick", "CccConvert", "CccHighlighterToggle" },
-    opts = function()
+    config = function()
       local ccc = require "ccc"
-      local p = ccc.picker
-      p.hex.pattern = {
-        [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)>]=],
-        [=[\v%(^|[^[:keyword:]])\zs#(\x\x)(\x\x)(\x\x)(\x\x)>]=],
-      }
       ccc.setup {
-        win_opts = { border = require("r.config").icons.border.line },
-        pickers = {
-          p.hex,
-          p.css_rgb,
-          p.css_hsl,
-          p.css_hwb,
-          p.css_lab,
-          p.css_lch,
-          p.css_oklab,
-          p.css_oklch,
-        },
         highlighter = {
           auto_enable = true,
           excludes = {

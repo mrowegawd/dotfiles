@@ -5,57 +5,57 @@
 *color0: #174956
 *color8: #325b66
 
-#: red
+!: red
 *color1: #fa5750
 *color9: #ff665c
 
-#: green
+!: green
 *color2:  #75b938
 *color10: #84c747
 
-#: yellow
+!: yellow
 *color3:  #dbb32d
 *color11: #ebc13d
 
-#: blue
+!: blue
 *color4:  #4695f7
 *color12: #58a3ff
 
-#: magenta
+!: magenta
 *color5:  #f275be
 *color13: #ff84cd
 
-#: cyan
+!: cyan
 *color6: #41c7b9
 *color14: #53d6c7
 
-#: white
+!: white
 *color7:  #72898f
 *color15: #cad8d9
 
-# -----------------------------
-# -----------------------------
+! -----------------------------
+! -----------------------------
 
-# MODE color
+! MODE color
 *color16: #bc9a30
 
-# SEPARATOR: separator_bg, separator_fg
+! SEPARATOR: separator_bg, separator_fg
 *color17: #75601e
 *color18: #1c6c81
 
-# FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #0e3640
 *color20: #818d8d
 *color21: #ffb49d
 
-# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
 *color22: #4b4b4b
 *color23: #d8ebeb
 *color24: #ff7869
 
-# TMUX: main separator bg
+! TMUX: main separator bg
 *color25: #081e24
 
-# TMUX: main window dan second window
+! TMUX: main window dan second window
 *color26: #103c48
 *color27: #0e3640

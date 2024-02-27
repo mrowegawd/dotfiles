@@ -210,6 +210,7 @@ return {
           "fugitive",
           "NvimTree",
           "gitcommit",
+          "markdown",
           "lazy",
           "neo-tree",
           "dashboard",

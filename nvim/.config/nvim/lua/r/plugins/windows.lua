@@ -2,7 +2,7 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = { { "<leader>M", "<CMD>NeoZoomToggle<CR>", desc = "WinNav(neozoom): toggle" } },
+    keys = { { "sm", "<CMD>NeoZoomToggle<CR>", desc = "WinNav(neozoom): toggle" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },
@@ -156,7 +156,7 @@ return {
 
               if winbufnr > 0 then
                 local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
-                if not vim.tbl_contains({ "notify" }, winft) then
+                if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
                   -- print(winft)
                   table.insert(tbl_nc, winft)
                 end

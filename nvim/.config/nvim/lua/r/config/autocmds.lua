@@ -112,6 +112,16 @@ Util.cmd.augroup("ReHighlightFolded", {
             },
           },
 
+          ["ayu"] = {
+            {
+              Folded = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+                fg = { from = "Comment", attr = "fg", alter = 0.1 },
+                underline = false,
+                bold = true,
+              },
+            },
+          },
           ["catppuccin-latte"] = {
             {
               Folded = {
@@ -172,17 +182,6 @@ Util.cmd.augroup("SmartClose", {
     end
   end,
 })
-
--- Util.cmd.augroup("DisableHiBGNormal", {
---   event = { "BufReadPost" },
---   pattern = "*",
---   command = function()
---     if os.getenv "TERMINAL" == "wezterm" then
---       cmd "hi Normal guibg=NONE"
---     end
---   end,
---   once = true,
--- })
 
 Util.cmd.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
@@ -271,6 +270,21 @@ Util.cmd.augroup("CheckOutsideTime", {
   end,
 })
 
+vim.cmd [[
+  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
+]]
+
+-- Util.cmd.augroup("DisableHiBGNormal", {
+--   event = { "BufReadPost" },
+--   pattern = "*",
+--   command = function()
+--     if os.getenv "TERMINAL" == "wezterm" then
+--       cmd "hi Normal guibg=NONE"
+--     end
+--   end,
+--   once = true,
+-- })
+
 -- Util.cmd.augroup(
 --   "WindowDim",
 --   -- {
@@ -315,9 +329,3 @@ Util.cmd.augroup("CheckOutsideTime", {
 --   --   end,
 --   -- }
 -- )
-
-vim.cmd [[
-  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
-]]
-
--- vim.cmd [[autocmd FileType * silent! lua if vim.fn.wordcount()['bytes'] > 2048000 then print("syntax off") vim.cmd("setlocal syntax=off") end]]

@@ -1,4 +1,3 @@
-local Config = require "r.config"
 return {
   -- NVIM-BQF
   {
@@ -54,34 +53,6 @@ return {
             "--prompt",
             "> ",
           },
-        },
-      },
-    },
-  },
-  -- QFSILET
-  {
-    dir = "~/.local/src/nvim_plugins/qfsilet",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-    },
-    ft = { "qf" },
-    cmd = { "LoadQfLocal", "SaveQfLocal", "LoadQfGlobal", "SaveQfGlobal" },
-    keys = {
-      "<Localleader>qT",
-      "<Localleader>qt",
-      "<Leader>q",
-    },
-    opts = {
-      save_dir = Config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
-      theme_list = {
-        enabled = true,
-        maxheight = 10,
-        minheight = 10,
-      },
-      keymap = {
-        quickfix = {
-          toggle_open = "<Leader>q",
         },
       },
     },

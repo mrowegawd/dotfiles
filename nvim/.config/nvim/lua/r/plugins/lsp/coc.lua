@@ -120,7 +120,7 @@ return {
 
       -- Apply codeAction to the selected region
       -- Example: `<leader>aap` for current paragraph
-      local opts = { silent = true, nowait = true }
+      opts = { silent = true, nowait = true }
       keyset("x", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
       keyset("n", "<leader>a", "<Plug>(coc-codeaction-selected)", opts)
 
@@ -676,9 +676,6 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
         local ret = register_capability(err, res, ctx)
-        local client_id = ctx.client_id
-        local client = vim.lsp.get_client_by_id(client_id)
-        local buffer = vim.api.nvim_get_current_buf()
         return ret
       end
 

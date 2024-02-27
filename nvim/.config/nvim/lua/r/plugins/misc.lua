@@ -7,6 +7,16 @@ return {
     event = "CmdlineEnter",
     config = true,
   },
+  -- UNDOTREE
+  {
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    keys = { { "<leader>u", "<Cmd>UndotreeToggle<CR>", desc = "undotree: toggle" } },
+    config = function()
+      vim.g.undotree_TreeNodeShape = "◦" -- Alternative: '◉'
+      vim.g.undotree_SetFocusWhenToggle = 1
+    end,
+  },
   -- COMMENT-BOX
   {
     "LudoPinelli/comment-box.nvim",
@@ -32,12 +42,12 @@ return {
     event = "LazyFile",
     keys = {
       {
-        "sn",
+        "<c-Down>",
         "<CMD> Hi} <CR>",
         desc = "Misc(vim-highlighter): next",
       },
       {
-        "sp",
+        "<c-Up>",
         "<CMD> Hi{ <CR>",
         desc = "Misc(vim-highlighter): prev",
       },

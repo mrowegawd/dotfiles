@@ -23,29 +23,29 @@
 ! *cursor_text_color #282c34
 ! *url_color #98be65
 
-# -----------------------------
-# -----------------------------
+! -----------------------------
+! -----------------------------
 
-# MODE color
+! MODE color
 *color16: #8b75b3
 
-# SEPARATOR: separator_bg, separator_fg
+! SEPARATOR: separator_bg, separator_fg
 *color17: #574970
 *color18: #3f493f
 
-# FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #1f241f
 *color20: #b1a890
 *color21: #ffb49d
 
-# FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
 *color22: #4b4b4b
 *color23: #fffff0
 *color24: #ff7869
 
-# TMUX: main separator bg
+! TMUX: main separator bg
 *color25: #111411
 
-# TMUX: main window dan second window
+! TMUX: main window dan second window
 *color26: #232923
 *color27: #1f241f

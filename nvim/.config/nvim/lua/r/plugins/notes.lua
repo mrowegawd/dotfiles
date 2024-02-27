@@ -295,6 +295,21 @@ return {
     dependencies = {
       "hrsh7th/nvim-cmp",
       {
+        dir = "~/.local/src/nvim_plugins/qfsilet",
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+          "MunifTanjim/nui.nvim",
+        },
+        keys = {
+          "<Leader>q",
+          "<Leader>Q",
+          "m`",
+        },
+        opts = {
+          save_dir = Config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
+        },
+      },
+      {
         "akinsho/org-bullets.nvim",
         config = function()
           require("org-bullets").setup {
@@ -614,7 +629,7 @@ return {
       end
     end,
     opts = {
-      backend = "kitty",
+      backend = "ueberzug",
       editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
       tmux_show_only_in_active_window = true,
       integrations = {

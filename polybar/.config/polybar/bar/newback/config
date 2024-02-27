@@ -52,7 +52,7 @@ modules-left = appmenu bspwm mpd pulseaudio
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update check-network memory filesystem popup-calendar powermenu
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update check-network transmission memory filesystem popup-calendar powermenu
 ; modules-right = mpd info-docker record-ffmpeg pulseaudio sync-update transmission memory filesystem popup-calendar powermenu
-modules-right = polypomo record-ffmpeg info-docker check-network sync-update memory filesystem popup-calendar powermenu
+modules-right = polypomo record-ffmpeg check-network sync-update memory filesystem popup-calendar powermenu
 ; modules-right = info-docker record-ffmpeg pulseaudio memory filesystem date powermenu
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_

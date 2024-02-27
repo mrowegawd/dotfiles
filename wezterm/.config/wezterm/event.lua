@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
-local mux = wezterm.mux
+-- local mux = wezterm.mux
 
 local scrollback_lines = 5000 -- default is 3500
 

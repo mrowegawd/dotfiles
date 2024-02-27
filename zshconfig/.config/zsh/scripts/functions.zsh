@@ -184,7 +184,7 @@ show_alias() {
       return
     fi
 
-  # TODO: buatkan untuk juga untuk container, images, volume
+  # TODO: buatkan juga auto fzf untuk command _container, _images, _volume
   elif [[ $myargs[-1] == *"$doc_con"* ]]; then
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
