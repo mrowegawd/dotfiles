@@ -150,30 +150,6 @@ M.Mode = {
     end,
   },
 }
-
--- local function qflabel()
---   return require("r.utils").qf.is_loclist() and "Location List" or "Quickfix List"
--- end
---
--- local function ft_()
---   return vim.bo.filetype
--- end
-
---
--- M.quickfix = {
---   condition = function()
---     return vim.bo[0].filetype == "qf"
---   end,
---   provider = function()
---     if is_loclist() then
---       return vim.fn.getloclist(0, { title = 0 }).title
---     end
---
---     return string.format("Id:%s Title:%s", vim.fn.getqflist({ id = 0 }).id, vim.fn.getqflist({ title = 0 }).title)
---   end,
---
---   hl = { fg = colors.branch_fg, bg = colors.base_bg, bold = true },
--- }
 M.Git = {
   condition = Conditions.is_git_repo,
   provider = " ",
@@ -305,6 +281,19 @@ M.FileFlags = {
     provider = " ",
     hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
   },
+}
+M.Dap = {
+  condition = function()
+    if package.loaded.dap == nil then
+      return false
+    end
+    local session = require("dap").session()
+    return session ~= nil
+  end,
+  provider = function()
+    return " " .. require("dap").status() .. " "
+  end,
+  hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
 }
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },

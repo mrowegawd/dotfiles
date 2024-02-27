@@ -1,3 +1,5 @@
+local Config = require "r.config"
+
 return {
   -- NVIM-BQF
   {
@@ -55,6 +57,32 @@ return {
           },
         },
       },
+    },
+  },
+  {
+    dir = "~/.local/src/nvim_plugins/qfsilet",
+    event = "BufReadPost",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-orgmode/orgmode",
+      "MunifTanjim/nui.nvim",
+    },
+    keys = {
+      "<Leader>q",
+      "<Leader>Q",
+      "m`",
+      "mt",
+      "mT",
+      "dm",
+      "dM",
+      "mq",
+      "mgl",
+      "mgL",
+      "mgs",
+      "mgS",
+    },
+    opts = {
+      save_dir = Config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
     },
   },
 }

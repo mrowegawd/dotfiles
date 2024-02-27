@@ -14,6 +14,7 @@ return {
           comp.FileIcon,
           comp.FileFlags,
           { provider = "%=" },
+          comp.Dap,
           comp.LSPActive,
           comp.Diagnostics,
           -- comp.SearchCount, -- this func make nvim slow!
