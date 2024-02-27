@@ -138,12 +138,12 @@ return {
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
             local prefix = string.format(
-              "%s ",
+              " %s ",
               Icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
                 return first:upper() .. rest:lower()
               end)]
             )
-            return prefix, "Diagnostic" .. level:gsub("^%l", string.upper)
+            return prefix, "DiagnosticFloating" .. level:gsub("^%l", string.upper)
           end,
         },
       },
@@ -712,7 +712,6 @@ return {
   -- TYPESCRIPT-TOOLS
   {
     "pmizio/typescript-tools.nvim",
-    -- enabled = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "neovim/nvim-lspconfig",
@@ -795,15 +794,8 @@ return {
   },
   -- BETTER-TS-ERRORS
   {
-    "oleggulevskyy/better-ts-errors.nvim",
-    dependencies = { "MunifTanjim/nui.nvim" },
-    keys = { "dg" },
-    opts = {
-      keymaps = {
-        toggle = "dg", -- default '<leader>dd'
-        -- go_to_definition = "dG", -- go to problematic type from popup window
-      },
-    },
+    "dmmulroy/ts-error-translator.nvim",
+    config = true,
   },
   -- TWOSLASH-QUERIESN
   {

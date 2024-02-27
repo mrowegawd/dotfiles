@@ -208,31 +208,8 @@ return {
         return ok_cmp and cmp or {}
       end
 
-      local function get_luasnip()
-        local ok_luasnip, luasnip = pcall(require, "luasnip")
-        return ok_luasnip and luasnip or {}
-      end
-
       local cmp = get_cmp()
-      local luasnip = get_luasnip()
       local types = require "cmp.types"
-
-      -- local escape_next = function()
-      --   local current_line = vim.api.nvim_get_current_line()
-      --   local _, col = unpack(vim.api.nvim_win_get_cursor(0))
-      --   local next_char = string.sub(current_line, col + 1, col + 1)
-      --   return next_char == ")"
-      --     or next_char == '"'
-      --     or next_char == "'"
-      --     or next_char == "`"
-      --     or next_char == "]"
-      --     or next_char == "}"
-      -- end
-      --
-      -- local move_right = function()
-      --   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-      --   vim.api.nvim_win_set_cursor(0, { row, col + 1 })
-      -- end
 
       local function deprioritize_snippet(entry1, entry2)
         if entry1:get_kind() == types.lsp.CompletionItemKind.Snippet then
@@ -243,46 +220,23 @@ return {
         end
       end
 
-      local is_in_bullet = function()
-        local line = vim.api.nvim_get_current_line()
-        return line:match "^%s*(.-)%s*$" == "-" and (vim.bo.filetype == "markdown" or vim.bo.filetype == "text")
-      end
-
-      local function tab(fallback) -- make TAB behave like Android Studio
-        local entry = cmp.get_selected_entry()
-        -- local col = vim.fn.col "." - 1
-
-        if
-          cmp.visible()
-          and (
-            entry ~= nil
-            and not (entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$"))
-          )
-        then
-          cmp.confirm { select = true }
-        elseif require("luasnip").expand_or_jumpable() then -- force to check luasnip
+      local function tab(fallback)
+        if vim.snippet.jumpable(1) then
+          vim.snippet.jump(1)
+        elseif require("luasnip").expand_or_jumpable() then
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
-          -- elseif col == 0 or vim.fn.getline("."):sub(col, col):match "%s" then
-          -- elseif escape_next() then
-          --   move_right()
-        elseif is_in_bullet() then
-          vim.cmd.BulletDemote()
-          local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-          vim.api.nvim_win_set_cursor(0, { row, col + 1 })
         else
           fallback()
         end
       end
 
       local function shift_tab(fallback)
-        if require("luasnip").jumpable(-1) then
+        if vim.snippet.jumpable(-1) then
+          vim.schedule(function()
+            vim.snippet.jump(-1)
+          end)
+        elseif require("luasnip").jumpable(-1) then
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
-        -- elseif escape_next() then
-        --   move_right()
-        elseif is_in_bullet() then
-          vim.cmd.BulletDemote()
-          local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-          vim.api.nvim_win_set_cursor(0, { row, col + 1 })
         else
           fallback()
         end
@@ -385,7 +339,7 @@ return {
       }
       opts.snippet = {
         expand = function(args)
-          luasnip.lsp_expand(args.body)
+          vim.snippet.expand(args.body)
         end,
       }
       opts.sorting = {

@@ -130,10 +130,10 @@ local general_overrides = function()
     { DiagnosticSignHint = { bg = { from = "Normal", attr = "bg" } } },
 
     -- Floating windows
-    { DiagnosticFloatingWarn = { link = "DiagnosticWarn" } },
-    { DiagnosticFloatingInfo = { link = "DiagnosticInfo" } },
-    { DiagnosticFloatingHint = { link = "DiagnosticHint" } },
-    { DiagnosticFloatingError = { link = "DiagnosticError" } },
+    { DiagnosticFloatingWarn = { fg = { from  = "DiagnosticWarn" , attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingInfo = { fg = { from  = "DiagnosticInfo" , attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingHint = { fg = { from  = "DiagnosticHint" , attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingError = { fg = { from  = "DiagnosticError" , attr = "fg" }, bg = "NONE", bold = true } },
     { DiagnosticFloatTitle = { inherit = "FloatTitle", bold = true } },
     { DiagnosticFloatTitleIcon = { inherit = "FloatTitle", fg = { from = "@character" } } },
 
