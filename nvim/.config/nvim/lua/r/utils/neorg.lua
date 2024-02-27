@@ -42,9 +42,12 @@ function M.open_orgagenda_paths()
     local dirs = scan.scan_dir(path)
     for _, file_path in pairs(dirs) do
       if not string.match(file_path, "org_archive") then
-        local basename_file = string.gsub(M.basename(file_path), ".org", "")
-        table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
-        table.insert(org_todos, basename_file)
+        local check_org_ext = string.match(M.basename(file_path), "%.org$")
+        if check_org_ext then
+          local basename_file = string.gsub(M.basename(file_path), ".org$", "")
+          table.insert(org_backup, { full_path = file_path, path = path, basename_file = basename_file })
+          table.insert(org_todos, basename_file)
+        end
       end
     end
   end

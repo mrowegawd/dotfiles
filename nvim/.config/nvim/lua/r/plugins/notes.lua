@@ -279,7 +279,7 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    event = "LazyFile",
+    -- event = "LazyFile",
     ft = "org",
     keys = {
       {
@@ -294,21 +294,6 @@ return {
     },
     dependencies = {
       "hrsh7th/nvim-cmp",
-      {
-        dir = "~/.local/src/nvim_plugins/qfsilet",
-        dependencies = {
-          "nvim-lua/plenary.nvim",
-          "MunifTanjim/nui.nvim",
-        },
-        keys = {
-          "<Leader>q",
-          "<Leader>Q",
-          "m`",
-        },
-        opts = {
-          save_dir = Config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
-        },
-      },
       {
         "akinsho/org-bullets.nvim",
         config = function()
