@@ -4,6 +4,7 @@ return {
   -- NVIM-BQF
   {
     "kevinhwang91/nvim-bqf",
+    enabled = false,
     ft = { "qf" },
     dependencies = {
       {

@@ -203,27 +203,22 @@ return {
             },
           }
         end,
-        desc = "Fzflua(qf): select qf list",
+        desc = "Fzflua(qf): select qf items",
       },
       {
         "<Leader>fq",
         function()
           local path = require "fzf-lua.path"
-
           local qf_items = vim.fn.getqflist()
 
           local qf_ntbl = {}
           for _, qf_item in pairs(qf_items) do
-            table.insert(qf_ntbl, path.relative(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
+            table.insert(qf_ntbl, path.relative_to(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
           end
-
-          local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case {q} ]]
-            .. table.concat(qf_ntbl, " ")
 
           return fzf_lua.live_grep_glob {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("[QF] Grep", "") },
-            cmd = pcmd,
           }
         end,
         desc = "Fzflua(qf): grep qf items",

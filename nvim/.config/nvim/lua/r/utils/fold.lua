@@ -49,8 +49,10 @@ function M.goPreviousClosedFold()
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
       local success, err = pcall(function()
-        vim.cmd "cprevious"
-        vim.cmd "normal! zz"
+        vim.schedule(function()
+          vim.cmd "cprevious"
+          vim.cmd "normal! zz"
+        end)
       end)
 
       if not success and type(err) == "string" then
@@ -63,7 +65,11 @@ function M.goPreviousClosedFold()
     else
       -- I got lazy convert this logic into lua, so I stole it yehahaa
       -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
-      return vim.cmd "wincmd p"
+      --
+      vim.schedule(function()
+        vim.cmd "wincmd p"
+      end)
+      return
     end
   end
 
@@ -102,8 +108,10 @@ function M.goNextClosedFold()
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
       local success, err = pcall(function()
-        vim.cmd "cnext"
-        vim.cmd "normal! zz"
+        vim.schedule(function()
+          vim.cmd "cnext"
+          vim.cmd "normal! zz"
+        end)
       end)
 
       if not success and type(err) == "string" then
@@ -114,7 +122,10 @@ function M.goNextClosedFold()
         end
       end
     else
-      return vim.cmd "wincmd p"
+      vim.schedule(function()
+        vim.cmd "wincmd p"
+      end)
+      return
     end
   end
 

@@ -218,7 +218,7 @@ Util.cmd.augroup("LocateLastPosition", {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
   command = function(args)
-    local exclude = { "gitcommit", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage" }
+    local exclude = { "gitcommit", "gitrebase", "svn", "hgcommit", "NeogitCommitMessage", "qf" }
     local buf = args.buf
     if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
       return
