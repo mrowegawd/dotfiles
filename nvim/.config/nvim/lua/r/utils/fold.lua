@@ -48,24 +48,17 @@ function M.goPreviousClosedFold()
 
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
-      local success, err = pcall(function()
-        vim.schedule(function()
+      vim.schedule(function()
+        local _, err = pcall(function()
           vim.cmd "cprevious"
           vim.cmd "normal! zz"
         end)
-      end)
 
-      if not success and type(err) == "string" then
-        if string.match(err, "^Vim%((%a+)%)=:E553") then
+        if err and string.match(err, "E553") then
           vim.cmd "clast"
-        elseif string.match(err, "^Vim%((%a+)%)=:E%(325%|776%|42%)") then
-          -- handle error appropriately
         end
-      end
+      end)
     else
-      -- I got lazy convert this logic into lua, so I stole it yehahaa
-      -- taken from: https://github.com/romainl/vim-qf/blob/master/autoload/qf/wrap.vim
-      --
       vim.schedule(function()
         vim.cmd "wincmd p"
       end)
@@ -107,20 +100,16 @@ function M.goNextClosedFold()
 
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
-      local success, err = pcall(function()
-        vim.schedule(function()
+      vim.schedule(function()
+        local _, err = pcall(function()
           vim.cmd "cnext"
           vim.cmd "normal! zz"
         end)
-      end)
 
-      if not success and type(err) == "string" then
-        if string.match(err, "^Vim%((%a+)%)=:E553") then
+        if err and string.match(err, "E553") then
           vim.cmd "cfirst"
-        elseif string.match(err, "^Vim%((%a+)%)=:E%(325%|776%|42%)") then
-          -- handle error appropriately
         end
-      end
+      end)
     else
       vim.schedule(function()
         vim.cmd "wincmd p"
