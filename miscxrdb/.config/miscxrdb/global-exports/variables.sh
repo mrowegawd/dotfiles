@@ -56,7 +56,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # }}}
 
 export NNN_OPENER=$HOME/.config/miscxrdb/nnn/nnn-opener.sh
-export NNN_PLUG='g:fzmark;o:fzopen;p:preview-tui;d:fzcd;t:termcd;r:filecd;B:oplazygit'
+export NNN_PLUG='g:fzmark;o:fzopen;p:preview-tui;d:fzcd;t:termcd;A:filecd;B:oplazygit'
 
 export NNN_FIFO='/tmp/nnn.fifo'
 export NNN_OPTS="H"
