@@ -712,9 +712,81 @@ return {
   -- TYPESCRIPT-TOOLS
   {
     "pmizio/typescript-tools.nvim",
+    enabled = function()
+      local ts_config = vim.fn.glob "./tsconfig.json"
+      if ts_config == "" then
+        return false
+      end
+      return true
+    end,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "neovim/nvim-lspconfig",
+      -- BETTER-TS-ERRORS
+      {
+        "dmmulroy/ts-error-translator.nvim",
+        config = true,
+      },
+      -- TWOSLASH-QUERIESN
+      {
+        -- use like //        ^?
+        "marilari88/twoslash-queries.nvim",
+        ft = {
+          "typescript",
+          "typescriptreact",
+          "javascript",
+          "javascriptreact",
+        },
+        opts = {
+          highlight = "Type",
+          multi_line = true,
+        },
+      },
+      -- TSC.NVIM
+      {
+        -- Type checking typescript
+        "dmmulroy/tsc.nvim",
+        cmd = { "TSC" },
+        ft = {
+          "typescript",
+          "typescriptreact",
+          "javascript",
+          "javascriptreact",
+        },
+        config = function()
+          require("tsc").setup()
+          vim.api.nvim_exec_autocmds("FileType", {})
+        end,
+      },
+      -- PACKAGE-INFO.NVIM
+      {
+        "vuki656/package-info.nvim",
+        event = "BufEnter package.json",
+        config = function()
+          require("package-info").setup {
+            colors = {
+              up_to_date = "#3C4048", -- Text color for up to date package virtual text
+              outdated = "#fc514e", -- Text color for outdated package virtual text
+            },
+            icons = {
+              enable = true, -- Whether to display icons
+              style = {
+                up_to_date = Icons.misc.check, -- Icon for up to date packages
+                outdated = Icons.git.remove, -- Icon for outdated packages
+              },
+            },
+            autostart = true, -- Whether to autostart when `package.json` is opened
+            hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
+            hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
+
+            -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
+            -- The plugin will try to auto-detect the package manager based on
+            -- `yarn.lock` or `package-lock.json`. If none are found it will use the
+            -- provided one,                              if nothing is provided it will use `yarn`
+            package_manager = "yarn",
+          }
+        end,
+      },
     },
     ft = {
       "typescript",
@@ -768,19 +840,20 @@ return {
         includeInlayEnumMemberValueHints = true,
       },
       root_dir = function(fname)
-        local util = require "lspconfig.util"
+        local lspUtil = require "lspconfig.util"
         -- Disable tsserver on js files when a flow project is detected
-        if not string.match(fname, ".tsx?$") and util.root_pattern ".flowconfig"(fname) then
+        if not string.match(fname, ".tsx?$") and lspUtil.root_pattern ".flowconfig"(fname) then
           return nil
         end
-        local ts_root = util.root_pattern "tsconfig.json"(fname)
-          or util.root_pattern("package.json", "jsconfig.json", ".git")(fname)
+        local ts_root = lspUtil.root_pattern "tsconfig.json"(fname)
+          or lspUtil.root_pattern("package.json", "jsconfig.json")(fname)
         if ts_root then
-          return ts_root
+          return nil
         end
         if vim.g.started_by_firenvim then
-          return util.path.dirname(fname)
+          return lspUtil.path.dirname(fname)
         end
+
         return nil
       end,
     },
@@ -790,71 +863,6 @@ return {
       end)
       require("typescript-tools").setup(opts)
       vim.api.nvim_exec_autocmds("FileType", {})
-    end,
-  },
-  -- BETTER-TS-ERRORS
-  {
-    "dmmulroy/ts-error-translator.nvim",
-    config = true,
-  },
-  -- TWOSLASH-QUERIESN
-  {
-    -- use like //        ^?
-    "marilari88/twoslash-queries.nvim",
-    ft = {
-      "typescript",
-      "typescriptreact",
-      "javascript",
-      "javascriptreact",
-    },
-    opts = {
-      highlight = "Type",
-      multi_line = true,
-    },
-  },
-  -- TSC.NVIM
-  {
-    -- Type checking typescript
-    "dmmulroy/tsc.nvim",
-    cmd = { "TSC" },
-    ft = {
-      "typescript",
-      "typescriptreact",
-      "javascript",
-      "javascriptreact",
-    },
-    config = function()
-      require("tsc").setup()
-      vim.api.nvim_exec_autocmds("FileType", {})
-    end,
-  },
-  -- PACKAGE-INFO.NVIM
-  {
-    "vuki656/package-info.nvim",
-    event = "BufEnter package.json",
-    config = function()
-      require("package-info").setup {
-        colors = {
-          up_to_date = "#3C4048", -- Text color for up to date package virtual text
-          outdated = "#fc514e", -- Text color for outdated package virtual text
-        },
-        icons = {
-          enable = true, -- Whether to display icons
-          style = {
-            up_to_date = Icons.misc.check, -- Icon for up to date packages
-            outdated = Icons.git.remove, -- Icon for outdated packages
-          },
-        },
-        autostart = true, -- Whether to autostart when `package.json` is opened
-        hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
-        hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
-
-        -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
-        -- The plugin will try to auto-detect the package manager based on
-        -- `yarn.lock` or `package-lock.json`. If none are found it will use the
-        -- provided one,                              if nothing is provided it will use `yarn`
-        package_manager = "yarn",
-      }
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
