@@ -127,7 +127,7 @@ function M.statuscolumn()
     -- Right: number or fold
     components[2] = is_file and M.icon(left or right) or big_spaces .. " "
 
-    if not vim.tbl_contains({ "norg", "markdown" }, vim.bo.filetype) then
+    if not vim.tbl_contains({ "norg", "markdown", "gitcommit" }, vim.bo.filetype) then
       components[4] = M.icon({ text = separator, texthl = "MySeparator" }, 1, big_spaces)
     else
       components[4] = " "
@@ -144,7 +144,7 @@ function M.statuscolumn()
       -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum))))
       components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
     elseif v.virtnum < 0 then
-      if not vim.tbl_contains({ "norg", "org", "markdown" }, vim.bo.filetype) then
+      if not vim.tbl_contains({ "norg", "org", "markdown", "octo" }, vim.bo.filetype) then
         components[3] = "%=" .. separator .. " "
       end
     else

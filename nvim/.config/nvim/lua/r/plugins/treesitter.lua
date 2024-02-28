@@ -104,6 +104,8 @@ return {
 
         "json",
         "jsonc",
+        "ini",
+        "ssh_config",
 
         "sql",
         "svelte",

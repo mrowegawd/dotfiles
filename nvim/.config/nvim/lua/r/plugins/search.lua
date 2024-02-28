@@ -539,6 +539,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = { ["--header"] = [[Ctrl-g:'grep_lgrep',Ctrl-e:'rgflow']] },
+          multiprocess = true,
           winopts_fn = function()
             local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.8)
             local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
