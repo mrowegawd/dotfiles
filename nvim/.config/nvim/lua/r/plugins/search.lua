@@ -284,15 +284,14 @@ return {
           builtin = {
             ["<F1>"] = "toggle-help",
             ["<F4>"] = "toggle-fullscreen",
+            ["<F3>"] = "toggle-preview-cw",
+
             ["<a-p>"] = "toggle-preview",
             ["<c-p>"] = "toggle-preview",
-            ["<c-d>"] = "preview-page-down",
-            ["<c-u>"] = "preview-page-up",
+
+            ["<a-d>"] = "preview-page-down",
+            ["<a-u>"] = "preview-page-up",
             ["<a-s>"] = "toggle-sort",
-            ["<a-j>"] = "toggle-preview-cw",
-            ["<a-k>"] = "toggle-preview-ccw",
-            ["<a-l>"] = "toggle-preview-cw",
-            ["<a-h>"] = "toggle-preview-ccw",
           },
         },
         -- PROVIDER SETUP
@@ -300,8 +299,9 @@ return {
           -- debug = true,
           prompt = "  ",
           cwd_prompt = false,
+          no_header = true, -- disable default header
           winopts = { title = Util.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[Ctrl-g:'ignore rules',Ctrl-y:'copy',Ctrl-e:'rgflow']] },
+          fzf_opts = { ["--header"] = [[Ctrl-y:'copy',Ctrl-e:'rgflow']] },
           fd_opts = fd_opts,
           actions = {
             ["default"] = function(selected, opts)
@@ -360,11 +360,15 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               -- actions inherit from 'actions.files' and merge
-              ["right"] = { actions.git_unstage, actions.resume },
-              ["left"] = {
-                actions.git_stage,
-                actions.resume,
-              },
+              -- ["right"] = { actions.git_unstage, actions.resume },
+              -- ["left"] = {
+              --   actions.git_stage,
+              --   actions.resume,
+              -- },
+              ["left"] = false,
+              ["right"] = false,
+              ["ctrl-s"] = { actions.git_stage_unstage, actions.resume },
+              ["ctrl-x"] = { actions.git_reset, actions.resume },
             },
           },
           commits = {
@@ -532,8 +536,9 @@ return {
         grep = {
           -- debug = true,
           prompt = " ",
-          -- no_header = false, -- disable default header
+          no_header = true, -- disable default header
           rg_opts = rg_opts,
+          fzf_opts = { ["--header"] = [[Ctrl-g:'grep_lgrep',Ctrl-e:'rgflow']] },
           winopts_fn = function()
             local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.8)
             local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
@@ -1035,6 +1040,7 @@ return {
               -- ["<c-l>"] = false, -- use `false` to disable mapping
 
               ["<a-a>"] = actions.toggle_all,
+              ["<a-q>"] = actions.send_to_qflist + actions.open_qflist,
 
               ["<CR>"] = stopinsert(actions.select_default),
               ["<C-s>"] = stopinsert(actions.select_horizontal),
@@ -1044,14 +1050,15 @@ return {
               ["<c-r>"] = actions.to_fuzzy_refine,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
-              ["<c-l>"] = layout_actions.cycle_layout_next,
-              ["<c-h>"] = layout_actions.cycle_layout_prev,
+              ["<F3>"] = layout_actions.cycle_layout_next,
+              -- ["<c-h>"] = layout_actions.cycle_layout_prev,
 
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
 
-              ["<F4>"] = layout_actions.cycle_layout_next,
-              ["<F3>"] = layout_actions.toggle_preview,
+              -- ["<F4>"] = layout_actions.cycle_layout_next,
+              ["<c-p>"] = layout_actions.toggle_preview,
+              ["<a-p>"] = layout_actions.toggle_preview,
 
               ["<jk>"] = function()
                 vim.cmd.stopinsert()
