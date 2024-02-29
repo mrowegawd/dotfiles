@@ -51,6 +51,10 @@ build-install(){
   # sudo apt update
   # sudo apt install timer
 
+  # TODO: install `play`
+  # https://askubuntu.com/questions/920539/how-do-you-play-a-sound-from-the-terminal
+  # sudo apt install sox
+  # sudo apt install libsox-fmt-all
 }
 
 build-react() {

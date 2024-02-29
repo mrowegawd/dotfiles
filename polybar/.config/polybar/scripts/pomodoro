@@ -29,7 +29,7 @@ run_pomo() {
 	fi
 
 	# bspc rule -a \* -o state=floating center=true focus=off rectangle=1200x800+0+0 follow=off desktop=4 &&
-	$terminal -e zsh -c "timer $1 && dunstify -u normal \"Pomodoro:\" \"$2\" -i ~/.config/miscxrdb/icons/pomodoro.png && mpv ~/.config/miscxrdb/mp3-wav/beep-warning.mp3 --volume=100 2 >/dev/null" &
+	$terminal -e zsh -c "timer $1 && dunstify -u normal \"Pomodoro:\" \"$2\" -i ~/.config/miscxrdb/icons/pomodoro.png && play ~/.config/miscxrdb/mp3-wav/beep-warning.mp3 2>/dev/null" &
 }
 
 main() {

@@ -30,5 +30,5 @@ concatenated_string=$(
 
 sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
 if [ -f "$sound_man" ]; then
-	/usr/local/bin/mpv "$sound_man" --volume=100 2 >/dev/null
+	/usr/bin/play "$sound_man" 2>/dev/null
 fi
