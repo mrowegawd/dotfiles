@@ -31,7 +31,12 @@ return {
             { action = [[lua require("fzf-lua").oldfiles()]], desc = " Recent files", icon = " ", key = "o" },
             { action = [[lua require("fzf-lua").live_grep()]], desc = " Find text", icon = " ", key = "g" },
             { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },
-            { action = 'lua require("persistence").load()', desc = " Restore Session", icon = " ", key = "s" },
+            {
+              action = 'lua require("r.utils").sessions.load_ses()',
+              desc = " Restore Session",
+              icon = " ",
+              key = "s",
+            },
             -- { action = 'lua require("resession").load()', desc = " Restore Session", icon = " ", key = "s" },
             -- { action = [[AutoSessionRestore]], desc = " Restore Session", icon = " ", key = "s" },
             { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "l" },

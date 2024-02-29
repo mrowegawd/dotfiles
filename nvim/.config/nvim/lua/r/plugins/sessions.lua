@@ -1,5 +1,3 @@
-local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
-
 local Util = require "r.utils"
 
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
@@ -8,27 +6,31 @@ return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- PERSISTENCE
+  -- MINI.SESSIONS
   {
-    "folke/persistence.nvim",
+    "echasnovski/mini.sessions",
+    version = "*",
     event = "BufReadPre",
-    opts = {
-      opts = { options = vim.opt.sessionoptions:get() },
-      pre_save = function()
-        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-          if vim.fn.buflisted(bufnr) == 1 then
-            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-              vim.api.nvim_buf_delete(bufnr, {})
-            end
-          end
-        end
-      end,
-    },
-    -- stylua: ignore
     keys = {
-      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
-      { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
-      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
+      {
+        "<Leader>ss",
+        function()
+          Util.sessions.save_ses()
+        end,
+        desc = "Misc(mini.session): save session",
+      },
+
+      {
+        "<Leader>sl",
+        function()
+          Util.sessions.load_ses()
+        end,
+        desc = "Misc(mini.session): restore last session",
+      },
+    },
+    opts = {
+      autoread = false,
+      autowrite = false,
     },
   },
   --  ╭──────────────────────────────────────────────────────────╮

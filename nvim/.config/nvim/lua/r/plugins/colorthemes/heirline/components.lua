@@ -515,7 +515,7 @@ M.Sessions = {
     provider = function()
       local ok, ses_persistent = pcall(require, "persistence")
       if not ok then
-        return "%#MyStatusLine_notif_fg# No Plugin%* "
+        return "%#MyStatusLine_notif_fg# No resync session (manual)%* "
       end
 
       local ses_persistent_get_current = ses_persistent.get_current()
