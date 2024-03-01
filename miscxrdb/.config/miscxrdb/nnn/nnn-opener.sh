@@ -69,7 +69,8 @@ handle_video() {
 	elif type smplayer >/dev/null 2>&1; then
 		nohup smplayer "${FPATH}" >/dev/null 2>&1 &
 	elif type mpv >/dev/null 2>&1; then
-		nohup mpv "${FPATH}" >/dev/null 2>&1 &
+		# nohup mpv "${FPATH}" >/dev/null 2>&1 &
+		nohup mpv --autofit=1000x900 --geometry=-15-60 "${FPATH}" >/dev/null 2>&1 &
 	else
 		return
 	fi

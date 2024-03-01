@@ -85,12 +85,13 @@ fi
 
 handle_video() {
 	# if [ "$GUI" -ne 0 ]; then
+	dunstify "mantap"
 	if is_mac; then
 		nohup open "$1" >/dev/null 2>&1 &
 	elif type smplayer >/dev/null 2>&1; then
 		nohup smplayer "$1" >/dev/null 2>&1 &
 	elif type mpv >/dev/null 2>&1; then
-		nohup mpv "$1" >/dev/null 2>&1 &
+		nohup mpv --autofit=1000x900 --geometry=-15-60 "$1" >/dev/null 2>&1 &
 	else
 		return
 	fi
