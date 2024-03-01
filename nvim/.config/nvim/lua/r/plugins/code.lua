@@ -43,96 +43,6 @@ return {
           },
         },
       },
-      -- NVIM-AUTOPAIRS
-      {
-        -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5
-        -- before we use ultimate-autopair
-        "windwp/nvim-autopairs",
-        opts = {
-          close_triple_quotes = true,
-          check_ts = true,
-          ts_config = {
-            lua = { "string" },
-            dart = { "string" },
-            javascript = { "template_string" },
-          },
-          disable_filetype = {
-            "TelescopePrompt",
-            "spectre_panel",
-            "neo-tree-popup",
-            "vim",
-          },
-          fast_wrap = { map = "<c-q>" },
-          -- fast_wrap = { map = nil },
-          chars = { "{", "[", "(", '"', "'" },
-          pattern = [=[[%'%"%>%]%)%}%,]]=],
-          end_key = "$",
-          before_key = "h",
-          after_key = "l",
-          manual_position = true,
-          highlight = "PmenuSel",
-          highlight_grey = "LineNr",
-        },
-        config = function(_, opts)
-          local npairs = require "nvim-autopairs"
-          local Rule = require "nvim-autopairs.rule"
-          local cond = require "nvim-autopairs.conds"
-          npairs.setup(opts)
-
-          -- rule for: `(|)` -> Space -> `( | )` and associated deletion options
-          local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
-          npairs.add_rules {
-            Rule(" ", " ", "-markdown")
-              :with_pair(function(optsc)
-                local pair = optsc.line:sub(optsc.col - 1, optsc.col)
-                return vim.tbl_contains({
-                  brackets[1][1] .. brackets[1][2],
-                  brackets[2][1] .. brackets[2][2],
-                  brackets[3][1] .. brackets[3][2],
-                }, pair)
-              end)
-              :with_move(cond.none())
-              :with_cr(cond.none())
-              :with_del(function(optsc)
-                -- We only want to delete the pair of spaces when the cursor is as such: ( | )
-                local col = vim.api.nvim_win_get_cursor(0)[2]
-                local context = optsc.line:sub(col - 1, col + 2)
-                return vim.tbl_contains({
-                  brackets[1][1] .. "  " .. brackets[1][2],
-                  brackets[2][1] .. "  " .. brackets[2][2],
-                  brackets[3][1] .. "  " .. brackets[3][2],
-                }, context)
-              end),
-          }
-
-          for _, bracket in pairs(brackets) do
-            npairs.add_rules {
-              -- add move for brackets with pair of spaces inside
-              Rule(bracket[1] .. " ", " " .. bracket[2])
-                :with_pair(function()
-                  return false
-                end)
-                :with_del(function()
-                  return false
-                end)
-                :with_move(function(optsc)
-                  return optsc.prev_char:match(".%" .. bracket[2]) ~= nil
-                end)
-                :use_key(bracket[2]),
-
-              -- add closing brackets even if next char is '$'
-              Rule(bracket[1], bracket[2]):with_pair(cond.after_text "$"),
-
-              -- `()|` -> <BS> -> `|`
-              Rule(bracket[1] .. bracket[2], ""):with_pair(function()
-                return false
-              end):with_cr(function()
-                return false
-              end),
-            }
-          end
-        end,
-      },
       -- LUASNIP
       {
         "L3MON4D3/LuaSnip",
@@ -564,6 +474,31 @@ return {
         --   { name = "buffer" },
         -- }
       })
+    end,
+  },
+  -- NVIM-AUTOPAIRS
+  {
+    -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5
+    -- before we use ultimate-autopair
+    "windwp/nvim-autopairs",
+    event = { "InsertEnter", "CmdlineEnter" },
+    dependencies = { "hrsh7th/nvim-cmp" },
+    config = function()
+      local autopairs = require "nvim-autopairs"
+      local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+      require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
+      autopairs.setup {
+        close_triple_quotes = true,
+        disable_filetype = { "neo-tree-popup" },
+        check_ts = true,
+        fast_wrap = { map = "<c-q>" },
+        ts_config = {
+          lua = { "string" },
+          dart = { "string" },
+          javascript = { "template_string" },
+        },
+      }
     end,
   },
   -- COMMENTS-TS-CONTEXT

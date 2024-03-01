@@ -10,7 +10,7 @@ local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
 -- stylua: ignore
 local general_overrides = function()
   Highlight.all {
-    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
+    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
     { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Keyword", attr = "fg", alter = -0.2 }, bg = "NONE", bold = true } },
@@ -83,10 +83,10 @@ local general_overrides = function()
     -- { diffNoEOL = { link = 'WarningMsg' } },
     -- { diffOnly = { link = 'WarningMsg' } },
 
-    { diffAdd = { bg = UIPallette.palette.green_git_bg, fg = "NONE", bold =true } },
-    { diffChange = { bg = UIPallette.palette.yellow_git_bg, fg = "NONE", bold =true } },
-    { diffDelete = { bg = UIPallette.palette.red_git_bg, fg = "NONE", bold =true } },
-    { diffText = { bg = UIPallette.palette.text_git_bg, fg = "NONE",bold =true } },
+    { diffAdd = { bg = UIPallette.palette.green_git_bg, fg = "NONE", bold = true } },
+    { diffChange = { bg = UIPallette.palette.yellow_git_bg, fg = "NONE", bold = true } },
+    { diffDelete = { bg = UIPallette.palette.red_git_bg, fg = "NONE", bold = true } },
+    { diffText = { bg = UIPallette.palette.text_git_bg, fg = "NONE", bold = true } },
 
     { GitSignsAdd = { bg = "NONE", fg =  dark_green } },
     { GitSignsChange = { bg = "NONE", fg = dark_orange } },
@@ -97,7 +97,6 @@ local general_overrides = function()
     { NeogitDiffDelete =  { link = "diffDelete" } } ,
     { NeogitDiffDeleteHighlight =  { link = "diffDelete" } } ,
     { DiffText =  { link = "diffText" } } ,
-
     -----------------------------------------------------------------------
     -- LSP
     -----------------------------------------------------------------------
@@ -116,7 +115,10 @@ local general_overrides = function()
       fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
       bg = { from = "ColorColumn" , attr = "bg" }
     } },
-
+    -----------------------------------------------------------------------
+    -- DEBUG
+    -----------------------------------------------------------------------
+    { debugPC = { bg = { from = "Boolean", attr = "fg", alter = -0.6 }, fg = "NONE", bold = true } },
     -----------------------------------------------------------------------
     -- DIAGNOSTIC
     -----------------------------------------------------------------------
@@ -194,7 +196,8 @@ local general_overrides = function()
     { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
-    { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
+    { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1.8 } } },
+    { CodeBlock1 = { bg = { from = "Normal", alter = -0.15 } } },
     { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
 
@@ -362,6 +365,7 @@ local function colorscheme_overrides()
 
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
+      { ["@org.agenda.scheduled"] = { fg = { from = "@tag.attribute", attr = "fg", alter = 0.2 } } },
     },
     ["solarized-osaka"] = {
       -- { NormalNC = { inherit = "Normal" } },

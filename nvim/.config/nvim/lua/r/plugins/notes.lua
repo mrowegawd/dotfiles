@@ -763,6 +763,7 @@ return {
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
+    -- enabled = false,
     event = "VeryLazy",
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
@@ -771,52 +772,52 @@ return {
           ["*"] = {
             { Dash = { bg = "NONE", bold = true } },
             { CodeBlock = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-            {
-              Headline1 = {
-                bg = "#332F46",
-                fg = { from = "PreProc", attr = "fg", alter = 1 },
-                bold = true,
-              },
-            },
-            {
-              Headline2 = {
-                bg = "#3F2F46",
-                fg = { from = "PreProc", attr = "fg", alter = 0.8 },
-                bold = true,
-              },
-            },
-
-            {
-              Headline3 = {
-                bg = "#462F42",
-                fg = { from = "PreProc", attr = "fg", alter = 0.6 },
-                bold = true,
-              },
-            },
-            {
-
-              Headline4 = {
-                bg = "#462F37",
-                fg = { from = "PreProc", attr = "fg", alter = 0.4 },
-                bold = true,
-              },
-            },
-            {
-              Headline5 = {
-                bg = "#46332F",
-                fg = { from = "PreProc", attr = "fg", alter = 0.2 },
-                bold = true,
-              },
-            },
-            {
-              Headline6 = {
-                -- bg = { from = "Normal", attr = "bg" },
-                bg = "#463F2F",
-                -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "PreProc", attr = "fg", alter = 0 },
-                bold = true,
-              },
-            },
+            -- {
+            --   Headline1 = {
+            --     bg = "#332F46",
+            --     fg = { from = "PreProc", attr = "fg", alter = 1 },
+            --     bold = true,
+            --   },
+            -- },
+            -- {
+            --   Headline2 = {
+            --     bg = "#3F2F46",
+            --     fg = { from = "PreProc", attr = "fg", alter = 0.8 },
+            --     bold = true,
+            --   },
+            -- },
+            --
+            -- {
+            --   Headline3 = {
+            --     bg = "#462F42",
+            --     fg = { from = "PreProc", attr = "fg", alter = 0.6 },
+            --     bold = true,
+            --   },
+            -- },
+            -- {
+            --
+            --   Headline4 = {
+            --     bg = "#462F37",
+            --     fg = { from = "PreProc", attr = "fg", alter = 0.4 },
+            --     bold = true,
+            --   },
+            -- },
+            -- {
+            --   Headline5 = {
+            --     bg = "#46332F",
+            --     fg = { from = "PreProc", attr = "fg", alter = 0.2 },
+            --     bold = true,
+            --   },
+            -- },
+            -- {
+            --   Headline6 = {
+            --     -- bg = { from = "Normal", attr = "bg" },
+            --     bg = "#463F2F",
+            --     -- bg = { from = "Normal", attr = "bg", alter = -0.2 },
+            --     fg = { from = "PreProc", attr = "fg", alter = 0 },
+            --     bold = true,
+            --   },
+            -- },
           },
         },
       })
@@ -824,7 +825,8 @@ return {
         org = { headline_highlights = false },
         norg = { headline_highlights = false, codeblock_highlight = false },
         markdown = {
-          headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4", "Headline5" },
+          -- headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4", "Headline5" },
+          headline_highlights = false,
           -- fat_headline_lower_string = "▔",
           codeblock_highlight = "CodeBlock1",
         },

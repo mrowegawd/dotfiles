@@ -317,7 +317,8 @@ return {
           settings = {
             Lua = {
               runtime = {
-                version = "LuaJIT", -- diperlukan define LuaJIT ini, kalau tidak warning lua version (contoh unpack)
+                -- diperlukan define LuaJIT ini, kalau tidak warning lua version (contoh unpack)
+                version = "LuaJIT",
               },
               codeLens = { enable = true },
               workspace = {

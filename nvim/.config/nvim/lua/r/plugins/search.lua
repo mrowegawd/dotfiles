@@ -70,7 +70,7 @@ return {
       {
         "mangelozzi/nvim-rgflow.lua",
         opts = {
-          default_trigger_mappings = true,
+          default_trigger_mappings = false,
           default_ui_mappings = true,
           cmd_flags = rg_opts,
           colors = {
@@ -86,7 +86,7 @@ return {
     keys = {
       { "sf", fzf_lua.buffers, desc = "WinNav(fzflua): open" },
       { "sG", fzf_lua.lines, desc = "WinNav(fzflua): live_grep on buffers" },
-      { "so", fzf_lua.oldfiles, desc = "WinNav(Fzflua): oldfiles" },
+      { "sH", fzf_lua.oldfiles, desc = "WinNav(Fzflua): history" },
       { "z=", fzf_lua.spell_suggest, desc = "Fzflua: spell suggest" },
       { "sg", fzf_lua.blines, desc = "WinNav(fzfLua): live_grep on curbuf" },
       {

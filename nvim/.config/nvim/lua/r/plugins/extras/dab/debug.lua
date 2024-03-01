@@ -160,9 +160,9 @@ return {
     },
     -- stylua: ignore
     keys = {
-      --  +----------------------------------------------------------+
-      --    DAP commands
-      --  +----------------------------------------------------------+
+      -- +----------------------------------------------------------+
+      -- DAP commands
+      -- +----------------------------------------------------------+
       -- { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug(dap): run to cursor" },
       -- { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug(dap): run last" },
       -- { "<Leader>dr", function() require "dap".repl.toggle(nil, "botright split") end, desc = "Dap: toggle REPL" },
@@ -210,9 +210,9 @@ return {
         end,
         desc = "Debug(dap): list of debugging dap commands",
       },
-      --  +----------------------------------------------------------+
-      --    Run and close the debug
-      --  +----------------------------------------------------------+
+      -- +----------------------------------------------------------+
+      -- Run and close the debug
+      -- +----------------------------------------------------------+
       -- { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug(dap): restart" },
       -- { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug(dap): closing or quit debug", },
       {
@@ -240,10 +240,10 @@ return {
         end,
         desc = "Debug(dap): run or disconnect",
       },
-      --  +----------------------------------------------------------+
-      --    Step-in, step-out, step-over | Stack-up Stack-down
-      --    For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
-      --  +----------------------------------------------------------+
+      -- +----------------------------------------------------------+
+      -- Step-in, step-out, step-over | Stack-up Stack-down
+      -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
+      -- +----------------------------------------------------------+
       { "<s-right>", function() require("dap").step_into() end, desc = "Debug(dap): step-into" },
       { "<s-left>", function() require("dap").step_out() end, desc = "Debug(dap): step-out" },
       { "<s-down>", function() require("dap").step_over() end, desc = "Debug(dap): step-over" },

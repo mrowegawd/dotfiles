@@ -238,9 +238,9 @@ return {
       -- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
     end,
   },
-  -- NVIM-TREESITTER-CONTEXT
+  -- CONTEXT-NVIM-ZERO
   {
-    "mrowegawd/context-nvim-zero",
+    "mrowegawd/nvim-treesitter-context",
     event = "LazyFile",
     opts = function()
       local Highlight = require "r.settings.highlights"

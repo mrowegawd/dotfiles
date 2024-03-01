@@ -17,7 +17,7 @@ return {
           comp.Dap,
           comp.LSPActive,
           comp.Diagnostics,
-          -- comp.SearchCount, -- this func make nvim slow!
+          comp.SearchCount, -- this func make nvim slow!
           comp.Sessions,
           comp.BufferCwd,
           comp.Ruler,

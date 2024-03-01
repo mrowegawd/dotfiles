@@ -4,6 +4,7 @@ return {
   -- Tabnine cmp source
   {
     "nvim-cmp",
+    enabled = false,
     dependencies = {
       {
         "tzachar/cmp-tabnine",
@@ -41,8 +42,9 @@ return {
   -- Show TabNine status in lualine
   {
     "nvim-lualine/lualine.nvim",
-    optional = true,
     event = "VeryLazy",
+    enabled = false,
+    optional = true,
     opts = function(_, opts)
       local icon = require("r.config").icons.kinds.TabNine
       table.insert(opts.sections.lualine_x, 2, require("r.utils").lualine.cmp_source("cmp_tabnine", icon))

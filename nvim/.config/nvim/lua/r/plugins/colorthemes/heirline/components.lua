@@ -369,16 +369,14 @@ M.FileIcon = {
 }
 M.SearchCount = {
   init = function(self)
-    local _, result = pcall(fn.searchcount, { recompute = 1, maxcount = 10000 })
-    self.result = result
+    local ok, s_count = pcall(vim.fn.searchcount, (self or {}).options or { recompute = true })
+    self.result = s_count
+    self.isok = ok
   end,
 
   provider = function(self)
-    if self and self.result and vim.tbl_isempty(self.result) then
+    if not self.isok or self.result.current == nil or self.result.total == 0 then
       return ""
-    end
-    if self and self.result and self.result.current > 0 then
-      return " "
     end
   end,
 
@@ -393,19 +391,15 @@ M.SearchCount = {
     end,
 
     provider = function(self)
-      if vim.tbl_isempty(self.result) then
-        return ""
+      if self.result.incomplete == 1 then
+        return "?/?"
       end
-      if self.result.incomplete == 1 then -- timed out
-        return "?/?? "
-      elseif self.result.incomplete == 2 then -- max count exceeded
-        if self.result.total > self.result.maxcount and self.result.current > self.result.maxcount then
-          return string.format(">%d/>%d ", self.result.current, self.result.total)
-        elseif self.result.total > self.result.maxcount then
-          return "%#MyStatusLine_red_fg#" .. string.format("%d/>%d ", self.result.current, self.result.total) .. "%*"
-        end
-      end
-      return "%#MyStatusLine_red_fg#" .. string.format("%d/%d ", self.result.current, self.result.total) .. "%*"
+
+      local too_many = (">%d"):format(self.result.maxcount)
+      local current = self.result.current > self.result.maxcount and too_many or self.result.current
+      local total = self.result.total > self.result.maxcount and too_many or self.result.total
+
+      return "%#MyStatusLine_red_fg#" .. string.format(" %s/%s ", current, total) .. "%*"
     end,
   },
 }
@@ -515,7 +509,7 @@ M.Sessions = {
     provider = function()
       local ok, ses_persistent = pcall(require, "persistence")
       if not ok then
-        return "%#MyStatusLine_notif_fg# No resync session (manual)%* "
+        return "%#MyStatusLine_notif_fg# (manual)%* "
       end
 
       local ses_persistent_get_current = ses_persistent.get_current()

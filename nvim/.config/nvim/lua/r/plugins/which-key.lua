@@ -33,9 +33,10 @@ return {
         ["<leader>"] = {
           name = "<Leader>",
           b = { name = "+buffer" },
+          a = { name = "+projectionist" },
           d = {
             name = "+debug",
-            a = { name = "+run/launch" },
+            a = { name = "+run-launch" },
             t = { name = "+toggle" },
           },
           D = { name = "+database" },
@@ -47,13 +48,14 @@ return {
             t = { name = "+toggle" },
             w = { name = "+git-worktree" },
           },
-          c = { name = "+change_dir" },
+          c = { name = "+change-dir" },
           v = { name = "+view" },
           s = { name = "+sessions" },
-          r = { name = "+run/misc" },
+          r = { name = "+run-misc" },
           p = { name = "+project" },
           y = { name = "+surround" },
           t = { name = "+testing" },
+          o = { name = "+open-url" },
           l = { name = "+lang" },
         },
 
