@@ -37,6 +37,7 @@ return {
     },
   },
   -- VIM-HIGHLIGHTER
+  -- https://github.com/t9md/vim-quickhl (alternative)
   {
     "azabiong/vim-highlighter",
     event = "LazyFile",

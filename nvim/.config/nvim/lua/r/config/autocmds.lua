@@ -111,7 +111,6 @@ Util.cmd.augroup("ReHighlightFolded", {
               },
             },
           },
-
           ["ayu"] = {
             {
               Folded = {

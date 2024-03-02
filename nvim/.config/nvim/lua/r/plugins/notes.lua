@@ -702,13 +702,14 @@ return {
     opts = {
       dir = Config.path.wiki_path, -- no need to call 'vim.fn.expand' here
 
-      -- daily_notes = {
-      --   folder = "Calendar 🗓️/Days 🌄",
-      --   -- Optional, if you want to change the date format for the ID of daily notes.
-      --   -- date_format = "%Y-%m-%d",
-      --   -- Optional, if you want to change the date format of the default alias of daily notes.
-      --   -- alias_format = "%B %-d, %Y",
-      -- },
+      daily_notes = {
+        -- folder = "Calendar 🗓️/Days 🌄",
+        folder = "Drafts",
+        -- Optional, if you want to change the date format for the ID of daily notes.
+        -- date_format = "%Y-%m-%d",
+        -- Optional, if you want to change the date format of the default alias of daily notes.
+        -- alias_format = "%B %-d, %Y",
+      },
 
       finder = "fzf-lua",
       -- Optional, alternatively you can customize the frontmatter data.
@@ -724,6 +725,18 @@ return {
         end
         return out
       end,
+
+      -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
+      -- way then set 'mappings = {}'.
+      mappings = {
+        -- Toggle check-boxes.
+        ["<c-c>"] = {
+          action = function()
+            return require("obsidian").util.toggle_checkbox()
+          end,
+          opts = { buffer = true },
+        },
+      },
 
       -- Optional, for templates (see below).
       -- templates = {
@@ -743,10 +756,6 @@ return {
       -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
       open_app_foreground = true,
     },
-
-    -- mappings = {
-    --   ["gf"] = require("obsidian.mapping").gf_passthrough(),
-    -- },
 
     config = function(_, opts)
       require("obsidian").setup(opts)

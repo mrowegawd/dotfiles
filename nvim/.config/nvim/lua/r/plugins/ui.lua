@@ -17,7 +17,13 @@ return {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
           ["catppuccin-latte"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = -0.5 } } },
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+          },
+          ["farout"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+          },
+          ["ayu"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
           },
         },
       })
@@ -120,6 +126,18 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -1 } } },
           },
+          ["farout"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+          },
+          ["ayu"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+          },
+          ["solarized-osaka"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
         },
       })
       require("ibl").setup(opts)
@@ -177,21 +195,26 @@ return {
         end,
       }
     end,
-    -- config = function(_, opts)
-    --   -- require("r.settings.highlights").plugin("notify", {
-    --   --   { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-    --   --   { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-    --   --   { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-    --   --   { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-    --   --   { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-    --   --   { NotifyERRORBody = { link = "NormalFloat" } },
-    --   --   { NotifyWARNBody = { link = "NormalFloat" } },
-    --   --   { NotifyINFOBody = { link = "NormalFloat" } },
-    --   --   { NotifyDEBUGBody = { link = "NormalFloat" } },
-    --   --   { NotifyTRACEBody = { link = "NormalFloat" } },
-    --   -- })
-    --   require("notify").setup(opts)
-    -- end,
+    config = function(_, opts)
+      Highlight.plugin("NotifyCol", {
+        -- { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyERRORBody = { link = "NormalFloat" } },
+        -- { NotifyWARNBody = { link = "NormalFloat" } },
+        -- { NotifyDEBUGBody = { link = "NormalFloat" } },
+        -- { NotifyTRACEBody = { link = "NormalFloat" } },
+        { NotifyINFOBody = { bg = { from = "NotifyINFOIcon", attr = "bg" } } },
+        { NotifyHINTBody = { bg = { from = "NotifyHINTIcon", attr = "bg" } } },
+        { NotifyWARNBody = { bg = { from = "NotifyWARNIcon", attr = "bg" } } },
+        { NotifyERRORBody = { bg = { from = "NotifyERRORIcon", attr = "bg" } } },
+        { NotifyDEBUGBody = { bg = { from = "NotifyDEBUGIcon", attr = "bg" } } },
+        { NotifyTRACEBody = { bg = { from = "NotifyTRACEIcon", attr = "bg" } } },
+      })
+      require("notify").setup(opts)
+    end,
   },
   -- NOICE
   {

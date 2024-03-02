@@ -227,20 +227,53 @@ return {
   {
     "Wansmer/symbol-usage.nvim",
     event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
-    opts = {
-      hl = { link = "MyCodeUsage" },
-      disable = { filetypes = { "dockerfile" } },
-    },
+    config = true,
+    opts = function()
+      Highlight.plugin("SymbolUsageCol", {
+        theme = {
+          ["*"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["kanagawa"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["bamboo"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+          },
+          ["nord"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+          },
+          ["farout"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 2.6 } } },
+          },
+          ["ayu"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 2.6 } } },
+          },
+          ["gruvbox-material"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+          },
+          ["catppuccin-latte"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
+        },
+      })
+      return {
+        hl = { link = "MyCodeUsage" },
+        disable = { filetypes = { "dockerfile", "markdown", "org" } },
+      }
+    end,
   },
   -- PAREN-HINT
   {
     "briangwaltney/paren-hint.nvim",
-    -- lazy = false,
+    event = "BufReadPost",
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
     },
     config = function()
-      require "paren-hint"
+      require("paren-hint").setup {
+        highlight = "MyParentHint",
+      }
     end,
   },
 }

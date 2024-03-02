@@ -2,7 +2,7 @@ return {
   {
     "David-Kunz/gen.nvim",
     cmd = { "Gen" },
-    enabled = false,
+    -- enabled = false,
     config = function()
       local gen = require "gen"
       gen.setup {

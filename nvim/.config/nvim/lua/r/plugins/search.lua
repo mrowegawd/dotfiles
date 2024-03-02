@@ -71,8 +71,29 @@ return {
         "mangelozzi/nvim-rgflow.lua",
         opts = {
           default_trigger_mappings = false,
-          default_ui_mappings = true,
+          default_ui_mappings = false,
           cmd_flags = rg_opts,
+          mappings = {
+            ui = {
+              -- Normal mode maps
+              n = {
+                ["<CR>"] = "start", -- With the ui open, start a search with the current parameters
+                ["<ESC>"] = "close", -- With the ui open, discard and close the UI window
+                ["q"] = "close", -- With the ui open, start a search with the current parameters (from insert mode)
+                ["?"] = "show_rg_help", -- Show the rg help in a floating window, which can be closed with q or <ESC> or the usual <C-W><C-C>
+                ["<BS>"] = "nop", -- No operation
+                ["<C-^>"] = "nop", -- No operation
+                ["<C-6>"] = "nop", -- No operation
+              },
+              -- Insert mode maps
+              i = {
+                ["<cr>"] = "nop", -- With the ui open, start a search with the current parameters (from insert mode)
+                ["<c-j>"] = "auto_complete", -- Start autocomplete if PUM not visible, if visible use own hotkeys to select an option
+                ["<C-n>"] = "nop", -- Start autocomplete if PUM not visible, if visible use own hotkeys to select an option
+                -- ["<C-P>"] = "auto_complete", -- Start autocomplete if PUM not visible, if visible use own hotkeys to select an option
+              },
+            },
+          },
           colors = {
             RgFlowInputPath = { link = "NormalFloat" },
             RgFlowInputBg = { link = "NormalFloat" },

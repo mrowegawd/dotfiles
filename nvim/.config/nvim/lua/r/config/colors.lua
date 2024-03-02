@@ -197,6 +197,7 @@ local general_overrides = function()
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
     { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1.8 } } },
+    { MyParentHint = { bg = { from = "CursorLine", attr = "bg" }, fg = { from = "MyCodeUsage", attr = "fg" , alter = -0.1 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = -0.15 } } },
     { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
@@ -321,8 +322,23 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["kanagawa"] = {
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 2 },
+          reverse = false,
+        },
+      },
+    },
     ["ayu"] = {
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+        },
+      },
       { CursorLine = { bg = { from = "Normal", alter = 1 } } },
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 }, bg = { from = "Normal", attr = "bg" } } },
       {
         StatusLine = {
@@ -334,6 +350,12 @@ local function colorscheme_overrides()
     },
     ["gruvbox-material"] = {},
     ["farout"] = {
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+        },
+      },
       { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
       { StatusLine = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
 
@@ -369,6 +391,7 @@ local function colorscheme_overrides()
     },
     ["solarized-osaka"] = {
       -- { NormalNC = { inherit = "Normal" } },
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       { TroubleNormal = { inherit = "Normal" } },
 
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1 }, bg = { from = "Normal", attr = "bg" } } },
@@ -395,6 +418,19 @@ local function colorscheme_overrides()
       },
     },
     ["catppuccin-latte"] = {
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = -0.1 },
+        },
+      },
+      {
+        MyParentHint = {
+          bg = { from = "Normal", alter = -0.1, attr = "bg" },
+          fg = { from = "MyCodeUsage", attr = "fg", alter = -0.05 },
+        },
+      },
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { WinSeparator = { fg = { from = "@constructor", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 } } },

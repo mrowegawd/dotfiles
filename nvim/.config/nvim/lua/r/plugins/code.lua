@@ -9,6 +9,8 @@ OverseerConfig.fnpane_run = 0
 OverseerConfig.fnpane_runtest = 0
 OverseerConfig.fnpane_runmisc = 0
 
+local callme = 0
+
 return {
   -- NVIM-CMP
   {
@@ -23,27 +25,21 @@ return {
     dependencies = {
       "hrsh7th/cmp-path",
       "davidsierradz/cmp-conventionalcommits",
-      -- "dmitmel/cmp-cmdline-history",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
-      -- "hrsh7th/cmp-nvim-lsp-signature-help",
       "lukas-reineke/cmp-under-comparator",
       "petertriho/cmp-git",
+      "lukas-reineke/cmp-rg",
       "rcarriga/cmp-dap",
       "saadparwaiz1/cmp_luasnip",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
       {
         "Saecki/crates.nvim",
         event = { "BufRead Cargo.toml" },
-        opts = {
-          src = {
-            cmp = { enabled = true },
-          },
-        },
+        config = true,
       },
-      -- LUASNIP
       {
         "L3MON4D3/LuaSnip",
         ---@diagnostic disable-next-line: undefined-global
@@ -75,61 +71,8 @@ return {
         end,
       },
     },
-    opts = {
-      enabled = function()
-        return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
-      end,
-      experimental = { ghost_text = false },
-      duplicates = {
-        nvim_lsp = 1,
-        luasnip = 1,
-        -- cmp_tabnine = 1,
-        buffer = 1,
-        path = 1,
-      },
-      formatting = {
-        fields = { "abbr", "kind", "menu" },
-        format = function(entry, item)
-          local label_width = 45
-          local label = item.abbr
-          local truncated_label = vim.fn.strcharpart(label, 0, label_width)
-
-          if truncated_label ~= label then
-            item.abbr = truncated_label .. "…"
-          elseif string.len(label) < label_width then
-            local padding = string.rep(" ", label_width - string.len(label))
-            item.abbr = label .. padding
-          end
-
-          item.menu = item.kind
-          local kind = Icons.kinds
-          if kind[item.kind] then
-            item.kind = kind[item.kind]
-          end
-          return require("tailwindcss-colorizer-cmp").formatter(entry, item)
-        end,
-      },
-    },
-    config = function(_, opts)
-      local MAX_INDEX_FILE_SIZE = 4000
-
-      local function get_cmp()
-        local ok_cmp, cmp = pcall(require, "cmp")
-        return ok_cmp and cmp or {}
-      end
-
-      local cmp = get_cmp()
-      local types = require "cmp.types"
-
-      local function deprioritize_snippet(entry1, entry2)
-        if entry1:get_kind() == types.lsp.CompletionItemKind.Snippet then
-          return false
-        end
-        if entry2:get_kind() == types.lsp.CompletionItemKind.Snippet then
-          return true
-        end
-      end
-
+    config = function()
+      local MAX_INDEX_FILE_SIZE = 1024
       local function tab(fallback)
         if vim.snippet.jumpable(1) then
           vim.snippet.jump(1)
@@ -152,155 +95,252 @@ return {
         end
       end
 
-      local function source_buffer()
-        return {
-          name = "buffer",
-          keyword_length = 2,
-          options = {
-            get_bufnrs = function()
-              local bufs = {}
-              for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-                -- Don't index giant files
-                if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE then
-                  table.insert(bufs, bufnr)
-                end
-              end
-              return bufs
-            end,
-          },
-        }
-      end
-
-      local callme = 0
-      local cmp_mappings = {
-        ["<C-r>"] = cmp.mapping(function(_)
-          -- if cmp.visible() then
-          --   cmp.abort()
-          if callme == 0 then
-            callme = 1
-            cmp.complete {
-              config = {
-                sources = {
-                  { name = "luasnip" },
-                },
-              },
-            }
-          elseif callme == 1 then
-            callme = 2
-            cmp.complete {
-              config = {
-                sources = { source_buffer() },
-              },
-            }
-          else
-            if callme == 2 then
-              callme = 0
-              cmp.complete {
-                config = {
-                  sources = {
-                    { name = "nvim_lsp" },
-                  },
-                },
-              }
-            end
-          end
-        end, {
-          "i",
-          "s",
-        }),
-        ["<c-j>"] = cmp.mapping(function()
-          if cmp.visible() then
-            cmp.select_next_item()
-          else
-            cmp.complete()
-          end
-        end, { "i", "c" }),
-        ["<c-k>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          else
-            fallback()
-          end
-        end, { "i", "c" }),
-        ["<c-q>"] = cmp.mapping.abort(),
-        ["<c-g>"] = cmp.mapping(function()
-          require("fzf-lua").complete_file {
-            cmd = "rg --files --hidden",
-            winopts = { preview = { hidden = "nohidden" } },
-          }
-        end, { "i" }),
-        ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
-        ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
-        ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
-        ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-        ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-        ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
-      }
-
       local border_opts = {
         border = Icons.border.line,
         winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
       }
 
-      opts.mapping = cmp_mappings
-      opts.window = {
-        completion = cmp.config.window.bordered(border_opts),
-        documentation = cmp.config.window.bordered(border_opts),
-      }
-      opts.snippet = {
-        expand = function(args)
-          vim.snippet.expand(args.body)
+      local cmp = require "cmp"
+      cmp.setup {
+        enabled = function()
+          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
         end,
-      }
-      opts.sorting = {
-        comparators = {
-          -- require("copilot_cmp.comparators").prioritize,
-          cmp.config.compare.offset,
-          cmp.config.compare.exact,
-          cmp.config.compare.score,
-
-          deprioritize_snippet,
-          function(entry1, entry2)
-            local _, entry1_under = entry1.completion_item.label:find "^_+"
-            local _, entry2_under = entry2.completion_item.label:find "^_+"
-            entry1_under = entry1_under or 0
-            entry2_under = entry2_under or 0
-            if entry1_under > entry2_under then
-              return false
-            elseif entry1_under < entry2_under then
-              return true
-            end
-          end,
-          cmp.config.compare.recently_used,
-          cmp.config.compare.kind,
-          cmp.config.compare.sort_text,
-          cmp.config.compare.length,
-          cmp.config.compare.order,
-          cmp.config.compare.locality,
+        window = {
+          completion = cmp.config.window.bordered(border_opts),
+          documentation = cmp.config.window.bordered(border_opts),
         },
-      }
+        snippet = {
+          expand = function(args)
+            vim.snippet.expand(args.body)
+          end,
+        },
+        experimental = { ghost_text = false },
+        duplicates = {
+          nvim_lsp = 1,
+          luasnip = 1,
+          -- cmp_tabnine = 1,
+          buffer = 1,
+          rg = 1,
+          path = 1,
+        },
+        formatting = {
+          fields = { "abbr", "kind", "menu" },
 
-      opts.sources = cmp.config.sources {
-        {
-          name = "nvim_lsp",
-          entry_filter = function(entry, ctx)
-            local kind = require("cmp.types").lsp.CompletionItemKind[entry:get_kind()]
-            if ctx.filetype == "markdown" then
-              -- Marksman uses Text kind for completion as per
-              -- https://github.com/artempyanykh/marksman/issues/204#issuecomment-1751657224
-              return (kind ~= "Snippet")
+          format = function(entry, item)
+            local label_width = 45
+            local label = item.abbr
+            local truncated_label = vim.fn.strcharpart(label, 0, label_width)
+
+            if truncated_label ~= label then
+              item.abbr = truncated_label .. "…"
+            elseif string.len(label) < label_width then
+              local padding = string.rep(" ", label_width - string.len(label))
+              item.abbr = label .. padding
+            end
+
+            -- print(entry.source.name)
+            item.menu = item.kind
+              .. " "
+              .. ({
+                nvim_lsp = "[LSP]",
+                obsidian = "[OBSIDIAN]",
+                obsidian_new = "[OBSIDIAN]",
+                nvim_lua = "[LUA]",
+                emoji = "[EMOJI]",
+                path = "[PATH]",
+                neorg = "[NEORG]",
+                luasnip = "[SNIP]",
+                dictionary = "[DIC]",
+                buffer = "[BUF]",
+                spell = "[SPELL]",
+                orgmode = "[ORG]",
+                norg = "[NORG]",
+                rg = "[RG]",
+                cmdline = "[CMD]",
+                git = "[GIT]",
+              })[entry.source.name]
+            local kind = Icons.kinds
+            if kind[item.kind] then
+              item.kind = kind[item.kind]
+            end
+
+            return require("tailwindcss-colorizer-cmp").formatter(entry, item)
+          end,
+        },
+        -- sorting = {
+        --   comparators = {
+        --     -- require("copilot_cmp.comparators").prioritize,
+        --     cmp.config.compare.offset,
+        --     cmp.config.compare.exact,
+        --     cmp.config.compare.score,
+        --
+        --     deprioritize_snippet,
+        --     function(entry1, entry2)
+        --       local _, entry1_under = entry1.completion_item.label:find "^_+"
+        --       local _, entry2_under = entry2.completion_item.label:find "^_+"
+        --       entry1_under = entry1_under or 0
+        --       entry2_under = entry2_under or 0
+        --       if entry1_under > entry2_under then
+        --         return false
+        --       elseif entry1_under < entry2_under then
+        --         return true
+        --       end
+        --     end,
+        --     cmp.config.compare.recently_used,
+        --     cmp.config.compare.kind,
+        --     cmp.config.compare.sort_text,
+        --     cmp.config.compare.length,
+        --     cmp.config.compare.order,
+        --     cmp.config.compare.locality,
+        --   },
+        -- }
+        mapping = {
+          ["<C-r>"] = cmp.mapping(function(_)
+            if callme == 0 then
+              callme = 1
+              cmp.complete {
+                config = {
+                  sources = {
+                    {
+                      name = "luasnip",
+                      max_item_count = 5,
+                      group_index = 1,
+                    },
+                  },
+                },
+              }
+            elseif callme == 1 then
+              callme = 2
+              cmp.complete {
+                config = {
+                  sources = {
+                    {
+                      name = "rg",
+                      keyword_length = 4,
+                      option = { additional_arguments = "--hidden --max-depth 8" },
+                      group_index = 1,
+                    },
+                    {
+                      name = "buffer",
+                      group_index = 2,
+                      max_item_count = 3,
+                      options = {
+                        get_bufnrs = function()
+                          --- from all loaded buffers
+                          local bufs = {}
+                          local loaded_bufs = vim.api.nvim_list_bufs()
+                          for _, bufnr in ipairs(loaded_bufs) do
+                            -- Don't index giant files
+                            if
+                              vim.api.nvim_buf_is_loaded(bufnr)
+                              and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE
+                            then
+                              table.insert(bufs, bufnr)
+                            end
+                          end
+                          return bufs
+                          -- ----
+                          -- from visible bufs.
+                          -- local bufs = {}
+                          -- for _, win in ipairs(vim.api.nvim_list_wins()) do
+                          --   bufs[vim.api.nvim_win_get_buf(win)] = true
+                          -- end
+                          -- --- alternative buf.
+                          -- local alter = vim.fn.bufnr('#')
+                          -- if alter > 0 then bufs[vim.fn.bufnr('#')] = true end
+                          -- return vim.tbl_keys(bufs)
+                        end,
+                      },
+                    },
+                  },
+                },
+              }
             else
-              return ((kind ~= "Text") and (kind ~= "Snippet"))
+              if callme == 2 then
+                callme = 0
+                cmp.complete {
+                  config = {
+                    sources = {
+                      {
+                        name = "nvim_lsp",
+                        max_item_count = 5,
+                        group_index = 1,
+                      },
+                    },
+                  },
+                }
+              end
             end
-          end,
+          end, {
+            "i",
+            "s",
+          }),
+          ["<c-j>"] = cmp.mapping(function()
+            if cmp.visible() then
+              cmp.select_next_item()
+            else
+              cmp.complete()
+            end
+          end, { "i", "c" }),
+          ["<c-k>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            else
+              fallback()
+            end
+          end, { "i", "c" }),
+          ["<c-q>"] = cmp.mapping.abort(),
+          ["<c-g>"] = cmp.mapping(function()
+            require("fzf-lua").complete_file {
+              cmd = "rg --files --hidden",
+              winopts = { preview = { hidden = "nohidden" } },
+            }
+          end, { "i" }),
+          ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
+          ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
+          ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
+          ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
+          ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+          ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
-        { name = "luasnip", max_item_count = 100 },
-        -- { name = "nvim_lsp_signature_help" },
-        -- { name = "crates" },
-        { name = "path" },
-        source_buffer(),
+        sources = cmp.config.sources {
+          {
+            name = "nvim_lsp",
+            group_index = 1,
+            max_item_count = 5,
+            entry_filter = function(entry)
+              return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+            end,
+          },
+          { name = "luasnip", group_index = 1 },
+          {
+            name = "rg",
+            keyword_length = 3,
+            max_item_count = 10,
+            option = { additional_arguments = "--hidden --max-depth 8" },
+            group_index = 1,
+          },
+          {
+            name = "buffer",
+            group_index = 2,
+            max_item_count = 3,
+            options = {
+              get_bufnrs = function()
+                local bufs = {}
+                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+                  -- Don't index giant files
+                  if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE then
+                    table.insert(bufs, bufnr)
+                  end
+                end
+                return bufs
+              end,
+            },
+          },
+          { name = "path", max_item_count = 3, group_index = 1 },
+          { name = "crates", group_index = 1 },
+        },
       }
-
       vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
         contents = vim.lsp.util._normalize_markdown(contents, {
           width = vim.lsp.util._make_floating_popup_size(contents, optsc),
@@ -313,17 +353,13 @@ return {
         return contents
       end
 
-      for _, source in ipairs(opts.sources) do
-        source.group_index = source.group_index or 1
-      end
-      cmp.setup(opts)
-
       local tbl_custom_sources = {
-        { name = "nvim_lsp", max_item_count = 100, group_index = 1 },
-        { name = "luasnip", max_item_count = 100, group_index = 1 },
-        { name = "async_path", group_index = 1 },
-        { name = "buffer", group_index = 1 },
-        { name = "emoji", group_index = 1 },
+        { name = "nvim_lsp", max_item_count = 5, group_index = 1 },
+        { name = "buffer", max_item_count = 5, group_index = 1 },
+        { name = "luasnip", max_item_count = 5, group_index = 1 },
+        { name = "path", max_item_count = 5, group_index = 1 },
+        { name = "rg", max_item_count = 5, group_index = 1 },
+        { name = "emoji", max_item_count = 5, group_index = 1 },
       }
 
       cmp.setup.filetype("markdown", {
@@ -331,11 +367,6 @@ return {
       })
 
       cmp.setup.filetype({ "norg", "neorg" }, {
-        -- snippet = {
-        --   expand = function(args)
-        --     luasnip.lsp_expand(args.body)
-        --   end,
-        -- },
         sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
       })
 
@@ -355,37 +386,9 @@ return {
         sources = cmp.config.sources { { name = "vim-dadbod-completion" }, { name = "buffer" } },
       })
 
-      -- cmp.setup.filetype({ "rgflow" }, {
-      --   sources = cmp.config.sources { { name = "buffer" }, { name = "async_path" } },
-      --   mapping = {
-      --     ["<c-p>"] = {
-      --       i = function(fallback)
-      --         if cmp.visible() then
-      --           cmp.select_prev_item()
-      --         else
-      --           fallback()
-      --         end
-      --       end,
-      --     },
-      --     ["<c-g>"] = {
-      --       i = function()
-      --         require("fzf-lua").complete_file {
-      --           cmd = "rg --files --hidden",
-      --           winopts = { preview = { hidden = "nohidden" } },
-      --         }
-      --       end,
-      --     },
-      --     ["<c-n>"] = {
-      --       i = function(fallback)
-      --         if cmp.visible() then
-      --           cmp.select_next_item()
-      --         else
-      --           fallback()
-      --         end
-      --       end,
-      --     },
-      --   },
-      -- })
+      cmp.setup.filetype({ "rgflow" }, {
+        sources = cmp.config.sources { { name = "buffer" }, { name = "rg" }, { name = "path" } },
+      })
 
       cmp.setup.cmdline(":", {
         mapping = {
@@ -405,7 +408,6 @@ return {
         },
         sources = cmp.config.sources {
           { name = "path" },
-          -- { name = "cmdline_history" },
           {
             name = "cmdline",
             option = {
@@ -430,49 +432,6 @@ return {
         sources = cmp.config.sources {
           { name = "buffer" },
         },
-      })
-
-      -- Taken from https://github.com/altermo/ultimate-autopair.nvim/issues/5#issuecomment-1772186460
-      local ind = cmp.lsp.CompletionItemKind
-
-      local function ls_name_from_event(event)
-        return event.entry.source.source.client.config.name
-      end
-      -- Add parenthesis on completion confirmation
-      cmp.event:on("confirm_done", function(event)
-        local ok, ls_name = pcall(ls_name_from_event, event)
-        if ok and vim.tbl_contains({ "rust_analyzer", "lua_ls" }, ls_name) then
-          return
-        end
-
-        local completion_kind = event.entry:get_completion_item().kind
-        if vim.tbl_contains({ ind.Function, ind.Method }, completion_kind) then
-          local left = vim.api.nvim_replace_termcodes("<Left>", true, true, true)
-          vim.api.nvim_feedkeys("()" .. left, "n", false)
-        end
-      end)
-    end,
-  },
-  -- CMP-RG
-  {
-    "lukas-reineke/cmp-rg",
-    cond = function()
-      return vim.fn.executable "rg" == 1
-    end,
-    ft = "rgflow",
-    dependencies = {
-      "hrsh7th/nvim-cmp",
-    },
-    config = function()
-      local cmp = require "cmp"
-      cmp.setup.filetype("rgflow", {
-        sources = cmp.config.sources {
-          { name = "rg" },
-          { name = "path" },
-        },
-        --   {
-        --   { name = "buffer" },
-        -- }
       })
     end,
   },
