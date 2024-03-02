@@ -276,7 +276,7 @@ return {
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
         popupmenu = {
-          enabled = true,
+          enabled = false,
           backend = "cmp",
         },
         redirect = { view = "popup", filter = { event = "msg_show" } },

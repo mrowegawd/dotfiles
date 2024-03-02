@@ -151,6 +151,7 @@ return {
                 neorg = "[NEORG]",
                 luasnip = "[SNIP]",
                 dictionary = "[DIC]",
+                noice_popupmenu = "[Noice]",
                 buffer = "[BUF]",
                 spell = "[SPELL]",
                 orgmode = "[ORG]",
