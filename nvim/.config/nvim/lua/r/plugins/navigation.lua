@@ -15,18 +15,18 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cond = vim.g.neovide ~= nil,
     cmd = "Neotree",
-    keys = {
-      --   {
-      --     "<Leader>ge",
-      --     function()
-      --       if vim.bo[0].filetype == "neo-tree" then
-      --         return cmd [[q]]
-      --       end
-      --       return cmd "Neotree git_status"
-      --     end,
-      --     desc = "Misc(neotree): open File explore",
-      --   },
-    },
+    -- keys = {
+    --   {
+    --     "<Leader>ge",
+    --     function()
+    --       if vim.bo[0].filetype == "neo-tree" then
+    --         return cmd [[q]]
+    --       end
+    --       return cmd "Neotree git_status"
+    --     end,
+    --     desc = "Misc(neotree): open File explore",
+    --   },
+    -- },
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
@@ -169,7 +169,6 @@ return {
         },
         window = {
           mappings = {
-
             ["<2-LeftMouse>"] = "open",
             ["l"] = "child_or_open",
             ["h"] = "parent_or_close",

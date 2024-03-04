@@ -14,58 +14,58 @@ return {
     cmd = "Neorg",
     ft = "norg",
     build = ":Neorg sync-parsers", -- This is the important bit!
-    keys = {
-      -- {
-      --   "<Localleader>fL",
-      --   function()
-      --     Util.maim.insert "test.png"
-      --   end,
-      -- },
-      -- {
-      --   "<Localleader>fo",
-      --   function()
-      --     if vim.bo.filetype == "norg" then
-      --       return cmd [[Neorg return]]
-      --     else
-      --       return cmd [[Neorg workspace wiki]]
-      --     end
-      --   end,
-      --   desc = "Note(neorg): open neorg workspace",
-      -- },
-      -- {
-      --   "<Localleader>ff",
-      --   function()
-      --     cmd [[Lazy load neorg]]
-      --
-      --     return fzf_lua.files {
-      --       prompt = "  ",
-      --       cwd = Config.path.wiki_path,
-      --       rg_glob = true,
-      --       file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
-      --       winopts = {
-      --         -- fullscreen = true,
-      --         title = Util.fzflua.format_title("[Neorg] Files", " "),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note(fzflua): find neorg files",
-      -- },
-      -- {
-      --   "<Localleader>fg",
-      --   function()
-      --     cmd [[Lazy load neorg]]
-      --     return fzf_lua.live_grep_glob {
-      --       prompt = "  ",
-      --       cwd = Config.path.wiki_path,
-      --       rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
-      --       winopts = {
-      --         title = Util.fzflua.format_title("[Neorg] Grep", " "),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note(fzflua): live grep neorg files",
-      -- },
-    },
+    -- keys = {
+    -- {
+    --   "<Localleader>fL",
+    --   function()
+    --     Util.maim.insert "test.png"
+    --   end,
+    -- },
+    -- {
+    --   "<Localleader>fo",
+    --   function()
+    --     if vim.bo.filetype == "norg" then
+    --       return cmd [[Neorg return]]
+    --     else
+    --       return cmd [[Neorg workspace wiki]]
+    --     end
+    --   end,
+    --   desc = "Note(neorg): open neorg workspace",
+    -- },
+    -- {
+    --   "<Localleader>ff",
+    --   function()
+    --     cmd [[Lazy load neorg]]
+    --
+    --     return fzf_lua.files {
+    --       prompt = "  ",
+    --       cwd = Config.path.wiki_path,
+    --       rg_glob = true,
+    --       file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
+    --       winopts = {
+    --         -- fullscreen = true,
+    --         title = Util.fzflua.format_title("[Neorg] Files", " "),
+    --       },
+    --     }
+    --   end,
+    --   desc = "Note(fzflua): find neorg files",
+    -- },
+    -- {
+    --   "<Localleader>fg",
+    --   function()
+    --     cmd [[Lazy load neorg]]
+    --     return fzf_lua.live_grep_glob {
+    --       prompt = "  ",
+    --       cwd = Config.path.wiki_path,
+    --       rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
+    --       winopts = {
+    --         title = Util.fzflua.format_title("[Neorg] Grep", " "),
+    --       },
+    --     }
+    --   end,
+    --   desc = "Note(fzflua): live grep neorg files",
+    -- },
+    -- },
     dependencies = {
       "nvim-telescope/telescope.nvim",
       "nvim-neorg/neorg-telescope",
@@ -279,8 +279,8 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    -- event = "LazyFile",
-    ft = "org",
+    event = "LazyFile",
+    -- ft = "org",
     keys = {
       {
         "<Localleader>fA",
@@ -531,7 +531,7 @@ return {
       })
 
       local orgmode = require "orgmode"
-      orgmode.setup_ts_grammar()
+      -- orgmode.setup_ts_grammar()
       orgmode.setup(opts)
     end,
   },

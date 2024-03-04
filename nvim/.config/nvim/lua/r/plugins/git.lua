@@ -34,12 +34,12 @@ return {
       {
         "<Leader>gn",
         "<CMD>GitConflictNextConflict<CR>",
-        { desc = "Git(gitconflict): next" },
+        desc = "Git(gitconflict): next",
       },
       {
         "<Leader>gp",
         "<CMD>GitConflictPrevConflict<CR>",
-        { des = "Git(gitconflict): prev" },
+        desc = "Git(gitconflict): prev",
       },
     },
     event = "LazyFile",
@@ -54,19 +54,13 @@ return {
       {
         "<Leader>go",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        { desc = "Git(gitlinker): range URL repo on browser" },
+        mode = { "n", "v" },
+        desc = "Git(gitlinker): range URL repo on browser",
       },
       {
         "<Leader>gO",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        { desc = "Git(gitlinker): open URL repo" },
-      },
-      {
-        "<Leader>go",
-        "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        {
-          desc = "Git(gitlinker): range URL repo on browser (visual)",
-        },
+        desc = "Git(gitlinker): open URL repo",
       },
       { "<leader>gy" }, --"Git(gitlinker): copy url git hash"
     },
@@ -234,6 +228,7 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
+    enabled = false,
     cmd = { "Git", "GBrowse", "Gdiffsplit", "Gvdiffsplit" },
     dependencies = {
       "tpope/vim-rhubarb",
@@ -281,6 +276,7 @@ return {
             opt.wrap, opt.list, opt.relativenumber = false, false, false
             opt.colorcolumn = ""
           end,
+          ---@diagnostic disable-next-line: unused-local
           diff_buf_win_enter = function(bufnr, winid, ctx)
             if ctx.layout_name:match "^diff2" then
               if ctx.symbol == "a" then
@@ -398,8 +394,6 @@ return {
   -- NEOGIT
   {
     "NeogitOrg/neogit",
-    enabled = false,
-    -- event = "LazyFile",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "sindrets/diffview.nvim", -- optional - Diff integration
@@ -409,12 +403,21 @@ return {
       "ibhagwan/fzf-lua", -- optional
     },
     cmd = "Neogit",
-    --stylua: ignore
     keys = {
-      { "<Leader>gc", function() require("neogit").open { "commit" } end, desc = "Git(neogit): create commit" },
-      { "<Leader>gN", function ()
-        vim.cmd("Neogit kind=split")
-      end, desc = "Git(neogit): open split" },
+      {
+        "<Leader>gc",
+        function()
+          require("neogit").open { "commit" }
+        end,
+        desc = "Git(neogit): create commit",
+      },
+      {
+        "<Leader>gN",
+        function()
+          vim.cmd "Neogit"
+        end,
+        desc = "Git(neogit): open split",
+      },
     },
     opts = {
       -- disable_signs = false,
