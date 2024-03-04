@@ -62,7 +62,7 @@ function M.get_mark(buf, lnum)
   vim.list_extend(marks, vim.fn.getmarklist())
   for _, mark in ipairs(marks) do
     if mark.pos[1] == buf and mark.pos[2] == lnum and mark.mark:match "[a-zA-Z]" then
-      return { text = mark.mark:sub(2), texthl = "DiagnosticHint" }
+      return { text = mark.mark:sub(2), texthl = "MyMark" }
     end
   end
 end
@@ -127,12 +127,14 @@ function M.statuscolumn()
     -- Right: number or fold
     components[2] = is_file and M.icon(left or right) or big_spaces .. " "
 
+    components[4] = " "
+    components[5] = " "
+
     if not vim.tbl_contains({ "norg", "markdown", "gitcommit" }, vim.bo.filetype) then
       components[4] = M.icon({ text = separator, texthl = "MySeparator" }, 1, big_spaces)
-    else
-      components[4] = " "
+      -- components[5] = M.icon(M.get_mark(buf, vim.v.lnum) or fold) or big_spaces
+      components[5] = M.icon(fold) or big_spaces
     end
-    components[5] = M.icon(M.get_mark(buf, vim.v.lnum) or fold) or big_spaces
   end
 
   -- Numbers in Neovim are weird

@@ -153,3 +153,5 @@ NVIDIA
 modprobe
 symlink
 unbuffered
+balancer
+pemprosesan

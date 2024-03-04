@@ -196,6 +196,7 @@ local general_overrides = function()
     { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+    { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
     { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1.8 } } },
     { MyParentHint = { bg = { from = "CursorLine", attr = "bg" }, fg = { from = "MyCodeUsage", attr = "fg" , alter = -0.1 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = -0.15 } } },
@@ -409,6 +410,9 @@ local function colorscheme_overrides()
     },
     ["bamboo"] = {
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
+    },
+    ["tokyonight"] = {
+      { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
     },
     ["vscode_modern"] = {
       {
