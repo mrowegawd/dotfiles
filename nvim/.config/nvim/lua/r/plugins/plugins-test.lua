@@ -30,30 +30,31 @@ return {
     cond = vim.fn.executable "ctags" == 1,
     opts = {},
   },
-  -- PERSISTENCE
+  -- MINI.SESSIONS
   {
-    "folke/persistence.nvim",
-    enabled = false,
+    "echasnovski/mini.sessions",
+    version = "*",
     event = "BufReadPre",
-    opts = {
-
-      -- local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
-      opts = { options = vim.opt.sessionoptions:get() },
-      pre_save = function()
-        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-          if vim.fn.buflisted(bufnr) == 1 then
-            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-              vim.api.nvim_buf_delete(bufnr, {})
-            end
-          end
-        end
-      end,
-    },
-    -- stylua: ignore
     keys = {
-      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
-      { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
-      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
+      {
+        "<Leader>ss",
+        function()
+          Util.sessions.save_ses()
+        end,
+        desc = "Misc(mini.session): save session",
+      },
+
+      {
+        "<Leader>sl",
+        function()
+          Util.sessions.load_ses()
+        end,
+        desc = "Misc(mini.session): restore last session",
+      },
+    },
+    opts = {
+      autoread = false,
+      autowrite = false,
     },
   },
   -- COMMAND-COMPLETION
@@ -1058,8 +1059,8 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", function() return vim.cmd.SessionLoadLast() end, { desc = "Misc(persisted): load a session" } },
-      { "<Leader>ps", function() vim.cmd.SessionStart() return vim.notify "Sessions persisted: Started.." end, { desc = "Misc(persisted): start a session" } },
+      { "<Leader>sl", function() return vim.cmd.SessionLoadLast() end, { desc = "Misc(persisted): load a session" } },
+      { "<Leader>ss", function() vim.cmd.SessionStart() return vim.notify "Sessions persisted: Started.." end, { desc = "Misc(persisted): start a session" } },
     },
     config = function()
       require("persisted").setup {
@@ -2067,9 +2068,9 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>pl", function() local possession = require "nvim-possession" return possession.list() end, desc = "Misc(possession): load a session" },
-      { "<Leader>ps", function() local possession = require "nvim-possession" return possession.new() end, desc = "Misc(possession): start or save a session name" },
-      { "<Leader>pu", function() local possession = require "nvim-possession" return possession.update() end, desc = "Misc(possession): save a new session or overwrite it" },
+      { "<Leader>sl", function() local possession = require "nvim-possession" return possession.list() end, desc = "Misc(possession): load a session" },
+      { "<Leader>ss", function() local possession = require "nvim-possession" return possession.new() end, desc = "Misc(possession): start or save a session name" },
+      { "<Leader>su", function() local possession = require "nvim-possession" return possession.update() end, desc = "Misc(possession): save a new session or overwrite it" },
     },
     opts = {
       autoload = true, -- whether to autoload sessions in the cwd at startup
