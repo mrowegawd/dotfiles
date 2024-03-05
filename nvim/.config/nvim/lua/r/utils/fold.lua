@@ -65,6 +65,10 @@ function M.goPreviousClosedFold()
     return Util.cmd.feedkey("<c-p>", "n")
   end
 
+  if vim.wo.diff then
+    return Util.cmd.feedkey("[c", "n")
+  end
+
   -- if find_markdown() then
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
@@ -117,6 +121,10 @@ end
 function M.goNextClosedFold()
   if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
     return Util.cmd.feedkey("<c-n>", "n")
+  end
+
+  if vim.wo.diff then
+    return Util.cmd.feedkey("]c", "n")
   end
 
   -- if find_markdown() then

@@ -2,6 +2,7 @@ return {
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
+    -- branch = "main",
     version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
     event = { "LazyFile", "VeryLazy" },
@@ -231,8 +232,7 @@ return {
         end, opts.ensure_installed)
       end
 
-      -- require("orgmode").setup_ts_grammar()
-
+      require("orgmode").setup_ts_grammar()
       require("nvim-treesitter.configs").setup(opts)
 
       -- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"

@@ -231,10 +231,9 @@ return {
         ---@diagnostic disable-next-line: param-type-mismatch
         function() require("noice").redirect(fn.getcmdline()) end,
         mode = "c",
-        desc =
-        "Redirect Cmdline"
+        desc = "Redirect Cmdline"
       },
-      { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "Dismiss All" },
+      { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "misc(noice): dismiss all" },
     },
     opts = function()
       Highlight.plugin("notify", {
