@@ -16,38 +16,71 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "K", "<CMD>Lspsaga hover_doc ++silent<CR>", desc = "LSP(lspsaga): hover", nowait = true },
-    { "<Leader>K", "<CMD>Lspsaga hover_doc ++keep<CR>", desc = "LSP(lspsaga): hover (keep the window)", nowait = true },
-    { "gK", vim.lsp.buf.signature_help, desc = "Signature Help", has = "signatureHelp" },
-    { "<c-s>", vim.lsp.buf.signature_help, mode = "i", desc = "Signature Help", has = "signatureHelp" },
-    { "gT", fzf_lua.lsp_typedefs, desc = "LSP(fzflua): peek type definitions" },
+    { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" },
     { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP(fzflua): outgoing calls" },
     { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP(fzflua): incoming calls" },
-    -- { "gy", function() require("telescope.builtin").lsp_type_definitions { reuse_win = true } end, desc = "Goto T[y]pe Definition" },
-    -- { "gs", fzf_lua.lsp_document_symbols, desc = "LSP(fzflua): document symbols" },
-    -- { "gS", fzf_lua.lsp_workspace_symbols, desc = "LSP(fzflua): workspaces symbols" },
-    { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" }, has = "LSP: codeAction" },
+    { "gT", fzf_lua.lsp_typedefs, desc = "LSP(fzflua): peek type definitions" },
+    { "<leader>ca", vim.lsp.buf.code_action, has = "codeAction", mode = { "n", "v" }, desc = "LSP: code action" },
     {
-      "<leader>cA",
+      "<Leader>ll",
       function()
-        vim.lsp.buf.code_action {
-          context = {
-            only = {
-              "source",
-            },
-            diagnostics = {},
-          },
-        }
+        vim.lsp.codelens.refresh { bufnr = 0 }
       end,
-      desc = "Source Action",
-      has = "codeAction",
+      has = "codeLensProvider",
+      desc = "LSP: codelens refresh",
     },
-
     --  +----------------------------------------------------------+
-    --  Toggle
+    --  Diagnostics
     --  +----------------------------------------------------------+
     {
-      "gt",
+      "dn",
+      function()
+        diagnostic.goto_next { float = false }
+      end,
+      desc = "LSP(diagnostic): next item",
+    },
+    {
+      "dp",
+      function()
+        diagnostic.goto_prev { float = false }
+      end,
+      desc = "LSP(diagnostic): prev item",
+    },
+    {
+      "dP",
+      function()
+        vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
+      end,
+      desc = "LSP(diagnostic): preview",
+    },
+    {
+      "dq",
+      function()
+        if #vim.diagnostic.get() == 0 then
+          return Util.info("Document its clean", { title = "Diagnostics" })
+        end
+
+        if Util.has "trouble" then
+          vim.cmd "Trouble document_diagnostics"
+        end
+      end,
+      desc = "LSP(diagnostic): document_diagnostics to qf",
+    },
+    {
+      "dQ",
+      function()
+        if #vim.diagnostic.get() == 0 then
+          return Util.info("Document its clean", { title = "Diagnostics" })
+        end
+        vim.cmd "Trouble workspace_diagnostics"
+      end,
+      desc = "LSP(diagnostic): workspace_diagnostic to qf",
+    },
+    --  +----------------------------------------------------------+
+    --  LSP commands
+    --  +----------------------------------------------------------+
+    {
+      "gf",
       function()
         local function check_current_ft(fts)
           local ft = vim.bo[0].filetype
@@ -134,55 +167,17 @@ function M.get()
       end,
       desc = "LSP: commands of lsp",
     },
-
-    --  +----------------------------------------------------------+
-    --  Diagnostics
-    --  +----------------------------------------------------------+
-    {
-      "dn",
-      function()
-        diagnostic.goto_next { float = false }
-      end,
-      desc = "LSP(diagnostic): next item",
-    },
-    {
-      "dp",
-      function()
-        diagnostic.goto_prev { float = false }
-      end,
-      desc = "LSP(diagnostic): prev item",
-    },
-    {
-      "dP",
-      function()
-        vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
-      end,
-      desc = "LSP(diagnostic): preview",
-    },
-    {
-      "dq",
-      function()
-        if #vim.diagnostic.get() == 0 then
-          return Util.info("Document its clean", { title = "Diagnostics" })
-        end
-
-        if Util.has "trouble" then
-          vim.cmd "Trouble document_diagnostics"
-        end
-      end,
-      desc = "LSP(diagnostic): sending to qf",
-    },
-    {
-      "dQ",
-      function()
-        if #vim.diagnostic.get() == 0 then
-          return Util.info("Document its clean", { title = "Diagnostics" })
-        end
-        vim.cmd "Trouble workspace_diagnostics"
-      end,
-      desc = "LSP(diagnostic): sending to qf",
-    },
   }
+
+  if vim.fn.has "nvim-0.10" == 0 and vim.bo[0].keywordprg ~= ":help" then
+    M._keys[#M._keys + 1] = {
+      "K",
+      function()
+        vim.lsp.buf.hover()
+      end,
+      desc = "LSP: show hover",
+    }
+  end
 
   if Util.has "nvim-gtd" then
     M._keys[#M._keys + 1] = {
@@ -196,15 +191,7 @@ function M.get()
     M._keys[#M._keys + 1] = { "gD", vim.lsp.buf.declaration, desc = "LSP: goto declaration" }
   end
 
-  if Util.has "fzf-lua" then
-    M._keys[#M._keys + 1] = {
-      "gd",
-      function()
-        fzf_lua.lsp_definitions()
-      end,
-      desc = "LSP(fzflua): goto definitions",
-    }
-  elseif Util.has "glance.nvim" then
+  if Util.has "glance.nvim" then
     M._keys[#M._keys + 1] = {
       "gd",
       "<CMD>Glance definitions<CR>",
@@ -217,7 +204,7 @@ function M.get()
       desc = "LSP(lspsaga): goto definition",
     }
   else
-    M._keys[#M._keys + 1] = { "gd", vim.lsp.buf.definition, desc = "LSP: goto declaration" }
+    M._keys[#M._keys + 1] = { "gd", vim.lsp.buf.definition, desc = "LSP: goto definition" }
   end
 
   if Util.has "fzf-lua" then
@@ -241,7 +228,6 @@ function M.get()
       desc = "LSP(lspsaga): references",
     }
   else
-    -- { "gr", "<cmd>FzfLua lsp_finder<cr>", desc = "LSP(fzflua): finder" },
     M._keys[#M._keys + 1] = { "gr", vim.lsp.buf.definition, desc = "LSP: references" }
   end
 
@@ -269,6 +255,7 @@ function M.get()
   else
     M._keys[#M._keys + 1] = { "gR", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
   end
+
   return M._keys
 end
 

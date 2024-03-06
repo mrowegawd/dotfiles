@@ -36,30 +36,6 @@ local function qf_is_opened()
   return qf_opened
 end
 
--- local function find_markdown()
---   local tbl_wins = {}
---   for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
---     if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
---       local winbufnr = vim.fn.winbufnr(winnr)
---
---       if winbufnr > 0 then
---         local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
---         if #winft > 0 then
---           table.insert(tbl_wins, winft)
---         end
---       end
---     end
---   end
---
---   local found = false
---   for _, x in pairs(tbl_wins) do
---     if x == "qf" then
---       found = true
---     end
---   end
---   return found
--- end
-
 function M.goPreviousClosedFold()
   if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
     return Util.cmd.feedkey("<c-p>", "n")
@@ -69,7 +45,6 @@ function M.goPreviousClosedFold()
     return Util.cmd.feedkey("[c", "n")
   end
 
-  -- if find_markdown() then
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
       vim.schedule(function()
@@ -88,12 +63,6 @@ function M.goPreviousClosedFold()
       end)
       return
     end
-  end
-  -- end
-
-  if vim.bo.filetype == "markdown" then
-    vim.cmd [[MkdnPrevHeading]]
-    return
   end
 
   local count = vim.v.count1
@@ -127,7 +96,6 @@ function M.goNextClosedFold()
     return Util.cmd.feedkey("]c", "n")
   end
 
-  -- if find_markdown() then
   if qf_is_opened() then
     if vim.bo[0].filetype ~= "qf" then
       vim.schedule(function()
@@ -146,12 +114,6 @@ function M.goNextClosedFold()
       end)
       return
     end
-  end
-  -- end
-
-  if vim.bo.filetype == "markdown" then
-    vim.cmd [[MkdnNextHeading]]
-    return
   end
 
   local count = vim.v.count1

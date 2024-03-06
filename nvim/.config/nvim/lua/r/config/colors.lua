@@ -18,7 +18,7 @@ local general_overrides = function()
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.5 }, fg = { from = "Normal", attr = "bg", alter = 1.6 } } },
+    { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.1 }, fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     { EndOfBuffer = { bg = "NONE" } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },
     { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
@@ -100,14 +100,14 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- LSP
     -----------------------------------------------------------------------
-    { LspCodeLens = { inherit = "Comment", bold = true, italic = false } },
-    { LspCodeLensSeparator = { bold = false, italic = false } },
+    { LspCodeLens = { bg  = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Comment", attr = "fg", alter = -0.5 },  italic = true } },
+    -- { LspCodeLensSeparator = { bold = false, italic = false } },
 
     { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.05 } } },
     { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.05 } } },
     { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.05 } } },
 
-    { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
+    -- { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
 
     { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
     { TreesitterContext = { bg  = { from = "ColorColumn" } } } ,
@@ -349,7 +349,6 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["gruvbox-material"] = {},
     ["farout"] = {
       {
         FoldColumn = {
@@ -365,6 +364,12 @@ local function colorscheme_overrides()
       { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
     },
     ["miasma"] = {
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 0.4 },
+        },
+      },
       {
         LspReferenceText = {
           bg = { from = "Normal", attr = "bg" },

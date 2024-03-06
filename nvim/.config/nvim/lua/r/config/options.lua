@@ -6,30 +6,24 @@ g.os = loop.os_uname().sysname
 
 local plat = require "r.utils.platform"
 
-local options = {
-  g = {
-    open_command = g.os == "Darwin" and "open" or "xdg-open",
-    vim_dir = g.dotfiles .. "/.config/nvim",
-    work_dir = g.projects_dir .. "/work",
-    mapleader = " ",
-    maplocalleader = ",",
-  },
-}
+vim.g.open_command = g.os == "Darwin" and "open" or "xdg-open"
+vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
+vim.g.work_dir = g.projects_dir .. "/work"
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
 
+opt.termguicolors = true -- tmux need this!
 opt.secure = true
 opt.modelines = 1 -- read a modeline at EOF
 opt.confirm = false -- Confirm to save changes before exiting modified buffer
 opt.completeopt = "menu,menuone,noselect"
-
 opt.errorbells = false -- disable error bells (no beep/flash)
 opt.visualbell = false
-
 opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so I use `stack` mode (agar level insane berkurang diotak)
 opt.cursorline = true
 opt.inccommand = "split"
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
 opt.fileformats = { "unix", "mac", "dos" }
-
 opt.clipboard:append "unnamed"
 opt.clipboard:append "unnamedplus"
 if plat.is_mac then
@@ -66,8 +60,8 @@ elseif plat.is_wsl then
     cache_enabled = true,
   }
 end
--- -- Exclude usetab as we do not want to jump to buffers in already open tabs
--- -- do not use split or vsplit to ensure we don't open any new windows
+-- Exclude usetab as we do not want to jump to buffers in already open tabs
+-- do not use split or vsplit to ensure we don't open any new windows
 opt.switchbuf = "useopen,uselast"
 opt.encoding = "utf-8"
 opt.conceallevel = 2
@@ -197,7 +191,7 @@ opt.fillchars = {
   diff = " ", -- alternatives = ⣿ ░ ╱
   -- msgsep = " ", -- alternatives: ‾ ─
   --
-  -- fold = " ",
+  -- fold = "▶",
   vert = "¦", -- "┃",
   horiz = "-",
   foldopen = "", -- '▼'
@@ -312,54 +306,26 @@ opt.diffopt = opt.diffopt
   }
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 
-for scope, table in pairs(options) do
-  for setting, value in pairs(table) do
-    vim[scope][setting] = value
-  end
-end
+opt.smoothscroll = true
 
-if vim.fn.has "nvim-0.10" == 1 then
-  opt.smoothscroll = true
-end
-
-opt.foldtext = "v:lua.custom_fold_text()"
-
--- opt.foldtext       = "v:lua.vim.treesitter.foldtext()"
-
-if vim.fn.has "nvim-0.9.0" == 1 then
-  opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
-end
-
-if vim.fn.has "nvim-0.10" == 1 then
-  opt.foldmethod = "expr"
-  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-else
-  opt.foldmethod = "indent"
-end
-
-vim.o.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
+opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
+-- opt.foldtext = "v:lua.custom_fold_text()"
+opt.foldtext = ""
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldmethod = "expr"
+opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
 
 -- Disable providers we do not care a about
--- vim.g.loaded_python_provider = 0 -- for python 2
+vim.g.loaded_python_provider = 0 -- for python 2
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python_provider = 0
 vim.g.loaded_python3_provider = 0
-
 -- vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
-
--- package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
--- package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
-
--- vim.g.nvim_tree_disable_netrw = 0
--- vim.g.nvim_tree_hijack_netrw = 0
--- -- disable netrw at the very start of your init.lua (strongly advised)
--- vim.g.loaded_netrw = 1
--- vim.g.loaded_netrwPlugin = 1
 
 if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.15
@@ -385,12 +351,13 @@ if vim.g.neovide then
 end
 
 -- forplugin: azabiong/vim-highlighter
--- delete jika tidak dibutuhkan
+-- delete jika tidak dibutuhkan or commented
 vim.g.HiSet = "t<CR>"
 vim.g.HiErase = "t<BS>"
 vim.g.HiClear = "t<C-L>"
 vim.g.HiFind = "t<Tab>"
 vim.g.HiSetSL = "S<CR>"
+vim.g.HiFindTool = "rg -H --color=never --no-heading --column --smart-case"
 
 -- forplugin: ggandor/lightspeed.nvim
 vim.g.lightspeed_no_default_keymaps = true

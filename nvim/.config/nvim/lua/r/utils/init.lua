@@ -165,6 +165,16 @@ function M.disable_ctrl_i_and_o(au_name, tbl_ft)
       vim.keymap.set("n", "<c-o>", "<Nop>", {
         buffer = vim.api.nvim_get_current_buf(),
       })
+
+      if vim.tbl_contains({ "Outline", "gitcommit" }, vim.bo.filetype) then
+        vim.keymap.set("n", "ss", "<Nop>", {
+          buffer = vim.api.nvim_get_current_buf(),
+        })
+
+        vim.keymap.set("n", "sv", "<Nop>", {
+          buffer = vim.api.nvim_get_current_buf(),
+        })
+      end
     end,
   })
 end

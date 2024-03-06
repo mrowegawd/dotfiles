@@ -80,7 +80,8 @@ end
 
 -- Focus the current fold by closing all others
 -- Util.map.nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
-Util.map.nnoremap("<space><space>", "zo", { desc = "Fold: open fold" })
+Util.map.nnoremap("<space><space>", "za", { desc = "Fold: focus the current fold by closing all others" })
+-- Util.map.nnoremap("<space><space>", "zo", { desc = "Fold: open fold" })
 Util.map.nnoremap("zm", "zM")
 -- Util.map.nnoremap("<BS>", "za")
 
@@ -114,6 +115,14 @@ Util.map.vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
 --  │ MISC                                                     │
 --  ╰──────────────────────────────────────────────────────────╯
 Util.map.nnoremap("~", "%", silent)
+
+-- Util.map.nnoremap("<TAB>", function()
+--   if vim.bo.filetype == "fugitive" then
+--     print "yes"
+--     return Util.cmd.feedkey("=", "n")
+--   end
+--   return Util.cmd.feedkey("<TAB>", "n")
+-- end, { desc = "togglet up" })
 
 -- nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 

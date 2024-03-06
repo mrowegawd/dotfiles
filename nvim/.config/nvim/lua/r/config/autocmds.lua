@@ -4,10 +4,10 @@ local Util = require "r.utils"
 
 Util.cmd.augroup("WrapSpell", {
   event = { "FileType" },
-  pattern = { "gitcommit", "markdown", "NeogitCommitMessage", "norg" },
+  pattern = { "gitcommit", "NeogitCommitMessage" },
   command = function()
     vim.opt_local.spell = true
-    vim.opt_local.wrap = false
+    vim.opt_local.wrap = true
     vim.opt_local.spelllang = { "en_us", "id" }
     vim.opt_local.conceallevel = 2
     vim.opt_local.relativenumber = false
@@ -70,68 +70,6 @@ Util.cmd.augroup("LargeFileSettings", {
             vim.bo[buf].syntax = ""
           end
         end),
-      })
-    end
-  end,
-})
-
-Util.cmd.augroup("ReHighlightFolded", {
-  event = { "BufRead", "BufEnter", "FocusGained" },
-  pattern = "*",
-  command = function()
-    if
-      vim.tbl_contains(
-        { "norg", "org", "markdown" },
-        vim.api.nvim_get_option_value("filetype", { buf = vim.api.nvim_get_current_buf() })
-      )
-    then
-      require("r.settings.highlights").plugin("markdca", {
-        { Folded = { bg = "NONE", fg = { from = "Boolean" } } },
-      })
-    else
-      require("r.settings.highlights").plugin("markdca", {
-        theme = {
-          ["*"] = {
-            {
-              Folded = {
-                bg = { from = "Normal", attr = "bg", alter = 0.5 },
-                fg = { from = "Normal", attr = "bg", alter = 1.6 },
-                underline = false,
-                bold = true,
-              },
-            },
-          },
-          ["farout"] = {
-            {
-              Folded = {
-                bg = { from = "Normal", attr = "bg", alter = 2 },
-                fg = { from = "Normal", attr = "bg", alter = 4 },
-                underline = false,
-                bold = true,
-              },
-            },
-          },
-          ["ayu"] = {
-            {
-              Folded = {
-                bg = { from = "Normal", attr = "bg", alter = 1 },
-                fg = { from = "Comment", attr = "fg", alter = 0.1 },
-                underline = false,
-                bold = true,
-              },
-            },
-          },
-          ["catppuccin-latte"] = {
-            {
-              Folded = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-                fg = { from = "Normal", attr = "bg", alter = -0.3 },
-                underline = false,
-                bold = true,
-              },
-            },
-          },
-        },
       })
     end
   end,

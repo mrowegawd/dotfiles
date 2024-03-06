@@ -327,45 +327,27 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# TokyoNight Alacritty Colors
-# Default colors
+# colors (miasma) https://github.com/xero/miasma.nvim
 [colors.primary]
-background = '#24283b'
-foreground = '#c0caf5'
+background = "#222222"
+foreground = "#d7c483"
 
-#[colors.cursor]
-#cursor = '#c0caf5'
-#text = '#24283b'
-
-# Normal colors
 [colors.normal]
-black = '#1d202f'
-red = '#f7768e'
-green = '#9ece6a'
-yellow = '#e0af68'
-blue = '#7aa2f7'
-magenta = '#bb9af7'
-cyan = '#7dcfff'
-white = '#a9b1d6'
+black = "#222222"
+red = "#685742"
+green = "#5f875f"
+yellow = "#b36d43"
+blue = "#78824b"
+magenta = "#bb7744"
+cyan = "#c9a554"
+white = "#d7c483"
 
-# Bright colors
 [colors.bright]
-black = '#414868'
-red = '#f7768e'
-green = '#9ece6a'
-yellow = '#e0af68'
-blue = '#7aa2f7'
-magenta = '#bb9af7'
-cyan = '#7dcfff'
-white = '#c0caf5'
-
-# Indexed Colors
-[[colors.indexed_colors]]
-index = 16
-color = '#ff9e64'
-
-[[colors.indexed_colors]]
-index = 17
-color = '#db4b4b'
-
-
+black = "#666666"
+red = "#685742"
+green = "#5f875f"
+yellow = "#b36d43"
+blue = "#78824b"
+magenta = "#bb7744"
+cyan = "#c9a554"
+white = "#d7c483"
