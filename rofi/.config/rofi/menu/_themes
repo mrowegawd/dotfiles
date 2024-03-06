@@ -72,7 +72,7 @@ set_tmux() {
 		sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$GET_CYAN\"/g" "$_PATH_TMUX_THEMES"
 
 		sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
+		sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
 
 		sed -i -e "s/^SEPARATOR_FG=.*$/SEPARATOR_FG=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
 		sed -i -e "s/^SEPARATOR_ACTIVE_BG=.*$/SEPARATOR_ACTIVE_BG=\"$GET_COL_26\"/g" "$_PATH_TMUX_THEMES"

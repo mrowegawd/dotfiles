@@ -118,6 +118,9 @@ return {
       end
       return false
     end,
+    config = function(_, opts)
+      require("solarized-osaka").setup(opts)
+    end,
     opts = {
       transparent = false, -- Enable this to disable setting the background color
       terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)

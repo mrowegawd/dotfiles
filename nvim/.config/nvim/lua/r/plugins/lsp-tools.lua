@@ -169,6 +169,21 @@ return {
     config = function()
       require("paren-hint").setup {
         highlight = "MyParentHint",
+        -- excluded filetypes
+        excluded_filetypes = {
+          "lspinfo",
+          "packer",
+          "norg",
+          "org",
+          "markdown",
+          "checkhealth",
+          "help",
+          "man",
+          "gitcommit",
+          "TelescopePrompt",
+          "TelescopeResults",
+          "",
+        },
       }
     end,
   },

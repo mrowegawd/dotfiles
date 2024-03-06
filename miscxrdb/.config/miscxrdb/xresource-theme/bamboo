@@ -27,10 +27,10 @@
 ! -----------------------------
 
 ! MODE color
-*color16: #8b75b3
+*color16: #807bc6
 
 ! SEPARATOR: separator_bg, separator_fg
-*color17: #574970
+*color17: #504d7c
 *color18: #3f493f
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,

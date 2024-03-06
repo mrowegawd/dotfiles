@@ -25,6 +25,12 @@ return {
           ["ayu"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
           },
+          ["nord"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+          },
+          ["vscode_modern"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+          },
         },
       })
       require("mini.indentscope").setup(opts)
@@ -131,8 +137,8 @@ return {
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
           },
           ["ayu"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
           ["solarized-osaka"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },

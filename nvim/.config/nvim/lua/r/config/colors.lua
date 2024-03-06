@@ -10,7 +10,7 @@ local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
 -- stylua: ignore
 local general_overrides = function()
   Highlight.all {
-    { FoldColumn = { bg = { from = "Normal" , attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
+    { FoldColumn = { bg = { from = "Normal", attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
     { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Keyword", attr = "fg", alter = -0.2 }, bg = "NONE", bold = true } },
@@ -63,10 +63,9 @@ local general_overrides = function()
     -- { ["@error"] = { fg = "fg", bg = "NONE" } },
     -- { ["@text.diff.add"] = { link = "DiffAdd" } },
     -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
-    -- { ["@text.title.markdown"] = { underdouble = true } },
 
     -----------------------------------------------------------------------
-    -- Diff
+    -- DIFF
     -----------------------------------------------------------------------
     -- These highlights are syntax groups that are set in diff.vim
     -- { GitSignsAdd = { bg = { from = "ColorColumn"} } },
@@ -176,6 +175,29 @@ local general_overrides = function()
       },
     },
     -----------------------------------------------------------------------
+    -- MARKDOWN
+    -----------------------------------------------------------------------
+    { ["@markup.quote.markdown"] = { italic = true } },
+    { ["@markup.heading.1.markdown"] = { fg = "#4d85c3", bold = true, italic = true } },
+    { ["@markup.heading.2.markdown"] = { fg = "#389674", bold = true, italic = true } },
+    { ["@markup.heading.3.markdown"] = { fg = "#b0be1e", bold = true, italic = true } },
+    { ["@markup.heading.4.markdown"] = { fg = "#8594c8", bold = true, italic = true } },
+    { ["@markup.heading.5.markdown"] = { fg = "#f76328", bold = true, italic = true } },
+    { ["@markup.heading.6.markdown"] = { fg = "#fccf3e", bold = true, italic = true } },
+    {
+      markdownItalic = {
+        fg = { from = "@tag.attribute", attr = "fg", alter = 0.5 },
+        italic = false,
+        underline = false,
+      },
+    },
+    {
+      markdownBold = {
+        fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+        bold = true,
+      },
+    },
+    -----------------------------------------------------------------------
     -- CREATED HIGHLIGHTS
     -----------------------------------------------------------------------
     { MyStatusline = { fg = { from = "Normal", alter = 0.5 } } },
@@ -195,9 +217,15 @@ local general_overrides = function()
     { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 } } },
     { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
-    { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+    { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
     { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
-    { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1.8 } } },
+    {
+      MyCodeUsage = {
+        fg = { from = "Normal", attr = "bg", alter = 1 },
+        bg = { from = "Normal", attr = "bg", alter = -0.15 },
+        italic = true,
+      },
+    },
     { MyParentHint = { bg = { from = "CursorLine", attr = "bg" }, fg = { from = "MyCodeUsage", attr = "fg" , alter = -0.1 } } },
     { CodeBlock1 = { bg = { from = "Normal", alter = -0.15 } } },
     { CodeBlock2 = { bg = "cyan" } },
@@ -256,8 +284,16 @@ local general_overrides = function()
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
-    -- ORGMODE ============================================================
+    -----------------------------------------------------------------------
+    -- ORGMODE 
+    -----------------------------------------------------------------------
     { OrgDONE = { fg = "#00FF00" } },
+    { ["@org.headline.level1.org"] = { fg = "#4d85c3", bold = true, italic = true } },
+    { ["@org.headline.level2.org"] = { fg = "#389674", bold = true, italic = true } },
+    { ["@org.headline.level3.org"] = { fg = "#b0be1e", bold = true, italic = true } },
+    { ["@org.headline.level4.org"] = { fg = "#8594c8", bold = true, italic = true } },
+    { ["@org.headline.level5.org"] = { fg = "#f76328", bold = true, italic = true } },
+    { ["@org.headline.level6.org"] = { fg = "#fccf3e", bold = true, italic = true } },
 
     -- HLSEARCH ===========================================================
     { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },
@@ -314,7 +350,14 @@ end
 
 local function colorscheme_overrides()
   local overrides = {
-    ["gruvbox"] = {
+    ["gruvbox-material"] = {
+      {
+        LspCodeLens = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          fg = { from = "Comment", attr = "fg", alter = -0.4 },
+          italic = true,
+        },
+      },
       {
         StatusLine = {
           fg = { from = "ColorColumn", attr = "bg", alter = 0.5 },
@@ -349,6 +392,15 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["nord"] = {
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 0.25 },
+        },
+      },
+    },
     ["farout"] = {
       {
         FoldColumn = {
@@ -364,12 +416,6 @@ local function colorscheme_overrides()
       { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
     },
     ["miasma"] = {
-      {
-        FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
-          fg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
       {
         LspReferenceText = {
           bg = { from = "Normal", attr = "bg" },
@@ -390,15 +436,23 @@ local function colorscheme_overrides()
         },
       },
       { LspReferenceRead = { bg = { from = "Normal", attr = "bg" }, underline = false, undercurl = false } },
-
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
       { ["@org.agenda.scheduled"] = { fg = { from = "@tag.attribute", attr = "fg", alter = 0.2 } } },
     },
     ["solarized-osaka"] = {
       -- { NormalNC = { inherit = "Normal" } },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 0.7 },
+        },
+      },
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { TroubleNormal = { inherit = "Normal" } },
+      { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+      { markdownCode = { bg = "NONE" } },
 
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1 }, bg = { from = "Normal", attr = "bg" } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
@@ -411,9 +465,32 @@ local function colorscheme_overrides()
       },
     },
     ["selenized"] = {
+      {
+        LspCodeLens = {
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = { from = "Comment", attr = "fg", alter = -0.1 },
+          italic = true,
+        },
+      },
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.2 } } },
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 0.25 },
+        },
+      },
+    },
+    ["onedark"] = {
+      {
+        FoldColumn = {
+          bg = { from = "Normal", attr = "bg" },
+          fg = { from = "Normal", attr = "bg", alter = 0.25 },
+        },
+      },
     },
     ["bamboo"] = {
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
     },
     ["tokyonight"] = {
@@ -425,6 +502,9 @@ local function colorscheme_overrides()
           fg = { from = "LineNr", attr = "fg", alter = 0.1 },
         },
       },
+    },
+    ["catppuccin-mocha"] = {
+      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
     },
     ["catppuccin-latte"] = {
       {

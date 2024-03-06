@@ -327,27 +327,32 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# colors (miasma) https://github.com/xero/miasma.nvim
 [colors.primary]
-background = "#222222"
-foreground = "#d7c483"
+background = "#1f1f1f"
+foreground = "#cccccc"
+
+[colors.cursor]
+text = "#1f1f1f"
+cursor = "#cccccc"
 
 [colors.normal]
-black = "#222222"
-red = "#685742"
-green = "#5f875f"
-yellow = "#b36d43"
-blue = "#78824b"
-magenta = "#bb7744"
-cyan = "#c9a554"
-white = "#d7c483"
+black =   "#000000"
+red =     "#cd3131"
+green =   "#0dbc79"
+yellow =  "#e5e510"
+blue =    "#2472c8"
+magenta = "#bc3fbc"
+cyan =    "#11a8cd"
+white =   "#e5e5e5"
 
 [colors.bright]
-black = "#666666"
-red = "#685742"
-green = "#5f875f"
-yellow = "#b36d43"
-blue = "#78824b"
-magenta = "#bb7744"
-cyan = "#c9a554"
-white = "#d7c483"
+black =   "#666666"
+red =     "#f14c4c"
+green =   "#23d18b"
+yellow =  "#f5f543"
+blue =    "#3b8eea"
+magenta = "#d670d6"
+cyan =    "#29b8db"
+white =   "#e5e5e5"
+
+
