@@ -452,54 +452,57 @@ return {
       --   return false
       -- end
 
-      -- local provider = {
-      --   HOVER = "hoverProvider",
-      --   RENAME = "renameProvider",
-      --   CODELENS = "codeLensProvider",
-      --   CODEACTIONS = "codeActionProvider",
-      --   FORMATTING = "documentFormattingProvider",
-      --   REFERENCES = "documentHighlightProvider",
-      --   DEFINITION = "definitionProvider",
-      -- }
+      local provider = {
+        HOVER = "hoverProvider",
+        RENAME = "renameProvider",
+        CODELENS = "codeLensProvider",
+        CODEACTIONS = "codeActionProvider",
+        FORMATTING = "documentFormattingProvider",
+        REFERENCES = "documentHighlightProvider",
+        DEFINITION = "definitionProvider",
+      }
 
       -- Setup formatting and keymaps
       Util.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
 
-        -- if client.server_capabilities[provider.CODELENS] then
-        --   Util.cmd.augroup("LspCodelensRefresh", {
-        --     event = { "BufEnter", "InsertLeave", "BufWritePost" },
-        --     desc = "LSP: Code Lens",
-        --     buffer = bufnr,
-        --     command = function()
-        --       if not has_capability("textDocument/codeLens", { bufnr = bufnr }) then
-        --         Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
-        --         return
-        --       end
-        --       if vim.g.codelens_enabled then
-        --         vim.lsp.codelens.refresh()
-        --       end
-        --     end,
-        --   })
-        -- end
+        if client.server_capabilities[provider.CODELENS] then
+          Util.cmd.augroup("LspCodelensRefresh", {
+            event = { "BufEnter", "InsertLeave", "BufWritePost" },
+            desc = "LSP: Code Lens",
+            buffer = bufnr,
+            -- call via vimscript so that errors are silenced
+            command = "silent! lua vim.lsp.codelens.refresh()",
+            -- command = function()
+            --   if not has_capability(provider.CODELENS, { bufnr = bufnr }) then
+            --     print "mantap"
+            --     Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
+            --     return
+            --   end
+            --   if vim.g.codelens_enabled then
+            --     vim.lsp.codelens.refresh()
+            --   end
+            -- end,
+          })
+        end
 
-        -- if client.server_capabilities[provider.REFERENCES] then
-        --   Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
-        --     event = { "CursorHold", "CursorHoldI" },
-        --     buffer = bufnr,
-        --     desc = "LSP: References",
-        --     command = function()
-        --       vim.lsp.buf.document_highlight()
-        --     end,
-        --   }, {
-        --     event = "CursorMoved",
-        --     desc = "LSP: References Clear",
-        --     buffer = bufnr,
-        --     command = function()
-        --       vim.lsp.buf.clear_references()
-        --     end,
-        --   })
-        -- end
+        if client.server_capabilities[provider.REFERENCES] then
+          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+            event = { "CursorHold", "CursorHoldI" },
+            buffer = bufnr,
+            desc = "LSP: References",
+            command = function()
+              vim.lsp.buf.document_highlight()
+            end,
+          }, {
+            event = { "CursorMoved", "CursorMovedI", "BufLeave" },
+            desc = "LSP: References Clear",
+            buffer = bufnr,
+            command = function()
+              vim.lsp.buf.clear_references()
+            end,
+          })
+        end
 
         if opts.inlay_hints.enabled then
           if client.supports_method "textDocument/inlayHint" then
@@ -519,28 +522,6 @@ return {
         require("r.keymaps.lsp").on_attach(client, buffer)
         return ret
       end
-
-      -- Uncomment this if you are not using 'noice.nvim'
-      -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-      --   border = border,
-      -- })
-
-      -- Diagnostics
-      -- for name, icon in pairs(icons.diagnostics) do
-      --   name = "DiagnosticSign" .. name
-      --   vim.fn.sign_define(name, { text = icon, texthl = name, numhl = name })
-      -- end
-
-      -- if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
-      --   opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
-      --     or function(diagnostic)
-      --       for d, icon in pairs(icons.diagnostics) do
-      --         if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
-      --           return icon
-      --         end
-      --       end
-      --     end
-      -- end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 

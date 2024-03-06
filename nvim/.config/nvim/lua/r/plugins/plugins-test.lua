@@ -22,6 +22,119 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- NVIM-GTD (disabled)
+  {
+    "hrsh7th/nvim-gtd",
+    enabled = false,
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = "neovim/nvim-lspconfig",
+    opts = {
+      sources = {
+        { name = "findup" },
+        {
+          name = "walk",
+          root_markers = {
+            ".git",
+            ".neoconf.json",
+            "Makefile",
+            "package.json",
+            "tsconfig.json",
+          },
+          ignore_patterns = { "/node_modules", "/.git" },
+        },
+        { name = "lsp" },
+      },
+    },
+  },
+  -- ILLUMINATE
+  {
+    "RRethy/vim-illuminate",
+    enabled = false,
+    event = "LazyFile",
+    opts = {
+      delay = 200,
+      large_file_cutoff = 2000,
+      large_file_overrides = {
+        providers = { "lsp" },
+      },
+    },
+    -- stylua: ignore
+    keys = {
+      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference" },
+      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference" },
+    },
+    config = function()
+      require("illuminate").configure {
+        filetypes_denylist = {
+          "NeogitStatus",
+          "Outline",
+          "TelescopePrompt",
+          "fugitiveblame",
+          "blame",
+          "DiffviewFiles",
+          "Trouble",
+          "alpha",
+          "dirvish",
+          "fugitive",
+          "NvimTree",
+          "gitcommit",
+          "markdown",
+          "lazy",
+          "neo-tree",
+          "dashboard",
+          "orgagenda",
+          "aerial",
+          "outline",
+          "sagafinder",
+          "qf",
+        },
+      }
+    end,
+  },
+  -- SYMBOL-USAGE
+  {
+    "Wansmer/symbol-usage.nvim",
+    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    enabled = false,
+    config = true,
+    opts = function()
+      Highlight.plugin("SymbolUsageCol", {
+        theme = {
+          ["*"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["kanagawa"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["bamboo"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+          },
+          ["nord"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+          },
+          ["farout"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 2.6 } } },
+          },
+          ["ayu"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 2.6 } } },
+          },
+          ["miasma"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
+          },
+          ["gruvbox-material"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+          },
+          ["catppuccin-latte"] = {
+            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
+        },
+      })
+      return {
+        hl = { link = "MyCodeUsage" },
+        disable = { filetypes = { "dockerfile", "markdown", "org" } },
+      }
+    end,
+  },
   -- GENTAGS (disabled)
   {
     "linrongbin16/gentags.nvim",
