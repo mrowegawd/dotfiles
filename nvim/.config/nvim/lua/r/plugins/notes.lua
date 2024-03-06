@@ -535,59 +535,11 @@ return {
       orgmode.setup(opts)
     end,
   },
-  -- MKDNFLOW.NVIM
-  {
-    "jakewvincent/mkdnflow.nvim",
-    event = "LazyFile",
-    ft = { "markdown" },
-    opts = {
-      mappings = {
-        MkdnEnter = false,
-        -- MkdnTab = false,
-        -- MkdnSTab = false,
-        MkdnNextLink = false,
-        MkdnPrevLink = false,
-        MkdnNextHeading = { "n", "<a-n>" },
-        MkdnPrevHeading = { "n", "<a-p>" },
-        MkdnGoBack = false,
-        MkdnGoForward = false,
-        MkdnCreateLink = false, -- see MkdnEnter
-        MkdnCreateLinkFromClipboard = false,
-        MkdnFollowLink = false, -- see MkdnEnter
-        MkdnDestroyLink = false,
-        MkdnTagSpan = false,
-        MkdnMoveSource = false,
-        MkdnYankAnchorLink = false,
-        MkdnYankFileAnchorLink = false,
-        MkdnIncreaseHeading = false,
-        MkdnDecreaseHeading = false,
-        MkdnToggleToDo = false,
-        MkdnNewListItem = false,
-        MkdnNewListItemBelowInsert = false,
-        MkdnNewListItemAboveInsert = false,
-        MkdnExtendList = false,
-        MkdnUpdateNumbering = false,
-        MkdnTableNextCell = false,
-        MkdnTablePrevCell = false,
-        MkdnTableNextRow = false,
-        MkdnTablePrevRow = false,
-        MkdnTableNewRowBelow = false,
-        MkdnTableNewRowAbove = false,
-        MkdnTableNewColAfter = false,
-        MkdnTableNewColBefore = false,
-        MkdnFoldSection = false,
-        MkdnUnfoldSection = false,
-      },
-    },
-  },
   -- CALENDAR-VIM
   {
     "renerocksai/calendar-vim",
-    -- event = "LazyFile",
     cmd = "Calendar",
-    -- keys = {
-    --   { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
-    -- },
+    config = true,
   },
   -- IMAGE.NVIM
   {
@@ -711,7 +663,9 @@ return {
         -- alias_format = "%B %-d, %Y",
       },
 
+      preferred_link_style = "markdown",
       finder = "fzf-lua",
+
       -- Optional, alternatively you can customize the frontmatter data.
       note_frontmatter_func = function(note)
         -- This is equivalent to the default frontmatter function.

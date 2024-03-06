@@ -501,7 +501,7 @@ return {
       })
 
       return {
-        -- minimal_jump = 20,
+        minimal_jump = 50,
         ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
         ignore_filetypes = {
           "qf",
