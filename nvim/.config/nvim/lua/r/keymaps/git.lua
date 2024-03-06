@@ -56,6 +56,9 @@ local function gitfzflua(opts)
           Util.info("Choosing none of them (deleted)", { title = "GitConflict" })
           vim.cmd [[GitConflictChooseNone]]
         end,
+        git_blame = function()
+          vim.cmd [[ToggleBlame]]
+        end,
       }, opts),
       { winopts = { title = require("r.config").icons.git.branch .. "Git ", row = row, col = col } }
     )
