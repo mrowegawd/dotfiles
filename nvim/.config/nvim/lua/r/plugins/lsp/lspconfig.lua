@@ -37,6 +37,9 @@ return {
         "ruff",
         "debugpy",
 
+        -- rust
+        "codelldb",
+
         -- cmake
         "cmakelang",
         "cmakelint",
@@ -55,6 +58,7 @@ return {
 
         -- ansible
         "ansible-language-server",
+        "ansible-lint",
       },
       ui = { border = Icons.border.line, height = 0.8 },
     },
@@ -151,6 +155,9 @@ return {
         },
       },
       inlay_hints = { enabled = false },
+      codelens = {
+        enabled = true,
+      },
       capabilities = {},
       format = { formatting_options = nil, timeout_ms = nil },
       servers = {
@@ -326,10 +333,6 @@ return {
               codeLens = { enable = true },
               workspace = {
                 checkThirdParty = false,
-                -- library = {
-                -- [vim.fn.expand "$HOME/moxconf/contrib/neovim/runtime/lua"] = true,
-                --   [vim.fn.stdpath "config" .. "/lua"] = true,
-                -- },
               },
               completion = { callSnippet = "Replace" },
               telemetry = { enable = false },
@@ -469,25 +472,27 @@ return {
       Util.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
 
-        if not Util.has "symbol-usage.nvim" then
-          if client.server_capabilities[provider.CODELENS] then
-            Util.cmd.augroup("LspCodelensRefresh", {
-              event = { "BufEnter", "InsertLeave", "BufWritePost" },
-              desc = "LSP: Code Lens",
-              buffer = bufnr,
-              -- call via vimscript so that errors are silenced
-              command = "silent! lua vim.lsp.codelens.refresh()",
-              -- command = function()
-              --   if not has_capability(provider.CODELENS, { bufnr = bufnr }) then
-              --     print "mantap"
-              --     Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
-              --     return
-              --   end
-              --   if vim.g.codelens_enabled then
-              --     vim.lsp.codelens.refresh()
-              --   end
-              -- end,
-            })
+        if opts.codelens.enabled and vim.lsp.codelens then
+          if not Util.has "symbol-usage.nvim" then
+            if client.server_capabilities[provider.CODELENS] then
+              Util.cmd.augroup("LspCodelensRefresh", {
+                event = { "BufEnter", "InsertLeave", "BufWritePost" },
+                desc = "LSP: Code Lens",
+                buffer = bufnr,
+                -- call via vimscript so that errors are silenced
+                command = "silent! lua vim.lsp.codelens.refresh()",
+                -- command = function()
+                --   if not has_capability(provider.CODELENS, { bufnr = bufnr }) then
+                --     print "mantap"
+                --     Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
+                --     return
+                --   end
+                --   if vim.g.codelens_enabled then
+                --     vim.lsp.codelens.refresh()
+                --   end
+                -- end,
+              })
+            end
           end
         end
 
@@ -628,44 +633,31 @@ return {
   -- RUSTACEANVIM
   {
     "mrcjkb/rustaceanvim",
-    version = "^3",
+    version = "^4", -- Recommended
     ft = { "rust" },
     opts = {
-      -- LSP configuration
-      --
-      -- REFERENCE:
-      -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-      -- https://rust-analyzer.github.io/manual.html#configuration
-      -- https://rust-analyzer.github.io/manual.html#features
-      --
-      -- NOTE: The configuration format is `rust-analyzer.<section>.<property>`.
-      --       <section> should be an object.
-      --       <property> should be a primitive.
       server = {
-        on_attach = function(client, bufnr)
-          -- require("illuminate").on_attach(client)
-          require("r.keymaps.lsp").on_attach(client, bufnr)
-
-          -- local bufopts = {
-          --   noremap = true,
-          --   silent = true,
-          --   buffer = bufnr,
-          -- }
-          -- vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
-          -- vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
-        end,
-        settings = {
+        -- on_attach = function(client, bufnr)
+        --   -- require("illuminate").on_attach(client)
+        --   require("r.keymaps.lsp").on_attach(client, bufnr)
+        --
+        --   -- local bufopts = {
+        --   --   noremap = true,
+        --   --   silent = true,
+        --   --   buffer = bufnr,
+        --   -- }
+        --   -- vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
+        --   -- vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
+        -- end,
+        default_settings = {
           -- rust-analyzer language server configuration
           ["rust-analyzer"] = {
-            assist = {
-              importEnforceGranularity = true,
-              importPrefix = "create",
-            },
             cargo = {
               allFeatures = true,
               loadOutDirsFromCheck = true,
               runBuildScripts = true,
             },
+            -- Add clippy lints for Rust.
             checkOnSave = {
               allFeatures = true,
               command = "clippy",
@@ -677,12 +669,6 @@ return {
                 ["async-trait"] = { "async_trait" },
                 ["napi-derive"] = { "napi" },
                 ["async-recursion"] = { "async_recursion" },
-              },
-            },
-            inlayHints = {
-              lifetimeElisionHints = {
-                enable = true,
-                useParameterNames = true,
               },
             },
           },

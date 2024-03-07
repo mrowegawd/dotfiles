@@ -207,6 +207,29 @@ Util.cmd.augroup("CheckOutsideTime", {
   end,
 })
 
+-- Copy/Paste when using ssh on a remote server
+-- Only works on Neovim >= 0.10.0
+if vim.clipboard and vim.clipboard.osc52 then
+  Util.cmd.augroup("SSH_clipboard", {
+    event = { "VimEnter" },
+    callback = function()
+      if vim.env.SSH_CONNECTION and vim.clipboard.osc52 then
+        vim.g.clipboard = {
+          name = "OSC 52",
+          copy = {
+            ["+"] = require("vim.clipboard.osc52").copy,
+            ["*"] = require("vim.clipboard.osc52").copy,
+          },
+          paste = {
+            ["+"] = require("vim.clipboard.osc52").paste,
+            ["*"] = require("vim.clipboard.osc52").paste,
+          },
+        }
+      end
+    end,
+  })
+end
+
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
 ]]

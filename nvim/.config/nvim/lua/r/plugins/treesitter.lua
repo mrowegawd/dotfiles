@@ -136,7 +136,6 @@ return {
         "python",
         "ninja",
         "rst",
-        "toml",
 
         "css",
         "html",
@@ -145,10 +144,12 @@ return {
 
         "ron",
         "rust",
+        "toml",
 
         "markdown",
         "markdown_inline",
 
+        "xml",
         "vimdoc",
       },
 

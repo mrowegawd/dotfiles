@@ -14,7 +14,9 @@ return {
       status = { virtual_text = true },
       output = { open_on_run = true },
       adapters = {
-        ["neotest-go"] = {},
+        ["neotest-go"] = {
+          recursive_run = true,
+        },
         ["neotest-rust"] = {},
         ["neotest-python"] = {
           -- Here you can specify the settings for the adapter, i.e.
