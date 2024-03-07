@@ -26,11 +26,12 @@ _check_pane_is_zsh() {
 }
 
 _create_nnn_window() {
-	tmux split-pane -hb -p 15 -c '#{pane_current_path}'
-	NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")
-	echo "$NEXT_PANE_ID" >"$1"
-	tmux send-keys -t "$NEXT_PANE_ID" "nnn -c" Enter
+	# tmux split-pane -hb -p 15 -c '#{pane_current_path}'
+	# NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")
+	# echo "$NEXT_PANE_ID" >"$1"
+	# tmux send-keys -t "$NEXT_PANE_ID" "nnn -c" Enter
 
+	tmux split-window -hb -p 15 -c "#{pane_current_path}" "nnn -c"
 }
 
 GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
@@ -39,10 +40,11 @@ GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
 # Check pane: jika ada 1 atau pane yang lebih dari 3
 # kenapa lebih dari 3: karena [1, 2, 3] adalah uratan `nnn` `nvim` `terminal`
 if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
-	tmux split-pane -hb -p 15 -c '#{pane_current_path}'
+	# tmux split-pane -hb -p 15 -c '#{pane_current_path}'
 	# NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")
 	# echo "$NEXT_PANE_ID" >"$PANE_MAIN_FILE_MANAGER"
-	tmux send-keys -t "$NEXT_PANE_ID" "nnn -c" Enter
+	# tmux send-keys -t "$NEXT_PANE_ID" "nnn -c" Enter
+	tmux split-window -hb -p 15 -c "#{pane_current_path}" "nnn -c"
 else
 	if _check_pane_is_nnn; then
 		tmux kill-pane
@@ -50,7 +52,11 @@ else
 	fi
 
 	if _check_pane_is_nvim; then
-		_create_nnn_window "$PANE_MAIN_FILE_MANAGER"
+		_go_left
+		if _check_pane_is_zsh; then
+			_go_left
+			_create_nnn_window
+		fi
 		exit
 	fi
 fi

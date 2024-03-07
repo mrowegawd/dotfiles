@@ -155,7 +155,8 @@ pidkill() {
 start_preview() {
 	if [ -e "${TMUX%%,*}" ] && tmux -V | grep -q '[ -][3456789]\.'; then
 		NNN_TERMINAL=tmux
-		exists mpv && tmux display -p '#{client_termfeatures}' | grep -q 'sixel' && ENVVARS+=("NNN_PREVIEWVIDEO=sixel")
+		# exists mpv && tmux display -p '#{client_termfeatures}' | grep -q 'sixel' && ENVVARS+=("NNN_PREVIEWVIDEO=sixel")
+		exists mpv && ENVVARS+=("NNN_PREVIEWVIDEO=kitty")
 	elif [ -n "$KITTY_LISTEN_ON" ]; then
 		NNN_TERMINAL=kitty
 		exists mpv && ENVVARS+=("NNN_PREVIEWVIDEO=kitty")
@@ -498,6 +499,7 @@ image_preview() {
 	if [ "$NNN_TERMINAL" = "kitty" ] && [[ "$NNN_PREVIEWIMGPROG" == +(|icat) ]]; then
 		kitty +kitten icat --silent --scale-up --place "$1"x"$2"@0x0 --transfer-mode=stream --stdin=no "$3" &
 	elif [ "$NNN_TERMINAL" = "tmux" ] && [[ -n "$KITTY_LISTEN_ON" ]] && [[ "$NNN_PREVIEWIMGPROG" == +(|icat) ]]; then
+		# mpv --force-window=immediate --autofit=800x800 --loop-file "$3" &
 		kitty +kitten icat --silent --scale-up --place "$(($1 - 1))x$(($2 - 1))"@0x0 --transfer-mode=memory --stdin=no "$3" &
 	elif [ "$NNN_TERMINAL" = "wezterm" ] && [[ "$NNN_PREVIEWIMGPROG" == +(|imgcat) ]]; then
 		wezterm imgcat "$3" &
@@ -522,7 +524,7 @@ video_preview() {
 	exec >/dev/tty
 	if [ -n "$NNN_PREVIEWVIDEO" ]; then
 		if type mpv >/dev/null 2>&1; then
-			mpv --force-window=immediate --autofit=800x800 --loop-file "$3" &
+			mpv --force-window=immediate --autofit=900x900 --geometry=-700-100 --loop-file "$3" &
 		else
 			ffmpegthumbnailer -i "$3" -o "$NNN_PREVIEWDIR/$3.jpg" -s 0 || rm "$NNN_PREVIEWDIR/$3.jpg" &
 		fi
