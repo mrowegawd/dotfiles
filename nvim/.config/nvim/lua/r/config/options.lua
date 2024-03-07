@@ -350,6 +350,39 @@ if vim.g.neovide then
   vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
 end
 
+-- Filetype detection
+vim.filetype.add {
+  filename = {
+    Brewfile = "ruby",
+    justfile = "just",
+    Justfile = "just",
+    Tmuxfile = "tmux",
+    ["yarn.lock"] = "yaml",
+    [".buckconfig"] = "toml",
+    [".flowconfig"] = "ini",
+    [".jsbeautifyrc"] = "json",
+    [".jscsrc"] = "json",
+    [".watchmanconfig"] = "json",
+    ["dev-requirements.txt"] = "requirements",
+    ["helmfile.yaml"] = "yaml",
+  },
+  pattern = {
+    [".*%.js%.map"] = "json",
+    [".*%.postman_collection"] = "json",
+    ["Jenkinsfile.*"] = "groovy",
+    ["%.kube/config"] = "yaml",
+    ["%.config/git/users/.*"] = "gitconfig",
+    ["requirements-.*%.txt"] = "requirements",
+    [".*/templates/.*%.ya?ml"] = "helm",
+    [".*/templates/.*%.tpl"] = "helm",
+    [".*/playbooks/.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/tasks/.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/molecule/*.*%.ya?ml"] = "yaml.ansible",
+    [".*/roles/.*/handlers/.*%.ya?ml"] = "yaml.ansible",
+    [".*/inventory/.*%.ini"] = "ansible_hosts",
+  },
+}
+
 -- forplugin: azabiong/vim-highlighter
 -- delete jika tidak dibutuhkan or commented
 vim.g.HiSet = "t<CR>"
