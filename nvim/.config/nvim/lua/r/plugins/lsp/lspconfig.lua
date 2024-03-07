@@ -52,6 +52,9 @@ return {
 
         -- docker
         "hadolint",
+
+        -- ansible
+        "ansible-language-server",
       },
       ui = { border = Icons.border.line, height = 0.8 },
     },
@@ -466,24 +469,26 @@ return {
       Util.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
 
-        if client.server_capabilities[provider.CODELENS] then
-          Util.cmd.augroup("LspCodelensRefresh", {
-            event = { "BufEnter", "InsertLeave", "BufWritePost" },
-            desc = "LSP: Code Lens",
-            buffer = bufnr,
-            -- call via vimscript so that errors are silenced
-            command = "silent! lua vim.lsp.codelens.refresh()",
-            -- command = function()
-            --   if not has_capability(provider.CODELENS, { bufnr = bufnr }) then
-            --     print "mantap"
-            --     Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
-            --     return
-            --   end
-            --   if vim.g.codelens_enabled then
-            --     vim.lsp.codelens.refresh()
-            --   end
-            -- end,
-          })
+        if not Util.has "symbol-usage.nvim" then
+          if client.server_capabilities[provider.CODELENS] then
+            Util.cmd.augroup("LspCodelensRefresh", {
+              event = { "BufEnter", "InsertLeave", "BufWritePost" },
+              desc = "LSP: Code Lens",
+              buffer = bufnr,
+              -- call via vimscript so that errors are silenced
+              command = "silent! lua vim.lsp.codelens.refresh()",
+              -- command = function()
+              --   if not has_capability(provider.CODELENS, { bufnr = bufnr }) then
+              --     print "mantap"
+              --     Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
+              --     return
+              --   end
+              --   if vim.g.codelens_enabled then
+              --     vim.lsp.codelens.refresh()
+              --   end
+              -- end,
+            })
+          end
         end
 
         if client.server_capabilities[provider.REFERENCES] then

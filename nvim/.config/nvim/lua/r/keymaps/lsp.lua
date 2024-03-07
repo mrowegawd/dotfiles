@@ -21,14 +21,6 @@ function M.get()
     { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP(fzflua): incoming calls" },
     { "gT", fzf_lua.lsp_typedefs, desc = "LSP(fzflua): peek type definitions" },
     { "<leader>ca", vim.lsp.buf.code_action, has = "codeAction", mode = { "n", "v" }, desc = "LSP: code action" },
-    {
-      "<Leader>ll",
-      function()
-        vim.lsp.codelens.refresh { bufnr = 0 }
-      end,
-      has = "codeLensProvider",
-      desc = "LSP: codelens refresh",
-    },
     --  +----------------------------------------------------------+
     --  Diagnostics
     --  +----------------------------------------------------------+
@@ -176,6 +168,31 @@ function M.get()
         vim.lsp.buf.hover()
       end,
       desc = "LSP: show hover",
+    }
+  end
+
+  if Util.has "symbol-usage.nvim" then
+    M._keys[#M._keys + 1] = {
+      "<Leader>ll",
+      function()
+        require("symbol-usage").refresh()
+      end,
+      desc = "LSP(symbol-usage): codelens refresh",
+    }
+    M._keys[#M._keys + 1] = {
+      "<Leader>lL",
+      function()
+        require("symbol-usage").toggle()
+      end,
+      desc = "LSP(symbol-usage): codelens toggle",
+    }
+  else
+    M._keys[#M._keys + 1] = {
+      "<Leader>ll",
+      function()
+        vim.lsp.codelens.refresh { bufnr = 0 }
+      end,
+      desc = "LSP: codelens refresh",
     }
   end
 
