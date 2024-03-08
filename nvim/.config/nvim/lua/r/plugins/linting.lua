@@ -1,7 +1,7 @@
 local Util = require "r.utils"
 
 return {
-  -- NONE-LS
+  -- NONE-LS (disabled)
   {
     "nvimtools/none-ls.nvim",
     event = "LazyFile",

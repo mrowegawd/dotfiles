@@ -90,6 +90,7 @@ return {
           sh = { "shfmt" },
           python = { "black" },
           go = { "goimports", "gofumpt" },
+          rust = { "rustfmt" },
 
           ["javascript"] = { { "prettierd", "prettier" } },
           ["javascriptreact"] = { { "prettierd", "prettier" } },
