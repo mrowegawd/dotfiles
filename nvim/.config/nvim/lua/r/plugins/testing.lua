@@ -19,6 +19,9 @@ return {
         },
         ["neotest-rust"] = {},
         ["neotest-python"] = {
+
+          -- require("rustaceanvim.neotest") <-- TODO: ini harus di sematkan pada adapters
+
           -- Here you can specify the settings for the adapter, i.e.
           -- runner = "pytest",
           -- python = ".venv/bin/python",

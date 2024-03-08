@@ -158,7 +158,6 @@ return {
         end,
       },
     },
-    -- stylua: ignore
     keys = {
       -- +----------------------------------------------------------+
       -- DAP commands
@@ -174,13 +173,19 @@ return {
       -- { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug(dap): clear all breakpoints" },
       -- { "<Leader>dbl", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug(dap): log breakpoint", },
       -- { "<Leader>dD", function() require("dap").list_breakpoints(true) end, desc = "Debug(dap): list breakpoint qf", },
-      { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug(dap): breakpoint (toggle)" },
+      {
+        "<leader>db",
+        function()
+          require("dap").toggle_breakpoint()
+        end,
+        desc = "Debug(dap): breakpoint (toggle)",
+      },
       {
         "<Leader>df",
         function()
           local col, row = Util.fzflua.rectangle_win_pojokan()
 
-          Util.fzflua.send_cmds ({
+          Util.fzflua.send_cmds({
             breakpoint_set = function()
               return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
             end,
@@ -232,11 +237,14 @@ return {
             return require("dap").disconnect()
           else
             if Util.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
-              require("osv").run_this()
-            else
-              return require("dap").continue()
+              return require("osv").run_this()
             end
-         end
+
+            -- if Util.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
+            --   return vim.cmd.RustLsp "debuggables"
+            -- end
+            return require("dap").continue()
+          end
         end,
         desc = "Debug(dap): run or disconnect",
       },
@@ -244,12 +252,42 @@ return {
       -- Step-in, step-out, step-over | Stack-up Stack-down
       -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       -- +----------------------------------------------------------+
-      { "<s-right>", function() require("dap").step_into() end, desc = "Debug(dap): step-into" },
-      { "<s-left>", function() require("dap").step_out() end, desc = "Debug(dap): step-out" },
-      { "<s-down>", function() require("dap").step_over() end, desc = "Debug(dap): step-over" },
+      {
+        "<s-right>",
+        function()
+          require("dap").step_into()
+        end,
+        desc = "Debug(dap): step-into",
+      },
+      {
+        "<s-left>",
+        function()
+          require("dap").step_out()
+        end,
+        desc = "Debug(dap): step-out",
+      },
+      {
+        "<s-down>",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "Debug(dap): step-over",
+      },
 
-      { "<leader>dk", function() require("dap").up() end, desc = "Debug(dap): stack up" },
-      { "<leader>dj", function() require("dap").down() end, desc = "Debug(dap): stack down" },
+      {
+        "<leader>dk",
+        function()
+          require("dap").up()
+        end,
+        desc = "Debug(dap): stack up",
+      },
+      {
+        "<leader>dj",
+        function()
+          require("dap").down()
+        end,
+        desc = "Debug(dap): stack down",
+      },
     },
     opts = {
       setup = {
