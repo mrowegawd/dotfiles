@@ -20,7 +20,6 @@ function M.get()
     { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP(fzflua): outgoing calls" },
     { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP(fzflua): incoming calls" },
     { "gT", fzf_lua.lsp_typedefs, desc = "LSP(fzflua): peek type definitions" },
-    { "<leader>ca", vim.lsp.buf.code_action, has = "codeAction", mode = { "n", "v" }, desc = "LSP: code action" },
     --  +----------------------------------------------------------+
     --  Diagnostics
     --  +----------------------------------------------------------+
@@ -68,6 +67,15 @@ function M.get()
       end,
       desc = "LSP(diagnostic): workspace_diagnostic to qf",
     },
+
+    {
+      "dl",
+      function()
+        Util.toggle.diagnostics()
+      end,
+      desc = "LSP(diagnostic): toggle",
+    },
+
     --  +----------------------------------------------------------+
     --  LSP commands
     --  +----------------------------------------------------------+
@@ -169,6 +177,19 @@ function M.get()
       end,
       desc = "LSP: show hover",
     }
+  end
+
+  if vim.bo[0].filetype == "rust" then
+    M._keys[#M._keys + 1] = {
+      "<Leader>ca",
+      function()
+        vim.cmd.RustLsp "codeAction"
+      end,
+      desc = "LSP(rustaceanvim): code action",
+      buffer = vim.api.nvim_get_current_buf(),
+    }
+  else
+    M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "LSP: code action" }
   end
 
   if Util.has "symbol-usage.nvim" then

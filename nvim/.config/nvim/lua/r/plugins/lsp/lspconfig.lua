@@ -163,8 +163,8 @@ return {
       servers = {
         zls = {},
         dockerls = {},
-        docker_compose_language_service = {},
         rust_analyzer = {},
+        docker_compose_language_service = {},
         html = {},
         cssls = {
           settings = {
@@ -347,6 +347,9 @@ return {
         },
       },
       setup = {
+        rust_analyzer = function()
+          return true
+        end,
         eslint = function()
           local function get_client(buf)
             return Util.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
@@ -637,21 +640,12 @@ return {
     ft = { "rust" },
     opts = {
       server = {
-        -- on_attach = function(client, bufnr)
-        --   -- require("illuminate").on_attach(client)
-        --   require("r.keymaps.lsp").on_attach(client, bufnr)
-        --
-        --   -- local bufopts = {
-        --   --   noremap = true,
-        --   --   silent = true,
-        --   --   buffer = bufnr,
-        --   -- }
-        --   -- vim.keymap.set("n", "<leader><leader>rr", "<Cmd>RustLsp runnables<CR>", bufopts)
-        --   -- vim.keymap.set("n", "K", "<Cmd>RustLsp hover actions<CR>", bufopts)
-        -- end,
         default_settings = {
           -- rust-analyzer language server configuration
           ["rust-analyzer"] = {
+            rustfmt = {
+              extraArgs = { "+nightly", "--unstable-features" },
+            },
             cargo = {
               allFeatures = true,
               loadOutDirsFromCheck = true,

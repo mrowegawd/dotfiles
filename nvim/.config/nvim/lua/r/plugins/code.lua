@@ -98,6 +98,8 @@ return {
       local border_opts = {
         border = Icons.border.line,
         winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+        col_offset = -1, -- To fit lspkind icon
+        side_padding = 1, -- One character margin
       }
 
       local cmp = require "cmp"
