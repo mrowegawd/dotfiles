@@ -51,7 +51,6 @@ if type fzf >/dev/null 2>&1; then
 		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 		wezterm cli activate-pane-direction Left
 	else
-		dunstify "gelo"
 		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'FzOpen: ')"
 	fi
 

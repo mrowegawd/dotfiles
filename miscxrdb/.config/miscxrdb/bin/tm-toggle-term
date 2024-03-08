@@ -34,7 +34,7 @@ _check_pane_is_zsh() {
 # kenapa lebih dari 3: karena [1, 2, 3] adalah uratan `nnn` `nvim` `terminal`
 GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
 if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
-	tmux split-pane -h -p 25 -c '#{pane_current_path}'
+	tmux split-pane -h -p 30 -l 55 -c '#{pane_current_path}'
 else
 	if _check_pane_is_nvim; then
 
@@ -44,14 +44,14 @@ else
 			if _check_pane_is_nvim; then
 				_go_left
 			fi
-			tmux split-pane -h -p 25 -c '#{pane_current_path}'
+			tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
 		fi
 
 		if _check_pane_is_nnn; then
 			if _check_pane_is_nnn; then
 				_go_left
 			fi
-			tmux split-pane -h -p 25 -c '#{pane_current_path}'
+			tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
 		fi
 
 	elif _check_pane_is_nnn; then
