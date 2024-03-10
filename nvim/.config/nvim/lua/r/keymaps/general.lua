@@ -354,6 +354,7 @@ local function magic_quit()
     ["help"] = "bd",
     ["octo"] = "bd",
     ["log"] = "bd",
+    ["Outline"] = "bd",
     -- ["qf"] = "bnext | bdelete #",
     ["DiffviewFileHistory"] = "DiffviewClose",
   }
@@ -573,9 +574,10 @@ Util.map.nnoremap("<a-E>", function()
       vim.fn.system "tmux kill-pane"
     end
 
-    vim.fn.system "tmux split-pane -hb -p 15 -c '#{pane_current_path}'"
-    local current_pane = normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}" ]])
-
-    vim.fn.system(string.format("tmux send-keys -t %s 'nnn -c %s' Enter", current_pane, dirname))
+    local msg = fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' 'nnn -c %s'", dirname)
+    vim.fn.system(msg)
+    -- local current_pane = normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}" ]])
+    --
+    -- vim.fn.system(string.format("tmux send-keys -t %s 'nnn -c %s' Enter", current_pane, dirname))
   end
 end)

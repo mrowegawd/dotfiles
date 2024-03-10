@@ -3,6 +3,7 @@ local Util = require "r.utils"
 local Icons = require("r.config").icons
 
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local is_outline_opened = false
 
 local function get_outline()
   local ok_outline, outline = pcall(require, "outline")
@@ -250,8 +251,16 @@ return {
         {
           OutlineCurrent = {
             fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
-            -- bg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-            bold = true,
+          },
+        },
+        {
+          OutlineFoldMarker = {
+            fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+          },
+        },
+        {
+          OutlineGuides = {
+            fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
           },
         },
       })
@@ -372,7 +381,18 @@ return {
           end,
           desc = "Misc(neotree): open File explore",
         },
-        { "<Localleader>oa", "<cmd>Outline<CR>", desc = "Misc(outline): toggle" },
+        {
+          "<Localleader>oa",
+          function()
+            if not is_outline_opened then
+              is_outline_opened = true
+            else
+              is_outline_opened = false
+            end
+            vim.cmd.Outline()
+          end,
+          desc = "Misc(outline): toggle",
+        },
         {
           "<Localleader>O",
           function()
@@ -393,7 +413,7 @@ return {
                 end
               end
 
-              if outline_tbl.found then
+              if outline_tbl.found and is_outline_opened then
                 -- print(vim.inspect(outline_tbl))
                 vim.api.nvim_set_current_win(outline_tbl.winid)
               end
@@ -415,7 +435,7 @@ return {
             local aerial_selected = { "all" }
 
             for key, icon in pairs(Icons.kinds) do
-              table.insert(aerial_selected, key .. " " .. icon)
+              table.insert(aerial_selected, icon .. " " .. key)
             end
 
             fzf_lua.fzf_exec(aerial_selected, {
@@ -444,7 +464,7 @@ return {
                   if selection ~= nil and type(selection) == "string" then
                     local opts_outline = Util.opts "outline.nvim"
                     local outline = get_outline()
-                    if outline.is_open then
+                    if outline.is_open and is_outline_opened then
                       outline.close_outline()
                     end
 

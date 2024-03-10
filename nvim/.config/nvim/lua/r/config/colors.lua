@@ -236,14 +236,20 @@ local general_overrides = function()
     -----------------------------------------------------------------------
 
     -- CMP ================================================================
-    { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = -0.25 }, bg = "NONE" } },
-    -- { CmpItemAbbrMatch = { fg = { from = "Error", alter = 0.2 }, bg = "NONE", bold = false } },
-    -- { CmpItemAbbrMatchFuzzy = { fg = "red", bg = "NONE", bold = false } },
+    { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.2 }, bg = "NONE" } },
     { CmpItemAbbrMatchFuzzy = { fg = dark_red } },
     { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
 
-    { PmenuSel = { bg = "#4b4b4b", fg = { from = "Normal", attr = "fg", alter = 0.25 } } },
-    { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.3 }, fg = { from = "CmpItemAbbr" } } },
+    { CmpItemKindFunction = { fg = { from = "Function", attr = "fg" } } },
+    { CmpItemKindModule = { fg = { from = "Include", attr = "fg" } } },
+    { CmpItemKindConstant = { fg = { from = "Constant", attr = "fg" } } },
+    { CmpItemKindStruct = { fg = { from = "Structure", attr = "fg" } } },
+    { CmpItemKindKeyword = { fg = { from = "String", attr = "fg" } } },
+    { CmpItemKindText = { fg = { from = "String", attr = "fg" } } },
+    -- { CmpItemKindField = { fg = { from = "Identifier", attr = "fg" } } },
+
+    { PmenuSel = { bg = { from = "WinSeparator", attr = "fg", alter = 0.2 }, fg = "NONE" } },
+    { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 
     -- TELESCOPE ==========================================================
