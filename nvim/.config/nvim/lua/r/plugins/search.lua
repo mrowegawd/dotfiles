@@ -234,12 +234,17 @@ return {
 
           local qf_ntbl = {}
           for _, qf_item in pairs(qf_items) do
-            table.insert(qf_ntbl, path.relative_to(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
+            table.insert(qf_ntbl, path.normalize(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
           end
+
+          local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case ]]
+            .. table.concat(qf_ntbl, " ")
+            .. " -e "
 
           return fzf_lua.live_grep_glob {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("[QF] Grep", "") },
+            winopts = { title = Util.fzflua.format_title("[QF] Grep", " ") },
+            cmd = pcmd,
           }
         end,
         desc = "Fzflua(qf): grep qf items",
@@ -1382,6 +1387,7 @@ return {
   -- TODO-SEARCH-COMMENTS
   {
     "folke/todo-comments.nvim",
+    enabled = false,
     event = "LazyFile",
     opts = {
       signs = true, -- show icons in the signs column
