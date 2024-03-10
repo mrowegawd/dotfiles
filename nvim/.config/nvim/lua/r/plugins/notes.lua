@@ -599,7 +599,12 @@ return {
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
-    ft = { "markdown" },
+    event = {
+      -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+      -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+      fmt("BufReadPre %s", Config.path.wiki_path),
+      fmt("BufNewFile %s", Config.path.wiki_path),
+    },
     cmd = {
       "ObsidianOpen",
       "ObsidianNew",

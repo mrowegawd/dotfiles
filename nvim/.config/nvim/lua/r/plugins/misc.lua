@@ -98,6 +98,7 @@ return {
   -- YANKYYANK.NVIM
   {
     "gbprod/yanky.nvim",
+    enabled = false,
     dependencies = not jit.os:find "Windows" and { "kkharji/sqlite.lua" } or {},
     opts = {
       highlight = { timer = 250 },
