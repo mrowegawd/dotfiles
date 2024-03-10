@@ -11,6 +11,7 @@ vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
 vim.g.work_dir = g.projects_dir .. "/work"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
+vim.g.loaded_matchparen = 1
 
 opt.termguicolors = true -- tmux need this!
 opt.secure = true
