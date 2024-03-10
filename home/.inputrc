@@ -46,7 +46,7 @@ $if mode=vi
     "/": forward-search-history
 
     set keymap vi-insert
-    "jk": vi-movement-mode
+    "hh": vi-movement-mode
     "\C-w": backward-kill-word
     "\C-p": history-search-backward
     "\C-n": history-search-forward

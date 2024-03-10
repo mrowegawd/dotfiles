@@ -14,8 +14,8 @@ end
 -- jk is escape, THEN move to the right to preserve the cursor position, unless
 -- at the first column.  <esc> will continue to work the default way.
 -- NOTE: this is a recursive mapping so anything bound (by a plugin) to <esc> still works
-Util.map.imap("jk", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
-Util.map.imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
+Util.map.imap("hh", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
+-- Util.map.imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 
 Util.map.inoremap("<c-c>", "<Esc>", silent)
 Util.map.inoremap("<c-a>", "<c-O>^", silent)
@@ -276,7 +276,7 @@ Util.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffe
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │
 --  ╰──────────────────────────────────────────────────────────╯
--- Util.map.cnoremap("jk", "<Esc>", { desc = "Commandline: exit from cmdline" })
+Util.map.cnoremap("hh", "<c-c>", { desc = "Commandline: exit from cmdline" })
 -- Util.map.cnoremap("<c-c>", "<Esc>", { desc = "Commandline: exit" })
 Util.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
 Util.map.cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last" })
