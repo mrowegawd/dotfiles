@@ -73,11 +73,23 @@ return {
     },
     config = function()
       local MAX_INDEX_FILE_SIZE = 1024
+      local cmp = require "cmp"
+
       local function tab(fallback)
-        if vim.snippet.jumpable(1) then
+        local entry = cmp.get_selected_entry()
+
+        if
+          cmp.visible()
+          and (
+            entry ~= nil
+            and not (entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$"))
+          )
+        then
+          cmp.confirm { select = true }
+        elseif vim.snippet.jumpable(1) then
           vim.snippet.jump(1)
-        elseif require("luasnip").expand_or_jumpable() then
-          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+        -- elseif require("luasnip").expand_or_jumpable() then
+        --   vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
         else
           fallback()
         end
@@ -88,28 +100,68 @@ return {
           vim.schedule(function()
             vim.snippet.jump(-1)
           end)
-        elseif require("luasnip").jumpable(-1) then
-          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
+          -- elseif require("luasnip").jumpable(-1) then
+          --   vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
         else
           fallback()
         end
       end
 
-      local border_opts = {
-        border = Icons.border.line,
-        winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
-        col_offset = -1, -- To fit lspkind icon
-        side_padding = 1, -- One character margin
-      }
+      local lspkind_comparator = function(conf)
+        local lsp_types = require("cmp.types").lsp
+        return function(entry1, entry2)
+          if entry1.source.name ~= "nvim_lsp" then
+            if entry2.source.name == "nvim_lsp" then
+              return false
+            else
+              return nil
+            end
+          end
+          local kind1 = lsp_types.CompletionItemKind[entry1:get_kind()]
+          local kind2 = lsp_types.CompletionItemKind[entry2:get_kind()]
 
-      local cmp = require "cmp"
+          local priority1 = conf.kind_priority[kind1] or 0
+          local priority2 = conf.kind_priority[kind2] or 0
+          if priority1 == priority2 then
+            return nil
+          end
+          return priority2 < priority1
+        end
+      end
+
+      local label_comparator = function(entry1, entry2)
+        return entry1.completion_item.label < entry2.completion_item.label
+      end
+
+      local function styldoc(is_border_set)
+        is_border_set = is_border_set or false
+
+        local opts = {
+          border = "",
+          winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+          col_offset = -3, -- To fit lspkind icon
+          side_padding = 1, -- One character margin
+        }
+        if is_border_set then
+          opts.border = Icons.border.line
+          opts.winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None"
+        end
+        return opts
+      end
+
       cmp.setup {
         enabled = function()
           return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
         end,
         window = {
-          completion = cmp.config.window.bordered(border_opts),
-          documentation = cmp.config.window.bordered(border_opts),
+          completion = cmp.config.window.bordered(styldoc()),
+          documentation = cmp.config.window.bordered(styldoc(true)),
+        },
+        completion = {
+
+          -- this is important
+          -- @see https://github.com/hrsh7th/nvim-cmp/discussions/1411
+          completeopt = "menuone,noinsert,noselect",
         },
         snippet = {
           expand = function(args)
@@ -126,10 +178,10 @@ return {
           path = 1,
         },
         formatting = {
-          fields = { "abbr", "kind", "menu" },
+          fields = { "kind", "abbr", "menu" },
 
           format = function(entry, item)
-            local label_width = 45
+            local label_width = 30
             local label = item.abbr
             local truncated_label = vim.fn.strcharpart(label, 0, label_width)
 
@@ -140,76 +192,105 @@ return {
               item.abbr = label .. padding
             end
 
-            -- print(entry.source.name)
-            item.menu = item.kind
+            local item_kind = item.kind
+            item.menu = item_kind
               .. " "
-              .. ({
-                nvim_lsp = "[LSP]",
-                obsidian = "[OBSIDIAN]",
-                obsidian_new = "[OBSIDIAN]",
-                nvim_lua = "[LUA]",
-                emoji = "[EMOJI]",
-                path = "[PATH]",
-                neorg = "[NEORG]",
-                luasnip = "[SNIP]",
-                dictionary = "[DIC]",
-                noice_popupmenu = "[Noice]",
-                buffer = "[BUF]",
-                spell = "[SPELL]",
-                orgmode = "[ORG]",
-                norg = "[NORG]",
-                rg = "[RG]",
-                cmdline = "[CMD]",
-                git = "[GIT]",
-              })[entry.source.name]
+              .. (
+                ({
+                  nvim_lsp = "[LSP]",
+                  obsidian = "[OBSIDIAN]",
+                  obsidian_new = "[OBSIDIAN]",
+                  nvim_lua = "[LUA]",
+                  emoji = "[EMOJI]",
+                  path = "[PATH]",
+                  neorg = "[NEORG]",
+                  luasnip = "[SNIP]",
+                  dictionary = "[DIC]",
+                  noice_popupmenu = "[Noice]",
+                  buffer = "[BUF]",
+                  spell = "[SPELL]",
+                  orgmode = "[ORG]",
+                  norg = "[NORG]",
+                  rg = "[RG]",
+                  cmdline = "[CMD]",
+                  git = "[GIT]",
+                })[entry.source.name] or ""
+              )
+
+            local hlkind = ("CmpItemKind%s"):format(item_kind)
+            item.menu_hl_group = hlkind
+
             local kind = Icons.kinds
             if kind[item.kind] then
               item.kind = kind[item.kind]
             end
-
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
         },
-        -- sorting = {
-        --   comparators = {
-        --     -- require("copilot_cmp.comparators").prioritize,
-        --     cmp.config.compare.offset,
-        --     cmp.config.compare.exact,
-        --     cmp.config.compare.score,
-        --
-        --     deprioritize_snippet,
-        --     function(entry1, entry2)
-        --       local _, entry1_under = entry1.completion_item.label:find "^_+"
-        --       local _, entry2_under = entry2.completion_item.label:find "^_+"
-        --       entry1_under = entry1_under or 0
-        --       entry2_under = entry2_under or 0
-        --       if entry1_under > entry2_under then
-        --         return false
-        --       elseif entry1_under < entry2_under then
-        --         return true
-        --       end
-        --     end,
-        --     cmp.config.compare.recently_used,
-        --     cmp.config.compare.kind,
-        --     cmp.config.compare.sort_text,
-        --     cmp.config.compare.length,
-        --     cmp.config.compare.order,
-        --     cmp.config.compare.locality,
-        --   },
-        -- }
+        -- matching = {
+        --   disallow_fuzzy_matching = false,
+        --   disallow_fullfuzzy_matching = false,
+        --   disallow_partial_fuzzy_matching = false,
+        -- },
+        sorting = {
+          comparators = {
+            lspkind_comparator {
+              kind_priority = {
+                Field = 11,
+                Property = 11,
+                Constant = 10,
+                Enum = 10,
+                EnumMember = 10,
+                Event = 10,
+                Function = 10,
+                Method = 10,
+                Operator = 10,
+                Reference = 10,
+                Struct = 10,
+                Variable = 9,
+                File = 8,
+                Folder = 8,
+                Class = 5,
+                Color = 5,
+                Module = 5,
+                Keyword = 2,
+                Constructor = 1,
+                Interface = 1,
+                Snippet = 0,
+                Text = 1,
+                TypeParameter = 1,
+                Unit = 1,
+                Value = 1,
+              },
+            },
+            label_comparator,
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            function(entry1, entry2)
+              local _, entry1_under = entry1.completion_item.label:find "^_+"
+              local _, entry2_under = entry2.completion_item.label:find "^_+"
+              entry1_under = entry1_under or 0
+              entry2_under = entry2_under or 0
+              if entry1_under > entry2_under then
+                return false
+              elseif entry1_under < entry2_under then
+                return true
+              end
+            end,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+          },
+        },
+
         mapping = {
           ["<C-r>"] = cmp.mapping(function(_)
             if callme == 0 then
               callme = 1
               cmp.complete {
                 config = {
-                  sources = {
-                    {
-                      name = "luasnip",
-                      max_item_count = 5,
-                      group_index = 1,
-                    },
-                  },
+                  sources = { { name = "luasnip" } },
                 },
               }
             elseif callme == 1 then
@@ -219,14 +300,12 @@ return {
                   sources = {
                     {
                       name = "rg",
-                      keyword_length = 4,
+                      keyword_length = 2,
                       option = { additional_arguments = "--hidden --max-depth 8" },
-                      group_index = 1,
                     },
                     {
                       name = "buffer",
-                      group_index = 2,
-                      max_item_count = 3,
+                      keyword_length = 2,
                       options = {
                         get_bufnrs = function()
                           --- from all loaded buffers
@@ -263,13 +342,7 @@ return {
                 callme = 0
                 cmp.complete {
                   config = {
-                    sources = {
-                      {
-                        name = "nvim_lsp",
-                        max_item_count = 5,
-                        group_index = 1,
-                      },
-                    },
+                    sources = { { name = "nvim_lsp", max_item_count = 20 } },
                   },
                 }
               end
@@ -306,27 +379,25 @@ return {
           ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
           ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
-        sources = cmp.config.sources {
+        sources = { -- remember: do not use `group_index`,
           {
             name = "nvim_lsp",
-            group_index = 1,
-            max_item_count = 5,
+            max_item_count = 20,
             entry_filter = function(entry)
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,
           },
-          { name = "luasnip", group_index = 1 },
+          { name = "luasnip", max_item_count = 10 },
           {
             name = "rg",
             keyword_length = 3,
             max_item_count = 10,
             option = { additional_arguments = "--hidden --max-depth 8" },
-            group_index = 1,
           },
           {
             name = "buffer",
-            group_index = 2,
-            max_item_count = 3,
+            keyword_length = 3,
+            max_item_count = 10,
             options = {
               get_bufnrs = function()
                 local bufs = {}
@@ -340,8 +411,8 @@ return {
               end,
             },
           },
-          { name = "path", max_item_count = 3, group_index = 1 },
-          { name = "crates", group_index = 1 },
+          { name = "path", max_item_count = 10 },
+          { name = "crates" },
         },
       }
       vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
@@ -399,6 +470,10 @@ return {
             cmp.confirm { select = true }
             Util.map.feedkey("<CR>", "")
           end, { "c" }),
+          ["<Tab>"] = cmp.mapping(function()
+            cmp.confirm { select = true }
+            Util.map.feedkey("<CR>", "")
+          end, { "c" }),
           ["<c-q>"] = {
             c = function(fallback)
               if cmp.visible() then
@@ -422,6 +497,14 @@ return {
 
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = {
+          ["<C-y>"] = cmp.mapping(function()
+            cmp.confirm { select = true }
+            Util.map.feedkey("<CR>", "")
+          end, { "c" }),
+          ["<Tab>"] = cmp.mapping(function()
+            cmp.confirm { select = true }
+            Util.map.feedkey("<CR>", "")
+          end, { "c" }),
           ["<c-q>"] = {
             c = function(fallback)
               if cmp.visible() then
