@@ -4,10 +4,10 @@ return {
     "tpope/vim-dadbod",
     cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection" },
     keys = {
-      { "<Leader>DT", "<CMD>DBUIToggle<CR>", desc = "Database(dadbod): toggle UI" },
-      { "<Leader>DF", "<CMD>DBUIFindBuffer<CR>", desc = "Database(dadbod): find buffer" },
-      { "<Leader>DR", "<CMD>DBUIRenameBuffer<cr>", desc = "Database(dadbod): rename buffer" },
-      { "<Leader>Dl", "<CMD>DBUILastQueryInfo<cr>", desc = "Database(dadbod): last query info" },
+      { "<Localleader>dd", "<CMD>DBUIToggle<CR>", desc = "Database(dadbod): toggle UI" },
+      -- { "<Localleader>dD", "<CMD>DBUIFindBuffer<CR>", desc = "Database(dadbod): find buffer" },
+      { "<Localleader>dr", "<CMD>DBUIRenameBuffer<cr>", desc = "Database(dadbod): rename buffer" },
+      { "<Localleader>dl", "<CMD>DBUILastQueryInfo<cr>", desc = "Database(dadbod): last query info" },
     },
     dependencies = {
       "kristijanhusak/vim-dadbod-ui",
