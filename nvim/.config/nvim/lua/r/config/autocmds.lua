@@ -112,11 +112,7 @@ Util.cmd.augroup("SmartClose", {
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
-    if vim.bo[event.buf].filetype == "filetree" then
-      vim.keymap.set("n", "q", "<cmd>Workspace RightPanelToggle<cr>", { buffer = event.buf, silent = true })
-    else
-      vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
-    end
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
   end,
 })
 
