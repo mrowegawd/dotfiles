@@ -88,8 +88,8 @@ return {
           cmp.confirm { select = true }
         elseif vim.snippet.jumpable(1) then
           vim.snippet.jump(1)
-        -- elseif require("luasnip").expand_or_jumpable() then
-        --   vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+        elseif require("luasnip").expand_or_jumpable() then
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
         else
           fallback()
         end
@@ -100,8 +100,8 @@ return {
           vim.schedule(function()
             vim.snippet.jump(-1)
           end)
-          -- elseif require("luasnip").jumpable(-1) then
-          --   vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
+        elseif require("luasnip").jumpable(-1) then
+          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
         else
           fallback()
         end
@@ -557,17 +557,17 @@ return {
   -- NVIM-SURROUND
   {
     "kylechui/nvim-surround",
+    event = "BufReadPost",
     version = "*",
     keys = {
-      "ys", -- how to use it: ysiw, yd<brackets>, yc<brackets>
-      "yS",
-      "yc",
-      "yd",
+      "<Leader>s", -- how to use it: ysiw, yd<brackets>, yc<brackets>
+      "<Leader>ss",
+      "<Leader>sS",
+      "<Leader>sc",
+      "<Leader>sd",
       { "s", "S", remap = true, mode = { "x" } },
-      { "S", mode = { "x" } },
-      { "gS", mode = { "x" } },
-      { "<C-v>s", mode = { "i" } },
-      { "<C-v>S", mode = { "i" } },
+      -- { "<C-v>s", mode = { "i" } },
+      -- { "<C-v>S", mode = { "i" } },
     },
     config = function()
       local input = require("nvim-surround.input").get_input
@@ -575,15 +575,15 @@ return {
         keymaps = {
           insert = "<C-v>s",
           insert_line = "<C-v>S",
-          normal = "ys",
-          normal_cur = "yss",
-          normal_line = "yS",
-          normal_cur_line = "ySS",
           visual = "S",
           visual_line = "gS",
-          delete = "yd",
-          change = "yc",
-          change_line = "yC",
+          normal = "<space>s",
+          normal_cur = "<space>ss",
+          normal_line = "<space>sS",
+          normal_cur_line = "<space>SS",
+          delete = "<space>sd",
+          change = "<space>sc",
+          change_line = "<space>sC",
         },
         -- Configuration here, or leave empty to use defaults
         aliases = {

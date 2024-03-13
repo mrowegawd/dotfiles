@@ -160,13 +160,6 @@ local function is_lowest(item, lowest)
   return item.priority > lowest.priority
 end
 
---- Take the lowest priority items out of the statusline if we don't have
---- space for them.
---- TODO: currently this doesn't account for if an item that has a lower priority
---- could be fit in instead
---- @param statusline table
---- @param space number
---- @param length number
 local function prioritize(statusline, space, length)
   length = length or sum_lengths(statusline)
   if length <= space then

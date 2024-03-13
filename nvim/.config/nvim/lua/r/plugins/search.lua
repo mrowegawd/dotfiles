@@ -1541,4 +1541,75 @@ return {
       },
     },
   },
+  -- TROUBLE.NVIM
+  {
+    "folke/trouble.nvim",
+    cmd = { "TroubleToggle", "Trouble" },
+    keys = {
+      {
+        "<Localleader>q",
+        function()
+          vim.cmd [[TroubleToggle quickfix]]
+        end,
+        desc = "Misc(trouble): toggle",
+        mode = { "n", "v" },
+      },
+      --   { "<Leader>q", "<CMD>TroubleToggle quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v" } },
+    },
+    opts = function()
+      Highlight.plugin("trouble", {
+        { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
+        { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
+        { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
+        { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+        { TroubleIndent = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.1 } } },
+        { TroubleFile = { bg = "NONE", fg = { from = "Directory", attr = "fg", alter = 0.1 } } },
+        { TroubleTextOther = { bg = "NONE", bold = true } },
+        { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
+        { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+        { TroubleCode = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 }, underline = false } },
+        {
+          TroubleCount = {
+            bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
+            fg = { from = "DiagnosticSignError", attr = "fg", alter = -0.5 },
+          },
+        },
+      })
+      return {
+        auto_open = false,
+        auto_close = true, -- automatically close the list when you have no diagnostics
+        signs = {
+          -- icons / text used for a diagnostic
+          error = "",
+          warning = "",
+          hint = "",
+          information = "",
+          other = "",
+        },
+        action_keys = {
+          -- map to {} to remove a mapping, for example:
+          -- close = {},
+          close = { "q", "<leader><Tab>" }, -- close the list
+          cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+          refresh = "r", -- manually refresh
+          jump = { "o", "<CR>" }, -- jump to the diagnostic or open / close folds
+          open_split = { "<c-s>" }, -- open buffer in new split
+          open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+          open_tab = { "<c-t>" }, -- open buffer in new tab
+          jump_close = {}, -- jump to the diagnostic and close the list
+          toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+          toggle_preview = "p", -- toggle auto_preview
+          hover = "K", -- opens a small popup with the full multiline message
+          preview = "p", -- preview the diagnostic location
+          close_folds = { "zM", "zm" }, -- close all folds
+          open_folds = { "zR", "zr" }, -- open all folds
+          toggle_fold = { "zA", "za" }, -- toggle fold of current file
+          previous = "k", -- previous item
+          next = "j", -- next item
+        },
+      }
+    end,
+  },
 }

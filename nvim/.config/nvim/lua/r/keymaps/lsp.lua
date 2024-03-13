@@ -47,25 +47,16 @@ function M.get()
     {
       "dq",
       function()
-        if #vim.diagnostic.get() == 0 then
-          return Util.info("Document its clean", { title = "Diagnostics" })
-        end
-
-        if Util.has "trouble" then
-          vim.cmd "Trouble document_diagnostics"
-        end
+        vim.cmd "Trouble document_diagnostics"
       end,
-      desc = "LSP(diagnostic): document_diagnostics to qf",
+      desc = "LSP(trouble): document_diagnostics to qf",
     },
     {
       "dQ",
       function()
-        if #vim.diagnostic.get() == 0 then
-          return Util.info("Document its clean", { title = "Diagnostics" })
-        end
         vim.cmd "Trouble workspace_diagnostics"
       end,
-      desc = "LSP(diagnostic): workspace_diagnostic to qf",
+      desc = "LSP(trouble): workspace_diagnostic to qf",
     },
 
     {
@@ -245,7 +236,15 @@ function M.get()
     M._keys[#M._keys + 1] = { "gd", vim.lsp.buf.definition, desc = "LSP: goto definition" }
   end
 
-  if Util.has "fzf-lua" then
+  if Util.has "trouble.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gr",
+      function()
+        vim.cmd [[TroubleToggle lsp_references]]
+      end,
+      desc = "LSP(trouble): references",
+    }
+  elseif Util.has "fzf-lua" then
     M._keys[#M._keys + 1] = {
       "gr",
       function()
