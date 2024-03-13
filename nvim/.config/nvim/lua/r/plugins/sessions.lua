@@ -28,11 +28,11 @@ return {
       end,
     },
     -- stylua: ignore
-    keys = {
-      { "<Leader>sl", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
-      { "<Leader>sL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
-      { "<Leader>ss", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
-    },
+    -- keys = {
+    --   { "<Leader>ll", function() require("persistence").load() end, desc = "Misc(persistence): restore session" },
+    --   { "<Leader>lL", function() require("persistence").load { last = true } end, desc = "Misc(persistence): restore last session" },
+    --   { "<Leader>ls", function() require("persistence").stop() end, desc = "Misc(persistence): don't save current session" },
+    -- },
   },
 
   --  ╭──────────────────────────────────────────────────────────╮
