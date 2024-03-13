@@ -248,19 +248,41 @@ return {
     opts = function()
       Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       Highlight.plugin("OutlineAuHi", {
-        {
-          OutlineCurrent = {
-            fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
+        theme = {
+          ["*"] = {
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
+              },
+            },
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.5 },
+              },
+            },
+            {
+              OutlineFoldMarker = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
+              },
+            },
           },
-        },
-        {
-          OutlineFoldMarker = {
-            fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
-          },
-        },
-        {
-          OutlineGuides = {
-            fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
+          ["miasma"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.3 },
+              },
+            },
+
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+              },
+            },
           },
         },
       })
@@ -272,6 +294,10 @@ return {
           position = "right",
           split_command = nil,
           width = 25,
+          winhl = "Normal:Pmenu,EndOfBuffer:None,NonText:Normal",
+          -- ¦  winhighlight = "Search:None,EndOfBuffer:None",
+          -- ¦  winhighlight = "Search:None,EndOfBuffer:None",
+          -- ¦  winhighlight = "Search:None,EndOfBuffer:None",
           focus_on_open = false,
         },
         symbols = {
@@ -316,6 +342,7 @@ return {
         },
         preview_window = {
           live = true,
+          winhl = "NormalFloat:NormalFloat",
         },
         -- These keymaps can be a string or a table for multiple keys.
         -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
@@ -327,7 +354,7 @@ return {
           goto_and_close = {},
           restore_location = {},
           hover_symbol = {},
-          toggle_preview = "P",
+          toggle_preview = { "P", "p" },
           rename_symbol = {},
           code_actions = {},
           fold = "h",
@@ -488,7 +515,7 @@ return {
               },
             })
           end,
-          desc = "Misc(aerial): change filter kind",
+          desc = "Misc(outline): change filter kind",
         },
       }
     end,
