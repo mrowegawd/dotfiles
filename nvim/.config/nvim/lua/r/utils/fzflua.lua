@@ -106,7 +106,9 @@ function M.send_cmds(opts, opts_cmds)
       actions = {
         ["default"] = function(selected, _)
           local sel = selected[1]
-          opts[sel]()
+          if opts[sel] then
+            opts[sel]()
+          end
         end,
       },
     }, opts_cmds))
