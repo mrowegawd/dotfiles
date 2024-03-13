@@ -11,7 +11,6 @@ return {
   {
     "mbbill/undotree",
     cmd = "UndotreeToggle",
-    keys = { { "<leader>u", "<Cmd>UndotreeToggle<CR>", desc = "undotree: toggle" } },
     config = function()
       vim.g.undotree_TreeNodeShape = "◦" -- Alternative: '◉'
       vim.g.undotree_SetFocusWhenToggle = 1
@@ -58,16 +57,10 @@ return {
   {
     "sourcegraph/sg.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "SourcegraphSearch", "SourcegraphLogin" },
     -- You must do this first before using it:
     -- jika belum login, gunakan `:SourcegraphLogin`
-    keys = {
-      {
-        "<Localleader>og",
-        "<CMD> lua require('sg.extensions.telescope').fuzzy_search_results() <CR>",
-        desc = "Misc(sq): search",
-      },
-    },
-    opts = {},
+    config = true,
   },
   -- GKEEP (disabled)
   -- {
@@ -95,7 +88,21 @@ return {
       vim.g.cheat_default_window_layout = "vertical_split"
     end,
   },
-  -- YANKYYANK.NVIM
+  -- HAWTKEYS (disabled)
+  { -- hanya digunakan ketika dibutuhkan saja
+    "tris203/hawtkeys.nvim",
+    enabled = false,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = {
+      -- an empty table will work for default config
+      --- if you use functions, or whichkey, or lazy to map keys
+      --- then please see the API below for options
+    },
+  },
+  -- YANKYYANK.NVIM (disabled)
   {
     "gbprod/yanky.nvim",
     enabled = false,
