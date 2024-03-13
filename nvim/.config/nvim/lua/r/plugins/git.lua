@@ -61,7 +61,7 @@ return {
         "<Leader>go",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "v" },
-        desc = "Git(gitlinker): range URL repo on browser",
+        desc = "Git(gitlinker): open range hash git in browser",
       },
       {
         "<Leader>gO",

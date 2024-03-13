@@ -171,7 +171,7 @@ function M.gitsigns()
   Util.map.nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk" })
   Util.map.nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk" })
   Util.map.nnoremap("<Leader>gP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })
-  Util.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git(gitsigns): preview hunk" })
+  Util.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
   -- Util.map.nnoremap("<Leader>gl", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk inline",  })
 
   Util.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
