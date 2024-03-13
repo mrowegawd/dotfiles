@@ -239,7 +239,7 @@ return {
       -- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
     end,
   },
-  -- CONTEXT-NVIM-ZERO
+  -- NVIM-TREESITTER-CONTEXT
   {
     "mrowegawd/nvim-treesitter-context",
     event = "LazyFile",
@@ -253,7 +253,7 @@ return {
             {
               TreesitterContextLineNumber = {
                 fg = { from = "LineNr", attr = "fg", alter = 0.8 },
-                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
               },
             },
           },

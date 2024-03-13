@@ -10,16 +10,16 @@ local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
 -- stylua: ignore
 local general_overrides = function()
   Highlight.all {
-    { FoldColumn = { bg = { from = "Normal", attr = "bg" }, fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+    { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
     { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.1 } } },
-    { LineNr = { bg = "NONE", fg = { from = "FoldColumn", attr = "bg", alter = 0.5 } } },
+    { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Keyword", attr = "fg", alter = -0.2 }, bg = "NONE", bold = true } },
     { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
     { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.1 }, fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-    { EndOfBuffer = { bg = "NONE" } },
+    { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },
     { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
     { SignColumn = { bg = "NONE" } },
@@ -215,7 +215,7 @@ local general_overrides = function()
     { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
     { MyQuickFixLineLeave = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 } } },
-    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
+    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
     { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
@@ -383,7 +383,7 @@ local function colorscheme_overrides()
     ["ayu"] = {
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
         },
       },
@@ -402,7 +402,7 @@ local function colorscheme_overrides()
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
@@ -410,7 +410,7 @@ local function colorscheme_overrides()
     ["farout"] = {
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
         },
       },
@@ -422,6 +422,13 @@ local function colorscheme_overrides()
       { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
     },
     ["miasma"] = {
+      { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.28 } } },
+      {
+        qfFileName = {
+          fg = { from = "Directory", attr = "fg" },
+          bg = "NONE",
+        },
+      },
       {
         LspReferenceText = {
           bg = { from = "Normal", attr = "bg" },
@@ -451,7 +458,7 @@ local function colorscheme_overrides()
       -- { NormalNC = { inherit = "Normal" } },
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 0.7 },
         },
       },
@@ -482,7 +489,7 @@ local function colorscheme_overrides()
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
@@ -490,7 +497,7 @@ local function colorscheme_overrides()
     ["onedark"] = {
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
@@ -515,7 +522,7 @@ local function colorscheme_overrides()
     ["catppuccin-latte"] = {
       {
         FoldColumn = {
-          bg = { from = "Normal", attr = "bg" },
+          bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = -0.1 },
         },
       },

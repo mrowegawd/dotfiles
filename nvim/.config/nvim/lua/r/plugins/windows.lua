@@ -122,9 +122,7 @@ return {
         for key, func in pairs(nav) do
           vim.keymap.set("n", "<" .. key .. ">", func)
         end
-      end
-
-      if not TMUX then
+      else
         local nav = {
           ["a-h"] = "Left",
           ["a-j"] = "Down",
