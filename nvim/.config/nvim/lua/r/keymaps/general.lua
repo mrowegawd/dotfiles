@@ -91,10 +91,10 @@ Util.map.nnoremap("zm", "zM")
 
 -- Jump next/prev to closing fold
 Util.map.nnoremap("<a-n>", function()
-  return Util.fold.goNextClosedFold()
+  return Util.fold.magic_prev_next_move()
 end, { desc = "Fold: go next closed" })
 Util.map.nnoremap("<a-p>", function()
-  return Util.fold.goPreviousClosedFold()
+  return Util.fold.magic_prev_next_move(true)
 end, { desc = "Fold: go prev closed" })
 
 --  ╭──────────────────────────────────────────────────────────╮
@@ -270,8 +270,21 @@ end, { desc = "Buffer: bufonly" })
 
 Util.map.nnoremap("sT", "<C-w><S-t>", { desc = "WinNav(buffer): break buffer into new tab" })
 
-Util.map.nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: go to the first buffer" })
-Util.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: go to the last buffer" })
+-- Util.map.nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: first buffer" })
+-- Util.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: last buffer" })
+
+-- Util.map.nnoremap("gh", "<CMD>bprev<CR>", { desc = "Buffer: prev buffer" })
+-- Util.map.nnoremap("gl", "<CMD>bnext<CR>", { desc = "Buffer: next buffer" })
+
+Util.map.nnoremap("gh", function()
+  return Util.fold.magic_prev_next_qf(true)
+end, { desc = "QF: magic move gh" })
+Util.map.nnoremap("gl", function()
+  return Util.fold.magic_prev_next_qf()
+end, { desc = "Qf: magic move gl" })
+
+-- Util.map.nnoremap("<S-Left>", "<CMD>colder<CR>", { desc = "qf: prev stack" })
+-- Util.map.nnoremap("<S-Right>", "<CMD>cnewer<CR>", { desc = "qf: next stack" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDLINE                                              │
@@ -469,8 +482,18 @@ Util.map.nnoremap("<F1>", function()
   -- end
 
   -- Util.ui.callme()
-  local jj = 123
-  print(string.rep("helloo: ", #tostring(jj)))
+  -- local jj = 123
+  -- print(string.rep("helloo: ", #tostring(jj)))
+
+  local j = vim.split(vim.fn.execute "chistory", "\n")
+  local tbl = {}
+  for _, x in pairs(j) do
+    if type(x) == "string" and #x > 0 and x ~= "No entries" then
+      table.insert(tbl, x)
+    end
+  end
+
+  print(vim.inspect(tbl))
 
   -- local layout = vim.fn.winlayout()
   --
@@ -484,17 +507,9 @@ Util.map.nnoremap("<F1>", function()
 end)
 
 local checkconceallevel = false
-Util.map.nnoremap("<Localleader>g", function()
+Util.map.nnoremap("<Localleader>r", function()
   local col, row = Util.fzflua.rectangle_win_pojokan()
   Util.fzflua.send_cmds({
-    check_todocurbuf = function()
-      -- cmd(fmt("TodoTrouble cwd=%s", fn.expand "%:p"))
-      cmd(fmt("TodoQuickFix cwd=%s", fn.expand "%:p"))
-    end,
-    check_todorepo = function()
-      -- cmd(fmt("TodoTrouble cwd=%s", fn.getcwd()))
-      cmd(fmt("TodoQuickFix cwd=%s", fn.getcwd()))
-    end,
     toggle_background = function()
       Util.toggle.background()
     end,
@@ -504,32 +519,33 @@ Util.map.nnoremap("<Localleader>g", function()
     ccc_pick = function()
       cmd "CccPick"
     end,
-    toggleterm_left_side = function()
-      cmd "ToggleTerm direction=vertical size=100"
+    loadqf = function()
+      cmd "LoadQf"
     end,
-
-    qf_save = function()
-      cmd "SaveQfLocal"
-    end,
-    qf_save_global = function()
-      cmd "SaveQfGlobal"
-    end,
-    qf_load = function()
-      cmd "LoadQfLocal"
-    end,
-    qf_load_global = function()
-      cmd "LoadQfGlobal"
+    saveqf = function()
+      cmd "SaveQf"
     end,
     lazy = function()
       cmd "Lazy"
+    end,
+    sourcegraph_sg = function()
+      cmd "SourcegraphSearch"
+    end,
+    nvim_cheat = function()
+      cmd "Cheat"
+    end,
+    toggle_undotree = function()
+      cmd "UndotreeToggle"
     end,
     toggle_conceallevel = function()
       if checkconceallevel then
         cmd [[setlocal conceallevel=2]]
         checkconceallevel = false
+        Util.info "setlocal conceallevel=2"
       else
         cmd [[setlocal conceallevel=0]]
         checkconceallevel = true
+        Util.info "setlocal conceallevel=0"
       end
     end,
   }, { winopts = { title = "Cmds", row = row, col = col } })

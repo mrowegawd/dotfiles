@@ -15,7 +15,7 @@ local function winCall(winid, f)
   end
 end
 
-local ctrlN_and_ctrlP = { "neo-tree", "aerial" }
+local ft_disabled = { "neo-tree", "aerial" }
 
 ---@param winid number
 ---@param lnum number
@@ -36,8 +36,10 @@ local function qf_is_opened()
   return qf_opened
 end
 
-function M.goPreviousClosedFold()
-  if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
+function M.magic_prev_next_move(is_qf)
+  is_qf = is_qf or false
+
+  if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
     return Util.cmd.feedkey("<c-p>", "n")
   end
 
@@ -45,97 +47,113 @@ function M.goPreviousClosedFold()
     return Util.cmd.feedkey("[c", "n")
   end
 
-  if qf_is_opened() then
-    if vim.bo[0].filetype ~= "qf" then
-      vim.schedule(function()
-        local _, err = pcall(function()
-          vim.cmd "cprevious"
-          vim.cmd "normal! zz"
-        end)
+  -- if qf_is_opened() then
+  if vim.bo[0].filetype == "qf" then
+    local cmd_msg_qf = "cnext"
+    local cmd_msg_qf_end = "cfirst"
 
-        if err and string.match(err, "E553") then
-          vim.cmd "clast"
-        end
-      end)
-    else
-      vim.schedule(function()
-        vim.cmd "wincmd p"
-      end)
-      return
+    if is_qf then
+      cmd_msg_qf = "cprevious"
+      cmd_msg_qf_end = "clast"
     end
-  end
 
-  local count = vim.v.count1
-  local curLnum = api.nvim_win_get_cursor(0)[1]
-  local cnt = 0
-  local lnum
-  for i = curLnum - 1, 1, -1 do
-    if foldClosed(0, i) == i then
-      cnt = cnt + 1
-      lnum = i
-      if cnt == count then
-        break
+    vim.schedule(function()
+      local _, err = pcall(function()
+        vim.cmd(cmd_msg_qf)
+        vim.cmd "wincmd p"
+        vim.cmd "normal! zz"
+      end)
+
+      if err and string.match(err, "E553") then
+        vim.cmd(cmd_msg_qf_end)
+        vim.cmd "wincmd p"
+      end
+    end)
+
+    -- vim.schedule(function()
+    -- end)
+  end
+  -- end
+
+  if is_qf then
+    local count = vim.v.count1
+    local curLnum = api.nvim_win_get_cursor(0)[1]
+    local cnt = 0
+    local lnum
+    for i = curLnum - 1, 1, -1 do
+      if foldClosed(0, i) == i then
+        cnt = cnt + 1
+        lnum = i
+        if cnt == count then
+          break
+        end
       end
     end
-  end
 
-  if lnum then
-    cmd "norm! m`"
-    api.nvim_win_set_cursor(0, { lnum, 0 })
+    if lnum then
+      cmd "norm! m`"
+      api.nvim_win_set_cursor(0, { lnum, 0 })
+    else
+      cmd "norm! zk"
+    end
   else
-    cmd "norm! zk"
+    local count = vim.v.count1
+    local curLnum = api.nvim_win_get_cursor(0)[1]
+    local lineCount = api.nvim_buf_line_count(0)
+    local cnt = 0
+    local lnum
+    for i = curLnum + 1, lineCount do
+      if foldClosed(0, i) == i then
+        cnt = cnt + 1
+        lnum = i
+        if cnt == count then
+          break
+        end
+      end
+    end
+
+    if lnum then
+      cmd "norm! m`"
+      api.nvim_win_set_cursor(0, { lnum, 0 })
+    else
+      cmd "norm! zj"
+    end
   end
 end
 
-function M.goNextClosedFold()
-  if vim.tbl_contains(ctrlN_and_ctrlP, vim.bo[0].filetype) then
-    return Util.cmd.feedkey("<c-n>", "n")
-  end
-
-  if vim.wo.diff then
-    return Util.cmd.feedkey("]c", "n")
-  end
+function M.magic_prev_next_qf(is_next)
+  is_next = is_next or false
+  local cmd_msg
 
   if qf_is_opened() then
+    cmd_msg = "cnewer"
+
+    if is_next then
+      cmd_msg = "colder"
+    end
+
     if vim.bo[0].filetype ~= "qf" then
-      vim.schedule(function()
-        local _, err = pcall(function()
-          vim.cmd "cnext"
-          vim.cmd "normal! zz"
-        end)
-
-        if err and string.match(err, "E553") then
-          vim.cmd "cfirst"
-        end
-      end)
-    else
-      vim.schedule(function()
-        vim.cmd "wincmd p"
-      end)
-      return
+      vim.cmd "wincmd p"
     end
-  end
 
-  local count = vim.v.count1
-  local curLnum = api.nvim_win_get_cursor(0)[1]
-  local lineCount = api.nvim_buf_line_count(0)
-  local cnt = 0
-  local lnum
-  for i = curLnum + 1, lineCount do
-    if foldClosed(0, i) == i then
-      cnt = cnt + 1
-      lnum = i
-      if cnt == count then
-        break
+    vim.schedule(function()
+      local _, err = pcall(function()
+        vim.fn.execute(cmd_msg)
+      end)
+
+      -- TODO: how to get these errors msg?? #today
+      if err and (string.match(err, "E380") or string.match(err, "E381")) then
+        -- what to do
+        return
       end
-    end
-  end
-
-  if lnum then
-    cmd "norm! m`"
-    api.nvim_win_set_cursor(0, { lnum, 0 })
+    end)
   else
-    cmd "norm! zj"
+    cmd_msg = "bnext"
+
+    if is_next then
+      cmd_msg = "bprev"
+    end
+    vim.cmd(cmd_msg)
   end
 end
 
