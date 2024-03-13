@@ -130,24 +130,15 @@ return {
       { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands", mode = "n" },
       { "<Leader>fh", fzf_lua.help_tags, desc = "Fzflua: help tags" },
       {
-        "df",
-        function()
-          fzf_lua.lsp_document_diagnostics {}
-        end,
-
-        desc = "Fzflua(LSP): document diagnostics",
-      },
-      { "dF", fzf_lua.lsp_workspace_diagnostics, desc = "Fzflua(LSP): document diagnostics" },
-      {
         "gs",
         function()
           fzf_lua.lsp_document_symbols {
             winopts = {
-              fullscreen = true,
+              fullscreen = false,
             },
           }
         end,
-        desc = "Fzflua(LSP): document symbols",
+        desc = "LSP(fzflua): document symbols",
       },
       {
         "gS",
@@ -158,7 +149,7 @@ return {
             },
           }
         end,
-        desc = "Fzflua(LSP): workspace symbols",
+        desc = "LSP(fzflua): workspace symbols",
       },
       {
         "<Leader>fh",
@@ -312,11 +303,11 @@ return {
             ["<F4>"] = "toggle-fullscreen",
             ["<F3>"] = "toggle-preview-cw",
 
-            ["<a-p>"] = "toggle-preview",
-            ["<c-p>"] = "toggle-preview",
+            -- ["<a-p>"] = "toggle-preview",
+            -- ["<c-p>"] = "toggle-preview",
 
-            ["<a-d>"] = "preview-page-down",
-            ["<a-u>"] = "preview-page-up",
+            ["<a-down>"] = "preview-page-down",
+            ["<a-up>"] = "preview-page-up",
             ["<a-s>"] = "toggle-sort",
           },
         },
@@ -583,6 +574,7 @@ return {
             }
           end,
           actions = {
+            ["ctrl-l"] = require("fzf-lua").actions.file_sel_to_ll,
             ["ctrl-g"] = { actions.grep_lgrep },
             ["ctrl-e"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
@@ -616,6 +608,9 @@ return {
           fzf_opts = {
             -- ["--delimiter"] = "' '",
             ["--with-nth"] = "-1..",
+          },
+          actions = {
+            ["alt-q"] = { actions.file_sel_to_qf },
           },
         },
         fighlights = {
@@ -658,7 +653,7 @@ return {
           actions = {
             ["default"] = actions.buf_edit_or_qf,
 
-            ["alt-l"] = actions.buf_sel_to_ll,
+            -- ["alt-l"] = actions.buf_sel_to_ll,
             ["ctrl-q"] = actions.buf_sel_to_qf,
 
             ["ctrl-s"] = actions.buf_split,
@@ -1063,6 +1058,9 @@ return {
 
               ["<c-f>"] = actions.results_scrolling_up,
               ["<c-b>"] = actions.results_scrolling_down,
+
+              ["<a-up>"] = actions.preview_scrolling_up,
+              ["<a-down>"] = actions.preview_scrolling_down,
 
               -- ["<c-l>"] = false, -- use `false` to disable mapping
 
@@ -1541,13 +1539,23 @@ return {
       },
     },
   },
-  -- TROUBLE.NVIM
+  -- TROUBLE.NVIM (disabled)
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
+    enabled = false,
     keys = {
       {
-        "<Localleader>q",
+        "<Localleader>t",
+        function()
+          vim.cmd [[TroubleToggle]]
+        end,
+        desc = "Misc(trouble): toggle",
+        mode = { "n", "v" },
+      },
+
+      {
+        "dq",
         function()
           vim.cmd [[TroubleToggle quickfix]]
         end,
@@ -1600,6 +1608,7 @@ return {
           open_tab = { "<c-t>" }, -- open buffer in new tab
           jump_close = {}, -- jump to the diagnostic and close the list
           toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+          switch_severity = { "<Up>", "<Down>" }, -- switch "diagnostics" severity filter level to ALL / HINT / INFO / WARN / ERROR
           toggle_preview = "p", -- toggle auto_preview
           hover = "K", -- opens a small popup with the full multiline message
           preview = "p", -- preview the diagnostic location

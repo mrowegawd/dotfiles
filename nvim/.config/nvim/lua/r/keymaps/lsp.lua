@@ -19,7 +19,90 @@ function M.get()
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" },
     { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP(fzflua): outgoing calls" },
     { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP(fzflua): incoming calls" },
-    { "gT", fzf_lua.lsp_typedefs, desc = "LSP(fzflua): peek type definitions" },
+    {
+      "gP",
+      function()
+        vim.cmd [[Lspsaga peek_definition]]
+      end,
+      desc = "LSP(goto-preview): preview definitions",
+    },
+    {
+      "K",
+      function()
+        if vim.fn.has "nvim-0.10" == 0 and vim.bo[0].keywordprg ~= ":help" then
+          vim.lsp.buf.hover()
+        end
+      end,
+      desc = "LSP: show hover",
+    },
+    { "gd", vim.lsp.buf.definition, desc = "LSP: definition" },
+    {
+      "gD",
+      function()
+        Util.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+          local what = {
+            idx = "$",
+            items = ret,
+            title = "LSP definitions ref",
+          }
+          vim.fn.setqflist({}, " ", what)
+          vim.cmd [[copen]]
+        end, "lsp_definitions")
+      end,
+      desc = "LSP: definition ref",
+    },
+    {
+      "gt",
+      function()
+        Util.lsp.type_definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+          local what = {
+            idx = "$",
+            items = ret,
+            title = "LSP type definition",
+          }
+          vim.fn.setqflist({}, " ", what)
+          vim.cmd [[copen]]
+        end)
+      end,
+      desc = "LSP: type definition",
+    },
+    {
+      "gr",
+      function()
+        Util.lsp.references(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+          local what = {
+            idx = "$",
+            items = ret,
+            title = "LSP references",
+          }
+          vim.fn.setqflist({}, " ", what)
+          vim.cmd [[copen]]
+        end, "lsp_references")
+      end,
+      desc = "LSP: references",
+    },
+    {
+      "<Leader>ll",
+      function()
+        if Util.has "symbol-usage.nvim" then
+          require("symbol-usage").refresh()
+        else
+          vim.lsp.codelens.refresh { bufnr = 0 }
+        end
+      end,
+      desc = "LSP(symbol-usage): codelens refresh",
+    },
+    {
+      "<Leader>lL",
+      function()
+        if Util.has "symbol-usage.nvim" then
+          require("symbol-usage").refresh()
+          require("symbol-usage").toggle()
+          vim.lsp.codelens.refresh { bufnr = 0 }
+        end
+      end,
+      desc = "LSP(symbol-usage): codelens toggle",
+    },
     --  +----------------------------------------------------------+
     --  Diagnostics
     --  +----------------------------------------------------------+
@@ -45,28 +128,58 @@ function M.get()
       desc = "LSP(diagnostic): preview",
     },
     {
-      "dq",
-      function()
-        vim.cmd "Trouble document_diagnostics"
-      end,
-      desc = "LSP(trouble): document_diagnostics to qf",
-    },
-    {
-      "dQ",
-      function()
-        vim.cmd "Trouble workspace_diagnostics"
-      end,
-      desc = "LSP(trouble): workspace_diagnostic to qf",
-    },
-
-    {
       "dl",
       function()
         Util.toggle.diagnostics()
       end,
       desc = "LSP(diagnostic): toggle",
     },
+    {
+      "df",
+      function()
+        if #vim.diagnostic.get(0) == 0 then
+          return Util.info("Diagnostics buffer is clean", { title = "" })
+        end
 
+        local items = {}
+        if vim.diagnostic then
+          local diags = vim.diagnostic.get(0)
+          for _, item in ipairs(diags) do
+            table.insert(items, Util.lsp.process_item(item))
+          end
+        end
+
+        local what = {
+          idx = "$",
+          items = items,
+          title = "Document diagnostics",
+        }
+        vim.fn.setqflist({}, " ", what)
+        vim.cmd [[copen]]
+      end,
+      desc = "LSP(diagnostic): document diagnostics",
+    },
+    {
+      "dF",
+      function()
+        local items = {}
+        if vim.diagnostic then
+          local diags = vim.diagnostic.get()
+          for _, item in ipairs(diags) do
+            table.insert(items, Util.lsp.process_item(item))
+          end
+        end
+
+        local what = {
+          idx = "$",
+          items = items,
+          title = "Workspaces diagnostics",
+        }
+        vim.fn.setqflist({}, " ", what)
+        vim.cmd [[copen]]
+      end,
+      desc = "LSP(diagnostic): workspace diagnostics",
+    },
     --  +----------------------------------------------------------+
     --  LSP commands
     --  +----------------------------------------------------------+
@@ -160,16 +273,6 @@ function M.get()
     },
   }
 
-  if vim.fn.has "nvim-0.10" == 0 and vim.bo[0].keywordprg ~= ":help" then
-    M._keys[#M._keys + 1] = {
-      "K",
-      function()
-        vim.lsp.buf.hover()
-      end,
-      desc = "LSP: show hover",
-    }
-  end
-
   if vim.bo[0].filetype == "rust" then
     M._keys[#M._keys + 1] = {
       "<Leader>ca",
@@ -181,99 +284,6 @@ function M.get()
     }
   else
     M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "LSP: code action" }
-  end
-
-  if Util.has "symbol-usage.nvim" then
-    M._keys[#M._keys + 1] = {
-      "<Leader>ll",
-      function()
-        require("symbol-usage").refresh()
-      end,
-      desc = "LSP(symbol-usage): codelens refresh",
-    }
-    M._keys[#M._keys + 1] = {
-      "<Leader>lL",
-      function()
-        require("symbol-usage").toggle()
-      end,
-      desc = "LSP(symbol-usage): codelens toggle",
-    }
-  else
-    M._keys[#M._keys + 1] = {
-      "<Leader>ll",
-      function()
-        vim.lsp.codelens.refresh { bufnr = 0 }
-      end,
-      desc = "LSP: codelens refresh",
-    }
-  end
-
-  if Util.has "nvim-gtd" then
-    M._keys[#M._keys + 1] = {
-      "gD",
-      function()
-        require("gtd").exec { command = "split" }
-      end,
-      desc = "LSP(gtd): goto definitions (split)",
-    }
-  else
-    M._keys[#M._keys + 1] = { "gD", vim.lsp.buf.declaration, desc = "LSP: goto declaration" }
-  end
-
-  if Util.has "glance.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gd",
-      "<CMD>Glance definitions<CR>",
-      desc = "LSP(glance): goto definitions",
-    }
-  elseif Util.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gd",
-      "<CMD>Lspsaga goto_definition <CR>",
-      desc = "LSP(lspsaga): goto definition",
-    }
-  else
-    M._keys[#M._keys + 1] = { "gd", vim.lsp.buf.definition, desc = "LSP: goto definition" }
-  end
-
-  if Util.has "trouble.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gr",
-      function()
-        vim.cmd [[TroubleToggle lsp_references]]
-      end,
-      desc = "LSP(trouble): references",
-    }
-  elseif Util.has "fzf-lua" then
-    M._keys[#M._keys + 1] = {
-      "gr",
-      function()
-        fzf_lua.lsp_finder()
-      end,
-      desc = "LSP(fzflua): references",
-    }
-  elseif Util.has "glance.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gr",
-      "<CMD>Glance references<CR>",
-      desc = "LSP(glance): references",
-    }
-  elseif Util.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gr",
-      "<CMD>Lspsaga finder<CR>",
-      desc = "LSP(lspsaga): references",
-    }
-  else
-    M._keys[#M._keys + 1] = { "gr", vim.lsp.buf.definition, desc = "LSP: references" }
-  end
-
-  if Util.has "goto-preview" then
-    M._keys[#M._keys + 1] =
-      { "gP", require("goto-preview").goto_preview_definition, desc = "LSP(goto-preview): peek preview definitions" }
-  elseif Util.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] =
-      { "gP", "<cmd>Lspsaga peek_definition<cr>", desc = "LSP[lspsaga]: peek preview definitions" }
   end
 
   if Util.has "inc-rename.nvim" then
