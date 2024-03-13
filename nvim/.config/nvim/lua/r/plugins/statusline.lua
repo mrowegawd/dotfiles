@@ -11,6 +11,7 @@ return {
           comp.Mode,
           comp.Git,
           comp.FilePath,
+          comp.FilePathQF,
           comp.FileIcon,
           comp.FileFlags,
           { provider = "%=" },

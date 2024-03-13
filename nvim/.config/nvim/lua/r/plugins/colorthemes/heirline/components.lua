@@ -152,7 +152,6 @@ M.Mode = {
 }
 M.Git = {
   condition = Conditions.is_git_repo,
-  provider = " ",
 
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
@@ -163,7 +162,7 @@ M.Git = {
 
   {
     provider = function(self)
-      return " " .. self.status_dict.head .. " "
+      return "  " .. self.status_dict.head .. " "
     end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
@@ -233,25 +232,80 @@ local function is_loclist()
   return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0
 end
 
+M.FilePathQF = {
+  condition = function()
+    return vim.bo[0].filetype == "qf"
+  end,
+  init = function(self)
+    self.bufname = vim.api.nvim_buf_get_name(0)
+  end,
+
+  {
+    provider = Icon.misc.separator_up,
+    hl = function()
+      return { fg = colors.base_bg, bg = colors.diff_add }
+    end,
+  },
+  {
+    provider = function()
+      local msg
+      if is_loclist() then
+        msg = vim.fn.getloclist(0, { title = 0 }).title
+      else
+        msg = string.format("%s/total?", vim.fn.getqflist({ id = 0 }).id)
+      end
+
+      return " " .. msg .. " "
+    end,
+    hl = { fg = colors.base_bg, bg = colors.diff_add, bold = true },
+  },
+  {
+    provider = Icon.misc.separator_up,
+    hl = { bg = colors.separator_fg_alt, fg = colors.diff_add },
+  },
+  {
+    provider = Icon.misc.separator_up,
+    hl = { fg = colors.separator_fg_alt, bg = colors.base_bg },
+  },
+
+  --  ------------------
+  {
+    provider = Icon.misc.separator_up,
+    hl = { fg = colors.base_bg, bg = colors.diff_change },
+  },
+  {
+    provider = function()
+      local msg
+      if is_loclist() then
+        msg = vim.fn.getloclist(0, { title = 0 }).title
+      else
+        msg = string.format("%s", vim.fn.getqflist({ title = 0 }).title)
+      end
+      return " " .. msg .. " "
+    end,
+    hl = { fg = colors.base_bg, bg = colors.diff_change, bold = true },
+  },
+  {
+    provider = Icon.misc.separator_up,
+    hl = function()
+      return { fg = colors.diff_change, bg = colors.separator_fg_alt }
+    end,
+  },
+  {
+    provider = Icon.misc.separator_up,
+    hl = { fg = colors.separator_fg_alt, bg = colors.base_bg },
+  },
+}
 M.FilePath = {
   init = function(self)
     self.bufname = vim.api.nvim_buf_get_name(0)
   end,
-  provider = " ",
+  -- provider = " ",
   {
     provider = function()
       if vim.bo[0].filetype == "qf" then
-        if is_loclist() then
-          return vim.fn.getloclist(0, { title = 0 }).title
-        else
-          return string.format(
-            "Id:%s Title:<<%s>>",
-            vim.fn.getqflist({ id = 0 }).id,
-            vim.fn.getqflist({ title = 0 }).title
-          )
-        end
+        return ""
       end
-
       local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
       if filename == "" then
         return "[No Name]"
@@ -261,7 +315,7 @@ M.FilePath = {
       if not Conditions.width_percent_below(#filename, 0.40) then
         filename = vim.fn.pathshorten(filename)
       end
-      return filename
+      return " " .. filename .. " "
     end,
     hl = { fg = colors.base_fg, bg = colors.base_bg },
   },

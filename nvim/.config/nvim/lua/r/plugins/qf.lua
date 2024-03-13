@@ -1,10 +1,10 @@
+local Highlight = require "r.settings.highlights"
 local Config = require "r.config"
 
 return {
   -- NVIM-BQF
   {
     "kevinhwang91/nvim-bqf",
-    enabled = false,
     ft = { "qf" },
     dependencies = {
       {
@@ -14,51 +14,60 @@ return {
         end,
       },
     },
-    opts = {
-      preview = {
-        auto_preview = false,
-        show_title = true,
-        wrap = true,
-        buf_label = true,
-        should_preview_cb = nil,
-      },
-      -- make `drop` and `tab drop` to become preferred
-      func_map = {
-        drop = "o",
-        openc = "O",
-        split = "<C-s>",
-        vsplit = "<C-v>",
-        tabdrop = "<C-t>",
-        tabc = "",
-        tab = "",
-        ptogglemode = "p",
-        ptoggleauto = "P",
-        ptoggleitem = "",
-        pscrollup = "<c-u>",
-        pscrolldown = "<c-d>",
-        prevfile = "",
-        nextfile = "",
-        sclear = "z<Tab>",
-        filter = "zn",
-        filterr = "zN",
-        fzffilter = "zf",
-      },
-      filter = {
-        fzf = {
-          action_for = {
-            ["ctrl-s"] = "split",
-            ["ctrl-t"] = "tab drop",
-          },
-          extra_opts = {
-            "+i",
-            "--bind",
-            "ctrl-o:toggle-all",
-            "--prompt",
-            "> ",
+
+    opts = function()
+      Highlight.plugin("NvimBqfC", {
+        { BqfPreviewFloat = { link = "NormalFloat" } },
+      })
+      return {
+        preview = {
+          auto_preview = false,
+          show_title = true,
+          wrap = true,
+          winblend = 0,
+          win_height = 25,
+          win_vheight = 25,
+          buf_label = true,
+          should_preview_cb = nil,
+        },
+        -- make `drop` and `tab drop` to become preferred
+        func_map = {
+          drop = "",
+          openc = "",
+          split = "<C-s>",
+          vsplit = "<C-v>",
+          tabdrop = "<C-t>",
+          tabc = "",
+          tab = "",
+          ptogglemode = "P",
+          ptoggleauto = "p",
+          ptoggleitem = "",
+          pscrollup = "<a-Up>",
+          pscrolldown = "<a-Down>",
+          prevfile = "",
+          nextfile = "",
+          sclear = "z<Tab>",
+          filter = "zn",
+          filterr = "zN",
+          fzffilter = "zf",
+        },
+        filter = {
+          fzf = {
+            action_for = {
+              ["ctrl-s"] = "split",
+              ["ctrl-t"] = "tab drop",
+            },
+            extra_opts = {
+              "+i",
+              "--bind",
+              "ctrl-o:toggle-all",
+              "--prompt",
+              "> ",
+            },
           },
         },
-      },
-    },
+      }
+    end,
   },
   -- QFSILET
   {

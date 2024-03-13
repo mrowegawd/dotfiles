@@ -12,11 +12,22 @@ keymap.set("n", "<c-o>", "<Nop>", {
   buffer = api.nvim_get_current_buf(),
 })
 
+keymap.set("n", "o", function()
+  Util.map.feedkey("<CR>", "n")
+  -- vim.schedule(function()
+  --   if vim.bo[0].filetype ~= "qf" then
+  --     vim.cmd "wincmd p"
+  --   end
+  -- end)
+end, {
+  buffer = api.nvim_get_current_buf(),
+})
+
 Util.cmd.augroup("ColorQuickFixLine", {
   event = { "BufRead", "WinEnter", "FocusGained", "VimEnter", "BufEnter" },
   command = function()
     if vim.bo.filetype ~= "qf" then
-      vim.cmd [[execute 'hi! link QuickFixLine MyQuickFixLineLeave' ]]
+      vim.cmd [[execute 'hi! link QuickFixLine CursorLine' ]]
       vim.cmd [[execute 'hi! link CursorLine MyCursorLine' ]]
     elseif vim.bo.filetype == "qf" then
       -- vim.cmd [[execute 'hi! link CursorLine MyQuickFixLineEnter' ]]
