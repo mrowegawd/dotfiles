@@ -148,6 +148,12 @@ local defaults = {
 
       separator_up = "",
       separator_down = "",
+
+      separator_leg_down = "",
+      separator_leg_up = "",
+
+      separator_hed_down = "",
+      separator_hed_up = "",
     },
 
     dap = {

@@ -126,14 +126,6 @@ Util.map.nnoremap("~", "%", silent)
 
 -- nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
 
-Util.map.nnoremap("<Leader>rd", function()
-  local query = vim.fn.input "Search DevDocs: "
-  if #query > 0 then
-    local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
-    os.execute(encodedURL)
-  end
-end, { desc = "Misc: search devdocs" })
-
 Util.map.nnoremap("<Leader>cd", function()
   local filepath = fn.expand "%:p:h" -- code
   cmd(fmt("cd %s", filepath))
@@ -531,8 +523,18 @@ Util.map.nnoremap("<Localleader>r", function()
     sourcegraph_sg = function()
       cmd "SourcegraphSearch"
     end,
-    nvim_cheat = function()
+    search_cheat = function()
       cmd "Cheat"
+    end,
+    search_devdocs = function()
+      local query = vim.fn.input "Search DevDocs: "
+      if #query > 0 then
+        local encodedURL = string.format('open "https://devdocs.io/#q=%s"', query:gsub("%s", "%%20"))
+        os.execute(encodedURL)
+      end
+    end,
+    dismiss_noice = function()
+      require("noice").cmd "dismiss"
     end,
     toggle_undotree = function()
       cmd "UndotreeToggle"

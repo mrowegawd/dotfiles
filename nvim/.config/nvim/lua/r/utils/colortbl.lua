@@ -4,6 +4,7 @@ local error_fg = Highlight.get("Error", "fg") or Highlight.get("Error", "bg")
 local keyword_fg = Highlight.get("Keyword", "fg")
 local statusline_bg = Highlight.get("StatusLine", "bg")
 local statusline_fg = Highlight.get("StatusLine", "fg")
+local statuslinenc_bg = Highlight.get("StatusLineNC", "bg")
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 local pmenusel_fg = Highlight.get("PmenuSel", "bg")
@@ -20,8 +21,10 @@ elseif vim.g.colorscheme == "catppuccin-latte" then
 end
 
 return {
-  statusline_fg = Highlight.tint(statusline_fg, 0.8),
+  -- statusline_fg = Highlight.tint(statusline_fg, 0.8),
+  statusline_fg = statusline_fg,
   statusline_bg = statusline_bg,
+  statuslinenc_bg = statuslinenc_bg,
 
   separator_fg = separator_fg,
   separator_fg_alt = separator_fg_alt,

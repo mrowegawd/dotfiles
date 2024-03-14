@@ -253,31 +253,88 @@ return {
             {
               OutlineCurrent = {
                 fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
+                bg = "NONE",
               },
             },
             {
               OutlineDetails = {
                 fg = { from = "Comment", attr = "fg", alter = -0.5 },
+                bg = "NONE",
               },
             },
             {
               OutlineFoldMarker = {
                 fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+                bg = "NONE",
               },
             },
             {
               OutlineGuides = {
                 fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineLineno = {
+                bg = "NONE",
+              },
+            },
+          },
+          ["onedark"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = 0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.1 },
+                bg = "NONE",
+              },
+            },
+          },
+          ["solarized-osaka"] = {
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+                bg = "NONE",
+              },
+            },
+          },
+          ["selenized"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = 0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineCurrent = {
+                fg = { from = "Error", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg" },
+                bg = "NONE",
               },
             },
           },
           ["miasma"] = {
             {
               OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.3 },
+                fg = { from = "Comment", attr = "fg", alter = -0.2 },
+                bg = "NONE",
               },
             },
-
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.05 },
+                bg = "NONE",
+              },
+            },
             {
               OutlineCurrent = {
                 fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
@@ -522,12 +579,24 @@ return {
     opts = function()
       Highlight.plugin("NeoEdgyHi", {
         { WinBar = { bg = "NONE" } },
+        { EdgyNormal = { bg = "NONE" } },
         { WinBarNC = { bg = "NONE" } },
         { EdgyTitle = { fg = { from = "Boolean", attr = "fg" }, bold = true } },
       })
 
       return {
         animate = { enabled = false },
+        wo = {
+          -- Setting to `true`, will add an edgy winbar.
+          -- Setting to `false`, won't set any winbar.
+          -- Setting to a string, will set the winbar to that string.
+          winbar = true,
+          winfixwidth = true,
+          winfixheight = false,
+          winhighlight = "WinBar:Normal,Normal:Normal",
+          spell = false,
+          signcolumn = "no",
+        },
         bottom = {
           -- {
           --   ft = "toggleterm",

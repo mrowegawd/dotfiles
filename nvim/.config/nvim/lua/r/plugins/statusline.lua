@@ -8,20 +8,8 @@ return {
       local comp = require "r.plugins.colorthemes.heirline.components"
       require("heirline").setup {
         statusline = {
-          comp.Mode,
-          comp.Git,
-          comp.FilePath,
-          comp.FilePathQF,
-          comp.FileIcon,
-          comp.FileFlags,
-          { provider = "%=" },
-          comp.Dap,
-          comp.LSPActive,
-          comp.Diagnostics,
-          comp.SearchCount, -- this func make nvim slow!
-          comp.Sessions,
-          comp.BufferCwd,
-          comp.Ruler,
+          comp.status_active_left,
+          comp.status_not_active,
         },
       }
 

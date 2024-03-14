@@ -15,6 +15,27 @@ Util.cmd.augroup("WrapSpell", {
   end,
 })
 
+-- {
+--   -- turn current line blame off in insert mode,
+--   -- back on when leaving insert mode
+--   name = 'GitSignsCurrentLineBlameInsertModeToggle',
+--   {
+--     { 'InsertLeave', 'InsertEnter' },
+--     function()
+--       local ok, gitsigns_config = pcall(require, 'gitsigns.config')
+--       if not ok then
+--         return
+--       end
+--
+--       local enabled = gitsigns_config.config.current_line_blame
+--       local mode = vim.fn.mode()
+--       if (mode == 'i' and enabled) or (mode ~= 'i' and not enabled) then
+--         pcall(vim.cmd --[[@as function]], 'Gitsigns toggle_current_line_blame')
+--       end
+--     end,
+--   },
+-- },
+
 Util.cmd.augroup("WrapFt", {
   event = { "FileType" },
   pattern = { "typescriptreact", "typescript" },

@@ -75,7 +75,7 @@ opt.previewheight = 12
 opt.showmode = false -- show current mode (insert, etc) under the cmdline
 opt.showcmd = false -- show current command under the cmd line
 opt.cmdheight = 0 -- cmdline height: 0 1 2
-opt.laststatus = 3 -- 2 = always show status line (filename, etc)
+opt.laststatus = 2 -- 2 = always show status line (filename, etc)
 opt.textwidth = 80 -- max inserted text width for paste operations
 opt.linespace = 0 -- font spacing
 opt.ruler = true -- show line,col at the cursor pos
@@ -188,7 +188,7 @@ opt.equalalways = false -- New vim windows created won't make everything back to
 -- folds {{{1
 -----------------------------------------------------------------------------//
 opt.fillchars = {
-  -- eob = " ", -- suppress ~ at endofbuffer
+  eob = " ", -- suppress ~ at endofbuffer
   diff = " ", -- alternatives = ⣿ ░ ╱
   -- msgsep = " ", -- alternatives: ‾ ─
   --

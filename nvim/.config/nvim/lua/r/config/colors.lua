@@ -20,8 +20,10 @@ local general_overrides = function()
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
     { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.1 }, fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-    { StatusLine = { fg = { from = "ColorColumn", attr = "bg", alter = 0.5 }, bg = { from = "Normal" , attr = "bg", alter = 0.2 } } },
-    { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
+
+    { StatusLine = { fg = { from = "Normal", attr = "bg", alter = 1.5 }, bg = { from = "StatusLine" , attr = "bg", alter = 0.1 } } },
+    { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.15 } } },
+
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
 
@@ -209,13 +211,12 @@ local general_overrides = function()
     { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
     { bufferline_fill_fg = { bg = { from = "Normal", attr = "fg", alter = -0.1 } } },
 
-    { Mygreen_fg = { fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
-    { MyStatusLine_red_fg = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
-    { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
-    { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 }, bg = { from = "StatusLine", attr = "bg" } } },
-    { MyQuickFixLineLeave = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
+    -- { MyStatusLine_red_fg = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 } } },
+    -- { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 } } },
+    -- { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 } } },
     { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 } } },
     { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
+    { LeaveCursorLine = { bg = { from = "Normal", alter = 0.1 } } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
     { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
@@ -364,13 +365,8 @@ local function colorscheme_overrides()
           italic = true,
         },
       },
-      {
-        StatusLine = {
-          fg = { from = "ColorColumn", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-          reverse = false,
-        },
-      },
+      { StatusLine = { reverse = false } },
+      { StatusLineNC = { reverse = false } },
     },
     ["kanagawa"] = {
       {
@@ -414,8 +410,9 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
         },
       },
+      { StatusLine = { fg = { from = "StatusLine", attr = "bg", alter = 1.5 } } },
+      { StatusLineNC = { reverse = false } },
       { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
-      { StatusLine = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
 
       { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 } } },
       { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 } } },
@@ -468,12 +465,19 @@ local function colorscheme_overrides()
       { markdownCode = { bg = "NONE" } },
 
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1 }, bg = { from = "Normal", attr = "bg" } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
-      { MyCursorLine = { bg = { from = "Normal", alter = 0.4 } } },
+      { CursorLine = { bg = { from = "Normal", alter = 0.5 } } },
       {
         StatusLine = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.3 },
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          reverse = false,
         },
       },
     },
@@ -487,7 +491,19 @@ local function colorscheme_overrides()
       },
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.2 } } },
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+
+      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      { LeaveCursorLine = { bg = { from = "Normal", alter = 0.1 } } },
+      { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.1 } } },
       {
+        MyQuickFixLine = {
+          bg = { from = "Error", attr = "fg", alter = -0.5 },
+          fg = { from = "Normal", attr = "fg" },
+          bold = true,
+        },
+      },
+      {
+
         FoldColumn = {
           bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 0.25 },
@@ -508,11 +524,34 @@ local function colorscheme_overrides()
     },
     ["tokyonight"] = {
       { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "StatusLineNC", attr = "bg", alter = 0.5 },
+          reverse = false,
+        },
+      },
     },
     ["vscode_modern"] = {
       {
         StatusLine = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "StatusLineNC", attr = "bg", alter = 0.5 },
+          reverse = false,
         },
       },
     },
@@ -550,7 +589,7 @@ local function colorscheme_overrides()
       {
         MyStatusLine_directory_fg = {
           fg = { from = "Directory", atrr = "fg", alter = 0.1 },
-          bg = { from = "StatusLine", attr = "bg" },
+          -- bg = { from = "StatusLine", attr = "bg" },
         },
       },
       {

@@ -5,9 +5,24 @@ local Col = require("r.utils").colortbl
 
 local M = {}
 
+local setcond = {
+  buffer_not_empty = function()
+    return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+  end,
+  hide_in_width = function()
+    return vim.fn.winwidth(0) > 120
+  end,
+  check_git_workspace = function()
+    local filepath = vim.fn.expand "%:p:h"
+    local gitdir = vim.fn.finddir(".git", filepath .. ";")
+    return gitdir and #gitdir > 0 and #gitdir < #filepath
+  end,
+}
+
 local colors = {
   base_bg = Col.statusline_bg,
   base_fg = Col.statusline_fg,
+  basenc_bg = Col.statuslinenc_bg,
 
   branch_fg = Col.branch_fg,
   terminal_fg = Col.terminal_fg,
@@ -128,11 +143,10 @@ M.Mode = {
   },
   {
     provider = function(self)
-      return string.format("   %s ", self.mode_icons[self.mode])
+      return string.format("    %s ", self.mode_icons[self.mode])
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      -- return { bg = self.mode_colors[mode], fg = colors.base_bg, bold = true }
       return { bg = self.mode_colors[mode], fg = colors.mod_norm_bg, bold = true }
     end,
   },
@@ -150,15 +164,13 @@ M.Mode = {
     end,
   },
 }
-M.Git = {
+M.Branch = {
   condition = Conditions.is_git_repo,
 
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
     self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
   end,
-
-  hl = { fg = colors.base_fg, bg = colors.base_bg, bold = true },
 
   {
     provider = function(self)
@@ -167,12 +179,20 @@ M.Git = {
     condition = function()
       return vim.bo[0].filetype ~= "qf"
     end,
-    hl = { fg = colors.branch_fg, bg = colors.base_bg, bold = true },
+    hl = { fg = colors.branch_fg, bold = true },
   },
+}
+M.Git = {
+  init = function(self)
+    self.status_dict = vim.b.gitsigns_status_dict
+    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
+  end,
+
+  condition = Conditions.is_git_repo,
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and ("A+" .. count .. "")
+      return count > 0 and (" A+" .. count .. "")
     end,
     hl = { fg = colors.diff_add },
   },
@@ -186,7 +206,7 @@ M.Git = {
   {
     provider = function(self)
       local count = self.status_dict.changed or 0
-      return count > 0 and (" M~" .. count .. "")
+      return count > 0 and (" M~" .. count .. " ")
     end,
     hl = { fg = colors.diff_change },
   },
@@ -257,7 +277,15 @@ M.FilePathQF = {
 
       return " " .. msg .. " "
     end,
-    hl = { fg = colors.base_bg, bg = colors.diff_add, bold = true },
+    hl = function()
+      local cs = colors.base_bg
+
+      if Conditions.is_not_active() then
+        cs = colors.basenc_bg
+      end
+
+      return { fg = cs, bg = colors.diff_add, bold = true }
+    end,
   },
   {
     provider = Icon.misc.separator_up,
@@ -265,13 +293,27 @@ M.FilePathQF = {
   },
   {
     provider = Icon.misc.separator_up,
-    hl = { fg = colors.separator_fg_alt, bg = colors.base_bg },
+    hl = function()
+      local cs = colors.base_bg
+
+      if Conditions.is_not_active() then
+        cs = colors.basenc_bg
+      end
+      return { fg = colors.separator_fg_alt, bg = cs }
+    end,
   },
 
   --  ------------------
   {
     provider = Icon.misc.separator_up,
-    hl = { fg = colors.base_bg, bg = colors.diff_change },
+    hl = function()
+      local cs = colors.base_bg
+
+      if Conditions.is_not_active() then
+        cs = colors.basenc_bg
+      end
+      return { fg = cs, bg = colors.diff_change }
+    end,
   },
   {
     provider = function()
@@ -283,7 +325,14 @@ M.FilePathQF = {
       end
       return " " .. msg .. " "
     end,
-    hl = { fg = colors.base_bg, bg = colors.diff_change, bold = true },
+    hl = function()
+      local cs = colors.base_bg
+
+      if Conditions.is_not_active() then
+        cs = colors.basenc_bg
+      end
+      return { fg = cs, bg = colors.diff_change, bold = true }
+    end,
   },
   {
     provider = Icon.misc.separator_up,
@@ -293,14 +342,20 @@ M.FilePathQF = {
   },
   {
     provider = Icon.misc.separator_up,
-    hl = { fg = colors.separator_fg_alt, bg = colors.base_bg },
+    hl = function()
+      local cs = colors.base_bg
+
+      if Conditions.is_not_active() then
+        cs = colors.basenc_bg
+      end
+      return { fg = colors.separator_fg_alt, bg = cs }
+    end,
   },
 }
 M.FilePath = {
   init = function(self)
     self.bufname = vim.api.nvim_buf_get_name(0)
   end,
-  -- provider = " ",
   {
     provider = function()
       if vim.bo[0].filetype == "qf" then
@@ -317,7 +372,7 @@ M.FilePath = {
       end
       return " " .. filename .. " "
     end,
-    hl = { fg = colors.base_fg, bg = colors.base_bg },
+    hl = { fg = colors.base_fg },
   },
 }
 M.FileFlags = {
@@ -333,7 +388,7 @@ M.FileFlags = {
       return (vim.bo.filetype ~= "fzf") and (vim.bo.filetype ~= "qf") and (not vim.bo.modifiable or vim.bo.readonly)
     end,
     provider = " ",
-    hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
+    hl = { fg = colors.diagnostic_err },
   },
 }
 M.Dap = {
@@ -351,6 +406,10 @@ M.Dap = {
 }
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
+
+  condition = function()
+    return setcond.hide_in_width()
+  end,
 
   init = function(self)
     local names = {}
@@ -391,18 +450,10 @@ M.LSPActive = {
       if vim.tbl_isempty(self.names) then
         return ""
       else
-        return " [" .. table.concat(self.names, " ") .. "] "
+        return " [" .. table.concat(self.names, " ") .. "]  "
       end
     end,
     hl = { fg = colors.base_fg, bg = colors.base_bg },
-  },
-  {
-    condition = Conditions.lsp_attached,
-    provider = " [LSP] ",
-  },
-  {
-    condition = Conditions.lsp_attached,
-    provider = " ",
   },
 }
 M.FileIcon = {
@@ -415,10 +466,10 @@ M.FileIcon = {
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
   end,
   provider = function(self)
-    return self.icon and (" " .. self.icon .. " ")
+    return self.icon and (self.icon .. " ")
   end,
   hl = function(self)
-    return { fg = self.icon_color, bg = colors.base_bg }
+    return { fg = self.icon_color }
   end,
 }
 M.SearchCount = {
@@ -453,8 +504,10 @@ M.SearchCount = {
       local current = self.result.current > self.result.maxcount and too_many or self.result.current
       local total = self.result.total > self.result.maxcount and too_many or self.result.total
 
-      return "%#MyStatusLine_red_fg#" .. string.format(" %s/%s ", current, total) .. "%*"
+      -- return "%#MyStatusLine_red_fg#" .. string.format(" %s/%s ", current, total) .. "%*"
+      return string.format("%s/%s  ", current, total)
     end,
+    hl = { fg = colors.diagnostic_warn },
   },
 }
 M.Diagnostics = {
@@ -558,7 +611,9 @@ M.Diagnostics = {
   },
 }
 M.Sessions = {
-  provider = " ",
+  condition = function()
+    return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
+  end,
   {
     provider = function()
       local ok, ses_persistent = pcall(require, "persistence")
@@ -569,16 +624,22 @@ M.Sessions = {
       local ses_persistent_get_current = ses_persistent.get_current()
       local sess = vim.fn.filereadable(ses_persistent_get_current) == 1
       if sess ~= nil then
-        return "%#MyStatusLine_notif_fg# On%* "
+        -- return "%#MyStatusLine_notif_fg# On%* "
+        return " On "
       end
 
-      return "%#MyStatusLine_notif_fg# off%* "
+      -- return "%#MyStatusLine_notif_fg# off%* "
+      return " off "
     end,
+    hl = { fg = colors.diagnostic_warn },
   },
 }
 M.BufferCwd = {
   init = function(self)
     self.bufnr = self.bufnr or 0
+  end,
+  condition = function()
+    return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
   end,
   provider = " ",
   {
@@ -588,12 +649,13 @@ M.BufferCwd = {
         return ""
       end
 
-      return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
+      -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
+      return " " .. cwd .. "%* "
     end,
+    hl = { fg = colors.diagnostic_warn },
   },
 }
 M.Ruler = {
-  provider = " ",
   {
     provider = function()
       local rhs = ""
@@ -629,12 +691,49 @@ M.Ruler = {
         end
       end
 
-      return rhs
+      return " " .. rhs
     end,
-    hl = function()
-      return { fg = colors.base_fg, bg = colors.base_bg, bold = true }
-    end,
+    hl = { fg = colors.base_fg },
   },
+}
+M.Gap = {
+  { provider = "%=" },
+}
+
+M.status_active_left = {
+  condition = Conditions.is_active,
+  M.Mode,
+  M.Branch,
+  M.FilePath,
+  M.FileIcon,
+  M.Git,
+  M.FilePathQF,
+  M.FileFlags,
+  M.Gap,
+  M.Dap,
+  M.LSPActive,
+  M.Diagnostics,
+  M.SearchCount, -- this func make nvim slow!
+  M.Sessions,
+  M.BufferCwd,
+  M.Ruler,
+
+  hl = { fg = colors.base_fg, bg = colors.base_bg },
+}
+
+M.status_not_active = {
+  condition = Conditions.is_not_active,
+  -- M.Mode,
+  M.Branch,
+  M.FilePath,
+  M.FileIcon,
+  M.Git,
+  M.FilePathQF,
+  M.FileFlags,
+  M.Gap,
+  M.Ruler,
+
+  hl = { bg = colors.basenc_bg },
 }
 
 return M

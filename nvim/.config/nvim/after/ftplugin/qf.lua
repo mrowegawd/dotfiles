@@ -27,8 +27,8 @@ Util.cmd.augroup("ColorQuickFixLine", {
   event = { "BufRead", "WinEnter", "FocusGained", "VimEnter", "BufEnter" },
   command = function()
     if vim.bo.filetype ~= "qf" then
-      vim.cmd [[execute 'hi! link QuickFixLine CursorLine' ]]
-      vim.cmd [[execute 'hi! link CursorLine MyCursorLine' ]]
+      vim.cmd [[execute 'hi! link QuickFixLine LeaveCursorLine' ]]
+      vim.cmd [[execute 'hi! link CursorLine CursorLine' ]]
     elseif vim.bo.filetype == "qf" then
       -- vim.cmd [[execute 'hi! link CursorLine MyQuickFixLineEnter' ]]
       vim.cmd [[execute 'hi! link QuickFixLine MyQuickFixLine' ]]

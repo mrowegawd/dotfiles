@@ -226,20 +226,19 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    -- enabled = false,
     dependencies = {
       "MunifTanjim/nui.nvim",
     },
-    -- stylua: ignore
     keys = {
       {
-        "<S-Enter>",
+        "<a-o>",
         ---@diagnostic disable-next-line: param-type-mismatch
-        function() require("noice").redirect(fn.getcmdline()) end,
+        function()
+          require("noice").redirect(fn.getcmdline())
+        end,
         mode = "c",
-        desc = "Redirect Cmdline"
+        desc = "Redirect Cmdline",
       },
-      { "<leader>rD", function() require("noice").cmd("dismiss") end, desc = "misc(noice): dismiss all" },
     },
     opts = function()
       Highlight.plugin("notify", {
@@ -346,9 +345,10 @@ return {
       },
     },
   },
-  -- INCLINE.NVIM
+  -- INCLINE.NVIM (disabled)
   {
     "b0o/incline.nvim",
+    enabled = false,
     event = "LazyFile",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
