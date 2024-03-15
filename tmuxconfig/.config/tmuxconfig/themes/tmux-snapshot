@@ -27,15 +27,19 @@ bind E set-window-option synchronize-panes on \;\
 bind e set-window-option synchronize-panes off \;\
   set-option -g status-bg $STATUSLINE_BG \; display 'synchronize end'
 
-setw -g window-style bg=$WINDOW_BG
+setw -g window-style bg=$WINDOW_BG_ACTIVE
 setw -g window-active-style bg=$WINDOW_BG_ACTIVE
 
-setw -g pane-active-border-style bg=$WINDOW_BG,fg=$BORDER_FG
-setw -g pane-border-style bg=$WINDOW_BG,fg=$BORDER_FG
+setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
+setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
 
-# setw -g pane-border-status bottom
-set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
-  #{?pane_active,❐ #S:#I/#{session_windows} ,}#{?window_zoomed_flag,⬢,❄} #P ⇒ #{pane_tty} #{pane_current_command}'
+setw -g pane-border-status bottom
+setw -g pane-border-format "[ ###{pane_index} #{?pane_active,#[fg=red] ,}\
+#{?window_zoomed_flag,#[fg=white]ZOOM ,}#[fg=$BORDER_FG]#{pane_current_command} ]"
+
+# set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
+#   #{?pane_active,❐ #S:#I/#{session_windows} ,}#{?window_zoomed_flag,⬢,❄} #P ⇒ #{pane_tty} #{pane_current_command}'
+
 
 #  +----------------------------------------------------------+
 #  |                      STATUS THEMES                       |

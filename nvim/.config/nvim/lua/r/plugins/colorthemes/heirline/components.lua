@@ -381,7 +381,7 @@ M.FileFlags = {
       return vim.bo.modified
     end,
     provider = " " .. Icon.misc.boldclose,
-    hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
+    hl = { fg = colors.diagnostic_err },
   },
   {
     condition = function()
