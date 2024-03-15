@@ -237,7 +237,7 @@ return {
           require("noice").redirect(fn.getcmdline())
         end,
         mode = "c",
-        desc = "Redirect Cmdline",
+        desc = "Misc(noice): redirect cmdline",
       },
     },
     opts = function()
