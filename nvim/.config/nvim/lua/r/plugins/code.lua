@@ -107,32 +107,6 @@ return {
         end
       end
 
-      local lspkind_comparator = function(conf)
-        local lsp_types = require("cmp.types").lsp
-        return function(entry1, entry2)
-          if entry1.source.name ~= "nvim_lsp" then
-            if entry2.source.name == "nvim_lsp" then
-              return false
-            else
-              return nil
-            end
-          end
-          local kind1 = lsp_types.CompletionItemKind[entry1:get_kind()]
-          local kind2 = lsp_types.CompletionItemKind[entry2:get_kind()]
-
-          local priority1 = conf.kind_priority[kind1] or 0
-          local priority2 = conf.kind_priority[kind2] or 0
-          if priority1 == priority2 then
-            return nil
-          end
-          return priority2 < priority1
-        end
-      end
-
-      local label_comparator = function(entry1, entry2)
-        return entry1.completion_item.label < entry2.completion_item.label
-      end
-
       local function styldoc(is_border_set)
         is_border_set = is_border_set or false
 
@@ -227,43 +201,8 @@ return {
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
         },
-        -- matching = {
-        --   disallow_fuzzy_matching = false,
-        --   disallow_fullfuzzy_matching = false,
-        --   disallow_partial_fuzzy_matching = false,
-        -- },
         sorting = {
           comparators = {
-            lspkind_comparator {
-              kind_priority = {
-                Field = 11,
-                Property = 11,
-                Constant = 10,
-                Enum = 10,
-                EnumMember = 10,
-                Event = 10,
-                Function = 10,
-                Method = 10,
-                Operator = 10,
-                Reference = 10,
-                Struct = 10,
-                Variable = 9,
-                File = 8,
-                Folder = 8,
-                Class = 5,
-                Color = 5,
-                Module = 5,
-                Keyword = 2,
-                Constructor = 1,
-                Interface = 1,
-                Snippet = 0,
-                Text = 1,
-                TypeParameter = 1,
-                Unit = 1,
-                Value = 1,
-              },
-            },
-            label_comparator,
             cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.score,
@@ -321,16 +260,6 @@ return {
                             end
                           end
                           return bufs
-                          -- ----
-                          -- from visible bufs.
-                          -- local bufs = {}
-                          -- for _, win in ipairs(vim.api.nvim_list_wins()) do
-                          --   bufs[vim.api.nvim_win_get_buf(win)] = true
-                          -- end
-                          -- --- alternative buf.
-                          -- local alter = vim.fn.bufnr('#')
-                          -- if alter > 0 then bufs[vim.fn.bufnr('#')] = true end
-                          -- return vim.tbl_keys(bufs)
                         end,
                       },
                     },
@@ -428,12 +357,12 @@ return {
       end
 
       local tbl_custom_sources = {
-        { name = "nvim_lsp", max_item_count = 5, group_index = 1 },
-        { name = "buffer", max_item_count = 5, group_index = 1 },
-        { name = "luasnip", max_item_count = 5, group_index = 1 },
-        { name = "path", max_item_count = 5, group_index = 1 },
-        { name = "rg", max_item_count = 5, group_index = 1 },
-        { name = "emoji", max_item_count = 5, group_index = 1 },
+        { name = "nvim_lsp", max_item_count = 20 },
+        { name = "buffer", max_item_count = 20 },
+        { name = "luasnip", max_item_count = 20 },
+        { name = "path", max_item_count = 20 },
+        { name = "rg", max_item_count = 20 },
+        { name = "emoji", max_item_count = 20 },
       }
 
       cmp.setup.filetype("markdown", {
