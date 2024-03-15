@@ -25,7 +25,3 @@ case "$XDG_SESSION_DESKTOP" in
 	;;
 *) echo "none" ;;
 esac
-
-# else
-# 	/usr/local/bin/dunstify "hello bro $get_target_path"
-# fi

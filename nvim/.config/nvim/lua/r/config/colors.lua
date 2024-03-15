@@ -21,8 +21,8 @@ local general_overrides = function()
     { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.1 }, fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
-    { StatusLine = { fg = { from = "Normal", attr = "bg", alter = 1.5 }, bg = { from = "StatusLine" , attr = "bg", alter = 0.1 } } },
-    { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.15 } } },
+    { StatusLine = { fg = { from = "Normal", attr = "bg", alter = 1.5 }, bg = { from = "StatusLine" , attr = "bg", alter = 0.2 } } },
+    { StatusLineNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.5 } } },
 
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
