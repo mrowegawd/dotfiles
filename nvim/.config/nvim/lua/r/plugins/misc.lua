@@ -40,6 +40,7 @@ return {
   {
     "azabiong/vim-highlighter",
     event = "LazyFile",
+    cmd = { "Hi", "HI" },
     keys = {
       {
         "<c-Down>",
@@ -51,6 +52,20 @@ return {
         "<CMD> Hi{ <CR>",
         desc = "Misc(vim-highlighter): prev",
       },
+      {
+        "t<CR>",
+        ":Hi + <CR>",
+        desc = "Misc(vim-highlighter): hi undercursor",
+      },
+      {
+        "t<BS>",
+        ":Hi - <CR>",
+        desc = "Misc(vim-highlighter): remove hi undercursor",
+      },
+      -- "t<CR>",
+      -- "t<BS>",
+      -- "S<CR>",
+      -- "t<Tab>",
     },
   },
   -- SG.NVIM

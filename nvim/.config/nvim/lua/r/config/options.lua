@@ -387,11 +387,11 @@ vim.filetype.add {
 
 -- forplugin: azabiong/vim-highlighter
 -- delete jika tidak dibutuhkan or commented
-vim.g.HiSet = "t<CR>"
-vim.g.HiErase = "t<BS>"
-vim.g.HiClear = "t<C-L>"
-vim.g.HiFind = "t<Tab>"
-vim.g.HiSetSL = "S<CR>"
+vim.g.HiSet = ""
+vim.g.HiErase = ""
+vim.g.HiClear = ""
+vim.g.HiFind = ""
+vim.g.HiSetSL = ""
 vim.g.HiFindTool = "rg -H --color=never --no-heading --column --smart-case"
 
 -- forplugin: ggandor/lightspeed.nvim
