@@ -44,7 +44,11 @@ function M.magic_prev_next_move(is_qf)
   end
 
   if vim.wo.diff then
-    return Util.cmd.feedkey("[c", "n")
+    if is_qf then
+      return Util.cmd.feedkey("[c", "n")
+    else
+      return Util.cmd.feedkey("]c", "n")
+    end
   end
 
   -- if qf_is_opened() then
