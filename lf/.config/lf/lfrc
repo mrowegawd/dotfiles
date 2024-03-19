@@ -47,16 +47,48 @@ cmd on-select &{{
 # }}}
 
 # OPEN ---------------------------------------------------------- {{{
-cmd open ${{ case $(file --mime-type $f -b) in
-	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
-	text/*|application/json) $EDITOR $fx;;
-	image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
-	image/*) sxiv -a $fx& 2>/dev/null ;;
-	audio/*) mpv --audio-display=no $f ;;
-	video/*) setsid -f mpv -ontop -no-border -force-window --autofit=600x500 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
-	application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
-	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
-    esac
+cmd open ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  case $(file --mime-type $f -b) in
+    image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
+    text/*|application/json)
+      if not_in_tmux; then
+        dunstify "not implemented yet"
+        pane_id_right=$(wezterm cli get-pane-direction right)
+        if [ -n "$pane_id_right" ]; then
+          # wezterm cli split-pane --cwd "$(pwd)" --bottom --percent 50 --pane-id "$pane_id_right" "$0" "$1" >/dev/null
+          # dunstify "yes"
+        # else
+        #   wezterm cli split-pane --cwd "$(pwd)" $split --percent 50 "$0" "$1" >/dev/null
+        fi
+      else
+        tmux select-pane -R
+        current_pane=$(tmux display-message -p '#{pane_id}')
+        # output current_pane selalu 1
+        if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+          tmux split-window -h -p 83
+          current_pane=$(tmux display-message -p '#{pane_id}')
+        fi
+
+        program=$(tmux display -p '#{pane_current_command}')
+        if [ "$program" = "nvim" ]; then
+          tmux send-keys -t "$current_pane" ":e $fx" Enter
+        else
+          tmux send-keys -t "$current_pane" "nvim $fx" Enter
+        fi
+      fi
+    ;;
+    image/x-xcf|image/svg+xml) setsid -f gimp $f >/dev/null 2>&1 ;;
+    image/*) sxiv $fx 2>/dev/null;;
+    audio/*) mpv --audio-display=no $f ;;
+    video/*) mpv --autofit=1000x900 --geometry=-15-60 "$fx" >/dev/null 2>&1 ;;
+    # video/*) setsid -f mpv -ontop -no-border -force-window --autofit=600x500 --geometry=-15-60 $f -quiet >/dev/null 2>&1 ;;
+    application/pdf|application/vnd*|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
+    *) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
+  esac
 }}
 # }}}
 # MKDIR --------------------------------------------------------- {{{
@@ -163,18 +195,19 @@ cmd getopen ${{
 
 		program=$(tmux display -p '#{pane_current_command}')
 		if [ "$program" = "nvim" ]; then
-			tmux send-keys -t "$current_pane" ":e $f" Enter
+			tmux send-keys -t "$current_pane" ":e $fx" Enter
 		else
-			tmux send-keys -t "$current_pane" "nvim $f" Enter
+			tmux send-keys -t "$current_pane" "nvim $fx" Enter
 		fi
   ;;
+  audio/*) mpv --audio-display=no $f ;;
+  video/*) mpv --autofit=1000x900 --geometry=-15-60 "$fx" >/dev/null 2>&1 ;;
+  image/*) sxiv $fx 2>/dev/null;;
+	application/pdf) setsid -f zathura $fx >/dev/null 2>&1 ;;
 	inode/directory) lfrun $f ;;
 	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
 	   esac
 }}
-
-
-map l getopen
 # }}}
 # FZMARKS ------------------------------------------------------- {{{
 cmd fzmarks ${{
