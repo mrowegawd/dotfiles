@@ -635,6 +635,7 @@ return {
   --  ╰──────────────────────────────────────────────────────────╯
   -- RUSTACEANVIM
   {
+    -- install rust-analyzer: `rustup component add rust-analyzer` (dont need from Mason)
     "mrcjkb/rustaceanvim",
     version = "^4", -- Recommended
     ft = { "rust" },

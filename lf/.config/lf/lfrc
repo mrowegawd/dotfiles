@@ -23,13 +23,13 @@ set ratios 3
 cmd nopreview &{{
     lf -remote "send $id set nopreview"
     lf -remote "send $id set ratios 3"
-    lf -remote "send $id map zp showpreview"
+    lf -remote "send $id map P showpreview"
 }}
 
 cmd showpreview &{{
-    lf -remote "send $id set ratios 3:2"
+    lf -remote "send $id set ratios 1:2:3"
     lf -remote "send $id set preview"
-    lf -remote "send $id map zp nopreview"
+    lf -remote "send $id map P nopreview"
 }}
 
 # map zp showpreview
@@ -40,7 +40,13 @@ cmd bulkrename $vidir
 #  ║                         COMMAND                          ║
 #  ╚══════════════════════════════════════════════════════════╝
 
-# OPEN ----------------------------------------- {{{
+# ENCHANTED ----------------------------------------------------- {{{
+cmd on-select &{{
+    lf -remote "send $id set statfmt \"$(exa -ld --color=always "$f")\""
+}}
+# }}}
+
+# OPEN ---------------------------------------------------------- {{{
 cmd open ${{ case $(file --mime-type $f -b) in
 	image/vnd.djvu|application/pdf|application/octet-stream) setsid -f zathura $fx >/dev/null 2>&1 ;;
 	text/*|application/json) $EDITOR $fx;;
@@ -53,21 +59,21 @@ cmd open ${{ case $(file --mime-type $f -b) in
     esac
 }}
 # }}}
-# MKDIR ---------------------------------------- {{{
+# MKDIR --------------------------------------------------------- {{{
 cmd mkdir ${{
     printf "\nDirectory Name: "
     read name
     mkdir $name
 }}
 # }}}
-# TOUCH ---------------------------------------- {{{
+# TOUCH --------------------------------------------------------- {{{
 cmd touch ${{
     printf "File Name: "
     read name
     $EDITOR $name
 }}
 # }}}
-# DELETE --------------------------------------- {{{
+# DELETE -------------------------------------------------------- {{{
 cmd Delete ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -77,7 +83,7 @@ cmd Delete ${{
 	[ $ans = "y" ] && rm -rf $fx
 }}
 # }}}
-# MOVETO --------------------------------------- {{{
+# MOVETO -------------------------------------------------------- {{{
 cmd moveto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -89,7 +95,7 @@ cmd moveto ${{
 	dunstify "🚚 File(s) moved." "File(s) moved to $dest."
 }}
 # }}}
-# COPYTO --------------------------------------- {{{
+# COPYTO -------------------------------------------------------- {{{
 cmd copyto ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
@@ -101,7 +107,7 @@ cmd copyto ${{
 	dunstify "📋 File(s) copied." "File(s) copies to $dest."
 }}
 # }}}
-# FZF_SEARCH ----------------------------------- {{{
+# FZF_SEARCH ---------------------------------------------------- {{{
 cmd fzf_search ${{
     not_in_tmux() {
     	[[ -z "$TMUX" ]]
@@ -135,7 +141,7 @@ cmd fzf_search ${{
 
 }}
 # }}}
-# WATCH_MPV_PLAYLIST --------------------------- {{{
+# WATCH_MPV_PLAYLIST -------------------------------------------- {{{
 cmd watch_mpv_playlist ${{
     # ls -t1 . | sort > /tmp/mylist_mpv
     IFS=$'\n' ; mpv -ontop -no-border -force-window \
@@ -166,6 +172,7 @@ cmd getopen ${{
 	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
 	   esac
 }}
+
 
 map l getopen
 # }}}
@@ -198,21 +205,15 @@ cmd fzmarks ${{
 
   		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
   		wezterm cli activate-pane-direction Left
-
-  		if [ -n "$select" ]; then
-  			# we select directory not a file
-  			lfrun "$select"
-  		fi
   	else
   		select=$(cat "$cwd" | fzf-tmux --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
   			--preview-window right:50%:hidden -xC -w '60%' -h '50%' \
   			--prompt "Jump to> ")
+  	fi
 
-
-      # [ ! -z "$select" ] && lf -remote "send $id select \"$select\""
-  		if [ -n "$select" ]; then
-  		    lfrun $select
-  		fi
+  	if [ -n "$select" ]; then
+  		# we select directory not a file
+	    lf -remote "send $id cd \"$select\""
   	fi
   fi
 }}
@@ -426,6 +427,27 @@ map I
 #  ╔══════════════════════════════════════════════════════════╗
 #  ║                       BOOKMARKS                          ║
 #  ╚══════════════════════════════════════════════════════════╝
+
+# map gs ${{clear; git status; echo "press ENTER"; read ENTER}}
+
+# cmd on-cd &{{
+# 	# display repository status in your prompt
+# 	if [ -d .git ] || [ -f .git ]; then
+# 		branch=$(git branch --show-current 2>/dev/null) || true
+# 		remote=$(git config --get branch.$branch.remote 2>/dev/null) || true
+# 		url=$(git remote get-url $remote 2>/dev/null) || true
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [GIT BRANCH:> $branch >> $url]\033[0m"
+# 	elif [ -d .hg ]; then
+# 		hg=$(hg branch 2>/dev/null) || true
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [HG BRANCH:> $hg]\033[0m"
+# 	elif [ -d .svn ]; then
+# 		svn=$(svn info 2>/dev/null | awk '/^URL: /{print $2}') || true
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%w\033[0m\033[33;1m [SVN URL:> $svn]\033[0m"
+# 	else
+# 		fmt="\033[32;1m%u@%h\033[0m:\033[34;1m%d\033[0m\033[1m%f\033[0m"
+# 	fi
+# 	lf -remote "send $id set promptfmt \"$fmt\""
+# }}
 
 map gc cd ~/moxconf/development/dotfiles
 map gd cd ~/Downloads
