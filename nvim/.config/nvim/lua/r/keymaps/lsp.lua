@@ -1,4 +1,3 @@
-local diagnostic = vim.diagnostic
 local Util = require "r.utils"
 
 local fzf_lua = Util.cmd.reqcall "fzf-lua"
@@ -6,6 +5,14 @@ local fzf_lua = Util.cmd.reqcall "fzf-lua"
 local M = {}
 
 M._keys = nil
+
+local diagnostic_goto = function(next, severity)
+  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  severity = severity and vim.diagnostic.severity[severity] or nil
+  return function()
+    go { severity = severity, float = false }
+  end
+end
 
 function M.get()
   if M._keys then
@@ -109,14 +116,14 @@ function M.get()
     {
       "dn",
       function()
-        diagnostic.goto_next { float = false }
+        diagnostic_goto(true)
       end,
       desc = "LSP(diagnostic): next item",
     },
     {
       "dp",
       function()
-        diagnostic.goto_prev { float = false }
+        diagnostic_goto(false)
       end,
       desc = "LSP(diagnostic): prev item",
     },
