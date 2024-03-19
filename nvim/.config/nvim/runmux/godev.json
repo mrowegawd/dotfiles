@@ -6,24 +6,24 @@
     "regex": "^.*:[0-9]+:[0-9]+.*"
   },
   "repl": {
-    "open_pane": "tmux split-window -h -p 20",
+    "open_pane": "tmux split-window -hl 20%",
     "command": "",
     "regex": ""
   },
   "tasks": {
     "layout": [
       {
-        "open_pane": "tmux split-window -v -p 20",
+        "open_pane": "tmux split-window -vl 20%",
         "command": "",
         "regex": ""
       },
       {
-        "open_pane": "tmux split-window -h -p 50",
+        "open_pane": "tmux split-window -hl 50%",
         "command": "go build ./main.go",
         "regex": ""
       },
       {
-        "open_pane": "tmux split-window -h -p 50",
+        "open_pane": "tmux split-window -hl 50%",
         "command": " go test -coverprofile coverage.out",
         "regex": ""
       }

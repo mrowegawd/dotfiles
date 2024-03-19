@@ -6,19 +6,19 @@
     "regex": ""
   },
   "repl": {
-    "open_pane": "tmux split-window -h -p 20",
+    "open_pane": "tmux split-window -hl 20%",
     "command": "node",
     "regex": ""
   },
   "tasks": {
     "layout": [
       {
-        "open_pane": "tmux split-window -v -p 20",
+        "open_pane": "tmux split-window -vl 20%",
         "command": "yarn dev",
         "regex": ""
       },
       {
-        "open_pane": "tmux split-window -h -p 50",
+        "open_pane": "tmux split-window -hl 50%",
         "command": "",
         "regex": ""
       }
