@@ -49,7 +49,7 @@ return {
 
         -- markdown
         "markdownlint",
-        "marksman",
+        -- "marksman",
         "codespell",
         "cbfmt",
 
@@ -95,18 +95,21 @@ return {
     "neovim/nvim-lspconfig",
     event = "LazyFile",
     dependencies = {
+      -- {
+      --   "folke/neoconf.nvim",
+      --   cmd = "Neoconf",
+      --   dependencies = { "nvim-lspconfig" },
+      --   opts = {
+      --     library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
+      --   },
+      -- },
       {
-        "folke/neoconf.nvim",
-        cmd = "Neoconf",
-        dependencies = { "nvim-lspconfig" },
-        opts = {
-          library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
-        },
+        "folke/neodev.nvim",
+        ft = "lua",
+        opts = { library = { plugins = { "nvim-dap-ui" } } },
       },
-      -- { "folke/neodev.nvim", opts = {} },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-
       {
         "b0o/SchemaStore.nvim",
         version = false, -- last release is way too old
@@ -163,7 +166,6 @@ return {
       servers = {
         zls = {},
         dockerls = {},
-        rust_analyzer = {},
         docker_compose_language_service = {},
         html = {},
         cssls = {
@@ -347,9 +349,6 @@ return {
         },
       },
       setup = {
-        rust_analyzer = function()
-          return true
-        end,
         eslint = function()
           local function get_client(buf)
             return Util.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
@@ -470,6 +469,8 @@ return {
         REFERENCES = "documentHighlightProvider",
         DEFINITION = "definitionProvider",
       }
+
+      -- require("neodev").setup()
 
       -- Setup formatting and keymaps
       Util.lsp.on_attach(function(client, bufnr)
@@ -606,8 +607,8 @@ return {
 
       if Util.lsp.get_config "denols" and Util.lsp.get_config "tsserver" then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        Util.lsp.lsp_disable("tsserver", is_deno)
-        Util.lsp.lsp_disable("denols", function(root_dir)
+        Util.lsp.disable("tsserver", is_deno)
+        Util.lsp.disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
 
@@ -671,7 +672,7 @@ return {
       },
     },
     config = function(_, opts)
-      vim.g.rustaceanvim = vim.tbl_deep_extend("force", {}, opts or {})
+      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
