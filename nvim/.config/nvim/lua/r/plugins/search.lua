@@ -8,10 +8,10 @@ local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --col
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 -- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
 
-local fzf_lua = Util.cmd.reqcall "fzf-lua"
-local file_picker = function(cwd)
-  fzf_lua.files { cwd = cwd }
-end
+-- local fzf_lua = Util.cmd.reqcall "fzf-lua"
+-- local file_picker = function(cwd)
+--   fzf_lua.files { cwd = cwd }
+-- end
 
 return {
   -- FLASH.NVIM
@@ -62,9 +62,11 @@ return {
   -- FZF-LUA
   {
     "ibhagwan/fzf-lua",
-    cmd = "FzfLua",
+    version = false,
+    event = "LazyFile",
+    -- cmd = "FzfLua",
     dependencies = {
-      "sindrets/diffview.nvim",
+      -- "sindrets/diffview.nvim",
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
       {
@@ -105,15 +107,15 @@ return {
       },
     },
     keys = {
-      { "sf", fzf_lua.buffers, desc = "WinNav(fzflua): open" },
-      { "sG", fzf_lua.lines, desc = "WinNav(fzflua): live_grep on buffers" },
-      { "sH", fzf_lua.oldfiles, desc = "WinNav(Fzflua): history" },
-      { "z=", fzf_lua.spell_suggest, desc = "Fzflua: spell suggest" },
-      { "sg", fzf_lua.blines, desc = "WinNav(fzfLua): live_grep on curbuf" },
+      { "sf", require("fzf-lua").buffers, desc = "WinNav(fzflua): open" },
+      { "sG", require("fzf-lua").lines, desc = "WinNav(fzflua): live_grep on buffers" },
+      { "sH", require("fzf-lua").oldfiles, desc = "WinNav(Fzflua): history" },
+      { "z=", require("fzf-lua").spell_suggest, desc = "Fzflua: spell suggest" },
+      { "sg", require("fzf-lua").blines, desc = "WinNav(fzfLua): live_grep on curbuf" },
       {
         "sg",
         function()
-          fzf_lua.blines { query = vim.fn.expand "<cword>" }
+          require("fzf-lua").blines { query = vim.fn.expand "<cword>" }
         end,
         desc = "WinNav(fzfLua): live_grep on curbuf [visual]",
         mode = { "v" },
@@ -121,18 +123,18 @@ return {
       {
         "sG",
         function()
-          fzf_lua.lines { query = vim.fn.expand "<cword>" }
+          require("fzf-lua").lines { query = vim.fn.expand "<cword>" }
         end,
         desc = "WinNav(fzflua): live_grep on buffers [visual]",
         mode = { "v" },
       },
-      { "<Leader>ff", file_picker, desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "<Leader>fC", fzf_lua.commands, desc = "Fzflua: commands", mode = "n" },
-      { "<Leader>fh", fzf_lua.help_tags, desc = "Fzflua: help tags" },
+      { "<Leader>ff", require("fzf-lua").files, desc = "Fzflua: find files", mode = { "n", "v" } },
+      { "<Leader>fC", require("fzf-lua").commands, desc = "Fzflua: commands", mode = "n" },
+      { "<Leader>fh", require("fzf-lua").help_tags, desc = "Fzflua: help tags" },
       {
         "gs",
         function()
-          fzf_lua.lsp_document_symbols {
+          require("fzf-lua").lsp_document_symbols {
             winopts = {
               fullscreen = false,
             },
@@ -143,7 +145,7 @@ return {
       {
         "gS",
         function()
-          fzf_lua.lsp_workspace_symbols {
+          require("fzf-lua").lsp_workspace_symbols {
             winopts = {
               fullscreen = true,
             },
@@ -154,22 +156,22 @@ return {
       {
         "<Leader>fh",
         function()
-          fzf_lua.help_tags { query = vim.fn.expand "<cword>" }
+          require("fzf-lua").help_tags { query = vim.fn.expand "<cword>" }
         end,
         mode = { "v" },
         desc = "Fzflua: help tags (visual)",
       },
-      { "<Leader>fl", fzf_lua.resume, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fg", fzf_lua.live_grep_glob, desc = "Fzflua: live grep" },
-      { "<Leader>fg", fzf_lua.grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
-      { "<Leader>fc", fzf_lua.changes, desc = "Fzflua: changes" },
-      { "<Leader>fj", fzf_lua.jumps, desc = "Fzflua: jumps" },
-      { "<Leader>fm", fzf_lua.marks, desc = "Fzflua: marks" },
-      { "<Leader>fs", fzf_lua.search_history, desc = "Fzflua: search-history" },
+      { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
+      { "<Leader>fg", require("fzf-lua").live_grep_glob, desc = "Fzflua: live grep" },
+      { "<Leader>fg", require("fzf-lua").grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
+      { "<Leader>fc", require("fzf-lua").changes, desc = "Fzflua: changes" },
+      { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
+      { "<Leader>fm", require("fzf-lua").marks, desc = "Fzflua: marks" },
+      { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search-history" },
       {
         "<Leader>fk",
         function()
-          return fzf_lua.keymaps {
+          return require("fzf-lua").keymaps {
             winopts = {
               preview = {
                 title = Util.fzflua.format_title("Keymaps", ""),
@@ -185,7 +187,7 @@ return {
       {
         "<Leader>fo",
         function()
-          return fzf_lua.files {
+          return require("fzf-lua").files {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
@@ -197,7 +199,7 @@ return {
         "<Leader>fF",
         function()
           local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
-          return fzf_lua.files {
+          return require("fzf-lua").files {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("Plugin Files", "󰈙") },
             cwd = plugins_directory,
@@ -208,7 +210,7 @@ return {
       {
         "<Leader>fQ",
         function()
-          fzf_lua.quickfix {
+          require("fzf-lua").quickfix {
             prompt = "    ",
             winopts = {
               title = Util.fzflua.format_title("[QF] Select item", "󰈙"),
@@ -232,7 +234,7 @@ return {
             .. table.concat(qf_ntbl, " ")
             .. " -e "
 
-          return fzf_lua.live_grep_glob {
+          return require("fzf-lua").live_grep_glob {
             prompt = "  ",
             winopts = { title = Util.fzflua.format_title("[QF] Grep", " ") },
             cmd = pcmd,
@@ -252,10 +254,13 @@ return {
 
       return {
         winopts_fn = function()
-          local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.5)
-          local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
-          local col = math.ceil((vim.api.nvim_get_option "columns" - win_width) * 1)
-          local row = math.ceil((vim.api.nvim_get_option "lines" - win_height) * 1 - 3)
+          local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+          local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+          local win_height = math.ceil(lines * 0.5)
+          local win_width = math.ceil(columns * 1)
+          local col = math.ceil((columns - win_width) * 1)
+          local row = math.ceil((lines - win_height) * 1 - 3)
           return {
             width = win_width,
             height = win_height,
@@ -297,20 +302,20 @@ return {
             },
           },
         },
-        keymap = {
-          builtin = {
-            ["<F1>"] = "toggle-help",
-            ["<F4>"] = "toggle-fullscreen",
-            ["<F3>"] = "toggle-preview-cw",
-
-            -- ["<a-p>"] = "toggle-preview",
-            -- ["<c-p>"] = "toggle-preview",
-
-            ["<a-down>"] = "preview-page-down",
-            ["<a-up>"] = "preview-page-up",
-            ["<a-s>"] = "toggle-sort",
-          },
-        },
+        -- keymap = {
+        --   builtin = {
+        --     ["<F1>"] = "toggle-help",
+        --     ["<F4>"] = "toggle-fullscreen",
+        --     ["<F3>"] = "toggle-preview-cw",
+        --
+        --     -- ["<a-p>"] = "toggle-preview",
+        --     -- ["<c-p>"] = "toggle-preview",
+        --
+        --     ["<a-down>"] = "preview-page-down",
+        --     ["<a-up>"] = "preview-page-up",
+        --     ["<a-s>"] = "toggle-sort",
+        --   },
+        -- },
         -- PROVIDER SETUP
         files = {
           -- debug = true,
@@ -558,10 +563,13 @@ return {
           fzf_opts = { ["--header"] = [[Ctrl-g:'grep_lgrep',Ctrl-e:'rgflow']] },
           multiprocess = true,
           winopts_fn = function()
-            local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.8)
-            local win_width = math.ceil(vim.api.nvim_get_option "columns" * 1)
-            local col = math.ceil((vim.api.nvim_get_option "columns" - win_width) * 1)
-            local row = math.ceil((vim.api.nvim_get_option "lines" - win_height) * 1 - 3)
+            local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+            local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+            local win_height = math.ceil(lines * 0.8)
+            local win_width = math.ceil(columns * 1)
+            local col = math.ceil((columns - win_width) * 1)
+            local row = math.ceil((lines - win_height) * 1 - 3)
             return {
               width = win_width,
               height = win_height,
