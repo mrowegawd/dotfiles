@@ -1,27 +1,18 @@
 return {
-  -- WHICH-KEY (disabled)
+  -- WHICH-KEY
   {
     "folke/which-key.nvim",
-    enabled = false,
     event = "LazyFile",
     opts = {
       setup = {
-        show_help = true,
         plugins = { spelling = true },
-        key_labels = { ["<leader>"] = "SPC" },
-        triggers = "auto",
         window = {
           border = "single", -- none, single, double, shadow
           position = "bottom", -- bottom, top
-          margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
-          padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
-          winblend = 0,
-        },
-        layout = {
-          height = { min = 4, max = 25 }, -- min and max height of the columns
-          width = { min = 20, max = 50 }, -- min and max width of the columns
-          spacing = 3, -- spacing between columns
-          align = "left", -- align columns left, center or right
+          margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]. When between 0 and 1, will be treated as a percentage of the screen size.
+          padding = { 1, 2, 1, 2 }, -- extra window padding [top, right, bottom, left]
+          winblend = 0, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+          zindex = 1000, -- positive value to position WhichKey above other floating windows.
         },
         triggers_blacklist = {
           i = { "j", "k", "h", "l", "t", "r" },
@@ -30,6 +21,16 @@ return {
         },
       },
       defaults = {
+        mode = { "n", "v" },
+        ["z"] = {
+          name = "+fold",
+        },
+        ["t"] = {
+          name = "t",
+        },
+        ["r"] = {
+          name = "r",
+        },
         ["<leader>"] = {
           name = "<Leader>",
           a = { name = "+projectionist" },
@@ -38,25 +39,19 @@ return {
             -- a = { name = "+run-launch" },
             -- t = { name = "+toggle" },
           },
-          -- D = { name = "+database" },
           f = { name = "+fzflua" },
-          -- u = { name = "+edgy" },
           g = {
             name = "+git",
-            -- v = { name = "+diffview" },
-            -- t = { name = "+toggle" },
-            -- w = { name = "+git-worktree" },
+            h = { name = "+hunks" },
+            f = { name = "+gitfzf" },
           },
           l = { name = "+tlsp" },
-          c = { name = "+change-dir" },
-          -- v = { name = "+view" },
+          c = { name = "+changedir" },
           s = { name = "+surround" },
-          r = { name = "+run-misc" },
+          r = { name = "+cmds" },
           -- p = { name = "+project" },
-          -- -- y = { name = "+surround" },
           t = { name = "+testing" },
-          o = { name = "+open-url" },
-          -- l = { name = "+lang" },
+          o = { name = "+open/browse" },
         },
 
         ["<localleader>"] = {
@@ -70,12 +65,13 @@ return {
     config = function(_, opts)
       local wk = require "which-key"
       wk.setup(opts.setup)
-      wk.register(opts.defaults, { mode = { "n", "v" } })
+      wk.register(opts.defaults)
     end,
   },
-  -- MINI.CLUE
+  -- MINI.CLUE (disabled)
   {
     "echasnovski/mini.clue",
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       local miniclue = require "mini.clue"
@@ -162,6 +158,8 @@ return {
           -- { mode = "x", keys = "<Leader>l", desc = "+Language" },
           -- { mode = "n", keys = "gc", desc = "+Coi" },
 
+          -- { mode = "n", keys = "t<CR>", desc = "+Coi" },
+
           -- { mode = "n", keys = "<Leader>lg", desc = "+Annotation" },
           -- { mode = "n", keys = "<Leader>lx", desc = "+Swap Next" },
           -- { mode = "n", keys = "<Leader>lxf", desc = "+Function" },
@@ -209,12 +207,12 @@ return {
           miniclue.gen_clues.g(),
           miniclue.gen_clues.marks(),
           miniclue.gen_clues.registers(),
-          miniclue.gen_clues.windows {
-            submode_move = false,
-            submode_navigate = false,
-            submode_resize = true,
-          },
-          miniclue.gen_clues.z(),
+          -- miniclue.gen_clues.windows {
+          --   submode_move = false,
+          --   submode_navigate = false,
+          --   submode_resize = true,
+          -- },
+          -- miniclue.gen_clues.z(),
         },
       }
     end,

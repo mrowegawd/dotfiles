@@ -4,6 +4,7 @@ local nosilent = { silent = false }
 local fn, cmd, fmt = vim.fn, vim.cmd, string.format
 
 local Util = require "r.utils"
+
 local function not_vscode()
   return vim.fn.exists "g:vscode" == 0
 end
@@ -14,8 +15,9 @@ end
 -- jk is escape, THEN move to the right to preserve the cursor position, unless
 -- at the first column.  <esc> will continue to work the default way.
 -- NOTE: this is a recursive mapping so anything bound (by a plugin) to <esc> still works
-Util.map.imap("hh", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
+Util.map.inoremap("hh", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
 -- Util.map.imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
+-- Util.map.inoremap("hh", "<Esc>", silent)
 
 Util.map.inoremap("<c-c>", "<Esc>", silent)
 Util.map.inoremap("<c-a>", "<c-O>^", silent)
@@ -361,7 +363,19 @@ local function magic_quit()
     ["log"] = "bd",
     ["Outline"] = "bd",
     -- ["qf"] = "bnext | bdelete #",
-    ["DiffviewFileHistory"] = "DiffviewClose",
+    -- ["DiffviewFileHistory"] = function()
+    --   local view = require("diffview.lib").get_current_view()
+    --   if view then
+    --     vim.cmd "DiffviewClose"
+    --   end
+    -- end,
+    --
+    -- ["DiffviewFiles"] = function()
+    --   local view = require("diffview.lib").get_current_view()
+    --   if view then
+    --     vim.cmd "DiffviewClose"
+    --   end
+    -- end,
   }
 
   -- for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -375,6 +389,9 @@ local function magic_quit()
   -- end
 
   if buf_fts[vim.bo[0].filetype] then
+    if type(buf_fts[vim.bo[0].filetype]) == "function" then
+      buf_fts[vim.bo[0].filetype]()
+    end
     cmd(buf_fts[vim.bo[0].filetype])
   else
     cmd [[q!]]
@@ -476,16 +493,16 @@ Util.map.nnoremap("<F1>", function()
   -- Util.ui.callme()
   -- local jj = 123
   -- print(string.rep("helloo: ", #tostring(jj)))
-
-  local j = vim.split(vim.fn.execute "chistory", "\n")
-  local tbl = {}
-  for _, x in pairs(j) do
-    if type(x) == "string" and #x > 0 and x ~= "No entries" then
-      table.insert(tbl, x)
-    end
-  end
-
-  print(vim.inspect(tbl))
+  --
+  -- local j = vim.split(vim.fn.execute "chistory", "\n")
+  -- local tbl = {}
+  -- for _, x in pairs(j) do
+  --   if type(x) == "string" and #x > 0 and x ~= "No entries" then
+  --     table.insert(tbl, x)
+  --   end
+  -- end
+  --
+  -- print(vim.inspect(tbl))
 
   -- local layout = vim.fn.winlayout()
   --
@@ -494,7 +511,39 @@ Util.map.nnoremap("<F1>", function()
   --   nwin = #layout[2]
   -- end
   -- print(tostring(nwin) .. " " .. layout[1])
+  local nio = require "nio"
+  -- local client = nio.lsp.get_clients({ name = "lua_ls" })[1]
 
+  -- local first = nio.process.run {
+  --   cmd = "printf",
+  --   args = { "hello bro" },
+  -- }
+  --
+  -- local second = nio.process.run {
+  --   cmd = "cat",
+  --   stdin = first.stdout,
+  -- }
+  -- local task = nio.run(function()
+  --   local output = second.stdout.read()
+  --
+  --   print(output)
+  -- end)
+
+  nio.run(function()
+    local client = nio.lsp.get_clients({ name = "lua_ls" })[1]
+
+    local err, response = client.request.textDocument_semanticTokens_full {
+      textDocument = { uri = vim.uri_from_bufnr(0) },
+    }
+
+    assert(not err, err)
+
+    for _, token in pairs(response.data) do
+      print(token)
+    end
+  end)
+
+  -- print(get_option "lines")
   -- print(tostring(vim.inspect(tbl_nc)) .. " " .. tostring(#tbl_nc == 1))
 end)
 
