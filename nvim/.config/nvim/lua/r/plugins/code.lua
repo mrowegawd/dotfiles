@@ -311,12 +311,15 @@ return {
         sources = { -- remember: do not use `group_index`,
           {
             name = "nvim_lsp",
-            max_item_count = 20,
+            -- max_item_count = 20,
             entry_filter = function(entry)
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,
           },
-          { name = "luasnip", max_item_count = 10 },
+          {
+            name = "luasnip",
+            max_item_count = 10,
+          },
           {
             name = "rg",
             keyword_length = 3,
@@ -344,17 +347,6 @@ return {
           { name = "crates" },
         },
       }
-      vim.lsp.util.stylize_markdown = function(bufnr, contents, optsc)
-        contents = vim.lsp.util._normalize_markdown(contents, {
-          width = vim.lsp.util._make_floating_popup_size(contents, optsc),
-        })
-
-        vim.bo[bufnr].filetype = "markdown"
-        vim.treesitter.start(bufnr)
-        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
-
-        return contents
-      end
 
       local tbl_custom_sources = {
         { name = "nvim_lsp", max_item_count = 20 },
@@ -626,7 +618,14 @@ return {
   {
     "rest-nvim/rest.nvim",
     ft = "http",
-    requires = { "nvim-lua/plenary.nvim" },
+    dependencies = {
+      {
+        "vhyrro/luarocks.nvim",
+        config = function()
+          require("luarocks").setup {}
+        end,
+      },
+    },
     -- keys = {
     --   { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
     -- },
