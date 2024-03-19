@@ -5,12 +5,12 @@ local fzf_lua = Util.cmd.reqcall "fzf-lua"
 local M = {}
 
 local function gitfzflua(opts)
-  Util.map.nnoremap("<Leader>gs", fzf_lua.git_status, { desc = "Git(fzflua): git status" })
-  Util.map.nnoremap("<Leader>gS", fzf_lua.git_stash, { desc = "Git(fzflua): git stash" })
-  Util.map.nnoremap("<Leader>gB", fzf_lua.git_commits, { desc = "Git(fzflua): open commits repos" })
-  Util.map.nnoremap("<Leader>gb", fzf_lua.git_bcommits, { desc = "Git(fzflua): open commits buffer" })
+  Util.map.nnoremap("<Leader>gfs", fzf_lua.git_status, { desc = "Git(fzflua): git status" })
+  Util.map.nnoremap("<Leader>gfS", fzf_lua.git_stash, { desc = "Git(fzflua): git stash" })
+  Util.map.nnoremap("<Leader>gfB", fzf_lua.git_commits, { desc = "Git(fzflua): open commits repos" })
+  Util.map.nnoremap("<Leader>gfb", fzf_lua.git_bcommits, { desc = "Git(fzflua): open commits buffer" })
 
-  Util.map.nnoremap("<Leader>gf", function()
+  Util.map.nnoremap("<Leader>gff", function()
     local col, row = Util.fzflua.rectangle_win_pojokan()
     Util.fzflua.send_cmds(
       vim.tbl_deep_extend("force", {
@@ -137,7 +137,7 @@ local function gitdiffview()
     { desc = "Git(diff): compare selection (visual) with clipboard " }
   )
 
-  Util.map.nnoremap("gvh", function()
+  Util.map.nnoremap("gvv", function()
     local current_line = vim.fn.line "."
     local file = vim.fn.expand "%"
     -- DiffviewFileHistory --follow -L{current_line},{current_line}:{file}
@@ -145,7 +145,7 @@ local function gitdiffview()
     vim.cmd(cmd)
   end, { desc = "Git(diffview): line history" })
 
-  -- Util.map.vnoremap(
+  -- Util.map.nnoremap(
   --   "<Leader>gvv",
   --   [[:'<'>DiffviewFileHistory --follow<CR>]],
   --   { desc = "Git(diffview): view the history diff of the selection (visual)" }
@@ -165,15 +165,17 @@ local is_gitsigns_attach = true
 function M.gitsigns()
   local gs = require "gitsigns"
 
-  Util.map.vnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk (visual)" })
-  Util.map.nnoremap("<Leader>ga", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk" })
-  Util.map.nnoremap("<Leader>gA", gs.stage_buffer, { desc = "Git(gitsigns): stage hunk buffer" })
-  Util.map.nnoremap("<Leader>gr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk" })
-  Util.map.nnoremap("<Leader>gu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk" })
-  Util.map.nnoremap("<Leader>gP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })
-  Util.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
-  -- Util.map.nnoremap("<Leader>gl", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk inline",  })
-
+  Util.map.vnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk (visual)" })
+  Util.map.nnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk" })
+  Util.map.nnoremap("<Leader>ghA", gs.stage_buffer, { desc = "Git(gitsigns): stage hunk buffer" })
+  Util.map.nnoremap("<Leader>ghr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk" })
+  Util.map.nnoremap("<Leader>ghu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk" })
+  Util.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })
+  Util.map.nnoremap("<Leader>ghq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
+  Util.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git(gitsigns): diffthis" })
+  Util.map.nnoremap("<Leader>ghD", function()
+    gs.diffthis "~"
+  end, { desc = "Git(gitsigns): diffthis '~'" })
   Util.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
   Util.map.onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
 
