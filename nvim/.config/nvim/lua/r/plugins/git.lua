@@ -78,14 +78,15 @@ return {
     "pwntester/octo.nvim",
     cmd = "Octo",
     opts = {
-      picker = "telescope",
+      -- picker = "telescope",
+      picker = "fzf-lua",
       picker_config = {
         mappings = {
           -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
-          goto_file = { lhs = "<CR>", desc = "kampang" },
+          goto_file = { lhs = "<CR>", desc = "got to file" },
           copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
-          checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
-          merge_pr = { lhs = "<C-r>", desc = "merge pull request" },
+          -- checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
+          -- merge_pr = { lhs = "<C-r>", desc = "merge pull request" },
         },
       },
       mappings = {
@@ -214,6 +215,7 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
+    dependencies = "nvim-lua/plenary.nvim",
     opts = {
       signs = {
         add = { text = "▎", numhl = "GitSignsAddNr" },
@@ -223,6 +225,9 @@ return {
         changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
         untracked = { text = "▎" },
       },
+      update_debounce = 100,
+      max_file_length = 40000,
+      attach_to_untracked = true,
       on_attach = function()
         require("r.keymaps.git").gitsigns()
         if vim.bo.ft == "markdown" then
@@ -372,28 +377,28 @@ return {
         enhanced_diff_hl = true,
         diff_binaries = false, -- Show diffs for binaries
         git_cmd = { "git" },
-        hooks = {
-          diff_buf_read = function()
-            local opt = vim.opt_local
-            opt.wrap, opt.list, opt.relativenumber = false, false, false
-            opt.colorcolumn = ""
-          end,
-          ---@diagnostic disable-next-line: unused-local
-          diff_buf_win_enter = function(bufnr, winid, ctx)
-            if ctx.layout_name:match "^diff2" then
-              if ctx.symbol == "a" then
-                vim.opt_local.winhl = table.concat({
-                  "DiffAdd:DiffviewDiffAddAsDelete",
-                  "DiffDelete:DiffviewDiffDelete",
-                }, ",")
-              elseif ctx.symbol == "b" then
-                vim.opt_local.winhl = table.concat({
-                  "DiffDelete:DiffviewDiffDelete",
-                }, ",")
-              end
-            end
-          end,
-        },
+        -- hooks = {
+        --   diff_buf_read = function()
+        --     local opt = vim.opt_local
+        --     opt.wrap, opt.list, opt.relativenumber = false, false, false
+        --     opt.colorcolumn = ""
+        --   end,
+        --   ---@diagnostic disable-next-line: unused-local
+        --   diff_buf_win_enter = function(bufnr, winid, ctx)
+        --     if ctx.layout_name:match "^diff2" then
+        --       if ctx.symbol == "a" then
+        --         vim.opt_local.winhl = table.concat({
+        --           "DiffAdd:DiffviewDiffAddAsDelete",
+        --           "DiffDelete:DiffviewDiffDelete",
+        --         }, ",")
+        --       elseif ctx.symbol == "b" then
+        --         vim.opt_local.winhl = table.concat({
+        --           "DiffDelete:DiffviewDiffDelete",
+        --         }, ",")
+        --       end
+        --     end
+        --   end,
+        -- },
         key_bindings = {
           disable_defaults = true, -- Disable the default key bindings
           -- The `view` bindings are active in the diff buffers, only when the current
