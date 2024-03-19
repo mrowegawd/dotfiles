@@ -277,7 +277,7 @@ return {
               local winbufnr = vim.fn.winbufnr(winnr)
 
               if winbufnr > 0 then
-                local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+                local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
                 if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
                   table.insert(tbl_winsplits, winft)
                 end
