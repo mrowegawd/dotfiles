@@ -106,4 +106,5 @@
 ; ((atx_h6_marker) @text.title.6.conceal (#set! conceal "⤷"))
 
 ; Ease fenced code block conceals a bit
-((fenced_code_block_delimiter) @punctuation.delimiter (#set! conceal "~"))
+; ((fenced_code_block_delimiter) @punctuation.delimiter (#set! conceal "~"))
+((fenced_code_block_delimiter) @punctuation.delimiter (#set! conceal ""))

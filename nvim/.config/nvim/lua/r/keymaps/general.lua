@@ -475,76 +475,56 @@ Util.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { ex
 Util.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
 Util.map.nnoremap("<F1>", function()
-  -- local tbl_nc = {}
-  -- local win_amount = vim.api.nvim_tabpage_list_wins(0)
-  -- for _, winnr in ipairs(win_amount) do
-  --   if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
-  --     local winbufnr = vim.fn.winbufnr(winnr)
-  --
-  --     if winbufnr > 0 then
-  --       local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
-  --       if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
-  --         table.insert(tbl_nc, winft)
-  --       end
-  --     end
-  --   end
-  -- end
+  local n = require "nui-components"
 
-  -- Util.ui.callme()
-  -- local jj = 123
-  -- print(string.rep("helloo: ", #tostring(jj)))
-  --
-  -- local j = vim.split(vim.fn.execute "chistory", "\n")
-  -- local tbl = {}
-  -- for _, x in pairs(j) do
-  --   if type(x) == "string" and #x > 0 and x ~= "No entries" then
-  --     table.insert(tbl, x)
-  --   end
-  -- end
-  --
-  -- print(vim.inspect(tbl))
+  local renderer = n.create_renderer {
+    width = 80,
+    height = 20,
+  }
 
-  -- local layout = vim.fn.winlayout()
-  --
-  -- local nwin
-  -- if layout[1] == "col" then -- a split window
-  --   nwin = #layout[2]
-  -- end
-  -- print(tostring(nwin) .. " " .. layout[1])
-  local nio = require "nio"
-  -- local client = nio.lsp.get_clients({ name = "lua_ls" })[1]
+  local signal = n.create_signal {
+    is_loading = false,
+    text = "nui.components",
+  }
 
-  -- local first = nio.process.run {
-  --   cmd = "printf",
-  --   args = { "hello bro" },
-  -- }
-  --
-  -- local second = nio.process.run {
-  --   cmd = "cat",
-  --   stdin = first.stdout,
-  -- }
-  -- local task = nio.run(function()
-  --   local output = second.stdout.read()
-  --
-  --   print(output)
-  -- end)
+  local body = n.rows(
+    n.columns(
+      { flex = 0 },
+      n.text_input {
+        autofocus = true,
+        id = "text-input",
+        flex = 1,
+        max_lines = 1,
+      },
+      n.gap(1),
+      n.button {
+        label = "Send",
+        padding = {
+          top = 1,
+        },
+        on_press = function()
+          signal.is_loading = true
 
-  nio.run(function()
-    local client = nio.lsp.get_clients({ name = "lua_ls" })[1]
-
-    local err, response = client.request.textDocument_semanticTokens_full {
-      textDocument = { uri = vim.uri_from_bufnr(0) },
-    }
-
-    assert(not err, err)
-
-    for _, token in pairs(response.data) do
-      print(token)
-    end
-  end)
-
-  -- print(get_option "lines")
-  -- print(tostring(vim.inspect(tbl_nc)) .. " " .. tostring(#tbl_nc == 1))
+          vim.defer_fn(function()
+            local ref = renderer:get_component_by_id "text-input"
+            signal.is_loading = false
+            signal.text = ref:get_current_value()
+          end, 2000)
+        end,
+      },
+      n.spinner {
+        is_loading = signal.is_loading,
+        padding = { top = 1, left = 1 },
+        hidden = signal.is_loading:negate(),
+      }
+    )
+    -- n.paragraph {
+    --   lines = signal.text,
+    --   align = "center",
+    --   is_focusable = false,
+    -- }
+  )
+  renderer:render(body)
 end)
 
 local checkconceallevel = false

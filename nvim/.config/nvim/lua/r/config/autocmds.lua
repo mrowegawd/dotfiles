@@ -210,7 +210,7 @@ Util.cmd.augroup("ConvertNorg", {
   event = { "BufWritePost" },
   pattern = { "*.norg" },
   command = function()
-    Util.neorg_notes.convert_norg_to_markdown()
+    Util.neorg.convert_norg_to_markdown()
   end,
 })
 

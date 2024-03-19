@@ -94,14 +94,28 @@ end
 function M.spawn_nnn(window, pane, percent_size)
 	percent_size = percent_size or 15
 
+	-- window:perform_action(
+	-- 	act.SplitPane({
+	-- 		direction = "Left",
+	-- 		command = {
+	-- 			args = {
+	-- 				os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
+	-- 				"-c",
+	-- 				"nnn",
+	-- 			},
+	-- 		},
+	-- 		size = { Percent = 15 },
+	-- 	}),
+	-- 	pane
+	-- )
+
 	window:perform_action(
 		act.SplitPane({
 			direction = "Left",
 			command = {
 				args = {
-					os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
-					"-c",
-					"nnn",
+					-- os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
+					"lfrun",
 				},
 			},
 			size = { Percent = 15 },
@@ -121,6 +135,10 @@ end
 
 function M.is_in_nnn(pane)
 	return string.match(pane:get_foreground_process_name(), "nnn")
+end
+
+function M.is_in_lf(pane)
+	return string.match(pane:get_foreground_process_name(), "dash")
 end
 
 return M

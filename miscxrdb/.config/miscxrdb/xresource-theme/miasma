@@ -46,16 +46,16 @@ URxvt.colorUL:  #5f875f
 
 ! SEPARATOR: separator_bg, separator_fg
 *.color17: #2f432f
-*.color18: #3c3c3c
+*.color18: #4c4c4c
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #1e1e1e
-*.color20: #a19362
+*.color20: #666666
 *.color21: #ffb49d
 
 ! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
-*.color22: #4b4b4b
-*.color23: #fff5a3
+*.color22: #263626
+*.color23: #ffffff
 *.color24: #ff7869
 
 ! TMUX: main separator bg

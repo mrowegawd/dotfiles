@@ -996,4 +996,11 @@ return {
       }
     end,
   },
+  -- NUI-COMPONENTS
+  {
+    "grapp-dev/nui-components.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+    },
+  },
 }

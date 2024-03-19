@@ -37,16 +37,16 @@
 
 ! SEPARATOR: separator_bg, separator_fg
 *.color17: #533a2c
-*.color18: #3c231f
+*.color18: #834e46
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *.color19: #0d0807
-*.color20: #a89982
+*.color20: #965a50
 *.color21: #ffb49d
 
 ! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
-*.color22: #4b4b4b
-*.color23: #ffffd9
+*.color22: #422e23
+*.color23: #fff0d8
 *.color24: #ff7869
 
 ! TMUX: main separator bg

@@ -3,9 +3,9 @@
 background = '0x001419'
 foreground = '0x9eabac'
 
-# cursor =
-#   text = '0x21222c'
-#   cursor = '0x076fc2'
+[colors.cursor]
+text = '0x21222c'
+cursor = '0xff0000'
 
 # Normal colors
 [colors.normal]

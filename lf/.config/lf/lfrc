@@ -424,8 +424,8 @@ map H set hidden!
 map <c-e> down
 map <c-y> up
 
-map u unselect    # clear select jika di mark sebagai visual selection
-map U clear       # clear select jika items di mark sebagai cut,copy
+map u unselect    # clear selected, yang ditandai dengan visual selection
+map U clear       # clear selected, yang ditandai dengan `mark` `cut` `copy`
 
 map <enter> open
 map <F5> reload

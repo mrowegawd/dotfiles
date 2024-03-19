@@ -238,7 +238,7 @@ local general_overrides = function()
     -----------------------------------------------------------------------
 
     -- CMP ================================================================
-    { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+    { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 3.5 }, bg = "NONE" } },
     { CmpItemAbbrMatchFuzzy = { fg = dark_red } },
     { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
 
@@ -248,11 +248,10 @@ local general_overrides = function()
     { CmpItemKindStruct = { fg = { from = "Structure", attr = "fg" } } },
     { CmpItemKindKeyword = { fg = { from = "String", attr = "fg" } } },
     { CmpItemKindText = { fg = { from = "String", attr = "fg" } } },
-    -- { CmpItemKindField = { fg = { from = "Identifier", attr = "fg" } } },
+    { CmpItemKindField = { fg = { from = "Identifier", attr = "fg" } } },
 
-    { PmenuSel = { bg = { from = "WinSeparator", attr = "fg", alter = -0.2 }, fg = "NONE" } },
-    -- { PmenuSel = { bg = "red", fg = "NONE" } },
-    { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
+    { PmenuSel = { bg = { from = "Keyword", attr = "fg", alter = -0.6 }, fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 }, bold = true } },
+    { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 
     -- TELESCOPE ==========================================================
@@ -304,6 +303,34 @@ local general_overrides = function()
     { ["@org.headline.level4.org"] = { fg = "#8594c8", bold = true, italic = true } },
     { ["@org.headline.level5.org"] = { fg = "#f76328", bold = true, italic = true } },
     { ["@org.headline.level6.org"] = { fg = "#fccf3e", bold = true, italic = true } },
+
+    {['@org.timestamp.active'] = { inherit = 'PreProc'}},
+    {['@org.timestamp.inactive'] = { inherit = 'Comment'}},
+    {['@org.bullet'] = { inherit = 'Identifier'}},
+    {['@org.checkbox'] = { inherit = 'PreProc'}},
+    {['@org.checkbox.halfchecked'] = { inherit = 'PreProc'}},
+    {['@org.checkbox.checked'] = { inherit = 'PreProc'}},
+    {['@org.properties'] = { inherit = 'Constant'}},
+    {['@org.drawer'] = { inherit = 'Constant'}},
+    {['@org.tag'] = { inherit = 'Function'}},
+    {['@org.plan'] = { inherit = 'Constant'}},
+    {['@org.comment'] = { inherit = 'Comment'}},
+    {['@org.directive'] = { inherit = 'Comment'}},
+    {['@org.block'] = { inherit = 'Comment'}},
+    {['@org.latex'] = { inherit = 'Statement'}},
+    {['@org.hyperlinks'] = { inherit = 'Underlined'}},
+    {['@org.code'] = { inherit = 'String'}},
+  -- ['@org.code.delimiter'] = 'String',
+  -- ['@org.verbatim'] = 'String',
+  -- ['@org.verbatim.delimiter'] = 'String',
+  -- ['@org.bold'] = { bold = true },
+  -- ['@org.bold.delimiter'] = { bold = true },
+  -- ['@org.italic'] = { italic = true },
+  -- ['@org.italic.delimiter'] = { italic = true },
+  -- ['@org.strikethrough'] = { strikethrough = true },
+  -- ['@org.strikethrough.delimiter'] = { strikethrough = true },
+  -- ['@org.underline'] = { underline = true },
+  -- ['@org.underline.delimiter'] = { underline = true },
 
     -- HLSEARCH ===========================================================
     { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },
@@ -361,6 +388,9 @@ end
 local function colorscheme_overrides()
   local overrides = {
     ["gruvbox-material"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
+
       { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
       { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
       { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
@@ -414,6 +444,9 @@ local function colorscheme_overrides()
       },
     },
     ["flexoki"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 6 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 2 }, fg = { from = "CmpItemAbbr" } } },
+
       -- LSP
       { CmpItemKindVariable = { inherit = "Constant" } },
       { CmpItemKindProperty = { inherit = "@property" } },
@@ -462,6 +495,18 @@ local function colorscheme_overrides()
       },
     },
     ["ayu"] = {
+      -- CMP
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 7 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 2 }, fg = { from = "CmpItemAbbr" } } },
+      {
+        PmenuSel = {
+          bg = { from = "Statement", attr = "fg", alter = -0.5 },
+          fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 },
+          bold = true,
+          reverse = false,
+        },
+      },
+
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 3 },
@@ -515,6 +560,9 @@ local function colorscheme_overrides()
       },
     },
     ["farout"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 9 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 2 }, fg = { from = "CmpItemAbbr" } } },
+
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 3 },
@@ -566,6 +614,9 @@ local function colorscheme_overrides()
       },
     },
     ["miasma"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
+
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.28 } } },
       {
@@ -612,6 +663,16 @@ local function colorscheme_overrides()
       },
     },
     ["solarized-osaka"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 4.5 }, bg = "NONE" } },
+      {
+        PmenuSel = {
+          bg = { from = "Statement", attr = "fg", alter = -0.5 },
+          fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 },
+          bold = true,
+          reverse = false,
+        },
+      },
+
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -667,6 +728,9 @@ local function colorscheme_overrides()
       },
     },
     ["selenized"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
+
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       {
         LspCodeLens = {
@@ -709,6 +773,9 @@ local function colorscheme_overrides()
       },
     },
     ["onedark"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 3 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.5 }, fg = { from = "CmpItemAbbr" } } },
+
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       {
         FoldColumn = {
@@ -759,6 +826,9 @@ local function colorscheme_overrides()
       },
     },
     ["tokyonight"] = {
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
+
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
       {
@@ -810,8 +880,13 @@ local function colorscheme_overrides()
       },
     },
     ["rose-pine"] = {
+      { CmpItemKindVariable = { inherit = "Constant" } },
+      { CmpItemKindProperty = { inherit = "@property" } },
+      { CmpItemKindField = { inherit = "Function" } },
+
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
+      { WhichKeyFloat = { inherit = "NormalFloat" } },
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -927,11 +1002,17 @@ local function colorscheme_overrides()
       { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
 
       -- CMP
-      { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { CmpItemAbbrMatchFuzzy = { fg = dark_red } },
       { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 } } },
 
-      { PmenuSel = { bg = { from = "WinSeparator", attr = "fg", alter = 0.2 }, fg = "NONE" } },
+      {
+        PmenuSel = {
+          bg = { from = "Statement", attr = "fg", alter = -0.3 },
+          fg = { from = "Normal", attr = "fg", alter = 6 },
+          bold = true,
+        },
+      },
       {
         Pmenu = {
           fg = { from = "Normal", attr = "fg" },

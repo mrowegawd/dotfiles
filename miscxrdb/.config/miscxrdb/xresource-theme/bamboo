@@ -35,12 +35,12 @@
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #1f241f
-*color20: #ffffe6
+*color20: #9db89d
 *color21: #ffb49d
 
 ! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
-*color22: #605c94
-*color23: #fffff0
+*color22: #403d63
+*color23: #ffffff
 *color24: #ff7869
 
 ! TMUX: main separator bg

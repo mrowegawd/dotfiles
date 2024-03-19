@@ -42,15 +42,15 @@
 
 ! SEPARATOR: separator_bg, separator_fg
 *color17: #65537b
-*color18: #363652
+*color18: #434369
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #1b1b29
-*color20: #99a0b7
+*color20: #8787cf
 *color21: #ffb49d
 
 ! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
-*color22: #4b4b4b
+*color22: #514262
 *color23: #ffffff
 *color24: #ff7869
 
