@@ -31,8 +31,7 @@ return {
       --   "LiadOz/nvim-dap-repl-highlights",
       --   config = true,
       --   build = function()
-      --     if not require("nvim-treesitter.parsers").has_parser "dap_repl" then
-      --       vim.cmd ":TSInstall dap_repl"
+      --     if not require("nvim-treesitter.parsers").has_parser "dap_repl" then vim.cmd ":TSInstall dap_repl"
       --     end
       --   end,
       -- },
@@ -87,6 +86,9 @@ return {
           { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug(dapui): toggle UI" },
           { "<Leader>dr", function() return require("dapui").open { reset = true } end, desc = "Debug(dapui): reset UI" },
           { "<leader>dP", function() require("dap.ui.widgets").hover() end, desc = "Debug(dapui): hover" },
+        },
+        dependencies = {
+          "nvim-neotest/nvim-nio",
         },
         opts = {
           -- expand_lines = fn.has "nvim-0.7",
