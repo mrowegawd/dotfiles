@@ -457,8 +457,6 @@ return {
                 return vim.cmd [[wincmd p]]
               end
               return vim.cmd "Neotree"
-
-              -- return cmd "Neotree reveal"
             else
               return vim.cmd "Neotree"
             end
