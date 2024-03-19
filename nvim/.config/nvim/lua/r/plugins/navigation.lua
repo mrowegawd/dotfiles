@@ -487,7 +487,8 @@ return {
                   local winid = vim.fn.win_findbuf(winbufnr)[1] -- yang dibutuhkan itu winid (example winid: 1004, 1005)
 
                   if winbufnr > 0 then
-                    local winft = vim.api.nvim_buf_get_option(winbufnr, "filetype")
+                    local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
+
                     if winft == "Outline" then
                       outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid }
                     end
