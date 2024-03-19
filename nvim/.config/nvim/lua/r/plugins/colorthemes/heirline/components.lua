@@ -9,8 +9,9 @@ local setcond = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
   end,
-  hide_in_width = function()
-    return vim.fn.winwidth(0) > 120
+  hide_in_width = function(size)
+    size = size or 120
+    return vim.fn.winwidth(0) > size
   end,
   check_git_workspace = function()
     local filepath = vim.fn.expand "%:p:h"
@@ -20,6 +21,7 @@ local setcond = {
 }
 
 local colors = {
+
   base_bg = Col.statusline_bg,
   base_fg = Col.statusline_fg,
   basenc_bg = Col.statuslinenc_bg,
@@ -35,6 +37,7 @@ local colors = {
 
   separator_fg = Col.separator_fg,
   separator_fg_alt = Col.separator_fg_alt,
+  separator_fg_inactive = Col.separator_fg_inactive,
 
   mod_norm = Col.error_fg,
   mod_norm_bg = Col.norm_bg,
@@ -164,6 +167,35 @@ M.Mode = {
     end,
   },
 }
+
+M.Mode_inactive = {
+  {
+    provider = function()
+      if vim.bo[0].filetype == "qf" then
+        return string.format "    QF"
+      end
+      return string.format "      "
+    end,
+    hl = function()
+      if vim.bo[0].filetype == "qf" then
+        return { bg = colors.separator_fg_inactive, fg = colors.coldisorent }
+      end
+      return { bg = colors.separator_fg_inactive, fg = colors.base_bg }
+    end,
+  },
+  {
+    provider = Icon.misc.separator_up,
+    hl = function()
+      return { bg = colors.separator_fg_inactive, fg = colors.separator_fg_inactive }
+    end,
+  },
+  {
+    provider = Icon.misc.separator_up,
+    hl = function()
+      return { fg = colors.separator_fg_inactive }
+    end,
+  },
+}
 M.Branch = {
   condition = Conditions.is_git_repo,
 
@@ -192,14 +224,14 @@ M.Git = {
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and (" A+" .. count .. "")
+      return count > 0 and (" A+" .. count .. " ")
     end,
     hl = { fg = colors.diff_add },
   },
   {
     provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and (" D-" .. count .. "")
+      return count > 0 and (" D-" .. count .. " ")
     end,
     hl = { fg = colors.diff_delete },
   },
@@ -361,6 +393,11 @@ M.FilePath = {
       if vim.bo[0].filetype == "qf" then
         return ""
       end
+
+      if vim.bo[0].filetype == "dashboard" then
+        return ""
+      end
+
       local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
       if filename == "" then
         return "[No Name]"
@@ -372,7 +409,12 @@ M.FilePath = {
       end
       return " " .. filename .. " "
     end,
-    hl = { fg = colors.base_fg },
+    hl = function()
+      if Conditions.is_not_active() then
+        return { fg = Col.statuslinenc_fg }
+      end
+      return { fg = colors.base_fg }
+    end,
   },
 }
 M.FileFlags = {
@@ -408,7 +450,7 @@ M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
 
   condition = function()
-    return setcond.hide_in_width()
+    return Conditions.lsp_attached and setcond.hide_in_width(150)
   end,
 
   init = function(self)
@@ -505,9 +547,9 @@ M.SearchCount = {
       local total = self.result.total > self.result.maxcount and too_many or self.result.total
 
       -- return "%#MyStatusLine_red_fg#" .. string.format(" %s/%s ", current, total) .. "%*"
-      return string.format("%s/%s  ", current, total)
+      return string.format(" %s/%s  ", current, total)
     end,
-    hl = { fg = colors.diagnostic_warn },
+    hl = { fg = colors.diagnostic_err },
   },
 }
 M.Diagnostics = {
@@ -639,7 +681,7 @@ M.BufferCwd = {
     self.bufnr = self.bufnr or 0
   end,
   condition = function()
-    return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
+    return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width(80)
   end,
   provider = " ",
   {
@@ -652,10 +694,13 @@ M.BufferCwd = {
       -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
       return " " .. cwd .. "%* "
     end,
-    hl = { fg = colors.diagnostic_warn },
+    hl = { fg = Col.direcotory },
   },
 }
 M.Ruler = {
+  condition = function()
+    return setcond.hide_in_width(130)
+  end,
   {
     provider = function()
       local rhs = ""
@@ -723,7 +768,7 @@ M.status_active_left = {
 
 M.status_not_active = {
   condition = Conditions.is_not_active,
-  -- M.Mode,
+  M.Mode_inactive,
   M.Branch,
   M.FilePath,
   M.FileIcon,
