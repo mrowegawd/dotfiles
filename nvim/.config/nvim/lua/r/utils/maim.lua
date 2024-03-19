@@ -1,4 +1,6 @@
 local Util = require "r.utils"
+
+---@class r.utils.maim
 local M = {}
 
 -- Taken from: kiran94/maim.nvim

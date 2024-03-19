@@ -7,6 +7,7 @@ local Highlight = require "r.settings.highlights"
 
 local Util = require "r.utils"
 
+---@class r.utils.plugin
 local M = {}
 
 M.use_lazy_file = true

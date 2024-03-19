@@ -1,5 +1,6 @@
 local Util = require "r.utils"
 
+---@class r.utils.root
 local M = setmetatable({}, {
   __call = function(m)
     return m.get()

@@ -1,5 +1,6 @@
 local plenary_path = require "plenary.path"
 
+---@class r.utils.file
 local M = {}
 
 --- Returns if the path exists on disk

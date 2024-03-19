@@ -1,3 +1,4 @@
+---@class r.utils.qf
 local M = {}
 
 -- example use; as.is_loclist() and "Location List" or "Quickfix List"

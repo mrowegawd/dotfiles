@@ -6,6 +6,7 @@ local fn = vim.fn
 
 local Util = require "r.utils"
 
+---@class r.utils.tiling
 local M = {}
 
 local tab_layouts = {}
@@ -167,7 +168,7 @@ end
 -- end
 
 local __change_buffers = function()
-  local curbufnum = api.nvim_buf_get_number(0)
+  local curbufnum = api.nvim_get_current_buf()
   vim.cmd(fmt([[%d wincmd w]], master_win))
   vim.cmd(fmt("b %d", curbufnum))
 end
@@ -340,7 +341,7 @@ local winds_find = function(input_tbl, output_tbl)
     local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
 
     if winbufnr > 0 then
-      local winft = api.nvim_buf_get_option(winbufnr, "filetype")
+      local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
 
       for i = 1, #input_tbl do
         if winft == input_tbl[i] then
@@ -399,7 +400,7 @@ local tile_reorder = function()
     local winbufnr = fn.winbufnr(api.nvim_win_get_number(winid))
     if winbufnr > 0 then
       table.insert(newTbl, {
-        winft = api.nvim_buf_get_option(winbufnr, "filetype"),
+        winft = api.nvim_get_option_value("filetype", { buf = winbufnr }),
         winidx = winidx,
       })
     end

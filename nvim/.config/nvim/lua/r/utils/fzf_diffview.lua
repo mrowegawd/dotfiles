@@ -1,6 +1,7 @@
 local validate = vim.validate
 local uv = vim.uv
 
+---@class r.utils.fzf_diffview
 local M = {}
 
 local File = require "r.utils.file"

@@ -1,5 +1,6 @@
 local Util = require "r.utils"
 
+---@class r.utils.uisec
 local M = {}
 
 M.palette = {

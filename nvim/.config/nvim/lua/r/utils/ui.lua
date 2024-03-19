@@ -1,3 +1,4 @@
+---@class r.utils.ui
 local M = {}
 
 local fcs = vim.opt.fillchars:get()

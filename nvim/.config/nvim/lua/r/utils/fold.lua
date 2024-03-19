@@ -2,6 +2,7 @@ local api, cmd, fn = vim.api, vim.cmd, vim.fn
 
 local Util = require "r.utils"
 
+---@class r.utils.fold
 local M = {}
 
 ---@param winid number

@@ -1,6 +1,7 @@
 local api = vim.api
 local option = api.nvim_get_option_value
 
+---@class r.utils.buf
 local M = {}
 
 function M._only()

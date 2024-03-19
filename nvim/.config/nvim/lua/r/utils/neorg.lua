@@ -4,6 +4,7 @@ local scan = require "plenary.scandir"
 local fmt, cmd = string.format, vim.cmd
 local neorg = require "neorg"
 
+---@class r.utils.neorg
 local M = {}
 
 local separator = function()

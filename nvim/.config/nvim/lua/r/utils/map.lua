@@ -1,6 +1,7 @@
 local map = vim.keymap.set
 local Util = require "r.utils"
 
+---@class r.utils.map
 local M = {}
 
 local recursive_map = function(mode, lhs, rhs, opts)
@@ -56,7 +57,6 @@ M.cabbrev = function(short, long)
   })
 end
 
----@param method string
 function M.has(buffer, method)
   method = method:find "/" and method or "textDocument/" .. method
   local clients = Util.lsp.get_clients { bufnr = buffer }

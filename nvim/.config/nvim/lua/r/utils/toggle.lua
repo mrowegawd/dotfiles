@@ -1,5 +1,6 @@
 local Util = require "r.utils"
 
+---@class r.utils.toggle
 local M = {}
 
 local function bool2str(bool)

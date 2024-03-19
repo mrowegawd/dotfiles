@@ -1,5 +1,6 @@
 local api, fmt, L = vim.api, string.format, vim.log.levels
 
+---@class r.utils.cmd
 local M = {}
 
 function M.foreach(callback, list)

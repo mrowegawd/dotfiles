@@ -3,6 +3,7 @@ local Util = require "r.utils"
 local uv = vim.loop
 local lsp = require "vim.lsp"
 
+---@class r.utils.lsp
 local M = {}
 
 function M.get_clients(opts)
@@ -195,7 +196,7 @@ local function lsp_buf_request(buf, method, params, handler)
   end)
 end
 
-function locations_to_items(results, default_severity)
+local function locations_to_items(results, default_severity)
   default_severity = default_severity or 0
   local ret = {}
   for bufnr, locs in pairs(results or {}) do

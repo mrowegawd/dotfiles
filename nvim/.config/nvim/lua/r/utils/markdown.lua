@@ -1,5 +1,6 @@
--- local Util = require "r.utils"
 local Config = require "r.config"
+
+---@class r.utils.markdown
 local M = {}
 
 -- local search_mode = "files"

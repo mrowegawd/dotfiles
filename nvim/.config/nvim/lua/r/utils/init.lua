@@ -1,5 +1,30 @@
 local LazyUtil = require "lazy.core.util"
 
+---@class r.util: LazyUtilCore
+---@field ui r.utils.ui
+---@field qf r.utils.qf
+---@field lsp r.utils.lsp
+---@field root r.utils.root
+---@field fold r.utils.fold
+---@field colortbl r.utils.colortbl
+---@field fzf_diffview r.utils.fzf_diffview
+---@field fzflua r.utils.fzflua
+---@field telescope r.utils.telescope
+---@field toggle r.utils.toggle
+---@field session r.utils.session
+---@field format r.utils.format
+---@field buf r.utils.buf
+---@field plugin r.utils.plugin
+---@field tiling r.utils.tiling
+---@field uisec r.utils.uisec
+---@field inject r.utils.inject
+---@field platform r.utils.platform
+---@field file r.utils.file
+---@field neorg r.utils.neorg
+---@field markdown r.utils.markdown
+---@field maim r.utils.maim
+---@field cmd r.utils.cmd
+---@field map r.utils.map
 local M = {}
 
 ---@type table<string, string|string[]>

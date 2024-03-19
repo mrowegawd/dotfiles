@@ -5,9 +5,12 @@ local keyword_fg = Highlight.get("Keyword", "fg")
 local statusline_bg = Highlight.get("StatusLine", "bg")
 local statusline_fg = Highlight.get("StatusLine", "fg")
 local statuslinenc_bg = Highlight.get("StatusLineNC", "bg")
+local statuslinenc_fg = Highlight.get("StatusLineNC", "fg")
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 local pmenusel_fg = Highlight.get("PmenuSel", "bg")
+
+local statusline_fg_inactive = Highlight.get("MySeparator_fg_inactive", "fg")
 
 local branch_fg = Highlight.tint(normal_fg, 4)
 local separator_fg = Highlight.tint(keyword_fg, -0.2)
@@ -20,11 +23,15 @@ elseif vim.g.colorscheme == "catppuccin-latte" then
   normal_fg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5)
 end
 
-return {
+---@class r.utils.colortbl
+local M = {
   -- statusline_fg = Highlight.tint(statusline_fg, 0.8),
   statusline_fg = statusline_fg,
   statusline_bg = statusline_bg,
   statuslinenc_bg = statuslinenc_bg,
+  statuslinenc_fg = statuslinenc_fg,
+
+  separator_fg_inactive = Highlight.tint(statusline_fg_inactive, 0.1),
 
   separator_fg = separator_fg,
   separator_fg_alt = separator_fg_alt,
@@ -52,8 +59,11 @@ return {
   diff_delete = Highlight.get("GitSignsChange", "fg"),
   diff_change = Highlight.get("GitSignsDelete", "fg"),
 
+  direcotory = Highlight.get("Directory", "fg"),
+
   diagnostic_warn = Highlight.get("DiagnosticSignWarn", "fg"),
   diagnostic_err = Highlight.get("DiagnosticSignError", "fg"),
   diagnostic_info = Highlight.get("DiagnosticSignInfo", "fg"),
   diagnostic_hint = Highlight.get("DiagnosticSignHint", "fg"),
 }
+return M

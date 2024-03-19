@@ -1,3 +1,4 @@
+---@class r.utils.session
 local M = {}
 
 function M.save_ses()
