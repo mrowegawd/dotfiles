@@ -171,7 +171,7 @@ function M.gitsigns()
   Util.map.nnoremap("<Leader>ghr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk" })
   Util.map.nnoremap("<Leader>ghu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk" })
   Util.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })
-  Util.map.nnoremap("<Leader>ghq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
+  Util.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
   Util.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git(gitsigns): diffthis" })
   Util.map.nnoremap("<Leader>ghD", function()
     gs.diffthis "~"

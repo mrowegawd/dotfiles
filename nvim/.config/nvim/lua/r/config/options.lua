@@ -385,6 +385,11 @@ vim.filetype.add {
   },
 }
 
+-- Config ini diperlukan untuk plugin image.nvim
+-- check: https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
+package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
+package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
+
 -- forplugin: azabiong/vim-highlighter
 -- delete jika tidak dibutuhkan or commented
 vim.g.HiSet = ""

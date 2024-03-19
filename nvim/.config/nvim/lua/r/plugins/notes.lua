@@ -552,6 +552,9 @@ return {
       return true
     end,
     build = function()
+      -- Requirements (linux):
+      -- sudo apt-get install libmagickwand-dev
+      -- sudo apt-get install libgraphicsmagick1-dev
       local has_magick = pcall(require, "magick")
       if not has_magick and vim.fn.executable "luarocks" == 1 then
         local is_mac = uv.os_uname().sysname == "Darwin"
