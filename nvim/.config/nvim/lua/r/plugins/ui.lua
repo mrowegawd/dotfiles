@@ -31,6 +31,9 @@ return {
           ["vscode_modern"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
           },
+          ["flexoki"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
+          },
         },
       })
       require("mini.indentscope").setup(opts)
@@ -118,6 +121,7 @@ return {
           "sagafinder",
           "txt",
           "undotree",
+          "",
         },
       },
     },
@@ -143,6 +147,10 @@ return {
           ["solarized-osaka"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["flexoki"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
           },
         },
       })
@@ -258,12 +266,12 @@ return {
           progress = {
             enabled = false,
           },
-          signature = { auto_open = { enabled = true }, enabled = false },
+          signature = { auto_open = { enabled = true }, enabled = true },
           hover = { enabled = true },
           override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
-            ["vim.lsp.util.stylize_markdown"] = false,
-            ["cmp.entry.get_documentation"] = false,
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
           },
         },
         cmdline = {
@@ -412,7 +420,7 @@ return {
             ft_icon = ""
           end
 
-          local modified = vim.api.nvim_buf_get_option(props.buf, "modified") and "bold,italic" or "bold"
+          local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf }) and "bold,italic" or "bold"
 
           if props.focused then
             return {

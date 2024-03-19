@@ -1,6 +1,6 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 *foreground: #f1e9d2
-*background: #252623
+*background: #232923
 
 
 *color0: #1c1e1b
@@ -31,15 +31,15 @@
 
 ! SEPARATOR: separator_bg, separator_fg
 *color17: #504d7c
-*color18: #3f493f
+*color18: #51584f
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #1f241f
-*color20: #b1a890
+*color20: #ffffe6
 *color21: #ffb49d
 
 ! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
-*color22: #4b4b4b
+*color22: #605c94
 *color23: #fffff0
 *color24: #ff7869
 

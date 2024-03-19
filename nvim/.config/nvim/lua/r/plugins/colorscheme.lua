@@ -1,6 +1,34 @@
 local colorscheme = require("r.config").colorscheme
 
 return {
+  -- ROSE-PINE
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local material_theme = { "rose-pine-moon", "rose-pine-main", "rose-pine-dawn" }
+      if vim.tbl_contains(material_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- FLEXOKI
+  {
+    "kepano/flexoki-neovim",
+    name = "flexoki",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local flexoki_theme = { "flexoki-dark", "flexoki-light" }
+      if vim.tbl_contains(flexoki_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NEOVIM-AYU
   {
     "Shatur/neovim-ayu",
@@ -264,17 +292,5 @@ return {
     opts = {
       style = "darker",
     },
-  },
-  -- NORD
-  {
-    "shaunsingh/nord.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local nordtheme = { "nord" }
-      if vim.tbl_contains(nordtheme, colorscheme) then
-        return true
-      end
-    end,
   },
 }
