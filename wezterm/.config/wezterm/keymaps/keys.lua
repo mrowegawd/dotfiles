@@ -243,6 +243,17 @@ return {
 						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
 						return
 					end
+
+					-- window:toast_notification("wezterm", tostring(pane:get_foreground_process_name()), nil, 4000)
+					if KeymapUtil.is_in_lf(pane) then
+						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+
+						-- TODO: ketika closing, cursor mouse pada wezterm tidak berada
+						-- posisi "last position", tapi malah maju kedepan
+						-- dan solusi ke `right` ini tidak berhasil
+						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+						return
+					end
 					if KeymapUtil.is_in_nvim(pane) then
 						KeymapUtil.spawn_nnn(window, pane)
 						return
