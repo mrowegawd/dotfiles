@@ -12,7 +12,7 @@ M.spec = { "lsp", { ".git", "lua" }, "cwd" }
 M.detectors = {}
 
 function M.detectors.cwd()
-  return { vim.loop.cwd() }
+  return { vim.uv.cwd() }
 end
 
 function M.detectors.lsp(buf)
