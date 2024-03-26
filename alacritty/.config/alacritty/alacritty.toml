@@ -32,8 +32,9 @@ size = 11.5
 # family = "Fisa Code"
 # style = "Regular"
 
+# Download font: https://monaspace.githubnext.com/
 [font.normal]
-family = "SF Mono"
+family = "Monaspace Neon ExtraLight"
 style = "Regular"
 
 [font.bold]
@@ -41,11 +42,11 @@ family = "SF Mono"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrains Mono"
+family = "Monaspace Radon ExtraBold"
 style = "Bold Italic"
 
 [font.italic]
-family = "JetBrains Mono"
+family = "Monaspace Neon ExtraLight"
 style = "Italic"
 
 [[keyboard.bindings]]

@@ -1,7 +1,8 @@
-st.font:              SF Mono:Regular:pixelsize=15
+! Download font: https://monaspace.githubnext.com/
+st.font:              Monaspace Neon ExtraLight:Regular:pixelsize=15
 st.boldFont:          SF Mono:Bold:pixelsize=15
-st.italicFont:        Victor Mono medium:Italic:pixelsize=15
-st.italicBoldFont:    Victor Mono:ItalicBold:pixelsize=15
+st.italicFont:        Monaspace Radon ExtraLight:Italic:pixelsize=15
+st.italicBoldFont:    JetBrains Mono:ItalicBold:pixelsize=15
 
 ! st.borderperc:              100
 ! st.cursorshape:               2
