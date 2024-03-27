@@ -4,6 +4,6 @@ if lsp == "coc" then
   return require "r.plugins.lsp.coc"
 elseif lsp == "coq" then
   return require "r.plugins.lsp.coq"
+else
+  return require "r.plugins.lsp.lspconfig"
 end
-
-return require "r.plugins.lsp.lspconfig"

@@ -20,7 +20,6 @@
   "vim.leader": "<space>",
   "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
   "snippets.extends": {},
-  "editor.fontSize": 16,
   "vim.handleKeys": {
     "<C-a>": false,
     "<C-f>": true
@@ -52,8 +51,8 @@
     },
     {
       "before": ["<c-g>"],
-      // "commands": [ "actions.find" ]
-      "after": ["/"]
+      "commands": ["actions.find"]
+      // "after": ["/"]
     },
     {
       "before": ["<leader>", "q"],
@@ -114,7 +113,7 @@
   ],
   "vim.insertModeKeyBindings": [
     {
-      "before": ["j", "k"],
+      "before": ["h", "h"],
       "after": ["<Esc>"]
     },
     // Navigate
@@ -162,9 +161,49 @@
     }
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
+    // DIAGNOSTIC ==================================================
     {
-      "before": ["s", "f"],
-      "commands": ["workbench.files.action.focusOpenEditorsView"]
+      "before": ["d", "n"],
+      "commands": ["editor.action.marker.nextInFiles"],
+      "silent": true
+    },
+    {
+      "before": ["d", "p"],
+      "commands": ["editor.action.marker.prevInFiles"],
+      "silent": true
+    },
+    // LSP =========================================================
+    {
+      "before": ["g", "d"],
+      "commands": ["editor.action.revealDefinition"],
+      "silent": true
+    },
+    {
+      "before": ["g", "r"],
+      "commands": ["editor.action.goToReferences"],
+      "silent": true
+    },
+
+    // GIT =========================================================
+    // {
+    //   "befor": ["g", "n"],
+    //   "command": "workbench.action.editor.nextChange"
+    //   //"when": "editorTextFocus"
+    // },
+    // {
+    //   "key": "shift+alt+f5",
+    //   "command": "workbench.action.editor.previousChange",
+    //   "when": "editorTextFocus"
+    // }
+
+    // GLOBALS =====================================================
+    // {
+    //   "before": ["s", "f"],
+    //   "commands": ["workbench.files.action.focusOpenEditorsView"]
+    // },
+    {
+      "before": ["<leader>", "f", "f"],
+      "commands": ["workbench.action.quickOpen"]
     },
     {
       "before": ["<leader>", "n"],
@@ -173,22 +212,11 @@
     {
       "before": ["<leader>", "<tab>"],
       "commands": [":q!"]
-    },
-    // {
-    //     "before": [ "<leader>", "E" ],
-    //     "commands": [ "revealInExplorer" ]
-    // },
-    // {
-    //     "before": [ "<leader>", "e" ],
-    //     "commands": [ "workbench.action.toggleSidebarVisibility" ]
-    // },
-    {
-      "before": ["<leader>", "f", "f"],
-      "commands": ["workbench.action.quickOpen"]
     }
   ],
   "editor.fontFamily": "'SF Mono', 'monospace', monospace",
+  "editor.fontSize": 10,
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "Sublime Material Theme - Dark",
-  "window.zoomLevel": 1
+  "window.zoomLevel": 2
 }
