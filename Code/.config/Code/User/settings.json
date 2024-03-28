@@ -1,8 +1,50 @@
 {
+  // stole from: https://gist.github.com/ixahmedxi/b9a5a9105bfa39b72b914d9c56bb1cf3
+
+  // ui
+  "editor.minimap.enabled": false,
+  "window.commandCenter": false,
+  "editor.scrollbar.vertical": "auto",
+  "window.titleBarStyle": "custom",
+  "editor.scrollbar.horizontal": "auto",
+
+  // APC
+  "apc.activityBar": {
+    "position": "bottom",
+    "size": 28,
+    "hideSettings": true
+  },
+
+  "apc.statusBar": {
+    "position": "editor-bottom",
+    "height": 28,
+    "fontSize": 12
+  },
+
+  // Font size
+  "editor.fontSize": 12,
+  "terminal.integrated.fontSize": 12,
+  "editor.fontFamily": "'SF Mono', 'monospace', monospace",
+
+  // Misc
+  "workbench.startupEditor": "none",
+  // "workbench.startupEditor": "newUntitledFile",
+  "explorer.compactFolders": false,
+  "editor.tabSize": 2,
+  "editor.linkedEditing": true,
+
+  "breadcrumbs.filePath": "off",
+  "files.trimTrailingWhitespace": true,
+  "[markdown]": {
+    "files.trimTrailingWhitespace": false
+  },
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "window.zoomLevel": 0.75,
+  // "window.zoomLevel": 2
+
   "editor.lineNumbers": "relative",
   "editor.stickyScroll.enabled": true,
-  "editor.minimap.enabled": false,
-  "workbench.startupEditor": "newUntitledFile",
   "editor.suggest.insertMode": "insert",
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
@@ -24,6 +66,44 @@
     "<C-a>": false,
     "<C-f>": true
   },
+
+  // Toggle excluded files
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/.husky": true,
+    "**/drizzle": true,
+    "**/dist": true,
+    "**/.todo.md": true,
+    "**/.vscode": true,
+    "**/.eslintrc.cjs": true,
+    "**/.editorconfig": true,
+    "**/.gitignore": true,
+    "**/.lintstagedrc.mjs": true,
+    "**/.markdownlint.json": true,
+    "**/.markdownlintignore": true,
+    "**/.prettierignore": true,
+    "**/bun.lockb": true,
+    "**/cspell.json": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock.yaml": true,
+    "**/next-env.d.ts": true,
+    "**/postcss.config.cjs": true,
+    "**/prettier.config.js": true,
+    "**/README.md": true,
+    "**/next.config.js": true,
+    "**/tailwind.config.ts": true,
+    "**/drizzle.config.ts": true,
+    "**/migrate.ts": true,
+    "**/.env.example": true
+  },
+
   "vim.normalModeKeyBindings": [
     {
       "before": ["s", "w"],
@@ -51,8 +131,7 @@
     },
     {
       "before": ["<c-g>"],
-      "commands": ["actions.find"]
-      // "after": ["/"]
+      "after": ["/"]
     },
     {
       "before": ["<leader>", "q"],
@@ -116,38 +195,16 @@
       "before": ["h", "h"],
       "after": ["<Esc>"]
     },
-    // Navigate
-    {
-      "before": "ctrl+b",
-      "commands": "cursorWordLeft"
-    },
-    {
-      "before": "ctrl+f",
-      "commands": "cursorWordRight"
-    },
+
+    // go next character
     {
       "before": ["<c-l>"],
       "commands": ["cursorRight"]
     },
+    // go prev character
     {
       "before": ["<c-h>"],
       "commands": ["cursorLeft"]
-    },
-    {
-      "before": ["<c-j>"],
-      "commands": ["cursorDown"]
-    },
-    {
-      "before": ["<c-k>"],
-      "commands": ["cursorUp"]
-    },
-    {
-      "before": ["<c-f>"],
-      "after": ["<Right>"]
-    },
-    {
-      "before": ["<c-b>"],
-      "commands": ["cursorWordRight"]
     }
   ],
   "vim.visualModeKeyBindings": [
@@ -214,9 +271,7 @@
       "commands": [":q!"]
     }
   ],
-  "editor.fontFamily": "'SF Mono', 'monospace', monospace",
-  "editor.fontSize": 10,
   "workbench.iconTheme": "material-icon-theme",
-  "workbench.colorTheme": "Sublime Material Theme - Dark",
-  "window.zoomLevel": 2
+  "workbench.colorTheme": "Aura Dark",
+  "breadcrumbs.enabled": false
 }

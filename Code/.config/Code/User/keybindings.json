@@ -1,4 +1,5 @@
 [
+  // Reset zoom
   {
     "key": "ctrl+Home",
     "command": "workbench.action.zoomReset"
@@ -8,28 +9,8 @@
     "command": "-editor.action.cancelSelectionAnchor",
     "when": "editorTextFocus && selectionAnchorSet"
   },
-  {
-    "key": "ctrl+n",
-    "command": "workbench.action.quickOpenNavigateNextInFilePicker",
-    "when": "inQuickOpen"
-  },
-  {
-    "key": "ctrl+p",
-    "command": "workbench.action.quickOpenNavigatePreviousInFilePicker",
-    "when": "inQuickOpen"
-  },
-  {
-    "key": "ctrl+Insert",
-    "command": "workbench.action.terminal.new",
-    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
-  },
-  {
-    "key": "ctrl+End",
-    "command": "workbench.action.terminal.kill",
-    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
-  },
 
-  // Insert Mode
+  // Navigate go/back fast word (when insert mode)
   {
     "key": "ctrl+b",
     "command": "cursorWordLeft",
@@ -40,16 +21,53 @@
     "command": "cursorWordRight",
     "when": "vim.active && vim.mode == 'Insert'"
   },
+  // {
+  //   "key": "ctrl+a",
+  //   "command": "cursorHome",
+  //   "when": "textInputFocus"
+  // },
+  // {
+  //   "key": "ctrl+e",
+  //   "command": "cursorEnd",
+  //   "when": "textInputFocus"
+  // },
+
+  // Traverse VSCode IntelliSense suggestions with vim keybindings.
   {
-    "key": "ctrl+a",
-    "command": "cursorHome",
-    "when": "textInputFocus"
+    "key": "ctrl+j",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
   },
   {
-    "key": "ctrl+e",
-    "command": "cursorEnd",
-    "when": "textInputFocus"
+    "key": "ctrl+k",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
   },
+  {
+    "key": "ctrl+l",
+    "command": "acceptSelectedSuggestion",
+    "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+  },
+
+  // Traverse VSCode quick open options with vim keybindings.
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenNavigateNextInFilePicker",
+    "when": "inFilesPicker && inQuickOpen"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.quickOpenNavigatePreviousInFilePicker",
+    "when": "inFilesPicker && inQuickOpen"
+  },
+
+  // Open VSCode quick open in split mode
+  // ini tidak berhasil, ctrl+v malah jadi paste!
+  // {
+  //   "key": "ctrl+v",
+  //   "command": "breadcrumbs.revealFocusedFromTreeAside",
+  //   "when": "inQuickOpen && breadcrumbsActive && breadcrumbsVisible && listFocus && !inputFocus && !treestickyScrollFocused"
+  // },
 
   // Navigate Window
   {
@@ -69,14 +87,6 @@
     "command": "workbench.action.navigateDown"
   },
 
-  {
-    "key": "alt+e",
-    "command": "workbench.action.toggleSidebarVisibility"
-  },
-  {
-    "key": "alt+shift+e",
-    "command": "revealInExplorer"
-  },
   // Resize window
   {
     "key": "shift+alt+l",
@@ -94,8 +104,45 @@
     "key": "shift+alt+j",
     "command": "workbench.action.decreaseViewSize"
   },
+
+  // Terminal
   {
     "key": "alt+f",
     "command": "workbench.action.terminal.toggleTerminal"
+  },
+  {
+    "key": "ctrl+Insert",
+    "command": "workbench.action.terminal.new",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
+  {
+    "key": "ctrl+End",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
+  },
+
+  // Explorer Sidebars
+  {
+    "key": "alt+e",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  {
+    "key": "alt+shift+e",
+    "command": "revealInExplorer"
+  },
+
+  {
+    // Open selected file in the first (left) editor group from File Explorer
+    "key": "ctrl+v",
+    "command": "explorer.openToSide",
+    "args": { "group": 0 },
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    // Open selected file in the second (right) editor group from File Explorer
+    "key": "ctrl+s",
+    "command": "explorer.openToSide",
+    "args": { "group": 1 },
+    "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
   }
 ]
