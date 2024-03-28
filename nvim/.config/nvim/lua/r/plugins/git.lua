@@ -1,4 +1,3 @@
-local Util = require "r.utils"
 local Highlight = require "r.settings.highlights"
 
 return {
@@ -96,7 +95,7 @@ return {
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
           reload = { lhs = "<C-r>", desc = "reload issue" },
           open_in_browser = { lhs = "<space>go", desc = "open issue in browser" },
-          copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          copy_url = { lhs = "<space>gy", desc = "copy url to system clipboard" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
           remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
           create_label = { lhs = "<space>lc", desc = "create label" },
@@ -420,7 +419,7 @@ return {
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = function()
-      Util.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+      RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
 
       Highlight.plugin("diffview", {
         { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.3 } } },

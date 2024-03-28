@@ -125,8 +125,8 @@ super + shift + n
 super + shift + o
         bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
 
-# misc: open inbox capture
-super + shift + c
+# misc: open note inbox (capture notes)
+F8
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
 
 # misc: open bookrmark and pass

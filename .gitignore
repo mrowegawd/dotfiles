@@ -43,8 +43,9 @@ mpd/.config/mpd/*
 !mpd/.config/mpd/mpd.conf
 
 Code/.config/Code/*
-!Code/.config/Code/User/keybindings.json
-!Code/.config/Code/User/settings.json
+Code/.config/Code/User/*
+!/Code/.config/Code/User/keybindings.json
+!/Code/.config/Code/User/settings.json
 
 tmuxconfig/.tmux/plugin*
 tmuxconfig/.tmux/resurrect

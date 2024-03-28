@@ -509,10 +509,10 @@ return {
       setup = {
         eslint = function()
           local function get_client(buf)
-            return require("r.utils").lsp.get_clients({ name = "eslint", bufnr = buf })[1]
+            return RUtils.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
           end
 
-          local formatter = require("r.utils").lsp.formatter {
+          local formatter = RUtils.lsp.formatter {
             name = "eslint: lsp",
             primary = false,
             priority = 200,

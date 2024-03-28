@@ -78,14 +78,13 @@ return {
     config = true,
   },
   -- GKEEP (disabled)
-  -- {
-  --   -- Check and run: `python3 -m pip install gkeepapi keyring`
-  --   "stevearc/gkeep.nvim",
-  --   enabled = false,
-  --   build = ":UpdateRemotePlugins",
-  --   cmd = { "GkeepToggle" },
-  --   -- event = "BufReadPre gkeep://*",
-  -- },
+  {
+    -- Check and run: `python3 -m pip install gkeepapi keyring`
+    "stevearc/gkeep.nvim",
+    event = "BufReadPre gkeep://*",
+    build = ":UpdateRemotePlugins",
+    -- cmd = { "GkeepToggle" },
+  },
   -- NREDIR
   {
     -- Redirect output of vim or external command into scratch buffer,
@@ -121,10 +120,10 @@ return {
   {
     "gbprod/yanky.nvim",
     enabled = false,
-    dependencies = not jit.os:find "Windows" and { "kkharji/sqlite.lua" } or {},
+    dependencies = not RUtils.is_win() and { "kkharji/sqlite.lua" } or {},
     opts = {
       highlight = { timer = 250 },
-      ring = { storage = jit.os:find "Windows" and "shada" or "sqlite" },
+      ring = { storage = RUtils.is_win() and "shada" or "sqlite" },
     },
     keys = {
         -- stylua: ignore

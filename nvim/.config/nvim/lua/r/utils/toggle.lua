@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 ---@class r.utils.toggle
 local M = {}
 
@@ -16,15 +14,15 @@ function M.option(option, silent, values)
       ---@diagnostic disable-next-line: no-unknown
       vim.opt_local[option] = values[1]
     end
-    return Util.info("Set " .. option .. " to " .. vim.opt_local[option]:get(), { title = "Option" })
+    return RUtils.info("Set " .. option .. " to " .. vim.opt_local[option]:get(), { title = "Option" })
   end
   ---@diagnostic disable-next-line: no-unknown
   vim.opt_local[option] = not vim.opt_local[option]:get()
   if not silent then
     if vim.opt_local[option]:get() then
-      Util.info("Enabled " .. option, { title = "Option" })
+      RUtils.info("Enabled " .. option, { title = "Option" })
     else
-      Util.warn("Disabled " .. option, { title = "Option" })
+      RUtils.warn("Disabled " .. option, { title = "Option" })
     end
   end
 end
@@ -35,11 +33,11 @@ function M.number()
     nu = { number = vim.opt_local.number:get(), relativenumber = vim.opt_local.relativenumber:get() }
     vim.opt_local.number = false
     vim.opt_local.relativenumber = false
-    Util.warn("Disabled line numbers", { title = "Option" })
+    RUtils.warn("Disabled line numbers", { title = "Option" })
   else
     vim.opt_local.number = nu.number
     vim.opt_local.relativenumber = nu.relativenumber
-    Util.info("Enabled line numbers", { title = "Option" })
+    RUtils.info("Enabled line numbers", { title = "Option" })
   end
 end
 
@@ -48,10 +46,10 @@ function M.diagnostics()
   enabled = not enabled
   if enabled then
     vim.diagnostic.enable()
-    Util.info("Enabled diagnostics", { title = "Diagnostics" })
+    RUtils.info("Enabled diagnostics", { title = "Diagnostics" })
   else
     vim.diagnostic.disable()
-    Util.warn("Disabled diagnostics", { title = "Diagnostics" })
+    RUtils.warn("Disabled diagnostics", { title = "Diagnostics" })
   end
 end
 
@@ -61,7 +59,7 @@ function M.semantic_tokens(bufnr)
   for _, client in ipairs(vim.lsp.get_clients()) do
     if client.server_capabilities.semanticTokensProvider then
       vim.lsp.semantic_tokens[vim.b.semantic_tokens_enabled and "start" or "stop"](bufnr or 0, client.id)
-      Util.info(string.format("Buffer lsp semantic highlighting %s", bool2str(vim.b.semantic_tokens_enabled)))
+      RUtils.info(string.format("Buffer lsp semantic highlighting %s", bool2str(vim.b.semantic_tokens_enabled)))
     end
   end
 end
@@ -83,7 +81,7 @@ function M.codelens()
   if not vim.g.codelens_enabled then
     vim.lsp.codelens.clear()
   end
-  Util.info(string.format("CodeLens %s", bool2str(vim.g.codelens_enabled)))
+  RUtils.info(string.format("CodeLens %s", bool2str(vim.g.codelens_enabled)))
 end
 
 function M.buffer_autoformat(bufnr)
@@ -93,7 +91,7 @@ function M.buffer_autoformat(bufnr)
     old_val = vim.g.autoformat_enabled
   end
   vim.b[bufnr].autoformat_enabled = not old_val
-  Util.info(string.format("Buffer autoformatting %s", bool2str(vim.b[bufnr].autoformat_enabled)))
+  RUtils.info(string.format("Buffer autoformatting %s", bool2str(vim.b[bufnr].autoformat_enabled)))
 end
 
 function M.background()

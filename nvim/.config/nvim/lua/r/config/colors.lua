@@ -1,4 +1,3 @@
-local Util = require "r.utils"
 local UIPallette = require("r.utils").uisec
 
 local Highlight = require "r.settings.highlights"
@@ -419,7 +418,7 @@ local function colorscheme_overrides()
         },
       },
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
       {
         MyQuickFixLine = {
           bg = { from = "Error", attr = "fg", alter = -0.5 },
@@ -430,6 +429,7 @@ local function colorscheme_overrides()
     },
     ["kanagawa"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.4 },
@@ -451,6 +451,8 @@ local function colorscheme_overrides()
       { CmpItemKindVariable = { inherit = "Constant" } },
       { CmpItemKindProperty = { inherit = "@property" } },
       { CmpItemKindField = { inherit = "Function" } },
+
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 2 } } },
 
       {
         MyCodeUsage = {
@@ -538,7 +540,7 @@ local function colorscheme_overrides()
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 }, bg = { from = "Normal", attr = "bg" } } },
 
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.8 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
       {
         MyQuickFixLine = {
           bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 },
@@ -604,7 +606,7 @@ local function colorscheme_overrides()
         },
       },
       { LeaveCursorLine = { bg = { from = "Normal", alter = 1.5 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1.6 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 2.5 } } },
       {
         MyQuickFixLine = {
           bg = { from = "Error", attr = "fg", alter = -0.5 },
@@ -644,6 +646,9 @@ local function colorscheme_overrides()
           undercurl = false,
         },
       },
+
+      { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+
       { LspReferenceRead = { bg = { from = "Normal", attr = "bg" }, underline = false, undercurl = false } },
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
@@ -703,7 +708,7 @@ local function colorscheme_overrides()
       },
 
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Statement", attr = "fg", alter = -0.7 } } },
       {
         MyQuickFixLine = {
           bg = { from = "Error", attr = "fg", alter = -0.5 },
@@ -743,7 +748,7 @@ local function colorscheme_overrides()
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
 
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
       {
         MyQuickFixLine = {
           bg = { from = "Error", attr = "fg", alter = -0.2 },
@@ -797,7 +802,7 @@ local function colorscheme_overrides()
           reverse = false,
         },
       },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.7 } } },
       {
         MyQuickFixLine = {
           bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
@@ -810,6 +815,9 @@ local function colorscheme_overrides()
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
+
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
@@ -846,7 +854,7 @@ local function colorscheme_overrides()
         },
       },
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
       {
         MyQuickFixLine = {
           bg = { from = "Error", attr = "fg", alter = -0.5 },
@@ -864,6 +872,9 @@ local function colorscheme_overrides()
           fg = { from = "MyCodeUsage", attr = "fg", alter = -0.1 },
         },
       },
+
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.4 },
@@ -887,6 +898,23 @@ local function colorscheme_overrides()
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { WhichKeyFloat = { inherit = "NormalFloat" } },
+
+      { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
+
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 2 } } },
+
+      -- { ["@org.agenda.scheduled"] = { fg = { from = "Boolean", attr = "fg", alter = 1 } } },
+      { ["@org.agenda.scheduled"] = { fg = "green" } },
+      -- { ["@org.agenda.scheduled_past"] = { bg = { from = "Normal", attr = "bg", alter = 2 } } },
+
+      {
+        MyQuickFixLine = {
+          bg = { from = "Error", attr = "fg", alter = -0.5 },
+          fg = { from = "Normal", attr = "fg" },
+          bold = true,
+        },
+      },
+
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 2.5 },
@@ -911,6 +939,7 @@ local function colorscheme_overrides()
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
 
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.3 },
@@ -1092,7 +1121,7 @@ local function user_highlights()
   colorscheme_overrides()
 end
 
-Util.cmd.augroup("UserHighlights", {
+RUtils.cmd.augroup("UserHighlights", {
   event = "ColorScheme",
   command = function()
     user_highlights()

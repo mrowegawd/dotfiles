@@ -1,7 +1,7 @@
 local fn = vim.fn
 local Icon = require("r.config").icons
 local Conditions = require "heirline.conditions"
-local Col = require("r.utils").colortbl
+local Col = RUtils.colortbl
 
 local M = {}
 
@@ -224,21 +224,21 @@ M.Git = {
   {
     provider = function(self)
       local count = self.status_dict.added or 0
-      return count > 0 and (" A+" .. count .. " ")
+      return count > 0 and ("A+" .. count .. " ")
     end,
     hl = { fg = colors.diff_add },
   },
   {
     provider = function(self)
       local count = self.status_dict.removed or 0
-      return count > 0 and (" D-" .. count .. " ")
+      return count > 0 and ("D-" .. count .. " ")
     end,
     hl = { fg = colors.diff_delete },
   },
   {
     provider = function(self)
       local count = self.status_dict.changed or 0
-      return count > 0 and (" M~" .. count .. " ")
+      return count > 0 and ("M~" .. count .. " ")
     end,
     hl = { fg = colors.diff_change },
   },

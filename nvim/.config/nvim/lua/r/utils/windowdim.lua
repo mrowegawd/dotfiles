@@ -1,11 +1,9 @@
 -- Taken from: https://github.com/wincent/wincent
 local api, wo = vim.api, vim.wo
 
-local Util = require "r.utils"
-
 local autocmds = {}
 
-local focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
+local focused_colorcolumn = RUtils.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
 
 -- local winhighlight_blurred = table.concat({
 --   -- -- "IncSearch:ColorColumn",
@@ -163,7 +161,7 @@ autocmds.mkview_filetype_blacklist = {
 local colorcolumn_width
 
 local focus_window = function()
-  local filetype, buftype = Util.buf.get_bo_buft()
+  local filetype, buftype = RUtils.buf.get_bo_buft()
 
   if autocmds.winhighlight_filetype_blacklist[filetype] ~= true then
     wo.winhighlight = ""
@@ -185,13 +183,13 @@ local focus_window = function()
     colorcolumn_width = 200 -- 120
     -- colorcolumn_width = 200 -- 120
     -- end
-    focused_colorcolumn = Util.cmd.tryjoin(Util.cmd.tryrange(colorcolumn_width, 256), ",")
+    focused_colorcolumn = RUtils.cmd.tryjoin(Util.cmd.tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
   end
 end
 
 local blur_window = function()
-  local filetype, _ = Util.buf.get_bo_buft()
+  local filetype, _ = RUtils.buf.get_bo_buft()
 
   if
     filetype == ""
@@ -230,7 +228,7 @@ end
 -- end
 
 -- local set_cursorline = function(active)
---   local filetype, _ = Util.buf.get_bo_buft()
+--   local filetype, _ = RUtils.buf.get_bo_buft()
 --   if autocmds.cursorline_blacklist[filetype] ~= true then
 --     -- check jika window is floating, like TelescopePrompt
 --     if api.nvim_win_get_config(0).relative ~= "" then

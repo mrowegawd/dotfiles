@@ -35,7 +35,7 @@ return {
         end
 
         if vim.fn.executable "mpv" == 1 then
-          vim.loop.spawn("mpv", {
+          vim.uv.spawn("mpv", {
             args = {
               "--audio-display=no",
               fmt("%s/.config/miscxrdb/mp3-wav/notif-me.mp3", os.getenv "HOME"),

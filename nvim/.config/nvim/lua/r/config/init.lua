@@ -1,6 +1,6 @@
-local fmt = string.format
+_G.RUtils = require "r.utils"
 
-local Util = require "r.utils"
+local fmt = string.format
 
 local M = {}
 
@@ -8,9 +8,9 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/friendly-snippets"
 
-local colorscheme = "solarized-osaka-night"
+local colorscheme = "vscode_modern"
 
-if Util.platform.is_wsl then
+if RUtils.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"
 end
 
@@ -264,7 +264,7 @@ local defaults = {
       stacked = "﬘ ",
     },
   },
-  ---@type table<string, string[]>?
+  ---@type table<string, string[]|boolean>?
   kind_filter = {
     default = {
       "Class",
@@ -281,6 +281,8 @@ local defaults = {
       "Struct",
       "Trait",
     },
+    markdown = false,
+    help = false,
     -- you can specify a different filter for each filetype
     lua = {
       "Class",
@@ -330,7 +332,7 @@ function M.setup(opts)
       end
       require "r.keymaps.general"
 
-      Util.format.setup()
+      RUtils.format.setup()
       -- Util.news.setup()
 
       vim.api.nvim_create_user_command("LazyHealth", function()
@@ -340,8 +342,8 @@ function M.setup(opts)
     end,
   })
 
-  Util.track "colorscheme"
-  Util.try(function()
+  RUtils.track "colorscheme"
+  RUtils.try(function()
     if type(M.colorscheme) == "function" then
       M.colorscheme()
     else
@@ -350,11 +352,11 @@ function M.setup(opts)
   end, {
     msg = "Could not load your colorscheme",
     on_error = function(msg)
-      Util.error(msg)
+      RUtils.error(msg)
       vim.cmd.colorscheme "habamax"
     end,
   })
-  Util.track()
+  RUtils.track()
 end
 
 ---@param buf? number
@@ -368,6 +370,9 @@ function M.get_kind_filter(buf)
   if M.kind_filter[ft] == false then
     return
   end
+  if type(M.kind_filter[ft]) == "table" then
+    return M.kind_filter[ft]
+  end
   ---@diagnostic disable-next-line: return-type-mismatch
   return type(M.kind_filter) == "table" and type(M.kind_filter.default) == "table" and M.kind_filter.default or nil
 end
@@ -376,7 +381,7 @@ end
 function M.load(name)
   local function _load(mod)
     if require("lazy.core.cache").find(mod)[1] then
-      Util.try(function()
+      RUtils.try(function()
         require(mod)
       end, { msg = "Failed loading " .. mod })
     end
@@ -408,19 +413,19 @@ function M.init()
   end
 
   package.preload["r.plugins.lsp.format"] = function()
-    Util.deprecate([[require("r.plugins.lsp.format")]], [[require("r.utils").format]])
-    return Util.format
+    RUtils.deprecate([[require("r.plugins.lsp.format")]], [[RUtils.format]])
+    return RUtils.format
   end
 
   -- delay notifications till vim.notify was replaced or after 500ms
-  require("r.utils").lazy_notify()
+  RUtils.lazy_notify()
 
   -- load options here, before lazy init while sourcing plugin modules
   -- this is needed to make sure options will be correctly applied
   -- after installing missing plugins
   M.load "options"
 
-  Util.plugin.setup()
+  RUtils.plugin.setup()
 
   require "r.config.colors"
 end

@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-local Util = require "r.utils"
 
 ---@class r.utils.map
 local M = {}
@@ -59,7 +58,7 @@ end
 
 function M.has(buffer, method)
   method = method:find "/" and method or "textDocument/" .. method
-  local clients = Util.lsp.get_clients { bufnr = buffer }
+  local clients = RUtils.lsp.get_clients { bufnr = buffer }
   for _, client in ipairs(clients) do
     if client.supports_method(method) then
       return true
@@ -74,9 +73,9 @@ function M.resolve(buffer, spec_maps)
     return {}
   end
   -- local spec = M.get()
-  local opts = Util.opts "nvim-lspconfig"
+  local opts = RUtils.opts "nvim-lspconfig"
   if opts ~= nil then
-    local clients = Util.lsp.get_clients { bufnr = buffer }
+    local clients = RUtils.lsp.get_clients { bufnr = buffer }
     for _, client in ipairs(clients) do
       if opts.servers ~= nil then
         local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}

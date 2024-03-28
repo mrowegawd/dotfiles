@@ -1,4 +1,4 @@
-local keymap = vim.keymap
+-- local keymap = vim.keymap
 -- local buffer_dir = vim.fn.expand "%:p:h"
 
 vim.opt.tabstop = 2
@@ -8,7 +8,7 @@ vim.opt.list = false
 
 vim.b.make = "luajit"
 
-require("r.utils").write_and_source(0)
+RUtils.write_and_source(0)
 
 -- local run_toggleterm = function()
 --   vim.cmd "silent noautocmd update"

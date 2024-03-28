@@ -94,6 +94,7 @@ end
 local function check_for_link_or_tag()
   local line = vim.api.nvim_get_current_line()
   local col = vim.fn.col "."
+  -- TODO: ini adalah yang salah
   return is_tag_or_link_at(line, col, M.Cfg)
 end
 

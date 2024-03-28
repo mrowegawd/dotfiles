@@ -5,8 +5,6 @@ local L = vim.log.levels
 
 local Highlight = require "r.settings.highlights"
 
-local Util = require "r.utils"
-
 ---@class r.utils.plugin
 local M = {}
 
@@ -42,7 +40,7 @@ function M.setup()
   ---@diagnostic disable-next-line: deprecated
   table.insert(package.loaders, function(module)
     if M.deprecated_modules[module] then
-      Util.warn(
+      RUtils.warn(
         ("`%s` is no longer included by default in **LazyVim**.\nPlease install the `%s` extra if you still want to use it."):format(
           module,
           M.deprecated_modules[module]
@@ -132,21 +130,21 @@ function M.lazy_file()
 end
 
 function M.fix_imports()
-  Plugin.Spec.import = Util.inject.args(Plugin.Spec.import, function(_, spec)
+  Plugin.Spec.import = RUtils.inject.args(Plugin.Spec.import, function(_, spec)
     local dep = M.deprecated_extras[spec and spec.import]
     if dep then
       dep = dep .. "\n" .. "Please remove the extra to hide this warning."
-      Util.warn(dep, { title = "LazyVim", once = true, stacktrace = true, stacklevel = 6 })
+      RUtils.warn(dep, { title = "LazyVim", once = true, stacktrace = true, stacklevel = 6 })
       return false
     end
   end)
 end
 
 function M.fix_renames()
-  Plugin.Spec.add = Util.inject.args(Plugin.Spec.add, function(self, plugin)
+  Plugin.Spec.add = RUtils.inject.args(Plugin.Spec.add, function(self, plugin)
     if type(plugin) == "table" then
       if M.renames[plugin[1]] then
-        Util.warn(
+        RUtils.warn(
           ("Plugin `%s` was renamed to `%s`.\nPlease update your config for `%s`"):format(
             plugin[1],
             M.renames[plugin[1]],
@@ -193,7 +191,7 @@ function M.EditSnippet()
 
   local base_snippets = { "package", "global" }
 
-  local ft, _ = Util.buf.get_bo_buft()
+  local ft, _ = RUtils.buf.get_bo_buft()
 
   if ft == "" then
     return vim.notify("Belum dibuat??", L.WARN, { title = "No snippets" })
@@ -208,8 +206,8 @@ function M.EditSnippet()
   local snippets = {}
   local is_file = true
 
-  if Util.file.is_dir(ft_snippet_path .. ft) then
-    if not Util.file.exists(ft_snippet_path .. ft) then
+  if RUtils.file.is_dir(ft_snippet_path .. ft) then
+    if not RUtils.file.exists(ft_snippet_path .. ft) then
       return vim.notify(ft_snippet_path .. ft .. ".json", L.WARN, { title = "Snippet file not exists" })
     end
     -- Untuk akses ke snippet khusus dir harus di tambahkan ext sama `ft` nya
@@ -229,10 +227,10 @@ function M.EditSnippet()
   else
     snippets = { ft }
 
-    if not Util.file.exists(ft_snippet_path .. ft .. ".json") then
+    if not RUtils.file.exists(ft_snippet_path .. ft .. ".json") then
       return vim.notify(ft_snippet_path .. ft .. ".json", L.WARN, { title = "Snippet file not exists" })
     end
-    if not Util.file.exists(ft_snippet_path .. ft .. ".json") then
+    if not RUtils.file.exists(ft_snippet_path .. ft .. ".json") then
       return vim.notify(ft_snippet_path .. ft .. ".json", L.WARN, { title = "Snippet file not exists" })
     end
 
@@ -246,7 +244,7 @@ function M.EditSnippet()
       return
     end
     if is_file then
-      if not Util.file.exists(ft_snippet_path .. choice .. ".json") then
+      if not RUtils.file.exists(ft_snippet_path .. choice .. ".json") then
         return vim.notify(ft_snippet_path .. choice .. ".json", L.WARN, { title = "Snippet file not exists" })
       end
       cmd(":edit " .. ft_snippet_path .. choice .. ".json")
@@ -285,11 +283,11 @@ function M.change_colors()
 *color27: %s
 ]],
     -- Mode
-    Util.colortbl.separator_fg,
+    RUtils.colortbl.separator_fg,
 
     -- Separator
     Highlight.get("WinSeparator", "fg"),
-    Util.colortbl.separator_fg_alt,
+    RUtils.colortbl.separator_fg_alt,
 
     -- FZF
     Highlight.get("NormalFloat", "bg"),
@@ -311,7 +309,7 @@ function M.change_colors()
 
   local master_color_path = "/tmp/masterColors"
 
-  if Util.file.is_file(master_color_path) then
+  if RUtils.file.is_file(master_color_path) then
     vim.fn.system(fmt("rm %s", master_color_path))
   end
 

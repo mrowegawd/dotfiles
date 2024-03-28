@@ -1,7 +1,5 @@
 local api, cmd, fn = vim.api, vim.cmd, vim.fn
 
-local Util = require "r.utils"
-
 ---@class r.utils.fold
 local M = {}
 
@@ -41,14 +39,14 @@ function M.magic_prev_next_move(is_qf)
   is_qf = is_qf or false
 
   if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
-    return Util.cmd.feedkey("<c-p>", "n")
+    return RUtils.cmd.feedkey("<c-p>", "n")
   end
 
   if vim.wo.diff then
     if is_qf then
-      return Util.cmd.feedkey("[c", "n")
+      return RUtils.cmd.feedkey("[c", "n")
     else
-      return Util.cmd.feedkey("]c", "n")
+      return RUtils.cmd.feedkey("]c", "n")
     end
   end
 

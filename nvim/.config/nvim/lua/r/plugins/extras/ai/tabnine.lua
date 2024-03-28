@@ -40,14 +40,14 @@ return {
   },
 
   -- Show TabNine status in lualine
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
-    enabled = false,
-    optional = true,
-    opts = function(_, opts)
-      local icon = require("r.config").icons.kinds.TabNine
-      table.insert(opts.sections.lualine_x, 2, require("r.utils").lualine.cmp_source("cmp_tabnine", icon))
-    end,
-  },
+  -- {
+  --   "nvim-lualine/lualine.nvim",
+  --   event = "VeryLazy",
+  --   enabled = false,
+  --   optional = true,
+  --   opts = function(_, opts)
+  --     local icon = require("r.config").icons.kinds.TabNine
+  --     table.insert(opts.sections.lualine_x, 2, RUtils.lualine.cmp_source("cmp_tabnine", icon))
+  --   end,
+  -- },
 }

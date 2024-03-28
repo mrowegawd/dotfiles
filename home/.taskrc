@@ -3,7 +3,7 @@
 data.location=~/.task
 
 # Color theme (uncomment one to use)
-include ~/.config/miscxrdb/taskwarrior/solarized-light-256.theme
+#include ~/.config/miscxrdb/taskwarrior/solarized-light-256.theme
 
 confirmation=no                              # Confirmation on delete, big changes
 
@@ -25,12 +25,12 @@ date.iso=yes
 # report.tagsonly.filter      = status:pending
 # report.tagsonly.labels      = TagName
 
-report.next.description     = Most urgent tasks
-report.next.columns         = id,start.age,entry.age,urgency,depends,priority,project,tags,recur,scheduled.countdown,due.remaining,until.remaining,description.truncated_count,brainpower
+# report.next.description     = Most urgent tasks
+# report.next.columns         = id,start.age,entry.age,urgency,depends,priority,project,tags,recur,scheduled.countdown,due.remaining,until.remaining,description.truncated_count,brainpower
 # report.next.filter        = status:pending and +next and -no and -rnr
-report.next.filter          = status:pending -HBD
-report.next.labels          = ID,Active,Age,Urgency,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Brainpower
-report.next.sort            = priority-,urgency-
+# report.next.filter          = status:pending -HBD
+# report.next.labels          = ID,Active,Age,Urgency,Deps,P,Project,Tag,Recur,S,Due,Until,Description,Brainpower
+# report.next.sort            = priority-,urgency-
 
 report.deleted.labels=UUID,P,description,end,project,tags,recur,scheduled,active,age,urg
 
@@ -66,22 +66,110 @@ report.inbox.description = Inbox
 report.inbox.filter = status:pending
 
 # color.calendar.due.today=color0 on color252
-color.active=bold yellow
-color.completed=rgb020 on white
-color.deleted=rgb200 on white
-color.due.today=on rgb020
-color.due=on rgb010
-color.overdue=on rgb120
-color.blocking=rgb533
-color.blocked=rgb353
-color.recurring=
-color.scheduled=on rgb011
+# color.active=bold yellow
+# color.completed=rgb020 on white
+# color.deleted=rgb200 on white
+# color.due.today=on rgb020
+# color.due=on rgb010
+# color.overdue=on rgb120
+# color.blocking=rgb533
+# color.blocked=rgb353
+# color.recurring=
+# color.scheduled=on rgb011
+# color.tagged=
+# color.pri.H=bold white
+# color.pri.M=gray23
+# color.pri.L=gray14
+# color.pri.none=gray23
+# color.tag.next=rgb440
+
+#+---------+
+#+ General +
+#+---------+
+color.label=
+color.label.sort=
+color.alternate=
+color.header=bold magenta
+color.footnote=yellow
+color.warning=bold black on yellow
+color.error=bold white on red
+color.debug=magenta
+
+#+-------------+
+#+ Task States +
+#+-------------+
+color.completed=gray9
+color.deleted=bold gray9
+color.active=bold black on green
+color.recurring=bold magenta
+color.scheduled=
+color.until=
+color.blocking=black on yellow
+color.blocked=bold black on yellow
+
+#+----------+
+#+ Projects +
+#+----------+
+color.project.none=
+
+#+----------+
+#+ Priority +
+#+----------+
+color.uda.priority.H=bold
+color.uda.priority.M=bold yellow
+color.uda.priority.L=
+
+#+------+
+#+ Tags +
+#+------+
+color.tag.next=
+color.tag.none=
 color.tagged=
-color.pri.H=bold white
-color.pri.M=gray23
-color.pri.L=gray14
-color.pri.none=gray23
-color.tag.next=rgb440
+
+#+-----+
+#+ Due +
+#+-----+
+color.due=black on red
+color.due.today=black on bright red
+color.overdue=bold black on bright red
+
+#+---------+
+#+ Reports +
+#+---------+
+color.burndown.done=bold black on green
+color.burndown.pending=black on red
+color.burndown.started=black on yellow
+
+color.history.add=bold black on blue
+color.history.delete=bright white on bold black
+color.history.done=bold black on cyan
+
+color.summary.background=bright white on black
+color.summary.bar=black on cyan
+
+#+----------+
+#+ Calendar +
+#+----------+
+color.calendar.due=bold black on blue
+color.calendar.due.today=bold black on cyan
+color.calendar.holiday=bold blue on white
+color.calendar.overdue=white on red
+color.calendar.today=bold black on cyan
+color.calendar.weekend=bright white on bright black
+color.calendar.weeknumber=bold black
+
+#+-----------------+
+#+ Synchronization +
+#+-----------------+
+color.sync.added=green
+color.sync.changed=yellow
+color.sync.rejected=red
+
+#+------+
+#+ Undo +
+#+------+
+color.undo.after=green
+color.undo.before=red
 
 # include /usr/share/task/dark-16.theme
 
@@ -91,15 +179,15 @@ color.tag.next=rgb440
 # color.label=inverse
 # color.footnote=gray2 on gray12
 
-uda.taskwarrior-tui.style.context.active= red
-
-uda.taskwarrior-tui.selection.reverse=yes
-uda.taskwarrior-tui.style.report.scrollbar=red
-
-report.day.columns=id,type,eta,tags,project,description.desc,planned,priority,due
-
-uda.taskwarrior-tui.keyconfig.next-tab=>
-uda.taskwarrior-tui.keyconfig.previous-tab=<
-uda.taskwarrior-tui.keyconfig.delete=D
+# uda.taskwarrior-tui.style.context.active= red
+#
+# uda.taskwarrior-tui.selection.reverse=yes
+# uda.taskwarrior-tui.style.report.scrollbar=red
+#
+# report.day.columns=id,type,eta,tags,project,description.desc,planned,priority,due
+#
+# uda.taskwarrior-tui.keyconfig.next-tab=>
+# uda.taskwarrior-tui.keyconfig.previous-tab=<
+# uda.taskwarrior-tui.keyconfig.delete=D
 # uda.taskwarrior-tui.keyconfig.filter=f
 # uda.taskwarrior-tui.task-report.prompt-on-delete=true

@@ -1,4 +1,3 @@
-local Util = require "r.utils"
 local Icons = require("r.config").icons
 
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
@@ -210,38 +209,6 @@ return {
             },
           },
         },
-        -- eslint = {
-        --   settings = {
-        --     -- workingDirectory = { mode = "location" },
-        --     -- workingDirectory = { mode = "auto" },
-        --     -- onIgnoredFiles = "off",
-        --     codeAction = {
-        --       disableRuleComment = {
-        --         enable = true,
-        --         location = "separateLine",
-        --       },
-        --       showDocumentation = {
-        --         enable = true,
-        --       },
-        --     },
-        --     codeActionOnSave = {
-        --       enable = false,
-        --       mode = "all",
-        --     },
-        --     format = true,
-        --     nodePath = "",
-        --     onIgnoredFiles = "off",
-        --     -- packageManager = "npm",
-        --     quiet = false,
-        --     rulesCustomizations = {},
-        --     run = "onType",
-        --     useESLintClass = false,
-        --     validate = "on",
-        --     workingDirectory = {
-        --       mode = "location",
-        --     },
-        --   },
-        -- },
         pyright = {},
         ruff_lsp = {
           keys = {
@@ -315,15 +282,16 @@ return {
         },
         neocmake = {},
         tailwindcss = {
-          filetypes = { "html", "mdx", "javascript", "javascriptreact", "typescriptreact", "vue", "svelte" },
-          -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
-          -- Atm LSP ini berat dengan cmp (check pengaturan cmp /code.lua),
-          -- tapi LSP ini tidak begitu dengan coq dan coc
+          -- filetypes = { "html", "mdx", "javascript", "javascriptreact", "typescriptreact", "vue", "svelte" },
+          -- -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
+          -- -- Atm LSP ini berat dengan cmp (check pengaturan cmp /code.lua),
+          -- -- tapi LSP ini tidak begitu dengan coq dan coc
+          -- filetypes_exclude = { "markdown" },
           filetypes_exclude = { "markdown" },
           filetypes_include = {},
-          root_dir = function(...)
-            return require("lspconfig.util").root_pattern ".git"(...)
-          end,
+          -- root_dir = function(...)
+          --   return require("lspconfig.util").root_pattern ".git"(...)
+          -- end,
         },
         lua_ls = {
           settings = {
@@ -351,10 +319,10 @@ return {
       setup = {
         eslint = function()
           local function get_client(buf)
-            return Util.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
+            return RUtils.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
           end
 
-          local formatter = Util.lsp.formatter {
+          local formatter = RUtils.lsp.formatter {
             name = "eslint: lsp",
             primary = false,
             priority = 200,
@@ -380,12 +348,12 @@ return {
           end
 
           -- register the formatter with LazyVim
-          Util.format.register(formatter)
+          RUtils.format.register(formatter)
         end,
         yamlls = function()
           -- Neovim < 0.10 does not have dynamic registration for formatting
           if vim.fn.has "nvim-0.10" == 0 then
-            Util.lsp.on_attach(function(client, _)
+            RUtils.lsp.on_attach(function(client, _)
               if client.name == "yamlls" then
                 client.server_capabilities.documentFormattingProvider = true
               end
@@ -393,7 +361,7 @@ return {
           end
         end,
         ruff_lsp = function()
-          Util.lsp.on_attach(function(client, _)
+          RUtils.lsp.on_attach(function(client, _)
             if client.name == "ruff_lsp" then
               -- Disable hover in favor of Pyright
               client.server_capabilities.hoverProvider = false
@@ -403,7 +371,7 @@ return {
         gopls = function()
           -- workaround for gopls not supporting semanticTokensProvider
           -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-          Util.lsp.on_attach(function(client, _)
+          RUtils.lsp.on_attach(function(client, _)
             if client.name == "gopls" then
               if not client.server_capabilities.semanticTokensProvider then
                 local semantic = client.config.capabilities.textDocument.semanticTokens
@@ -428,7 +396,7 @@ return {
 
           -- Remove excluded filetypes
           --- @param ft string
-          opts.filetypev = vim.tbl_filter(function(ft)
+          opts.filetypes = vim.tbl_filter(function(ft)
             return not vim.tbl_contains(opts.filetypes_exclude or {}, ft)
           end, opts.filetypes)
 
@@ -438,17 +406,17 @@ return {
       },
     },
     config = function(_, opts)
-      if Util.has "neoconf.nvim" then
+      if RUtils.has "neoconf.nvim" then
         local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
         require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
       end
 
-      Util.format.register(Util.lsp.formatter())
+      RUtils.format.register(RUtils.lsp.formatter())
 
       -- deprecated options
       if opts.autoformat ~= nil then
         vim.g.autoformat = opts.autoformat
-        Util.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
+        RUtils.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
       end
 
       -- local function has_capability(capability, filter)
@@ -473,13 +441,13 @@ return {
       -- require("neodev").setup()
 
       -- Setup formatting and keymaps
-      Util.lsp.on_attach(function(client, bufnr)
+      RUtils.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
 
         if opts.codelens.enabled and vim.lsp.codelens then
-          if not Util.has "symbol-usage.nvim" then
+          if not RUtils.has "symbol-usage.nvim" then
             if client.server_capabilities[provider.CODELENS] then
-              Util.cmd.augroup("LspCodelensRefresh", {
+              RUtils.cmd.augroup("LspCodelensRefresh", {
                 event = { "BufEnter", "InsertLeave", "BufWritePost" },
                 desc = "LSP: Code Lens",
                 buffer = bufnr,
@@ -501,7 +469,7 @@ return {
         end
 
         if client.server_capabilities[provider.REFERENCES] then
-          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+          RUtils.cmd.augroup(("LspReferences%d"):format(bufnr), {
             event = { "CursorHold", "CursorHoldI" },
             buffer = bufnr,
             desc = "LSP: References",
@@ -520,7 +488,7 @@ return {
 
         if opts.inlay_hints.enabled then
           if client.supports_method "textDocument/inlayHint" then
-            Util.toggle.inlay_hints(bufnr, true)
+            RUtils.toggle.inlay_hints(bufnr, true)
           end
         end
       end)
@@ -605,10 +573,10 @@ return {
         mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
 
-      if Util.lsp.get_config "denols" and Util.lsp.get_config "tsserver" then
+      if RUtils.lsp.get_config "denols" and RUtils.lsp.get_config "tsserver" then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        Util.lsp.disable("tsserver", is_deno)
-        Util.lsp.disable("denols", function(root_dir)
+        RUtils.lsp.disable("tsserver", is_deno)
+        RUtils.lsp.disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
 
@@ -827,7 +795,7 @@ return {
       end,
     },
     config = function(_, opts)
-      Util.lsp.on_attach(function(client, bufnr)
+      RUtils.lsp.on_attach(function(client, bufnr)
         require("twoslash-queries").attach(client, bufnr)
       end)
       require("typescript-tools").setup(opts)
@@ -854,6 +822,42 @@ return {
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       vim.fn["mkdp#util#install"]()
+    end,
+  },
+
+  --  ╭──────────────────────────────────────────────────────────╮
+  --  │   PYTHON                                                 │
+  --  ╰──────────────────────────────────────────────────────────╯
+  {
+    "wookayin/semshi", -- use a maintained fork
+    ft = "python",
+    build = ":UpdateRemotePlugins",
+    init = function()
+      -- Disabled these features better provided by LSP or other more general plugins
+      vim.g["semshi#error_sign"] = false
+      vim.g["semshi#simplify_markup"] = false
+      vim.g["semshi#mark_selected_nodes"] = false
+      vim.g["semshi#update_delay_factor"] = 0.001
+
+      -- This autocmd must be defined in init to take effect
+      vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+        group = vim.api.nvim_create_augroup("SemanticHighlight", {}),
+        callback = function()
+          -- Only add style, inherit or link to the LSP's colors
+          vim.cmd [[
+            highlight! link semshiGlobal  @none
+            highlight! link semshiImported @none
+            highlight! link semshiParameter @lsp.type.parameter
+            highlight! link semshiBuiltin @function.builtin
+            highlight! link semshiAttribute @field
+            highlight! link semshiSelf @lsp.type.selfKeyword
+            highlight! link semshiUnresolved @none
+            highlight! link semshiFree @none
+            highlight! link semshiAttribute @none
+            highlight! link semshiParameterUnused @none
+            ]]
+        end,
+      })
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮

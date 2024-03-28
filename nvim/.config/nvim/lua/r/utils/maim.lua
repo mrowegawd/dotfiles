@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 ---@class r.utils.maim
 local M = {}
 
@@ -19,14 +17,14 @@ M.build_dir_img = function(input_png)
     img_dir_path = "assets"
     img_for = "markdown"
   else
-    Util.warn("unsupported filetype (" .. vim.bo.filetype .. ")", { title = "Maim: Insert Image" })
+    RUtils.warn("unsupported filetype (" .. vim.bo.filetype .. ")", { title = "Maim: Insert Image" })
     return
   end
 
   local current_buffer = vim.api.nvim_buf_get_name(0)
   local current_directory = vim.fs.dirname(current_buffer)
   local fullpath = current_directory .. "/" .. img_dir_path
-  Util.file.create_dir(fullpath) -- will create dir if not exists
+  RUtils.file.create_dir(fullpath) -- will create dir if not exists
 
   local locate_img_path = "./" .. img_dir_path .. "/" .. input_png -- neorg
   fullpath = fullpath .. "/" .. input_png
@@ -38,8 +36,8 @@ M.build_dir_img = function(input_png)
     add_string_img = "![" .. input_png .. "](" .. locate_img_path .. ")" -- markdown
   end
 
-  if Util.file.exists(fullpath) then
-    Util.warn "image name already exists"
+  if RUtils.file.exists(fullpath) then
+    RUtils.warn "image name already exists"
     return
   end
 

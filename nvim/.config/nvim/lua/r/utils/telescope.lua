@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 ---@class r.utils.telescope.opts
 ---@field cwd? string|boolean
 ---@field show_untracked? boolean
@@ -22,16 +20,16 @@ function M.telescope(builtin, opts)
   return function()
     builtin = params.builtin
     opts = params.opts
-    opts = vim.tbl_deep_extend("force", { cwd = Util.root() }, opts or {}) --[[@as r.utils.telescope.opts]]
+    opts = vim.tbl_deep_extend("force", { cwd = RUtils.root() }, opts or {}) --[[@as r.utils.telescope.opts]]
     if builtin == "files" then
-      if vim.loop.fs_stat((opts.cwd or vim.loop.cwd()) .. "/.git") then
+      if vim.uv.fs_stat((opts.cwd or vim.uv.cwd()) .. "/.git") then
         opts.show_untracked = true
         builtin = "git_files"
       else
         builtin = "find_files"
       end
     end
-    if opts.cwd and opts.cwd ~= vim.loop.cwd() then
+    if opts.cwd and opts.cwd ~= vim.uv.cwd() then
       ---@diagnostic disable-next-line: inject-field
       opts.attach_mappings = function(_, map)
         map("i", "<a-c>", function()
@@ -51,7 +49,7 @@ function M.telescope(builtin, opts)
 end
 
 function M.config_files()
-  return Util.telescope("find_files", { cwd = vim.fn.stdpath "config" })
+  return RUtils.telescope("find_files", { cwd = vim.fn.stdpath "config" })
 end
 
 return M

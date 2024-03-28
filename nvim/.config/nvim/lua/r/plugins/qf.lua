@@ -2,6 +2,33 @@ local Highlight = require "r.settings.highlights"
 local Config = require "r.config"
 
 return {
+  {
+    "yssl/QFEnter",
+    enabled = false,
+    -- ft = { "qf" },
+    event = "VeryLazy",
+    init = function()
+      -- vim.g.qfenter_keymap.open = ['<CR>', '<2-LeftMouse>']
+      -- vim.g.qfenter_keymap.vopen = ['<Leader><CR>']
+      -- vim.g.qfenter_keymap.hopen = ['<Leader><Space>']
+      -- vim.g.qfenter_keymap.topen = ['<Leader><Tab>']
+
+      vim.g.qfenter_keymap = {
+        open = {
+          "<CR>",
+          "<2-LeftMouse>",
+        },
+
+        hopen = {
+          "<Leader><CR>",
+        },
+
+        vopen = {
+          "<Leader><Space>",
+        },
+      }
+    end,
+  },
   -- NVIM-BQF
   {
     "kevinhwang91/nvim-bqf",

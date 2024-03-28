@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 ---@class r.utils.root
 local M = setmetatable({}, {
   __call = function(m)
@@ -21,7 +19,7 @@ function M.detectors.lsp(buf)
     return {}
   end
   local roots = {} ---@type string[]
-  for _, client in pairs(Util.lsp.get_clients { bufnr = buf }) do
+  for _, client in pairs(RUtils.lsp.get_clients { bufnr = buf }) do
     -- only check workspace folders, since we're not interested in clients
     -- running in single file mode
     local workspace = client.config.workspace_folders
@@ -30,7 +28,7 @@ function M.detectors.lsp(buf)
     end
   end
   return vim.tbl_filter(function(path)
-    path = Util.norm(path)
+    path = RUtils.norm(path)
     return path and bufpath:find(path, 1, true) == 1
   end, roots)
 end
@@ -38,7 +36,7 @@ end
 ---@param patterns string[]|string
 function M.detectors.pattern(buf, patterns)
   patterns = type(patterns) == "string" and { patterns } or patterns
-  local path = M.bufpath(buf) or vim.loop.cwd()
+  local path = M.bufpath(buf) or vim.uv.cwd()
   local pattern = vim.fs.find(patterns, { path = path, upward = true })[1]
   return pattern and { vim.fs.dirname(pattern) } or {}
 end
@@ -48,15 +46,15 @@ function M.bufpath(buf)
 end
 
 function M.cwd()
-  return M.realpath(vim.loop.cwd()) or ""
+  return M.realpath(vim.uv.cwd()) or ""
 end
 
 function M.realpath(path)
   if path == "" or path == nil then
     return nil
   end
-  path = vim.loop.fs_realpath(path) or path
-  return Util.norm(path)
+  path = vim.uv.fs_realpath(path) or path
+  return RUtils.norm(path)
 end
 
 function M.resolve(spec)
@@ -119,15 +117,15 @@ function M.info()
   lines[#lines + 1] = "```lua"
   lines[#lines + 1] = "vim.g.root_spec = " .. vim.inspect(spec)
   lines[#lines + 1] = "```"
-  require("r.utils").info(lines, { title = "LazyVim Roots" })
-  return roots[1] and roots[1].paths[1] or vim.loop.cwd()
+  RUtils.info(lines, { title = "LazyVim Roots" })
+  return roots[1] and roots[1].paths[1] or vim.uv.cwd()
 end
 
 M.cache = {}
 
 function M.setup()
   vim.api.nvim_create_user_command("LazyRoot", function()
-    Util.root.info()
+    RUtils.root.info()
   end, { desc = "LazyVim roots for the current buffer" })
 
   vim.api.nvim_create_autocmd({ "LspAttach", "BufWritePost", "DirChanged" }, {
@@ -143,17 +141,17 @@ function M.get(opts)
   local ret = M.cache[buf]
   if not ret then
     local roots = M.detect { all = false }
-    ret = roots[1] and roots[1].paths[1] or vim.loop.cwd()
+    ret = roots[1] and roots[1].paths[1] or vim.uv.cwd()
     M.cache[buf] = ret
   end
   if opts and opts.normalize then
     return ret
   end
-  return Util.is_win() and ret:gsub("/", "\\") or ret
+  return RUtils.is_win() and (ret and ret:gsub("/", "\\")) or ret
 end
 
 function M.pretty_path(opts)
-  return ""
+  return opts
 end
 
 return M

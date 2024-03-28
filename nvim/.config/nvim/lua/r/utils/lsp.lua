@@ -1,6 +1,4 @@
-local Util = require "r.utils"
-
-local uv = vim.loop
+local uv = vim.uv
 local lsp = require "vim.lsp"
 
 ---@class r.utils.lsp
@@ -83,10 +81,10 @@ function M.formatter(opts)
     primary = true,
     priority = 1,
     format = function(buf)
-      M.format(Util.merge(filter, { bufnr = buf }))
+      M.format(RUtils.merge(filter, { bufnr = buf }))
     end,
     sources = function(buf)
-      local clients = M.get_clients(Util.merge(filter, { bufnr = buf }))
+      local clients = M.get_clients(RUtils.merge(filter, { bufnr = buf }))
       local ret = vim.tbl_filter(function(client)
         return client.supports_method "textDocument/formatting" or client.supports_method "textDocument/rangeFormatting"
       end, clients)
@@ -95,11 +93,11 @@ function M.formatter(opts)
       end, ret)
     end,
   }
-  return Util.merge(ret, opts)
+  return RUtils.merge(ret, opts)
 end
 
 function M.format(opts)
-  opts = vim.tbl_deep_extend("force", {}, opts or {}, Util.opts("nvim-lspconfig").format or {})
+  opts = vim.tbl_deep_extend("force", {}, opts or {}, RUtils.opts("nvim-lspconfig").format or {})
   local ok, conform = pcall(require, "conform")
   -- use conform for formatting with LSP when available,
   -- since it has better format diffing
@@ -137,7 +135,7 @@ function M.process_item(item, bufnr)
     M.error("Found an item for Trouble without start range " .. vim.inspect(start))
   end
   if finish.character == nil or finish.line == nil then
-    Util.error("Found an item for Trouble without finish range " .. vim.inspect(finish))
+    RUtils.error("Found an item for Trouble without finish range " .. vim.inspect(finish))
   end
   local row = start.line ---@type number
   local col = start.character ---@type number
@@ -248,7 +246,7 @@ function M.references(win, buf, cb, mode)
 
   lsp_buf_request(buf, method, params, function(err, result)
     if err then
-      Util.error("an error happened getting references: " .. err.message)
+      RUtils.error("an error happened getting references: " .. err.message)
       return cb {}
     end
     if result == nil or #result == 0 then
@@ -265,7 +263,7 @@ function M.definitions(win, buf, cb, mode)
   params.context = { includeDeclaration = vim.tbl_contains(include_declaration, mode) }
   lsp_buf_request(buf, method, params, function(err, result)
     if err then
-      Util.error("an error happened getting definitions: " .. err.message)
+      RUtils.error("an error happened getting definitions: " .. err.message)
       return cb {}
     end
     if result == nil or #result == 0 then
@@ -285,7 +283,7 @@ function M.type_definitions(win, buf, cb)
   local params = make_position_params(win, buf)
   lsp_buf_request(buf, method, params, function(err, result)
     if err then
-      Util.error("an error happened getting type definitions: " .. err.message)
+      RUtils.error("an error happened getting type definitions: " .. err.message)
       return cb {}
     end
     if result == nil or #result == 0 then

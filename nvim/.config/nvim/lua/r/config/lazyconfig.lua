@@ -87,7 +87,7 @@ require("lazy").setup {
         "zip",
         "zipPlugin",
         "tutor",
-        "rplugin",
+        -- "rplugin", -- (cant use "UpdateRemotePlugins" if disabled)
         "syntax",
         "synmenu",
         "optwin",

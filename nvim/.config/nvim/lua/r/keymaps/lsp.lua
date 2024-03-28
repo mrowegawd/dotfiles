@@ -1,6 +1,4 @@
-local Util = require "r.utils"
-
-local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 local M = {}
 
@@ -11,6 +9,7 @@ local diagnostic_goto = function(next, severity)
   severity = severity and vim.diagnostic.severity[severity] or nil
   return function()
     go { severity = severity, float = false }
+    -- go { severity = severity }
   end
 end
 
@@ -42,11 +41,12 @@ function M.get()
       end,
       desc = "LSP: show hover",
     },
-    { "gd", vim.lsp.buf.definition, desc = "LSP: definition" },
+    -- { "gd", vim.lsp.buf.definition, desc = "LSP: definition" },
+    { "gd", "<CMD>Glance definitions<CR>", desc = "LSP(glance): definition" },
     {
       "gD",
       function()
-        Util.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+        RUtils.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
           local what = {
             idx = "$",
             items = ret,
@@ -61,7 +61,7 @@ function M.get()
     {
       "gt",
       function()
-        Util.lsp.type_definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+        RUtils.lsp.type_definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
           local what = {
             idx = "$",
             items = ret,
@@ -76,22 +76,23 @@ function M.get()
     {
       "gr",
       function()
-        Util.lsp.references(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-          local what = {
-            idx = "$",
-            items = ret,
-            title = "LSP references",
-          }
-          vim.fn.setqflist({}, " ", what)
-          vim.cmd [[copen]]
-        end, "lsp_references")
+        -- RUtils.lsp.references(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+        --   local what = {
+        --     idx = "$",
+        --     items = ret,
+        --     title = "LSP references",
+        --   }
+        --   vim.fn.setqflist({}, " ", what)
+        --   vim.cmd [[copen]]
+        -- end, "lsp_references")
+        vim.cmd [[Glance references]]
       end,
-      desc = "LSP: references",
+      desc = "LSP(glance): references",
     },
     {
       "<Leader>ll",
       function()
-        if Util.has "symbol-usage.nvim" then
+        if RUtils.has "symbol-usage.nvim" then
           require("symbol-usage").refresh()
         else
           vim.lsp.codelens.refresh { bufnr = 0 }
@@ -102,7 +103,7 @@ function M.get()
     {
       "<Leader>lL",
       function()
-        if Util.has "symbol-usage.nvim" then
+        if RUtils.has "symbol-usage.nvim" then
           require("symbol-usage").refresh()
           require("symbol-usage").toggle()
           vim.lsp.codelens.refresh { bufnr = 0 }
@@ -115,16 +116,12 @@ function M.get()
     --  +----------------------------------------------------------+
     {
       "dn",
-      function()
-        diagnostic_goto(true)
-      end,
+      diagnostic_goto(true),
       desc = "LSP(diagnostic): next item",
     },
     {
       "dp",
-      function()
-        diagnostic_goto(false)
-      end,
+      diagnostic_goto(false),
       desc = "LSP(diagnostic): prev item",
     },
     {
@@ -137,7 +134,7 @@ function M.get()
     {
       "dl",
       function()
-        Util.toggle.diagnostics()
+        RUtils.toggle.diagnostics()
       end,
       desc = "LSP(diagnostic): toggle",
     },
@@ -145,14 +142,14 @@ function M.get()
       "df",
       function()
         if #vim.diagnostic.get(0) == 0 then
-          return Util.info("Diagnostics buffer is clean", { title = "" })
+          return RUtils.info("Diagnostics buffer is clean", { title = "" })
         end
 
         local items = {}
         if vim.diagnostic then
           local diags = vim.diagnostic.get(0)
           for _, item in ipairs(diags) do
-            table.insert(items, Util.lsp.process_item(item))
+            table.insert(items, RUtils.lsp.process_item(item))
           end
         end
 
@@ -173,7 +170,7 @@ function M.get()
         if vim.diagnostic then
           local diags = vim.diagnostic.get()
           for _, item in ipairs(diags) do
-            table.insert(items, Util.lsp.process_item(item))
+            table.insert(items, RUtils.lsp.process_item(item))
           end
         end
 
@@ -238,29 +235,29 @@ function M.get()
 
         local defaultCmds = vim.tbl_deep_extend("force", {
           toggle_diagnostics = function()
-            Util.toggle.diagnostics()
+            RUtils.toggle.diagnostics()
           end,
           toggle_codelens = function()
-            Util.toggle.codelens()
+            RUtils.toggle.codelens()
           end,
           toggle_semantic_tokens = function()
-            Util.toggle.semantic_tokens()
+            RUtils.toggle.semantic_tokens()
           end,
           toggle_inlay_hint = function()
             if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
-              Util.toggle.inlay_hints()
+              RUtils.toggle.inlay_hints()
             else
-              Util.warn("This LSP does not support for inlay_hint", { title = "LSP" })
+              RUtils.warn("This LSP does not support for inlay_hint", { title = "LSP" })
             end
           end,
           toggle_number = function()
-            Util.toggle.number()
+            RUtils.toggle.number()
           end,
           toggle_format_lspbuffer = function()
-            Util.format.toggle(true)
+            RUtils.format.toggle(true)
           end,
           toggle_format_lspallbuf = function()
-            Util.format.toggle()
+            RUtils.format.toggle()
           end,
           run_format_lspinfo = function()
             vim.cmd [[LazyFormatInfo]]
@@ -270,8 +267,8 @@ function M.get()
           end,
         }, unpack(newCmds) or {})
 
-        local col, row = Util.fzflua.rectangle_win_pojokan()
-        Util.fzflua.send_cmds(
+        local col, row = RUtils.fzflua.rectangle_win_pojokan()
+        RUtils.fzflua.send_cmds(
           defaultCmds,
           { winopts = { title = require("r.config").icons.misc.smiley .. "LSP", row = row, col = col } }
         )
@@ -293,7 +290,7 @@ function M.get()
     M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "LSP: code action" }
   end
 
-  if Util.has "inc-rename.nvim" then
+  if RUtils.has "inc-rename.nvim" then
     M._keys[#M._keys + 1] = {
       "gR",
       function()
@@ -304,7 +301,7 @@ function M.get()
       desc = "LSP(inc-rename): rename",
       has = "rename",
     }
-  elseif Util.has "lspsaga.nvim" then
+  elseif RUtils.has "lspsaga.nvim" then
     M._keys[#M._keys + 1] = { "gR", "<CMD> Lspsaga rename <CR>", desc = "LSP(lspsaga): rename", has = "rename" }
   else
     M._keys[#M._keys + 1] = { "gR", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
@@ -314,7 +311,7 @@ function M.get()
 end
 
 function M.on_attach(client, buffer)
-  Util.map.on_attach(client, buffer, M.get())
+  RUtils.map.on_attach(client, buffer, M.get())
 end
 
 return M

@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 ---@class r.utils.uisec
 local M = {}
 
@@ -87,7 +85,7 @@ local buftypes = {
 --- When searching through the filetypes table if a match can't be found then search
 --- again but check if there is matching lua pattern. This is useful for filetypes for
 --- plugins like Neogit which have a filetype of Neogit<something>.
-local filetypes = Util.cmd.p_table {
+local filetypes = RUtils.cmd.p_table {
   ["startuptime"] = presets.tool_panel,
   ["checkhealth"] = presets.tool_panel,
   ["log"] = presets.tool_panel,
@@ -130,7 +128,7 @@ local filetypes = Util.cmd.p_table {
   ["NeogitCommitMessage"] = commit_buffer,
 }
 
-local filenames = Util.cmd.p_table {
+local filenames = RUtils.cmd.p_table {
   ["option-window"] = presets.tool_panel,
 }
 
@@ -160,7 +158,7 @@ function M.decorations.set_colorcolumn(bufnr, fn)
       return
     end
     local ccol = decor.ft or decor.bt or ""
-    local virtcolumn = not Util.cmd.falsy(ccol) and ccol or "+1"
+    local virtcolumn = not RUtils.cmd.falsy(ccol) and ccol or "+1"
     if vim.is_callable(fn) then
       fn(virtcolumn)
     end

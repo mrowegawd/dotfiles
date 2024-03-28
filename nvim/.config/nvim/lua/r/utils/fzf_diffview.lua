@@ -4,7 +4,7 @@ local uv = vim.uv
 ---@class r.utils.fzf_diffview
 local M = {}
 
-local File = require "r.utils.file"
+local File = RUtils.file
 
 function M.split_string(inputstr, sep)
   if sep == nil then

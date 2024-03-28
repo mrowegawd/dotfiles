@@ -1,17 +1,9 @@
 local Highlight = require "r.settings.highlights"
 
-local Util = require "r.utils"
-
 local Icon = require("r.config").icons
 
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
--- .. [[ --exclude '*.ttf' --exclude '*.png' --exclude '*.otf']],
-
--- local fzf_lua = Util.cmd.reqcall "fzf-lua"
--- local file_picker = function(cwd)
---   fzf_lua.files { cwd = cwd }
--- end
 
 return {
   -- FLASH.NVIM
@@ -22,13 +14,13 @@ return {
         {
           FlashMatch = {
             bg = "white",
-            fg = "black",
+            fg = "red",
             bold = true,
           },
         },
         {
           FlashLabel = {
-            bg = { from = "Normal", attr = "bg", alter = -0.1 },
+            bg = "black",
             fg = "yellow",
             bold = true,
             strikethrough = false,
@@ -174,7 +166,7 @@ return {
           return require("fzf-lua").keymaps {
             winopts = {
               preview = {
-                title = Util.fzflua.format_title("Keymaps", ""),
+                title = RUtils.fzflua.format_title("Keymaps", ""),
                 vertical = "up:45%",
                 horizontal = "right:30%",
                 layout = "flex",
@@ -189,7 +181,7 @@ return {
         function()
           return require("fzf-lua").files {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("Dotfiles", "󰈙") },
+            winopts = { title = RUtils.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
         end,
@@ -201,7 +193,7 @@ return {
           local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
           return require("fzf-lua").files {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("Plugin Files", "󰈙") },
+            winopts = { title = RUtils.fzflua.format_title("Plugin Files", "󰈙") },
             cwd = plugins_directory,
           }
         end,
@@ -213,7 +205,7 @@ return {
           require("fzf-lua").quickfix {
             prompt = "    ",
             winopts = {
-              title = Util.fzflua.format_title("[QF] Select item", "󰈙"),
+              title = RUtils.fzflua.format_title("[QF] Select item", "󰈙"),
             },
           }
         end,
@@ -236,7 +228,7 @@ return {
 
           return require("fzf-lua").live_grep_glob {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("[QF] Grep", " ") },
+            winopts = { title = RUtils.fzflua.format_title("[QF] Grep", " ") },
             cmd = pcmd,
           }
         end,
@@ -302,27 +294,26 @@ return {
             },
           },
         },
-        -- keymap = {
-        --   builtin = {
-        --     ["<F1>"] = "toggle-help",
-        --     ["<F4>"] = "toggle-fullscreen",
-        --     ["<F3>"] = "toggle-preview-cw",
-        --
-        --     -- ["<a-p>"] = "toggle-preview",
-        --     -- ["<c-p>"] = "toggle-preview",
-        --
-        --     ["<a-down>"] = "preview-page-down",
-        --     ["<a-up>"] = "preview-page-up",
-        --     ["<a-s>"] = "toggle-sort",
-        --   },
-        -- },
+        keymap = {
+          builtin = {
+            ["<F1>"] = "toggle-help",
+            ["<F2>"] = "toggle-fullscreen",
+            ["<F4>"] = "toggle-preview-cw",
+
+            ["<a-p>"] = "toggle-preview",
+            ["<c-p>"] = "toggle-preview",
+
+            ["<a-down>"] = "preview-page-down",
+            ["<a-up>"] = "preview-page-up",
+          },
+        },
         -- PROVIDER SETUP
         files = {
           -- debug = true,
           prompt = "  ",
           cwd_prompt = false,
           no_header = true, -- disable default header
-          winopts = { title = Util.fzflua.format_title("Files", "") },
+          winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = { ["--header"] = [[Ctrl-y:'copy',Ctrl-e:'rgflow']] },
           fd_opts = fd_opts,
           actions = {
@@ -360,7 +351,7 @@ return {
               local pth = selected[1]:sub(slice_num_str)
               vim.fn.setreg([[+]], pth)
 
-              Util.info("copy: " .. pth, { title = "Path" })
+              RUtils.info("copy: " .. pth, { title = "Path" })
 
               require("fzf-lua").actions.resume()
             end,
@@ -369,7 +360,7 @@ return {
         git = {
           files = {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("Git Files", "") },
+            winopts = { title = RUtils.fzflua.format_title("Git Files", "") },
             cmd = "git ls-files --exclude-standard",
             multiprocess = true, -- run command in a separate process
             git_icons = true, -- show git icons?
@@ -378,7 +369,7 @@ return {
           },
           status = {
             prompt = "  ",
-            winopts = { title = Util.fzflua.format_title("Git Status", "") },
+            winopts = { title = RUtils.fzflua.format_title("Git Status", "") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               -- actions inherit from 'actions.files' and merge
@@ -399,7 +390,7 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = Util.fzflua.format_title("", "Commits") },
+            winopts = { title = RUtils.fzflua.format_title("", "Commits") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
             },
@@ -411,40 +402,40 @@ return {
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
 
-                Util.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
+                RUtils.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
               end,
               ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 vim.fn.setreg("+", commit_hash)
 
-                Util.info("Hash: " .. commit_hash .. " copied", { title = "FZFGit" })
+                RUtils.info("Hash: " .. commit_hash .. " copied", { title = "FZFGit" })
 
                 require("fzf-lua").actions.resume()
               end,
               ["ctrl-z"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("All diff " .. commit_hash, { title = "FZFGit: commits" })
+                RUtils.info("All diff " .. commit_hash, { title = "FZFGit: commits" })
               end,
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-                local filename = Util.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
+                local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info(
+                RUtils.info(
                   "Compare diff " .. commit_hash .. " with current file \n" .. filename,
                   { title = "FZFGit: commits" }
                 )
@@ -458,7 +449,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = { title = Util.fzflua.format_title("", "Buffer Commits") },
+            winopts = { title = RUtils.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
             },
@@ -469,40 +460,40 @@ return {
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
-                Util.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
+                RUtils.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
               ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 vim.fn.setreg("+", commit_hash)
 
-                Util.info("Hash: " .. commit_hash .. " copied", { title = "FZFGit" })
+                RUtils.info("Hash: " .. commit_hash .. " copied", { title = "FZFGit" })
 
                 require("fzf-lua").actions.resume()
               end,
               ["ctrl-z"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info("All diff " .. commit_hash, { title = "FZFGit: bcommits" })
+                RUtils.info("All diff " .. commit_hash, { title = "FZFGit: bcommits" })
               end,
               ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
-                local commit_hash = Util.fzf_diffview.split_string(selection, " ")[1]
-                local filename = Util.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
+                local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
+                local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
 
                 vim.api.nvim_command(cmdmsg)
 
-                Util.info(
+                RUtils.info(
                   "Compare diff " .. commit_hash .. " with current file \n" .. filename,
                   { title = "FZFGit: bcommits" }
                 )
@@ -514,7 +505,7 @@ return {
             cmd = "git branch --all --color",
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
             winopts = {
-              title = Util.fzflua.format_title("Branches", ""),
+              title = RUtils.fzflua.format_title("Branches", ""),
               height = 0.3,
               row = 0.4,
             },
@@ -605,13 +596,13 @@ return {
           },
         },
         oldfiles = {
-          winopts = { title = Util.fzflua.format_title("History", "") },
+          winopts = { title = RUtils.fzflua.format_title("History", "") },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
         },
         buffers = {
-          winopts = { title = Util.fzflua.format_title("Buffers", "󰈙") },
+          winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = {
             -- ["--delimiter"] = "' '",
@@ -623,11 +614,11 @@ return {
         },
         fighlights = {
           prompt = "  ",
-          winopts = { title = Util.fzflua.format_title "Highlights" },
+          winopts = { title = RUtils.fzflua.format_title "Highlights" },
         },
         helptags = {
           prompt = "  ",
-          winopts = { title = Util.fzflua.format_title("Help", "󰋖") },
+          winopts = { title = RUtils.fzflua.format_title("Help", "󰋖") },
         },
         tabs = {
           prompt = "  ",
@@ -648,7 +639,7 @@ return {
         },
         lines = {
           prompt = "  ",
-          winopts = { title = Util.fzflua.format_title("Lines", "") },
+          winopts = { title = RUtils.fzflua.format_title("Lines", "") },
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
             -- tiebreak by line no.
@@ -674,7 +665,7 @@ return {
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
           winopts = {
-            title = Util.fzflua.format_title("Blines", ""),
+            title = RUtils.fzflua.format_title("Blines", ""),
           },
           fzf_opts = {
             -- Cara menghilangkan filepath
@@ -737,14 +728,14 @@ return {
         },
         quickfix = {
           winopts = {
-            title = Util.fzflua.format_title("[QF]", "󰈙"),
+            title = RUtils.fzflua.format_title("[QF]", "󰈙"),
           },
           file_icons = true,
           git_icons = true,
         },
         quickfix_stack = {
           winopts = {
-            title = Util.fzflua.format_title("[QF]", "󰈙"),
+            title = RUtils.fzflua.format_title("[QF]", "󰈙"),
           },
           marker = ">", -- current list marker
         },
@@ -760,25 +751,25 @@ return {
               -- ["--scrollbar"] = "▓",
             },
             winopts = {
-              title = Util.fzflua.format_title("Symbols", ""),
+              title = RUtils.fzflua.format_title("Symbols", ""),
             },
           },
-          code_actions = Util.fzflua.cursor_dropdown {
+          code_actions = RUtils.fzflua.cursor_dropdown {
             winopts = {
-              title = Util.fzflua.format_title("Code Actions", "󰌵", "@type"),
+              title = RUtils.fzflua.format_title("Code Actions", "󰌵", "@type"),
             },
           },
           finder = {
             prompt = "  ",
             no_action_zz = true,
             winopts = {
-              title = Util.fzflua.format_title("LSP Finder", ""),
+              title = RUtils.fzflua.format_title("LSP Finder", ""),
             },
           },
         },
         diagnostics = {
           prompt = "  ",
-          winopts = { title = Util.fzflua.format_title("Diagnostics", "", "DiagnosticError") },
+          winopts = { title = RUtils.fzflua.format_title("Diagnostics", "", "DiagnosticError") },
           cwd_only = false,
           file_icons = true,
           git_icons = false,
@@ -935,7 +926,12 @@ return {
       --         },
     },
     dependencies = {
-      { "nvim-telescope/telescope-fzf-native.nvim", build = "make", enabled = vim.fn.executable "make" == 1 },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = vim.fn.executable "make" == 1 and "make"
+          or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        enabled = vim.fn.executable "make" == 1 or vim.fn.executable "cmake" == 1,
+      },
       "nvim-telescope/telescope-symbols.nvim",
       "debugloop/telescope-undo.nvim", -- Visualise undotree
       "nvim-telescope/telescope-live-grep-args.nvim",
@@ -1083,13 +1079,12 @@ return {
               ["<c-r>"] = actions.to_fuzzy_refine,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
-              ["<F3>"] = layout_actions.cycle_layout_next,
+              ["<F4>"] = layout_actions.cycle_layout_next,
               -- ["<c-h>"] = layout_actions.cycle_layout_prev,
 
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
 
-              -- ["<F4>"] = layout_actions.cycle_layout_next,
               ["<c-p>"] = layout_actions.toggle_preview,
               ["<a-p>"] = layout_actions.toggle_preview,
 
@@ -1195,7 +1190,7 @@ return {
       {
         "<Leader><s-f>",
         function()
-          Util.tiling.force_win_close({ "toggleterm", "termlist" }, true)
+          RUtils.tiling.force_win_close({ "toggleterm", "termlist" }, true)
           return require("spectre").open_visual { select_word = true }
         end,
         desc = "Misc(spectre): open (visual)",
@@ -1492,7 +1487,7 @@ return {
           if opts.kind == "codeaction" then
             return {
               backend = "fzf_lua",
-              fzf_lua = Util.fzflua.cursor_dropdown {
+              fzf_lua = RUtils.fzflua.cursor_dropdown {
                 prompt = "  ",
                 winopts = { title = opts.prompt, relative = "cursor" },
               },
@@ -1509,10 +1504,10 @@ return {
             }
           end
           if opts.kind == "pojokan" then
-            local col, row = Util.fzflua.rectangle_win_pojokan()
+            local col, row = RUtils.fzflua.rectangle_win_pojokan()
             return {
               backend = "fzf_lua",
-              fzf_lua = Util.fzflua.cursor_dropdown {
+              fzf_lua = RUtils.fzflua.cursor_dropdown {
                 winopts = {
                   title = opts.prompt,
                   relative = "editor",
@@ -1525,7 +1520,7 @@ return {
           end
           return {
             backend = "fzf_lua",
-            fzf_lua = Util.fzflua.dropdown {
+            fzf_lua = RUtils.fzflua.dropdown {
               winopts = { title = opts.prompt, height = 0.33, row = 0.5 },
             },
           }

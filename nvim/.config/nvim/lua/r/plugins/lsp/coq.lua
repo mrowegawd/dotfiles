@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 
@@ -194,10 +192,10 @@ return {
         end,
         eslint = function()
           local function get_client(buf)
-            return require("r.utils").lsp.get_clients({ name = "eslint", bufnr = buf })[1]
+            return RUtils.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
           end
 
-          local formatter = require("r.utils").lsp.formatter {
+          local formatter = RUtils.lsp.formatter {
             name = "eslint: lsp",
             primary = false,
             priority = 200,
@@ -223,22 +221,22 @@ return {
           end
 
           -- register the formatter with LazyVim
-          require("r.utils").format.register(formatter)
+          RUtils.format.register(formatter)
         end,
       },
     },
     config = function(_, opts)
-      if Util.has "neoconf.nvim" then
+      if RUtils.has "neoconf.nvim" then
         local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
         require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
       end
 
-      Util.format.register(Util.lsp.formatter())
+      RUtils.format.register(Util.lsp.formatter())
 
       -- deprecated options
       if opts.autoformat ~= nil then
         vim.g.autoformat = opts.autoformat
-        Util.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
+        RUtils.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
       end
 
       local function has_capability(capability, filter)
@@ -261,17 +259,17 @@ return {
       }
 
       -- Setup formatting and keymaps
-      Util.lsp.on_attach(function(client, bufnr)
+      RUtils.lsp.on_attach(function(client, bufnr)
         require("r.plugins.lsp.keymaps").on_attach(client, bufnr)
 
         if client.server_capabilities[provider.CODELENS] then
-          Util.cmd.augroup("LspCodelensRefresh", {
+          RUtils.cmd.augroup("LspCodelensRefresh", {
             event = { "BufEnter", "InsertLeave", "BufWritePost" },
             desc = "LSP: Code Lens",
             buffer = bufnr,
             command = function()
               if not has_capability("textDocument/codeLens", { bufnr = bufnr }) then
-                Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
+                RUtils.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
                 return
               end
               if vim.g.codelens_enabled then
@@ -282,7 +280,7 @@ return {
         end
 
         if client.server_capabilities[provider.REFERENCES] then
-          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+          RUtils.cmd.augroup(("LspReferences%d"):format(bufnr), {
             event = { "CursorHold", "CursorHoldI" },
             buffer = bufnr,
             desc = "LSP: References",
@@ -301,7 +299,7 @@ return {
 
         if opts.inlay_hints.enabled then
           if client.supports_method "textDocument/inlayHint" then
-            Util.toggle.inlay_hints(bufnr, true)
+            RUtils.toggle.inlay_hints(bufnr, true)
           end
         end
       end)
@@ -393,13 +391,13 @@ return {
         mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
 
-      if Util.lsp.get_config "denols" and Util.lsp.get_config "tsserver" then
-        Util.lsp.on_attach(function(client, _)
+      if RUtils.lsp.get_config "denols" and Util.lsp.get_config "tsserver" then
+        RUtils.lsp.on_attach(function(client, _)
           client.server_capabilities.semanticTokensProvider = nil
         end)
         --   local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        --   Util.lsp.lsp_disable("tsserver", is_deno)
-        --   Util.lsp.lsp_disable("denols", function(root_dir)
+        --   RUtils.lsp.lsp_disable("tsserver", is_deno)
+        --   RUtils.lsp.lsp_disable("denols", function(root_dir)
         --     return not is_deno(root_dir)
         -- end)
       end
@@ -497,7 +495,7 @@ return {
       },
     },
     config = function(_, opts)
-      Util.lsp.on_attach(function(client, bufnr)
+      RUtils.lsp.on_attach(function(client, bufnr)
         -- stylua: ignore
         if client.name == "tsserver" then
           vim.keymap.set("n", "<Leader>co", "<cmd>TSToolsOrganizeImports<cr>",

@@ -11,7 +11,7 @@ function M.save_ses()
   -- session_name = string.gsub(session_name, "[/\\ .]", "_")
 
   local branch_name = "temp"
-  local cwd = vim.fn.fnameescape(vim.loop.cwd())
+  local cwd = vim.fn.fnameescape(vim.uv.cwd())
   local session_name = string.format("%s_%s", branch_name, cwd)
   -- -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
   session_name = string.gsub(session_name, "[/\\ .]", "_")
@@ -24,7 +24,7 @@ function M.load_ses()
   local MS = require "mini.sessions"
   -- local branch_name = vim.fn["FugitiveHead"]() or "temp"
   local branch_name = "temp"
-  local cwd = vim.fn.fnameescape(vim.loop.cwd())
+  local cwd = vim.fn.fnameescape(vim.uv.cwd())
   local session_name = string.format("%s_%s", branch_name, cwd)
   -- -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
   session_name = string.gsub(session_name, "[/\\ .]", "_")

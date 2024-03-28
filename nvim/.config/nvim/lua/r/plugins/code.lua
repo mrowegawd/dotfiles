@@ -1,7 +1,6 @@
 local Highlight = require "r.settings.highlights"
 local Icons = require("r.config").icons
 local Config = require "r.config"
-local Util = require "r.utils"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -43,7 +42,7 @@ return {
       {
         "L3MON4D3/LuaSnip",
         ---@diagnostic disable-next-line: undefined-global
-        build = (not jit.os:find "Windows")
+        build = (not RUtils.is_win())
             and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
           or nil,
         opts = {
@@ -166,6 +165,7 @@ return {
               item.abbr = label .. padding
             end
 
+            -- print(entry.source.name)
             local item_kind = item.kind
             item.menu = item_kind
               .. " "
@@ -389,11 +389,11 @@ return {
         mapping = {
           ["<C-y>"] = cmp.mapping(function()
             cmp.confirm { select = true }
-            Util.map.feedkey("<CR>", "")
+            RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
           ["<Tab>"] = cmp.mapping(function()
             cmp.confirm { select = true }
-            Util.map.feedkey("<CR>", "")
+            RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
           ["<c-q>"] = {
             c = function(fallback)
@@ -420,11 +420,11 @@ return {
         mapping = {
           ["<C-y>"] = cmp.mapping(function()
             cmp.confirm { select = true }
-            Util.map.feedkey("<CR>", "")
+            RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
           ["<Tab>"] = cmp.mapping(function()
             cmp.confirm { select = true }
-            Util.map.feedkey("<CR>", "")
+            RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
           ["<c-q>"] = {
             c = function(fallback)
@@ -443,29 +443,49 @@ return {
     end,
   },
   -- NVIM-AUTOPAIRS
+  -- {
+  --   -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5
+  --   -- before we use ultimate-autopair
+  --   "windwp/nvim-autopairs",
+  --   event = { "InsertEnter", "CmdlineEnter" },
+  --   dependencies = { "hrsh7th/nvim-cmp" },
+  --   config = function()
+  --     local autopairs = require "nvim-autopairs"
+  --     local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+  --     require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
+  --
+  --     autopairs.setup {
+  --       close_triple_quotes = true,
+  --       disable_filetype = { "neo-tree-popup" },
+  --       check_ts = true,
+  --       fast_wrap = { map = "<c-q>" },
+  --       ts_config = {
+  --         lua = { "string" },
+  --         dart = { "string" },
+  --         javascript = { "template_string" },
+  --       },
+  --     }
+  --   end,
+  -- },
+  -- MINI.PAIRS
   {
-    -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5
-    -- before we use ultimate-autopair
-    "windwp/nvim-autopairs",
-    event = { "InsertEnter", "CmdlineEnter" },
-    dependencies = { "hrsh7th/nvim-cmp" },
-    config = function()
-      local autopairs = require "nvim-autopairs"
-      local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-      require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-
-      autopairs.setup {
-        close_triple_quotes = true,
-        disable_filetype = { "neo-tree-popup" },
-        check_ts = true,
-        fast_wrap = { map = "<c-q>" },
-        ts_config = {
-          lua = { "string" },
-          dart = { "string" },
-          javascript = { "template_string" },
-        },
-      }
-    end,
+    "echasnovski/mini.pairs",
+    event = "VeryLazy",
+    opts = {},
+    -- keys = {
+    --   {
+    --     "<leader>up",
+    --     function()
+    --       vim.g.minipairs_disable = not vim.g.minipairs_disable
+    --       if vim.g.minipairs_disable then
+    --         LazyVim.warn("Disabled auto pairs", { title = "Option" })
+    --       else
+    --         LazyVim.info("Enabled auto pairs", { title = "Option" })
+    --       end
+    --     end,
+    --     desc = "Toggle Auto Pairs",
+    --   },
+    -- },
   },
   -- COMMENTS-TS-CONTEXT
   {
@@ -618,17 +638,17 @@ return {
   {
     "rest-nvim/rest.nvim",
     ft = "http",
-    dependencies = {
-      {
-        "vhyrro/luarocks.nvim",
-        config = function()
-          require("luarocks").setup {}
-        end,
-      },
-    },
     -- keys = {
     --   { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
     -- },
+    dependencies = {
+      {
+        "vhyrro/luarocks.nvim",
+        ots = {
+          rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" }, -- Specify LuaRocks packages to install
+        },
+      },
+    },
     opts = { skip_ssl_verification = true },
     config = function(_, opts)
       require("rest-nvim").setup(opts)

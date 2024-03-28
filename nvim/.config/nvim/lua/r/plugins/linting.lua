@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 return {
   -- NONE-LS (disabled)
   {
@@ -8,13 +6,13 @@ return {
     enabled = false,
     dependencies = { "mason.nvim", dir = "~/.local/src/nvim_plugins/null-ls-embedded" },
     init = function()
-      Util.on_very_lazy(function()
-        require("r.utils").format.register {
+      RUtils.on_very_lazy(function()
+        RUtils.format.register {
           name = "none-ls.nvim",
           priority = 200, -- set higher than conform, the builtin formatter
           primary = true,
           format = function(buf)
-            return Util.lsp.format {
+            return RUtils.lsp.format {
               bufnr = buf,
               filter = function(client)
                 return client.name == "null-ls"
@@ -108,6 +106,7 @@ return {
         -- ['*'] = { 'global linter' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
         -- ['_'] = { 'fallback linter' },
+        -- ["*"] = { "typos" },
       },
       -- LazyVim extension to easily override linter options
       -- or add custom linters.
@@ -135,16 +134,6 @@ return {
       local M = {}
 
       local lint = require "lint"
-
-      vim.g.try_lint = function(args)
-        args = args or {}
-        lint.try_lint(nil, args)
-        if vim.g.codespell_active then
-          lint.try_lint("codespell", { ignore_errors = true })
-        end
-      end
-      vim.g.codespell_active = true -- enabled by default
-
       for name, linter in pairs(opts.linters) do
         if type(linter) == "table" and type(lint.linters[name]) == "table" then
           lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name], linter)
@@ -155,12 +144,11 @@ return {
       lint.linters_by_ft = opts.linters_by_ft
 
       function M.debounce(ms, fn)
-        local timer = vim.loop.new_timer()
+        local timer = vim.uv.new_timer()
         return function(...)
           local argv = { ... }
           timer:start(ms, 0, function()
             timer:stop()
-            ---@diagnostic disable-next-line: deprecated
             vim.schedule_wrap(fn)(unpack(argv))
           end)
         end
@@ -172,6 +160,9 @@ return {
         -- * otherwise will split filetype by "." and add all those linters
         -- * this differs from conform.nvim which only uses the first filetype that has a formatter
         local names = lint._resolve_linter_by_ft(vim.bo.filetype)
+
+        -- Create a copy of the names table to avoid modifying the original.
+        names = vim.list_extend({}, names)
 
         -- Add fallback linters.
         if #names == 0 then
@@ -187,7 +178,7 @@ return {
         names = vim.tbl_filter(function(name)
           local linter = lint.linters[name]
           if not linter then
-            Util.warn("Linter not found: " .. name, { title = "nvim-lint" })
+            RUtils.warn("Linter not found: " .. name, { title = "nvim-lint" })
           end
           return linter and not (type(linter) == "table" and linter.condition and not linter.condition(ctx))
         end, names)

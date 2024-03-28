@@ -11,7 +11,7 @@ local hg = require "r.settings.highlights"
 local toggle_number = 1
 
 local function qflabel()
-  return require("r.utils").qf.is_loclist() and "Location List" or "Quickfix List"
+  return RUtils.qf.is_loclist() and "Location List" or "Quickfix List"
 end
 
 local function ft_()
@@ -23,7 +23,7 @@ local function title()
     return ""
   end
 
-  if require("r.utils").qf.is_loclist()() then
+  if RUtils.qf.is_loclist()() then
     return vim.fn.getloclist(0, { title = 0 }).title
   end
 

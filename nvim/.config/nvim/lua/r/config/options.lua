@@ -63,7 +63,7 @@ elseif plat.is_wsl then
 end
 -- Exclude usetab as we do not want to jump to buffers in already open tabs
 -- do not use split or vsplit to ensure we don't open any new windows
-opt.switchbuf = "useopen,uselast"
+-- opt.switchbuf = "useopen,uselast"
 opt.encoding = "utf-8"
 opt.conceallevel = 2
 opt.infercase = true -- Infer cases in keyword completion
@@ -200,6 +200,8 @@ opt.fillchars = {
   foldsep = " ",
 }
 
+-- vim.opt.fillchars = "fold: "
+
 opt.foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil -- show foldcolumn in nvim 0.9
 opt.foldlevelstart = 99 -- start with all code unfolded
 -- unfortunately folding in (n)vim is a mess, if you set the fold level to start
@@ -310,12 +312,17 @@ opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "glob
 
 opt.smoothscroll = true
 
-opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
--- opt.foldtext = "v:lua.custom_fold_text()"
-opt.foldtext = ""
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-opt.foldmethod = "expr"
+-- HACK: causes freezes on <= 0.9, so only enable on >= 0.10 for now
+if vim.fn.has "nvim-0.10" == 1 then
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+  vim.opt.foldtext = ""
+else
+  vim.opt.foldmethod = "indent"
+end
+
 opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
+opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
@@ -326,8 +333,8 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python_provider = 0
-vim.g.loaded_python3_provider = 0
--- vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
+-- vim.g.loaded_python3_provider = 0
+vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
 
 if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.15

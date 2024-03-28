@@ -8,7 +8,7 @@ local function title()
     return ""
   end
 
-  if require("r.utils").qf.is_loclist() then
+  if RUtils.qf.is_loclist() then
     return vim.fn.getloclist(0, { title = 0 }).title
   end
 

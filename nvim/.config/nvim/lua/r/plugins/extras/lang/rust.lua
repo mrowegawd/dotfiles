@@ -50,7 +50,7 @@ return {
         local extension_path = codelldb:get_install_path() .. "/extension/"
         local codelldb_path = extension_path .. "adapter/codelldb"
         local liblldb_path = ""
-        if vim.loop.os_uname().sysname:find "Windows" then
+        if vim.uv.os_uname().sysname:find "Windows" then
           liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
         elseif vim.fn.has "mac" == 1 then
           liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
@@ -131,7 +131,7 @@ return {
       },
       setup = {
         rust_analyzer = function(_, opts)
-          local rust_tools_opts = require("r.utils").opts "rust-tools.nvim"
+          local rust_tools_opts = RUtils.opts "rust-tools.nvim"
           require("rust-tools").setup(vim.tbl_deep_extend("force", rust_tools_opts or {}, { server = opts }))
           return true
         end,

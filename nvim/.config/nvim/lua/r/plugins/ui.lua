@@ -1,6 +1,5 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
-local Util = require "r.utils"
 local Config = require "r.config"
 
 return {
@@ -38,7 +37,7 @@ return {
       })
       require("mini.indentscope").setup(opts)
 
-      Util.cmd.augroup("DetachMiniIndentScope", {
+      RUtils.cmd.augroup("DetachMiniIndentScope", {
         event = { "FileType" },
         pattern = {
           "NeogitCommitMessage",
@@ -172,6 +171,7 @@ return {
       vim.notify = require "notify"
 
       return {
+        stages = "static",
         timeout = 5000,
         max_width = function()
           return math.floor(vim.o.columns * 0.6)
@@ -189,7 +189,7 @@ return {
         -- end,
         render = function(...)
           local notification = select(2, ...)
-          local style = Util.cmd.falsy(notification.title[1]) and "minimal" or "default"
+          local style = RUtils.cmd.falsy(notification.title[1]) and "minimal" or "default"
           require("notify.render")[style](...)
         end,
         on_open = function(win)
@@ -366,11 +366,11 @@ return {
         highlight = {
           groups = {
             InclineNormal = {
-              guifg = Util.colortbl.norm_bg,
+              guifg = RUtils.colortbl.norm_bg,
             },
             InclineNormalNC = {
-              guifg = Util.colortbl.separator_fg_alt,
-              guibg = Util.colortbl.norm_bg,
+              guifg = RUtils.colortbl.separator_fg_alt,
+              guibg = RUtils.colortbl.norm_bg,
             },
           },
         },
@@ -396,7 +396,7 @@ return {
                   " " .. Config.icons.misc.boldclose,
                   guifg = Highlight.get("DiagnosticSignError", "fg"),
                   gui = "bold",
-                  guibg = Util.colortbl.separator_fg,
+                  guibg = RUtils.colortbl.separator_fg,
                 }
               end
             else
@@ -405,7 +405,7 @@ return {
                   " " .. Config.icons.misc.boldclose,
                   guifg = Highlight.get("DiagnosticSignError", "fg"),
                   gui = "bold",
-                  guibg = Util.colortbl.separator_fg_alt,
+                  guibg = RUtils.colortbl.separator_fg_alt,
                 }
               end
             end
@@ -425,8 +425,8 @@ return {
           if props.focused then
             return {
               {
-                guibg = Util.colortbl.separator_fg,
-                guifg = Util.colortbl.norm_bg,
+                guibg = RUtils.colortbl.separator_fg,
+                guifg = RUtils.colortbl.norm_bg,
                 Config.icons.misc.separator_up,
               },
               {
@@ -435,23 +435,23 @@ return {
               {
                 " " .. ft_icon .. " ",
                 guifg = ft_color,
-                guibg = Util.colortbl.separator_fg,
+                guibg = RUtils.colortbl.separator_fg,
               },
               {
                 filename .. " ",
-                guibg = Util.colortbl.separator_fg,
+                guibg = RUtils.colortbl.separator_fg,
                 gui = modified,
               },
               {
-                guifg = Util.colortbl.separator_fg,
+                guifg = RUtils.colortbl.separator_fg,
                 Config.icons.misc.separator_up,
               },
             }
           else
             return {
               {
-                guifg = Util.colortbl.norm_bg,
-                guibg = Util.colortbl.separator_fg_alt,
+                guifg = RUtils.colortbl.norm_bg,
+                guibg = RUtils.colortbl.separator_fg_alt,
                 Config.icons.misc.separator_up,
               },
               {
@@ -460,18 +460,18 @@ return {
               {
                 " " .. ft_icon .. " ",
                 guifg = ft_color,
-                guibg = Util.colortbl.separator_fg_alt,
+                guibg = RUtils.colortbl.separator_fg_alt,
               },
               {
                 filename .. " ",
                 -- guifg = Highlight.tint(Highlight.get("Normal", "fg"), -0.9),
-                guifg = Util.colortbl.norm_fg,
-                guibg = Util.colortbl.separator_fg_alt,
+                guifg = RUtils.colortbl.norm_fg,
+                guibg = RUtils.colortbl.separator_fg_alt,
                 gui = modified,
               },
               {
-                guifg = Util.colortbl.separator_fg_alt,
-                guibg = Util.colortbl.norm_bg,
+                guifg = RUtils.colortbl.separator_fg_alt,
+                guibg = RUtils.colortbl.norm_bg,
                 Config.icons.misc.separator_up,
               },
             }

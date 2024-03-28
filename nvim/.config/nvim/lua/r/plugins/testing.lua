@@ -99,7 +99,7 @@ return {
     end,
     keys = {
       -- { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing(neotest): test file" },
-      -- { "<Leader>tF", function() require("neotest").run.run(vim.loop.cwd()) end, "Testing(neotest): test all files" },
+      -- { "<Leader>tF", function() require("neotest").run.run(vim.uv.cwd()) end, "Testing(neotest): test all files" },
       -- { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing(neotest): stop" },
       {
         "<Leader>tl",
@@ -139,7 +139,7 @@ return {
               vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
             end,
             test_all_files = function()
-              vim.cmd [[lua require("neotest").run.run(vim.loop.cwd())]]
+              vim.cmd [[lua require("neotest").run.run(vim.uv.cwd())]]
             end,
             test_unit = function()
               vim.cmd [[lua require("neotest").run.run()]]

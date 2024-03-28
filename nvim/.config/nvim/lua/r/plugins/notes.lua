@@ -1,11 +1,10 @@
 local fmt, api = string.format, vim.api
-local uv = vim.uv or vim.loop
+local uv = vim.uv
 
 local Config = require "r.config"
-local Util = require "r.utils"
 local Highlight = require "r.settings.highlights"
 
-local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 return {
   -- NEORG
@@ -13,12 +12,12 @@ return {
     "nvim-neorg/neorg",
     cmd = "Neorg",
     ft = "norg",
-    build = ":Neorg sync-parsers", -- This is the important bit!
+    -- build = ":Neorg sync-parsers", -- This is the important bit!
     -- keys = {
     -- {
     --   "<Localleader>fL",
     --   function()
-    --     Util.maim.insert "test.png"
+    --     RUtils.maim.insert "test.png"
     --   end,
     -- },
     -- {
@@ -44,7 +43,7 @@ return {
     --       file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
     --       winopts = {
     --         -- fullscreen = true,
-    --         title = Util.fzflua.format_title("[Neorg] Files", " "),
+    --         title = RUtils.fzflua.format_title("[Neorg] Files", " "),
     --       },
     --     }
     --   end,
@@ -59,7 +58,7 @@ return {
     --       cwd = Config.path.wiki_path,
     --       rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
     --       winopts = {
-    --         title = Util.fzflua.format_title("[Neorg] Grep", " "),
+    --         title = RUtils.fzflua.format_title("[Neorg] Grep", " "),
     --       },
     --     }
     --   end,
@@ -68,6 +67,7 @@ return {
     -- },
     dependencies = {
       "nvim-telescope/telescope.nvim",
+      "luarocks.nvim",
       "nvim-neorg/neorg-telescope",
       "nvim-treesitter/nvim-treesitter",
       "ibhagwan/fzf-lua",
@@ -75,7 +75,7 @@ return {
       "laher/neorg-exec",
     },
     config = function(_, opts)
-      Util.cmd.augroup("ManageNoteMappingNeorg", {
+      RUtils.cmd.augroup("ManageNoteMappingNeorg", {
         event = { "FileType" },
         pattern = { "norg" },
         command = function()
@@ -83,7 +83,7 @@ return {
         end,
       })
 
-      Util.cmd.augroup("SetNorgFoldLevel", {
+      RUtils.cmd.augroup("SetNorgFoldLevel", {
         event = { "FileType" },
         pattern = { "norg" },
         command = "setlocal foldlevel=0",
@@ -115,7 +115,7 @@ return {
       --   vim.cmd("normal A" .. image_neorg)
       -- end
       --
-      -- Util.cmd.create_command("MaimNeorg", invoke_screenshot_to_neorg(), { desc = "Maim: put image (neorg)" })
+      -- RUtils.cmd.create_command("MaimNeorg", invoke_screenshot_to_neorg(), { desc = "Maim: put image (neorg)" })
     end,
     opts = function()
       -- local invoke_screenshot = function(output_path)
@@ -280,13 +280,12 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    event = "LazyFile",
-    -- ft = "org",
+    ft = "org",
     keys = {
       {
         "<Localleader>fA",
         function()
-          return require("r.utils").neorg.open_orgagenda_paths()
+          return RUtils.neorg.open_orgagenda_paths()
         end,
         desc = "Note(orgmode): open orgmode paths",
       },
@@ -295,6 +294,7 @@ return {
     },
     dependencies = {
       "hrsh7th/nvim-cmp",
+      "nvim-treesitter/nvim-treesitter",
       {
         "akinsho/org-bullets.nvim",
         config = function()
@@ -475,8 +475,8 @@ return {
           org_refile = "<prefix>r",
           org_timestamp_up = "<c-a>",
           org_timestamp_down = "<c-x>",
-          org_change_date = "cid",
-          org_todo = "cit",
+          org_change_date = "cd",
+          org_todo = "ct",
           org_toggle_checkbox = "<C-c>",
           org_open_at_point = "<prefix>o",
           org_meta_return = "<F12>", -- Add heading, item or row
@@ -489,21 +489,27 @@ return {
           org_archive_subtree = "<prefix>$",
           org_set_tags_command = "<Leader>t",
           org_toggle_archive_tag = "<Leader>T",
+
           org_next_visible_heading = "<a-n>",
           org_previous_visible_heading = "<a-p>",
+
           org_toggle_heading = "<leader>o*",
           org_show_help = "?",
           org_timestamp_up_day = "<PageUp>",
           org_timestamp_down_day = "<PageDown>",
+
           org_priority = "<prefix>,",
           org_priority_up = "<c-Up>",
           org_priority_down = "<c-Down>",
+
           org_todo_prev = "ciT",
           org_edit_special = [[<prefix>']],
+
           org_do_promote = "<<",
           org_do_demote = ">>",
           org_promote_subtree = "<left>",
           org_demote_subtree = "<right>",
+
           org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
           org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
           org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
@@ -535,7 +541,6 @@ return {
       })
 
       local orgmode = require "orgmode"
-      -- orgmode.setup_ts_grammar()
       orgmode.setup(opts)
     end,
   },
@@ -612,19 +617,6 @@ return {
       fmt("BufReadPre %s", Config.path.wiki_path),
       fmt("BufNewFile %s", Config.path.wiki_path),
     },
-    cmd = {
-      "ObsidianOpen",
-      "ObsidianNew",
-      "ObsidianQuickSwitch",
-      "ObsidianFollowLink",
-      "ObsidianBacklinks",
-      "ObsidianToday",
-      "ObsidianYesterday",
-      "ObsidianTemplate",
-      "ObsidianSearch",
-      "ObsidianLink",
-      "ObsidianLinkNew",
-    },
     keys = {
       {
         "<Localleader>fg",
@@ -634,7 +626,7 @@ return {
             cwd = Config.path.wiki_path,
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
             winopts = {
-              title = Util.fzflua.format_title("[Obsidian] Grep", ""),
+              title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
             },
           }
         end,
@@ -651,7 +643,7 @@ return {
 
             winopts = {
               -- fullscreen = true,
-              title = Util.fzflua.format_title("Note Files", ""),
+              title = RUtils.fzflua.format_title("Note Files", ""),
             },
           }
         end,
@@ -666,36 +658,48 @@ return {
     opts = {
       dir = Config.path.wiki_path, -- no need to call 'vim.fn.expand' here
 
+      workspaces = {
+        {
+          name = "obsidian",
+          path = "~/Dropbox/neorg",
+        },
+      },
+
       daily_notes = {
-        -- folder = "Calendar 🗓️/Days 🌄",
         folder = "Drafts",
         -- Optional, if you want to change the date format for the ID of daily notes.
+        date_format = "%d-%m-%Y",
         -- date_format = "%Y-%m-%d",
         -- Optional, if you want to change the date format of the default alias of daily notes.
         -- alias_format = "%B %-d, %Y",
       },
 
+      picker = {
+        name = "fzf-lua",
+        mappings = {
+          new = "<C-x>",
+          insert_link = "<C-l>",
+        },
+      },
+
       preferred_link_style = "markdown",
-      finder = "fzf-lua",
 
-      -- Optional, alternatively you can customize the frontmatter data.
-      note_frontmatter_func = function(note)
-        -- This is equivalent to the default frontmatter function.
-        local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-        -- `note.metadata` contains any manually added fields in the frontmatter.
-        -- So here we just make sure those fields are kept in the frontmatter.
-        if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
-          for k, v in pairs(note.metadata) do
-            out[k] = v
-          end
-        end
-        return out
-      end,
+      -- note_frontmatter_func = function(note)
+      --   local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+      --   if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
+      --     for k, v in pairs(note.metadata) do
+      --       out[k] = v
+      --     end
+      --   end
+      --   return out
+      -- end,
 
-      -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
-      -- way then set 'mappings = {}'.
+      completion = {
+        nvim_cmp = true,
+        min_chars = 2,
+      },
+
       mappings = {
-        -- Toggle check-boxes.
         ["<c-c>"] = {
           action = function()
             return require("obsidian").util.toggle_checkbox()
@@ -704,29 +708,15 @@ return {
         },
       },
 
-      -- Optional, for templates (see below).
-      -- templates = {
-      --   subdir = "templates",
-      --   date_format = "%Y-%m-%d-%a",
-      --   time_format = "%H:%M",
-      -- },
-
       follow_url_func = function(url)
         vim.fn.jobstart { "open", url }
       end,
-
-      -- Optional, set to true if you use the Obsidian Advanced URI plugin.
-      -- https://github.com/Vinzent03/obsidian-advanced-uri
-      use_advanced_uri = true,
-
-      -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
-      open_app_foreground = true,
     },
 
     config = function(_, opts)
       require("obsidian").setup(opts)
 
-      Util.cmd.augroup("ManageNoteMappingMarkdown", {
+      RUtils.cmd.augroup("ManageNoteMappingMarkdown", {
         event = { "FileType" },
         pattern = { "markdown" },
         command = function()
@@ -738,7 +728,6 @@ return {
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
-    -- enabled = false,
     event = "VeryLazy",
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()

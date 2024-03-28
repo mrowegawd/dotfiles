@@ -73,170 +73,155 @@ return {
         end,
       },
     },
-    opts = {
-      ensure_installed = {
-        "c",
-        -- "comment", -- comments are slowing down TS bigtime, so disable for now
-
-        "dockerfile",
-
-        "cpp",
-        "diff",
-        "gitignore",
-        "graphql",
-        "java",
-        "bash",
-        "jsdoc",
-        "latex",
-        "kotlin",
-        "dart",
-        "meson",
-        "ninja",
-        "nix",
-        "norg",
-        "org",
-        "php",
-        "query",
-        "regex",
-
-        "fish",
-
-        "yaml",
-
-        "json",
-        "jsonc",
-        "ini",
-        "ssh_config",
-
-        "sql",
-        "svelte",
-        "teal",
-        "vhs",
-        "vim",
-        "vue",
-        "ruby",
-        "wgsl",
-
-        "cmake",
-        "make",
-
-        "javascript",
-        "typescript",
-        "tsx",
-
-        "go",
-        "gomod",
-        "gowork",
-        "gosum",
-
-        "lua",
-        "luadoc",
-        "luap",
-
-        "python",
-        "ninja",
-        "rst",
-
-        "css",
-        "html",
-        "http",
-        "scss",
-
-        "ron",
-        "rust",
-        "toml",
-
-        "markdown",
-        "markdown_inline",
-
-        "xml",
-        "vimdoc",
-      },
-
-      highlight = {
-        enable = true,
-        disable = function(ft)
-          return vim.tbl_contains({ "tex", "latex" }, ft)
-        end,
-        additional_vim_regex_highlighting = { "markdown" },
-      },
-
-      indent = {
-        enable = true,
-        disable = function(ft)
-          return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
-        end,
-      },
-      incremental_selection = {
-        enable = false,
-        -- disable = buf_is_large,
-        keymaps = {
-          init_selection = false,
-          node_incremental = "v",
-          node_decremental = "V",
-        },
-      },
-
-      -- nvim-treesitter-textobjects
-      textobjects = {
-        select = {
-          -- disable = buf_is_large,
-          enable = false,
-          lookahead = true,
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-          },
-        },
-        move = {
-          enable = false,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]f"] = "@function.outer",
-            ["]c"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]F"] = "@function.outer",
-            ["]C"] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[f"] = "@function.outer",
-            ["[c"] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[F"] = "@function.outer",
-            ["[C"] = "@class.outer",
-          },
-        },
-        lsp_interop = {
-          enable = false,
-          -- disable = buf_is_large,
-          peek_definition_code = {
-            ["gD"] = "@function.outer",
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        ---@type table<string, boolean>
-        local added = {}
-        opts.ensure_installed = vim.tbl_filter(function(lang)
-          if added[lang] then
-            return false
-          end
-          added[lang] = true
-          return true
-        end, opts.ensure_installed)
-      end
-
+    config = function()
       require("orgmode").setup_ts_grammar()
-      require("nvim-treesitter.configs").setup(opts)
+      require("nvim-treesitter.configs").setup {
+        ensure_installed = {
+          "c",
+          -- "comment", -- comments are slowing down TS bigtime, so disable for now
 
-      -- vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+          "dockerfile",
+
+          "cpp",
+          "diff",
+          "gitignore",
+          "graphql",
+          "java",
+          "bash",
+          "jsdoc",
+          "latex",
+          "kotlin",
+          "dart",
+          "meson",
+          "ninja",
+          "nix",
+          "norg",
+          "org",
+          "php",
+          "query",
+          "regex",
+
+          "fish",
+
+          "yaml",
+
+          "json",
+          "jsonc",
+          "ini",
+          "ssh_config",
+
+          "sql",
+          "svelte",
+          "teal",
+          "vhs",
+          "vim",
+          "vue",
+          "ruby",
+          "wgsl",
+
+          "cmake",
+          "make",
+
+          "javascript",
+          "typescript",
+          "tsx",
+
+          "go",
+          "gomod",
+          "gowork",
+          "gosum",
+
+          "lua",
+          "luadoc",
+          "luap",
+
+          "python",
+          "ninja",
+          "rst",
+
+          "css",
+          "html",
+          "http",
+          "scss",
+
+          "ron",
+          "rust",
+          "toml",
+
+          "markdown",
+          "markdown_inline",
+
+          "xml",
+          "vimdoc",
+        },
+
+        highlight = {
+          enable = true,
+          disable = function(ft)
+            return vim.tbl_contains({ "tex", "latex" }, ft)
+          end,
+          additional_vim_regex_highlighting = { "markdown", "org" },
+        },
+
+        indent = {
+          enable = true,
+          disable = function(ft)
+            return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
+          end,
+        },
+        incremental_selection = {
+          enable = false,
+          -- disable = buf_is_large,
+          keymaps = {
+            init_selection = false,
+            node_incremental = "v",
+            node_decremental = "V",
+          },
+        },
+
+        -- nvim-treesitter-textobjects
+        textobjects = {
+          select = {
+            -- disable = buf_is_large,
+            enable = false,
+            lookahead = true,
+            keymaps = {
+              -- You can use the capture groups defined in textobjects.scm
+              ["af"] = "@function.outer",
+              ["if"] = "@function.inner",
+              ["ac"] = "@class.outer",
+              ["ic"] = "@class.inner",
+            },
+          },
+          move = {
+            enable = false,
+            set_jumps = true, -- whether to set jumps in the jumplist
+            goto_next_start = {
+              ["]f"] = "@function.outer",
+              ["]c"] = "@class.outer",
+            },
+            goto_next_end = {
+              ["]F"] = "@function.outer",
+              ["]C"] = "@class.outer",
+            },
+            goto_previous_start = {
+              ["[f"] = "@function.outer",
+              ["[c"] = "@class.outer",
+            },
+            goto_previous_end = {
+              ["[F"] = "@function.outer",
+              ["[C"] = "@class.outer",
+            },
+          },
+          lsp_interop = {
+            enable = false,
+            -- disable = buf_is_large,
+            peek_definition_code = {
+              ["gD"] = "@function.outer",
+            },
+          },
+        },
+      }
     end,
   },
   -- NVIM-TREESITTER-CONTEXT

@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 local scan = require "plenary.scandir"
 local fmt, cmd = string.format, vim.cmd
 local neorg = require "neorg"
@@ -62,10 +60,10 @@ function M.open_orgagenda_paths()
       end
       for _, x in pairs(org_backup) do
         if choice == x.basename_file then
-          if Util.file.exists(x.full_path) then
+          if RUtils.file.exists(x.full_path) then
             return cmd(":edit " .. x.full_path)
           else
-            return Util.warn("Path not exists: " .. x.full_path, { title = "orgmode" })
+            return RUtils.warn("Path not exists: " .. x.full_path, { title = "orgmode" })
           end
         end
       end

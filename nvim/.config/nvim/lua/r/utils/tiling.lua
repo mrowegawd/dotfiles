@@ -4,8 +4,6 @@ local fmt = string.format
 local api = vim.api
 local fn = vim.fn
 
-local Util = require "r.utils"
-
 ---@class r.utils.tiling
 local M = {}
 
@@ -306,7 +304,7 @@ local stack_windows = function()
   while arrange_window() < 0 do
     counter = counter + 1
     if counter > 50 then
-      Util.warn "infinite loop, probably an issue with getting max height or width"
+      RUtils.warn "infinite loop, probably an issue with getting max height or width"
       break
     end
   end
@@ -470,12 +468,12 @@ M.tiling_toggle = function()
   if state.active then
     state.active = false
     deactivate_tiling_autocmds()
-    Util.info "[+] Tiling autocmds off.."
+    RUtils.info "[+] Tiling autocmds off.."
     return
   end
   state.active = true
   activate_tiling_autocmds()
-  Util.info "[+] Tiling autocmds on.."
+  RUtils.info "[+] Tiling autocmds on.."
 end
 
 M.state_active = function(stat)

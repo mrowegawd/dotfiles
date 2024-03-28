@@ -148,25 +148,26 @@ Util.cmd.augroup("TextYankHighlight", {
   end,
 })
 
-Util.cmd.augroup("WindowBehaviours", {
-  event = { "FileType" },
-  pattern = { "norg", "org", "orgagenda" },
-  command = function()
-    vim.opt_local.foldcolumn = "0"
-  end,
-}, {
-  event = { "FileType" },
-  pattern = { "org", "orgagenda" },
-  command = function()
-    vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
-  end,
-}, {
-  event = { "FileType" },
-  pattern = { "norg" },
-  command = function()
-    vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
-  end,
-})
+-- Util.cmd.augroup("WindowBehaviours", {
+--   event = { "FileType" },
+--   pattern = { "norg", "org", "orgagenda" },
+--   command = function()
+--     vim.opt_local.foldcolumn = "0"
+--   end,
+-- }, {
+--   event = { "FileType" },
+--   pattern = { "org", "orgagenda" },
+--   command = function()
+--     -- vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
+--     vim.cmd [[setlocal foldmethod=manual]]
+--   end,
+-- }, {
+--   event = { "FileType" },
+--   pattern = { "norg" },
+--   command = function()
+--     vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
+--   end,
+-- })
 
 Util.cmd.augroup("LocateLastPosition", {
   -- Go to last loc when opening a buffer

@@ -108,8 +108,8 @@ return {
           ["handlebars"] = { { "prettierd", "prettier" } },
 
           ["markdown"] = { "prettierd", "cbfmt" },
-          ["norg"] = { "trim_whitespace", "trim_newlines" }, -- TODO: cbfmt does not work :(
           ["markdown.mdx"] = { { "prettierd", "prettier" } },
+          ["norg"] = { "trim_whitespace", "trim_newlines" }, -- TODO: cbfmt does not work :(
           ["org"] = { "trim_whitespace", "trim_newlines" },
 
           ["_"] = { "trim_whitespace" },
