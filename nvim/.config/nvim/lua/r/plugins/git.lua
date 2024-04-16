@@ -49,7 +49,7 @@ return {
   -- BLAME.NVIM
   {
     "FabijanZulj/blame.nvim",
-    cmd = { "ToggleBlame", "EnableBlame", "DisableBlame" },
+    cmd = { "BlameToggle" },
     config = true,
   },
   -- GITLINKER

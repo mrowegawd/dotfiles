@@ -55,7 +55,7 @@ local function gitfzflua(opts)
           vim.cmd [[GitConflictChooseNone]]
         end,
         git_blame = function()
-          vim.cmd [[ToggleBlame]]
+          vim.cmd [[BlameToggle]]
         end,
       }, opts),
       { winopts = { title = require("r.config").icons.git.branch .. "Git ", row = row, col = col } }
