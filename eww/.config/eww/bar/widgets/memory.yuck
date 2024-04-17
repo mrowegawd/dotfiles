@@ -1,0 +1,9 @@
+(defwidget memory []
+  (box :class ""
+       :orientation "v"
+       :space-evenly false
+       :tooltip "RAM"
+    ; (button :class "icon" :onclick "kitty watch free &" "")
+    (button :class "icon" :onclick "bar/scripts/openwindow.sh cpu &"
+      (label :text ""))
+    (label :text "${round(EWW_RAM.used_mem_perc, 0)}%")))

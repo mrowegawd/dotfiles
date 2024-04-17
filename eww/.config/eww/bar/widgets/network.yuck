@@ -1,0 +1,9 @@
+
+
+(defwidget network []
+  (box  :class "icon"
+        :space-evenly false
+        :orientation "v"
+        :tooltip "Shutdown"
+      (label :text "󰤨")))
+    ;(label :text "${round(EWW_NET.enp0s31f6.NET_UP / 1000000, 2)}/${round(EWW_NET.enp0s31f6.NET_DOWN / 1000000, 2)}")))

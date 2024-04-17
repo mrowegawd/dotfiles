@@ -1,0 +1,22 @@
+(defvar is_open_dashboard true)
+(defvar is_open_calendar false)
+(defvar show_audio_slider false)
+(defvar show_power_menu false)
+(defvar active_workspace_icon "")
+(defvar inactive_workspace_icon "")
+
+(defpoll gpu_usage :interval "1s"
+  "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | awk '{ print \"\"$1\"\"}'")
+
+(defpoll calendar_day :interval "10h"
+  "date '+%d'")
+
+(defpoll volume :interval "1s"
+  "amixer sget Master | awk -F'[][]' '/Right:|Mono:/ && NF > 1 {sub(/%/, \"\"); printf \"%0.0f\", $2}'")
+
+(defpoll calendar_month :interval "10h"
+  "month=$(date +%m) | month=$((month-1)) | echo $month")
+
+
+(defpoll time :interval "10s"
+  `date "+%H:%M"`)

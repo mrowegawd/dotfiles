@@ -74,7 +74,6 @@ return {
       },
     },
     config = function()
-      require("orgmode").setup_ts_grammar()
       require("nvim-treesitter.configs").setup {
         ensure_installed = {
           "c",
@@ -143,6 +142,8 @@ return {
           "html",
           "http",
           "scss",
+
+          "yuck",
 
           "ron",
           "rust",

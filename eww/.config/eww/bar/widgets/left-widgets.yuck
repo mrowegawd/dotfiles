@@ -1,0 +1,16 @@
+(include "/home/mr00x/.config/eww/bar/widgets/time.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/left-menu.yuck")
+(include "/home/mr00x/.config/eww/bar/widgets/workspaces.yuck")
+
+(defwidget left-widgets []
+
+  (box :class "left-widgets"
+       :orientation "v"
+       :space-evenly false
+       :halign "center"
+       :valign "start"
+   ;(time-widget)))
+   (left-menu)
+   (workspaces)
+  ))
+

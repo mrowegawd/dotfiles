@@ -1,0 +1,37 @@
+; (defwidget time-widget []
+;   (eventbox :class ""
+;             :orientation "h"
+;             :space-evenly false
+;             :tooltip "Calendar"
+;     (button :class ""
+;             :onclick {is_open_calendar == true ? "eww update is_open_calendar=\"false\" && eww close calendar" : "eww update is_open_calendar=\"true\" && eww open calendar"}
+;       (label :class "time-label" :text time))))
+
+(defpoll hour :interval "1s" "date '+%H'")
+(defpoll min :interval "1s" "date '+%M'")
+(defpoll mer :interval "1s" "date '+%P'")
+
+(defwidget time []
+	(box :class "time" :orientation "v" :halign "center" :valign "center" :space-evenly "false"
+		(button :class "hour" :tooltip "It's ${hour}:${min} ${mer}" :onclick "bar/scripts/openwindow.sh syspanel"
+			hour)
+		(button :class "min" :tooltip "It's ${hour}:${min} ${mer}" :onclick "$HOME/.config/eww/scripts/openwindow.sh syspanel"
+			min)))
+
+;(defpoll calendar_day :interval "20h" "date '+%d'")
+;(defpoll calendar_year :interval "20h" "date '+%Y'")
+;
+;(defwidget time []
+;  (box :class "cal" :orientation "v"
+;   (box :class "cal-in"
+;    (calendar :class "cal"
+;       :day calendar_day
+;       :year calendar_year))))
+;
+;(defwindow calendar
+;  :geometry (geometry :x "-20px"
+;             :y "7%"
+;             :anchor "top right"
+;             :width "270px"
+;             :height "60px")
+; (time))

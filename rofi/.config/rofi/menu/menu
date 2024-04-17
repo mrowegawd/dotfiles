@@ -19,7 +19,7 @@ chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 
 	case "$chosen" in
 	"@")
-		rofi -theme "$dir/$theme" -show drun
+		rofi -modi drun -theme "$dir/$theme" -show drun
 		;;
 	"Emojis") "$dir/_emoji" ;;
 	"Snippet") "$dir/_snippet" ;;

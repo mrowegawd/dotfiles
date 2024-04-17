@@ -209,9 +209,36 @@ set_fzf() {
 
 }
 
+set_eww() {
+
+	EWW_PATH="$HOME/.config/eww"
+
+	BG_DARKEN_1=$(darken_color "$GET_BLACK" 7) # Misalnya, mengurangi 50 untuk menggelapkan
+
+	sed -i -e "s/^\$bg: .*/\$bg: $GET_BG;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$black: .*/\$black: $BG_DARKEN_1;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$altbg: .*/\$altbg: $GET_BLACK_ALT;/g" "$EWW_PATH/eww.scss"
+
+	sed -i -e "s/^\$fg: .*/\$fg: $GET_FG;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$fg2: .*/\$fg2: $GET_FG;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
+
+	sed -i -e "s/^\$red: .*/\$red: $GET_RED;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$green: .*/\$green: $GET_GREEN;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$altgreen: .*/\$altgreen: $GET_GREEN_ALT;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$yellow: .*/\$yellow: $GET_YELLOW;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$altyellow: .*/\$altyellow: $GET_YELLOW_ALT;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$blue: .*/\$blue: $GET_BLUE;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$altblue: .*/\$altblue: $GET_BLUE_ALT;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$magenta: .*/\$magenta: $GET_MAGENTA;/g" "$EWW_PATH/eww.scss"
+	sed -i -e "s/^\$cyan: .*/\$cyan: $GET_CYAN;/g" "$EWW_PATH/eww.scss"
+
+}
+
 wm_bspwm() {
 	~/.config/bspwm/bspwmrc &>/dev/null
-	~/.config/polybar/runpolybar.sh &>/dev/null
+	# ~/.config/bspwm/bspwmrc
+	# ~/.config/polybar/runpolybar.sh &>/dev/null
 }
 wm_awesome() {
 	echo "awesome.restart()" | awesome-client
@@ -236,7 +263,7 @@ set_firefox() {
 
 dir="$HOME/.config/rofi/menu"
 theme="styles/big_center"
-rofi_command="rofi -theme $dir/$theme"
+rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
 
 (
 	[[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
@@ -258,7 +285,7 @@ rofi_command="rofi -theme $dir/$theme"
 	done
 
 	if [[ $STHEM == "false" ]]; then
-		dunstify "Load theme: $_NAMETHEME" "Not found, abort it"
+		notify-send "Load theme: $_NAMETHEME" "Not found, abort it"
 		exit 1
 	fi
 
@@ -284,6 +311,8 @@ rofi_command="rofi -theme $dir/$theme"
 	_NOTIF_TMUX="Tmux        ✅"
 	set_btop
 	_NOTIF_BTOP="Btop        ✅"
+	set_eww
+	_NOTIF_EWW="Eww        ✅"
 	set_zathura
 	_NOTIF_ZATHURA="Zathura     ✅"
 	set_vim "$_NAMETHEME"
@@ -291,15 +320,17 @@ rofi_command="rofi -theme $dir/$theme"
 	set_terminal "$_NAMETHEME"
 	_NOTIF_TERMINAL="Terminal    ✅"
 	set_firefox "$_NAMETHEME"
-	_NOTIF_FIREFOX="Firefox    ✅"
+	_NOTIF_FIREFOX="Firefox     ✅"
 
 	case "$XDG_SESSION_DESKTOP" in
 	"bspwm") wm_bspwm ;;
 	"awesome") wm_awesome ;;
 	esac
 
+	xrdb -merge ~/.Xresources
 	sleep 1
 	set_fzf
 
-	dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX"
+	dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
+		"\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
 )

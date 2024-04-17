@@ -1,0 +1,37 @@
+.sidetray {
+  background-color: $fg;
+  border-radius: 10px;
+  padding: 5px 0;
+  color: $bg;
+}
+
+.sidetray button {
+  transition: all;
+  transition-duration: 0.5s;
+}
+
+.sidetray button:hover {
+  color: $altgreen;
+  transition: all;
+  transition-duration: 0.2s;
+}
+
+.sidetray button:active {
+  color: $green;
+  transition: all;
+  transition-duration: 0.05s;
+}
+
+.sidetray-icon {
+  font-family: "Font Awesome 5 Free";
+  font-size: 2rem;
+  padding: 0 0.5rem;
+}
+
+.icon-code {
+  font-size: 3rem;
+}
+
+.icon-discord {
+  font-size: 1.8rem;
+}
