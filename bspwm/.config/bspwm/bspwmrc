@@ -114,7 +114,8 @@ setxkbmap -option caps:backspace # switch capslock to backspace
 # uncomment the picom "--legacy-backends" line and comment the current one.
 pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
 
-killall eww || { "$HOME/.local/bin/eww" open bar & }
+# Launch eww (I HATE THIS BAR!)
+"$HOME/.config/eww/starteww.sh"
 
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
@@ -133,5 +134,3 @@ if [ ! -f $startup_lock_file ]; then
 fi
 
 run_once xrdb ~/.Xresources
-
-#xdo lower -N eww-bar

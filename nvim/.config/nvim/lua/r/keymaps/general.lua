@@ -551,7 +551,7 @@ local function normalize_return(str)
   return str_slice
 end
 
-local fm_manager = "lf" -- "nnn -c"  or "lf"
+local fm_manager = "nnn -c" -- "nnn -c"  or "lf"
 
 RUtils.map.nnoremap("<a-E>", function()
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
