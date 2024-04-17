@@ -1,13 +1,14 @@
--- local cmd = vim.cmd
--- local term_count = 0
-
 return {
   -- TOGGLETERM
   {
     "akinsho/nvim-toggleterm.lua",
     opts = function()
+      local function get_option(name_opt)
+        return vim.api.nvim_get_option_value(name_opt, { scope = "local" })
+      end
+
       local function win_height_term()
-        local win_height = math.ceil(vim.api.nvim_get_option "lines" * 0.5)
+        local win_height = math.ceil(get_option "lines" * 0.5)
         return win_height - 4
       end
       return {
