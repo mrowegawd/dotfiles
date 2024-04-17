@@ -1,4 +1,4 @@
-local lsp = require("r.config").lsp_style
+local lsp = RUtils.config.lsp_style
 
 if lsp == "coc" then
   return require "r.plugins.lsp.coc"

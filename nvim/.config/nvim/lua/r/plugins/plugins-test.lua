@@ -10,10 +10,9 @@ local cmd = vim.cmd
 -------------------------------------------------------------------------------
 
 local Highlight = require "r.config.highlights"
-local Util = require "r.utils"
-local Icon = require("r.config").icons
+
 local api = vim.api
-local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
 
@@ -152,7 +151,7 @@ return {
       {
         "<Leader>ss",
         function()
-          Util.sessions.save_ses()
+          RUtils.session.save_ses()
         end,
         desc = "Misc(mini.session): save session",
       },
@@ -160,7 +159,7 @@ return {
       {
         "<Leader>sl",
         function()
-          Util.sessions.load_ses()
+          RUtils.session.load_ses()
         end,
         desc = "Misc(mini.session): restore last session",
       },
@@ -316,7 +315,7 @@ return {
     event = "LazyFile",
     enabled = false,
     init = function()
-      Util.disable_ctrl_i_and_o("NoAerial", { "aerial" })
+      RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
 
       api.nvim_create_autocmd("FileType", {
         pattern = { "aerial" },
@@ -357,7 +356,7 @@ return {
         {
           "<Localleader>oa",
           function()
-            Util.tiling.force_win_close({}, true)
+            RUtils.tiling.force_win_close({}, true)
             vim.cmd [[AerialToggle right]]
             -- if vim.bo[0].filetype == "aerial" then
             --   vim.cmd [[wincmd L]]
@@ -404,7 +403,7 @@ return {
                 ["default"] = function(selected, _)
                   local selection = selected[1]
                   if selection ~= nil and type(selection) == "string" then
-                    local opts_aerial = Util.opts "aerial.nvim"
+                    local opts_aerial = RUtils.opts "aerial.nvim"
                     local aerial = get_aerial()
                     aerial.close()
 
@@ -449,7 +448,7 @@ return {
         },
         whitespace = "  ",
         filter_kind = false,
-        icons = Icon.kinds,
+        icons = RUtils.config.icons.kinds,
         keymaps = {
           -- ["o"] = "actions.jump",
           ["o"] = "actions.scroll",
@@ -475,7 +474,7 @@ return {
     "liuchengxu/vista.vim",
     cmd = { "Vista" },
     enabled = function()
-      if require("r.config").lsp_style == "coc" then
+      if RUtils.config.lsp_style == "coc" then
         return true
       end
       return false
@@ -636,7 +635,7 @@ return {
           -- if vim.bo[0].filetype == "neo-tree" then
           --   return cmd [[q]]
           -- end
-          -- Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+          -- RUtils.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
           -- if vim.bo[0].filetype == "norg" then
           --   return cmd "Neotree toggle "
           -- end
@@ -683,7 +682,7 @@ return {
     enabled = false,
     cmd = { "NvimTreeToggle", "NvimTreeClose", "NvimTreeFindFileToggle" },
     -- init = function()
-    --   Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
+    --   RUtils.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
     -- end,
     keys = {
       {
@@ -692,7 +691,7 @@ return {
           --   if vim.bo[0].filetype == "neo-tree" then
           --     return cmd [[q]]
           --   end
-          --   Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
+          --   RUtils.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, false)
           --   if vim.bo[0].filetype == "norg" then
           --     return cmd "Neotree toggle "
           --   end
@@ -851,23 +850,23 @@ return {
             git_placement = "after",
 
             glyphs = {
-              default = Icon.documents.unknown,
-              symlink = Icon.documents.symlink,
+              default = RUtils.config.icons.documents.unknown,
+              symlink = RUtils.config.icons.documents.symlink,
               git = {
-                unstaged = Icon.git.added,
-                staged = Icon.git.added,
-                unmerged = Icon.git.unmerged,
-                renamed = Icon.git.rename,
-                deleted = Icon.git.removed,
-                untracked = Icon.git.untrack,
+                unstaged = RUtils.config.icons.git.added,
+                staged = RUtils.config.icons.git.added,
+                unmerged = RUtils.config.icons.git.unmerged,
+                renamed = RUtils.config.icons.git.rename,
+                deleted = RUtils.config.icons.git.removed,
+                untracked = RUtils.config.icons.git.untrack,
                 ignored = "",
               },
               folder = {
-                default = Icon.documents.folder,
-                open = Icon.documents.openfolder,
-                empty = Icon.documents.emptyfolder,
-                empty_open = Icon.documents.emptyopenfolder,
-                symlink = Icon.documents.foldersymlink,
+                default = RUtils.config.icons.documents.folder,
+                open = RUtils.config.icons.documents.openfolder,
+                empty = RUtils.config.icons.documents.emptyfolder,
+                empty_open = RUtils.config.icons.documents.emptyopenfolder,
+                symlink = RUtils.config.icons.documents.foldersymlink,
               },
             },
           },
@@ -1159,7 +1158,7 @@ return {
     event = "LazyFile",
     enabled = false,
     init = function()
-      Util.cmd.augroup("PersistedEvents", {
+      RUtils.cmd.augroup("PersistedEvents", {
         event = "User",
         pattern = "PersistedSavePre",
         -- Arguments are always persisted in a session and can't be removed using 'sessionoptions'
@@ -1319,7 +1318,7 @@ return {
         "<localleader><localleader>",
         function()
           if vim.bo.filetype == "qf" then
-            Util.tiling.force_win_close({ "qf" }, false)
+            RUtils.tiling.force_win_close({ "qf" }, false)
 
             vim.cmd [[wincmd w]]
           end
@@ -1333,7 +1332,7 @@ return {
         "<c-Delete>",
         function()
           if vim.bo.filetype == "qf" then
-            Util.tiling.force_win_close({ "qf" }, false)
+            RUtils.tiling.force_win_close({ "qf" }, false)
 
             vim.cmd [[wincmd w]]
           end
@@ -1351,7 +1350,7 @@ return {
         "<c-Insert>",
         function()
           if vim.bo.filetype == "qf" then
-            Util.tiling.force_win_close({ "qf" }, false)
+            RUtils.tiling.force_win_close({ "qf" }, false)
 
             vim.cmd [[wincmd w]]
           end
@@ -1369,7 +1368,7 @@ return {
         "<C-PageDown>",
         function()
           if vim.bo.filetype == "qf" then
-            Util.tiling.force_win_close({ "qf" }, false)
+            RUtils.tiling.force_win_close({ "qf" }, false)
 
             vim.cmd [[wincmd w]]
           end
@@ -1388,7 +1387,7 @@ return {
         "<C-PageUp>",
         function()
           if vim.bo.filetype == "qf" then
-            Util.tiling.force_win_close({ "qf" }, false)
+            RUtils.tiling.force_win_close({ "qf" }, false)
 
             vim.cmd [[wincmd w]]
           end
@@ -1826,7 +1825,7 @@ return {
     --   "OverseerTaskAction",
     -- },
     init = function()
-      -- Util.cmd.augroup("RunOverseerTasks", {
+      -- RUtils.cmd.augroup("RunOverseerTasks", {
       --   event = { "FileType" },
       --   pattern = as.lspfiles,
       --   command = function()
@@ -1862,7 +1861,7 @@ return {
     --   {
     --     "rt",
     --     function()
-    --       Util.tiling.force_win_close({ "neo-tree", "undotree" }, false)
+    --       RUtils.tiling.force_win_close({ "neo-tree", "undotree" }, false)
     --       return cmd "OverseerToggle!"
     --     end,
     --     desc = "Task(overseer): toggle",
@@ -2215,7 +2214,7 @@ return {
         if vim.v.hlsearch == 0 or vim.api.nvim_get_mode().mode ~= "n" then
           return
         end
-        Util.cmd.feedkey("<Plug>(StopHL)", "n")
+        RUtils.cmd.feedkey("<Plug>(StopHL)", "n")
       end
 
       local function hl_search()
@@ -2236,7 +2235,7 @@ return {
         end
       end
 
-      Util.cmd.augroup("VimrcIncSearchHighlight", {
+      RUtils.cmd.augroup("VimrcIncSearchHighlight", {
         event = { "CursorMoved" },
         command = function()
           hl_search()
@@ -2370,7 +2369,7 @@ return {
           update_interval = 100,
           enable = function(buf, win)
             local b, w = vim.bo[buf], vim.wo[win]
-            local decor = Util.uisec.decorations.decoration_get { ft = b.ft, bt = b.bt, setting = "winbar" }
+            local decor = RUtils.uisec.decorations.decoration_get { ft = b.ft, bt = b.bt, setting = "winbar" }
             return decor ~= nil
               and decor.ft ~= false
               and decor.bt ~= false
@@ -2383,11 +2382,11 @@ return {
         icons = {
           kinds = {
             use_devicons = false,
-            symbols = require("r.config").icons.kinds,
+            symbols = RUtils.config.icons.kinds,
           },
           ui = {
             bar = {
-              separator = set_icons(require("r.config").icons.misc.arrow_right),
+              separator = set_icons(RUtils.config.icons.misc.arrow_right),
               extends = "…",
             },
             menu = {

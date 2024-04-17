@@ -1,8 +1,6 @@
 local cmd = vim.cmd
 
-local Util = require "r.utils"
-
-Util.cmd.augroup("WrapSpell", {
+RUtils.cmd.augroup("WrapSpell", {
   event = { "FileType" },
   pattern = { "gitcommit", "NeogitCommitMessage" },
   command = function()
@@ -36,7 +34,7 @@ Util.cmd.augroup("WrapSpell", {
 --   },
 -- },
 
-Util.cmd.augroup("WrapFt", {
+RUtils.cmd.augroup("WrapFt", {
   event = { "FileType" },
   pattern = { "typescriptreact", "typescript" },
   command = function()
@@ -44,7 +42,7 @@ Util.cmd.augroup("WrapFt", {
   end,
 })
 
-Util.cmd.augroup("TerminalDefaults", {
+RUtils.cmd.augroup("TerminalDefaults", {
   event = { "TermOpen" },
   pattern = "*",
   command = function()
@@ -56,13 +54,13 @@ Util.cmd.augroup("TerminalDefaults", {
   end,
 })
 
-Util.cmd.augroup("LargeFileSettings", {
+RUtils.cmd.augroup("LargeFileSettings", {
   event = { "BufRead" },
   desc = "Set settings for large files.",
   command = function(ctx)
     local buf = ctx.buf
 
-    if Util.buf.is_big_file(ctx.buf) then
+    if RUtils.buf.is_big_file(ctx.buf) then
       vim.b[buf].is_big_file = true
       vim.b[buf].copilot_enabled = false
       vim.b[buf].autoformat_disable = true
@@ -96,13 +94,13 @@ Util.cmd.augroup("LargeFileSettings", {
   end,
 })
 
-Util.cmd.augroup("SetNopaste", {
+RUtils.cmd.augroup("SetNopaste", {
   event = { "InsertLeave" },
   pattern = "*",
   command = "set nopaste",
 })
 
-Util.cmd.augroup("DisableJsonConceal", {
+RUtils.cmd.augroup("DisableJsonConceal", {
   event = { "FileType" },
   pattern = { "json", "jsonc" },
   command = function()
@@ -110,7 +108,7 @@ Util.cmd.augroup("DisableJsonConceal", {
   end,
 })
 
-Util.cmd.augroup("SmartClose", {
+RUtils.cmd.augroup("SmartClose", {
   event = { "FileType" },
   pattern = {
     "PlenaryTestPopup",
@@ -137,7 +135,7 @@ Util.cmd.augroup("SmartClose", {
   end,
 })
 
-Util.cmd.augroup("TextYankHighlight", {
+RUtils.cmd.augroup("TextYankHighlight", {
   event = { "TextYankPost" },
   command = function()
     vim.highlight.on_yank {
@@ -148,7 +146,7 @@ Util.cmd.augroup("TextYankHighlight", {
   end,
 })
 
--- Util.cmd.augroup("WindowBehaviours", {
+-- RUtils.cmd.augroup("WindowBehaviours", {
 --   event = { "FileType" },
 --   pattern = { "norg", "org", "orgagenda" },
 --   command = function()
@@ -169,7 +167,7 @@ Util.cmd.augroup("TextYankHighlight", {
 --   end,
 -- })
 
-Util.cmd.augroup("LocateLastPosition", {
+RUtils.cmd.augroup("LocateLastPosition", {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
   command = function(args)
@@ -187,7 +185,7 @@ Util.cmd.augroup("LocateLastPosition", {
   end,
 })
 
-Util.cmd.augroup("WindowBehaviours", {
+RUtils.cmd.augroup("WindowBehaviours", {
   event = { "FileType" },
   pattern = {
     "orgagenda",
@@ -207,15 +205,15 @@ Util.cmd.augroup("WindowBehaviours", {
   end,
 })
 
-Util.cmd.augroup("ConvertNorg", {
+RUtils.cmd.augroup("ConvertNorg", {
   event = { "BufWritePost" },
   pattern = { "*.norg" },
   command = function()
-    Util.neorg.convert_norg_to_markdown()
+    RUtils.neorg.convert_norg_to_markdown()
   end,
 })
 
-Util.cmd.augroup("CheckOutsideTime", {
+RUtils.cmd.augroup("CheckOutsideTime", {
   -- automatically check for changed files outside vim
   event = { "FocusGained", "TermClose", "TermLeave" },
   command = function()
@@ -228,7 +226,7 @@ Util.cmd.augroup("CheckOutsideTime", {
 -- Copy/Paste when using ssh on a remote server
 -- Only works on Neovim >= 0.10.0
 if vim.clipboard and vim.clipboard.osc52 then
-  Util.cmd.augroup("SSH_clipboard", {
+  RUtils.cmd.augroup("SSH_clipboard", {
     event = { "VimEnter" },
     callback = function()
       if vim.env.SSH_CONNECTION and vim.clipboard.osc52 then
@@ -252,58 +250,58 @@ vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
 ]]
 
--- Util.cmd.augroup("DisableHiBGNormal", {
+-- RUtils.cmd.augroup("DisableHiBGNormal", {
 --   event = { "BufReadPost" },
 --   pattern = "*",
 --   command = function()
 --     if os.getenv "TERMINAL" == "wezterm" then
---       cmd "hi Normal guibg=NONE"
+--     cmd "hi Normal guibg=NONE"
 --     end
 --   end,
 --   once = true,
 -- })
 
--- Util.cmd.augroup(
+-- RUtils.cmd.augroup(
 --   "WindowDim",
 --   -- {
 --   --   event = { "BufRead" },
 --   --   pattern = { "*" },
 --   --   command = function()
---   --     Util.windowdim.buf_enter()
+--   --     RUtils.windowdim.buf_enter()
 --   --   end,
 --   -- }, {
 --   --   event = { "BufEnter" },
 --   --   pattern = { "*" },
 --   --   command = function()
---   --     Util.windowdim.buf_enter()
+--   --     RUtils.windowdim.buf_enter()
 --   --   end,
 --   -- },
 --   {
 --     event = { "VimEnter", "FocusGained", "WinEnter" },
 --     pattern = "*",
 --     command = function()
---       Util.windowdim.focus_gained()
+--       RUtils.windowdim.focus_gained()
 --     end,
 --   },
 --   {
 --     event = { "VimLeave", "FocusLost", "WinLeave" },
 --     pattern = "*",
 --     command = function()
---       Util.windowdim.focus_lost()
+--       RUtils.windowdim.focus_lost()
 --     end,
 --   }
 --   -- {
 --   --   event = { "WinEnter" },
 --   --   pattern = "*",
 --   --   command = function()
---   --     Util.windowdim.win_enter()
+--   --     RUtils.windowdim.win_enter()
 --   --   end,
 --   -- },
 --   -- {
 --   --   event = { "WinLeave" },
 --   --   pattern = "*",
 --   --   command = function()
---   --     Util.windowdim.win_leave()
+--   --     RUtils.windowdim.win_leave()
 --   --   end,
 --   -- }
 -- )

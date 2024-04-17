@@ -30,7 +30,7 @@ function M.dropdown(opts)
     opts.winopts.title = M.format_title(title)
   end
   return vim.tbl_deep_extend("force", {
-    prompt = require("r.config").icons.misc.dots,
+    prompt = RUtils.config.icons.misc.dots,
     fzf_opts = { ["--layout"] = "reverse" },
     winopts = {
       title_pos = opts.winopts.title and "center" or nil,

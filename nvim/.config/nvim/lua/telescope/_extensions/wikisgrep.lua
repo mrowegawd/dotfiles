@@ -217,7 +217,7 @@ local wikisgrep = function(opts)
     "-g=!config/",
     "-g=!.obsidian/",
   }
-  opts.cwd = require("r.config").path.wiki_path
+  opts.cwd = RUtils.config.path.wiki_path
   opts.entry_maker = opts.entry_maker or make_entry.gen_from_vimgrep(opts)
   opts.cwd = opts.cwd and vim.fn.expand(opts.cwd)
 

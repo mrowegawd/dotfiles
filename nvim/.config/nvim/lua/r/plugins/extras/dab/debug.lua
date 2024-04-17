@@ -1,7 +1,6 @@
 local fn = vim.fn
 
 local Highlight = require "r.settings.highlights"
-local Util = require "r.utils"
 
 return {
   -- NVIM-DAP
@@ -185,9 +184,9 @@ return {
       {
         "<Leader>df",
         function()
-          local col, row = Util.fzflua.rectangle_win_pojokan()
+          local col, row = RUtils.fzflua.rectangle_win_pojokan()
 
-          Util.fzflua.send_cmds({
+          RUtils.fzflua.send_cmds({
             breakpoint_set = function()
               return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
             end,
@@ -213,7 +212,7 @@ return {
             dap_printout_session = function()
               return print(vim.inspect(require("dap").session()))
             end,
-          }, { winopts = { title = require("r.config").icons.misc.bug .. " Debug", row = row, col = col } })
+          }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
         end,
         desc = "Debug(dap): list of debugging dap commands",
       },
@@ -238,11 +237,11 @@ return {
           if #status_dap(require "dap") > 0 then
             return require("dap").disconnect()
           else
-            if Util.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
+            if RUtils.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
               return require("osv").run_this()
             end
 
-            -- if Util.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
+            -- if RUtils.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
             --   return vim.cmd.RustLsp "debuggables"
             -- end
             return require("dap").continue()
@@ -394,7 +393,6 @@ return {
       },
     },
     config = function()
-      local Config = require "r.config"
       Highlight.plugin("dapHi", {
         {
           DapBreakpoint = {
@@ -414,12 +412,12 @@ return {
         {
           name = "DapBreakpoint",
           texthl = "DapBreakpoint",
-          text = Config.icons.dap.Breakpoint,
+          text = RUtils.config.icons.dap.Breakpoint,
         },
         {
           name = "DapStopped",
           texthl = "DapStopped",
-          text = Config.icons.dap.Stopped,
+          text = RUtils.config.icons.dap.Stopped,
         },
       }
     end,

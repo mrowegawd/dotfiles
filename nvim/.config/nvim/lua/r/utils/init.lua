@@ -1,6 +1,7 @@
 local LazyUtil = require "lazy.core.util"
 
 ---@class r.util: LazyUtilCore
+---@field config LazyVimConfig
 ---@field ui r.utils.ui
 ---@field qf r.utils.qf
 ---@field lsp r.utils.lsp

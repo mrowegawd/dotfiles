@@ -1,6 +1,4 @@
-local Util = require "r.utils"
-
-local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf" }
 

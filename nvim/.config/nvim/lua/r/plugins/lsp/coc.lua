@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 
@@ -248,7 +246,7 @@ return {
         -- docker
         "hadolint",
       },
-      ui = { border = require("r.config").icons.border.line, height = 0.8 },
+      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
     },
 
     config = function(_, opts)
@@ -322,14 +320,14 @@ return {
           },
           focusable = false,
           style = "minimal",
-          border = require("r.config").icons.border.line,
+          border = RUtils.config.icons.border.line,
           source = "always",
           header = "",
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
             local prefix = string.format(
               "%s ",
-              require("r.config").icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
+              RUtils.config.icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
                 return first:upper() .. rest:lower()
               end)]
             )
@@ -538,12 +536,12 @@ return {
           end
 
           -- register the formatter with LazyVim
-          Util.format.register(formatter)
+          RUtils.format.register(formatter)
         end,
         yamlls = function()
           -- Neovim < 0.10 does not have dynamic registration for formatting
           if vim.fn.has "nvim-0.10" == 0 then
-            Util.lsp.on_attach(function(client, _)
+            RUtils.lsp.on_attach(function(client, _)
               if client.name == "yamlls" then
                 client.server_capabilities.documentFormattingProvider = true
               end
@@ -551,7 +549,7 @@ return {
           end
         end,
         ruff_lsp = function()
-          Util.lsp.on_attach(function(client, _)
+          RUtils.lsp.on_attach(function(client, _)
             if client.name == "ruff_lsp" then
               -- Disable hover in favor of Pyright
               client.server_capabilities.hoverProvider = false
@@ -561,7 +559,7 @@ return {
         gopls = function()
           -- workaround for gopls not supporting semanticTokensProvider
           -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-          Util.lsp.on_attach(function(client, _)
+          RUtils.lsp.on_attach(function(client, _)
             if client.name == "gopls" then
               if not client.server_capabilities.semanticTokensProvider then
                 local semantic = client.config.capabilities.textDocument.semanticTokens
@@ -596,21 +594,21 @@ return {
       },
     },
     config = function(_, opts)
-      if Util.has "neoconf.nvim" then
+      if RUtils.has "neoconf.nvim" then
         local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
         require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
       end
 
-      Util.format.register(Util.lsp.formatter())
+      RUtils.format.register(RUtils.lsp.formatter())
 
       -- deprecated options
       if opts.autoformat ~= nil then
         vim.g.autoformat = opts.autoformat
-        Util.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
+        RUtils.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
       end
 
       local function has_capability(capability, filter)
-        for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
+        for _, client in ipairs(vim.lsp.get_clients(filter)) do
           if client.supports_method(capability) then
             return true
           end
@@ -629,15 +627,15 @@ return {
       }
 
       -- Setup formatting and keymaps
-      Util.lsp.on_attach(function(client, bufnr)
+      RUtils.lsp.on_attach(function(client, bufnr)
         if client.server_capabilities[provider.CODELENS] then
-          Util.cmd.augroup("LspCodelensRefresh", {
+          RUtils.cmd.augroup("LspCodelensRefresh", {
             event = { "BufEnter", "InsertLeave", "BufWritePost" },
             desc = "LSP: Code Lens",
             buffer = bufnr,
             command = function()
               if not has_capability("textDocument/codeLens", { bufnr = bufnr }) then
-                Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
+                RUtils.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
                 return
               end
               if vim.g.codelens_enabled then
@@ -648,7 +646,7 @@ return {
         end
 
         if client.server_capabilities[provider.REFERENCES] then
-          Util.cmd.augroup(("LspReferences%d"):format(bufnr), {
+          RUtils.cmd.augroup(("LspReferences%d"):format(bufnr), {
             event = { "CursorHold", "CursorHoldI" },
             buffer = bufnr,
             desc = "LSP: References",
@@ -666,7 +664,7 @@ return {
         end
         if opts.inlay_hints.enabled then
           if client.supports_method "textDocument/inlayHint" then
-            Util.toggle.inlay_hints(bufnr, true)
+            RUtils.toggle.inlay_hints(bufnr, true)
           end
         end
       end)
@@ -685,7 +683,7 @@ return {
       -- })
 
       -- Diagnostics
-      for name, icon in pairs(require("r.config").icons.diagnostics) do
+      for name, icon in pairs(RUtils.config.icons.diagnostics) do
         name = "DiagnosticSign" .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = name })
       end
@@ -693,7 +691,7 @@ return {
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
           or function(diagnostic)
-            for d, icon in pairs(require("r.config").icons.diagnostics) do
+            for d, icon in pairs(RUtils.config.icons.diagnostics) do
               if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
                 return icon
               end
@@ -754,13 +752,13 @@ return {
         mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
       end
 
-      if Util.lsp.get_config "denols" and Util.lsp.get_config "tsserver" then
-        Util.lsp.on_attach(function(client, _)
+      if RUtils.lsp.get_config "denols" and RUtils.lsp.get_config "tsserver" then
+        RUtils.lsp.on_attach(function(client, _)
           client.server_capabilities.semanticTokensProvider = nil
         end)
         --   local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        --   Util.lsp.lsp_disable("tsserver", is_deno)
-        --   Util.lsp.lsp_disable("denols", function(root_dir)
+        --   RUtils.lsp.lsp_disable("tsserver", is_deno)
+        --   RUtils.lsp.lsp_disable("denols", function(root_dir)
         --     return not is_deno(root_dir)
         -- end)
       end

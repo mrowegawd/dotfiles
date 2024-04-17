@@ -1,5 +1,3 @@
-local Config = require "r.config"
-
 ---@class r.utils.markdown
 local M = {}
 
@@ -129,7 +127,7 @@ function M.followLink(is_selection)
         [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
 
       local fzflua = require "fzf-lua"
-      fzflua.grep { cwd = Config.path.wiki_path, search = title, rg_opts = rg_opts }
+      fzflua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
     else
       if require("obsidian").util.cursor_on_markdown_link() then
         vim.cmd "ObsidianFollowLink"

@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 local M = {}
 
 ---@param opts ConformOpts
@@ -10,14 +8,17 @@ function M.setup(_, opts)
       if formatter.extra_args then
         ---@diagnostic disable-next-line: undefined-field
         formatter.prepend_args = formatter.extra_args
-        Util.deprecate(("opts.formatters.%s.extra_args"):format(name), ("opts.formatters.%s.prepend_args"):format(name))
+        RUtils.deprecate(
+          ("opts.formatters.%s.extra_args"):format(name),
+          ("opts.formatters.%s.prepend_args"):format(name)
+        )
       end
     end
   end
 
   for _, key in ipairs { "format_on_save", "format_after_save" } do
     if opts[key] then
-      Util.warn(
+      RUtils.warn(
         ("Don't set `opts.%s` for `conform.nvim`.\n**LazyVim** will use the conform formatter automatically"):format(
           key
         )
@@ -47,8 +48,8 @@ return {
     },
     init = function()
       -- Install the conform formatter on VeryLazy
-      Util.on_very_lazy(function()
-        Util.format.register {
+      RUtils.on_very_lazy(function()
+        RUtils.format.register {
           name = "conform.nvim",
           priority = 100,
           primary = true,
@@ -56,7 +57,7 @@ return {
             local plugin = require("lazy.core.config").plugins["conform.nvim"]
             local Plugin = require "lazy.core.plugin"
             local opts = Plugin.values(plugin, "opts", false)
-            require("conform").format(Util.merge(opts.format, { bufnr = buf }))
+            require("conform").format(RUtils.merge(opts.format, { bufnr = buf }))
           end,
           sources = function(buf)
             local ret = require("conform").list_formatters(buf)
@@ -70,7 +71,7 @@ return {
     opts = function()
       -- local plugin = require("lazy.core.config").plugins["conform.nvim"]
       -- if plugin.config ~= M.setup then
-      --   Util.error({
+      --   RUtils.error({
       --     "Don't set `plugin.config` for `conform.nvim`.\n",
       --     "This will break **LazyVim** formatting.\n",
       --     "Please refer to the docs at https://www.lazyvim.org/plugins/formatting",

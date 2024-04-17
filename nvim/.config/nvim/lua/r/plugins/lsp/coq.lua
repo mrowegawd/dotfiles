@@ -36,7 +36,7 @@ return {
     build = ":MasonUpdate",
     opts = {
       ensure_installed = { "shfmt" },
-      ui = { border = require("r.config").icons.border.line, height = 0.8 },
+      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
     },
     config = function(_, opts)
       require("mason").setup(opts)
@@ -103,14 +103,14 @@ return {
           },
           focusable = false,
           style = "minimal",
-          border = require("r.config").icons.border.line,
+          border = RUtils.config.icons.border.line,
           source = "always",
           header = "",
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
             local prefix = string.format(
               "%s ",
-              require("r.config").icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
+              RUtils.config.icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
                 return first:upper() .. rest:lower()
               end)]
             )
@@ -322,7 +322,7 @@ return {
       -- })
 
       -- Diagnostics
-      for name, icon in pairs(require("r.config").icons.diagnostics) do
+      for name, icon in pairs(RUtils.config.icons.diagnostics) do
         name = "DiagnosticSign" .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
       end
@@ -330,7 +330,7 @@ return {
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
           or function(diagnostic)
-            for d, icon in pairs(require("r.config").icons.diagnostics) do
+            for d, icon in pairs(RUtils.config.icons.diagnostics) do
               if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
                 return icon
               end

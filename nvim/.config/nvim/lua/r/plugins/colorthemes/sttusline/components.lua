@@ -3,8 +3,6 @@ local fn, fmt, hl, get_option = vim.fn, string.format, vim.api.nvim_set_hl, vim.
 local sttsline_utils = require "sttusline.utils"
 local sttsline_colors = require "sttusline.utils.color"
 
-local Util = require "r.utils"
-
 local highlight = require "r.settings.highlights"
 
 local col_bg_StatusLine = highlight.get("ColorColumn", "bg")
@@ -171,7 +169,7 @@ M.filename = function()
   Filename.set_event(M.set_event)
 
   Filename.set_config {
-    icon = require("r.config").icons.git.branch,
+    icon = RUtils.config.icons.git.branch,
     colors = {
       normal = { fg = colors.base_fg, bg = colors.base_bg, bold = true },
       filename = { fg = colors.filename_fg, bg = colors.base_bg, bold = true },
@@ -201,8 +199,8 @@ M.filename = function()
     local path = vim.fn.expand "%:p"
     local sep
 
-    local root = Util.root.get { normalize = true }
-    local cwd = Util.root.cwd()
+    local root = RUtils.root.get { normalize = true }
+    local cwd = RUtils.root.cwd()
 
     if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
       path = path:sub(#cwd + 2)
@@ -248,7 +246,7 @@ M.filename = function()
         parts = "Lazy"
       elseif filetype == "qf" then
         icon, color_icon = "󰏔", sttsline_colors.magenta
-        if Util.qf.is_loclist() then
+        if RUtils.qf.is_loclist() then
           parts = fmt("Loclist:%s", fn.getloclist(0, { title = 0 }).title)
         else
           parts = fmt("Quickfix: %s %s", fn.getqflist({ id = 0 }).id, fn.getqflist({ title = 0 }).title)
@@ -284,7 +282,7 @@ end
 M.filereadonly = function()
   local Readonly = require("sttusline.component").new()
 
-  -- local col = Util.ui.fg("Error").fg
+  -- local col = RUtils.ui.fg("Error").fg
   -- if col == nil then
   --   col = "#610000"
   -- end
@@ -315,7 +313,7 @@ M.filereadonly = function()
 end
 M.rootdir = function()
   local Rootdir = require("sttusline.component").new()
-  local spesc = Util.ui.fg "Directory" or "#fe8019"
+  local spesc = RUtils.ui.fg "Directory" or "#fe8019"
 
   Rootdir.set_config {
     cwd = true,
@@ -333,8 +331,8 @@ M.rootdir = function()
   Rootdir.set_event(M.set_event)
 
   Rootdir.set_update(function()
-    local cwd = Util.root.cwd()
-    local root = Util.root.get { normalize = true }
+    local cwd = RUtils.root.cwd()
+    local root = RUtils.root.get { normalize = true }
     local name = vim.fs.basename(root) or ""
 
     if name == nil then
@@ -391,7 +389,7 @@ M.branch = function()
   Branch.set_event { "BufWritePost", "VimResized", "BufEnter" }
 
   Branch.set_config {
-    icon = require("r.config").icons.git.branch,
+    icon = RUtils.config.icons.git.branch,
     color = { fg = colors.branch_fg, bg = colors.base_bg, bold = false },
   }
 

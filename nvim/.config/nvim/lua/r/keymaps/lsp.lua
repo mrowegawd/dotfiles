@@ -270,7 +270,7 @@ function M.get()
         local col, row = RUtils.fzflua.rectangle_win_pojokan()
         RUtils.fzflua.send_cmds(
           defaultCmds,
-          { winopts = { title = require("r.config").icons.misc.smiley .. "LSP", row = row, col = col } }
+          { winopts = { title = RUtils.config.icons.misc.smiley .. "LSP", row = row, col = col } }
         )
       end,
       desc = "LSP: commands of lsp",

@@ -1,7 +1,5 @@
 local Highlight = require "r.settings.highlights"
 
-local Icon = require("r.config").icons
-
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 
@@ -745,7 +743,7 @@ return {
           symbols = {
             no_action_zz = true,
             symbol_style = 1,
-            symbol_icons = require("r.config").icons.kinds,
+            symbol_icons = RUtils.config.icons.kinds,
             fzf_opts = {
               ["--reverse"] = false,
               -- ["--scrollbar"] = "▓",
@@ -810,7 +808,7 @@ return {
       --   "gs",
       --   function()
       --     require("telescope.builtin").lsp_document_symbols {
-      --       symbols = require("r.config").get_kind_filter(),
+      --       symbols = RUtils.config.get_kind_filter(),
       --     }
       --   end,
       --   desc = "Telescope (lsp): goto symbol",
@@ -819,7 +817,7 @@ return {
       --   "gS",
       --   function()
       --     require("telescope.builtin").lsp_dynamic_workspace_symbols {
-      --       symbols = require("r.config").get_kind_filter(),
+      --       symbols = RUtils.config.get_kind_filter(),
       --     }
       --   end,
       --   desc = "Telescope(lsp): goto symbol (Workspace)",
@@ -1395,7 +1393,7 @@ return {
       sign_priority = 8, -- sign priority
       keywords = {
         FIX = {
-          icon = Icon.misc.tools,
+          icon = RUtils.config.icons.misc.tools,
           -- can be a hex color, or a named color
           -- named colors definitions follow below
           color = "error",
@@ -1403,9 +1401,9 @@ return {
           alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
           -- signs = false -- configure signs for some keywords individually
         },
-        TODO = { icon = Icon.misc.check_big, color = "info" },
+        TODO = { icon = RUtils.config.icons.misc.check_big, color = "info" },
         WARN = {
-          icon = Icon.misc.bug,
+          icon = RUtils.config.icons.misc.bug,
           -- icon = " ", -- used for the sign, and search results
           color = "warning",
           alt = { "WARNING", "WARN" },
@@ -1477,7 +1475,7 @@ return {
         -- priority: use fzf_lua first before anything else
         backend = { "fzf_lua", "builtin" },
         builtin = {
-          border = Icon.border.line,
+          border = RUtils.config.icons.border.line,
           min_height = 10,
           win_options = { winblend = 10 },
           mappings = { n = { ["q"] = "Close" } },
@@ -1498,7 +1496,7 @@ return {
               backend = "nui",
               nui = {
                 position = "90%",
-                border = { style = Icon.border.line },
+                border = { style = RUtils.config.icons.border.line },
                 min_width = math.floor(vim.o.columns / 2 - 50),
               },
             }

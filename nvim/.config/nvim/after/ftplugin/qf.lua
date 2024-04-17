@@ -1,7 +1,5 @@
 local keymap, api = vim.keymap, vim.api
 
-local Util = require "r.utils"
-
 vim.opt.buflisted = false
 
 -- Disable ctrl-i and ctrl-o
@@ -13,7 +11,7 @@ keymap.set("n", "<c-o>", "<Nop>", {
 })
 
 keymap.set("n", "o", function()
-  Util.map.feedkey("<CR>", "n")
+  RUtils.map.feedkey("<CR>", "n")
   -- vim.schedule(function()
   --   if vim.bo[0].filetype ~= "qf" then
   --     vim.cmd "wincmd p"
@@ -23,7 +21,7 @@ end, {
   buffer = api.nvim_get_current_buf(),
 })
 
-Util.cmd.augroup("ColorQuickFixLine", {
+RUtils.cmd.augroup("ColorQuickFixLine", {
   event = { "BufRead", "WinEnter", "FocusGained", "VimEnter", "BufEnter" },
   command = function()
     if vim.bo.filetype ~= "qf" then

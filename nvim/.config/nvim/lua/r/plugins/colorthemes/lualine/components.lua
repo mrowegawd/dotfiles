@@ -2,10 +2,6 @@ local M = {}
 
 local fn, fmt = vim.fn, string.format
 
-local Util = require "r.utils"
-
-local Icons = require("r.config").icons
-
 local term_count = 1
 
 function M.format(component, text, hl_group)
@@ -177,9 +173,9 @@ M.diff = function()
   return {
     "diff",
     symbols = {
-      added = Icons.git.add,
-      modified = Icons.git.mod,
-      removed = Icons.git.remove,
+      added = RUtils.config.icons.git.add,
+      modified = RUtils.config.icons.git.mod,
+      removed = RUtils.config.icons.git.remove,
     },
 
     source = function()
@@ -232,14 +228,14 @@ M.cmp_source = function(name, icon)
   end
 
   local colors = {
-    ok = Util.ui.fg "Special",
-    error = Util.ui.fg "DiagnosticError",
-    pending = Util.ui.fg "DiagnosticWarn",
+    ok = RUtils.ui.fg "Special",
+    error = RUtils.ui.fg "DiagnosticError",
+    pending = RUtils.ui.fg "DiagnosticWarn",
   }
 
   return {
     function()
-      return icon or require("r.config").icons.kinds[name:sub(1, 1):upper() .. name:sub(2)]
+      return icon or RUtils.config.icons.kinds[name:sub(1, 1):upper() .. name:sub(2)]
     end,
     cond = function()
       return status() ~= nil
@@ -261,8 +257,8 @@ M.filename = function(opts)
     if path == "" then
       return ""
     end
-    local root = Util.root.get { normalize = true }
-    local cwd = Util.root.cwd()
+    local root = RUtils.root.get { normalize = true }
+    local cwd = RUtils.root.cwd()
 
     if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
       path = path:sub(#cwd + 2)
@@ -360,10 +356,10 @@ M.diagnostics = function()
     "diagnostics",
     sources = { "nvim_diagnostic" },
     symbols = {
-      error = Icons.diagnostics.error,
-      warn = Icons.diagnostics.warn,
-      info = Icons.diagnostics.info,
-      hint = Icons.diagnostics.hint,
+      error = RUtils.config.icons.diagnostics.error,
+      warn = RUtils.config.icons.diagnostics.warn,
+      info = RUtils.config.icons.diagnostics.info,
+      hint = RUtils.config.icons.diagnostics.hint,
     },
   }
 end
@@ -455,7 +451,7 @@ M.check_loaded_buf = function()
       end
       return loaded_bufs
     end,
-    icon = Icons.kinds.stacked,
+    icon = RUtils.config.icons.kinds.stacked,
     cond = conditions.debugger_status_run,
     color = { fg = "DarkCyan", gui = "bold" },
   }
@@ -467,21 +463,21 @@ M.root_dir = function(opts)
     parent = true,
     other = true,
     icon = "󱉭 ",
-    color = Util.ui.fg "Special",
+    color = RUtils.ui.fg "Special",
   }, opts or {})
 
   local function get()
-    local cwd = Util.root.cwd()
-    local root = Util.root.get { normalize = true }
+    local cwd = RUtils.root.cwd()
+    local root = RUtils.root.get { normalize = true }
     local name = vim.fs.basename(root)
 
-    if root == cwd then
+    if root and root == cwd then
       -- root is cwd
       return opts.cwd and name
-    elseif root:find(cwd, 1, true) == 1 then
+    elseif root and root:find(cwd, 1, true) == 1 then
       -- root is subdirectory of cwd
       return opts.subdirectory and name
-    elseif cwd:find(root, 1, true) == 1 then
+    elseif root and cwd:find(root, 1, true) == 1 then
       -- root is parent directory of cwd
       return opts.parent and name
     else
@@ -505,7 +501,7 @@ M.get_lsp_client_notify = function()
     function()
       local clients = vim.lsp.get_active_clients { bufnr = 0 }
 
-      if Util.cmd.falsy(clients) then
+      if RUtils.cmd.falsy(clients) then
         return "No LSP clients available"
       end
 

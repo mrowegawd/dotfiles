@@ -1,6 +1,5 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
-local Config = require "r.config"
 
 return {
   -- MINI.INDENTSCOPE
@@ -185,7 +184,7 @@ return {
         --   if not vim.api.nvim_win_is_valid(win) then
         --     return
         --   end
-        --   vim.api.nvim_win_set_config(win, { border = require("r.config").icons.border.line })
+        --   vim.api.nvim_win_set_config(win, { border = RUtils.config.icons.border.line })
         -- end,
         render = function(...)
           local notification = select(2, ...)
@@ -266,12 +265,13 @@ return {
           progress = {
             enabled = false,
           },
-          signature = { auto_open = { enabled = true }, enabled = true },
+          signature = { auto_open = { enabled = true }, enabled = false },
           hover = { enabled = true },
           override = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
             ["cmp.entry.get_documentation"] = true,
+            -- ''config.lsp.signature.enabled = false
           },
         },
         cmdline = {
@@ -393,7 +393,7 @@ return {
             if props.focused then
               if vim.bo[props.buf].modified then
                 return {
-                  " " .. Config.icons.misc.boldclose,
+                  " " .. RUtils.config.icons.misc.boldclose,
                   guifg = Highlight.get("DiagnosticSignError", "fg"),
                   gui = "bold",
                   guibg = RUtils.colortbl.separator_fg,
@@ -402,7 +402,7 @@ return {
             else
               if vim.bo[props.buf].modified then
                 return {
-                  " " .. Config.icons.misc.boldclose,
+                  " " .. RUtils.config.icons.misc.boldclose,
                   guifg = Highlight.get("DiagnosticSignError", "fg"),
                   gui = "bold",
                   guibg = RUtils.colortbl.separator_fg_alt,
@@ -427,7 +427,7 @@ return {
               {
                 guibg = RUtils.colortbl.separator_fg,
                 guifg = RUtils.colortbl.norm_bg,
-                Config.icons.misc.separator_up,
+                RUtils.config.icons.misc.separator_up,
               },
               {
                 file_modified(),
@@ -444,7 +444,7 @@ return {
               },
               {
                 guifg = RUtils.colortbl.separator_fg,
-                Config.icons.misc.separator_up,
+                RUtils.config.icons.misc.separator_up,
               },
             }
           else
@@ -452,7 +452,7 @@ return {
               {
                 guifg = RUtils.colortbl.norm_bg,
                 guibg = RUtils.colortbl.separator_fg_alt,
-                Config.icons.misc.separator_up,
+                RUtils.config.icons.misc.separator_up,
               },
               {
                 file_modified(),
@@ -472,7 +472,7 @@ return {
               {
                 guifg = RUtils.colortbl.separator_fg_alt,
                 guibg = RUtils.colortbl.norm_bg,
-                Config.icons.misc.separator_up,
+                RUtils.config.icons.misc.separator_up,
               },
             }
           end
@@ -567,7 +567,7 @@ return {
       local col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 2)
       local col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 0.2)
 
-      if Config.colorscheme == "catppuccin-latte" then
+      if RUtils.config.colorscheme == "catppuccin-latte" then
         col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.1)
         col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.2)
         col_selected_bg_attr = "PmenuSel"
@@ -582,13 +582,13 @@ return {
         options = {
           mode = "tabs",
           buffer_close_icon = "󰒲",
-          modified_icon = Config.icons.misc.boldclose,
+          modified_icon = RUtils.config.icons.misc.boldclose,
           always_show_bufferline = false,
           diagnostics = "nvim_lsp",
           separator_style = "slant", -- "slant" | "slope" | "thick" | "thin" | { 'any', 'any' },
 
           diagnostics_indicator = function(_, _, diag)
-            local icons = require("r.config").icons.diagnostics
+            local icons = RUtils.config.icons.diagnostics
             local ret = (diag.error and icons.Error .. diag.error .. " " or "")
               .. (diag.warning and icons.Warn .. diag.warning or "")
             return vim.trim(ret)

@@ -1,5 +1,4 @@
 local Highlight = require "r.settings.highlights"
-local Config = require "r.config"
 
 return {
   {
@@ -105,7 +104,7 @@ return {
       "MunifTanjim/nui.nvim",
     },
     opts = {
-      save_dir = Config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
+      save_dir = RUtils.config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
     },
   },
 }

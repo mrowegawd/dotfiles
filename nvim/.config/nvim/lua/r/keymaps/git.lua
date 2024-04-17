@@ -58,7 +58,7 @@ local function gitfzflua(opts)
           vim.cmd [[BlameToggle]]
         end,
       }, opts),
-      { winopts = { title = require("r.config").icons.git.branch .. "Git ", row = row, col = col } }
+      { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
     )
   end, { desc = "Git(fzflua): list of cmds" })
 end

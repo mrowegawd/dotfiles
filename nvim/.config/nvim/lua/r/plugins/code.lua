@@ -1,6 +1,4 @@
 local Highlight = require "r.settings.highlights"
-local Icons = require("r.config").icons
-local Config = require "r.config"
 
 _G.OverseerConfig = {} -- to store error formats
 
@@ -15,7 +13,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     enabled = function()
-      if require("r.config").lsp_style == "coc" then
+      if RUtils.config.lsp_style == "coc" then
         return false
       end
       return true
@@ -53,7 +51,7 @@ return {
           local luasnip = require "luasnip"
 
           require("luasnip.loaders.from_vscode").lazy_load {
-            paths = Config.path.dropbox_path .. "/friendly-snippets",
+            paths = RUtils.config.path.dropbox_path .. "/friendly-snippets",
           }
 
           luasnip.filetype_extend("python", { "django" })
@@ -116,7 +114,7 @@ return {
           side_padding = 1, -- One character margin
         }
         if is_border_set then
-          opts.border = Icons.border.line
+          opts.border = RUtils.config.icons.border.line
           opts.winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None"
         end
         return opts
@@ -194,7 +192,7 @@ return {
             local hlkind = ("CmpItemKind%s"):format(item_kind)
             item.menu_hl_group = hlkind
 
-            local kind = Icons.kinds
+            local kind = RUtils.config.icons.kinds
             if kind[item.kind] then
               item.kind = kind[item.kind]
             end

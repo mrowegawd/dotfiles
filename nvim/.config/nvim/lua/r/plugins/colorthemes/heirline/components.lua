@@ -1,5 +1,4 @@
 local fn = vim.fn
-local Icon = require("r.config").icons
 local Conditions = require "heirline.conditions"
 local Col = RUtils.colortbl
 
@@ -154,14 +153,14 @@ M.Mode = {
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       return { fg = self.mode_colors[mode], bg = colors.separator_fg_alt }
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       return { fg = colors.separator_fg_alt, bg = colors.base_bg }
     end,
@@ -184,13 +183,13 @@ M.Mode_inactive = {
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       return { bg = colors.separator_fg_inactive, fg = colors.separator_fg_inactive }
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       return { fg = colors.separator_fg_inactive }
     end,
@@ -293,7 +292,7 @@ M.FilePathQF = {
   end,
 
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       return { fg = colors.base_bg, bg = colors.diff_add }
     end,
@@ -320,11 +319,11 @@ M.FilePathQF = {
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = { bg = colors.separator_fg_alt, fg = colors.diff_add },
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       local cs = colors.base_bg
 
@@ -337,7 +336,7 @@ M.FilePathQF = {
 
   --  ------------------
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       local cs = colors.base_bg
 
@@ -367,13 +366,13 @@ M.FilePathQF = {
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       return { fg = colors.diff_change, bg = colors.separator_fg_alt }
     end,
   },
   {
-    provider = Icon.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       local cs = colors.base_bg
 
@@ -422,7 +421,7 @@ M.FileFlags = {
     condition = function()
       return vim.bo.modified
     end,
-    provider = " " .. Icon.misc.boldclose,
+    provider = " " .. RUtils.config.icons.misc.boldclose,
     hl = { fg = colors.diagnostic_err },
   },
   {
@@ -560,10 +559,10 @@ M.Diagnostics = {
     return Conditions.has_diagnostics
   end,
   static = {
-    error_icon = Icon.diagnostics.Error,
-    warn_icon = Icon.diagnostics.Warn,
-    info_icon = Icon.diagnostics.Info,
-    hint_icon = Icon.diagnostics.Hint,
+    error_icon = RUtils.config.icons.diagnostics.Error,
+    warn_icon = RUtils.config.icons.diagnostics.Warn,
+    info_icon = RUtils.config.icons.diagnostics.Info,
+    hint_icon = RUtils.config.icons.diagnostics.Hint,
   },
   init = function(self)
     local function count(severity)

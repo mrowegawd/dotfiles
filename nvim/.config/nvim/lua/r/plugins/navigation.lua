@@ -1,8 +1,6 @@
 local Highlight = require "r.settings.highlights"
-local Util = require "r.utils"
-local Icons = require("r.config").icons
 
-local fzf_lua = Util.cmd.reqcall "fzf-lua"
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 local is_outline_opened = false
 
 local function get_outline()
@@ -14,7 +12,7 @@ return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    cond = vim.g.neovide ~= nil,
+    cond = vim.g.neovide ~= nil or vim.env.TMUX,
     cmd = "Neotree",
     -- keys = {
     --   {
@@ -47,7 +45,7 @@ return {
       -- },
     },
     opts = function()
-      Util.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
+      RUtils.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
 
       return {
         sources = { "filesystem", "buffers", "git_status", "document_symbols" },
@@ -198,7 +196,7 @@ return {
     end,
     config = function(_, opts)
       local function on_move(data)
-        Util.lsp.on_rename(data.source, data.destination)
+        RUtils.lsp.on_rename(data.source, data.destination)
       end
 
       local events = require "neo-tree.events"
@@ -246,7 +244,7 @@ return {
     event = "LspAttach",
     cmd = "Outline",
     opts = function()
-      Util.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       Highlight.plugin("OutlineAuHi", {
         theme = {
           ["*"] = {
@@ -344,7 +342,7 @@ return {
         },
       })
 
-      local kind = Icons.kinds
+      local kind = RUtils.config.icons.kinds
 
       return {
         outline_window = {
@@ -359,7 +357,7 @@ return {
         },
         symbols = {
           filter = nil,
-          -- icons = require("r.config").icons.kinds,
+          -- icons = RUtils.config.icons.kinds,
           icons = {
             File = { icon = kind.File, hl = "Identifier" },
             Module = { icon = kind.Module, hl = "Include" },
@@ -517,7 +515,7 @@ return {
 
             local aerial_selected = { "all" }
 
-            for key, icon in pairs(Icons.kinds) do
+            for key, icon in pairs(RUtils.config.icons.kinds) do
               table.insert(aerial_selected, icon .. " " .. key)
             end
 
@@ -545,7 +543,7 @@ return {
                   local selection = sel[1]
 
                   if selection ~= nil and type(selection) == "string" then
-                    local opts_outline = Util.opts "outline.nvim"
+                    local opts_outline = RUtils.opts "outline.nvim"
                     local outline = get_outline()
                     if outline.is_open and is_outline_opened then
                       outline.close_outline()

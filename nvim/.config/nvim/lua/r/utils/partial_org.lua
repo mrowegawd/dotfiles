@@ -1,15 +1,14 @@
 local fmt = string.format
-local Config = require "r.config"
 
 require "r.utils"
 
 return {
   org_agenda_files = {
-    fmt("%s/orgmode/gtd/*", Config.path.wiki_path),
-    fmt("%s/orgmode/habit/*", Config.path.wiki_path),
-    fmt("%s/orgmode/day-to-remember/*", Config.path.wiki_path),
+    fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+    fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
+    fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
   },
-  org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", Config.path.wiki_path),
+  org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
   notifications = {
     -- reminder_time = { 0, 1, 5, 10 },
     -- repeater_reminder_time = { 0, 1, 5, 10 },

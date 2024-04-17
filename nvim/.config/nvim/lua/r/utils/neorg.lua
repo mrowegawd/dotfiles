@@ -53,7 +53,7 @@ function M.open_orgagenda_paths()
 
   vim.ui.select(
     org_todos,
-    { prompt = require("r.config").icons.misc.pencil .. " Open OrgTodos ", kind = "pojokan" },
+    { prompt = RUtils.config.icons.misc.pencil .. " Open OrgTodos ", kind = "pojokan" },
     function(choice)
       if choice == nil then
         return
@@ -333,10 +333,7 @@ end
 
 function M.find_by_categories()
   local scripts = vim.api.nvim_exec2(
-    fmt(
-      [[!find %s -type f -exec sed -n '/categories:/s/categories: \(.*\)/\1/p' {} \; ]],
-      require("r.config").path.wiki_path
-    ),
+    fmt([[!find %s -type f -exec sed -n '/categories:/s/categories: \(.*\)/\1/p' {} \; ]], RUtils.config.path.wiki_path),
     { output = true }
   )
   local categories = {}

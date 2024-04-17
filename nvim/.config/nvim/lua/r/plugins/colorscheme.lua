@@ -1,4 +1,4 @@
-local colorscheme = require("r.config").colorscheme
+local colorscheme = RUtils.config.colorscheme
 
 return {
   -- ROSE-PINE

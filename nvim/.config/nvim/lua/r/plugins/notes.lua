@@ -1,7 +1,6 @@
 local fmt, api = string.format, vim.api
 local uv = vim.uv
 
-local Config = require "r.config"
 local Highlight = require "r.settings.highlights"
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
@@ -12,6 +11,7 @@ return {
     "nvim-neorg/neorg",
     cmd = "Neorg",
     ft = "norg",
+    version = "*",
     -- build = ":Neorg sync-parsers", -- This is the important bit!
     -- keys = {
     -- {
@@ -38,7 +38,7 @@ return {
     --
     --     return fzf_lua.files {
     --       prompt = "  ",
-    --       cwd = Config.path.wiki_path,
+    --       cwd = RUtils.config.path.wiki_path,
     --       rg_glob = true,
     --       file_ignore_patterns = { "%.md$", "%.json$", "%.org$" },
     --       winopts = {
@@ -55,7 +55,7 @@ return {
     --     cmd [[Lazy load neorg]]
     --     return fzf_lua.live_grep_glob {
     --       prompt = "  ",
-    --       cwd = Config.path.wiki_path,
+    --       cwd = RUtils.config.path.wiki_path,
     --       rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]],
     --       winopts = {
     --         title = RUtils.fzflua.format_title("[Neorg] Grep", " "),
@@ -73,6 +73,7 @@ return {
       "ibhagwan/fzf-lua",
       "nvim-lua/plenary.nvim",
       "laher/neorg-exec",
+      "luarocks.nvim",
     },
     config = function(_, opts)
       RUtils.cmd.augroup("ManageNoteMappingNeorg", {
@@ -205,9 +206,9 @@ return {
           ["core.dirman"] = {
             config = {
               workspaces = {
-                gtd = fmt("%s/gtd", Config.path.wiki_path),
-                wiki = Config.path.wiki_path,
-                wikis = Config.path.wiki_path .. "/test",
+                gtd = fmt("%s/gtd", RUtils.config.path.wiki_path),
+                wiki = RUtils.config.path.wiki_path,
+                wikis = RUtils.config.path.wiki_path .. "/test",
               },
             },
           },
@@ -280,6 +281,7 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
+    event = "LazyFile",
     ft = "org",
     keys = {
       {
@@ -324,7 +326,7 @@ return {
               :totable()
 
             vim.ui.select(items, {
-              prompt = fmt(Config.icons.misc.fire .. " %s ", data.prompt),
+              prompt = fmt(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
               kind = "pojokan",
               format_item = function(item)
                 return fmt("%s → %s", item.key, item.label)
@@ -341,13 +343,13 @@ return {
         },
       },
       org_agenda_files = {
-        fmt("%s/orgmode/gtd/*", Config.path.wiki_path),
-        fmt("%s/orgmode/bookmarks/*", Config.path.wiki_path),
-        fmt("%s/orgmode/habit/*", Config.path.wiki_path),
-        fmt("%s/orgmode/day-to-remember/*", Config.path.wiki_path),
-        fmt("%s/orgmode/project-todo/**/*", Config.path.wiki_path),
+        fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+        fmt("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
+        fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
+        fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
+        fmt("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
       },
-      org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", Config.path.wiki_path),
+      org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
       org_todo_keywords = {
         "TODO(t)",
         "HOLD(h)", -- task yang ditangguhkan, no hint to continue
@@ -374,34 +376,34 @@ return {
         t = {
           description = "Todo",
           template = "* TODO %? \n  SCHEDULED: %T",
-          target = Config.path.wiki_path .. "/orgmode/gtd/refile.org",
+          target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
         },
         i = {
           description = "Inbox me (Inbox)",
           -- template = "* %?",
           template = "* CHECK %? \n  SCHEDULED: %t",
-          target = Config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+          target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
         },
         l = {
           description = "Link (Inbox)",
           -- template = "\n* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
           template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
-          target = Config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+          target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
         },
         u = {
           description = "URL bookmarks",
           template = "* RAPIKAN: %? \n  SCHEDULED: %t",
-          target = Config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
+          target = RUtils.config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
         },
         -- j = {
         --     description = "Journal",
         --     template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
-        --     target = Config.path.wiki_path.. "/orgmode/gtd/journal.org",
+        --     target = RUtils.config.path.wiki_path.. "/orgmode/gtd/journal.org",
         -- },
         -- k = {
         --     description = "Markdown",
         --     template = "\n* TODO %? \n  SCHEDULED: %t",
-        --     target = Config.path.wiki_path .. "/orgmode/gtd/base.md",
+        --     target = RUtils.config.path.wiki_path .. "/orgmode/gtd/base.md",
         --     filetype = "markdown",
         -- },
       },
@@ -614,8 +616,8 @@ return {
     event = {
       -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
       -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-      fmt("BufReadPre %s", Config.path.wiki_path),
-      fmt("BufNewFile %s", Config.path.wiki_path),
+      fmt("BufReadPre %s", RUtils.config.path.wiki_path),
+      fmt("BufNewFile %s", RUtils.config.path.wiki_path),
     },
     keys = {
       {
@@ -623,7 +625,7 @@ return {
         function()
           return fzf_lua.live_grep_glob {
             prompt = "  ",
-            cwd = Config.path.wiki_path,
+            cwd = RUtils.config.path.wiki_path,
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
             winopts = {
               title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
@@ -637,7 +639,7 @@ return {
         function()
           return fzf_lua.files {
             prompt = "  ",
-            cwd = Config.path.wiki_path,
+            cwd = RUtils.config.path.wiki_path,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
 
@@ -656,7 +658,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     opts = {
-      dir = Config.path.wiki_path, -- no need to call 'vim.fn.expand' here
+      dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
 
       workspaces = {
         {

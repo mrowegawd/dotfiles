@@ -1,5 +1,3 @@
-local Util = require "r.utils"
-
 return {
   -- NEOTEST
   {
@@ -132,9 +130,9 @@ return {
       {
         "<Leader>tf",
         function()
-          local col, row = Util.fzflua.rectangle_win_pojokan()
+          local col, row = RUtils.fzflua.rectangle_win_pojokan()
           local neotest = require "neotest"
-          Util.fzflua.send_cmds({
+          RUtils.fzflua.send_cmds({
             test_file = function()
               vim.cmd [[lua require("neotest").run.run(vim.fn.expand "%")]]
             end,
@@ -179,7 +177,7 @@ return {
               vim.cmd [[CoverageClear]]
             end,
           }, {
-            winopts = { title = require("r.config").icons.misc.dashboard .. " Testing", row = row, col = col },
+            winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing", row = row, col = col },
           })
         end,
         desc = "Testing(neotest): list of cmds",

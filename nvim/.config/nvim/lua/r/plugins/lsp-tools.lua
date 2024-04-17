@@ -187,6 +187,7 @@ return {
       }
     end,
   },
+  -- GLANCE
   {
     "dnlhc/glance.nvim",
     event = "LspAttach",

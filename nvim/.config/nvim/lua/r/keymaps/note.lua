@@ -1,8 +1,4 @@
 local fmt, cmd = string.format, vim.cmd
-local Util = require "r.utils"
-local Config = require "r.config"
-
--- local fzf_lua = Util.cmd.reqcall "fzf-lua"
 
 local M = {}
 
@@ -11,7 +7,7 @@ function M.neorg_mappings_ft(bufnr)
     ["n"] = {
       ["ri"] = {
         function()
-          return Util.maim.insert()
+          return RUtils.maim.insert()
         end,
         "Note: insert image",
       },
@@ -46,7 +42,7 @@ function M.neorg_mappings_ft(bufnr)
       ["<Localleader>oa"] = {
         function()
           if vim.bo[0].filetype == "neorg" then
-            Util.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
+            RUtils.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
             cmd "Neorg toc right"
             local vim_width = vim.o.columns
             vim_width = math.floor(vim_width / 2 - 10)
@@ -61,11 +57,11 @@ function M.neorg_mappings_ft(bufnr)
         function()
           local opts = {
             prompt = "  ",
-            cwd = Config.path.wiki_path,
+            cwd = RUtils.config.path.wiki_path,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
             winopts = {
-              title = Util.fzflua.format_title("Note: files", "󰈙"),
+              title = RUtils.fzflua.format_title("Note: files", "󰈙"),
             },
           }
 
@@ -84,9 +80,9 @@ function M.neorg_mappings_ft(bufnr)
         function()
           local opts = {
             prompt = "  ",
-            cwd = Config.path.wiki_path,
+            cwd = RUtils.config.path.wiki_path,
             winopts = {
-              title = Util.fzflua.format_title("Note: grep", ""),
+              title = RUtils.fzflua.format_title("Note: grep", ""),
             },
           }
 
@@ -129,7 +125,7 @@ function M.neorg_mappings_ft(bufnr)
               prompt = "  ",
               winopts = {
                 -- split = "belowright new | wincmd J | resize 40",
-                title = Util.fzflua.format_title("Note: link curbuf", ""),
+                title = RUtils.fzflua.format_title("Note: link curbuf", ""),
                 preview = {
                   hidden = "hidden",
                   vertical = "up:55%",
@@ -147,7 +143,7 @@ function M.neorg_mappings_ft(bufnr)
               },
             }
 
-            return require("fzf-lua").fzf_exec(Util.neorg.find_by_categories(), opts)
+            return require("fzf-lua").fzf_exec(RUtils.neorg.find_by_categories(), opts)
           end
         end,
         "Note: insert categories (curbuf)",
@@ -158,7 +154,7 @@ function M.neorg_mappings_ft(bufnr)
             prompt = "  ",
             winopts = {
               -- split = "belowright new | wincmd J | resize 40",
-              title = Util.fzflua.format_title("Note: link curbuf", ""),
+              title = RUtils.fzflua.format_title("Note: link curbuf", ""),
               preview = {
                 hidden = "hidden",
                 vertical = "up:55%",
@@ -178,7 +174,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg.finder_sitelinkable(), opts)
+          return require("fzf-lua").fzf_exec(RUtils.neorg.finder_sitelinkable(), opts)
         end,
         "Note: insert link (curbuf)",
       },
@@ -187,7 +183,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              title = Util.fzflua.format_title("Note: title curbuf", ""),
+              title = RUtils.fzflua.format_title("Note: title curbuf", ""),
             },
             actions = {
               ["default"] = function(selected, _)
@@ -203,7 +199,7 @@ function M.neorg_mappings_ft(bufnr)
             },
           }
 
-          return require("fzf-lua").fzf_exec(Util.neorg.finder_linkable(), opts)
+          return require("fzf-lua").fzf_exec(RUtils.neorg.finder_linkable(), opts)
         end,
         "Note: insert title (curbuf)",
       },
@@ -217,7 +213,7 @@ function M.neorg_mappings_ft(bufnr)
           local opts = {
             prompt = "  ",
             winopts = {
-              title = Util.fzflua.format_title("Note: title global", ""),
+              title = RUtils.fzflua.format_title("Note: title global", ""),
             },
             actions = {
               ["default"] = function(selected, _)
@@ -262,14 +258,14 @@ function M.neorg_mappings_ft(bufnr)
 
           if note_ext == "md" then
             opts.search = [[^#.*]]
-            opts.cwd = Config.path.wiki_path
+            opts.cwd = RUtils.config.path.wiki_path
             opts.rg_opts =
               [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" -e ]]
           end
 
           opts.no_esc = true
           if note_ext == "norg" then
-            return require("fzf-lua").fzf_exec(Util.neorg.finder_linkableGlobal(), opts)
+            return require("fzf-lua").fzf_exec(RUtils.neorg.finder_linkableGlobal(), opts)
           else
             return require("fzf-lua").live_grep_glob(opts)
           end

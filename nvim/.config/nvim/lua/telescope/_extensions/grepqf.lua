@@ -22,7 +22,7 @@ local grepqf = function(opts)
   end
 
   opts = {
-    vimgrep_arguments = require("r.config").vimgrep_arguments,
+    vimgrep_arguments = RUtils.config.vimgrep_arguments,
     path_display = { "smart" },
     -- theme = "ivy",
     search_dirs = RUtils.cmd.rm_duplicates_tbl(path), -- much better, unique path

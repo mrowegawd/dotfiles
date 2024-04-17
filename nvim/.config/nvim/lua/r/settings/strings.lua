@@ -6,7 +6,6 @@
 -- this way one small library to create these strings is useful.
 
 local api, L = vim.api, vim.log.levels
-local Util = require "r.utils"
 local strwidth, fmt = api.nvim_strwidth, string.format
 
 ---@alias StringComponent {component: string, length: integer, priority: integer}
@@ -75,9 +74,9 @@ local function chunks_to_string(chunks)
   if not chunks or not vim.tbl_islist(chunks) then
     return ""
   end
-  local strings = Util.cmd.fold(function(acc, item)
+  local strings = RUtils.cmd.fold(function(acc, item)
     local text, hl = unpack(item)
-    if not Util.cmd.falsy(text) then
+    if not RUtils.cmd.falsy(text) then
       if type(text) ~= "string" then
         text = tostring(text)
       end
@@ -85,7 +84,7 @@ local function chunks_to_string(chunks)
         text = truncate_str(text, item.max_size)
       end
       text = text:gsub("%%", "%%%1")
-      table.insert(acc, not Util.cmd.falsy(hl) and ("%%#%s#%s%%*"):format(hl, text) or text)
+      table.insert(acc, not RUtils.cmd.falsy(hl) and ("%%#%s#%s%%*"):format(hl, text) or text)
     end
     return acc
   end, chunks)
@@ -106,7 +105,7 @@ end
 --- @return StringComponent?
 local function component(opts)
   assert(opts, "component options are required")
-  if opts.cond ~= nil and Util.cmd.falsy(opts.cond) then
+  if opts.cond ~= nil and RUtils.cmd.falsy(opts.cond) then
     return
   end
 
@@ -139,7 +138,7 @@ end
 -- RENDER
 ----------------------------------------------------------------------------------------------------
 local function sum_lengths(list)
-  return Util.cmd.fold(function(acc, item)
+  return RUtils.cmd.fold(function(acc, item)
     return acc + (item.length or 0)
   end, list, 0)
 end
@@ -179,16 +178,16 @@ end
 --- @param available_space number?
 --- @return string
 function M.display(sections, available_space)
-  local components = Util.cmd.fold(function(acc, section, count)
+  local components = RUtils.cmd.fold(function(acc, section, count)
     if #section == 0 then
       table.insert(acc, separator())
       return acc
     end
-    Util.cmd.foreach(function(args, index)
+    RUtils.cmd.foreach(function(args, index)
       if not args then
         return
       end
-      local ok, str = Util.cmd.pcall("Error creating component", component, args)
+      local ok, str = RUtils.cmd.pcall("Error creating component", component, args)
       if not ok then
         return
       end

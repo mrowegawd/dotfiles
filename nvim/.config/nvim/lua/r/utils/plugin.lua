@@ -201,7 +201,7 @@ function M.EditSnippet()
     ft = "shell"
   end
 
-  local ft_snippet_path = require("r.config").path.snippet_path .. "/snippets/"
+  local ft_snippet_path = RUtils.config.path.snippet_path .. "/snippets/"
 
   local snippets = {}
   local is_file = true
