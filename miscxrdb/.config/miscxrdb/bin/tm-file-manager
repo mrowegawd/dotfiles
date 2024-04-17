@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# lfrun="lf"
+#lfrun="lf"
 nnn="nnn -c"
 file_manager="$nnn"
 

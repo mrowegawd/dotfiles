@@ -91,6 +91,86 @@ cmd open ${{
   esac
 }}
 # }}}
+# OPENVSPLIT ---------------------------------------------------- {{{
+cmd open_vsplit ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  case $(file --mime-type $f -b) in
+    text/*|application/json)
+      if not_in_tmux; then
+        dunstify "not implemented yet"
+        pane_id_right=$(wezterm cli get-pane-direction right)
+        if [ -n "$pane_id_right" ]; then
+          # wezterm cli split-pane --cwd "$(pwd)" --bottom --percent 50 --pane-id "$pane_id_right" "$0" "$1" >/dev/null
+          # dunstify "yes"
+        # else
+        #   wezterm cli split-pane --cwd "$(pwd)" $split --percent 50 "$0" "$1" >/dev/null
+        fi
+      else
+        tmux select-pane -R
+        current_pane=$(tmux display-message -p '#{pane_id}')
+        # output current_pane selalu 1
+        if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+          tmux split-window -h -p 83
+          current_pane=$(tmux display-message -p '#{pane_id}')
+        fi
+
+        program=$(tmux display -p '#{pane_current_command}')
+        if [ "$program" = "nvim" ]; then
+          tmux send-keys -t "$current_pane" ":vsplit $fx" Enter
+        else
+          tmux send-keys -t "$current_pane" "nvim $fx" Enter
+        fi
+      fi
+    ;;
+    *) exit;;
+  esac
+}}
+
+map <c-v> open_vsplit
+# }}}
+# OPENSPLIT ----------------------------------------------------- {{{
+cmd open_split ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  case $(file --mime-type $f -b) in
+    text/*|application/json)
+      if not_in_tmux; then
+        dunstify "not implemented yet"
+        pane_id_right=$(wezterm cli get-pane-direction right)
+        if [ -n "$pane_id_right" ]; then
+          # wezterm cli split-pane --cwd "$(pwd)" --bottom --percent 50 --pane-id "$pane_id_right" "$0" "$1" >/dev/null
+          # dunstify "yes"
+        # else
+        #   wezterm cli split-pane --cwd "$(pwd)" $split --percent 50 "$0" "$1" >/dev/null
+        fi
+      else
+        tmux select-pane -R
+        current_pane=$(tmux display-message -p '#{pane_id}')
+        # output current_pane selalu 1
+        if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+          tmux split-window -h -p 83
+          current_pane=$(tmux display-message -p '#{pane_id}')
+        fi
+
+        program=$(tmux display -p '#{pane_current_command}')
+        if [ "$program" = "nvim" ]; then
+          tmux send-keys -t "$current_pane" ":sp $fx" Enter
+        else
+          tmux send-keys -t "$current_pane" "nvim $fx" Enter
+        fi
+      fi
+    ;;
+    *) exit;;
+  esac
+}}
+
+map <c-s> open_split
+# }}}
 # MKDIR --------------------------------------------------------- {{{
 cmd mkdir ${{
     printf "\nDirectory Name: "
@@ -416,6 +496,7 @@ map <a-D> oplazydocker
 # map y
 # map g
 # map q
+# map x
 
 # map P set preview!
 map P showpreview
@@ -433,29 +514,30 @@ map <F5> reload
 map y copy
 map yp %readlink -f "$f" | clipper c # Copy selected file's path
 
-map x cut
+# map x cut
 map d delete
 map p paste
-map A mkdir
-map a touch
+map N mkdir
+map n touch
 map D Delete
 map C copyto
 map M moveto
 map R bulkrename
 map r rename
-map <c-g> fzf_search                          # search string in file or search name of file
+map <c-q> fzf_search                          # search string in file or search name of file
 map <c-c> quit
-map c
-map cd push :cd<space>
-map cw watch_mpv_playlist
+
+# map c
+# map cd push :cd<space>
+# map cw watch_mpv_playlist
 
 # map e $$EDITOR "$f"                           # enter with nvim/vim
 # map i $edit "$f"
 # map I $nvr -cc call TermOpen(&shell,'v')
 
-map e
-map i
-map I
+# map e
+# map i
+# map I
 
 #  ╔══════════════════════════════════════════════════════════╗
 #  ║                       BOOKMARKS                          ║

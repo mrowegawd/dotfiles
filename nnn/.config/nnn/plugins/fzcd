@@ -70,13 +70,13 @@ if [ -n "$LIST" ]; then
 			wezterm cli activate-pane-direction Up
 
 			# sel=$(xargs -d '\n' fd -H -I . <"$tmpfile" | fzf --delimiter / --with-nth=-2,-1 --tiebreak=begin --info=hidden --prompt "Cd to> ")
-			sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf --no-height --prompt "FzCD: ")
+			sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf --no-height --prompt "Change Directory To: ")
 
 			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 			wezterm cli activate-pane-direction Left
 
 		else
-			sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf-tmux -xC -w '60%' -h '50%' --prompt "FzCD: ")
+			sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf-tmux -xC -w '60%' -h '50%' --prompt "Change Directory To: ")
 		fi
 
 		rm "$tmpfile"

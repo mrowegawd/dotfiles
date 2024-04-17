@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# IFS="$(printf '\n\r')"
+clear
 
 # shellcheck disable=SC1090,SC1091
 . "$(dirname "$0")"/.nnn-plugin-helper
@@ -47,9 +47,6 @@ else
 
 		if [ -n "$select" ]; then
 			nnn "$select"
-		else
-			dunstify "[warn] this not folder??"
-			exit 1
 		fi
 	fi
 	exit 1

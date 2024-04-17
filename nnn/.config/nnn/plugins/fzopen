@@ -46,12 +46,12 @@ if type fzf >/dev/null 2>&1; then
 		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
 		wezterm cli activate-pane-direction Up
 
-		entry="$(eval "$cmd" | fzf --no-height -m --prompt 'FzOpen: ')"
+		entry="$(eval "$cmd" | fzf --no-height -m --prompt 'Select To Open And Change Dir To: ')"
 
 		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 		wezterm cli activate-pane-direction Left
 	else
-		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'FzOpen: ')"
+		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'Select To Open And Change Dir To: ')"
 	fi
 
 	# To show only the file name
@@ -128,6 +128,47 @@ handle_pdf() {
 	# exit 0
 }
 
+handle_file() {
+
+	# "${VISUAL:-$EDITOR}" "$entry"
+	# dunstify "$entry"
+
+	if not_in_tmux; then
+		pane_id=$(wezterm cli get-pane-direction right)
+		if [ -z "${pane_id}" ]; then
+			pane_id=$(wezterm cli split-pane --right --percent 85)
+		fi
+
+		program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
+
+		if [ "$program" = "nvim" ]; then
+			# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+			echo ":e $1\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+		else
+			echo "nvim $1\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
+		fi
+
+		wezterm cli activate-pane-direction --pane-id "$pane_id" right
+
+	else
+		tmux select-pane -R
+		current_pand_id=$(tmux display-message -p '#{pane_id}')
+		# output current_pane selalu 1
+
+		if [ -z "${current_pand_id}" ]; then
+			tmux split-window -h -p 83
+			current_pand_id=$(tmux display-message -p '#{pane_id}')
+		fi
+
+		program=$(tmux display -p '#{pane_current_command}')
+		if [ "$program" = "nvim" ]; then
+			tmux send-keys -t "$current_pand_id" ":e $1" Enter
+		else
+			tmux send-keys -t "$current_pand_id" "nvim $1" Enter
+		fi
+	fi
+}
+
 # sets the variable abs_target, this should be faster than calling printf
 abspath() {
 	case "$1" in
@@ -188,122 +229,27 @@ if [ "$entry" ]; then
 
 	# Open the file (works for a single file only)
 	cmd_file=""
-	cmd_open=""
+	# cmd_open=""
 	if uname | grep -q "Darwin"; then
 		cmd_file="file -bIL"
-		cmd_open="open"
+		# cmd_open="open"
 	else
 		cmd_file="file -biL"
-		cmd_open="xdg-open"
+		# cmd_open="xdg-open"
 	fi
 
 	case "$($cmd_file "$entry")" in
 	*text*)
-		# "${VISUAL:-$EDITOR}" "$entry"
-		# dunstify "$entry"
-
-		if not_in_tmux; then
-			pane_id=$(wezterm cli get-pane-direction right)
-			if [ -z "${pane_id}" ]; then
-				pane_id=$(wezterm cli split-pane --right --percent 85)
-			fi
-
-			program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
-
-			if [ "$program" = "nvim" ]; then
-				# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-				echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-			else
-				echo "nvim ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-			fi
-
-			wezterm cli activate-pane-direction --pane-id "$pane_id" right
-
-		else
-
-			tmux select-pane -R
-			current_pane=$(tmux display-message -p '#{window_panes}')
-			# output current_pane selalu 1
-			if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
-				# dunstify "mantap"
-				tmux split-window -h -p 83
-				current_pane=$(tmux display-message -p '#{window_panes}')
-			fi
-
-			program=$(tmux display -p '#{pane_current_command}')
-			if [ "$program" = "nvim" ]; then
-				tmux send-keys -t "$current_pane" ":e ${entry}" Enter
-			else
-				tmux send-keys -t "$current_pane" "nvim ${entry}" Enter
-			fi
-		fi
+		handle_file "${entry}"
+		nnn "${entry}"
 		;;
 	*pdf*)
-		if not_in_tmux; then
-			pane_id_right=$(wezterm cli get-pane-direction right)
-			wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
-			wezterm cli activate-pane-direction Up
-
-			# entry="$(eval "$entry" | fzf --no-height -m --prompt 'FzOpen: ')"}
-			select_open="$(printf "Open\nConvert To Text" | fzf --no-height -m --prompt 'FzOpen: ')"
-
-			if [ -n "$select_open" ]; then
-
-				if [ "$select_open" = "Open" ]; then
-					handle_pdf "${entry}"
-					wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-					wezterm cli activate-pane-direction Left
-					exit 1
-				else
-					tmp_pdf="/tmp/pdf_dump.txt"
-
-					# install: `apt install ghostcript`
-					gs -sDEVICE=txtwrite -o $tmp_pdf "${entry}"
-
-					# git: `https://github.com/VikParuchuri/marker`
-					# convert_single.py $tmp_pdf "${entry}" --parallel_factor 2 --max_pages 20
-
-					wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-					wezterm cli activate-pane-direction Left
-
-					if [ -f "$tmp_pdf" ]; then
-						pane_id=$(wezterm cli get-pane-direction right)
-						if [ -z "${pane_id}" ]; then
-							pane_id=$(wezterm cli split-pane --right --percent 85)
-						fi
-
-						program=$(wezterm cli list | awk -v pane_id="$pane_id" '$3==pane_id { print $6 }')
-
-						if [ "$program" = "nvim" ]; then
-							dunstify "Load the file: $tmp_pdf"
-							# echo ":e ${entry}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-							echo ":e ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-						else
-							dunstify "gila"
-							echo "nvim ${tmp_pdf}\r" | wezterm cli send-text --pane-id "$pane_id" --no-paste
-						fi
-
-						wezterm cli activate-pane-direction --pane-id "$pane_id" right
-					fi
-					exit 1
-				fi
-			fi
-
-			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-			wezterm cli activate-pane-direction Left
-		else
-			dunstify "mantap"
-		fi
-
-		dunstify "gila"
-		exit 1
+		handle_pdf "${entry}"
 		;;
-
 	*gif*)
 		if type sxiv >/dev/null 2>&1; then
 			load_dir_with_flag sxiv -a "${entry}" >/dev/null 2>&1 &
 			# sxiv -a "${entry}" >/dev/null 2>&1 &
-			exit 1
 		fi
 		;;
 
@@ -339,11 +285,11 @@ if [ "$entry" ]; then
 
 	*video*)
 		handle_video "${entry}"
-		exit 1
 		;;
 
 	*)
-		$cmd_open "$entry" >/dev/null 2>&1
+		handle_file "${entry}"
+		# $cmd_open "$entry" >/dev/null 2>&1
 		;;
 	esac
 fi

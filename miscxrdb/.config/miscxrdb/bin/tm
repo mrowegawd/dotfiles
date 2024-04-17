@@ -14,6 +14,8 @@ not_in_tmux_2() {
 
 	if [[ $tmux_ls == *"no server"* ]]; then
 		return 1
+	elif not_in_tmux; then
+		return 1
 	else
 		return 0
 	fi
@@ -36,9 +38,9 @@ create_if_needed_and_attach() {
 		tmux new-session -As "$session_name" -c "$session_name"
 	else
 		not_in_tmux_2
-		run_fzf_with_tmux=$?
+		is_not_in_tmux=$?
 
-		if [[ $run_fzf_with_tmux == 1 ]]; then
+		if [[ $is_not_in_tmux == 1 ]]; then
 			select=$(fzf --prompt='Create New Session: ' <"$MARKED_PWD")
 		else
 			select=$(fzf-tmux -xC -w '50%' -h '40%' --prompt='Create New Session: ' <"$MARKED_PWD")

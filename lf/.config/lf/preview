@@ -47,6 +47,37 @@ batorcat() {
 	fi
 }
 
+handle_video() {
+	# if [ "$GUI" -ne 0 ]; then
+	# if is_mac; then
+	# nohup open "${FPATH}" >/dev/null 2>&1 &
+	# if type smplayer >/dev/null 2>&1; then
+	# 	nohup smplayer "${FPATH}" >/dev/null 2>&1 &
+	if type mpv >/dev/null 2>&1; then
+		# nohup mpv "${FPATH}" >/dev/null 2>&1 &
+		#
+		# mpv --force-window=immediate --loop-file "$1" &
+		nohup mpv --force-window=immediate --autofit=900x900 --geometry=-700-100 --loop-file "$1" &
+		# nohup mpv --autofit=1000x900 --geometry=-15-60 "$1" >/dev/null 2>&1 &
+	fi
+	# else
+	# 	return
+	# fi
+	# elif type ffmpegthumbnailer >/dev/null 2>&1; then
+	# 	# Thumbnail
+	# 	[ -d "${IMAGE_CACHE_PATH}" ] || mkdir "${IMAGE_CACHE_PATH}"
+	# 	ffmpegthumbnailer -i "${FPATH}" -o "${IMAGE_CACHE_PATH}/${FNAME}.jpg" -s 0
+	# 	viu -n "${IMAGE_CACHE_PATH}/${FNAME}.jpg" | eval "$PAGER"
+	# elif type mediainfo >/dev/null 2>&1; then
+	# 	mediainfo "${FPATH}" | eval "$PAGER"
+	# elif type exiftool >/dev/null 2>&1; then
+	# 	exiftool "${FPATH}" | eval "$PAGER"
+	# else
+	# 	return
+	# fi
+	exit 0
+}
+
 CACHE="$HOME/.cache/lf/thumbnail.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | sha256sum | awk '{print $1}'))"
 
 case "$(printf "%s\n" "$(readlink -f "$1")" | awk '{print tolower($0)}')" in
@@ -90,6 +121,17 @@ case "$(printf "%s\n" "$(readlink -f "$1")" | awk '{print tolower($0)}')" in
 	[ ! -f "${CACHE}.jpg" ] &&
 		ffmpegthumbnailer -i "$1" -o "${CACHE}.jpg" -s 0 -q 5
 	image "${CACHE}.jpg" "$2" "$3" "$4" "$5"
+
+	# tmux select-pane -R
+	# current_pane=$(tmux display-message -p '#{pane_id}')
+	#
+	# if [ -z "${current_pane}" ]; then # --> jadi conditional ini tidak masuk
+	# 	# dunstify "mantap"
+	# 	tmux split-window -h -p 83
+	# 	current_pane=$(tmux display-message -p '#{pane_id}')
+	# fi
+
+	handle_video "$1"
 	;;
 *.bmp | *.jpg | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.jfif)
 	image "$1" "$2" "$3" "$4" "$5"
