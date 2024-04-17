@@ -293,6 +293,9 @@ return {
             end
           end, { "i", "c" }),
           ["<c-q>"] = cmp.mapping.abort(),
+          ["<c-space>"] = cmp.mapping(function()
+            cmp.complete()
+          end, { "i", "c" }),
           ["<c-g>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
               cmd = "rg --files --hidden",
@@ -304,7 +307,7 @@ return {
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-          ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+          ["<c-l>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
         sources = { -- remember: do not use `group_index`,
           {
@@ -385,7 +388,7 @@ return {
 
       cmp.setup.cmdline(":", {
         mapping = {
-          ["<C-y>"] = cmp.mapping(function()
+          ["<C-l>"] = cmp.mapping(function()
             cmp.confirm { select = true }
             RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
@@ -416,7 +419,7 @@ return {
 
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = {
-          ["<C-y>"] = cmp.mapping(function()
+          ["<C-l>"] = cmp.mapping(function()
             cmp.confirm { select = true }
             RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
@@ -631,6 +634,12 @@ return {
         desc = "Misc(scratch): open",
       },
     },
+  },
+  -- LUAROCKS
+  {
+    "vhyrro/luarocks.nvim",
+    priority = 1000,
+    config = true,
   },
   -- REST.NVIM
   {
