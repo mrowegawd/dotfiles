@@ -188,7 +188,7 @@ function M.get()
     --  LSP commands
     --  +----------------------------------------------------------+
     {
-      "gf",
+      "gff",
       function()
         local function check_current_ft(fts)
           local ft = vim.bo[0].filetype
@@ -305,6 +305,17 @@ function M.get()
     M._keys[#M._keys + 1] = { "gR", "<CMD> Lspsaga rename <CR>", desc = "LSP(lspsaga): rename", has = "rename" }
   else
     M._keys[#M._keys + 1] = { "gR", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
+  end
+
+  if RUtils.has "lsp_signature.nvim" then
+    M._keys[#M._keys + 1] = {
+      "go",
+      function()
+        require("lsp_signature").toggle_float_win()
+      end,
+      desc = "LSP(lsp_signature): toggle",
+      has = "signatureHelp",
+    }
   end
 
   return M._keys

@@ -1,5 +1,3 @@
-local Icons = require("r.config").icons
-
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 
@@ -28,7 +26,7 @@ return {
         "golangci-lint",
 
         -- bash,sh
-        "beautysh",
+        "shellcheck",
         "shfmt",
 
         -- python
@@ -113,8 +111,25 @@ return {
         "b0o/SchemaStore.nvim",
         version = false, -- last release is way too old
       },
+      {
+        "ray-x/lsp_signature.nvim",
+        config = function()
+          require("lsp_signature").setup {
+            hint_enable = false,
+            hint_prefix = "● ",
+            max_width = 80,
+            max_height = 12,
+            handler_opts = {
+              border = "single",
+            },
+            timer_interval = 200,
+          }
+        end,
+      },
     },
     opts = {
+      -- options for vim.diagnostic.config()
+      ---@type vim.diagnostic.Opts
       diagnostics = {
         underline = true,
         update_in_insert = false,
@@ -161,6 +176,8 @@ return {
       },
       capabilities = {},
       format = { formatting_options = nil, timeout_ms = nil },
+      -- LSP Server Settings
+      ---@type lspconfig.options
       servers = {
         zls = {},
         dockerls = {},
@@ -497,11 +514,18 @@ return {
       ---@diagnostic disable-next-line: duplicate-set-field
       vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
         local ret = register_capability(err, res, ctx)
-        local client_id = ctx.client_id
-        local client = vim.lsp.get_client_by_id(client_id)
+        local client = vim.lsp.get_client_by_id(ctx.client_id)
         local buffer = vim.api.nvim_get_current_buf()
         require("r.keymaps.lsp").on_attach(client, buffer)
         return ret
+      end
+
+      if vim.fn.has "nvim-0.10.0" == 0 then
+        for severity, icon in pairs(opts.diagnostics.signs.text) do
+          local name = vim.diagnostic.severity[severity]:lower():gsub("^%l", string.upper)
+          name = "DiagnosticSign" .. name
+          vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
+        end
       end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
