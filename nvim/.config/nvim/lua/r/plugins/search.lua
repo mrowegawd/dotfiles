@@ -1540,30 +1540,29 @@ return {
       },
     },
   },
-  -- TROUBLE.NVIM (disabled)
+  -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
-    cmd = { "TroubleToggle", "Trouble" },
-    enabled = false,
+    branch = "dev",
     keys = {
       {
-        "<Localleader>t",
-        function()
-          vim.cmd [[TroubleToggle]]
-        end,
-        desc = "Misc(trouble): toggle",
-        mode = { "n", "v" },
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "misc(trouble): diagnostics opened buffers toggle",
       },
-
       {
-        "dq",
-        function()
-          vim.cmd [[TroubleToggle quickfix]]
-        end,
-        desc = "Misc(trouble): toggle",
-        mode = { "n", "v" },
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "misc(trouble): diagnostics curbuf toggle",
       },
-      --   { "<Leader>q", "<CMD>TroubleToggle quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v" } },
+      { "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "misc(trouble): symbols cur buffer" },
+      {
+        "<leader>cS",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "misc(trouble): LSP references/definitions/... (Trouble)",
+      },
+      { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "misc(trouble): location list" },
+      { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "misc(trouble): quickfix list" },
     },
     opts = function()
       Highlight.plugin("trouble", {
@@ -1580,9 +1579,16 @@ return {
         { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
         { TroubleCode = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 }, underline = false } },
         {
+          TroubleDiagnosticsCount = {
+            bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
+            fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+            underline = false,
+          },
+        },
+        {
           TroubleCount = {
             bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
-            fg = { from = "DiagnosticSignError", attr = "fg", alter = -0.5 },
+            fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
           },
         },
       })
