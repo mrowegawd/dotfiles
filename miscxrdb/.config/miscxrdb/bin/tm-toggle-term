@@ -59,5 +59,7 @@ else
 		_go_right
 	elif _check_pane_is_zsh; then
 		_go_left
+	else
+		_go_left
 	fi
 fi

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-lfrun="lf"
-# nnn="nnn -c"
-file_manager="$lfrun"
+# lfrun="lf"
+nnn="nnn -c"
+file_manager="$nnn"
 
 [ -z "$TMUX" ] && exit
 
@@ -74,14 +74,18 @@ else
 	fi
 
 	if _check_pane_is_nvim; then
-		_go_left
-		if _check_pane_is_zsh; then
-			_go_left
-			_create_lf_window
-		# else
+		_create_lf_window
+		# _go_left
+		# if _check_pane_is_zsh; then
 		# 	_go_left
 		# 	_create_lf_window
-		fi
-
+		# else
+		# 	_go_left
+		# 	# if _check_pane_is_lf; then
+		# 	# 	dunstify "mantap"
+		# 	_create_lf_window
+		# 	# 	exit 1
+		# 	# fi
+		# fi
 	fi
 fi
