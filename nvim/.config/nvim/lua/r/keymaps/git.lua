@@ -171,9 +171,17 @@ function M.gitsigns()
   RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })
   RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
   RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git(gitsigns): diffthis" })
+  RUtils.map.nnoremap(
+    "<Leader>gtb",
+    gs.toggle_current_line_blame,
+    { desc = "Git(gitsigns): toggle line blame (gitlens)" }
+  )
   RUtils.map.nnoremap("<Leader>ghD", function()
     gs.diffthis "~"
   end, { desc = "Git(gitsigns): diffthis '~'" })
+  RUtils.map.nnoremap("<Leader>gtB", function()
+    vim.cmd "BlameToggle"
+  end, { desc = "Git(fugitive): open blame buffer" })
   RUtils.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
   RUtils.map.onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
 
