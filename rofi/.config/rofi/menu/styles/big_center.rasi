@@ -85,7 +85,7 @@ inputbar {
     spacing:    				          0px;
     text-color: 				          @border;
     /* padding:    				          1px; */
-	  children: 						  [ prompt, entry ];
+	  children: 						        [ prompt, entry ];
 }
 
 /* mainbox {

@@ -66,6 +66,11 @@ code() {
 	# desktop=$desktop_code       -- alasan di ganti karena annoying
 }
 
+code2() {
+	state=floating
+	desktop=$desktop_todo # alasan di ganti karena annoying
+}
+
 browser() {
 	desktop=$desktop_browser
 }
@@ -184,9 +189,6 @@ case $instance.$class in
 *.Pidgin) misc ;;
 *.[Ss]xiv) svix ;;
 *.Gimp) misc ;;
-*.[cC]ode) code ;;
-*.Emacs) code ;;
-*.Postman) code ;;
 *.todoist-nativefier-6c11dd) todo ;;
 *.notiontheall-in-oneworkspaceforyournotestaskswikisanddatabases-nativefier-46aee8) todo ;;
 *.Pinentry-gtk-2) pinentry_gtk_2 ;;
@@ -207,9 +209,13 @@ case $instance.$class in
 *org.remmina.Remmina) misc ;;
 stj*.st) stj1 ;;
 *.TelegramDesktop) chatting ;;
+# *.Visual Studio Code) chatting ;;
 *.Nautilus) file_manager ;;
-Code.*) code ;;
-*.Code) code ;;
+*.[cC]ode) code2 ;;
+Code.*) code2 ;;
+*.Code) code2 ;;
+*.Emacs) code ;;
+*.Postman) code ;;
 *.java-lang-Thread) misc_floating ;;
 weechatw.*) chatting ;;
 pomotroid.*) stack ;;

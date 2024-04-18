@@ -102,6 +102,31 @@ super + shift + Right
 #         xbacklight -dec 5
 
 ########################################
+# MULTIMEDIA
+########################################
+
+# media: increase volume audio
+super + shift + equal
+        amixer -q sset Master 3%+
+
+# media: decrease volume audio
+super + shift + minus
+        amixer -q sset Master 3%-
+
+# media: toggle mute audio
+super + shift + m
+        amixer -q sset Master toggle
+
+super + shift + ctrl + Right
+        playerctl next
+
+super + shift + ctrl + Left
+        playerctl next
+
+super + shift + ctrl + p
+        playerctl play-pause
+
+########################################
 # APPS
 ########################################
 
@@ -136,18 +161,6 @@ super + shift + p
 # misc: close/kill current app/window
 super + End
         xdo close
-
-# misc: increase volume audio
-super + shift + equal
-        amixer -q sset Master 3%+
-
-# misc: decrease volume audio
-super + shift + minus
-        amixer -q sset Master 3%-
-
-# misc: toggle mute audio
-super + shift + m
-        amixer -q sset Master toggle
 
 # misc: reload/restart sxhkd config
 super + shift + F8
