@@ -104,6 +104,7 @@
     "**/.env.example": true
   },
 
+
   "vim.normalModeKeyBindings": [
     {
       "before": ["s", "w"],
@@ -218,7 +219,9 @@
     }
   ],
   "vim.normalModeKeyBindingsNonRecursive": [
-    // DIAGNOSTIC ==================================================
+    // -------------------------
+    // DIAGNOSTIC
+    // -------------------------
     {
       "before": ["d", "n"],
       "commands": ["editor.action.marker.nextInFiles"],
@@ -229,7 +232,19 @@
       "commands": ["editor.action.marker.prevInFiles"],
       "silent": true
     },
-    // LSP =========================================================
+    {
+      "before": ["<leader>", "x", "x"],
+      "commands": ["workbench.actions.view.problems"],
+      "silent": true
+    },
+    // {
+    //   "key": "ctrl+shift+m",
+    //   "command": "workbench.actions.view.problems",
+    //   "when": "workbench.panel.markers.view.active"
+    // }
+    // -------------------------
+    // LSP
+    // -------------------------
     {
       "before": ["g", "d"],
       "commands": ["editor.action.revealDefinition"],
@@ -240,8 +255,9 @@
       "commands": ["editor.action.goToReferences"],
       "silent": true
     },
-
-    // GIT =========================================================
+    // -------------------------
+    // GIT
+    // -------------------------
     // {
     //   "befor": ["g", "n"],
     //   "command": "workbench.action.editor.nextChange"
@@ -252,8 +268,18 @@
     //   "command": "workbench.action.editor.previousChange",
     //   "when": "editorTextFocus"
     // }
+    {
+      "before": ["<leader>", "g", "t", "b"],
+      "commands": ["gitlens.toggleCodeLens"]
+    },
+    {
+      "before": ["<leader>", "g", "t", "B"],
+      "commands": ["gitlens.toggleFileBlame"]
+    },
 
-    // GLOBALS =====================================================
+    // -------------------------
+    // GLOBALS
+    // -------------------------
     // {
     //   "before": ["s", "f"],
     //   "commands": ["workbench.files.action.focusOpenEditorsView"]
@@ -269,9 +295,17 @@
     {
       "before": ["<leader>", "<tab>"],
       "commands": [":q!"]
+    },
+    {
+      "before": [",", "o", "a"],
+      "commands": ["workbench.action.toggleAuxiliaryBar"]
     }
   ],
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "Aura Dark",
-  "breadcrumbs.enabled": false
+  "breadcrumbs.enabled": false,
+  "settingsSync.keybindingsPerPlatform": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "gitlens.codeLens.enabled": false
 }

@@ -1,5 +1,7 @@
 [
+  // -------------------------
   // Reset zoom
+  // -------------------------
   {
     "key": "ctrl+Home",
     "command": "workbench.action.zoomReset"
@@ -69,7 +71,9 @@
   //   "when": "inQuickOpen && breadcrumbsActive && breadcrumbsVisible && listFocus && !inputFocus && !treestickyScrollFocused"
   // },
 
+  // -------------------------
   // Navigate Window
+  // -------------------------
   {
     "key": "alt+h",
     "command": "workbench.action.navigateLeft"
@@ -87,7 +91,9 @@
     "command": "workbench.action.navigateDown"
   },
 
+  // -------------------------
   // Resize window
+  // -------------------------
   {
     "key": "shift+alt+l",
     "command": "workbench.action.increaseViewSize"
@@ -105,7 +111,9 @@
     "command": "workbench.action.decreaseViewSize"
   },
 
+  // -------------------------
   // Terminal
+  // -------------------------
   {
     "key": "alt+f",
     "command": "workbench.action.terminal.toggleTerminal"
@@ -121,7 +129,9 @@
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
   },
 
+  // -------------------------
   // Explorer Sidebars
+  // -------------------------
   {
     "key": "alt+e",
     "command": "workbench.action.toggleSidebarVisibility"
@@ -144,5 +154,13 @@
     "command": "explorer.openToSide",
     "args": { "group": 1 },
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+  {
+    "key": "alt+9",
+    "command": "outline-map.focusSearch"
+  },
+  {
+    "key": "alt+l",
+    "command": "-outline-map.focusSearch"
   }
 ]
