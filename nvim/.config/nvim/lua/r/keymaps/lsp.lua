@@ -32,15 +32,7 @@ function M.get()
       end,
       desc = "LSP(goto-preview): preview definitions",
     },
-    {
-      "K",
-      function()
-        if vim.fn.has "nvim-0.10" == 0 and vim.bo[0].keywordprg ~= ":help" then
-          vim.lsp.buf.hover()
-        end
-      end,
-      desc = "LSP: show hover",
-    },
+    { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
     -- { "gd", vim.lsp.buf.definition, desc = "LSP: definition" },
     { "gd", "<CMD>Glance definitions<CR>", desc = "LSP(glance): definition" },
     {

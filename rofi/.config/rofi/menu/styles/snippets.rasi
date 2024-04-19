@@ -42,7 +42,7 @@ prompt {
     spacing: 					              0;
     border: 					              0;
     text-color: 					          @foreground;
-    padding: 						            1.5% 1% 1.5% 1.5%;
+    padding: 						            1.5% 0 1.5% 1.5%;
     background-color: 				      @border;
 }
 

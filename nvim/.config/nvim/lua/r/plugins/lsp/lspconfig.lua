@@ -31,7 +31,7 @@ return {
 
         -- python
         "black",
-        "ruff",
+        -- "ruff", -- (use ruff insted of 'black' because its is rust, rust is fast!)
         "debugpy",
 
         -- rust
@@ -225,7 +225,20 @@ return {
             },
           },
         },
-        pyright = {},
+        pyright = {
+          settings = {
+            -- pyright = { disableLanguageServices = true },
+            python = {
+              analysis = {
+                autoSearchPaths = true,
+                typeCheckingMode = "strict",
+                -- diagnosticMode = "workspace",
+                diagnosticMode = "openFilesOnly",
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
         ruff_lsp = {
           keys = {
             {

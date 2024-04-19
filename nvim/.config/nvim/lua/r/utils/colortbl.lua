@@ -31,7 +31,7 @@ local M = {
   statuslinenc_bg = statuslinenc_bg,
   statuslinenc_fg = statuslinenc_fg,
 
-  separator_fg_inactive = Highlight.tint(statusline_fg_inactive, 0.1),
+  separator_fg_inactive = Highlight.tint(statusline_fg_inactive, 0.4),
 
   separator_fg = separator_fg,
   separator_fg_alt = separator_fg_alt,

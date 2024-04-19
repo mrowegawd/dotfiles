@@ -7,6 +7,8 @@
   "editor.scrollbar.vertical": "auto",
   "window.titleBarStyle": "custom",
   "editor.scrollbar.horizontal": "auto",
+  "workbench.editor.showTabs": "none",
+  "editor.overviewRulerBorder": false,
 
   // APC
   "apc.activityBar": {
@@ -33,6 +35,17 @@
   "editor.tabSize": 2,
   "editor.linkedEditing": true,
 
+  "workbench.colorCustomizations": {
+    // "activityBar.background": "#6ff304",
+    // "titleBar.activeBackground": "#69e024",
+    // "titleBar.activeForeground": "#5809ce",
+    // "icon.foreground": "#91ff00",
+    "activityBar.border": "#6ff304",
+    "symbolIcon.colorForeground": "#ff0000",
+    "icon.colorForeground": "#ff0000",
+    "activityBar.inactiveForeground": "#524747"
+  },
+
   "breadcrumbs.filePath": "off",
   "files.trimTrailingWhitespace": true,
   "[markdown]": {
@@ -43,13 +56,19 @@
   "window.zoomLevel": 0.75,
   // "window.zoomLevel": 2
 
+
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  },
   "editor.lineNumbers": "relative",
   "editor.stickyScroll.enabled": true,
   "editor.suggest.insertMode": "insert",
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
   "workbench.panel.defaultLocation": "right",
-  "python.jediEnabled": false,
   "vim.easymotion": true,
   "vim.incsearch": true,
   "vim.useSystemClipboard": true,
@@ -57,11 +76,8 @@
   "vim.hlsearch": true,
   "vim.sneak": true,
   "vim.highlightedyank.enable": true,
-  "vim.easymotionMarkerooundColor": "#020202",
   "vim.foldfix": true,
   "vim.leader": "<space>",
-  "snippets.userSnippetsDirectory": "/home/mr00x/Dropbox/friendly-snippets",
-  "snippets.extends": {},
   "vim.handleKeys": {
     "<C-a>": false,
     "<C-f>": true
@@ -102,7 +118,6 @@
     "**/migrate.ts": true,
     "**/.env.example": true
   },
-
 
   "vim.normalModeKeyBindings": [
     {
@@ -298,6 +313,14 @@
     {
       "before": [",", "o", "a"],
       "commands": ["workbench.action.toggleAuxiliaryBar"]
+    },
+    {
+      "before": ["g", "p"],
+      "commands": ["workbench.action.editor.previousChange"]
+    },
+    {
+      "before": ["g", "n"],
+      "commands": ["workbench.action.editor.nextChange"]
     }
   ],
   "workbench.iconTheme": "material-icon-theme",
@@ -306,5 +329,14 @@
   "settingsSync.keybindingsPerPlatform": false,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  "gitlens.codeLens.enabled": false
+  "gitlens.codeLens.enabled": false,
+
+  // ----------------------------------------
+  // PYTHON
+  // ----------------------------------------
+  "python.analysis.typeCheckingMode": "strict",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  }
 }
+
