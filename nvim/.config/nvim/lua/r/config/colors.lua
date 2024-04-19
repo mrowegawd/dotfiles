@@ -249,6 +249,7 @@ local general_overrides = function()
     { CmpItemKindText = { fg = { from = "String", attr = "fg" } } },
     { CmpItemKindField = { fg = { from = "Identifier", attr = "fg" } } },
     { CmpItemKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
+    { CmpItemKindVariable = { fg = { from = "@variable", attr = "fg" } } },
 
     { PmenuSel = { bg = { from = "Keyword", attr = "fg", alter = -0.6 }, fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 }, bold = true } },
     { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
