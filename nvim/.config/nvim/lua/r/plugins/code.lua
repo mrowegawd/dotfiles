@@ -51,7 +51,7 @@ return {
           local luasnip = require "luasnip"
 
           require("luasnip.loaders.from_vscode").lazy_load {
-            paths = RUtils.config.path.dropbox_path .. "/friendly-snippets",
+            paths = RUtils.config.path.snippet_path,
           }
 
           luasnip.filetype_extend("python", { "django" })

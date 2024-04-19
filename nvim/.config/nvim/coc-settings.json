@@ -1,7 +1,5 @@
 {
-  "Lua.diagnostics.globals": [
-    "vim"
-  ],
+  "Lua.diagnostics.globals": ["vim"],
   "[typescript][typescriptreact][php]": {
     "coc.preferences.formatOnSave": true
   },
@@ -21,5 +19,5 @@
     "typescriptreact",
     "javascriptreact"
   ],
-  "snippets.userSnippetsDirectory": "~/Dropbox/friendly-snippets"
+  "snippets.userSnippetsDirectory": "~/Dropbox/snippets-for-all"
 }

@@ -1917,7 +1917,7 @@ return {
       -- when completion confrim auto show a signature help floating window.
       signature = true,
       -- vscode style json snippet path
-      snippet_path = vim.env.HOME .. "/Dropbox/friendly-snippets/snippets",
+      snippet_path = RUtils.config.path.snippet_path .. "/snippets",
       -- border for lsp signature popup, :h nvim_open_win
       signature_border = "rounded",
       -- lsp kind formatting, k is kind string "Field", "Struct", "Keyword" etc.

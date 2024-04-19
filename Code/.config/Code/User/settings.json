@@ -96,7 +96,6 @@
     "**/next-env.d.ts": true,
     "**/postcss.config.cjs": true,
     "**/prettier.config.js": true,
-    "**/README.md": true,
     "**/next.config.js": true,
     "**/tailwind.config.ts": true,
     "**/drizzle.config.ts": true,

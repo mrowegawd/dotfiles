@@ -9,7 +9,7 @@ RUtils.config = M
 
 local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
-local snippet_path = dropbox_path .. "/friendly-snippets"
+local snippet_path = dropbox_path .. "/snippets-for-all"
 
 local colorscheme = "tokyonight-night"
 
@@ -251,8 +251,8 @@ local defaults = {
       -- Property = " ",
       Property = " ",
       Reference = " ",
-      -- Snippet = " ",
-      Snippet = "﬌ ",
+      Snippet = " ",
+      -- Snippet = "﬌ ",
       String = " ",
       Struct = " ",
       -- Struct = "󰆼 ",
