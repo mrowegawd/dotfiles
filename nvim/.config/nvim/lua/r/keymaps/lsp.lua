@@ -23,18 +23,18 @@ function M.get()
     --  LSP Stuff
     --  +----------------------------------------------------------+
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" },
-    { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP(fzflua): outgoing calls" },
-    { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP(fzflua): incoming calls" },
+    { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP: outgoing calls [fzflua]" },
+    { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP: incoming calls [fzflua]" },
     {
       "gP",
       function()
         vim.cmd [[Lspsaga peek_definition]]
       end,
-      desc = "LSP(goto-preview): preview definitions",
+      desc = "LSP: preview/peek definitions [goto-preview]",
     },
     { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
     -- { "gd", vim.lsp.buf.definition, desc = "LSP: definition" },
-    { "gd", "<CMD>Glance definitions<CR>", desc = "LSP(glance): definition" },
+    { "gd", "<CMD>Glance definitions<CR>", desc = "LSP: definition [glance]" },
     {
       "gD",
       function()
@@ -79,7 +79,7 @@ function M.get()
         -- end, "lsp_references")
         vim.cmd [[Glance references]]
       end,
-      desc = "LSP(glance): references",
+      desc = "LSP: references [glance]",
     },
     {
       "<Leader>ll",
@@ -90,7 +90,7 @@ function M.get()
           vim.lsp.codelens.refresh { bufnr = 0 }
         end
       end,
-      desc = "LSP(symbol-usage): codelens refresh",
+      desc = "LSP: refresh codelens [symbol-usage]",
     },
     {
       "<Leader>lL",
@@ -101,7 +101,7 @@ function M.get()
           vim.lsp.codelens.refresh { bufnr = 0 }
         end
       end,
-      desc = "LSP(symbol-usage): codelens toggle",
+      desc = "LSP: codelens toggle [symbol-usage]",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics
@@ -109,26 +109,26 @@ function M.get()
     {
       "dn",
       diagnostic_goto(true),
-      desc = "LSP(diagnostic): next item",
+      desc = "Diagnostic: next item",
     },
     {
       "dp",
       diagnostic_goto(false),
-      desc = "LSP(diagnostic): prev item",
+      desc = "Diagnostic: prev item",
     },
     {
       "dP",
       function()
         vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
       end,
-      desc = "LSP(diagnostic): preview",
+      desc = "Diagnostic: preview",
     },
     {
       "dl",
       function()
         RUtils.toggle.diagnostics()
       end,
-      desc = "LSP(diagnostic): toggle",
+      desc = "Diagnostic: toggle enable/disable diagnostic",
     },
     {
       "df",
@@ -153,7 +153,7 @@ function M.get()
         vim.fn.setqflist({}, " ", what)
         vim.cmd [[copen]]
       end,
-      desc = "LSP(diagnostic): document diagnostics",
+      desc = "Diagnostic: document diagnostics",
     },
     {
       "dF",
@@ -174,7 +174,7 @@ function M.get()
         vim.fn.setqflist({}, " ", what)
         vim.cmd [[copen]]
       end,
-      desc = "LSP(diagnostic): workspace diagnostics",
+      desc = "Diagnostic: workspace diagnostics",
     },
     --  +----------------------------------------------------------+
     --  LSP commands
@@ -275,7 +275,7 @@ function M.get()
       function()
         vim.cmd.RustLsp "codeAction"
       end,
-      desc = "LSP(rustaceanvim): code action",
+      desc = "LSP: code action [rustaceanvim]",
       buffer = vim.api.nvim_get_current_buf(),
     }
   else
@@ -290,25 +290,25 @@ function M.get()
         return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
       end,
       expr = true,
-      desc = "LSP(inc-rename): rename",
+      desc = "LSP: rename [inc-rename]",
       has = "rename",
     }
   elseif RUtils.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] = { "gR", "<CMD> Lspsaga rename <CR>", desc = "LSP(lspsaga): rename", has = "rename" }
+    M._keys[#M._keys + 1] = { "gR", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [Lspsaga]", has = "rename" }
   else
     M._keys[#M._keys + 1] = { "gR", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
   end
 
-  if RUtils.has "lsp_signature.nvim" then
-    M._keys[#M._keys + 1] = {
-      "go",
-      function()
-        require("lsp_signature").toggle_float_win()
-      end,
-      desc = "LSP(lsp_signature): toggle",
-      has = "signatureHelp",
-    }
-  end
+  -- if RUtils.has "lsp_signature.nvim" then
+  --   M._keys[#M._keys + 1] = {
+  --     "go",
+  --     function()
+  --       require("lsp_signature").toggle_float_win()
+  --     end,
+  --     desc = "LSP: toggle [lsp-signature]",
+  --     has = "signatureHelp",
+  --   }
+  -- end
 
   return M._keys
 end

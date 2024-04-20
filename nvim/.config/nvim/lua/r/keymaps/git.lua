@@ -3,10 +3,10 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 local M = {}
 
 local function gitfzflua(opts)
-  RUtils.map.nnoremap("<Leader>gfs", fzf_lua.git_status, { desc = "Git(fzflua): git status" })
-  RUtils.map.nnoremap("<Leader>gfS", fzf_lua.git_stash, { desc = "Git(fzflua): git stash" })
-  RUtils.map.nnoremap("<Leader>gfB", fzf_lua.git_commits, { desc = "Git(fzflua): open commits repos" })
-  RUtils.map.nnoremap("<Leader>gfb", fzf_lua.git_bcommits, { desc = "Git(fzflua): open commits buffer" })
+  RUtils.map.nnoremap("<Leader>gfs", fzf_lua.git_status, { desc = "Git: show git status [fzflua]" })
+  RUtils.map.nnoremap("<Leader>gfS", fzf_lua.git_stash, { desc = "Git: show git stash [fzflua]" })
+  RUtils.map.nnoremap("<Leader>gfB", fzf_lua.git_commits, { desc = "Git: list commits repos [fzflua]" })
+  RUtils.map.nnoremap("<Leader>gfb", fzf_lua.git_bcommits, { desc = "Git: list commits buffer [fzflua]" })
 
   RUtils.map.nnoremap("<Leader>gff", function()
     local col, row = RUtils.fzflua.rectangle_win_pojokan()
@@ -60,7 +60,7 @@ local function gitfzflua(opts)
       }, opts),
       { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
     )
-  end, { desc = "Git(fzflua): list of cmds" })
+  end, { desc = "Git: list of cmds [fzflua]" })
 end
 
 -- Create a new scratch buffer
@@ -132,16 +132,16 @@ local function gitdiffview()
   RUtils.map.vnoremap(
     "<Leader>gvc",
     "<esc><cmd>CompareClipboardSelection<cr>",
-    { desc = "Git(diff): compare selection (visual) with clipboard " }
+    { desc = "Git: compare diff with selection clipboard" }
   )
 
-  RUtils.map.nnoremap("gvv", function()
+  RUtils.map.nnoremap("<leader>gvv", function()
     local current_line = vim.fn.line "."
     local file = vim.fn.expand "%"
     -- DiffviewFileHistory --follow -L{current_line},{current_line}:{file}
     local cmd = string.format("DiffviewFileHistory --follow -L%s,%s:%s", current_line, current_line, file)
     vim.cmd(cmd)
-  end, { desc = "Git(diffview): line history" })
+  end, { desc = "Git: line hash history [diffview]" })
 
   -- RUtils.map.nnoremap(
   --   "<Leader>gvv",
@@ -155,7 +155,7 @@ local function gitdiffview()
     -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
     local cmd = string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
     vim.cmd(cmd)
-  end, { desc = "Git(diffview): range history" })
+  end, { desc = "Git: line range hash history [diffview]" })
 end
 
 local is_gitsigns_attach = true
@@ -163,27 +163,27 @@ local is_gitsigns_attach = true
 function M.gitsigns()
   local gs = require "gitsigns"
 
-  RUtils.map.vnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk (visual)" })
-  RUtils.map.nnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git(gitsigns): stage hunk" })
-  RUtils.map.nnoremap("<Leader>ghA", gs.stage_buffer, { desc = "Git(gitsigns): stage hunk buffer" })
-  RUtils.map.nnoremap("<Leader>ghr", gs.reset_hunk, { desc = "Git(gitsigns): reset hunk" })
-  RUtils.map.nnoremap("<Leader>ghu", gs.undo_stage_hunk, { desc = "Git(gitsigns): undo stage hunk" })
-  RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git(gitsigns): preview hunk" })
-  RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git(gitsigns): send to qf" })
-  RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git(gitsigns): diffthis" })
+  RUtils.map.vnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git: stage hunk (visual) [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git: stage hunk [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>ghA", gs.stage_buffer, { desc = "Git: stage hunk buffer [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>ghr", gs.reset_hunk, { desc = "Git: reset hunk [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>ghu", gs.undo_stage_hunk, { desc = "Git: undo stage hunk [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git: preview hunk [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git: select all hunks and send to qf [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git: diffthis [gitsigns]" })
   RUtils.map.nnoremap(
     "<Leader>gtb",
     gs.toggle_current_line_blame,
-    { desc = "Git(gitsigns): toggle line blame (gitlens)" }
+    { desc = "Git: toggle line blame (gitlens) [gitsigns]" }
   )
   RUtils.map.nnoremap("<Leader>ghD", function()
     gs.diffthis "~"
-  end, { desc = "Git(gitsigns): diffthis '~'" })
+  end, { desc = "Git: diffthis '~' [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gtB", function()
     vim.cmd "BlameToggle"
-  end, { desc = "Git(fugitive): open blame buffer" })
-  RUtils.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
-  RUtils.map.onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git(gitsigns): select git hunk" })
+  end, { desc = "Git: open blame buffer [fugitive]" })
+  RUtils.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
+  RUtils.map.onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
 
   RUtils.map.nnoremap("gn", function()
     if vim.wo.diff then
@@ -193,7 +193,7 @@ function M.gitsigns()
       gs.next_hunk { preview = false }
     end)
     return "<Ignore>"
-  end, { desc = "Git(gitsigns): next hunk" })
+  end, { desc = "Git: next hunk [gitsigns]" })
   RUtils.map.nnoremap("gp", function()
     if vim.wo.diff then
       return "[c"
@@ -202,7 +202,7 @@ function M.gitsigns()
       gs.prev_hunk { preview = false }
     end)
     return "<Ignore>"
-  end, { desc = "Git(gitsigns): prev hunk" })
+  end, { desc = "Git: prev hunk [gitsigns]" })
 
   gitdiffview()
 

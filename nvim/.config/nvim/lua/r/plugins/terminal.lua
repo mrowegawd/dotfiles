@@ -196,12 +196,12 @@ return {
       {
         "<a-f>",
         "<CMD>Vterm<CR>",
-        desc = "Terminal(termim): open",
+        desc = "Terminal: open [terminal]",
       },
       {
         "<a-N>",
         "<CMD>Fterm<CR>",
-        desc = "Terminal(termim): open",
+        desc = "Terminal: open [terminal]",
       },
     },
   },

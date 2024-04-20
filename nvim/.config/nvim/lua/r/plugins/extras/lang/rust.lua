@@ -85,9 +85,9 @@ return {
       servers = {
         rust_analyzer = {
           keys = {
-            { "K", "<cmd>RustHoverActions<cr>", desc = "Hover Actions (Rust)" },
-            { "<Leader>cR", "<cmd>RustCodeAction<cr>", desc = "LSP: Code Action (Rust)" },
-            { "<leader>dR", "<cmd>RustDebuggables<cr>", desc = "Debug(rust): run debuggables" },
+            { "K", "<cmd>RustHoverActions<cr>", desc = "LSP: hover actions (rustlsp)" },
+            { "<Leader>cR", "<cmd>RustCodeAction<cr>", desc = "LSP: code action (rustlsp)" },
+            { "<leader>dR", "<cmd>RustDebuggables<cr>", desc = "Debug: run debuggables [rustlsp]" },
           },
           settings = {
             ["rust-analyzer"] = {

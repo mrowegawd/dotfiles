@@ -626,12 +626,12 @@ return {
       {
         "<Localleader>oS",
         "<CMD>Scratch<CR>",
-        desc = "Misc(scratch): select language",
+        desc = "Misc: select filetype for scratch buffer [scratch]",
       },
       {
         "<Localleader>os",
         "<CMD>ScratchOpen<CR>",
-        desc = "Misc(scratch): open",
+        desc = "Misc: open scratch buffer [scratch]",
       },
     },
   },

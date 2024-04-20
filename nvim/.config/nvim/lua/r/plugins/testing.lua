@@ -96,36 +96,36 @@ return {
       require("neotest").setup(opts)
     end,
     keys = {
-      -- { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing(neotest): test file" },
-      -- { "<Leader>tF", function() require("neotest").run.run(vim.uv.cwd()) end, "Testing(neotest): test all files" },
-      -- { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing(neotest): stop" },
+      -- { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing: test file [neotest]" },
+      -- { "<Leader>tF", function() require("neotest").run.run(vim.uv.cwd()) end, "Testing: test all files [neotest]" },
+      -- { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing: stop [neotest]" },
       {
         "<Leader>tl",
         function()
           require("neotest").run.run_last()
         end,
-        desc = "Testing(neotest): run last",
+        desc = "Testing: run last [neotest]",
       },
       {
         "<Leader>tt",
         function()
           require("neotest").run.run()
         end,
-        desc = "Testing(neotest): test unit",
+        desc = "Testing: test unit [neotest]",
       },
       {
         "<Leader>to",
         function()
           require("neotest").summary.toggle()
         end,
-        desc = "Testing(neotest): open output summary",
+        desc = "Testing: open output summary [neotest]",
       },
       {
         "<Leader>tP",
         function()
           require("neotest").output.open { enter = true, short = false }
         end,
-        desc = "Testing(neotest): preview",
+        desc = "Testing: preview [neotest]",
       },
       {
         "<Leader>tf",
@@ -180,7 +180,7 @@ return {
             winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing", row = row, col = col },
           })
         end,
-        desc = "Testing(neotest): list of cmds",
+        desc = "Testing: list of cmds [neotest]",
       },
     },
   },
@@ -193,7 +193,7 @@ return {
   --       function()
   --         require("neotest").run.run { strategy = "dap" }
   --       end,
-  --       desc = "Testing(neotest): debug nearest",
+  --       desc = "Testing: debug nearest [neotest]",
   --     },
   --   },
   -- },

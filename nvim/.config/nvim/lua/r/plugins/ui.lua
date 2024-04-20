@@ -246,7 +246,7 @@ return {
           require("noice").redirect(fn.getcmdline())
         end,
         mode = "c",
-        desc = "Misc(noice): redirect cmdline",
+        desc = "Misc: redirect cmdline [noice]",
       },
     },
     opts = function()
@@ -344,14 +344,14 @@ return {
         function()
           require("fold-cycle").open()
         end,
-        desc = "Fold(fold-cycle): cycle fold",
+        desc = "Fold: cycle fold [fold-cycle]",
       },
       {
         "z<Leader>",
         function()
           require("fold-cycle").open()
         end,
-        desc = "Fold(fold-cycle): cycle fold",
+        desc = "Fold: cycle fold [fold-cycle]",
       },
     },
   },

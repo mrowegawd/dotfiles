@@ -33,12 +33,12 @@ return {
       {
         "<Leader>gn",
         "<CMD>GitConflictNextConflict<CR>",
-        desc = "Git(gitconflict): next",
+        desc = "Git: next conflict [gitconflict]",
       },
       {
         "<Leader>gp",
         "<CMD>GitConflictPrevConflict<CR>",
-        desc = "Git(gitconflict): prev",
+        desc = "Git: prev conflict [gitconflict]",
       },
     },
     event = "LazyFile",
@@ -60,14 +60,17 @@ return {
         "<Leader>go",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "v" },
-        desc = "Git(gitlinker): open range hash git in browser",
+        desc = "Git: open hash, on cursur git in browser [gitlinker]",
       },
       {
         "<Leader>gO",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        desc = "Git(gitlinker): open URL repo",
+        desc = "Git: open URL repo [gitlinker]",
       },
-      { "<leader>gy" }, --"Git(gitlinker): copy url git hash"
+      {
+        "<leader>gy",
+        desc = "Git: yank/copy URL git hash on cursor [gitlinker]",
+      },
     },
     opts = { mappings = "<Leader>gy" },
   },
@@ -350,9 +353,9 @@ return {
       {
         "<Leader>gN",
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
-        desc = "Git(fugitive): open",
+        desc = "Git: open fugitive [fugitive]",
       },
-      { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git(fugitive): commit" },
+      { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git: commit [fugitive]" },
     },
   },
   -- FUGIT2
@@ -368,7 +371,7 @@ return {
         dependencies = { "stevearc/dressing.nvim" },
       },
     },
-    keys = { { "<leader>G", mode = "n", "<cmd>Fugit2<cr>" } },
+    keys = { { "<leader>G", mode = "n", "<cmd>Fugit2<cr>", desc = "Git: open fugit2 [fugit2]" } },
     opts = {
       link_colors = {
         Fugit2Header = "Label",

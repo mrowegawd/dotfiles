@@ -9,8 +9,8 @@ keymap.set(
 
 keymap.set("n", "<Leader>dam", function()
   require("dap-python").test_method()
-end, { buffer = true, desc = "Debug(dap-python): debug method" })
+end, { buffer = true, desc = "Debug: debug method [dap-python]" })
 
 keymap.set("n", "<Leader>dac", function()
   require("dap-python").test_class()
-end, { buffer = true, desc = "Debug(dap-python): debug class" })
+end, { buffer = true, desc = "Debug: debug class [dap-python]" })

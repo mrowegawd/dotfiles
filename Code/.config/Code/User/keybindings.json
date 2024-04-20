@@ -45,6 +45,18 @@
     "command": "selectPrevSuggestion",
     "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
   },
+
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.quickOpenSelectPrevious",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenSelectNext",
+    "when": "inQuickOpen"
+  },
+
   {
     "key": "ctrl+l",
     "command": "acceptSelectedSuggestion",
@@ -149,27 +161,9 @@
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
   },
   {
-    // Open selected file in the second (right) editor group from File Explorer
     "key": "ctrl+s",
     "command": "explorer.openToSide",
     "args": { "group": 1 },
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
-  },
-  {
-    "key": "alt+9",
-    "command": "outline-map.focusSearch"
-  },
-  {
-    "key": "alt+l",
-    "command": "-outline-map.focusSearch"
-  },
-  {
-    "key": "ctrl+shift+e",
-    "command": "-workbench.view.explorer",
-    "when": "viewContainer.workbench.view.explorer.enabled"
-  },
-  {
-    "key": "ctrl+j",
-    "command": "-workbench.action.togglePanel"
   }
 ]

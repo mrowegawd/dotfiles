@@ -56,7 +56,6 @@
   "window.zoomLevel": 0.75,
   // "window.zoomLevel": 2
 
-
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.formatOnSaveMode": "file",
@@ -97,7 +96,7 @@
     "**/drizzle": true,
     "**/dist": true,
     "**/.todo.md": true,
-    "**/.vscode": true,
+    "**/.vscode": false,
     "**/.eslintrc.cjs": true,
     "**/.editorconfig": true,
     "**/.gitignore": true,
@@ -197,6 +196,18 @@
     },
 
     {
+      // force to horizontal, tapi command ini membuat cursor malah menjadi out of window??
+      // dunno idk how to fix :(
+      "before": ["s", "J"],
+      "commands": ["workbench.action.toggleEditorGroupLayout"]
+    },
+    {
+      // force to vertical
+      "before": ["s", "L"],
+      "commands": ["workbench.action.toggleEditorGroupLayout"]
+    },
+
+    {
       "before": ["z", "m"],
       "after": ["z", "M"]
     },
@@ -251,11 +262,6 @@
       "commands": ["workbench.actions.view.problems"],
       "silent": true
     },
-    // {
-    //   "key": "ctrl+shift+m",
-    //   "command": "workbench.actions.view.problems",
-    //   "when": "workbench.panel.markers.view.active"
-    // }
     // -------------------------
     // LSP
     // -------------------------
@@ -269,6 +275,24 @@
       "commands": ["editor.action.goToReferences"],
       "silent": true
     },
+
+    // -------------------------
+    // DEBUG
+    // -------------------------
+    {
+      "before": ["<leader>", "d", "b"],
+      "commands": ["editor.debug.action.toggleBreakpoint"],
+      "silent": true
+    },
+
+    {
+      "before": ["<leader>", "d", "B"],
+      "commands": ["workbench.debug.viewlet.action.removeAllBreakpoints"],
+      "silent": true
+    },
+
+    // "when": "debuggersAvailable && disassemblyViewFocus || debuggersAvailable && editorTextFocus"
+
     // -------------------------
     // GIT
     // -------------------------
@@ -337,6 +361,6 @@
   "python.analysis.typeCheckingMode": "strict",
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
-  }
+  },
+  "go.toolsManagement.autoUpdate": true
 }
-

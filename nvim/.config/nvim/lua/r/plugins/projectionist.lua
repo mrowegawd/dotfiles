@@ -193,9 +193,9 @@ return {
     }
   end,
   keys = {
-    { "<leader>A", "<Cmd>A<CR>", desc = "projectionist: edit alternate" },
-    { "<leader>av", "<Cmd>AV<CR>", desc = "projectionist: vsplit alternate" },
-    { "<leader>as", "<Cmd>AS<CR>", desc = "projectionist: split test" },
-    { "<leader>at", "<Cmd>At<CR>", desc = "projectionist: tab test" },
+    { "<leader>A", "<Cmd>A<CR>", desc = "Projectionist: edit alternate" },
+    { "<leader>av", "<Cmd>AV<CR>", desc = "Projectionist: vsplit alternate" },
+    { "<leader>as", "<Cmd>AS<CR>", desc = "Projectionist: split test" },
+    { "<leader>at", "<Cmd>At<CR>", desc = "Projectionist: tab test" },
   },
 }

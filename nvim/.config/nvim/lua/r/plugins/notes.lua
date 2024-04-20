@@ -29,7 +29,7 @@ return {
     --       return cmd [[Neorg workspace wiki]]
     --     end
     --   end,
-    --   desc = "Note(neorg): open neorg workspace",
+    --   desc = "Note: open neorg workspace [fzflua]",
     -- },
     -- {
     --   "<Localleader>ff",
@@ -47,7 +47,7 @@ return {
     --       },
     --     }
     --   end,
-    --   desc = "Note(fzflua): find neorg files",
+    --   desc = "Note: find neorg files [fzflua]",
     -- },
     -- {
     --   "<Localleader>fg",
@@ -62,7 +62,7 @@ return {
     --       },
     --     }
     --   end,
-    --   desc = "Note(fzflua): live grep neorg files",
+    --   desc = "Note: live grep neorg files [fzflua]",
     -- },
     -- },
     dependencies = {
@@ -289,10 +289,10 @@ return {
         function()
           return RUtils.neorg.open_orgagenda_paths()
         end,
-        desc = "Note(orgmode): open orgmode paths",
+        desc = "Note: open list orgtodos orgmode [orgmode]",
       },
-      "<Localleader>fc",
-      "<Localleader>fa",
+      { "<Localleader>fc", desc = "Note: capture note [orgmode]" },
+      { "<Localleader>fa", desc = "Note: open agenda orgmode [orgmode]" },
     },
     dependencies = {
       "hrsh7th/nvim-cmp",
@@ -632,7 +632,7 @@ return {
             },
           }
         end,
-        desc = "Note(fzflua): obsidian search",
+        desc = "Note: obsidian search [obsidian]",
       },
       {
         "<Localleader>ff",
@@ -649,7 +649,7 @@ return {
             },
           }
         end,
-        desc = "Note(fzflua): find neorg files",
+        desc = "Note: find file notes [obsidian]",
       },
     },
     dependencies = {

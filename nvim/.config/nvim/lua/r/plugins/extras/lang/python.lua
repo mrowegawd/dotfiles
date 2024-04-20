@@ -32,7 +32,7 @@ return {
                   },
                 }
               end,
-              desc = "LSP(python): organize Imports",
+              desc = "LSP: organize imports [pythonlsp]",
             },
           },
         },

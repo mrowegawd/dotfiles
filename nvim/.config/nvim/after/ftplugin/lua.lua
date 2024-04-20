@@ -27,8 +27,9 @@ RUtils.write_and_source(0)
 
 -- keymap.set("n", "<Leader>dal", function()
 --   require("osv").run_this()
--- end, { buffer = true, desc = "Debug(nlua): adapter lua" })
+-- end, { buffer = true, desc = "Debug: adapter lua [nlua]" })
 
 -- keymap.set("n", "<Leader>daL", function()
 --   require("osv").launch { port = 8086 }
--- end, { buffer = true, desc = "Debug(nlua): launch" })
+-- end, { buffer = true, desc = "Debug: launch debug lua [nlua]" })
+

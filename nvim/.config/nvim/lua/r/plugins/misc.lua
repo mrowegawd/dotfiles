@@ -45,22 +45,22 @@ return {
       {
         "<c-Down>",
         "<CMD> Hi} <CR>",
-        desc = "Misc(vim-highlighter): next",
+        desc = "Misc: next highlighter [vim-highlighter]",
       },
       {
         "<c-Up>",
         "<CMD> Hi{ <CR>",
-        desc = "Misc(vim-highlighter): prev",
+        desc = "Misc: prev [vim-highlighter]",
       },
       {
         "t<CR>",
         ":Hi + <CR>",
-        desc = "Misc(vim-highlighter): hi undercursor",
+        desc = "Misc: highlight on cursor [vim-highlighter]",
       },
       {
         "t<BS>",
         ":Hi - <CR>",
-        desc = "Misc(vim-highlighter): remove hi undercursor",
+        desc = "Misc: remove hi undercursor [vim-highlighter]",
       },
       -- "t<CR>",
       -- "t<BS>",

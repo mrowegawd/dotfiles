@@ -97,17 +97,17 @@ return {
       },
     },
     keys = {
-      { "sf", require("fzf-lua").buffers, desc = "WinNav(fzflua): open" },
-      { "sG", require("fzf-lua").lines, desc = "WinNav(fzflua): live_grep on buffers" },
-      { "sH", require("fzf-lua").oldfiles, desc = "WinNav(Fzflua): history" },
+      { "sf", require("fzf-lua").buffers, desc = "Fzflua: select buffers" },
+      { "sG", require("fzf-lua").lines, desc = "Fzflua: live grep on buffers" },
+      { "sH", require("fzf-lua").oldfiles, desc = "Fzflua: history buffer" },
       { "z=", require("fzf-lua").spell_suggest, desc = "Fzflua: spell suggest" },
-      { "sg", require("fzf-lua").blines, desc = "WinNav(fzfLua): live_grep on curbuf" },
+      { "sg", require("fzf-lua").blines, desc = "FzfLua: live grep on curbuf" },
       {
         "sg",
         function()
           require("fzf-lua").blines { query = vim.fn.expand "<cword>" }
         end,
-        desc = "WinNav(fzfLua): live_grep on curbuf [visual]",
+        desc = "Winav: live grep on curbuf (visual)",
         mode = { "v" },
       },
       {
@@ -115,7 +115,7 @@ return {
         function()
           require("fzf-lua").lines { query = vim.fn.expand "<cword>" }
         end,
-        desc = "WinNav(fzflua): live_grep on buffers [visual]",
+        desc = "Winav: live grep on buffers (visual) [fzflua]",
         mode = { "v" },
       },
       { "<Leader>ff", require("fzf-lua").files, desc = "Fzflua: find files", mode = { "n", "v" } },
@@ -130,7 +130,7 @@ return {
             },
           }
         end,
-        desc = "LSP(fzflua): document symbols",
+        desc = "LSP: document symbols [fzflua]",
       },
       {
         "gS",
@@ -141,7 +141,7 @@ return {
             },
           }
         end,
-        desc = "LSP(fzflua): workspace symbols",
+        desc = "LSP: workspace symbols [fzflua]",
       },
       {
         "<Leader>fh",
@@ -158,22 +158,22 @@ return {
       { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
       { "<Leader>fm", require("fzf-lua").marks, desc = "Fzflua: marks" },
       { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search-history" },
-      {
-        "<Leader>fk",
-        function()
-          return require("fzf-lua").keymaps {
-            winopts = {
-              preview = {
-                title = RUtils.fzflua.format_title("Keymaps", ""),
-                vertical = "up:45%",
-                horizontal = "right:30%",
-                layout = "flex",
-              },
-            },
-          }
-        end,
-        desc = "Fzflua: keymaps",
-      },
+      -- {
+      --   "<Leader>fk",
+      --   function()
+      --     return require("fzf-lua").keymaps {
+      --       winopts = {
+      --         preview = {
+      --           title = RUtils.fzflua.format_title("Keymaps", ""),
+      --           vertical = "up:45%",
+      --           horizontal = "right:30%",
+      --           layout = "flex",
+      --         },
+      --       },
+      --     }
+      --   end,
+      --   desc = "Fzflua: keymaps",
+      -- },
       {
         "<Leader>fo",
         function()
@@ -207,7 +207,7 @@ return {
             },
           }
         end,
-        desc = "Fzflua(qf): select qf items",
+        desc = "Fzflua: select quickfix items",
       },
       {
         "<Leader>fq",
@@ -230,7 +230,7 @@ return {
             cmd = pcmd,
           }
         end,
-        desc = "Fzflua(qf): grep qf items",
+        desc = "Fzflua: live grep qf items",
       },
     },
     opts = function()
@@ -599,6 +599,9 @@ return {
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
         },
+        keymaps = {
+          winopts = { preview = { hidden = "hidden" } },
+        },
         buffers = {
           winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
@@ -799,8 +802,8 @@ return {
     version = false, -- telescope did only one release, so use HEAD for now
     keys = {
       -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
-      -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "LSP(diagnostic): telescope bufnr diagnostics" },
-      -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "LSP(diagnostic): telescope all diagnostics" },
+      -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Diagnostic: document diagnostics [telescope]" },
+      -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "Diagnostic: workspace diagnostics [telescope]" },
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
       -- { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
       { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
@@ -823,7 +826,7 @@ return {
       --   desc = "Telescope(lsp): goto symbol (Workspace)",
       -- },
       -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
-      -- { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps" },
+      { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "v" } },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
       -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
       -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
@@ -1128,7 +1131,7 @@ return {
           diagnostics = dropdown {},
           colorscheme = { enable_preview = true },
           keymaps = dropdown {
-            layout_config = { height = 18, width = 0.5 },
+            layout_config = { height = 50, width = 0.8 },
           },
           lsp_references = {
             sorting_strategy = "descending",
@@ -1183,7 +1186,7 @@ return {
       {
         "<Leader><s-f>",
         "<CMD>Spectre<CR>",
-        desc = "Misc(spectre): open",
+        desc = "Misc: open spectre [spectre]",
       },
       {
         "<Leader><s-f>",
@@ -1191,7 +1194,7 @@ return {
           RUtils.tiling.force_win_close({ "toggleterm", "termlist" }, true)
           return require("spectre").open_visual { select_word = true }
         end,
-        desc = "Misc(spectre): open (visual)",
+        desc = "Misc: open spectre with grep on cursor (visual) [spectre]",
         mode = {
           "v",
         },
@@ -1548,21 +1551,25 @@ return {
       {
         "<leader>xx",
         "<cmd>Trouble diagnostics toggle<cr>",
-        desc = "misc(trouble): diagnostics opened buffers toggle",
+        desc = "Misc: open diagnostics with [trouble]",
       },
       {
         "<leader>xX",
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-        desc = "misc(trouble): diagnostics curbuf toggle",
+        desc = "Misc: diagnostics curbuf toggle [trouble]",
       },
-      { "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "misc(trouble): symbols cur buffer" },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Misc: open symbols with trouble [trouble]",
+      },
       {
         "<leader>cS",
         "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-        desc = "misc(trouble): LSP references/definitions/... (Trouble)",
+        desc = "Misc: LSP references/definitions/... [trouble]",
       },
-      { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "misc(trouble): location list" },
-      { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "misc(trouble): quickfix list" },
+      { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "Misc: open location list with [trouble]" },
+      { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "Misc: open quickfix list with [trouble]" },
     },
     opts = function()
       Highlight.plugin("trouble", {

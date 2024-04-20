@@ -82,7 +82,7 @@ end
 -- RUtils.map.nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
 RUtils.map.nnoremap("<space><space>", "za", { desc = "Fold: focus the current fold by closing all others" })
 -- RUtils.map.nnoremap("<space><space>", "zo", { desc = "Fold: open fold" })
-RUtils.map.nnoremap("zm", "zM")
+RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
 -- RUtils.map.nnoremap("<BS>", "za")
 
 -- Make zO recursively open whatever top level fold we're in, no matter where the
@@ -101,20 +101,20 @@ end, { desc = "Fold: go prev closed" })
 --  │ VISUAL                                                   │
 --  ╰──────────────────────────────────────────────────────────╯
 -- Cara mudah untuk cursor dari bawah ke atas dalam visual mode
-RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "Visual: dont mistake" })
-RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "Visual: mistake" })
+RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
+RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
 
-RUtils.map.xnoremap("al", "$o0", { desc = "Visual: jump in" })
-RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "Visual: jump out" })
+RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
+RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
 
-RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Visual: select text lines" })
-RUtils.map.vnoremap(">", ">gv", { desc = "Visual: next align lines" })
-RUtils.map.vnoremap("<", "<gv", { desc = "Visual: prev align lines" })
+RUtils.map.nnoremap("vv", [[^vg_]], { desc = "View: select text lines" })
+RUtils.map.vnoremap(">", ">gv", { desc = "View: next align lines (visual)" })
+RUtils.map.vnoremap("<", "<gv", { desc = "View: prev align lines (visual)" })
 
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ MISC                                                     │
 --  ╰──────────────────────────────────────────────────────────╯
-RUtils.map.nnoremap("~", "%", silent)
+RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 
 -- RUtils.map.nnoremap("<TAB>", function()
 --   if vim.bo.filetype == "fugitive" then
@@ -164,7 +164,7 @@ RUtils.map.nnoremap("<Leader>P", function()
   local cwd = vim.fn.expand "%:p:h"
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
   print(cwd .. "/" .. fname)
-end)
+end, { desc = "Winav: show path curbuf (printout)" })
 
 local function replace_keymap(confirmation, visual)
   local text = [[:%s/]]
@@ -198,52 +198,51 @@ end
 
 RUtils.map.nnoremap("sr", function()
   replace_keymap(false, false)
-end, { desc = "Misc: find and [r]eplace word under cursor" })
-RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and [r]eplace word (visual)" })
+end, { desc = "Misc: find and replace word under cursor" })
+
+RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace word (visual)" })
 
 -- RUtils.map.nnoremap("sc", function()
 --   replace_keymap(true, false)
--- end, { desc = "Misc: find and [r]eplace word under cursor with [c]onfirmation" })
+-- end, { desc = "Misc: find and replace word under cursor with confirmation" })
 -- RUtils.map.nnoremap("<leader>r", function()
 --   replace_keymap(false, true)
--- end, { desc = "Misc: find and [r]eplace selected" })
+-- end, { desc = "Misc: find and replace selected" })
 -- RUtils.map.nnoremap("<leader>rc", function()
 --   replace_keymap(true, true)
--- end, { desc = "Misc: find and [r]eplace selected with [c]onfirmation" })
+-- end, { desc = "Misc: find and replace selected with confirmation" })
 
 --  ╭──────────────────────────────────────────────────────────╮
---  │ WINDOWS AND NAV                                          │
+--  │ WINDOWS, VIEW AND NAV                                    │
 --  ╰──────────────────────────────────────────────────────────╯
 
-RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "WinNav: vsplit", silent = true })
-RUtils.map.nnoremap("ss", "<CMD>split|wincmd p<CR>", { desc = "WinNav: split", silent = true })
+RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
+RUtils.map.nnoremap("ss", "<CMD>split|wincmd p<CR>", { desc = "View: horizontal split", silent = true })
 -- RUtils.map.nnoremap("<c-w>v", [[<CMD> lua print("not allowed to use c-w v")<CR>]], { desc = "Misc: <c-w>v not allowed" })
 -- RUtils.map.nnoremap("<c-w>s", [[<CMD> lua print("not allowed to use c-w s")<CR>]], { desc = "Misc: <c-w>s not allowed" })
 -- nnoremap("sa", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']], { expr = true })
 
-RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "WinNav: wincmd =", silent = true })
+RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window to =", silent = true })
 
-RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "WinNav: force to splits", silent = true })
-RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "WinNav: force to vsplits", silent = true })
+RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force to horizontal split", silent = true })
+RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force to vertical split", silent = true })
 
-RUtils.map.nnoremap("sc", "<CMD>q!<CR>")
-RUtils.map.nnoremap("sC", "<CMD>qa!<CR>")
+RUtils.map.nnoremap("sc", "<CMD>q!<CR>", { desc = "View: close buffer" })
+RUtils.map.nnoremap("sC", "<CMD>qa!<CR>", { desc = "View: close all buffer" })
 
-RUtils.map.nnoremap("sh", "<C-w>h", { desc = "WinNav: move left", silent = true })
-RUtils.map.nnoremap("sl", "<C-w>l", { desc = "WinNav: move right", silent = true })
-RUtils.map.nnoremap("sj", "<C-w>j", { desc = "WinNav: move down", silent = true })
-RUtils.map.nnoremap("sk", "<C-w>k", { desc = "WinNav: move up", silent = true })
+RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: move cursor left", silent = true })
+RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: move cursor right", silent = true })
+RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: move cursor down", silent = true })
+RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: move cursor up", silent = true })
 
-RUtils.map.nnoremap("sP", [[<CMD> lua print(vim.fn.expand "%:p") <CR>]], { desc = "WinNav: printout the path curbuf" })
+RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Winav: new tab", silent = true })
+RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Winav: close tab", silent = true })
 
-RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "WinNav(tab): new tab", silent = true })
-RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "WinNav(tab): close", silent = true })
+RUtils.map.nnoremap("tl", "<CMD>tabn<CR>", { desc = "Winav: next tab", silent = true })
+RUtils.map.nnoremap("th", "<CMD>tabp<CR>", { desc = "Winav: prev tab", silent = true })
 
-RUtils.map.nnoremap("tl", "<CMD>tabn<CR>", { desc = "WinNav(tab): next tab", silent = true })
-RUtils.map.nnoremap("th", "<CMD>tabp<CR>", { desc = "WinNav(tab): prev tab", silent = true })
-
-RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "WinNav(tab): first tab", silent = true })
-RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "WinNav(tab): last tab", silent = true })
+RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Winav: first tab", silent = true })
+RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Winav: last tab", silent = true })
 
 -- Alternate the buffer
 local dont_alternitefile = { "qf", "Outline", "neo-tree", "OverseerList" }
@@ -254,13 +253,13 @@ RUtils.map.nnoremap("sbb", function()
     return
   end
   return RUtils.cmd.feedkey("<C-^>", "n")
-end, { desc = "WinNav(buffer): alternate file" })
+end, { desc = "View: alternate file" })
 
 RUtils.map.nnoremap("sO", function()
   return RUtils.buf._only()
-end, { desc = "Buffer: bufonly" })
+end, { desc = "View: buffonly" })
 
-RUtils.map.nnoremap("sT", "<C-w><S-t>", { desc = "WinNav(buffer): break buffer into new tab" })
+RUtils.map.nnoremap("sT", "<C-w><S-t>", { desc = "Buffer: break buffer/change to new tab" })
 
 -- RUtils.map.nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: first buffer" })
 -- RUtils.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: last buffer" })
@@ -270,10 +269,10 @@ RUtils.map.nnoremap("sT", "<C-w><S-t>", { desc = "WinNav(buffer): break buffer i
 
 RUtils.map.nnoremap("gh", function()
   return RUtils.fold.magic_prev_next_qf(true)
-end, { desc = "QF: magic move gh" })
+end, { desc = "Misc: magic move gh" })
 RUtils.map.nnoremap("gl", function()
   return RUtils.fold.magic_prev_next_qf()
-end, { desc = "Qf: magic move gl" })
+end, { desc = "Misc: magic move gl" })
 
 -- RUtils.map.nnoremap("<S-Left>", "<CMD>colder<CR>", { desc = "qf: prev stack" })
 -- RUtils.map.nnoremap("<S-Right>", "<CMD>cnewer<CR>", { desc = "qf: next stack" })
@@ -396,7 +395,7 @@ local function magic_quit()
   end
 end
 RUtils.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
-RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit [visual]" })
+RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (visual)" })
 
 local function getPopups()
   return vim.fn.filter(vim.api.nvim_tabpage_list_wins(0), function(_, e)
@@ -410,18 +409,19 @@ local function killPopups()
   end)
 end
 
-vim.keymap.set("n", "<ESC>", function()
+RUtils.map.nnoremap("<ESC>", function()
   cmd.noh()
   killPopups()
-end)
+end, { desc = "Misc: magic escape" })
 
 RUtils.map.nnoremap("<Leader>oo", function()
   return RUtils.markdown.followLink(false)
-end)
+end, { desc = "Misc: magic follow link" })
 
 RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.followLink(true)
-end)
+end, { desc = "Misc: magic follow link (visual)" })
+
 --  ╭──────────────────────────────────────────────────────────╮
 --  │ COMMANDS                                                 │
 --  ╰──────────────────────────────────────────────────────────╯
@@ -432,7 +432,7 @@ end, { desc = "Snippet: edit snippet file" })
 
 RUtils.cmd.create_command("CBcatalog", function()
   return require("comment-box").catalog()
-end, { desc = "Comment-box: show catalog" })
+end, { desc = "Misc: show catalog [comment-box]" })
 
 RUtils.cmd.create_command("ChangeMasterTheme", function()
   return RUtils.plugin.change_colors()
@@ -454,10 +454,10 @@ end, { desc = "Misc: echo options" })
 --  │ Improve scroll, credits: https://github.com/Shougo       │
 --  ╰──────────────────────────────────────────────────────────╯
 
-RUtils.map.nmap(
+RUtils.map.nnoremap(
   "zz",
   [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
-  { expr = true }
+  { expr = true, desc = "View: center cursor window" }
 )
 
 -- Scroll step sideways

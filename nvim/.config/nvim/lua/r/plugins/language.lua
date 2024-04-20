@@ -5,8 +5,13 @@ return {
   {
     "voldikss/vim-translator",
     keys = {
-      { "<Leader>rs", "<Plug>TranslateW", desc = "misc(translate): translate" },
-      { "<Leader>rs", "<Plug>TranslateWV", desc = "misc(translate): translate", mode = { "v" } },
+      { "<Leader>rs", "<Plug>TranslateW", desc = "Misc: translate on cursor [vim-translator]" },
+      {
+        "<Leader>rs",
+        "<Plug>TranslateWV",
+        desc = "Misc: translate on select visual mode [vim-translator]",
+        mode = { "v" },
+      },
     },
   },
   -- VIM-GRAMMAROUS (disabled)

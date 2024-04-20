@@ -59,8 +59,8 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP(vim-illuminate): go next reference" },
-      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP(vim-illuminate): go prev reference" },
+      { "<a-q>", function() require("illuminate").goto_next_reference(nil) end, desc = "LSP: go next reference [vim-illuminate]" },
+      { "<a-Q>", function() require("illuminate").goto_prev_reference(nil) end, desc = "LSP: go prev reference [vim-illuminate]" },
     },
     config = function()
       require("illuminate").configure {
@@ -153,7 +153,7 @@ return {
         function()
           RUtils.session.save_ses()
         end,
-        desc = "Misc(mini.session): save session",
+        desc = "Misc: save session [mini.session]",
       },
 
       {
@@ -161,7 +161,7 @@ return {
         function()
           RUtils.session.load_ses()
         end,
-        desc = "Misc(mini.session): restore last session",
+        desc = "Misc: restore last session [mini.session]",
       },
     },
     opts = {
@@ -362,7 +362,7 @@ return {
             --   vim.cmd [[wincmd L]]
             -- end
           end,
-          desc = "Misc(aerial): toggle",
+          desc = "Misc: toggle aerial [aerial]",
         },
         {
           "<Localleader>oA",
@@ -422,7 +422,7 @@ return {
               },
             })
           end,
-          desc = "Misc(aerial): change filter kind",
+          desc = "Misc: change filter kind aerial [aerial]",
         },
       }
     end,
@@ -496,45 +496,45 @@ return {
       {
         "<a-k>",
         "<cmd>TmuxNavigateUp<CR>",
-        desc = "WinNav(vim-tmux-navigator): move up",
+        desc = "Winav(vim-tmux-navigator): move up",
       },
       {
         "<a-j>",
         "<cmd>TmuxNavigateDown<CR>",
-        desc = "WinNav(vim-tmux-navigator): move down",
+        desc = "Winav(vim-tmux-navigator): move down",
       },
       {
         "<a-h>",
         "<cmd>TmuxNavigateLeft<CR>",
-        desc = "WinNav(vim-tmux-navigator): move left",
+        desc = "Winav(vim-tmux-navigator): move left",
       },
       {
         "<a-l>",
         "<cmd>TmuxNavigateRight<CR>",
-        desc = "WinNav(vim-tmux-navigator): move right",
+        desc = "Winav(vim-tmux-navigator): move right",
       },
 
       -- RESIZE
       {
         "<a-K>",
         "<cmd>resize +2<CR>",
-        desc = "WinNav: resize up",
+        desc = "Winav: resize up",
       },
       {
         "<a-J>",
         "<cmd>resize -2<CR>",
-        desc = "WinNav: resize down",
+        desc = "Winav: resize down",
       },
 
       {
         "<a-H>",
         "<cmd>vertical resize -2<CR>",
-        desc = "WinNav: resize left",
+        desc = "Winav: resize left",
       },
       {
         "<a-L>",
         "<cmd>vertical resize +2<CR>",
-        desc = "WinNav: resize right",
+        desc = "Winav: resize right",
       },
     },
   },
@@ -546,22 +546,22 @@ return {
       {
         "<a-k>",
         "<cmd>lua require('tmux').move_top()<CR>",
-        desc = "WinNav(tmux): move up",
+        desc = "Winav(tmux): move up",
       },
       {
         "<a-j>",
         "<cmd>lua require('tmux').move_bottom()<CR>",
-        desc = "WinNav(tmux): move down",
+        desc = "Winav(tmux): move down",
       },
       {
         "<a-h>",
         "<cmd>lua require('tmux').move_left()<CR>",
-        desc = "WinNav(tmux): move left",
+        desc = "Winav(tmux): move left",
       },
       {
         "<a-l>",
         "<cmd>lua require('tmux').move_right()<CR>",
-        desc = "WinNav(tmux): move right",
+        desc = "Winav(tmux): move right",
       },
 
       -- RESIZE
@@ -570,14 +570,14 @@ return {
         function()
           return require("tmux").resize_top()
         end,
-        desc = "WinNav(tmux): resize up",
+        desc = "Winav(tmux): resize up",
       },
       {
         "<a-J>",
         function()
           return require("tmux").resize_bottom()
         end,
-        desc = "WinNav(tmux): resize down",
+        desc = "Winav(tmux): resize down",
       },
 
       {
@@ -585,14 +585,14 @@ return {
         function()
           return require("tmux").resize_left()
         end,
-        desc = "WinNav(tmux): resize left",
+        desc = "Winav(tmux): resize left",
       },
       {
         "<a-L>",
         function()
           return require("tmux").resize_right()
         end,
-        desc = "WinNav(tmux): resize right",
+        desc = "Winav(tmux): resize right",
       },
     },
     config = function(_, opts)
@@ -642,7 +642,7 @@ return {
           require("oil").open()
           -- return cmd "Neotree toggle reveal"
         end,
-        desc = "Misc(oil): open",
+        desc = "Misc: open oil [oil.nvim] ",
       },
     },
     opts = {
@@ -697,7 +697,7 @@ return {
           --   end
           return cmd "NvimTreeToggle"
         end,
-        desc = "Misc(nvimtree): open toggle",
+        desc = "Misc: open toggle [nvimtree]",
       },
       -- {
       --   "<Leader>ge",
@@ -707,14 +707,14 @@ return {
       --     -- end
       --     return cmd "NvimTreeFindFileToggle"
       --   end,
-      --   desc = "Misc(neotree): open File explore",
+      --   desc = "Misc: open file explore [neotree]",
       -- },
       {
         "<Leader>E",
         function()
           return cmd "NvimTreeFindFileToggle"
         end,
-        desc = "Misc(nvimtree): find file toggle",
+        desc = "Misc: find file toggle [neotree]",
       },
     },
     dependencies = {
@@ -888,7 +888,7 @@ return {
     cmd = { "Calendar" },
     lazy = false,
     keys = {
-      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc(calendar): open" },
+      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
     },
   },
   -- HOUDINI
@@ -907,7 +907,7 @@ return {
     enabled = false,
     --stylua: ignore
     keys = {
-      { "<Leader>ja", function() require("harpoon.mark").add_file() end, desc = "Misc(harpoon): add file" },
+      { "<Leader>ja", function() require("harpoon.mark").add_file() end, desc = "Misc: add file [harpoon]" },
       { "<Leader>jm", function() require("harpoon.ui").toggle_quick_menu() end, desc = "Misc(harpoon): file menu" },
       { "<Leader>jc", function() require("harpoon.cmd-ui").toggle_quick_menu() end, desc = "Misc(harpoon): command menu" },
       { "<Leader>1", function() require("harpoon.ui").nav_file(1) end, desc = "Misc(harpoon): file 1" },

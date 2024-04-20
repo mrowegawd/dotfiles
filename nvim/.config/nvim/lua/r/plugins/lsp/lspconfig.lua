@@ -1,6 +1,8 @@
 local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
 local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
 
+local Highlight = require "r.settings.highlights"
+
 return {
   -- MASON NVIM
   {
@@ -114,6 +116,10 @@ return {
       {
         "ray-x/lsp_signature.nvim",
         config = function()
+          Highlight.plugin("lspSignatureUIcol", {
+            { LspSignatureActiveParameter = { bg = "NONE", fg = "#ED9455" } },
+          })
+
           require("lsp_signature").setup {
             hint_enable = false,
             hint_prefix = "● ",
@@ -252,7 +258,7 @@ return {
                   },
                 }
               end,
-              desc = "LSP(python): organize Imports",
+              desc = "LSP: organize Imports [rustlsp]",
             },
           },
         },

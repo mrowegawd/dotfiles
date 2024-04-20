@@ -2,7 +2,7 @@ return {
   -- NEOZOOM
   {
     "nyngwang/NeoZoom.lua",
-    keys = { { "sm", "<CMD>NeoZoomToggle<CR>", desc = "WinNav(neozoom): toggle" } },
+    keys = { { "sm", "<CMD>NeoZoomToggle<CR>", desc = "View: toggle zoom [neozoom]" } },
     opts = {
       scrolloff_on_enter = 7,
       exclude_buftypes = { "terminal" },

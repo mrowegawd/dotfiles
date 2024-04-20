@@ -23,7 +23,7 @@ return {
     --       end
     --       return cmd "Neotree git_status"
     --     end,
-    --     desc = "Misc(neotree): open File explore",
+    --     desc = "Misc: open file explore [neotree]",
     --   },
     -- },
     dependencies = {
@@ -459,7 +459,7 @@ return {
               return vim.cmd "Neotree"
             end
           end,
-          desc = "Misc(neotree): open File explore",
+          desc = "Misc: open file explore [neotree]",
         },
         {
           "<Localleader>oa",
@@ -471,7 +471,7 @@ return {
             end
             vim.cmd.Outline()
           end,
-          desc = "Misc(outline): toggle",
+          desc = "Misc: toggle open/close outline window [outline]",
         },
         {
           "<Localleader>O",
@@ -500,7 +500,7 @@ return {
               end
             end
           end,
-          desc = "Misc(outline): jump back-to-back",
+          desc = "Misc: move cursor to outline window [outline]",
         },
         {
           "<Localleader>oA",
@@ -569,7 +569,7 @@ return {
               },
             })
           end,
-          desc = "Misc(outline): change filter kind",
+          desc = "Misc: change filter kind [outline]",
         },
       }
     end,
