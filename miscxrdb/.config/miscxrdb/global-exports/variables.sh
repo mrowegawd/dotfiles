@@ -41,19 +41,6 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 export PATH="$PATH:/opt/flutter/bin"
 #
 # }}}
-# SDKMAN: ----------------------------------------------------------------- {{{
-#
-# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
-
-export ANDROID_SDK=$HOME/Android/Sdk
-export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
-
-# Avoid error Intellij
-export _JAVA_AWT_WM_NONREPARENTING=1
-#
-# }}}
 # Ansible: ---------------------------------------------------------------- {{{
 # config ansible agar bisa menampilkan color ketika menjalankan `molecule cli`
 export PY_COLORS='1'
@@ -70,6 +57,23 @@ export NNN_OPTS="H"
 
 BLK="0B" CHR="0B" DIR="04" EXE="06" REG="00" HARDLINK="06" SYMLINK="06" MISSING="00" ORPHAN="09" FIFO="06" SOCK="0B" OTHER="06"
 export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SOCK$OTHER"
+#
+# }}}
+# SDKMAN: ----------------------------------------------------------------- {{{
+#
+# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+# export SDKMAN_DIR="$HOME/.sdkman"
+# if [[ -d $SDKMAN_DIR ]]; then
+# 	if [[ -f "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
+# 		source "$SDKMAN_DIR/bin/sdkman-init.sh"
+# 	fi
+# fi
+#
+# export ANDROID_SDK=$HOME/Android/Sdk
+# export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
+#
+# # Avoid error Intellij
+# export _JAVA_AWT_WM_NONREPARENTING=1
 #
 # }}}
 
