@@ -5,7 +5,7 @@ LC_TIME=id_ID.UTF-8
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Fullscreen\nRecord Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Fullscreen\nRecord Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate"
 
 # For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
@@ -134,6 +134,14 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		nautilus
 	}
 
+	sync_update() {
+		if [[ ! -f ~/.config/polybar/scripts/sync-update ]]; then
+			notify-send "file 'sync-update' not found "
+		fi
+
+		~/.config/polybar/scripts/sync-update --run
+	}
+
 	run_pomodoro() {
 		script_pomodoro_path="$HOME/.config/polybar/scripts/pomodoro"
 
@@ -153,6 +161,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 	"Pomodoro") run_pomodoro ;;
 	"Stop Record") run_ffmpeg_stop ;;
 	"File manager [UI]") run_filemanager ;;
+	"SyncUpdate") sync_update ;;
 
 	esac
 

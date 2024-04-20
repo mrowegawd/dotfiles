@@ -27,7 +27,7 @@ start_docker_syncthing() {
 	fi
 
 	if [ -n "$DOCKER_CON_ID" ]; then
-		if [ ! -n "$DOCKER_CHECK_RUNNING" ]; then
+		if [ -z "$DOCKER_CHECK_RUNNING" ]; then
 			docker start "$DOCKER_CON_ID"
 		fi
 	else
