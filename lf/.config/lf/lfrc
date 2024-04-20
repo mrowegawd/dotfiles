@@ -23,13 +23,13 @@ set ratios 3
 cmd nopreview &{{
     lf -remote "send $id set nopreview"
     lf -remote "send $id set ratios 3"
-    lf -remote "send $id map P showpreview"
+    lf -remote "send $id map <a-p> showpreview"
 }}
 
 cmd showpreview &{{
     lf -remote "send $id set ratios 1:2:3"
     lf -remote "send $id set preview"
-    lf -remote "send $id map P nopreview"
+    lf -remote "send $id map <a-p> nopreview"
 }}
 
 # map zp showpreview
@@ -225,26 +225,26 @@ cmd fzf_search ${{
     	[[ -z "$TMUX" ]]
     }
   	if not_in_tmux; then
-      select="$(echo -e 'search_string_in_file\nsearch_name_of_file' | fzf)"
+      select="$(echo -e 'Grep string in file\nSearch name of file' | fzf)"
     else
-      select="$(echo -e 'search_string_in_file\nsearch_name_of_file' | fzf-tmux -xC -w '60%' -h '50%')"
+      select="$(echo -e 'Grep string in file\nSearch name of file' | fzf-tmux -xC -w '60%' -h '50%')"
 
-      if [[ "$select" == "search_string_in_file" ]] then
+      if [[ "$select" == "Grep string in file" ]] then
         res="$( \
             RG_PREFIX="rg --column --line-number --no-heading --hidden --follow --color=always \
                 --smart-case "
             FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
                 fzf-tmux --bind "change:reload:$RG_PREFIX {q} || true" \
-                --ansi --layout=reverse -xC -w '80%' -h '80%' --header 'Search in files' \
+                --ansi --layout=reverse -xC -w '80%' -h '80%' --header $select \
                 | cut -d':' -f1
         )"
         [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
-      elif [[ "$select" == "search_name_of_file" ]] then
+      elif [[ "$select" == "Search name of file" ]] then
         res="$( \
             RG_PREFIX="fd --color=never --type f --hidden --follow --exclude .git "
             FZF_DEFAULT_COMMAND="$RG_PREFIX ''" \
                 fzf-tmux --bind "change:reload:$RG_PREFIX {q} || true" \
-                --ansi --layout=reverse -xC -w '80%' -h '80%' --header 'Search name file' \
+                --ansi --layout=reverse -xC -w '80%' -h '80%' --header $select \
                 | cut -d':' -f1
         )"
         [ ! -z "$res" ] && lf -remote "send $id select \"$res\""
@@ -252,6 +252,7 @@ cmd fzf_search ${{
     fi
 
 }}
+map <a-q> fzf_search                          # search string in file or search name of file
 # }}}
 # WATCH_MPV_PLAYLIST -------------------------------------------- {{{
 cmd watch_mpv_playlist ${{
@@ -332,6 +333,64 @@ cmd fzmarks ${{
 }}
 
 map <a-g> fzmarks
+# }}}
+# FZCD ---------------------------------------------------------- {{{
+cmd fzcd ${{
+  clear
+
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  LIST=''
+
+  if type find >/dev/null 2>&1; then
+  	tmpfile=$(mktemp /tmp/abc-script.XXXXXX)
+
+  	while IFS= read -r path; do
+  		if [ -d "$path" ]; then
+  			printf "%s\n" "$path" >>"$tmpfile"
+  		elif [ -f "$path" ]; then
+  			printf "%s\n" "$(dirname "$path")" >>"$tmpfile"
+  		fi
+  	done <"$LIST"
+
+  	if not_in_tmux; then
+  		pane_id_right=$(wezterm cli get-pane-direction right)
+  		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+  		wezterm cli activate-pane-direction Up
+
+  		# sel=$(xargs -d '\n' fd -H -I . <"$tmpfile" | fzf --delimiter / --with-nth=-2,-1 --tiebreak=begin --info=hidden --prompt "Cd to> ")
+  		sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf --no-height --prompt "Change Directory To: ")
+
+  		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+  		wezterm cli activate-pane-direction Left
+
+  	else
+  		sel=$(xargs -d '\n' fd -H . <"$tmpfile" | fzf-tmux -xC -w '60%' -h '50%' --prompt "Change Directory To: ")
+  	fi
+
+  	rm "$tmpfile"
+  # else
+  # 	printf "find missing"
+  # 	read -r _
+  # 	exit 1
+  fi
+
+  if [ -n "$sel" ]; then
+  	if [ "$sel" = "." ] || { ! [ -d "$sel" ] && ! [ -f "$sel" ]; }; then
+  		exit 0
+  	fi
+
+    pwd=$(pwd)
+
+    # dunstify "$pwd/$sel"
+
+    lf -remote "send $id cd \"$sel\""
+  fi
+}}
+
+map <a-d> fzcd
 # }}}
 # TERMCD -------------------------------------------------------- {{{
 cmd termcd ${{
@@ -499,7 +558,7 @@ map <a-D> oplazydocker
 # map x
 
 # map P set preview!
-map P showpreview
+map <a-p> showpreview
 map H set hidden!
 
 map <c-e> down
@@ -524,7 +583,7 @@ map C copyto
 map M moveto
 map R bulkrename
 map r rename
-map <c-q> fzf_search                          # search string in file or search name of file
+
 map <c-c> quit
 
 # map c
