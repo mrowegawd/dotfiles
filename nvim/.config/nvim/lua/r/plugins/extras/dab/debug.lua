@@ -104,12 +104,13 @@ return {
               elements = {
                 -- Elements can be strings or table with id and size keys.
                 { id = "scopes", size = 0.25 },
-                "breakpoints",
-                "stacks",
+                -- { id = "variable", size = 0.25 },
                 "watches",
+                "stacks",
+                "breakpoints",
               },
               size = 40, -- 40 columns
-              position = "right",
+              position = "left",
             },
             {
               elements = {
@@ -165,7 +166,13 @@ return {
       -- +----------------------------------------------------------+
       -- { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor [dap]" },
       -- { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug: run last [dap]" },
-      -- { "<Leader>dr", function() require "dap".repl.toggle(nil, "botright split") end, desc = "Debug: toggle REPL [dap]" },
+      {
+        "<Leader>dR",
+        function()
+          require("dap").repl.toggle(nil, "botright split")
+        end,
+        desc = "Debug: toggle REPL [dap]",
+      },
       -- { "<Leader>dS", function() print(vim.inspect(require("dap").session())) end, desc = "Debug: get session [dap]" },
       --  +----------------------------------------------------------+
       --    Breakpoints
@@ -220,7 +227,7 @@ return {
             end,
           }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
         end,
-        desc = "Debug: list of debugging dap commands (dap)",
+        desc = "Debug: list of debugging dap commands [dap]",
       },
       -- +----------------------------------------------------------+
       -- Run and close the debug
@@ -228,7 +235,15 @@ return {
       -- { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug: restart [dap]" },
       -- { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug: closing or quit debug [dap]", },
       {
-        "<Leader>dd",
+        "<Leader><F5>",
+        function()
+          require("dap").terminate()
+          require("dapui").close()
+        end,
+        desc = "Debug: closing or quit debug [dap]",
+      },
+      {
+        "<F5>",
         function()
           local function status_dap(req)
             local ok, _ = pcall(require, req)
@@ -260,6 +275,13 @@ return {
       -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       -- +----------------------------------------------------------+
       {
+        "<s-down>",
+        function()
+          require("dap").step_over()
+        end,
+        desc = "Debug: step-over [dap]",
+      },
+      {
         "<s-right>",
         function()
           require("dap").step_into()
@@ -273,14 +295,6 @@ return {
         end,
         desc = "Debug: step-out [dap]",
       },
-      {
-        "<s-down>",
-        function()
-          require("dap").step_over()
-        end,
-        desc = "Debug: step-over [dap]",
-      },
-
       {
         "<leader>dk",
         function()
@@ -403,13 +417,13 @@ return {
         {
           DapBreakpoint = {
             fg = { from = "Error", attr = "fg" },
-            bg = { from = "Normal", attr = "bg" },
+            bg = "NONE",
           },
         },
         {
           DapStopped = {
             fg = { from = "Boolean", attr = "fg" },
-            bg = { from = "Normal", attr = "bg" },
+            bg = "NONE",
           },
         },
       })

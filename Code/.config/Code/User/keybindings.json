@@ -1,19 +1,21 @@
 [
   // -------------------------
-  // Reset zoom
+  // RESET ZOOM
   // -------------------------
   {
-    "key": "ctrl+Home",
-    "command": "workbench.action.zoomReset"
-  },
-  {
     "key": "escape",
-    "command": "-editor.action.cancelSelectionAnchor",
+    "command": "editor.action.cancelSelectionAnchor",
     "when": "editorTextFocus && selectionAnchorSet"
   },
+  { "key": "ctrl+=", "command": "editor.action.fontZoomIn" },
+  { "key": "ctrl+-", "command": "editor.action.fontZoomOut" },
+  { "key": "ctrl+Home", "command": "editor.action.fontZoomReset" },
 
-  // Navigate go/back fast word (when insert mode)
+  // -------------------------
+  // NAVIGATE INSERT MODE
+  // -------------------------
   {
+    // Navigate go/back fast word (when insert mode)
     "key": "ctrl+b",
     "command": "cursorWordLeft",
     "when": "vim.active && vim.mode == 'Insert'"
@@ -23,18 +25,7 @@
     "command": "cursorWordRight",
     "when": "vim.active && vim.mode == 'Insert'"
   },
-  // {
-  //   "key": "ctrl+a",
-  //   "command": "cursorHome",
-  //   "when": "textInputFocus"
-  // },
-  // {
-  //   "key": "ctrl+e",
-  //   "command": "cursorEnd",
-  //   "when": "textInputFocus"
-  // },
 
-  // Traverse VSCode IntelliSense suggestions with vim keybindings.
   {
     "key": "ctrl+j",
     "command": "selectNextSuggestion",
@@ -63,7 +54,6 @@
     "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
   },
 
-  // Traverse VSCode quick open options with vim keybindings.
   {
     "key": "ctrl+j",
     "command": "workbench.action.quickOpenNavigateNextInFilePicker",
@@ -84,7 +74,7 @@
   // },
 
   // -------------------------
-  // Navigate Window
+  // NAVIGATE WINDOW
   // -------------------------
   {
     "key": "alt+h",
@@ -104,7 +94,24 @@
   },
 
   // -------------------------
-  // Resize window
+  // FOLD
+  // -------------------------
+
+  {
+    // jump prev closed fold
+    "key": "alt+p",
+    "command": "editor.gotoPreviousFold",
+    "when": "editorTextFocus"
+  },
+  {
+    // jump next closed fold
+    "key": "alt+n",
+    "command": "editor.gotoNextFold",
+    "when": "editorTextFocus"
+  },
+
+  // -------------------------
+  // RESIZE WINDOW
   // -------------------------
   {
     "key": "shift+alt+l",
@@ -124,7 +131,7 @@
   },
 
   // -------------------------
-  // Terminal
+  // TERMINAL
   // -------------------------
   {
     "key": "alt+f",
@@ -136,13 +143,13 @@
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
   },
   {
-    "key": "ctrl+End",
+    "key": "ctrl+Delete",
     "command": "workbench.action.terminal.kill",
     "when": "terminalProcessSupported || terminalWebExtensionContributedProfile"
   },
 
   // -------------------------
-  // Explorer Sidebars
+  // EXPLORER SIDEBARS
   // -------------------------
   {
     "key": "alt+e",
@@ -165,5 +172,24 @@
     "command": "explorer.openToSide",
     "args": { "group": 1 },
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  }
+
+  // -------------------------
+  // DEBUG
+  // -------------------------
+  {
+    "key": "shift+Down",
+    "command": "workbench.action.debug.stepOver",
+    "when": "debugState == 'stopped'"
+  },
+  { 
+    "key": "shift+Right",
+    "command": "workbench.action.debug.stepInto",
+    "when": "debugState != 'inactive'"
+  },
+  {
+    "key": "shift+Left",
+    "command": "workbench.action.debug.stepOut",
+    "when": "debugState == 'stopped'"
   }
 ]

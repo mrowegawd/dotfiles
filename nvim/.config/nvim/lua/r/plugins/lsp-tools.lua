@@ -145,7 +145,7 @@ return {
     },
     opts = {},
     keys = {
-      { "<Localleader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc: open devdocs (devdocs)" },
+      { "<Localleader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc: open devdocs [devdocs]" },
     },
     cmd = {
       "DevdocsFetch",
@@ -192,16 +192,6 @@ return {
     "dnlhc/glance.nvim",
     event = "LspAttach",
     config = function()
-      Highlight.plugin("GlanceHi", {
-        { GlanceListBorderBottom = { link = "NormalFloat" } },
-
-        { GlancePreviewNormal = { bg = { from = "@property", attr = "fg", alter = -0.8 } } },
-
-        -- { GlanceWinbarTitle = { bg = "yellow" } },
-        -- { GlanceWinbarFilename = { bg = "yellow" } },
-        -- { GlanceWinbarFilepath = { bg = "yellow" } },
-      })
-
       local glance = require "glance"
       local actions = glance.actions
       glance.setup {

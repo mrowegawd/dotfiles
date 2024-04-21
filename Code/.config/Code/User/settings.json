@@ -120,20 +120,10 @@
 
   "vim.normalModeKeyBindings": [
     {
+      // TODO: ini ga ngefek!
+      // coba check ini: https://stackoverflow.com/questions/46812455/vs-code-how-to-resize-editor-window-without-resizing-the-whole-interface
       "before": ["s", "w"],
       "command": "workbench.action.evenEditorWidths"
-    },
-    {
-      "before": ["g", "l"],
-      "commands": ["workbench.action.nextEditor"]
-    },
-    {
-      "before": ["g", "h"],
-      "commands": ["workbench.action.previousEditor"]
-    },
-    {
-      "before": ["K"],
-      "commands": ["editor.action.showHover"]
     },
     {
       "before": ["<c-p>"],
@@ -144,24 +134,44 @@
       "commands": ["workbench.view.search"]
     },
     {
+      "before": ["<leader>", "f", "g"],
+      "commands": ["workbench.view.search"]
+    },
+    {
       "before": ["<c-g>"],
       "after": ["/"]
     },
     {
-      "before": ["<leader>", "q"],
-      "commands": ["workbench.actions.view.problems"]
-    },
-
-    {
-      "before": ["g", "S"],
-      "commands": ["workbench.action.showAllSymbols"]
+      "before": ["<leader>", "f", "f"],
+      "commands": ["workbench.action.quickOpen"]
     },
     {
-      "before": ["g", "s"],
-      "commands": ["workbench.action.gotoSymbol"]
+      "before": ["<leader>", "n"],
+      "commands": [":nohl"]
+    },
+    {
+      "before": ["<leader>", "<tab>"],
+      "commands": [":q!"]
+    },
+    {
+      "before": [",", "o", "a"],
+      "commands": ["workbench.action.toggleAuxiliaryBar"]
     },
 
-    // Navigate
+    // -------------------------
+    // NAVIGATE
+    // -------------------------
+
+    {
+      // next buffer
+      "before": ["g", "l"],
+      "commands": ["workbench.action.nextEditor"]
+    },
+    {
+      // prev buffer
+      "before": ["g", "h"],
+      "commands": ["workbench.action.previousEditor"]
+    },
     {
       "before": ["s", "h"],
       "commands": ["workbench.action.focusLeftGroup"]
@@ -196,8 +206,9 @@
     },
 
     {
-      // force to horizontal, tapi command ini membuat cursor malah menjadi out of window??
-      // dunno idk how to fix :(
+      // force window view to horizontal view,
+      // tapi command ini membuat cursor malah menjadi out of window??
+      // dunno idk how to fix this :(
       "before": ["s", "J"],
       "commands": ["workbench.action.toggleEditorGroupLayout"]
     },
@@ -207,6 +218,42 @@
       "commands": ["workbench.action.toggleEditorGroupLayout"]
     },
 
+    // -------------------------
+    // BOOKMARKS & MARKS
+    // -------------------------
+    {
+      "before": ["m", "`"],
+      "commands": ["bookmarks.toggle"]
+      // "command": "bookmarks.toggle",
+      // "when": "editorTextFocus"
+    },
+    {
+      "before": ["d", "m"],
+      "commands": ["bookmarks.toggle"]
+      // "command": "bookmarks.toggle",
+      // "when": "editorTextFocus"
+    },
+    {
+      "before": ["d", "M"],
+      "commands": ["bookmarks.clearFromAllFiles"]
+    },
+    {
+      "before": ["s", "n"],
+      "commands": ["bookmarks.jumpToNext"]
+      // "when": "editorTextFocus"
+    },
+    {
+      "before": ["s", "p"],
+      "commands": ["bookmarks.jumpToPrevious"]
+    },
+    {
+      "before": ["m", "F"],
+      "commands": ["bookmarks.listFromAllFiles"]
+    },
+
+    // -------------------------
+    // FOLD
+    // -------------------------
     {
       "before": ["z", "m"],
       "after": ["z", "M"]
@@ -214,39 +261,108 @@
     {
       "before": ["<space>", "<space>"],
       "after": ["z", "M", "z", "v"]
-    }
-  ],
-  "vim.insertModeKeyBindings": [
-    {
-      "before": ["h", "h"],
-      "after": ["<Esc>"]
     },
 
-    // go next character
+    // -------------------------
+    // GIT
+    // -------------------------
     {
-      "before": ["<c-l>"],
-      "commands": ["cursorRight"]
-    },
-    // go prev character
-    {
-      "before": ["<c-h>"],
-      "commands": ["cursorLeft"]
-    }
-  ],
-  "vim.visualModeKeyBindings": [
-    {
-      "before": [">"],
-      "after": [">", "g", "v"]
+      // move cursor to the next hunk
+      "before": ["g", "n"],
+      "commands": ["workbench.action.editor.nextChange"]
     },
     {
-      "before": ["<"],
-      "after": ["<", "g", "v"]
-    }
-  ],
-  "vim.normalModeKeyBindingsNonRecursive": [
+      // move cursor to the prev hunk
+      "before": ["g", "p"],
+      "commands": ["workbench.action.editor.previousChange"]
+    },
+
+    {
+      "before": ["<leader>", "g", "t", "b"],
+      "commands": ["gitlens.toggleCodeLens"]
+    },
+    {
+      "before": ["<leader>", "g", "t", "B"],
+      "commands": ["gitlens.toggleFileBlame"]
+    },
+
+    // -------------------------
+    // LSP
+    // -------------------------
+
+    {
+      "before": ["g", "S"],
+      "commands": ["workbench.action.showAllSymbols"]
+    },
+    {
+      "before": ["g", "s"],
+      "commands": ["workbench.action.gotoSymbol"]
+    },
+
+    {
+      "before": ["K"],
+      "commands": ["editor.action.showHover"]
+    },
+    {
+      "before": ["g", "d"],
+      "commands": ["editor.action.revealDefinition"],
+      "silent": true
+    },
+    {
+      "before": ["<F2>"],
+      "commands": ["editor.action.goToReferences"],
+      "silent": true
+    },
+
+    {
+      "before": ["g", "R"],
+      "commands": ["references-view.findReferences"],
+      "silent": true
+    },
+
+    {
+      "before": ["g", "r"],
+      "commands": ["editor.action.goToReferences"],
+      "silent": true
+    },
+
+    {
+      "before": ["g", "P"],
+      "commands": ["editor.action.peekTypeDefinition"],
+      "silent": true
+    },
+
+    {
+      "before": ["g", "t"],
+      "commands": ["editor.action.goToTypeDefinition"],
+      "silent": true
+    },
+
+    {
+      "before": ["g", "I"],
+      "commands": ["editor.showCallHierarchy"],
+      "silent": true
+    },
+
+    {
+      "before": ["g", "O"],
+      "commands": ["editor.showOutgoingCalls"],
+      "silent": true
+    },
+
+    // {
+    //   "key": "shift+alt+h",
+    //   "command": "editor.showCallHierarchy",
+    //   "when": "editorHasCallHierarchyProvider && editorTextFocus && !inReferenceSearchEditor"
+    // }
     // -------------------------
     // DIAGNOSTIC
     // -------------------------
+    {
+      "before": ["<leader>", "q"],
+      "commands": ["workbench.actions.view.problems"]
+    },
+
     {
       "before": ["d", "n"],
       "commands": ["editor.action.marker.nextInFiles"],
@@ -262,91 +378,71 @@
       "commands": ["workbench.actions.view.problems"],
       "silent": true
     },
+
     // -------------------------
-    // LSP
+    // TASK
     // -------------------------
     {
-      "before": ["g", "d"],
-      "commands": ["editor.action.revealDefinition"],
-      "silent": true
-    },
-    {
-      "before": ["g", "r"],
-      "commands": ["editor.action.goToReferences"],
-      "silent": true
+      "before": ["r", "f"],
+      "commands": ["workbench.action.tasks.runTask"]
     },
 
     // -------------------------
     // DEBUG
     // -------------------------
     {
+      "before": ["<leader>", "<F5>"],
+      "commands": ["workbench.action.debug.stop"],
+      // "when": "inDebugMode && !focusedSessionIsAttach"
+      "silent": true
+    },
+    {
       "before": ["<leader>", "d", "b"],
       "commands": ["editor.debug.action.toggleBreakpoint"],
       "silent": true
     },
-
     {
       "before": ["<leader>", "d", "B"],
       "commands": ["workbench.debug.viewlet.action.removeAllBreakpoints"],
       "silent": true
     },
 
-    // "when": "debuggersAvailable && disassemblyViewFocus || debuggersAvailable && editorTextFocus"
-
-    // -------------------------
-    // GIT
-    // -------------------------
-    // {
-    //   "befor": ["g", "n"],
-    //   "command": "workbench.action.editor.nextChange"
-    //   //"when": "editorTextFocus"
-    // },
-    // {
-    //   "key": "shift+alt+f5",
-    //   "command": "workbench.action.editor.previousChange",
-    //   "when": "editorTextFocus"
-    // }
     {
-      "before": ["<leader>", "g", "t", "b"],
-      "commands": ["gitlens.toggleCodeLens"]
-    },
-    {
-      "before": ["<leader>", "g", "t", "B"],
-      "commands": ["gitlens.toggleFileBlame"]
-    },
-
-    // -------------------------
-    // GLOBALS
-    // -------------------------
-    // {
-    //   "before": ["s", "f"],
-    //   "commands": ["workbench.files.action.focusOpenEditorsView"]
-    // },
-    {
-      "before": ["<leader>", "f", "f"],
-      "commands": ["workbench.action.quickOpen"]
-    },
-    {
-      "before": ["<leader>", "n"],
-      "commands": [":nohl"]
-    },
-    {
-      "before": ["<leader>", "<tab>"],
-      "commands": [":q!"]
-    },
-    {
-      "before": [",", "o", "a"],
-      "commands": ["workbench.action.toggleAuxiliaryBar"]
-    },
-    {
-      "before": ["g", "p"],
-      "commands": ["workbench.action.editor.previousChange"]
-    },
-    {
-      "before": ["g", "n"],
-      "commands": ["workbench.action.editor.nextChange"]
+      "before": ["<leader>", "d", "R"],
+      "commands": ["workbench.debug.action.toggleRepl"],
+      // "when": "workbench.panel.repl.view.active"
+      "silent": true
     }
   ],
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["h", "h"],
+      "after": ["<Esc>"]
+    },
+
+    {
+      // go next character
+      "before": ["<c-l>"],
+      "commands": ["cursorRight"]
+    },
+
+    {
+      // go prev character
+      "before": ["<c-h>"],
+      "commands": ["cursorLeft"]
+    }
+  ],
+  "vim.visualModeKeyBindings": [
+    {
+      "before": [">"],
+      "after": [">", "g", "v"]
+    },
+    {
+      "before": ["<"],
+      "after": ["<", "g", "v"]
+    }
+  ],
+  "vim.normalModeKeyBindingsNonRecursive": [],
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "Aura Dark",
   "breadcrumbs.enabled": false,

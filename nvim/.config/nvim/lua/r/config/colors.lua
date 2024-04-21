@@ -348,6 +348,12 @@ local general_overrides = function()
     { TodoSignWarn = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticWarn" } } },
     { TodoSignFIX = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticSignError" } } },
     { TodoSignTODO = { bg = { from = "Normal", attr = "bg" }, fg = { from = "OrgDONE" } } },
+
+    -- GLANCE =============================================================
+    { GlancePreviewNormal = { bg = "#111231" } },
+    { GlancePreviewMatch = { fg = "#012D36", bg = "#FDA50F" } },
+    { GlanceListMatch = { fg = dark_red, bg = "NONE" } },
+    { GlancePreviewCursorLine = { bg = "#1b1c4b" } },
   }
 end
 

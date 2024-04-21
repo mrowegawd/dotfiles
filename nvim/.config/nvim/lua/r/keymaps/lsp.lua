@@ -73,18 +73,24 @@ function M.get()
     {
       "gr",
       function()
-        -- RUtils.lsp.references(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-        --   local what = {
-        --     idx = "$",
-        --     items = ret,
-        --     title = "LSP references",
-        --   }
-        --   vim.fn.setqflist({}, " ", what)
-        --   vim.cmd [[copen]]
-        -- end, "lsp_references")
         vim.cmd [[Glance references]]
       end,
       desc = "LSP: references [glance]",
+    },
+    {
+      "gR",
+      function()
+        RUtils.lsp.references(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+          local what = {
+            idx = "$",
+            items = ret,
+            title = "LSP references",
+          }
+          vim.fn.setqflist({}, " ", what)
+          vim.cmd [[copen]]
+        end, "lsp_references")
+      end,
+      desc = "LSP: send references to quickfix list",
     },
     {
       "<Leader>ll",
@@ -289,7 +295,8 @@ function M.get()
 
   if RUtils.has "inc-rename.nvim" then
     M._keys[#M._keys + 1] = {
-      "gR",
+      -- "gR",
+      "<F2>",
       function()
         local inc_rename = require "inc_rename"
         return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
@@ -299,9 +306,9 @@ function M.get()
       has = "rename",
     }
   elseif RUtils.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] = { "gR", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [Lspsaga]", has = "rename" }
+    M._keys[#M._keys + 1] = { "<F2>", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [lspsaga]", has = "rename" }
   else
-    M._keys[#M._keys + 1] = { "gR", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
+    M._keys[#M._keys + 1] = { "<F2>", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
   end
 
   -- if RUtils.has "lsp_signature.nvim" then
