@@ -102,13 +102,7 @@ function M.neorg_mappings_ft(bufnr)
         function()
           vim.cmd "vsplit | ObsidianFollowLink"
         end,
-        "Note: followlink vsplit",
-      },
-      ["gs"] = {
-        function()
-          vim.cmd "split | ObsidianFollowLink"
-        end,
-        "Note: followlink split",
+        "Note: followlink vertical split",
       },
     },
 
