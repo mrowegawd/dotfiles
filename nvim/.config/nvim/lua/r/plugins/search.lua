@@ -306,14 +306,13 @@ return {
             ["<a-up>"] = "preview-page-up",
           },
         },
-        -- PROVIDER SETUP
         files = {
           -- debug = true,
           prompt = "  ",
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[Ctrl-y:'copy',Ctrl-e:'rgflow']] },
+          fzf_opts = { ["--header"] = [[Ctrl-y: copy/yank path | Ctrl-e: mode rgflow]] },
           fd_opts = fd_opts,
           actions = {
             ["default"] = function(selected, opts)
@@ -391,7 +390,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("", "Commits") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
+              ["--header"] = [[Ctrl-o: open browser | Ctrl-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -450,7 +449,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("", "Buffer Commits") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o:'browser',Ctrl-y:'copy',Ctrl-z:'diff commit',Ctrl-x:'compare curdiff']],
+              ["--header"] = [[Ctrl-o: open browser | Ctrl-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -550,7 +549,7 @@ return {
           prompt = " ",
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g:'grep_lgrep',Ctrl-e:'rgflow']] },
+          fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Ctrl-e: mode rgflow]] },
           multiprocess = true,
           winopts_fn = function()
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
