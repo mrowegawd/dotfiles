@@ -38,17 +38,22 @@ function M.get()
     {
       "gD",
       function()
-        RUtils.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-          local what = {
-            idx = "$",
-            items = ret,
-            title = "LSP definitions ref",
-          }
-          vim.fn.setqflist({}, " ", what)
-          vim.cmd [[copen]]
-        end, "lsp_definitions")
+        vim.cmd.split()
+        -- vim.cmd "vertical resize"
+
+        vim.schedule(function()
+          RUtils.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+            local what = {
+              idx = "$",
+              items = ret,
+              title = "LSP definitions ref",
+            }
+            vim.fn.setqflist({}, " ", what)
+            vim.cmd [[copen]]
+          end, "lsp_definitions")
+        end)
       end,
-      desc = "LSP: definition ref",
+      desc = "LSP: collect definitions and send to quickfix list",
     },
     {
       "gt",
