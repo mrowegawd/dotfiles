@@ -1,8 +1,8 @@
 #!/bin/bash
 
-lfrun="lf"
-# nnn="nnn -c"
-file_manager="$lfrun"
+# lfrun="lf"
+nnn="nnn -c"
+file_manager="$nnn"
 
 [ -z "$TMUX" ] && exit
 
