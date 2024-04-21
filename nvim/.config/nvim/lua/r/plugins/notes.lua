@@ -613,6 +613,7 @@ return {
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
+    version = "*", -- recommended, use latest release instead of latest commit
     event = {
       -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
       -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
@@ -632,7 +633,7 @@ return {
             },
           }
         end,
-        desc = "Note: obsidian search [obsidian]",
+        desc = "Note: live grep notes [obsidian]",
       },
       {
         "<Localleader>ff",
@@ -649,7 +650,17 @@ return {
             },
           }
         end,
-        desc = "Note: find file notes [obsidian]",
+        desc = "Note: find note files [obsidian]",
+      },
+      {
+        "<Localleader>fn",
+        ":ObsidianNew ",
+        desc = "Note: create new note [obsidian]",
+      },
+      {
+        "<Localleader>ft",
+        "<CMD>ObsidianTags<CR>",
+        desc = "Note: find note files by tags [obsidian]",
       },
     },
     dependencies = {
@@ -665,6 +676,11 @@ return {
           name = "obsidian",
           path = "~/Dropbox/neorg",
         },
+
+        {
+          name = "work",
+          path = "~/Dropbox/neorg/work",
+        },
       },
 
       daily_notes = {
@@ -675,6 +691,24 @@ return {
         -- Optional, if you want to change the date format of the default alias of daily notes.
         -- alias_format = "%B %-d, %Y",
       },
+
+      note_id_func = function(title)
+        -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
+        -- In this case a note with the title 'My new note' will be given an ID that looks
+        -- like '1657296016-my-new-note', and therefore the file name '1657296016-my-new-note.md'
+        local suffix = ""
+        if title ~= nil then
+          -- If title is given, transform it into valid file name.
+          suffix = title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+        else
+          -- If title is nil, just add 4 random uppercase letters to the suffix.
+          for _ = 1, 4 do
+            suffix = suffix .. string.char(math.random(65, 90))
+          end
+        end
+        local time = os.date("%Y-%m-%d", os.time() - 86400)
+        return tostring(time) .. "_" .. suffix
+      end,
 
       picker = {
         name = "fzf-lua",
