@@ -80,8 +80,8 @@ return {
     "pwntester/octo.nvim",
     cmd = "Octo",
     opts = {
-      -- picker = "telescope",
-      picker = "fzf-lua",
+      picker = "telescope",
+      -- picker = "fzf-lua",
       picker_config = {
         mappings = {
           -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
