@@ -157,7 +157,8 @@ return {
       { "<Leader>fc", require("fzf-lua").changes, desc = "Fzflua: changes" },
       { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
       { "<Leader>fm", require("fzf-lua").marks, desc = "Fzflua: marks" },
-      { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search-history" },
+      { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search history" },
+      { "<Leader>fH", require("fzf-lua").command_history, desc = "Fzflua: command history" },
       -- {
       --   "<Leader>fk",
       --   function()
