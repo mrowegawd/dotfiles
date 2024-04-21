@@ -1,4 +1,4 @@
--- local keymap = vim.keymap
+local keymap = vim.keymap
 -- local buffer_dir = vim.fn.expand "%:p:h"
 
 vim.opt.tabstop = 2
@@ -29,7 +29,6 @@ RUtils.write_and_source(0)
 --   require("osv").run_this()
 -- end, { buffer = true, desc = "Debug: adapter lua [nlua]" })
 
--- keymap.set("n", "<Leader>daL", function()
---   require("osv").launch { port = 8086 }
--- end, { buffer = true, desc = "Debug: launch debug lua [nlua]" })
-
+keymap.set("n", "<Leader>dD", function()
+  require("osv").launch { port = 8086 }
+end, { buffer = true, desc = "Debug: launch debug lua [nlua]" })
