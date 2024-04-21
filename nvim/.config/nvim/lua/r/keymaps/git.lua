@@ -5,8 +5,8 @@ local M = {}
 local function gitfzflua(opts)
   RUtils.map.nnoremap("<Leader>gfs", fzf_lua.git_status, { desc = "Git: show git status [fzflua]" })
   RUtils.map.nnoremap("<Leader>gfS", fzf_lua.git_stash, { desc = "Git: show git stash [fzflua]" })
-  RUtils.map.nnoremap("<Leader>gfB", fzf_lua.git_commits, { desc = "Git: list commits repos [fzflua]" })
-  RUtils.map.nnoremap("<Leader>gfb", fzf_lua.git_bcommits, { desc = "Git: list commits buffer [fzflua]" })
+  RUtils.map.nnoremap("<Leader>gfC", fzf_lua.git_commits, { desc = "Git: list commits repos [fzflua]" })
+  RUtils.map.nnoremap("<Leader>gfc", fzf_lua.git_bcommits, { desc = "Git: list commits buffer [fzflua]" })
 
   RUtils.map.nnoremap("<Leader>gff", function()
     local col, row = RUtils.fzflua.rectangle_win_pojokan()
