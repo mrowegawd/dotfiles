@@ -1573,6 +1573,7 @@ return {
       { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "Misc: open quickfix list with [trouble]" },
     },
     opts = function()
+      local icons_lsp = RUtils.config.icons.kinds
       Highlight.plugin("trouble", {
         { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
         { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
@@ -1603,35 +1604,41 @@ return {
       return {
         auto_open = false,
         auto_close = true, -- automatically close the list when you have no diagnostics
-        signs = {
-          -- icons / text used for a diagnostic
-          error = "",
-          warning = "",
-          hint = "",
-          information = "",
-          other = "",
+        icons = {
+          kinds = {
+            Array = icons_lsp.Array,
+            Boolean = icons_lsp.Boolean,
+            Class = icons_lsp.Classs,
+            Constant = icons_lsp.Constant,
+            Constructor = icons_lsp.Constructor,
+            Enum = icons_lsp.Enum,
+            EnumMember = icons_lsp.EnumMember,
+            Event = icons_lsp.Event,
+            Field = icons_lsp.Field,
+            File = icons_lsp.File,
+            Function = icons_lsp.Function,
+            Interface = icons_lsp.Interface,
+            Key = icons_lsp.Interface,
+            Method = icons_lsp.Key,
+            Module = icons_lsp.Method,
+            Namespace = icons_lsp.Namespace,
+            Null = icons_lsp.Null,
+            Number = icons_lsp.Number,
+            Object = icons_lsp.Object,
+            Operator = icons_lsp.Operator,
+            Package = icons_lsp.Package,
+            Property = icons_lsp.Property,
+            String = icons_lsp.String,
+            Struct = icons_lsp.Struct,
+            TypeParameter = icons_lsp.TypeParameter,
+            Variable = icons_lsp.Variable,
+          },
         },
-        action_keys = {
-          -- map to {} to remove a mapping, for example:
-          -- close = {},
-          close = { "q", "<leader><Tab>" }, -- close the list
-          cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-          refresh = "r", -- manually refresh
-          jump = { "o", "<CR>" }, -- jump to the diagnostic or open / close folds
-          open_split = { "<c-s>" }, -- open buffer in new split
-          open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-          open_tab = { "<c-t>" }, -- open buffer in new tab
-          jump_close = {}, -- jump to the diagnostic and close the list
-          toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-          switch_severity = { "<Up>", "<Down>" }, -- switch "diagnostics" severity filter level to ALL / HINT / INFO / WARN / ERROR
-          toggle_preview = "p", -- toggle auto_preview
-          hover = "K", -- opens a small popup with the full multiline message
-          preview = "p", -- preview the diagnostic location
-          close_folds = { "zM", "zm" }, -- close all folds
-          open_folds = { "zR", "zr" }, -- open all folds
-          toggle_fold = { "zA", "za" }, -- toggle fold of current file
-          previous = "k", -- previous item
-          next = "j", -- next item
+        keys = {
+          ["<esc>"] = "cancel",
+          ["q"] = "close",
+          ["<a-n>"] = "next",
+          ["<a-p>"] = "prev",
         },
       }
     end,
