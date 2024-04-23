@@ -60,7 +60,7 @@ local function gitfzflua(opts)
       }, opts),
       { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
     )
-  end, { desc = "Git: list of cmds [fzflua]" })
+  end, { desc = "Git: list commands of git" })
 end
 
 -- Create a new scratch buffer

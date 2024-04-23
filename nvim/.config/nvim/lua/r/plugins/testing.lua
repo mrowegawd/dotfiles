@@ -180,7 +180,7 @@ return {
             winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing", row = row, col = col },
           })
         end,
-        desc = "Testing: list of cmds [neotest]",
+        desc = "Testing: list commands of testing",
       },
     },
   },

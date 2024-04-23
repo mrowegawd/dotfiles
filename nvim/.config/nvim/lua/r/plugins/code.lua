@@ -667,7 +667,7 @@ return {
     dir = "~/.local/src/nvim_plugins/rmux",
     cmd = { "RmuxEDITConfig" },
     keys = {
-      { "rf", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task file " },
+      { "rf", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
       { "rp", "<Cmd> RmuxREPL <CR>", desc = "Tasks: open pane window REPL (if the language has any)" },
       { "rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
       { "rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },

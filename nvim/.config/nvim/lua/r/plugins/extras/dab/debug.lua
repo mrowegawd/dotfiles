@@ -227,7 +227,7 @@ return {
             end,
           }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
         end,
-        desc = "Debug: list of debugging dap commands [dap]",
+        desc = "Debug: list commands of debug",
       },
       -- +----------------------------------------------------------+
       -- Run and close the debug

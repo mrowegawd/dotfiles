@@ -276,7 +276,7 @@ function M.get()
           { winopts = { title = RUtils.config.icons.misc.smiley .. "LSP", row = row, col = col } }
         )
       end,
-      desc = "LSP: commands of lsp",
+      desc = "LSP: list commands of lsp",
     },
   }
 

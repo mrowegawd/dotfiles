@@ -80,10 +80,12 @@ return {
   -- GKEEP (disabled)
   {
     -- Check and run: `python3 -m pip install gkeepapi keyring`
-    "stevearc/gkeep.nvim",
+    "stevearc/gkeep.nvim", -- ga bisa dipake lagi? Karana `checkhealth gkeep` aja error!
+    enabled = false,
     event = "BufReadPre gkeep://*",
-    build = ":UpdateRemotePlugins",
-    -- cmd = { "GkeepToggle" },
+    build = "UpdateRemotePlugins",
+    cmd = { "GkeepToggle", "GkeepOpen" },
+    opts = {},
   },
   -- NREDIR
   {

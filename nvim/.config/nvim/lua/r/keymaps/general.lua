@@ -537,8 +537,8 @@ RUtils.map.nnoremap("<Localleader>r", function()
         RUtils.info "setlocal conceallevel=0"
       end
     end,
-  }, { winopts = { title = "Cmds", row = row, col = col } })
-end)
+  }, { winopts = { title = "Misc commands", row = row, col = col } })
+end, { desc = "Misc: list commands" })
 
 local function normalize_return(str)
   ---@diagnostic disable-next-line: redefined-local
