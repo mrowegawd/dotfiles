@@ -224,13 +224,16 @@
     {
       "before": ["m", "`"],
       "commands": ["bookmarks.toggle"]
-      // "command": "bookmarks.toggle",
+      // "when": "editorTextFocus"
+    },
+    {
+      "before": ["m", "q"],
+      "commands": ["bookmarks.toggle"]
       // "when": "editorTextFocus"
     },
     {
       "before": ["d", "m"],
       "commands": ["bookmarks.toggle"]
-      // "command": "bookmarks.toggle",
       // "when": "editorTextFocus"
     },
     {
@@ -247,7 +250,7 @@
       "commands": ["bookmarks.jumpToPrevious"]
     },
     {
-      "before": ["m", "F"],
+      "before": ["m", "f", "f"],
       "commands": ["bookmarks.listFromAllFiles"]
     },
 
@@ -362,7 +365,17 @@
       "before": ["<leader>", "q"],
       "commands": ["workbench.actions.view.problems"]
     },
-
+    {
+      "before": ["<leader>", "x", "x"],
+      "commands": ["workbench.actions.view.problems"],
+      "silent": true
+    },
+    {
+      "before": ["d", "P"],
+      "commands": ["errorLens.toggleHint"],
+      "silent": true
+      //   "command": "errorLens.toggleHint"
+    },
     {
       "before": ["d", "n"],
       "commands": ["editor.action.marker.nextInFiles"],
@@ -371,11 +384,6 @@
     {
       "before": ["d", "p"],
       "commands": ["editor.action.marker.prevInFiles"],
-      "silent": true
-    },
-    {
-      "before": ["<leader>", "x", "x"],
-      "commands": ["workbench.actions.view.problems"],
       "silent": true
     },
 

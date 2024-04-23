@@ -172,7 +172,7 @@
     "command": "explorer.openToSide",
     "args": { "group": 1 },
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
-  }
+  },
 
   // -------------------------
   // DEBUG
@@ -182,7 +182,7 @@
     "command": "workbench.action.debug.stepOver",
     "when": "debugState == 'stopped'"
   },
-  { 
+  {
     "key": "shift+Right",
     "command": "workbench.action.debug.stepInto",
     "when": "debugState != 'inactive'"
