@@ -1,5 +1,5 @@
 return {
   "run_shell",
-  "run_python",
-  -- "single_file",
+  -- "run_python",
+  "single_file",
 }

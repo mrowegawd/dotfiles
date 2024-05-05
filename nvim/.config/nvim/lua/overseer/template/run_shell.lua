@@ -1,5 +1,6 @@
 return {
-  name = "run_sh",
+  name = "[Builtin]: Run sh/bash",
+  -- desc = "Build and run single file",
   builder = function()
     local file = vim.fn.expand "%:p"
     local cmd = { "bash" }

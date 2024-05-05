@@ -15,9 +15,9 @@ return {
         { "on_output_quickfix", tail = false, open = false },
         "default",
       },
-      default_component_params = {
-        errorformat = _G.OverseerConfig.python_errorformat,
-      },
+      -- default_component_params = {
+      --   errorformat = _G.OverseerConfig.python_errorformat,
+      -- },
     }
   end,
   condition = {

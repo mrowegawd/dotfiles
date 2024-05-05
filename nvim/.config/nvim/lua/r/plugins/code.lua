@@ -1,11 +1,5 @@
 local Highlight = require "r.settings.highlights"
 
-_G.OverseerConfig = {} -- to store error formats
-
-OverseerConfig.fnpane_run = 0
-OverseerConfig.fnpane_runtest = 0
-OverseerConfig.fnpane_runmisc = 0
-
 local callme = 0
 
 return {
@@ -659,6 +653,85 @@ return {
     opts = { skip_ssl_verification = true },
     config = function(_, opts)
       require("rest-nvim").setup(opts)
+    end,
+  },
+  -- OVERSEER.NVIM
+  {
+    "stevearc/overseer.nvim", -- Task runner and job management
+    cmd = {
+      "OverseerToggle",
+      "OverseerOpen",
+      "OverseerInfo",
+      "OverseerRun",
+      "OverseerBuild",
+      "OverseerClose",
+      "OverseerLoadBundle",
+      "OverseerSaveBundle",
+      "OverseerDeleteBundle",
+      "OverseerRunCmd",
+      "OverseerQuickAction",
+      "OverseerTaskAction",
+      "OverseerDebugParser",
+    },
+    keys = {
+      {
+        "rr",
+        function()
+          return vim.cmd "OverseerToggle!"
+        end,
+        desc = "Task: toggle [overseer]",
+      },
+      {
+        "rf",
+        function()
+          return vim.cmd "OverseerRun"
+        end,
+        desc = "Task: run [overseer]",
+      },
+      {
+        "rd",
+        function()
+          return vim.cmd "OverseerDebugParser"
+        end,
+        desc = "Task: run [overseer]",
+      },
+    },
+
+    opts = {
+      templates = { "builtin", "user" },
+      component_aliases = {
+        log = {
+          {
+            type = "echo",
+            level = vim.log.levels.WARN,
+          },
+          {
+            type = "file",
+            filename = "overseer.log",
+            level = vim.log.levels.DEBUG,
+          },
+        },
+      },
+      task_list = {
+        default_detail = 1,
+        direction = "bottom",
+        min_height = 25,
+        max_height = 25,
+        bindings = {
+          ["<S-tab>"] = "ScrollOutputUp",
+          ["<tab>"] = "ScrollOutputDown",
+          ["q"] = function()
+            vim.cmd "OverseerClose"
+          end,
+          ["<c-k>"] = false,
+          ["<c-j>"] = false,
+        },
+      },
+    },
+    config = function(_, opts)
+      require("overseer").setup(opts)
+
+      vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
   -- RUNMUX
