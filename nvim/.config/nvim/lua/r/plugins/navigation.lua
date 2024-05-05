@@ -462,6 +462,13 @@ return {
           desc = "Misc: open file explore [neotree]",
         },
         {
+          "<leader>ge",
+          function()
+            return vim.cmd "Neotree git_status"
+          end,
+          desc = "Git: open file explore for git status [neotree]",
+        },
+        {
           "<Localleader>oa",
           function()
             if not is_outline_opened then
