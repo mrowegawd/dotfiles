@@ -115,7 +115,7 @@ if wezterm.target_triple:find("windows") then
 else
 	-- config.term = "wezterm"
 	config.window_decorations = "RESIZE"
-	config.font_size = 11.5 -- pengaturan font agar mudah dibaca
+	config.font_size = 11 -- pengaturan font agar mudah dibaca
 end
 
 -- [1.0] alpha channel value with floating point numbers in the range 0.0
@@ -198,7 +198,7 @@ config.font_rules = {
 	{
 		italic = false,
 		intensity = "Normal",
-		font = font_with_fallback("SF Mono", {}),
+		font = font_with_fallback("Monaspace Neon ExtraLight", {}),
 	},
 	{
 		italic = false,
