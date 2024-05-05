@@ -332,9 +332,20 @@ vim.g.loaded_python_provider = 0 -- for python 2
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
-vim.g.loaded_python_provider = 0
+-- vim.g.loaded_python_provider = 0
 -- vim.g.loaded_python3_provider = 0
 vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
+
+local enable_providers = {
+  "python3_provider",
+  "node_provider",
+  -- and so on
+}
+
+for _, plugin in pairs(enable_providers) do
+  vim.g["loaded_" .. plugin] = nil
+  vim.cmd("runtime " .. plugin)
+end
 
 if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.15
@@ -355,6 +366,8 @@ if vim.g.neovide then
       vim.o.guifont = string.gsub(vim.o.guifont, "%d+$", font_size)
     end
   end, { noremap = true })
+
+  vim.keymap.set("", "<C-Home>", "<CMD>lua vim.g.neovide_scale_factor = 1<CR>", { noremap = true })
 
   vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
 end

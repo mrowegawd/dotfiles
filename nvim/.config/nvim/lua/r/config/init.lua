@@ -11,7 +11,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "tokyonight-night"
+local colorscheme = "vscode_modern"
 
 if RUtils.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"

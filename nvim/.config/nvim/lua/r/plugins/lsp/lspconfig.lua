@@ -162,7 +162,7 @@ return {
           },
           focusable = false,
           style = "minimal",
-          border = RUtils.config.icons.border.line,
+          -- border = RUtils.config.icons.border.line,
           header = "",
           prefix = function(diag)
             local level = vim.diagnostic.severity[diag.severity]
@@ -661,7 +661,9 @@ return {
             cargo = {
               allFeatures = true,
               loadOutDirsFromCheck = true,
-              runBuildScripts = true,
+              buildScripts = {
+                enable = true,
+              },
             },
             -- Add clippy lints for Rust.
             checkOnSave = {
