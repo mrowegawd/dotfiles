@@ -77,7 +77,7 @@ return {
           )
         then
           cmp.confirm { select = true }
-        elseif vim.snippet.jumpable(1) then
+        elseif vim.snippet.active { direction = -1 } then
           vim.snippet.jump(1)
         elseif require("luasnip").expand_or_jumpable() then
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
@@ -87,7 +87,7 @@ return {
       end
 
       local function shift_tab(fallback)
-        if vim.snippet.jumpable(-1) then
+        if vim.snippet.active { direction = -1 } then
           vim.schedule(function()
             vim.snippet.jump(-1)
           end)
@@ -301,7 +301,7 @@ return {
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-          ["<c-l>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+          -- ["<c-l>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
         sources = { -- remember: do not use `group_index`,
           {
@@ -382,10 +382,10 @@ return {
 
       cmp.setup.cmdline(":", {
         mapping = {
-          ["<C-l>"] = cmp.mapping(function()
-            cmp.confirm { select = true }
-            RUtils.map.feedkey("<CR>", "")
-          end, { "c" }),
+          -- ["<C-l>"] = cmp.mapping(function()
+          --   cmp.confirm { select = true }
+          --   RUtils.map.feedkey("<CR>", "")
+          -- end, { "c" }),
           ["<Tab>"] = cmp.mapping(function()
             cmp.confirm { select = true }
             RUtils.map.feedkey("<CR>", "")
@@ -413,10 +413,10 @@ return {
 
       cmp.setup.cmdline({ "/", "?" }, {
         mapping = {
-          ["<C-l>"] = cmp.mapping(function()
-            cmp.confirm { select = true }
-            RUtils.map.feedkey("<CR>", "")
-          end, { "c" }),
+          -- ["<C-l>"] = cmp.mapping(function()
+          --   cmp.confirm { select = true }
+          --   RUtils.map.feedkey("<CR>", "")
+          -- end, { "c" }),
           ["<Tab>"] = cmp.mapping(function()
             cmp.confirm { select = true }
             RUtils.map.feedkey("<CR>", "")
