@@ -32,8 +32,11 @@ setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
 
 setw -g pane-border-status bottom
 
-setw -g pane-border-format "[ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
-#{?window_zoomed_flag,#[fg=white]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
+# setw -g pane-border-format "#{?window_zoomed_flag,#[fg=white]#[bg=$RED],}[ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
+# #{?window_zoomed_flag,#[fg=white]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
+
+setw -g pane-border-format " [ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
+#{?window_zoomed_flag,#[fg=$RED]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
 
 # set-option -g status-format '#[fg=colour0] #{session_name} #[fg=colour1] (#{window_id}) #[fg=colour2] #{pane_id}: #[fg=colour3] #{current_window_stack} #[fg=colour4] #{session_time} #[fg=colour5]  #[fg=colour6] #{host_name}'
 
@@ -64,10 +67,10 @@ set -g window-status-format "#[fg=$STATUSLINE_BG]\
 #{?pane_synchronized,#[fg=$RED],}$left_slant_separator"
 
 set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
-#{?pane_synchronized,#[fg=$BLUE],}$left_slant_separator#[fg=$STATUSLINE_BG,bg=$STATUSLINE_BG_ACTIVE,bold]\
-#{?pane_synchronized,#[bg=$BLUE] [SYNC],}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],}\
+#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG,bg=$STATUSLINE_BG_ACTIVE,bold]#{?window_zoomed_flag,#[bg=$RED],}\
+#{?pane_synchronized,#[bg=yellow] [SYNC],}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],}\
  #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$STATUSLINE_BG_ACTIVE],}#[bg=$STATUSLINE_BG_ACTIVE,fg=$SEPARATOR_FG]\
-#{?pane_synchronized,#[bg=$BLUE],}$left_slant_separator#[bg=$SEPARATOR_FG,fg=$STATUSLINE_BG]$left_slant_separator"
+#{?pane_synchronized,#[bg=yellow],}#{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$SEPARATOR_FG,fg=$STATUSLINE_BG]$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT
