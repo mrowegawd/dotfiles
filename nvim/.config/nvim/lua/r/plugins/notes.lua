@@ -552,6 +552,16 @@ return {
     cmd = "Calendar",
     config = true,
   },
+  -- Render Mardown (disabled)
+  {
+    "MeanderingProgrammer/markdown.nvim",
+    enabled = false,
+    name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("render-markdown").setup {}
+    end,
+  },
   -- IMAGE.NVIM
   {
     "3rd/image.nvim",
@@ -563,9 +573,6 @@ return {
       return true
     end,
     build = function()
-      -- Requirements (linux):
-      -- sudo apt-get install libmagickwand-dev
-      -- sudo apt-get install libgraphicsmagick1-dev
       local has_magick = pcall(require, "magick")
       if not has_magick and vim.fn.executable "luarocks" == 1 then
         local is_mac = uv.os_uname().sysname == "Darwin"
@@ -653,6 +660,25 @@ return {
         desc = "Note: find note files [obsidian]",
       },
       {
+        "<Localleader>fT",
+        function()
+          return fzf_lua.grep {
+            prompt = "  ",
+            cwd = RUtils.config.path.wiki_path,
+            search = "^#.*",
+            rg_glob = false,
+            no_esc = true,
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
+            winopts = {
+              fullscreen = true,
+              title = RUtils.fzflua.format_title("Note Files", ""),
+            },
+          }
+        end,
+        desc = "Note: regex and search title [obsidian]",
+      },
+      {
         "<Localleader>fn",
         ":ObsidianNew ",
         desc = "Note: create new note [obsidian]",
@@ -667,6 +693,7 @@ return {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",
       "nvim-treesitter/nvim-treesitter",
+      "3rd/image.nvim",
     },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here

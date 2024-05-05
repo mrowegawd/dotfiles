@@ -254,14 +254,15 @@ function M.neorg_mappings_ft(bufnr)
             opts.search = [[^#.*]]
             opts.cwd = RUtils.config.path.wiki_path
             opts.rg_opts =
-              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" -e ]]
+              [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" -e ]]
           end
 
+          opts.rg_glob = false
           opts.no_esc = true
           if note_ext == "norg" then
             return require("fzf-lua").fzf_exec(RUtils.neorg.finder_linkableGlobal(), opts)
           else
-            return require("fzf-lua").live_grep_glob(opts)
+            return require("fzf-lua").grep(opts)
           end
         end,
         "Note: insert title (global)",
