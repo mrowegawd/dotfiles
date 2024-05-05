@@ -739,21 +739,29 @@ return {
     -- "mrowegawd/runmux",
     dir = "~/.local/src/nvim_plugins/rmux",
     cmd = { "RmuxEDITConfig" },
+    dependencies = {
+      "stevearc/overseer.nvim",
+    },
     keys = {
-      { "rf", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
-      { "rp", "<Cmd> RmuxREPL <CR>", desc = "Tasks: open pane window REPL (if the language has any)" },
+      { "rF", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
+      -- { "rR", "<Cmd> RmuxRunTaskAll <CR>", desc = "Tasks: run task all" },
+      -- { "rp", "<Cmd> RmuxREPL <CR>", desc = "Tasks: open pane window REPL (if the language has any)" },
+
       { "rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
       { "rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
-      { "ri", "<Cmd> RmuxSendInterrupt <CR>", desc = "Tasks: send interrupt signal to targeted pane" },
-      { "rI", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Tasks: send interrupt signal to all targeted pane" },
-      { "rt", "<Cmd> RmuxTargetPane <CR>", desc = "Tasks: change target pane" },
 
-      { "rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
-      { "rA", "<Cmd> RmuxRunTaskAll <CR>", desc = "Tasks: run task all" },
+      { "rc", "<Cmd> RmuxSendInterrupt <CR>", desc = "Tasks: send interrupt signal to targeted pane" },
+      { "rC", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Tasks: send interrupt signal to all targeted pane" },
+
+      -- { "rt", "<Cmd> RmuxTargetPane <CR>", desc = "Tasks: change target pane" },
+
+      -- { "rr", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
       { "rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },
       { "rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Tasks: load global rmuxrc.json" },
+      { "rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Tasks: show setup config" },
+
       -- { "<a-f>", "<Cmd> RmuxToggleTerm <CR>", desc = "Tasks: open rmux toggle terminal" },
     },
     opts = {
