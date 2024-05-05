@@ -874,6 +874,11 @@ local function colorscheme_overrides()
     ["vscode_modern"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
+      { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
+      { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
+      { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
+      { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
+
       {
         MyParentHint = {
           bg = { from = "CursorLine", attr = "bg" },
