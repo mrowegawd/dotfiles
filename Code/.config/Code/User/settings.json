@@ -43,7 +43,7 @@
     "activityBar.border": "#6ff304",
     "symbolIcon.colorForeground": "#ff0000",
     "icon.colorForeground": "#ff0000",
-    "activityBar.inactiveForeground": "#524747"
+    "activityBar.inactiveForeground": "#9e0f0f"
   },
 
   "breadcrumbs.filePath": "off",
