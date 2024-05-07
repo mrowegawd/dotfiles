@@ -434,6 +434,7 @@ return {
         { DiffviewStatusUnmerged = { link = "DiffChangedChar" } },
         { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
         { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
+        { DiffviewCursorLine = { bg = { from = "MyQuickFixLine", attr = "bg" } } },
 
         { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
         { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },

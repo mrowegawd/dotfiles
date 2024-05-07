@@ -214,7 +214,7 @@ local general_overrides = function()
     -- { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 } } },
     -- { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 } } },
     { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 }, fg = { from = "Normal", attr = "fg" }, bold = true } },
+    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 }, fg = "NONE", bold = true } },
     { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
