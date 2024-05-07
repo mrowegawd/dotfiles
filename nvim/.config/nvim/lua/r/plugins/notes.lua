@@ -362,7 +362,7 @@ return {
       },
       org_todo_keyword_faces = {
         CHECK = ":foreground royalblue :weight bold :slant",
-        TODO = ":foreground pink :weight bold :slant",
+        TODO = ":foreground pink :background red :weight bold :slant",
         INPROGRESS = ":foreground magenta :weight bold :slant italic",
         UNTASK = ":foreground deeppink :weight bold",
         HBD = ":foreground magenta :weight bold :slant",
