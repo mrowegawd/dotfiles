@@ -685,7 +685,9 @@ return {
       },
       {
         "<Localleader>ft",
-        "<CMD>ObsidianTags<CR>",
+        function()
+          RUtils.neorg.find_by_tags()
+        end,
         desc = "Note: find note files by tags [obsidian]",
       },
     },

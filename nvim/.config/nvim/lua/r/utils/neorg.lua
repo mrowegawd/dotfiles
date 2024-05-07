@@ -384,4 +384,566 @@ end
 --     return vim.tbl_flatten(command)
 -- end
 
+-- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+-- ┃                        OBSIDIAN                         ┃
+-- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+--
+
+local AsyncExecutor = require("obsidian.async").AsyncExecutor
+local channel = require("plenary.async.control").channel
+local search = require "obsidian.search"
+local async = require "plenary.async"
+local Path = require "obsidian.path"
+local log = require "obsidian.log"
+local Note = require "obsidian.note"
+
+local builtin = require "fzf-lua.previewer.builtin"
+local tags_previewer = builtin.buffer_or_file:extend()
+
+local TagCharsOptional = "[A-Za-z0-9_/-]*"
+local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
+-- local Tag = "#[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+"
+
+local iter = function(iterable)
+  if type(iterable) == "function" then
+    return iterable
+  elseif type(iterable) == "string" then
+    local i = 1
+    local n = string.len(iterable)
+
+    return function()
+      if i > n then
+        return nil
+      else
+        local c = string.sub(iterable, i, i)
+        i = i + 1
+        return c
+      end
+    end
+  elseif type(iterable) == "table" then
+    if vim.tbl_isempty(iterable) then
+      return function()
+        return nil
+      end
+    elseif vim.islist(iterable) then
+      local i = 1
+      local n = #iterable
+
+      return function()
+        if i > n then
+          return nil
+        else
+          local x = iterable[i]
+          i = i + 1
+          return x
+        end
+      end
+    else
+      return iter(vim.tbl_keys(iterable))
+    end
+  else
+    error("unexpected type '" .. type(iterable) .. "'")
+  end
+end
+
+local rstrip_whitespace = function(str)
+  str = string.gsub(str, "%s+$", "")
+  return str
+end
+
+local lstrip_whitespace = function(str, limit)
+  if limit ~= nil then
+    local num_found = 0
+    while num_found < limit do
+      str = string.gsub(str, "^%s", "")
+      num_found = num_found + 1
+    end
+  else
+    str = string.gsub(str, "^%s+", "")
+  end
+  return str
+end
+
+local strip_whitespace = function(str)
+  return rstrip_whitespace(lstrip_whitespace(str))
+end
+
+local string_contains = function(str, substr)
+  local i = string.find(str, substr, 1, true)
+  return i ~= nil
+end
+
+local tbl_contains = function(table, val)
+  for i = 1, #table do
+    if table[i] == val then
+      return true
+    end
+  end
+  return false
+end
+
+local tbl_unique = function(table)
+  local out = {}
+  for _, val in pairs(table) do
+    if not tbl_contains(out, val) then
+      out[#out + 1] = val
+    end
+  end
+  return out
+end
+
+local function find_tags_async(term, callback, opts)
+  opts = opts or {}
+
+  ---@type string[]
+  local terms
+  if type(term) == "string" then
+    terms = { term }
+  else
+    terms = term
+  end
+
+  -- for i, t in ipairs(terms) do
+  --   if vim.startswith(t, "#") then
+  --     terms[i] = string.sub(t, 2)
+  --   end
+  -- end
+
+  terms = tbl_unique(terms)
+
+  local path_to_tag_loc = {}
+
+  local path_to_note = {}
+
+  local path_to_code_blocks = {}
+  -- Keeps track of the order of the paths.
+  ---@type table<string, integer>
+  local path_order = {}
+
+  local num_paths = 0
+  local err_count = 0
+  local first_err = nil
+  local first_err_path = nil
+
+  local executor = AsyncExecutor.new()
+
+  local add_match = function(tag, path, note, lnum, text, col_start, col_end)
+    if not path_to_tag_loc[path] then
+      path_to_tag_loc[path] = {}
+    end
+    path_to_tag_loc[path][#path_to_tag_loc[path] + 1] = {
+      tag = tag,
+      path = path,
+      note = note,
+      line = lnum,
+      text = text,
+      tag_start = col_start,
+      tag_end = col_end,
+    }
+  end
+
+  local load_note = function(path)
+    local note, contents = Note.from_file_with_contents_async(path)
+    return { note, search.find_code_blocks(contents) }
+  end
+
+  local on_match = function(match_data)
+    local path = Path.new(match_data.path.text):resolve { strict = true }
+
+    if path_order[path] == nil then
+      num_paths = num_paths + 1
+      path_order[path] = num_paths
+    end
+
+    executor:submit(function()
+      -- Load note.
+      local note = path_to_note[path]
+      local code_blocks = path_to_code_blocks[path]
+      if not note or not code_blocks then
+        local ok, res = pcall(load_note, path)
+        if ok then
+          note, code_blocks = unpack(res)
+          path_to_note[path] = note
+          path_to_code_blocks[path] = code_blocks
+        else
+          err_count = err_count + 1
+          if first_err == nil then
+            first_err = res
+            first_err_path = path
+          end
+          return
+        end
+      end
+
+      -- check if the match was inside a code block.
+      for block in iter(code_blocks) do
+        if block[1] <= match_data.line_number and match_data.line_number <= block[2] then
+          return
+        end
+      end
+
+      local line = strip_whitespace(match_data.lines.text)
+      local n_matches = 0
+
+      -- check for tag in the wild of the form '#{tag}'
+      for match in iter(search.find_tags(line)) do
+        local m_start, m_end, _ = unpack(match)
+        local tag = string.sub(line, m_start + 1, m_end)
+        if string.match(tag, "^" .. TagCharsRequired .. "$") then
+          add_match(tag, path, note, match_data.line_number, line, m_start, m_end)
+        end
+      end
+
+      -- check for tags in frontmatter
+      if n_matches == 0 and note.tags ~= nil and (vim.startswith(line, "tags:") or string.match(line, "%s*- ")) then
+        for tag in iter(note.tags) do
+          tag = tostring(tag)
+          for _, t in ipairs(terms) do
+            if string.len(t) == 0 or string_contains(tag, t) then
+              add_match(tag, path, note, match_data.line_number, line)
+            end
+          end
+        end
+      end
+    end)
+  end
+
+  local tx, rx = channel.oneshot()
+
+  local search_terms = {}
+  for t in iter(terms) do
+    if string.len(t) > 0 then
+      -- tag in the wild
+      -- search_terms[#search_terms + 1] = "#" .. TagCharsOptional .. t .. TagCharsOptional
+      -- frontmatter tag in multiline list
+      search_terms[#search_terms + 1] = "\\s*- " .. TagCharsOptional .. t .. TagCharsOptional .. "$"
+      -- frontmatter tag in inline list
+      search_terms[#search_terms + 1] = "tags: .*" .. TagCharsOptional .. t .. TagCharsOptional
+    else
+      -- tag in the wild
+      -- search_terms[#search_terms + 1] = "#" .. TagCharsRequired
+      -- frontmatter tag in multiline list
+      search_terms[#search_terms + 1] = "\\s*- " .. TagCharsRequired .. "$"
+      -- frontmatter tag in inline list
+      search_terms[#search_terms + 1] = "tags: .*" .. TagCharsRequired
+    end
+  end
+
+  search.search_async(RUtils.config.path.wiki_path, search_terms, { ignore_case = true }, on_match, function(_)
+    tx()
+  end)
+
+  async.run(function()
+    rx()
+    executor:join_async()
+
+    local tags_list = {}
+
+    -- Order by path.
+    local paths = {}
+    for path, idx in pairs(path_order) do
+      paths[idx] = path
+    end
+
+    -- Gather results in path order.
+    for _, path in ipairs(paths) do
+      local tag_locs = path_to_tag_loc[path]
+      if tag_locs ~= nil then
+        table.sort(tag_locs, function(a, b)
+          return a.line < b.line
+        end)
+        for _, tag_loc in ipairs(tag_locs) do
+          tags_list[#tags_list + 1] = tag_loc
+        end
+      end
+    end
+
+    -- Log any errors.
+    if first_err ~= nil and first_err_path ~= nil then
+      log.err(
+        "%d error(s) occurred during search. First error from note at '%s':\n%s",
+        err_count,
+        first_err_path,
+        first_err
+      )
+    end
+
+    return tags_list
+  end, callback)
+end
+
+local get_visual_selection = function(opts)
+  opts = opts or {}
+  -- Adapted from fzf-lua:
+  -- https://github.com/ibhagwan/fzf-lua/blob/6ee73fdf2a79bbd74ec56d980262e29993b46f2b/lua/fzf-lua/utils.lua#L434-L466
+  -- this will exit visual mode
+  -- use 'gv' to reselect the text
+  local _, csrow, cscol, cerow, cecol
+  local mode = vim.fn.mode()
+  if opts.strict and not vim.endswith(string.lower(mode), "v") then
+    return
+  end
+
+  if mode == "v" or mode == "V" or mode == "" then
+    -- if we are in visual mode use the live position
+    _, csrow, cscol, _ = unpack(vim.fn.getpos ".")
+    _, cerow, cecol, _ = unpack(vim.fn.getpos "v")
+    if mode == "V" then
+      -- visual line doesn't provide columns
+      cscol, cecol = 0, 999
+    end
+    -- exit visual mode
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+  else
+    -- otherwise, use the last known visual position
+    _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
+    _, cerow, cecol, _ = unpack(vim.fn.getpos "'>")
+  end
+
+  -- Swap vars if needed
+  if cerow < csrow then
+    csrow, cerow = cerow, csrow
+    cscol, cecol = cecol, cscol
+  elseif cerow == csrow and cecol < cscol then
+    cscol, cecol = cecol, cscol
+  end
+
+  local lines = vim.fn.getline(csrow, cerow)
+  assert(type(lines) == "table")
+  if vim.tbl_isempty(lines) then
+    return
+  end
+
+  -- When the whole line is selected via visual line mode ("V"), cscol / cecol will be equal to "v:maxcol"
+  -- for some odd reason. So change that to what they should be here. See ':h getpos' for more info.
+  local maxcol = vim.api.nvim_get_vvar "maxcol"
+  if cscol == maxcol then
+    cscol = string.len(lines[1])
+  end
+  if cecol == maxcol then
+    cecol = string.len(lines[#lines])
+  end
+
+  ---@type string
+  local selection
+  local n = #lines
+  if n <= 0 then
+    selection = ""
+  elseif n == 1 then
+    selection = string.sub(lines[1], cscol, cecol)
+  elseif n == 2 then
+    selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
+  else
+    selection = string.sub(lines[1], cscol)
+      .. "\n"
+      .. table.concat(lines, "\n", 2, n - 1)
+      .. "\n"
+      .. string.sub(lines[n], 1, cecol)
+  end
+
+  return {
+    lines = lines,
+    selection = selection,
+    csrow = csrow,
+    cscol = cscol,
+    cerow = cerow,
+    cecol = cecol,
+  }
+end
+
+local cursor_tag = function(line, col)
+  local current_line = line and line or vim.api.nvim_get_current_line()
+  local _, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
+  cur_col = col or cur_col + 1 -- nvim_win_get_cursor returns 0-indexed column
+
+  for match in iter(search.find_tags(current_line)) do
+    local open, close, _ = unpack(match)
+    if open <= cur_col and cur_col <= close then
+      return string.sub(current_line, open + 1, close)
+    end
+  end
+
+  return nil
+end
+
+local list_tags_async = function(term, callback)
+  find_tags_async(term and term or "", function(tag_locations)
+    local tags = {}
+    for _, tag_loc in ipairs(tag_locations) do
+      tags[tag_loc.tag] = true
+    end
+    callback(vim.tbl_keys(tags))
+  end)
+end
+
+local picker = function(entries)
+  local titles = {}
+  local checkerTbl = {}
+  for _, element in ipairs(entries) do
+    if not checkerTbl[element] then
+      checkerTbl[element.display] = element.col
+      table.insert(titles, element.display)
+    end
+  end
+
+  function tags_previewer:new(o, opts, fzf_win)
+    tags_previewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, tags_previewer)
+    return self
+  end
+
+  function tags_previewer:parse_entry(entry_str)
+    for _, x in pairs(entries) do
+      if x.display == entry_str then
+        return {
+          path = x.filename,
+          line = x.lnum,
+          col = x.col,
+        }
+      end
+    end
+  end
+
+  require("fzf-lua").fzf_exec(titles, {
+    previewer = tags_previewer,
+    prompt = "Select > ",
+    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: Reload]] },
+    actions = {
+      ["default"] = function(selected, _)
+        local sel = selected[1]
+        for _, x in pairs(entries) do
+          if x.display == sel then
+            vim.cmd("e " .. x.filename)
+            vim.api.nvim_win_set_cursor(0, { x.lnum, 1 })
+          end
+        end
+      end,
+
+      ["ctrl-v"] = function(selected, _)
+        local sel = selected[1]
+        for _, x in pairs(entries) do
+          if x.display == sel then
+            vim.cmd("vsplit " .. x.filename)
+            vim.api.nvim_win_set_cursor(0, { x.lnum, 1 })
+            break
+          end
+        end
+      end,
+
+      ["ctrl-s"] = function(selected, _)
+        local sel = selected[1]
+        for _, x in pairs(entries) do
+          if x.display == sel then
+            vim.cmd("sp " .. x.filename)
+            vim.api.nvim_win_set_cursor(0, { x.lnum, 1 })
+            break
+          end
+        end
+      end,
+
+      ["ctrl-a"] = function()
+        M.find_by_tags()
+      end,
+
+      -- TODO: masih salah ini, ctrl-t, kadang ga tertarget tag nya (selalu 'vim')
+      ["ctrl-t"] = function(selected, _)
+        local sel = selected[1]
+
+        local sel_splits = vim.split(sel, "-")
+        local sel_tag = string.gsub(sel_splits[#sel_splits], "%s", "") -- remove whitespaces
+
+        for _, x in pairs(entries) do
+          if x.tag_name == sel_tag then
+            M.find_by_tags { fargs = { x.tag_name } }
+            break
+          end
+        end
+      end,
+    },
+  })
+end
+
+local function checkTbl(arrays, elements)
+  for _, x in pairs(arrays) do
+    if x.display == elements.display then
+      return true
+    end
+  end
+  return false
+end
+
+local function loop_entries(tags, tag_locations)
+  local entries = {}
+  for _, tag_loc in ipairs(tag_locations) do
+    for _, tag in ipairs(tags) do
+      if tag_loc.tag == tag or vim.startswith(tag_loc.tag, tag .. "/") then
+        local display = string.format("%s [%s] %s", tag_loc.note:display_name(), tag_loc.line, tag_loc.text)
+
+        local sel_splits = vim.split(display, "-")
+        local sel_tag = string.gsub(sel_splits[#sel_splits], "%s", "") -- remove whitespaces
+
+        local element_items = {
+          value = { path = tag_loc.path, line = tag_loc.line, col = tag_loc.tag_start },
+          display = display,
+          ordinal = display,
+          tag_name = sel_tag,
+          filename = tostring(tag_loc.path),
+          lnum = tag_loc.line,
+          col = tag_loc.tag_start,
+        }
+
+        if not checkTbl(entries, element_items) then
+          table.insert(entries, element_items)
+        end
+      end
+    end
+  end
+  return entries
+end
+
+function M.find_by_tags(data)
+  data = data or {}
+  local tags = data.fargs or {}
+
+  if vim.tbl_isempty(tags) then
+    -- Check for visual selection.
+    local viz = get_visual_selection { strict = true }
+    if viz and #viz.lines == 1 and string.match(viz.selection, "^#?" .. TagCharsRequired .. "$") then
+      local tag = viz.selection
+
+      if vim.startswith(tag, "#") then
+        tag = string.sub(tag, 2)
+      end
+
+      tags = { tag }
+    else
+      -- Otherwise check for a tag under the cursor.
+      local tag = cursor_tag()
+      if tag then
+        tags = { tag }
+      end
+    end
+  end
+
+  -- print(vim.inspect(tags))
+
+  if not vim.tbl_isempty(tags) then
+    return find_tags_async(tags, function(tag_locations)
+      -- print(vim.inspect(tags))
+      local entries = loop_entries(tags, tag_locations)
+      picker(entries)
+    end, { search = { sort = true } })
+  else
+    list_tags_async(nil, function(all_tags)
+      vim.schedule(function()
+        -- Open picker with tags.
+        find_tags_async(all_tags, function(tag_locations)
+          local entries = loop_entries(all_tags, tag_locations)
+          picker(entries)
+        end, { search = { sort = true } })
+      end)
+    end)
+  end
+end
+
 return M
