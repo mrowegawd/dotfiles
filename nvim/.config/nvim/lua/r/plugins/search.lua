@@ -1554,12 +1554,12 @@ return {
       {
         "<leader>xX",
         "<cmd>Trouble diagnostics toggle<cr>",
-        desc = "Misc: open diagnostics with [trouble]",
+        desc = "Misc: workspace diagnostic [trouble]",
       },
       {
         "<leader>xx",
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
-        desc = "Misc: diagnostics curbuf toggle [trouble]",
+        desc = "Misc: document diagnostic [trouble]",
       },
       {
         "<leader>cs",

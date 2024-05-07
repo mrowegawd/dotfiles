@@ -135,7 +135,7 @@ function M.get()
       desc = "Diagnostic: preview",
     },
     {
-      "dl",
+      "dt",
       function()
         RUtils.toggle.diagnostics()
       end,
