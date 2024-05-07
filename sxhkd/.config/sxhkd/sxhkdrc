@@ -117,12 +117,15 @@ super + shift + minus
 super + shift + m
         amixer -q sset Master toggle
 
+# media: play next
 super + shift + ctrl + Right
         playerctl next
 
+# media: play prev
 super + shift + ctrl + Left
-        playerctl next
+        playerctl previous
 
+# media: toggle pouse/play
 super + shift + ctrl + p
         playerctl play-pause
 
