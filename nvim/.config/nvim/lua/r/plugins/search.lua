@@ -152,7 +152,7 @@ return {
         desc = "Fzflua: help tags (visual)",
       },
       { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fg", require("fzf-lua").live_grep_glob, desc = "Fzflua: live grep" },
+      { "<Leader>fg", require("fzf-lua").live_grep, desc = "Fzflua: live grep" },
       { "<Leader>fg", require("fzf-lua").grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", require("fzf-lua").changes, desc = "Fzflua: changes" },
       { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
@@ -308,12 +308,13 @@ return {
         },
         files = {
           -- debug = true,
-          prompt = "  ",
+          prompt = "    ",
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = { ["--header"] = [[Ctrl-y: copy/yank path | Ctrl-e: mode rgflow]] },
           fd_opts = fd_opts,
+          formatter = "path.filename_first",
           actions = {
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
@@ -550,6 +551,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Ctrl-e: mode rgflow]] },
+          formatter = "path.filename_first",
           multiprocess = true,
           winopts_fn = function()
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
@@ -1550,12 +1552,12 @@ return {
     cmd = "Trouble",
     keys = {
       {
-        "<leader>xx",
+        "<leader>xX",
         "<cmd>Trouble diagnostics toggle<cr>",
         desc = "Misc: open diagnostics with [trouble]",
       },
       {
-        "<leader>xX",
+        "<leader>xx",
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Misc: diagnostics curbuf toggle [trouble]",
       },
