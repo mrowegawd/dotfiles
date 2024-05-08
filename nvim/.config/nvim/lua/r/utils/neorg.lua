@@ -5,6 +5,8 @@ local neorg = require "neorg"
 ---@class r.utils.neorg
 local M = {}
 
+local insert_tags = {}
+
 local separator = function()
   return "/"
 end
@@ -395,6 +397,7 @@ local search = require "obsidian.search"
 local async = require "plenary.async"
 local Path = require "obsidian.path"
 local log = require "obsidian.log"
+-- local path = require "fzf-lua.path"
 local Note = require "obsidian.note"
 
 local builtin = require "fzf-lua.previewer.builtin"
@@ -804,10 +807,21 @@ local picker = function(entries)
     end
   end
 
+  local format_prompt_strings = function()
+    local msg = ""
+    if #insert_tags > 0 then
+      msg = "[" .. table.concat(insert_tags, ",") .. "]"
+      msg = string.format("[Obsidian] Search by tag %s > ", msg)
+    else
+      msg = "[Obsidian] Search by tag > "
+    end
+    return msg
+  end
+
   require("fzf-lua").fzf_exec(titles, {
     previewer = tags_previewer,
-    prompt = "Select > ",
-    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: Reload]] },
+    prompt = format_prompt_strings(),
+    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: add tag | Ctrl-r: reload | Ctrl-g: search by regex]] },
     actions = {
       ["default"] = function(selected, _)
         local sel = selected[1]
@@ -841,20 +855,72 @@ local picker = function(entries)
         end
       end,
 
-      ["ctrl-a"] = function()
+      ["ctrl-a"] = function(selected, _)
+        local sel = selected[1]
+
+        local sel_splits = vim.split(sel, "-")
+        local sel_tag = string.gsub(sel_splits[#sel_splits], "%s", "") -- remove whitespaces
+
+        -- local function removeDuplicate(tbl, element)
+        --   for _, x in pairs(tbl) do
+        --     if x == element then
+        --       return true
+        --     end
+        --   end
+        --   return false
+        -- end
+
+        for _, x in pairs(entries) do
+          if x.tag_name == sel_tag then
+            table.insert(insert_tags, x.tag_name)
+            -- if #insert_tags == 0 then
+            --   table.insert(insert_tags, x.tag_name)
+            -- else
+            --   for _, inserted_tag in pairs(insert_tags) do
+            --     if x.tag_name == inserted_tag then
+            --       break
+            --     end
+            --     table.insert(insert_tags, x.tag_name)
+            --   end
+            -- end
+            break
+          end
+        end
+
+        print("Add tag: " .. vim.inspect(insert_tags))
+
+        require("fzf-lua").actions.resume()
+      end,
+
+      ["ctrl-r"] = function()
+        insert_tags = {}
+        -- print("Add tag: " .. vim.inspect(insert_tags))
         M.find_by_tags()
       end,
 
-      -- TODO: masih salah ini, ctrl-t, kadang ga tertarget tag nya (selalu 'vim')
+      ["ctrl-g"] = function(selected)
+        if #selected > 1 then
+          M.find_grep_by_all_regex_or_selected_tag(entries, selected)
+        else
+          M.find_grep_by_all_regex_or_selected_tag(entries, selected[1])
+        end
+      end,
+
       ["ctrl-t"] = function(selected, _)
         local sel = selected[1]
 
         local sel_splits = vim.split(sel, "-")
         local sel_tag = string.gsub(sel_splits[#sel_splits], "%s", "") -- remove whitespaces
 
+        local tag
         for _, x in pairs(entries) do
           if x.tag_name == sel_tag then
-            M.find_by_tags { fargs = { x.tag_name } }
+            if #insert_tags > 0 then
+              tag = insert_tags
+            else
+              tag = { x.tag_name }
+            end
+            M.find_by_tags { fargs = tag }
             break
           end
         end
@@ -863,7 +929,7 @@ local picker = function(entries)
   })
 end
 
-local function checkTbl(arrays, elements)
+function M.checkTbl(arrays, elements)
   for _, x in pairs(arrays) do
     if x.display == elements.display then
       return true
@@ -892,13 +958,106 @@ local function loop_entries(tags, tag_locations)
           col = tag_loc.tag_start,
         }
 
-        if not checkTbl(entries, element_items) then
+        if not M.checkTbl(entries, element_items) then
           table.insert(entries, element_items)
         end
       end
     end
   end
   return entries
+end
+
+function M.find_grep_by_all_regex_or_selected_tag(entries, selected)
+  local rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+  local path = {}
+
+  if type(selected) == "table" then
+    for _, x in pairs(entries) do
+      for _, sel in pairs(selected) do
+        if x.display == sel then
+          local local_path = x.value.path.filename
+          table.insert(path, local_path)
+        end
+      end
+    end
+    rg_opts = rg_opts .. " " .. table.concat(path, " ") .. " -e "
+  elseif type(selected) == "string" then
+    for _, x in pairs(entries) do
+      if x.display == selected then
+        path = x.value.path.filename
+        rg_opts = rg_opts .. " " .. path .. " -e "
+      end
+    end
+  end
+
+  function tags_previewer:new(o, opts, fzf_win)
+    tags_previewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, tags_previewer)
+    return self
+  end
+
+  function tags_previewer:parse_entry(entry_str)
+    local row, col = entry_str:match "(%d+):(%d+)"
+    -- print(tostring(row) .. " " .. tostring(col))
+    return {
+      path = path,
+      line = row,
+      col = col,
+    }
+  end
+  local opts = {
+    -- debug = true,
+    fzf_opts = { ["--header"] = [[Ctrl-r: reload]] },
+    rg_opts = rg_opts,
+  }
+
+  if type(selected) == "string" then
+    opts.previewer = tags_previewer
+    opts.actions = {
+      ["default"] = function(sell, _)
+        local sel = sell[1]
+        local row, col = sel:match "(%d+):(%d+)"
+        vim.cmd("e " .. path)
+        vim.api.nvim_win_set_cursor(0, { tonumber(row), tonumber(col) })
+      end,
+
+      ["ctrl-v"] = function(sell, _)
+        local sel = sell[1]
+        local row, col = sel:match "(%d+):(%d+)"
+
+        vim.cmd("vsplit " .. path)
+        vim.api.nvim_win_set_cursor(0, { tonumber(row), tonumber(col) })
+      end,
+
+      ["ctrl-r"] = function()
+        insert_tags = {}
+        M.find_by_tags()
+      end,
+
+      ["ctrl-s"] = function(sell, _)
+        local sel = sell[1]
+        local row, col = sel:match "(%d+):(%d+)"
+
+        vim.cmd("sp " .. path)
+        vim.api.nvim_win_set_cursor(0, { tonumber(row), tonumber(col) })
+      end,
+    }
+  elseif type(selected) == "table" then
+    opts.actions = {
+      ["default"] = function(sell, _)
+        local sel = sell[1]
+        -- TODO: sel:match nya berubah harus di ubah matching nya
+        -- local row, col = sel:match "(%d+):(%d+)" --> ini harus diubah
+        print "not implemented yet "
+        print(sel)
+
+        -- vim.cmd("e " .. path)
+        -- vim.api.nvim_win_set_cursor(0, { tonumber(row), tonumber(col) })
+      end,
+    }
+  end
+
+  require("fzf-lua").live_grep(opts)
 end
 
 function M.find_by_tags(data)
