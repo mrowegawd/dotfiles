@@ -96,7 +96,7 @@ local function check_for_link_or_tag()
   return is_tag_or_link_at(line, col, M.Cfg)
 end
 
-function M.followLink(is_selection)
+function M.follow_link(is_selection)
   is_selection = is_selection or false
 
   local saved_reg = vim.fn.getreg '"0'
@@ -172,6 +172,442 @@ end
 
 function M.finder_linkableGlobal()
   return { "yes" }
+end
+
+-- local TagCharsOptional = "[A-Za-z0-9_/-]*"
+local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
+
+local rg = "rg"
+local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
+rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
+local rg_cmds = rg .. " " .. rg_opts
+
+-- local cursor_tag = function(line, col)
+--   local current_line = line and line or vim.api.nvim_get_current_line()
+--   local _, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
+--   cur_col = col or cur_col + 1 -- nvim_win_get_cursor returns 0-indexed column
+--
+--   for match in iter(search.find_tags(current_line)) do
+--     local open, close, _ = unpack(match)
+--     if open <= cur_col and cur_col <= close then
+--       return string.sub(current_line, open + 1, close)
+--     end
+--   end
+--
+--   return nil
+-- end
+
+local get_visual_selection = function(opts)
+  opts = opts or {}
+  -- Adapted from fzf-lua:
+  -- https://github.com/ibhagwan/fzf-lua/blob/6ee73fdf2a79bbd74ec56d980262e29993b46f2b/lua/fzf-lua/utils.lua#L434-L466
+  -- this will exit visual mode
+  -- use 'gv' to reselect the text
+  local _, csrow, cscol, cerow, cecol
+  local mode = vim.fn.mode()
+  if opts.strict and not vim.endswith(string.lower(mode), "v") then
+    return
+  end
+
+  if mode == "v" or mode == "V" or mode == "" then
+    -- if we are in visual mode use the live position
+    _, csrow, cscol, _ = unpack(vim.fn.getpos ".")
+    _, cerow, cecol, _ = unpack(vim.fn.getpos "v")
+    if mode == "V" then
+      -- visual line doesn't provide columns
+      cscol, cecol = 0, 999
+    end
+    -- exit visual mode
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+  else
+    -- otherwise, use the last known visual position
+    _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
+    _, cerow, cecol, _ = unpack(vim.fn.getpos "'>")
+  end
+
+  -- Swap vars if needed
+  if cerow < csrow then
+    csrow, cerow = cerow, csrow
+    cscol, cecol = cecol, cscol
+  elseif cerow == csrow and cecol < cscol then
+    cscol, cecol = cecol, cscol
+  end
+
+  local lines = vim.fn.getline(csrow, cerow)
+  assert(type(lines) == "table")
+  if vim.tbl_isempty(lines) then
+    return
+  end
+
+  -- When the whole line is selected via visual line mode ("V"), cscol / cecol will be equal to "v:maxcol"
+  -- for some odd reason. So change that to what they should be here. See ':h getpos' for more info.
+  local maxcol = vim.api.nvim_get_vvar "maxcol"
+  if cscol == maxcol then
+    cscol = string.len(lines[1])
+  end
+  if cecol == maxcol then
+    cecol = string.len(lines[#lines])
+  end
+
+  ---@type string
+  local selection
+  local n = #lines
+  if n <= 0 then
+    selection = ""
+  elseif n == 1 then
+    selection = string.sub(lines[1], cscol, cecol)
+  elseif n == 2 then
+    selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
+  else
+    selection = string.sub(lines[1], cscol)
+      .. "\n"
+      .. table.concat(lines, "\n", 2, n - 1)
+      .. "\n"
+      .. string.sub(lines[n], 1, cecol)
+  end
+
+  return {
+    lines = lines,
+    selection = selection,
+    csrow = csrow,
+    cscol = cscol,
+    cerow = cerow,
+    cecol = cecol,
+  }
+end
+
+local data_tags_table = {}
+local data_tags_out = {}
+local data_title_out = {}
+local insert_tags = {}
+
+local builtin = require "fzf-lua.previewer.builtin"
+local tags_previewer = builtin.buffer_or_file:extend()
+
+local function format_data_tags(match_data)
+  local line = string.gsub(match_data.lines.text, '"(%d+)"', "%1")
+  line = string.gsub(line, "-%s", "")
+  return {
+    tag = RUtils.cmd.strip_whitespace(line),
+    line_number = match_data.line_number,
+    path = match_data.path.text,
+    title = "",
+  }
+end
+
+local function format_tag_text(match_data)
+  local line = string.gsub(match_data.lines.text, '\\"', "")
+  -- local line = string.gsub(match_data.lines.text, '"(%d+)"', "%1")
+  line = string.gsub(line, "-%s", "") -- remove strip '- tags'
+  return RUtils.cmd.strip_whitespace(line)
+end
+
+local function format_title_tag(match_data)
+  local line = string.gsub(match_data.lines.text, '\\"', "")
+  line = string.gsub(line, "#%s", "")
+  return {
+    title = RUtils.cmd.strip_whitespace(line),
+    line_number = match_data.line_number,
+    path = match_data.path.text,
+  }
+end
+
+local function collect_all_tags_async(data, cb)
+  data = data or {}
+
+  local rg_optsc = "--no-config --json --type=md --ignore-case"
+  local cmd = "rg "
+    .. rg_optsc
+    .. ' -e "tags: .*[a-z]+[a-z0-9_/-]*[a-z0-9]+"'
+    .. ' -e "^\\s\\s*- [a-z]+[a-z0-9_/-]*[a-z0-9]+$"'
+    .. ' -e "^#\\s[A-Za-z]+[A-Za-z0-9_/-]*[a-z0-9].*"'
+    .. " "
+    .. RUtils.config.path.wiki_path
+
+  -- print(cmd)
+
+  coroutine.wrap(function()
+    local co = coroutine.running()
+
+    RUtils.async.run_jobstart(cmd, function(_, dataout, event)
+      if event == "stdout" then
+        if dataout then
+          for _, line in ipairs(dataout) do
+            if line ~= "" then
+              local json_data = vim.json.decode(line)
+
+              local match_data = json_data.data
+              if match_data["path"] then
+                if match_data["lines"] then
+                  local line_text = match_data.lines.text
+
+                  -- Kita hanya butuh tag yang berada pada line frontmatter
+                  if string.match(line_text, "%s*- ") then
+                    if match_data.line_number < 20 then
+                      data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
+                      coroutine.resume(co, 0)
+                    end
+                  end
+
+                  if string.match(line_text, "^# ") then
+                    if match_data.line_number < 25 then
+                      data_title_out[#data_title_out + 1] = format_title_tag(match_data)
+                      coroutine.resume(co, 0)
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      elseif event == "stderr" then
+        vim.cmd "echohl Error"
+        vim.cmd('echomsg "' .. table.concat(dataout, "") .. '"')
+        vim.cmd "echohl None"
+        coroutine.resume(co, 2)
+      elseif event == "exit" then
+        coroutine.resume(co, 1)
+      end
+    end)
+
+    repeat
+      -- Waiting for a call to 'resume'
+      local ret = coroutine.yield()
+    until ret ~= 0
+
+    if #data_tags_out > 0 then
+      local data_tags = RUtils.cmd.remove_duplicates_tbl(data_tags_out)
+      cb(data_tags)
+    end
+  end)()
+end
+
+local format_prompt_strings = function()
+  local msg = ""
+  if #insert_tags > 0 then
+    msg = "[" .. table.concat(insert_tags, ",") .. "]"
+    msg = string.format("[Obsidian] Search by tag %s > ", msg)
+  else
+    msg = "[Obsidian] Search by tag > "
+  end
+  return msg
+end
+
+local function picker(contents)
+  function tags_previewer:new(o, opts, fzf_win)
+    tags_previewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, tags_previewer)
+    return self
+  end
+
+  function tags_previewer:parse_entry(entry_str)
+    local text = vim.split(entry_str, "|")
+
+    for _, x in pairs(data_tags_table) do
+      if x.title == text[1] then
+        return {
+          path = x.path,
+          line = x.line_number,
+          col = 1,
+        }
+      end
+    end
+    return {}
+  end
+
+  return require("fzf-lua").fzf_exec(contents, {
+    previewer = tags_previewer,
+    prompt = format_prompt_strings(),
+
+    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: add tag | Ctrl-r: reload | Ctrl-g: search by regex]] },
+
+    actions = {
+      ["default"] = function(selected, _)
+        local sel = selected[1]
+        sel = vim.split(sel, "|")
+        for _, x in pairs(data_tags_table) do
+          if x.title == sel[1] then
+            vim.cmd("e " .. x.path)
+            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+          end
+        end
+      end,
+
+      ["ctrl-v"] = function(selected, _)
+        local sel = selected[1]
+        sel = vim.split(sel, "|")
+        for _, x in pairs(data_tags_table) do
+          if x.title == sel[1] then
+            vim.cmd("vsplit " .. x.path)
+            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            break
+          end
+        end
+      end,
+
+      ["ctrl-s"] = function(selected, _)
+        local sel = selected[1]
+        sel = vim.split(sel, "|")
+        for _, x in pairs(data_tags_table) do
+          if x.title == sel[1] then
+            vim.cmd("split " .. x.path)
+            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            break
+          end
+        end
+      end,
+
+      ["ctrl-a"] = function(selected, _)
+        local sel = selected[1]
+        sel = vim.split(sel, "|")
+        sel = vim.split(sel[2], " ")
+
+        table.insert(insert_tags, sel[3])
+        print("Add tag: " .. vim.inspect(insert_tags))
+
+        require("fzf-lua").actions.resume()
+      end,
+
+      ["ctrl-t"] = function(selected, _)
+        print(selected[1])
+      end,
+    },
+  })
+end
+
+local function list_tags_async(all_tags)
+  local function cocating()
+    local search_terms = {}
+    for _, t in pairs(all_tags) do
+      if string.len(t) > 0 then
+        -- tag in the wild
+        -- search_terms[#search_terms + 1] = "#" .. TagCharsOptional .. t .. TagCharsOptional
+        -- frontmatter tag in multiline list
+        -- search_terms[#search_terms + 1] = "\\s*- " .. TagCharsOptional .. t .. TagCharsOptional .. "$"
+        search_terms[#search_terms + 1] = "^\\s\\s*- " .. t .. "$"
+        -- frontmatter tag in inline list
+        -- search_terms[#search_terms + 1] = "tags: .*" .. TagCharsOptional .. t .. TagCharsOptional
+        -- else
+        --   -- tag in the wild
+        --   -- search_terms[#search_terms + 1] = "#" .. TagCharsRequired
+        --   -- frontmatter tag in multiline list
+        --   search_terms[#search_terms + 1] = "\\s*- " .. TagCharsRequired .. "$"
+        --   -- frontmatter tag in inline list
+        --   search_terms[#search_terms + 1] = "tags: .*" .. TagCharsRequired
+      end
+    end
+    return search_terms
+  end
+
+  local rg_optsc = "--no-config --json --type=md --ignore-case"
+
+  local line_e = ""
+  for _, x in pairs(cocating()) do
+    line_e = line_e .. string.format(' -e "%s" ', x)
+  end
+
+  local cmd = "rg " .. rg_optsc .. line_e .. RUtils.config.path.wiki_path
+  -- print(cmd)
+
+  local contents = function(cb)
+    coroutine.wrap(function()
+      local co = coroutine.running()
+
+      RUtils.async.run_jobstart(cmd, function(_, dataout, event)
+        if event == "stdout" then
+          if dataout and #dataout > 0 then
+            for _, line in ipairs(dataout) do
+              if #line > 0 then
+                local json_data = vim.json.decode(line)
+                local match_data = json_data.data
+
+                if match_data["path"] then
+                  if match_data["lines"] then
+                    local line_text = match_data.lines.text
+                    if string.match(line_text, "%s%s*- ") then
+                      local data_tags = format_data_tags(match_data)
+
+                      local title_s
+                      for _, x in pairs(data_title_out) do
+                        if x.path == data_tags.path then
+                          title_s = x.title
+                        end
+                      end
+
+                      data_tags.title = title_s
+                      data_tags_table[#data_tags_table + 1] = data_tags
+
+                      local fzf_str =
+                        string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+                      cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
+                        coroutine.resume(co, 0)
+                      end)
+                    end
+                  end
+                end
+              end
+            end
+          end
+        elseif event == "stderr" then
+          vim.cmd "echohl Error"
+          vim.cmd('echomsg "' .. table.concat(dataout, "") .. '"')
+          vim.cmd "echohl None"
+          coroutine.resume(co, 2)
+        elseif event == "exit" then
+          coroutine.resume(co, 1)
+        end
+      end)
+
+      repeat
+        -- Waiting for a call to 'resume'
+        local ret = coroutine.yield()
+      -- print("yielded ", ret)
+      until ret ~= 0
+      cb(nil)
+    end)()
+  end
+
+  return picker(contents)
+end
+
+function M.find_note_by_tag(data)
+  data = data or {}
+  local tags = data.fargs or {}
+
+  if vim.tbl_isempty(tags) then
+    -- Check for visual selection.
+    local viz = get_visual_selection { strict = true }
+    if viz and #viz.lines == 1 and string.match(viz.selection, "^#?" .. TagCharsRequired .. "$") then
+      local tag = viz.selection
+
+      if vim.startswith(tag, "#") then
+        tag = string.sub(tag, 2)
+      end
+
+      tags = { tag }
+      -- else
+      --   -- Otherwise check for a tag under the cursor.
+      --   local tag = cursor_tag()
+      --   if tag then
+      --     tags = { tag }
+      --   end
+    end
+  end
+
+  if not vim.tbl_isempty(tags) then
+    RUtils.fzflua.exec_fzf_cmd_async(rg_cmds, {
+      prompt = "hello world",
+    })
+  else
+    collect_all_tags_async(tags, function(all_tags)
+      -- for _, x in pairs(all_tags) do
+      vim.schedule(function()
+        --   print(x)
+        -- end
+        list_tags_async(all_tags)
+      end)
+    end)
+  end
 end
 
 return M
