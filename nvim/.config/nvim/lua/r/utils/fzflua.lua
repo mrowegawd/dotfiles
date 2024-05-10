@@ -119,4 +119,85 @@ function M.send_cmds(opts, opts_cmds)
   )
 end
 
+function M.has_ansi_coloring(str)
+  return str:match "%[[%d;]-m"
+end
+
+function M.replace_refs(s)
+  local out, _ = string.gsub(s, "%[%[[^%|%]]+%|([^%]]+)%]%]", "%1")
+  out, _ = out:gsub("%[%[([^%]]+)%]%]", "%1")
+  out, _ = out:gsub("%[([^%]]+)%]%([^%)]+%)", "%1")
+  return out
+end
+
+function M.strip_ansi_coloring(str)
+  if not str then
+    return str
+  end
+  -- remove escape sequences of the following formats:
+  -- 1. ^[[34m
+  -- 2. ^[[0;34m
+  -- 3. ^[[m
+  return str:gsub("%[[%d;]-m", "")
+end
+
+function M.ansi_escseq_len(str)
+  local stripped = M.strip_ansi_coloring(str)
+  return #str - #stripped
+end
+
+function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
+  vim.validate {
+    str_cmds = { str_cmds, "string" },
+    fzf_opts = { fzf_opts, "table" },
+  }
+  return function()
+    local contents = function(cb)
+      coroutine.wrap(function()
+        local co = coroutine.running()
+
+        local function on_event(_, data, event)
+          if event == "stdout" then
+            for _, file in ipairs(data) do
+              if #file > 0 then
+                print(file)
+                cb(require("fzf-lua").make_entry.file(file, {}), function()
+                  coroutine.resume(co, 0)
+                end)
+              end
+            end
+          elseif event == "stderr" then
+            vim.cmd "echohl Error"
+            vim.cmd('echomsg "' .. table.concat(data, "") .. '"')
+            vim.cmd "echohl None"
+            coroutine.resume(co, 2)
+          elseif event == "exit" then
+            coroutine.resume(co, 1)
+          end
+        end
+
+        vim.fn.jobstart(str_cmds, {
+          on_stderr = on_event,
+          on_stdout = on_event,
+          on_exit = on_event,
+          -- cwd = cwd,
+        })
+
+        repeat
+          -- waiting for a call to 'resume'
+          local ret = coroutine.yield()
+        -- print("yielded", ret)
+        until ret ~= 0
+
+        -- process oldfiles
+
+        -- only when done procesing we call EOF once
+        cb(nil)
+      end)()
+    end
+
+    require("fzf-lua").fzf_exec(contents, fzf_opts)
+  end
+end
+
 return M

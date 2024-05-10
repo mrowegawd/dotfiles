@@ -198,41 +198,6 @@ return {
         end,
         desc = "Fzflua: plugin files",
       },
-      {
-        "<Leader>fQ",
-        function()
-          require("fzf-lua").quickfix {
-            prompt = "    ",
-            winopts = {
-              title = RUtils.fzflua.format_title("[QF] Select item", "󰈙"),
-            },
-          }
-        end,
-        desc = "Fzflua: select quickfix items",
-      },
-      {
-        "<Leader>fq",
-        function()
-          local path = require "fzf-lua.path"
-          local qf_items = vim.fn.getqflist()
-
-          local qf_ntbl = {}
-          for _, qf_item in pairs(qf_items) do
-            table.insert(qf_ntbl, path.normalize(vim.api.nvim_buf_get_name(qf_item.bufnr), vim.uv.cwd()))
-          end
-
-          local pcmd = [[rg --column --line-number -i --hidden --no-heading --color=always --smart-case ]]
-            .. table.concat(qf_ntbl, " ")
-            .. " -e "
-
-          return require("fzf-lua").live_grep_glob {
-            prompt = "  ",
-            winopts = { title = RUtils.fzflua.format_title("[QF] Grep", " ") },
-            cmd = pcmd,
-          }
-        end,
-        desc = "Fzflua: live grep qf items",
-      },
     },
     opts = function()
       local actions = require "fzf-lua.actions"
