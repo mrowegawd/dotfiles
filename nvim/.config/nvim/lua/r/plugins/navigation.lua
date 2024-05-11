@@ -241,7 +241,6 @@ return {
   -- OUTLINE.NVIM
   {
     "hedyhli/outline.nvim",
-    event = "LspAttach",
     cmd = "Outline",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })

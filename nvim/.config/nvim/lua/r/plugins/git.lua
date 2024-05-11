@@ -4,7 +4,7 @@ return {
   -- GH.NVIM
   {
     "ldelossa/gh.nvim",
-    event = "BufReadPre",
+    cmd = { "GHOpenPR", "GHOpenIssue", "GHSearchIssues" },
     dependencies = {
       {
         "ldelossa/litee.nvim",
@@ -41,7 +41,6 @@ return {
         desc = "Git: prev conflict [gitconflict]",
       },
     },
-    event = "LazyFile",
     opts = {
       default_commands = true, -- disable commands created by this plugin
     },

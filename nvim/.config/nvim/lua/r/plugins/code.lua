@@ -614,7 +614,6 @@ return {
   -- SCRATCH
   {
     "LintaoAmons/scratch.nvim",
-    event = "VeryLazy",
     cmd = { "Scratch", "ScratchOpen" },
     keys = {
       {

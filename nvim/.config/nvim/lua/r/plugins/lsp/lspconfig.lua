@@ -862,7 +862,6 @@ return {
   -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
-    event = "LazyFile",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       vim.fn["mkdp#util#install"]()

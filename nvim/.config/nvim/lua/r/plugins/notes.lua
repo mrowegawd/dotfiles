@@ -281,7 +281,6 @@ return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    event = "LazyFile",
     ft = "org",
     keys = {
       {
@@ -291,8 +290,21 @@ return {
         end,
         desc = "Note: open list orgtodos orgmode [orgmode]",
       },
-      { "<Localleader>fc", desc = "Note: capture note [orgmode]" },
-      { "<Localleader>fa", desc = "Note: open agenda orgmode [orgmode]" },
+      {
+        "<Localleader>fc",
+        function()
+          require("orgmode").action "capture.prompt"
+        end,
+        desc = "Note: capture note [orgmode]",
+      },
+      {
+        "<Localleader>fa",
+        function()
+          require("orgmode").action "agenda.prompt"
+        end,
+        desc = "Note: open agenda orgmode [orgmode]",
+      },
+      -- { "<Localleader>fa", desc = "Note: open agenda orgmode [orgmode]" },
     },
     dependencies = {
       "hrsh7th/nvim-cmp",
@@ -793,7 +805,6 @@ return {
   -- HEADLINES.NVIM
   {
     "lukas-reineke/headlines.nvim",
-    event = "VeryLazy",
     ft = { "markdown", "norg", "rmd", "org" },
     opts = function()
       Highlight.plugin("headlines", {

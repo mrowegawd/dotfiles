@@ -102,7 +102,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
-      "stevearc/overseer.nvim",
     },
     opts = {
       save_dir = RUtils.config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
