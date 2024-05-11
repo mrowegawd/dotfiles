@@ -415,11 +415,11 @@ RUtils.map.nnoremap("<ESC>", function()
 end, { desc = "Misc: magic escape" })
 
 RUtils.map.nnoremap("<Leader>oo", function()
-  return RUtils.markdown.followLink(false)
+  return RUtils.markdown.follow_link(false)
 end, { desc = "Misc: magic follow link" })
 
 RUtils.map.vnoremap("<Leader>oo", function()
-  return RUtils.markdown.followLink(true)
+  return RUtils.markdown.follow_link(true)
 end, { desc = "Misc: magic follow link (visual)" })
 
 --  ╭──────────────────────────────────────────────────────────╮
@@ -478,8 +478,7 @@ RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = t
 
 RUtils.map.nnoremap("<F1>", function()
   -- dihapus saja ini
-  local Headline = require "orgmode"
-  Headline:reload(vim.fn.expand "<afile>:p")
+  RUtils.markdown.find_note_by_tag()
 end)
 
 local checkconceallevel = false
