@@ -277,6 +277,10 @@ end
 local data_tags_table = {}
 local data_tags_out = {}
 local data_title_out = {}
+
+-- local data_tags_table_is_set = {}
+-- local found_yo = {}
+
 local insert_tags = {}
 
 local builtin = require "fzf-lua.previewer.builtin"
@@ -466,15 +470,8 @@ local function picker(contents)
         require("fzf-lua").actions.resume()
       end,
 
-      ["ctrl-t"] = function(selected, _)
-        if #insert_tags > 1 then
+      ["ctrl-t"] = function()
           M.find_note_by_tag { fargs = insert_tags }
-        else
-          local sel_tag = vim.split(selected[1], "|")
-          sel_tag = vim.split(sel_tag[2], " ")
-          M.find_note_by_tag { fargs = { sel_tag[3] } }
-        end
-
         insert_tags = {}
       end,
 
@@ -553,8 +550,9 @@ local function picker(contents)
   })
 end
 
-local function list_tags_async(all_tags)
-  local function cocating()
+local function list_tags_async(all_tags, is_set)
+  is_set = is_set or false
+  local function concatting_tags()
     local search_terms = {}
     for _, t in pairs(all_tags) do
       if string.len(t) > 0 then
@@ -618,9 +616,34 @@ local function list_tags_async(all_tags)
 
                       data_tags.title = title_s
                       data_tags_table[#data_tags_table + 1] = data_tags
+                      -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
 
                       local fzf_str =
                         string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+                      --
+                      -- if is_set then
+                      --   local function check_tbl_elementyo(tbl, element)
+                      --     for _, x in pairs(tbl) do
+                      --       if x.title == element then
+                      --         return true
+                      --       end
+                      --     end
+                      --     return false
+                      --   end
+                      --
+                      --   for _, t in pairs(all_tags) do
+                      --     for _, x in pairs(data_tags_table_is_set) do
+                      --       if t == x.tag then
+                      --         if not check_tbl_elementyo(found_yo, x.title) then
+                      --           found_yo[#found_yo + 1] = data_tags
+                      --           fzf_str =
+                      --             string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+                      --         end
+                      --       end
+                      --     end
+                      --   end
+                      -- end
+
                       cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
                         coroutine.resume(co, 0)
                       end)
@@ -652,7 +675,8 @@ local function list_tags_async(all_tags)
   return picker(contents)
 end
 
-function M.find_note_by_tag(data)
+function M.find_note_by_tag(data, is_set)
+  is_set = is_set or false
   data = data or {}
   local tags = data.fargs or {}
 
@@ -677,10 +701,11 @@ function M.find_note_by_tag(data)
   end
 
   if not vim.tbl_isempty(tags) then
-    RUtils.fzflua.exec_fzf_cmd_async(rg_cmds, {
-      prompt = "hello world",
-    })
+    list_tags_async(tags, true)
+  -- elseif not vim.tbl_isempty(tags) and is_set then
+  --   list_tags_async(tags, is_set)
   else
+    insert_tags = {}
     collect_all_tags_async(tags, function(all_tags)
       vim.schedule(function()
         list_tags_async(all_tags)
