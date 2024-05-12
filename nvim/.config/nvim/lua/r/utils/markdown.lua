@@ -469,7 +469,87 @@ local function picker(contents)
       end,
 
       ["ctrl-t"] = function(selected, _)
-        print(selected[1])
+        if #insert_tags > 1 then
+          M.find_note_by_tag { fargs = insert_tags }
+        else
+          local sel_tag = vim.split(selected[1], "|")
+          sel_tag = vim.split(sel_tag[2], " ")
+          M.find_note_by_tag { fargs = { sel_tag[3] } }
+        end
+
+        insert_tags = {}
+      end,
+
+      ["ctrl-r"] = function()
+        insert_tags = {}
+        M.find_note_by_tag()
+      end,
+
+      ["alt-q"] = function(selected, _)
+        -- local function check_tbl_element(tbl, element)
+        --   for _, x in pairs(tbl) do
+        --     if x["text"] then
+        --       local str_s = string.match(x.text, "-%s(%w+[A-Za-z0-9_/-]*[A-Za-z0-9]+)")
+        --       if str_s == element then
+        --         return true
+        --       end
+        --     end
+        --   end
+        --   return false
+        -- end
+
+        local function check_tbl_element(tbl, element)
+          for _, x in pairs(tbl) do
+            if x["text"] == element then
+                return true
+              end
+            end
+          return false
+        end
+
+        local items = {}
+        if #selected > 1 then
+          for _, sel in pairs(selected) do
+            local sel_str = vim.split(sel, "|")[1]
+
+            for _, tbl_tags in pairs(data_tags_table) do
+              if tbl_tags.title == sel_str then
+                if not check_tbl_element(items, tbl_tags.title) then
+                  items[#items + 1] = {
+                    filename = tbl_tags.path,
+                    lnum = tbl_tags.line_number,
+                    col = 1,
+                    text = tbl_tags.title,
+                  }
+                end
+              end
+            end
+          end
+        else
+          local sel_str = vim.split(selected[1], "|")[1]
+          for _, tbl_tags in pairs(data_tags_table) do
+            if tbl_tags.title == sel_str then
+              if not check_tbl_element(items, tbl_tags.title) then
+                items[#items + 1] = {
+                  filename = tbl_tags.path,
+                  lnum = tbl_tags.line_number,
+                  col = 1,
+                  text = tbl_tags.title,
+                }
+                break
+              end
+            end
+          end
+        end
+
+        local what = {
+          idx = "$",
+          items = items,
+          title = vim.fn.getqflist { title = 0 },
+        }
+
+        vim.fn.setqflist({}, "r", what)
+        vim.cmd "copen"
       end,
     },
   })
@@ -502,8 +582,12 @@ local function list_tags_async(all_tags)
   local rg_optsc = "--no-config --json --type=md --ignore-case"
 
   local line_e = ""
-  for _, x in pairs(cocating()) do
+  if #all_tags > 1 then
+    for _, x in pairs(concatting_tags()) do
     line_e = line_e .. string.format(' -e "%s" ', x)
+  end
+  else
+    line_e = string.format(' -e "%s" ', "^\\s\\s*- " .. all_tags[1] .. "$")
   end
 
   local cmd = "rg " .. rg_optsc .. line_e .. RUtils.config.path.wiki_path
@@ -600,10 +684,7 @@ function M.find_note_by_tag(data)
     })
   else
     collect_all_tags_async(tags, function(all_tags)
-      -- for _, x in pairs(all_tags) do
       vim.schedule(function()
-        --   print(x)
-        -- end
         list_tags_async(all_tags)
       end)
     end)
