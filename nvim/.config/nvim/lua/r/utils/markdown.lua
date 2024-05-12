@@ -177,10 +177,8 @@ end
 -- local TagCharsOptional = "[A-Za-z0-9_/-]*"
 local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
 
-local rg = "rg"
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
 rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
-local rg_cmds = rg .. " " .. rg_opts
 
 -- local cursor_tag = function(line, col)
 --   local current_line = line and line or vim.api.nvim_get_current_line()
@@ -545,7 +543,7 @@ local function picker(contents)
         local what = {
           idx = "$",
           items = items,
-          title = vim.fn.getqflist { title = 0 },
+          title = "Tags Note Random",
         }
 
         vim.fn.setqflist({}, "r", what)
