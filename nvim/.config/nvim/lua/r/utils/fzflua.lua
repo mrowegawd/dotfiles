@@ -200,4 +200,28 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
   end
 end
 
+local nbsp = "\xe2\x80\x82" -- "\u{2002}"
+
+local function __lastIndexOf(haystack, needle)
+  local i = haystack:match(".*" .. needle .. "()")
+  if i == nil then
+    return nil
+  else
+    return i - 1
+  end
+end
+
+local function __stripBeforeLastOccurrenceOf(str, sep)
+  local idx = __lastIndexOf(str, sep) or 0
+  return str:sub(idx + 1), idx
+end
+
+function M.__strip_str(selected)
+  local pth = M.strip_ansi_coloring(selected)
+  if pth == nil then
+    return
+  end
+  return __stripBeforeLastOccurrenceOf(pth, nbsp)
+end
+
 return M
