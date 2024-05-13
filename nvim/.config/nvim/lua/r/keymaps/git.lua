@@ -160,14 +160,29 @@ end
 
 local is_gitsigns_attach = true
 
+local function visual_operation(operator)
+  local visual_range = { start_pos = vim.fn.line "v", end_pos = vim.fn.line "." }
+  if visual_range.start_pos > visual_range.end_pos then
+    local tmp = visual_range.start_pos
+    visual_range.start_pos = visual_range.end_pos
+    visual_range.end_pos = tmp
+    require("gitsigns")[operator] { visual_range.start_pos, visual_range.end_pos }
+  end
+end
+
 function M.gitsigns()
   local gs = require "gitsigns"
 
-  RUtils.map.vnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git: stage hunk (visual) [gitsigns]" })
+  RUtils.map.vnoremap("<Leader>gha", function()
+    visual_operation "stage_hunk"
+  end, { desc = "Git: stage hunk (visual) [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gha", gs.stage_hunk, { desc = "Git: stage hunk [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghA", gs.stage_buffer, { desc = "Git: stage hunk buffer [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghr", gs.reset_hunk, { desc = "Git: reset hunk [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghu", gs.undo_stage_hunk, { desc = "Git: undo stage hunk [gitsigns]" })
+  RUtils.map.vnoremap("<Leader>ghu", function()
+    visual_operation "undo_stage_hunk"
+  end, { desc = "Git: undo stage hunk (visual) [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git: preview hunk [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git: select all hunks and send to qf [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git: diffthis [gitsigns]" })
