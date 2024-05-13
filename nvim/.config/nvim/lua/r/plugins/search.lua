@@ -265,8 +265,8 @@ return {
             ["<a-p>"] = "toggle-preview",
             ["<c-p>"] = "toggle-preview",
 
-            ["<a-down>"] = "preview-page-down",
-            ["<a-up>"] = "preview-page-up",
+            ["<c-d>"] = "preview-page-down",
+            ["<c-u>"] = "preview-page-up",
           },
         },
         files = {
@@ -277,6 +277,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = { ["--header"] = [[Ctrl-y: copy/yank path | Ctrl-e: mode rgflow]] },
           fd_opts = fd_opts,
+          git_icons = false,
           formatter = "path.filename_first",
           actions = {
             ["default"] = function(selected, opts)
@@ -1028,8 +1029,8 @@ return {
               ["<c-f>"] = actions.results_scrolling_up,
               ["<c-b>"] = actions.results_scrolling_down,
 
-              ["<a-up>"] = actions.preview_scrolling_up,
-              ["<a-down>"] = actions.preview_scrolling_down,
+              ["<c-u>"] = actions.preview_scrolling_up,
+              ["<c-d>"] = actions.preview_scrolling_down,
 
               -- ["<c-l>"] = false, -- use `false` to disable mapping
 
