@@ -26,6 +26,21 @@ if [[ "$select" == "Grep string in file" ]]; then
 			--ansi --layout=reverse -xC -w '80%' -h '80%' --header "$select" |
 			cut -d':' -f1
 	)"
+
+	if not_in_tmux; then
+		echo "yeah"
+	else
+		# notify-send "$res"
+		tmux select-pane -R
+		current_pane=$(tmux display-message -p '#{pane_id}')
+		program=$(tmux display -p '#{pane_current_command}')
+		if [ "$program" = "nvim" ]; then
+			tmux send-keys -t "$current_pane" ":e ${res}" Enter
+		else
+			tmux send-keys -t "$current_pane" "nvim ${res}" Enter
+		fi
+	fi
+
 elif [[ "$select" == "Search name of file" ]]; then
 	res="$(
 		RG_PREFIX="fd --color=never --type f --hidden --follow --exclude .git "
