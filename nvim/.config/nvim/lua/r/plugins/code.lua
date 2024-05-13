@@ -3,6 +3,12 @@ local Highlight = require "r.settings.highlights"
 local callme = 0
 
 return {
+  {
+    "Saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
+    config = true,
+    -- { name = "crates" },
+  },
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
@@ -23,14 +29,9 @@ return {
       "lukas-reineke/cmp-under-comparator",
       "petertriho/cmp-git",
       "lukas-reineke/cmp-rg",
-      "rcarriga/cmp-dap",
+      -- "rcarriga/cmp-dap",
       "saadparwaiz1/cmp_luasnip",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
-      {
-        "Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
-        config = true,
-      },
       {
         "L3MON4D3/LuaSnip",
         ---@diagnostic disable-next-line: undefined-global
@@ -301,7 +302,7 @@ return {
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-          -- ["<c-l>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
+          ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
         sources = { -- remember: do not use `group_index`,
           {
@@ -339,7 +340,6 @@ return {
             },
           },
           { name = "path", max_item_count = 10 },
-          { name = "crates" },
         },
       }
 
@@ -644,7 +644,7 @@ return {
     dependencies = {
       {
         "vhyrro/luarocks.nvim",
-        ots = {
+        opts = {
           rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" }, -- Specify LuaRocks packages to install
         },
       },
