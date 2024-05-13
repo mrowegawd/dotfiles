@@ -471,6 +471,11 @@ local function picker(contents)
       end,
 
       ["ctrl-t"] = function()
+        if #insert_tags == 0 then
+          print "add tags first"
+          require("fzf-lua").actions.resume()
+          return
+        end
           M.find_note_by_tag { fargs = insert_tags }
         insert_tags = {}
       end,
