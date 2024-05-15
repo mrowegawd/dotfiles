@@ -2,7 +2,7 @@ return {
   -- DASHBOARD.NVIM
   {
     "nvimdev/dashboard-nvim",
-    event = "VimEnter",
+    lazy = false, -- As https://github.com/nvimdev/dashboard-nvim/pull/450, dashboard-nvim shouldn't be lazy-loaded to properly handle stdin.
     opts = function()
       if vim.o.filetype == "lazy" then
         vim.cmd.close()

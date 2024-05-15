@@ -39,6 +39,7 @@ return {
       RUtils.cmd.augroup("DetachMiniIndentScope", {
         event = { "FileType" },
         pattern = {
+          "DiffviewFiles",
           "NeogitCommitMessage",
           "NeogitPopup",
           "NeogitStatus",

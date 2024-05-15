@@ -128,7 +128,7 @@ function M.statuscolumn()
     -- Right: number or fold
     components[2] = is_file and M.icon(left or right) or big_spaces .. " "
 
-    if not vim.tbl_contains({ "norg", "markdown", "gitcommit" }, vim.bo.filetype) then
+    if not vim.tbl_contains({ "norg", "markdown", "gitcommit", "DiffviewFiles" }, vim.bo.filetype) then
       components[4] = M.icon({ text = separator, texthl = "MySeparator" }, 1, big_spaces)
       -- components[5] = M.icon(M.get_mark(buf, vim.v.lnum) or fold) or big_spaces
     else

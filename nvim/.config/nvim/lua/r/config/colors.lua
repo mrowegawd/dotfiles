@@ -43,7 +43,8 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- { String = { italic = true } },
     -- { ["@lsp.type.variable"] = { clear = true } },
-    -- { ["@lsp.type.parameter"] = { italic = true, fg = { from = "Normal" } } },
+    { ["@lsp.type.parameter"] = { italic = true, bold = true, fg = { from = "Normal" } } },
+    { ["@lsp.typemod.function.declaration"] = { link = "Identifier" } } ,
     -- { ['@lsp.typemod.method'] = { link = '@method' } },
     -- { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
     -- { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
@@ -57,7 +58,7 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- TREESITTER
     -----------------------------------------------------------------------
-    -- { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
+    { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
     -- { ['@type.qualifier'] = { inherit = '@keyword', italic = true } },
     -- { ["@variable"] = { clear = true } },
     -- { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
@@ -122,10 +123,6 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- DIAGNOSTIC
     -----------------------------------------------------------------------
-    { DiagnosticHint = { bg = "NONE" } },
-    { DiagnosticError = { bg = "NONE" } },
-    { DiagnosticWarning = { bg = "NONE" } },
-    { DiagnosticInfo = { bg = "NONE" } },
     { DiagnosticSignError = { bg = { from = "Normal", attr = "bg" } } },
     { DiagnosticSignWarn = { bg = { from = "Normal", attr = "bg" } } },
     { DiagnosticSignInfo = { bg = { from = "Normal", attr = "bg" } } },
@@ -143,12 +140,17 @@ local general_overrides = function()
     { DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" } },
     { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
     { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
+
+    { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
+    { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
+    { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
+    { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
+
     {
       DiagnosticError = {
         fg = { from = "DiagnosticSignError", attr = "fg" },
         bg = { from = "DiagnosticSignError", attr = "fg", alter = -0.7 },
         italic = true,
-        -- undercurl = false,
       },
     },
     {
@@ -156,7 +158,6 @@ local general_overrides = function()
         fg = { from = "DiagnosticSignWarn", attr = "fg" },
         bg = { from = "DiagnosticSignWarn", attr = "fg", alter = -0.7 },
         italic = true,
-        -- undercurl = false,
       },
     },
     {
@@ -164,7 +165,6 @@ local general_overrides = function()
         fg = { from = "DiagnosticSignHint", attr = "fg" },
         bg = { from = "DiagnosticSignHint", attr = "fg", alter = -0.7 },
         italic = true,
-        -- undercurl = false,
       },
     },
     {
@@ -172,7 +172,6 @@ local general_overrides = function()
         fg = { from = "DiagnosticSignInfo", attr = "fg" },
         bg = { from = "DiagnosticSignInfo", attr = "fg", alter = -0.7 },
         italic = true,
-        -- undercurl = false,
       },
     },
     -----------------------------------------------------------------------
@@ -397,6 +396,13 @@ local function colorscheme_overrides()
     ["gruvbox-material"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
+
+      { DiagnosticVirtualTextWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, sp = "NONE", undercurl = false } },
+      { DiagnosticVirtualTextInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, sp = "NONE", undercurl = false } },
+      {
+        DiagnosticVirtualTextError = { fg = { from = "DiagnosticError", attr = "fg" }, sp = "NONE", undercurl = false },
+      },
+      { DiagnosticVirtualTextHint = { fg = { from = "DiagnosticHint", attr = "fg" }, sp = "NONE", undercurl = false } },
 
       { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
       { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
@@ -874,10 +880,6 @@ local function colorscheme_overrides()
     ["vscode_modern"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
-      { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
-      { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
-      { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
-      { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
 
       {
         MyParentHint = {

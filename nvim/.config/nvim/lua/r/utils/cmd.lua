@@ -106,6 +106,59 @@ function M.rm_duplicates_tbl(arr)
   return newArray
 end
 
+function M.normalize_return(str)
+  ---@diagnostic disable-next-line: redefined-local
+  local str_slice = string.gsub(str, "\n", "")
+  local res = vim.split(str_slice, "\n")
+  if res[1] then
+    return res[1]
+  end
+
+  return str_slice
+end
+
+function M.check_tbl_element(tbl, element)
+  for _, x in pairs(tbl) do
+    if x == element then
+      return true
+    end
+  end
+  return false
+end
+
+function M.remove_duplicates_tbl(old_tbl)
+  local new_tbl = {}
+  for _, x in pairs(old_tbl) do
+    if not M.check_tbl_element(new_tbl, x) then
+      table.insert(new_tbl, x)
+    end
+  end
+
+  return new_tbl
+end
+
+local rstrip_whitespace = function(str)
+  str = string.gsub(str, "%s+$", "")
+  return str
+end
+
+function M.lstrip_whitespace(str, limit)
+  if limit ~= nil then
+    local num_found = 0
+    while num_found < limit do
+      str = string.gsub(str, "^%s", "")
+      num_found = num_found + 1
+    end
+  else
+    str = string.gsub(str, "^%s+", "")
+  end
+  return str
+end
+
+function M.strip_whitespace(str)
+  return rstrip_whitespace(M.lstrip_whitespace(str))
+end
+
 function M.p_table(map)
   return setmetatable(map, {
     __index = function(tbl, key)

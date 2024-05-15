@@ -146,11 +146,11 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<Left>"] = "git_add_file",
-              ["gA"] = "git_add_all",
-              ["<Right>"] = "git_unstage_file",
-              ["gr"] = "git_revert_file",
-              ["gc"] = "git_commit",
+              ["<Leader>gha"] = "git_add_file",
+              ["<Leader>ghA"] = "git_add_all",
+              ["<Leader>ghu"] = "git_unstage_file",
+              ["<Leader>ghr"] = "git_revert_file",
+              ["<Leader>gc"] = "git_commit",
               ["gp"] = "noop",
               ["gn"] = "noop",
               ["gg"] = "noop",

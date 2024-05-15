@@ -577,6 +577,7 @@ return {
   -- IMAGE.NVIM
   {
     "3rd/image.nvim",
+    -- event = "LazyFile",
     ft = { "markdown", "norg", "oil" },
     enabled = function()
       if vim.g.neovide then
@@ -633,12 +634,12 @@ return {
   {
     "epwalsh/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
-    event = {
-      -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-      -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-      fmt("BufReadPre %s", RUtils.config.path.wiki_path),
-      fmt("BufNewFile %s", RUtils.config.path.wiki_path),
-    },
+    -- event = {
+    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+    --   fmt("BufReadPre %s", RUtils.config.path.wiki_path),
+    --   fmt("BufNewFile %s", RUtils.config.path.wiki_path),
+    -- },
     keys = {
       {
         "<Localleader>fg",
@@ -655,13 +656,29 @@ return {
         desc = "Note: live grep notes [obsidian]",
       },
       {
+        "<Localleader>fg",
+        function()
+          return fzf_lua.live_grep_glob {
+            prompt = "  ",
+            query = vim.fn.expand "<cword>",
+            cwd = RUtils.config.path.wiki_path,
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
+            winopts = {
+              title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
+            },
+          }
+        end,
+        desc = "Note: live grep notes (visual) [obsidian]",
+        mode = "v",
+      },
+      {
         "<Localleader>ff",
         function()
           return fzf_lua.files {
             prompt = "  ",
             cwd = RUtils.config.path.wiki_path,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
+            rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]],
 
             winopts = {
               -- fullscreen = true,
@@ -698,7 +715,7 @@ return {
       {
         "<Localleader>ft",
         function()
-          RUtils.neorg.find_by_tags()
+          RUtils.markdown.find_note_by_tag()
         end,
         desc = "Note: find note files by tags [obsidian]",
       },
@@ -761,15 +778,16 @@ return {
 
       preferred_link_style = "markdown",
 
-      -- note_frontmatter_func = function(note)
-      --   local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-      --   if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
-      --     for k, v in pairs(note.metadata) do
-      --       out[k] = v
-      --     end
-      --   end
-      --   return out
-      -- end,
+      note_frontmatter_func = function(note)
+        local out = { id = note.id, aliases = note.aliases, tags = note.tags }
+        if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
+          for k, v in pairs(note.metadata) do
+            print(k, v)
+            out[k] = v
+          end
+        end
+        return out
+      end,
 
       completion = {
         nvim_cmp = true,

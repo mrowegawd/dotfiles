@@ -2,76 +2,23 @@ return {
   -- TREESITTER
   {
     "nvim-treesitter/nvim-treesitter",
-    -- branch = "main",
     version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
     event = { "LazyFile", "VeryLazy" },
-    cmd = { "TSUpdateSync", "TSUdate", "TSIntsall" },
-    --  TODO: Check this queries https://github.com/helix-editor/helix/blob/d5e6749fa250f3a7be75c81c7b0611e3c3221d63/runtime/queries/php/highlights.scm
-    --  make more readable
-
-    init = function()
-      vim.api.nvim_create_augroup("treesitter_start", { clear = true })
-      vim.api.nvim_create_autocmd("User", {
-        group = "treesitter_start",
-        pattern = "TreeSitterStart",
-        callback = function(ctx)
-          local buf = ctx.data.bufnr
-          if vim.b[buf].treesitter_disable then
-            return
-          end
-          local lines = vim.api.nvim_buf_line_count(buf)
-          if vim.b[buf].is_big_file or lines > 10000 then
-            vim.bo[buf].indentexpr = ""
-            return
-          end
-          vim.bo[buf].indentexpr = [[v:lua.require('nvim-treesitter').indentexpr()]]
-        end,
-      })
+    lazy = vim.fn.argc(-1) == 0, -- load treesitter early when opening a file from the cmdline
+    init = function(plugin)
+      -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
+      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
+      -- no longer trigger the **nvim-treesitter** module to be loaded in time.
+      -- Luckily, the only things that those plugins need are the custom queries, which we make available
+      -- during startup.
+      require("lazy.core.loader").add_to_rtp(plugin)
+      require "nvim-treesitter.query_predicates"
     end,
-
-    -- init = function(plugin)
-    --   -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-    --   -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-    --   -- no longer trigger the **nvim-treeitter** module to be loaded in time.
-    --   -- Luckily, the only thins that those plugins need are the custom queries, which we make available
-    --   -- during startup.
-    --   require("lazy.core.loader").add_to_rtp(plugin)
-    --   require "nvim-treesitter.query_predicates"
-    -- end,
-    -- keys = {
-    --   { "v", desc = "Increment selection" },
-    --   { "V", desc = "Decrement selection", mode = "x" },
-    --   { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "o" },
-    --   { "m", [[:<C-U>lua require('tsht').nodes()<CR>]], desc = "Treesitter: jump nodes", mode = "x" },
-    -- },
-    dependencies = {
-      -- { "mfussenegger/nvim-treehopper" },
-      {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        config = function()
-          -- When in diff mode, we want to use the default
-          -- vim text objects c & C instead of the treesitter ones.
-          local move = require "nvim-treesitter.textobjects.move" ---@type table<string,fun(...)>
-          local configs = require "nvim-treesitter.configs"
-          for name, fn in pairs(move) do
-            if name:find "goto" == 1 then
-              move[name] = function(q, ...)
-                if vim.wo.diff then
-                  local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
-                  for key, query in pairs(config or {}) do
-                    if q == query and key:find "[%]%[][cC]" then
-                      vim.cmd("normal! " .. key)
-                      return
-                    end
-                  end
-                end
-                return fn(q, ...)
-              end
-            end
-          end
-        end,
-      },
+    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    keys = {
+      { "<c-space>", desc = "Misc: increment selection" },
+      { "<bs>", desc = "Misc: iecrement selection", mode = "x" },
     },
     config = function()
       require("nvim-treesitter.configs").setup {
@@ -103,6 +50,8 @@ return {
           "fish",
 
           "yaml",
+
+          "kdl", -- zellij
 
           "json",
           "jsonc",
@@ -171,12 +120,12 @@ return {
           end,
         },
         incremental_selection = {
-          enable = false,
-          -- disable = buf_is_large,
+          enable = true,
           keymaps = {
-            init_selection = false,
-            node_incremental = "v",
-            node_decremental = "V",
+            init_selection = "<C-space>",
+            node_incremental = "<C-space>",
+            scope_incremental = false,
+            node_decremental = "<bs>",
           },
         },
 
@@ -223,6 +172,33 @@ return {
           },
         },
       }
+    end,
+  },
+  -- NVIM-TREESITTER-TEXTOBJECTS
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    lazy = true,
+    config = function()
+      -- When in diff mode, we want to use the default
+      -- vim text objects c & C instead of the treesitter ones.
+      local move = require "nvim-treesitter.textobjects.move" ---@type table<string,fun(...)>
+      local configs = require "nvim-treesitter.configs"
+      for name, fn in pairs(move) do
+        if name:find "goto" == 1 then
+          move[name] = function(q, ...)
+            if vim.wo.diff then
+              local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
+              for key, query in pairs(config or {}) do
+                if q == query and key:find "[%]%[][cC]" then
+                  vim.cmd("normal! " .. key)
+                  return
+                end
+              end
+            end
+            return fn(q, ...)
+          end
+        end
+      end
     end,
   },
   -- NVIM-TREESITTER-CONTEXT

@@ -651,6 +651,7 @@ local function find_tags_async(term, callback, opts)
     -- Gather results in path order.
     for _, path in ipairs(paths) do
       local tag_locs = path_to_tag_loc[path]
+      -- print(vim.inspect(tag_locs))
       if tag_locs ~= nil then
         table.sort(tag_locs, function(a, b)
           return a.line < b.line

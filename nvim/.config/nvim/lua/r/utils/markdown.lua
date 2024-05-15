@@ -557,6 +557,7 @@ end
 
 local function list_tags_async(all_tags, is_set)
   is_set = is_set or false
+
   local function concatting_tags()
     local search_terms = {}
     for _, t in pairs(all_tags) do
