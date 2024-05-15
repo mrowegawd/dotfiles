@@ -231,8 +231,12 @@ function M.neorg_mappings_ft(bufnr)
                   -- remove space
                   local path_linkheading = string.gsub(path_heading[#path_heading], "^%s", "")
 
+                  local path_str = RUtils.fzflua.__strip_str(path_file)
+                  if path_str == nil then
+                    return
+                  end
                   vim.api.nvim_put({
-                    "[[" .. path_file .. "#" .. path_linkheading .. "]]",
+                    "[[" .. path_str .. "#" .. path_linkheading .. "]]",
                   }, "c", false, true)
                 end
               end,
