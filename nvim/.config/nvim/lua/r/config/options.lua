@@ -4,8 +4,6 @@ g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
 g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
 g.os = loop.os_uname().sysname
 
-local plat = require "r.utils.platform"
-
 vim.g.open_command = g.os == "Darwin" and "open" or "xdg-open"
 vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
 vim.g.work_dir = g.projects_dir .. "/work"
@@ -25,45 +23,49 @@ opt.cursorline = true
 opt.inccommand = "split"
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
 opt.fileformats = { "unix", "mac", "dos" }
-opt.clipboard:append "unnamed"
-opt.clipboard:append "unnamedplus"
-if plat.is_mac then
-  vim.g.clipboard = {
-    name = "macOS-clipboard",
-    copy = {
-      ["+"] = "pbcopy",
-      ["*"] = "pbcopy",
-    },
-    paste = {
-      ["+"] = "pbpaste",
-      ["*"] = "pbpaste",
-    },
-    cache_enabled = 0,
-  }
-elseif plat.is_wsl then
-  -- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
-  --NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
-  vim.g.clipboard = {
-    -- name = "win32yank-wsl",
-    -- copy = {
-    --   ["+"] = "win32yank.exe -i --crlf",
-    --   ["*"] = "win32yank.exe -i --crlf",
-    -- },
-    -- paste = {
-    --   ["+"] = "win32yank.exe -o --lf",
-    --   ["*"] = "win32yank.exe -o --lf",
-    -- },
-    -- cache_enabled = 0,
-    --
-    name = "wsl clipboard",
-    copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
-    paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
-    cache_enabled = true,
-  }
-end
+-- only set clipboard if not in ssh, to make sure the OSC 52
+-- integration works automatically. Requires Neovim >= 0.10.0
+opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+-- local plat = require "r.utils.platform"
+-- if plat.is_mac then
+--
+--   vim.g.clipboard = {
+--     name = "macOS-clipboard",
+--     copy = {
+--       ["+"] = "pbcopy",
+--       ["*"] = "pbcopy",
+--     },
+--     paste = {
+--       ["+"] = "pbpaste",
+--       ["*"] = "pbpaste",
+--     },
+--     cache_enabled = 0,
+--   }
+-- elseif plat.is_wsl then
+--   -- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
+--   --NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
+--   vim.g.clipboard = {
+--     -- name = "win32yank-wsl",
+--     -- copy = {
+--     --   ["+"] = "win32yank.exe -i --crlf",
+--     --   ["*"] = "win32yank.exe -i --crlf",
+--     -- },
+--     -- paste = {
+--     --   ["+"] = "win32yank.exe -o --lf",
+--     --   ["*"] = "win32yank.exe -o --lf",
+--     -- },
+--     -- cache_enabled = 0,
+--     --
+--     name = "wsl clipboard",
+--     copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
+--     paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
+--     cache_enabled = true,
+--   }
+-- end
 -- Exclude usetab as we do not want to jump to buffers in already open tabs
 -- do not use split or vsplit to ensure we don't open any new windows
 -- opt.switchbuf = "useopen,uselast"
+--
 opt.encoding = "utf-8"
 opt.conceallevel = 2
 opt.infercase = true -- Infer cases in keyword completion
@@ -151,6 +153,9 @@ opt.shiftround = true -- Always indent/outdent to nearest tabstop
 opt.expandtab = true -- Convert all tabs that are typed into spaces
 opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 
+opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
+opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
+
 -- c: auto-wrap comments using textwidth
 -- r: auto-insert the current comment leader after hitting <Enter>
 -- o: auto-insert the current comment leader after hitting 'o' or 'O'
@@ -189,7 +194,7 @@ opt.equalalways = false -- New vim windows created won't make everything back to
 -----------------------------------------------------------------------------//
 opt.fillchars = {
   eob = " ", -- suppress ~ at endofbuffer
-  diff = " ", -- alternatives = ⣿ ░ ╱
+  diff = "╱", -- alternatives = ⣿ ░ ╱
   -- msgsep = " ", -- alternatives: ‾ ─
   --
   -- fold = "▶",
@@ -199,8 +204,6 @@ opt.fillchars = {
   foldclose = "", -- '▶'
   foldsep = " ",
 }
-
--- vim.opt.fillchars = "fold: "
 
 opt.foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil -- show foldcolumn in nvim 0.9
 opt.foldlevelstart = 99 -- start with all code unfolded
@@ -310,28 +313,21 @@ opt.diffopt = opt.diffopt
   }
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 
-opt.smoothscroll = true
-
 -- HACK: causes freezes on <= 0.9, so only enable on >= 0.10 for now
 if vim.fn.has "nvim-0.10" == 1 then
-  vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
-  vim.opt.foldtext = ""
+  opt.foldmethod = "expr"
+  opt.smoothscroll = true
+  opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+  opt.foldtext = ""
 else
-  vim.opt.foldmethod = "indent"
+  opt.foldmethod = "indent"
 end
 
-opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
-opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
-
--- Fix markdown indentation settings
-vim.g.markdown_recommended_style = 0
-
 -- Disable providers we do not care a about
-vim.g.loaded_python_provider = 0 -- for python 2
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
+vim.g.loaded_python_provider = 0 -- for python 2
 -- vim.g.loaded_python_provider = 0
 -- vim.g.loaded_python3_provider = 0
 vim.g.python3_host_prog = os.getenv "HOME" .. "/.config/neovim3/bin/python"
@@ -410,7 +406,7 @@ vim.filetype.add {
 package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
 package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
 
--- forplugin: azabiong/vim-highlighter
+-- Plugin: azabiong/vim-highlighter
 -- delete jika tidak dibutuhkan or commented
 vim.g.HiSet = ""
 vim.g.HiErase = ""
@@ -421,3 +417,6 @@ vim.g.HiFindTool = "rg -H --color=never --no-heading --column --smart-case"
 
 -- forplugin: ggandor/lightspeed.nvim
 vim.g.lightspeed_no_default_keymaps = true
+
+-- Fix markdown indentation settings
+vim.g.markdown_recommended_style = 0

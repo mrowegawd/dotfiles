@@ -3,12 +3,13 @@
 
   // ui
   "editor.minimap.enabled": false,
-  "window.commandCenter": false,
-  "editor.scrollbar.vertical": "auto",
-  "window.titleBarStyle": "custom",
-  "editor.scrollbar.horizontal": "auto",
-  "workbench.editor.showTabs": "none",
   "editor.overviewRulerBorder": false,
+  "editor.scrollbar.horizontal": "auto",
+  "editor.scrollbar.vertical": "auto",
+  "editor.guides.indentation": false,
+  "window.commandCenter": false,
+  "window.titleBarStyle": "custom",
+  "workbench.editor.showTabs": "none",
 
   // APC
   "apc.activityBar": {
@@ -466,5 +467,11 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "go.toolsManagement.autoUpdate": true
+  "go.toolsManagement.autoUpdate": true,
+  "errorLens.enabledDiagnosticLevels": [
+    "error",
+    "warning",
+    "info",
+    "hint"
+  ]
 }

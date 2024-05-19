@@ -42,9 +42,13 @@ local general_overrides = function()
     --  SEMANTIC TOKENS
     -----------------------------------------------------------------------
     -- { String = { italic = true } },
-    -- { ["@lsp.type.variable"] = { clear = true } },
     { ["@lsp.type.parameter"] = { italic = true, bold = true, fg = { from = "Normal" } } },
-    { ["@lsp.typemod.function.declaration"] = { link = "Identifier" } } ,
+    { ["@lsp.type.selfKeyword"] = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.2 } } },
+    { ['@lsp.type.comment'] = { fg = 'NONE' } },
+
+    { ["@lsp.typemod.function.declaration"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    { ["@lsp.typemod.function.defaultLibrary"] = { link = "Special" } },
+
     -- { ['@lsp.typemod.method'] = { link = '@method' } },
     -- { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
     -- { ["@lsp.typemod.variable.defaultLibrary"] = { italic = true } },
@@ -60,11 +64,25 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     { ["@keyword.return"] = { italic = true, fg = { from = "Keyword" } } },
     -- { ['@type.qualifier'] = { inherit = '@keyword', italic = true } },
-    -- { ["@variable"] = { clear = true } },
-    -- { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
+    -- { ["@variable"] = { fg =  { from = "Directory", attr = "fg", alter = -0.1 } } },
+    { ["@parameter"] = { italic = true, bold = true, fg = "NONE" } },
     -- { ["@error"] = { fg = "fg", bg = "NONE" } },
     -- { ["@text.diff.add"] = { link = "DiffAdd" } },
     -- { ["@text.diff.delete"] = { link = "DiffDelete" } },
+    -----------------------------------------------------------------------
+    -- TREESITTER LANGUAGE
+    -----------------------------------------------------------------------
+    -- lua
+    { ["@lsp.type.function.lua"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    -- { ["@function.call.lua"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    -- { ['@lsp.type.variable.lua'] = { italic = true, fg = "green" } },
+
+    -- zsh
+    { ["zshFunction"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+
+    -- bash
+    { ["@function.bash"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    { ["@function.call.bash"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
 
     -----------------------------------------------------------------------
     -- DIFF
@@ -141,11 +159,6 @@ local general_overrides = function()
     { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
     { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
 
-    { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
-    { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
-    { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
-    { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
-
     {
       DiagnosticError = {
         fg = { from = "DiagnosticSignError", attr = "fg" },
@@ -174,6 +187,12 @@ local general_overrides = function()
         italic = true,
       },
     },
+
+    { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
+    { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
+    { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
+    { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
+
     -----------------------------------------------------------------------
     -- MARKDOWN
     -----------------------------------------------------------------------
@@ -227,7 +246,7 @@ local general_overrides = function()
       },
     },
     { MyParentHint = { bg = { from = "CursorLine", attr = "bg" }, fg = { from = "MyCodeUsage", attr = "fg" , alter = -0.1 } } },
-    { CodeBlock1 = { bg = { from = "Normal", alter = -0.15 } } },
+    { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
     { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
 
@@ -444,6 +463,7 @@ local function colorscheme_overrides()
     ["kanagawa"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.4 },
@@ -454,6 +474,51 @@ local function colorscheme_overrides()
         StatusLineNC = {
           fg = { from = "StatusLineNC", attr = "fg", alter = 0.1 },
           bg = { from = "StatusLineNC", attr = "bg", alter = 1.4 },
+        },
+      },
+    },
+    ["neomodern"] = {
+      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = 0.9 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = 0.9 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = -0.1 },
+          bold = true,
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLineNC", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLineNC", attr = "bg", alter = 2 },
         },
       },
     },
@@ -952,6 +1017,11 @@ local function colorscheme_overrides()
     },
     ["catppuccin-mocha"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+
+      { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
+      { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
+      { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
+      { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
 
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },

@@ -360,6 +360,7 @@ return {
   -- FUGIT2
   {
     "SuperBo/fugit2.nvim",
+    enabled = false,
     cmd = { "Fugit2", "Fugit2Graph" },
     dependencies = {
       "MunifTanjim/nui.nvim",

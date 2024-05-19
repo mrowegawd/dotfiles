@@ -145,7 +145,7 @@ return {
     },
     opts = {},
     keys = {
-      { "<Localleader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc: open devdocs [devdocs]" },
+      { "<Leader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc: open devdocs [devdocs]" },
     },
     cmd = {
       "DevdocsFetch",
@@ -158,34 +158,6 @@ return {
       "DevdocsUpdate",
       "DevdocsUpdateAll",
     },
-  },
-  -- PAREN-HINT
-  {
-    "briangwaltney/paren-hint.nvim",
-    event = "BufReadPost",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-    },
-    config = function()
-      require("paren-hint").setup {
-        highlight = "MyParentHint",
-        -- excluded filetypes
-        excluded_filetypes = {
-          "lspinfo",
-          "packer",
-          "norg",
-          "org",
-          "markdown",
-          "checkhealth",
-          "help",
-          "man",
-          "gitcommit",
-          "TelescopePrompt",
-          "TelescopeResults",
-          "",
-        },
-      }
-    end,
   },
   -- GLANCE
   {
@@ -271,7 +243,7 @@ return {
       return {
         hl = { link = "MyCodeUsage" },
         text_format = text_format,
-        disable = { filetypes = { "dockerfile", "markdown", "org" } },
+        disable = { filetypes = { "dockerfile", "markdown", "org", "neorg" } },
         ---@type 'above'|'end_of_line'|'textwidth'|'signcolumn' `above` by default
         vt_position = "end_of_line",
       }

@@ -5,18 +5,7 @@ local lsp = require "vim.lsp"
 local M = {}
 
 function M.get_clients(opts)
-  local ret = {}
-  if vim.lsp.get_clients then
-    ret = vim.lsp.get_clients(opts)
-  else
-    ---@diagnostic disable-next-line: deprecated
-    ret = vim.lsp.get_active_clients(opts)
-    if opts and opts.method then
-      ret = vim.tbl_filter(function(client)
-        return client.supports_method(opts.method, { bufnr = opts.bufnr })
-      end, ret)
-    end
-  end
+  local ret = vim.lsp.get_clients(opts)
   return opts and opts.filter and vim.tbl_filter(opts.filter, ret) or ret
 end
 
@@ -53,6 +42,7 @@ function M.on_rename(from, to)
   end
 end
 
+---@diagnostic disable-next-line: undefined-doc-name
 ---@return _.lspconfig.options
 function M.get_config(server)
   local configs = require "lspconfig.configs"
@@ -81,9 +71,11 @@ function M.formatter(opts)
     primary = true,
     priority = 1,
     format = function(buf)
+      ---@diagnostic disable-next-line: undefined-field
       M.format(RUtils.merge(filter, { bufnr = buf }))
     end,
     sources = function(buf)
+      ---@diagnostic disable-next-line: undefined-field
       local clients = M.get_clients(RUtils.merge(filter, { bufnr = buf }))
       local ret = vim.tbl_filter(function(client)
         return client.supports_method "textDocument/formatting" or client.supports_method "textDocument/rangeFormatting"
@@ -93,6 +85,7 @@ function M.formatter(opts)
       end, ret)
     end,
   }
+  ---@diagnostic disable-next-line: undefined-field
   return RUtils.merge(ret, opts)
 end
 
@@ -132,9 +125,11 @@ function M.process_item(item, bufnr)
   }
 
   if start.character == nil or start.line == nil then
+    ---@diagnostic disable-next-line: undefined-field
     M.error("Found an item for Trouble without start range " .. vim.inspect(start))
   end
   if finish.character == nil or finish.line == nil then
+    ---@diagnostic disable-next-line: undefined-field
     RUtils.error("Found an item for Trouble without finish range " .. vim.inspect(finish))
   end
   local row = start.line ---@type number
@@ -154,6 +149,7 @@ function M.process_item(item, bufnr)
       local data = assert(uv.fs_read(fd, stat.size, 0))
       assert(uv.fs_close(fd))
 
+      ---@diagnostic disable-next-line: param-type-mismatch
       item.message = vim.split(data, "\n", { plain = true })[row + 1] or ""
     end
   end
@@ -246,6 +242,7 @@ function M.references(win, buf, cb, mode)
 
   lsp_buf_request(buf, method, params, function(err, result)
     if err then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.error("an error happened getting references: " .. err.message)
       return cb {}
     end
@@ -263,6 +260,7 @@ function M.definitions(win, buf, cb, mode)
   params.context = { includeDeclaration = vim.tbl_contains(include_declaration, mode) }
   lsp_buf_request(buf, method, params, function(err, result)
     if err then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.error("an error happened getting definitions: " .. err.message)
       return cb {}
     end
@@ -283,6 +281,7 @@ function M.type_definitions(win, buf, cb)
   local params = make_position_params(win, buf)
   lsp_buf_request(buf, method, params, function(err, result)
     if err then
+      ---@diagnostic disable-next-line: undefined-field
       RUtils.error("an error happened getting type definitions: " .. err.message)
       return cb {}
     end

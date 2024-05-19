@@ -1,0 +1,64 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! special
+*.foreground:   #bbbac1
+*.background:   #181b1b
+*.cursorColor:  #dcd7ba
+
+! black
+*.color0:       #090618
+*.color8:       #727169
+
+! red
+*.color1:       #c34043
+*.color9:       #e82424
+
+! green
+*.color2:       #76946a
+*.color10:      #98bb6c
+
+! yellow
+*.color3:       #c0a36e
+*.color11:      #e6c384
+
+! blue
+*.color4:       #7e9cd8
+*.color12:      #7fb4ca
+
+! magenta
+*.color5:       #957fb8
+*.color13:      #938aa9
+
+! cyan
+*.color6:       #6a9589
+*.color14:      #7aa89f
+
+! white
+*.color7:       #c8c093
+*.color15:      #dcd7ba
+
+! -----------------------------
+! -----------------------------
+
+! MODE color
+*color16: #648564
+
+! SEPARATOR: separator_bg, separator_fg
+*color17: #3e533f
+*color18: #919d90
+
+! FZF: fzf_bg, fzf_fg, fzf_match,
+*color19: #151818
+*color20: #6c7979
+*color21: #ffb49d
+
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*color22: #324232
+*color23: #ffffff
+*color24: #ff7869
+
+! TMUX: main separator bg
+*color25: #0c0d0d
+
+! TMUX: main window dan second window
+*color26: #181b1b
+*color27: #151818

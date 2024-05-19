@@ -485,12 +485,6 @@ local checkconceallevel = false
 RUtils.map.nnoremap("<Localleader>r", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
-    toggle_background = function()
-      RUtils.toggle.background()
-    end,
-    ccc_highlight_color = function()
-      cmd "CccHighlighterToggle"
-    end,
     ccc_pick = function()
       cmd "CccPick"
     end,
@@ -521,6 +515,12 @@ RUtils.map.nnoremap("<Localleader>r", function()
     end,
     dismiss_noice = function()
       require("noice").cmd "dismiss"
+    end,
+    toggle_background = function()
+      RUtils.toggle.background()
+    end,
+    toggle_highlight_color = function()
+      require("nvim-highlight-colors").toggle()
     end,
     toggle_undotree = function()
       cmd "UndotreeToggle"

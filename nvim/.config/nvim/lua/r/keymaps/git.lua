@@ -130,7 +130,7 @@ end
 
 local function gitdiffview()
   RUtils.map.vnoremap(
-    "<Leader>gvc",
+    "<Leader>gvV",
     "<esc><cmd>CompareClipboardSelection<cr>",
     { desc = "Git: compare diff with selection clipboard" }
   )
@@ -142,12 +142,6 @@ local function gitdiffview()
     local cmd = string.format("DiffviewFileHistory --follow -L%s,%s:%s", current_line, current_line, file)
     vim.cmd(cmd)
   end, { desc = "Git: line hash history [diffview]" })
-
-  -- RUtils.map.nnoremap(
-  --   "<Leader>gvv",
-  --   [[:'<'>DiffviewFileHistory --follow<CR>]],
-  --   { desc = "Git(diffview): view the history diff of the selection (visual)" }
-  -- )
 
   RUtils.map.vnoremap("<Leader>gvv", function()
     local v = get_visual_selection_info()
@@ -168,6 +162,14 @@ local function visual_operation(operator)
     visual_range.end_pos = tmp
     require("gitsigns")[operator] { visual_range.start_pos, visual_range.end_pos }
   end
+end
+
+local function lazygit()
+  RUtils.map.nnoremap("<Leader>gb", RUtils.lazygit.blame_line, { desc = "Git: blame line [lazygit]" })
+  RUtils.map.nnoremap("<Leader>gB", function()
+    local git_path = vim.api.nvim_buf_get_name(0)
+    RUtils.lazygit { args = { "-f", vim.trim(git_path) } }
+  end, { desc = "Git: lazygit current file history [lazygit]" })
 end
 
 function M.gitsigns()
@@ -196,7 +198,7 @@ function M.gitsigns()
   end, { desc = "Git: diffthis '~' [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gtB", function()
     vim.cmd "BlameToggle"
-  end, { desc = "Git: open blame buffer [fugitive]" })
+  end, { desc = "Git: toggle open blame buffer [fugitive]" })
   RUtils.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
   RUtils.map.onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
 
@@ -205,22 +207,44 @@ function M.gitsigns()
       return "]c"
     end
     vim.schedule(function()
-      gs.next_hunk { preview = false }
+      gs.nav_hunk "next"
     end)
     return "<Ignore>"
   end, { desc = "Git: next hunk [gitsigns]" })
+
+  RUtils.map.nnoremap("gN", function()
+    if vim.wo.diff then
+      return ""
+    end
+    vim.schedule(function()
+      gs.nav_hunk "last"
+    end)
+    return "<Ignore>"
+  end, { desc = "Git: last hunk [gitsigns]" })
+
   RUtils.map.nnoremap("gp", function()
     if vim.wo.diff then
       return "[c"
     end
     vim.schedule(function()
-      gs.prev_hunk { preview = false }
+      gs.nav_hunk "prev"
     end)
     return "<Ignore>"
   end, { desc = "Git: prev hunk [gitsigns]" })
 
-  gitdiffview()
+  -- TODO: bentrok dengan mapping lsp, 'gP'
+  -- RUtils.map.nnoremap("gP", function()
+  --   if vim.wo.diff then
+  --     return ""
+  --   end
+  --   vim.schedule(function()
+  --     gs.nav_hunk "first"
+  --   end)
+  --   return "<Ignore>"
+  -- end, { desc = "git: first hunk [gitsigns]" })
 
+  gitdiffview()
+  lazygit()
   gitfzflua {
     toggle_gitsigns_attach = function()
       if is_gitsigns_attach then

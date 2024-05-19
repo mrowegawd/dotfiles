@@ -180,7 +180,7 @@ local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag i
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
 rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
 
--- local cursor_tag = function(line, col)
+-- local function cursor_tag(line, col)
 --   local current_line = line and line or vim.api.nvim_get_current_line()
 --   local _, cur_col = unpack(vim.api.nvim_win_get_cursor(0))
 --   cur_col = col or cur_col + 1 -- nvim_win_get_cursor returns 0-indexed column
@@ -195,91 +195,9 @@ rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
 --   return nil
 -- end
 
-local get_visual_selection = function(opts)
-  opts = opts or {}
-  -- Adapted from fzf-lua:
-  -- https://github.com/ibhagwan/fzf-lua/blob/6ee73fdf2a79bbd74ec56d980262e29993b46f2b/lua/fzf-lua/utils.lua#L434-L466
-  -- this will exit visual mode
-  -- use 'gv' to reselect the text
-  local _, csrow, cscol, cerow, cecol
-  local mode = vim.fn.mode()
-  if opts.strict and not vim.endswith(string.lower(mode), "v") then
-    return
-  end
-
-  if mode == "v" or mode == "V" or mode == "" then
-    -- if we are in visual mode use the live position
-    _, csrow, cscol, _ = unpack(vim.fn.getpos ".")
-    _, cerow, cecol, _ = unpack(vim.fn.getpos "v")
-    if mode == "V" then
-      -- visual line doesn't provide columns
-      cscol, cecol = 0, 999
-    end
-    -- exit visual mode
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
-  else
-    -- otherwise, use the last known visual position
-    _, csrow, cscol, _ = unpack(vim.fn.getpos "'<")
-    _, cerow, cecol, _ = unpack(vim.fn.getpos "'>")
-  end
-
-  -- Swap vars if needed
-  if cerow < csrow then
-    csrow, cerow = cerow, csrow
-    cscol, cecol = cecol, cscol
-  elseif cerow == csrow and cecol < cscol then
-    cscol, cecol = cecol, cscol
-  end
-
-  local lines = vim.fn.getline(csrow, cerow)
-  assert(type(lines) == "table")
-  if vim.tbl_isempty(lines) then
-    return
-  end
-
-  -- When the whole line is selected via visual line mode ("V"), cscol / cecol will be equal to "v:maxcol"
-  -- for some odd reason. So change that to what they should be here. See ':h getpos' for more info.
-  local maxcol = vim.api.nvim_get_vvar "maxcol"
-  if cscol == maxcol then
-    cscol = string.len(lines[1])
-  end
-  if cecol == maxcol then
-    cecol = string.len(lines[#lines])
-  end
-
-  ---@type string
-  local selection
-  local n = #lines
-  if n <= 0 then
-    selection = ""
-  elseif n == 1 then
-    selection = string.sub(lines[1], cscol, cecol)
-  elseif n == 2 then
-    selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
-  else
-    selection = string.sub(lines[1], cscol)
-      .. "\n"
-      .. table.concat(lines, "\n", 2, n - 1)
-      .. "\n"
-      .. string.sub(lines[n], 1, cecol)
-  end
-
-  return {
-    lines = lines,
-    selection = selection,
-    csrow = csrow,
-    cscol = cscol,
-    cerow = cerow,
-    cecol = cecol,
-  }
-end
-
 local data_tags_table = {}
 local data_tags_out = {}
 local data_title_out = {}
-
--- local data_tags_table_is_set = {}
--- local found_yo = {}
 
 local insert_tags = {}
 
@@ -384,7 +302,7 @@ local function collect_all_tags_async(data, cb)
   end)()
 end
 
-local format_prompt_strings = function()
+local function format_prompt_strings()
   local msg = ""
   if #insert_tags > 0 then
     msg = "[" .. table.concat(insert_tags, ",") .. "]"
@@ -476,7 +394,7 @@ local function picker(contents)
           require("fzf-lua").actions.resume()
           return
         end
-          M.find_note_by_tag { fargs = insert_tags }
+        M.find_note_by_tag { fargs = insert_tags }
         insert_tags = {}
       end,
 
@@ -486,24 +404,12 @@ local function picker(contents)
       end,
 
       ["alt-q"] = function(selected, _)
-        -- local function check_tbl_element(tbl, element)
-        --   for _, x in pairs(tbl) do
-        --     if x["text"] then
-        --       local str_s = string.match(x.text, "-%s(%w+[A-Za-z0-9_/-]*[A-Za-z0-9]+)")
-        --       if str_s == element then
-        --         return true
-        --       end
-        --     end
-        --   end
-        --   return false
-        -- end
-
         local function check_tbl_element(tbl, element)
           for _, x in pairs(tbl) do
             if x["text"] == element then
-                return true
-              end
+              return true
             end
+          end
           return false
         end
 
@@ -586,8 +492,8 @@ local function list_tags_async(all_tags, is_set)
   local line_e = ""
   if #all_tags > 1 then
     for _, x in pairs(concatting_tags()) do
-    line_e = line_e .. string.format(' -e "%s" ', x)
-  end
+      line_e = line_e .. string.format(' -e "%s" ', x)
+    end
   else
     line_e = string.format(' -e "%s" ', "^\\s\\s*- " .. all_tags[1] .. "$")
   end
@@ -626,28 +532,9 @@ local function list_tags_async(all_tags, is_set)
 
                       local fzf_str =
                         string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
-                      --
+
+                      -- TODO: ensure id note exists #postpone #25/5/saturday
                       -- if is_set then
-                      --   local function check_tbl_elementyo(tbl, element)
-                      --     for _, x in pairs(tbl) do
-                      --       if x.title == element then
-                      --         return true
-                      --       end
-                      --     end
-                      --     return false
-                      --   end
-                      --
-                      --   for _, t in pairs(all_tags) do
-                      --     for _, x in pairs(data_tags_table_is_set) do
-                      --       if t == x.tag then
-                      --         if not check_tbl_elementyo(found_yo, x.title) then
-                      --           found_yo[#found_yo + 1] = data_tags
-                      --           fzf_str =
-                      --             string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
-                      --         end
-                      --       end
-                      --     end
-                      --   end
                       -- end
 
                       cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
@@ -688,7 +575,7 @@ function M.find_note_by_tag(data, is_set)
 
   if vim.tbl_isempty(tags) then
     -- Check for visual selection.
-    local viz = get_visual_selection { strict = true }
+    local viz = RUtils.cmd.get_visual_selection { strict = true }
     if viz and #viz.lines == 1 and string.match(viz.selection, "^#?" .. TagCharsRequired .. "$") then
       local tag = viz.selection
 
@@ -708,10 +595,7 @@ function M.find_note_by_tag(data, is_set)
 
   if not vim.tbl_isempty(tags) then
     list_tags_async(tags, true)
-  -- elseif not vim.tbl_isempty(tags) and is_set then
-  --   list_tags_async(tags, is_set)
   else
-    insert_tags = {}
     collect_all_tags_async(tags, function(all_tags)
       vim.schedule(function()
         list_tags_async(all_tags)

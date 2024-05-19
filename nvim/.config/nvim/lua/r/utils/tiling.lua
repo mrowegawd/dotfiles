@@ -34,26 +34,6 @@ local activate_tiling_autocmds = function()
   au WinClosed,WinLeave * call v:lua.require'config.tiling'.handle_event("leave")
   augroup END
 ]]
-
-  -- local augroup = vim.api.nvim_create_augroup("luasnip-expand", { clear = true })
-  -- vim.api.nvim_create_autocmd("ModeChanged", {
-  --     group = augroup,
-  --     pattern = "*:s",
-  --     callback = function()
-  --         if luasnip.in_snippet() then
-  --             return vim.diagnostic.disable()
-  --         end
-  --     end,
-  -- })
-  -- vim.api.nvim_create_autocmd("ModeChanged", {
-  --     group = augroup,
-  --     pattern = "[is]:n",
-  --     callback = function()
-  --         if luasnip.in_snippet() then
-  --             return vim.diagnostic.enable()
-  --         end
-  --     end,
-  -- })
 end
 
 local deactivate_tiling_autocmds = function()

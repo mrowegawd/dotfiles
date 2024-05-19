@@ -15,6 +15,36 @@ return {
       return false
     end,
   },
+  -- NEOMODERN
+  {
+    "cdmill/neomodern.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local neomodern_theme = { "iceclimber", "coffeecat", "darkforest", "campfire", "roseprime", "daylight" }
+      if vim.tbl_contains(neomodern_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      require("neomodern").setup {}
+    end,
+  },
+  -- HORIZON
+  {
+    "akinsho/horizon.nvim",
+    version = "*",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local horizon_theme = { "horizon" }
+      if vim.tbl_contains(horizon_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- FLEXOKI
   {
     "kepano/flexoki-neovim",

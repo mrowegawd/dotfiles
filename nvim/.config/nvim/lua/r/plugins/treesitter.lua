@@ -17,161 +17,158 @@ return {
     end,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     keys = {
-      { "<c-space>", desc = "Misc: increment selection" },
-      { "<bs>", desc = "Misc: iecrement selection", mode = "x" },
+      { "<c-space>", desc = "Misc: increment selection [treesitter]" },
+      { "<bs>", desc = "Misc: iecrement selection (xmode) [treesitter]", mode = "x" },
     },
-    config = function()
-      require("nvim-treesitter.configs").setup {
-        ensure_installed = {
-          "c",
-          -- "comment", -- comments are slowing down TS bigtime, so disable for now
+    opts = {
+      ensure_installed = {
+        "c",
+        -- "comment", -- comments are slowing down TS bigtime, so disable for now
 
-          "dockerfile",
+        "dockerfile",
 
-          "cpp",
-          "diff",
-          "gitignore",
-          "graphql",
-          "java",
-          "bash",
-          "jsdoc",
-          "latex",
-          "kotlin",
-          "dart",
-          "meson",
-          "ninja",
-          "nix",
-          "norg",
-          "org",
-          "php",
-          "query",
-          "regex",
+        "cpp",
+        "diff",
+        "gitignore",
+        "graphql",
+        "java",
+        "bash",
+        "jsdoc",
+        "latex",
+        "dart",
+        "meson",
+        "ninja",
+        "nix",
+        "norg",
+        "org",
+        "php",
+        "query",
+        "regex",
 
-          "fish",
+        "fish",
 
-          "yaml",
+        "yaml",
 
-          "kdl", -- zellij
+        "kotlin",
+        "kdl", -- zellij
 
-          "json",
-          "jsonc",
-          "ini",
-          "ssh_config",
+        "json",
+        "jsonc",
+        "ini",
+        "ssh_config",
 
-          "sql",
-          "svelte",
-          "teal",
-          "vhs",
-          "vim",
-          "vue",
-          "ruby",
-          "wgsl",
+        "sql",
+        "svelte",
+        "teal",
+        "vhs",
+        "vim",
+        "vue",
+        "ruby",
+        "wgsl",
 
-          "cmake",
-          "make",
+        "cmake",
+        "make",
 
-          "javascript",
-          "typescript",
-          "tsx",
+        "javascript",
+        "typescript",
+        "tsx",
 
-          "go",
-          "gomod",
-          "gowork",
-          "gosum",
+        "go",
+        "gomod",
+        "gowork",
+        "gosum",
 
-          "lua",
-          "luadoc",
-          "luap",
+        "lua",
+        "luadoc",
+        "luap",
 
-          "python",
-          "ninja",
-          "rst",
+        "python",
+        "ninja",
+        "rst",
 
-          "css",
-          "html",
-          "http",
-          "scss",
+        "css",
+        "html",
+        "http",
+        "scss",
 
-          "yuck",
+        "yuck",
 
-          "ron",
-          "rust",
-          "toml",
+        "ron",
+        "rust",
+        "toml",
 
-          "markdown",
-          "markdown_inline",
+        "markdown",
+        "markdown_inline",
 
-          "xml",
-          "vimdoc",
+        "xml",
+        "vimdoc",
+      },
+
+      highlight = {
+        enable = true,
+        -- disable = function(ft)
+        --   return vim.tbl_contains({ "tex", "latex" }, ft)
+        -- end,
+        additional_vim_regex_highlighting = { "markdown", "org" },
+      },
+
+      indent = {
+        enable = true,
+        -- disable = function(ft)
+        --   return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
+        -- end,
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<C-space>",
+          node_incremental = "<C-space>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
         },
+      },
 
-        highlight = {
-          enable = true,
-          disable = function(ft)
-            return vim.tbl_contains({ "tex", "latex" }, ft)
-          end,
-          additional_vim_regex_highlighting = { "markdown", "org" },
-        },
-
-        indent = {
-          enable = true,
-          disable = function(ft)
-            return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
-          end,
-        },
-        incremental_selection = {
-          enable = true,
+      -- nvim-treesitter-textobjects
+      textobjects = {
+        select = {
+          -- disable = buf_is_large,
+          enable = false,
+          lookahead = true,
           keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = false,
-            node_decremental = "<bs>",
+            -- You can use the capture groups defined in textobjects.scm
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
           },
         },
-
-        -- nvim-treesitter-textobjects
-        textobjects = {
-          select = {
-            -- disable = buf_is_large,
-            enable = false,
-            lookahead = true,
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
-            },
+        move = {
+          enable = false,
+          set_jumps = true, -- whether to set jumps in the jumplist
+          goto_next_start = {
+            ["]f"] = "@function.outer",
+            ["]c"] = "@class.outer",
           },
-          move = {
-            enable = false,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              ["]f"] = "@function.outer",
-              ["]c"] = "@class.outer",
-            },
-            goto_next_end = {
-              ["]F"] = "@function.outer",
-              ["]C"] = "@class.outer",
-            },
-            goto_previous_start = {
-              ["[f"] = "@function.outer",
-              ["[c"] = "@class.outer",
-            },
-            goto_previous_end = {
-              ["[F"] = "@function.outer",
-              ["[C"] = "@class.outer",
-            },
+          goto_next_end = {
+            ["]F"] = "@function.outer",
+            ["]C"] = "@class.outer",
           },
-          lsp_interop = {
-            enable = false,
-            -- disable = buf_is_large,
-            peek_definition_code = {
-              ["gD"] = "@function.outer",
-            },
+          goto_previous_start = {
+            ["[f"] = "@function.outer",
+            ["[c"] = "@class.outer",
+          },
+          goto_previous_end = {
+            ["[F"] = "@function.outer",
+            ["[C"] = "@class.outer",
           },
         },
-      }
+      },
+    },
+    config = function(_, opts)
+      if type(opts.ensure_installed) == "table" then
+        opts.ensure_installed = RUtils.dedup(opts.ensure_installed)
+      end
+      require("nvim-treesitter.configs").setup(opts)
     end,
   },
   -- NVIM-TREESITTER-TEXTOBJECTS
@@ -226,9 +223,9 @@ return {
       })
       return {
         multiline_threshold = 4,
-        separator = "━", -- alternatives: ▁ ─ ▄ 󰇘  󰇘
-        -- separator = "▁", -- alternatives: ▁ ─ ▄
-        mode = "cursor",
+        -- separator = "━", -- alternatives: ▁ ─ ▄ 󰇘  󰇘
+        separator = "▁", -- alternatives: ▁ ─ ▄
+        opts = { mode = "cursor", max_lines = 5 },
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(buf)
           local tbl_winsplits = {}

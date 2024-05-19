@@ -9,7 +9,6 @@ local diagnostic_goto = function(next, severity)
   severity = severity and vim.diagnostic.severity[severity] or nil
   return function()
     go { severity = severity, float = false }
-    -- go { severity = severity }
   end
 end
 
@@ -135,16 +134,10 @@ function M.get()
       desc = "Diagnostic: preview",
     },
     {
-      "dt",
-      function()
-        RUtils.toggle.diagnostics()
-      end,
-      desc = "Diagnostic: toggle enable/disable diagnostic",
-    },
-    {
       "df",
       function()
         if #vim.diagnostic.get(0) == 0 then
+          ---@diagnostic disable-next-line: undefined-field
           return RUtils.info("Diagnostics buffer is clean", { title = "" })
         end
 
@@ -247,11 +240,7 @@ function M.get()
             RUtils.toggle.semantic_tokens()
           end,
           toggle_inlay_hint = function()
-            if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
-              RUtils.toggle.inlay_hints()
-            else
-              RUtils.warn("This LSP does not support for inlay_hint", { title = "LSP" })
-            end
+            RUtils.toggle.inlay_hints()
           end,
           toggle_number = function()
             RUtils.toggle.number()
@@ -261,6 +250,9 @@ function M.get()
           end,
           toggle_format_lspallbuf = function()
             RUtils.format.toggle()
+          end,
+          run_refresh_symbol_useage = function()
+            require("symbol-usage").refresh()
           end,
           run_format_lspinfo = function()
             vim.cmd [[LazyFormatInfo]]

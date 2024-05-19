@@ -71,7 +71,7 @@ end
 ---@param chunks Chunks
 ---@return string
 local function chunks_to_string(chunks)
-  if not chunks or not vim.tbl_islist(chunks) then
+  if not chunks or not vim.islist(chunks) then
     return ""
   end
   local strings = RUtils.cmd.fold(function(acc, item)
@@ -110,7 +110,7 @@ local function component(opts)
   end
 
   local item = opts[1]
-  if not vim.tbl_islist(item) then
+  if not vim.islist(item) then
     error(fmt("component options are required but got %s instead", vim.inspect(item)))
   end
 

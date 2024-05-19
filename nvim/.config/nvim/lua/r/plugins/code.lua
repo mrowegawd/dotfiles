@@ -3,6 +3,7 @@ local Highlight = require "r.settings.highlights"
 local callme = 0
 
 return {
+  -- CRATES
   {
     "Saecki/crates.nvim",
     event = { "BufRead Cargo.toml" },
@@ -12,6 +13,7 @@ return {
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
+    version = false, -- last release is way too old
     enabled = function()
       if RUtils.config.lsp_style == "coc" then
         return false
@@ -78,7 +80,7 @@ return {
           )
         then
           cmp.confirm { select = true }
-        elseif vim.snippet.active { direction = -1 } then
+        elseif vim.snippet.active { direction = 1 } then
           vim.snippet.jump(1)
         elseif require("luasnip").expand_or_jumpable() then
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
@@ -89,9 +91,7 @@ return {
 
       local function shift_tab(fallback)
         if vim.snippet.active { direction = -1 } then
-          vim.schedule(function()
-            vim.snippet.jump(-1)
-          end)
+          vim.snippet.jump(-1)
         elseif require("luasnip").jumpable(-1) then
           vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
         else
@@ -116,9 +116,9 @@ return {
       end
 
       cmp.setup {
-        enabled = function()
-          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
-        end,
+        -- enabled = function()
+        --   return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
+        -- end,
         window = {
           completion = cmp.config.window.bordered(styldoc()),
           documentation = cmp.config.window.bordered(styldoc(true)),
@@ -301,7 +301,16 @@ return {
           ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+          ["<CR>"] = function(fallback)
+            if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
+              RUtils.create_undo()
+              if cmp.confirm { select = true } then
+                return
+              end
+            end
+
+            return fallback()
+          end,
           ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
         sources = { -- remember: do not use `group_index`,
@@ -437,50 +446,29 @@ return {
       })
     end,
   },
-  -- NVIM-AUTOPAIRS
-  -- {
-  --   -- Dont forget to check this issue https://github.com/altermo/ultimate-autopair.nvim/issues/5
-  --   -- before we use ultimate-autopair
-  --   "windwp/nvim-autopairs",
-  --   event = { "InsertEnter", "CmdlineEnter" },
-  --   dependencies = { "hrsh7th/nvim-cmp" },
-  --   config = function()
-  --     local autopairs = require "nvim-autopairs"
-  --     local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-  --     require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-  --
-  --     autopairs.setup {
-  --       close_triple_quotes = true,
-  --       disable_filetype = { "neo-tree-popup" },
-  --       check_ts = true,
-  --       fast_wrap = { map = "<c-q>" },
-  --       ts_config = {
-  --         lua = { "string" },
-  --         dart = { "string" },
-  --         javascript = { "template_string" },
-  --       },
-  --     }
-  --   end,
-  -- },
   -- MINI.PAIRS
   {
     "echasnovski/mini.pairs",
     event = "VeryLazy",
-    opts = {},
-    -- keys = {
-    --   {
-    --     "<leader>up",
-    --     function()
-    --       vim.g.minipairs_disable = not vim.g.minipairs_disable
-    --       if vim.g.minipairs_disable then
-    --         LazyVim.warn("Disabled auto pairs", { title = "Option" })
-    --       else
-    --         LazyVim.info("Enabled auto pairs", { title = "Option" })
-    --       end
-    --     end,
-    --     desc = "Toggle Auto Pairs",
-    --   },
-    -- },
+    opts = {
+      mappings = {
+        ["`"] = { action = "closeopen", pair = "``", neigh_pattern = "[^\\`].", register = { cr = false } },
+      },
+    },
+    keys = {
+      {
+        "<Leader>up",
+        function()
+          vim.g.minipairs_disable = not vim.g.minipairs_disable
+          if vim.g.minipairs_disable then
+            RUtils.warn("Disabled auto pairs", { title = "Option" })
+          else
+            RUtils.info("Enabled auto pairs", { title = "Option" })
+          end
+        end,
+        desc = "Misc: toggle auto pairs [mini.pairs]",
+      },
+    },
   },
   -- COMMENTS-TS-CONTEXT
   {
@@ -488,6 +476,29 @@ return {
     lazy = true,
     opts = {
       enable_autocmd = false,
+    },
+    init = function()
+      if vim.fn.has "nvim-0.10" == 1 then
+        vim.schedule(function()
+          local get_option = vim.filetype.get_option
+          vim.filetype.get_option = function(filetype, option)
+            return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
+              or get_option(filetype, option)
+          end
+        end)
+      end
+    end,
+  },
+  -- MINI.COMMENT
+  {
+    "echasnovski/mini.comment",
+    event = "VeryLazy",
+    opts = {
+      options = {
+        custom_commentstring = function()
+          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+        end,
+      },
     },
   },
   -- NVIM-SURROUND
@@ -570,18 +581,6 @@ return {
       }
     end,
   },
-  -- MINI.COMMENT
-  {
-    "echasnovski/mini.comment",
-    event = "VeryLazy",
-    opts = {
-      options = {
-        custom_commentstring = function()
-          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
-        end,
-      },
-    },
-  },
   -- NVIM-COVERAGE
   {
     "andythigpen/nvim-coverage", -- Display test coverage information
@@ -633,6 +632,16 @@ return {
     "vhyrro/luarocks.nvim",
     priority = 1000,
     config = true,
+    opts = {
+      rocks = {
+        "lua-utils.nvim",
+        "lua-curl",
+        "nvim-nio",
+        "mimetypes",
+        "pathlib.nvim",
+        "xml2lua",
+      }, -- Specify LuaRocks packages to install
+    },
   },
   -- REST.NVIM
   {
@@ -640,15 +649,7 @@ return {
     ft = "http",
     -- keys = {
     --   { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
-    -- },
-    dependencies = {
-      {
-        "vhyrro/luarocks.nvim",
-        opts = {
-          rocks = { "lua-curl", "nvim-nio", "mimetypes", "xml2lua" }, -- Specify LuaRocks packages to install
-        },
-      },
-    },
+    dependencies = { "luarocks.nvim" },
     opts = { skip_ssl_verification = true },
     config = function(_, opts)
       require("rest-nvim").setup(opts)
@@ -749,12 +750,12 @@ return {
       { "rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
       { "rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
 
-      { "rc", "<Cmd> RmuxSendInterrupt <CR>", desc = "Tasks: send interrupt signal to targeted pane" },
-      { "rC", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Tasks: send interrupt signal to all targeted pane" },
+      -- { "rc", "<Cmd> RmuxSendInterrupt <CR>", desc = "Tasks: send interrupt signal to targeted pane" },
+      -- { "rC", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Tasks: send interrupt signal to all targeted pane" },
 
       -- { "rt", "<Cmd> RmuxTargetPane <CR>", desc = "Tasks: change target pane" },
 
-      -- { "rr", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
+      { "rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
       { "rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
 
       { "re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },

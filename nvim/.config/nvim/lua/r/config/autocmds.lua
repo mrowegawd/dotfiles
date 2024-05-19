@@ -13,6 +13,16 @@ RUtils.cmd.augroup("WrapSpell", {
   end,
 })
 
+vim.api.nvim_create_autocmd("TermOpen", {
+  group = vim.api.nvim_create_augroup("Terminal", { clear = true }),
+  -- Related https://github.com/neovim/neovim/issues/20726
+  desc = "Disable fold inside terminal",
+  callback = function()
+    vim.opt_local.foldmethod = "manual"
+    vim.opt_local.foldenable = false
+  end,
+})
+
 -- {
 --   -- turn current line blame off in insert mode,
 --   -- back on when leaving insert mode

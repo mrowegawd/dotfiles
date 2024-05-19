@@ -28,7 +28,7 @@ return {
       -- golang
       {
         "leoluz/nvim-dap-go",
-        opts = {},
+        config = true,
       },
 
       { "theHamsta/nvim-dap-virtual-text", opts = { commented = true } },

@@ -327,32 +327,39 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
+# Darkforest Alacritty Colors
 [colors.primary]
-background = "#1f1f1f"
-foreground = "#cccccc"
+background = '#181b1b'
+foreground = '#bbbac1'
 
 [colors.cursor]
-text = "#1f1f1f"
-cursor = "#cccccc"
+text = '0x21222c'
+cursor = '0xff0000'
 
 [colors.normal]
-black =   "#000000"
-red =     "#cd3131"
-green =   "#0dbc79"
-yellow =  "#e5e510"
-blue =    "#2472c8"
-magenta = "#bc3fbc"
-cyan =    "#11a8cd"
-white =   "#e5e5e5"
+black =   '#090618'
+red =     '#c34043'
+green =   '#76946a'
+yellow =  '#c0a36e'
+blue =    '#7e9cd8'
+magenta = '#957fb8'
+cyan =    '#6a9589'
+white =   '#c8c093'
 
 [colors.bright]
-black =   "#666666"
-red =     "#f14c4c"
-green =   "#23d18b"
-yellow =  "#f5f543"
-blue =    "#3b8eea"
-magenta = "#d670d6"
-cyan =    "#29b8db"
-white =   "#e5e5e5"
+black =   '#727169'
+red =     '#e82424'
+green =   '#98bb6c'
+yellow =  '#e6c384'
+blue =    '#7fb4ca'
+magenta = '#938aa9'
+cyan =    '#7aa89f'
+white =   '#dcd7ba'
 
-
+# selection:
+# background: '0x2d4f67'
+# foreground: '0xc8c093'
+#
+# [[indexed_colors]]
+# index = 16
+# color = '#ffa066'

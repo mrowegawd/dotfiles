@@ -2,45 +2,25 @@ local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- MINI.INDENTSCOPE
+  -- INDENTMINI
   {
-    "echasnovski/mini.indentscope",
-    version = "*",
-    main = "mini.indentscope",
-    event = { "VeryLazy" },
-    config = function(_, opts)
-      Highlight.plugin("mini.indentscopeUi", {
+    "nvimdev/indentmini.nvim",
+    config = function()
+      Highlight.plugin("indentmini", {
         theme = {
           ["*"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["catppuccin-latte"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
-          },
-          ["farout"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-          },
-          ["ayu"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-          },
-          ["nord"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-          },
-          ["vscode_modern"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-          },
-          ["flexoki"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
+            { IndentLine = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { IndentLineCurrent = { fg = { from = "Normal", attr = "bg", alter = 4.5 } } },
           },
         },
       })
-      require("mini.indentscope").setup(opts)
-
-      RUtils.cmd.augroup("DetachMiniIndentScope", {
-        event = { "FileType" },
-        pattern = {
+      require("indentmini").setup {
+        char = "┊",
+        exclude = {
           "DiffviewFiles",
           "NeogitCommitMessage",
+          "calendar",
+          "neo-tree",
           "NeogitPopup",
           "NeogitStatus",
           "NvimTree",
@@ -66,111 +46,38 @@ return {
           "sagafinder",
           "trouble",
         },
-        command = function()
-          vim.b.miniindentscope_disable = true
-        end,
-      })
-    end,
-    opts = {
-      symbol = "┊",
-      mappings = {
-        goto_top = "<leader>k",
-        goto_bottom = "<leader>j",
-      },
-      options = {
-        try_as_border = true,
-      },
-      draw = {
-        animation = function()
-          return 0
-        end,
-      },
-    },
-  },
-  -- INDENT-BLANKLINE
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = { "ColorScheme" },
-    main = "ibl",
-    opts = {
-      scope = { enabled = false },
-      indent = {
-        char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
-        tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
-        repeat_linebreak = false,
-      },
-      exclude = {
-        filetypes = {
-          "NvimTree",
-          "dashboard",
-          "dbout",
-          "flutterToolsOutline",
-          "fzf",
-          "fzflua",
-          "git",
-          "gitcommit",
-          "help",
-          "log",
-          "man",
-          "markdown",
-          "neo-tree",
-          "neo-tree-popup",
-          "norg",
-          "org",
-          "orgagenda",
-          "sagafinder",
-          "trouble",
-          "txt",
-          "undotree",
-          "",
-        },
-      },
-    },
-    config = function(_, opts)
-      Highlight.plugin("ibl_indentline", {
-        theme = {
-          ["*"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["catppuccin-latte"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -1 } } },
-          },
-          ["farout"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-          },
-          ["ayu"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["solarized-osaka"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["flexoki"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
-          },
-        },
-      })
-      require("ibl").setup(opts)
+      } -- use default config
     end,
   },
   -- NVIM-NOTIFY
   {
     "rcarriga/nvim-notify",
-    event = "VeryLazy",
-    -- init = function()
-    --   vim.notify = require "notify"
-    -- end,
-    -- TODO: nanti hapus ini,
-    -- kalau ini sudah di merge
-    -- https://github.com/rcarriga/nvim-notify/pull/253
-    -- pin = true,
+    init = function()
+      -- when noice is not enabled, install notify on VeryLazy
+      if not RUtils.has "noice.nvim" then
+        RUtils.on_very_lazy(function()
+          vim.notify = require "notify"
+        end)
+      end
+    end,
     opts = function()
-      vim.notify = require "notify"
+      -- Highlight.plugin("NotifyCol", {
+      --   -- { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+      --   -- { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+      --   -- { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+      --   -- { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+      --   -- { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+      --   -- { NotifyERRORBody = { link = "NormalFloat" } },
+      --   -- { NotifyWARNBody = { link = "NormalFloat" } },
+      --   -- { NotifyDEBUGBody = { link = "NormalFloat" } },
+      --   -- { NotifyTRACEBody = { link = "NormalFloat" } },
+      --   { NotifyINFOBody = { bg = { from = "NotifyINFOIcon", attr = "bg" } } },
+      --   { NotifyHINTBody = { bg = { from = "NotifyHINTIcon", attr = "bg" } } },
+      --   { NotifyWARNBody = { bg = { from = "NotifyWARNIcon", attr = "bg" } } },
+      --   { NotifyERRORBody = { bg = { from = "NotifyERRORIcon", attr = "bg" } } },
+      --   { NotifyDEBUGBody = { bg = { from = "NotifyDEBUGIcon", attr = "bg" } } },
+      --   { NotifyTRACEBody = { bg = { from = "NotifyTRACEIcon", attr = "bg" } } },
+      -- })
 
       return {
         stages = "static",
@@ -182,13 +89,6 @@ return {
         max_height = function()
           return math.floor(vim.o.lines * 0.8)
         end,
-
-        -- on_open = function(win)
-        --   if not vim.api.nvim_win_is_valid(win) then
-        --     return
-        --   end
-        --   vim.api.nvim_win_set_config(win, { border = RUtils.config.icons.border.line })
-        -- end,
         render = function(...)
           local notification = select(2, ...)
           local style = RUtils.cmd.falsy(notification.title[1]) and "minimal" or "default"
@@ -196,49 +96,14 @@ return {
         end,
         on_open = function(win)
           vim.api.nvim_win_set_config(win, { zindex = 175 })
-          if not vim.g.notifications_enabled then
-            vim.api.nvim_win_close(win, true)
-          end
-          if not package.loaded["nvim-treesitter"] then
-            pcall(require, "nvim-treesitter")
-          end
-          vim.wo[win].conceallevel = 3
-          local buf = vim.api.nvim_win_get_buf(win)
-          if not pcall(vim.treesitter.start, buf, "markdown") then
-            vim.bo[buf].syntax = "markdown"
-          end
-          vim.wo[win].spell = false
         end,
       }
-    end,
-    config = function(_, opts)
-      Highlight.plugin("NotifyCol", {
-        -- { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyERRORBody = { link = "NormalFloat" } },
-        -- { NotifyWARNBody = { link = "NormalFloat" } },
-        -- { NotifyDEBUGBody = { link = "NormalFloat" } },
-        -- { NotifyTRACEBody = { link = "NormalFloat" } },
-        { NotifyINFOBody = { bg = { from = "NotifyINFOIcon", attr = "bg" } } },
-        { NotifyHINTBody = { bg = { from = "NotifyHINTIcon", attr = "bg" } } },
-        { NotifyWARNBody = { bg = { from = "NotifyWARNIcon", attr = "bg" } } },
-        { NotifyERRORBody = { bg = { from = "NotifyERRORIcon", attr = "bg" } } },
-        { NotifyDEBUGBody = { bg = { from = "NotifyDEBUGIcon", attr = "bg" } } },
-        { NotifyTRACEBody = { bg = { from = "NotifyTRACEIcon", attr = "bg" } } },
-      })
-      require("notify").setup(opts)
     end,
   },
   -- NOICE
   {
     "folke/noice.nvim",
     event = "VeryLazy",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
     keys = {
       {
         "<a-o>",
@@ -555,6 +420,17 @@ return {
     --   -- { "s#", "<Cmd>BufferLineCloseRight<CR>", desc = "Buffer(bufferline): delete buffers to the right" },
     --   -- { "s@", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
     -- },
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+      -- Fix bufferline when restoring a session
+      vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
+        callback = function()
+          vim.schedule(function()
+            pcall(nvim_bufferline)
+          end)
+        end,
+      })
+    end,
     opts = function()
       local col_base_bg_attr = "bufferline_fill_bg"
       local col_base_fg_attr = "Comment"

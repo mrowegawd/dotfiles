@@ -240,7 +240,7 @@ return {
       end
 
       local function has_capability(capability, filter)
-        for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
+        for _, client in ipairs(vim.lsp.get_clients(filter)) do
           if client.supports_method(capability) then
             return true
           end
@@ -297,11 +297,11 @@ return {
           })
         end
 
-        if opts.inlay_hints.enabled then
-          if client.supports_method "textDocument/inlayHint" then
-            RUtils.toggle.inlay_hints(bufnr, true)
-          end
-        end
+        -- if opts.inlay_hints.enabled then
+        --   if client.supports_method "textDocument/inlayHint" then
+        --     RUtils.toggle.inlay_hints(bufnr)
+        --   end
+        -- end
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
@@ -448,6 +448,7 @@ return {
   -- BETTER-TS-ERRORS
   {
     "OlegGulevskyy/better-ts-errors.nvim",
+    enabled = false,
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = { "dg", "dG" },
     opts = {

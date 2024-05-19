@@ -20,11 +20,13 @@ return {
         "js-debug-adapter",
 
         -- golang
-        "gomodifytags",
-        "impl",
+        "gomodifytags", -- linter
+        "impl", -- linter
+
+        "delve", -- for debug
+
         "goimports",
         "gofumpt",
-        "delve",
         "golangci-lint",
 
         -- bash,sh
@@ -44,7 +46,7 @@ return {
         "cmakelint",
 
         -- kotlin
-        -- "ktlint",
+        "ktlint",
 
         -- markdown
         "markdownlint",
@@ -114,7 +116,10 @@ return {
         version = false, -- last release is way too old
       },
       {
+        -- TODO: check dan pakai plugin ini, kalau sudah di update error nya
+        -- check langsung repo github nya
         "ray-x/lsp_signature.nvim",
+        enabled = false,
         config = function()
           Highlight.plugin("lspSignatureUIcol", {
             { LspSignatureActiveParameter = { bg = "NONE", fg = "#ED9455" } },
@@ -176,10 +181,8 @@ return {
           end,
         },
       },
-      inlay_hints = { enabled = false },
-      codelens = {
-        enabled = true,
-      },
+      inlay_hints = { enabled = true },
+      codelens = { enabled = true },
       capabilities = {},
       format = { formatting_options = nil, timeout_ms = nil },
       -- LSP Server Settings
@@ -331,17 +334,20 @@ return {
         lua_ls = {
           settings = {
             Lua = {
-              runtime = {
-                -- diperlukan define LuaJIT ini, kalau tidak warning lua version (contoh unpack)
-                version = "LuaJIT",
-              },
+              runtime = { version = "LuaJIT" },
               codeLens = { enable = true },
-              workspace = {
-                checkThirdParty = false,
+              workspace = { checkThirdParty = false },
+              doc = { privateName = { "^_" } },
+              hint = {
+                enable = true,
+                -- setType = false,
+                -- paramType = true,
+                -- paramName = "Disable",
+                -- semicolon = "Disable",
+                arrayIndex = "Disable",
               },
               completion = { callSnippet = "Replace" },
               telemetry = { enable = false },
-              hint = { enable = false },
               diagnostics = {
                 globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
                 undefined_global = false, -- remove this from diag!
@@ -442,26 +448,10 @@ return {
     },
     config = function(_, opts)
       if RUtils.has "neoconf.nvim" then
-        local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
-        require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
+        require("neoconf").setup(RUtils.opts "neoconf.nvim")
       end
 
       RUtils.format.register(RUtils.lsp.formatter())
-
-      -- deprecated options
-      if opts.autoformat ~= nil then
-        vim.g.autoformat = opts.autoformat
-        RUtils.error("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
-      end
-
-      -- local function has_capability(capability, filter)
-      --   for _, client in ipairs(vim.lsp.get_active_clients(filter)) do
-      --     if client.supports_method(capability) then
-      --       return true
-      --     end
-      --   end
-      --   return false
-      -- end
 
       local provider = {
         HOVER = "hoverProvider",
@@ -472,8 +462,6 @@ return {
         REFERENCES = "documentHighlightProvider",
         DEFINITION = "definitionProvider",
       }
-
-      -- require("neodev").setup()
 
       -- Setup formatting and keymaps
       RUtils.lsp.on_attach(function(client, bufnr)
@@ -520,12 +508,6 @@ return {
             end,
           })
         end
-
-        if opts.inlay_hints.enabled then
-          if client.supports_method "textDocument/inlayHint" then
-            RUtils.toggle.inlay_hints(bufnr, true)
-          end
-        end
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
@@ -552,25 +534,10 @@ return {
       local servers = opts.servers
       local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
       local capabilities = vim.tbl_deep_extend(
-        "keep",
+        "force",
         {},
         vim.lsp.protocol.make_client_capabilities(),
         has_cmp and cmp_nvim_lsp.default_capabilities() or {},
-        {
-          -- See: https://github.com/neovim/neovim/issues/23291
-          -- ram eater!!! check berkala pada issue ini
-          workspace = {
-            didChangeWatchedFiles = {
-              dynamicRegistration = true,
-            },
-          },
-          textDocument = {
-            foldingRange = {
-              dynamicRegistration = false,
-              lineFoldingOnly = true,
-            },
-          },
-        },
         opts.capabilities or {}
       )
 
@@ -605,7 +572,7 @@ return {
           -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
           if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
             setup(server)
-          else
+          elseif server_opts.enabled ~= false then
             ensure_installed[#ensure_installed + 1] = server
           end
         end
@@ -862,6 +829,7 @@ return {
   -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
+    ft = "markdown",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       vim.fn["mkdp#util#install"]()
@@ -888,15 +856,15 @@ return {
         callback = function()
           -- Only add style, inherit or link to the LSP's colors
           vim.cmd [[
-            highlight! link semshiGlobal  @none
-            highlight! link semshiImported @none
+            " highlight! link semshiGlobal  @none
+            " highlight! link semshiImported @none
             highlight! link semshiParameter @lsp.type.parameter
             highlight! link semshiBuiltin @function.builtin
             highlight! link semshiAttribute @field
             highlight! link semshiSelf @lsp.type.selfKeyword
-            highlight! link semshiUnresolved @none
-            highlight! link semshiFree @none
-            highlight! link semshiAttribute @none
+            " highlight! link semshiUnresolved @none
+            " highlight! link semshiFree @none
+            " highlight! link semshiAttribute @none
             highlight! link semshiParameterUnused @none
             ]]
         end,

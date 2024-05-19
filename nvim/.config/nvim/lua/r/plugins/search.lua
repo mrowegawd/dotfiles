@@ -1,5 +1,8 @@
 local Highlight = require "r.settings.highlights"
 
+local have_make = vim.fn.executable "make" == 1
+local have_cmake = vim.fn.executable "cmake" == 1
+
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 
@@ -772,7 +775,6 @@ return {
       -- { "dF", "<cmd>Telescope diagnostics<cr>", desc = "Diagnostic: workspace diagnostics [telescope]" },
       -- { "<Leader>fg", "<cmd>Telescope live_grep_args<cr>", desc = "Telescope: live grep" },
       -- { "<Leader>fF", "<cmd>Telescope lazy<cr>", desc = "Telescope: plugin files" },
-      { "<Leader>fu", "<cmd>Telescope undo<cr>", desc = "Telescope: undo" },
       -- {
       --   "gs",
       --   function()
@@ -895,12 +897,27 @@ return {
     dependencies = {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
-        build = vim.fn.executable "make" == 1 and "make"
+        build = have_make and "make"
           or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-        enabled = vim.fn.executable "make" == 1 or vim.fn.executable "cmake" == 1,
+        enabled = have_make or have_cmake,
+        config = function(plugin)
+          RUtils.on_load("telescope.nvim", function()
+            local ok, err = pcall(require("telescope").load_extension, "fzf")
+            if not ok then
+              local lib = plugin.dir .. "/build/libfzf." .. (RUtils.is_win() and "dll" or "so")
+              if not vim.uv.fs_stat(lib) then
+                RUtils.warn "`telescope-fzf-native.nvim` not built. Rebuilding..."
+                require("lazy").build({ plugins = { plugin }, show = false }):wait(function()
+                  RUtils.info "Rebuilding `telescope-fzf-native.nvim` done.\nPlease restart Neovim."
+                end)
+              else
+                RUtils.error("Failed to load `telescope-fzf-native.nvim`:\n" .. err)
+              end
+            end
+          end)
+        end,
       },
       "nvim-telescope/telescope-symbols.nvim",
-      "debugloop/telescope-undo.nvim", -- Visualise undotree
       "nvim-telescope/telescope-live-grep-args.nvim",
       "benfowler/telescope-luasnip.nvim",
       "fdschmidt93/telescope-corrode.nvim",
@@ -1019,7 +1036,7 @@ return {
           mappings = {
             i = {
               ["<esc>"] = actions.close,
-              ["<c-c>"] = actions.close,
+              -- ["<c-c>"] = actions.close,
 
               -- ["<c-o>"] = trouble.open_with_trouble,
 
@@ -1114,7 +1131,6 @@ return {
         },
         extensions = {
           lazy = themes.get_ivy {},
-          undo = themes.get_ivy {},
           -- dap = themes.get_ivy {}, -- not working
           live_grep_args = themes.get_ivy {
             auto_quoting = false, -- enable/disable auto-quoting
@@ -1132,8 +1148,6 @@ return {
       telescope.load_extension "fzf"
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "grepqf"
-      ---@diagnostic disable-next-line: undefined-field
-      telescope.load_extension "undo"
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "live_grep_args"
       ---@diagnostic disable-next-line: undefined-field

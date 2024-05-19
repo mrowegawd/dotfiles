@@ -456,7 +456,7 @@ M.LSPActive = {
     local names = {}
     local lsp = rawget(vim, "lsp")
     if lsp then
-      for _, server in pairs(lsp.get_active_clients { bufnr = 0 }) do
+      for _, server in pairs(lsp.get_clients { bufnr = 0 }) do
         table.insert(names, server.name)
       end
     end

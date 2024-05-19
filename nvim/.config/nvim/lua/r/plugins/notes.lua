@@ -210,6 +210,7 @@ return {
                 wiki = RUtils.config.path.wiki_path,
                 wikis = RUtils.config.path.wiki_path .. "/test",
               },
+              index = "index.norg", -- The name of the main (root) .norg file
             },
           },
           ["core.esupports.metagen"] = {
@@ -278,6 +279,24 @@ return {
       }
     end,
   },
+  -- ORG-ROAM (disabled)
+  {
+    "chipsenkbeil/org-roam.nvim",
+    ft = "org",
+    tag = "0.1.0",
+    enabled = false,
+    dependencies = {
+      {
+        "nvim-orgmode/orgmode",
+        -- tag = "0.3.4",
+      },
+    },
+    config = function()
+      require("org-roam").setup {
+        directory = RUtils.config.path.wiki_path,
+      }
+    end,
+  },
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
@@ -304,7 +323,23 @@ return {
         end,
         desc = "Note: open agenda orgmode [orgmode]",
       },
-      -- { "<Localleader>fa", desc = "Note: open agenda orgmode [orgmode]" },
+      -- {
+      --   "<Localleader>ff",
+      --   function()
+      --     return fzf_lua.files {
+      --       prompt = "  ",
+      --       cwd = RUtils.config.path.wiki_path,
+      --       file_ignore_patterns = { "%.norg$", "*.png$" },
+      --       rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]],
+      --
+      --       winopts = {
+      --         -- fullscreen = true,
+      --         title = RUtils.fzflua.format_title("Note Files", ""),
+      --       },
+      --     }
+      --   end,
+      --   desc = "Note: find note files [orgmode]",
+      -- },
     },
     dependencies = {
       "hrsh7th/nvim-cmp",
@@ -564,7 +599,7 @@ return {
     cmd = "Calendar",
     config = true,
   },
-  -- Render Mardown (disabled)
+  -- RENDER MARKDOWN (disabled)
   {
     "MeanderingProgrammer/markdown.nvim",
     enabled = false,
@@ -633,6 +668,7 @@ return {
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
+    pin = true,
     version = "*", -- recommended, use latest release instead of latest commit
     -- event = {
     --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
@@ -640,6 +676,7 @@ return {
     --   fmt("BufReadPre %s", RUtils.config.path.wiki_path),
     --   fmt("BufNewFile %s", RUtils.config.path.wiki_path),
     -- },
+    cmd = { "ObsidianDailies" },
     keys = {
       {
         "<Localleader>fg",
@@ -658,15 +695,20 @@ return {
       {
         "<Localleader>fg",
         function()
-          return fzf_lua.live_grep_glob {
-            prompt = "  ",
-            query = vim.fn.expand "<cword>",
-            cwd = RUtils.config.path.wiki_path,
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
-            winopts = {
-              title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
-            },
-          }
+          local viz = RUtils.cmd.get_visual_selection { strict = true }
+          if viz then
+            return fzf_lua.grep {
+              prompt = "  ",
+              query = string.format("%s", viz.selection),
+              -- no_esc = true,
+              rg_glob = true,
+              cwd = RUtils.config.path.wiki_path,
+              rg_opts = [[--column --line-number --hidden --ignore-case --smart-case -g "*.md" ]],
+              winopts = {
+                title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
+              },
+            }
+          end
         end,
         desc = "Note: live grep notes (visual) [obsidian]",
         mode = "v",
@@ -677,7 +719,7 @@ return {
           return fzf_lua.files {
             prompt = "  ",
             cwd = RUtils.config.path.wiki_path,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
             rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]],
 
             winopts = {
@@ -711,6 +753,11 @@ return {
         "<Localleader>fn",
         ":ObsidianNew ",
         desc = "Note: create new note [obsidian]",
+      },
+      {
+        "<Localleader>fN",
+        "<CMD>ObsidianDailies<CR>",
+        desc = "Note: open create new note dailies [obsidian]",
       },
       {
         "<Localleader>ft",

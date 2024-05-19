@@ -19,18 +19,16 @@ _go_last_pane() {
 _check_pane_is_nnn() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
 }
-
 _check_pane_is_lf() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }')" == "lf" ]
 }
-
 _check_pane_is_nvim() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
+
 _check_pane_is_zsh() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
 }
-
 _create_nnn_window() {
 	# tmux split-pane -hb -p 15 -c '#{pane_current_path}'
 	# NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")
@@ -39,7 +37,6 @@ _create_nnn_window() {
 
 	tmux split-window -hb -p 30 -l 30 -c "#{pane_current_path}" "nnn -c"
 }
-
 _create_lf_window() {
 	# tmux split-pane -hb -p 15 -c '#{pane_current_path}'
 	# NEXT_PANE_ID=$(tmux display-message -p "#{pane_id}")

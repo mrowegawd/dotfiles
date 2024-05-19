@@ -21,6 +21,218 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- PAREN-HINT (disabled)
+  {
+    "briangwaltney/paren-hint.nvim",
+    event = "BufReadPost",
+    enabled = false,
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("paren-hint").setup {
+        highlight = "MyParentHint",
+        -- excluded filetypes
+        excluded_filetypes = {
+          "lspinfo",
+          "packer",
+          "norg",
+          "org",
+          "markdown",
+          "checkhealth",
+          "help",
+          "man",
+          "gitcommit",
+          "TelescopePrompt",
+          "TelescopeResults",
+          "",
+        },
+      }
+    end,
+  },
+  -- CCC (disabled)
+  {
+    "uga-rosa/ccc.nvim",
+    enabled = false,
+    cmd = { "CccPick", "CccConvert", "CccHighlighterToggle" },
+    config = function()
+      local ccc = require "ccc"
+      ccc.setup {
+        highlighter = {
+          auto_enable = true,
+          excludes = {
+            "dart",
+            "lazy",
+            "orgagenda",
+            "org",
+            "NeogitStatus",
+            "toggleterm",
+          },
+        },
+      }
+    end,
+  },
+  -- MINI.INDENTSCOPE (disabled)
+  {
+    "echasnovski/mini.indentscope",
+    enabled = false,
+    version = "*",
+    main = "mini.indentscope",
+    event = { "VeryLazy" },
+    config = function(_, opts)
+      Highlight.plugin("mini.indentscopeUi", {
+        theme = {
+          ["*"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["catppuccin-latte"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+          },
+          ["farout"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+          },
+          ["ayu"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+          },
+          ["nord"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+          },
+          ["vscode_modern"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+          },
+          ["flexoki"] = {
+            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
+          },
+        },
+      })
+      require("mini.indentscope").setup(opts)
+
+      RUtils.cmd.augroup("DetachMiniIndentScope", {
+        event = { "FileType" },
+        pattern = {
+          "DiffviewFiles",
+          "NeogitCommitMessage",
+          "calendar",
+          "NeogitPopup",
+          "NeogitStatus",
+          "NvimTree",
+          "Outline",
+          "TelescopePrompt",
+          "TelescopeResults",
+          "alpha",
+          "checkhealth",
+          "dashboard",
+          "fzf",
+          "gitcommit",
+          "help",
+          "lazy",
+          "lspinfo",
+          "make",
+          "man",
+          "markdown",
+          "mason",
+          "neorg",
+          "norg",
+          "org",
+          "orgagenda",
+          "sagafinder",
+          "trouble",
+        },
+        command = function()
+          vim.b.miniindentscope_disable = true
+        end,
+      })
+    end,
+    opts = {
+      symbol = "┊",
+      mappings = {
+        goto_top = "<leader>k",
+        goto_bottom = "<leader>j",
+      },
+      options = {
+        try_as_border = true,
+      },
+      draw = {
+        animation = function()
+          return 0
+        end,
+      },
+    },
+  },
+  -- INDENT-BLANKLINE (disabled)
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "ColorScheme" },
+    enabled = false,
+    main = "ibl",
+    opts = {
+      scope = { show_start = false, show_end = false },
+      indent = {
+        char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+        tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+        repeat_linebreak = false,
+      },
+      exclude = {
+        filetypes = {
+          "NvimTree",
+          "dashboard",
+          "dbout",
+          "flutterToolsOutline",
+          "fzf",
+          "fzflua",
+          "git",
+          "gitcommit",
+          "help",
+          "log",
+          "man",
+          "markdown",
+          "neo-tree",
+          "neo-tree-popup",
+          "norg",
+          "calendar",
+          "org",
+          "orgagenda",
+          "sagafinder",
+          "trouble",
+          "txt",
+          "undotree",
+          "",
+        },
+      },
+    },
+    config = function(_, opts)
+      Highlight.plugin("ibl_indentline", {
+        theme = {
+          ["*"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["catppuccin-latte"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -1 } } },
+          },
+          ["farout"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+          },
+          ["ayu"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["solarized-osaka"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["flexoki"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+          },
+        },
+      })
+      require("ibl").setup(opts)
+    end,
+  },
+
   -- SPECTRE (disabled)
   {
     "nvim-pack/nvim-spectre",

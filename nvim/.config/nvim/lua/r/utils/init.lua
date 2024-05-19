@@ -1,6 +1,7 @@
 local LazyUtil = require "lazy.core.util"
 
 ---@class r.util: LazyUtilCore
+---@field async r.utils.async
 ---@field config LazyVimConfig
 ---@field ui r.utils.ui
 ---@field qf r.utils.qf
@@ -16,6 +17,8 @@ local LazyUtil = require "lazy.core.util"
 ---@field format r.utils.format
 ---@field buf r.utils.buf
 ---@field plugin r.utils.plugin
+---@field terminal r.utils.terminal
+---@field lazygit r.utils.lazygit
 ---@field tiling r.utils.tiling
 ---@field uisec r.utils.uisec
 ---@field inject r.utils.inject
@@ -83,7 +86,7 @@ end
 
 ---@param name string
 function M.opts(name)
-  local plugin = require("lazy.core.config").plugins[name]
+  local plugin = require("lazy.core.config").spec.plugins[name]
   if not plugin then
     return {}
   end
@@ -215,4 +218,25 @@ function M.write_and_source(buf)
   end, { buffer = buf, desc = "Evaluate current file" })
 end
 
+---@generic T
+---@param list T[]
+---@return T[]
+function M.dedup(list)
+  local ret = {}
+  local seen = {}
+  for _, v in ipairs(list) do
+    if not seen[v] then
+      table.insert(ret, v)
+      seen[v] = true
+    end
+  end
+  return ret
+end
+
+M.CREATE_UNDO = vim.api.nvim_replace_termcodes("<c-G>u", true, true, true)
+function M.create_undo()
+  if vim.api.nvim_get_mode().mode == "i" then
+    vim.api.nvim_feedkeys(M.CREATE_UNDO, "n", false)
+  end
+end
 return M

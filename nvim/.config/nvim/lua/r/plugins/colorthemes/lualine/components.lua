@@ -499,7 +499,7 @@ end
 M.get_lsp_client_notify = function()
   return {
     function()
-      local clients = vim.lsp.get_active_clients { bufnr = 0 }
+      local clients = vim.lsp.get_clients { bufnr = 0 }
 
       if RUtils.cmd.falsy(clients) then
         return "No LSP clients available"

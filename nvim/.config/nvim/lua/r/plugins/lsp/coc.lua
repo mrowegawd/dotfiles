@@ -662,11 +662,6 @@ return {
             end,
           })
         end
-        if opts.inlay_hints.enabled then
-          if client.supports_method "textDocument/inlayHint" then
-            RUtils.toggle.inlay_hints(bufnr, true)
-          end
-        end
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]

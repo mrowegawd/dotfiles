@@ -54,9 +54,7 @@ return {
           priority = 100,
           primary = true,
           format = function(buf)
-            local plugin = require("lazy.core.config").plugins["conform.nvim"]
-            local Plugin = require "lazy.core.plugin"
-            local opts = Plugin.values(plugin, "opts", false)
+            local opts = RUtils.opts "conform.nvim"
             require("conform").format(RUtils.merge(opts.format, { bufnr = buf }))
           end,
           sources = function(buf)
@@ -92,6 +90,7 @@ return {
           python = { "black" },
           go = { "goimports", "gofumpt" },
           rust = { "rustfmt" },
+          kotlin = { "ktlint" },
 
           ["javascript"] = { { "prettierd", "prettier" } },
           ["javascriptreact"] = { { "prettierd", "prettier" } },
