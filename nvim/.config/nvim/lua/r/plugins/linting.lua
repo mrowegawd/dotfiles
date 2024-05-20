@@ -100,6 +100,7 @@ return {
         cmake = { "cmakelint" },
         markdown = { "markdownlint", "codespell" },
         norg = { "codespell" },
+        org = { "codespell" },
         go = { "golangcilint" },
         docker = { "hadolint" },
         -- Use the "*" filetype to run linters on all filetypes.
@@ -115,8 +116,8 @@ return {
         markdownlint = {
           args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
         },
-        cspell = {
-          args = { "--config=" .. vim.env.HOME .. "/.config/linters/cspell.json" },
+        codespell = {
+          args = { "--ignore-words", vim.env.HOME .. "/.config/linters/cspell-ignore-words.txt" },
         },
 
         -- Example of using selene only when a selene.toml file is present

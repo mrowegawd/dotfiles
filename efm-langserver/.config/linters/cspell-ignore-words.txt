@@ -6,5 +6,6 @@ dbaeumer
 esbenp
 flagger
 flaggy
-shit
+lama
 maka
+shit
