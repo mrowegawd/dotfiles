@@ -4,7 +4,9 @@ return {
   -- LSPSAGA
   {
     "nvimdev/lspsaga.nvim",
-    cmd = "Lspsaga",
+    event = "LspAttach",
+    -- dev = true,
+    -- cmd = "Lspsaga",
     dependencies = {
       { "nvim-tree/nvim-web-devicons" },
       { "nvim-treesitter/nvim-treesitter" },
@@ -12,7 +14,7 @@ return {
     config = function(_, opts)
       Highlight.plugin("LspsagaCustomHi", {
         -- { SagaBorder = { link = "NormalFloat" } },
-        { SagaTitle = { bg = "red" } },
+        { SagaTitle = { bg = "red", fg = "black", bold = true } },
         { SagaFileName = { link = "Directory" } },
         -- { SagaFinderFName = { bg = { from = "Boolean", attr = "fg" }, fg = { from = "Normal", attr = "bg" } } },
         -- { SagaFolderName = { link = "Directory" } },
@@ -23,15 +25,17 @@ return {
     end,
     opts = {
       ui = {
-        expand = "",
-        collapse = "",
+        border = "rounded",
+        devicon = true,
+        foldericon = true,
+        title = true,
+        expand = "⊞",
+        collapse = "⊟",
         code_action = "💡",
-        incoming = " ",
-        outgoing = " ",
-        actionfix = " ",
-        hover = " ",
-        theme = "arrow",
-        lines = { "┗", "┣", "┃", "━" },
+        lines = { "┗", "┣", "┃", "━", "┏" },
+        kind = nil,
+        button = { "", "" },
+        imp_sign = "󰳛 ",
       },
       diagnostic = {
         keys = {
@@ -59,6 +63,8 @@ return {
         scroll_up = "<C-u>",
       },
       finder = {
+        max_height = 0.8,
+        left_width = 0.7,
         keys = {
           jump_to = "o",
           edit = { "e", "<CR>" },
@@ -102,13 +108,14 @@ return {
       outline = {
         win_position = "right",
         win_with = "",
+        layout = "normal", -- normal, layout
         win_width = 30,
-        auto_preview = false,
-        auto_refresh = true,
+        auto_preview = true,
+        detail = true,
         auto_close = true,
-        custom_sort = nil,
-        preview_width = 0.4,
         close_after_jump = false,
+        max_height = 0.5,
+        left_width = 0.3,
         keys = {
           expand_or_jump = "o",
           quit = "q",
@@ -158,24 +165,6 @@ return {
       "DevdocsUpdate",
       "DevdocsUpdateAll",
     },
-  },
-  -- GLANCE
-  {
-    "dnlhc/glance.nvim",
-    event = "LspAttach",
-    config = function()
-      local glance = require "glance"
-      local actions = glance.actions
-      glance.setup {
-        mappings = {
-          list = {
-            ["<c-v>"] = actions.jump_vsplit,
-            ["<c-s>"] = actions.jump_split,
-            ["<c-t>"] = actions.jump_tab,
-          },
-        },
-      }
-    end,
   },
   -- SYMBOL-USAGE
   {

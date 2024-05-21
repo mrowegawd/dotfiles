@@ -65,7 +65,7 @@ return {
         end,
       },
     },
-    config = function()
+    opts = function()
       local MAX_INDEX_FILE_SIZE = 1024
       local cmp = require "cmp"
 
@@ -114,38 +114,28 @@ return {
         end
         return opts
       end
-
-      cmp.setup {
-        -- enabled = function()
-        --   return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
-        -- end,
+      return {
+        auto_brackets = { "python" }, -- configure any filetype to auto add brackets
         window = {
           completion = cmp.config.window.bordered(styldoc()),
           documentation = cmp.config.window.bordered(styldoc(true)),
         },
-        completion = {
-
-          -- this is important
-          -- @see https://github.com/hrsh7th/nvim-cmp/discussions/1411
-          completeopt = "menuone,noinsert,noselect",
-        },
+        completion = { completeopt = "menuone,noinsert,noselect" },
         snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
+          expand = function(item)
+            return RUtils.cmp.expand(item.body)
           end,
         },
         experimental = { ghost_text = false },
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
-          -- cmp_tabnine = 1,
           buffer = 1,
           rg = 1,
           path = 1,
         },
         formatting = {
           fields = { "kind", "abbr", "menu" },
-
           format = function(entry, item)
             local label_width = 30
             local label = item.abbr
@@ -215,7 +205,6 @@ return {
             cmp.config.compare.sort_text,
           },
         },
-
         mapping = {
           ["<C-r>"] = cmp.mapping(function(_)
             if callme == 0 then
@@ -301,17 +290,12 @@ return {
           ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<CR>"] = function(fallback)
-            if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
-              RUtils.create_undo()
-              if cmp.confirm { select = true } then
-                return
-              end
-            end
-
-            return fallback()
+          ["<CR>"] = RUtils.cmp.confirm(),
+          ["<c-y>"] = RUtils.cmp.confirm { behavior = cmp.ConfirmBehavior.Replace },
+          ["<C-e>"] = function(fallback)
+            cmp.abort()
+            fallback()
           end,
-          ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
         },
         sources = { -- remember: do not use `group_index`,
           {
@@ -351,6 +335,23 @@ return {
           { name = "path", max_item_count = 10 },
         },
       }
+    end,
+
+    config = function(_, opts)
+      local cmp = require "cmp"
+      for _, source in ipairs(opts.sources) do
+        source.group_index = source.group_index or 1
+      end
+      cmp.setup(opts)
+
+      cmp.event:on("confirm_done", function(event)
+        if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
+          RUtils.cmp.auto_brackets(event.entry)
+        end
+      end)
+      cmp.event:on("menu_opened", function(event)
+        RUtils.cmp.add_missing_snippet_docs(event.window)
+      end)
 
       local tbl_custom_sources = {
         { name = "nvim_lsp", max_item_count = 20 },

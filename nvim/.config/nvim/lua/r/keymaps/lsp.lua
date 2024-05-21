@@ -32,25 +32,22 @@ function M.get()
       desc = "LSP: preview/peek definitions [goto-preview]",
     },
     { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
-    -- { "gd", vim.lsp.buf.definition, desc = "LSP: definition" },
-    { "gd", "<CMD>Glance definitions<CR>", desc = "LSP: definition [glance]" },
+    { "gd", "<CMD>Lspsaga goto_definition<CR>", desc = "LSP: definition [lspsaga]" },
     {
       "gD",
       function()
         vim.cmd.split()
-        -- vim.cmd "vertical resize"
-
-        vim.schedule(function()
-          RUtils.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-            local what = {
-              idx = "$",
-              items = ret,
-              title = "LSP definitions ref",
-            }
-            vim.fn.setqflist({}, " ", what)
-            vim.cmd [[copen]]
-          end, "lsp_definitions")
-        end)
+        -- vim.schedule(function()
+        RUtils.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
+          local what = {
+            idx = "$",
+            items = ret,
+            title = "LSP definitions ref",
+          }
+          vim.fn.setqflist({}, " ", what)
+        end, "lsp_definitions")
+        -- end)
+        vim.cmd [[copen]]
       end,
       desc = "LSP: collect definitions and send to quickfix list",
     },
@@ -72,9 +69,9 @@ function M.get()
     {
       "gr",
       function()
-        vim.cmd [[Glance references]]
+        vim.cmd [[Lspsaga finder]]
       end,
-      desc = "LSP: references [glance]",
+      desc = "LSP: references [lspsaga]",
     },
     {
       "gR",
@@ -129,7 +126,8 @@ function M.get()
     {
       "dP",
       function()
-        vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
+        -- vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
+        vim.cmd [[Lspsaga show_line_diagnostics ]]
       end,
       desc = "Diagnostic: preview",
     },

@@ -265,11 +265,14 @@ return {
             ["<F2>"] = "toggle-fullscreen",
             ["<F4>"] = "toggle-preview-cw",
 
-            ["<a-p>"] = "toggle-preview",
             ["<c-p>"] = "toggle-preview",
 
             ["<c-d>"] = "preview-page-down",
             ["<c-u>"] = "preview-page-up",
+          },
+          fzf = {
+            ["ctrl-d"] = "preview-page-down",
+            ["ctrl-u"] = "preview-page-up",
           },
         },
         files = {

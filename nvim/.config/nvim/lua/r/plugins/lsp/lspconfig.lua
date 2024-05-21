@@ -510,16 +510,8 @@ return {
         end
       end)
 
-      local register_capability = vim.lsp.handlers["client/registerCapability"]
-
-      ---@diagnostic disable-next-line: duplicate-set-field
-      vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
-        local ret = register_capability(err, res, ctx)
-        local client = vim.lsp.get_client_by_id(ctx.client_id)
-        local buffer = vim.api.nvim_get_current_buf()
-        require("r.keymaps.lsp").on_attach(client, buffer)
-        return ret
-      end
+      RUtils.lsp.setup_dynamic_capability()
+      RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
 
       if vim.fn.has "nvim-0.10.0" == 0 then
         for severity, icon in pairs(opts.diagnostics.signs.text) do
