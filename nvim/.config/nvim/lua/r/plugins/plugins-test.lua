@@ -50,6 +50,47 @@ return {
       }
     end,
   },
+  -- YANKYYANK.NVIM (disabled)
+  {
+    "gbprod/yanky.nvim",
+    enabled = false,
+    dependencies = not RUtils.is_win() and { "kkharji/sqlite.lua" } or {},
+    opts = {
+      highlight = { timer = 250 },
+      ring = { storage = RUtils.is_win() and "shada" or "sqlite" },
+    },
+    keys = {
+        -- stylua: ignore
+      { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Misc(yank): Yank text" },
+      { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text after cursor" },
+      { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text before cursor" },
+      { "gp", "<Plug>(YankyGPutAfter)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text after selection" },
+      { "gP", "<Plug>(YankyGPutBefore)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text before selection" },
+      { "[y", "<Plug>(YankyCycleForward)", desc = "Misc(yank): Cycle forward through yank history" },
+      { "]y", "<Plug>(YankyCycleBackward)", desc = "Misc(yank): Cycle backward through yank history" },
+      { "]p", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Misc(yank): Put indented after cursor (linewise)" },
+      { "[p", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Misc(yank): Put indented before cursor (linewise)" },
+      { "]P", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Misc(yank): Put indented after cursor (linewise)" },
+      { "[P", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Misc(yank): Put indented before cursor (linewise)" },
+      { ">p", "<Plug>(YankyPutIndentAfterShiftRight)", desc = "Misc(yank): Put and indent right" },
+      { "<p", "<Plug>(YankyPutIndentAfterShiftLeft)", desc = "Misc(yank): Put and indent left" },
+      { ">P", "<Plug>(YankyPutIndentBeforeShiftRight)", desc = "Misc(yank): Put before and indent right" },
+      { "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)", desc = "Misc(yank): Put before and indent left" },
+      { "=p", "<Plug>(YankyPutAfterFilter)", desc = "Misc(yank): Put after applying a filter" },
+      { "=P", "<Plug>(YankyPutBeforeFilter)", desc = "Misc(yank): Put before applying a filter" },
+    },
+  },
+  -- GKEEP (disabled; plugin di tinggalkan oleh author nya sendiri karena lack
+  -- of API dari google sendiri)
+  {
+    -- Check and run: `python3 -m pip install gkeepapi keyring`
+    "stevearc/gkeep.nvim", -- ga bisa dipake lagi? Karana `checkhealth gkeep` aja error!
+    enabled = false,
+    event = "BufReadPre gkeep://*",
+    build = "UpdateRemotePlugins",
+    cmd = { "GkeepToggle", "GkeepOpen" },
+    opts = {},
+  },
   -- CCC (disabled)
   {
     "uga-rosa/ccc.nvim",
@@ -730,162 +771,278 @@ return {
       -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
     },
   },
-  -- AERIAL (disabled)
+  -- OUTLINE.NVIM (false)
   {
-    "stevearc/aerial.nvim",
-    event = "LazyFile",
+    "hedyhli/outline.nvim",
+    cmd = { "Outline", "OutlineFocus", "OutlineClose" },
     enabled = false,
-    init = function()
-      RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
+    keys = {
+      {
+        "<Localleader>oa",
+        function()
+          if not is_outline_opened then
+            is_outline_opened = true
+            vim.cmd.Outline()
+          else
+            is_outline_opened = false
+            vim.cmd.OutlineClose()
+          end
+        end,
+        desc = "Misc: toggle open/close outline window [outline]",
+      },
+      {
+        "<Localleader>O",
+        function()
+          if vim.bo.filetype ~= "Outline" then
+            local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
+            if outline_win.found then
+              vim.cmd.OutlineFocus()
+            end
+          end
+        end,
+        desc = "Misc: move cursor to outline window [outline]",
+      },
+      {
+        "<Localleader>oA",
+        function()
+          if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
+            return
+          end
 
-      api.nvim_create_autocmd("FileType", {
-        pattern = { "aerial" },
-        callback = function()
-          vim.keymap.set("n", "zM", function()
-            local aerial = require "aerial"
-            return aerial.tree_close_all()
-          end, {
-            buffer = api.nvim_get_current_buf(),
-          })
-          vim.keymap.set("n", "zO", function()
-            local aerial = require "aerial"
-            return aerial.tree_open_all()
-          end, {
-            buffer = api.nvim_get_current_buf(),
+          if vim.bo[0].filetype == "outline" then
+            vim.cmd "wincmd w"
+          end
+
+          local outline_providers_selected = { "all" }
+
+          for key, icon in pairs(RUtils.config.icons.kinds) do
+            table.insert(outline_providers_selected, icon .. " " .. key)
+          end
+
+          fzf_lua.fzf_exec(outline_providers_selected, {
+            prompt = "  ",
+            no_esc = true,
+            fzf_opts = { ["--layout"] = "reverse" },
+            winopts_fn = {
+              width = widthc,
+              height = heightc,
+            },
+            winopts = {
+              title = "[Outline] filter symbols",
+              row = 1,
+              relative = "cursor",
+              height = 0.33,
+              width = widthc / (widthc + vim_width - 10),
+            },
+            actions = {
+              ["default"] = function(selected, _)
+                local sel = {}
+                for word in selected[1]:gmatch "%w+" do
+                  table.insert(sel, word)
+                end
+                local selection = sel[1]
+
+                if selection ~= nil and type(selection) == "string" then
+                  local opts_outline = RUtils.opts "outline.nvim"
+                  local outline = get_outline()
+
+                  local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
+                  if outline_win.found then
+                    outline.close_outline()
+                  end
+
+                  vim.cmd "e "
+                  if selection == "all" then
+                    opts_outline.symbols.filter = nil
+                  else
+                    opts_outline.symbols.filter = { selection }
+                  end
+                  outline.setup(opts_outline)
+
+                  vim.schedule(function()
+                    outline.open_outline()
+                  end)
+                end
+              end,
+            },
           })
         end,
-      })
-    end,
-    keys = function()
-      local function get_aerial()
-        local ok_aerial, aerial = pcall(require, "aerial")
-        return ok_aerial and aerial or {}
-      end
-
-      local height = vim.o.lines - vim.o.cmdheight
-      if vim.o.laststatus ~= 0 then
-        height = height - 1
-      end
-
-      local vim_width = vim.o.columns
-      local vim_height = height
-
-      local widthc = math.floor(vim_width / 2 + 8)
-      local heightc = math.floor(vim_height / 2 - 5)
-
-      return {
-        {
-          "<Localleader>oa",
-          function()
-            RUtils.tiling.force_win_close({}, true)
-            vim.cmd [[AerialToggle right]]
-            -- if vim.bo[0].filetype == "aerial" then
-            --   vim.cmd [[wincmd L]]
-            -- end
-          end,
-          desc = "Misc: toggle aerial [aerial]",
-        },
-        {
-          "<Localleader>oA",
-          function()
-            if vim.bo[0].filetype == "norg" then
-              return
-            end
-
-            local aerial_selected = {
-              "Class",
-              "Constructor",
-              "Object",
-              "Enum",
-              "Function",
-              "Interface",
-              "Variable",
-              "Module",
-              "Method",
-              "Struct",
-              "all",
-            }
-            fzf_lua.fzf_exec(aerial_selected, {
-              prompt = "  ",
-              no_esc = true,
-              fzf_opts = { ["--layout"] = "reverse" },
-              winopts_fn = {
-                width = widthc,
-                height = heightc,
-              },
-              winopts = {
-                title = "[Aerial] Change filter kind",
-                row = 1,
-                relative = "cursor",
-                height = 0.33,
-                width = widthc / (widthc + vim_width - 10),
-              },
-              actions = {
-                ["default"] = function(selected, _)
-                  local selection = selected[1]
-                  if selection ~= nil and type(selection) == "string" then
-                    local opts_aerial = RUtils.opts "aerial.nvim"
-                    local aerial = get_aerial()
-                    aerial.close()
-
-                    local path = vim.fn.expand "%:p"
-                    vim.cmd [[bd]]
-                    vim.cmd("e " .. path)
-                    if selection == "all" then
-                      opts_aerial.filter_kind = false
-                    else
-                      opts_aerial.filter_kind = { selection }
-                    end
-                    aerial.setup(opts_aerial)
-                    aerial.open()
-                  end
-                end,
-              },
-            })
-          end,
-          desc = "Misc: change filter kind aerial [aerial]",
-        },
-      }
-    end,
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+        desc = "Misc: change filter kind [outline]",
+      },
+    },
     opts = function()
-      ---@diagnostic disable-next-line: undefined-field
-      require("telescope").load_extension "aerial"
-
-      local vim_width = vim.o.columns
-      vim_width = math.floor(vim_width / 2 - 30)
-      return {
-        attach_mode = "global",
-        backends = { "lsp", "treesitter", "markdown", "man" },
-        layout = { min_width = vim_width },
-        -- fold code from tree (overwrites treesitter foldexpr)
-        manage_folds = false,
-        show_guides = true,
-        guides = {
-          mid_item = "├╴",
-          last_item = "└╴",
-          nested_top = "│ ",
-          whitespace = "  ",
+      RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
+      Highlight.plugin("OutlineAuHi", {
+        theme = {
+          ["*"] = {
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.5 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineFoldMarker = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineLineno = {
+                bg = "NONE",
+              },
+            },
+          },
+          ["onedark"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = 0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.1 },
+                bg = "NONE",
+              },
+            },
+          },
+          ["solarized-osaka"] = {
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+                bg = "NONE",
+              },
+            },
+          },
+          ["selenized"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = 0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineCurrent = {
+                fg = { from = "Error", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg" },
+                bg = "NONE",
+              },
+            },
+          },
+          ["miasma"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.2 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+              },
+            },
+          },
         },
-        whitespace = "  ",
-        filter_kind = false,
-        icons = RUtils.config.icons.kinds,
+      })
+
+      local kind = RUtils.config.icons.kinds
+
+      return {
+        outline_window = {
+          position = "right",
+          winhl = "Normal:Normal,EndOfBuffer:None,NonText:Normal",
+          focus_on_open = false,
+        },
+        symbols = {
+          filter = nil,
+          -- icons = RUtils.config.icons.kinds,
+          icons = {
+            File = { icon = kind.File, hl = "Identifier" },
+            Module = { icon = kind.Module, hl = "Include" },
+            Namespace = { icon = kind.Namespace, hl = "Include" },
+            Package = { icon = kind.Package, hl = "Include" },
+            Class = { icon = kind.Class, hl = "Type" },
+            Method = { icon = kind.Method, hl = "Function" },
+            Property = { icon = kind.Property, hl = "Identifier" },
+            Field = { icon = kind.Field, hl = "Identifier" },
+            Constructor = { icon = kind.Constructor, hl = "Special" },
+            Enum = { icon = kind.Enum, hl = "Type" },
+            Interface = { icon = kind.Interface, hl = "Type" },
+            Function = { icon = kind.Function, hl = "Function" },
+            Variable = { icon = kind.Variable, hl = "Constant" },
+            Constant = { icon = kind.Constant, hl = "Constant" },
+            String = { icon = kind.String, hl = "String" },
+            Number = { icon = kind.number, hl = "Number" },
+            Boolean = { icon = kind.Boolean, hl = "Boolean" },
+            Array = { icon = kind.Array, hl = "Constant" },
+            Object = { icon = kind.Object, hl = "Type" },
+            Key = { icon = kind.Key, hl = "Type" },
+            Null = { icon = kind.Null, hl = "Type" },
+            EnumMember = { icon = kind.EnumNumber, hl = "Identifier" },
+            Struct = { icon = kind.Struct, hl = "Structure" },
+            Event = { icon = kind.Event, hl = "Type" },
+            Operator = { icon = kind.Operator, hl = "Identifier" },
+            TypeParameter = { icon = kind.TypeParameter, hl = "Identifier" },
+            Component = { icon = kind.Component, hl = "Function" },
+            Fragment = { icon = "󰅴", hl = "Constant" },
+
+            TypeAlias = { icon = kind.TypeAlias, hl = "Type" },
+            Parameter = { icon = kind.Parameter, hl = "Identifier" },
+            StaticMethod = { icon = kind.StaticMethod, hl = "Function" },
+            Macro = { icon = kind.Macro, hl = "Function" },
+          },
+          --
+        },
+        preview_window = {
+          live = true,
+          winhl = "NormalFloat:NormalFloat",
+        },
+        -- These keymaps can be a string or a table for multiple keys.
+        -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
         keymaps = {
-          -- ["o"] = "actions.jump",
-          ["o"] = "actions.scroll",
-          -- ["]y"] = "actions.next",
-          -- ["[y"] = "actions.prev",
-          ["<a-n>"] = "actions.down_and_scroll",
-          ["<a-p>"] = "actions.up_and_scroll",
-          -- ["<a-n>"] = "actions.next",
-          -- ["<a-p>"] = "actions.prev",
-          -- ["zM"] = "actions.tree_close_all",
-          ["{"] = false,
-          ["}"] = false,
-          ["[["] = false,
-          ["]]"] = false,
-          ["zM"] = false,
-          ["zO"] = false,
+          show_help = "?",
+          close = { "<Esc>", "q", "<Leader><TAB>" },
+          goto_location = { "<Cr>", "o" },
+          peek_location = {},
+          goto_and_close = {},
+          restore_location = {},
+          hover_symbol = {},
+          toggle_preview = { "P", "p" },
+          rename_symbol = {},
+          code_actions = {},
+          fold = "h",
+          fold_toggle = { "<tab>", "za" },
+          fold_toggle_all = "<S-tab>",
+          unfold = "l",
+          fold_all = { "zm", "zM" },
+          unfold_all = { "zO", "zR" },
+          fold_reset = "<space><space>",
+          down_and_goto = "<a-n>",
+          up_and_goto = "<a-p>",
         },
       }
     end,
@@ -1518,60 +1675,6 @@ return {
     keys = {
       { "<Localleader>P", "<cmd>PasteImage<cr>", desc = "Paste clipboard image" },
     },
-  },
-  -- TROUBLE.NVIM (disabled)
-  {
-    "folke/trouble.nvim",
-    enabled = false,
-    cmd = { "TroubleToggle", "Trouble" },
-    keys = {
-      { "<Localleader>tt", "<CMD>TroubleToggle<CR>", desc = "Misc(trouble): toggle", mode = { "n", "v" } },
-      { "<Leader>q", "<CMD>TroubleToggle quickfix<CR>", desc = "Misc(trouble): quickfix", mode = { "n", "v" } },
-    },
-    opts = function()
-      Highlight.plugin("trouble", {
-        { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
-        { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
-        { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
-        { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-        { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-        { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-        { TroubleIndent = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
-        { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
-        { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-        {
-          TroubleCount = {
-            bg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
-            fg = { from = "DiagnosticSignError", attr = "fg", alter = 0.1 },
-          },
-        },
-      })
-      return {
-        auto_open = false,
-        use_diagnostic_signs = true, -- en
-        action_keys = {
-          -- map to {} to remove a mapping, for example:
-          -- close = {},
-          close = { "q", "<leader><Tab>" }, -- close the list
-          cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-          refresh = "r", -- manually refresh
-          jump = "o", -- jump to the diagnostic or open / close folds
-          open_split = { "<c-s>" }, -- open buffer in new split
-          open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-          open_tab = { "<c-t>" }, -- open buffer in new tab
-          jump_close = "<cr>", -- jump to the diagnostic and close the list
-          toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-          toggle_preview = "p", -- toggle auto_preview
-          hover = "K", -- opens a small popup with the full multiline message
-          preview = "p", -- preview the diagnostic location
-          close_folds = { "zM", "zm" }, -- close all folds
-          open_folds = { "zR", "zr" }, -- open all folds
-          toggle_fold = { "zA", "za" }, -- toggle fold of current file
-          previous = "k", -- previous item
-          next = "j", -- next item
-        },
-      }
-    end,
   },
   -- PERSISTED NVIM (disabled)
   {

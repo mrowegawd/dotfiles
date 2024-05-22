@@ -1,12 +1,6 @@
 local Highlight = require "r.settings.highlights"
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-local is_outline_opened = false
-
-local function get_outline()
-  local ok_outline, outline = pcall(require, "outline")
-  return ok_outline and outline or {}
-end
 
 return {
   -- NEO-TREE
@@ -238,13 +232,14 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- OUTLINE.NVIM
+  -- AERIAL
   {
-    "hedyhli/outline.nvim",
-    cmd = "Outline",
+    "stevearc/aerial.nvim",
+    event = "LazyFile",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
-      RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
-      Highlight.plugin("OutlineAuHi", {
+      RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
+      Highlight.plugin("AerialAuHi", {
         theme = {
           ["*"] = {
             {
@@ -253,173 +248,125 @@ return {
                 bg = "NONE",
               },
             },
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.5 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineFoldMarker = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineLineno = {
-                bg = "NONE",
-              },
-            },
+            -- {
+            --   OutlineDetails = {
+            --     fg = { from = "Comment", attr = "fg", alter = -0.5 },
+            --     bg = "NONE",
+            --   },
+            -- },
+            -- {
+            --   OutlineFoldMarker = {
+            --     fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+            --     bg = "NONE",
+            --   },
+            -- },
+            -- {
+            --   OutlineGuides = {
+            --     fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
+            --     bg = "NONE",
+            --   },
+            -- },
+            -- {
+            --   OutlineLineno = {
+            --     bg = "NONE",
+            --   },
+            -- },
           },
-          ["onedark"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = 0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.1 },
-                bg = "NONE",
-              },
-            },
-          },
-          ["solarized-osaka"] = {
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
-          },
-          ["selenized"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = 0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "Error", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg" },
-                bg = "NONE",
-              },
-            },
-          },
-          ["miasma"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-              },
-            },
-          },
+          -- ["onedark"] = {
+          --   {
+          --     OutlineDetails = {
+          --       fg = { from = "Comment", attr = "fg", alter = 0.05 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          --   {
+          --     OutlineGuides = {
+          --       fg = { from = "FoldColumn", attr = "fg", alter = 0.1 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          -- },
+          -- ["solarized-osaka"] = {
+          --   {
+          --     OutlineGuides = {
+          --       fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          -- },
+          -- ["selenized"] = {
+          --   {
+          --     OutlineDetails = {
+          --       fg = { from = "Comment", attr = "fg", alter = 0.1 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          --   {
+          --     OutlineCurrent = {
+          --       fg = { from = "Error", attr = "fg", alter = -0.1 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          --   {
+          --     OutlineGuides = {
+          --       fg = { from = "FoldColumn", attr = "fg" },
+          --       bg = "NONE",
+          --     },
+          --   },
+          -- },
+          -- ["miasma"] = {
+          --   {
+          --     OutlineDetails = {
+          --       fg = { from = "Comment", attr = "fg", alter = -0.2 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          --   {
+          --     OutlineGuides = {
+          --       fg = { from = "FoldColumn", attr = "fg", alter = 0.05 },
+          --       bg = "NONE",
+          --     },
+          --   },
+          --   {
+          --     OutlineCurrent = {
+          --       fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+          --     },
+          --   },
+          -- },
         },
       })
 
-      local kind = RUtils.config.icons.kinds
+      -- ---@diagnostic disable-next-line: undefined-field
+      -- require("telescope").load_extension "aerial"
+
+      local vim_width = vim.o.columns
+      vim_width = math.floor(vim_width / 2 - 30)
 
       return {
-        outline_window = {
-          position = "right",
-          split_command = nil,
-          width = 25,
-          winhl = "Normal:Pmenu,EndOfBuffer:None,NonText:Normal",
-          -- ¦  winhighlight = "Search:None,EndOfBuffer:None",
-          -- ¦  winhighlight = "Search:None,EndOfBuffer:None",
-          -- ¦  winhighlight = "Search:None,EndOfBuffer:None",
-          focus_on_open = false,
+        attach_mode = "global",
+        backends = { "lsp", "treesitter", "markdown", "man" },
+        layout = { min_width = vim_width },
+        show_guides = true,
+        guides = {
+          mid_item = "├╴",
+          last_item = "└╴",
+          nested_top = "│ ",
+          whitespace = "  ",
         },
-        symbols = {
-          filter = nil,
-          -- icons = RUtils.config.icons.kinds,
-          icons = {
-            File = { icon = kind.File, hl = "Identifier" },
-            Module = { icon = kind.Module, hl = "Include" },
-            Namespace = { icon = kind.Namespace, hl = "Include" },
-            Package = { icon = kind.Package, hl = "Include" },
-            Class = { icon = kind.Class, hl = "Type" },
-            Method = { icon = kind.Method, hl = "Function" },
-            Property = { icon = kind.Property, hl = "Identifier" },
-            Field = { icon = kind.Field, hl = "Identifier" },
-            Constructor = { icon = kind.Constructor, hl = "Special" },
-            Enum = { icon = kind.Enum, hl = "Type" },
-            Interface = { icon = kind.Interface, hl = "Type" },
-            Function = { icon = kind.Function, hl = "Function" },
-            Variable = { icon = kind.Variable, hl = "Constant" },
-            Constant = { icon = kind.Constant, hl = "Constant" },
-            String = { icon = kind.String, hl = "String" },
-            Number = { icon = kind.number, hl = "Number" },
-            Boolean = { icon = kind.Boolean, hl = "Boolean" },
-            Array = { icon = kind.Array, hl = "Constant" },
-            Object = { icon = kind.Object, hl = "Type" },
-            Key = { icon = kind.Key, hl = "Type" },
-            Null = { icon = kind.Null, hl = "Type" },
-            EnumMember = { icon = kind.EnumNumber, hl = "Identifier" },
-            Struct = { icon = kind.Struct, hl = "Structure" },
-            Event = { icon = kind.Event, hl = "Type" },
-            Operator = { icon = kind.Operator, hl = "Identifier" },
-            TypeParameter = { icon = kind.TypeParameter, hl = "Identifier" },
-            Component = { icon = kind.Component, hl = "Function" },
-            Fragment = { icon = "󰅴", hl = "Constant" },
-
-            TypeAlias = { icon = kind.TypeAlias, hl = "Type" },
-            Parameter = { icon = kind.Parameter, hl = "Identifier" },
-            StaticMethod = { icon = kind.StaticMethod, hl = "Function" },
-            Macro = { icon = kind.Macro, hl = "Function" },
-          },
-          --
-        },
-        preview_window = {
-          live = true,
-          winhl = "NormalFloat:NormalFloat",
-        },
-        -- These keymaps can be a string or a table for multiple keys.
-        -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
+        manage_folds = false,
+        link_tree_to_folds = false,
+        highlight_mode = "full_width",
+        link_folds_to_tree = false,
+        filter_kind = false,
+        icons = RUtils.config.icons.kinds,
         keymaps = {
-          show_help = "?",
-          close = { "<Esc>", "q", "<Leader><TAB>" },
-          goto_location = { "<Cr>", "o" },
-          peek_location = {},
-          goto_and_close = {},
-          restore_location = {},
-          hover_symbol = {},
-          toggle_preview = { "P", "p" },
-          rename_symbol = {},
-          code_actions = {},
-          fold = "h",
-          fold_toggle = { "<tab>", "za" },
-          fold_toggle_all = "<S-tab>",
-          unfold = "l",
-          fold_all = { "zm", "zM" },
-          unfold_all = { "zO", "zR" },
-          fold_reset = "<space><space>",
-          down_and_goto = "<a-n>",
-          up_and_goto = "<a-p>",
+          ["<a-n>"] = "actions.down_and_scroll",
+          ["<a-p>"] = "actions.up_and_scroll",
+          ["{"] = false,
+          ["o"] = "actions.jump",
+          ["}"] = false,
+          ["[["] = false,
+          ["]]"] = false,
         },
       }
     end,
@@ -431,6 +378,11 @@ return {
       local height = vim.o.lines - vim.o.cmdheight
       if vim.o.laststatus ~= 0 then
         height = height - 1
+      end
+
+      local function get_aerial()
+        local ok_aerial, aerial = pcall(require, "aerial")
+        return ok_aerial and aerial or {}
       end
 
       local vim_width = vim.o.columns
@@ -468,64 +420,39 @@ return {
           desc = "Git: open file explore for git status [neotree]",
         },
         {
-          "<Localleader>oa",
-          function()
-            if not is_outline_opened then
-              is_outline_opened = true
-            else
-              is_outline_opened = false
-            end
-            vim.cmd.Outline()
-          end,
-          desc = "Misc: toggle open/close outline window [outline]",
-        },
-        {
           "<Localleader>O",
           function()
-            if vim.bo.filetype ~= "Outline" then
-              local outline_tbl = { found = false, winbufnr = 0, winnr = 0, winid = 0 }
-              for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
-                if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
-                  local winbufnr = vim.fn.winbufnr(winnr)
-
-                  local winid = vim.fn.win_findbuf(winbufnr)[1] -- yang dibutuhkan itu winid (example winid: 1004, 1005)
-
-                  if winbufnr > 0 then
-                    local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
-
-                    if winft == "Outline" then
-                      outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid }
-                    end
-                  end
-                end
-              end
-
-              if outline_tbl.found and is_outline_opened then
-                -- print(vim.inspect(outline_tbl))
-                vim.api.nvim_set_current_win(outline_tbl.winid)
+            local right_win = "aerial"
+            if vim.bo.filetype ~= right_win then
+              local outline_win = RUtils.cmd.windows_is_opened { right_win }
+              if outline_win.found then
+                vim.api.nvim_set_current_win(outline_win.winid)
               end
             end
           end,
           desc = "Misc: move cursor to outline window [outline]",
         },
         {
+          "<Localleader>oa",
+          function()
+            vim.cmd [[AerialToggle right]]
+          end,
+          desc = "Misc: toggle aerial [aerial]",
+        },
+        {
           "<Localleader>oA",
           function()
-            if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
+            if vim.bo[0].filetype == "norg" then
               return
             end
 
-            if vim.bo[0].filetype == "outline" then
-              vim.cmd "wincmd w"
-            end
-
-            local aerial_selected = { "all" }
+            local aerial_provider_selected = { "all" }
 
             for key, icon in pairs(RUtils.config.icons.kinds) do
-              table.insert(aerial_selected, icon .. " " .. key)
+              table.insert(aerial_provider_selected, icon .. " " .. key)
             end
 
-            fzf_lua.fzf_exec(aerial_selected, {
+            fzf_lua.fzf_exec(aerial_provider_selected, {
               prompt = "  ",
               no_esc = true,
               fzf_opts = { ["--layout"] = "reverse" },
@@ -534,7 +461,7 @@ return {
                 height = heightc,
               },
               winopts = {
-                title = "[Outline] filter symbols",
+                title = "[Aerial] Change filter kind",
                 row = 1,
                 relative = "cursor",
                 height = 0.33,
@@ -549,33 +476,31 @@ return {
                   local selection = sel[1]
 
                   if selection ~= nil and type(selection) == "string" then
-                    local opts_outline = RUtils.opts "outline.nvim"
-                    local outline = get_outline()
-                    if outline.is_open and is_outline_opened then
-                      outline.close_outline()
+                    local opts_aerial = RUtils.opts "aerial.nvim"
+                    local aerial = get_aerial()
+                    local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
+                    if outline_win.found then
+                      vim.cmd [[AerialToggle]]
+                      -- outline.close_outline()
                     end
 
-                    -- local path = vim.fn.expand "%:p"
-                    -- vim.cmd [[close]]
-                    -- vim.cmd("e " .. path)
+                    -- we must reload
+                    vim.cmd "e "
                     if selection == "all" then
-                      opts_outline.symbols.filter = nil
+                      opts_aerial.filter_kind = false
                     else
-                      opts_outline.symbols.filter = { selection }
+                      opts_aerial.filter_kind = { selection }
                     end
-                    outline.setup(opts_outline)
-
+                    aerial.setup(opts_aerial)
                     vim.schedule(function()
-                      outline.open_outline()
-
-                      -- vim.cmd("e " .. path)
+                      aerial.open()
                     end)
                   end
                 end,
               },
             })
           end,
-          desc = "Misc: change filter kind [outline]",
+          desc = "Misc: change filter kind aerial [aerial]",
         },
       }
     end,
@@ -639,8 +564,16 @@ return {
           -- { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
         },
         right = {
+          -- {
+          --   ft = "Outline",
+          --   pinned = true,
+          --   open = "Outline",
+          --   size = {
+          --     width = 0.2,
+          --   },
+          -- },
           {
-            ft = "Outline",
+            ft = "aerial",
             pinned = true,
             open = "Outline",
             size = {

@@ -3,6 +3,38 @@ local api, fmt, L = vim.api, string.format, vim.log.levels
 ---@class r.utils.cmd
 local M = {}
 
+---@param wins table
+function M.windows_is_opened(wins)
+  wins = wins or {}
+
+  vim.validate {
+    wins = { wins, "table" },
+  }
+
+  local ft_wins = {
+    "incline",
+  }
+
+  if #wins > 0 then
+    for _, x in pairs(wins) do
+      ft_wins[#ft_wins + 1] = x
+    end
+  end
+
+  local outline_tbl = { found = false, winbufnr = 0, winnr = 0, winid = 0 }
+  for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+    if vim.tbl_contains(ft_wins, vim.fn.getwinvar(winnr, "&syntax")) then
+      local winbufnr = vim.fn.winbufnr(winnr)
+      if winbufnr > 0 then
+        local winid = vim.fn.win_findbuf(winbufnr)[1] -- yang dibutuhkan itu winid (example winid: 1004, 1005)
+        outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid }
+      end
+    end
+  end
+
+  return outline_tbl
+end
+
 function M.foreach(callback, list)
   for k, v in pairs(list) do
     callback(v, k)
