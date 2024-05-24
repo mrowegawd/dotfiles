@@ -841,15 +841,27 @@ return {
       })
     end,
   },
+  {
+    "linux-cultist/venv-selector.nvim",
+    cmd = "VenvSelect",
+    keys = { { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Misc: select virtualenv [venv-selector]", ft = "python" } },
+    opts = function(_, opts)
+      if RUtils.has "nvim-dap-python" then
+        opts.dap_enabled = true
+      end
+      return vim.tbl_deep_extend("force", opts, {
+        name = {
+          "venv",
+          ".venv",
+          "env",
+          ".env",
+        },
+      })
+    end,
+  },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   MISC                                                   │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- RASI
-  {
-    "Fymyte/rasi.vim",
-    event = "LazyFile",
-    ft = "rasi",
-  },
   -- LOG SYNTAX
   {
     "mtdl9/vim-log-highlighting",
