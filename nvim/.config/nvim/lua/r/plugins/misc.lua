@@ -1,5 +1,4 @@
 return {
-  { "lambdalisue/suda.vim", cmd = { "SudaWrite", "SudaRead" } }, -- sudo
   -- STARTUPTIME
   {
     "dstein64/vim-startuptime",
@@ -75,6 +74,12 @@ return {
       -- "t<Tab>",
     },
   },
+  -- NREDIR
+  {
+    -- Redirect output of vim or external command into scratch buffer,
+    "sbulav/nredir.nvim",
+    cmd = { "Nredir" },
+  },
   -- SG.NVIM
   {
     "sourcegraph/sg.nvim",
@@ -84,26 +89,10 @@ return {
     -- jika belum login, gunakan `:SourcegraphLogin`
     config = true,
   },
-  -- GKEEP (disabled)
-  {
-    -- Check and run: `python3 -m pip install gkeepapi keyring`
-    "stevearc/gkeep.nvim", -- ga bisa dipake lagi? Karana `checkhealth gkeep` aja error!
-    enabled = false,
-    event = "BufReadPre gkeep://*",
-    build = "UpdateRemotePlugins",
-    cmd = { "GkeepToggle", "GkeepOpen" },
-    opts = {},
-  },
-  -- NREDIR
-  {
-    -- Redirect output of vim or external command into scratch buffer,
-    "sbulav/nredir.nvim",
-    cmd = { "Nredir" },
-  },
   -- NVIM-CHEAT
   {
     "RishabhRD/nvim-cheat.sh",
-    cmd = { "Cheat", "CheatWithoutComments", "CheatList", "CheatListWithoutComments" },
+    cmd = { "Cheat", "CheatWithoutComments", "CheatList" },
     dependencies = {
       "RishabhRD/popfix",
     },
@@ -112,7 +101,7 @@ return {
     end,
   },
   -- HAWTKEYS (disabled)
-  { -- hanya digunakan ketika dibutuhkan saja
+  { -- use only when necessary.
     "tris203/hawtkeys.nvim",
     enabled = false,
     dependencies = {
@@ -120,35 +109,5 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     opts = {},
-  },
-  -- YANKYYANK.NVIM (disabled)
-  {
-    "gbprod/yanky.nvim",
-    enabled = false,
-    dependencies = not RUtils.is_win() and { "kkharji/sqlite.lua" } or {},
-    opts = {
-      highlight = { timer = 250 },
-      ring = { storage = RUtils.is_win() and "shada" or "sqlite" },
-    },
-    keys = {
-        -- stylua: ignore
-      { "y", "<Plug>(YankyYank)", mode = { "n", "x" }, desc = "Misc(yank): Yank text" },
-      { "p", "<Plug>(YankyPutAfter)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text after cursor" },
-      { "P", "<Plug>(YankyPutBefore)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text before cursor" },
-      { "gp", "<Plug>(YankyGPutAfter)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text after selection" },
-      { "gP", "<Plug>(YankyGPutBefore)", mode = { "n", "x" }, desc = "Misc(yank): Put yanked text before selection" },
-      { "[y", "<Plug>(YankyCycleForward)", desc = "Misc(yank): Cycle forward through yank history" },
-      { "]y", "<Plug>(YankyCycleBackward)", desc = "Misc(yank): Cycle backward through yank history" },
-      { "]p", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Misc(yank): Put indented after cursor (linewise)" },
-      { "[p", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Misc(yank): Put indented before cursor (linewise)" },
-      { "]P", "<Plug>(YankyPutIndentAfterLinewise)", desc = "Misc(yank): Put indented after cursor (linewise)" },
-      { "[P", "<Plug>(YankyPutIndentBeforeLinewise)", desc = "Misc(yank): Put indented before cursor (linewise)" },
-      { ">p", "<Plug>(YankyPutIndentAfterShiftRight)", desc = "Misc(yank): Put and indent right" },
-      { "<p", "<Plug>(YankyPutIndentAfterShiftLeft)", desc = "Misc(yank): Put and indent left" },
-      { ">P", "<Plug>(YankyPutIndentBeforeShiftRight)", desc = "Misc(yank): Put before and indent right" },
-      { "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)", desc = "Misc(yank): Put before and indent left" },
-      { "=p", "<Plug>(YankyPutAfterFilter)", desc = "Misc(yank): Put after applying a filter" },
-      { "=P", "<Plug>(YankyPutBeforeFilter)", desc = "Misc(yank): Put before applying a filter" },
-    },
   },
 }
