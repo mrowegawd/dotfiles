@@ -458,65 +458,39 @@ return {
 
       RUtils.format.register(RUtils.lsp.formatter())
 
-      local provider = {
-        HOVER = "hoverProvider",
-        RENAME = "renameProvider",
-        CODELENS = "codeLensProvider",
-        CODEACTIONS = "codeActionProvider",
-        FORMATTING = "documentFormattingProvider",
-        REFERENCES = "documentHighlightProvider",
-        DEFINITION = "definitionProvider",
-      }
+      RUtils.lsp.setup()
+      RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
+
+      RUtils.lsp.words.setup(opts.document_highlight)
 
       -- Setup formatting and keymaps
       RUtils.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
+      end)
 
-        if opts.codelens.enabled and vim.lsp.codelens then
-          if not RUtils.has "symbol-usage.nvim" then
-            if client.server_capabilities[provider.CODELENS] then
-              RUtils.cmd.augroup("LspCodelensRefresh", {
-                event = { "BufEnter", "InsertLeave", "BufWritePost" },
-                desc = "LSP: Code Lens",
-                buffer = bufnr,
-                -- call via vimscript so that errors are silenced
-                command = "silent! lua vim.lsp.codelens.refresh()",
-                -- command = function()
-                --   if not has_capability(provider.CODELENS, { bufnr = bufnr }) then
-                --     print "mantap"
-                --     Util.cmd.del_buffer_autocmd("LspCodelensRefresh", bufnr)
-                --     return
-                --   end
-                --   if vim.g.codelens_enabled then
-                --     vim.lsp.codelens.refresh()
-                --   end
-                -- end,
-              })
-            end
+      if vim.fn.has "nvim-0.10" == 1 then
+        -- inlay hints
+        if not RUtils.has "symbol-usage.nvim" then
+          if opts.inlay_hints.enabled then
+            RUtils.lsp.on_supports_method("textDocument/inlayHint", function(client, buffer)
+              if vim.api.nvim_buf_is_valid(buffer) and vim.bo[buffer].buftype == "" then
+                RUtils.toggle.inlay_hints(buffer, true)
+              end
+            end)
           end
         end
 
-        if client.server_capabilities[provider.REFERENCES] then
-          RUtils.cmd.augroup(("LspReferences%d"):format(bufnr), {
-            event = { "CursorHold", "CursorHoldI" },
-            buffer = bufnr,
-            desc = "LSP: References",
-            command = function()
-              vim.lsp.buf.document_highlight()
-            end,
-          }, {
-            event = { "CursorMoved", "CursorMovedI", "BufLeave" },
-            desc = "LSP: References Clear",
-            buffer = bufnr,
-            command = function()
-              vim.lsp.buf.clear_references()
-            end,
-          })
+        -- code lens
+        if opts.codelens.enabled and vim.lsp.codelens then
+          RUtils.lsp.on_supports_method("textDocument/codeLens", function(client, buffer)
+            vim.lsp.codelens.refresh()
+            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+              buffer = buffer,
+              callback = vim.lsp.codelens.refresh,
+            })
+          end)
         end
-      end)
-
-      RUtils.lsp.setup_dynamic_capability()
-      RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
+      end
 
       if vim.fn.has "nvim-0.10.0" == 0 then
         for severity, icon in pairs(opts.diagnostics.signs.text) do
@@ -576,7 +550,14 @@ return {
       end
 
       if have_mason then
-        mlsp.setup { ensure_installed = ensure_installed, handlers = { setup } }
+        mlsp.setup {
+          ensure_installed = vim.tbl_deep_extend(
+            "force",
+            ensure_installed,
+            RUtils.opts("mason-lspconfig.nvim").ensure_installed or {}
+          ),
+          handlers = { setup },
+        }
       end
 
       if RUtils.lsp.get_config "denols" and RUtils.lsp.get_config "tsserver" then
@@ -585,14 +566,6 @@ return {
         RUtils.lsp.disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
-
-        ---@diagnostic disable-next-line: unused-local
-        -- Util.lsp.on_attach(function(client, bufnr)
-        --   if client.name == "tsserver" then
-        --     client.server_capabilities.documentFormattingProvider = false
-        --     client.server_capabilities.documentRangeFormattingProvider = false
-        --   end
-        -- end)
       end
     end,
   },

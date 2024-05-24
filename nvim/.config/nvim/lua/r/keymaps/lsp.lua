@@ -34,6 +34,20 @@ function M.get()
     { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
     { "gd", "<CMD>Lspsaga goto_definition<CR>", desc = "LSP: definition [lspsaga]" },
     {
+      "<a-q>",
+      function()
+        RUtils.lsp.words.jump(vim.v.count1)
+      end,
+      desc = "LSP: next word reference",
+    },
+    {
+      "<a-Q>",
+      function()
+        RUtils.lsp.words.jump(-vim.v.count1)
+      end,
+      desc = "LSP: prev word reference",
+    },
+    {
       "gD",
       function()
         vim.cmd.split()
@@ -87,28 +101,6 @@ function M.get()
         end, "lsp_references")
       end,
       desc = "LSP: send references to quickfix list",
-    },
-    {
-      "<Leader>ll",
-      function()
-        if RUtils.has "symbol-usage.nvim" then
-          require("symbol-usage").refresh()
-        else
-          vim.lsp.codelens.refresh { bufnr = 0 }
-        end
-      end,
-      desc = "LSP: refresh codelens [symbol-usage]",
-    },
-    {
-      "<Leader>lL",
-      function()
-        if RUtils.has "symbol-usage.nvim" then
-          require("symbol-usage").refresh()
-          require("symbol-usage").toggle()
-          vim.lsp.codelens.refresh { bufnr = 0 }
-        end
-      end,
-      desc = "LSP: codelens toggle [symbol-usage]",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics

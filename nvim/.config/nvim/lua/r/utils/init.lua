@@ -234,6 +234,11 @@ function M.dedup(list)
   return ret
 end
 
+function M.is_loaded(name)
+  local Config = require "lazy.core.config"
+  return Config.plugins[name] and Config.plugins[name]._.loaded
+end
+
 M.CREATE_UNDO = vim.api.nvim_replace_termcodes("<c-G>u", true, true, true)
 function M.create_undo()
   if vim.api.nvim_get_mode().mode == "i" then

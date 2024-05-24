@@ -5,8 +5,6 @@ return {
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
-    -- dev = true,
-    -- cmd = "Lspsaga",
     dependencies = {
       { "nvim-tree/nvim-web-devicons" },
       { "nvim-treesitter/nvim-treesitter" },

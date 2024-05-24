@@ -1,3 +1,11 @@
+---@type string
+local xdg_config = vim.env.XDG_CONFIG_HOME or vim.env.HOME .. "/.config"
+
+---@param path string
+local function have(path)
+  return vim.uv.fs_stat(xdg_config .. "/" .. path) ~= nil
+end
+
 return {
   -- TREESITTER
   {
@@ -26,6 +34,7 @@ return {
         -- "comment", -- comments are slowing down TS bigtime, so disable for now
 
         "dockerfile",
+        "rasi",
 
         "cpp",
         "diff",
@@ -168,14 +177,54 @@ return {
       if type(opts.ensure_installed) == "table" then
         opts.ensure_installed = RUtils.dedup(opts.ensure_installed)
       end
+
+      local function add(lang)
+        if type(opts.ensure_installed) == "table" then
+          table.insert(opts.ensure_installed, lang)
+        end
+      end
+
+      vim.filetype.add {
+        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi" },
+        filename = {
+          ["vifmrc"] = "vim",
+        },
+        pattern = {
+          [".*/waybar/config"] = "jsonc",
+          [".*/mako/config"] = "dosini",
+          [".*/kitty/.+%.conf"] = "bash",
+          [".*/hypr/.+%.conf"] = "hyprlang",
+          ["%.env%.[%w_.-]+"] = "sh",
+        },
+      }
+
+      add "git_config"
+
+      if have "hypr" then
+        add "hyprlang"
+      end
+
+      if have "fish" then
+        add "fish"
+      end
+
+      if have "rofi" or have "wofi" then
+        add "rasi"
+      end
+
       require("nvim-treesitter.configs").setup(opts)
     end,
   },
   -- NVIM-TREESITTER-TEXTOBJECTS
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    lazy = true,
+    event = "VeryLazy",
     config = function()
+      -- If treesitter is already loaded, we need to run config again for textobjects
+      if RUtils.is_loaded "nvim-treesitter" then
+        local opts = RUtils.opts "nvim-treesitter"
+        require("nvim-treesitter.configs").setup { textobjects = opts.textobjects }
+      end
       -- When in diff mode, we want to use the default
       -- vim text objects c & C instead of the treesitter ones.
       local move = require "nvim-treesitter.textobjects.move" ---@type table<string,fun(...)>
