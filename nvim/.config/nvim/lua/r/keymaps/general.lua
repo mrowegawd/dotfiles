@@ -503,8 +503,8 @@ RUtils.map.nnoremap("<Localleader>r", function()
     search_cheat = function()
       cmd "Cheat"
     end,
-    gkeep_open = function()
-      cmd "GkeepOpen"
+    search_cheatlist = function()
+      cmd "CheatList"
     end,
     search_devdocs = function()
       local query = vim.fn.input "Search DevDocs: "
