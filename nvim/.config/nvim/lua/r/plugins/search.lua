@@ -1533,12 +1533,25 @@ return {
     keys = {
       {
         "<leader>xX",
-        "<cmd>Trouble diagnostics toggle<cr>",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+
+          vim.cmd [[Trouble diagnostics toggle]]
+        end,
         desc = "Misc: workspace diagnostic [trouble]",
       },
       {
         "<leader>xx",
-        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
+        end,
         desc = "Misc: document diagnostic [trouble]",
       },
       {
@@ -1551,8 +1564,28 @@ return {
         "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
         desc = "Misc: LSP references/definitions/... [trouble]",
       },
-      { "<leader>xl", "<cmd>Trouble loclist toggle<cr>", desc = "Misc: open location list with [trouble]" },
-      { "<leader>xq", "<cmd>Trouble qflist toggle<cr>", desc = "Misc: open quickfix list with [trouble]" },
+      {
+        "<leader>xl",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd "Trouble loclist toggle"
+        end,
+        desc = "Misc: open location list with [trouble]",
+      },
+      {
+        "<leader>xq",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd "Trouble qflist toggle"
+        end,
+        desc = "Misc: open quickfix list with [trouble]",
+      },
     },
     opts = function()
       local icons_lsp = RUtils.config.icons.kinds
