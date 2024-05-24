@@ -507,6 +507,30 @@ return {
       },
     },
   },
+  -- GRUG-FAR.NVIM (disabled)
+  {
+    "MagicDuck/grug-far.nvim",
+    cmd = { "GrugFar" },
+    enabled = false,
+    keys = {
+      {
+        "<Leader><s-f>",
+        "<CMD>GrugFar<CR>",
+        desc = "Misc: open grug [grugfar]",
+      },
+      {
+        "<Leader>sf",
+        function()
+          -- require("grug-far").grug_far { prefills = { search = vim.fn.expand "<cword>" } }
+          require("grug-far").grug_far { prefills = { flags = vim.fn.expand "%" } }
+        end,
+        desc = "Misc: open grug on curbuf [grugfar]",
+      },
+    },
+    config = function()
+      require("grug-far").setup()
+    end,
+  },
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
