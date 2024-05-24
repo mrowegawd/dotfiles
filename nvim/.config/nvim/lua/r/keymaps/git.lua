@@ -187,18 +187,21 @@ function M.gitsigns()
   end, { desc = "Git: undo stage hunk (visual) [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git: preview hunk [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git: select all hunks and send to qf [gitsigns]" })
-  RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git: diffthis [gitsigns]" })
   RUtils.map.nnoremap(
     "<Leader>gtb",
     gs.toggle_current_line_blame,
     { desc = "Git: toggle line blame (gitlens) [gitsigns]" }
   )
-  RUtils.map.nnoremap("<Leader>ghD", function()
+  -- RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git: diffthis [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>ghd", function()
     gs.diffthis "~"
   end, { desc = "Git: diffthis '~' [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gtB", function()
     vim.cmd "BlameToggle"
-  end, { desc = "Git: toggle open blame buffer [fugitive]" })
+  end, { desc = "Git: toggle blame buffer [blame.nvim]" })
+  RUtils.map.nnoremap("<Leader>gts", function()
+    vim.cmd "Gitsigns toggle_signs"
+  end, { desc = "Git: toggle signs [gitsigns]" })
   RUtils.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
   RUtils.map.onoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
 
@@ -246,7 +249,7 @@ function M.gitsigns()
   gitdiffview()
   lazygit()
   gitfzflua {
-    toggle_gitsigns_attach = function()
+    toggle_gitsign_attach = function()
       if is_gitsigns_attach then
         gs.detach()
         is_gitsigns_attach = false
@@ -255,7 +258,7 @@ function M.gitsigns()
         is_gitsigns_attach = true
       end
     end,
-    toggle_gitsigns_deleted = function()
+    toggle_gitsign_deleted = function()
       gs.toggle_deleted()
     end,
     toggle_gitsign_linehl = function()
@@ -263,9 +266,6 @@ function M.gitsigns()
     end,
     toggle_gitsign_word_diff = function()
       gs.toggle_word_diff()
-    end,
-    gitsign_show_blameline = function()
-      gs.blame_line()
     end,
     gitsign_reset_all = function()
       gs.reset_buffer()
@@ -277,6 +277,11 @@ function M.gitsigns()
       gs.setqflist()
     end,
   }
+end
+
+function M.minigit()
+  gitdiffview()
+  lazygit()
 end
 
 return M

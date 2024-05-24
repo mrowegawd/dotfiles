@@ -79,16 +79,19 @@ return {
     "pwntester/octo.nvim",
     cmd = "Octo",
     opts = {
-      picker = "telescope",
-      -- picker = "fzf-lua",
+      -- picker = "telescope",
+      picker = "fzf-lua",
       picker_config = {
         mappings = {
           -- open_in_browser = { lhs = "<Leader>bo", desc = "open issue in browser" },
           goto_file = { lhs = "<CR>", desc = "got to file" },
-          copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          -- copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
           -- checkout_pr = { lhs = "<C-o>", desc = "checkout pull request" },
           -- merge_pr = { lhs = "<C-r>", desc = "merge pull request" },
         },
+      },
+      suppress_missing_scope = {
+        projects_v2 = true,
       },
       mappings = {
         issue = {
@@ -130,9 +133,9 @@ return {
           close_issue = { lhs = "<space>ic", desc = "close PR" },
           reopen_issue = { lhs = "<space>io", desc = "reopen PR" },
           list_issues = { lhs = "<space>il", desc = "list open issues on same repo" },
-          reload = { lhs = "<C-r>", desc = "reload PR" },
+          reload = { lhs = "R", desc = "reload PR" },
           open_in_browser = { lhs = "<space>go", desc = "open PR in browser" },
-          copy_url = { lhs = "<C-y>", desc = "copy url to system clipboard" },
+          copy_url = { lhs = "<leader><C-y>", desc = "copy url to system clipboard" },
           goto_file = { lhs = "gf", desc = "go to file" },
           add_assignee = { lhs = "<space>aa", desc = "add assignee" },
           remove_assignee = { lhs = "<space>ad", desc = "remove assignee" },
@@ -235,6 +238,7 @@ return {
       },
       update_debounce = 100,
       max_file_length = 40000,
+      sign_priority = 15, -- higher than diagnostic,todo signs. lower than dapui breakpoint sign
       attach_to_untracked = true,
       on_attach = function()
         require("r.keymaps.git").gitsigns()
@@ -243,6 +247,59 @@ return {
         end
       end,
     },
+  },
+  -- MINI.GIT (disabled)
+  {
+    "echasnovski/mini-git",
+    version = false,
+    enabled = false,
+  },
+  -- MINI.DIFF (disabled)
+  {
+    "echasnovski/mini.diff",
+    enabled = false,
+    event = "VeryLazy",
+    keys = {
+      {
+        "<leader>gto",
+        function()
+          require("mini.diff").toggle_overlay(0)
+        end,
+        desc = "Git: toggle mini.diff overlay [mini.diff]",
+      },
+    },
+    opts = function()
+      require("r.keymaps.git").minigit()
+      return {
+        view = {
+          style = "sign",
+          signs = {
+            add = "▎",
+            change = "▎",
+            delete = "",
+          },
+        },
+        -- Module mappings. Use `''` (empty string) to disable one.
+        mappings = {
+          -- Apply hunks inside a visual/operator region
+          -- apply = "<Leader>gha",
+          apply = "gh",
+
+          -- Reset hunks inside a visual/operator region
+          -- reset = "<Leader>ghr",
+          reset = "gH",
+
+          -- Hunk range textobject to be used inside operator
+          textobject = "",
+
+          -- Go to hunk range in corresponding direction
+          goto_first = "gF",
+          goto_prev = "gp",
+          goto_next = "gn",
+          goto_last = "gL",
+        },
+      }
+    end,
   },
   -- FUGITIVE
   {
@@ -328,6 +385,30 @@ return {
         end)
       end, {
         desc = "Edit files with uncommitted changes",
+      })
+
+      -- vim.api.nvim_create_autocmd("FileType", {
+      --   group = vim.api.nvim_create_augroup("ps_fugitive", { clear = true }),
+
+      RUtils.cmd.augroup("ps_fugitive", {
+        event = "FileType",
+        pattern = { "fugitive" }, -- gstatus
+        command = function(e)
+          -- Options
+          vim.opt_local.winfixheight = true
+          vim.opt_local.winfixbuf = true
+          -- Mappings
+          vim.keymap.set("n", "q", RUtils.cmd.quit_return, { buffer = e.buf })
+          vim.keymap.set("n", "<a-n>", "]c", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<a-p>", "[c", { buffer = e.buf, remap = true })
+          -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
+          vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
+          vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
+          vim.keymap.set("n", "<Leader>gP", "<Cmd>Git pull<CR>", { buffer = true })
+          vim.keymap.set("n", "<Leader>gl", function()
+            vim.cmd "Git log --oneline"
+          end, { buffer = e.buf })
+        end,
       })
 
       vim.api.nvim_create_user_command("GitEditDiff", function()
