@@ -3,6 +3,14 @@ local api, fmt, L = vim.api, string.format, vim.log.levels
 ---@class r.utils.cmd
 local M = {}
 
+function M.quit_return()
+  vim.cmd "wincmd p"
+  local win_id = vim.api.nvim_get_current_win()
+  vim.cmd "wincmd p"
+  vim.cmd "bdelete"
+  vim.fn.win_gotoid(win_id)
+end
+
 ---@param wins table
 function M.windows_is_opened(wins)
   wins = wins or {}
