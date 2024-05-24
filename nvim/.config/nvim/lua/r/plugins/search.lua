@@ -153,7 +153,7 @@ return {
         desc = "Fzflua: help tags (visual)",
       },
       { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fg", require("fzf-lua").live_grep, desc = "Fzflua: live grep" },
+      { "<Leader>fg", require("fzf-lua").live_grep_glob, desc = "Fzflua: live grep" },
       { "<Leader>fg", require("fzf-lua").grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", require("fzf-lua").changes, desc = "Fzflua: changes" },
       { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
