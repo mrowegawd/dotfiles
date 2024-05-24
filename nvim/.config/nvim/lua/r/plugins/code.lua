@@ -150,6 +150,11 @@ return {
 
             -- print(entry.source.name)
             local item_kind = item.kind
+
+            if item_kind == nil then
+              item_kind = "x"
+            end
+
             item.menu = item_kind
               .. " "
               .. (
