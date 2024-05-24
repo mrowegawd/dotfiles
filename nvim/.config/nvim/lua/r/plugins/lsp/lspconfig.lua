@@ -47,10 +47,11 @@ return {
 
         -- kotlin
         "ktlint",
+        "kotlin-debug-adapter",
 
         -- markdown
         "markdownlint",
-        -- "marksman",
+        "marksman",
         "codespell",
         "cbfmt",
 
@@ -182,12 +183,16 @@ return {
         },
       },
       inlay_hints = { enabled = true },
-      codelens = { enabled = true },
+      codelens = { enabled = false },
+      document_highlight = {
+        enabled = true,
+      },
       capabilities = {},
       format = { formatting_options = nil, timeout_ms = nil },
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
+        kotlin_language_server = {},
         zls = {},
         dockerls = {},
         docker_compose_language_service = {},
@@ -251,7 +256,7 @@ return {
         ruff_lsp = {
           keys = {
             {
-              "<leader>co",
+              "<Leader>co",
               function()
                 vim.lsp.buf.code_action {
                   apply = true,
