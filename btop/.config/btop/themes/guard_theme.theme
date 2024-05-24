@@ -1,46 +1,46 @@
 # Main background, empty for terminal default, need to be empty if you want transparent background
-theme[main_bg]="#181b1b"
+theme[main_bg]="#1f2329"
 
 # Main text color
-theme[main_fg]="#bbbac1"
+theme[main_fg]="#a0a8b7"
 
 # Title color for boxes
-theme[title]="#6a9589"
+theme[title]="#8BE9FD"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="#c34043"
+theme[hi_fg]="#FF5555"
 
 # Background color of selected item in processes box
-theme[selected_bg]="#e82424"
+theme[selected_bg]="#FF6E67"
 
 # Foreground color of selected item in processes box
-theme[selected_fg]="#181b1b"
+theme[selected_fg]="#1f2329"
 
 # Color of inactive/disabled text
-theme[inactive_fg]="#57565d"
+theme[inactive_fg]="#3c4453"
 
 # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
 theme[graph_text]="#F2D5CF"
 
 # Background color of the percentage meters
-theme[meter_bg]="#57565d"
+theme[meter_bg]="#3c4453"
 
 # Misc colors for processes box including mini cpu graphs, details memory graph and details status text
 theme[proc_misc]="#F2D5CF"
 
 # CPU, Memory, Network, Proc box outline colors
-theme[cpu_box]="#c34043" #Mauve
-theme[mem_box]="#c34043" #Green
-theme[net_box]="#c34043" #Maroon
-theme[proc_box]="#c34043" #Blue
+theme[cpu_box]="#FF5555" #Mauve
+theme[mem_box]="#FF5555" #Green
+theme[net_box]="#FF5555" #Maroon
+theme[proc_box]="#FF5555" #Blue
 
 # Box divider line and small boxes line color
 theme[div_line]="#737994"
 
 # Temperature graph color (Green -> Yellow -> Red)
-theme[temp_start]="#ff9093
-theme[temp_mid]="#eb686b"
-theme[temp_end]="#c34043"
+theme[temp_start]="#ffa5a5
+theme[temp_mid]="#ff7d7d"
+theme[temp_end]="#FF5555"
 
 # CPU graph colors (Teal -> Lavender)
 theme[cpu_start]="#81c8be"
@@ -58,24 +58,24 @@ theme[cached_mid]="#8caaee"
 theme[cached_end]="#babbf1"
 
 # Mem/Disk available meter (Peach -> Red)
-theme[available_start]="#c34043"
-theme[available_mid]="#eb686b"
-theme[available_end]="#ff9093"
+theme[available_start]="#FF5555"
+theme[available_mid]="#ff7d7d"
+theme[available_end]="#ffa5a5"
 
 # Mem/Disk used meter (Green -> Sky)
-theme[used_start]="#98bb6c"
-theme[used_mid]="#c0e394"
-theme[used_end]="#e8ffbc"
+theme[used_start]="#5AF78E"
+theme[used_mid]="#82ffb6"
+theme[used_end]="#aaffde"
 
 # Download graph colors (Peach -> Red)
-theme[download_start]="#c34043"
-theme[download_mid]="#eb686b"
-theme[download_end]="#ff9093"
+theme[download_start]="#FF5555"
+theme[download_mid]="#ff7d7d"
+theme[download_end]="#ffa5a5"
 
 # Upload graph colors (Green -> Sky)
-theme[upload_start]="#98bb6c"
-theme[upload_mid]="#c0e394"
-theme[upload_end]="#e8ffbc"
+theme[upload_start]="#5AF78E"
+theme[upload_mid]="#82ffb6"
+theme[upload_end]="#aaffde"
 
 # Process box color gradient for threads, mem and cpu usage (Sapphire -> Mauve)
 theme[process_start]="#85c1dc"
