@@ -22,15 +22,9 @@ return {
       },
       defaults = {
         mode = { "n", "v" },
-        ["z"] = {
-          name = "+fold",
-        },
-        ["t"] = {
-          name = "t",
-        },
-        ["r"] = {
-          name = "r",
-        },
+        ["z"] = { name = "+fold" },
+        ["t"] = { name = "t" },
+        ["r"] = { name = "r" },
         ["<leader>"] = {
           name = "<Leader>",
           a = { name = "+projectionist" },
@@ -44,6 +38,8 @@ return {
             name = "+git",
             h = { name = "+hunks" },
             f = { name = "+gitfzf" },
+            v = { name = "+line_or_visual_or_clipboard" },
+            t = { name = "+git_toggle" },
           },
           l = { name = "+tlsp" },
           c = { name = "+changedir" },
@@ -52,6 +48,7 @@ return {
           -- p = { name = "+project" },
           t = { name = "+testing" },
           o = { name = "+open/browse" },
+          x = { name = "+diagnostic/quickfix/trouble" },
         },
 
         ["<localleader>"] = {

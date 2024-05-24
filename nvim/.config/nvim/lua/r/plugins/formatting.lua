@@ -90,6 +90,8 @@ return {
           python = { "black" },
           go = { "goimports", "gofumpt" },
           rust = { "rustfmt" },
+          ["markdown"] = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc", "cbfmt" },
+          ["markdown.mdx"] = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc", "cbfmt" },
           kotlin = { "ktlint" },
 
           ["javascript"] = { { "prettierd", "prettier" } },
@@ -107,8 +109,6 @@ return {
           ["graphql"] = { { "prettierd", "prettier" } },
           ["handlebars"] = { { "prettierd", "prettier" } },
 
-          ["markdown"] = { "prettierd", "cbfmt" },
-          ["markdown.mdx"] = { { "prettierd", "prettier" } },
           ["norg"] = { "trim_whitespace", "trim_newlines" }, -- TODO: cbfmt does not work :(
           ["org"] = { "trim_whitespace", "trim_newlines" },
 

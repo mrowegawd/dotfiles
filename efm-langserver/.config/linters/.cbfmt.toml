@@ -3,6 +3,7 @@ rust = ["rustfmt"]
 go = ["gofmt"]
 sh = ["shfmt"]
 bash = ["shfmt"]
+kotlin = ["ktlin"]
 lua = ["stylua -s -"]
 python = ["black --fast -"]
 

@@ -403,7 +403,7 @@ return {
   -- BUFFERLINE
   {
     "akinsho/bufferline.nvim",
-    event = "LazyFile",
+    event = "UIEnter",
     -- keys = {
     --   { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
     --   { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },

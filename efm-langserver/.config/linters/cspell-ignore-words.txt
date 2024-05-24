@@ -9,3 +9,5 @@ flaggy
 lama
 maka
 shit
+crate
+Crate
