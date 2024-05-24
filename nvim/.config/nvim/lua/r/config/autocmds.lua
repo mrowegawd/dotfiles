@@ -238,7 +238,7 @@ RUtils.cmd.augroup("CheckOutsideTime", {
 if vim.clipboard and vim.clipboard.osc52 then
   RUtils.cmd.augroup("SSH_clipboard", {
     event = { "VimEnter" },
-    callback = function()
+    command = function()
       if vim.env.SSH_CONNECTION and vim.clipboard.osc52 then
         vim.g.clipboard = {
           name = "OSC 52",
@@ -256,62 +256,22 @@ if vim.clipboard and vim.clipboard.osc52 then
   })
 end
 
+-- Use the more sane snippet session leave logic. Copied from:
+-- https://github.com/LazyVim/LazyVim/pull/2519#issue-2123554685
+-- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1429989436
+RUtils.cmd.augroup("SessionLogicLeave", {
+  event = { "ModeChanged" },
+  command = function()
+    if
+      ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
+      and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+      and not require("luasnip").session.jump_active
+    then
+      require("luasnip").unlink_current()
+    end
+  end,
+})
+
 vim.cmd [[
   :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
 ]]
-
--- RUtils.cmd.augroup("DisableHiBGNormal", {
---   event = { "BufReadPost" },
---   pattern = "*",
---   command = function()
---     if os.getenv "TERMINAL" == "wezterm" then
---     cmd "hi Normal guibg=NONE"
---     end
---   end,
---   once = true,
--- })
-
--- RUtils.cmd.augroup(
---   "WindowDim",
---   -- {
---   --   event = { "BufRead" },
---   --   pattern = { "*" },
---   --   command = function()
---   --     RUtils.windowdim.buf_enter()
---   --   end,
---   -- }, {
---   --   event = { "BufEnter" },
---   --   pattern = { "*" },
---   --   command = function()
---   --     RUtils.windowdim.buf_enter()
---   --   end,
---   -- },
---   {
---     event = { "VimEnter", "FocusGained", "WinEnter" },
---     pattern = "*",
---     command = function()
---       RUtils.windowdim.focus_gained()
---     end,
---   },
---   {
---     event = { "VimLeave", "FocusLost", "WinLeave" },
---     pattern = "*",
---     command = function()
---       RUtils.windowdim.focus_lost()
---     end,
---   }
---   -- {
---   --   event = { "WinEnter" },
---   --   pattern = "*",
---   --   command = function()
---   --     RUtils.windowdim.win_enter()
---   --   end,
---   -- },
---   -- {
---   --   event = { "WinLeave" },
---   --   pattern = "*",
---   --   command = function()
---   --     RUtils.windowdim.win_leave()
---   --   end,
---   -- }
--- )
