@@ -403,7 +403,7 @@ M.FilePath = {
       end
       -- now, if the filename would occupy more than 90% of the available
       -- space, we trim the file path to its initials
-      if not Conditions.width_percent_below(#filename, 0.40) then
+      if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
         filename = vim.fn.pathshorten(filename)
       end
       return " " .. filename .. " "
@@ -691,9 +691,9 @@ M.BufferCwd = {
       end
 
       -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
-      return " " .. cwd .. "%* "
+      return " " .. cwd .. " %*"
     end,
-    hl = { fg = Col.direcotory },
+    hl = { fg = Col.direcotory, bg = colors.base_bg },
   },
 }
 M.Ruler = {
@@ -757,21 +757,22 @@ M.status_active_left = {
   M.Dap,
   M.LSPActive,
   M.Diagnostics,
-  M.SearchCount, -- this func make nvim slow!
+  -- M.SearchCount, -- this func make nvim slow!
   M.Sessions,
   M.BufferCwd,
   M.Ruler,
 
   hl = { fg = colors.base_fg, bg = colors.base_bg },
+  -- hl = { fg = colors.base_fg, bg = colors.base_bg },
 }
 
 M.status_not_active = {
   condition = Conditions.is_not_active,
-  M.Mode_inactive,
-  M.Branch,
+  -- M.Mode_inactive,
+  -- M.Branch,
   M.FilePath,
-  M.FileIcon,
-  M.Git,
+  -- M.FileIcon,
+  -- M.Git,
   M.FilePathQF,
   M.FileFlags,
   M.Gap,
