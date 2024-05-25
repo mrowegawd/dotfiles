@@ -18,7 +18,7 @@ IFS=$'\n' read -r -d '' -a array <<<"$TASK"
 # Array baru untuk menyimpan elemen yang dimodifikasi
 new_array=()
 for element in "${array[@]}"; do
-	new_array+=("  <b><span foreground=\"$GREEN\">$element</span></b>")
+	new_array+=("<b><span foreground=\"$GREEN\">$element</span></b> ")
 done
 
 concatenated_string=$(
@@ -26,7 +26,7 @@ concatenated_string=$(
 	echo "${new_array[*]}"
 )
 
-/usr/local/bin/dunstify -t 5000 -i "$ICON_PATH" "To Do Now:" "$concatenated_string"
+/usr/local/bin/dunstify -t 5000 -i "$ICON_PATH" "Reminder:" "$concatenated_string"
 
 sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
 if [ -f "$sound_man" ]; then

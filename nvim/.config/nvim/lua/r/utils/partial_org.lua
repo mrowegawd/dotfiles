@@ -20,12 +20,14 @@ return {
       for _, task in ipairs(tasks) do
         local title = fmt("%s (%s)", task.category, task.humanized_duration)
         local subtitle = fmt("%s", task.title)
-        local date = string.format("%s: %s", task.type, task.time:to_string())
+        -- local date = string.format("%s: %s", task.type, task.time:to_string())
+        local date = string.format("%s", task.time:to_string())
 
         if vim.fn.executable "dunstify" == 1 then
           vim.uv.spawn("dunstify", {
             args = {
-              fmt("TODO: %s\n%s\n%s", subtitle, date, title),
+              fmt("[%s %s]\n%s:", task.type, date, title),
+              fmt("<b><span foreground='#7ba05b'>%s</span></b>", subtitle),
               fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
               "-u",
               "normal",
