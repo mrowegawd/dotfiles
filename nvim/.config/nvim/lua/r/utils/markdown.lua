@@ -324,7 +324,7 @@ local function picker(contents)
     local text = vim.split(entry_str, "|")
 
     for _, x in pairs(data_tags_table) do
-      if x.title == text[1] then
+      if x.title == text[2] then
         return {
           path = x.path,
           line = x.line_number,
@@ -346,7 +346,7 @@ local function picker(contents)
         local sel = selected[1]
         sel = vim.split(sel, "|")
         for _, x in pairs(data_tags_table) do
-          if x.title == sel[1] then
+          if x.title == sel[2] then
             vim.cmd("e " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
           end
@@ -357,7 +357,7 @@ local function picker(contents)
         local sel = selected[1]
         sel = vim.split(sel, "|")
         for _, x in pairs(data_tags_table) do
-          if x.title == sel[1] then
+          if x.title == sel[2] then
             vim.cmd("vsplit " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
             break
@@ -369,7 +369,7 @@ local function picker(contents)
         local sel = selected[1]
         sel = vim.split(sel, "|")
         for _, x in pairs(data_tags_table) do
-          if x.title == sel[1] then
+          if x.title == sel[2] then
             vim.cmd("split " .. x.path)
             vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
             break
@@ -379,10 +379,10 @@ local function picker(contents)
 
       ["ctrl-a"] = function(selected, _)
         local sel = selected[1]
-        sel = vim.split(sel, "|")
-        sel = vim.split(sel[2], " ")
+        sel = vim.split(sel, " ")
+        -- sel = vim.split(sel[1], " ")
 
-        table.insert(insert_tags, sel[3])
+        table.insert(insert_tags, sel[1])
         print("Add tag: " .. vim.inspect(insert_tags))
 
         require("fzf-lua").actions.resume()
@@ -416,7 +416,7 @@ local function picker(contents)
         local items = {}
         if #selected > 1 then
           for _, sel in pairs(selected) do
-            local sel_str = vim.split(sel, "|")[1]
+            local sel_str = vim.split(sel, "|")[2]
 
             for _, tbl_tags in pairs(data_tags_table) do
               if tbl_tags.title == sel_str then
@@ -432,7 +432,7 @@ local function picker(contents)
             end
           end
         else
-          local sel_str = vim.split(selected[1], "|")[1]
+          local sel_str = vim.split(selected[1], "|")[2]
           for _, tbl_tags in pairs(data_tags_table) do
             if tbl_tags.title == sel_str then
               if not check_tbl_element(items, tbl_tags.title) then
@@ -530,8 +530,15 @@ local function list_tags_async(all_tags, is_set)
                       data_tags_table[#data_tags_table + 1] = data_tags
                       -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
 
-                      local fzf_str =
-                        string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+                      -- local fzf_str =
+                      --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+
+                      local fzf_str = string.format(
+                        "%-30s %-4s |%s",
+                        data_tags.tag,
+                        "[" .. data_tags.line_number .. "]",
+                        data_tags.title
+                      )
 
                       -- TODO: ensure id note exists #postpone #25/5/saturday
                       -- if is_set then
