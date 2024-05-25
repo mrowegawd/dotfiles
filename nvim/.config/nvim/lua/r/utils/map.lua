@@ -9,6 +9,33 @@ local recursive_map = function(mode, lhs, rhs, opts)
   map(mode, lhs, rhs, opts)
 end
 
+M.show_help_buf_keymap = function()
+  local ft = vim.bo[0].ft
+  local tbl_maps = vim.api.nvim_buf_get_keymap(0, "n")
+
+  local col = {}
+  for _, tbl in pairs(tbl_maps) do
+    ---@diagnostic disable-next-line: undefined-field
+    local map_desc = string.format("%-14s | %s", RUtils.cmd.strip_whitespace(tbl.lhs), tbl.desc)
+    col[#col + 1] = map_desc
+  end
+
+  local opts = {
+    prompt = "  ",
+    winopts = {
+      title = "Show Keymap Help [" .. ft .. "]",
+    },
+    actions = {
+      ["default"] = function(_, _)
+        print "not implemented yet"
+      end,
+    },
+  }
+
+  -- print(vim.inspect(tbl_map_help))
+  return require("fzf-lua").fzf_exec(col, opts)
+end
+
 M.nmap = function(...)
   recursive_map("n", ...)
 end

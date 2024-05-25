@@ -2,22 +2,27 @@
 --   return
 -- end
 
-local keymap = vim.keymap
--- local opt_local = vim.opt_local
+-- local keymap = vim.keymap
+local opt_local = vim.opt_local
 
--- opt_local.number = false
--- opt_local.relativenumber = false
--- opt_local.signcolumn = "no"
+opt_local.number = false
+opt_local.relativenumber = false
+opt_local.signcolumn = "no"
+opt_local.buflisted = false
+opt_local.conceallevel = 2
 
-keymap.set("n", "gd", "<c-]>", {
+-- open help buffers in new tabs by default
+vim.cmd.wincmd "L"
+
+RUtils.map.nnoremap("gd", "<c-]>", {
   buffer = true,
-  desc = "Go to definition",
+  desc = "Help: go to definition",
 })
 
--- keymap.set("n", "<BS>", "<c-t>", {
---     buffer = true,
---     desc = "Go back last definition",
--- })
+RUtils.map.nnoremap("<BS>", "<c-t>", {
+  buffer = true,
+  desc = "Help: go back last definition",
+})
 
 -- " if this a vim help file rather than one I'm creating
 -- " add mappings otherwise do not
@@ -31,18 +36,3 @@ keymap.set("n", "gd", "<c-]>", {
 --   nnoremap <silent><buffer> S ?\|\zs\S\+\ze\|<CR>
 --   finish
 -- endif
-
--- vim.bo.buflisted = false
--- vim.opt_local.conceallevel = 1
--- vim.opt_local.list = false
--- vim.opt_local.number = false
--- vim.opt_local.relativenumber = false
--- vim.opt_local.signcolumn = "no"
--- vim.opt_local.spell = false
--- vim.opt_local.statuscolumn = ""
-
--- open help buffers in new tabs by default
--- vim.cmd.wincmd "T"
-
--- get highlighted code examples
--- vim.treesitter.start()

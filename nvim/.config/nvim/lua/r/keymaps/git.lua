@@ -132,7 +132,7 @@ local function gitdiffview()
   RUtils.map.vnoremap(
     "<Leader>gvV",
     "<esc><cmd>CompareClipboardSelection<cr>",
-    { desc = "Git: compare diff with selection clipboard" }
+    { desc = "Git: compare diff with selection clipboard (visual)" }
   )
 
   RUtils.map.nnoremap("<leader>gvv", function()
@@ -149,7 +149,7 @@ local function gitdiffview()
     -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
     local cmd = string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
     vim.cmd(cmd)
-  end, { desc = "Git: line range hash history [diffview]" })
+  end, { desc = "Git: line range hash history (visual) [diffview]" })
 end
 
 local is_gitsigns_attach = true

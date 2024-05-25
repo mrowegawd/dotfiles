@@ -478,8 +478,10 @@ RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = t
 
 RUtils.map.nnoremap("<F1>", function()
   -- dihapus saja ini
-  RUtils.markdown.find_note_by_tag()
+  RUtils.map.show_help_buf_keymap()
 end)
+
+RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, silent)
 
 local checkconceallevel = false
 RUtils.map.nnoremap("<Localleader>r", function()

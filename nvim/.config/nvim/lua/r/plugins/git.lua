@@ -227,26 +227,28 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = "nvim-lua/plenary.nvim",
-    opts = {
-      signs = {
-        add = { text = "▎", numhl = "GitSignsAddNr" },
-        change = { text = "▎", numhl = "GitSignsChangeNr" },
-        delete = { text = "_", numhl = "GitSignsDeleteNr" },
-        topdelete = { text = "‾", numhl = "GitSignsDeleteNr" },
-        changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
-        untracked = { text = "▎" },
-      },
-      update_debounce = 100,
-      max_file_length = 40000,
-      sign_priority = 15, -- higher than diagnostic,todo signs. lower than dapui breakpoint sign
-      attach_to_untracked = true,
-      on_attach = function()
-        require("r.keymaps.git").gitsigns()
-        if vim.bo.ft == "markdown" then
-          return false
-        end
-      end,
-    },
+    opts = function()
+      require("r.keymaps.git").gitsigns()
+      return {
+        signs = {
+          add = { text = "▎", numhl = "GitSignsAddNr" },
+          change = { text = "▎", numhl = "GitSignsChangeNr" },
+          delete = { text = "_", numhl = "GitSignsDeleteNr" },
+          topdelete = { text = "‾", numhl = "GitSignsDeleteNr" },
+          changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
+          untracked = { text = "▎" },
+        },
+        update_debounce = 100,
+        max_file_length = 40000,
+        sign_priority = 15, -- higher than diagnostic,todo signs. lower than dapui breakpoint sign
+        attach_to_untracked = true,
+        on_attach = function()
+          if vim.bo.ft == "markdown" then
+            return false
+          end
+        end,
+      }
+    end,
   },
   -- MINI.GIT (disabled)
   {

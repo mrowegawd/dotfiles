@@ -1,6 +1,12 @@
 local keymap, api = vim.keymap, vim.api
 
-vim.opt.buflisted = false
+local opt = vim.opt_local
+
+opt.buflisted = false
+opt.winfixheight = true
+opt.cursorline = true
+-- opt.signcolumn = "yes"
+opt.listchars:append "trail: "
 
 -- Disable ctrl-i and ctrl-o
 keymap.set("n", "<c-i>", "<Nop>", {
@@ -10,7 +16,7 @@ keymap.set("n", "<c-o>", "<Nop>", {
   buffer = api.nvim_get_current_buf(),
 })
 
-keymap.set("n", "<leader>fq", function()
+RUtils.map.nnoremap("<leader>fq", function()
   require("fzf-lua").quickfix {
     prompt = "  ",
     winopts = {
@@ -19,10 +25,10 @@ keymap.set("n", "<leader>fq", function()
   }
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "Fzflua: select item list",
+  desc = "QF: select items [fzflua]",
 })
 
-keymap.set("n", "<leader>fg", function()
+RUtils.map.nnoremap("<leader>fg", function()
   local path = require "fzf-lua.path"
   local qf_items = vim.fn.getqflist()
 
@@ -42,18 +48,14 @@ keymap.set("n", "<leader>fg", function()
   }
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "Fzflua: live grep item lists",
+  desc = "QF: live grep items [fzflua]",
 })
 
-keymap.set("n", "o", function()
+RUtils.map.nnoremap("o", function()
   RUtils.map.feedkey("<CR>", "n")
-  -- vim.schedule(function()
-  --   if vim.bo[0].filetype ~= "qf" then
-  --     vim.cmd "wincmd p"
-  --   end
-  -- end)
 end, {
   buffer = api.nvim_get_current_buf(),
+  desc = "QF: open item",
 })
 
 RUtils.cmd.augroup("ColorQuickFixLine", {

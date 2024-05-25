@@ -1,7 +1,7 @@
-local opt, keymap = vim.opt_local, vim.keymap
+local opt = vim.opt_local
 
-keymap.set("n", "rf", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true })
-keymap.set("n", "ri", "<CMD>ImgInsert<CR>", { buffer = true })
+RUtils.map.nnoremap("rf", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true, desc = "Markdown: preview toggle" })
+RUtils.map.nnoremap("ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 -- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]
 
 opt.wrap = false
