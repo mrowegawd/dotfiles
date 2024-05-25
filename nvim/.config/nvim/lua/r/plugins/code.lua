@@ -620,6 +620,7 @@ return {
   {
     "LintaoAmons/scratch.nvim",
     cmd = { "Scratch", "ScratchOpen" },
+    tag = "v0.13.2",
     keys = {
       {
         "<Localleader>oS",

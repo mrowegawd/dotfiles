@@ -668,7 +668,6 @@ return {
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
-    pin = true,
     version = "*", -- recommended, use latest release instead of latest commit
     -- event = {
     --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
