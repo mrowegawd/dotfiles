@@ -1,6 +1,33 @@
 ---@class r.utils.cmp
 local M = {}
 
+---@param snippet string
+---@param fn fun(placeholder:Placeholder):string
+---@return string
+function M.snippet_replace(snippet, fn)
+  return snippet:gsub("%$%b{}", function(m)
+    local n, name = m:match "^%${(%d+):(.+)}$"
+    return n and fn { n = n, text = name } or m
+  end) or snippet
+end
+
+-- This function resolves nested placeholders in a snippet.
+---@param snippet string
+---@return string
+function M.snippet_preview(snippet)
+  local ret = M.snippet_replace(snippet, function(placeholder)
+    return M.snippet_preview(placeholder.text)
+  end):gsub("%$0", "")
+  return ret
+end
+
+-- This function replaces nested placeholders in a snippet with LSP placeholders.
+function M.snippet_fix(snippet)
+  return M.snippet_replace(snippet, function(placeholder)
+    return "${" .. placeholder.n .. ":" .. M.snippet_preview(placeholder.text) .. "}"
+  end)
+end
+
 ---@param entry cmp.Entry
 function M.auto_brackets(entry)
   local cmp = require "cmp"
@@ -29,7 +56,7 @@ function M.add_missing_snippet_docs(window)
       if not item.documentation and item.insertText then
         item.documentation = {
           kind = cmp.lsp.MarkupKind.Markdown,
-          value = string.format("```%s\n%s\n```", vim.bo.filetype, M.snippet_resolve(item.insertText)),
+          value = string.format("```%s\n%s\n```", vim.bo.filetype, M.snippet_preview(item.insertText)),
         }
       end
     end
@@ -58,31 +85,14 @@ function M.confirm(opts)
   end
 end
 
----@param snippet string
----@param fn fun(placeholder:Placeholder):string
----@return string
-function M.snippet_replace(snippet, fn)
-  return snippet:gsub("%$%b{}", function(m)
-    local n, name = m:match "^%${(%d+):(.+)}$"
-    return n and fn { n = n, text = name } or m
-  end) or snippet
-end
-
--- This function resolves nested placeholders in a snippet.
-function M.snippet_resolve(snippet)
-  return M.snippet_replace(snippet, function(placeholder)
-    return M.snippet_resolve(placeholder.text)
-  end):gsub("%$0", "")
-end
-
--- This function replaces nested placeholders in a snippet with LSP placeholders.
-function M.snippet_fix(snippet)
-  return M.snippet_replace(snippet, function(placeholder)
-    return "${" .. placeholder.n .. ":" .. M.snippet_resolve(placeholder.text) .. "}"
-  end)
-end
-
 function M.expand(snippet)
+  -- Native sessions don't support nested snippet sessions.
+  -- Always use the top-level session.
+  -- Otherwise, when on the first placeholder and selecting a new completion,
+  -- the nested session will be used instead of the top-level session.
+  -- See: https://github.com/LazyVim/LazyVim/issues/3199
+  local session = vim.snippet.active() and vim.snippet._session or nil
+
   local ok = pcall(vim.snippet.expand, snippet)
   if not ok then
     local fixed = M.snippet_fix(snippet)
@@ -90,13 +100,18 @@ function M.expand(snippet)
 
     local msg = ok and "Failed to parse snippet,\nbut was able to fix it automatically." or "Failed to parse snippet."
 
-    LazyVim[ok and "warn" or "error"](
+    RUtils[ok and "warn" or "error"](
       ([[%s
 ```%s
 %s
 ```]]):format(msg, vim.bo.filetype, snippet),
       { title = "vim.snippet" }
     )
+  end
+
+  -- Restore top-level session when needed
+  if session then
+    vim.snippet._session = session
   end
 end
 

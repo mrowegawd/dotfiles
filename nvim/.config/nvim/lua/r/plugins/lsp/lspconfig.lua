@@ -139,318 +139,320 @@ return {
         end,
       },
     },
-    opts = {
-      -- options for vim.diagnostic.config()
-      ---@type vim.diagnostic.Opts
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          prefix = "■", -- "●"
-        },
-        severity_sort = true,
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = RUtils.config.icons.diagnostics.Error,
-            [vim.diagnostic.severity.WARN] = RUtils.config.icons.diagnostics.Warn,
-            [vim.diagnostic.severity.HINT] = RUtils.config.icons.diagnostics.Hint,
-            [vim.diagnostic.severity.INFO] = RUtils.config.icons.diagnostics.Info,
+    opts = function()
+      return {
+        -- options for vim.diagnostic.config()
+        ---@type vim.diagnostic.Opts
+        diagnostics = {
+          underline = true,
+          update_in_insert = false,
+          virtual_text = {
+            spacing = 4,
+            source = "if_many",
+            prefix = "■", -- "●"
+          },
+          severity_sort = true,
+          signs = {
+            text = {
+              [vim.diagnostic.severity.ERROR] = RUtils.config.icons.diagnostics.Error,
+              [vim.diagnostic.severity.WARN] = RUtils.config.icons.diagnostics.Warn,
+              [vim.diagnostic.severity.HINT] = RUtils.config.icons.diagnostics.Hint,
+              [vim.diagnostic.severity.INFO] = RUtils.config.icons.diagnostics.Info,
+            },
+          },
+          float = {
+            max_width = max_width,
+            max_height = max_height,
+            title = {
+              { "  ", "DiagnosticFloatTitleIcon" },
+              { "Problems  ", "DiagnosticFloatTitle" },
+            },
+            focusable = false,
+            style = "minimal",
+            -- border = RUtils.config.icons.border.line,
+            header = "",
+            prefix = function(diag)
+              local level = vim.diagnostic.severity[diag.severity]
+              local prefix = string.format(
+                " %s ",
+                RUtils.config.icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
+                  return first:upper() .. rest:lower()
+                end)]
+              )
+              return prefix, "DiagnosticFloating" .. level:gsub("^%l", string.upper)
+            end,
           },
         },
-        float = {
-          max_width = max_width,
-          max_height = max_height,
-          title = {
-            { "  ", "DiagnosticFloatTitleIcon" },
-            { "Problems  ", "DiagnosticFloatTitle" },
-          },
-          focusable = false,
-          style = "minimal",
-          -- border = RUtils.config.icons.border.line,
-          header = "",
-          prefix = function(diag)
-            local level = vim.diagnostic.severity[diag.severity]
-            local prefix = string.format(
-              " %s ",
-              RUtils.config.icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
-                return first:upper() .. rest:lower()
-              end)]
-            )
-            return prefix, "DiagnosticFloating" .. level:gsub("^%l", string.upper)
-          end,
+        inlay_hints = { enabled = true },
+        codelens = { enabled = false },
+        document_highlight = {
+          enabled = true,
         },
-      },
-      inlay_hints = { enabled = true },
-      codelens = { enabled = false },
-      document_highlight = {
-        enabled = true,
-      },
-      capabilities = {},
-      format = { formatting_options = nil, timeout_ms = nil },
-      -- LSP Server Settings
-      ---@type lspconfig.options
-      servers = {
-        kotlin_language_server = {},
-        zls = {},
-        dockerls = {},
-        docker_compose_language_service = {},
-        html = {},
-        cssls = {
-          settings = {
-            css = { lint = { unknownAtRules = "ignore" } },
-            scss = { lint = { unknownAtRules = "ignore" } },
+        capabilities = {},
+        format = { formatting_options = nil, timeout_ms = nil },
+        -- LSP Server Settings
+        ---@type lspconfig.options
+        servers = {
+          kotlin_language_server = {},
+          zls = {},
+          dockerls = {},
+          docker_compose_language_service = {},
+          html = {},
+          cssls = {
+            settings = {
+              css = { lint = { unknownAtRules = "ignore" } },
+              scss = { lint = { unknownAtRules = "ignore" } },
+            },
           },
-        },
-        yamlls = {
-          -- Have to add this for yamlls to understand that we support line folding
-          capabilities = {
-            textDocument = {
-              foldingRange = {
-                dynamicRegistration = false,
-                lineFoldingOnly = true,
+          yamlls = {
+            -- Have to add this for yamlls to understand that we support line folding
+            capabilities = {
+              textDocument = {
+                foldingRange = {
+                  dynamicRegistration = false,
+                  lineFoldingOnly = true,
+                },
+              },
+            },
+            -- lazy-load schemastore when needed
+            on_new_config = function(new_config)
+              new_config.settings.yaml.schemas = vim.tbl_deep_extend(
+                "force",
+                new_config.settings.yaml.schemas or {},
+                require("schemastore").yaml.schemas()
+              )
+            end,
+            settings = {
+              redhat = { telemetry = { enabled = false } },
+              yaml = {
+                keyOrdering = false,
+                format = {
+                  enable = true,
+                },
+                validate = true,
+                schemaStore = {
+                  -- Must disable built-in schemaStore support to use
+                  -- schemas from SchemaStore.nvim plugin
+                  enable = false,
+                  -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                  url = "",
+                },
               },
             },
           },
-          -- lazy-load schemastore when needed
-          on_new_config = function(new_config)
-            new_config.settings.yaml.schemas = vim.tbl_deep_extend(
-              "force",
-              new_config.settings.yaml.schemas or {},
-              require("schemastore").yaml.schemas()
-            )
-          end,
-          settings = {
-            redhat = { telemetry = { enabled = false } },
-            yaml = {
-              keyOrdering = false,
-              format = {
-                enable = true,
+          pyright = {
+            settings = {
+              -- pyright = { disableLanguageServices = true },
+              python = {
+                analysis = {
+                  autoSearchPaths = true,
+                  typeCheckingMode = "strict",
+                  -- diagnosticMode = "workspace",
+                  diagnosticMode = "openFilesOnly",
+                  useLibraryCodeForTypes = true,
+                },
               },
-              validate = true,
-              schemaStore = {
-                -- Must disable built-in schemaStore support to use
-                -- schemas from SchemaStore.nvim plugin
-                enable = false,
-                -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-                url = "",
+            },
+          },
+          ruff_lsp = {
+            keys = {
+              {
+                "<Leader>co",
+                function()
+                  vim.lsp.buf.code_action {
+                    apply = true,
+                    context = {
+                      only = { "source.organizeImports" },
+                      diagnostics = {},
+                    },
+                  }
+                end,
+                desc = "LSP: organize Imports [rustlsp]",
+              },
+            },
+          },
+          jsonls = {
+            -- lazy-load schemastore when needed
+            on_new_config = function(new_config)
+              new_config.settings.json.schemas = new_config.settings.json.schemas or {}
+              vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
+            end,
+            settings = { json = { format = { enable = true }, validate = { enable = true } } },
+          },
+          bashls = {},
+          gopls = {
+            settings = {
+              gopls = {
+                gofumpt = true,
+                codelenses = {
+                  gc_details = false,
+                  generate = true,
+                  regenerate_cgo = true,
+                  run_govulncheck = true,
+                  test = true,
+                  tidy = true,
+                  upgrade_dependency = true,
+                  vendor = true,
+                },
+                hints = {
+                  assignVariableTypes = true,
+                  compositeLiteralFields = true,
+                  compositeLiteralTypes = true,
+                  constantValues = true,
+                  functionTypeParameters = true,
+                  parameterNames = true,
+                  rangeVariableTypes = true,
+                },
+                analyses = {
+                  fieldalignment = true,
+                  nilness = true,
+                  unusedparams = true,
+                  unusedwrite = true,
+                  useany = true,
+                },
+                usePlaceholders = true,
+                completeUnimported = true,
+                staticcheck = true,
+                directoryFilters = {
+                  "-.git",
+                  "-.vscode",
+                  "-.idea",
+                  "-.vscode-test",
+                  "-node_modules",
+                },
+                semanticTokens = true,
+              },
+            },
+          },
+          neocmake = {},
+          tailwindcss = {
+            -- filetypes = { "html", "mdx", "javascript", "javascriptreact", "typescriptreact", "vue", "svelte" },
+            -- -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
+            -- -- Atm LSP ini berat dengan cmp (check pengaturan cmp /code.lua),
+            -- -- tapi LSP ini tidak begitu dengan coq dan coc
+            -- filetypes_exclude = { "markdown" },
+            filetypes_exclude = { "markdown" },
+            filetypes_include = {},
+            -- root_dir = function(...)
+            --   return require("lspconfig.util").root_pattern ".git"(...)
+            -- end,
+          },
+          lua_ls = {
+            settings = {
+              Lua = {
+                runtime = { version = "LuaJIT" },
+                codeLens = { enable = true },
+                workspace = { checkThirdParty = false },
+                doc = { privateName = { "^_" } },
+                hint = {
+                  enable = true,
+                  -- setType = false,
+                  -- paramType = true,
+                  -- paramName = "Disable",
+                  -- semicolon = "Disable",
+                  arrayIndex = "Disable",
+                },
+                completion = { callSnippet = "Replace" },
+                telemetry = { enable = false },
+                diagnostics = {
+                  globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
+                  undefined_global = false, -- remove this from diag!
+                  missing_parameters = false, -- missing fields :)
+                },
               },
             },
           },
         },
-        pyright = {
-          settings = {
-            -- pyright = { disableLanguageServices = true },
-            python = {
-              analysis = {
-                autoSearchPaths = true,
-                typeCheckingMode = "strict",
-                -- diagnosticMode = "workspace",
-                diagnosticMode = "openFilesOnly",
-                useLibraryCodeForTypes = true,
-              },
-            },
-          },
-        },
-        ruff_lsp = {
-          keys = {
-            {
-              "<Leader>co",
-              function()
-                vim.lsp.buf.code_action {
-                  apply = true,
-                  context = {
-                    only = { "source.organizeImports" },
-                    diagnostics = {},
-                  },
-                }
-              end,
-              desc = "LSP: organize Imports [rustlsp]",
-            },
-          },
-        },
-        jsonls = {
-          -- lazy-load schemastore when needed
-          on_new_config = function(new_config)
-            new_config.settings.json.schemas = new_config.settings.json.schemas or {}
-            vim.list_extend(new_config.settings.json.schemas, require("schemastore").json.schemas())
-          end,
-          settings = { json = { format = { enable = true }, validate = { enable = true } } },
-        },
-        bashls = {},
-        gopls = {
-          settings = {
-            gopls = {
-              gofumpt = true,
-              codelenses = {
-                gc_details = false,
-                generate = true,
-                regenerate_cgo = true,
-                run_govulncheck = true,
-                test = true,
-                tidy = true,
-                upgrade_dependency = true,
-                vendor = true,
-              },
-              hints = {
-                assignVariableTypes = true,
-                compositeLiteralFields = true,
-                compositeLiteralTypes = true,
-                constantValues = true,
-                functionTypeParameters = true,
-                parameterNames = true,
-                rangeVariableTypes = true,
-              },
-              analyses = {
-                fieldalignment = true,
-                nilness = true,
-                unusedparams = true,
-                unusedwrite = true,
-                useany = true,
-              },
-              usePlaceholders = true,
-              completeUnimported = true,
-              staticcheck = true,
-              directoryFilters = {
-                "-.git",
-                "-.vscode",
-                "-.idea",
-                "-.vscode-test",
-                "-node_modules",
-              },
-              semanticTokens = true,
-            },
-          },
-        },
-        neocmake = {},
-        tailwindcss = {
-          -- filetypes = { "html", "mdx", "javascript", "javascriptreact", "typescriptreact", "vue", "svelte" },
-          -- -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
-          -- -- Atm LSP ini berat dengan cmp (check pengaturan cmp /code.lua),
-          -- -- tapi LSP ini tidak begitu dengan coq dan coc
-          -- filetypes_exclude = { "markdown" },
-          filetypes_exclude = { "markdown" },
-          filetypes_include = {},
-          -- root_dir = function(...)
-          --   return require("lspconfig.util").root_pattern ".git"(...)
-          -- end,
-        },
-        lua_ls = {
-          settings = {
-            Lua = {
-              runtime = { version = "LuaJIT" },
-              codeLens = { enable = true },
-              workspace = { checkThirdParty = false },
-              doc = { privateName = { "^_" } },
-              hint = {
-                enable = true,
-                -- setType = false,
-                -- paramType = true,
-                -- paramName = "Disable",
-                -- semicolon = "Disable",
-                arrayIndex = "Disable",
-              },
-              completion = { callSnippet = "Replace" },
-              telemetry = { enable = false },
-              diagnostics = {
-                globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
-                undefined_global = false, -- remove this from diag!
-                missing_parameters = false, -- missing fields :)
-              },
-            },
-          },
-        },
-      },
-      setup = {
-        eslint = function()
-          local function get_client(buf)
-            return RUtils.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
-          end
-
-          local formatter = RUtils.lsp.formatter {
-            name = "eslint: lsp",
-            primary = false,
-            priority = 200,
-            filter = "eslint",
-          }
-
-          -- Use EslintFixAll on Neovim < 0.10.0
-          if not pcall(require, "vim.lsp._dynamic") then
-            formatter.name = "eslint: EslintFixAll"
-            formatter.sources = function(buf)
-              local client = get_client(buf)
-              return client and { "eslint" } or {}
+        setup = {
+          eslint = function()
+            local function get_client(buf)
+              return RUtils.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
             end
-            formatter.format = function(buf)
-              local client = get_client(buf)
-              if client then
-                local diag = vim.diagnostic.get(buf, { namespace = vim.lsp.diagnostic.get_namespace(client.id) })
-                if #diag > 0 then
-                  vim.cmd "EslintFixAll"
+
+            local formatter = RUtils.lsp.formatter {
+              name = "eslint: lsp",
+              primary = false,
+              priority = 200,
+              filter = "eslint",
+            }
+
+            -- Use EslintFixAll on Neovim < 0.10.0
+            if not pcall(require, "vim.lsp._dynamic") then
+              formatter.name = "eslint: EslintFixAll"
+              formatter.sources = function(buf)
+                local client = get_client(buf)
+                return client and { "eslint" } or {}
+              end
+              formatter.format = function(buf)
+                local client = get_client(buf)
+                if client then
+                  local diag = vim.diagnostic.get(buf, { namespace = vim.lsp.diagnostic.get_namespace(client.id) })
+                  if #diag > 0 then
+                    vim.cmd "EslintFixAll"
+                  end
                 end
               end
             end
-          end
 
-          -- register the formatter with LazyVim
-          RUtils.format.register(formatter)
-        end,
-        yamlls = function()
-          -- Neovim < 0.10 does not have dynamic registration for formatting
-          if vim.fn.has "nvim-0.10" == 0 then
+            -- register the formatter with LazyVim
+            RUtils.format.register(formatter)
+          end,
+          yamlls = function()
+            -- Neovim < 0.10 does not have dynamic registration for formatting
+            if vim.fn.has "nvim-0.10" == 0 then
+              RUtils.lsp.on_attach(function(client, _)
+                if client.name == "yamlls" then
+                  client.server_capabilities.documentFormattingProvider = true
+                end
+              end)
+            end
+          end,
+          ruff_lsp = function()
             RUtils.lsp.on_attach(function(client, _)
-              if client.name == "yamlls" then
-                client.server_capabilities.documentFormattingProvider = true
+              if client.name == "ruff_lsp" then
+                -- Disable hover in favor of Pyright
+                client.server_capabilities.hoverProvider = false
               end
             end)
-          end
-        end,
-        ruff_lsp = function()
-          RUtils.lsp.on_attach(function(client, _)
-            if client.name == "ruff_lsp" then
-              -- Disable hover in favor of Pyright
-              client.server_capabilities.hoverProvider = false
-            end
-          end)
-        end,
-        gopls = function()
-          -- workaround for gopls not supporting semanticTokensProvider
-          -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
-          RUtils.lsp.on_attach(function(client, _)
-            if client.name == "gopls" then
-              if not client.server_capabilities.semanticTokensProvider then
-                local semantic = client.config.capabilities.textDocument.semanticTokens
-                client.server_capabilities.semanticTokensProvider = {
-                  full = true,
-                  legend = {
-                    tokenTypes = semantic.tokenTypes,
-                    tokenModifiers = semantic.tokenModifiers,
-                  },
-                  range = true,
-                }
+          end,
+          gopls = function()
+            -- workaround for gopls not supporting semanticTokensProvider
+            -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
+            RUtils.lsp.on_attach(function(client, _)
+              if client.name == "gopls" then
+                if not client.server_capabilities.semanticTokensProvider then
+                  local semantic = client.config.capabilities.textDocument.semanticTokens
+                  client.server_capabilities.semanticTokensProvider = {
+                    full = true,
+                    legend = {
+                      tokenTypes = semantic.tokenTypes,
+                      tokenModifiers = semantic.tokenModifiers,
+                    },
+                    range = true,
+                  }
+                end
               end
-            end
-          end)
-        end,
-        tailwindcss = function(_, opts)
-          local tw = require "lspconfig.server_configurations.tailwindcss"
-          opts.filetypes = opts.filetypes or {}
+            end)
+          end,
+          tailwindcss = function(_, opts)
+            local tw = require "lspconfig.server_configurations.tailwindcss"
+            opts.filetypes = opts.filetypes or {}
 
-          -- Add default filetypes
-          vim.list_extend(opts.filetypes, tw.default_config.filetypes)
+            -- Add default filetypes
+            vim.list_extend(opts.filetypes, tw.default_config.filetypes)
 
-          -- Remove excluded filetypes
-          --- @param ft string
-          opts.filetypes = vim.tbl_filter(function(ft)
-            return not vim.tbl_contains(opts.filetypes_exclude or {}, ft)
-          end, opts.filetypes)
+            -- Remove excluded filetypes
+            --- @param ft string
+            opts.filetypes = vim.tbl_filter(function(ft)
+              return not vim.tbl_contains(opts.filetypes_exclude or {}, ft)
+            end, opts.filetypes)
 
-          -- Add additional filetypes
-          vim.list_extend(opts.filetypes, opts.filetypes_include or {})
-        end,
-      },
-    },
+            -- Add additional filetypes
+            vim.list_extend(opts.filetypes, opts.filetypes_include or {})
+          end,
+        },
+      }
+    end,
     config = function(_, opts)
       if RUtils.has "neoconf.nvim" then
         require("neoconf").setup(RUtils.opts "neoconf.nvim")

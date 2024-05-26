@@ -38,6 +38,7 @@ function M.get()
       function()
         RUtils.lsp.words.jump(vim.v.count1)
       end,
+      has = "documentHighlight",
       desc = "LSP: next word reference",
     },
     {
@@ -45,6 +46,7 @@ function M.get()
       function()
         RUtils.lsp.words.jump(-vim.v.count1)
       end,
+      has = "documentHighlight",
       desc = "LSP: prev word reference",
     },
     {

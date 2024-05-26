@@ -343,12 +343,21 @@ return {
     end,
 
     config = function(_, opts)
-      local cmp = require "cmp"
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
       end
-      cmp.setup(opts)
 
+      local parse = require("cmp.utils.snippet").parse
+      require("cmp.utils.snippet").parse = function(input)
+        local ok, ret = pcall(parse, input)
+        if ok then
+          return ret
+        end
+        return RUtils.cmp.snippet_preview(input)
+      end
+
+      local cmp = require "cmp"
+      cmp.setup(opts)
       cmp.event:on("confirm_done", function(event)
         if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
           RUtils.cmp.auto_brackets(event.entry)
