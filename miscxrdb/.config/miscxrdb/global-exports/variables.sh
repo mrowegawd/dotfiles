@@ -50,7 +50,7 @@ export ANSIBLE_FORCE_COLOR='1'
 # NNN: -------------------------------------------------------------------- {{{
 #
 export NNN_OPENER=$HOME/.config/miscxrdb/nnn/nnn-opener.sh
-export NNN_PLUG='g:fzmark;q:fzsearch;o:fzopen;p:preview-tui;d:fzcd;t:termcd;O:opencurdir;B:oplazygit;D:oplazydocker'
+export NNN_PLUG='g:fzmark;q:fzsearch;o:fzopen;p:preview-tui;d:fzcd;t:termcd;O:opencurdir;G:oplazygit;D:oplazydocker;v:opvsplit;s:opsplit'
 
 export NNN_FIFO='/tmp/nnn.fifo'
 export NNN_OPTS="H"
