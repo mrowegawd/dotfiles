@@ -6,7 +6,6 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/neotest-go",
       "nvim-neotest/neotest-python",
-      "rouge8/neotest-rust",
     },
     opts = {
       status = { virtual_text = true },
@@ -15,11 +14,7 @@ return {
         ["neotest-go"] = {
           recursive_run = true,
         },
-        ["neotest-rust"] = {},
         ["neotest-python"] = {
-
-          -- require("rustaceanvim.neotest") <-- TODO: ini harus di sematkan pada adapters
-
           -- Here you can specify the settings for the adapter, i.e.
           -- runner = "pytest",
           -- python = ".venv/bin/python",
