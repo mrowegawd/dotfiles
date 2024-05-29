@@ -84,7 +84,11 @@ M.cabbrev = function(short, long)
 end
 
 function M.has(buffer, method)
-  method = method:find "/" and method or "textDocument/" .. method
+  if type(method) == "table" then
+    method = method[1]:find "/" and method[1] or "textDocument/" .. method[1]
+  elseif type(method) == "string" then
+    method = method:find "/" and method or "textDocument/" .. method
+  end
   local clients = RUtils.lsp.get_clients { bufnr = buffer }
   for _, client in ipairs(clients) do
     if client.supports_method(method) then

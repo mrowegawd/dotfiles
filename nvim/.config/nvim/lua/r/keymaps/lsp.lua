@@ -24,15 +24,14 @@ function M.get()
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" },
     { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP: outgoing calls [fzflua]" },
     { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP: incoming calls [fzflua]" },
-    {
-      "gP",
-      function()
-        vim.cmd [[Lspsaga peek_definition]]
-      end,
-      desc = "LSP: preview/peek definitions [goto-preview]",
-    },
     { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
-    { "gd", "<CMD>Lspsaga goto_definition<CR>", desc = "LSP: definition [lspsaga]" },
+    {
+      "<leader>cR",
+      RUtils.lsp.rename_file,
+      desc = "LSP: rename file",
+      mode = { "n" },
+      has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
+    },
     {
       "<a-q>",
       function()
@@ -48,61 +47,6 @@ function M.get()
       end,
       has = "documentHighlight",
       desc = "LSP: prev word reference",
-    },
-    {
-      "gD",
-      function()
-        vim.cmd.split()
-        -- vim.schedule(function()
-        RUtils.lsp.definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-          local what = {
-            idx = "$",
-            items = ret,
-            title = "LSP definitions ref",
-          }
-          vim.fn.setqflist({}, " ", what)
-        end, "lsp_definitions")
-        -- end)
-        vim.cmd [[copen]]
-      end,
-      desc = "LSP: collect definitions and send to quickfix list",
-    },
-    {
-      "gt",
-      function()
-        RUtils.lsp.type_definitions(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-          local what = {
-            idx = "$",
-            items = ret,
-            title = "LSP type definition",
-          }
-          vim.fn.setqflist({}, " ", what)
-          vim.cmd [[copen]]
-        end)
-      end,
-      desc = "LSP: type definition",
-    },
-    {
-      "gr",
-      function()
-        vim.cmd [[Lspsaga finder]]
-      end,
-      desc = "LSP: references [lspsaga]",
-    },
-    {
-      "gR",
-      function()
-        RUtils.lsp.references(vim.api.nvim_get_current_win(), vim.api.nvim_get_current_buf(), function(ret)
-          local what = {
-            idx = "$",
-            items = ret,
-            title = "LSP references",
-          }
-          vim.fn.setqflist({}, " ", what)
-          vim.cmd [[copen]]
-        end, "lsp_references")
-      end,
-      desc = "LSP: send references to quickfix list",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics
@@ -120,57 +64,9 @@ function M.get()
     {
       "dP",
       function()
-        -- vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
-        vim.cmd [[Lspsaga show_line_diagnostics ]]
+        vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
       end,
       desc = "Diagnostic: preview",
-    },
-    {
-      "df",
-      function()
-        if #vim.diagnostic.get(0) == 0 then
-          ---@diagnostic disable-next-line: undefined-field
-          return RUtils.info("Diagnostics buffer is clean", { title = "" })
-        end
-
-        local items = {}
-        if vim.diagnostic then
-          local diags = vim.diagnostic.get(0)
-          for _, item in ipairs(diags) do
-            table.insert(items, RUtils.lsp.process_item(item))
-          end
-        end
-
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Document diagnostics",
-        }
-        vim.fn.setqflist({}, " ", what)
-        vim.cmd [[copen]]
-      end,
-      desc = "Diagnostic: document diagnostics",
-    },
-    {
-      "dF",
-      function()
-        local items = {}
-        if vim.diagnostic then
-          local diags = vim.diagnostic.get()
-          for _, item in ipairs(diags) do
-            table.insert(items, RUtils.lsp.process_item(item))
-          end
-        end
-
-        local what = {
-          idx = "$",
-          items = items,
-          title = "Workspaces diagnostics",
-        }
-        vim.fn.setqflist({}, " ", what)
-        vim.cmd [[copen]]
-      end,
-      desc = "Diagnostic: workspace diagnostics",
     },
     --  +----------------------------------------------------------+
     --  LSP commands
@@ -279,7 +175,6 @@ function M.get()
 
   if RUtils.has "inc-rename.nvim" then
     M._keys[#M._keys + 1] = {
-      -- "gR",
       "<F2>",
       function()
         local inc_rename = require "inc_rename"

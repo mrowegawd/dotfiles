@@ -125,9 +125,9 @@ local general_overrides = function()
     { LspCodeLens = { bg  = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Comment", attr = "fg", alter = -0.5 },  italic = true } },
     -- { LspCodeLensSeparator = { bold = false, italic = false } },
 
-    { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.05 } } },
-    { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.05 } } },
-    { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.05 } } },
+    -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.05 } } },
+    -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.05 } } },
+    -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.05 } } },
 
     -- { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
 
@@ -237,7 +237,7 @@ local general_overrides = function()
     { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
     { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 }, fg = "NONE", bold = true } },
     { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
-    { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
+    { MyCursorLine = { bg = { from = "Normal", alter = 0.1 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
     { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg" } } },
     { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
@@ -455,13 +455,6 @@ local function colorscheme_overrides()
       },
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-      {
-        MyQuickFixLine = {
-          bg = { from = "Error", attr = "fg", alter = -0.5 },
-          fg = { from = "Normal", attr = "fg" },
-          bold = true,
-        },
-      },
     },
     ["kanagawa"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
@@ -521,7 +514,7 @@ local function colorscheme_overrides()
       {
         StatusLineNC = {
           fg = { from = "StatusLineNC", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 2 },
+          bg = { from = "StatusLineNC", attr = "fg", alter = -2 },
         },
       },
     },
@@ -624,13 +617,6 @@ local function colorscheme_overrides()
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.8 } } },
       { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
       {
-        MyQuickFixLine = {
-          bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 },
-          fg = { from = "Normal", attr = "fg" },
-          bold = true,
-        },
-      },
-      {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 2 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
@@ -676,9 +662,9 @@ local function colorscheme_overrides()
       { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
       { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
 
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 } } },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 } } },
-      { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
+      -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 } } },
+      -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 } } },
+      -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
 
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
       {
@@ -791,13 +777,6 @@ local function colorscheme_overrides()
 
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
       { MyQuickFixLineEnter = { bg = { from = "Statement", attr = "fg", alter = -0.7 } } },
-      {
-        MyQuickFixLine = {
-          bg = { from = "Error", attr = "fg", alter = -0.5 },
-          fg = { from = "Normal", attr = "fg" },
-          bold = true,
-        },
-      },
 
       {
         StatusLine = {
@@ -833,8 +812,8 @@ local function colorscheme_overrides()
       { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
       {
         MyQuickFixLine = {
-          bg = { from = "Error", attr = "fg", alter = -0.2 },
-          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "Error", attr = "fg", alter = -0.7 },
+          -- fg = "NONE",
           bold = true,
         },
       },
@@ -892,13 +871,6 @@ local function colorscheme_overrides()
         },
       },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.7 } } },
-      {
-        MyQuickFixLine = {
-          bg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
-          fg = { from = "Normal", attr = "fg" },
-          bold = true,
-        },
-      },
     },
     ["bamboo"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
@@ -944,13 +916,6 @@ local function colorscheme_overrides()
       },
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-      {
-        MyQuickFixLine = {
-          bg = { from = "Error", attr = "fg", alter = -0.5 },
-          fg = { from = "Normal", attr = "fg" },
-          bold = true,
-        },
-      },
     },
     ["vscode_modern"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
@@ -999,7 +964,7 @@ local function colorscheme_overrides()
 
       {
         MyQuickFixLine = {
-          bg = { from = "Error", attr = "fg", alter = -0.5 },
+          bg = { from = "Error", attr = "fg", alter = -0.6 },
           fg = { from = "Normal", attr = "fg" },
           bold = true,
         },
@@ -1058,21 +1023,14 @@ local function colorscheme_overrides()
           fg = { from = "MyCodeUsage", attr = "fg", alter = -0.2 },
         },
       },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-
       {
         Folded = {
           bg = { from = "Normal", attr = "bg", alter = -0.1 },
           fg = { from = "Normal", attr = "bg", alter = 0.8 },
         },
       },
-      {
-        MyQuickFixLine = {
-          bg = { from = "ErrorMsg", attr = "fg", alter = 0.1 },
-          fg = { from = "Normal", attr = "bg" },
-          bold = true,
-        },
-      },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
       { MyCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
 
@@ -1087,9 +1045,9 @@ local function colorscheme_overrides()
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 } } },
 
-      { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
-      { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
-      { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = 0.1 } } },
+      -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
+      -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
+      -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = 0.1 } } },
 
       {
         StatusLine = {

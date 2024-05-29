@@ -487,9 +487,6 @@ local checkconceallevel = false
 RUtils.map.nnoremap("<Localleader>r", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
-    ccc_pick = function()
-      cmd "CccPick"
-    end,
     loadqf = function()
       cmd "LoadQf"
     end,

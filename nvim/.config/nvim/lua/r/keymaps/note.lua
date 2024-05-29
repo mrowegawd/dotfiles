@@ -11,6 +11,18 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
+      ["<leader>sT"] = {
+        function()
+          RUtils.todocomments.search_global_note()
+        end,
+        "Note: search todo global note [fzflua]",
+      },
+      ["<leader>st"] = {
+        function()
+          RUtils.todocomments.search_local()
+        end,
+        "Note: search todo local note [fzflua]",
+      },
       ["ro"] = {
         function()
           local note_ext = "norg"

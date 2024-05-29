@@ -1,10 +1,11 @@
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- LSPSAGA
+  -- LSPSAGA (disabled)
   {
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
+    enabled = false,
     dependencies = {
       { "nvim-tree/nvim-web-devicons" },
       { "nvim-treesitter/nvim-treesitter" },

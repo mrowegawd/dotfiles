@@ -332,7 +332,6 @@ local function picker(contents)
         }
       end
     end
-    return {}
   end
 
   return require("fzf-lua").fzf_exec(contents, {

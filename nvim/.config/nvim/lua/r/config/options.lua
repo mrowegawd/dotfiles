@@ -42,8 +42,8 @@ opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clip
 --     cache_enabled = 0,
 --   }
 -- elseif plat.is_wsl then
---   -- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
---   --NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
+-- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
+-- NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
 --   vim.g.clipboard = {
 --     -- name = "win32yank-wsl",
 --     -- copy = {

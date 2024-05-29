@@ -30,6 +30,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field cmd r.utils.cmd
 ---@field map r.utils.map
 ---@field cmp r.utils.cmp
+---@field todocomments r.utils.todocomments
 local M = {}
 
 ---@type table<string, string|string[]>

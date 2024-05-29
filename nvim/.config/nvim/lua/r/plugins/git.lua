@@ -73,6 +73,19 @@ return {
     },
     opts = { mappings = "<Leader>gy" },
   },
+  -- GH-ADDRESSED
+  {
+    "dlvhdr/gh-addressed.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "folke/trouble.nvim",
+    },
+    cmd = "GhReviewComments",
+    keys = {
+      { "<leader>gC", "<cmd>GhReviewComments<cr>", desc = "Git: github review comments [gh-addressed]" },
+    },
+  },
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"

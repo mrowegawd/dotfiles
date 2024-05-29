@@ -1159,261 +1159,94 @@ return {
       corrode_cfg.values = { theme = "ivy" }
     end,
   },
-  -- SPECTRE
+  -- GRUG-FAR.NVIM
   {
-    "nvim-pack/nvim-spectre",
-    cmd = { "Spectre" },
-    -- enabled = false,
+    "MagicDuck/grug-far.nvim",
+    cmd = { "GrugFar" },
     keys = {
       {
         "<Leader><s-f>",
-        "<CMD>Spectre<CR>",
-        desc = "Misc: open spectre [spectre]",
+        "<CMD>GrugFar<CR>",
+        desc = "Misc: open grug [grugfar]",
       },
       {
-        "<Leader><s-f>",
+        "<Leader>sf",
         function()
-          RUtils.tiling.force_win_close({ "toggleterm", "termlist" }, true)
-          return require("spectre").open_visual { select_word = true }
+          require("grug-far").grug_far { prefills = { flags = vim.fn.expand "%" } }
         end,
-        desc = "Misc: open spectre with grep on cursor (visual) [spectre]",
-        mode = {
-          "v",
-        },
+        desc = "Misc: open grug on curbuf [grugfar]",
       },
     },
-    opts = function()
-      Highlight.plugin("Spectre", {
-        {
-          TargetKeyword = {
-            fg = "DarkYellow",
-            bold = true,
-            italic = true,
-          },
-        },
-        {
-          TargetFileDirectory = {
-            bg = "DarkCyan",
-            fg = "black",
-            bold = true,
-          },
-        },
-
-        {
-          TargetFilename = {
-            bg = "Cyan",
-            fg = "black",
-            bold = true,
-          },
-        },
-        {
-          TargetReplace = {
-            bg = "Cyan",
-            fg = "black",
-            italic = true,
-          },
-        },
-      })
-      return {
-        open_cmd = "noswapfile vnew",
-        color_devicons = true,
-        live_update = false, -- auto execute search again when you write any file in vim
-        line_sep_start = "┌-----------------------------------------",
-        result_padding = "¦  ",
-        line_sep = "└-----------------------------------------",
-        highlight = {
-          ui = "String",
-          filename = "TargetFilename",
-          filedirectory = "TargetFileDirectory",
-          search = "TargetKeyword",
-          replace = "TargetReplace",
-        },
-        mapping = {
-          ["toggle_line"] = {
-            map = "dd",
-            cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
-            desc = "toggle current item",
-          },
-          ["enter_file"] = {
-            map = "<cr>",
-            cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
-            desc = "goto current file",
-          },
-          ["send_to_qf"] = {
-            map = "<c-q>",
-            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
-            desc = "send all item to quickfix",
-          },
-          ["replace_cmd"] = {
-            map = "<c-c>",
-            cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
-            desc = "input replace vim command",
-          },
-          ["show_option_menu"] = {
-            map = "<Leader>o",
-            cmd = "<cmd>lua require('spectre').show_options()<CR>",
-            desc = "show option",
-          },
-          ["run_current_replace"] = {
-            map = "rc",
-            cmd = "<cmd>lua require('spectre.actions').run_current_replace()<CR>",
-            desc = "replace current line",
-          },
-          ["run_replace"] = {
-            map = "R",
-            cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
-            desc = "replace all",
-          },
-          ["change_view_mode"] = {
-            map = "<Leader>v",
-            cmd = "<cmd>lua require('spectre').change_view()<CR>",
-            desc = "change result view mode",
-          },
-          ["change_replace_sed"] = {
-            map = "ts",
-            cmd = "<cmd>lua require('spectre').change_engine_replace('sed')<CR>",
-            desc = "use sed to replace",
-          },
-          ["toggle_live_update"] = {
-            map = "tu",
-            cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
-            desc = "update change when vim write file.",
-          },
-          ["toggle_ignore_case"] = {
-            map = "ti",
-            cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
-            desc = "toggle ignore case",
-          },
-          ["toggle_ignore_hidden"] = {
-            map = "th",
-            cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
-            desc = "toggle search hidden",
-          },
-          -- you can put your mapping here it only use normal mode
-        },
-        find_engine = {
-          -- rg is map with finder_cmd
-          ["rg"] = {
-            cmd = "rg",
-            -- default args
-            args = {
-              "--color=never",
-              "--no-heading",
-              "--with-filename",
-              "--line-number",
-              "--column",
-            },
-            options = {
-              ["ignore-case"] = {
-                value = "--ignore-case",
-                icon = "[I]",
-                desc = "ignore case",
-              },
-              ["hidden"] = {
-                value = "--hidden",
-                desc = "hidden file",
-                icon = "[H]",
-              },
-              -- you can put any rg search option you want here it can toggle with
-              -- show_option function
-            },
-          },
-          ["ag"] = {
-            cmd = "ag",
-            args = {
-              "--vimgrep",
-              "-s",
-            },
-            options = {
-              ["ignore-case"] = {
-                value = "-i",
-                icon = "[I]",
-                desc = "ignore case",
-              },
-              ["hidden"] = {
-                value = "--hidden",
-                desc = "hidden file",
-                icon = "[H]",
-              },
-            },
-          },
-        },
-        replace_engine = {
-          ["sed"] = {
-            cmd = "sed",
-            args = nil,
-            options = {
-              ["ignore-case"] = {
-                value = "--ignore-case",
-                icon = "[I]",
-                desc = "ignore case",
-              },
-            },
-          },
-        },
-        default = {
-          find = {
-            --pick one of item in find_engine
-            cmd = "rg",
-            options = { "ignore-case", "hidden" },
-          },
-          replace = {
-            --pick one of item in replace_engine
-            cmd = "sed",
-          },
-        },
-        replace_vim_cmd = "cdo",
-        is_open_target_win = true, --open file on opener window
-        is_insert_mode = false, -- start open panel on is_insert_mode
-      }
-    end,
+    opts = {
+      keymaps = {
+        replace = { n = "<c-c>" },
+        qflist = { n = "<c-q>" },
+        syncLocations = { n = "<Localleader>s" },
+        syncLine = { n = "<Localleader>l" },
+        close = { n = "q" },
+        historyOpen = { n = "<Leader>h" },
+        historyAdd = { n = "<Leader>A" },
+        refresh = { n = "R" },
+        gotoLocation = { n = "<enter>" },
+        pickHistoryEntry = { n = "<enter>" },
+      },
+    },
   },
-  -- TODO-SEARCH-COMMENTS
+  -- TODOCOMMENTS
   {
     "folke/todo-comments.nvim",
-    enabled = false,
     event = "LazyFile",
+    cmd = { "TodoTrouble", "TodoTelescope" },
+    keys = {
+      { "<leader>xt", "<cmd>TodoTrouble<cr>", desc = "Misc: todo trouble (trouble) [todo-comments]" },
+      {
+        "<leader>xT",
+        "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",
+        desc = "Misc: search Todo/Fix/Fixme (trouble) [todo-comments]",
+      },
+      {
+        "<leader>sT",
+        function()
+          RUtils.todocomments.search_global()
+        end,
+        desc = "Misc: todo global dir (fzflua) [todo-comments]",
+      },
+      {
+        "<leader>st",
+        function()
+          RUtils.todocomments.search_local()
+        end,
+        desc = "Misc: todo local dir (fzflua) [todo-comments]",
+      },
+      -- { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
+    },
     opts = {
       signs = true, -- show icons in the signs column
       sign_priority = 8, -- sign priority
       keywords = {
         FIX = {
           icon = RUtils.config.icons.misc.tools,
-          -- can be a hex color, or a named color
-          -- named colors definitions follow below
           color = "error",
-          -- a set of other keywords that all map to this FIX keywords
           alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-          -- signs = false -- configure signs for some keywords individually
         },
-        TODO = { icon = RUtils.config.icons.misc.check_big, color = "info" },
         WARN = {
           icon = RUtils.config.icons.misc.bug,
-          -- icon = " ", -- used for the sign, and search results
           color = "warning",
           alt = { "WARNING", "WARN" },
         },
-        -- NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        TODO = { icon = RUtils.config.icons.misc.check_big, color = "info" },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
       },
-      merge_keywords = false,
+      -- merge_keywords = false,
       highlight = {
-        -- highlights before the keyword (typically comment characters)
         before = "", -- "fg", "bg", or empty
-        -- highlights of the keyword
-        -- wide is the same as bg, but also highlights the colon
         keyword = "wide", -- "fg", "bg", "wide", or empty
-        -- highlights after the keyword (TODO text)
         after = "fg", -- "fg", "bg", or empty
-        -- pattern can be a string, or a table of regexes that will be checked
-        -- vim regex
         pattern = [[.*<(KEYWORDS)*:]],
         comments_only = true, -- highlight only inside comments using treesitter
         max_line_len = 400, -- ignore lines longer than this
         exclude = {}, -- list of file types to exclude highlighting
       },
-      -- list of named colors
-      -- a list of hex colors or highlight groups
-      -- will use the first valid one
       colors = {
         error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
         warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
@@ -1423,7 +1256,7 @@ return {
       },
       search = {
         command = "rg",
-        pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+        pattern = [[\b(KEYWORDS):\s]], -- ripgrep regex
         args = {
           "--color=never",
           "--no-heading",
@@ -1532,6 +1365,21 @@ return {
     cmd = "Trouble",
     keys = {
       {
+        "gr",
+        "<cmd>Trouble lsp_references toggle focus=true win.position=right<cr>",
+        desc = "LSP: references [trouble]",
+      },
+      {
+        "gd",
+        "<cmd>Trouble lsp_definitions<CR>",
+        desc = "LSP: definitions [trouble]",
+      },
+      {
+        "gt",
+        "<cmd>Trouble lsp_type_definitions<CR>",
+        desc = "LSP: type definitions [trouble]",
+      },
+      {
         "<leader>xX",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
@@ -1541,7 +1389,7 @@ return {
 
           vim.cmd [[Trouble diagnostics toggle]]
         end,
-        desc = "Misc: workspace diagnostic [trouble]",
+        desc = "Diagnostic: workspaces diagnostic [trouble]",
       },
       {
         "<leader>xx",
@@ -1552,17 +1400,17 @@ return {
           end
           vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
         end,
-        desc = "Misc: document diagnostic [trouble]",
+        desc = "Diagnostic: document diagnostic [trouble]",
       },
       {
         "<leader>cs",
         "<cmd>Trouble symbols toggle focus=false<cr>",
-        desc = "Misc: open symbols with trouble [trouble]",
+        desc = "LSP: open symbols with trouble [trouble]",
       },
       {
         "<leader>cS",
         "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-        desc = "Misc: LSP references/definitions/... [trouble]",
+        desc = "LSP: LSP references/definitions/... [trouble]",
       },
       {
         "<leader>xl",
@@ -1573,7 +1421,7 @@ return {
           end
           vim.cmd "Trouble loclist toggle"
         end,
-        desc = "Misc: open location list with [trouble]",
+        desc = "QF: open location list with [trouble]",
       },
       {
         "<leader>xq",
@@ -1584,7 +1432,7 @@ return {
           end
           vim.cmd "Trouble qflist toggle"
         end,
-        desc = "Misc: open quickfix list with [trouble]",
+        desc = "QF: open quickfix list with [trouble]",
       },
     },
     opts = function()

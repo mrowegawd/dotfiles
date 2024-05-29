@@ -195,6 +195,66 @@ return {
         servers = {
           kotlin_language_server = {},
           zls = {},
+          tsserver = {
+            enabled = false,
+          },
+          vtsls = {
+            settings = {
+              complete_function_calls = true,
+              vtsls = {
+                enableMoveToFileCodeAction = true,
+              },
+              typescript = {
+                updateImportsOnFileMove = { enabled = "always" },
+                experimental = {
+                  completion = {
+                    enableServerSideFuzzyMatch = true,
+                  },
+                },
+                suggest = {
+                  completeFunctionCalls = true,
+                },
+                inlayHints = {
+                  enumMemberValues = { enabled = true },
+                  functionLikeReturnTypes = { enabled = true },
+                  parameterNames = { enabled = "literals" },
+                  parameterTypes = { enabled = true },
+                  propertyDeclarationTypes = { enabled = true },
+                  variableTypes = { enabled = false },
+                },
+              },
+            },
+            keys = {
+              {
+                "gd",
+                function()
+                  require("vtsls").commands.goto_source_definition(0)
+                end,
+                desc = "LSP: goto source definition",
+              },
+              {
+                "<leader>co",
+                function()
+                  require("vtsls").commands.organize_imports(0)
+                end,
+                desc = "LSP: organize imports",
+              },
+              {
+                "<leader>cM",
+                function()
+                  require("vtsls").commands.add_missing_imports(0)
+                end,
+                desc = "LSP: add missing imports",
+              },
+              {
+                "<leader>cD",
+                function()
+                  require("vtsls").commands.fix_all(0)
+                end,
+                desc = "LSP: fix all diagnostics",
+              },
+            },
+          },
           dockerls = {},
           docker_compose_language_service = {},
           html = {},
@@ -202,6 +262,21 @@ return {
             settings = {
               css = { lint = { unknownAtRules = "ignore" } },
               scss = { lint = { unknownAtRules = "ignore" } },
+            },
+          },
+          taplo = {
+            keys = {
+              {
+                "K",
+                function()
+                  if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
+                    require("crates").show_popup()
+                  else
+                    vim.lsp.buf.hover()
+                  end
+                end,
+                desc = "LSP: show crate documentation [taplo]",
+              },
             },
           },
           yamlls = {
@@ -434,6 +509,10 @@ return {
               end
             end)
           end,
+          tsserver = function()
+            -- disable tsserver
+            return true
+          end,
           tailwindcss = function(_, opts)
             local tw = require "lspconfig.server_configurations.tailwindcss"
             opts.filetypes = opts.filetypes or {}
@@ -454,6 +533,8 @@ return {
       }
     end,
     config = function(_, opts)
+      opts.servers.vtsls.settings.javascript = vim.deepcopy(opts.servers.vtsls.settings.typescript)
+
       if RUtils.has "neoconf.nvim" then
         require("neoconf").setup(RUtils.opts "neoconf.nvim")
       end
@@ -562,9 +643,9 @@ return {
         }
       end
 
-      if RUtils.lsp.get_config "denols" and RUtils.lsp.get_config "tsserver" then
+      if RUtils.lsp.is_enabled "denols" and RUtils.lsp.is_enabled "vtsls" then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        RUtils.lsp.disable("tsserver", is_deno)
+        RUtils.lsp.disable("vtsls", is_deno)
         RUtils.lsp.disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
@@ -589,8 +670,29 @@ return {
     "mrcjkb/rustaceanvim",
     version = "^4", -- Recommended
     ft = { "rust" },
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      {
+        "nvim-neotest/neotest",
+        optional = true,
+        opts = function(_, opts)
+          opts.adapters = opts.adapters or {}
+          vim.list_extend(opts.adapters, {
+            require "rustaceanvim.neotest",
+          })
+        end,
+      },
+    },
     opts = {
       server = {
+        on_attach = function(_, bufnr)
+          vim.keymap.set("n", "<leader>cR", function()
+            vim.cmd.RustLsp "codeAction"
+          end, { desc = "LSP: code action [rustaceanvim]", buffer = bufnr })
+          vim.keymap.set("n", "<leader>dd", function()
+            vim.cmd.RustLsp "debuggables"
+          end, { desc = "Debug: rust debuggables [rustaceanvim]", buffer = bufnr })
+        end,
         default_settings = {
           -- rust-analyzer language server configuration
           ["rust-analyzer"] = {
@@ -624,21 +726,23 @@ return {
     },
     config = function(_, opts)
       vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
+
+      if vim.fn.executable "rust-analyzer" == 0 then
+        RUtils.error(
+          "**rust-analyzer** not found in PATH, please install it.\nhttps://rust-analyzer.github.io/",
+          { title = "rustaceanvim" }
+        )
+      end
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   TYPESCRIPT                                             │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- TYPESCRIPT-TOOLS
+  -- NVIM-VTSLS
   {
-    "pmizio/typescript-tools.nvim",
-    enabled = function()
-      local ts_config = vim.fn.glob "./tsconfig.json"
-      if ts_config == "" then
-        return false
-      end
-      return true
-    end,
+    "yioneko/nvim-vtsls",
+    lazy = true,
+    opts = {},
     dependencies = {
       "nvim-lua/plenary.nvim",
       "neovim/nvim-lspconfig",
@@ -647,32 +751,10 @@ return {
         "dmmulroy/ts-error-translator.nvim",
         config = true,
       },
-      -- TWOSLASH-QUERIESN
-      {
-        -- use like //        ^?
-        "marilari88/twoslash-queries.nvim",
-        ft = {
-          "typescript",
-          "typescriptreact",
-          "javascript",
-          "javascriptreact",
-        },
-        opts = {
-          highlight = "Type",
-          multi_line = true,
-        },
-      },
       -- TSC.NVIM
       {
-        -- Type checking typescript
         "dmmulroy/tsc.nvim",
         cmd = { "TSC" },
-        ft = {
-          "typescript",
-          "typescriptreact",
-          "javascript",
-          "javascriptreact",
-        },
         config = function()
           require("tsc").setup()
           vim.api.nvim_exec_autocmds("FileType", {})
@@ -714,75 +796,10 @@ return {
       "javascript",
       "javascriptreact",
     },
-    opts = {
-      settings = {
-        -- spawn additional tsserver instance to calculate diagnostics on it
-        separate_diagnostic_server = true,
-        -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-        publish_diagnostic_on = "insert_leave",
-        -- string|nil -specify a custom path to `tsserver.js` file, if this is nil or file under path
-        -- not exists then standard path resolution strategy is applied
-        tsserver_path = nil,
-        -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
-        -- (see 💅 `styled-components` support section)
-        tsserver_plugins = {},
-        -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
-        -- memory limit in megabytes or "auto"(basically no limit)
-        tsserver_max_memory = "auto",
-        -- described below
-        tsserver_format_options = {},
-        tsserver_file_preferences = {},
-      },
-      tsserver_max_memory = 8096, -- 4096 | "auto"
-      -- tsserver_max_memory = 4096, -- 4096 | "auto"
-      -- code_lens = "off",
-      separate_diagnostic_server = true,
-      publish_diagnostic_on = "insert_leave",
-      expose_as_code_action = { "organize_imports", "remove_unused" },
-      tsserver_file_preferences = {
-        -- Inlay Hints
-        -- includeInlayParameterNameHints = "all",
-        -- includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-        -- includeInlayFunctionParameterTypeHints = true,
-        -- includeInlayVariableTypeHints = true,
-        -- includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-        -- includeInlayPropertyDeclarationTypeHints = true,
-        -- includeInlayFunctionLikeReturnTypeHints = true,
-        -- includeInlayEnumMemberValueHints = true,
-
-        includeInlayParameterNameHints = "literal",
-        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayVariableTypeHints = true,
-        includeInlayFunctionLikeReturnTypeHints = false,
-        includeInlayPropertyDeclarationTypeHints = true,
-        includeInlayEnumMemberValueHints = true,
-      },
-      root_dir = function(fname)
-        local lspUtil = require "lspconfig.util"
-        -- Disable tsserver on js files when a flow project is detected
-        if not string.match(fname, ".tsx?$") and lspUtil.root_pattern ".flowconfig"(fname) then
-          return nil
-        end
-        local ts_root = lspUtil.root_pattern "tsconfig.json"(fname)
-          or lspUtil.root_pattern("package.json", "jsconfig.json")(fname)
-        if ts_root then
-          return nil
-        end
-        if vim.g.started_by_firenvim then
-          return lspUtil.path.dirname(fname)
-        end
-
-        return nil
-      end,
-    },
     config = function(_, opts)
-      RUtils.lsp.on_attach(function(client, bufnr)
-        require("twoslash-queries").attach(client, bufnr)
-      end)
-      require("typescript-tools").setup(opts)
-      vim.api.nvim_exec_autocmds("FileType", {})
+      -- add vtsls to lspconfig
+      require("lspconfig.configs").vtsls = require("vtsls").lspconfig
+      require("vtsls").config(opts)
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮

@@ -109,7 +109,7 @@ return {
           ["graphql"] = { { "prettierd", "prettier" } },
           ["handlebars"] = { { "prettierd", "prettier" } },
 
-          ["norg"] = { "trim_whitespace", "trim_newlines" }, -- TODO: cbfmt does not work :(
+          ["norg"] = { "trim_whitespace", "trim_newlines" },
           ["org"] = { "trim_whitespace", "trim_newlines" },
 
           ["_"] = { "trim_whitespace" },

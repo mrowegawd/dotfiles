@@ -11,7 +11,7 @@ local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "onedark"
+local colorscheme = "campfire"
 
 if RUtils.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"
@@ -144,6 +144,9 @@ local defaults = {
       terminal = " ",
       tools = " ",
       up = "⇡ ",
+
+      Neovim = "",
+      Vim = "",
 
       tag = " ",
       watch = " ",

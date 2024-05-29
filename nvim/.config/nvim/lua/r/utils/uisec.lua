@@ -36,7 +36,7 @@ function Preset:new(o)
   return setmetatable(o, self)
 end
 
---- WARNING: deep extend does not copy lua meta methods
+-- WARNING: deep extend does not copy lua meta methods
 function Preset:with(o)
   return vim.tbl_deep_extend("force", self, o)
 end

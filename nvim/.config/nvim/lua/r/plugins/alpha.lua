@@ -13,6 +13,19 @@ return {
           end,
         })
       end
+
+      -- Remove statusline and tabline when in Alpha
+      RUtils.cmd.augroup("DisableStatuslineDashboard", {
+        event = { "FileType" },
+        pattern = "dashboard",
+        command = function()
+          vim.cmd [[
+            set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
+            set laststatus=0 | autocmd BufUnload <buffer> set laststatus=2
+          ]]
+        end,
+      })
+
       return {
         theme = "doom",
         hide = {
@@ -38,15 +51,16 @@ return {
           footer = function()
             local stats = require("lazy").stats()
             local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-            return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
+            local date = os.date "%d-%m-%Y"
+            local time = os.date "%H:%M:%S"
+            return {
+              RUtils.config.icons.misc.Neovim .. " Neovim v" .. vim.version().major .. "." .. vim.version().minor,
+              "󰂖 loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms",
+              "[ " .. date .. "] [ " .. time .. "]",
+            }
           end,
         },
       }
-
-      -- for _, button in ipairs(opts.config.center) do
-      --   button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
-      --   button.key_format = "  %s"
-      -- end
     end,
   },
   -- ALPHA (disabled)

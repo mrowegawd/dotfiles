@@ -516,9 +516,10 @@ return {
       },
     },
   },
-  -- NVIM-SURROUND
+  -- NVIM-SURROUND (disabled)
   {
     "kylechui/nvim-surround",
+    enabled = false,
     event = "BufReadPost",
     version = "*",
     keys = {

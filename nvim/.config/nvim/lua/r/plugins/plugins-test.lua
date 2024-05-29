@@ -1428,6 +1428,169 @@ return {
     --   },
     -- },
   },
+  -- MINI.ANIMATE
+  {
+    "echasnovski/mini.animate",
+    event = "VeryLazy",
+    enabled = false,
+    opts = function()
+      -- don't use animate when scrolling with the mouse
+      local mouse_scrolled = false
+      for _, scroll in ipairs { "Up", "Down" } do
+        local key = "<ScrollWheel" .. scroll .. ">"
+        vim.keymap.set({ "", "i" }, key, function()
+          mouse_scrolled = true
+          return key
+        end, { expr = true })
+      end
+
+      local animate = require "mini.animate"
+      return {
+        resize = {
+          timing = animate.gen_timing.linear { duration = 100, unit = "total" },
+        },
+        scroll = {
+          timing = animate.gen_timing.linear { duration = 300, unit = "total" },
+          subscroll = animate.gen_subscroll.equal {
+            predicate = function(total_scroll)
+              if mouse_scrolled then
+                mouse_scrolled = false
+                return false
+              end
+              return total_scroll > 1
+            end,
+          },
+        },
+      }
+    end,
+  },
+  -- INCLINE.NVIM (disabled)
+  {
+    "b0o/incline.nvim",
+    enabled = false,
+    event = "LazyFile",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = function()
+      return {
+        highlight = {
+          groups = {
+            InclineNormal = {
+              guifg = RUtils.colortbl.norm_bg,
+            },
+            InclineNormalNC = {
+              guifg = RUtils.colortbl.separator_fg_alt,
+              guibg = RUtils.colortbl.norm_bg,
+            },
+          },
+        },
+        window = { margin = { vertical = 0, horizontal = 0 } },
+        hide = {
+          cursorline = true,
+          focused_win = false,
+          only_win = false,
+        },
+        ignore = {
+          buftypes = "special",
+          filetypes = { "alpha", "dashboard", "fzf" },
+          floating_wins = true,
+          unlisted_buffers = true,
+          wintypes = "special",
+        },
+
+        render = function(props)
+          local function file_modified()
+            if props.focused then
+              if vim.bo[props.buf].modified then
+                return {
+                  " " .. RUtils.config.icons.misc.boldclose,
+                  guifg = Highlight.get("DiagnosticSignError", "fg"),
+                  gui = "bold",
+                  guibg = RUtils.colortbl.separator_fg,
+                }
+              end
+            else
+              if vim.bo[props.buf].modified then
+                return {
+                  " " .. RUtils.config.icons.misc.boldclose,
+                  guifg = Highlight.get("DiagnosticSignError", "fg"),
+                  gui = "bold",
+                  guibg = RUtils.colortbl.separator_fg_alt,
+                }
+              end
+            end
+          end
+
+          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":h:t")
+          local fnc = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+          local filename = dirname .. "/" .. fnc
+
+          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
+          if ft_icon == nil then
+            ft_icon = ""
+          end
+
+          local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf }) and "bold,italic" or "bold"
+
+          if props.focused then
+            return {
+              {
+                guibg = RUtils.colortbl.separator_fg,
+                guifg = RUtils.colortbl.norm_bg,
+                RUtils.config.icons.misc.separator_up,
+              },
+              {
+                file_modified(),
+              },
+              {
+                " " .. ft_icon .. " ",
+                guifg = ft_color,
+                guibg = RUtils.colortbl.separator_fg,
+              },
+              {
+                filename .. " ",
+                guibg = RUtils.colortbl.separator_fg,
+                gui = modified,
+              },
+              {
+                guifg = RUtils.colortbl.separator_fg,
+                RUtils.config.icons.misc.separator_up,
+              },
+            }
+          else
+            return {
+              {
+                guifg = RUtils.colortbl.norm_bg,
+                guibg = RUtils.colortbl.separator_fg_alt,
+                RUtils.config.icons.misc.separator_up,
+              },
+              {
+                file_modified(),
+              },
+              {
+                " " .. ft_icon .. " ",
+                guifg = ft_color,
+                guibg = RUtils.colortbl.separator_fg_alt,
+              },
+              {
+                filename .. " ",
+                -- guifg = Highlight.tint(Highlight.get("Normal", "fg"), -0.9),
+                guifg = RUtils.colortbl.norm_fg,
+                guibg = RUtils.colortbl.separator_fg_alt,
+                gui = modified,
+              },
+              {
+                guifg = RUtils.colortbl.separator_fg_alt,
+                guibg = RUtils.colortbl.norm_bg,
+                RUtils.config.icons.misc.separator_up,
+              },
+            }
+          end
+        end,
+      }
+    end,
+  },
   -- STATUSCOL
   {
     "luukvbaal/statuscol.nvim",
@@ -1903,6 +2066,215 @@ return {
         },
       }
       return opts
+    end,
+  },
+  -- SPECTRE (disabled)
+  {
+    "nvim-pack/nvim-spectre",
+    cmd = { "Spectre" },
+    enabled = false,
+    keys = {
+      {
+        "<Leader><s-f>",
+        "<CMD>Spectre<CR>",
+        desc = "Misc: open spectre [spectre]",
+      },
+      {
+        "<Leader><s-f>",
+        function()
+          RUtils.tiling.force_win_close({ "toggleterm", "termlist" }, true)
+          return require("spectre").open_visual { select_word = true }
+        end,
+        desc = "Misc: open spectre with grep on cursor (visual) [spectre]",
+        mode = {
+          "v",
+        },
+      },
+    },
+    opts = function()
+      Highlight.plugin("Spectre", {
+        {
+          TargetKeyword = {
+            fg = "DarkYellow",
+            bold = true,
+            italic = true,
+          },
+        },
+        {
+          TargetFileDirectory = {
+            bg = "DarkCyan",
+            fg = "black",
+            bold = true,
+          },
+        },
+
+        {
+          TargetFilename = {
+            bg = "Cyan",
+            fg = "black",
+            bold = true,
+          },
+        },
+        {
+          TargetReplace = {
+            bg = "Cyan",
+            fg = "black",
+            italic = true,
+          },
+        },
+      })
+      return {
+        open_cmd = "noswapfile vnew",
+        color_devicons = true,
+        live_update = false, -- auto execute search again when you write any file in vim
+        line_sep_start = "┌-----------------------------------------",
+        result_padding = "¦  ",
+        line_sep = "└-----------------------------------------",
+        highlight = {
+          ui = "String",
+          filename = "TargetFilename",
+          filedirectory = "TargetFileDirectory",
+          search = "TargetKeyword",
+          replace = "TargetReplace",
+        },
+        mapping = {
+          ["toggle_line"] = {
+            map = "dd",
+            cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
+            desc = "toggle current item",
+          },
+          ["enter_file"] = {
+            map = "<cr>",
+            cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
+            desc = "goto current file",
+          },
+          ["send_to_qf"] = {
+            map = "<c-q>",
+            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
+            desc = "send all item to quickfix",
+          },
+          ["replace_cmd"] = {
+            map = "<c-c>",
+            cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
+            desc = "input replace vim command",
+          },
+          ["show_option_menu"] = {
+            map = "<Leader>o",
+            cmd = "<cmd>lua require('spectre').show_options()<CR>",
+            desc = "show option",
+          },
+          ["run_current_replace"] = {
+            map = "rc",
+            cmd = "<cmd>lua require('spectre.actions').run_current_replace()<CR>",
+            desc = "replace current line",
+          },
+          ["run_replace"] = {
+            map = "R",
+            cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
+            desc = "replace all",
+          },
+          ["change_view_mode"] = {
+            map = "<Leader>v",
+            cmd = "<cmd>lua require('spectre').change_view()<CR>",
+            desc = "change result view mode",
+          },
+          ["change_replace_sed"] = {
+            map = "ts",
+            cmd = "<cmd>lua require('spectre').change_engine_replace('sed')<CR>",
+            desc = "use sed to replace",
+          },
+          ["toggle_live_update"] = {
+            map = "tu",
+            cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
+            desc = "update change when vim write file.",
+          },
+          ["toggle_ignore_case"] = {
+            map = "ti",
+            cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
+            desc = "toggle ignore case",
+          },
+          ["toggle_ignore_hidden"] = {
+            map = "th",
+            cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
+            desc = "toggle search hidden",
+          },
+          -- you can put your mapping here it only use normal mode
+        },
+        find_engine = {
+          -- rg is map with finder_cmd
+          ["rg"] = {
+            cmd = "rg",
+            -- default args
+            args = {
+              "--color=never",
+              "--no-heading",
+              "--with-filename",
+              "--line-number",
+              "--column",
+            },
+            options = {
+              ["ignore-case"] = {
+                value = "--ignore-case",
+                icon = "[I]",
+                desc = "ignore case",
+              },
+              ["hidden"] = {
+                value = "--hidden",
+                desc = "hidden file",
+                icon = "[H]",
+              },
+              -- you can put any rg search option you want here it can toggle with
+              -- show_option function
+            },
+          },
+          ["ag"] = {
+            cmd = "ag",
+            args = {
+              "--vimgrep",
+              "-s",
+            },
+            options = {
+              ["ignore-case"] = {
+                value = "-i",
+                icon = "[I]",
+                desc = "ignore case",
+              },
+              ["hidden"] = {
+                value = "--hidden",
+                desc = "hidden file",
+                icon = "[H]",
+              },
+            },
+          },
+        },
+        replace_engine = {
+          ["sed"] = {
+            cmd = "sed",
+            args = nil,
+            options = {
+              ["ignore-case"] = {
+                value = "--ignore-case",
+                icon = "[I]",
+                desc = "ignore case",
+              },
+            },
+          },
+        },
+        default = {
+          find = {
+            --pick one of item in find_engine
+            cmd = "rg",
+            options = { "ignore-case", "hidden" },
+          },
+          replace = {
+            --pick one of item in replace_engine
+            cmd = "sed",
+          },
+        },
+        replace_vim_cmd = "cdo",
+        is_open_target_win = true, --open file on opener window
+        is_insert_mode = false, -- start open panel on is_insert_mode
+      }
     end,
   },
   -- use edgy's selection window

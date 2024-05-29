@@ -235,7 +235,7 @@ return {
   -- AERIAL
   {
     "stevearc/aerial.nvim",
-    event = "LazyFile",
+    event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -248,94 +248,9 @@ return {
                 bg = "NONE",
               },
             },
-            -- {
-            --   OutlineDetails = {
-            --     fg = { from = "Comment", attr = "fg", alter = -0.5 },
-            --     bg = "NONE",
-            --   },
-            -- },
-            -- {
-            --   OutlineFoldMarker = {
-            --     fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
-            --     bg = "NONE",
-            --   },
-            -- },
-            -- {
-            --   OutlineGuides = {
-            --     fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
-            --     bg = "NONE",
-            --   },
-            -- },
-            -- {
-            --   OutlineLineno = {
-            --     bg = "NONE",
-            --   },
-            -- },
           },
-          -- ["onedark"] = {
-          --   {
-          --     OutlineDetails = {
-          --       fg = { from = "Comment", attr = "fg", alter = 0.05 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          --   {
-          --     OutlineGuides = {
-          --       fg = { from = "FoldColumn", attr = "fg", alter = 0.1 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          -- },
-          -- ["solarized-osaka"] = {
-          --   {
-          --     OutlineGuides = {
-          --       fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          -- },
-          -- ["selenized"] = {
-          --   {
-          --     OutlineDetails = {
-          --       fg = { from = "Comment", attr = "fg", alter = 0.1 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          --   {
-          --     OutlineCurrent = {
-          --       fg = { from = "Error", attr = "fg", alter = -0.1 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          --   {
-          --     OutlineGuides = {
-          --       fg = { from = "FoldColumn", attr = "fg" },
-          --       bg = "NONE",
-          --     },
-          --   },
-          -- },
-          -- ["miasma"] = {
-          --   {
-          --     OutlineDetails = {
-          --       fg = { from = "Comment", attr = "fg", alter = -0.2 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          --   {
-          --     OutlineGuides = {
-          --       fg = { from = "FoldColumn", attr = "fg", alter = 0.05 },
-          --       bg = "NONE",
-          --     },
-          --   },
-          --   {
-          --     OutlineCurrent = {
-          --       fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-          --     },
-          --   },
-          -- },
         },
       })
-
       -- ---@diagnostic disable-next-line: undefined-field
       -- require("telescope").load_extension "aerial"
 
@@ -374,6 +289,7 @@ return {
   -- EDGY.NVIM
   {
     "folke/edgy.nvim",
+    event = "VeryLazy",
     keys = function()
       local height = vim.o.lines - vim.o.cmdheight
       if vim.o.laststatus ~= 0 then
@@ -412,6 +328,15 @@ return {
           end,
           desc = "Misc: open file explore [neotree]",
         },
+        {
+          "<leader>ue",
+          function()
+            require("edgy").toggle()
+          end,
+          desc = "Edgy Toggle",
+        },
+        -- stylua: ignore
+        { "<leader>uE", function() require("edgy").select() end, desc = "Edgy Select Window" },
         {
           "<leader>ge",
           function()
@@ -518,12 +443,12 @@ return {
           -- Setting to `true`, will add an edgy winbar.
           -- Setting to `false`, won't set any winbar.
           -- Setting to a string, will set the winbar to that string.
-          winbar = true,
-          winfixwidth = true,
-          winfixheight = false,
+          -- winbar = true,
+          -- winfixwidth = true,
+          -- winfixheight = false,
           winhighlight = "WinBar:Normal,Normal:Normal",
-          spell = false,
-          signcolumn = "no",
+          -- spell = false,
+          -- signcolumn = "no",
         },
         bottom = {
           -- {
@@ -550,7 +475,7 @@ return {
           --     return not vim.b[buf].lazyterm_cmd
           --   end,
           -- },
-          -- "Trouble",
+          "Trouble",
           -- { ft = "qf", title = "QuickFix" },
           -- {
           --   ft = "help",
@@ -564,21 +489,15 @@ return {
           -- { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
         },
         right = {
-          -- {
-          --   ft = "Outline",
-          --   pinned = true,
-          --   open = "Outline",
-          --   size = {
-          --     width = 0.2,
-          --   },
-          -- },
+          -- "Trouble",
           {
             ft = "aerial",
             pinned = true,
             open = "Outline",
-            size = {
-              width = 0.2,
-            },
+            title = "Aerial",
+            -- size = {
+            --   width = 0.2,
+            -- },
           },
         },
         left = {
