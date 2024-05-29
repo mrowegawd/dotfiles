@@ -95,6 +95,23 @@ function M.background()
   vim.notify(string.format("background=%s", vim.go.background))
 end
 
+M._maximized = nil
+function M.maximize()
+  if M._maximized then
+    vim.o.winwidth = M._maximized.width
+    vim.o.winheight = M._maximized.height
+    M._maximized = nil
+    vim.cmd "wincmd ="
+  else
+    M._maximized = {
+      width = vim.o.winwidth,
+      height = vim.o.winheight,
+    }
+    vim.o.winwidth = 999
+    vim.o.winheight = 999
+  end
+end
+
 setmetatable(M, {
   __call = function(m, ...)
     return m.option(...)

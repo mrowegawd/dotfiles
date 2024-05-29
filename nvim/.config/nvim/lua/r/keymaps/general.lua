@@ -476,9 +476,14 @@ RUtils.map.nnoremap(
 RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
+RUtils.map.nnoremap("sm", function()
+  RUtils.toggle.maximize()
+end)
+
 RUtils.map.nnoremap("<F1>", function()
   -- dihapus saja ini
-  RUtils.map.show_help_buf_keymap()
+  -- RUtils.map.show_help_buf_keymap()
+  RUtils.toggle.maximize()
 end)
 
 RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, silent)
