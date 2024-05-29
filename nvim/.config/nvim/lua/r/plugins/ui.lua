@@ -154,6 +154,7 @@ return {
     opts = function()
       Highlight.plugin("notify", {
         { NoiceCmdlinePopupBorder = { fg = { from = "Directory" } } },
+        { NoiceCmdlinePopup = { bg = "NONE" } },
         { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
       })
 
@@ -179,7 +180,7 @@ return {
           },
         },
         cmdline = {
-          view = "cmdline",
+          view = "cmdline_popup",
         },
         messages = {
           -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
@@ -196,6 +197,18 @@ return {
           backend = "cmp",
         },
         redirect = { view = "popup", filter = { event = "msg_show" } },
+        views = {
+          cmdline_popup = {
+            position = {
+              row = "98%",
+              col = "1%",
+            },
+            size = {
+              width = "auto",
+              height = "auto",
+            },
+          },
+        },
         routes = {
           {
             opts = { skip = true },
@@ -256,133 +269,6 @@ return {
         desc = "Fold: cycle fold [fold-cycle]",
       },
     },
-  },
-  -- INCLINE.NVIM (disabled)
-  {
-    "b0o/incline.nvim",
-    enabled = false,
-    event = "LazyFile",
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
-    opts = function()
-      return {
-        highlight = {
-          groups = {
-            InclineNormal = {
-              guifg = RUtils.colortbl.norm_bg,
-            },
-            InclineNormalNC = {
-              guifg = RUtils.colortbl.separator_fg_alt,
-              guibg = RUtils.colortbl.norm_bg,
-            },
-          },
-        },
-        window = { margin = { vertical = 0, horizontal = 0 } },
-        hide = {
-          cursorline = true,
-          focused_win = false,
-          only_win = false,
-        },
-        ignore = {
-          buftypes = "special",
-          filetypes = { "alpha", "dashboard", "fzf" },
-          floating_wins = true,
-          unlisted_buffers = true,
-          wintypes = "special",
-        },
-
-        render = function(props)
-          local function file_modified()
-            if props.focused then
-              if vim.bo[props.buf].modified then
-                return {
-                  " " .. RUtils.config.icons.misc.boldclose,
-                  guifg = Highlight.get("DiagnosticSignError", "fg"),
-                  gui = "bold",
-                  guibg = RUtils.colortbl.separator_fg,
-                }
-              end
-            else
-              if vim.bo[props.buf].modified then
-                return {
-                  " " .. RUtils.config.icons.misc.boldclose,
-                  guifg = Highlight.get("DiagnosticSignError", "fg"),
-                  gui = "bold",
-                  guibg = RUtils.colortbl.separator_fg_alt,
-                }
-              end
-            end
-          end
-
-          local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":h:t")
-          local fnc = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-          local filename = dirname .. "/" .. fnc
-
-          local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
-          if ft_icon == nil then
-            ft_icon = ""
-          end
-
-          local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf }) and "bold,italic" or "bold"
-
-          if props.focused then
-            return {
-              {
-                guibg = RUtils.colortbl.separator_fg,
-                guifg = RUtils.colortbl.norm_bg,
-                RUtils.config.icons.misc.separator_up,
-              },
-              {
-                file_modified(),
-              },
-              {
-                " " .. ft_icon .. " ",
-                guifg = ft_color,
-                guibg = RUtils.colortbl.separator_fg,
-              },
-              {
-                filename .. " ",
-                guibg = RUtils.colortbl.separator_fg,
-                gui = modified,
-              },
-              {
-                guifg = RUtils.colortbl.separator_fg,
-                RUtils.config.icons.misc.separator_up,
-              },
-            }
-          else
-            return {
-              {
-                guifg = RUtils.colortbl.norm_bg,
-                guibg = RUtils.colortbl.separator_fg_alt,
-                RUtils.config.icons.misc.separator_up,
-              },
-              {
-                file_modified(),
-              },
-              {
-                " " .. ft_icon .. " ",
-                guifg = ft_color,
-                guibg = RUtils.colortbl.separator_fg_alt,
-              },
-              {
-                filename .. " ",
-                -- guifg = Highlight.tint(Highlight.get("Normal", "fg"), -0.9),
-                guifg = RUtils.colortbl.norm_fg,
-                guibg = RUtils.colortbl.separator_fg_alt,
-                gui = modified,
-              },
-              {
-                guifg = RUtils.colortbl.separator_fg_alt,
-                guibg = RUtils.colortbl.norm_bg,
-                RUtils.config.icons.misc.separator_up,
-              },
-            }
-          end
-        end,
-      }
-    end,
   },
   -- NVIM-TRANSPARENT
   {
