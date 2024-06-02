@@ -2,8 +2,12 @@
 
 clear
 
+title_fzf="Jump To"
+
 # shellcheck disable=SC1090,SC1091
 . "$(dirname "$0")"/.nnn-plugin-helper
+
+nnn_banner "$title_fzf"
 
 cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
 if grep -qi microsoft /proc/version; then # --> check for WSL
@@ -31,7 +35,7 @@ else
 
 		select=$(cat "$cwd" | fzf --no-height --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
 			--preview-window right:50%:hidden \
-			--prompt "$title_fzf")
+			--prompt "$title_fzf> ")
 
 		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
 		wezterm cli activate-pane-direction Left

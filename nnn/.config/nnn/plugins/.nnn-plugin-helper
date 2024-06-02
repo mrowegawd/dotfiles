@@ -62,3 +62,18 @@ nnn_use_selection() {
 		fi
 	fi
 }
+
+nnn_banner() {
+	figlet_text="
+$1
+  ++  
+$(date +%d)         
+$(date +%m)         
+"
+	# $(date +%A)
+
+	cols=$(tput cols)
+	figlet -f slant -w "$cols" -c "$figlet_text" | lolcat
+	echo ""
+	figlet -f pagga -w "$cols" -c "$(date +%A)" | lolcat
+}

@@ -17,6 +17,8 @@
 # Shell: POSIX compliant
 # Author: Arun Prakash Jana
 
+clear
+
 NUKE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins/nuke"
 USE_NUKE=0
 
