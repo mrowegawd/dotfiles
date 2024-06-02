@@ -201,10 +201,10 @@ RUtils.cmd.augroup("WindowBehaviours", {
     "orgagenda",
     "capture",
     "gitcommit",
-    -- "help",
     "qf",
     "NeogitCommitMessage",
     "NeogitPopup",
+    -- "help",
     -- "Trouble",
   },
   command = function()
@@ -212,6 +212,29 @@ RUtils.cmd.augroup("WindowBehaviours", {
     if vim.bo[0].filetype == "NeogitCommitMessage" then
       cmd [[resize 20]]
     end
+  end,
+}, {
+  event = { "FileType" },
+  pattern = { "gitcommit", "NeogitCommitMessage" },
+  command = function()
+    vim.opt_local.spell = true
+    vim.opt_local.wrap = true
+    vim.opt_local.spelllang = { "en_us", "id" }
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.relativenumber = false
+    vim.opt_local.number = false
+  end,
+}, {
+  event = { "FocusLost" },
+  pattern = "*",
+  command = function()
+    vim.opt.laststatus = 0
+  end,
+}, {
+  event = { "FocusGained" },
+  pattern = "*",
+  command = function()
+    vim.opt.laststatus = 2
   end,
 })
 
