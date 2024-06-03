@@ -109,6 +109,7 @@ return {
 		},
 		-- search
 		{ key = "/", mods = "NONE", action = act.Search("CurrentSelectionOrEmptyString") },
+		{ key = "g", mods = "CTRL", action = act.Search("CurrentSelectionOrEmptyString") },
 		{
 			key = "n",
 			mods = "NONE",
@@ -141,5 +142,6 @@ return {
 		{ key = "r", mods = "CTRL", action = act.CopyMode("CycleMatchType") },
 		{ key = "/", mods = "NONE", action = act.CopyMode("ClearPattern") },
 		{ key = "u", mods = "CTRL", action = act.CopyMode("ClearPattern") },
+		{ key = "w", mods = "CTRL", action = act.CopyMode("ClearPattern") },
 	},
 }
