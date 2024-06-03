@@ -41,7 +41,7 @@ local function picker(contents, tbl_cts, fzf_opts)
         "GitSignsChange"
       ),
     },
-    prompt = "  ",
+    prompt = "   ",
 
     actions = {
       ["default"] = function(selected, _)
