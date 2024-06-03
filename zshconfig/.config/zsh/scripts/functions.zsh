@@ -172,7 +172,7 @@ bindkey '^z' fg-bg
 find-in-file() {
   local _file="$(rg --color=always --line-number --no-heading --smart-case "${@:-^[^\n]}" \
     | fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
-    --preview-window='50%' --height='50%' --with-nth 1,3.. --exact)"
+    --preview-window='50%' --prompt='Grep text current cwd> ' --height='50%' --with-nth 1,3.. --exact)"
 
   _file="${_file%%:*}"
   if [[ -n $_file ]]; then
@@ -235,7 +235,6 @@ show_alias() {
       return
     fi
 
-  # TODO: buatkan juga auto fzf untuk command _container, _images, _volume
   elif [[ $myargs[-1] == *"$doc_con"* ]]; then
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
