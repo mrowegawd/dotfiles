@@ -7,9 +7,9 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 
 return {
-	-- ╭──────╮
+	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ PANE │
-	-- ╰──────╯
+	-- └─────────────────────────────────────────────────────────┘
 	--
 	{
 		mods = "ALT",
@@ -27,7 +27,6 @@ return {
 			end
 		end),
 	},
-
 	KeymapUtil.split_nav("move", "ALT", "h", "Left"),
 	KeymapUtil.split_nav("move", "ALT", "j", "Down"),
 	KeymapUtil.split_nav("move", "ALT", "k", "Up"),
@@ -71,9 +70,9 @@ return {
 		end),
 	},
 
-	-- ╭─────╮
+	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ TAB │
-	-- ╰─────╯
+	-- └─────────────────────────────────────────────────────────┘
 	-- { key = "N", mods = "ALT", action = act({ SpawnTab = "CurrentPaneDomain" }) },
 	{
 		mods = "ALT",
@@ -142,9 +141,9 @@ return {
 		end),
 	},
 
-	-- ╭────────╮
+	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ REMOVE │
-	-- ╰────────╯
+	-- └─────────────────────────────────────────────────────────┘
 	{
 		mods = "ALT",
 		key = "x",
@@ -167,10 +166,36 @@ return {
 			end
 		end),
 	},
+	{
+		mods = "NONE",
+		key = "q",
+		action = wezterm.action_callback(function(window, pane)
+			if Util.is_tmux(pane) then
+				window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
+			else
+				if KeymapUtil.is_in_nnn(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
+				end
 
-	-- ╭──────╮
+				if KeymapUtil.is_in_lf(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
+				end
+
+				if KeymapUtil.is_in_yazi(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
+				end
+
+				window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
+			end
+		end),
+	},
+
+	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ MISC │
-	-- ╰──────╯
+	-- └─────────────────────────────────────────────────────────┘
 	{ key = "c", mods = "CTRL|SHIFT", action = wezterm.action({ CopyTo = "Clipboard" }) },
 	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action({ PasteFrom = "Clipboard" }) },
 	{ key = "=", mods = "CTRL", action = "IncreaseFontSize" },
@@ -230,41 +255,41 @@ return {
 				local panes = pane:tab():panes_with_info()
 
 				if #panes == 1 then
-					KeymapUtil.spawn_nnn(window, pane)
+					-- window:toast_notification("wezterm", os.getenv("TERM_FILEMANAGER"), nil, 4000)
+					KeymapUtil.spawn_file_manager(window, pane)
 				else
+					-- window:toast_notification("wezterm", os.getenv("TERM_FILEMANAGER"), nil, 4000)
 					if KeymapUtil.is_in_nnn(pane) then
-						-- window:toast_notification("wezterm", "hello bro", nil, 4000)
-
 						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-
-						-- TODO: ketika closing, cursor mouse pada wezterm tidak berada
-						-- posisi "last position", tapi malah maju kedepan
-						-- dan solusi ke `right` ini tidak berhasil
 						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
 						return
 					end
 
-					-- window:toast_notification("wezterm", tostring(pane:get_foreground_process_name()), nil, 4000)
 					if KeymapUtil.is_in_lf(pane) then
 						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-
-						-- TODO: ketika closing, cursor mouse pada wezterm tidak berada
-						-- posisi "last position", tapi malah maju kedepan
-						-- dan solusi ke `right` ini tidak berhasil
 						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
 						return
 					end
+
 					if KeymapUtil.is_in_nvim(pane) then
-						KeymapUtil.spawn_nnn(window, pane)
+						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+						KeymapUtil.spawn_file_manager(window, pane)
+						return
+					end
+
+					if KeymapUtil.is_in_yazi(pane) then
+						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+						KeymapUtil.spawn_file_manager(window, pane)
 						return
 					end
 				end
 			end
 		end),
 	},
-	-- ╭──────────╮
-	-- │ TERMINAL │
-	-- ╰──────────╯
+
+	-- ┌─────────────────────────────────────────────────────────┐
+	-- │ TERMINAL                                                │
+	-- └─────────────────────────────────────────────────────────┘
 	{
 		mods = "ALT",
 		key = "f",
@@ -288,16 +313,4 @@ return {
 			end
 		end),
 	},
-
-	-- vim - command prompt
-	-- {
-	-- 	mods = "CTRL",
-	-- 	key = "p",
-	-- 	action = act.Multiple({
-	-- 		act.SendKey({ key = "\x1b" }), -- escape
-	-- 		act.SendKey({ key = " " }),
-	-- 		act.SendKey({ key = "f" }),
-	-- 		act.SendKey({ key = "c" }),
-	-- 	}),
-	-- },
 }
