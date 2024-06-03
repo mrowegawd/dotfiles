@@ -336,7 +336,7 @@ return {
         },
         git = {
           files = {
-            prompt = "  ",
+            prompt = "   ",
             winopts = { title = RUtils.fzflua.format_title("Git Files", "") },
             cmd = "git ls-files --exclude-standard",
             multiprocess = true, -- run command in a separate process
@@ -345,8 +345,8 @@ return {
             color_icons = true, -- colorize file|git icons
           },
           status = {
-            prompt = "  ",
-            winopts = { title = RUtils.fzflua.format_title("Git Status", "") },
+            prompt = "   ",
+            winopts = { title = RUtils.fzflua.format_title("Git Status", "", "GitSignsAdd") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               -- actions inherit from 'actions.files' and merge
@@ -362,12 +362,12 @@ return {
             },
           },
           commits = {
-            prompt = "  ",
+            prompt = "   ",
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = RUtils.fzflua.format_title("", "Commits") },
+            winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o: open browser | Ctrl-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
             },
@@ -421,12 +421,12 @@ return {
           },
           bcommits = {
             -- debug = true,
-            prompt = "  ",
+            prompt = "   ",
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = { title = RUtils.fzflua.format_title("", "Buffer Commits") },
+            winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
             fzf_opts = {
               ["--header"] = [[Ctrl-o: open browser | Ctrl-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
             },
@@ -490,25 +490,25 @@ return {
               ["default"] = actions.git_switch,
             },
           },
-          -- stash = {
-          --     prompt = "  ",
-          --     cmd = "git --no-pager stash list",
-          --     preview = "git --no-pager stash show --patch --color {1}",
-          --     winopts = {
-          --         title = format_title("Stash", ""),
-          --     },
-          --     actions = {
-          --         ["default"] = actions.git_stash_apply,
-          --         ["ctrl-x"] = {
-          --             actions.git_stash_drop,
-          --             actions.resume,
-          --         },
-          --     },
-          --     fzf_opts = {
-          --         ["--no-multi"] = "",
-          --         ["--delimiter"] = "'[:]'",
-          --     },
-          -- },
+          stash = {
+            prompt = "   ",
+            --     cmd = "git --no-pager stash list",
+            --     preview = "git --no-pager stash show --patch --color {1}",
+            winopts = {
+              title = RUtils.fzflua.format_title("Stash", "", "GitSignsAdd"),
+            },
+            --     actions = {
+            --         ["default"] = actions.git_stash_apply,
+            --         ["ctrl-x"] = {
+            --             actions.git_stash_drop,
+            --             actions.resume,
+            --         },
+            --     },
+            --     fzf_opts = {
+            --         ["--no-multi"] = "",
+            --         ["--delimiter"] = "'[:]'",
+            --     },
+          },
           icons = {
             ["M"] = { icon = "M", color = "yellow" },
             ["D"] = { icon = "D", color = "red" },
