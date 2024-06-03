@@ -91,7 +91,7 @@ function M.spawn_toggle_pane(window, pane)
 	-- })
 end
 
-function M.spawn_nnn(window, pane, percent_size)
+function M.spawn_file_manager(window, pane, percent_size)
 	percent_size = percent_size or 15
 
 	-- window:perform_action(
@@ -114,8 +114,10 @@ function M.spawn_nnn(window, pane, percent_size)
 			direction = "Left",
 			command = {
 				args = {
-					-- os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
-					"lfrun",
+					os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
+					-- "lfrun",
+					"-c",
+					"nnn",
 				},
 			},
 			size = { Percent = 15 },
@@ -139,6 +141,10 @@ end
 
 function M.is_in_lf(pane)
 	return string.match(pane:get_foreground_process_name(), "dash")
+end
+
+function M.is_in_yazi(pane)
+	return string.match(pane:get_foreground_process_name(), "yazi")
 end
 
 return M
