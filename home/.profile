@@ -30,7 +30,7 @@ fi
 # shellcheck source=/dev/null
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
-export TERMINAL="alacritty"
+export TERMINAL="kitty"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 

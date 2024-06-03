@@ -398,9 +398,14 @@ M.FilePath = {
       end
       -- now, if the filename would occupy more than 90% of the available
       -- space, we trim the file path to its initials
-      if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
+      if not Conditions.width_percent_below(#filename, 0.60) and not Conditions.is_not_active() then
+        filename = vim.fs.basename(filename)
+      end
+
+      if not Conditions.width_percent_below(#filename, 0.20) and not Conditions.is_not_active() then
         filename = vim.fn.pathshorten(filename)
       end
+
       return " " .. filename .. " "
     end,
     hl = function()
