@@ -180,8 +180,8 @@ return {
 	{ mods = "ALT", key = "P", action = act.ActivateCommandPalette },
 
 	{ -- enter copy mode
-		key = "Enter",
-		mods = "ALT|SHIFT",
+		key = "F5",
+		mods = "ALT",
 		action = act.Multiple({
 			act.CopyMode("ClearSelectionMode"),
 			act.ActivateCopyMode,
