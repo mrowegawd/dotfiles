@@ -73,19 +73,19 @@ return {
     },
     opts = { mappings = "<Leader>gy" },
   },
-  -- GH-ADDRESSED
-  {
-    "dlvhdr/gh-addressed.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
-      "folke/trouble.nvim",
-    },
-    cmd = "GhReviewComments",
-    keys = {
-      { "<leader>gC", "<cmd>GhReviewComments<cr>", desc = "Git: github review comments [gh-addressed]" },
-    },
-  },
+  -- GH-ADDRESSED (disabled)
+  -- {
+  --   "dlvhdr/gh-addressed.nvim",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "MunifTanjim/nui.nvim",
+  --     "folke/trouble.nvim",
+  --   },
+  --   cmd = "GhReviewComments",
+  --   keys = {
+  --     { "<leader>gC", "<cmd>GhReviewComments<cr>", desc = "Git: github review comments [gh-addressed]" },
+  --   },
+  -- },
   -- OCTO
   {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
@@ -638,8 +638,8 @@ return {
             ["<F4>"] = actions.cycle_layout,
             ["L"] = actions.open_commit_log,
 
-            ["<space>E"] = actions.focus_files,
-            ["<space>e"] = actions.toggle_files,
+            ["<a-E>"] = actions.focus_files,
+            ["<a-e>"] = actions.toggle_files,
 
             ["gf"] = "",
             ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
@@ -666,6 +666,8 @@ return {
             ["<a-p>"] = actions.select_prev_entry,
             ["<cr>"] = actions.select_entry,
             ["<2-LeftMouse>"] = actions.select_entry,
+
+            ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
 
             ["o"] = actions.goto_file_edit,
             ["<c-t>"] = actions.goto_file_tab,

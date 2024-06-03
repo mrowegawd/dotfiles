@@ -141,6 +141,7 @@ local defaults = {
       table = " ",
       telescope = " ",
       telescope2 = " ",
+      telescope3 = " ",
       terminal = " ",
       tools = " ",
       up = "⇡ ",
@@ -302,7 +303,6 @@ local defaults = {
       "Method",
       "Module",
       "Namespace",
-      -- "Package", -- remove package since luals uses it for control flow structures
       "Property",
       "Struct",
       "Trait",
@@ -342,11 +342,19 @@ function M.setup(opts)
 
       RUtils.format.setup()
       -- Util.news.setup()
+      RUtils.root.setup()
 
       vim.api.nvim_create_user_command("LazyHealth", function()
         vim.cmd [[Lazy! load all]]
         vim.cmd [[checkhealth]]
       end, { desc = "Load all plugins and run :checkhealth" })
+
+      local health = require "lazy.health"
+      vim.list_extend(health.valid, {
+        -- "recommended",
+        -- "desc",
+        -- "vscode",
+      })
     end,
   })
 
@@ -443,6 +451,7 @@ setmetatable(M, {
     if options == nil then
       return vim.deepcopy(defaults)[key]
     end
+    ---@cast options LazyVimConfig
     return options[key]
   end,
 })

@@ -17,32 +17,78 @@ build-nvim() {
 }
 
 build-install(){
-  # fix mouse lagging coba install `xinpunt` (sudo apt install xiinput)
+  if ! command -v xinput >/dev/null; then
+    echo "Installing: xinput - fixing mouse lagging..?"
+  	sudo apt install xinput
+  fi
 
-  # TODO: install apt seperti urlview
-  apt_install="urlview"
+  if ! command -v urlview >/dev/null; then
+    echo "Installing: urlview"
+  	sudo apt install urlview
+  fi
 
-  # TODO: install cargo seperti eza, lazygit, etc
-  cargo_install="eza, git-delta"
+  if ! command -v eza >/dev/null; then
+    echo "Installing: eza - ls colors"
+  	cargo install eza
+    asdf reshim rust
+  fi
 
-  # TODO: install go get
-  cargo_install="lf lazygit"
+  if ! command -v delta >/dev/null; then
+    echo "Installing: delta - color hunk"
+  	cargo install git-delta
+    asdf reshim rust
+  fi
 
-  # TODO: build yang khusus apt dan juga cargo
-  sudo apt install "$apt_install"
+  if ! command -v rg >/dev/null; then
+    echo "Installing: rg - grep drugs"
+    cargo install ripgrep
+    asdf reshim rust
+  fi
 
-  # TODO: install gpg-tui
-  # install depencies apt-get install libgpgme-dev libx11-dev libxcb-shape0-dev libxcb-xfixes0-dev libxkbcommon-dev
-  # carog install gpg-tui
+  if ! command -v bat >/dev/null; then
+    echo "Installing: bat - we cat before bat"
+    sudo apt install bat
+  fi
 
-  # TODO: install dive (https://github.com/wagoodman/dive)
-  # go get github.com/wagoodman/dive
+  if ! command -v lazygit >/dev/null; then
+    echo "Installing: lazygit - git GUI"
+    go install github.com/jesseduffield/lazygit@latest
+    asdf reshim golang
+  fi
 
-  # TODO: install gifski https://github.com/sindresorhus/Gifski
-  # cargo install gifski
+  if ! command -v fd >/dev/null; then
+    echo "Installing: fd - blazingly fast"
+    sudo apt install fd-find
+  fi
 
-  # TODO: install lazydocker https://github.com/jesseduffield/lazydocker#
-  # go install github.com/jesseduffield/lazydocker@latest
+  if ! command -v lf >/dev/null; then
+    echo "Installing: lf - file manager"
+    env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
+    asdf reshim golang
+  fi
+
+  if ! command -v joshuto >/dev/null; then
+    echo "Installing: joshuto - file manager"
+    cargo install --git https://github.com/kamiyaa/joshuto.git --force
+    asdf reshim rust
+  fi
+
+  # Explore docker layer
+  if ! command -v dive >/dev/null; then
+    echo "Installing: dive - docker layer"
+    go install github.com/wagoodman/dive@latest
+    asdf reshim golang
+  fi
+
+  if ! command -v lazydocker >/dev/null; then
+    echo "Installing: lazydocker - docker GUI"
+    go install github.com/jesseduffield/lazydocker@latest
+    asdf reshim golang
+  fi
+
+  # Install: gifski
+  # gihtub: https://github.com/sindresorhus/Gifski
+  # install binary langsung dari link https://gif.ski/
 
   # TODO: install pomodoro, didapat dari link youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
   # https://github.com/caarlos0/timer
@@ -51,10 +97,11 @@ build-install(){
   # sudo apt update
   # sudo apt install timer
 
-  # TODO: install `play`
-  # https://askubuntu.com/questions/920539/how-do-you-play-a-sound-from-the-terminal
-  # sudo apt install sox
-  # sudo apt install libsox-fmt-all
+  if ! command -v play >/dev/null; then
+    echo "Installing: play - play sound from the terminal"
+    sudo apt install sox
+    sudo apt install libsox-fmt-all
+  fi
 }
 
 build-react() {

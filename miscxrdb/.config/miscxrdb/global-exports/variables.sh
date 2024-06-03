@@ -21,6 +21,12 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
 else
 	export BROWSER="firefox"
 fi
+
+# nnn -c
+# lf
+# yazi
+export TERM_FILEMANAGER="lf"
+
 #
 # }}}
 # PIPENV: ----------------------------------------------------------------- {{{

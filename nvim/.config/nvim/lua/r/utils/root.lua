@@ -1,4 +1,5 @@
 ---@class r.utils.root
+---@overload fun(): string
 local M = setmetatable({}, {
   __call = function(m)
     return m.get()
@@ -37,7 +38,17 @@ end
 function M.detectors.pattern(buf, patterns)
   patterns = type(patterns) == "string" and { patterns } or patterns
   local path = M.bufpath(buf) or vim.uv.cwd()
-  local pattern = vim.fs.find(patterns, { path = path, upward = true })[1]
+  local pattern = vim.fs.find(function(name)
+    for _, p in ipairs(patterns) do
+      if name == p then
+        return true
+      end
+      if p:sub(1, 1) == "*" and name:find(p:sub(2) .. "$") then
+        return true
+      end
+    end
+    return false
+  end, { path = path, upward = true })[1]
   return pattern and { vim.fs.dirname(pattern) } or {}
 end
 
@@ -73,7 +84,7 @@ function M.detect(opts)
   opts.spec = opts.spec or type(vim.g.root_spec) == "table" and vim.g.root_spec or M.spec
   opts.buf = (opts.buf == nil or opts.buf == 0) and vim.api.nvim_get_current_buf() or opts.buf
 
-  local ret = {}
+  local ret = {} ---@type LazyRoot[]
   for _, spec in ipairs(opts.spec) do
     local paths = M.resolve(spec)(opts.buf)
     paths = paths or {}
@@ -121,6 +132,7 @@ function M.info()
   return roots[1] and roots[1].paths[1] or vim.uv.cwd()
 end
 
+---@type table<number, string>
 M.cache = {}
 
 function M.setup()
@@ -139,6 +151,13 @@ function M.setup()
   })
 end
 
+-- returns the root directory based on:
+-- * lsp workspace folders
+-- * lsp root_dir
+-- * root pattern of filename of the current buffer
+-- * root pattern of cwd
+---@param opts? {normalize?:boolean}
+---@return string
 function M.get(opts)
   local buf = vim.api.nvim_get_current_buf()
   local ret = M.cache[buf]
@@ -153,6 +172,14 @@ function M.get(opts)
   return RUtils.is_win() and (ret and ret:gsub("/", "\\")) or ret
 end
 
+function M.git()
+  local root = M.get()
+  local git_root = vim.fs.find(".git", { path = root, upward = true })[1]
+  local ret = git_root and vim.fn.fnamemodify(git_root, ":h") or root
+  return ret
+end
+
+---@param opts? {hl_last?: string}
 function M.pretty_path(opts)
   return opts
 end

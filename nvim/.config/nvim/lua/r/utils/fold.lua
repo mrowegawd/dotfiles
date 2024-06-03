@@ -1,4 +1,4 @@
-local api, cmd, fn = vim.api, vim.cmd, vim.fn
+local api, cmd = vim.api, vim.cmd
 
 ---@class r.utils.fold
 local M = {}
@@ -23,16 +23,6 @@ local function foldClosed(winid, lnum)
   return winCall(winid, function()
     return vim.fn.foldclosed(lnum)
   end)
-end
-
-local function qf_is_opened()
-  local qf_opened = false
-  for _, winnr in ipairs(fn.range(1, fn.winnr "$")) do
-    if fn.getwinvar(winnr, "&syntax") == "qf" then
-      qf_opened = true
-    end
-  end
-  return qf_opened
 end
 
 function M.magic_prev_next_move(is_qf)
@@ -128,35 +118,35 @@ function M.magic_prev_next_qf(is_next)
   is_next = is_next or false
   local cmd_msg
 
-  if qf_is_opened() then
-    cmd_msg = "cnewer"
+  local ft = vim.bo.filetype
 
+  if ft ~= "qf" then
+    cmd_msg = "bnext"
     if is_next then
-      cmd_msg = "colder"
+      cmd_msg = "bprev"
     end
-
-    if vim.bo[0].filetype ~= "qf" then
-      vim.cmd "wincmd p"
+    vim.cmd(cmd_msg)
+  elseif ft == "qf" then
+    if not RUtils.qf.is_loclist() then
+      cmd_msg = "cnewer"
+      if is_next then
+        cmd_msg = "colder"
+      end
     end
-
     vim.schedule(function()
       local _, err = pcall(function()
         vim.fn.execute(cmd_msg)
       end)
 
-      -- TODO: how to get these errors msg?? #today
       if err and (string.match(err, "E380") or string.match(err, "E381")) then
-        -- what to do
+        local msg = "cnewer UDAH mentok"
+        if is_next then
+          msg = "colder UDAH mentok"
+        end
+        RUtils.info(msg, { title = "Quickfix" })
         return
       end
     end)
-  else
-    cmd_msg = "bnext"
-
-    if is_next then
-      cmd_msg = "bprev"
-    end
-    vim.cmd(cmd_msg)
   end
 end
 

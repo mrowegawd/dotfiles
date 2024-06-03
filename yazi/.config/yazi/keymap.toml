@@ -1,0 +1,4 @@
+[[manager.prepend_keymap]]
+on   = [ "f", "g" ]
+exec  = "plugin fg"
+desc = "find file by content (fuzzy match)"

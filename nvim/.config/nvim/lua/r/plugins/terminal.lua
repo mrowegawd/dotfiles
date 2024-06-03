@@ -195,13 +195,25 @@ return {
     keys = {
       {
         "<a-f>",
-        "<CMD>Vterm<CR>",
-        desc = "Terminal: open [terminal]",
+        function()
+          -- if vim.bo.filetype == "neo-tree" then
+          --   vim.cmd "wincmd l"
+          -- end
+          vim.cmd "wincmd L"
+          vim.cmd.Vterm()
+        end,
+        desc = "Terminal: open vsplit [termim.nvim]",
       },
       {
         "<a-N>",
-        "<CMD>Fterm<CR>",
-        desc = "Terminal: open [terminal]",
+        function()
+          -- if vim.bo.filetype == "neo-tree" then
+          --   vim.cmd "wincmd l"
+          -- end
+          vim.cmd "wincmd L"
+          vim.cmd.Fterm()
+        end,
+        desc = "Terminal: open new tab [termim.nvim]",
       },
     },
   },

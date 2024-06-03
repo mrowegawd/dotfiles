@@ -1,5 +1,3 @@
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-
 local M = {}
 
 M._keys = nil
@@ -22,8 +20,6 @@ function M.get()
     --  LSP Stuff
     --  +----------------------------------------------------------+
     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" },
-    { "gO", fzf_lua.lsp_outgoing_calls, desc = "LSP: outgoing calls [fzflua]" },
-    { "gI", fzf_lua.lsp_incoming_calls, desc = "LSP: incoming calls [fzflua]" },
     { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
     {
       "<leader>cR",
@@ -48,6 +44,20 @@ function M.get()
       has = "documentHighlight",
       desc = "LSP: prev word reference",
     },
+    {
+      "<Leader>ui",
+      function()
+        RUtils.toggle.inlay_hints()
+      end,
+      desc = "LSP: toggle inlay hint",
+    },
+    {
+      "<Leader>uu",
+      function()
+        require("symbol-usage").toggle()
+      end,
+      desc = "LSP: toggle symbol usage",
+    },
     --  +----------------------------------------------------------+
     --  Diagnostics
     --  +----------------------------------------------------------+
@@ -67,6 +77,13 @@ function M.get()
         vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
       end,
       desc = "Diagnostic: preview",
+    },
+    {
+      "<Leader>ud",
+      function()
+        RUtils.toggle.diagnostics()
+      end,
+      desc = "Diagnostic: toggle diagnostic",
     },
     --  +----------------------------------------------------------+
     --  LSP commands
@@ -118,35 +135,14 @@ function M.get()
         end
 
         local defaultCmds = vim.tbl_deep_extend("force", {
-          toggle_diagnostics = function()
-            RUtils.toggle.diagnostics()
-          end,
           toggle_codelens = function()
             RUtils.toggle.codelens()
           end,
           toggle_semantic_tokens = function()
             RUtils.toggle.semantic_tokens()
           end,
-          toggle_inlay_hint = function()
-            RUtils.toggle.inlay_hints()
-          end,
-          toggle_number = function()
-            RUtils.toggle.number()
-          end,
-          toggle_format_lspbuffer = function()
-            RUtils.format.toggle(true)
-          end,
-          toggle_format_lspallbuf = function()
-            RUtils.format.toggle()
-          end,
-          run_refresh_symbol_useage = function()
-            require("symbol-usage").refresh()
-          end,
-          run_format_lspinfo = function()
+          show_info_formatlspinfo = function()
             vim.cmd [[LazyFormatInfo]]
-          end,
-          run_format = function()
-            vim.cmd [[LazyFormat]]
           end,
         }, unpack(newCmds) or {})
 

@@ -3,7 +3,7 @@
 # shellcheck disable=SC1090,SC1091
 . "$(dirname "$0")"/.nnn-plugin-helper
 
-PWD="$PWD"
+PWDC="$PWD"
 
 NNN_SPLIT="v"
 PERCENT=60
@@ -17,9 +17,9 @@ if not_in_tmux; then
 	if [ "$NNN_SPLIT" = "v" ]; then split="--horizontal"; else split="--bottom"; fi
 	pane_id_right=$(wezterm cli get-pane-direction right)
 	if [ -n "$pane_id_right" ]; then
-		wezterm cli split-pane --cwd "$PWD" --bottom --percent $PERCENT --pane-id "$pane_id_right" lazygit >/dev/null
+		wezterm cli split-pane --cwd "$PWDC" --bottom --percent $PERCENT --pane-id "$pane_id_right" lazygit >/dev/null
 	else
-		wezterm cli split-pane --cwd "$PWD" $split --percent $PERCENT "$0" "$1" >/dev/null
+		wezterm cli split-pane --cwd "$PWDC" $split --percent $PERCENT "$0" "$1" >/dev/null
 	fi
 else
 	tmux select-pane -R

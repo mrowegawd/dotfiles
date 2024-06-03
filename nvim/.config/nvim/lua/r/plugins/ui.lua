@@ -176,7 +176,6 @@ return {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
             ["cmp.entry.get_documentation"] = true,
-            -- ''config.lsp.signature.enabled = false
           },
         },
         cmdline = {
@@ -191,10 +190,6 @@ return {
           view_warn = "notify", -- view for warnings
           view_history = "messages", -- view for :messages
           view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
-        },
-        popupmenu = {
-          enabled = false,
-          backend = "cmp",
         },
         redirect = { view = "popup", filter = { event = "msg_show" } },
         views = {
@@ -255,14 +250,7 @@ return {
     opts = {},
     keys = {
       {
-        "<Leader>z",
-        function()
-          require("fold-cycle").open()
-        end,
-        desc = "Fold: cycle fold [fold-cycle]",
-      },
-      {
-        "z<Leader>",
+        "<F1>",
         function()
           require("fold-cycle").open()
         end,
@@ -363,13 +351,13 @@ return {
       local col_sp_fg_attr = "ErrorMsg"
 
       local col_selected_fg_attr = "PmenuSel"
-      local col_selected_bg_attr = "Boolean"
+      local col_selected_bg_attr = "Directory"
 
-      local col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 2)
+      -- local col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 2)
       local col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), 0.2)
 
       if RUtils.config.colorscheme == "catppuccin-latte" then
-        col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.1)
+        -- col_selected_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.1)
         col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.2)
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
@@ -577,7 +565,8 @@ return {
             italic = true,
           },
           buffer_selected = {
-            fg = col_selected_fg,
+            -- fg = col_selected_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -633,7 +622,8 @@ return {
             italic = true,
           },
           duplicate_selected = {
-            fg = col_selected_fg,
+            -- fg = col_selected_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -662,14 +652,15 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           warning_visible = {
-            -- fg = { attribute = "fg", highlight = col_selected_fg_attr },
-            fg = col_select_visible_fg,
+            -- fg = col_select_visible_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           warning_selected = {
             -- fg = { attribute = "fg", highlight = col_selected_bg_attr },
-            fg = col_selected_fg,
+            -- fg = col_selected_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -698,12 +689,14 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           error_visible = {
-            fg = col_select_visible_fg,
+            -- fg = col_select_visible_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           error_selected = {
-            fg = col_selected_fg,
+            -- fg = col_selected_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -737,7 +730,8 @@ return {
             italic = true,
           },
           hint_selected = {
-            fg = col_selected_fg,
+            -- fg = col_selected_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
@@ -766,12 +760,14 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           info_visible = {
-            fg = col_select_visible_fg,
+            -- fg = col_select_visible_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           info_selected = {
-            fg = col_selected_fg,
+            -- fg = col_selected_fg,
+            fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,

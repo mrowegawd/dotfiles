@@ -4,6 +4,7 @@
 #  ║                       SET OPTIONS                        ║
 #  ╚══════════════════════════════════════════════════════════╝
 
+set shellopts "-eu"
 set shell zsh
 set ifs "\n"
 set scrolloff 10
@@ -18,21 +19,6 @@ set cleaner ~/.config/lf/cleaner
 set nopreview
 set ratios 3
 
-# set waitmsg ""      # get rid message "press any key to continue"
-
-cmd nopreview &{{
-    lf -remote "send $id set nopreview"
-    lf -remote "send $id set ratios 3"
-    lf -remote "send $id map <a-p> showpreview"
-}}
-
-cmd showpreview &{{
-    lf -remote "send $id set ratios 1:2:3"
-    lf -remote "send $id set preview"
-    lf -remote "send $id map <a-p> nopreview"
-}}
-
-# map zp showpreview
 
 cmd bulkrename $vidir
 
@@ -40,11 +26,41 @@ cmd bulkrename $vidir
 #  ║                         COMMAND                          ║
 #  ╚══════════════════════════════════════════════════════════╝
 
+
 # ENCHANTED ----------------------------------------------------- {{{
 cmd on-select &{{
     lf -remote "send $id set statfmt \"$(exa -ld --color=always "$f")\""
 }}
 # }}}
+
+cmd zoom_mode ${{
+  not_in_tmux() {
+    [[ -z "$TMUX" ]]
+  }
+
+  if not_in_tmux; then
+    dunstify "not implemented yet"
+  else
+    tmux resize-pane -Z
+  fi
+}}
+
+cmd nopreview &{{
+    lf -remote "send $id zoom_mode"
+    lf -remote "send $id set nopreview"
+    lf -remote "send $id set ratios 3"
+    lf -remote "send $id map <a-p> showpreview"
+}}
+
+cmd showpreview &{{
+    # lf -remote "send $id set ratios 1:2:3"
+    lf -remote "send $id zoom_mode"
+    lf -remote "send $id set ratios 2:2:5"
+    lf -remote "send $id set preview"
+    lf -remote "send $id map <a-p> nopreview"
+}}
+
+
 
 # OPEN ---------------------------------------------------------- {{{
 cmd open ${{
@@ -292,6 +308,10 @@ cmd getopen ${{
 # }}}
 # FZMARKS ------------------------------------------------------- {{{
 cmd fzmarks ${{
+  clear
+
+	cols=$(tput cols)
+	figlet -f slant -w "$cols" -c "Jump To" | lolcat
   # dunstify $(display-message -p '#{pane_id} #{window_current_command}')
 
   cwd="$HOME/Dropbox/data.programming.forprivate/marked-pwd"
@@ -502,7 +522,7 @@ cmd oplazygit ${{
   fi
 }}
 
-map <a-B> oplazygit
+map <a-G> oplazygit
 # }}}
 # OPLAZYDOCKER -------------------------------------------------- {{{
 cmd oplazydocker ${{

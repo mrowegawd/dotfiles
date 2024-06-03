@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# lfrun="lf"
-nnn="nnn -c"
-file_manager="$nnn"
+file_manager="$TERM_FILEMANAGER"
 
 [ -z "$TMUX" ] && exit
 
@@ -21,6 +19,9 @@ _check_pane_is_nnn() {
 }
 _check_pane_is_lf() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }')" == "lf" ]
+}
+_check_pane_is_yazi() {
+	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
 }
 _check_pane_is_nvim() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
@@ -48,12 +49,32 @@ else
 		exit
 	fi
 
+	if _check_pane_is_lf; then
+		tmux kill-pane
+		exit
+	fi
+
+	if _check_pane_is_yazi; then
+		tmux kill-pane
+		exit
+	fi
+
 	_go_left
 
 	CURRENT_CURSOR_PANE=$(tmux display-message -p '#{pane_id}')
 	# dunstify "Pane cursor: $CURRENT_CURSOR_PANE  === Main pane: $CURRENT_MAIN_PANE_ID"
 	if [ "$CURRENT_CURSOR_PANE" != "$CURRENT_MAIN_PANE_ID" ]; then
 		if _check_pane_is_nnn; then
+			tmux kill-pane
+			exit
+		fi
+
+		if _check_pane_is_lf; then
+			tmux kill-pane
+			exit
+		fi
+
+		if _check_pane_is_yazi; then
 			tmux kill-pane
 			exit
 		fi

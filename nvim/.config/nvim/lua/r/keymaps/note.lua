@@ -11,45 +11,68 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
+      ["<Localleader>sT"] = {
+        function()
+          return require("fzf-lua").grep {
+            prompt = "   ",
+            cwd = RUtils.config.path.wiki_path,
+            search = "^#.*",
+            rg_glob = false,
+            no_esc = true,
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
+            winopts = {
+              fullscreen = true,
+              title = RUtils.fzflua.format_title(
+                "Obsidian > Search Global Note Titles",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
+                "GitSignsChange"
+              ),
+            },
+          }
+        end,
+        desc = "Note: search title global [obsidian]",
+      },
+      ["<Localleader>st"] = {
+        function()
+          -- FIX: ini masih error
+          local fullname = vim.fn.fnamemodify(vim.fn.bufname(0), ":.")
+          return require("fzf-lua").grep {
+            prompt = "   ",
+            -- cwd = fullname,
+            search = "^#.*",
+            rg_glob = false,
+            no_esc = true,
+            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]]
+              .. fullname,
+            winopts = {
+              fullscreen = true,
+              title = RUtils.fzflua.format_title(
+                "Obsidian > Search Note Titles",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
+                "GitSignsChange"
+              ),
+            },
+          }
+        end,
+        desc = "Note: search title global [obsidian]",
+      },
       ["<leader>sT"] = {
         function()
-          RUtils.todocomments.search_global_note()
+          RUtils.todocomments.search_global_note {
+            title = "Todo Note Global",
+          }
         end,
         "Note: search todo global note [fzflua]",
       },
       ["<leader>st"] = {
         function()
-          RUtils.todocomments.search_local()
+          RUtils.todocomments.search_local {
+            title = "Todo Note Curbuf",
+          }
         end,
         "Note: search todo local note [fzflua]",
-      },
-      ["ro"] = {
-        function()
-          local note_ext = "norg"
-          if vim.bo[0].filetype == "markdown" then
-            note_ext = "md"
-          end
-
-          if note_ext == "norg" then
-            return
-          else
-            -- vim.cmd [[ObsidianOpen]]
-            local Job = require "plenary.job"
-            -- async
-            local data = {}
-            Job:new({
-              command = "obsidian",
-              -- args = { "-a" },
-              on_stdout = function(_, line)
-                table.insert(data, line)
-              end,
-              on_exit = function()
-                print "done"
-              end,
-            }):start()
-          end
-        end,
-        "Note: run file",
       },
       ["<Localleader>oa"] = {
         function()
@@ -64,51 +87,6 @@ function M.neorg_mappings_ft(bufnr)
           end
         end,
         "Note: open toc",
-      },
-      ["<Localleader>ff"] = {
-        function()
-          local opts = {
-            prompt = "  ",
-            cwd = RUtils.config.path.wiki_path,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
-            winopts = {
-              title = RUtils.fzflua.format_title("Note: files", "󰈙"),
-            },
-          }
-
-          -- if vim.bo[0].filetype == "norg" then
-          --   cmd [[Lazy load neorg]]
-          --   opts.rg_opts =
-          --     [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
-          -- else
-          -- end
-
-          return require("fzf-lua").files(opts)
-        end,
-        "Note: file",
-      },
-      ["<Localleader>fg"] = {
-        function()
-          local opts = {
-            prompt = "  ",
-            cwd = RUtils.config.path.wiki_path,
-            winopts = {
-              title = RUtils.fzflua.format_title("Note: grep", ""),
-            },
-          }
-
-          if vim.bo[0].filetype == "norg" then
-            cmd [[Lazy load neorg]]
-            opts.rg_opts =
-              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.norg" ]]
-          else
-            opts.rg_opts =
-              [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]]
-          end
-          return require("fzf-lua").live_grep_glob(opts)
-        end,
-        "Note: grep",
       },
       ["gD"] = {
         function()
@@ -131,7 +109,7 @@ function M.neorg_mappings_ft(bufnr)
               prompt = "  ",
               winopts = {
                 -- split = "belowright new | wincmd J | resize 40",
-                title = RUtils.fzflua.format_title("Note: link curbuf", ""),
+                title = RUtils.fzflua.format_title("Note: insert categories", ""),
                 preview = {
                   hidden = "hidden",
                   vertical = "up:55%",

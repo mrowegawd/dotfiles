@@ -2,28 +2,21 @@ local Highlight = require "r.settings.highlights"
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
+local lazyterm = function()
+  RUtils.terminal { cwd = RUtils.root() }
+end
+
 return {
   -- NEO-TREE
   {
     "nvim-neo-tree/neo-tree.nvim",
-    cond = vim.g.neovide ~= nil or vim.env.TMUX,
+    cond = vim.g.neovide ~= nil or not vim.env.TMUX,
     cmd = "Neotree",
-    -- keys = {
-    --   {
-    --     "<Leader>ge",
-    --     function()
-    --       if vim.bo[0].filetype == "neo-tree" then
-    --         return cmd [[q]]
-    --       end
-    --       return cmd "Neotree git_status"
-    --     end,
-    --     desc = "Misc: open file explore [neotree]",
-    --   },
-    -- },
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
+      "3rd/image.nvim",
       -- {
       --   "ten3roberts/window-picker.nvim",
       --   name = "window-picker",
@@ -136,6 +129,83 @@ return {
               state.commands.open(state)
             end
           end,
+
+          open_lazygit = function()
+            RUtils.lazygit.open { ctrl_hjkl = true }
+          end,
+
+          open_terminal = function()
+            lazyterm()
+          end,
+
+          open_search_cd_and_grep = function()
+            local command_selects = { "Grep string in file", "Search name of file" }
+            vim.ui.select(command_selects, {
+              prompt = "Select commands",
+              format_item = function(item)
+                return "CMD: " .. item
+              end,
+            }, function(choice)
+              if choice == nil then
+                return
+              end
+              if choice == command_selects[1] then
+                vim.cmd "wincmd l"
+                vim.schedule(function()
+                  require("fzf-lua").live_grep_glob {
+                    winopts = {
+                      title = RUtils.fzflua.format_title(choice, "󰈙"),
+                    },
+                    -- actions = {
+                    --   ["default"] = function(e)
+                    --     local sel = RUtils.fzflua.__strip_str(e[1])
+                    --     if sel then
+                    --       local res = vim.split(sel, "\t")
+                    --       local filepath = res[2]
+                    --       local filename = res[1]
+                    --       local fullname = vim.fn.fnamemodify(filepath .. "/" .. filename, ":.")
+                    --       vim.cmd("e  " .. fullname)
+                    --       vim.cmd.cd(res[2])
+                    --     end
+                    --   end,
+                    -- },
+                  }
+                end)
+              end
+
+              if choice == command_selects[2] then
+                vim.cmd "wincmd l"
+                require("fzf-lua").files {
+                  winopts = {
+                    title = RUtils.fzflua.format_title(choice, "󰈙"),
+                  },
+                  actions = {
+                    ["default"] = function(e)
+                      local sel = RUtils.fzflua.__strip_str(e[1])
+                      if sel then
+                        local res = vim.split(sel, "\t")
+                        local filepath = res[2]
+                        local filename = res[1]
+                        -- TODO: seharusnya dicheck format selection nya apakah
+                        -- itu: vidio, pdf, image, dan sebagainya
+                        if filepath then
+                          local fullname = vim.fn.fnamemodify(filepath .. "/" .. filename, ":.")
+                          -- print(fullname)
+
+                          local basename = vim.fs.basename(fullname)
+
+                          print(filename)
+
+                          vim.cmd("e  " .. fullname)
+                          vim.cmd.cd(res[2])
+                        end
+                      end
+                    end,
+                  },
+                }
+              end
+            end)
+          end,
         },
         git_status = {
           window = {
@@ -143,6 +213,8 @@ return {
               ["<Leader>gha"] = "git_add_file",
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
+              ["<a-G>"] = "open_lazygit",
+              ["<a-t>"] = "open_terminal",
               ["<Leader>ghr"] = "git_revert_file",
               ["<Leader>gc"] = "git_commit",
               ["gp"] = "noop",
@@ -163,14 +235,18 @@ return {
         window = {
           mappings = {
             ["<2-LeftMouse>"] = "open",
+            ["<a-G>"] = "open_lazygit",
+            ["<a-t>"] = "open_terminal",
+            ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
             ["h"] = "parent_or_close",
-            ["P"] = {
+            ["<a-p>"] = {
               "toggle_preview",
-              config = { use_float = true },
+              config = { use_float = true, use_image_nvim = true },
             },
             ["o"] = "open",
             ["s"] = "",
+            ["P"] = "",
             ["z"] = "noop",
             -- ["<CR>"] = "child_or_open",
             -- ["<c-s>"] = "split_with_window_picker",
@@ -179,7 +255,6 @@ return {
             ["<c-v>"] = "open_vsplit",
             ["<esc>"] = "revert_preview",
             -- ["<c-c>"] = "clear_filter",
-
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
             ["gh"] = "prev_source",
@@ -216,11 +291,14 @@ return {
         { NeoTreeCursorLine = { link = "CursorLine" } },
         { NeoTreeRootName = { underline = false } },
         { NeoTreeStatusLine = { link = "PanelStusLine" } },
-        { NeoTreeGitModified = { bg = "NONE" } },
+        { NeoTreeWinSeparator = { link = "WinSeparator" } },
         { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
         { NeoTreeIndentMarker = { fg = { from = "ColorColumn", attr = "bg", alter = 0.2 }, bold = false } },
         { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
         { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
+
+        { NeoTreeGitAdded = { link = "GitSignsAdd" } },
+        { NeoTreeGitModified = { link = "GitSignsChange" } },
         {
           NeoTreeTabSeparatorInactive = {
             inherit = "NeoTreeTabInactive",
@@ -243,9 +321,9 @@ return {
         theme = {
           ["*"] = {
             {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
-                bg = "NONE",
+              AerialLine = {
+                bg = { from = "MyQuickFixLine", attr = "bg" },
+                -- bg = "NONE",
               },
             },
           },
@@ -310,33 +388,19 @@ return {
         {
           "<a-e>",
           function()
-            local neotree_opened = false
-            for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
-              if vim.fn.getwinvar(winnr, "&syntax") == "neo-tree" then
-                neotree_opened = true
-              end
-            end
-
-            if neotree_opened then
-              if vim.bo[0].filetype == "neo-tree" then
-                return vim.cmd [[wincmd p]]
-              end
-              return vim.cmd "Neotree"
-            else
-              return vim.cmd "Neotree"
-            end
+            vim.cmd "Neotree toggle"
           end,
           desc = "Misc: open file explore [neotree]",
         },
-        {
-          "<leader>ue",
-          function()
-            require("edgy").toggle()
-          end,
-          desc = "Edgy Toggle",
-        },
+        -- { TODO: ini error, cause flickring window
+        --   "<leader>ue",
+        --   function()
+        --     require("edgy").toggle()
+        --   end,
+        --   desc = "Misc: toggle edgy [edgy]",
+        -- },
         -- stylua: ignore
-        { "<leader>uE", function() require("edgy").select() end, desc = "Edgy Select Window" },
+        -- { "<Leader>uE", function() require("edgy").select() end, desc = "Misc: edgy select window [edgy]" },
         {
           "<leader>ge",
           function()
@@ -431,24 +495,20 @@ return {
     end,
     opts = function()
       Highlight.plugin("NeoEdgyHi", {
-        { WinBar = { bg = "NONE" } },
+        { WinBar = { bg = RUtils.colortbl.statusline_bg } },
+        { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
         { EdgyNormal = { bg = "NONE" } },
-        { WinBarNC = { bg = "NONE" } },
-        { EdgyTitle = { fg = { from = "Boolean", attr = "fg" }, bold = true } },
+        { EdgyTitle = { fg = { from = "Directory", attr = "fg" }, bold = true, bg = RUtils.colortbl.statusline_bg } },
+        {
+          EdgyIcon = { bold = true, bg = RUtils.colortbl.statusline_bg, fg = RUtils.colortbl.statuslinenc_fg },
+        },
+        { EdgyIconActive = { bold = true, bg = RUtils.colortbl.statusline_bg } },
       })
 
-      return {
+      local opts = {
         animate = { enabled = false },
-        wo = {
-          -- Setting to `true`, will add an edgy winbar.
-          -- Setting to `false`, won't set any winbar.
-          -- Setting to a string, will set the winbar to that string.
-          -- winbar = true,
-          -- winfixwidth = true,
-          -- winfixheight = false,
-          winhighlight = "WinBar:Normal,Normal:Normal",
-          -- spell = false,
-          -- signcolumn = "no",
+        options = {
+          right = { size = 40 },
         },
         bottom = {
           -- {
@@ -476,7 +536,7 @@ return {
           --   end,
           -- },
           "Trouble",
-          -- { ft = "qf", title = "QuickFix" },
+          { ft = "qf", title = "QuickFix" },
           -- {
           --   ft = "help",
           --   size = { height = 20 },
@@ -489,21 +549,18 @@ return {
           -- { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
         },
         right = {
-          -- "Trouble",
+          "Trouble",
           {
             ft = "aerial",
             pinned = true,
             open = "Outline",
             title = "Aerial",
-            -- size = {
-            --   width = 0.2,
-            -- },
           },
         },
         left = {
           -- { title = "Neotest Summary", ft = "neotest-summary" },
           {
-            title = "Neo-Tree",
+            title = "Explorer",
             ft = "neo-tree",
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "filesystem"
@@ -515,7 +572,7 @@ return {
             size = { height = 0.6 },
           },
           {
-            title = "Neo-Tree Git",
+            title = "Git Status",
             ft = "neo-tree",
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "git_status"
@@ -535,24 +592,35 @@ return {
           -- "neo-tree",
         },
         keys = {
-          -- increase width
           ["<a-H>"] = function(win)
-            win:resize("width", 2)
+            win:resize("width", 5)
           end,
-          -- decrease width
           ["<a-L>"] = function(win)
-            win:resize("width", -2)
+            win:resize("width", -5)
           end,
-          -- increase height
           ["<a-K>"] = function(win)
-            win:resize("height", 2)
+            win:resize("height", 5)
           end,
-          -- decrease height
           ["<a-J>"] = function(win)
-            win:resize("height", -2)
+            win:resize("height", -5)
           end,
         },
       }
+
+      for _, pos in ipairs { "top", "bottom", "left", "right" } do
+        opts[pos] = opts[pos] or {}
+        table.insert(opts[pos], {
+          ft = "trouble",
+          filter = function(_buf, win)
+            return vim.w[win].trouble
+              and vim.w[win].trouble.position == pos
+              and vim.w[win].trouble.type == "split"
+              and vim.w[win].trouble.relative == "editor"
+              and not vim.w[win].trouble_preview
+          end,
+        })
+      end
+      return opts
     end,
   },
 }

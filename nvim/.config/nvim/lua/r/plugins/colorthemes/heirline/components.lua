@@ -278,11 +278,6 @@ M.Mixindent = {
     end,
   },
 }
-
-local function is_loclist()
-  return vim.fn.getloclist(0, { filewinid = 1 }).filewinid ~= 0
-end
-
 M.FilePathQF = {
   condition = function()
     return vim.bo[0].filetype == "qf"
@@ -300,7 +295,7 @@ M.FilePathQF = {
   {
     provider = function()
       local msg
-      if is_loclist() then
+      if RUtils.qf.is_loclist() then
         msg = vim.fn.getloclist(0, { title = 0 }).title
       else
         msg = string.format("%s/total?", vim.fn.getqflist({ id = 0 }).id)
@@ -349,7 +344,7 @@ M.FilePathQF = {
   {
     provider = function()
       local msg
-      if is_loclist() then
+      if RUtils.qf.is_loclist() then
         msg = vim.fn.getloclist(0, { title = 0 }).title
       else
         msg = string.format("%s", vim.fn.getqflist({ title = 0 }).title)
@@ -399,7 +394,7 @@ M.FilePath = {
 
       local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
       if filename == "" then
-        return "[No Name]"
+        return string.upper(vim.bo.filetype) .. " "
       end
       -- now, if the filename would occupy more than 90% of the available
       -- space, we trim the file path to its initials
@@ -434,10 +429,15 @@ M.FileFlags = {
 }
 M.Dap = {
   condition = function()
+    local ft_exclude = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
     if package.loaded.dap == nil then
       return false
     end
+    if vim.tbl_contains(ft_exclude, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
+      return false
+    end
     local session = require("dap").session()
+
     return session ~= nil
   end,
   provider = function()

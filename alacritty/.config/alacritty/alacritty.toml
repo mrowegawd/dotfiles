@@ -66,12 +66,12 @@ mods = "Control"
 [[keyboard.bindings]]
 action = "ScrollPageUp"
 key = "PageUp"
-mods = "Control|Shift"
+mods = "Control"
 
 [[keyboard.bindings]]
 action = "ScrollPageDown"
 key = "PageDown"
-mods = "Control|Shift"
+mods = "Control"
 
 [mouse]
 hide_when_typing = true

@@ -597,7 +597,6 @@ return {
   {
     "renerocksai/calendar-vim",
     cmd = "Calendar",
-    config = true,
   },
   -- RENDER MARKDOWN (disabled)
   {
@@ -685,7 +684,11 @@ return {
             cwd = RUtils.config.path.wiki_path,
             rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
             winopts = {
-              title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
+              title = RUtils.fzflua.format_title(
+                "Obsidian > Grep",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3),
+                "GitSignsChange"
+              ),
             },
           }
         end,
@@ -704,7 +707,11 @@ return {
               cwd = RUtils.config.path.wiki_path,
               rg_opts = [[--column --line-number --hidden --ignore-case --smart-case -g "*.md" ]],
               winopts = {
-                title = RUtils.fzflua.format_title("[Obsidian] Grep", ""),
+                title = RUtils.fzflua.format_title(
+                  "Obsidian > Grep",
+                  RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3),
+                  "GitSignsChange"
+                ),
               },
             }
           end
@@ -716,37 +723,22 @@ return {
         "<Localleader>ff",
         function()
           return fzf_lua.files {
-            prompt = "  ",
+            prompt = "   ",
             cwd = RUtils.config.path.wiki_path,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
             rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]],
 
             winopts = {
               -- fullscreen = true,
-              title = RUtils.fzflua.format_title("Note Files", ""),
+              title = RUtils.fzflua.format_title(
+                "Obsidian > Note files",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.bookmark),
+                "GitSignsChange"
+              ),
             },
           }
         end,
         desc = "Note: find note files [obsidian]",
-      },
-      {
-        "<Localleader>fT",
-        function()
-          return fzf_lua.grep {
-            prompt = "  ",
-            cwd = RUtils.config.path.wiki_path,
-            search = "^#.*",
-            rg_glob = false,
-            no_esc = true,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
-            winopts = {
-              fullscreen = true,
-              title = RUtils.fzflua.format_title("Note Files", ""),
-            },
-          }
-        end,
-        desc = "Note: regex and search title [obsidian]",
       },
       {
         "<Localleader>fn",
@@ -763,7 +755,7 @@ return {
         function()
           RUtils.markdown.find_note_by_tag()
         end,
-        desc = "Note: find note files by tags [obsidian]",
+        desc = "Note: find note by tags [obsidian]",
       },
     },
     dependencies = {

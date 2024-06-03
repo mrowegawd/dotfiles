@@ -16,82 +16,32 @@ return {
     version = false, -- last release is way too old
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
-      "hrsh7th/cmp-path",
       "davidsierradz/cmp-conventionalcommits",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-path",
+      "lukas-reineke/cmp-rg",
       "lukas-reineke/cmp-under-comparator",
       "petertriho/cmp-git",
-      "lukas-reineke/cmp-rg",
       -- "rcarriga/cmp-dap",
-      "saadparwaiz1/cmp_luasnip",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
-      {
-        "L3MON4D3/LuaSnip",
-        ---@diagnostic disable-next-line: undefined-global
-        build = (not RUtils.is_win())
-            and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
-          or nil,
-        opts = {
-          history = true,
-          delete_check_events = "TextChanged",
-        },
-        config = function()
-          local luasnip = require "luasnip"
-
-          require("luasnip.loaders.from_vscode").lazy_load {
-            paths = RUtils.config.path.snippet_path,
-          }
-
-          luasnip.filetype_extend("python", { "django" })
-          luasnip.filetype_extend("django-html", { "html" })
-          luasnip.filetype_extend("htmldjango", { "html" })
-
-          luasnip.filetype_extend("javascript", { "html" })
-          luasnip.filetype_extend("javascript", { "javascriptreact" })
-          luasnip.filetype_extend("javascriptreact", { "html" })
-          luasnip.filetype_extend("typescript", { "html" })
-          luasnip.filetype_extend("typescriptreact", { "html", "react" })
-
-          -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
-        end,
-      },
+      --     luasnip.filetype_extend("python", { "django" })
+      --     luasnip.filetype_extend("django-html", { "html" })
+      --     luasnip.filetype_extend("htmldjango", { "html" })
+      --
+      --     luasnip.filetype_extend("javascript", { "html" })
+      --     luasnip.filetype_extend("javascript", { "javascriptreact" })
+      --     luasnip.filetype_extend("javascriptreact", { "html" })
+      --     luasnip.filetype_extend("typescript", { "html" })
+      --     luasnip.filetype_extend("typescriptreact", { "html", "react" })
+      --     -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     },
     opts = function()
       local MAX_INDEX_FILE_SIZE = 1024
       local cmp = require "cmp"
-
-      local function tab(fallback)
-        local entry = cmp.get_selected_entry()
-
-        if
-          cmp.visible()
-          and (
-            entry ~= nil
-            and not (entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$"))
-          )
-        then
-          cmp.confirm { select = true }
-        elseif vim.snippet.active { direction = 1 } then
-          vim.snippet.jump(1)
-        elseif require("luasnip").expand_or_jumpable() then
-          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
-        else
-          fallback()
-        end
-      end
-
-      local function shift_tab(fallback)
-        if vim.snippet.active { direction = -1 } then
-          vim.snippet.jump(-1)
-        elseif require("luasnip").jumpable(-1) then
-          vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
-        else
-          fallback()
-        end
-      end
+      local defaults = require "cmp.config.default"()
 
       local function styldoc(is_border_set)
         is_border_set = is_border_set or false
@@ -160,7 +110,6 @@ return {
                   emoji = "[EMOJI]",
                   path = "[PATH]",
                   neorg = "[NEORG]",
-                  luasnip = "[SNIP]",
                   dictionary = "[DIC]",
                   noice_popupmenu = "[Noice]",
                   buffer = "[BUF]",
@@ -183,46 +132,17 @@ return {
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
         },
-        sorting = {
-          comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
-            cmp.config.compare.recently_used,
-            function(entry1, entry2)
-              local _, entry1_under = entry1.completion_item.label:find "^_+"
-              local _, entry2_under = entry2.completion_item.label:find "^_+"
-              entry1_under = entry1_under or 0
-              entry2_under = entry2_under or 0
-              if entry1_under > entry2_under then
-                return false
-              elseif entry1_under < entry2_under then
-                return true
-              end
-            end,
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-          },
-        },
+        sorting = defaults.sorting,
         mapping = {
           ["<C-r>"] = cmp.mapping(function(_)
             if callme == 0 then
               callme = 1
-              cmp.complete {
-                config = {
-                  sources = { { name = "luasnip" } },
-                },
-              }
+              cmp.complete {}
             elseif callme == 1 then
-              callme = 2
+              callme = 0
               cmp.complete {
                 config = {
                   sources = {
-                    {
-                      name = "rg",
-                      keyword_length = 2,
-                      option = { additional_arguments = "--hidden --max-depth 8" },
-                    },
                     {
                       name = "buffer",
                       keyword_length = 2,
@@ -247,15 +167,6 @@ return {
                   },
                 },
               }
-            else
-              if callme == 2 then
-                callme = 0
-                cmp.complete {
-                  config = {
-                    sources = { { name = "nvim_lsp", max_item_count = 20 } },
-                  },
-                }
-              end
             end
           end, {
             "i",
@@ -279,8 +190,8 @@ return {
               winopts = { preview = { hidden = "nohidden" } },
             }
           end, { "i" }),
-          ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
-          ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
+          -- ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
+          -- ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<CR>"] = RUtils.cmp.confirm(),
@@ -293,24 +204,17 @@ return {
         sources = { -- remember: do not use `group_index`,
           {
             name = "nvim_lsp",
-            -- max_item_count = 20,
             entry_filter = function(entry)
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,
           },
           {
-            name = "luasnip",
-            max_item_count = 10,
-          },
-          {
             name = "rg",
-            keyword_length = 3,
             max_item_count = 10,
-            option = { additional_arguments = "--hidden --max-depth 8" },
+            option = { additional_arguments = "--hidden" },
           },
           {
             name = "buffer",
-            keyword_length = 3,
             max_item_count = 10,
             options = {
               get_bufnrs = function()
@@ -325,11 +229,12 @@ return {
               end,
             },
           },
-          { name = "path", max_item_count = 10 },
+          { name = "path" },
         },
       }
     end,
 
+    ---@param opts cmp.ConfigSchema | {auto_brackets?: string[]}
     config = function(_, opts)
       for _, source in ipairs(opts.sources) do
         source.group_index = source.group_index or 1
@@ -358,7 +263,7 @@ return {
       local tbl_custom_sources = {
         { name = "nvim_lsp", max_item_count = 20 },
         { name = "buffer", max_item_count = 20 },
-        { name = "luasnip", max_item_count = 20 },
+        { name = "snippets" },
         { name = "path", max_item_count = 20 },
         { name = "rg", max_item_count = 20 },
         { name = "emoji", max_item_count = 20 },
@@ -424,30 +329,72 @@ return {
       })
 
       cmp.setup.cmdline({ "/", "?" }, {
-        mapping = {
-          -- ["<C-l>"] = cmp.mapping(function()
-          --   cmp.confirm { select = true }
-          --   RUtils.map.feedkey("<CR>", "")
-          -- end, { "c" }),
-          ["<Tab>"] = cmp.mapping(function()
-            cmp.confirm { select = true }
-            RUtils.map.feedkey("<CR>", "")
-          end, { "c" }),
-          ["<c-q>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.abort()
-              else
-                fallback()
-              end
-            end,
-          },
-        },
+        -- mapping = {
+        --   -- ["<C-l>"] = cmp.mapping(function()
+        --   --   cmp.confirm { select = true }
+        --   --   RUtils.map.feedkey("<CR>", "")
+        --   -- end, { "c" }),
+        --   ["<Tab>"] = cmp.mapping(function()
+        --     cmp.confirm { select = true }
+        --     RUtils.map.feedkey("<CR>", "")
+        --   end, { "c" }),
+        --   ["<c-q>"] = {
+        --     c = function(fallback)
+        --       if cmp.visible() then
+        --         cmp.abort()
+        --       else
+        --         fallback()
+        --       end
+        --     end,
+        --   },
+        -- },
         sources = cmp.config.sources {
           { name = "buffer" },
+          { name = "registers" },
         },
       })
     end,
+  },
+  -- NVIM-SNIPPETS
+  {
+    "nvim-cmp",
+    dependencies = {
+      {
+        "garymjr/nvim-snippets",
+        opts = {
+          friendly_snippets = true,
+          search_paths = { RUtils.config.path.snippet_path .. "/snippets" },
+        },
+      },
+    },
+    opts = function(_, opts)
+      opts.snippet = {
+        expand = function(item)
+          return RUtils.cmp.expand(item.body)
+        end,
+      }
+      table.insert(opts.sources, { name = "snippets" })
+    end,
+    keys = {
+      {
+        "<Tab>",
+        function()
+          return vim.snippet.active { direction = 1 } and "<cmd>lua vim.snippet.jump(1)<cr>" or "<Tab>"
+        end,
+        expr = true,
+        silent = true,
+        mode = { "i", "s" },
+      },
+      {
+        "<S-Tab>",
+        function()
+          return vim.snippet.active { direction = -1 } and "<cmd>lua vim.snippet.jump(-1)<cr>" or "<Tab>"
+        end,
+        expr = true,
+        silent = true,
+        mode = { "i", "s" },
+      },
+    },
   },
   -- MINI.PAIRS
   {
@@ -492,6 +439,7 @@ return {
       end
     end,
   },
+  -- TS-COMMENTS
   {
     "folke/ts-comments.nvim",
     event = "VeryLazy",

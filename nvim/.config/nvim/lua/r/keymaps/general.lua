@@ -227,7 +227,8 @@ RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window
 RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force to horizontal split", silent = true })
 RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force to vertical split", silent = true })
 
-RUtils.map.nnoremap("sc", "<CMD>q!<CR>", { desc = "View: close buffer" })
+RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "View: close buffer" })
+
 RUtils.map.nnoremap("sC", "<CMD>qa!<CR>", { desc = "View: close all buffer" })
 
 RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: move cursor left", silent = true })
@@ -295,25 +296,6 @@ RUtils.map.cnoremap("<c-f>", "<S-Right>")
 RUtils.map.cnoremap("<c-b>", "<S-Left>")
 
 --  ╭──────────────────────────────────────────────────────────╮
---  │ TERMINAL                                                 │
---  ╰──────────────────────────────────────────────────────────╯
-
-RUtils.cmd.augroup("AddTerminalMappings", {
-  event = { "TermOpen" },
-  pattern = { "term://*" },
-  command = function()
-    if vim.bo.filetype == "" or vim.bo.filetype == "toggleterm" then
-      RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-      RUtils.map.tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window navigation" })
-      RUtils.map.tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal; down window navigation" })
-      RUtils.map.tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window navigation" })
-      RUtils.map.tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window naviation" })
-      -- tnoremap("<a-/>", "<cmd>close<cr>", { desc = "Terminal: close" })
-    end
-  end,
-})
-
---  ╭──────────────────────────────────────────────────────────╮
 --  │ CABBREV                                                  │
 --  ╰──────────────────────────────────────────────────────────╯
 
@@ -342,8 +324,8 @@ RUtils.map.cabbrev("qla", "qal!")
 RUtils.map.cabbrev("w;", "update!")
 
 -- I don't need help to show when I type <F1>.
-RUtils.map.nmap("<F1>", "<Nop>")
-RUtils.map.imap("<F1>", "<Nop>")
+-- RUtils.map.nmap("<F1>", "<Nop>")
+-- RUtils.map.imap("<F1>", "<Nop>")
 RUtils.map.vmap("K", "<Nop>")
 
 --  ┌──────────────────────────────────────────────────────────┐
@@ -397,21 +379,8 @@ end
 RUtils.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (visual)" })
 
-local function getPopups()
-  return vim.fn.filter(vim.api.nvim_tabpage_list_wins(0), function(_, e)
-    return vim.api.nvim_win_get_config(e).zindex
-  end)
-end
-
-local function killPopups()
-  vim.fn.map(getPopups(), function(_, e)
-    vim.api.nvim_win_close(e, false)
-  end)
-end
-
 RUtils.map.nnoremap("<ESC>", function()
   cmd.noh()
-  killPopups()
 end, { desc = "Misc: magic escape" })
 
 RUtils.map.nnoremap("<Leader>oo", function()
@@ -480,13 +449,10 @@ RUtils.map.nnoremap("sm", function()
   RUtils.toggle.maximize()
 end)
 
-RUtils.map.nnoremap("<F1>", function()
-  -- dihapus saja ini
-  -- RUtils.map.show_help_buf_keymap()
-  RUtils.toggle.maximize()
-end)
-
-RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, silent)
+RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, {
+  desc = "MISC: show keymap helps curbuf",
+  silent = true,
+})
 
 local checkconceallevel = false
 RUtils.map.nnoremap("<Localleader>r", function()
@@ -529,6 +495,15 @@ RUtils.map.nnoremap("<Localleader>r", function()
     toggle_undotree = function()
       cmd "UndotreeToggle"
     end,
+    toggle_number = function()
+      RUtils.toggle.number()
+    end,
+    session_load = function()
+      require("persistence").load()
+    end,
+    session_save = function()
+      require("persistence").save()
+    end,
     toggle_conceallevel = function()
       if checkconceallevel then
         cmd [[setlocal conceallevel=2]]
@@ -554,27 +529,31 @@ local function normalize_return(str)
   return str_slice
 end
 
-local fm_manager = "nnn -c" -- "nnn -c"  or "lf"
+local fm_manager = vim.env.TERM_FILEMANAGER
 
 RUtils.map.nnoremap("<a-E>", function()
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
 
   local TMUX = os.getenv "TMUX"
   if not TMUX then
-    local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-    if pane_left_id then
-      vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+    if RUtils.has "neo-tree.nvim" then
+      vim.cmd "Neotree focus reveal"
+    else
+      local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+      if pane_left_id then
+        vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+      end
+
+      vim.fn.system "wezterm cli split-pane --left --percent 15"
+      vim.fn.system "wezterm cli activate-pane-direction Right"
+
+      local pane_left_id2 = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+      vim.fn.system(
+        string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_left_id2)
+      )
+
+      vim.fn.system "wezterm cli activate-pane-direction Left"
     end
-
-    vim.fn.system "wezterm cli split-pane --left --percent 15"
-    vim.fn.system "wezterm cli activate-pane-direction Right"
-
-    local pane_left_id2 = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-    vim.fn.system(
-      string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_left_id2)
-    )
-
-    vim.fn.system "wezterm cli activate-pane-direction Left"
   else
     vim.fn.system [[tmux select-pane -L]]
 

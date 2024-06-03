@@ -121,7 +121,6 @@ return {
       },
       { "<Leader>ff", require("fzf-lua").files, desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", require("fzf-lua").commands, desc = "Fzflua: commands", mode = "n" },
-      { "<Leader>fh", require("fzf-lua").help_tags, desc = "Fzflua: help tags" },
       {
         "gs",
         function()
@@ -144,14 +143,6 @@ return {
         end,
         desc = "LSP: workspace symbols [fzflua]",
       },
-      {
-        "<Leader>fh",
-        function()
-          require("fzf-lua").help_tags { query = vim.fn.expand "<cword>" }
-        end,
-        mode = { "v" },
-        desc = "Fzflua: help tags (visual)",
-      },
       { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", require("fzf-lua").live_grep_glob, desc = "Fzflua: live grep" },
       { "<Leader>fg", require("fzf-lua").grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
@@ -160,27 +151,44 @@ return {
       { "<Leader>fm", require("fzf-lua").marks, desc = "Fzflua: marks" },
       { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search history" },
       { "<Leader>fH", require("fzf-lua").command_history, desc = "Fzflua: command history" },
-      -- {
-      --   "<Leader>fk",
-      --   function()
-      --     return require("fzf-lua").keymaps {
-      --       winopts = {
-      --         preview = {
-      --           title = RUtils.fzflua.format_title("Keymaps", ""),
-      --           vertical = "up:45%",
-      --           horizontal = "right:30%",
-      --           layout = "flex",
-      --         },
-      --       },
-      --     }
-      --   end,
-      --   desc = "Fzflua: keymaps",
-      -- },
+      {
+        "<Leader>fh",
+        function()
+          if vim.bo.filetype == "lua" then
+            require("fzf-lua").help_tags { query = vim.fn.expand "<cword>" }
+          elseif vim.bo.filetype == "rust" then
+            vim.cmd.RustLsp "openDocs"
+          end
+        end,
+        desc = "Fzflua: help tags",
+      },
+      {
+        "<Leader>fh",
+        function()
+          if vim.bo.filetype == "lua" then
+            local sel = RUtils.cmd.get_visual_selection { strict = true }
+            if sel then
+              local selection = RUtils.cmd.strip_whitespace(sel.selection)
+              local _, err = pcall(function()
+                vim.cmd("h " .. selection)
+              end)
+
+              if err then
+                RUtils.warn(selection .. "-> Not found ", { title = "FzfLua Help" })
+              end
+            end
+          elseif vim.bo.filetype == "rust" then
+            vim.cmd.RustLsp "openDocs"
+          end
+        end,
+        mode = { "v" },
+        desc = "Fzflua: help tags (visual)",
+      },
       {
         "<Leader>fo",
         function()
           return require("fzf-lua").files {
-            prompt = "  ",
+            prompt = "   ",
             winopts = { title = RUtils.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
@@ -277,7 +285,7 @@ return {
         },
         files = {
           -- debug = true,
-          prompt = "    ",
+          prompt = "   ",
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
@@ -517,10 +525,16 @@ return {
         },
         grep = {
           -- debug = true,
-          prompt = " ",
+          prompt = "  ",
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Ctrl-e: mode rgflow]] },
+          winopts = {
+            title = RUtils.fzflua.format_title(
+              "Grep",
+              RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+            ),
+          },
           formatter = "path.filename_first",
           multiprocess = true,
           winopts_fn = function()
@@ -566,6 +580,7 @@ return {
           },
         },
         oldfiles = {
+          prompt = "   ",
           winopts = { title = RUtils.fzflua.format_title("History", "") },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
@@ -575,6 +590,7 @@ return {
           winopts = { preview = { hidden = "hidden" } },
         },
         buffers = {
+          prompt = "   ",
           winopts = { title = RUtils.fzflua.format_title("Buffers", "󰈙") },
           cwd = nil, -- buffers list for a given dir
           fzf_opts = {
@@ -585,12 +601,12 @@ return {
             ["alt-q"] = { actions.file_sel_to_qf },
           },
         },
-        fighlights = {
-          prompt = "  ",
-          winopts = { title = RUtils.fzflua.format_title "Highlights" },
+        highlights = {
+          prompt = "   ",
+          winopts = { title = RUtils.fzflua.format_title("Highlights", RUtils.config.icons.misc.circle) },
         },
         helptags = {
-          prompt = "  ",
+          prompt = "   ",
           winopts = { title = RUtils.fzflua.format_title("Help", "󰋖") },
         },
         tabs = {
@@ -611,7 +627,7 @@ return {
           },
         },
         lines = {
-          prompt = "  ",
+          prompt = "   ",
           winopts = { title = RUtils.fzflua.format_title("Lines", "") },
           fzf_opts = {
             -- do not include bufnr in fuzzy matching
@@ -634,7 +650,7 @@ return {
           },
         },
         blines = {
-          prompt = "  ",
+          prompt = "   ",
           no_header = true, -- hide grep|cwd header?
           no_header_i = true, -- hide interactive header?
           winopts = {
@@ -1207,14 +1223,18 @@ return {
       {
         "<leader>sT",
         function()
-          RUtils.todocomments.search_global()
+          RUtils.todocomments.search_global {
+            title = "Todo Global",
+          }
         end,
         desc = "Misc: todo global dir (fzflua) [todo-comments]",
       },
       {
         "<leader>st",
         function()
-          RUtils.todocomments.search_local()
+          RUtils.todocomments.search_local {
+            title = "Todo Curbuf",
+          }
         end,
         desc = "Misc: todo local dir (fzflua) [todo-comments]",
       },
@@ -1361,13 +1381,27 @@ return {
   -- TROUBLE.NVIM
   {
     "folke/trouble.nvim",
-    branch = "dev",
     cmd = "Trouble",
     keys = {
       {
         "gr",
         "<cmd>Trouble lsp_references toggle focus=true win.position=right<cr>",
         desc = "LSP: references [trouble]",
+      },
+      {
+        "gi",
+        "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
+        desc = "LSP: implementations [trouble]",
+      },
+      {
+        "gO",
+        "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=right<cr>",
+        desc = "LSP: outgoing calls [trouble]",
+      },
+      {
+        "gI",
+        "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=right<cr>",
+        desc = "LSP: incomming calls [trouble]",
       },
       {
         "gd",

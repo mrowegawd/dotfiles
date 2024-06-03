@@ -303,14 +303,16 @@ local function collect_all_tags_async(data, cb)
 end
 
 local function format_prompt_strings()
-  local msg = ""
+  local title_fzf = "Obsidian > Search By Tag"
   if #insert_tags > 0 then
-    msg = "[" .. table.concat(insert_tags, ",") .. "]"
-    msg = string.format("[Obsidian] Search by tag %s > ", msg)
-  else
-    msg = "[Obsidian] Search by tag > "
+    local tags = "[" .. table.concat(insert_tags, ", ") .. "]"
+    title_fzf = string.format("%s > %s", title_fzf, tags)
   end
-  return msg
+  return RUtils.fzflua.format_title(
+    title_fzf,
+    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag),
+    "GitSignsChange"
+  )
 end
 
 local function picker(contents)
@@ -336,7 +338,10 @@ local function picker(contents)
 
   return require("fzf-lua").fzf_exec(contents, {
     previewer = tags_previewer,
-    prompt = format_prompt_strings(),
+    prompt = "   ",
+    winopts = {
+      title = format_prompt_strings(),
+    },
 
     fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: add tag | Ctrl-r: reload | Ctrl-g: search by regex]] },
 
@@ -610,4 +615,11 @@ function M.find_note_by_tag(data, is_set)
   end
 end
 
+function M.find_by_categories()
+  collect_all_tags_async(tags, function(all_tags)
+    vim.schedule(function()
+      picker(all_tags)
+    end)
+  end)
+end
 return M

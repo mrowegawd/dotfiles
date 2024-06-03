@@ -20,25 +20,44 @@ left_separator=''
 left_separator_black=''
 right_separator=''
 right_separator_black=''
-left_slant_separator=""
-right_slant_separator=""
+
+left_slant_separator=''
+right_slant_separator=''
 
 setw -g window-style bg=$WINDOW_BG_ACTIVE
 setw -g window-active-style bg=$WINDOW_BG_ACTIVE
 
 # setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
+# setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
+# setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
+
 setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
-setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
+setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
 
 setw -g pane-border-status bottom
 
 # setw -g pane-border-format "#{?window_zoomed_flag,#[fg=white]#[bg=$RED],}[ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
 # #{?window_zoomed_flag,#[fg=white]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
 
-setw -g pane-border-format " [ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
-#{?window_zoomed_flag,#[fg=$RED]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
+# setw -g pane-border-format " [ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
+# #{?window_zoomed_flag,#[fg=$RED]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}] "
 
-# set-option -g status-format '#[fg=colour0] #{session_name} #[fg=colour1] (#{window_id}) #[fg=colour2] #{pane_id}: #[fg=colour3] #{current_window_stack} #[fg=colour4] #{session_time} #[fg=colour5]  #[fg=colour6] #{host_name}'
+# setw -g pane-border-format "\
+# #{?pane_active,#[fg=$RED] $left_slant_separator,}#{?pane_active,#[bg=$RED],}\
+#   #[fg=$RED,bold]#{?pane_active,#[fg=white],}#{pane_index}.#{pane_id} \
+# #[fg=black#{?window_zoomed_flag,#[fg=$BLUE]ZOOM ,}\
+# #{?pane_active,#[fg=$blue]#{pane_current_command} ,}\
+# #[fg=black,bold]#{?pane_active,#[fg=$blue]$left_slant_separator ,}#[bg=black,bold] "
+
+setw -g pane-border-format "\
+#{?pane_active,#[fg=$STATUSLINE_BG_ACTIVE]$left_slant_separator,}\
+#[fg=$RED,bold]#{?pane_active,#[bg=$STATUSLINE_BG_ACTIVE],} #{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
+#{?pane_active,#{pane_current_command} ,}\
+#{?pane_active,#[fg=$WINDOW_BG_ACTIVE]$left_slant_separator,}"
+
+# set-option -g status-format '#[fg=colour0] #{session_name} #[fg=colour1]
+# (#{window_id}) #[fg=colour2] #{pane_id}: #[fg=colour3] #{current_window_stack}
+# #[fg=colour4] #{session_time} #[fg=colour5]  #[fg=colour6] #{host_name}'
 
 # set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
 #   #{?pane_active,❐ #S:#I/#{session_windows} ,}#{?window_zoomed_flag,⬢,❄} #P ⇒ #{pane_tty} #{pane_current_command}'
@@ -55,7 +74,7 @@ set -g status-justify left # left,centre, absolute-centre
 set -g status-left ""
 
 set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
-set -g mode-style "bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG,bold"
+set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
 
 #  ╓
 #  ║ LEFT

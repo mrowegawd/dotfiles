@@ -13,54 +13,21 @@ RUtils.cmd.augroup("WrapSpell", {
   end,
 })
 
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = vim.api.nvim_create_augroup("Terminal", { clear = true }),
+RUtils.cmd.augroup("AuTermOpen", {
   -- Related https://github.com/neovim/neovim/issues/20726
-  desc = "Disable fold inside terminal",
-  callback = function()
+  event = { "TermOpen" },
+  command = function()
     vim.opt_local.foldmethod = "manual"
     vim.opt_local.foldenable = false
+    vim.cmd.startinsert()
   end,
 })
-
--- {
---   -- turn current line blame off in insert mode,
---   -- back on when leaving insert mode
---   name = 'GitSignsCurrentLineBlameInsertModeToggle',
---   {
---     { 'InsertLeave', 'InsertEnter' },
---     function()
---       local ok, gitsigns_config = pcall(require, 'gitsigns.config')
---       if not ok then
---         return
---       end
---
---       local enabled = gitsigns_config.config.current_line_blame
---       local mode = vim.fn.mode()
---       if (mode == 'i' and enabled) or (mode ~= 'i' and not enabled) then
---         pcall(vim.cmd --[[@as function]], 'Gitsigns toggle_current_line_blame')
---       end
---     end,
---   },
--- },
 
 RUtils.cmd.augroup("WrapFt", {
   event = { "FileType" },
   pattern = { "typescriptreact", "typescript" },
   command = function()
     vim.opt_local.wrap = true
-  end,
-})
-
-RUtils.cmd.augroup("TerminalDefaults", {
-  event = { "TermOpen" },
-  pattern = "*",
-  command = function()
-    vim.defer_fn(function()
-      if vim.bo.buftype == "terminal" then
-        vim.cmd [[startinsert]]
-      end
-    end, 100)
   end,
 })
 
@@ -156,27 +123,6 @@ RUtils.cmd.augroup("TextYankHighlight", {
   end,
 })
 
--- RUtils.cmd.augroup("WindowBehaviours", {
---   event = { "FileType" },
---   pattern = { "norg", "org", "orgagenda" },
---   command = function()
---     vim.opt_local.foldcolumn = "0"
---   end,
--- }, {
---   event = { "FileType" },
---   pattern = { "org", "orgagenda" },
---   command = function()
---     -- vim.cmd [[setlocal foldtext=OrgmodeFoldText()]]
---     vim.cmd [[setlocal foldmethod=manual]]
---   end,
--- }, {
---   event = { "FileType" },
---   pattern = { "norg" },
---   command = function()
---     vim.cmd [[setlocal foldtext=v:lua.foldtext()]]
---   end,
--- })
-
 RUtils.cmd.augroup("LocateLastPosition", {
   -- Go to last loc when opening a buffer
   event = { "BufReadPost" },
@@ -195,48 +141,73 @@ RUtils.cmd.augroup("LocateLastPosition", {
   end,
 })
 
-RUtils.cmd.augroup("WindowBehaviours", {
-  event = { "FileType" },
-  pattern = {
-    "orgagenda",
-    "capture",
-    "gitcommit",
-    "qf",
-    "NeogitCommitMessage",
-    "NeogitPopup",
-    -- "help",
-    -- "Trouble",
+RUtils.cmd.augroup(
+  "WindowBehaviours",
+  {
+    event = { "FileType" },
+    pattern = {
+      "orgagenda",
+      "capture",
+      "gitcommit",
+      "qf",
+      "NeogitCommitMessage",
+      "NeogitPopup",
+      -- "help",
+      -- "Trouble",
+    },
+    command = function()
+      cmd "wincmd J"
+      if vim.bo[0].filetype == "NeogitCommitMessage" then
+        cmd [[resize 20]]
+      end
+    end,
   },
-  command = function()
-    cmd "wincmd J"
-    if vim.bo[0].filetype == "NeogitCommitMessage" then
-      cmd [[resize 20]]
-    end
-  end,
-}, {
-  event = { "FileType" },
-  pattern = { "gitcommit", "NeogitCommitMessage" },
-  command = function()
-    vim.opt_local.spell = true
-    vim.opt_local.wrap = true
-    vim.opt_local.spelllang = { "en_us", "id" }
-    vim.opt_local.conceallevel = 2
-    vim.opt_local.relativenumber = false
-    vim.opt_local.number = false
-  end,
-}, {
-  event = { "FocusLost" },
-  pattern = "*",
-  command = function()
-    vim.opt.laststatus = 0
-  end,
-}, {
-  event = { "FocusGained" },
-  pattern = "*",
-  command = function()
-    vim.opt.laststatus = 2
-  end,
-})
+  {
+    event = { "FileType" },
+    pattern = { "gitcommit", "NeogitCommitMessage" },
+    command = function()
+      vim.opt_local.spell = true
+      vim.opt_local.wrap = true
+      vim.opt_local.spelllang = { "en_us", "id" }
+      vim.opt_local.conceallevel = 2
+      vim.opt_local.relativenumber = false
+      vim.opt_local.number = false
+    end,
+  },
+  --   {
+  --   event = { "FocusLost" },
+  --   pattern = "*",
+  --   command = function()
+  --     vim.opt.laststatus = 0
+  --   end,
+  -- }, {
+  --   event = { "FocusGained" },
+  --   pattern = "*",
+  --   command = function()
+  --     vim.opt.laststatus = 2
+  --   end,
+  -- },
+  {
+    event = { "BufEnter", "BufRead" },
+    pattern = "*",
+    command = function()
+      if vim.bo.filetype == "" and (vim.bo.buftype == "terminal" or vim.bo.filetype == "toggleterm") then
+        vim.cmd.startinsert()
+        RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+        RUtils.map.tnoremap("<a-h>", "<c-w>h", { desc = "Terminal: left window" })
+        RUtils.map.tnoremap("<a-j>", "<c-w>j", { desc = "Terminal; down window" })
+        RUtils.map.tnoremap("<a-k>", "<c-w>k", { desc = "Terminal: up window" })
+        RUtils.map.tnoremap("<a-l>", "<c-w>l", { desc = "Terminal: right window" })
+        RUtils.map.tnoremap("<a-x>", function()
+          RUtils.map.feedkey("<C-\\><C-n>:q!<CR>", "t")
+        end, { desc = "Terminal: right window naviation" })
+        RUtils.map.tnoremap("<a-t>", function()
+          RUtils.terminal { cwd = RUtils.root() }
+        end, { desc = "Terminal: test" })
+      end
+    end,
+  }
+)
 
 RUtils.cmd.augroup("ConvertNorg", {
   event = { "BufWritePost" },
@@ -282,19 +253,20 @@ end
 -- Use the more sane snippet session leave logic. Copied from:
 -- https://github.com/LazyVim/LazyVim/pull/2519#issue-2123554685
 -- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1429989436
-RUtils.cmd.augroup("SessionLogicLeave", {
-  event = { "ModeChanged" },
-  command = function()
-    if
-      ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
-      and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
-      and not require("luasnip").session.jump_active
-    then
-      require("luasnip").unlink_current()
-    end
-  end,
-})
+-- RUtils.cmd.augroup("SessionLogicLeave", {
+--   event = { "ModeChanged" },
+--   command = function()
+--     if
+--       ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
+--       and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+--       and not require("luasnip").session.jump_active
+--     then
+--       require("luasnip").unlink_current()
+--     end
+--   end,
+-- })
 
 vim.cmd [[
-  :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
+  " :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
+  :autocmd BufEnter *.png,*.jpg,*gif exec "!bspc rule -a \\* -o state=tiled focus=true && sxiv -a ///".expand("%") | :bw
 ]]

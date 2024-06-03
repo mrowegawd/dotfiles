@@ -7,9 +7,10 @@ local tags_previewer = builtin.buffer_or_file:extend()
 local tbl_dat = {}
 local tbl_dat_note = {}
 
-local function picker(contents, tbl_cts)
+local function picker(contents, tbl_cts, fzf_opts)
   vim.validate {
     contents = { contents, "function" },
+    fzf_opts = { fzf_opts, "table" },
     tbl_cts = { tbl_cts, "table" },
   }
 
@@ -33,6 +34,13 @@ local function picker(contents, tbl_cts)
 
   require("fzf-lua").fzf_exec(contents, {
     previewer = tags_previewer,
+    winopts = {
+      title = RUtils.fzflua.format_title(
+        "Todocomments > " .. fzf_opts.title,
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.check_big),
+        "GitSignsChange"
+      ),
+    },
     prompt = "  ",
 
     actions = {
@@ -197,23 +205,26 @@ local function todo_note(path)
   end
 end
 
-function M.search_global()
+function M.search_global(opts)
+  opts = opts or {}
   tbl_dat = {}
   local cts = todo(vim.uv.cwd())
-  picker(cts(), tbl_dat)
+  picker(cts(), tbl_dat, opts)
 end
 
-function M.search_global_note()
+function M.search_global_note(opts)
+  opts = opts or {}
   tbl_dat_note = {}
   local cts = todo_note(RUtils.config.path.wiki_path)
-  picker(cts(), tbl_dat_note)
+  picker(cts(), tbl_dat_note, opts)
 end
 
-function M.search_local()
+function M.search_local(opts)
+  opts = opts or {}
   tbl_dat = {}
 
   local cts = todo(vim.fn.fnameescape(vim.fn.expand "%:p"))
-  picker(cts(), tbl_dat)
+  picker(cts(), tbl_dat, opts)
 end
 
 return M

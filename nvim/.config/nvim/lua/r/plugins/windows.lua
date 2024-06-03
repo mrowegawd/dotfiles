@@ -88,25 +88,33 @@ return {
           ["a-h"] = function()
             require("smart-splits").move_cursor_left()
           end,
-          ["a-H"] = function()
-            require("smart-splits").resize_left()
-          end,
           ["a-j"] = function()
             require("smart-splits").move_cursor_down()
-          end,
-          ["a-J"] = function()
-            require("smart-splits").resize_down()
           end,
           ["a-k"] = function()
             require("smart-splits").move_cursor_up()
           end,
-          ["a-K"] = function()
-            require("smart-splits").resize_up()
-          end,
           ["a-l"] = function()
             require("smart-splits").move_cursor_right()
           end,
+          ["a-H"] = function()
+            local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
+            if exclude_win.found then
+              return vim.cmd "vertical resize +5 "
+            end
+            require("smart-splits").resize_left()
+          end,
+          ["a-J"] = function()
+            require("smart-splits").resize_down()
+          end,
+          ["a-K"] = function()
+            require("smart-splits").resize_up()
+          end,
           ["a-L"] = function()
+            local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
+            if exclude_win.found then
+              return vim.cmd "vertical resize -5 "
+            end
             require("smart-splits").resize_right()
           end,
         }
@@ -220,7 +228,25 @@ return {
         end
 
         for key, _ in pairs(nav2) do
-          vim.keymap.set("n", "<" .. key .. ">", navigate(key, true))
+          if key == "a-H" then
+            vim.keymap.set("n", "<" .. key .. ">", function()
+              local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
+              if exclude_win.found then
+                return vim.cmd "vertical resize +5 "
+              end
+              navigate(key, true)()
+            end)
+          elseif key == "a-L" then
+            vim.keymap.set("n", "<" .. key .. ">", function()
+              local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
+              if exclude_win.found then
+                return vim.cmd "vertical resize -5 "
+              end
+              navigate(key, true)()
+            end)
+          else
+            vim.keymap.set("n", "<" .. key .. ">", navigate(key, true))
+          end
         end
       end
     end,

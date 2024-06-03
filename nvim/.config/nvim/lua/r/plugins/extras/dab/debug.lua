@@ -421,18 +421,11 @@ return {
     },
     config = function()
       Highlight.plugin("dapHi", {
-        {
-          DapBreakpoint = {
-            fg = { from = "Error", attr = "fg" },
-            bg = "NONE",
-          },
-        },
-        {
-          DapStopped = {
-            fg = { from = "Boolean", attr = "fg" },
-            bg = "NONE",
-          },
-        },
+        { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = "NONE" } },
+        { DapStopped = { fg = { from = "Boolean", attr = "fg" }, bg = "NONE" } },
+        { DapUiPlayPause = { bg = RUtils.colortbl.statusline_bg } },
+        { DapUiStop = { bg = RUtils.colortbl.statusline_bg } },
+        { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
       })
 
       fn.sign_define {

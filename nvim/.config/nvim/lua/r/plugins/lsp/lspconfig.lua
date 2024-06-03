@@ -1,6 +1,3 @@
-local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
-local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
-
 local Highlight = require "r.settings.highlights"
 
 return {
@@ -22,7 +19,6 @@ return {
         -- golang
         "gomodifytags", -- linter
         "impl", -- linter
-
         "delve", -- for debug
 
         "goimports",
@@ -31,7 +27,8 @@ return {
 
         -- bash,sh
         "shellcheck",
-        "shfmt",
+        -- TODO: remove shfmt, use bashls instead
+        -- "shfmt",
 
         -- python
         "black",
@@ -97,25 +94,9 @@ return {
     "neovim/nvim-lspconfig",
     event = "LazyFile",
     dependencies = {
-      -- {
-      --   "folke/neoconf.nvim",
-      --   cmd = "Neoconf",
-      --   dependencies = { "nvim-lspconfig" },
-      --   opts = {
-      --     library = { plugins = { "neotest", "nvim-dap-ui" }, types = true },
-      --   },
-      -- },
-      {
-        "folke/neodev.nvim",
-        ft = "lua",
-        opts = { library = { plugins = { "nvim-dap-ui" } } },
-      },
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
-      {
-        "b0o/SchemaStore.nvim",
-        version = false, -- last release is way too old
-      },
+      { "b0o/SchemaStore.nvim", version = false },
       {
         -- TODO: check dan pakai plugin ini, kalau sudah di update error nya
         -- check langsung repo github nya
@@ -140,6 +121,9 @@ return {
       },
     },
     opts = function()
+      local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
+      local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
+
       return {
         -- options for vim.diagnostic.config()
         ---@type vim.diagnostic.Opts
@@ -203,14 +187,14 @@ return {
               complete_function_calls = true,
               vtsls = {
                 enableMoveToFileCodeAction = true,
-              },
-              typescript = {
-                updateImportsOnFileMove = { enabled = "always" },
                 experimental = {
                   completion = {
                     enableServerSideFuzzyMatch = true,
                   },
                 },
+              },
+              typescript = {
+                updateImportsOnFileMove = { enabled = "always" },
                 suggest = {
                   completeFunctionCalls = true,
                 },
@@ -233,21 +217,28 @@ return {
                 desc = "LSP: goto source definition",
               },
               {
-                "<leader>co",
+                "<Leader>fh",
+                function()
+                  vim.cmd.RustLsp "openDocs"
+                end,
+                desc = "LSP: open rust docs",
+              },
+              {
+                "<Leader>co",
                 function()
                   require("vtsls").commands.organize_imports(0)
                 end,
                 desc = "LSP: organize imports",
               },
               {
-                "<leader>cM",
+                "<Leader>cM",
                 function()
                   require("vtsls").commands.add_missing_imports(0)
                 end,
                 desc = "LSP: add missing imports",
               },
               {
-                "<leader>cD",
+                "<Leader>cD",
                 function()
                   require("vtsls").commands.fix_all(0)
                 end,
@@ -439,6 +430,18 @@ return {
           },
         },
         setup = {
+          rust_analyzer = function()
+            return true
+          end,
+          tsserver = function()
+            -- disable tsserver
+            return true
+          end,
+          vtsls = function(_, opts)
+            -- copy typescript settings to javascript
+            opts.settings.javascript =
+              vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
+          end,
           eslint = function()
             local function get_client(buf)
               return RUtils.lsp.get_clients({ name = "eslint", bufnr = buf })[1]
@@ -497,21 +500,19 @@ return {
               if client.name == "gopls" then
                 if not client.server_capabilities.semanticTokensProvider then
                   local semantic = client.config.capabilities.textDocument.semanticTokens
-                  client.server_capabilities.semanticTokensProvider = {
-                    full = true,
-                    legend = {
-                      tokenTypes = semantic.tokenTypes,
-                      tokenModifiers = semantic.tokenModifiers,
-                    },
-                    range = true,
-                  }
+                  if semantic then
+                    client.server_capabilities.semanticTokensProvider = {
+                      full = true,
+                      legend = {
+                        tokenTypes = semantic.tokenTypes,
+                        tokenModifiers = semantic.tokenModifiers,
+                      },
+                      range = true,
+                    }
+                  end
                 end
               end
             end)
-          end,
-          tsserver = function()
-            -- disable tsserver
-            return true
           end,
           tailwindcss = function(_, opts)
             local tw = require "lspconfig.server_configurations.tailwindcss"
@@ -533,8 +534,6 @@ return {
       }
     end,
     config = function(_, opts)
-      opts.servers.vtsls.settings.javascript = vim.deepcopy(opts.servers.vtsls.settings.typescript)
-
       if RUtils.has "neoconf.nvim" then
         require("neoconf").setup(RUtils.opts "neoconf.nvim")
       end
@@ -652,6 +651,30 @@ return {
       end
     end,
   },
+  -- LAZYDEV
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    enabled = false,
+    opts = function()
+      return {
+        library = {
+          uv = "luvit-meta/library",
+          lazyvim = "LazyVim",
+        },
+      }
+    end,
+  },
+  -- LIVIT_META
+  -- Manage libuv types with lazy. Plugin will never be loaded
+  { "Bilal2453/luvit-meta", lazy = true },
+  -- Add lazydev source to cmp
+  {
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      table.insert(opts.sources, { name = "lazydev", group_index = 0 })
+    end,
+  },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   CMAKE                                                  │
   --  ╰──────────────────────────────────────────────────────────╯
@@ -686,19 +709,16 @@ return {
     opts = {
       server = {
         on_attach = function(_, bufnr)
-          vim.keymap.set("n", "<leader>cR", function()
+          vim.keymap.set("n", "<Leader>cR", function()
             vim.cmd.RustLsp "codeAction"
           end, { desc = "LSP: code action [rustaceanvim]", buffer = bufnr })
-          vim.keymap.set("n", "<leader>dd", function()
+          vim.keymap.set("n", "<Leader>dd", function()
             vim.cmd.RustLsp "debuggables"
           end, { desc = "Debug: rust debuggables [rustaceanvim]", buffer = bufnr })
         end,
         default_settings = {
           -- rust-analyzer language server configuration
           ["rust-analyzer"] = {
-            rustfmt = {
-              extraArgs = { "+nightly", "--unstable-features" },
-            },
             cargo = {
               allFeatures = true,
               loadOutDirsFromCheck = true,
@@ -756,7 +776,24 @@ return {
         "dmmulroy/tsc.nvim",
         cmd = { "TSC" },
         config = function()
-          require("tsc").setup()
+          require("tsc").setup {
+            auto_open_qflist = true,
+            auto_close_qflist = false,
+            auto_focus_qflist = false,
+            auto_start_watch_mode = false,
+            use_trouble_qflist = false,
+            use_diagnostics = false,
+            run_as_monorepo = false,
+            bin_path = utils.find_tsc_bin(),
+            enable_progress_notifications = true,
+            flags = {
+              noEmit = true,
+              watch = false,
+            },
+            hide_progress_notifications_from_history = true,
+            spinner = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
+            pretty_errors = true,
+          }
           vim.api.nvim_exec_autocmds("FileType", {})
         end,
       },

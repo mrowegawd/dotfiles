@@ -930,6 +930,100 @@ return {
       },
     },
   },
+  -- NVIM-SURROUND (disabled)
+  {
+    "kylechui/nvim-surround",
+    enabled = false,
+    event = "BufReadPost",
+    version = "*",
+    keys = {
+      "<Leader>s", -- how to use it: ysiw, yd<brackets>, yc<brackets>
+      "<Leader>ss",
+      "<Leader>sS",
+      "<Leader>sc",
+      "<Leader>sd",
+      { "s", "S", remap = true, mode = { "x" } },
+      -- { "<C-v>s", mode = { "i" } },
+      -- { "<C-v>S", mode = { "i" } },
+    },
+    config = function()
+      local input = require("nvim-surround.input").get_input
+      require("nvim-surround").setup {
+        keymaps = {
+          insert = "<C-v>s",
+          insert_line = "<C-v>S",
+          visual = "S",
+          visual_line = "gS",
+          normal = "<space>s",
+          normal_cur = "<space>ss",
+          normal_line = "<space>sS",
+          normal_cur_line = "<space>SS",
+          delete = "<space>sd",
+          change = "<space>sc",
+          change_line = "<space>sC",
+        },
+        -- Configuration here, or leave empty to use defaults
+        aliases = {
+          ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- any delimiter
+          ["b"] = { "{", "[", "(", "<" }, -- bracket
+          ["p"] = { "(" },
+        },
+        surrounds = {
+          ["f"] = {
+            change = {
+              target = "^.-([%w_.]+!?)()%(.-%)()()$",
+              replacement = function()
+                local result = input "Enter the function name: "
+                if result then
+                  return { { result }, { "" } }
+                end
+              end,
+            },
+          },
+          ["g"] = {
+            add = function()
+              local result = require("nvim-surround.config").get_input "Enter the generic name: "
+              if result then
+                return {
+                  { result .. "<" },
+                  { ">" },
+                }
+              end
+            end,
+            find = "[%w_]-<.->",
+            delete = "^([%w_]-<)().-(>)()$",
+          },
+          ["G"] = {
+            add = function()
+              local result = require("nvim-surround.config").get_input "Enter the generic name: "
+              if result then
+                return {
+                  { result .. "<" },
+                  { ">" },
+                }
+              end
+            end,
+            find = "[%w_]-<.->",
+            delete = "^([%w_]-<)().-(>)()$",
+          },
+        },
+        move_cursor = false,
+      }
+    end,
+  },
+  -- MINI.COMMENT (disabled)
+  {
+    "echasnovski/mini.comment",
+    event = "VeryLazy",
+    enabled = vim.fn.has "nvim-0.10" == 0,
+    opts = {
+      options = {
+        custom_commentstring = function()
+          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+        end,
+      },
+    },
+  },
   -- TMUX.NVIM (disabled)
   {
     "aserowy/tmux.nvim",
@@ -1278,6 +1372,7 @@ return {
   {
     "itchyny/calendar.vim",
     cmd = { "Calendar" },
+    config = true,
     lazy = false,
     keys = {
       { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
@@ -3572,7 +3667,7 @@ return {
       { icon = "", pos = "left", titles = { "Outline" } },
     },
   },
-  -- MINI-SURROUND
+  -- MINI-SURROUND (disabled)
   {
     "echasnovski/mini.surround",
     enabled = false,
