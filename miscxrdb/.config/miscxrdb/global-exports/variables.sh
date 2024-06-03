@@ -25,7 +25,7 @@ fi
 # nnn -c
 # lf
 # yazi
-export TERM_FILEMANAGER="lf"
+export TERM_FILEMANAGER="nnn -c"
 
 #
 # }}}
