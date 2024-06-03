@@ -97,7 +97,7 @@ if wezterm.target_triple:find("windows") then
 		},
 	}
 	-- config.default_prog = { "pwsh" }
-	config.font_size = 9 -- pengaturan font agar mudah dibaca
+	config.font_size = 7 -- pengaturan font agar mudah dibaca
 	config.window_decorations = "RESIZE"
 	wezterm.on("gui-startup", function(cmd)
 		local screen = wezterm.gui.screens().active
@@ -118,7 +118,7 @@ else
 	config.font_size = 11 -- pengaturan font agar mudah dibaca
 end
 
--- [1.0] alpha channel value with floating point numbers in the range 0.0
+-- [1.0] alpha channel value with oating point numbers in the range 0.0
 -- (meaning completely translucent/transparent) through to 1.0 (meaning
 -- completely opaque)- Base
 -- window_background_opacity = 0.7,
@@ -196,25 +196,25 @@ config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
 config.font_rules = {
 	{
-		italic = false,
+		-- Normal
 		intensity = "Normal",
-		font = font_with_fallback("Monaspace Neon ExtraLight", {}),
+		font = font_with_fallback("Liga SFMono Nerd Font", { weight = "Regular" }),
 	},
 	{
+		-- Bold
 		italic = false,
-		-- intensity = "Bold",
-		font = font_with_fallback("SF Mono", { weight = "Bold" }),
+		font = font_with_fallback("Liga SFMono Nerd Font", { weight = "Bold" }),
 	},
-	{
-		italic = false,
-		-- intensity = "Normal",
-		font = font_with_fallback("Victor Mono", { weight = "Regular" }),
-	},
-	{
-		italic = false,
-		-- intensity = "Bold",
-		font = font_with_fallback("Victor Mono", {}),
-	},
+	-- {
+	-- 	-- italic = true,
+	-- 	intensity = "Half",
+	-- 	font = font_with_fallback("JetBrains Mono", { bold = false, italic = true }),
+	-- },
+	-- {
+	-- italic = false,
+	-- intensity = "Bold",
+	-- font = font_with_fallback("Victor Mono"),
+	-- },
 }
 
 -- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
