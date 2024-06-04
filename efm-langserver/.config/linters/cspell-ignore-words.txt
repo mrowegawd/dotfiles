@@ -11,3 +11,5 @@ maka
 shit
 crate
 Crate
+dosen
+samping
