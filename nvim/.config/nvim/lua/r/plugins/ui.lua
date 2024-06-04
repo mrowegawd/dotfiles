@@ -248,7 +248,7 @@ return {
     opts = {},
     keys = {
       {
-        "<F1>",
+        "tt",
         function()
           require("fold-cycle").open()
         end,
