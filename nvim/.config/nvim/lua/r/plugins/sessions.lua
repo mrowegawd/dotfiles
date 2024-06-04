@@ -1,36 +1,73 @@
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
-local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf" }
+local visible_buffers = {}
 
 return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
   --  ╰──────────────────────────────────────────────────────────╯
-
-  -- PERSISTENCE
   {
-    "folke/persistence.nvim",
-    event = "BufReadPre",
+    "stevearc/resession.nvim",
+    -- lazy = vim.fn.argc(-1) == 0,
+    event = "LazyFile",
     opts = {
+      autosave = {
+        enabled = true,
+        notify = false,
+      },
+      buf_filter = function(bufnr)
+        if not require("resession").default_buf_filter(bufnr) then
+          return false
+        end
+        return visible_buffers[bufnr]
+      end,
+      extensions = { quickfix = {} },
+    },
+    config = function(_, opts)
+      local resession = require "resession"
+      resession.setup(opts)
 
-      -- local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
-      opts = { options = vim.opt.sessionoptions:get() },
-      pre_save = function()
-        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
-          if vim.fn.buflisted(bufnr) == 1 then
-            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
-              vim.api.nvim_buf_delete(bufnr, {})
-            end
+      resession.add_hook("pre_save", function()
+        visible_buffers = {}
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+          if vim.api.nvim_win_is_valid(winid) then
+            visible_buffers[vim.api.nvim_win_get_buf(winid)] = winid
           end
         end
-      end,
-    },
-    -- stylua: ignore
-    -- keys = {
-    --   { "<Leader>ll", function() require("persistence").load() end, desc = "Misc: restore session [persistence]" },
-    --   { "<Leader>lL", function() require("persistence").load { last = true } end, desc = "Misc: restore last session [persistence]" },
-    --   { "<Leader>ls", function() require("persistence").stop() end, desc = "Misc: don't save current session [persistence]" },
-    -- },
+      end)
+
+      vim.api.nvim_create_user_command("SessionDetach", function()
+        resession.detach()
+      end, {})
+
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          -- Only load the session if nvim was started with no args
+          if vim.fn.argc(-1) == 0 then
+            -- Save these to a different directory, so our manual sessions don't get polluted
+            resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+          end
+        end,
+      })
+
+      if vim.tbl_contains(resession.list(), "__quicksave__") then
+        vim.defer_fn(function()
+          resession.load("__quicksave__", { attach = false })
+          local ok, err = pcall(resession.delete, "__quicksave__")
+          if not ok then
+            vim.notify(string.format("Error deleting quicksave session: %s", err), vim.log.levels.WARN)
+          end
+        end, 50)
+      end
+
+      RUtils.cmd.augroup("ResessionLeave", {
+        event = { "VimLeavePre" },
+        command = function()
+          -- resession.save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
+          resession.save "last"
+        end,
+      })
+    end,
   },
 
   --  ╭──────────────────────────────────────────────────────────╮

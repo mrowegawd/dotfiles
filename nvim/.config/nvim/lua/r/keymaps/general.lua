@@ -499,10 +499,40 @@ RUtils.map.nnoremap("<Localleader>r", function()
       RUtils.toggle.number()
     end,
     session_load = function()
-      require("persistence").load()
+      if RUtils.has "persistence.nvim" then
+        require("persistence").load()
+      elseif RUtils.has "resession.nvim" then
+        require("resession").load()
+      end
+    end,
+    session_load_cwd = function()
+      if RUtils.has "resession.nvim" then
+        require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+      else
+        RUtils.info "current plugin sessions, dont have this feature. so abort"
+      end
+    end,
+    session_delete = function()
+      if RUtils.has "resession.nvim" then
+        require("resession").delete()
+      else
+        print "do nothing, ignore me"
+      end
     end,
     session_save = function()
-      require("persistence").save()
+      if RUtils.has "persistence.nvim" then
+        require("persistence").save()
+      elseif RUtils.has "resession.nvim" then
+        require("resession").save()
+      end
+    end,
+    session_save_cwd = function()
+      if RUtils.has "resession.nvim" then
+        -- require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+        require("resession").save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
+      else
+        print "do nothinn, ignore me"
+      end
     end,
     toggle_conceallevel = function()
       if checkconceallevel then

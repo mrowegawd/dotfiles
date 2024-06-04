@@ -1,94 +1,6 @@
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- MASON NVIM
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    build = ":MasonUpdate",
-    opts = {
-      ensure_installed = {
-        -- lua
-        "stylua",
-
-        -- ts,js,react
-        "prettierd",
-        -- "typescript-language-server", -- do not install this, let typescript-tools handle this,
-        "js-debug-adapter",
-
-        -- golang
-        "gomodifytags", -- linter
-        "impl", -- linter
-        "delve", -- for debug
-
-        "goimports",
-        "gofumpt",
-        "golangci-lint",
-
-        -- bash,sh
-        "shellcheck",
-        -- TODO: remove shfmt, use bashls instead
-        -- "shfmt",
-
-        -- python
-        "black",
-        -- "ruff", -- (use ruff insted of 'black' because its is rust, rust is fast!)
-        "debugpy",
-
-        -- rust
-        "codelldb",
-
-        -- cmake
-        "cmakelang",
-        "cmakelint",
-
-        -- kotlin
-        "ktlint",
-        "kotlin-debug-adapter",
-
-        -- markdown
-        "markdownlint",
-        "marksman",
-        "codespell",
-        "cbfmt",
-
-        -- docker
-        "hadolint",
-
-        -- ansible
-        "ansible-language-server",
-        "ansible-lint",
-      },
-      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
-    },
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require "mason-registry"
-      mr:on("package:install:success", function()
-        vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger {
-            event = "FileType",
-            buf = vim.api.nvim_get_current_buf(),
-          }
-        end, 100)
-      end)
-
-      local function ensure_installed()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end
-      if mr.refresh then
-        mr.refresh(ensure_installed)
-      else
-        ensure_installed()
-      end
-    end,
-  },
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
@@ -120,6 +32,7 @@ return {
         end,
       },
     },
+    ---@class PluginLspOpts
     opts = function()
       local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
       local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
@@ -429,6 +342,7 @@ return {
             },
           },
         },
+        ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
         setup = {
           rust_analyzer = function()
             return true
@@ -533,6 +447,7 @@ return {
         },
       }
     end,
+    ---@param opts PluginLspOpts
     config = function(_, opts)
       if RUtils.has "neoconf.nvim" then
         require("neoconf").setup(RUtils.opts "neoconf.nvim")
@@ -645,30 +560,119 @@ return {
       if RUtils.lsp.is_enabled "denols" and RUtils.lsp.is_enabled "vtsls" then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
         RUtils.lsp.disable("vtsls", is_deno)
-        RUtils.lsp.disable("denols", function(root_dir)
-          return not is_deno(root_dir)
+        RUtils.lsp.disable("denols", function(root_dir, config)
+          if not is_deno(root_dir) then
+            config.settings.deno.enable = false
+          end
+          return false
         end)
       end
+    end,
+  },
+  -- MASON NVIM
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    opts = {
+      ensure_installed = {
+        -- lua
+        "stylua",
+
+        -- ts,js,react
+        "prettierd",
+        -- "typescript-language-server", -- do not install this, let typescript-tools handle this,
+        "js-debug-adapter",
+
+        -- golang
+        "gomodifytags", -- linter
+        "impl", -- linter
+        "delve", -- for debug
+
+        "goimports",
+        "gofumpt",
+        "golangci-lint",
+
+        -- bash,sh
+        "shellcheck",
+        -- TODO: remove shfmt, use bashls instead
+        -- "shfmt",
+
+        -- python
+        "black",
+        -- "ruff", -- (use ruff insted of 'black' because its is rust, rust is fast!)
+        "debugpy",
+
+        -- rust
+        "codelldb",
+
+        -- cmake
+        "cmakelang",
+        "cmakelint",
+
+        -- kotlin
+        "ktlint",
+        "kotlin-debug-adapter",
+
+        -- markdown
+        "markdownlint",
+        "marksman",
+        "codespell",
+        "cbfmt",
+
+        -- docker
+        "hadolint",
+
+        -- ansible
+        "ansible-language-server",
+        "ansible-lint",
+      },
+      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
+    },
+    ---@param opts MasonSettings | {ensure_installed: string[]}
+    config = function(_, opts)
+      require("mason").setup(opts)
+      local mr = require "mason-registry"
+      mr:on("package:install:success", function()
+        vim.defer_fn(function()
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger {
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          }
+        end, 100)
+      end)
+
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+          end
+        end
+      end)
     end,
   },
   -- LAZYDEV
   {
     "folke/lazydev.nvim",
     ft = "lua",
-    enabled = false,
-    opts = function()
-      return {
-        library = {
-          uv = "luvit-meta/library",
-          lazyvim = "LazyVim",
-        },
-      }
-    end,
+    cmd = "LazyDev",
+    opts = {
+      library = {
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
+        -- { path = "LazyVim", words = { "LazyVim" } },
+        { path = "lazy.nvim", words = { "LazyVim" } },
+      },
+    },
   },
   -- LIVIT_META
-  -- Manage libuv types with lazy. Plugin will never be loaded
-  { "Bilal2453/luvit-meta", lazy = true },
-  -- Add lazydev source to cmp
+  {
+    -- Manage libuv types with lazy. Plugin will never be loaded
+    "Bilal2453/luvit-meta",
+    lazy = true,
+  },
+  -- CMP (Add lazydev source to cmp)
   {
     "hrsh7th/nvim-cmp",
     opts = function(_, opts)
