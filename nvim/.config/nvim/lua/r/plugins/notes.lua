@@ -598,21 +598,10 @@ return {
     "renerocksai/calendar-vim",
     cmd = "Calendar",
   },
-  -- RENDER MARKDOWN (disabled)
-  {
-    "MeanderingProgrammer/markdown.nvim",
-    enabled = false,
-    name = "render-markdown", -- Only needed if you have another plugin named markdown.nvim
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require("render-markdown").setup {}
-    end,
-  },
   -- IMAGE.NVIM
   {
     "3rd/image.nvim",
-    -- event = "LazyFile",
-    ft = { "markdown", "norg", "oil" },
+    ft = { "markdown", "norg", "oil", "octo" },
     enabled = function()
       if vim.g.neovide then
         return false
