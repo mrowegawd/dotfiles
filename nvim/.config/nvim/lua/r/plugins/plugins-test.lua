@@ -297,30 +297,6 @@ return {
       },
     },
   },
-  -- GRUG-FAR.NVIM (disabled)
-  {
-    "MagicDuck/grug-far.nvim",
-    cmd = { "GrugFar" },
-    enabled = false,
-    keys = {
-      {
-        "<Leader><s-f>",
-        "<CMD>GrugFar<CR>",
-        desc = "Misc: open grug [grugfar]",
-      },
-      {
-        "<Leader>sf",
-        function()
-          -- require("grug-far").grug_far { prefills = { search = vim.fn.expand "<cword>" } }
-          require("grug-far").grug_far { prefills = { flags = vim.fn.expand "%" } }
-        end,
-        desc = "Misc: open grug on curbuf [grugfar]",
-      },
-    },
-    config = function()
-      require("grug-far").setup()
-    end,
-  },
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
@@ -366,50 +342,6 @@ return {
       }
     end,
   },
-  -- SYMBOL-USAGE
-  {
-    "Wansmer/symbol-usage.nvim",
-    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
-    enabled = false,
-    config = true,
-    opts = function()
-      Highlight.plugin("SymbolUsageCol", {
-        theme = {
-          ["*"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["kanagawa"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["bamboo"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-          },
-          ["nord"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-          },
-          ["farout"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 2.6 } } },
-          },
-          ["ayu"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 2.6 } } },
-          },
-          ["miasma"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
-          },
-          ["gruvbox-material"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-          },
-          ["catppuccin-latte"] = {
-            { MyCodeUsage = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-          },
-        },
-      })
-      return {
-        hl = { link = "MyCodeUsage" },
-        disable = { filetypes = { "dockerfile", "markdown", "org" } },
-      }
-    end,
-  },
   -- GENTAGS (disabled)
   {
     "linrongbin16/gentags.nvim",
@@ -421,6 +353,7 @@ return {
   -- MINI.SESSIONS
   {
     "echasnovski/mini.sessions",
+    enabled = false,
     version = "*",
     event = "BufReadPre",
     keys = {
@@ -538,52 +471,6 @@ return {
         },
       }
     end,
-  },
-  -- FLASH.NVIM
-  {
-    "folke/flash.nvim",
-    enabled = false,
-    opts = function()
-      Highlight.plugin("flash.nvim", {
-        {
-          FlashMatch = {
-            bg = "white",
-            fg = "black",
-            bold = true,
-          },
-        },
-        {
-          FlashLabel = {
-            bg = { from = "Normal", attr = "bg", alter = -0.1 },
-            fg = { from = "ErrorMsg", attr = "fg" },
-            bold = true,
-            strikethrough = false,
-          },
-        },
-        { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
-      })
-      return {
-        modes = {
-          char = {
-            keys = { "F", "t", "T", ";" }, -- remove "," from keys
-          },
-          search = {
-            enabled = false,
-          },
-        },
-        jump = {
-          nohlsearch = true,
-        },
-      }
-    end,
-    -- stylua: ignore
-    keys = {
-      { "f", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
-      -- { "S", function() require("flash").treesitter() end, mode = { "o", "x" } },
-      -- { "r", function() require("flash").remote() end, mode = "o", desc = "Remote Flash" },
-      -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Toggle Flash Search" },
-      -- { "R", function() require("flash").treesitter_search() end, mode = { "o", "x" }, desc = "Flash Treesitter Search" },
-    },
   },
   -- OUTLINE.NVIM (false)
   {
@@ -2872,51 +2759,31 @@ return {
       require("nvim-possession").setup(opts)
     end,
   },
-  -- RESESSION (disabled)
+  -- PERSISTENCE (disabled)
   {
-    "stevearc/resession.nvim",
-    event = "LazyFile",
-    -- stylua: ignore
-    keys = {
-      { "<Leader>sl", function() require("resession").load() end, desc = "Misc(resession): load from the list" },
-      { "<Leader>sd", function() require("resession").delete() end, desc = "Misc(resession): delete" },
-      { "<Leader>ss", function() require("resession").save() end, desc = "Misc(resession): save" },
-      { "<Leader>sr", function() require("resession").load(nil, {reset = false}) end, desc = "Misc(resession): save without reset" },
-    },
+    "folke/persistence.nvim",
+    enabled = false,
+    event = "BufReadPre",
     opts = {
-      autosave = {
-        enabled = true,
-        notify = false,
-      },
-      -- extensions = {
-      --   oil = {},
-      -- },
-    },
-    config = function(_, opts)
-      local resession = require "resession"
-      local aug = vim.api.nvim_create_augroup("StevearcResession", {})
-      resession.setup(opts)
 
-      vim.api.nvim_create_user_command("SessionDetach", function()
-        resession.detach()
-      end, {})
-
-      vim.api.nvim_create_autocmd("VimEnter", {
-        callback = function()
-          -- Only load the session if nvim was started with no args
-          if vim.fn.argc(-1) == 0 then
-            -- Save these to a different directory, so our manual sessions don't get polluted
-            resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+      -- local ignore_fts_session = { "gitcommit", "gitrebase", "alpha", "norg", "org", "orgmode", "conf", "markdown" }
+      opts = { options = vim.opt.sessionoptions:get() },
+      pre_save = function()
+        for _, bufnr in pairs(vim.api.nvim_list_bufs()) do
+          if vim.fn.buflisted(bufnr) == 1 then
+            if vim.tbl_contains(ignore_fts_session, vim.api.nvim_get_option_value("filetype", { buf = bufnr })) then
+              vim.api.nvim_buf_delete(bufnr, {})
+            end
           end
-        end,
-      })
-      vim.api.nvim_create_autocmd("VimLeavePre", {
-        group = aug,
-        callback = function()
-          resession.save "last"
-        end,
-      })
-    end,
+        end
+      end,
+    },
+    -- stylua: ignore
+    -- keys = {
+    --   { "<Leader>ll", function() require("persistence").load() end, desc = "Misc: restore session [persistence]" },
+    --   { "<Leader>lL", function() require("persistence").load { last = true } end, desc = "Misc: restore last session [persistence]" },
+    --   { "<Leader>ls", function() require("persistence").stop() end, desc = "Misc: don't save current session [persistence]" },
+    -- },
   },
   -- NEOVIM-SESSION-MANAGER (disabled)
   {
@@ -3405,16 +3272,6 @@ return {
     config = function(_, opts)
       require("lsp_signature").setup(opts)
     end,
-  },
-  -- INCRENAME (disabled)
-  {
-    "smjonas/inc-rename.nvim",
-    enabled = false,
-    opts = {
-      show_message = false,
-      hl_group = "MyQuickFixLineEnter", -- the highlight group used for highlighting the identifier's new name
-      preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancel
-    },
   },
   -- BARBAR.NVIM
   {
