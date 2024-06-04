@@ -21,8 +21,8 @@ return {
         },
         {
           FlashLabel = {
-            bg = "black",
-            fg = "yellow",
+            fg = "black",
+            bg = "yellow",
             bold = true,
             strikethrough = false,
           },
