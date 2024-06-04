@@ -7,8 +7,6 @@ vim.opt.list = false
 
 vim.b.make = "luajit"
 
-RUtils.write_and_source(0)
-
 -- local run_toggleterm = function()
 --   vim.cmd "silent noautocmd update"
 --   vim.cmd(string.format('TermExec cmd="%s %s"', "nvim -ll", vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p")))

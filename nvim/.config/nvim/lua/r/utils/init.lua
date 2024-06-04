@@ -223,16 +223,6 @@ function M.disable_ctrl_i_and_o(au_name, tbl_ft)
   })
 end
 
----Write current file and source it within current nvim instance
----@param buf number Bufner to attach mapping to
-function M.write_and_source(buf)
-  vim.keymap.set("n", "<F6>", function()
-    vim.cmd.write()
-    vim.cmd.source "%"
-    vim.notify "Sourcing..."
-  end, { buffer = buf, desc = "Evaluate current file" })
-end
-
 ---@generic T
 ---@param list T[]
 ---@return T[]
