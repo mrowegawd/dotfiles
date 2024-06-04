@@ -98,7 +98,7 @@ return {
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    event = "BufReadPre",
+    event = "VimEnter",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",

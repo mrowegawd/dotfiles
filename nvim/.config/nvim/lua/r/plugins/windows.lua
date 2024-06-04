@@ -9,7 +9,8 @@ return {
   -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
-    event = "LazyFile",
+    event = "VimEnter",
+    -- event = "LazyFile",
     opts = {
       -- Ignored filetypes (only while resizing)
       ignored_filetypes = {
