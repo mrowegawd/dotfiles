@@ -662,20 +662,33 @@ M.Sessions = {
   end,
   {
     provider = function()
-      local ok, ses_persistent = pcall(require, "persistence")
-      if not ok then
-        return "%#MyStatusLine_notif_fg# (manual)%* "
+      local sess_icon = ""
+      local sess_status = "off"
+
+      if RUtils.has "persistence.nvim" then
+        local ok, ses_persistent = pcall(require, "persistence")
+        if not ok then
+          sess_status = "off"
+        else
+          local ses_persistent_get_current = ses_persistent.get_current()
+          local sess = vim.fn.filereadable(ses_persistent_get_current) == 1
+          if sess ~= nil then
+            sess_status = "on"
+          end
+        end
+      elseif RUtils.has "resession.nvim" then
+        local ok, ses_resession = pcall(require, "resession")
+        if not ok then
+          sess_status = "off"
+        else
+          local ses_resession_get_current = ses_resession.get_current()
+          if ses_resession_get_current ~= nil then
+            sess_status = "on"
+          end
+        end
       end
 
-      local ses_persistent_get_current = ses_persistent.get_current()
-      local sess = vim.fn.filereadable(ses_persistent_get_current) == 1
-      if sess ~= nil then
-        -- return "%#MyStatusLine_notif_fg# On%* "
-        return " On "
-      end
-
-      -- return "%#MyStatusLine_notif_fg# off%* "
-      return " off "
+      return sess_icon .. " " .. sess_status .. " "
     end,
     hl = { fg = colors.diagnostic_warn },
   },
