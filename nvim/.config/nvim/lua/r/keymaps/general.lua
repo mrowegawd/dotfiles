@@ -7,9 +7,9 @@ local function not_vscode()
   return vim.fn.exists "g:vscode" == 0
 end
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ EDITING TEXT                                             │
---  ╰──────────────────────────────────────────────────────────╯
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ EDITING TEXT                                             │
+-- ╰──────────────────────────────────────────────────────────╯
 -- jk is escape, THEN move to the right to preserve the cursor position, unless
 -- at the first column.  <esc> will continue to work the default way.
 -- NOTE: this is a recursive mapping so anything bound (by a plugin) to <esc> still works
@@ -57,9 +57,9 @@ end
 --   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "A" or '"_cc'
 -- end, moresilent)
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ MARKS                                                    │
---  ╰──────────────────────────────────────────────────────────╯
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ MARKS                                                    │
+-- ╰──────────────────────────────────────────────────────────╯
 -- Map gm to `. Instead of `a, hit gma. See :help mark-motions as to why we use backtick.
 -- nnoremap("gm", "`", { noremap = false })
 
@@ -74,10 +74,9 @@ end
 -- nnoremap("<c-o>", "<c-o>zz")
 -- nnoremap("<c-i>", "<c-i>zz")
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ FOLDS                                                    │
---  ╰──────────────────────────────────────────────────────────╯
-
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ FOLDS                                                    │
+-- ╰──────────────────────────────────────────────────────────╯
 -- Focus the current fold by closing all others
 -- RUtils.map.nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
 RUtils.map.nnoremap("<space><space>", "za", { desc = "Fold: focus the current fold by closing all others" })
@@ -97,9 +96,9 @@ RUtils.map.nnoremap("<a-p>", function()
   return RUtils.fold.magic_prev_next_move(true)
 end, { desc = "Fold: go prev closed" })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ VISUAL                                                   │
---  ╰──────────────────────────────────────────────────────────╯
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ VISUAL                                                   │
+-- ╰──────────────────────────────────────────────────────────╯
 -- Cara mudah untuk cursor dari bawah ke atas dalam visual mode
 RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
 RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
@@ -111,9 +110,9 @@ RUtils.map.nnoremap("vv", [[^vg_]], { desc = "View: select text lines" })
 RUtils.map.vnoremap(">", ">gv", { desc = "View: next align lines (visual)" })
 RUtils.map.vnoremap("<", "<gv", { desc = "View: prev align lines (visual)" })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ MISC                                                     │
---  ╰──────────────────────────────────────────────────────────╯
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ MISC                                                     │
+-- ╰──────────────────────────────────────────────────────────╯
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 
 -- RUtils.map.nnoremap("<TAB>", function()
@@ -133,7 +132,7 @@ RUtils.map.nnoremap("<Leader>cd", function()
 end, { desc = "Misc: change cur pwd to curfile" })
 
 RUtils.map.nnoremap("<Leader>n", function()
-  require("notify").dismiss {}
+  -- require("notify").dismiss {}
   cmd.nohl()
   -- return cmd [[let @/ = ""]]
 end, { desc = "Misc: clear searches" })
@@ -212,9 +211,18 @@ RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and repl
 --   replace_keymap(true, true)
 -- end, { desc = "Misc: find and replace selected with confirmation" })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ WINDOWS, VIEW AND NAV                                    │
---  ╰──────────────────────────────────────────────────────────╯
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ TERMINAL                                                │
+-- ╰─────────────────────────────────────────────────────────╯
+RUtils.map.tnoremap("<c-h>", "<Left>", { desc = "Terminal: left char" })
+RUtils.map.tnoremap("<c-l>", "<Right>", { desc = "Terminal: right char" })
+RUtils.map.tnoremap("<c-b>", "<c-Left>", { desc = "Terminal: backward" })
+RUtils.map.tnoremap("<c-f>", "<c-Right>", { desc = "Terminal: forward" })
+RUtils.map.tnoremap("<c-w>", "<BS>", { desc = "Terminal: del char" })
+
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ WINDOWS, VIEW AND NAV                                    │
+-- ╰──────────────────────────────────────────────────────────╯
 
 RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
 RUtils.map.nnoremap("ss", "<CMD>split|wincmd p<CR>", { desc = "View: horizontal split", silent = true })
@@ -283,9 +291,9 @@ end, { desc = "Misc: magic move gl" })
 -- RUtils.map.nnoremap("<S-Left>", "<CMD>colder<CR>", { desc = "qf: prev stack" })
 -- RUtils.map.nnoremap("<S-Right>", "<CMD>cnewer<CR>", { desc = "qf: next stack" })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ COMMANDLINE                                              │
---  ╰──────────────────────────────────────────────────────────╯
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ COMMANDLINE                                              │
+-- ╰──────────────────────────────────────────────────────────╯
 RUtils.map.cnoremap("hh", "<c-c>", { desc = "Commandline: exit from cmdline" })
 -- RUtils.map.cnoremap("<c-c>", "<Esc>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
@@ -300,10 +308,9 @@ RUtils.map.cnoremap("<c-h>", "<Left>", { desc = "Commandline: prev word" })
 RUtils.map.cnoremap("<c-f>", "<S-Right>")
 RUtils.map.cnoremap("<c-b>", "<S-Left>")
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ CABBREV                                                  │
---  ╰──────────────────────────────────────────────────────────╯
-
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ CABBREV                                                  │
+-- ╰──────────────────────────────────────────────────────────╯
 RUtils.map.cabbrev("BD", "bd!")
 RUtils.map.cabbrev("Bd", "bd!")
 RUtils.map.cabbrev("Bd", "bd!")
@@ -333,10 +340,9 @@ RUtils.map.cabbrev("w;", "update!")
 -- RUtils.map.imap("<F1>", "<Nop>")
 RUtils.map.vmap("K", "<Nop>")
 
---  ┌──────────────────────────────────────────────────────────┐
---  │                          MAGIC                           │
---  └──────────────────────────────────────────────────────────┘
-
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ MAGIC                                                   │
+-- ╰─────────────────────────────────────────────────────────╯
 -- Exit or delete a buffer
 local function magic_quit()
   local buf_fts = {
@@ -396,10 +402,9 @@ RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(true)
 end, { desc = "Misc: magic follow link (visual)" })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ COMMANDS                                                 │
---  ╰──────────────────────────────────────────────────────────╯
-
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ COMMANDS                                                 │
+-- ╰──────────────────────────────────────────────────────────╯
 RUtils.cmd.create_command("Snippets", function()
   return RUtils.plugin.EditSnippet()
 end, { desc = "Snippet: edit snippet file" })
@@ -424,10 +429,9 @@ RUtils.cmd.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: echo options" })
 
---  ╭──────────────────────────────────────────────────────────╮
---  │ Improve scroll, credits: https://github.com/Shougo       │
---  ╰──────────────────────────────────────────────────────────╯
-
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ Improve scroll, credits: https://github.com/Shougo       │
+-- ╰──────────────────────────────────────────────────────────╯
 RUtils.map.nnoremap(
   "zz",
   [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],

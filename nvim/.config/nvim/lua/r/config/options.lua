@@ -311,7 +311,7 @@ opt.diffopt = opt.diffopt
     "algorithm:histogram", -- "algorithm:patience"
     "indent-heuristic",
   }
-opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "terminal" }
 
 -- HACK: causes freezes on <= 0.9, so only enable on >= 0.10 for now
 if vim.fn.has "nvim-0.10" == 1 then
