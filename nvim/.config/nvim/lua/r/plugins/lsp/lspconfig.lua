@@ -846,6 +846,7 @@ return {
   -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
+    event = "VimEnter",
     ft = "markdown",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
@@ -856,8 +857,10 @@ return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   PYTHON                                                 │
   --  ╰──────────────────────────────────────────────────────────╯
+  -- SEMSHI (disabled)
   {
     "wookayin/semshi", -- use a maintained fork
+    enabled = false,
     ft = "python",
     build = ":UpdateRemotePlugins",
     init = function()

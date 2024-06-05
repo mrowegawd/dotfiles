@@ -5,6 +5,7 @@ return {
   -- INDENTMINI
   {
     "nvimdev/indentmini.nvim",
+    event = "LazyFile",
     config = function()
       Highlight.plugin("indentmini", {
         theme = {
@@ -752,12 +753,5 @@ return {
         },
       }
     end,
-  },
-  -- NUI-COMPONENTS
-  {
-    "grapp-dev/nui-components.nvim",
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-    },
   },
 }
