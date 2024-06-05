@@ -1,5 +1,3 @@
-local Highlight = require "r.settings.highlights"
-
 return {
   -- NVIM-LSPCONFIG
   {
@@ -62,6 +60,8 @@ return {
           enabled = false,
           exclude = {}, -- filetypes for which you don't want to enable inlay hints
         },
+        codelens = { enabled = false },
+        document_highlight = { enabled = true },
         capabilities = {},
         format = { formatting_options = nil, timeout_ms = nil },
         -- LSP Server Settings
@@ -105,13 +105,6 @@ return {
                   require("vtsls").commands.goto_source_definition(0)
                 end,
                 desc = "LSP: goto source definition",
-              },
-              {
-                "<Leader>fh",
-                function()
-                  vim.cmd.RustLsp "openDocs"
-                end,
-                desc = "LSP: open rust docs",
               },
               {
                 "<Leader>co",
@@ -321,9 +314,6 @@ return {
         },
         ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
         setup = {
-          rust_analyzer = function()
-            return true
-          end,
           tsserver = function()
             -- disable tsserver
             return true
@@ -444,18 +434,20 @@ return {
 
       if vim.fn.has "nvim-0.10" == 1 then
         -- inlay hints
-        if not RUtils.has "symbol-usage.nvim" then
-          if opts.inlay_hints.enabled then
-            RUtils.lsp.on_supports_method("textDocument/inlayHint", function(client, buffer)
-              if vim.api.nvim_buf_is_valid(buffer) and vim.bo[buffer].buftype == "" then
-                RUtils.toggle.inlay_hints(buffer, true)
-              end
-            end)
-          end
+        if opts.inlay_hints.enabled then
+          RUtils.lsp.on_supports_method("textDocument/inlayHint", function(client, buffer)
+            if
+              vim.api.nvim_buf_is_valid(buffer)
+              and vim.bo[buffer].buftype == ""
+              and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
+            then
+              RUtils.toggle.inlay_hints(buffer, true)
+            end
+          end)
         end
 
         -- code lens
-        if opts.codelens.enabled and vim.lsp.codelens then
+        if opts.codelens.enabled and vim.bo[buffer].buftype == "" and vim.lsp.codelens then
           RUtils.lsp.on_supports_method("textDocument/codeLens", function(client, buffer)
             vim.lsp.codelens.refresh()
             vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -687,16 +679,34 @@ return {
         end,
       },
     },
+    keys = {
+      {
+        "<Leader>fH",
+        function()
+          vim.cmd.RustLsp "openDocs"
+        end,
+        desc = "LPS: open rust docs [rustaceanvim]",
+        ft = "rust",
+      },
+      {
+        "<Leader>ca",
+        function()
+          vim.cmd.RustLsp "codeAction"
+        end,
+        desc = "LSP: code action [rustaceanvim]",
+        ft = "rust",
+      },
+      {
+        "<Leader>dd",
+        function()
+          vim.cmd.RustLsp "debuggables"
+        end,
+        desc = "Debug: debuggables [rustaceanvim]",
+        ft = "rust",
+      },
+    },
     opts = {
       server = {
-        on_attach = function(_, bufnr)
-          vim.keymap.set("n", "<Leader>cR", function()
-            vim.cmd.RustLsp "codeAction"
-          end, { desc = "LSP: code action [rustaceanvim]", buffer = bufnr })
-          vim.keymap.set("n", "<Leader>dd", function()
-            vim.cmd.RustLsp "debuggables"
-          end, { desc = "Debug: rust debuggables [rustaceanvim]", buffer = bufnr })
-        end,
         default_settings = {
           -- rust-analyzer language server configuration
           ["rust-analyzer"] = {

@@ -144,41 +144,34 @@ return {
         desc = "LSP: workspace symbols [fzflua]",
       },
       { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
+      { "<Leader>fL", require("fzf-lua").command_history, desc = "Fzflua: command history" },
       { "<Leader>fg", require("fzf-lua").live_grep_glob, desc = "Fzflua: live grep" },
       { "<Leader>fg", require("fzf-lua").grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", require("fzf-lua").changes, desc = "Fzflua: changes" },
       { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
       { "<Leader>fm", require("fzf-lua").marks, desc = "Fzflua: marks" },
       { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search history" },
-      { "<Leader>fH", require("fzf-lua").command_history, desc = "Fzflua: command history" },
       {
         "<Leader>fh",
         function()
-          if vim.bo.filetype == "lua" then
-            require("fzf-lua").help_tags { query = vim.fn.expand "<cword>" }
-          elseif vim.bo.filetype == "rust" then
-            vim.cmd.RustLsp "openDocs"
-          end
+          local j = vim.fn.expand "<cword>"
+          require("fzf-lua").help_tags { query = j }
         end,
         desc = "Fzflua: help tags",
       },
       {
         "<Leader>fh",
         function()
-          if vim.bo.filetype == "lua" then
-            local sel = RUtils.cmd.get_visual_selection { strict = true }
-            if sel then
-              local selection = RUtils.cmd.strip_whitespace(sel.selection)
-              local _, err = pcall(function()
-                vim.cmd("h " .. selection)
-              end)
+          local sel = RUtils.cmd.get_visual_selection { strict = true }
+          if sel then
+            local selection = RUtils.cmd.strip_whitespace(sel.selection)
+            local _, err = pcall(function()
+              vim.cmd("h " .. selection)
+            end)
 
-              if err then
-                RUtils.warn(selection .. "-> Not found ", { title = "FzfLua Help" })
-              end
+            if err then
+              RUtils.warn(selection .. "-> Not found ", { title = "FzfLua Help" })
             end
-          elseif vim.bo.filetype == "rust" then
-            vim.cmd.RustLsp "openDocs"
           end
         end,
         mode = { "v" },

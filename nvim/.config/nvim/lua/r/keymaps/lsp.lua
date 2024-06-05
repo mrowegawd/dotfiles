@@ -58,11 +58,36 @@ function M.get()
       desc = "LSP: toggle inlay hint",
     },
     {
-      "<Leader>uu",
+      "<Leader>uc",
       function()
-        require("symbol-usage").toggle()
+        RUtils.toggle.codelens()
       end,
-      desc = "LSP: toggle symbol usage",
+      desc = "LSP: toggle codelens",
+    },
+    {
+      "<Leader>cc",
+      function()
+        vim.lsp.codelens.run()
+      end,
+      desc = "LSP: run codelens",
+    },
+    {
+      "<Leader>cC",
+      function()
+        vim.lsp.codelens.refresh()
+      end,
+      desc = "LSP: codelens refresh",
+    },
+    {
+      "<Leader>us",
+      function()
+        if RUtils.has "symbol-usage.nvim" then
+          require("symbol-usage").toggle()
+        else
+          print "symbol-usage is not installed"
+        end
+      end,
+      desc = "LSP: symbol-usage [symbol-usage]",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics
