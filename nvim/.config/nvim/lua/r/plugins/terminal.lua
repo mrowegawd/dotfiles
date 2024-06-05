@@ -196,24 +196,18 @@ return {
       {
         "<a-f>",
         function()
-          -- if vim.bo.filetype == "neo-tree" then
-          --   vim.cmd "wincmd l"
-          -- end
           vim.cmd "wincmd L"
           vim.cmd.Vterm()
         end,
-        desc = "Terminal: open vsplit [termim.nvim]",
+        desc = "Terminal: new term split [termim.nvim]",
       },
       {
         "<a-N>",
         function()
-          -- if vim.bo.filetype == "neo-tree" then
-          --   vim.cmd "wincmd l"
-          -- end
           vim.cmd "wincmd L"
           vim.cmd.Fterm()
         end,
-        desc = "Terminal: open new tab [termim.nvim]",
+        desc = "Terminal: open new tabterm [termim.nvim]",
       },
     },
   },

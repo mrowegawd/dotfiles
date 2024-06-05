@@ -214,16 +214,28 @@ RUtils.cmd.augroup(
       if vim.bo.filetype == "" and (vim.bo.buftype == "terminal" or vim.bo.filetype == "toggleterm") then
         vim.cmd.startinsert()
         RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-        RUtils.map.tnoremap("<a-h>", "<c-w>h", { desc = "Terminal: left window" })
-        RUtils.map.tnoremap("<a-j>", "<c-w>j", { desc = "Terminal; down window" })
-        RUtils.map.tnoremap("<a-k>", "<c-w>k", { desc = "Terminal: up window" })
-        RUtils.map.tnoremap("<a-l>", "<c-w>l", { desc = "Terminal: right window" })
+        RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
         RUtils.map.tnoremap("<a-x>", function()
           RUtils.map.feedkey("<C-\\><C-n>:q!<CR>", "t")
-        end, { desc = "Terminal: right window naviation" })
-        RUtils.map.tnoremap("<a-t>", function()
-          RUtils.terminal { cwd = RUtils.root() }
-        end, { desc = "Terminal: test" })
+        end, { desc = "Terminal: close terminal" })
+
+        RUtils.map.tnoremap("<Left>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
+        RUtils.map.tnoremap("<Right>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
+        RUtils.map.tnoremap("<Up>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
+        RUtils.map.tnoremap("<Down>", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+
+        RUtils.map.tnoremap("th", function()
+          RUtils.map.feedkey("<C-\\><C-n>:tabp<CR>", "t")
+        end, { desc = "Terminal: next prev" })
+        RUtils.map.tnoremap("tl", function()
+          RUtils.map.feedkey("<C-\\><C-n>:tabn<CR>", "t")
+        end, { desc = "Terminal: next prev" })
+        RUtils.map.tnoremap("<a-f>", function()
+          RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
+        end, { desc = "Terminal: new term split" })
+        RUtils.map.tnoremap("<a-N>", function()
+          RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
+        end, { desc = "Terminal: new tabterm" })
       end
     end,
   }

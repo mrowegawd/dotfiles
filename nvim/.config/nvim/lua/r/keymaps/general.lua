@@ -231,10 +231,15 @@ RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "View: close buffer" })
 
 RUtils.map.nnoremap("sC", "<CMD>qa!<CR>", { desc = "View: close all buffer" })
 
-RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: move cursor left", silent = true })
-RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: move cursor right", silent = true })
-RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: move cursor down", silent = true })
-RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: move cursor up", silent = true })
+RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true })
+RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: right window", silent = true })
+RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: down window", silent = true })
+RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
+
+RUtils.map.nnoremap("<Left>", "<cmd>wincmd h<cr>", { desc = "View: left window (alternate)" })
+RUtils.map.nnoremap("<Right>", "<cmd>wincmd l<cr>", { desc = "View: right window (alternate)" })
+RUtils.map.nnoremap("<Up>", "<cmd>wincmd k<cr>", { desc = "View: up window (alternate)" })
+RUtils.map.nnoremap("<Down>", "<cmd>wincmd j<cr>", { desc = "View: down window (alternate)" })
 
 RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Winav: new tab", silent = true })
 RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Winav: close tab", silent = true })
