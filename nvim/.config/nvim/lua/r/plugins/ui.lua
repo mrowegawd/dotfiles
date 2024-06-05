@@ -2,42 +2,6 @@ local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- CODEWINDOW
-  {
-    "gorbit99/codewindow.nvim",
-    lazy = false,
-    keys = {
-      {
-        "<leader>um",
-        function()
-          require("codewindow").toggle_minimap()
-        end,
-        desc = "Misc: toggle minimap [codewindow]",
-      },
-    },
-    opts = {
-      auto_enable = false,
-      minimap_width = 20,
-      width_multiplier = 2,
-      screen_bounds = "background",
-      window_border = "none",
-      relative = "win",
-      exclude_filetypes = {
-        "dashboard",
-        "neo-tree",
-        "lazy",
-        "lazyterm",
-        "mason",
-        "help",
-        "checkhealth",
-        "lspinfo",
-        "noice",
-        "Trouble",
-        "fish",
-        "zsh",
-      },
-    },
-  },
   -- INDENTMINI
   {
     "nvimdev/indentmini.nvim",
@@ -167,13 +131,11 @@ return {
               position = { row = 2 },
             },
           },
-          progress = {
-            enabled = false,
-          },
+          progress = { enabled = false },
+          hover = { enabled = false },
           signature = { auto_open = { enabled = true }, enabled = false },
-          hover = { enabled = true },
           override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
             ["vim.lsp.util.stylize_markdown"] = true,
             ["cmp.entry.get_documentation"] = true,
           },

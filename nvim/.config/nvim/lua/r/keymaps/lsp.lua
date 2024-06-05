@@ -19,8 +19,14 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" },
-    { "K", vim.lsp.buf.hover, desc = "LSP: show hover" },
+    {
+      "K",
+      function()
+        -- vim.lsp.buf.hover()
+        require("noice.lsp").hover()
+      end,
+      desc = "LSP: show hover [noice]",
+    },
     {
       "<leader>cR",
       RUtils.lsp.rename_file,
@@ -186,17 +192,20 @@ function M.get()
     M._keys[#M._keys + 1] = { "<F2>", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
   end
 
-  -- if RUtils.has "lsp_signature.nvim" then
-  --   M._keys[#M._keys + 1] = {
-  --     "go",
-  --     function()
-  --       require("lsp_signature").toggle_float_win()
-  --     end,
-  --     desc = "LSP: toggle [lsp-signature]",
-  --     has = "signatureHelp",
-  --   }
-  -- end
-
+  if RUtils.has "lsp_signature.nvim" then
+    M._keys[#M._keys + 1] = {
+      "<c-s>",
+      function()
+        require("lsp_signature").toggle_float_win()
+      end,
+      mode = "i",
+      has = "signatureHelp",
+      desc = "LSP: toggle signature help [lsp-signature]",
+    }
+  else
+    M._keys[#M._keys + 1] =
+      { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" }
+  end
   return M._keys
 end
 

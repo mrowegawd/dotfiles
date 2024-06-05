@@ -9,28 +9,6 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       { "b0o/SchemaStore.nvim", version = false },
-      {
-        -- TODO: check dan pakai plugin ini, kalau sudah di update error nya
-        -- check langsung repo github nya
-        "ray-x/lsp_signature.nvim",
-        enabled = false,
-        config = function()
-          Highlight.plugin("lspSignatureUIcol", {
-            { LspSignatureActiveParameter = { bg = "NONE", fg = "#ED9455" } },
-          })
-
-          require("lsp_signature").setup {
-            hint_enable = false,
-            hint_prefix = "● ",
-            max_width = 80,
-            max_height = 12,
-            handler_opts = {
-              border = "single",
-            },
-            timer_interval = 200,
-          }
-        end,
-      },
     },
     ---@class PluginLspOpts
     opts = function()
@@ -80,10 +58,9 @@ return {
             end,
           },
         },
-        inlay_hints = { enabled = true },
-        codelens = { enabled = false },
-        document_highlight = {
-          enabled = true,
+        inlay_hints = {
+          enabled = false,
+          exclude = {}, -- filetypes for which you don't want to enable inlay hints
         },
         capabilities = {},
         format = { formatting_options = nil, timeout_ms = nil },

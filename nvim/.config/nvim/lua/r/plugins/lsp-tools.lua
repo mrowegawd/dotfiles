@@ -211,7 +211,7 @@ return {
           local num = symbol.references == 0 and "no" or symbol.references
           table.insert(res, round_start)
           table.insert(res, { "󰌹 ", "SymbolUsageRef" })
-          table.insert(res, { ("%s %s"):format(num, usage), "SymbolUsageContent" })
+          table.insert(res, { string.format("%s %s", num, usage), "SymbolUsageContent" })
           table.insert(res, round_end)
         end
 
@@ -244,6 +244,31 @@ return {
         ---@type 'above'|'end_of_line'|'textwidth'|'signcolumn' `above` by default
         vt_position = "end_of_line",
       }
+    end,
+  },
+  -- LSP-SIGNATURE
+  {
+    "ray-x/lsp_signature.nvim",
+    config = function()
+      Highlight.plugin("lspSignatureUIcol", {
+        { LspSignatureActiveParameter = { bg = "NONE", fg = "#ED9455" } },
+      })
+
+      RUtils.cmd.augroup("AttachLSPSignature", {
+        event = { "LspAttach" },
+        command = function(args)
+          local bufnr = args.buf
+          require("lsp_signature").on_attach({
+            hint_prefix = "● ",
+            -- floating_window = false, -- disable more content window
+            bind = true,
+            max_width = 80,
+            handler_opts = {
+              border = "single",
+            },
+          }, bufnr)
+        end,
+      })
     end,
   },
 }
