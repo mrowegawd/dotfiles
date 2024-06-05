@@ -170,10 +170,6 @@ function M.follow_link(is_selection)
   end
 end
 
-function M.finder_linkableGlobal()
-  return { "yes" }
-end
-
 -- local TagCharsOptional = "[A-Za-z0-9_/-]*"
 local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
 
@@ -622,4 +618,94 @@ function M.find_by_categories()
     end)
   end)
 end
+
+function M.find_global_titles()
+  return require("fzf-lua").grep {
+    prompt = "   ",
+    cwd = RUtils.config.path.wiki_path,
+    search = "^#.*",
+    rg_glob = false,
+    no_esc = true,
+    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+    rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
+    winopts = {
+      fullscreen = true,
+      title = RUtils.fzflua.format_title(
+        "Obsidian > Search Global Note Titles",
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
+        "GitSignsChange"
+      ),
+    },
+  }
+end
+
+function M.find_local_titles()
+  local starting_bufname = vim.api.nvim_buf_get_name(0)
+  local fullname = vim.fn.fnamemodify(starting_bufname, ":p")
+
+  function tags_previewer:new(o, opts, fzf_win)
+    tags_previewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, tags_previewer)
+    return self
+  end
+
+  function tags_previewer:parse_entry(entry_str)
+    local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
+    if entry_str_strip then
+      local x = vim.split(entry_str_strip, ":")
+      return {
+        path = fullname,
+        line = x[1],
+        col = 1,
+      }
+    end
+  end
+
+  return require("fzf-lua").grep {
+    prompt = "   ",
+    previewer = tags_previewer,
+    no_esc = true,
+    rg_glob = false,
+    search = "^#.*",
+    rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+      .. fullname
+      .. " -e ",
+    winopts = {
+      fullscreen = true,
+      title = RUtils.fzflua.format_title(
+        "Obsidian > Search Local Note Titles",
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
+        "GitSignsChange"
+      ),
+    },
+    actions = {
+      ["default"] = function(selected, _)
+        local sel = RUtils.fzflua.__strip_str(selected[1])
+        if sel then
+          sel = vim.split(sel, ":")
+          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+        end
+      end,
+
+      ["ctrl-v"] = function(selected, _)
+        local sel = RUtils.fzflua.__strip_str(selected[1])
+        if sel then
+          sel = vim.split(sel, ":")
+          vim.cmd("vsplit " .. fullname)
+          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+        end
+      end,
+
+      ["ctrl-s"] = function(selected, _)
+        local sel = RUtils.fzflua.__strip_str(selected[1])
+        if sel then
+          sel = vim.split(sel, ":")
+          vim.cmd("split " .. fullname)
+          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+        end
+      end,
+    },
+  }
+end
+
 return M

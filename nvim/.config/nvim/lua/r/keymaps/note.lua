@@ -11,50 +11,9 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
-      ["<Localleader>sT"] = {
-        function()
-          return require("fzf-lua").grep {
-            prompt = "   ",
-            cwd = RUtils.config.path.wiki_path,
-            search = "^#.*",
-            rg_glob = false,
-            no_esc = true,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
-            winopts = {
-              fullscreen = true,
-              title = RUtils.fzflua.format_title(
-                "Obsidian > Search Global Note Titles",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
-                "GitSignsChange"
-              ),
-            },
-          }
-        end,
-        desc = "Note: search title global [obsidian]",
-      },
       ["<Localleader>st"] = {
         function()
-          -- FIX: ini masih error
-          local fullname = vim.fn.fnamemodify(vim.fn.bufname(0), ":.")
-          return require("fzf-lua").grep {
-            prompt = "   ",
-            -- cwd = fullname,
-            search = "^#.*",
-            rg_glob = false,
-            no_esc = true,
-            file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
-            rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]]
-              .. fullname,
-            winopts = {
-              fullscreen = true,
-              title = RUtils.fzflua.format_title(
-                "Obsidian > Search Note Titles",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
-                "GitSignsChange"
-              ),
-            },
-          }
+          RUtils.markdown.find_local_titles()
         end,
         desc = "Note: search title global [obsidian]",
       },
