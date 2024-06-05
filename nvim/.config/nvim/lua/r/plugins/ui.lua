@@ -271,6 +271,11 @@ return {
       }
     end,
   },
+  --BUFDELETE
+  {
+    "famiu/bufdelete.nvim",
+    lazy = true,
+  },
   -- BUFFERLINE
   {
     "akinsho/bufferline.nvim",
