@@ -282,7 +282,7 @@ return {
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[Ctrl-y: copy/yank path | Ctrl-e: mode rgflow]] },
+          fzf_opts = { ["--header"] = [[Ctrl-y: copy/yank path | Alt-e: rgflow]] },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
@@ -305,7 +305,7 @@ return {
                 end
               end
             end,
-            ["ctrl-e"] = function(_, args)
+            ["alt-e"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -521,7 +521,7 @@ return {
           prompt = "  ",
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Ctrl-e: mode rgflow]] },
+          fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Alt-e: rgflow]] },
           winopts = {
             title = RUtils.fzflua.format_title(
               "Grep",
@@ -550,9 +550,8 @@ return {
             }
           end,
           actions = {
-            ["ctrl-l"] = require("fzf-lua").actions.file_sel_to_ll,
             ["ctrl-g"] = { actions.grep_lgrep },
-            ["ctrl-e"] = function(_, args)
+            ["alt-e"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path

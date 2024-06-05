@@ -186,8 +186,8 @@ zle -N autosuggest-accept
 bindkey '^y'                  autosuggest-accept       # enter autosugest (c-y)
 
 bindkey '^?'                  backward-delete-char
-bindkey '^h'                  backward-char            # backward (c-b)
-bindkey '^l'                  forward-char             # forward char (c-f)
+# bindkey '^h'                  backward-char            # backward (c-b)
+# bindkey '^l'                  forward-char             # forward char (c-f)
 bindkey '^b'                  backward-word            # backward (c-b)
 bindkey '^f'                  forward-word             # forward char (c-f)
 bindkey '^a'                  beginning-of-line
