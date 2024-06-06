@@ -4,6 +4,24 @@ local Col = RUtils.colortbl
 
 local M = {}
 
+local Spacer = { provider = " " }
+
+local function rpad(child)
+  return {
+    condition = child.condition,
+    child,
+    Spacer,
+  }
+end
+
+-- local function lpad(child)
+--   return {
+--     condition = child.condition,
+--     Spacer,
+--     child,
+--   }
+-- end
+
 local setcond = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
@@ -220,6 +238,8 @@ M.Git = {
   end,
 
   condition = Conditions.is_git_repo,
+  provider = " ",
+
   {
     provider = function(self)
       local count = self.status_dict.added or 0
@@ -450,6 +470,47 @@ M.Dap = {
   end,
   hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
 }
+
+local function OverseerTasksForStatus(status)
+  return {
+    condition = function(self)
+      return self.tasks[status]
+    end,
+    provider = function(self)
+      return string.format("%s%d", self.symbols[status], #self.tasks[status])
+    end,
+    hl = function()
+      return {
+        fg = colors.diagnostic_err,
+        bg = colors.base_bg,
+        bold = true,
+      }
+    end,
+  }
+end
+M.Runfile = {
+  condition = function()
+    return package.loaded.overseer
+  end,
+  init = function(self)
+    local tasks = require("overseer.task_list").list_tasks { unique = true }
+    local tasks_by_status = require("overseer.util").tbl_group_by(tasks, "status")
+    self.tasks = tasks_by_status
+  end,
+  static = {
+    symbols = {
+      ["CANCELED"] = " ",
+      ["FAILURE"] = "󰅚 ",
+      ["SUCCESS"] = "󰄴 ",
+      ["RUNNING"] = "󰑮 ",
+    },
+  },
+
+  rpad(OverseerTasksForStatus "CANCELED"),
+  rpad(OverseerTasksForStatus "RUNNING"),
+  rpad(OverseerTasksForStatus "SUCCESS"),
+  rpad(OverseerTasksForStatus "FAILURE"),
+}
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
 
@@ -486,9 +547,9 @@ M.LSPActive = {
   end,
   provider = function(self)
     if #self.names > 1 then
-      return ""
-    end
     return " "
+    end
+    return ""
   end,
   flexible = 1,
   {
@@ -660,9 +721,10 @@ M.Sessions = {
   condition = function()
     return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
   end,
+  provider = "",
   {
     provider = function()
-      local sess_icon = ""
+      local sess_icon = " "
       local sess_status = "off"
 
       if RUtils.has "persistence.nvim" then
@@ -702,22 +764,28 @@ M.BufferCwd = {
   end,
   provider = " ",
   {
-    provider = function(self)
-      local cwd = vim.fn.fnamemodify(vim.b[self.bufnr].project_nvim_cwd or vim.uv.cwd(), ":t")
+    provider = function()
+      local patc = vim.uv.cwd()
+      if patc then
+        local cwd = vim.fn.fnamemodify(patc, ":t")
       if not cwd or cwd == "" then
         return ""
       end
-
       -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
-      return " " .. cwd .. " %*"
+        return " " .. cwd .. "%*"
+      end
     end,
     hl = { fg = Col.direcotory, bg = colors.base_bg },
+  },
+  {
+    provider = " ",
   },
 }
 M.Ruler = {
   condition = function()
     return setcond.hide_in_width(130)
   end,
+  provider = " ",
   {
     provider = function()
       local rhs = ""
@@ -731,7 +799,8 @@ M.Ruler = {
         -- Add padding to stop RHS from changing too much as we move the cursor.
         local padding = #tostring(height) - #tostring(line)
         if padding > 0 then
-          rhs = rhs .. (" "):rep(padding)
+          -- rhs = rhs .. (" "):rep(padding)
+          rhs = rhs
         end
 
         rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
@@ -753,7 +822,7 @@ M.Ruler = {
         end
       end
 
-      return " " .. rhs
+      return rhs
     end,
     hl = { fg = colors.base_fg },
   },
@@ -772,6 +841,7 @@ M.status_active_left = {
   M.FilePathQF,
   M.FileFlags,
   M.Gap,
+  M.Runfile,
   M.Dap,
   M.LSPActive,
   M.Diagnostics,
