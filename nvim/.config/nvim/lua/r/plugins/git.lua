@@ -91,6 +91,9 @@ return {
     -- Sebelum menggunakannya: run command ini di cli "gh auth login --scopes read:project"
     "pwntester/octo.nvim",
     cmd = "Octo",
+    init = function()
+      vim.treesitter.language.register("markdown", "octo")
+    end,
     opts = {
       -- picker = "telescope",
       picker = "fzf-lua",
