@@ -1,6 +1,7 @@
 return {
   "tpope/vim-projectionist",
-  event = "VeryLazy",
+  -- event = "VeryLazy",
+  lazy = true,
   config = function()
     vim.g.projectionist_heuristics = {
       ["*"] = {

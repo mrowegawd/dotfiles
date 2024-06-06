@@ -9,6 +9,7 @@ return {
   -- NEORG
   {
     "nvim-neorg/neorg",
+    enabled = false,
     cmd = "Neorg",
     ft = "norg",
     version = "*",

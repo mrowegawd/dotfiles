@@ -2,7 +2,7 @@ return {
   -- NVIM-HIGHLIGHT-COLORS
   {
     "brenoprata10/nvim-highlight-colors",
-    event = "VimEnter",
+    event = "BufReadPost",
     config = function()
       require("nvim-highlight-colors").setup {
         ---Render style
