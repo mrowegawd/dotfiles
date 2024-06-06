@@ -6,32 +6,51 @@ local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, 0.5)
 local dark_green = Highlight.tint(UIPallette.palette.dark_green, 0.5)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
 
--- stylua: ignore
 local general_overrides = function()
   Highlight.all {
     { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-    { ColorColumn = { bg = { from = "Normal" , attr = "bg", alter = -0.1 } } },
+    { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
+    { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
     { CursorLineNr = { fg = { from = "Keyword", attr = "fg", alter = -0.2 }, bg = "NONE", bold = true } },
     { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
-    { Folded = { bg = { from = "Normal", attr = "bg", alter = 0.1 }, fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+    {
+      Folded = {
+        bg = { from = "Normal", attr = "bg", alter = 0.1 },
+        fg = { from = "Normal", attr = "bg", alter = 0.8 },
+      },
+    },
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
-    { StatusLine = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = { from = "StatusLine" , attr = "bg" } } },
-    { StatusLineNC = { bg = { from = "StatusLineNC", attr = "bg", alter = -0.3 } } },
+    { StatusLine = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = { from = "StatusLine", attr = "bg" } } },
 
     { SignColumn = { bg = "NONE" } },
-    { NonText = { fg = {from = "Normal", attr = "fg", alter = -0.4 } } },
+    { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
 
     { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.5 }, bg = "NONE" } },
-    { FloatBorder = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "WinSeparator" , attr = "fg", alter = 0.5 } } },
-    { WinBar = { bg = { from = "ColorColumn" } , fg = { from = "Normal", attr = "bg", alter = 1 } } },
+    {
+      FloatBorder = {
+        bg = { from = "Normal", attr = "bg", alter = -0.1 },
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+      },
+    },
+    { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
 
-    { TablineFill = { bg = { from = "Normal"  } } },
+    { TablineFill = { bg = { from = "Normal" } } },
+
+    {
+      PmenuSel = {
+        bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+        fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 },
+        bold = true,
+      },
+    },
+    { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
+    { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
     -----------------------------------------------------------------------------//
     --  Spell
     -----------------------------------------------------------------------------//
@@ -41,13 +60,12 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     --  SEMANTIC TOKENS
     -----------------------------------------------------------------------
-    -- { String = { italic = true } },
     { ["@lsp.type.parameter"] = { italic = true, bold = true, fg = { from = "Normal" } } },
     { ["@lsp.type.selfKeyword"] = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.2 } } },
-    { ['@lsp.type.comment'] = { fg = 'NONE' } },
+    { ["@lsp.type.comment"] = { fg = "NONE" } },
 
-    { ["@lsp.typemod.function.declaration"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
-    { ["@lsp.typemod.function.defaultLibrary"] = { link = "Special" } },
+    -- { ["@lsp.typemod.function.declaration"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
+    -- { ["@lsp.typemod.function.defaultLibrary"] = { link = "Special" } },
 
     -- { ['@lsp.typemod.method'] = { link = '@method' } },
     -- { ["@lsp.typemod.variable.global"] = { bold = true, inherit = "@constant.builtin", }, },
@@ -59,6 +77,48 @@ local general_overrides = function()
     -- { ["@lsp.typemod.keyword.injected"] = { link = "@keyword" } },
     -- { ["@lsp.typemod.string.injected"] = { link = "@string" } },
     -- { ["@lsp.typemod.variable.injected"] = { link = "@variable" } },
+
+    -----------------------------------------------------------------------
+    -- LSP
+    -----------------------------------------------------------------------
+    { ["@punctuation.bracket"] = { fg = "yellow" } },
+
+    { LspKindText = { link = "@markup" } },
+    { LspKindBoolean = { link = "@boolean" } },
+    { LspKindVariable = { link = "@variable" } },
+    { LspKindConstant = { link = "@constant" } },
+    { LspKindModule = { link = "@module" } },
+    { LspKindPackage = { link = "@module" } },
+    { LspKindKeyword = { link = "@lsp.type.keyword" } },
+    { LspKindFunction = { link = "@function" } },
+    -- { LspKindFunction = { link = "@lsp.typemod.function.declaration" } },
+    { LspKindStruct = { link = "@lsp.type.struct" } },
+    { LspKindArray = { link = "@punctuation.bracket" } },
+    { LspKindOperator = { link = "@operator" } },
+    { LspKindObject = { link = "@constant" } },
+    { LspKindString = { link = "@string" } },
+    { LspKindField = { link = "@variable.member" } },
+    { LspKindNumber = { link = "@number" } },
+    { LspKindProperty = { link = "@property" } },
+    { LspKindReference = { link = "@markup.link" } },
+    { LspKindEvent = { link = "Special" } },
+    { LspKindFile = { link = "Normal" } },
+    { LspKindFolder = { link = "Directory" } },
+    { LspKindInterface = { link = "@lsp.type.interface" } },
+    { LspKindKey = { link = "@variable.member" } },
+    { LspKindMethod = { link = "@function.method" } },
+    { LspKindNamespace = { link = "@module" } },
+    { LspKindNull = { link = "@constant.builtin" } },
+    { LspKindUnit = { link = "@lsp.type.struct" } },
+    { LspKindEnum = { link = "@lsp.type.enum" } },
+    { LspKindEnumMember = { link = "@lsp.type.enumMember" } },
+    { LspKindConstructor = { link = "@constructor" } },
+    { LspKindTypeParameter = { link = "@lsp.type.typeparameter" } },
+    { LspKindValue = { link = "@string" } },
+
+    -- { LspKindSnippet = { link = "Conceal" } },
+    { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
+
     -----------------------------------------------------------------------
     -- TREESITTER
     -----------------------------------------------------------------------
@@ -73,19 +133,19 @@ local general_overrides = function()
     -- TREESITTER LANGUAGE
     -----------------------------------------------------------------------
     -- lua
-    { ["@lsp.type.function.lua"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    { ["@lsp.type.function.lua"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
     -- { ["@function.call.lua"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
     -- { ['@lsp.type.variable.lua'] = { italic = true, fg = "green" } },
 
     -- zsh
-    { ["zshFunction"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    { ["zshFunction"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
 
     -- bash
-    { ["@function.bash"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
-    { ["@function.call.bash"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    { ["@function.bash"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
+    { ["@function.call.bash"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
 
     -- rust
-    { ["@lsp.type.function.rust"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
+    { ["@lsp.type.function.rust"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
 
     -----------------------------------------------------------------------
     -- DIFF
@@ -110,37 +170,20 @@ local general_overrides = function()
     { diffDelete = { bg = UIPallette.palette.red_git_bg, fg = "NONE", bold = true } },
     { diffText = { bg = UIPallette.palette.text_git_bg, fg = "NONE", bold = true } },
 
-    { GitSignsAdd = { bg = "NONE", fg =  dark_green } },
+    { GitSignsAdd = { bg = "NONE", fg = dark_green } },
     { GitSignsChange = { bg = "NONE", fg = dark_orange } },
     { GitSignsDelete = { bg = "NONE", fg = dark_red } },
 
-    { NeogitDiffAdd =  { link = "diffAdd"} } ,
+    { NeogitDiffAdd = { link = "diffAdd" } },
     { NeogitDiffAddHighlight = { link = "diffAdd" } },
-    { NeogitDiffDelete =  { link = "diffDelete" } } ,
-    { NeogitDiffDeleteHighlight =  { link = "diffDelete" } } ,
-    { DiffText =  { link = "diffText" } } ,
-    -----------------------------------------------------------------------
-    -- LSP
-    -----------------------------------------------------------------------
-    { LspCodeLens = { bg  = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Comment", attr = "fg", alter = -0.5 },  italic = true } },
-    -- { LspCodeLensSeparator = { bold = false, italic = false } },
-
-    -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.05 } } },
-    -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.05 } } },
-    -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.05 } } },
-
-    -- { LspInlayhint = { bg = { from = "Normal", attr = "bg", alter = -0.4 }, fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
-
-    { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
-    { TreesitterContext = { bg  = { from = "ColorColumn" } } } ,
-    { TreesitterContextSeparator = {
-      fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
-      bg = { from = "ColorColumn" , attr = "bg" }
-    } },
+    { NeogitDiffDelete = { link = "diffDelete" } },
+    { NeogitDiffDeleteHighlight = { link = "diffDelete" } },
+    { DiffText = { link = "diffText" } },
     -----------------------------------------------------------------------
     -- DEBUG
     -----------------------------------------------------------------------
     { debugPC = { bg = { from = "Boolean", attr = "fg", alter = -0.6 }, fg = "NONE", bold = true } },
+
     -----------------------------------------------------------------------
     -- DIAGNOSTIC
     -----------------------------------------------------------------------
@@ -150,10 +193,10 @@ local general_overrides = function()
     { DiagnosticSignHint = { bg = { from = "Normal", attr = "bg" } } },
 
     -- Floating windows
-    { DiagnosticFloatingWarn = { fg = { from  = "DiagnosticWarn" , attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatingInfo = { fg = { from  = "DiagnosticInfo" , attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatingHint = { fg = { from  = "DiagnosticHint" , attr = "fg" }, bg = "NONE", bold = true } },
-    { DiagnosticFloatingError = { fg = { from  = "DiagnosticError" , attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
+    { DiagnosticFloatingError = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE", bold = true } },
     { DiagnosticFloatTitle = { bg = { from = "NormalFloat", attr = "bg" }, bold = true } },
     { DiagnosticFloatTitleIcon = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "@character" } } },
 
@@ -248,7 +291,12 @@ local general_overrides = function()
         italic = true,
       },
     },
-    { MyParentHint = { bg = { from = "CursorLine", attr = "bg" }, fg = { from = "MyCodeUsage", attr = "fg" , alter = -0.1 } } },
+    {
+      MyParentHint = {
+        bg = { from = "CursorLine", attr = "bg" },
+        fg = { from = "MyCodeUsage", attr = "fg", alter = -0.1 },
+      },
+    },
     { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
     { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
@@ -262,19 +310,165 @@ local general_overrides = function()
     { CmpItemAbbrMatchFuzzy = { fg = dark_red } },
     { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg", alter = 0.5 } } },
 
-    { CmpItemKindFunction = { fg = { from = "Function", attr = "fg" } } },
-    { CmpItemKindModule = { fg = { from = "Include", attr = "fg" } } },
-    { CmpItemKindConstant = { fg = { from = "Constant", attr = "fg" } } },
-    { CmpItemKindStruct = { fg = { from = "Structure", attr = "fg" } } },
-    { CmpItemKindKeyword = { fg = { from = "String", attr = "fg" } } },
-    { CmpItemKindText = { fg = { from = "String", attr = "fg" } } },
-    { CmpItemKindField = { fg = { from = "Identifier", attr = "fg" } } },
-    { CmpItemKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
-    { CmpItemKindVariable = { fg = { from = "@variable", attr = "fg" } } },
+    { CmpItemKindArray = { link = "LspKindArray" } },
+    { CmpItemKindCopilot = { bg = "NONE", fg = "#118c74" } },
+    { CmpItemKindDefault = { bg = "NONE", fg = "#6172b0" } },
+    { CmpItemKindFunction = { link = "LspKindFunction" } },
+    { CmpItemKindBoolean = { link = "LspKindBoolean" } },
+    { CmpItemKindVariable = { link = "LspKindVariable" } },
+    { CmpItemKindMethod = { link = "LspKindMethod" } },
+    { CmpItemKindModule = { link = "LspKindModule" } },
+    { CmpItemKindText = { link = "LspKindText" } },
+    { CmpItemKindClass = { link = "LspKindClass" } },
+    { CmpItemKindCodeium = { bg = "NONE", fg = "#118c74" } },
+    { CmpItemKindColor = { link = "LspKindColor" } },
+    { CmpItemKindConstant = { link = "LspKindConstant" } },
+    { CmpItemKindStruct = { link = "LspKindStruct" } },
+    { CmpItemKindSnippet = { link = "LspKindSnippet" } },
+    { CmpItemKindString = { link = "LspKindString" } },
+    { CmpItemKindNumber = { link = "LspKindNumber" } },
+    { CmpItemKindPackage = { link = "LspKindPackage" } },
+    { CmpItemKindObject = { link = "LspKindObject" } },
+    { CmpItemKindNamespace = { link = "LspKindNamespace" } },
+    { CmpItemKindEvent = { link = "LspKindEvent" } },
+    { CmpItemKindField = { link = "LspKindField" } },
+    { CmpItemKindFile = { link = "LspKindFile" } },
+    { CmpItemKindFolder = { link = "LspKindFolder" } },
+    { CmpItemKindInterface = { link = "LspKindInterface" } },
+    { CmpItemKindUnit = { link = "LspKindUnit" } },
+    { CmpItemKindKey = { link = "LspKindKey" } },
+    { CmpItemKindKeyword = { link = "LspKindKeyword" } },
+    { CmpItemKindNull = { link = "LspKindNull" } },
+    { CmpItemKindOperator = { link = "LspKindOperator" } },
+    { CmpItemKindProperty = { link = "LspKindProperty" } },
+    { CmpItemKindReference = { link = "LspKindReference" } },
+    { CmpItemKindValue = { link = "LspKindValue" } },
+    { CmpItemKindEnum = { link = "LspKindEnum" } },
+    { CmpItemKindEnumMember = { link = "LspKindEnumMember" } },
+    { CmpItemKindConstructor = { link = "LspKindConstructor" } },
+    { CmpItemKindTypeParameter = { link = "LspKindTypeParameter" } },
 
-    { PmenuSel = { bg = { from = "Keyword", attr = "fg", alter = -0.6 }, fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 }, bold = true } },
-    { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
-    { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+    { CmpItemKindTabNine = { bg = "NONE", fg = "#118c74" } },
+
+    -- AERIALS ============================================================
+    { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+    { AerialBoolean = { link = "LspKindBoolean" } },
+    { AerialBooleanIcon = { link = "LspKindBoolean" } },
+
+    { AerialVariable = { link = "LspKindVariable" } },
+    { AerialVariableIcon = { link = "LspKindVariable" } },
+
+    { AerialInterface = { link = "LspKindInterface" } },
+    { AerialInterfaceIcon = { link = "LspKindInterface" } },
+
+    { AerialKey = { link = "LspKindKey" } },
+    { AerialKeyIcon = { link = "LspKindKey" } },
+
+    { AerialLine = { link = "LspInlayHint" } },
+
+    { AerialMethod = { link = "LspKindMethod" } },
+    { AerialMethodIcon = { link = "LspKindMethod" } },
+
+    { AerialModule = { link = "LspKindModule" } },
+    { AerialModuleIcon = { link = "LspKindModule" } },
+
+    { AerialNamespace = { link = "LspKindNamespace" } },
+    { AerialNamespaceIcon = { link = "LspKindNamespace" } },
+
+    { AerialText = { link = "LspKindText" } },
+    { AerialTextIcon = { link = "LspKindText" } },
+
+    { AerialFunction = { link = "LspKindFunction" } },
+    { AerialFunctionIcon = { link = "LspKindFunction" } },
+
+    { AerialArray = { link = "LspKindArray" } },
+    { AerialArrayIcon = { link = "LspKindArray" } },
+
+    { AerialObject = { link = "LspKindObject" } },
+    { AerialObjectIcon = { link = "LspKindObject" } },
+
+    { AerialString = { link = "LspKindString" } },
+    { AerialStringIcon = { link = "LspKindString" } },
+
+    { AerialNumber = { link = "LspKindNumber" } },
+    { AerialNumberIcon = { link = "LspKindNumber" } },
+
+    { AerialField = { link = "LspKindField" } },
+    { AerialFieldIcon = { link = "LspKindField" } },
+
+    { AerialConstant = { link = "LspKindConstant" } },
+    { AerialConstantIcon = { link = "LspKindConstant" } },
+
+    { AerialPackage = { link = "LspKindPackage" } },
+    { AerialPackageIcon = { link = "LspKindPackage" } },
+
+    { AerialProperty = { link = "LspKindProperty" } },
+    { AerialPropertyIcon = { link = "LspKindProperty" } },
+
+    { AerialNull = { link = "LspKindNull" } },
+    { AerialNullIcon = { link = "LspKindNull" } },
+
+    { AerialOperator = { link = "LspKindOperator" } },
+    { AerialOperatorIcon = { link = "LspKindOperator" } },
+
+    { AerialReference = { link = "LspKindReference" } },
+    { AerialReferenceIcon = { link = "LspKindReference" } },
+
+    { AerialSnippet = { link = "LspKindSnippet" } },
+    { AerialSnippetIcon = { link = "LspKindSnippet" } },
+
+    { AerialStruct = { link = "LspKindStruct" } },
+    { AerialStructIcon = { link = "LspKindStruct" } },
+
+    { AerialTypeParameter = { link = "LspKindTypeParameter" } },
+    { AerialTypeParameterIcon = { link = "LspKindTypeParameter" } },
+
+    { AerialUnit = { link = "LspKindUnit" } },
+    { AerialUnitIcon = { link = "LspKindUnit" } },
+
+    { AerialValue = { link = "LspKindValue" } },
+    { AerialValueIcon = { link = "LspKindValue" } },
+
+    { AerialEnum = { link = "LspKindEnum" } },
+    { AerialEnumIcon = { link = "LspKindEnum" } },
+
+    { AerialEnumMember = { link = "LspKindEnumMember" } },
+    { AerialEnumMemberIcon = { link = "LspKindEnumMember" } },
+
+    { AerialConstructor = { link = "LspKindConstructor" } },
+    { AerialConstructorIcon = { link = "LspKindConstructor" } },
+
+    -- SHOW CODE LENS PLUGIN ============================================
+    {
+      LspCodeLens = {
+        bg = { from = "Normal", attr = "bg", alter = -0.1 },
+        fg = { from = "Comment", attr = "fg", alter = -0.5 },
+        italic = true,
+      },
+    },
+
+    -- TREESITTER CONTEXT ===============================================
+    -- { LspCodeLensSeparator = { bold = false, italic = false } },
+
+    -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.05 } } },
+    -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.05 } } },
+    -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.05 } } },
+
+    {
+      LspInlayhint = {
+        bg = { from = "Normal", attr = "bg", alter = -0.4 },
+        fg = { from = "Directory", attr = "fg", alter = -0.3 },
+      },
+    },
+
+    { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+    { TreesitterContext = { bg = { from = "ColorColumn" } } },
+    {
+      TreesitterContextSeparator = {
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+        bg = { from = "ColorColumn", attr = "bg" },
+      },
+    },
 
     -- TELESCOPE ==========================================================
     { TelescopeNormal = { link = "NormalFloat" } },
@@ -282,33 +476,57 @@ local general_overrides = function()
 
     -- Prompt
     { TelescopePromptNormal = { link = "NormalFloat" } },
-    { TelescopePromptTitle = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "WarningMsg", alter = 0.5, bold = true }, bold = true } },
+    {
+      TelescopePromptTitle = {
+        bg = { from = "NormalFloat", attr = "bg" },
+        fg = { from = "WarningMsg", alter = 0.5, bold = true },
+        bold = true,
+      },
+    },
     { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
     { TelescopePromptPrefix = { bg = { from = "NormalFloat", attr = "bg" } } },
     { TelescopePromptCounter = { bg = { from = "NormalFloat", attr = "bg" } } },
 
     -- Preview
     { TelescopePreviewNormal = { link = "NormalFloat" } },
-    { TelescopePreviewTitle = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "ColorColumn", alter = 0.14, bold = true }, bold = true } },
+    {
+      TelescopePreviewTitle = {
+        bg = { from = "NormalFloat", attr = "bg" },
+        fg = { from = "ColorColumn", alter = 0.14, bold = true },
+        bold = true,
+      },
+    },
     { TelescopePreviewBorder = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "FloatBorder" } } },
     { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
     { TelescopeSelection = { inherit = "PmenuSel" } },
-    { TelescopeTitle = { fg =  { from = "Boolean", attr = "fg" } } },
+    { TelescopeTitle = { fg = { from = "Boolean", attr = "fg" } } },
 
     -- Results
     { TelescopeResultsNormal = { link = "NormalFloat" } },
-    { TelescopeResultsTitle = { fg = { from = "FloatBorder" },bg = "NONE" } },
+    { TelescopeResultsTitle = { fg = { from = "FloatBorder" }, bg = "NONE" } },
     { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
 
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "NormalFloat" } },
     { FzfLuaBorder = { fg = { from = "WinSeparator" }, bg = { from = "NormalFloat", attr = "bg" } } },
-    { FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
-    { FzfLuaTitleIcon = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } } },
+    {
+      FzfLuaTitle = { fg = { from = "Boolean", attr = "fg", alter = 0.2 }, bg = { from = "FzfLuaNormal", attr = "bg" } },
+    },
+    {
+      FzfLuaTitleIcon = {
+        fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+        bg = { from = "FzfLuaNormal", attr = "bg" },
+      },
+    },
     { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
 
     -- WHICH-KEY ==========================================================
-    { WhichKeyBorder = { fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 }, bg = { from = "NormalFloat", attr = "bg" } } },
+    {
+      WhichKeyBorder = {
+        fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 },
+        bg = { from = "NormalFloat", attr = "bg" },
+      },
+    },
 
     -- NOICE ==============================================================
     { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = "NONE" } },
@@ -316,7 +534,7 @@ local general_overrides = function()
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
     -----------------------------------------------------------------------
-    -- ORGMODE 
+    -- ORGMODE
     -----------------------------------------------------------------------
     { OrgDONE = { fg = "#00FF00" } },
     { ["@org.headline.level1.org"] = { fg = "#4d85c3", bold = true, italic = true } },
@@ -326,36 +544,42 @@ local general_overrides = function()
     { ["@org.headline.level5.org"] = { fg = "#f76328", bold = true, italic = true } },
     { ["@org.headline.level6.org"] = { fg = "#fccf3e", bold = true, italic = true } },
 
-    {['@org.timestamp.active'] = { inherit = 'PreProc'}},
-    {['@org.timestamp.inactive'] = { inherit = 'Comment'}},
-    {['@org.bullet'] = { inherit = 'Identifier'}},
-    {['@org.checkbox'] = { inherit = 'PreProc'}},
-    {['@org.checkbox.halfchecked'] = { inherit = 'PreProc'}},
-    {['@org.checkbox.checked'] = { inherit = 'PreProc'}},
-    {['@org.properties'] = { inherit = 'Constant'}},
-    {['@org.drawer'] = { inherit = 'Constant'}},
-    {['@org.tag'] = { inherit = 'Function'}},
-    {['@org.plan'] = { inherit = 'Constant'}},
-    {['@org.comment'] = { inherit = 'Comment'}},
-    {['@org.directive'] = { inherit = 'Comment'}},
-    {['@org.block'] = { inherit = 'Comment'}},
-    {['@org.latex'] = { inherit = 'Statement'}},
-    {['@org.hyperlinks'] = { inherit = 'Underlined'}},
-    {['@org.code'] = { inherit = 'String'}},
-  -- ['@org.code.delimiter'] = 'String',
-  -- ['@org.verbatim'] = 'String',
-  -- ['@org.verbatim.delimiter'] = 'String',
-  -- ['@org.bold'] = { bold = true },
-  -- ['@org.bold.delimiter'] = { bold = true },
-  -- ['@org.italic'] = { italic = true },
-  -- ['@org.italic.delimiter'] = { italic = true },
-  -- ['@org.strikethrough'] = { strikethrough = true },
-  -- ['@org.strikethrough.delimiter'] = { strikethrough = true },
-  -- ['@org.underline'] = { underline = true },
-  -- ['@org.underline.delimiter'] = { underline = true },
+    { ["@org.timestamp.active"] = { inherit = "PreProc" } },
+    { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
+    { ["@org.bullet"] = { inherit = "Identifier" } },
+    { ["@org.checkbox"] = { inherit = "PreProc" } },
+    { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
+    { ["@org.checkbox.checked"] = { inherit = "PreProc" } },
+    { ["@org.properties"] = { inherit = "Constant" } },
+    { ["@org.drawer"] = { inherit = "Constant" } },
+    { ["@org.tag"] = { inherit = "Function" } },
+    { ["@org.plan"] = { inherit = "Constant" } },
+    { ["@org.comment"] = { inherit = "Comment" } },
+    { ["@org.directive"] = { inherit = "Comment" } },
+    { ["@org.block"] = { inherit = "Comment" } },
+    { ["@org.latex"] = { inherit = "Statement" } },
+    { ["@org.hyperlinks"] = { inherit = "Underlined" } },
+    { ["@org.code"] = { inherit = "String" } },
+    -- ['@org.code.delimiter'] = 'String',
+    -- ['@org.verbatim'] = 'String',
+    -- ['@org.verbatim.delimiter'] = 'String',
+    -- ['@org.bold'] = { bold = true },
+    -- ['@org.bold.delimiter'] = { bold = true },
+    -- ['@org.italic'] = { italic = true },
+    -- ['@org.italic.delimiter'] = { italic = true },
+    -- ['@org.strikethrough'] = { strikethrough = true },
+    -- ['@org.strikethrough.delimiter'] = { strikethrough = true },
+    -- ['@org.underline'] = { underline = true },
+    -- ['@org.underline.delimiter'] = { underline = true },
 
     -- HLSEARCH ===========================================================
-    { HlSearchLensNear = { bg = { from = "IncSearch", attr = "bg" }, fg = { from = "IncSearch", attr = "bg", alter = -0.3 }, bold = true } },
+    {
+      HlSearchLensNear = {
+        bg = { from = "IncSearch", attr = "bg" },
+        fg = { from = "IncSearch", attr = "bg", alter = -0.3 },
+        bold = true,
+      },
+    },
 
     -- BUFFERLINE =========================================================
     { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
@@ -406,7 +630,6 @@ local function on_sidebar_enter()
     Normal = "PanelBackground",
     EndOfBuffer = "PanelBackground",
     StatusLine = "PanelSt",
-    StatusLineNC = "PanelStNC",
     SignColumn = "PanelBackground",
     VertSplit = "PanelVertSplit",
     WinSeparator = "PanelWinSeparator",
@@ -447,12 +670,6 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = 0.1 },
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.2 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.5 },
-        },
-      },
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
     },
@@ -464,12 +681,6 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 1.4 },
         },
       },
     },
@@ -509,12 +720,6 @@ local function colorscheme_overrides()
           fg = { from = "StatusLine", attr = "fg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.7 },
           bold = true,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLineNC", attr = "fg", alter = -2 },
         },
       },
     },
@@ -562,12 +767,6 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 2.5 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.6 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = -0.3 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.5 },
         },
       },
     },
@@ -622,12 +821,6 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.6 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.1 },
-        },
-      },
     },
     ["farout"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 9 }, bg = "NONE" } },
@@ -651,12 +844,6 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.5 },
         },
       },
       { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
@@ -728,12 +915,6 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.2 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.8 },
-        },
-      },
     },
     ["solarized-osaka"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 4.5 }, bg = "NONE" } },
@@ -785,13 +966,6 @@ local function colorscheme_overrides()
           reverse = false,
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = -0.2 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 1.1 },
-          reverse = false,
-        },
-      },
     },
     ["selenized"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
@@ -837,13 +1011,6 @@ local function colorscheme_overrides()
           reverse = false,
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.15 },
-          reverse = false,
-        },
-      },
     },
     ["onedark"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 3 }, bg = "NONE" } },
@@ -863,13 +1030,6 @@ local function colorscheme_overrides()
           reverse = false,
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.25 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.3 },
-          reverse = false,
-        },
-      },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.7 } } },
     },
     ["bamboo"] = {
@@ -886,13 +1046,6 @@ local function colorscheme_overrides()
           reverse = false,
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.3 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 },
-          reverse = false,
-        },
-      },
     },
     ["tokyonight"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
@@ -904,13 +1057,6 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.8 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
-          reverse = false,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 1.2 },
           reverse = false,
         },
       },
@@ -934,13 +1080,6 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-          reverse = false,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = -0.1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.2 },
           reverse = false,
         },
       },
@@ -983,12 +1122,6 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.6 },
-        },
-      },
     },
     ["catppuccin-mocha"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
@@ -1004,12 +1137,6 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 1.3 },
         },
       },
     },
@@ -1055,12 +1182,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
         },
       },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLineNC", attr = "fg", alter = 0.5 },
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.1 },
-        },
-      },
+
       {
         MyStatusLine_directory_fg = {
           fg = { from = "Directory", atrr = "fg", alter = 0.1 },

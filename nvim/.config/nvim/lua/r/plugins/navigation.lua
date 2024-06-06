@@ -499,10 +499,9 @@ return {
         { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
         { EdgyNormal = { bg = "NONE" } },
         { EdgyTitle = { fg = { from = "Directory", attr = "fg" }, bold = true, bg = RUtils.colortbl.statusline_bg } },
-        {
-          EdgyIcon = { bold = true, bg = RUtils.colortbl.statusline_bg, fg = RUtils.colortbl.statuslinenc_fg },
-        },
+        { EdgyIcon = { bold = true, bg = RUtils.colortbl.statusline_bg, fg = RUtils.colortbl.statuslinenc_fg } },
         { EdgyIconActive = { bold = true, bg = RUtils.colortbl.statusline_bg } },
+        { AerialLine = { bg = { from = "MyQuickFixLine", attr = "bg" }, sp = "NONE" } },
       })
 
       local opts = {
