@@ -45,17 +45,6 @@ function M.diagnostics()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end
 
-function M.semantic_tokens(bufnr)
-  vim.b.semantic_tokens_enabled = vim.b.semantic_tokens_enabled == false
-
-  for _, client in ipairs(vim.lsp.get_clients()) do
-    if client.server_capabilities.semanticTokensProvider then
-      vim.lsp.semantic_tokens[vim.b.semantic_tokens_enabled and "start" or "stop"](bufnr or 0, client.id)
-      RUtils.info(string.format("Buffer lsp semantic highlighting %s", bool2str(vim.b.semantic_tokens_enabled)))
-    end
-  end
-end
-
 ---@param buf? number
 ---@param value? boolean
 function M.inlay_hints(buf, value)

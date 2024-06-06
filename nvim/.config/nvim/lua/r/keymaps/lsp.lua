@@ -166,12 +166,6 @@ function M.get()
         end
 
         local defaultCmds = vim.tbl_deep_extend("force", {
-          toggle_codelens = function()
-            RUtils.toggle.codelens()
-          end,
-          toggle_semantic_tokens = function()
-            RUtils.toggle.semantic_tokens()
-          end,
           show_info_formatlspinfo = function()
             vim.cmd [[LazyFormatInfo]]
           end,

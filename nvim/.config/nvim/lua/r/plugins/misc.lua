@@ -83,6 +83,7 @@ return {
   -- SG.NVIM
   {
     "sourcegraph/sg.nvim",
+    enabled = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = { "SourcegraphSearch", "SourcegraphLogin" },
     -- You must do this first before using it:
