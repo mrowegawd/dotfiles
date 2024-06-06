@@ -4,8 +4,6 @@ local error_fg = Highlight.get("Error", "fg") or Highlight.get("Error", "bg")
 local keyword_fg = Highlight.get("Keyword", "fg")
 local statusline_bg = Highlight.get("StatusLine", "bg")
 local statusline_fg = Highlight.get("StatusLine", "fg")
-local statuslinenc_bg = Highlight.get("StatusLineNC", "bg")
-local statuslinenc_fg = Highlight.get("StatusLineNC", "fg")
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 local pmenusel_fg = Highlight.get("PmenuSel", "bg")
@@ -29,9 +27,9 @@ local M = {
   statusline_bg = Highlight.tint(statusline_bg, 0.6),
 
   statuslinenc_bg = Highlight.tint(statusline_bg, 0.1),
-  statuslinenc_fg = Highlight.tint(statuslinenc_fg, -0.2),
+  statuslinenc_fg = Highlight.tint(statusline_fg, -0.2),
 
-  separator_fg_inactive = Highlight.tint(statuslinenc_bg, -0.8),
+  separator_fg_inactive = Highlight.tint(statusline_bg, -0.8),
 
   separator_fg = separator_fg,
   separator_fg_alt = separator_fg_alt,

@@ -105,6 +105,7 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
+    dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
         "<a-o>",
@@ -143,16 +144,6 @@ return {
         },
         cmdline = {
           view = "cmdline_popup",
-        },
-        messages = {
-          -- Using kevinhwang91/nvim-hlslens because virtualtext is hard to read
-          -- view_search = false,
-          enabled = true, -- enables the Noice messages UI
-          view = "notify", -- default view for messages
-          view_error = "notify", -- view for errors
-          view_warn = "notify", -- view for warnings
-          view_history = "messages", -- view for :messages
-          view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
         },
         redirect = { view = "popup", filter = { event = "msg_show" } },
         views = {
@@ -218,31 +209,6 @@ return {
         desc = "Fold: cycle fold [fold-cycle]",
       },
     },
-  },
-  -- NVIM-TRANSPARENT
-  {
-    "xiyaowong/nvim-transparent",
-    cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
-    cond = vim.g.neovide == nil,
-    opts = {
-      extra_groups = { -- table/string: additional groups that should be cleared
-        -- In particular, when you set it to 'all', that means all available groups
-
-        -- example of akinsho/nvim-bufferline.lua
-        "BufferLineTabClose",
-        "BufferlineBufferSelected",
-        "BufferLineFill",
-        "BufferLineBackground",
-        "BufferLineSeparator",
-        "BufferLineIndicatorSelected",
-
-        "Normal",
-      },
-      exclude_groups = { "Folded" }, -- table: groups you don't want to clear
-    },
-    config = function(_, opts)
-      require("transparent").setup(opts)
-    end,
   },
   -- BEACON
   {

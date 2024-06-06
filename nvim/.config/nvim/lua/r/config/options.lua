@@ -313,15 +313,10 @@ opt.diffopt = opt.diffopt
   }
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "terminal" }
 
--- HACK: causes freezes on <= 0.9, so only enable on >= 0.10 for now
-if vim.fn.has "nvim-0.10" == 1 then
-  opt.foldmethod = "expr"
-  opt.smoothscroll = true
-  opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
-  opt.foldtext = ""
-else
-  opt.foldmethod = "indent"
-end
+opt.foldmethod = "expr"
+opt.smoothscroll = true
+opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+opt.foldtext = ""
 
 -- Disable providers we do not care a about
 vim.g.loaded_ruby_provider = 0
