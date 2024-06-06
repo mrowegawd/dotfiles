@@ -6,7 +6,7 @@ return {
   -- tags = { overseer.TAG.BUILD },
   -- strategy = { "toggleterm", open_on_start = true, close_on_exit = false },
   params = { save = { type = "boolean", default = true } },
-  builder = function(params)
+  builder = function()
     return {
       cmd = { vim.bo.filetype, vim.fn.expand "%" },
       components = {

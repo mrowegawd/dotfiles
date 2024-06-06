@@ -1054,8 +1054,8 @@ return {
               ["<s-down>"] = actions.cycle_history_next,
               ["<s-up>"] = actions.cycle_history_prev,
 
-              ["<c-f>"] = actions.results_scrolling_up,
-              ["<c-b>"] = actions.results_scrolling_down,
+              ["<c-p>"] = actions.results_scrolling_up,
+              ["<c-n>"] = actions.results_scrolling_down,
 
               ["<c-u>"] = actions.preview_scrolling_up,
               ["<c-d>"] = actions.preview_scrolling_down,
@@ -1079,7 +1079,6 @@ return {
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
 
-              ["<c-p>"] = layout_actions.toggle_preview,
               ["<a-p>"] = layout_actions.toggle_preview,
 
               ["<jk>"] = function()

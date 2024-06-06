@@ -730,22 +730,22 @@ M.Sessions = {
       if RUtils.has "persistence.nvim" then
         local ok, ses_persistent = pcall(require, "persistence")
         if not ok then
-          sess_status = "off"
+          sess_status = "Off"
         else
           local ses_persistent_get_current = ses_persistent.get_current()
           local sess = vim.fn.filereadable(ses_persistent_get_current) == 1
           if sess ~= nil then
-            sess_status = "on"
+            sess_status = "On"
           end
         end
       elseif RUtils.has "resession.nvim" then
         local ok, ses_resession = pcall(require, "resession")
         if not ok then
-          sess_status = "off"
+          sess_status = "Off"
         else
           local ses_resession_get_current = ses_resession.get_current()
           if ses_resession_get_current ~= nil then
-            sess_status = "on"
+            sess_status = "On"
           end
         end
       end

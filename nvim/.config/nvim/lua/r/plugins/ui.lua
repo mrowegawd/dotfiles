@@ -5,13 +5,13 @@ return {
   -- INDENTMINI
   {
     "nvimdev/indentmini.nvim",
-    event = "LazyFile",
+    event = "VeryLazy",
     config = function()
       Highlight.plugin("indentmini", {
         theme = {
           ["*"] = {
             { IndentLine = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            { IndentLineCurrent = { fg = { from = "Normal", attr = "bg", alter = 4.5 } } },
+            { IndentLineCurrent = { fg = { from = "Normal", attr = "bg", alter = 3.5 } } },
           },
         },
       })

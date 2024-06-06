@@ -196,15 +196,19 @@ return {
       {
         "<a-f>",
         function()
-          vim.cmd "wincmd L"
+          vim.cmd "wincmd l"
           vim.cmd.Vterm()
+          RUtils.map.feedkey("<C-\\><C-n>sw", "t")
+          -- vim.cmd.startinsert()
+          -- vim.cmd "startinsert!"
+          RUtils.map.feedkey("a", "t")
         end,
         desc = "Terminal: new term split [termim.nvim]",
       },
       {
         "<a-N>",
         function()
-          vim.cmd "wincmd L"
+          -- vim.cmd "wincmd L"
           vim.cmd.Fterm()
         end,
         desc = "Terminal: open new tabterm [termim.nvim]",
