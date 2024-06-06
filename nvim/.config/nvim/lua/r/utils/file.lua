@@ -33,4 +33,22 @@ function M.create_dir(path)
   end
 end
 
+local separator = function()
+  return "/"
+end
+
+local function remove_trailing(path)
+  local p, _ = path:gsub(separator() .. "$", "")
+  return p
+end
+
+function M.basename(path)
+  path = remove_trailing(path)
+  local i = path:match("^.*()" .. separator())
+  if not i then
+    return path
+  end
+  return path:sub(i + 1, #path)
+end
+
 return M

@@ -4,6 +4,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field async r.utils.async
 ---@field config LazyVimConfig
 ---@field ui r.utils.ui
+---@field notes r.utils.notes
 ---@field qf r.utils.qf
 ---@field lsp r.utils.lsp
 ---@field root r.utils.root

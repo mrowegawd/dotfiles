@@ -6,7 +6,7 @@ local Highlight = require "r.settings.highlights"
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 return {
-  -- NEORG
+  -- NEORG (disabled)
   {
     "nvim-neorg/neorg",
     enabled = false,
@@ -306,9 +306,9 @@ return {
       {
         "<Localleader>fA",
         function()
-          return RUtils.neorg.open_orgagenda_paths()
+          return RUtils.notes.open_agenda_file_lists()
         end,
-        desc = "Note: open list orgtodos orgmode [orgmode]",
+        desc = "Note: open agenda file list [orgmode]",
       },
       {
         "<Localleader>fc",
@@ -324,23 +324,6 @@ return {
         end,
         desc = "Note: open agenda orgmode [orgmode]",
       },
-      -- {
-      --   "<Localleader>ff",
-      --   function()
-      --     return fzf_lua.files {
-      --       prompt = "  ",
-      --       cwd = RUtils.config.path.wiki_path,
-      --       file_ignore_patterns = { "%.norg$", "*.png$" },
-      --       rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]],
-      --
-      --       winopts = {
-      --         -- fullscreen = true,
-      --         title = RUtils.fzflua.format_title("Note Files", ""),
-      --       },
-      --     }
-      --   end,
-      --   desc = "Note: find note files [orgmode]",
-      -- },
     },
     dependencies = {
       "hrsh7th/nvim-cmp",
