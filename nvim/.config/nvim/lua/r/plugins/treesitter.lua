@@ -256,12 +256,17 @@ return {
       Highlight.plugin("treesitter-context", {
         theme = {
           ["*"] = {
-            { TreesitterContextSeparator = { link = "WinSeparator" } },
-            { TreesitterContext = { inherit = "Normal" } },
+            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg" },
+              },
+            },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.8 },
-                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.1 },
+                bg = { from = "TreesitterContext" },
               },
             },
           },
@@ -272,9 +277,8 @@ return {
       })
       return {
         multiline_threshold = 4,
-        -- separator = "━", -- alternatives: ▁ ─ ▄ 󰇘  󰇘
         separator = "▁", -- alternatives: ▁ ─ ▄
-        opts = { mode = "cursor", max_lines = 5 },
+        opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(buf)
           local tbl_winsplits = {}
@@ -293,7 +297,7 @@ return {
             end
           end
 
-          if #tbl_winsplits < 3 then
+          if #tbl_winsplits < 4 then
             -- check split or no split (`leaf`, `col` , `row`)
             local layout = vim.fn.winlayout()
             if layout[1] == "col" then -- a split window
