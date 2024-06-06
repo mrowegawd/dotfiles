@@ -266,7 +266,7 @@ return {
             ["<F2>"] = "toggle-fullscreen",
             ["<F4>"] = "toggle-preview-cw",
 
-            ["<c-p>"] = "toggle-preview",
+            ["<a-p>"] = "toggle-preview",
 
             ["<c-d>"] = "preview-page-down",
             ["<c-u>"] = "preview-page-up",
@@ -282,7 +282,7 @@ return {
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[Ctrl-y: copy/yank path | Alt-e: rgflow]] },
+          fzf_opts = { ["--header"] = [[Alt-y: copy/yank path | Alt-e: rgflow]] },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
@@ -316,7 +316,7 @@ return {
                 end,
               })
             end,
-            ["ctrl-y"] = function(selected, _)
+            ["alt-y"] = function(selected, _)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
               local pth = selected[1]:sub(slice_num_str)
               vim.fn.setreg([[+]], pth)
@@ -362,7 +362,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o: open browser | Ctrl-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
+              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -378,7 +378,7 @@ return {
 
                 RUtils.info("Browse commit hash: " .. commit_hash, { title = "FZFGit" })
               end,
-              ["ctrl-y"] = function(selected, _)
+              ["alt-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 vim.fn.setreg("+", commit_hash)
@@ -421,7 +421,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o: open browser | Ctrl-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
+              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -436,7 +436,7 @@ return {
 
                 vim.api.nvim_command(":GBrowse " .. commit_hash)
               end,
-              ["ctrl-y"] = function(selected, _)
+              ["alt-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 vim.fn.setreg("+", commit_hash)
