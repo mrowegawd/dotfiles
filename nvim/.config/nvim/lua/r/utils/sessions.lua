@@ -38,4 +38,16 @@ function M.load_ses()
   end
 end
 
+function M.load_ses_dashboard()
+  if RUtils.has "resession.nvim" then
+    require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+    if #vim.fn.getqflist() > 0 then
+      vim.cmd [[copen]]
+      vim.cmd [[wincmd p]]
+    end
+  else
+    RUtils.warn("Atm you have NONE session plugin?!", { title = "Sessions" })
+  end
+end
+
 return M

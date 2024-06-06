@@ -1,10 +1,9 @@
 ---@class r.utils.ui
 local M = {}
 
-local fcs = vim.opt.fillchars:get()
 local v = vim.v
 
-local space, big_spaces = " ", ""
+local big_spaces = ""
 local separator = "│"
 
 ---@alias Sign {name:string, text:string, texthl:string, priority:number}
@@ -75,7 +74,6 @@ function M.color(name, bg)
   ---@type {foreground?:number}?
   ---@diagnostic disable-next-line: deprecated
   local hl = vim.api.nvim_get_hl and vim.api.nvim_get_hl(0, { name = name, link = false })
-    or vim.api.nvim_get_hl_by_name(name, true)
   ---@diagnostic disable-next-line: undefined-field
   ---@type string?
   local color = nil
@@ -110,7 +108,7 @@ end
 
 function M.statuscolumn()
   -- local lnum, relnum, virtnum = v.lnum, v.relnum, v.virtnum
-  local lnum = v.lnum
+  -- local lnum = v.lnum
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
   local is_file = vim.bo[buf].buftype == ""
@@ -124,10 +122,11 @@ function M.statuscolumn()
 
   if show_signs then
     ---@type Sign?,Sign?,Sign?
-    local left, right, fold
+    local left, right, fold, githl
     for _, s in ipairs(M.get_signs(buf, vim.v.lnum)) do
       if s.name and s.name:find "GitSign" then
         right = s
+        -- githl = s["texthl"]
       else
         left = s
       end
@@ -136,10 +135,19 @@ function M.statuscolumn()
       left = nil
     end
     vim.api.nvim_win_call(win, function()
-      if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then
-        fold = { text = space, texthl = "FoldColumn" }
-      else
-        fold = { text = vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose, texthl = "FoldColumn" }
+      -- if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then
+      --   fold = { text = space, texthl = "FoldColumn" }
+      -- else
+      --   fold = { text = vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose, texthl = "GitSignsAdd" }
+      -- end
+      if vim.fn.foldclosed(vim.v.lnum) >= 0 then
+        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = githl or "FoldColumn1" }
+      elseif
+        -- show_open_folds
+        -- and not RUtils.ui.skip_foldexpr[buf]
+        vim.treesitter.foldexpr(vim.v.lnum):sub(1, 1) == ">"
+      then -- fold start
+        fold = { text = vim.opt.fillchars:get().foldopen or "", texthl = githl or "FoldColumn" }
       end
     end)
 
@@ -191,7 +199,6 @@ function M.fg(name)
   ---@type {foreground?:number}?
   ---@diagnostic disable-next-line: deprecated
   local hl = vim.api.nvim_get_hl and vim.api.nvim_get_hl(0, { name = name, link = false })
-    or vim.api.nvim_get_hl_by_name(name, true)
   ---@diagnostic disable-next-line: undefined-field
   local fg = hl and (hl.fg or hl.foreground)
   return fg and { fg = string.format("#%06x", fg) } or nil

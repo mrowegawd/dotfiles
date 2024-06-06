@@ -14,32 +14,13 @@ RUtils.cmd.augroup("WrapSpell", {
 })
 
 -- NOTE: It seems this fix error invalid window from `resession.nvim'`
-RUtils.cmd.augroup("ResessionLeave2", {
-  event = { "VimLeavePre" },
+RUtils.cmd.augroup("ForceCloseQFToAvoidSessionError", {
+  event = { "VimLeavePre", "VimLeave" },
   command = function()
     local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
     if is_qf_opened.found then
       vim.cmd [[cclose]]
     end
-  end,
-})
-
-RUtils.cmd.augroup("ResessionVimEnter2", {
-  event = { "VimEnter" },
-  command = function()
-    if #vim.fn.getqflist() > 0 then
-      vim.cmd [[copen]]
-    end
-  end,
-})
-
-RUtils.cmd.augroup("AuTermOpen", {
-  -- Related https://github.com/neovim/neovim/issues/20726
-  event = { "TermOpen" },
-  command = function()
-    vim.opt_local.foldmethod = "manual"
-    vim.opt_local.foldenable = false
-    vim.cmd.startinsert()
   end,
 })
 

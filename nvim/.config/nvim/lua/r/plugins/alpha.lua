@@ -53,7 +53,7 @@ return {
             { action = "e $MYVIMRC", desc = " Config", icon = " ", key = "c" },
             -- { action = 'lua require("persistence").load()', desc = " Restore Session", icon = " ", key = "s" },
             {
-              action = 'lua require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })',
+              action = 'lua require("r.utils.sessions").load_ses_dashboard()',
               desc = " Restore Session",
               icon = " ",
               key = "s",

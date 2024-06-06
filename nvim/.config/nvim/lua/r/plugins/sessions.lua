@@ -9,7 +9,7 @@ return {
   {
     "stevearc/resession.nvim",
     -- lazy = vim.fn.argc(-1) == 0,
-    event = "VeryLazy",
+    event = "LazyFile",
     opts = {
       autosave = {
         enabled = true,
