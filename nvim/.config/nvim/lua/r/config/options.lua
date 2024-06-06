@@ -229,7 +229,7 @@ opt.hidden = true -- do not unload buffer when abandoned
 opt.updatetime = 300
 opt.timeout = true
 if not vim.g.vscode then
-  opt.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
+  opt.timeoutlen = 1000 -- Lower than default (1000) to quickly trigger which-key
 end
 opt.ttimeoutlen = 10
 
