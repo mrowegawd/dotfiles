@@ -767,6 +767,7 @@ return {
         "dmmulroy/tsc.nvim",
         cmd = { "TSC" },
         config = function()
+          local utils = require "tsc.utils"
           require("tsc").setup {
             auto_open_qflist = true,
             auto_close_qflist = false,
@@ -891,6 +892,7 @@ return {
       })
     end,
   },
+  -- VENV-SELECTOR
   {
     "linux-cultist/venv-selector.nvim",
     cmd = "VenvSelect",

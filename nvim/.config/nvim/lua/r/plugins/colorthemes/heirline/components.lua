@@ -547,7 +547,7 @@ M.LSPActive = {
   end,
   provider = function(self)
     if #self.names > 1 then
-    return " "
+      return " "
     end
     return ""
   end,
@@ -557,7 +557,7 @@ M.LSPActive = {
       if vim.tbl_isempty(self.names) then
         return ""
       else
-        return " [" .. table.concat(self.names, " ") .. "]  "
+        return " [" .. table.concat(self.names, " ") .. "] "
       end
     end,
     hl = { fg = colors.base_fg, bg = colors.base_bg },
@@ -768,10 +768,10 @@ M.BufferCwd = {
       local patc = vim.uv.cwd()
       if patc then
         local cwd = vim.fn.fnamemodify(patc, ":t")
-      if not cwd or cwd == "" then
-        return ""
-      end
-      -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
+        if not cwd or cwd == "" then
+          return ""
+        end
+        -- return "%#MyStatusLine_directory_fg# " .. cwd .. "%* "
         return " " .. cwd .. "%*"
       end
     end,
