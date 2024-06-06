@@ -218,7 +218,6 @@ RUtils.map.tnoremap("<c-h>", "<Left>", { desc = "Terminal: left char" })
 RUtils.map.tnoremap("<c-l>", "<Right>", { desc = "Terminal: right char" })
 RUtils.map.tnoremap("<c-b>", "<c-Left>", { desc = "Terminal: backward" })
 RUtils.map.tnoremap("<c-f>", "<c-Right>", { desc = "Terminal: forward" })
-RUtils.map.tnoremap("<c-w>", "<BS>", { desc = "Terminal: del char" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ WINDOWS, VIEW AND NAV                                    │

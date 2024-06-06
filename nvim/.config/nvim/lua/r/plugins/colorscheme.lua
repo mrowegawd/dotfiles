@@ -27,9 +27,7 @@ return {
       end
       return false
     end,
-    config = function()
-      require("neomodern").setup {}
-    end,
+    opts = {},
   },
   -- HORIZON
   {
@@ -273,38 +271,22 @@ return {
         return true
       end
     end,
-    config = function()
-      -- local tokyo_style = "strom"
-      -- if Config.colorscheme == "tokyonight-night" then
-      --   tokyo_style = "night"
-      -- elseif Config.colorscheme == "tokyonight-day" then
-      --   tokyo_style = "day"
-      -- end
-
+    opts = {
+      style = "night",
+      sidebars = {
+        "NeogitStatus",
+      },
+      styles = {
+        comments = { italic = true },
+      },
+      dim_inactive = false, -- dims inactive windows
+      transparent = false, -- true
+      on_colors = function() end,
+      on_highlights = function() end,
+    },
+    config = function(_, opts)
       local tokyonight = require "tokyonight"
-      tokyonight.setup {
-        style = "night",
-        -- priority = 1000,
-        sidebars = {
-          --     "qf",
-          --     "vista_kind",
-          --     "terminal",
-          --     -- "packer",
-          --     "spectre_panel",
-          "NeogitStatus",
-          --     -- "help",
-          --     "startuptime",
-          --     "Outline",
-        },
-        styles = {
-          comments = { italic = true },
-          -- functions = { italic = true },
-          -- variables = { italic = true },
-        },
-        dim_inactive = false, -- dims inactive windows
-        transparent = false, -- true
-      }
-
+      tokyonight.setup(opts)
       tokyonight.load()
     end,
   },
