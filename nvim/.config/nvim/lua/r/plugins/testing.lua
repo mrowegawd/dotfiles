@@ -6,11 +6,13 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/neotest-go",
       "nvim-neotest/neotest-python",
+      "mrcjkb/rustaceanvim",
     },
     opts = {
       status = { virtual_text = true },
       output = { open_on_run = true },
       adapters = {
+        ["rustaceanvim.neotest"] = {},
         ["neotest-go"] = {
           recursive_run = true,
         },
