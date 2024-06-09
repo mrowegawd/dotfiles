@@ -42,7 +42,9 @@ end
 
 function M.load_ses_dashboard()
   if RUtils.has "resession.nvim" then
-    require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+    local resession = require "resession"
+    resession.load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
+
     if #vim.fn.getqflist() > 0 then
       vim.cmd [[copen]]
       vim.cmd [[wincmd p]]
@@ -59,7 +61,14 @@ function M.load_ses_dashboard()
     if async ~= nil then
       async:send()
     end
-    vim.cmd [[e]]
+
+    -- if sessions are not loaded, do not run this command,
+    if vim.bo[0].filetype ~= "dashboard" then
+      if vim.bo[0].filetype == "" then
+        return
+      end
+      vim.cmd [[edit!]]
+    end
   else
     RUtils.warn("can't find your session plugin!", { title = "Sessions" })
   end

@@ -38,6 +38,7 @@ return {
           },
           f = { name = "+fzua" },
           u = { name = "+toggle" },
+          R = { name = "+translate" },
           g = {
             name = "+git",
             h = { name = "+hunks" },
