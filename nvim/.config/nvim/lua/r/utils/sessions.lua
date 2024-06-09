@@ -1,6 +1,8 @@
 ---@class r.utils.session
 local M = {}
 
+local uv = vim.loop
+
 function M.save_ses()
   local MS = require "mini.sessions"
   -- local branch_name = vim.fn["FugitiveHead"]() or "temp"
@@ -45,6 +47,19 @@ function M.load_ses_dashboard()
       vim.cmd [[copen]]
       vim.cmd [[wincmd p]]
     end
+
+    local async
+    async = uv.new_async(vim.schedule_wrap(function()
+      if async ~= nil then
+        require("qfsilet.note").todo_local()
+        async:close()
+      end
+    end))
+
+    if async ~= nil then
+      async:send()
+    end
+    vim.cmd [[e]]
   else
     RUtils.warn("Atm you have NONE session plugin?!", { title = "Sessions" })
   end

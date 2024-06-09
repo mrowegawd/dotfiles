@@ -230,7 +230,7 @@ function M.change_colors()
 *color17: %s
 *color18: %s
 
-! FZF: fzf_bg, fzf_fg, fzf_match, 
+! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: %s
 *color20: %s
 *color21: %s

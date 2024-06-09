@@ -10,6 +10,10 @@ return {
     "stevearc/resession.nvim",
     -- lazy = vim.fn.argc(-1) == 0,
     event = "LazyFile",
+    -- event = "VeryLazy",
+    dependencies = {
+      dir = "~/.local/src/nvim_plugins/qfsilet",
+    },
     opts = {
       autosave = {
         enabled = true,

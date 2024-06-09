@@ -98,6 +98,8 @@ return {
       },
     },
     keys = {
+      { "<a-w>f", require("fzf-lua").tabs, desc = "Fzflua: select tabs" },
+
       { "sf", require("fzf-lua").buffers, desc = "Fzflua: select buffers" },
       { "sG", require("fzf-lua").lines, desc = "Fzflua: live grep on buffers" },
       { "sH", require("fzf-lua").oldfiles, desc = "Fzflua: history buffer" },
@@ -121,26 +123,22 @@ return {
       },
       { "<Leader>ff", require("fzf-lua").files, desc = "Fzflua: find files", mode = { "n", "v" } },
       { "<Leader>fC", require("fzf-lua").commands, desc = "Fzflua: commands", mode = "n" },
+      -- {
+      --   "gss",
+      --   function()
+      --     require("fzf-lua").lsp_document_symbols {
+      --       winopts = {
+      --         title = RUtils.fzflua.format_title("Symbols", RUtils.config.icons.misc.gear),
+      --         fullscreen = false,
+      --       },
+      --     }
+      --   end,
+      --   desc = "LSP: document symbols [fzflua]",
+      -- },
       {
         "gs",
-        function()
-          require("fzf-lua").lsp_document_symbols {
-            winopts = {
-              fullscreen = false,
-            },
-          }
-        end,
-        desc = "LSP: document symbols [fzflua]",
-      },
-      {
-        "gS",
-        function()
-          require("fzf-lua").lsp_workspace_symbols {
-            winopts = {
-              fullscreen = true,
-            },
-          }
-        end,
+        -- RUtils.fzflua.symbols,
+        "<CMD>FzfLua lsp_document_symbols<CR>",
         desc = "LSP: workspace symbols [fzflua]",
       },
       { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
@@ -203,6 +201,7 @@ return {
     },
     opts = function()
       local actions = require "fzf-lua.actions"
+      local extend_title = RUtils.fzflua.extend_title_fzf { cwd = "" }
 
       local img_preview_command = vim.fn.executable "ueberzug" == 1 and { "ueberzug" } or nil
       local html_preview_command = vim.fn.executable "w3m" == 1 and { "w3m", "-dump" } or nil
@@ -263,7 +262,7 @@ return {
         keymap = {
           builtin = {
             ["<F1>"] = "toggle-help",
-            ["<F2>"] = "toggle-fullscreen",
+            ["<F3>"] = "toggle-fullscreen",
             ["<F4>"] = "toggle-preview-cw",
 
             ["<a-p>"] = "toggle-preview",
@@ -282,7 +281,7 @@ return {
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[Alt-y: copy/yank path | Alt-e: rgflow]] },
+          fzf_opts = { ["--header"] = [[Alt-y: copy/yank path | Alt-g: rgflow]] },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
@@ -305,7 +304,7 @@ return {
                 end
               end
             end,
-            ["alt-e"] = function(_, args)
+            ["alt-g"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -521,7 +520,7 @@ return {
           prompt = "  ",
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Alt-e: rgflow]] },
+          fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Alt-g: rgflow]] },
           winopts = {
             title = RUtils.fzflua.format_title(
               "Grep",
@@ -551,7 +550,7 @@ return {
           end,
           actions = {
             ["ctrl-g"] = { actions.grep_lgrep },
-            ["alt-e"] = function(_, args)
+            ["alt-g"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -570,6 +569,14 @@ return {
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
           },
+        },
+        builtin = {
+          prompt = "   ",
+          winopts = { title = RUtils.fzflua.format_title("Builtin", RUtils.config.icons.misc.tools) },
+        },
+        commands = {
+          prompt = "   ",
+          winopts = { title = RUtils.fzflua.format_title("Commands", RUtils.config.icons.misc.tools) },
         },
         oldfiles = {
           prompt = "   ",
@@ -705,7 +712,8 @@ return {
         colorschemes = {
           live_preview = true, -- apply the colorscheme on preview?
           actions = { ["default"] = actions.colorscheme },
-          winopts = { height = 0.55, width = 0.30 },
+          prompt = "   ",
+          winopts = { title = RUtils.fzflua.format_title("Colorscheme", RUtils.config.icons.misc.plus) },
         },
         quickfix = {
           winopts = {
@@ -722,17 +730,65 @@ return {
         },
         lsp = {
           cwd_only = true,
-          no_action_zz = true,
           symbols = {
-            no_action_zz = true,
+            prompt = "   ",
             symbol_style = 1,
             symbol_icons = RUtils.config.icons.kinds,
-            fzf_opts = {
-              ["--reverse"] = false,
-              -- ["--scrollbar"] = "▓",
-            },
+            child_prefix = false, -- remove spaces
+            async_or_timeout = true,
+            exec_empty_query = true,
             winopts = {
-              title = RUtils.fzflua.format_title("Symbols", ""),
+              title = extend_title.title,
+              fullscreen = false,
+            },
+            fzf_opts = {
+              ["--header"] = [[Alt-g: Filter LSP  | Alt-x: Workspace Symbols]],
+              ["--reverse"] = false,
+            },
+            symbol_hl = function(s)
+              return "@" .. s:lower()
+            end,
+            symbol_fmt = function(s, _)
+              return "[" .. s .. "]"
+            end,
+            actions = {
+              ["alt-g"] = function()
+                local opts = {
+                  title = "[LSP Symbols]",
+                  actions = {
+                    ["default"] = function(selected)
+                      local contents = {}
+                      if type(selected) == "table" then
+                        for _, x in pairs(selected) do
+                          for word in x:gmatch "%w+" do
+                            contents[#contents + 1] = word
+                          end
+                          contents[#contents + 1] = word
+                        end
+                      else
+                        for word in selected[1]:gmatch "%w+" do
+                          contents[#contents + 1] = word
+                        end
+                      end
+
+                      require("fzf-lua").lsp_document_symbols {
+                        query = table.concat(contents, " "),
+                      }
+                    end,
+                  },
+                }
+                RUtils.fzflua.cmd_filter_kind_lsp(opts)
+              end,
+
+              ["alt-x"] = function()
+                local cwd = vim.loop.cwd()
+                local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
+
+                require("fzf-lua").lsp_workspace_symbols {
+                  cwd = cwd,
+                  winopts = { title = extend_title_cs.title, fullscreen = false },
+                }
+              end,
             },
           },
           code_actions = RUtils.fzflua.cursor_dropdown {
@@ -742,7 +798,6 @@ return {
           },
           finder = {
             prompt = "  ",
-            no_action_zz = true,
             winopts = {
               title = RUtils.fzflua.format_title("LSP Finder", ""),
             },
@@ -773,6 +828,16 @@ return {
     end,
     config = function(_, opts)
       require("fzf-lua").setup(opts)
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("FzfSetMap", { clear = true }),
+        desc = "Set terminal mappings in fzf buffer.",
+        pattern = "fzf",
+        callback = function(bufn)
+          vim.keymap.set("t", "<F2>", require("fzf-lua").builtin, { buffer = bufn.buf })
+          -- vim.keymap.set("t", "<c-w>", "<c-w>", { buffer = buf, nowait = true })
+        end,
+      })
     end,
   },
   -- TELESCOPE
@@ -806,6 +871,12 @@ return {
       -- },
       -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "v" } },
+      {
+        "<Localleader><Localleader>",
+        "<CMD>Telescope find_files<CR>",
+        desc = "Telescope: files",
+        mode = { "n", "v" },
+      },
       -- { "<Leader>bg", "<CMD>Telescope current_buffer_fuzzy_find<CR>", desc = "Telescope: live_grep on buffers" },
       -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
       -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
@@ -1047,9 +1118,6 @@ return {
           mappings = {
             i = {
               ["<esc>"] = actions.close,
-              -- ["<c-c>"] = actions.close,
-
-              -- ["<c-o>"] = trouble.open_with_trouble,
 
               ["<s-down>"] = actions.cycle_history_next,
               ["<s-up>"] = actions.cycle_history_prev,
@@ -1059,8 +1127,6 @@ return {
 
               ["<c-u>"] = actions.preview_scrolling_up,
               ["<c-d>"] = actions.preview_scrolling_down,
-
-              -- ["<c-l>"] = false, -- use `false` to disable mapping
 
               ["<a-a>"] = actions.toggle_all,
               ["<a-q>"] = actions.send_to_qflist + actions.open_qflist,
@@ -1074,16 +1140,11 @@ return {
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
               ["<F4>"] = layout_actions.cycle_layout_next,
-              -- ["<c-h>"] = layout_actions.cycle_layout_prev,
 
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
 
               ["<a-p>"] = layout_actions.toggle_preview,
-
-              ["<jk>"] = function()
-                vim.cmd.stopinsert()
-              end,
             },
             n = {
               ["<esc>"] = actions.close,
@@ -1110,6 +1171,8 @@ return {
             },
           },
           oldfiles = dropdown {},
+          builtin = themes.get_ivy {},
+          filetypes = themes.get_ivy {},
           find_files = themes.get_ivy { hidden = true },
           help_tags = { theme = "ivy" },
           live_grep = themes.get_ivy {
@@ -1150,8 +1213,18 @@ return {
     end,
     config = function(_, opts)
       local telescope = require "telescope"
-      ---@diagnostic disable-next-line: undefined-field
       telescope.setup(opts)
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("TelescopeSetMap", { clear = true }),
+        desc = "Set terminal mappings in telescope buffer.",
+        pattern = "TelescopePrompt",
+        callback = function(buf)
+          vim.keymap.set("i", "<F2>", function()
+            vim.cmd "Telescope builtin"
+          end, { buffer = buf.buf })
+        end,
+      })
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "corrode"
       ---@diagnostic disable-next-line: undefined-field

@@ -66,12 +66,12 @@ mods = "Control"
 [[keyboard.bindings]]
 action = "ScrollPageUp"
 key = "PageUp"
-mods = "Control"
+mods = "Control|Shift"
 
 [[keyboard.bindings]]
 action = "ScrollPageDown"
 key = "PageDown"
-mods = "Control"
+mods = "Control|Shift"
 
 [mouse]
 hide_when_typing = true
@@ -327,39 +327,44 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# Campfire Alacritty Colors
+# TokyoNight Alacritty Colors
+# Default colors
 [colors.primary]
-background = '#1b1a20'
-foreground = '#bbbac1'
+background = '#1a1b26'
+foreground = '#c0caf5'
 
-[colors.cursor]
-text = '0x21222c'
-cursor = '0xff0000'
+#[colors.cursor]
+#cursor = '#c0caf5'
+#text = '#1a1b26'
 
+# Normal colors
 [colors.normal]
-black =   '#090618'
-red =     '#c34043'
-green =   '#76946a'
-yellow =  '#c0a36e'
-blue =    '#7e9cd8'
-magenta = '#957fb8'
-cyan =    '#6a9589'
-white =   '#c8c093'
+black = '#15161e'
+red = '#f7768e'
+green = '#9ece6a'
+yellow = '#e0af68'
+blue = '#7aa2f7'
+magenta = '#bb9af7'
+cyan = '#7dcfff'
+white = '#a9b1d6'
 
+# Bright colors
 [colors.bright]
-black =   '#727169'
-red =     '#e82424'
-green =   '#98bb6c'
-yellow =  '#e6c384'
-blue =    '#7fb4ca'
-magenta = '#938aa9'
-cyan =    '#7aa89f'
-white =   '#dcd7ba'
+black = '#414868'
+red = '#f7768e'
+green = '#9ece6a'
+yellow = '#e0af68'
+blue = '#7aa2f7'
+magenta = '#bb9af7'
+cyan = '#7dcfff'
+white = '#c0caf5'
 
-# selection:
-# background: '0x2d4f67'
-# foreground: '0xc8c093'
-#
-# [[indexed_colors]]
-# index = 16
-# color = '#ffa066'
+# Indexed Colors
+[[colors.indexed_colors]]
+index = 16
+color = '#ff9e64'
+
+[[colors.indexed_colors]]
+index = 17
+color = '#db4b4b'
+

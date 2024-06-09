@@ -243,6 +243,11 @@ RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: right window", silent = true
 RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: down window", silent = true })
 RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
 
+RUtils.map.nnoremap("<a-w>h", "<C-w>h", { desc = "View: left window (mod)", silent = true })
+RUtils.map.nnoremap("<a-w>l", "<C-w>l", { desc = "View: right window (mod)", silent = true })
+RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
+RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
+
 RUtils.map.nnoremap("<Left>", "<cmd>wincmd h<cr>", { desc = "View: left window (alternate)" })
 RUtils.map.nnoremap("<Right>", "<cmd>wincmd l<cr>", { desc = "View: right window (alternate)" })
 RUtils.map.nnoremap("<Up>", "<cmd>wincmd k<cr>", { desc = "View: up window (alternate)" })
@@ -253,6 +258,8 @@ RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Winav: close tab", sile
 
 RUtils.map.nnoremap("tl", "<CMD>tabn<CR>", { desc = "Winav: next tab", silent = true })
 RUtils.map.nnoremap("th", "<CMD>tabp<CR>", { desc = "Winav: prev tab", silent = true })
+RUtils.map.nnoremap("<a-w>L", "<CMD>tabn<CR>", { desc = "Winav: next tab (mod)", silent = true })
+RUtils.map.nnoremap("<a-w>H", "<CMD>tabp<CR>", { desc = "Winav: prev tab (mod)", silent = true })
 
 RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Winav: first tab", silent = true })
 RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Winav: last tab", silent = true })

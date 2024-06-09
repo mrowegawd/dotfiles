@@ -5,9 +5,9 @@ return {
   {
     "voldikss/vim-translator",
     keys = {
-      { "<Leader>rs", "<Plug>TranslateW", desc = "Misc: translate on cursor [vim-translator]" },
+      { "<Leader>RS", "<Plug>TranslateW", desc = "Misc: translate on cursor [vim-translator]" },
       {
-        "<Leader>rs",
+        "<Leader>RS",
         "<Plug>TranslateWV",
         desc = "Misc: translate on select visual mode [vim-translator]",
         mode = { "v" },

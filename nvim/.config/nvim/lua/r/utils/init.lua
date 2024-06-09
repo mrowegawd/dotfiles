@@ -1,8 +1,8 @@
 local LazyUtil = require "lazy.core.util"
 
 ---@class r.util: LazyUtilCore
----@field async r.utils.async
 ---@field config LazyVimConfig
+---@field async r.utils.async
 ---@field ui r.utils.ui
 ---@field notes r.utils.notes
 ---@field qf r.utils.qf
@@ -257,6 +257,20 @@ for _, level in ipairs { "info", "warn", "error" } do
     opts = opts or {}
     opts.title = opts.title or "LazyVim"
     return LazyUtil[level](msg, opts)
+  end
+end
+
+local cache = {} ---@type table<string, any>
+---@generic T: fun()
+---@param fn T
+---@return T
+function M.memoize(fn)
+  return function(...)
+    local key = vim.inspect({ ... })
+    if cache[key] == nil then
+      cache[key] = fn(...)
+    end
+    return cache[key]
   end
 end
 

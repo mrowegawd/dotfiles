@@ -48,7 +48,7 @@ return {
           l = { name = "+tlsp" },
           c = { name = "+changedir" },
           s = { name = "+surround" },
-          r = { name = "+cmds" },
+          r = { name = "+refactor" },
           -- p = { name = "+project" },
           t = { name = "+testing" },
           o = { name = "+open/browse" },

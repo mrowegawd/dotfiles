@@ -224,4 +224,72 @@ function M.__strip_str(selected)
   return __stripBeforeLastOccurrenceOf(pth, nbsp)
 end
 
+function M.select_lsp()
+  local lsp_kinds = { "all" }
+  for key, icon in pairs(RUtils.config.icons.kinds) do
+    table.insert(lsp_kinds, icon .. " " .. key)
+  end
+  return lsp_kinds
+end
+
+function M.cmd_filter_kind_lsp(opts)
+  opts = opts or {}
+  vim.validate {
+    tilte = { opts.title, "string" },
+    actions = { opts.actions, "table" },
+  }
+
+  local win_height = math.ceil(get_option "lines" - 150)
+  local win_width = math.ceil(get_option "columns" - 100)
+
+  local col = math.ceil((win_width / 2) * 1 + 20)
+  local row = math.ceil(((get_option "lines" - win_height) / 100) + 15)
+
+  local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+  local selected_lsp = M.select_lsp()
+
+  fzf_lua.fzf_exec(selected_lsp, {
+    prompt = "   ",
+    no_esc = true,
+    fzf_opts = { ["--layout"] = "reverse" },
+    winopts_fn = {
+      width = win_height,
+      height = win_width,
+    },
+    winopts = {
+      title = M.format_title(string.format("%s Cmd Filter LSP", opts.title), "󰈙"),
+      -- relative = "cursor",
+      row = row,
+      col = col,
+      height = 20,
+      width = 50,
+    },
+    actions = opts.actions,
+  })
+end
+
+function M.extend_title_fzf(opts, extend_title)
+  extend_title = extend_title or "Symbols"
+  opts = opts or {}
+
+  vim.validate {
+    cwd = { opts.cwd, "string" },
+  }
+
+  if #opts.cwd == 0 then
+    opts.cwd = ""
+  else
+    opts.cwd = string.format(": %s", opts.cwd)
+  end
+
+  local title = RUtils.fzflua.format_title(
+    string.format("[Mod] %s%s", extend_title, opts.cwd),
+    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.gear)
+  )
+
+  return {
+    title = title,
+  }
+end
+
 return M

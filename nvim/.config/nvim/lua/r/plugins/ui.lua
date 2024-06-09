@@ -237,7 +237,7 @@ return {
       }
     end,
   },
-  --BUFDELETE
+  -- BUFDELETE
   {
     "famiu/bufdelete.nvim",
     lazy = true,
@@ -497,12 +497,10 @@ return {
             italic = true,
           },
           buffer_selected = {
-            -- fg = col_selected_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
             italic = true,
-            -- bold = true,
           },
           --  ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
           --  ╎ PICK                                                     ╎
@@ -513,7 +511,6 @@ return {
           },
           pick_selected = {
             fg = { attribute = "fg", highlight = buffer_selected_fg },
-            -- bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = false,
           },
           pick_visible = {
@@ -525,8 +522,8 @@ return {
           --  ╎ MODIFIED                                                 ╎
           --  └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
           modified = {
+            fg = { attribute = "fg", highlight = "ErrorMsg" },
             bg = { attribute = "bg", highlight = col_base_bg_attr },
-            fg = { attribute = "fg", highlight = col_selected_sp },
           },
           modified_visible = {
             fg = { attribute = "fg", highlight = "ErrorMsg" },
@@ -548,13 +545,11 @@ return {
             italic = false,
           },
           duplicate_visible = {
-            -- fg = { attribute = "fg", highlight = col_selected_fg_attr },
             fg = col_select_visible_fg,
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           duplicate_selected = {
-            -- fg = col_selected_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
@@ -584,14 +579,11 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           warning_visible = {
-            -- fg = col_select_visible_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           warning_selected = {
-            -- fg = { attribute = "fg", highlight = col_selected_bg_attr },
-            -- fg = col_selected_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
@@ -621,13 +613,11 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           error_visible = {
-            -- fg = col_select_visible_fg,
-            fg = { attribute = "fg", highlight = col_selected_bg_attr },
+            fg = { attribute = "fg", highlight = "DiagnosticError" },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           error_selected = {
-            -- fg = col_selected_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
@@ -662,7 +652,6 @@ return {
             italic = true,
           },
           hint_selected = {
-            -- fg = col_selected_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },
@@ -692,13 +681,11 @@ return {
             bg = { attribute = "bg", highlight = col_base_bg_attr },
           },
           info_visible = {
-            -- fg = col_select_visible_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             italic = true,
           },
           info_selected = {
-            -- fg = col_selected_fg,
             fg = { attribute = "fg", highlight = col_selected_bg_attr },
             bg = { attribute = "bg", highlight = buffer_selected_bg },
             sp = { attribute = "fg", highlight = col_sp_fg_attr },

@@ -718,14 +718,14 @@ M.Diagnostics = {
   },
 }
 M.Sessions = {
-  condition = function()
-    return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
-  end,
-  provider = "",
+  -- condition = function()
+  --   return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
+  -- end,
+  -- provider = "",
   {
     provider = function()
       local sess_icon = " "
-      local sess_status = "off"
+      local sess_status = "Off"
 
       if RUtils.has "persistence.nvim" then
         local ok, ses_persistent = pcall(require, "persistence")
@@ -751,6 +751,17 @@ M.Sessions = {
       end
 
       return sess_icon .. " " .. sess_status .. " "
+    end,
+    hl = { fg = colors.diagnostic_warn },
+  },
+}
+M.Marks = {
+  {
+    provider = function()
+      local cur_mark = require("qfsilet.marks").get_current_status_buf()
+      if cur_mark > 0 then
+        return " " .. RUtils.config.icons.misc.marks .. " "
+      end
     end,
     hl = { fg = colors.diagnostic_warn },
   },
@@ -847,6 +858,7 @@ M.status_active_left = {
   M.Diagnostics,
   -- M.SearchCount, -- this func make nvim slow!
   M.Sessions,
+  M.Marks,
   M.BufferCwd,
   M.Ruler,
 

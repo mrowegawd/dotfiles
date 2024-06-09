@@ -3,6 +3,9 @@ local M = {}
 
 local v = vim.v
 
+---@type (fun(buf:number, lnum:number, vnum:number, win:number):Sign[]?)[]
+M.virtual = {}
+
 local big_spaces = ""
 local separator = "│"
 

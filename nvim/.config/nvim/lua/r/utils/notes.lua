@@ -20,7 +20,7 @@ local function opts_fzf(title, maps)
 
       local win_height = math.ceil(lines * 0.5)
       local win_width = math.ceil(columns * 0.22)
-      local col = math.ceil((columns - lines) + 15)
+      local col = math.ceil((columns - lines) - 10)
       local row = math.ceil(lines - win_height)
       return {
         width = win_width - 10,

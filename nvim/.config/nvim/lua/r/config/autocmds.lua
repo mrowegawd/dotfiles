@@ -142,81 +142,107 @@ RUtils.cmd.augroup("LocateLastPosition", {
   end,
 })
 
-RUtils.cmd.augroup(
-  "WindowBehaviours",
-  {
-    event = { "FileType" },
-    pattern = {
-      "orgagenda",
-      "capture",
-      "gitcommit",
-      "qf",
-      "NeogitCommitMessage",
-      "NeogitPopup",
-      -- "help",
-      -- "Trouble",
-    },
-    command = function()
-      cmd "wincmd J"
-      if vim.bo[0].filetype == "NeogitCommitMessage" then
-        cmd [[resize 20]]
-      end
-    end,
+RUtils.cmd.augroup("WindowBehaviours", {
+  event = { "FileType" },
+  pattern = {
+    "orgagenda",
+    "capture",
+    "gitcommit",
+    "qf",
+    "NeogitCommitMessage",
+    "NeogitPopup",
+    -- "help",
+    -- "Trouble",
   },
-  {
-    event = { "FileType" },
-    pattern = { "gitcommit", "NeogitCommitMessage" },
-    command = function()
-      vim.opt_local.spell = true
-      vim.opt_local.wrap = true
-      vim.opt_local.spelllang = { "en_us", "id" }
-      vim.opt_local.conceallevel = 2
-      vim.opt_local.relativenumber = false
-      vim.opt_local.number = false
-    end,
-  },
-  --   {
-  --   event = { "FocusLost" },
-  --   pattern = "*",
-  --   command = function()
-  --     vim.opt.laststatus = 0
-  --   end,
-  -- }, {
-  --   event = { "FocusGained" },
-  --   pattern = "*",
-  --   command = function()
-  --     vim.opt.laststatus = 2
-  --   end,
-  -- },
-  {
-    event = { "BufEnter", "BufRead" },
-    pattern = "*",
-    command = function()
-      if vim.bo.filetype == "" and (vim.bo.buftype == "terminal" or vim.bo.filetype == "toggleterm") then
-        vim.cmd.startinsert()
-        RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-        RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-        RUtils.map.tnoremap("<a-x>", function()
-          -- RUtils.map.feedkey("<C-\\><C-n>:q!<CR>", "t")
-          local buf = vim.api.nvim_get_current_buf()
-          require("bufdelete").bufdelete(buf, true)
-        end, { desc = "Terminal: close terminal" })
+  command = function()
+    cmd "wincmd J"
+    if vim.bo[0].filetype == "NeogitCommitMessage" then
+      cmd [[resize 20]]
+    end
+  end,
+}, {
+  event = { "FileType" },
+  pattern = { "gitcommit", "NeogitCommitMessage" },
+  command = function()
+    vim.opt_local.spell = true
+    vim.opt_local.wrap = true
+    vim.opt_local.spelllang = { "en_us", "id" }
+    vim.opt_local.conceallevel = 2
+    vim.opt_local.relativenumber = false
+    vim.opt_local.number = false
+  end,
+}, {
+  event = { "BufEnter", "BufRead" },
+  pattern = "*",
+  command = function()
+    if vim.bo.filetype == "" and (vim.bo.buftype == "terminal" or vim.bo.filetype == "toggleterm") then
+      vim.cmd.startinsert()
+      RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+      RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+      RUtils.map.tnoremap("<a-x>", function()
+        -- RUtils.map.feedkey("<C-\\><C-n>:q!<CR>", "t")
+        local buf = vim.api.nvim_get_current_buf()
+        require("bufdelete").bufdelete(buf, true)
+      end, { desc = "Terminal: close terminal" })
 
-        RUtils.map.tnoremap("sh", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
-        RUtils.map.tnoremap("sl", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
-        RUtils.map.tnoremap("sk", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
-        RUtils.map.tnoremap("sj", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+      -- TODO: pilih kandidat dan get familiar prefix untuk mapping terminal #low #created:2024-06-05
 
-        RUtils.map.tnoremap("<a-f>", function()
-          RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
-        end, { desc = "Terminal: new term split" })
-        RUtils.map.tnoremap("<a-N>", function()
-          RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
-        end, { desc = "Terminal: new tabterm" })
-      end
-    end,
-  }
-)
+      -- ATTEMPT 1: prefix mod `arrow keys` = gagal! (jari tangan kriting)
+      -- RUtils.map.tnoremap("<Right>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
+      -- RUtils.map.tnoremap("<Left>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
+      -- RUtils.map.tnoremap("<Up>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
+      -- RUtils.map.tnoremap("<Down>", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+
+      -- ATTEMPT 2: prefix mod `<c-w>` = gagal! (bikin ganggu fzf-lua, <c-w> untuk delete text line!)
+      -- RUtils.map.tnoremap("<c-w>h", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
+      -- RUtils.map.tnoremap("<c-w>l", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
+      -- RUtils.map.tnoremap("<c-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
+      -- RUtils.map.tnoremap("<c-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+      -- RUtils.map.tnoremap("<c-w>L", function()
+      --   RUtils.map.feedkey("<C-\\><C-n>tL", "t")
+      -- end, { desc = "Terminal: next tab" })
+      -- RUtils.map.tnoremap("<c-w>H", function()
+      --   RUtils.map.feedkey("<C-\\><C-n>th", "t")
+      -- end, { desc = "Terminal: prev tab" })
+      -- RUtils.map.tnoremap("<c-w>f", function()
+      --   RUtils.map.feedkey("<C-\\><C-n><c-w>f", "t")
+      -- end, { desc = "Terminal: create new terminal from terminal mode" })
+
+      -- ATTEMPT 3: prefix mod `<c-a>` = gagal! (<c-a> di terminal, go to first line)
+
+      -- ATTEMPT 4: prefix mod `<c-hjkl>` = gagal! (bikin ganggu fzf-lua, <c-l/h> next/prev char)
+
+      -- >>> ATTEMPT 5: prefix mod `<a-w>` = ?? (get familiar with this bindings maybe for some couple days?) <<<
+      RUtils.map.tnoremap("<a-w>h", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
+      RUtils.map.tnoremap("<a-w>l", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
+      RUtils.map.tnoremap("<a-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
+      RUtils.map.tnoremap("<a-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+      RUtils.map.tnoremap("<a-w>f", function()
+        require("fzf-lua").tabs()
+      end, { desc = "Terminal: down window" })
+      RUtils.map.tnoremap("<a-w>L", function()
+        RUtils.map.feedkey("<C-\\><C-n>tl", "t")
+      end, { desc = "Terminal: next tab" })
+      RUtils.map.tnoremap("<a-w>H", function()
+        RUtils.map.feedkey("<C-\\><C-n>th", "t")
+      end, { desc = "Terminal: prev tab" })
+      RUtils.map.tnoremap("<a-w>n", function()
+        RUtils.map.feedkey("<C-\\><C-n><c-w>f", "t")
+      end, { desc = "Terminal: create new terminal from terminal mode" })
+
+      -- ========================
+      -- Do not delete these line!
+      -- ========================
+
+      RUtils.map.tnoremap("<a-f>", function()
+        RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
+      end, { desc = "Terminal: new term split" })
+      RUtils.map.tnoremap("<a-N>", function()
+        RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
+      end, { desc = "Terminal: new tabterm" })
+    end
+  end,
+})
 
 RUtils.cmd.augroup("ConvertNorg", {
   event = { "BufWritePost" },
@@ -258,22 +284,6 @@ if vim.clipboard and vim.clipboard.osc52 then
     end,
   })
 end
-
--- Use the more sane snippet session leave logic. Copied from:
--- https://github.com/LazyVim/LazyVim/pull/2519#issue-2123554685
--- https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1429989436
--- RUtils.cmd.augroup("SessionLogicLeave", {
---   event = { "ModeChanged" },
---   command = function()
---     if
---       ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
---       and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
---       and not require("luasnip").session.jump_active
---     then
---       require("luasnip").unlink_current()
---     end
---   end,
--- })
 
 vim.cmd [[
   " :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw

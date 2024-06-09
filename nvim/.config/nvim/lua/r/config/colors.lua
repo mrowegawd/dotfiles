@@ -471,10 +471,15 @@ local general_overrides = function()
     },
 
     -- TELESCOPE ==========================================================
-    { TelescopeNormal = { link = "NormalFloat" } },
+    { TelescopeNormal = { bg = "red", fg = "black" } },
     { TelescopeBorder = { link = "NormalFloat" } },
+    { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+    { TelescopeTitle = { fg = { from = "Boolean", attr = "fg" } } },
 
-    -- Prompt
+    { TelescopeSelection = { inherit = "PmenuSel" } },
+    { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
+
+    -- prompt
     { TelescopePromptNormal = { link = "NormalFloat" } },
     {
       TelescopePromptTitle = {
@@ -497,9 +502,6 @@ local general_overrides = function()
       },
     },
     { TelescopePreviewBorder = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "FloatBorder" } } },
-    { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
-    { TelescopeSelection = { inherit = "PmenuSel" } },
-    { TelescopeTitle = { fg = { from = "Boolean", attr = "fg" } } },
 
     -- Results
     { TelescopeResultsNormal = { link = "NormalFloat" } },
@@ -882,29 +884,9 @@ local function colorscheme_overrides()
           bg = "NONE",
         },
       },
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg" },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg" },
-          bold = true,
-          italic = true,
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
 
       { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
 
-      { LspReferenceRead = { bg = { from = "Normal", attr = "bg" }, underline = false, undercurl = false } },
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
@@ -915,6 +897,25 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
+
+      {
+        LspReferenceText = {
+          fg = "NONE",
+          undercurl = false,
+          bold = false,
+          bg = { from = "LspReferenceText", attr = "bg", alter = -0.2 },
+        },
+      },
+      {
+        LspReferenceWrite = {
+          fg = "NONE",
+          italic = true,
+          undercurl = false,
+          bold = false,
+          bg = { from = "LspReferenceText" },
+        },
+      },
+      { LspReferenceRead = { fg = "NONE", undercurl = false, bold = false, bg = { from = "LspReferenceText" } } },
     },
     ["solarized-osaka"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 4.5 }, bg = "NONE" } },

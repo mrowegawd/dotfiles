@@ -1,3 +1,13 @@
+-- if lazyvim_docs then
+-- LSP Server to use for Python.
+-- Set to "basedpyright" to use basedpyright instead of pyright.
+vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_python_ruff = "ruff_lsp"
+-- end
+
+local lsp = vim.g.lazyvim_python_lsp or "pyright"
+local ruff = vim.g.lazyvim_python_ruff or "ruff_lsp"
+
 return {
   -- NVIM-LSPCONFIG
   {
@@ -190,33 +200,26 @@ return {
             },
           },
           pyright = {
-            settings = {
-              -- pyright = { disableLanguageServices = true },
-              python = {
-                analysis = {
-                  autoSearchPaths = true,
-                  typeCheckingMode = "strict",
-                  -- diagnosticMode = "workspace",
-                  diagnosticMode = "openFilesOnly",
-                  useLibraryCodeForTypes = true,
-                },
-              },
-            },
+            enabled = lsp == "pyright",
+          },
+          basedpyright = {
+            enabled = lsp == "basedpyright",
+          },
+          [lsp] = {
+            enabled = true,
           },
           ruff_lsp = {
+            enabled = ruff == "ruff_lsp",
+          },
+          ruff = {
+            enabled = ruff == "ruff",
+          },
+          [ruff] = {
             keys = {
               {
-                "<Leader>co",
-                function()
-                  vim.lsp.buf.code_action {
-                    apply = true,
-                    context = {
-                      only = { "source.organizeImports" },
-                      diagnostics = {},
-                    },
-                  }
-                end,
-                desc = "LSP: organize Imports [rustlsp]",
+                "<leader>co",
+                RUtils.lsp.action["source.organizeImports"],
+                desc = "Organize Imports",
               },
             },
           },
@@ -286,31 +289,6 @@ return {
             --   return require("lspconfig.util").root_pattern ".git"(...)
             -- end,
           },
-          lua_ls = {
-            settings = {
-              Lua = {
-                runtime = { version = "LuaJIT" },
-                codeLens = { enable = true },
-                workspace = { checkThirdParty = false },
-                doc = { privateName = { "^_" } },
-                hint = {
-                  enable = true,
-                  -- setType = false,
-                  -- paramType = true,
-                  -- paramName = "Disable",
-                  -- semicolon = "Disable",
-                  arrayIndex = "Disable",
-                },
-                completion = { callSnippet = "Replace" },
-                telemetry = { enable = false },
-                diagnostics = {
-                  globals = { "vim", "it", "describe", "before_each", "after_each", "a" },
-                  undefined_global = false, -- remove this from diag!
-                  missing_parameters = false, -- missing fields :)
-                },
-              },
-            },
-          },
         },
         ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
         setup = {
@@ -319,6 +297,56 @@ return {
             return true
           end,
           vtsls = function(_, opts)
+            RUtils.lsp.on_attach(function(client, buffer)
+              client.commands["_typescript.moveToFileRefactoring"] = function(command, ctx)
+                ---@type string, string, lsp.Range
+                local action, uri, range = unpack(command.arguments)
+
+                local function move(newf)
+                  client.request("workspace/executeCommand", {
+                    command = command.command,
+                    arguments = { action, uri, range, newf },
+                  })
+                end
+
+                local fname = vim.uri_to_fname(uri)
+                client.request("workspace/executeCommand", {
+                  command = "typescript.tsserverRequest",
+                  arguments = {
+                    "getMoveToRefactoringFileSuggestions",
+                    {
+                      file = fname,
+                      startLine = range.start.line + 1,
+                      startOffset = range.start.character + 1,
+                      endLine = range["end"].line + 1,
+                      endOffset = range["end"].character + 1,
+                    },
+                  },
+                }, function(_, result)
+                  ---@type string[]
+                  local files = result.body.files
+                  table.insert(files, 1, "Enter new path...")
+                  vim.ui.select(files, {
+                    prompt = "Select move destination:",
+                    format_item = function(f)
+                      return vim.fn.fnamemodify(f, ":~:.")
+                    end,
+                  }, function(f)
+                    if f and f:find "^Enter new path" then
+                      vim.ui.input({
+                        prompt = "Enter move destination:",
+                        default = vim.fn.fnamemodify(fname, ":h") .. "/",
+                        completion = "file",
+                      }, function(newf)
+                        return newf and move(newf)
+                      end)
+                    elseif f then
+                      move(f)
+                    end
+                  end)
+                end)
+              end
+            end, "vtsls")
             -- copy typescript settings to javascript
             opts.settings.javascript =
               vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
@@ -360,10 +388,8 @@ return {
             -- Neovim < 0.10 does not have dynamic registration for formatting
             if vim.fn.has "nvim-0.10" == 0 then
               RUtils.lsp.on_attach(function(client, _)
-                if client.name == "yamlls" then
-                  client.server_capabilities.documentFormattingProvider = true
-                end
-              end)
+                client.server_capabilities.documentFormattingProvider = true
+              end, "yamlls")
             end
           end,
           ruff_lsp = function()
@@ -378,22 +404,26 @@ return {
             -- workaround for gopls not supporting semanticTokensProvider
             -- https://github.com/golang/go/issues/54531#issuecomment-1464982242
             RUtils.lsp.on_attach(function(client, _)
-              if client.name == "gopls" then
-                if not client.server_capabilities.semanticTokensProvider then
-                  local semantic = client.config.capabilities.textDocument.semanticTokens
-                  if semantic then
-                    client.server_capabilities.semanticTokensProvider = {
-                      full = true,
-                      legend = {
-                        tokenTypes = semantic.tokenTypes,
-                        tokenModifiers = semantic.tokenModifiers,
-                      },
-                      range = true,
-                    }
-                  end
+              if not client.server_capabilities.semanticTokensProvider then
+                local semantic = client.config.capabilities.textDocument.semanticTokens
+                if semantic then
+                  client.server_capabilities.semanticTokensProvider = {
+                    full = true,
+                    legend = {
+                      tokenTypes = semantic.tokenTypes,
+                      tokenModifiers = semantic.tokenModifiers,
+                    },
+                    range = true,
+                  }
                 end
               end
-            end)
+            end, "gopls")
+          end,
+          [ruff] = function()
+            RUtils.lsp.on_attach(function(client, _)
+              -- Disable hover in favor of Pyright
+              client.server_capabilities.hoverProvider = false
+            end, ruff)
           end,
           tailwindcss = function(_, opts)
             local tw = require "lspconfig.server_configurations.tailwindcss"
@@ -565,7 +595,7 @@ return {
         -- bash,sh
         "shellcheck",
         -- TODO: remove shfmt, use bashls instead
-        -- "shfmt",
+        "shfmt",
 
         -- python
         "black",
@@ -585,6 +615,7 @@ return {
 
         -- markdown
         "markdownlint",
+        "markdown-toc",
         "marksman",
         "codespell",
         "cbfmt",
@@ -749,86 +780,65 @@ return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   TYPESCRIPT                                             │
   --  ╰──────────────────────────────────────────────────────────╯
-  -- NVIM-VTSLS
+  -- BETTER-TS-ERRORS
   {
-    "yioneko/nvim-vtsls",
-    lazy = true,
-    opts = {},
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "neovim/nvim-lspconfig",
-      -- BETTER-TS-ERRORS
-      {
-        "dmmulroy/ts-error-translator.nvim",
-        config = true,
-      },
-      -- TSC.NVIM
-      {
-        "dmmulroy/tsc.nvim",
-        cmd = { "TSC" },
-        config = function()
-          local utils = require "tsc.utils"
-          require("tsc").setup {
-            auto_open_qflist = true,
-            auto_close_qflist = false,
-            auto_focus_qflist = false,
-            auto_start_watch_mode = false,
-            use_trouble_qflist = false,
-            use_diagnostics = false,
-            run_as_monorepo = false,
-            bin_path = utils.find_tsc_bin(),
-            enable_progress_notifications = true,
-            flags = {
-              noEmit = true,
-              watch = false,
-            },
-            hide_progress_notifications_from_history = true,
-            spinner = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
-            pretty_errors = true,
-          }
-          vim.api.nvim_exec_autocmds("FileType", {})
-        end,
-      },
-      -- PACKAGE-INFO.NVIM
-      {
-        "vuki656/package-info.nvim",
-        event = "BufEnter package.json",
-        config = function()
-          require("package-info").setup {
-            colors = {
-              up_to_date = "#3C4048", -- Text color for up to date package virtual text
-              outdated = "#fc514e", -- Text color for outdated package virtual text
-            },
-            icons = {
-              enable = true, -- Whether to display icons
-              style = {
-                up_to_date = RUtils.config.icons.misc.check, -- Icon for up to date packages
-                outdated = RUtils.config.icons.git.remove, -- Icon for outdated packages
-              },
-            },
-            autostart = true, -- Whether to autostart when `package.json` is opened
-            hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
-            hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
+    "dmmulroy/ts-error-translator.nvim",
+    config = true,
+  },
+  -- TSC.NVIM
+  {
+    "dmmulroy/tsc.nvim",
+    cmd = { "TSC" },
+    config = function()
+      local utils = require "tsc.utils"
+      require("tsc").setup {
+        auto_open_qflist = true,
+        auto_close_qflist = false,
+        auto_focus_qflist = false,
+        auto_start_watch_mode = false,
+        use_trouble_qflist = false,
+        use_diagnostics = false,
+        run_as_monorepo = false,
+        bin_path = utils.find_tsc_bin(),
+        enable_progress_notifications = true,
+        flags = {
+          noEmit = true,
+          watch = false,
+        },
+        hide_progress_notifications_from_history = true,
+        spinner = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
+        pretty_errors = true,
+      }
+      vim.api.nvim_exec_autocmds("FileType", {})
+    end,
+  },
+  -- PACKAGE-INFO.NVIM
+  {
+    "vuki656/package-info.nvim",
+    event = "BufEnter package.json",
+    config = function()
+      require("package-info").setup {
+        colors = {
+          up_to_date = "#3C4048", -- Text color for up to date package virtual text
+          outdated = "#fc514e", -- Text color for outdated package virtual text
+        },
+        icons = {
+          enable = true, -- Whether to display icons
+          style = {
+            up_to_date = RUtils.config.icons.misc.check, -- Icon for up to date packages
+            outdated = RUtils.config.icons.git.remove, -- Icon for outdated packages
+          },
+        },
+        autostart = true, -- Whether to autostart when `package.json` is opened
+        hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
+        hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
 
-            -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
-            -- The plugin will try to auto-detect the package manager based on
-            -- `yarn.lock` or `package-lock.json`. If none are found it will use the
-            -- provided one,                              if nothing is provided it will use `yarn`
-            package_manager = "yarn",
-          }
-        end,
-      },
-    },
-    ft = {
-      "typescript",
-      "typescriptreact",
-      "javascript",
-      "javascriptreact",
-    },
-    config = function(_, opts)
-      -- add vtsls to lspconfig
-      require("lspconfig.configs").vtsls = require("vtsls").lspconfig
-      require("vtsls").config(opts)
+        -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
+        -- The plugin will try to auto-detect the package manager based on
+        -- `yarn.lock` or `package-lock.json`. If none are found it will use the
+        -- provided one,                              if nothing is provided it will use `yarn`
+        package_manager = "yarn",
+      }
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
@@ -895,21 +905,16 @@ return {
   -- VENV-SELECTOR
   {
     "linux-cultist/venv-selector.nvim",
+    branch = "regexp", -- Use this branch for the new version
     cmd = "VenvSelect",
     keys = { { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Misc: select virtualenv [venv-selector]", ft = "python" } },
-    opts = function(_, opts)
-      if RUtils.has "nvim-dap-python" then
-        opts.dap_enabled = true
-      end
-      return vim.tbl_deep_extend("force", opts, {
-        name = {
-          "venv",
-          ".venv",
-          "env",
-          ".env",
+    opts = {
+      settings = {
+        options = {
+          notify_user_on_venv_activation = true,
         },
-      })
-    end,
+      },
+    },
   },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   MISC                                                   │

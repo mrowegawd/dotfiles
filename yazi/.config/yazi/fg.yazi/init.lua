@@ -5,7 +5,7 @@ end)
 
 return {
 	entry = function()
-		local path, name = state()
+		-- local path, name = state()
 
 		ya.notify({
 			title = "Copied to Clipboard",
@@ -14,13 +14,13 @@ return {
 			level = "info",
 		})
 
-		local cmd = Command("zsh"):args({
-			"ls",
-			"|",
-			"fzf-tmux",
-			-- "~/AppData/Roaming/yazi/config/plugins/copy-item.yazi/copy-item.ps1",
-			-- "'" .. path .. "'",
-		}):output()
+		-- local cmd = Command("zsh"):args({
+		-- 	"ls",
+		-- 	"|",
+		-- 	"fzf-tmux",
+		-- 	-- "~/AppData/Roaming/yazi/config/plugins/copy-item.yazi/copy-item.ps1",
+		-- 	-- "'" .. path .. "'",
+		-- }):output()
 	end,
 }
 

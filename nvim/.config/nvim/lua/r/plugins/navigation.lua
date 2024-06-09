@@ -1,10 +1,12 @@
 local Highlight = require "r.settings.highlights"
 
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+-- local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 local lazyterm = function()
   RUtils.terminal { cwd = RUtils.root() }
 end
+
+local toggle_state = false
 
 return {
   -- NEO-TREE
@@ -13,10 +15,11 @@ return {
     cond = vim.g.neovide ~= nil or not vim.env.TMUX,
     cmd = "Neotree",
     dependencies = {
+      "3rd/image.nvim",
+      "MunifTanjim/nui.nvim",
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
-      "3rd/image.nvim",
       -- {
       --   "ten3roberts/window-picker.nvim",
       --   name = "window-picker",
@@ -33,6 +36,10 @@ return {
     },
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoNeoTree", { "neo-tree" })
+
+      local Preview = require "neo-tree.sources.common.preview"
+      -- local events = require "neo-tree.events"
+      local log = require "neo-tree.log"
 
       return {
         sources = { "filesystem", "buffers", "git_status", "document_symbols" },
@@ -138,9 +145,32 @@ return {
             lazyterm()
           end,
 
+          -- TODO: ensure previewer works (image, gif, video)? #tag:low #created:4juni24
+          -- [x] video size is too big = hang
+          -- [x] image with big size = hang
+          -- [x] gif = idk
+          toggle_open_preview = function(state)
+            -- toggle_state = false
+            local node = state.tree:get_node()
+
+            if not toggle_state then
+              if node.ext == "mp4" then
+                log.warn(string.format("not allowed to preview ext file: %s", node.ext))
+                Preview.hide()
+                return
+              else
+                Preview.show(state)
+              end
+              toggle_state = true
+            else
+              toggle_state = false
+              Preview.hide()
+            end
+          end,
+
           open_search_cd_and_grep = function()
-            local command_selects = { "Grep string in file", "Search name of file" }
-            vim.ui.select(command_selects, {
+            local cmds = { "Grep string in file", "Search name of file" }
+            vim.ui.select(cmds, {
               prompt = "Select commands",
               format_item = function(item)
                 return "CMD: " .. item
@@ -149,31 +179,38 @@ return {
               if choice == nil then
                 return
               end
-              if choice == command_selects[1] then
+              if choice == cmds[1] then
                 vim.cmd "wincmd l"
                 vim.schedule(function()
                   require("fzf-lua").live_grep_glob {
                     winopts = {
                       title = RUtils.fzflua.format_title(choice, "󰈙"),
                     },
-                    -- actions = {
-                    --   ["default"] = function(e)
-                    --     local sel = RUtils.fzflua.__strip_str(e[1])
-                    --     if sel then
-                    --       local res = vim.split(sel, "\t")
-                    --       local filepath = res[2]
-                    --       local filename = res[1]
-                    --       local fullname = vim.fn.fnamemodify(filepath .. "/" .. filename, ":.")
-                    --       vim.cmd("e  " .. fullname)
-                    --       vim.cmd.cd(res[2])
-                    --     end
-                    --   end,
-                    -- },
+                    actions = {
+                      ["default"] = function(e)
+                        local sel = RUtils.fzflua.__strip_str(e[1])
+                        if sel then
+                          local res = vim.split(sel, "\t")
+
+                          local filename = res[1]
+                          local slice_text_2 = res[2]
+
+                          local split_text = vim.split(slice_text_2, ":")
+                          local path_fdname = split_text[1]
+                          local row = split_text[2]
+                          local col = split_text[3]
+
+                          filename = path_fdname .. "/" .. filename
+                          vim.cmd("e  " .. filename)
+                          vim.api.nvim_win_set_cursor(0, { tonumber(row), tonumber(col) })
+                        end
+                      end,
+                    },
                   }
                 end)
               end
 
-              if choice == command_selects[2] then
+              if choice == cmds[2] then
                 vim.cmd "wincmd l"
                 require("fzf-lua").files {
                   winopts = {
@@ -190,11 +227,8 @@ return {
                         -- itu: vidio, pdf, image, dan sebagainya
                         if filepath then
                           local fullname = vim.fn.fnamemodify(filepath .. "/" .. filename, ":.")
-                          -- print(fullname)
 
-                          local basename = vim.fs.basename(fullname)
-
-                          print(filename)
+                          -- print(filename)
 
                           vim.cmd("e  " .. fullname)
                           vim.cmd.cd(res[2])
@@ -241,20 +275,19 @@ return {
             ["l"] = "child_or_open",
             ["h"] = "parent_or_close",
             ["<a-p>"] = {
-              "toggle_preview",
+              "toggle_open_preview",
               config = { use_float = true, use_image_nvim = true },
             },
-            ["o"] = "open",
+            ["o"] = "child_or_open",
             ["s"] = "",
+            ["t"] = "", -- disabled open tab
             ["P"] = "",
-            ["z"] = "noop",
-            -- ["<CR>"] = "child_or_open",
-            -- ["<c-s>"] = "split_with_window_picker",
-            -- ["<c-v>"] = "vsplit_with_window_picker",
+            ["z"] = "",
             ["<c-s>"] = "open_split",
             ["<c-v>"] = "open_vsplit",
+            ["<c-t>"] = "open_tabnew",
             ["<esc>"] = "revert_preview",
-            -- ["<c-c>"] = "clear_filter",
+            ["m"] = "",
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
             ["gh"] = "prev_source",
@@ -317,19 +350,6 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
-      Highlight.plugin("AerialAuHi", {
-        theme = {
-          ["*"] = {
-            {
-              AerialLine = {
-                bg = { from = "MyQuickFixLine", attr = "bg" },
-                -- bg = "NONE",
-              },
-            },
-          },
-        },
-      })
-      -- ---@diagnostic disable-next-line: undefined-field
       -- require("telescope").load_extension "aerial"
 
       local vim_width = vim.o.columns
@@ -379,11 +399,6 @@ return {
         return ok_aerial and aerial or {}
       end
 
-      local vim_width = vim.o.columns
-      local vim_height = height
-
-      local widthc = math.floor(vim_width / 2 + 8)
-      local heightc = math.floor(vim_height / 2 - 5)
       return {
         {
           "<a-e>",
@@ -399,14 +414,16 @@ return {
         --   end,
         --   desc = "Misc: toggle edgy [edgy]",
         -- },
-        -- stylua: ignore
-        -- { "<Leader>uE", function() require("edgy").select() end, desc = "Misc: edgy select window [edgy]" },
         {
           "<leader>ge",
           function()
-            return vim.cmd "Neotree git_status"
+            if RUtils.has "neo-tree.nvim" then
+              return vim.cmd "Neotree git_status"
+            else
+              return require("fzf-lua").git_status()
+            end
           end,
-          desc = "Git: open file explore for git status [neotree]",
+          desc = "Git: open file explore for git status (callback fzflua) [neotree]",
         },
         {
           "<Localleader>O",
@@ -435,27 +452,8 @@ return {
               return
             end
 
-            local aerial_provider_selected = { "all" }
-
-            for key, icon in pairs(RUtils.config.icons.kinds) do
-              table.insert(aerial_provider_selected, icon .. " " .. key)
-            end
-
-            fzf_lua.fzf_exec(aerial_provider_selected, {
-              prompt = "  ",
-              no_esc = true,
-              fzf_opts = { ["--layout"] = "reverse" },
-              winopts_fn = {
-                width = widthc,
-                height = heightc,
-              },
-              winopts = {
-                title = "[Aerial] Change filter kind",
-                row = 1,
-                relative = "cursor",
-                height = 0.33,
-                width = widthc / (widthc + vim_width - 10),
-              },
+            local opts = {
+              title = "[Aerial]",
               actions = {
                 ["default"] = function(selected, _)
                   local sel = {}
@@ -473,7 +471,7 @@ return {
                       -- outline.close_outline()
                     end
 
-                    -- we must reload
+                    -- must reload
                     vim.cmd "e "
                     if selection == "all" then
                       opts_aerial.filter_kind = false
@@ -487,7 +485,8 @@ return {
                   end
                 end,
               },
-            })
+            }
+            RUtils.fzflua.cmd_filter_kind_lsp(opts)
           end,
           desc = "Misc: change filter kind aerial [aerial]",
         },
