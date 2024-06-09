@@ -1509,16 +1509,6 @@ return {
       }
     end,
   },
-  -- CALENDAR
-  {
-    "itchyny/calendar.vim",
-    cmd = { "Calendar" },
-    config = true,
-    lazy = false,
-    keys = {
-      { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
-    },
-  },
   -- HOUDINI
   {
     "TheBlob42/houdini.nvim",
@@ -1552,6 +1542,22 @@ return {
       },
     },
   },
+  -- CALENDAR
+  -- {
+  --   "itchyny/calendar.vim",
+  --   cmd = { "Calendar" },
+  --   lazy = false,
+  --   config = function()
+  --     RUtils.cmd.create_command("CalendarBelow", function()
+  --       vim.cmd [[ Calendar -view=year -split=horizontal -position=below -height=12 ]]
+  --       vim.cmd [[wincmd J]]
+  --     end, { desc = "Misc: open calendar below [calendar.nvim]" })
+  --   end,
+  --   keys = {
+  --     -- { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
+  --     { "<Localleader>oc", "<CMD>CalendarBelow <CR>", desc = "Misc: open calendar [calendar.nvim]" },
+  --   },
+  -- },
   -- MINI.COMPLETION (disabled)
   {
     "echasnovski/mini.completion",

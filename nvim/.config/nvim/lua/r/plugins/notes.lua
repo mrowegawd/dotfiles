@@ -577,12 +577,42 @@ return {
       orgmode.setup(opts)
     end,
   },
-  -- CALENDAR-VIM
+  -- CALENDAR
   {
     "renerocksai/calendar-vim",
     cmd = "Calendar",
+    init = function()
+      vim.g.calendar_mark = "bottom"
+      vim.g.calendar_keys = {
+        goto_next_month = "<a-n>",
+        goto_prev_month = "<a-p>",
+        goto_today = "~",
+        redisplay = "r",
+      }
+
+      Highlight.plugin("CalendarVim", {
+        {
+          CalToday = {
+            bg = { from = "GitSignsChange", attr = "fg" },
+            fg = { from = "Normal", attr = "bg" },
+            bold = true,
+          },
+        },
+      })
+    end,
+    keys = {
+      -- { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
+      {
+        "<Localleader>oc",
+        function()
+          vim.cmd [[Calendar]]
+          vim.cmd "vertical resize +20"
+        end,
+        desc = "Misc: open calendar [calendar-nvim]",
+      },
+    },
   },
-  -- IMAGE.NVIM
+  -- IMAGE
   {
     "3rd/image.nvim",
     ft = { "markdown", "norg", "oil", "octo" },

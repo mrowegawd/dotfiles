@@ -61,7 +61,7 @@ function M.load_ses_dashboard()
     end
     vim.cmd [[e]]
   else
-    RUtils.warn("Atm you have NONE session plugin?!", { title = "Sessions" })
+    RUtils.warn("can't find your session plugin!", { title = "Sessions" })
   end
 end
 

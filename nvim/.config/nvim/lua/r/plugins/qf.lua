@@ -16,6 +16,7 @@ return {
         excluded = {
           buftypes = {},
           filetypes = {
+            "calendar",
             "DiffviewFiles",
             "NeogitCommitMessage",
             "calendar",
