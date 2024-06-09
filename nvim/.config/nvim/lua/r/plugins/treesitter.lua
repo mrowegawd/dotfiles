@@ -297,7 +297,7 @@ return {
             end
           end
 
-          if #tbl_winsplits < 4 then
+          if #tbl_winsplits < 3 then
             -- check split or no split (`leaf`, `col` , `row`)
             local layout = vim.fn.winlayout()
             if layout[1] == "col" then -- a split window
