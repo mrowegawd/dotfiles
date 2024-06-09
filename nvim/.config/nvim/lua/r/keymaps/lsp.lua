@@ -169,6 +169,9 @@ function M.get()
           show_info_formatlspinfo = function()
             vim.cmd [[LazyFormatInfo]]
           end,
+          refresh_symbol_usage = function()
+            require("symbol-usage").refresh()
+          end,
         }, unpack(newCmds) or {})
 
         local col, row = RUtils.fzflua.rectangle_win_pojokan()
@@ -224,6 +227,11 @@ function M.get()
   else
     M._keys[#M._keys + 1] =
       { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" }
+  end
+
+  if RUtils.has "goto-preview" then
+    M._keys[#M._keys + 1] =
+      { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek preview definitions [goto-preview]" }
   end
   return M._keys
 end

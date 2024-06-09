@@ -160,7 +160,7 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
           if event == "stdout" then
             for _, file in ipairs(data) do
               if #file > 0 then
-                print(file)
+                -- print(file)
                 cb(require("fzf-lua").make_entry.file(file, {}), function()
                   coroutine.resume(co, 0)
                 end)

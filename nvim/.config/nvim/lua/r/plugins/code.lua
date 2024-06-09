@@ -615,7 +615,6 @@ return {
     },
     keys = {
       { "rF", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
-      -- { "rR", "<Cmd> RmuxRunTaskAll <CR>", desc = "Tasks: run task all" },
       -- { "rp", "<Cmd> RmuxREPL <CR>", desc = "Tasks: open pane window REPL (if the language has any)" },
 
       { "rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
@@ -641,7 +640,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
-        run_with = "wez", -- mux, tt, wez, toggleterm
+        run_with = "auto", -- mux, tt, wez, toggleterm
       },
     },
     config = function(_, opts)

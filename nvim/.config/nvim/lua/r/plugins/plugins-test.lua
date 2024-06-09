@@ -454,103 +454,6 @@ return {
       },
     },
   },
-  -- INDENT-BLANKLINE (disabled)
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = { "ColorScheme" },
-    enabled = false,
-    main = "ibl",
-    opts = {
-      scope = { show_start = false, show_end = false },
-      indent = {
-        char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
-        tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
-        repeat_linebreak = false,
-      },
-      exclude = {
-        filetypes = {
-          "NvimTree",
-          "dashboard",
-          "dbout",
-          "flutterToolsOutline",
-          "fzf",
-          "fzflua",
-          "git",
-          "gitcommit",
-          "help",
-          "log",
-          "man",
-          "markdown",
-          "neo-tree",
-          "neo-tree-popup",
-          "norg",
-          "calendar",
-          "org",
-          "orgagenda",
-          "sagafinder",
-          "trouble",
-          "txt",
-          "undotree",
-          "",
-        },
-      },
-    },
-    config = function(_, opts)
-      Highlight.plugin("ibl_indentline", {
-        theme = {
-          ["*"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["catppuccin-latte"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -1 } } },
-          },
-          ["farout"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-          },
-          ["ayu"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["solarized-osaka"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["flexoki"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
-          },
-        },
-      })
-      require("ibl").setup(opts)
-    end,
-  },
-  -- NVIM-GTD (disabled)
-  {
-    "hrsh7th/nvim-gtd",
-    enabled = false,
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = "neovim/nvim-lspconfig",
-    opts = {
-      sources = {
-        { name = "findup" },
-        {
-          name = "walk",
-          root_markers = {
-            ".git",
-            ".neoconf.json",
-            "Makefile",
-            "package.json",
-            "tsconfig.json",
-          },
-          ignore_patterns = { "/node_modules", "/.git" },
-        },
-        { name = "lsp" },
-      },
-    },
-  },
   -- ILLUMINATE
   {
     "RRethy/vim-illuminate",
@@ -594,6 +497,55 @@ return {
           "qf",
         },
       }
+    end,
+  },
+  -- INDENTMINI (disabled)
+  {
+    "nvimdev/indentmini.nvim",
+    enabled = false,
+    event = "VeryLazy",
+    config = function()
+      Highlight.plugin("indentmini", {
+        theme = {
+          ["*"] = {
+            { IndentLine = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { IndentLineCurrent = { fg = { from = "Normal", attr = "bg", alter = 3.5 } } },
+          },
+        },
+      })
+      require("indentmini").setup {
+        char = "┊",
+        exclude = {
+          "DiffviewFiles",
+          "NeogitCommitMessage",
+          "calendar",
+          "neo-tree",
+          "NeogitPopup",
+          "NeogitStatus",
+          "NvimTree",
+          "Outline",
+          "TelescopePrompt",
+          "TelescopeResults",
+          "alpha",
+          "checkhealth",
+          "dashboard",
+          "fzf",
+          "gitcommit",
+          "help",
+          "lazy",
+          "lspinfo",
+          "make",
+          "man",
+          "markdown",
+          "mason",
+          "neorg",
+          "norg",
+          "org",
+          "orgagenda",
+          "sagafinder",
+          "trouble",
+        },
+      } -- use default config
     end,
   },
   -- GENTAGS (disabled)
@@ -1543,21 +1495,21 @@ return {
     },
   },
   -- CALENDAR
-  -- {
-  --   "itchyny/calendar.vim",
-  --   cmd = { "Calendar" },
-  --   lazy = false,
-  --   config = function()
-  --     RUtils.cmd.create_command("CalendarBelow", function()
-  --       vim.cmd [[ Calendar -view=year -split=horizontal -position=below -height=12 ]]
-  --       vim.cmd [[wincmd J]]
-  --     end, { desc = "Misc: open calendar below [calendar.nvim]" })
-  --   end,
-  --   keys = {
-  --     -- { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
-  --     { "<Localleader>oc", "<CMD>CalendarBelow <CR>", desc = "Misc: open calendar [calendar.nvim]" },
-  --   },
-  -- },
+  {
+    "itchyny/calendar.vim",
+    cmd = { "Calendar" },
+    lazy = false,
+    config = function()
+      RUtils.cmd.create_command("CalendarBelow", function()
+        vim.cmd [[ Calendar -view=year -split=horizontal -position=below -height=12 ]]
+        vim.cmd [[wincmd J]]
+      end, { desc = "Misc: open calendar below [calendar.nvim]" })
+    end,
+    keys = {
+      -- { "<Localleader>oc", "<CMD> Calendar <CR>", desc = "Misc: open calendar [calendar.nvim]" },
+      { "<Localleader>oc", "<CMD>CalendarBelow <CR>", desc = "Misc: open calendar [calendar.nvim]" },
+    },
+  },
   -- MINI.COMPLETION (disabled)
   {
     "echasnovski/mini.completion",

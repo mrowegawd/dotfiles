@@ -55,7 +55,7 @@ return {
         nls.builtins.formatting.shfmt,
 
         -- ts,js,react
-        nls.builtins.formatting.prettierd,
+        -- nls.builtins.formatting.prettierd,
         nls.builtins.diagnostics.eslint_d,
         nls.builtins.code_actions.eslint_d,
 

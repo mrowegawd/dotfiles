@@ -2,52 +2,75 @@ local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- INDENTMINI
+  -- INDENT-BLANKLINE
   {
-    "nvimdev/indentmini.nvim",
-    event = "VeryLazy",
-    config = function()
-      Highlight.plugin("indentmini", {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "ColorScheme" },
+    main = "ibl",
+    opts = function()
+      Highlight.plugin("ibl_indentline", {
         theme = {
           ["*"] = {
-            { IndentLine = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            { IndentLineCurrent = { fg = { from = "Normal", attr = "bg", alter = 3.5 } } },
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["catppuccin-latte"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -1 } } },
+          },
+          ["farout"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+          },
+          ["ayu"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["solarized-osaka"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["flexoki"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
           },
         },
       })
-      require("indentmini").setup {
-        char = "┊",
-        exclude = {
-          "DiffviewFiles",
-          "NeogitCommitMessage",
-          "calendar",
-          "neo-tree",
-          "NeogitPopup",
-          "NeogitStatus",
-          "NvimTree",
-          "Outline",
-          "TelescopePrompt",
-          "TelescopeResults",
-          "alpha",
-          "checkhealth",
-          "dashboard",
-          "fzf",
-          "gitcommit",
-          "help",
-          "lazy",
-          "lspinfo",
-          "make",
-          "man",
-          "markdown",
-          "mason",
-          "neorg",
-          "norg",
-          "org",
-          "orgagenda",
-          "sagafinder",
-          "trouble",
+      return {
+        scope = { show_start = false, show_end = false },
+        indent = {
+          char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+          tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+          repeat_linebreak = false,
         },
-      } -- use default config
+        exclude = {
+          filetypes = {
+            "NvimTree",
+            "dashboard",
+            "dbout",
+            "flutterToolsOutline",
+            "fzf",
+            "fzflua",
+            "git",
+            "gitcommit",
+            "help",
+            "log",
+            "man",
+            "markdown",
+            "neo-tree",
+            "neo-tree-popup",
+            "norg",
+            "calendar",
+            "org",
+            "orgagenda",
+            "sagafinder",
+            "trouble",
+            "txt",
+            "undotree",
+            "",
+          },
+        },
+      }
     end,
   },
   -- NVIM-NOTIFY

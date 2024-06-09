@@ -1,6 +1,14 @@
 local Highlight = require "r.settings.highlights"
 
 return {
+  -- GOTOPREVIEW
+  {
+    "rmagatti/goto-preview",
+    event = "VeryLazy",
+    config = function()
+      require("goto-preview").setup {}
+    end,
+  },
   -- INCRENAME
   {
     "smjonas/inc-rename.nvim",
@@ -38,7 +46,7 @@ return {
   -- SYMBOL-USAGE
   {
     "Wansmer/symbol-usage.nvim",
-    event = "LspAttach", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
+    event = "VeryLazy", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
     opts = function()
       local function h(name)
         return vim.api.nvim_get_hl(0, { name = name })
@@ -110,6 +118,7 @@ return {
   -- LSP-SIGNATURE
   {
     "ray-x/lsp_signature.nvim",
+    event = "VeryLazy",
     config = function()
       Highlight.plugin("lspSignatureUIcol", {
         { LspSignatureActiveParameter = { bg = "NONE", fg = "#ED9455" } },

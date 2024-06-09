@@ -579,7 +579,7 @@ return {
         "stylua",
 
         -- ts,js,react
-        "prettierd",
+        "prettier", -- use prettier instead of `prettierd`. Too many people get truncated files
         -- "typescript-language-server", -- do not install this, let typescript-tools handle this,
         "js-debug-adapter",
 

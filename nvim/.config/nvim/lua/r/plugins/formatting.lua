@@ -22,6 +22,11 @@ local supported = {
 --- Checks if a Prettier config file exists for the given context
 ---@param ctx ConformCtx
 function M.has_config(ctx)
+  -- local ft = vim.bo[ctx.buf].filetype --[[@as string]]
+  -- if ft == "markdown" then
+  --   return true
+  -- end
+
   vim.fn.system { "prettier", "--find-config-path", ctx.filename }
   return vim.v.shell_error == 0
 end
@@ -113,6 +118,7 @@ return {
           timeout_ms = 3000,
           async = false, -- not recommended to change
           quiet = false, -- not recommended to change
+          lsp_fallback = true, -- not recommended to change
         },
         formatters_by_ft = {
           lua = { "stylua" },
