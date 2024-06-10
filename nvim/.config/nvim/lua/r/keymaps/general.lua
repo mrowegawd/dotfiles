@@ -10,206 +10,30 @@ end
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ EDITING TEXT                                             │
 -- ╰──────────────────────────────────────────────────────────╯
--- jk is escape, THEN move to the right to preserve the cursor position, unless
--- at the first column.  <esc> will continue to work the default way.
--- NOTE: this is a recursive mapping so anything bound (by a plugin) to <esc> still works
-RUtils.map.inoremap("hh", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
--- RUtils.map.imap("kj", [[col('.') == 1 ? '<esc>' : '<esc>l']], { expr = true })
--- RUtils.map.inoremap("hh", "<Esc>", silent)
-
-RUtils.map.inoremap("<c-c>", "<Esc>", silent)
+-- Insert mode
 RUtils.map.inoremap("<c-a>", "<c-O>^", silent)
 RUtils.map.inoremap("<c-e>", "<c-O>$", silent)
 RUtils.map.inoremap("<c-d>", "<c-O>dw", silent)
-
-RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
-RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
--- Avoid or don't yank on visual paste
-RUtils.map.vnoremap("p", "pgvy")
-RUtils.map.nnoremap("<Leader>Y", function()
-  local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
-  vim.fn.setreg("+", path)
-  vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
-end, { silent = true, desc = "Misc: yank absolute path" })
-RUtils.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
-
--- RUtils.map.inoremap("<c-j>", "<Down>", silent)
--- RUtils.map.inoremap("<c-k>", "<Up>", silent)
-
 RUtils.map.inoremap("<c-l>", "<Right>", silent)
 RUtils.map.inoremap("<c-h>", "<Left>", silent)
-
 RUtils.map.inoremap("<c-b>", "<Esc>ba", silent)
 RUtils.map.inoremap("<c-f>", "<Esc>ea", silent)
 
-RUtils.map.nnoremap("<c-g>", "/", nosilent)
-
-if not RUtils.has "bufferline.nvim" then
-  RUtils.map.nnoremap("gl", "<cmd>bnext<CR>", silent)
-  RUtils.map.nnoremap("gh", "<cmd>bprev<CR>", silent)
-end
-
--- Automatically indent with i and A made by ycino
--- inoremap("i", function()
---   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "i" or '"_cc'
--- end, moresilent)
--- inoremap("A", function()
---   return string.len(vim.api.nvim_get_current_line()) ~= 0 and "A" or '"_cc'
--- end, moresilent)
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ MARKS                                                    │
--- ╰──────────────────────────────────────────────────────────╯
--- Map gm to `. Instead of `a, hit gma. See :help mark-motions as to why we use backtick.
--- nnoremap("gm", "`", { noremap = false })
-
--- Easy to remember when do marks stuff
--- if not pcall(require, "fzf-lua") then
---   nnoremap("<Leader>mc", ":norm `.<CR>", { desc = "Marks: jump to last change" })
---   nnoremap("<Leader>mi", ":norm `^<CR>", { desc = "Marks: jump to last insert" })
---   nnoremap("<Leader>mj", ":norm `'<CR>", { desc = "Marks: jump to last jump" })
--- end
-
--- Always do center win, when do jump <c-o/i>
--- nnoremap("<c-o>", "<c-o>zz")
--- nnoremap("<c-i>", "<c-i>zz")
+RUtils.map.inoremap("hh", "<Esc>")
+RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ FOLDS                                                    │
 -- ╰──────────────────────────────────────────────────────────╯
--- Focus the current fold by closing all others
--- RUtils.map.nnoremap("<space><space>", "zMzvzO", { desc = "Fold: focus the current fold by closing all others" })
-RUtils.map.nnoremap("<space><space>", "za", { desc = "Fold: focus the current fold by closing all others" })
--- RUtils.map.nnoremap("<space><space>", "zo", { desc = "Fold: open fold" })
+RUtils.map.nnoremap("<space><space>", "za", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
--- RUtils.map.nnoremap("<BS>", "za")
-
--- Make zO recursively open whatever top level fold we're in, no matter where the
--- cursor happens to be.
--- nnoremap("zO", [[zCzO]], { desc = " fold: recursively zO" })
-
--- Jump next/prev to closing fold
 RUtils.map.nnoremap("<a-n>", function()
   return RUtils.fold.magic_prev_next_move()
-end, { desc = "Fold: go next closed" })
+end, { desc = "Fold: magic next closed" })
 RUtils.map.nnoremap("<a-p>", function()
   return RUtils.fold.magic_prev_next_move(true)
-end, { desc = "Fold: go prev closed" })
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ VISUAL                                                   │
--- ╰──────────────────────────────────────────────────────────╯
--- Cara mudah untuk cursor dari bawah ke atas dalam visual mode
-RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
-RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
-
-RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
-RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
-
-RUtils.map.nnoremap("vv", [[^vg_]], { desc = "View: select text lines" })
-RUtils.map.vnoremap(">", ">gv", { desc = "View: next align lines (visual)" })
-RUtils.map.vnoremap("<", "<gv", { desc = "View: prev align lines (visual)" })
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ MISC                                                     │
--- ╰──────────────────────────────────────────────────────────╯
-RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
-
--- RUtils.map.nnoremap("<TAB>", function()
---   if vim.bo.filetype == "fugitive" then
---     print "yes"
---     return RUtils.cmd.feedkey("=", "n")
---   end
---   return RUtils.cmd.feedkey("<TAB>", "n")
--- end, { desc = "togglet up" })
-
--- nnoremap("<Leader>rf", [[:s/\<<C-r>=expand("<cword>")<CR>\>/]], { silent = false, desc = "Misc: search and replace" })
-
-RUtils.map.nnoremap("<Leader>cd", function()
-  local filepath = fn.expand "%:p:h" -- code
-  cmd(fmt("cd %s", filepath))
-  vim.notify(fmt("ROOT CHANGED: %s", filepath))
-end, { desc = "Misc: change cur pwd to curfile" })
-
-RUtils.map.nnoremap("<Leader>n", function()
-  -- require("notify").dismiss {}
-  cmd.nohl()
-  -- return cmd [[let @/ = ""]]
-end, { desc = "Misc: clear searches" })
-
-RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
-RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
-RUtils.map.onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
-RUtils.map.nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
-RUtils.map.xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
-RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
-
--- Save jumps > 3 lines to the jumplist
--- Jumps <= 3 respect line wraps
--- RUtils.map.nnoremap("k", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'k' : 'gk']], { expr = true })
--- RUtils.map.nnoremap("j", [[v:count ? (v:count >= 3 ? "m'" . v:count : '') . 'j' : 'gj']], { expr = true })
-
--- allow moving the cursor through wrapped lines using j and k,
--- note that I have line wrapping turned off but turned on only for Markdown
-RUtils.map.nnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-RUtils.map.nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-RUtils.map.vnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-
--- RUtils.map.nnoremap("j", [[(v:count > 1 ? 'm`' . v:count : '') . 'gj']], { expr = true, silent = true })
--- RUtils.map.nnoremap("k", [[(v:count > 1 ? 'm`' . v:count : '') . 'gk']], { expr = true, silent = true })
-
-RUtils.map.nnoremap("<Leader>P", function()
-  local cwd = vim.fn.expand "%:p:h"
-  local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  print(cwd .. "/" .. fname)
-end, { desc = "Winav: show path curbuf (printout)" })
-
-local function replace_keymap(confirmation, visual)
-  local text = [[:%s/]]
-  local search_string = ""
-  if visual then
-    search_string = RUtils.map.getVisualSelection()
-  else
-    text = text .. [[\<]]
-    search_string = vim.fn.expand "<cword>"
-  end
-  text = text .. RUtils.map.escape(search_string, "[]")
-  if not visual then
-    text = text .. [[\>]]
-  end
-  text = text .. "/" .. RUtils.map.escape(search_string, "&")
-  if confirmation then
-    text = text .. [[/gcI]]
-  else
-    text = text .. [[/gI]]
-  end
-  RUtils.map.type_no_escape(text)
-
-  if not_vscode() then
-    local move_text = [[<Left><Left><Left>]]
-    if confirmation then
-      move_text = move_text .. [[<Left>]]
-    end
-    RUtils.map.type_escape(move_text)
-  end
-end
-
-RUtils.map.nnoremap("sr", function()
-  replace_keymap(false, false)
-end, { desc = "Misc: find and replace word under cursor" })
-
-RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace word (visual)" })
-
--- RUtils.map.nnoremap("sc", function()
---   replace_keymap(true, false)
--- end, { desc = "Misc: find and replace word under cursor with confirmation" })
--- RUtils.map.nnoremap("<leader>r", function()
---   replace_keymap(false, true)
--- end, { desc = "Misc: find and replace selected" })
--- RUtils.map.nnoremap("<leader>rc", function()
---   replace_keymap(true, true)
--- end, { desc = "Misc: find and replace selected with confirmation" })
+end, { desc = "Fold: magic prev closed" })
 
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ TERMINAL                                                │
@@ -222,134 +46,51 @@ RUtils.map.tnoremap("<c-f>", "<c-Right>", { desc = "Terminal: forward" })
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ WINDOWS, VIEW AND NAV                                    │
 -- ╰──────────────────────────────────────────────────────────╯
-
+-- edit window state
 RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
 RUtils.map.nnoremap("ss", "<CMD>split|wincmd p<CR>", { desc = "View: horizontal split", silent = true })
--- RUtils.map.nnoremap("<c-w>v", [[<CMD> lua print("not allowed to use c-w v")<CR>]], { desc = "Misc: <c-w>v not allowed" })
--- RUtils.map.nnoremap("<c-w>s", [[<CMD> lua print("not allowed to use c-w s")<CR>]], { desc = "Misc: <c-w>s not allowed" })
--- nnoremap("sa", [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']], { expr = true })
-
 RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window to =", silent = true })
+RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force view to horizontal split", silent = true })
+RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force view to vertical split", silent = true })
 
-RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force to horizontal split", silent = true })
-RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force to vertical split", silent = true })
-
-RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "View: close buffer" })
-
-RUtils.map.nnoremap("sC", "<CMD>qa!<CR>", { desc = "View: close all buffer" })
-
+-- navigate window
 RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true })
 RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: right window", silent = true })
 RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: down window", silent = true })
 RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
-
 RUtils.map.nnoremap("<a-w>h", "<C-w>h", { desc = "View: left window (mod)", silent = true })
 RUtils.map.nnoremap("<a-w>l", "<C-w>l", { desc = "View: right window (mod)", silent = true })
 RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
 RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
 
-RUtils.map.nnoremap("<Left>", "<cmd>wincmd h<cr>", { desc = "View: left window (alternate)" })
-RUtils.map.nnoremap("<Right>", "<cmd>wincmd l<cr>", { desc = "View: right window (alternate)" })
-RUtils.map.nnoremap("<Up>", "<cmd>wincmd k<cr>", { desc = "View: up window (alternate)" })
-RUtils.map.nnoremap("<Down>", "<cmd>wincmd j<cr>", { desc = "View: down window (alternate)" })
+RUtils.map.nnoremap("sm", RUtils.toggle.maximize, { desc = "View: toggle zoom" })
 
-RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Winav: new tab", silent = true })
-RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Winav: close tab", silent = true })
-
-RUtils.map.nnoremap("tl", "<CMD>tabn<CR>", { desc = "Winav: next tab", silent = true })
-RUtils.map.nnoremap("th", "<CMD>tabp<CR>", { desc = "Winav: prev tab", silent = true })
-RUtils.map.nnoremap("<a-w>L", "<CMD>tabn<CR>", { desc = "Winav: next tab (mod)", silent = true })
-RUtils.map.nnoremap("<a-w>H", "<CMD>tabp<CR>", { desc = "Winav: prev tab (mod)", silent = true })
-
-RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Winav: first tab", silent = true })
-RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Winav: last tab", silent = true })
-
--- Alternate the buffer
-local dont_alternitefile = { "qf", "Outline", "neo-tree", "OverseerList" }
-RUtils.map.nnoremap("sbb", function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local ft = vim.bo[bufnr].filetype
-  if vim.tbl_contains(dont_alternitefile, ft) then
-    return
-  end
-  return RUtils.cmd.feedkey("<C-^>", "n")
-end, { desc = "View: alternate file" })
-
-RUtils.map.nnoremap("sO", function()
-  return RUtils.buf._only()
-end, { desc = "View: buffonly" })
-
-RUtils.map.nnoremap("sT", "<C-w><S-t>", { desc = "Buffer: break buffer/change to new tab" })
-
--- RUtils.map.nnoremap("gH", "<CMD>bfirst<CR>", { desc = "Buffer: first buffer" })
--- RUtils.map.nnoremap("gL", "<CMD>blast<CR>", { desc = "Buffer: last buffer" })
-
--- RUtils.map.nnoremap("gh", "<CMD>bprev<CR>", { desc = "Buffer: prev buffer" })
--- RUtils.map.nnoremap("gl", "<CMD>bnext<CR>", { desc = "Buffer: next buffer" })
-
-RUtils.map.nnoremap("gh", function()
-  return RUtils.fold.magic_prev_next_qf(true)
-end, { desc = "Misc: magic move gh" })
-RUtils.map.nnoremap("gl", function()
-  return RUtils.fold.magic_prev_next_qf()
-end, { desc = "Misc: magic move gl" })
-
--- RUtils.map.nnoremap("<S-Left>", "<CMD>colder<CR>", { desc = "qf: prev stack" })
--- RUtils.map.nnoremap("<S-Right>", "<CMD>cnewer<CR>", { desc = "qf: next stack" })
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ COMMANDLINE                                              │
--- ╰──────────────────────────────────────────────────────────╯
-RUtils.map.cnoremap("hh", "<c-c>", { desc = "Commandline: exit from cmdline" })
--- RUtils.map.cnoremap("<c-c>", "<Esc>", { desc = "Commandline: exit" })
-RUtils.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to the first" })
-RUtils.map.cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last" })
-RUtils.map.cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist on text" })
-RUtils.map.cnoremap("<c-p>", "<Up>", { desc = "Commandline: prev hist on text" })
-RUtils.map.cnoremap("<a-n>", "<S-Down>", { desc = "Commandline: next hist" })
-RUtils.map.cnoremap("<a-p>", "<S-Up>", { desc = "Commandline: prev hist" })
-
-RUtils.map.cnoremap("<c-l>", "<Right>", { desc = "Commandline: next word" })
-RUtils.map.cnoremap("<c-h>", "<Left>", { desc = "Commandline: prev word" })
-RUtils.map.cnoremap("<c-f>", "<S-Right>")
-RUtils.map.cnoremap("<c-b>", "<S-Left>")
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ CABBREV                                                  │
--- ╰──────────────────────────────────────────────────────────╯
-RUtils.map.cabbrev("BD", "bd!")
-RUtils.map.cabbrev("Bd", "bd!")
-RUtils.map.cabbrev("Bd", "bd!")
-RUtils.map.cabbrev("Q!!", "q!")
-RUtils.map.cabbrev("Q!", "q!")
-RUtils.map.cabbrev("Q", "q")
--- RUtils.map.cabbrev("Q1", "q!")
-RUtils.map.cabbrev("Qal", "qal!")
-RUtils.map.cabbrev("Ql", "qal!")
-RUtils.map.cabbrev("Qla", "qal!")
-RUtils.map.cabbrev("W!", "update!")
-RUtils.map.cabbrev("W", "update!")
--- RUtils.map.cabbrev("W1", "update!")
-RUtils.map.cabbrev("W;", "update!")
-RUtils.map.cabbrev("WQ", "up")
-RUtils.map.cabbrev("Wq", "wq")
-RUtils.map.cabbrev("bD", "bd!")
-RUtils.map.cabbrev("bd", "bd!")
-RUtils.map.cabbrev("q!!", "q!")
-RUtils.map.cabbrev("ql", "q!")
-RUtils.map.cabbrev("qla", "qal!")
--- RUtils.map.cabbrev("w1", "w")
-RUtils.map.cabbrev("w;", "update!")
-
--- I don't need help to show when I type <F1>.
--- RUtils.map.nmap("<F1>", "<Nop>")
--- RUtils.map.imap("<F1>", "<Nop>")
-RUtils.map.vmap("K", "<Nop>")
+-- Tab
+RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab", silent = true })
+RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close tab", silent = true })
+RUtils.map.nnoremap("tl", "<CMD>tabn<CR>", { desc = "Tab: next tab", silent = true })
+RUtils.map.nnoremap("th", "<CMD>tabp<CR>", { desc = "Tab: prev tab", silent = true })
+RUtils.map.nnoremap("<a-w>L", "<CMD>tabn<CR>", { desc = "Tab: next tab (mod)", silent = true })
+RUtils.map.nnoremap("<a-w>H", "<CMD>tabp<CR>", { desc = "Tab: prev tab (mod)", silent = true })
+RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab", silent = true })
+RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last tab", silent = true })
 
 -- ╭─────────────────────────────────────────────────────────╮
--- │ MAGIC                                                   │
+-- │ BUFFER                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
--- Exit or delete a buffer
+RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: break buffer/change to new tab" })
+RUtils.map.nnoremap("<Leader>bO", RUtils.buf._only, { desc = "Buffer: buffonly" })
+RUtils.map.nnoremap("<Leader>bb", "<cmd>e #<cr>", { desc = "Buffer: switch to other buffer" })
+RUtils.map.nnoremap("<Leader>bd", RUtils.ui.bufremove, { desc = "Buffer: delete buffer" })
+RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
+RUtils.map.nnoremap("<Leader>bn", "<CMD>vnew<CR>", { desc = "Buffer: close buffer" })
+RUtils.map.nnoremap("gh", function()
+  return RUtils.fold.magic_prev_next_qf(true)
+end, { desc = "Buffer: magic gh" })
+RUtils.map.nnoremap("gl", function()
+  return RUtils.fold.magic_prev_next_qf()
+end, { desc = "Buffer: magic gl" })
+
 local function magic_quit()
   local buf_fts = {
     ["fugitive"] = "bd",
@@ -396,48 +137,65 @@ end
 RUtils.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (visual)" })
 
-RUtils.map.nnoremap("<ESC>", function()
-  cmd.noh()
-end, { desc = "Misc: magic escape" })
-
-RUtils.map.nnoremap("<Leader>oo", function()
-  return RUtils.markdown.follow_link(false)
-end, { desc = "Misc: magic follow link" })
-
-RUtils.map.vnoremap("<Leader>oo", function()
-  return RUtils.markdown.follow_link(true)
-end, { desc = "Misc: magic follow link (visual)" })
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ COMMANDLINE                                              │
+-- ╰──────────────────────────────────────────────────────────╯
+RUtils.map.cnoremap("hh", "<c-c>", { desc = "Commandline: exit" })
+RUtils.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to first line" })
+RUtils.map.cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last line" })
+RUtils.map.cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist" })
+RUtils.map.cnoremap("<c-p>", "<Up>", { desc = "Commandline: prev hist" })
+RUtils.map.cnoremap("<a-n>", "<S-Down>", { desc = "Commandline: next hist" })
+RUtils.map.cnoremap("<a-p>", "<S-Up>", { desc = "Commandline: prev hist" })
+RUtils.map.cnoremap("<c-l>", "<Right>", { desc = "Commandline: next word" })
+RUtils.map.cnoremap("<c-h>", "<Left>", { desc = "Commandline: prev word" })
+RUtils.map.cnoremap("<c-f>", "<S-Right>", { desc = "Commandline: forward word" })
+RUtils.map.cnoremap("<c-b>", "<S-Left>", { desc = "Commandline: backward word" })
 
 -- ╭──────────────────────────────────────────────────────────╮
--- │ COMMANDS                                                 │
+-- │ CABBREV                                                  │
 -- ╰──────────────────────────────────────────────────────────╯
-RUtils.cmd.create_command("Snippets", function()
-  return RUtils.plugin.EditSnippet()
-end, { desc = "Snippet: edit snippet file" })
+RUtils.map.cabbrev("BD", "bd!")
+RUtils.map.cabbrev("Bd", "bd!")
+RUtils.map.cabbrev("Bd", "bd!")
+RUtils.map.cabbrev("Q!!", "q!")
+RUtils.map.cabbrev("Q!", "q!")
+RUtils.map.cabbrev("Q", "q")
+-- RUtils.map.cabbrev("Q1", "q!")
+RUtils.map.cabbrev("Qal", "qal!")
+RUtils.map.cabbrev("Ql", "qal!")
+RUtils.map.cabbrev("Qla", "qal!")
+RUtils.map.cabbrev("W!", "update!")
+RUtils.map.cabbrev("W", "update!")
+-- RUtils.map.cabbrev("W1", "update!")
+RUtils.map.cabbrev("W;", "update!")
+RUtils.map.cabbrev("WQ", "up")
+RUtils.map.cabbrev("Wq", "wq")
+RUtils.map.cabbrev("bD", "bd!")
+RUtils.map.cabbrev("bd", "bd!")
+RUtils.map.cabbrev("q!!", "q!")
+RUtils.map.cabbrev("ql", "q!")
+RUtils.map.cabbrev("qla", "qal!")
+-- RUtils.map.cabbrev("w1", "w")
+RUtils.map.cabbrev("w;", "update!")
 
-RUtils.cmd.create_command("CBcatalog", function()
-  return require("comment-box").catalog()
-end, { desc = "Misc: show catalog [comment-box]" })
+-- I don't need help to show when I type <F1>.
+RUtils.map.nmap("<F1>", "<Nop>")
+RUtils.map.imap("<F1>", "<Nop>")
+RUtils.map.vmap("K", "<Nop>")
 
-RUtils.cmd.create_command("ChangeMasterTheme", function()
-  return RUtils.plugin.change_colors()
-end, { desc = "Misc: set theme bspwm" })
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ COMMANDS                                                │
+-- ╰─────────────────────────────────────────────────────────╯
+RUtils.cmd.create_command("Snippets", RUtils.plugin.EditSnippet, { desc = "Misc: edit snippet file" })
+-- RUtils.cmd.create_command("CBcatalog", require("comment-box").catalog, { desc = "Misc: show catalog [comment-box]" })
+RUtils.cmd.create_command("ChangeMasterTheme", RUtils.plugin.change_colors, { desc = "Misc: set theme bspwm" })
+RUtils.cmd.create_command("InfoOption", RUtils.plugin.infoFoldPreview, { desc = "Misc: echo options" })
+RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo options" })
 
-RUtils.cmd.create_command("InfoOption", function()
-  return RUtils.plugin.infoFoldPreview()
-end, { desc = "Misc: echo options" })
-
-RUtils.cmd.create_command("ImgInsert", function()
-  return RUtils.maim.insert()
-end, { desc = "Misc: echo options" })
-
-RUtils.cmd.create_command("E", function()
-  return cmd [[ vnew ]]
-end, { desc = "Misc: echo options" })
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ Improve scroll, credits: https://github.com/Shougo       │
--- ╰──────────────────────────────────────────────────────────╯
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ SCROLL                                                  │
+-- ╰─────────────────────────────────────────────────────────╯
 RUtils.map.nnoremap(
   "zz",
   [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
@@ -460,9 +218,151 @@ RUtils.map.nnoremap(
 RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
-RUtils.map.nnoremap("sm", function()
-  RUtils.toggle.maximize()
-end)
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ TOGGLE                                                  │
+-- ╰─────────────────────────────────────────────────────────╯
+
+RUtils.map.nnoremap("<Leader>uF", function()
+  RUtils.format.toggle()
+end, { desc = "Toggle: toggle auto format (global)" })
+RUtils.map.nnoremap("<Leader>uf", function()
+  RUtils.format.toggle(true)
+end, { desc = "Toggle: auto format (buffer)" })
+RUtils.map.nnoremap("<Leader>uw", function()
+  RUtils.toggle "wrap"
+end, { desc = "Toggle: wrap" })
+local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
+RUtils.map.nnoremap("<Leader>uL", function()
+  RUtils.toggle "relativenumber"
+end, { desc = "Toggle: relative line numbers" })
+RUtils.map.nnoremap("<Leader>ul", function()
+  RUtils.toggle.number()
+end, { desc = "Toggle: line numbers" })
+RUtils.map.nnoremap("<Leader>uc", function()
+  RUtils.toggle("conceallevel", false, { 0, conceallevel })
+end, { desc = "Toggle: conceal" })
+RUtils.map.nnoremap("<Leader>us", function()
+  RUtils.toggle "spell"
+end, { desc = "Toggle: spelling" })
+RUtils.map.nnoremap("<Leader>ud", function()
+  RUtils.toggle.diagnostics()
+end, { desc = "Toggle: diagnostic" })
+if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
+  RUtils.map.nnoremap("<Leader>uh", function()
+    LazyVim.toggle.inlay_hints()
+  end, { desc = "Toggle: inlay hints" })
+end
+RUtils.map.nnoremap("<Leader>ub", function()
+  RUtils.toggle("background", false, { "light", "dark" })
+end, { desc = "Toggle: background" })
+RUtils.map.nnoremap("<Leader>uT", function()
+  if vim.b.ts_highlight then
+    vim.treesitter.stop()
+  else
+    vim.treesitter.start()
+  end
+end, { desc = "Toggle: treesitter highlight" })
+
+-- ╭──────────────────────────────────────────────────────────╮
+-- │ MISC                                                     │
+-- ╰──────────────────────────────────────────────────────────╯
+-- General
+RUtils.map.nnoremap("<c-g>", "/", nosilent)
+RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
+RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
+RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
+RUtils.map.vnoremap("p", "pgvy")
+RUtils.map.nnoremap("<Leader>Y", function()
+  local path = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p") or ""
+  vim.fn.setreg("+", path)
+  vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
+end, { silent = true, desc = "Misc: yank current absolute path" })
+RUtils.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
+
+RUtils.map.nnoremap("<Leader>n", cmd.nohl, { desc = "Misc: clear searches" })
+RUtils.map.nnoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
+RUtils.map.inoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
+
+RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
+RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
+RUtils.map.onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
+RUtils.map.nnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+RUtils.map.xnoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+RUtils.map.onoremap("N", "'nN'[v:searchforward]", { expr = true, desc = "Misc: prev search result" })
+
+-- Visual
+RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
+RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
+
+RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
+RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
+
+RUtils.map.vnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
+RUtils.map.vnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
+
+RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })
+
+RUtils.map.nnoremap("<Leader>cd", function()
+  local filepath = fn.expand "%:p:h" -- code
+  cmd(fmt("cd %s", filepath))
+  vim.notify(fmt("ROOT CHANGED: %s", filepath))
+end, { desc = "Misc: change pwd to dir file" })
+
+-- allow moving the cursor through wrapped lines using j and k,
+-- note that I have line wrapping turned off but turned on only for Markdown
+RUtils.map.nnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+RUtils.map.nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+RUtils.map.vnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+
+RUtils.map.nnoremap("<Leader>P", function()
+  local cwd = vim.fn.expand "%:p:h"
+  local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
+  RUtils.info(cwd .. "/" .. fname)
+end, { desc = "Misc: printout current path" })
+
+local function replace_keymap(confirmation, visual)
+  confirmation = confirmation or false
+  visual = visual or false
+  local text = [[:%s/]]
+  local search_string = ""
+  if visual then
+    search_string = RUtils.map.getVisualSelection()
+  else
+    text = text .. [[\<]]
+    search_string = vim.fn.expand "<cword>"
+  end
+  text = text .. RUtils.map.escape(search_string, "[]")
+  if not visual then
+    text = text .. [[\>]]
+  end
+  text = text .. "/" .. RUtils.map.escape(search_string, "&")
+  if confirmation then
+    text = text .. [[/gcI]]
+  else
+    text = text .. [[/gI]]
+  end
+  RUtils.map.type_no_escape(text)
+
+  if not_vscode() then
+    local move_text = [[<Left><Left><Left>]]
+    if confirmation then
+      move_text = move_text .. [[<Left>]]
+    end
+    RUtils.map.type_escape(move_text)
+  end
+end
+
+RUtils.map.nnoremap("sr", replace_keymap, { desc = "Misc: find and replace under cursor" })
+RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace (visual)" })
+
+RUtils.map.nnoremap("<Leader>oo", function()
+  return RUtils.markdown.follow_link(false)
+end, { desc = "Misc: magic follow link" })
+
+RUtils.map.vnoremap("<Leader>oo", function()
+  return RUtils.markdown.follow_link(true)
+end, { desc = "Misc: magic follow link (visual)" })
 
 RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, {
   desc = "MISC: show keymap helps curbuf",

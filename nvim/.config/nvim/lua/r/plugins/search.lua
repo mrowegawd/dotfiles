@@ -527,6 +527,9 @@ return {
               RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
             ),
           },
+          -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
+          -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
+          -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
           formatter = "path.filename_first",
           multiprocess = true,
           winopts_fn = function()
@@ -1188,6 +1191,8 @@ return {
           keymaps = dropdown {
             layout_config = { height = 50, width = 0.8 },
           },
+
+          lsp_definitions = themes.get_ivy {},
           lsp_references = {
             sorting_strategy = "descending",
             layout_strategy = "vertical", -- ivy, cursor, dropdown
@@ -1245,16 +1250,21 @@ return {
     cmd = { "GrugFar" },
     keys = {
       {
-        "<Leader><s-f>",
+        "<Leader>F",
         "<CMD>GrugFar<CR>",
         desc = "Misc: open grug [grugfar]",
       },
       {
-        "<Leader>sf",
+        "<Leader>F",
         function()
-          require("grug-far").grug_far { prefills = { flags = vim.fn.expand "%" } }
+          local sel = RUtils.cmd.get_visual_selection { strict = true }
+          if sel then
+            local selection = RUtils.cmd.strip_whitespace(sel.selection)
+            require("grug-far").grug_far { prefills = { search = selection } }
+          end
         end,
-        desc = "Misc: open grug on curbuf [grugfar]",
+        mode = { "v" },
+        desc = "Misc: open grug (visual) [grugfar]",
       },
     },
     opts = {
@@ -1278,31 +1288,33 @@ return {
     event = "LazyFile",
     cmd = { "TodoTrouble", "TodoTelescope" },
     keys = {
-      { "<leader>xt", "<cmd>TodoTrouble<cr>", desc = "Misc: todo trouble (trouble) [todo-comments]" },
+      { "<Leader>xt", "<cmd>TodoTrouble<cr>", desc = "Misc: todo trouble (trouble) [todo-comments]" },
       {
-        "<leader>xT",
+        "<Leader>xT",
         "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",
         desc = "Misc: search Todo/Fix/Fixme (trouble) [todo-comments]",
       },
       {
-        "<leader>sT",
+        "<Leader>fT",
         function()
           RUtils.todocomments.search_global {
             title = "Todo Global",
           }
+          vim.cmd "normal! zz"
         end,
         desc = "Misc: todo global dir (fzflua) [todo-comments]",
       },
       {
-        "<leader>st",
+        "<Leader>ft",
         function()
           RUtils.todocomments.search_local {
             title = "Todo Curbuf",
           }
+          vim.cmd "normal! zz"
         end,
         desc = "Misc: todo local dir (fzflua) [todo-comments]",
       },
-      -- { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
+      -- { "<Leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
     },
     opts = {
       signs = true, -- show icons in the signs column
@@ -1452,33 +1464,28 @@ return {
         "<cmd>Trouble lsp_references toggle focus=true win.position=right<cr>",
         desc = "LSP: references [trouble]",
       },
+      -- {
+      --   "gi",
+      --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
+      --   desc = "LSP: implementations [trouble]",
+      -- },
+      -- {
+      --   "gO",
+      --   "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=right<cr>",
+      --   desc = "LSP: outgoing calls [trouble]",
+      -- },
+      -- {
+      --   "gI",
+      --   "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=right<cr>",
+      --   desc = "LSP: incomming calls [trouble]",
+      -- },
+      -- {
+      --   "gt",
+      --   "<cmd>Trouble lsp_type_definitions<CR>",
+      --   desc = "LSP: type definitions [trouble]",
+      -- },
       {
-        "gi",
-        "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
-        desc = "LSP: implementations [trouble]",
-      },
-      {
-        "gO",
-        "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=right<cr>",
-        desc = "LSP: outgoing calls [trouble]",
-      },
-      {
-        "gI",
-        "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=right<cr>",
-        desc = "LSP: incomming calls [trouble]",
-      },
-      {
-        "gd",
-        "<cmd>Trouble lsp_definitions<CR>",
-        desc = "LSP: definitions [trouble]",
-      },
-      {
-        "gt",
-        "<cmd>Trouble lsp_type_definitions<CR>",
-        desc = "LSP: type definitions [trouble]",
-      },
-      {
-        "<leader>xX",
+        "<Leader>xX",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then
@@ -1490,7 +1497,7 @@ return {
         desc = "Diagnostic: workspaces diagnostic [trouble]",
       },
       {
-        "<leader>xx",
+        "<Leader>xx",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then
@@ -1500,18 +1507,18 @@ return {
         end,
         desc = "Diagnostic: document diagnostic [trouble]",
       },
+      -- {
+      --   "<Leader>cs",
+      --   "<cmd>Trouble symbols toggle focus=false<cr>",
+      --   desc = "LSP: open symbols with trouble [trouble]",
+      -- },
+      -- {
+      --   "<Leader>cS",
+      --   "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+      --   desc = "LSP: LSP references/definitions/... [trouble]",
+      -- },
       {
-        "<leader>cs",
-        "<cmd>Trouble symbols toggle focus=false<cr>",
-        desc = "LSP: open symbols with trouble [trouble]",
-      },
-      {
-        "<leader>cS",
-        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-        desc = "LSP: LSP references/definitions/... [trouble]",
-      },
-      {
-        "<leader>xl",
+        "<Leader>xl",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then
@@ -1522,7 +1529,7 @@ return {
         desc = "QF: open location list with [trouble]",
       },
       {
-        "<leader>xq",
+        "<Leader>xq",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then

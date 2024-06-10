@@ -420,7 +420,7 @@ return {
             RUtils.info("Enabled auto pairs", { title = "Option" })
           end
         end,
-        desc = "Misc: toggle auto pairs [mini.pairs]",
+        desc = "Toggle: auto pairs [mini.pairs]",
       },
     },
   },

@@ -19,14 +19,31 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
+    { "K", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
     {
-      "K",
+      "gd",
       function()
-        -- vim.lsp.buf.hover()
-        require("noice.lsp").hover()
+        require("telescope.builtin").lsp_definitions { reuse_win = true }
       end,
-      desc = "LSP: show hover [noice]",
+      desc = "LSP: goto definition",
+      has = "definition",
     },
+    { "gD", vim.lsp.buf.declaration, desc = "LSP: goto declaration" },
+    {
+      "gI",
+      function()
+        require("telescope.builtin").lsp_implementations { reuse_win = true }
+      end,
+      desc = "LSP: goto implementation",
+    },
+    {
+      "gy",
+      function()
+        require("telescope.builtin").lsp_type_definitions { reuse_win = true }
+      end,
+      desc = "LSP: goto type definition",
+    },
+    { "<leader>cA", RUtils.lsp.action.source, desc = "LSP: source action", has = "codeAction" },
     {
       "<leader>cR",
       RUtils.lsp.rename_file,
@@ -37,7 +54,7 @@ function M.get()
     {
       "<a-q>",
       function()
-        RUtils.lsp.words.jump(vim.v.count1)
+        RUtils.lsp.words.jump(vim.v.count1, true)
       end,
       has = "documentHighlight",
       desc = "LSP: next word reference",
@@ -45,24 +62,10 @@ function M.get()
     {
       "<a-Q>",
       function()
-        RUtils.lsp.words.jump(-vim.v.count1)
+        RUtils.lsp.words.jump(-vim.v.count1, true)
       end,
       has = "documentHighlight",
       desc = "LSP: prev word reference",
-    },
-    {
-      "<Leader>ui",
-      function()
-        RUtils.toggle.inlay_hints()
-      end,
-      desc = "LSP: toggle inlay hint",
-    },
-    {
-      "<Leader>uc",
-      function()
-        RUtils.toggle.codelens()
-      end,
-      desc = "LSP: toggle codelens",
     },
     {
       "<Leader>cc",
@@ -77,17 +80,6 @@ function M.get()
         vim.lsp.codelens.refresh()
       end,
       desc = "LSP: codelens refresh",
-    },
-    {
-      "<Leader>us",
-      function()
-        if RUtils.has "symbol-usage.nvim" then
-          require("symbol-usage").toggle()
-        else
-          print "symbol-usage is not installed"
-        end
-      end,
-      desc = "LSP: symbol-usage [symbol-usage]",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics
@@ -108,13 +100,6 @@ function M.get()
         vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
       end,
       desc = "Diagnostic: preview",
-    },
-    {
-      "<Leader>ud",
-      function()
-        RUtils.toggle.diagnostics()
-      end,
-      desc = "Diagnostic: toggle diagnostic",
     },
     --  +----------------------------------------------------------+
     --  LSP commands
@@ -168,9 +153,6 @@ function M.get()
         local defaultCmds = vim.tbl_deep_extend("force", {
           show_info_formatlspinfo = function()
             vim.cmd [[LazyFormatInfo]]
-          end,
-          refresh_symbol_usage = function()
-            require("symbol-usage").refresh()
           end,
         }, unpack(newCmds) or {})
 
@@ -233,6 +215,7 @@ function M.get()
     M._keys[#M._keys + 1] =
       { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek preview definitions [goto-preview]" }
   end
+
   return M._keys
 end
 
