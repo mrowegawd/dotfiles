@@ -85,23 +85,18 @@ return {
       end
     end,
     opts = function()
-      -- Highlight.plugin("NotifyCol", {
-      --   -- { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-      --   -- { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-      --   -- { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-      --   -- { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-      --   -- { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-      --   -- { NotifyERRORBody = { link = "NormalFloat" } },
-      --   -- { NotifyWARNBody = { link = "NormalFloat" } },
-      --   -- { NotifyDEBUGBody = { link = "NormalFloat" } },
-      --   -- { NotifyTRACEBody = { link = "NormalFloat" } },
-      --   { NotifyINFOBody = { bg = { from = "NotifyINFOIcon", attr = "bg" } } },
-      --   { NotifyHINTBody = { bg = { from = "NotifyHINTIcon", attr = "bg" } } },
-      --   { NotifyWARNBody = { bg = { from = "NotifyWARNIcon", attr = "bg" } } },
-      --   { NotifyERRORBody = { bg = { from = "NotifyERRORIcon", attr = "bg" } } },
-      --   { NotifyDEBUGBody = { bg = { from = "NotifyDEBUGIcon", attr = "bg" } } },
-      --   { NotifyTRACEBody = { bg = { from = "NotifyTRACEIcon", attr = "bg" } } },
-      -- })
+      Highlight.plugin("NotifyCol", {
+        { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+        { NotifyERRORBody = { link = "NormalFloat" } },
+        { NotifyWARNBody = { link = "NormalFloat" } },
+        { NotifyINFOBody = { link = "NormalFloat" } },
+        { NotifyDEBUGBody = { link = "NormalFloat" } },
+        { NotifyTRACEBody = { link = "NormalFloat" } },
+      })
 
       return {
         stages = "static",
