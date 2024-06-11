@@ -214,7 +214,9 @@ M.Mode_inactive = {
   },
 }
 M.Branch = {
-  condition = Conditions.is_git_repo,
+  condition = function()
+    return Conditions.is_git_repo() and setcond.hide_in_width(100)
+  end,
 
   init = function(self)
     self.status_dict = vim.b.gitsigns_status_dict
