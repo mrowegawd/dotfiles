@@ -1,13 +1,8 @@
 ---@class r.utils.ui
 local M = {}
 
-local v = vim.v
-
 ---@type (fun(buf:number, lnum:number, vnum:number, win:number):Sign[]?)[]
 M.virtual = {}
-
-local big_spaces = ""
-local separator = "│"
 
 ---@alias Sign {name:string, text:string, texthl:string, priority:number}
 
@@ -42,7 +37,7 @@ function M.get_signs(buf, lnum)
   )
   for _, extmark in pairs(extmarks) do
     signs[#signs + 1] = {
-      name = extmark[4].sign_hl_group or "",
+      name = extmark[4].sign_hl_group or extmark[4].sign_name or "",
       text = extmark[4].sign_text,
       texthl = extmark[4].sign_hl_group,
       priority = extmark[4].priority,
@@ -70,6 +65,119 @@ function M.get_mark(buf, lnum)
   end
 end
 
+---@param sign? Sign
+---@param len? number
+function M.icon(sign, len)
+  sign = sign or {}
+  len = len or 2
+  local text = vim.fn.strcharpart(sign.text or "", 0, len) ---@type string
+  text = text .. string.rep(" ", len - vim.fn.strchars(text))
+  return sign.texthl and ("%#" .. sign.texthl .. "#" .. text .. "%*") or text
+end
+
+function M.foldtext()
+  local ok = pcall(vim.treesitter.get_parser, vim.api.nvim_get_current_buf())
+  local ret = ok and vim.treesitter.foldtext and vim.treesitter.foldtext()
+  if not ret or type(ret) == "string" then
+    ret = { { vim.api.nvim_buf_get_lines(0, vim.v.lnum - 1, vim.v.lnum, false)[1], {} } }
+  end
+  table.insert(ret, { " " .. require("RUtils.config").config.icons.misc.dots })
+
+  if not vim.treesitter.foldtext then
+    return table.concat(
+      vim.tbl_map(function(line)
+        return line[1]
+      end, ret),
+      " "
+    )
+  end
+  return ret
+end
+
+function _G.custom_fold_text()
+  local line = vim.fn.getline(vim.v.foldstart)
+
+  local line_count = vim.v.foldend - vim.v.foldstart + 1
+
+  return " ⚡ " .. line .. ": " .. line_count .. " lines"
+end
+
+function M.statuscolumn()
+  local win = vim.g.statusline_winid
+  local buf = vim.api.nvim_win_get_buf(win)
+  local is_file = vim.bo[buf].buftype == ""
+  local show_signs = vim.wo[win].signcolumn ~= "no"
+
+  local components = { "", "", "" } -- left, middle, right
+
+  local show_open_folds = true
+  local use_githl = {
+    folds_open = false, -- show fold sign when fold is open
+    folds_githl = false, -- highlight fold sign with git sign color
+  }
+
+  if show_signs then
+    local signs = M.get_signs(buf, vim.v.lnum)
+
+    ---@type Sign?,Sign?,Sign?
+    local left, right, fold, githl
+    for _, s in ipairs(signs) do
+      if s.name and (s.name:find "GitSign" or s.name:find "MiniDiffSign") then
+        right = s
+        if use_githl then
+          githl = s["texthl"]
+        end
+      else
+        left = s
+      end
+    end
+
+    vim.api.nvim_win_call(win, function()
+      if vim.fn.foldclosed(vim.v.lnum) >= 0 then
+        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = githl or "Folded" }
+      elseif
+        show_open_folds
+        and not RUtils.ui.skip_foldexpr[buf]
+        and vim.treesitter.foldexpr(vim.v.lnum):sub(1, 1) == ">"
+      then -- fold start
+        fold = { text = vim.opt.fillchars:get().foldopen or "", texthl = githl }
+      end
+    end)
+    -- Left: mark or non-git sign
+    -- components[1] = M.icon(M.get_mark(buf, vim.v.lnum) or left)
+    -- Left: saat ini memakai custom mark dari qfsilet maka itu menggunakan `left` (saja) dari pada `get_mark`,
+    -- jadi sign builtin-mark ('a/b/c/etc') diremove
+    components[1] = M.icon(left)
+    -- Right: fold icon or git sign (only if file)
+    components[3] = is_file and M.icon(fold or right) or ""
+  end
+
+  -- Numbers in Neovim are weird
+  -- They show when either number or relativenumber is true
+  local is_num = vim.wo[win].number
+  local is_relnum = vim.wo[win].relativenumber
+  if (is_num or is_relnum) and vim.v.virtnum == 0 then
+    if vim.v.relnum == 0 then
+      components[2] = is_num and "%l" or "%r" -- the current line
+    else
+      components[2] = is_relnum and "%r" or "%l" -- other lines
+    end
+    components[2] = "%=" .. components[2] .. " " -- right align
+  end
+
+  if vim.v.virtnum ~= 0 then
+    components[2] = "%= "
+  end
+
+  return table.concat(components, "")
+end
+
+---@return {fg?:string}?
+function M.fg(name)
+  local color = M.color(name)
+  return color and { fg = color } or nil
+end
+
 ---@param name string
 ---@param bg? boolean
 ---@return string?
@@ -88,123 +196,6 @@ function M.color(name, bg)
     end
   end
   return color and string.format("#%06x", color) or nil
-end
-
----@param sign? Sign
----@param len? number
-function M.icon(sign, len, spaces)
-  spaces = spaces or " "
-  sign = sign or {}
-  len = len or 2
-  local text = vim.fn.strcharpart(sign.text or "", 0, len) ---@type string
-  text = text .. string.rep(spaces, len - vim.fn.strchars(text))
-  return sign.texthl and ("%#" .. sign.texthl .. "#" .. text .. "%*") or text
-end
-
-function _G.custom_fold_text()
-  local line = vim.fn.getline(vim.v.foldstart)
-
-  local line_count = vim.v.foldend - vim.v.foldstart + 1
-
-  return " ⚡ " .. line .. ": " .. line_count .. " lines"
-end
-
-function M.statuscolumn()
-  -- local lnum, relnum, virtnum = v.lnum, v.relnum, v.virtnum
-  -- local lnum = v.lnum
-  local win = vim.g.statusline_winid
-  local buf = vim.api.nvim_win_get_buf(win)
-  local is_file = vim.bo[buf].buftype == ""
-  local show_signs = vim.wo[win].signcolumn ~= "no"
-
-  local height = vim.api.nvim_buf_line_count(0)
-  local totalSpaces = #tostring(height)
-  big_spaces = string.rep(" ", totalSpaces)
-
-  local components = { "", "", "" } -- left, middle, right
-
-  if show_signs then
-    ---@type Sign?,Sign?,Sign?
-    local left, right, fold, githl
-    for _, s in ipairs(M.get_signs(buf, vim.v.lnum)) do
-      if s.name and s.name:find "GitSign" then
-        right = s
-        -- githl = s["texthl"]
-      else
-        left = s
-      end
-    end
-    if vim.v.virtnum ~= 0 then
-      left = nil
-    end
-    vim.api.nvim_win_call(win, function()
-      -- if vim.fn.foldlevel(lnum) <= vim.fn.foldlevel(lnum - 1) then
-      --   fold = { text = space, texthl = "FoldColumn" }
-      -- else
-      --   fold = { text = vim.fn.foldclosed(lnum) == -1 and fcs.foldopen or fcs.foldclose, texthl = "GitSignsAdd" }
-      -- end
-      if vim.fn.foldclosed(vim.v.lnum) >= 0 then
-        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = githl or "FoldColumn1" }
-      elseif
-        -- show_open_folds
-        -- and not RUtils.ui.skip_foldexpr[buf]
-        vim.treesitter.foldexpr(vim.v.lnum):sub(1, 1) == ">"
-      then -- fold start
-        fold = { text = vim.opt.fillchars:get().foldopen or "", texthl = githl or "FoldColumn" }
-      end
-    end)
-
-    -- Left: mark or non-git sign
-    components[1] = " "
-
-    -- Right: number or fold
-    components[2] = is_file and M.icon(left or right) or big_spaces .. " "
-
-    if not vim.tbl_contains({ "norg", "markdown", "gitcommit", "DiffviewFiles" }, vim.bo.filetype) then
-      components[4] = M.icon({ text = separator, texthl = "MySeparator" }, 1, big_spaces)
-      -- components[5] = M.icon(M.get_mark(buf, vim.v.lnum) or fold) or big_spaces
-    else
-      components[4] = " "
-      -- components[5] = " "
-    end
-    components[5] = M.icon(fold) or big_spaces
-  end
-
-  -- Numbers in Neovim are weird
-  -- They show when either number or relativenumber is true
-  local is_num = vim.wo[win].number
-  local is_relnum = vim.wo[win].relativenumber
-  if is_num and is_relnum then
-    if vim.v.virtnum > 0 then
-      -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum))))
-      components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
-    elseif v.virtnum < 0 then
-      if not vim.tbl_contains({ "norg", "org", "markdown", "octo" }, vim.bo.filetype) then
-        components[3] = "%=" .. separator .. " "
-      end
-    else
-      components[3] = '%=%{v:relnum?(v:virtnum>0?"":v:relnum):v:lnum} '
-    end
-  elseif is_num and not is_relnum then
-    components[3] = '%=%{v:virtnum>0?"":v:lnum} '
-    -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
-  elseif is_relnum and not is_num then
-    components[3] = '%=%{v:virtnum>0?"":v:relnum} '
-    -- components[3] = ("%="):rep(math.floor(math.ceil(math.log10(vim.v.lnum)))) .. separator .. " "
-  else
-    components[3] = ""
-  end
-
-  return table.concat(components, "")
-end
-
-function M.fg(name)
-  ---@type {foreground?:number}?
-  ---@diagnostic disable-next-line: deprecated
-  local hl = vim.api.nvim_get_hl and vim.api.nvim_get_hl(0, { name = name, link = false })
-  ---@diagnostic disable-next-line: undefined-field
-  local fg = hl and (hl.fg or hl.foreground)
-  return fg and { fg = string.format("#%06x", fg) } or nil
 end
 
 M.skip_foldexpr = {} ---@type table<number,boolean>
@@ -243,6 +234,49 @@ function M.foldexpr()
     skip_check:stop()
   end)
   return "0"
+end
+
+---@param buf number?
+function M.bufremove(buf)
+  buf = buf or 0
+  buf = buf == 0 and vim.api.nvim_get_current_buf() or buf
+
+  if vim.bo.modified then
+    local choice = vim.fn.confirm(("Save changes to %q?"):format(vim.fn.bufname()), "&Yes\n&No\n&Cancel")
+    if choice == 0 then -- Cancel
+      return
+    end
+    if choice == 1 then -- Yes
+      vim.cmd.write()
+    end
+  end
+
+  for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+    vim.api.nvim_win_call(win, function()
+      if not vim.api.nvim_win_is_valid(win) or vim.api.nvim_win_get_buf(win) ~= buf then
+        return
+      end
+      -- Try using alternate buffer
+      local alt = vim.fn.bufnr "#"
+      if alt ~= buf and vim.fn.buflisted(alt) == 1 then
+        vim.api.nvim_win_set_buf(win, alt)
+        return
+      end
+
+      -- Try using previous buffer
+      local has_previous = pcall(vim.cmd, "bprevious")
+      if has_previous and buf ~= vim.api.nvim_win_get_buf(win) then
+        return
+      end
+
+      -- Create new listed buffer
+      local new_buf = vim.api.nvim_create_buf(true, false)
+      vim.api.nvim_win_set_buf(win, new_buf)
+    end)
+  end
+  if vim.api.nvim_buf_is_valid(buf) then
+    pcall(vim.cmd, "bdelete! " .. buf)
+  end
 end
 
 return M
