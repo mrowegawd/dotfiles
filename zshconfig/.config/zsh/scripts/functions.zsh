@@ -45,6 +45,13 @@ build-install(){
     asdf reshim rust
   fi
 
+  # https://github.com/race604/clock-tui
+  if ! command -v tclock >/dev/null; then
+    echo "Installing: tclock - clock tui"
+    cargo install clock-tui
+    asdf reshim rust
+  fi
+
   if ! command -v bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     sudo apt install bat

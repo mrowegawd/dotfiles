@@ -144,7 +144,12 @@ tmux_clock_mode() {
 	if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
 		tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
 		tmux split-pane -v -p 10 -l 10 -c '#{pane_current_path}'
-		tmux clock-mode
+		if command -v tclock &>/dev/null; then
+			CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
+			tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
+		else
+			tmux clock-mode
+		fi
 		_go_up
 		_go_left
 	else
@@ -160,7 +165,12 @@ tmux_clock_mode() {
 
 		if _check_pane_is_zsh; then
 			tmux split-pane -v -p 10 -l 10 -c '#{pane_current_path}'
-			tmux clock-mode
+			if command -v tclock &>/dev/null; then
+				CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
+				tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
+			else
+				tmux clock-mode
+			fi
 			_go_up
 			_go_left
 		fi
