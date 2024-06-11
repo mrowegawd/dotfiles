@@ -8,6 +8,9 @@ _go_left() {
 _go_right() {
 	tmux select-pane -R
 }
+_go_last_pane() {
+	tmux last-pane
+}
 
 _check_pane_is_nnn() {
 	[ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
