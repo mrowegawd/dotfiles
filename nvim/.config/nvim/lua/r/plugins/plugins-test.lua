@@ -343,7 +343,7 @@ return {
     event = "BufReadPre gkeep://*",
     build = "UpdateRemotePlugins",
     cmd = { "GkeepToggle", "GkeepOpen" },
-    opts = {},
+    opts = true,
   },
   -- CCC (disabled)
   {
@@ -454,7 +454,7 @@ return {
       },
     },
   },
-  -- ILLUMINATE
+  -- ILLUMINATE (disabled)
   {
     "RRethy/vim-illuminate",
     enabled = false,
@@ -554,7 +554,7 @@ return {
     enabled = false,
     event = "VeryLazy",
     cond = vim.fn.executable "ctags" == 1,
-    opts = {},
+    opts = true,
   },
   -- MINI.SESSIONS
   {
@@ -1597,7 +1597,7 @@ return {
   {
     "ThePrimeagen/git-worktree.nvim",
     enabled = false,
-    opts = {},
+    opts = true,
     config = function()
       ---@diagnostic disable-next-line: undefined-field
       require("telescope").load_extension "git_worktree"
@@ -1842,7 +1842,7 @@ return {
     "HakonHarnes/img-clip.nvim",
     enabled = false,
     cmd = "PasteImage",
-    opts = {},
+    opts = true,
     keys = {
       { "<Localleader>P", "<cmd>PasteImage<cr>", desc = "Paste clipboard image" },
     },
@@ -2694,7 +2694,7 @@ return {
     end,
   },
   -- NETRW (disabled)
-  { "prichrd/netrw.nvim", enabled = false, opts = {} },
+  { "prichrd/netrw.nvim", enabled = false, opts = true },
   -- HYPERSONIC.NVIM (make regex readable) (disabled)
   {
     "tomiis4/Hypersonic.nvim",
@@ -2846,7 +2846,7 @@ return {
     enabled = false,
     event = { "InsertEnter", "CmdlineEnter" },
     branch = "v0.6",
-    opts = {},
+    opts = true,
   },
   -- LUAPAD (disabled)
   {
@@ -3167,7 +3167,7 @@ return {
     "j-hui/fidget.nvim",
     enabled = false,
     event = "LazyFile",
-    opts = {},
+    opts = true,
   },
   -- DROPBAR (disabled)
   {
@@ -3447,7 +3447,7 @@ return {
     event = "VeryLazy",
     enabled = false,
     dependencies = "neovim/nvim-lspconfig",
-    opts = {},
+    opts = true,
   },
   -- LSP-TIMEOUT.NVIM (disabled)
   {
@@ -3631,7 +3631,7 @@ return {
     "HampusHauffman/block.nvim",
     enabled = false,
     cmd = { "BlockOn", "BlockOff", "Block" },
-    opts = {},
+    opts = true,
   },
   -- SCROLLEOF (disabled)
   {

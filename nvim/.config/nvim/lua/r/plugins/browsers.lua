@@ -5,7 +5,7 @@ return {
       "sontungexpt/url-open",
       enabled = false,
       cmd = "URLOpenUnderCursor",
-      opts = {},
+      opts = true,
       -- keys = {
       --   {
       --     "<Leader>oo",

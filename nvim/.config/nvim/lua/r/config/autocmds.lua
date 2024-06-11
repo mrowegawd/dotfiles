@@ -218,6 +218,7 @@ RUtils.cmd.augroup("WindowBehaviours", {
       RUtils.map.tnoremap("<a-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
       RUtils.map.tnoremap("<a-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
       RUtils.map.tnoremap("<a-w>f", function()
+        RUtils.map.feedkey("<C-\\><C-n>", "t")
         require("fzf-lua").tabs()
       end, { desc = "Terminal: down window" })
       RUtils.map.tnoremap("<a-w>L", function()

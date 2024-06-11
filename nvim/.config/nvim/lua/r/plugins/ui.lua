@@ -217,7 +217,7 @@ return {
   -- FOLD CYCLE
   {
     "jghauser/fold-cycle.nvim",
-    opts = {},
+    opts = true,
     keys = {
       {
         "tt",

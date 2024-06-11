@@ -27,7 +27,7 @@ return {
       end
       return false
     end,
-    opts = {},
+    opts = true,
   },
   -- HORIZON
   {

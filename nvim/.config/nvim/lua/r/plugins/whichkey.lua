@@ -31,12 +31,13 @@ return {
         ["<leader>"] = {
           name = "<Leader>",
           a = { name = "+projectionist" },
+          b = { name = "+buffer" },
           d = {
             name = "+debug",
             -- a = { name = "+run-launch" },
             -- t = { name = "+toggle" },
           },
-          f = { name = "+fzua" },
+          f = { name = "+fzflua" },
           u = { name = "+toggle" },
           R = { name = "+translate" },
           g = {

@@ -686,7 +686,7 @@ return {
   -- {
   --   "civitasv/cmake-tools.nvim",
   --   event = "LazyFile",
-  --   opts = {},
+  --   opts = true
   -- },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   RUST                                                   │
