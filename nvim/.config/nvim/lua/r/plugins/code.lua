@@ -2,6 +2,43 @@ local Highlight = require "r.settings.highlights"
 
 local callme = 0
 
+local function get_option_buffers()
+  -- local MAX_INDEX_FILE_SIZE = 1024
+
+  ---@diagnostic disable-next-line: unused-local
+  local is_small_buf = function(index, buf)
+    local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
+    return byte_size <= 1024 * 1024 -- 1 Megabyte max
+  end
+
+  local all_bufs = vim.api.nvim_list_bufs()
+  return vim.fn.filter(all_bufs, is_small_buf)
+
+  -- local bufs = {}
+  -- for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+  --   -- Don't index giant files
+  --   if
+  --     vim.api.nvim_buf_is_loaded(bufnr)
+  --     and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE
+  --   then
+  --     bufs[#bufs + 1] = bufnr
+  --   end
+  -- end
+  --
+  -- for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
+  --   local winbufnr = vim.fn.winbufnr(winnr)
+  --   if winbufnr > 0 then
+  --     if
+  --       vim.api.nvim_buf_is_loaded(winbufnr)
+  --       and vim.api.nvim_buf_line_count(winbufnr) < MAX_INDEX_FILE_SIZE
+  --     then
+  --       bufs[#bufs + 1] = winbufnr
+  --     end
+  --   end
+  -- end
+  -- return bufs
+end
+
 return {
   -- CRATES
   {
@@ -22,10 +59,9 @@ return {
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
-      "lukas-reineke/cmp-rg",
       "lukas-reineke/cmp-under-comparator",
       "petertriho/cmp-git",
-      -- "rcarriga/cmp-dap",
+      "rcarriga/cmp-dap",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
       --     luasnip.filetype_extend("python", { "django" })
       --     luasnip.filetype_extend("django-html", { "html" })
@@ -39,7 +75,6 @@ return {
       --     -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     },
     opts = function()
-      local MAX_INDEX_FILE_SIZE = 1024
       local cmp = require "cmp"
       local defaults = require "cmp.config.default"()
 
@@ -147,21 +182,7 @@ return {
                       name = "buffer",
                       keyword_length = 2,
                       options = {
-                        get_bufnrs = function()
-                          --- from all loaded buffers
-                          local bufs = {}
-                          local loaded_bufs = vim.api.nvim_list_bufs()
-                          for _, bufnr in ipairs(loaded_bufs) do
-                            -- Don't index giant files
-                            if
-                              vim.api.nvim_buf_is_loaded(bufnr)
-                              and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE
-                            then
-                              table.insert(bufs, bufnr)
-                            end
-                          end
-                          return bufs
-                        end,
+                        get_bufnrs = get_option_buffers,
                       },
                     },
                   },
@@ -209,28 +230,14 @@ return {
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,
           },
-          {
-            name = "rg",
-            max_item_count = 10,
-            option = { additional_arguments = "--hidden" },
-          },
+          { name = "path" },
+          { name = "crates" },
           {
             name = "buffer",
-            max_item_count = 10,
             options = {
-              get_bufnrs = function()
-                local bufs = {}
-                for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-                  -- Don't index giant files
-                  if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE then
-                    table.insert(bufs, bufnr)
-                  end
-                end
-                return bufs
-              end,
+              get_bufnrs = get_option_buffers,
             },
           },
-          { name = "path" },
         },
       }
     end,
@@ -262,12 +269,17 @@ return {
       end)
 
       local tbl_custom_sources = {
-        { name = "nvim_lsp", max_item_count = 20 },
-        { name = "buffer", max_item_count = 20 },
+        { name = "nvim_lsp" },
         { name = "snippets" },
-        { name = "path", max_item_count = 20 },
-        { name = "rg", max_item_count = 20 },
-        { name = "emoji", max_item_count = 20 },
+        { name = "path" },
+        { name = "emoji" },
+        {
+          name = "buffer",
+          max_item_count = 10,
+          options = {
+            get_bufnrs = get_option_buffers,
+          },
+        },
       }
 
       cmp.setup.filetype("markdown", {
@@ -283,7 +295,7 @@ return {
       })
 
       cmp.setup.filetype("dap-repl", {
-        sources = cmp.config.sources { { name = "dap" }, { name = "buffer" } },
+        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
       })
 
       cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
@@ -291,12 +303,21 @@ return {
       })
 
       cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = cmp.config.sources { { name = "vim-dadbod-completion" }, { name = "buffer" } },
+        sources = cmp.config.sources {
+          { name = "vim-dadbod-completion" },
+          {
+            name = "buffer",
+            max_item_count = 10,
+            options = {
+              get_bufnrs = get_option_buffers,
+            },
+          },
+        },
       })
 
-      cmp.setup.filetype({ "rgflow" }, {
-        sources = cmp.config.sources { { name = "buffer" }, { name = "rg" }, { name = "path" } },
-      })
+      vim.api.nvim_create_user_command("CmpInfo", function()
+        cmp.status()
+      end, {})
 
       cmp.setup.cmdline(":", {
         mapping = {
@@ -363,7 +384,7 @@ return {
       {
         "garymjr/nvim-snippets",
         opts = {
-          friendly_snippets = true,
+          friendly_snippets = false,
           search_paths = { RUtils.config.path.snippet_path .. "/snippets" },
         },
       },
@@ -447,7 +468,7 @@ return {
   {
     "folke/ts-comments.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = true,
     enabled = vim.fn.has "nvim-0.10" == 1,
   },
   -- NVIM-COVERAGE
