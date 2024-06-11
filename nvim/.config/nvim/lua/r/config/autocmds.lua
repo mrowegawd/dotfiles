@@ -185,7 +185,7 @@ RUtils.cmd.augroup("WindowBehaviours", {
         require("bufdelete").bufdelete(buf, true)
       end, { desc = "Terminal: close terminal" })
 
-      -- TODO: pilih kandidat dan get familiar prefix untuk mapping terminal #low #created:2024-06-05
+      -- TODO: pilih kandidat prefix mapping dan get familiar dengan nya, utk mapping terminal #low #created:2024-06-05
 
       -- ATTEMPT 1: prefix mod `arrow keys` = gagal! (jari tangan kriting)
       -- RUtils.map.tnoremap("<Right>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })

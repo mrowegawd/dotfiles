@@ -768,6 +768,18 @@ M.Marks = {
     hl = { fg = colors.diagnostic_warn },
   },
 }
+M.PinnedBuffer = {
+  {
+    provider = function()
+      local is_pinned = require("stickybuf").is_pinned()
+      if is_pinned then
+        -- return " " .. RUtils.config.icons.misc.marks .. " "
+        return " [BufPinned] "
+      end
+    end,
+    hl = { fg = colors.diagnostic_warn },
+  },
+}
 M.BufferCwd = {
   init = function(self)
     self.bufnr = self.bufnr or 0
@@ -860,6 +872,7 @@ M.status_active_left = {
   M.Diagnostics,
   -- M.SearchCount, -- this func make nvim slow!
   M.Sessions,
+  M.PinnedBuffer,
   M.Marks,
   M.BufferCwd,
   M.Ruler,

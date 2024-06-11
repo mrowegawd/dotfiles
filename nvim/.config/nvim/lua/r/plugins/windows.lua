@@ -4,7 +4,21 @@ return {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
     cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
-    opts = {},
+    keys = {
+      {
+        "<Leader>bp",
+        function()
+          local pinbuf = require "stickybuf"
+          if pinbuf.is_pinned() then
+            vim.cmd "Unpin"
+          else
+            vim.cmd "PinBuffer"
+          end
+        end,
+        desc = "Buffer: Pin buffer [stickybuf]",
+      },
+    },
+    config = true,
   },
   -- SMART-SPLITS
   {
