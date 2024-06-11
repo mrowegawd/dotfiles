@@ -1,8 +1,5 @@
 #!/bin/bash
 
-DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
-MARKED_PWD="$DROPBOX_PATH/marked-pwd"
-
 # Method ini sepertinya ga work pada tmux 3.4 ..?!
 # butuh investigasi ini
 not_in_tmux() {
@@ -37,32 +34,7 @@ create_if_needed_and_attach() {
 	if [[ $not_in_tmux == 1 ]]; then
 		tmux new-session -As "$session_name" -c "$session_name"
 	else
-		not_in_tmux_2
-		is_not_in_tmux=$?
-
-		if [[ $is_not_in_tmux == 1 ]]; then
-			select=$(fzf --prompt='Create New Session: ' <"$MARKED_PWD")
-		else
-			select=$(fzf-tmux -xC -w '50%' -h '40%' --prompt='Create New Session: ' <"$MARKED_PWD")
-		fi
-
-		[[ -z $select ]] && exit
-		[[ ! -d $select ]] && notify-send "Path: $select" "Not found!" && exit
-
-		select_basename=$(basename "$select")
-
-		ss_name=$(echo "$select_basename" | sed -e "s/\./\_/g")
-
-		session_exists() {
-			tmux has-session -t "=$ss_name"
-		}
-
-		if ! session_exists; then
-			tmux new-session -d -s "$ss_name" -c "$select"
-		fi
-
-		tmux switch-client -t "$ss_name"
-		notify-send "create new session and detach $ss_name"
+		echo -e "\tTo create another session: use 'ctrl-o' (bind from tmux)"
 	fi
 }
 
