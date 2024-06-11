@@ -11,21 +11,23 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
-      ["<Localleader>st"] = {
+      ["<Localleader>ft"] = {
         function()
           RUtils.markdown.find_local_titles()
+          vim.cmd "normal! zz"
         end,
         desc = "Note: search title global [obsidian]",
       },
-      ["<leader>sT"] = {
+      ["<leader>fT"] = {
         function()
           RUtils.todocomments.search_global_note {
             title = "Todo Note Global",
           }
+          vim.cmd "normal! zz"
         end,
         "Note: search todo global note [fzflua]",
       },
-      ["<leader>st"] = {
+      ["<leader>ft"] = {
         function()
           RUtils.todocomments.search_local {
             title = "Todo Note Curbuf",
