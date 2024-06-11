@@ -61,16 +61,6 @@ function M.inlay_hints(buf, value)
   end
 end
 
-function M.codelens()
-  vim.g.codelens_enabled = not vim.g.codelens_enabled
-  if not vim.g.codelens_enabled then
-    vim.lsp.codelens.clear()
-  else
-    vim.lsp.codelens.refresh()
-  end
-  RUtils.info(string.format("CodeLens %s", bool2str(vim.g.codelens_enabled)))
-end
-
 function M.buffer_autoformat(bufnr)
   bufnr = bufnr or 0
   local old_val = vim.b[bufnr].autoformat_enabled
