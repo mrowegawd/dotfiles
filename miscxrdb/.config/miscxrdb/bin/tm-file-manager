@@ -38,7 +38,6 @@ _create_lf_window() {
 }
 
 GET_TOTAL_ACTIVE_PANES=$(tmux display-message -p '#{window_panes}')
-CURRENT_MAIN_PANE_ID=$(tmux display-message -p '#{pane_id}')
 
 if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
 	tmux split-window -hb -p 30 -l 30 -c "#{pane_current_path}" "$file_manager"
@@ -61,26 +60,29 @@ else
 
 	_go_left
 
-	CURRENT_CURSOR_PANE=$(tmux display-message -p '#{pane_id}')
-	# dunstify "Pane cursor: $CURRENT_CURSOR_PANE  === Main pane: $CURRENT_MAIN_PANE_ID"
-	if [ "$CURRENT_CURSOR_PANE" != "$CURRENT_MAIN_PANE_ID" ]; then
-		if _check_pane_is_nnn; then
-			tmux kill-pane
-			exit
-		fi
-
-		if _check_pane_is_lf; then
-			tmux kill-pane
-			exit
-		fi
-
-		if _check_pane_is_yazi; then
-			tmux kill-pane
-			exit
-		fi
-		_go_right
-		_create_lf_window
+	if _check_pane_is_nnn; then
+		tmux kill-pane
 		exit
 	fi
+
+	if _check_pane_is_nnn; then
+		tmux kill-pane
+		exit
+	fi
+
+	if _check_pane_is_lf; then
+		tmux kill-pane
+		exit
+	fi
+
+	if _check_pane_is_yazi; then
+		tmux kill-pane
+		exit
+	fi
+
+	_go_right
+
+	_create_lf_window
+	exit
 
 fi
