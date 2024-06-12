@@ -126,13 +126,41 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
-        "<a-o>",
+        "<S-CR>",
         ---@diagnostic disable-next-line: param-type-mismatch
         function()
           require("noice").redirect(fn.getcmdline())
         end,
         mode = "c",
-        desc = "Misc: redirect cmdline [noice]",
+        desc = "Noice: redirect cmdline",
+      },
+      {
+        "<Localleader>nd",
+        function()
+          require("noice").cmd "dismiss"
+        end,
+        desc = "Noice: dismiss all",
+      },
+      {
+        "<Localleader>nl",
+        function()
+          require("noice").cmd "last"
+        end,
+        desc = "Noice: last message",
+      },
+      {
+        "<Localleader>nh",
+        function()
+          require("noice").cmd "history"
+        end,
+        desc = "Noice: history",
+      },
+      {
+        "<Localleader>np",
+        function()
+          require("noice").cmd "pick"
+        end,
+        desc = "Noice: picker (telescope/fzflua)",
       },
     },
     opts = function()
@@ -167,12 +195,33 @@ return {
         views = {
           cmdline_popup = {
             position = {
-              row = "98%",
+              row = -2,
               col = "1%",
             },
+          },
+          cmdline_popupmenu = {
+            position = {
+              row = -5,
+              col = "1%",
+            },
+          },
+          popupmenu = {
+            border = {},
+            relative = "editor",
+            position = {
+              row = "55%",
+              col = "50%",
+            },
             size = {
-              width = "auto",
-              height = "auto",
+              width = 60,
+              height = 12, --you can set this to any height, even "auto", depending on your preference
+            },
+            win_options = {
+              winblend = 0,
+              winhighlight = {
+                Normal = "Normal",
+                FloatBorder = "DiagnosticInfo",
+              },
             },
           },
         },
@@ -313,7 +362,7 @@ return {
         col_selected_fg_attr = "PmenuSel"
       end
 
-      local col_selected_sp = "bufferline_unselected"
+      -- local col_selected_sp = "bufferline_unselected"
 
       local bufferline = require "bufferline"
 
