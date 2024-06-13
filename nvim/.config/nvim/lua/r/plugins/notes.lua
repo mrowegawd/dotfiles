@@ -328,6 +328,7 @@ return {
     dependencies = {
       "hrsh7th/nvim-cmp",
       "nvim-treesitter/nvim-treesitter",
+      "lukas-reineke/indent-blankline.nvim",
       {
         "akinsho/org-bullets.nvim",
         config = function()
@@ -754,14 +755,14 @@ return {
         desc = "Note: open create new note dailies [obsidian]",
       },
       {
-        "<Localleader>ft",
+        "<Localleader>fl",
         function()
           RUtils.markdown.find_note_by_tag()
         end,
         desc = "Note: find note by tags [obsidian]",
       },
       {
-        "<Localleader>sT",
+        "<Localleader>fT",
         function()
           RUtils.markdown.find_global_titles()
         end,
