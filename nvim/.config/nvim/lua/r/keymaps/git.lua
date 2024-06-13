@@ -97,7 +97,7 @@ vim.api.nvim_create_user_command("CompareClipboardSelection", function()
 		Ns
 		normal! Vp
     " alternative: diffview
-		windo diffthis 
+		windo diffthis
 	]]
 end, {
   nargs = 0,
@@ -188,18 +188,26 @@ function M.gitsigns()
   RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git: preview hunk [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git: select all hunks and send to qf [gitsigns]" })
   RUtils.map.nnoremap(
-    "<Leader>gtb",
+    "<Leader>gul",
     gs.toggle_current_line_blame,
     { desc = "Git: toggle line blame (gitlens) [gitsigns]" }
   )
-  -- RUtils.map.nnoremap("<Leader>ghd", gs.diffthis, { desc = "Git: diffthis [gitsigns]" })
-  RUtils.map.nnoremap("<Leader>ghd", function()
+  RUtils.map.nnoremap("<Leader>gud", function()
     gs.diffthis "~"
-  end, { desc = "Git: diffthis '~' [gitsigns]" })
-  RUtils.map.nnoremap("<Leader>gtB", function()
+  end, { desc = "Git: toggle diffthis '~' [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>guw", function()
+    gs.toggle_word_diff()
+  end, { desc = "Git: toggle word diff [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>guD", function()
+    gs.toggle_deleted()
+  end, { desc = "Git: toggle deleted [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>guL", function()
+    gs.toggle_linehl()
+  end, { desc = "Git: toggle linehl [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>gub", function()
     vim.cmd "BlameToggle"
-  end, { desc = "Git: toggle blame buffer [blame.nvim]" })
-  RUtils.map.nnoremap("<Leader>gts", function()
+  end, { desc = "Git: toggle line blame  [blame.nvim]" })
+  RUtils.map.nnoremap("<Leader>gus", function()
     vim.cmd "Gitsigns toggle_signs"
   end, { desc = "Git: toggle signs [gitsigns]" })
   RUtils.map.xnoremap("ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Git: select git hunk [gitsigns]" })
@@ -258,24 +266,15 @@ function M.gitsigns()
         is_gitsigns_attach = true
       end
     end,
-    toggle_gitsign_deleted = function()
-      gs.toggle_deleted()
-    end,
-    toggle_gitsign_linehl = function()
-      gs.toggle_linehl()
-    end,
-    toggle_gitsign_word_diff = function()
-      gs.toggle_word_diff()
-    end,
-    gitsign_reset_all = function()
-      gs.reset_buffer()
-    end,
-    gitsign_add_hunk_all = function()
-      gs.stage_buffer()
-    end,
-    gitsign_collect_hunk_qf = function()
-      gs.setqflist()
-    end,
+    -- gitsign_reset_all = function()
+    --   gs.reset_buffer()
+    -- end,
+    -- gitsign_add_hunk_all = function()
+    --   gs.stage_buffer()
+    -- end,
+    -- gitsign_collect_hunk_qf = function()
+    --   gs.setqflist()
+    -- end,
   }
 end
 

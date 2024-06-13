@@ -175,7 +175,7 @@ RUtils.cmd.augroup("WindowBehaviours", {
   event = { "BufEnter", "BufRead" },
   pattern = "*",
   command = function()
-    if vim.bo.filetype == "" and (vim.bo.buftype == "terminal" or vim.bo.filetype == "toggleterm") then
+    if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
       vim.cmd.startinsert()
       RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
       RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
@@ -212,35 +212,51 @@ RUtils.cmd.augroup("WindowBehaviours", {
 
       -- ATTEMPT 4: prefix mod `<c-hjkl>` = gagal! (bikin ganggu fzf-lua, <c-l/h> next/prev char)
 
-      -- >>> ATTEMPT 5: prefix mod `<a-w>` = ?? (get familiar with this bindings maybe for some couple days?) <<<
-      RUtils.map.tnoremap("<a-w>h", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
-      RUtils.map.tnoremap("<a-w>l", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
-      RUtils.map.tnoremap("<a-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
-      RUtils.map.tnoremap("<a-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
-      RUtils.map.tnoremap("<a-w>f", function()
+      -- ATTEMPT 5: prefix mod `<a-hjkl>` = gagal!
+      -- RUtils.map.tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
+      -- RUtils.map.tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
+      -- RUtils.map.tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
+      -- RUtils.map.tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+
+      -- >>> ATTEMPT 6: prefix mod `<a-w>` = ?? (get familiar with this bindings maybe for some couple days?) <<<
+      -- RUtils.map.tnoremap("<a-w>h", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
+      -- RUtils.map.tnoremap("<a-w>l", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
+      -- RUtils.map.tnoremap("<a-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
+      -- RUtils.map.tnoremap("<a-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
+      RUtils.map.tnoremap("<a-w>", function()
         RUtils.map.feedkey("<C-\\><C-n>", "t")
         require("fzf-lua").tabs()
       end, { desc = "Terminal: down window" })
-      RUtils.map.tnoremap("<a-w>L", function()
-        RUtils.map.feedkey("<C-\\><C-n>tl", "t")
+      RUtils.map.tnoremap("<c-a-l>", function()
+        RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
       end, { desc = "Terminal: next tab" })
-      RUtils.map.tnoremap("<a-w>H", function()
-        RUtils.map.feedkey("<C-\\><C-n>th", "t")
+      RUtils.map.tnoremap("<c-a-h>", function()
+        RUtils.map.feedkey("<C-\\><C-n><c-a-h>", "t")
       end, { desc = "Terminal: prev tab" })
-      RUtils.map.tnoremap("<a-w>n", function()
-        RUtils.map.feedkey("<C-\\><C-n><c-w>f", "t")
-      end, { desc = "Terminal: create new terminal from terminal mode" })
+      RUtils.map.tnoremap("<a-m>", function()
+        RUtils.map.feedkey("<C-\\><C-n>sm", "t")
+        if vim.bo.buftype == "terminal" then
+          RUtils.map.feedkey("a", "t")
+        end
+      end, { desc = "Terminal: toggle zoom" })
 
       -- ========================
       -- Do not delete these line!
       -- ========================
 
       RUtils.map.tnoremap("<a-f>", function()
-        RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
+        RUtils.terminal.toggle_right_term()
+        -- RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
       end, { desc = "Terminal: new term split" })
       RUtils.map.tnoremap("<a-N>", function()
         RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
       end, { desc = "Terminal: new tabterm" })
+      RUtils.map.tnoremap("<a-CR>", function()
+        RUtils.terminal.smart_split()
+      end, { desc = "Terminal: new term" })
+      RUtils.map.tnoremap("<Leader>bd", function()
+        RUtils.map.feedkey("<C-\\><C-n><Leader>bd", "t")
+      end, { desc = "Terminal: rescue buffer" })
     end
   end,
 })

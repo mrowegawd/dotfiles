@@ -42,6 +42,7 @@ RUtils.map.tnoremap("<c-h>", "<Left>", { desc = "Terminal: left char" })
 RUtils.map.tnoremap("<c-l>", "<Right>", { desc = "Terminal: right char" })
 RUtils.map.tnoremap("<c-b>", "<c-Left>", { desc = "Terminal: backward" })
 RUtils.map.tnoremap("<c-f>", "<c-Right>", { desc = "Terminal: forward" })
+RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ WINDOWS, VIEW AND NAV                                    │
@@ -58,20 +59,37 @@ RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true 
 RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: right window", silent = true })
 RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: down window", silent = true })
 RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
-RUtils.map.nnoremap("<a-w>h", "<C-w>h", { desc = "View: left window (mod)", silent = true })
-RUtils.map.nnoremap("<a-w>l", "<C-w>l", { desc = "View: right window (mod)", silent = true })
-RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
-RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
 
-RUtils.map.nnoremap("sm", RUtils.toggle.maximize, { desc = "View: toggle zoom" })
+-- RUtils.map.nnoremap("<a-w>h", "<C-w>h", { desc = "View: left window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-w>l", "<C-w>l", { desc = "View: right window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
+
+if not RUtils.has "smart-splits.nvim" then
+  RUtils.map.nnoremap("<a-h>", "<C-w>h", { desc = "View: left window (mod)", silent = true })
+  RUtils.map.nnoremap("<a-l>", "<C-w>l", { desc = "View: right window (mod)", silent = true })
+  RUtils.map.nnoremap("<a-j>", "<C-w>j", { desc = "View: down window (mod)", silent = true })
+  RUtils.map.nnoremap("<a-k>", "<C-w>k", { desc = "View: up window (mod)", silent = true })
+
+  -- Resize window using
+  RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
+  RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
+  RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
+  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
+end
+
+-- RUtils.map.nnoremap("sm", RUtils.toggle.maximize, { desc = "View: toggle zoom" })
+-- RUtils.map.nnoremap("<a-m>", RUtils.toggle.maximize, { desc = "View: toggle zoom" })
 
 -- Tab
 RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab", silent = true })
 RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close tab", silent = true })
-RUtils.map.nnoremap("tl", "<CMD>tabn<CR>", { desc = "Tab: next tab", silent = true })
-RUtils.map.nnoremap("th", "<CMD>tabp<CR>", { desc = "Tab: prev tab", silent = true })
-RUtils.map.nnoremap("<a-w>L", "<CMD>tabn<CR>", { desc = "Tab: next tab (mod)", silent = true })
-RUtils.map.nnoremap("<a-w>H", "<CMD>tabp<CR>", { desc = "Tab: prev tab (mod)", silent = true })
+
+RUtils.map.nnoremap("tl", "<CMD>tabnext<CR>", { desc = "Tab: next tab", silent = true })
+RUtils.map.nnoremap("th", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab", silent = true })
+RUtils.map.nnoremap("<c-a-l>", "<CMD>tabnext<CR>", { desc = "Tab: next tab (mod)", silent = true })
+RUtils.map.nnoremap("<c-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab (mod)", silent = true })
+
 RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab", silent = true })
 RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last tab", silent = true })
 
@@ -128,8 +146,9 @@ local function magic_quit()
   if buf_fts[vim.bo[0].filetype] then
     if type(buf_fts[vim.bo[0].filetype]) == "function" then
       buf_fts[vim.bo[0].filetype]()
+    else
+      cmd(buf_fts[vim.bo[0].filetype])
     end
-    cmd(buf_fts[vim.bo[0].filetype])
   else
     cmd [[q!]]
   end
@@ -192,7 +211,9 @@ RUtils.cmd.create_command("Snippets", RUtils.plugin.EditSnippet, { desc = "Misc:
 RUtils.cmd.create_command("ChangeMasterTheme", RUtils.plugin.change_colors, { desc = "Misc: set theme bspwm" })
 RUtils.cmd.create_command("InfoOption", RUtils.plugin.infoFoldPreview, { desc = "Misc: echo options" })
 RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo options" })
-
+RUtils.cmd.create_command("E", function()
+  return cmd [[ vnew ]]
+end, { desc = "Misc: vnew" })
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ SCROLL                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
@@ -369,7 +390,20 @@ RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, {
   silent = true,
 })
 
-local checkconceallevel = false
+RUtils.map.nnoremap("<a-o>", function()
+  local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
+  local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
+
+  local col = math.ceil((win_width / 2) - 40)
+  local row = math.ceil((RUtils.cmd.get_option "lines" - win_height) - 10)
+
+  RUtils.fzflua.send_cmds({
+    clock_mode = function()
+      RUtils.terminal.clock_mode()
+    end,
+  }, { winopts = { title = "Mods commands", row = row, col = col } })
+end, { desc = "Misc: list commands" })
+
 RUtils.map.nnoremap("<Localleader>r", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
@@ -398,20 +432,8 @@ RUtils.map.nnoremap("<Localleader>r", function()
         os.execute(encodedURL)
       end
     end,
-    dismiss_noice = function()
-      require("noice").cmd "dismiss"
-    end,
-    toggle_background = function()
-      RUtils.toggle.background()
-    end,
-    toggle_highlight_color = function()
-      require("nvim-highlight-colors").toggle()
-    end,
     toggle_undotree = function()
       cmd "UndotreeToggle"
-    end,
-    toggle_number = function()
-      RUtils.toggle.number()
     end,
     session_load = function()
       if RUtils.has "persistence.nvim" then
@@ -447,17 +469,6 @@ RUtils.map.nnoremap("<Localleader>r", function()
         require("resession").save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
       else
         print "do nothinn, ignore me"
-      end
-    end,
-    toggle_conceallevel = function()
-      if checkconceallevel then
-        cmd [[setlocal conceallevel=2]]
-        checkconceallevel = false
-        RUtils.info "setlocal conceallevel=2"
-      else
-        cmd [[setlocal conceallevel=0]]
-        checkconceallevel = true
-        RUtils.info "setlocal conceallevel=0"
       end
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
