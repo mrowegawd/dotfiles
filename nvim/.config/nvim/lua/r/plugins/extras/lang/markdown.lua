@@ -17,36 +17,14 @@ return {
   },
   {
     "williamboman/mason.nvim",
-    opts = { ensure_installed = { "markdownlint", "markdown-toc", "codespell", "cbfmt" } },
+    opts = { ensure_installed = { "markdownlint", "markdown-toc" } },
   },
-  -- {
-  --   "nvimtools/none-ls.nvim",
-  --   optional = true,
-  --   opts = function(_, opts)
-  --     local nls = require "null-ls"
-  --     opts.sources = vim.list_extend(opts.sources or {}, {
-  --       nls.builtins.diagnostics.markdownlint,
-  --     })
-  --   end,
-  -- },
   {
     "mfussenegger/nvim-lint",
     optional = true,
     opts = {
       linters_by_ft = {
-        -- markdown = { "markdownlint" },
-        markdown = { "markdownlint", "codespell" },
-        norg = { "codespell" },
-        cmake = { "cmakelint" },
-        org = { "codespell" },
-      },
-      linters = {
-        codespell = {
-          args = { "--ignore-words", vim.env.HOME .. "/.config/linters/cspell-ignore-words.txt" },
-        },
-        markdownlint = {
-          args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
-        },
+        markdown = { "markdownlint" },
       },
     },
   },
@@ -78,6 +56,7 @@ return {
       vim.cmd [[do FileType]]
     end,
   },
+
   {
     "lukas-reineke/headlines.nvim",
     opts = function()

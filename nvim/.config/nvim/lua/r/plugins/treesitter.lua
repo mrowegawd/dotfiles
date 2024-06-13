@@ -1,13 +1,8 @@
----@type string
-local xdg_config = vim.env.XDG_CONFIG_HOME or vim.env.HOME .. "/.config"
-
----@param path string
-local function have(path)
-  return vim.uv.fs_stat(xdg_config .. "/" .. path) ~= nil
-end
-
 return {
   -- TREESITTER
+  -- Treesitter is a new parser generator tool that we can
+  -- use in Neovim to power faster and more accurate
+  -- syntax highlighting.
   {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- last release is way too old and doesn't work on Windows
@@ -28,103 +23,37 @@ return {
       { "<c-space>", desc = "Misc: increment selection [treesitter]" },
       { "<bs>", desc = "Misc: iecrement selection (xmode) [treesitter]", mode = "x" },
     },
+    opts_extend = { "ensure_installed" },
+    ---@type TSConfig
+    ---@diagnostic disable-next-line: missing-fields
     opts = {
+      highlight = { enable = true },
+      indent = { enable = true },
       ensure_installed = {
-        "c",
-        -- "comment", -- comments are slowing down TS bigtime, so disable for now
-
-        "dockerfile",
-        "rasi",
-
-        "cpp",
-        "diff",
-        "gitignore",
-        "graphql",
-        "java",
         "bash",
+        "c",
+        "diff",
+        "html",
+        "javascript",
         "jsdoc",
-        "latex",
-        "dart",
-        "meson",
-        "ninja",
-        "nix",
-        "norg",
-        "org",
-        "php",
-        "query",
-        "regex",
-
-        "fish",
-
-        "yaml",
-
-        "kotlin",
-        "kdl", -- zellij
-
         "json",
         "jsonc",
-        "ini",
-        "ssh_config",
-
-        "sql",
-        "svelte",
-        "teal",
-        "vhs",
-        "vim",
-        "vue",
-        "ruby",
-        "wgsl",
-
-        "make",
-
-        "javascript",
-        "typescript",
-        "tsx",
-
-        "go",
-        "gomod",
-        "gowork",
-        "gosum",
-
         "lua",
         "luadoc",
         "luap",
-
-        "python",
-        "ninja",
-        "rst",
-
-        "css",
-        "html",
-        "http",
-        "scss",
-
-        "yuck",
-
-        "ron",
-        "rust",
-        "toml",
-
         "markdown",
         "markdown_inline",
-
-        "xml",
+        "printf",
+        "python",
+        "query",
+        "regex",
+        "toml",
+        "tsx",
+        "typescript",
+        "vim",
         "vimdoc",
-      },
-
-      highlight = {
-        enable = true,
-        -- disable = function(ft)
-        --   return vim.tbl_contains({ "tex", "latex" }, ft)
-        -- end,
-        additional_vim_regex_highlighting = { "markdown", "org" },
-      },
-
-      indent = {
-        enable = true,
-        -- disable = function(ft)
-        --   return vim.tbl_contains({ "markdown", "tex", "latex" }, ft)
-        -- end,
+        "xml",
+        "yaml",
       },
       incremental_selection = {
         enable = true,
@@ -135,40 +64,13 @@ return {
           node_decremental = "<bs>",
         },
       },
-
-      -- nvim-treesitter-textobjects
       textobjects = {
-        select = {
-          -- disable = buf_is_large,
-          enable = false,
-          lookahead = true,
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["af"] = "@function.outer",
-            ["if"] = "@function.inner",
-            ["ac"] = "@class.outer",
-            ["ic"] = "@class.inner",
-          },
-        },
         move = {
-          enable = false,
-          set_jumps = true, -- whether to set jumps in the jumplist
-          goto_next_start = {
-            ["]f"] = "@function.outer",
-            ["]c"] = "@class.outer",
-          },
-          goto_next_end = {
-            ["]F"] = "@function.outer",
-            ["]C"] = "@class.outer",
-          },
-          goto_previous_start = {
-            ["[f"] = "@function.outer",
-            ["[c"] = "@class.outer",
-          },
-          goto_previous_end = {
-            ["[F"] = "@function.outer",
-            ["[C"] = "@class.outer",
-          },
+          enable = true,
+          goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
+          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
+          goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
+          goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
         },
       },
     },
@@ -176,41 +78,6 @@ return {
       if type(opts.ensure_installed) == "table" then
         opts.ensure_installed = RUtils.dedup(opts.ensure_installed)
       end
-
-      local function add(lang)
-        if type(opts.ensure_installed) == "table" then
-          table.insert(opts.ensure_installed, lang)
-        end
-      end
-
-      vim.filetype.add {
-        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi" },
-        filename = {
-          ["vifmrc"] = "vim",
-        },
-        pattern = {
-          [".*/waybar/config"] = "jsonc",
-          [".*/mako/config"] = "dosini",
-          [".*/kitty/.+%.conf"] = "bash",
-          [".*/hypr/.+%.conf"] = "hyprlang",
-          ["%.env%.[%w_.-]+"] = "sh",
-        },
-      }
-
-      add "git_config"
-
-      if have "hypr" then
-        add "hyprlang"
-      end
-
-      if have "fish" then
-        add "fish"
-      end
-
-      if have "rofi" or have "wofi" then
-        add "rasi"
-      end
-
       require("nvim-treesitter.configs").setup(opts)
     end,
   },

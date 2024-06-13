@@ -14,15 +14,4 @@ return {
       },
     },
   },
-  -- VIM-GRAMMAROUS (disabled)
-  {
-    "rhysd/vim-grammarous",
-    cmd = { "GrammarousCheck" },
-    ft = { "markdown", "txt" },
-    enabled = false,
-    config = function()
-      local lazy = require "lazy"
-      lazy.load { plugins = "vim-grammarous" }
-    end,
-  },
 }

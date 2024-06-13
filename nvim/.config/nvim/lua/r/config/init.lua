@@ -45,17 +45,14 @@ end
 local defaults = {
   lsp_style = "", -- coc, coq, or "" (for default lsp)
   -- colorscheme can be a string like `catppuccin` or a function that will load the colorscheme
-  -- colorscheme = function()
-  --   require("tokyonight").load()
-  -- end,
+  ---@type string|fun()
+  colorscheme = colorscheme,
   path = {
     dropbox_path = dropbox_path,
     wiki_path = fmt("%s/neorg", dropbox_path),
     snippet_path = snippet_path,
     home = home,
   },
-
-  colorscheme = colorscheme,
 
   -- load the default settings
   defaults = {

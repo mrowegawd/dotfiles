@@ -8,9 +8,6 @@ return {
       events = { "BufWritePost", "BufReadPost", "InsertLeave" },
       linters_by_ft = {
         fish = { "fish" },
-        go = { "golangcilint" },
-        docker = { "hadolint" },
-        kotlin = { "ktlin" },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ['*'] = { 'global linter' },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
@@ -39,6 +36,9 @@ return {
       for name, linter in pairs(opts.linters) do
         if type(linter) == "table" and type(lint.linters[name]) == "table" then
           lint.linters[name] = vim.tbl_deep_extend("force", lint.linters[name], linter)
+          if type(linter.prepend_args) == "table" then
+            vim.list_extend(lint.linters[name].args, linter.prepend_args)
+          end
         else
           lint.linters[name] = linter
         end

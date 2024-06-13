@@ -16,7 +16,6 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
       "lukas-reineke/cmp-under-comparator",
-      "petertriho/cmp-git",
       "rcarriga/cmp-dap",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
       --     luasnip.filetype_extend("python", { "django" })
@@ -287,10 +286,6 @@ return {
 
       cmp.setup.filetype("dap-repl", {
         sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
-      })
-
-      cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
-        sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
       })
 
       cmp.setup.filetype({ "sql", "mysql", "plsql" }, {

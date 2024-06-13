@@ -43,7 +43,7 @@ local deprecated = {
   on_rename = "lsp",
   root_patterns = { "root", "patterns" },
   get_root = { "root", "get" },
-  oat_term = { "terminal", "open" },
+  float_term = { "terminal", "open" },
   toggle_diagnostics = { "toggle", "diagnostics" },
   toggle_number = { "toggle", "number" },
   fg = "ui",
@@ -59,7 +59,7 @@ setmetatable(M, {
     if dep then
       local mod = type(dep) == "table" and dep[1] or dep
       local key = type(dep) == "table" and dep[2] or k
-      M.deprecate([[require("r.utils").]] .. k, [[require("r.utils").]] .. mod .. "." .. key)
+      M.deprecate([[RUtils.]] .. k, [[RUtils.]] .. mod .. "." .. key)
       ---@diagnostic disable-next-line: no-unknown
       t[mod] = require("r.utils." .. mod) -- load here to prevent loops
       return t[mod][key]
@@ -92,6 +92,14 @@ function M.has(plugin)
   return M.get_plugin(plugin) ~= nil
 end
 
+---@param extra string
+function M.has_extra(extra)
+  local Config = require "r.config"
+  local modname = "r.plugins.extras." .. extra
+  return vim.tbl_contains(require("lazy.core.config").spec.modules, modname)
+    or vim.tbl_contains(Config.json.data.extras, modname)
+end
+
 ---@param fn fun()
 function M.on_very_lazy(fn)
   vim.api.nvim_create_autocmd("User", {
@@ -100,6 +108,27 @@ function M.on_very_lazy(fn)
       fn()
     end,
   })
+end
+
+--- This extends a deeply nested list with a key in a table
+--- that is a dot-separated string.
+--- The nested list will be created if it does not exist.
+---@generic T
+---@param t T[]
+---@param key string
+---@param values T[]
+---@return T[]?
+function M.extend(t, key, values)
+  local keys = vim.split(key, ".", { plain = true })
+  for i = 1, #keys do
+    local k = keys[i]
+    t[k] = t[k] or {}
+    if type(t) ~= "table" then
+      return
+    end
+    t = t[k]
+  end
+  return vim.list_extend(t, values)
 end
 
 ---@param name string
@@ -158,11 +187,15 @@ function M.lazy_notify()
   timer:start(500, 0, replay)
 end
 
+function M.is_loaded(name)
+  local Config = require "lazy.core.config"
+  return Config.plugins[name] and Config.plugins[name]._.loaded
+end
+
 ---@param name string
 ---@param fn fun(name:string)
 function M.on_load(name, fn)
-  local Config = require "lazy.core.config"
-  if Config.plugins[name] and Config.plugins[name]._.loaded then
+  if M.is_loaded(name) then
     fn(name)
   else
     vim.api.nvim_create_autocmd("User", {
@@ -182,8 +215,10 @@ end
 -- It will also set `silent` to true by default.
 function M.safe_keymap_set(mode, lhs, rhs, opts)
   local keys = require("lazy.core.handler").handlers.keys
+  ---@cast keys LazyKeysHandler
   local modes = type(mode) == "string" and { mode } or mode
 
+  ---@param m string
   modes = vim.tbl_filter(function(m)
     return not (keys.have and keys:have(lhs, m))
   end, modes)
@@ -241,16 +276,32 @@ function M.dedup(list)
   return ret
 end
 
-function M.is_loaded(name)
-  local Config = require "lazy.core.config"
-  return Config.plugins[name] and Config.plugins[name]._.loaded
-end
-
 M.CREATE_UNDO = vim.api.nvim_replace_termcodes("<c-G>u", true, true, true)
 function M.create_undo()
   if vim.api.nvim_get_mode().mode == "i" then
     vim.api.nvim_feedkeys(M.CREATE_UNDO, "n", false)
   end
+end
+
+--- Gets a path to a package in the Mason registry.
+--- Prefer this to `get_package`, since the package might not always be
+--- available yet and trigger errors.
+---@param pkg string
+---@param path? string
+---@param opts? { warn?: boolean }
+function M.get_pkg_path(pkg, path, opts)
+  pcall(require, "mason") -- make sure Mason is loaded. Will fail when generating docs
+  local root = vim.env.MASON or (vim.fn.stdpath "data" .. "/mason")
+  opts = opts or {}
+  opts.warn = opts.warn == nil and true or opts.warn
+  path = path or ""
+  local ret = root .. "/packages/" .. pkg .. "/" .. path
+  if opts.warn and not vim.loop.fs_stat(ret) and not require("lazy.core.config").headless() then
+    M.warn(
+      ("Mason package path not found for **%s**:\n- `%s`\nYou may need to force update the package."):format(pkg, path)
+    )
+  end
+  return ret
 end
 
 --- Override the default title for notifications.
@@ -262,17 +313,18 @@ for _, level in ipairs { "info", "warn", "error" } do
   end
 end
 
-local cache = {} ---@type table<string, any>
+local cache = {} ---@type table<(fun()), table<string, any>>
 ---@generic T: fun()
 ---@param fn T
 ---@return T
 function M.memoize(fn)
   return function(...)
     local key = vim.inspect { ... }
-    if cache[key] == nil then
-      cache[key] = fn(...)
+    cache[fn] = cache[fn] or {}
+    if cache[fn][key] == nil then
+      cache[fn][key] = fn(...)
     end
-    return cache[key]
+    return cache[fn][key]
   end
 end
 
