@@ -84,4 +84,125 @@ function M.open(cmd, opts)
   return terminals[termkey]
 end
 
+local function get_total_wins()
+  local tbl_winsplits = {}
+  local win_amount = vim.api.nvim_tabpage_list_wins(0)
+  for _, winnr in ipairs(win_amount) do
+    if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
+      local winbufnr = vim.fn.winbufnr(winnr)
+
+      if winbufnr > 0 then
+        local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
+        if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
+          table.insert(tbl_winsplits, winft)
+        end
+      end
+    end
+  end
+  return tbl_winsplits
+end
+
+local function win_width_term()
+  return vim.fn.winwidth(0)
+end
+
+local function win_height_term()
+  return vim.fn.winheight(0)
+end
+
+local term_win = {
+  main_toggle = {
+    bufnr = 0,
+    winnr = 0,
+  },
+  misc_toggle = {},
+  clock_mode = {
+    bufnr = 0,
+    winnr = 0,
+  },
+}
+
+local function __open_term()
+  local term = RUtils.cmd.windows_is_opened { "terminal" }
+  if not term.found then
+    local wins_togal = get_total_wins()
+
+    if #wins_togal == 1 then
+      vim.cmd.Vterm()
+      vim.cmd.startinsert()
+      vim.api.nvim_win_set_width(0, 50)
+    elseif #wins_togal > 1 then
+      vim.cmd.Vterm()
+      vim.cmd.startinsert()
+      vim.cmd [[wincmd L]]
+      vim.api.nvim_win_set_width(0, 50)
+    end
+
+    term_win.main_toggle.bufnr = vim.api.nvim_get_current_buf()
+    term_win.main_toggle.winnr = vim.api.nvim_win_get_number(vim.api.nvim_get_current_win())
+  end
+end
+
+function M.toggle_right_term()
+  if not RUtils.has "termim.nvim" then
+    RUtils.warn "This extension requires termim.nvim "
+  end
+
+  if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
+    if win_width_term() < 50 then
+      vim.api.nvim_win_set_width(0, 50)
+    end
+    vim.cmd [[wincmd h]]
+    return
+  end
+
+  __open_term()
+
+  -- RUtils.info(vim.inspect(term_win.main_toggle))
+
+  for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local winbufnr = vim.fn.winbufnr(vim.api.nvim_win_get_number(winid))
+    if winbufnr == term_win.main_toggle.bufnr then
+      vim.api.nvim_set_current_win(winid)
+      break
+    end
+  end
+
+  if win_width_term() > 50 then
+    vim.api.nvim_win_set_width(0, 50)
+  end
+
+  if win_height_term() < 50 then
+    vim.api.nvim_win_set_height(0, 45)
+  end
+end
+
+function M.clock_mode()
+  M.toggle_right_term()
+
+  vim.cmd [[STerm $HOME/.asdf/shims/tclock clock -S]]
+
+  if win_height_term() > 10 then
+    vim.api.nvim_win_set_height(0, 10)
+    vim.cmd [[wincmd k]]
+    vim.cmd [[wincmd h]]
+    RUtils.map.feedkey("<esc>", "n")
+  end
+end
+
+function M.smart_split()
+  if win_width_term() > win_height_term() then
+    __open_term()
+
+    if win_width_term() > win_height_term() then
+      vim.cmd [[VTerm]]
+    else
+      vim.cmd [[STerm]]
+    end
+  else
+    RUtils.info "bro"
+    vim.cmd [[STerm]]
+  end
+end
+
 return M
