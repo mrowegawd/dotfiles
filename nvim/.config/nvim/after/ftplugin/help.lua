@@ -12,7 +12,7 @@ opt_local.buflisted = false
 opt_local.conceallevel = 2
 
 -- open help buffers in new tabs by default
-vim.cmd.wincmd "L"
+-- vim.cmd.wincmd "L"
 
 RUtils.map.nnoremap("gd", "<c-]>", {
   buffer = true,
