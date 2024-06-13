@@ -101,7 +101,7 @@ return {
       },
     },
     keys = {
-      { "<a-w>f", require("fzf-lua").tabs, desc = "Fzflua: select tabs" },
+      { "<a-w>", require("fzf-lua").tabs, desc = "Fzflua: select tabs" },
 
       { "sf", require("fzf-lua").buffers, desc = "Fzflua: select buffers" },
       { "sG", require("fzf-lua").lines, desc = "Fzflua: live grep on buffers" },
@@ -738,9 +738,16 @@ return {
           cwd_only = true,
           symbols = {
             prompt = "   ",
+            symbol_hl = function(s)
+              return "TroubleIcon" .. s
+            end,
+            symbol_fmt = function(s)
+              return s:lower() .. "\t"
+            end,
+            child_prefix = false,
             symbol_style = 1,
             symbol_icons = RUtils.config.icons.kinds,
-            child_prefix = false, -- remove spaces
+            -- child_prefix = false, -- remove spaces
             async_or_timeout = true,
             exec_empty_query = true,
             winopts = {
@@ -751,12 +758,6 @@ return {
               ["--header"] = [[Alt-g: Filter LSP  | Alt-x: Workspace Symbols]],
               ["--reverse"] = false,
             },
-            symbol_hl = function(s)
-              return "@" .. s:lower()
-            end,
-            symbol_fmt = function(s, _)
-              return "[" .. s .. "]"
-            end,
             actions = {
               ["alt-g"] = function()
                 local opts = {
@@ -798,12 +799,13 @@ return {
             },
           },
           code_actions = RUtils.fzflua.cursor_dropdown {
+            prompt = "   ",
             winopts = {
               title = RUtils.fzflua.format_title("Code Actions", "󰌵", "@type"),
             },
           },
           finder = {
-            prompt = "  ",
+            prompt = "   ",
             winopts = {
               title = RUtils.fzflua.format_title("LSP Finder", ""),
             },
