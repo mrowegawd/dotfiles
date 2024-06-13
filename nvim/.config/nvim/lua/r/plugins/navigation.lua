@@ -423,10 +423,10 @@ return {
               return require("fzf-lua").git_status()
             end
           end,
-          desc = "Git: open file explore for git status (callback fzflua) [neotree]",
+          desc = "Git: explore git status (callback fzflua) [neotree]",
         },
         {
-          "<Localleader>O",
+          "<Localleader>oo",
           function()
             local right_win = "aerial"
             if vim.bo.filetype ~= right_win then

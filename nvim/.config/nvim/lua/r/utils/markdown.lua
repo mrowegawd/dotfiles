@@ -257,7 +257,7 @@ local function collect_all_tags_async(data, cb)
                 if match_data["lines"] then
                   local line_text = match_data.lines.text
 
-                  -- Kita hanya butuh tag yang berada pada line frontmatter
+                  -- hanya butuh tag yang berada pada line frontmatter
                   if string.match(line_text, "%s*- ") then
                     if match_data.line_number < 20 then
                       data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
