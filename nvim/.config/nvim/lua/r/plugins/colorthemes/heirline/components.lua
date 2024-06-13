@@ -406,6 +406,8 @@ M.FilePath = {
   end,
   {
     provider = function()
+      local bufname = vim.api.nvim_buf_get_name(0)
+
       if vim.bo[0].filetype == "qf" then
         return ""
       end
@@ -414,7 +416,14 @@ M.FilePath = {
         return ""
       end
 
-      local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":.")
+      if vim.bo[0].buftype == "terminal" then
+        local tname, _ = bufname:gsub(".*:", "")
+        -- remove '/usr/local/bin/fish;' part from tname
+        tname, _ = tname:gsub(".*;", "")
+        return tname .. " "
+      end
+
+      local filename = vim.fn.fnamemodify(bufname, ":.")
       if filename == "" then
         return string.upper(vim.bo.filetype) .. " "
       end
