@@ -10,10 +10,10 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 # alias grep="grep --color=auto"
-alias rg="rg --hidden"
+#alias rg="rg --hidden"
 
 alias v="nvim"
-alias vv="vv"
+# alias vv="vv"
 alias vvg="vv --multigrid"
 alias svi="sudo nvim"
 alias ttext='nvim /tmp/dump_text.txt'

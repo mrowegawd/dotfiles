@@ -8,7 +8,7 @@
 # For debug:
 # zmodload zsh/zprof
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Enable Powerlevel10k instant prompt. Should stay close to the top of $HOME/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -303,7 +303,7 @@ if [ -f "$HOME/.fzf.zsh" ]; then
   ZSH_AUTOSUGGEST_USE_ASYNC=1
 
   [ -f "$HOME/.config/miscxrdb/fzf/fzf.config" ] && source "$HOME/.config/miscxrdb/fzf/fzf.config"
-  [ -f "$HOME/.fzf.zsh" ] && source ~/.fzf.zsh
+  [ -f "$HOME/.fzf.zsh" ] && source $HOME/.fzf.zsh
 fi
 
 # GRCAT
@@ -312,12 +312,14 @@ fi
 #   [ -s "$GRCHPATH" ] && . "$GRCHPATH"
 #   source /etc/grc.zsh
 # fi
-source ~/powerlevel10k/powerlevel10k.zsh-theme
+source $HOME/powerlevel10k/powerlevel10k.zsh-theme
 
 last_working_dir
 
-# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+# To customize prompt, run `p10k configure` or edit $HOME/.config/zsh/.p10k.zsh.
+[[ ! -f $HOME/.config/zsh/.p10k.zsh ]] || source $HOME/.config/zsh/.p10k.zsh
+
+# unset ZSHENV_LOADED
 
 # For debug:
 # zprof

@@ -34,6 +34,11 @@ export TERMINAL="kitty"
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
+# TODO: setting ini seperti nya berhasil
+export PATH="$HOME/.asdf/shims:$PATH"
+export PATH="$HOME/.asdf/bin:$PATH"
+export PATH="$HOME/.fzf/bin:$PATH"
+
 if grep -qi microsoft /proc/version; then
 	sudo_autopasswd() {
 		echo "<add password here>" | sudo -Svp ""
