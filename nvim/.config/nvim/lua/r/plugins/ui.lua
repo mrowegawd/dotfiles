@@ -5,7 +5,8 @@ return {
   -- INDENT-BLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = { "ColorScheme" },
+    event = { "LazyFile" },
+    -- lazy = false,
     main = "ibl",
     opts = function()
       Highlight.plugin("ibl_indentline", {
@@ -77,6 +78,18 @@ return {
         },
       }
     end,
+  },
+  -- NEOZOOM
+  {
+    "nyngwang/NeoZoom.lua",
+    keys = {
+      { "sm", "<CMD>NeoZoomToggle<CR>", desc = "View: toggle zoom [neozoom]" },
+      { "<a-m>", "<CMD>NeoZoomToggle<CR>", desc = "View: toggle zoom [neozoom]", mode = { "n", "t" } },
+    },
+    opts = {
+      scrolloff_on_enter = 7,
+      exclude_buftypes = {},
+    },
   },
   -- NVIM-NOTIFY
   {
@@ -255,7 +268,7 @@ return {
             filter = {
               any = {
                 { event = "msg_show", find = "^E486:" },
-                { event = "notify", max_height = 1 },
+                -- { event = "notify", max_height = 1 },
               },
             }, -- minimise pattern not found messages
           },
