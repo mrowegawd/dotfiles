@@ -1,6 +1,19 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- LACKLUSTER.NVIM
+  {
+    "slugbyte/lackluster.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local lackluster_theme = { "lackluster", "lackluster-mint", "lackluster-hack" }
+      if vim.tbl_contains(lackluster_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- ROSE-PINE
   {
     "rose-pine/neovim",

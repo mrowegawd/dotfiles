@@ -686,9 +686,61 @@ local function colorscheme_overrides()
         },
       },
     },
+
+    ["lackluster"] = {
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "Normal", attr = "bg", alter = 5 },
+          bg = { from = "Normal", attr = "bg", alter = 1.5 },
+          italic = true,
+        },
+      },
+
+      { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = 1.2 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = 2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = 2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          bold = true,
+        },
+      },
+    },
     ["neomodern"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+
+      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
 
       {
         LspReferenceText = {

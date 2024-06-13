@@ -34,6 +34,11 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
           },
+          ["lackluster"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            -- { ["@ibl.indent.char.1"] = { fg = "blue" } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
+          },
         },
       })
       return {
@@ -360,12 +365,11 @@ return {
         col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.2)
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
+      elseif RUtils.config.colorscheme == "lackluster" then
+        col_selected_bg_attr = "Normal"
       end
 
-      -- local col_selected_sp = "bufferline_unselected"
-
       local bufferline = require "bufferline"
-
       return {
         options = {
           mode = "tabs",
