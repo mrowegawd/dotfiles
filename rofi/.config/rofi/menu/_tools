@@ -5,7 +5,7 @@ LC_TIME=id_ID.UTF-8
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Fullscreen\nRecord Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Fullscreen\nRecord Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate\nNeovide"
 
 # For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
@@ -15,7 +15,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 # COL_MSG_SUCCSS="$(xrdb -query | grep "color3" | head -n 1 | cut -d":" -f2 | xargs)"
 
 (
-	SELECT="$(echo -e "$MENULIST_PATH" | $rofi_command -p "  " -dmenu -i)"
+	SELECT="$(echo -e "$MENULIST_PATH" | sort | $rofi_command -p "  " -dmenu -i)"
 
 	[[ -z $SELECT ]] && exit
 
@@ -142,6 +142,10 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		~/.config/polybar/scripts/sync-update --run
 	}
 
+	run_neovide() {
+		[[ -f "$HOME/.local/bin/vv" ]] && "$HOME/.local/bin/vv"
+	}
+
 	run_pomodoro() {
 		script_pomodoro_path="$HOME/.config/polybar/scripts/pomodoro"
 
@@ -152,15 +156,16 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 
 	case "$SELECT" in
 	"Calendar") gnome-calendar ;;
-	"Keyboard") run_screenkey ;;
 	"Drawing") gromit-mpx ;; # install: sudo apt install gromit-mpx
-	"Screenshot") "$HOME/.config/rofi/scripts/takescreenshot" ;;
-	"Record Fullscreen") run_ffmpeg_record_fullscreen ;;
-	"Record Rectangle") run_ffmpeg_record_with_rectangle ;;
-	"Record Gif") run_simplegif ;;
-	"Pomodoro") run_pomodoro ;;
-	"Stop Record") run_ffmpeg_stop ;;
 	"File manager [UI]") run_filemanager ;;
+	"Keyboard") run_screenkey ;;
+	"Neovide") run_neovide ;;
+	"Pomodoro") run_pomodoro ;;
+	"Record Fullscreen") run_ffmpeg_record_fullscreen ;;
+	"Record Gif") run_simplegif ;;
+	"Record Rectangle") run_ffmpeg_record_with_rectangle ;;
+	"Screenshot") "$HOME/.config/rofi/scripts/takescreenshot" ;;
+	"Stop Record") run_ffmpeg_stop ;;
 	"SyncUpdate") sync_update ;;
 
 	esac

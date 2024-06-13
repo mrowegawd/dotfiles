@@ -20,6 +20,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field plugin r.utils.plugin
 ---@field terminal r.utils.terminal
 ---@field lazygit r.utils.lazygit
+---@field lazydocker r.utils.lazydocker
 ---@field tiling r.utils.tiling
 ---@field uisec r.utils.uisec
 ---@field inject r.utils.inject
@@ -266,7 +267,7 @@ local cache = {} ---@type table<string, any>
 ---@return T
 function M.memoize(fn)
   return function(...)
-    local key = vim.inspect({ ... })
+    local key = vim.inspect { ... }
     if cache[key] == nil then
       cache[key] = fn(...)
     end

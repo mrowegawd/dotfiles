@@ -139,7 +139,7 @@ super + Return
 
 # misc: open tools
 super + shift + t
-        $HOME/.config/rofi/menu/_tools
+        zsh -c "$HOME/.config/rofi/menu/_tools"
 
 # misc: open rofi_menu
 super + u
@@ -200,6 +200,9 @@ super + shift + q
 # misc: run mpv
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
+
+super + shift + Return
+        zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
 
 # misc: run clipmenu
 # super + shift + c
