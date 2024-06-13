@@ -39,7 +39,7 @@ return {
           relativenumber = false,
         },
         config = {
-          header = require "r.utils.logo"(),
+          header = require "r.utils.logo"(5),
           center = {
             {
               action = [[lua require("fzf-lua").files()]],
