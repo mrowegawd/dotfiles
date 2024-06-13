@@ -121,10 +121,10 @@ map c           LinkHints.activateModeToCopyLinkUrl
 ###############################
 
 # tab: next tab
-map <a-L>       nextTab
+map <c-a-l>       nextTab
 
 # tab: prev tab
-map <a-H>       previousTab
+map <c-a-h>       previousTab
 
 # tab: first tab
 map gH          firstTab
