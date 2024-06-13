@@ -5,8 +5,6 @@ IFS="$(printf '\n\r')"
 # shellcheck disable=SC1090,SC1091
 . "$(dirname "$0")"/.nnn-plugin-helper
 
-PWD="$PWD"
-
 NNN_SPLIT="v"
 PERCENT=60
 
@@ -24,9 +22,7 @@ if not_in_tmux; then
 		wezterm cli split-pane --cwd "$PWD" $split --percent $PERCENT "$0" "$1" >/dev/null
 	fi
 else
-	tmux select-pane -R
-
-	tmux split-window -l"$PERCENT"% -d"v" -p"$PERCENT" lazydocker
+	tmux popup -d '#{pane_current_path}' -h 80% -w 80% -E "lazydocker"
 
 	tmux select-pane -D
 fi

@@ -22,9 +22,6 @@ if not_in_tmux; then
 		wezterm cli split-pane --cwd "$PWDC" $split --percent $PERCENT "$0" "$1" >/dev/null
 	fi
 else
-	tmux select-pane -R
-
-	tmux split-window -l"$PERCENT"% -d"v" -p"$PERCENT" lazygit
-
+	tmux popup -d '#{pane_current_path}' -h 80% -w 80% -E "lazygit"
 	tmux select-pane -D
 fi
