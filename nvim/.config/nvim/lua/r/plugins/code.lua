@@ -2,43 +2,6 @@ local Highlight = require "r.settings.highlights"
 
 local callme = 0
 
-local function get_option_buffers()
-  -- local MAX_INDEX_FILE_SIZE = 1024
-
-  ---@diagnostic disable-next-line: unused-local
-  local is_small_buf = function(index, buf)
-    local byte_size = vim.api.nvim_buf_get_offset(buf, vim.api.nvim_buf_line_count(buf))
-    return byte_size <= 1024 * 1024 -- 1 Megabyte max
-  end
-
-  local all_bufs = vim.api.nvim_list_bufs()
-  return vim.fn.filter(all_bufs, is_small_buf)
-
-  -- local bufs = {}
-  -- for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-  --   -- Don't index giant files
-  --   if
-  --     vim.api.nvim_buf_is_loaded(bufnr)
-  --     and vim.api.nvim_buf_line_count(bufnr) < MAX_INDEX_FILE_SIZE
-  --   then
-  --     bufs[#bufs + 1] = bufnr
-  --   end
-  -- end
-  --
-  -- for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
-  --   local winbufnr = vim.fn.winbufnr(winnr)
-  --   if winbufnr > 0 then
-  --     if
-  --       vim.api.nvim_buf_is_loaded(winbufnr)
-  --       and vim.api.nvim_buf_line_count(winbufnr) < MAX_INDEX_FILE_SIZE
-  --     then
-  --       bufs[#bufs + 1] = winbufnr
-  --     end
-  --   end
-  -- end
-  -- return bufs
-end
-
 return {
   -- CRATES
   {
@@ -93,8 +56,35 @@ return {
         end
         return opts
       end
+
+      local function get_lsp_completion_context(completion, source)
+        local ok, source_name = pcall(function()
+          return source.source.client.config.name
+        end)
+        if not ok then
+          return nil
+        end
+        if source_name == "tsserver" then
+          return completion.detail
+        elseif source_name == "gopls" then
+          return completion.detail
+        elseif source_name == "rust_analyzer" then
+          return completion.detail
+        elseif source_name == "zls" then
+          return completion.detail
+        elseif source_name == "lua_ls" then
+          return completion.detail
+        end
+      end
       return {
         auto_brackets = { "python", "lua" }, -- configure any filetype to auto add brackets
+        enabled = function()
+          local disabled = false
+          disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
+          disabled = disabled or (vim.fn.reg_recording() ~= "")
+          disabled = disabled or (vim.fn.reg_executing() ~= "")
+          return not disabled
+        end,
         window = {
           completion = cmp.config.window.bordered(styldoc()),
           documentation = cmp.config.window.bordered(styldoc(true)),
@@ -113,6 +103,7 @@ return {
           rg = 1,
           path = 1,
         },
+
         formatting = {
           fields = { "kind", "abbr", "menu" },
           format = function(entry, item)
@@ -164,6 +155,11 @@ return {
             if kind[item.kind] then
               item.kind = kind[item.kind]
             end
+
+            local completion_context = get_lsp_completion_context(entry.completion_item, entry.source)
+            if completion_context ~= nil and completion_context ~= "" then
+              item.menu = item.menu .. completion_context
+            end
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
         },
@@ -180,9 +176,10 @@ return {
                   sources = {
                     {
                       name = "buffer",
-                      keyword_length = 2,
-                      options = {
-                        get_bufnrs = get_option_buffers,
+                      option = {
+                        get_bufnrs = function()
+                          return vim.api.nvim_list_bufs()
+                        end,
                       },
                     },
                   },
@@ -196,6 +193,8 @@ return {
           ["<c-j>"] = cmp.mapping(function()
             if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
               cmp.select_next_item()
+            else
+              cmp.complete {}
             end
           end, { "i", "c" }),
           ["<c-k>"] = cmp.mapping(function()
@@ -203,7 +202,6 @@ return {
               cmp.select_prev_item()
             end
           end, { "i", "c" }),
-          ["<c-q>"] = cmp.mapping.abort(),
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
           ["<c-g>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
@@ -211,13 +209,10 @@ return {
               winopts = { preview = { hidden = "nohidden" } },
             }
           end, { "i" }),
-          -- ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
-          -- ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<CR>"] = RUtils.cmp.confirm(),
-          ["<C-y>"] = RUtils.cmp.confirm(),
-          -- ["<c-y>"] = RUtils.cmp.confirm { behavior = cmp.ConfirmBehavior.Replace },
+          ["<c-y>"] = RUtils.cmp.confirm { behavior = cmp.ConfirmBehavior.Replace },
           ["<C-e>"] = function(fallback)
             cmp.abort()
             fallback()
@@ -274,76 +269,72 @@ return {
         RUtils.cmp.add_missing_snippet_docs(event.window)
       end)
 
-      local tbl_custom_sources = {
-        { name = "nvim_lsp" },
-        { name = "snippets" },
-        { name = "path" },
-        { name = "emoji" },
-        {
-          name = "buffer",
-          max_item_count = 10,
-          options = {
-            get_bufnrs = get_option_buffers,
-          },
-        },
-      }
+      -- local tbl_custom_sources = {
+      --   { name = "nvim_lsp" },
+      --   { name = "snippets" },
+      --   { name = "path" },
+      --   { name = "emoji" },
+      --   {
+      --     name = "buffer",
+      --     max_item_count = 10,
+      --     options = {
+      --       get_bufnrs = get_option_buffers,
+      --     },
+      --   },
+      -- }
 
-      cmp.setup.filetype("markdown", {
-        sources = cmp.config.sources(tbl_custom_sources),
-      })
-
-      cmp.setup.filetype({ "norg", "neorg" }, {
-        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
-      })
-
-      cmp.setup.filetype({ "org", "orgagenda" }, {
-        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
-      })
-
-      cmp.setup.filetype("dap-repl", {
-        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
-      })
-
-      cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
-        sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
-      })
-
-      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = cmp.config.sources {
-          { name = "vim-dadbod-completion" },
-          {
-            name = "buffer",
-            max_item_count = 10,
-            options = {
-              get_bufnrs = get_option_buffers,
-            },
-          },
-        },
-      })
-
-      vim.api.nvim_create_user_command("CmpInfo", function()
-        cmp.status()
-      end, {})
-
+      --   cmp.setup.filetype("markdown", {
+      --     sources = cmp.config.sources(tbl_custom_sources),
+      --   })
+      --
+      --   cmp.setup.filetype({ "norg", "neorg" }, {
+      --     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
+      --   })
+      --
+      --   cmp.setup.filetype({ "org", "orgagenda" }, {
+      --     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
+      --   })
+      --
+      --   cmp.setup.filetype("dap-repl", {
+      --     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
+      --   })
+      --
+      --   cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
+      --     sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
+      --   })
+      --
+      --   cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+      --     sources = cmp.config.sources {
+      --       { name = "vim-dadbod-completion" },
+      --       {
+      --         name = "buffer",
+      --         max_item_count = 10,
+      --         options = {
+      --           get_bufnrs = get_option_buffers,
+      --         },
+      --       },
+      --     },
+      --   })
+      --
+      --   vim.api.nvim_create_user_command("CmpInfo", function()
+      --     cmp.status()
+      --   end, {})
+      --
       cmp.setup.cmdline(":", {
         mapping = {
-          -- ["<C-l>"] = cmp.mapping(function()
-          --   cmp.confirm { select = true }
-          --   RUtils.map.feedkey("<CR>", "")
-          -- end, { "c" }),
-          ["<Tab>"] = cmp.mapping(function()
+          ["<c-y>"] = cmp.mapping(function()
             cmp.confirm { select = true }
             RUtils.map.feedkey("<CR>", "")
           end, { "c" }),
-          ["<c-q>"] = {
-            c = function(fallback)
-              if cmp.visible() then
-                cmp.abort()
-              else
-                fallback()
-              end
-            end,
-          },
+
+          ["<c-j>"] = cmp.mapping(function()
+            cmp.complete {}
+            if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
+              cmp.select_next_item()
+            else
+              cmp.complete {}
+            end
+          end, { "c" }),
         },
         sources = cmp.config.sources {
           { name = "path" },
@@ -357,28 +348,8 @@ return {
       })
 
       cmp.setup.cmdline({ "/", "?" }, {
-        -- mapping = {
-        --   -- ["<C-l>"] = cmp.mapping(function()
-        --   --   cmp.confirm { select = true }
-        --   --   RUtils.map.feedkey("<CR>", "")
-        --   -- end, { "c" }),
-        --   ["<Tab>"] = cmp.mapping(function()
-        --     cmp.confirm { select = true }
-        --     RUtils.map.feedkey("<CR>", "")
-        --   end, { "c" }),
-        --   ["<c-q>"] = {
-        --     c = function(fallback)
-        --       if cmp.visible() then
-        --         cmp.abort()
-        --       else
-        --         fallback()
-        --       end
-        --     end,
-        --   },
-        -- },
         sources = cmp.config.sources {
           { name = "buffer" },
-          { name = "registers" },
         },
       })
     end,
@@ -613,8 +584,8 @@ return {
       task_list = {
         default_detail = 1,
         direction = "bottom",
-        min_height = 25,
-        max_height = 25,
+        min_height = 15,
+        max_height = 15,
         bindings = {
           ["<S-tab>"] = "ScrollOutputUp",
           ["<tab>"] = "ScrollOutputDown",
