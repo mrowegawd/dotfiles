@@ -5,18 +5,7 @@ local M = setmetatable({}, {
   end,
 })
 
-M.theme = {
-  [241] = { fg = "Special" },
-  activeBorderColor = { fg = "MatchParen", bold = true },
-  cherryPickedCommitBgColor = { fg = "Identifier" },
-  cherryPickedCommitFgColor = { fg = "Function" },
-  defaultFgColor = { fg = "Normal" },
-  inactiveBorderColor = { fg = "FloatBorder" },
-  optionsTextColor = { fg = "Function" },
-  searchingActiveBorderColor = { fg = "MatchParen", bold = true },
-  selectedLineBgColor = { bg = "Visual" }, -- set to `default` to have no background colour
-  unstagedChangesColor = { fg = "DiagnosticError" },
-}
+M.theme_path = vim.fn.stdpath "cache" .. "/lazydocker/config.yml"
 
 -- Opens lazydocker
 function M.open(opts)
@@ -33,8 +22,8 @@ function M.open(opts)
   vim.list_extend(cmd, opts.args or {})
 
   if vim.g.lazygit_config then
-    if M.dirty then
-      M.update_config()
+    if RUtils.lazygit.dirty then
+      RUtils.lazygit.update_config()
     end
 
     if not M.config_dir then
@@ -55,62 +44,6 @@ function M.open(opts)
   end
 
   return RUtils.terminal(cmd, opts)
-end
-
-function M.set_ansi_color(idx, color)
-  io.write(("\27]4;%d;%s\7"):format(idx, color))
-end
-
-function M.get_color(v)
-  ---@type string[]
-  local color = {}
-  if v.fg then
-    color[1] = RUtils.ui.color(v.fg)
-  elseif v.bg then
-    color[1] = RUtils.ui.color(v.bg, true)
-  end
-  if v.bold then
-    table.insert(color, "bold")
-  end
-  return color
-end
-
-M.theme_path = vim.fn.stdpath "cache" .. "/lazydocker/config.yml"
-
-function M.update_config()
-  ---@type table<string, string[]>
-  local theme = {}
-
-  for k, v in pairs(M.theme) do
-    if type(k) == "number" then
-      local color = M.get_color(v)
-      -- LazyGit uses color 241 a lot, so also set it to a nice color
-      -- pcall, since some terminals don't like this
-      pcall(M.set_ansi_color, k, color[1])
-    else
-      theme[k] = M.get_color(v)
-    end
-  end
-
-  local config = [[
-os:
-  editPreset: "nvim-remote"
-gui:
-  nerdFontsVersion: 3
-  theme:
-]]
-
-  ---@type string[]
-  local lines = {}
-  for k, v in pairs(theme) do
-    lines[#lines + 1] = ("   %s:"):format(k)
-    for _, c in ipairs(v) do
-      lines[#lines + 1] = ("     - %q"):format(c)
-    end
-  end
-  config = config .. table.concat(lines, "\n")
-  require("lazy.util").write_file(M.theme_path, config)
-  M.dirty = false
 end
 
 return M

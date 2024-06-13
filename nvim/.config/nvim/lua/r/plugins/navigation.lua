@@ -160,42 +160,6 @@ return {
             })
           end,
 
-          fzmark = function()
-            local contents = require("project_nvim").get_recent_projects()
-            local reverse = {}
-            for i = #contents, 1, -1 do
-              reverse[#reverse + 1] = contents[i]
-            end
-
-            if #reverse == 0 then
-              local dropbox_path = RUtils.config.path.dropbox_path
-              local path_fzmark = dropbox_path .. "/data.programming.forprivate/marked-pwd"
-
-              local cat_fzmark = vim.api.nvim_exec2("!cat " .. path_fzmark, { output = true })
-              if cat_fzmark.output ~= nil then
-                local res = vim.split(cat_fzmark.output, "\n")
-                -- print(vim.inspect(#res - 1))
-                for index = 2, #res - 1 do
-                  if #res[index] > 1 then
-                    reverse[#reverse + 1] = res[index]
-                  end
-                end
-              end
-            end
-
-            return fzf_lua.fzf_exec(reverse, {
-              prompt = "   ",
-              winopts = {
-                title = RUtils.fzflua.format_title("FzMark", "󰈙"),
-              },
-              actions = {
-                ["default"] = function(e)
-                  vim.cmd.cd(e[1])
-                end,
-              },
-            })
-          end,
-
           child_or_open = function(state)
             local node = state.tree:get_node()
             if node.type == "directory" or node:has_children() then
@@ -211,6 +175,10 @@ return {
 
           open_lazygit = function()
             RUtils.lazygit.open { ctrl_hjkl = true }
+          end,
+
+          open_lazydocker = function()
+            RUtils.lazydocker.open { ctrl_hjkl = true }
           end,
 
           open_terminal = function()
@@ -317,11 +285,12 @@ return {
           window = {
             mappings = {
               ["<a-g>"] = "fzmark",
+              ["<a-t>"] = "open_terminal",
+              ["<a-G>"] = "open_lazygit",
+              ["<a-D>"] = "open_lazydocker",
               ["<Leader>gha"] = "git_add_file",
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
-              ["<a-G>"] = "open_lazygit",
-              ["<a-t>"] = "open_terminal",
               ["<Leader>ghr"] = "git_revert_file",
               ["<Leader>gc"] = "git_commit",
               ["gp"] = "noop",
@@ -343,6 +312,9 @@ return {
           mappings = {
             ["<a-g>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
+            ["<a-G>"] = "open_lazygit",
+            ["<a-D>"] = "open_lazydocker",
+            ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
             ["h"] = "parent_or_close",
