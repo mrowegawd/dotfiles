@@ -35,8 +35,6 @@ return {
           b = { name = "+buffer" },
           d = {
             name = "+debug",
-            -- a = { name = "+run-launch" },
-            -- t = { name = "+toggle" },
           },
           f = { name = "+fzflua" },
           u = { name = "+toggle" },
@@ -45,6 +43,7 @@ return {
             name = "+git",
             h = { name = "+hunks" },
             f = { name = "+gitfzf" },
+            u = { name = "+toggle" },
             v = { name = "+line_or_visual_or_clipboard" },
             t = { name = "+git_toggle" },
           },
