@@ -230,12 +230,18 @@ return {
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,
           },
+          {
+            name = "lazydev",
+            group_index = 0, -- Set group index to 0 to skip loading LuaLS completions
+          },
           { name = "path" },
           { name = "crates" },
           {
             name = "buffer",
-            options = {
-              get_bufnrs = get_option_buffers,
+            option = {
+              get_bufnrs = function()
+                return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
+              end,
             },
           },
         },

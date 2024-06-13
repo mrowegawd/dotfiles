@@ -231,7 +231,9 @@ return {
             end,
             settings = { json = { format = { enable = true }, validate = { enable = true } } },
           },
-          bashls = {},
+          bashls = {
+            filetypes = { "sh", "zsh" },
+          },
           gopls = {
             settings = {
               gopls = {
@@ -616,7 +618,7 @@ return {
         -- markdown
         "markdownlint",
         "markdown-toc",
-        "marksman",
+        -- "marksman",
         "codespell",
         "cbfmt",
 
@@ -671,13 +673,6 @@ return {
     -- Manage libuv types with lazy. Plugin will never be loaded
     "Bilal2453/luvit-meta",
     lazy = true,
-  },
-  -- CMP (Add lazydev source to cmp)
-  {
-    "hrsh7th/nvim-cmp",
-    opts = function(_, opts)
-      table.insert(opts.sources, { name = "lazydev", group_index = 0 })
-    end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   CMAKE                                                  │
