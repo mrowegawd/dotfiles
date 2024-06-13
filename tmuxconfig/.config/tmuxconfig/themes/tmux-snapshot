@@ -1,20 +1,20 @@
-STATUSLINE_BG_ACTIVE="#64a5cc"
-STATUSLINE_BG="#1a1b26"
-STATUSLINE_FG="#7dcfff"
+STATUSLINE_BG_ACTIVE="#515151"
+STATUSLINE_BG="#0A0A0A"
+STATUSLINE_FG="#708090"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#3e677f"
-BORDER_BG="#1a1b26"
+BORDER_FG="#333333"
+BORDER_BG="#0A0A0A"
 
-SEPARATOR_FG="#3d3d55"
-SEPARATOR_ACTIVE_BG="#1a1b26"
+SEPARATOR_FG="#363636"
+SEPARATOR_ACTIVE_BG="#101010"
 
-WINDOW_BG_ACTIVE="#1a1b26"
-WINDOW_BG="#171822"
+WINDOW_BG_ACTIVE="#101010"
+WINDOW_BG="#0e0e0e"
 
-RED="#f7768e"
-BLUE="#7aa2f7"
+RED="#D70000"
+BLUE="#BD93F9"
 
 left_separator=''
 left_separator_black=''
@@ -31,8 +31,11 @@ setw -g window-active-style bg=$WINDOW_BG_ACTIVE
 # setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
 # setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
 
-setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
-setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
+# setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
+# setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
+
+setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
+setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
 
 setw -g pane-border-status bottom
 
