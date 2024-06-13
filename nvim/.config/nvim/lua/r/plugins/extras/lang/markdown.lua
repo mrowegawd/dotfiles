@@ -59,6 +59,12 @@ return {
 
   {
     "lukas-reineke/headlines.nvim",
+    enabled = function()
+      if vim.g.neovide then
+        return false
+      end
+      return true
+    end,
     opts = function()
       local opts = {}
       for _, ft in ipairs { "markdown", "norg", "rmd", "org" } do

@@ -311,6 +311,7 @@ opt.diffopt = opt.diffopt
     "algorithm:histogram", -- "algorithm:patience"
     "indent-heuristic",
   }
+
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "terminal" }
 
 opt.foldmethod = "expr"
@@ -406,18 +407,6 @@ vim.filetype.add {
     [".*/inventory/.*%.ini"] = "ansible_hosts",
   },
 }
-afterasdfa
-adhfhoadfha
-asdf
-afterasdfa
-adhfhoadfha
-asdf
-hoasfd
-asdhfhod
-hoasfd
-asdhfhod
-hoasfd
-asdhfhod
 
 -- Config ini diperlukan untuk plugin image.nvim
 -- check: https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
