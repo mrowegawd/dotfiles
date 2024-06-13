@@ -271,6 +271,7 @@ local general_overrides = function()
 
     { bufferline_unselected = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
     { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
+    { col_selected_bg_attr = { link = "Directory" } },
     { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
     { bufferline_fill_fg = { bg = { from = "Normal", attr = "fg", alter = -0.1 } } },
 
@@ -691,6 +692,8 @@ local function colorscheme_overrides()
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
 
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 5 },
@@ -781,6 +784,8 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 6 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 2 }, fg = { from = "CmpItemAbbr" } } },
 
+      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
+
       -- LSP
       { CmpItemKindVariable = { inherit = "Constant" } },
       { CmpItemKindProperty = { inherit = "@property" } },
@@ -825,6 +830,8 @@ local function colorscheme_overrides()
       },
     },
     ["ayu"] = {
+      { CodeBlock1 = { bg = { from = "Normal", alter = 0.7 } } },
+
       -- CMP
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 7 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 2 }, fg = { from = "CmpItemAbbr" } } },
@@ -1091,6 +1098,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
 
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
 
       {
         StatusLine = {

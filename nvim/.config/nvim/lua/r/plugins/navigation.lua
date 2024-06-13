@@ -540,13 +540,30 @@ return {
     end,
     opts = function()
       Highlight.plugin("NeoEdgyHi", {
-        { WinBar = { bg = RUtils.colortbl.statusline_bg } },
-        { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
+        -- { WinBar = { bg = RUtils.colortbl.statusline_bg } },
+        -- { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
+
+        { WinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+        { WinBarNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+        -- { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
+
         { EdgyNormal = { bg = "NONE" } },
-        { EdgyTitle = { fg = { from = "Directory", attr = "fg" }, bold = true, bg = RUtils.colortbl.statusline_bg } },
-        { EdgyIcon = { bold = true, bg = RUtils.colortbl.statusline_bg, fg = RUtils.colortbl.statuslinenc_fg } },
-        { EdgyIconActive = { bold = true, bg = RUtils.colortbl.statusline_bg } },
-        { AerialLine = { bg = { from = "MyQuickFixLine", attr = "bg" }, sp = "NONE" } },
+        {
+          EdgyTitle = {
+            fg = { from = "Directory", attr = "fg" },
+            bold = true,
+            bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          },
+        },
+        {
+          EdgyIcon = {
+            bold = true,
+            bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+            fg = RUtils.colortbl.statuslinenc_fg,
+          },
+        },
+        { EdgyIconActive = { bold = true, bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+        -- { AerialLine = { bg = { from = "MyQuickFixLine", attr = "bg" }, sp = "NONE" } },
       })
 
       local opts = {
