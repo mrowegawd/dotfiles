@@ -47,6 +47,10 @@ function M.windows_is_opened(wins)
   return outline_tbl
 end
 
+function M.get_option(name_opt)
+  return vim.api.nvim_get_option_value(name_opt, { scope = "local" })
+end
+
 function M.foreach(callback, list)
   for k, v in pairs(list) do
     callback(v, k)

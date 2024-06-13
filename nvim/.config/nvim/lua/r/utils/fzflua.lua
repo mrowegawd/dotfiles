@@ -1,16 +1,12 @@
 ---@class r.utils.fzflua
 local M = {}
 
-local function get_option(name_opt)
-  return vim.api.nvim_get_option_value(name_opt, { scope = "local" })
-end
-
 function M.rectangle_win_pojokan()
-  local win_height = math.ceil(get_option "lines" * 0.5)
-  local win_width = math.ceil(get_option "columns" * 1)
+  local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
+  local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
 
   local col = math.ceil((win_width / 2) * 1 + 20)
-  local row = math.ceil((get_option "lines" - win_height) * 1 + 5)
+  local row = math.ceil((RUtils.cmd.get_option "lines" - win_height) * 1 + 5)
   return col, row
 end
 
@@ -239,11 +235,11 @@ function M.cmd_filter_kind_lsp(opts)
     actions = { opts.actions, "table" },
   }
 
-  local win_height = math.ceil(get_option "lines" - 150)
-  local win_width = math.ceil(get_option "columns" - 100)
+  local win_height = math.ceil(RUtils.cmd.get_option "lines" - 150)
+  local win_width = math.ceil(RUtils.cmd.get_option "columns" - 100)
 
   local col = math.ceil((win_width / 2) * 1 + 20)
-  local row = math.ceil(((get_option "lines" - win_height) / 100) + 15)
+  local row = math.ceil(((RUtils.cmd.get_option "lines" - win_height) / 100) + 15)
 
   local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
   local selected_lsp = M.select_lsp()
