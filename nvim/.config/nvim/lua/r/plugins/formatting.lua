@@ -74,7 +74,6 @@ return {
           lua = { "stylua" },
           fish = { "fish_indent" },
           sh = { "shfmt" },
-          rust = { "rustfmt" },
 
           ["norg"] = { "trim_whitespace", "trim_newlines" },
           ["org"] = { "trim_whitespace", "trim_newlines" },

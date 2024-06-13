@@ -270,7 +270,7 @@ RUtils.map.nnoremap("<Leader>ud", function()
 end, { desc = "Toggle: diagnostic" })
 if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
   RUtils.map.nnoremap("<Leader>uh", function()
-    LazyVim.toggle.inlay_hints()
+    RUtils.toggle.inlay_hints()
   end, { desc = "Toggle: inlay hints" })
 end
 RUtils.map.nnoremap("<Leader>ub", function()

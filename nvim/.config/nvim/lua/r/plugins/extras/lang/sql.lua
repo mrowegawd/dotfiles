@@ -43,7 +43,11 @@ return {
     cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
     dependencies = "vim-dadbod",
     keys = {
-      { "<leader>D", "<cmd>DBUIToggle<CR>", desc = "Toggle DBUI" },
+      -- { "<leader>D", "<cmd>DBUIToggle<CR>", desc = "Toggle DBUI" },
+      { "<Localleader>dd", "<CMD>DBUIToggle<CR>", desc = "Database: toggle UI [dadbod]" },
+      -- { "<Localleader>dD", "<CMD>DBUIFindBuffer<CR>", desc = "Database: find buffer [dadbod]" },
+      { "<Localleader>dr", "<CMD>DBUIRenameBuffer<cr>", desc = "Database: rename buffer [dadbod]" },
+      { "<Localleader>dl", "<CMD>DBUILastQueryInfo<cr>", desc = "Database: last query info [dadbod]" },
     },
     init = function()
       local data_path = vim.fn.stdpath "data"

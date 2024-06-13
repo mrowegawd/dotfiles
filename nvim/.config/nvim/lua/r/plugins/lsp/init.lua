@@ -148,21 +148,17 @@ return {
     end,
     ---@param opts PluginLspOpts
     config = function(_, opts)
-      if RUtils.has "neoconf.nvim" then
-        require("neoconf").setup(RUtils.opts "neoconf.nvim")
-      end
-
       RUtils.format.register(RUtils.lsp.formatter())
+
+      -- setup keymaps
+      RUtils.lsp.on_attach(function(client, bufnr)
+        require("r.keymaps.lsp").on_attach(client, bufnr)
+      end)
 
       RUtils.lsp.setup()
       RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
 
       RUtils.lsp.words.setup(opts.document_highlight)
-
-      -- Setup formatting and keymaps
-      RUtils.lsp.on_attach(function(client, bufnr)
-        require("r.keymaps.lsp").on_attach(client, bufnr)
-      end)
 
       if vim.fn.has "nvim-0.10" == 1 then
         -- inlay hints
@@ -179,7 +175,7 @@ return {
         end
 
         -- code lens
-        if opts.codelens.enabled and vim.bo[buffer].buftype == "" and vim.lsp.codelens then
+        if opts.codelens.enabled and vim.lsp.codelens then
           RUtils.lsp.on_supports_method("textDocument/codeLens", function(client, buffer)
             vim.lsp.codelens.refresh()
             vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
@@ -190,12 +186,16 @@ return {
         end
       end
 
-      if vim.fn.has "nvim-0.10.0" == 0 then
-        for severity, icon in pairs(opts.diagnostics.signs.text) do
-          local name = vim.diagnostic.severity[severity]:lower():gsub("^%l", string.upper)
-          name = "DiagnosticSign" .. name
-          vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
-        end
+      if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
+        opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
+          or function(diagnostic)
+            local icons = require("r.config").icons.diagnostics
+            for d, icon in pairs(icons) do
+              if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
+                return icon
+              end
+            end
+          end
       end
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))

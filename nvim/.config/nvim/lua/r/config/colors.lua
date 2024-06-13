@@ -1114,6 +1114,8 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
 
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
       {
