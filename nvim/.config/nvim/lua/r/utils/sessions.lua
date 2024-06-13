@@ -69,6 +69,10 @@ function M.load_ses_dashboard()
       end
       vim.cmd [[edit!]]
     end
+
+    if not vim.env.TMUX then
+      RUtils.terminal.clock_mode()
+    end
   else
     RUtils.warn("can't find your session plugin!", { title = "Sessions" })
   end
