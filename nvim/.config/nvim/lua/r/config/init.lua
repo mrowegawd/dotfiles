@@ -25,8 +25,11 @@ local base_options = {
     autoformat_enabled = false, -- Enable auto formatting at start.
     cmp_enabled = true, -- Enable completion at start.
     codelens_enabled = true, -- Enable automatic codelens refreshing for lsp that support it.
+    inlay_hints_enabled = false, -- Enable always show function parameter names.
     lsp_signature_enabled = false, -- Enable automatically showing lsp help as you write function parameters.
     notifications_enabled = true, -- Enable notifications.
+    semantic_tokens_enabled = true, -- Enable lsp semantic tokens at start.
+    url_effect_enabled = true, -- Highlight URLs with an underline effect.
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
   },

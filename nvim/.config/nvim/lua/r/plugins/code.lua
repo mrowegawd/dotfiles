@@ -3,13 +3,6 @@ local Highlight = require "r.settings.highlights"
 local callme = 0
 
 return {
-  -- CRATES
-  {
-    "Saecki/crates.nvim",
-    event = { "BufRead Cargo.toml" },
-    config = true,
-    -- { name = "crates" },
-  },
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
@@ -230,7 +223,6 @@ return {
             group_index = 0, -- Set group index to 0 to skip loading LuaLS completions
           },
           { name = "path" },
-          { name = "crates" },
           {
             name = "buffer",
             option = {
@@ -269,57 +261,42 @@ return {
         RUtils.cmp.add_missing_snippet_docs(event.window)
       end)
 
-      -- local tbl_custom_sources = {
-      --   { name = "nvim_lsp" },
-      --   { name = "snippets" },
-      --   { name = "path" },
-      --   { name = "emoji" },
-      --   {
-      --     name = "buffer",
-      --     max_item_count = 10,
-      --     options = {
-      --       get_bufnrs = get_option_buffers,
-      --     },
-      --   },
-      -- }
+      local tbl_custom_sources = {
+        { name = "nvim_lsp" },
+        { name = "snippets" },
+        { name = "path" },
+        { name = "emoji" },
+        {
+          name = "buffer",
+          max_item_count = 10,
+          option = {
+            get_bufnrs = function()
+              return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
+            end,
+          },
+        },
+      }
 
-      --   cmp.setup.filetype("markdown", {
-      --     sources = cmp.config.sources(tbl_custom_sources),
-      --   })
-      --
-      --   cmp.setup.filetype({ "norg", "neorg" }, {
-      --     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
-      --   })
-      --
-      --   cmp.setup.filetype({ "org", "orgagenda" }, {
-      --     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
-      --   })
-      --
-      --   cmp.setup.filetype("dap-repl", {
-      --     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
-      --   })
-      --
-      --   cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
-      --     sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
-      --   })
-      --
-      --   cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-      --     sources = cmp.config.sources {
-      --       { name = "vim-dadbod-completion" },
-      --       {
-      --         name = "buffer",
-      --         max_item_count = 10,
-      --         options = {
-      --           get_bufnrs = get_option_buffers,
-      --         },
-      --       },
-      --     },
-      --   })
-      --
-      --   vim.api.nvim_create_user_command("CmpInfo", function()
-      --     cmp.status()
-      --   end, {})
-      --
+      cmp.setup.filetype({ "norg", "neorg" }, {
+        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
+      })
+
+      cmp.setup.filetype({ "org", "orgagenda" }, {
+        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
+      })
+
+      cmp.setup.filetype("dap-repl", {
+        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
+      })
+
+      cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, {
+        sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
+      })
+
+      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+        sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
+      })
+
       cmp.setup.cmdline(":", {
         mapping = {
           ["<c-y>"] = cmp.mapping(function()
@@ -421,6 +398,24 @@ return {
         desc = "Toggle: auto pairs [mini.pairs]",
       },
     },
+  },
+  -- LAZYDEV
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    cmd = "LazyDev",
+    opts = {
+      library = {
+        { path = "luvit-meta/library", words = { "vim%.uv" } },
+        { path = "lazy.nvim", words = { "LazyVim" } },
+      },
+    },
+  },
+  -- LIVIT_META
+  {
+    -- Manage libuv types with lazy. Plugin will never be loaded
+    "Bilal2453/luvit-meta",
+    lazy = true,
   },
   -- COMMENTS-TS-CONTEXT
   {

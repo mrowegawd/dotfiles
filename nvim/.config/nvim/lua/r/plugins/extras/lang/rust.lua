@@ -1,4 +1,12 @@
 return {
+  recommended = function()
+    return RUtils.extras.wants {
+      ft = "rust",
+      root = { "Cargo.toml", "rust-project.json" },
+    }
+  end,
+
+  -- Extend auto completion
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
@@ -6,113 +14,131 @@ return {
         "Saecki/crates.nvim",
         event = { "BufRead Cargo.toml" },
         opts = {
-          src = {
+          completion = {
             cmp = { enabled = true },
           },
         },
       },
     },
+    ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
-      local cmp = require "cmp"
-      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
-        { name = "crates" },
-      }))
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, { name = "crates" })
     end,
   },
-  -- NVIM-TREESITTER
+
+  -- Add Rust & related to treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "ron", "rust", "toml" })
-      end
-    end,
+    opts = { ensure_installed = { "rust", "ron" } },
   },
-  -- MASON.NVIM
+
+  -- Ensure Rust debugger is installed
   {
     "williamboman/mason.nvim",
     optional = true,
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "codelldb" })
-      end
-    end,
+    opts = { ensure_installed = { "codelldb" } },
   },
-  -- RUST-TOOLS
+
   {
-    "simrat39/rust-tools.nvim",
-    opts = function()
-      local ok, mason_registry = pcall(require, "mason-registry")
-      local adapter ---@type any
-      if ok then
-        -- rust tools configuration for debugging support
-        local codelldb = mason_registry.get_package "codelldb"
-        local extension_path = codelldb:get_install_path() .. "/extension/"
-        local codelldb_path = extension_path .. "adapter/codelldb"
-        local liblldb_path = ""
-        if vim.uv.os_uname().sysname:find "Windows" then
-          liblldb_path = extension_path .. "lldb\\bin\\liblldb.dll"
-        elseif vim.fn.has "mac" == 1 then
-          liblldb_path = extension_path .. "lldb/lib/liblldb.dylib"
-        else
-          liblldb_path = extension_path .. "lldb/lib/liblldb.so"
-        end
-        adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path)
-      end
-      return {
-        dap = {
-          adapter = adapter,
-        },
-        -- tools = {
-        --   on_initialized = function()
-        --     vim.cmd [[
-        --           augroup RustLSP
-        --             autocmd CursorHold                      *.rs silent! lua vim.lsp.buf.document_highlight()
-        --             autocmd CursorMoved,InsertEnter         *.rs silent! lua vim.lsp.buf.clear_references()
-        --             autocmd BufEnter,CursorHold,InsertLeave *.rs silent! lua vim.lsp.codelens.refresh()
-        --           augroup END
-        --         ]]
-        --   end,
-        -- },
-      }
-    end,
-    config = function() end,
-  },
-  -- NVIM-LSPCONFIG
-  {
-    "neovim/nvim-lspconfig",
+    "mrcjkb/rustaceanvim",
+    version = "^4", -- Recommended
+    ft = { "rust" },
+    -- keys = {
+    --   {
+    --     "<Leader>fH",
+    --     function()
+    --       vim.cmd.RustLsp "openDocs"
+    --     end,
+    --     desc = "LPS: open rust docs [rustaceanvim]",
+    --     ft = "rust",
+    --   },
+    --   {
+    --     "<Leader>ca",
+    --     function()
+    --       vim.cmd.RustLsp "codeAction"
+    --     end,
+    --     desc = "LSP: code action [rustaceanvim]",
+    --     ft = "rust",
+    --   },
+    --   {
+    --     "<Leader>dd",
+    --     function()
+    --       vim.cmd.RustLsp "debuggables"
+    --     end,
+    --     desc = "Debug: debuggables [rustaceanvim]",
+    --     ft = "rust",
+    --   },
+    -- },
     opts = {
-      servers = {
-        rust_analyzer = {
-          keys = {
-            { "K", "<cmd>RustHoverActions<cr>", desc = "LSP: hover actions (rustlsp)" },
-            { "<Leader>cR", "<cmd>RustCodeAction<cr>", desc = "LSP: code action (rustlsp)" },
-            { "<leader>dR", "<cmd>RustDebuggables<cr>", desc = "Debug: run debuggables [rustlsp]" },
-          },
-          settings = {
-            ["rust-analyzer"] = {
-              cargo = {
-                allFeatures = true,
-                loadOutDirsFromCheck = true,
-                runBuildScripts = true,
-              },
-              -- Add clippy lints for Rust.
-              checkOnSave = {
-                allFeatures = true,
-                command = "clippy",
-                extraArgs = { "--no-deps" },
-              },
-              procMacro = {
+      server = {
+        on_attach = function(_, bufnr)
+          vim.keymap.set("n", "<leader>cR", function()
+            vim.cmd.RustLsp "codeAction"
+          end, { desc = "Code Action", buffer = bufnr })
+          vim.keymap.set("n", "<leader>dr", function()
+            vim.cmd.RustLsp "debuggables"
+          end, { desc = "Rust Debuggables", buffer = bufnr })
+        end,
+        default_settings = {
+          -- rust-analyzer language server configuration
+          ["rust-analyzer"] = {
+            cargo = {
+              allFeatures = true,
+              loadOutDirsFromCheck = true,
+              buildScripts = {
                 enable = true,
-                ignored = {
-                  ["async-trait"] = { "async_trait" },
-                  ["napi-derive"] = { "napi" },
-                  ["async-recursion"] = { "async_recursion" },
-                },
+              },
+            },
+            -- Add clippy lints for Rust.
+            checkOnSave = {
+              allFeatures = true,
+              command = "clippy",
+              extraArgs = { "--no-deps" },
+            },
+            procMacro = {
+              enable = true,
+              ignored = {
+                ["async-trait"] = { "async_trait" },
+                ["napi-derive"] = { "napi" },
+                ["async-recursion"] = { "async_recursion" },
               },
             },
           },
         },
+      },
+    },
+    config = function(_, opts)
+      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
+      if vim.fn.executable "rust-analyzer" == 0 then
+        RUtils.error(
+          "**rust-analyzer** not found in PATH, please install it.\nhttps://rust-analyzer.github.io/",
+          { title = "rustaceanvim" }
+        )
+      end
+    end,
+  },
+
+  -- Correctly setup lspconfig for Rust 🚀
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        -- taplo = {
+        --   keys = {
+        --     {
+        --       "K",
+        --       function()
+        --         if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
+        --           require("crates").show_popup()
+        --         else
+        --           vim.lsp.buf.hover()
+        --         end
+        --       end,
+        --       desc = "LSP: show crate documentation [taplo]",
+        --     },
+        --   },
+        -- },
         taplo = {
           keys = {
             {
@@ -129,25 +155,15 @@ return {
           },
         },
       },
-      setup = {
-        rust_analyzer = function(_, opts)
-          local rust_tools_opts = RUtils.opts "rust-tools.nvim"
-          require("rust-tools").setup(vim.tbl_deep_extend("force", rust_tools_opts or {}, { server = opts }))
-          return true
-        end,
-      },
     },
   },
-  -- NEOTEST RUST
+
   {
     "nvim-neotest/neotest",
     optional = true,
-    dependencies = {
-      "rouge8/neotest-rust",
-    },
     opts = {
       adapters = {
-        ["neotest-rust"] = {},
+        ["rustaceanvim.neotest"] = {},
       },
     },
   },

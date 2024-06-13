@@ -27,7 +27,7 @@
 
 ! SEPARATOR: separator_bg, separator_fg
 *color17: #333333
-*color18: #363636
+*color18: #303030
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #0e0e0e

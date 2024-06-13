@@ -75,7 +75,6 @@ return {
         "ruby",
         "wgsl",
 
-        "cmake",
         "make",
 
         "javascript",

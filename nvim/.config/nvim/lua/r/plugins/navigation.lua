@@ -190,6 +190,11 @@ return {
           -- [x] image with big size = hang
           -- [x] gif = idk
           toggle_open_preview = function(state)
+            if state.use_image_nvim then
+              if vim.g.neovide then
+                state.use_image_nvim = false
+              end
+            end
             -- toggle_state = false
             local node = state.tree:get_node()
 

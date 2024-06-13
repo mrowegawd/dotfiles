@@ -830,7 +830,9 @@ local function colorscheme_overrides()
       },
     },
     ["ayu"] = {
-      { CodeBlock1 = { bg = { from = "Normal", alter = 0.7 } } },
+      { CodeBlock1 = { bg = { from = "Normal", alter = 0.6 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 5 } } },
 
       -- CMP
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 7 }, bg = "NONE" } },
@@ -846,8 +848,8 @@ local function colorscheme_overrides()
 
       {
         MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "fg", alter = -0.1 },
+          bg = { from = "Normal", attr = "bg", alter = 1.5 },
           italic = true,
         },
       },

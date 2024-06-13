@@ -6,6 +6,15 @@ local M = setmetatable({}, {
   end,
 })
 
+---@class LazyRoot
+---@field paths string[]
+---@field spec LazyRootSpec
+
+---@alias LazyRootFn fun(buf: number): (string|string[])
+
+---@alias LazyRootSpec string|string[]|LazyRootFn
+
+---@type LazyRootSpec[]
 M.spec = { "lsp", { ".git", "lua" }, "cwd" }
 
 M.detectors = {}
@@ -68,6 +77,8 @@ function M.realpath(path)
   return RUtils.norm(path)
 end
 
+---@param spec LazyRootSpec
+---@return LazyRootFn
 function M.resolve(spec)
   if M.detectors[spec] then
     return M.detectors[spec]
@@ -79,6 +90,7 @@ function M.resolve(spec)
   end
 end
 
+---@param opts? { buf?: number, spec?: LazyRootSpec[], all?: boolean }
 function M.detect(opts)
   opts = opts or {}
   opts.spec = opts.spec or type(vim.g.root_spec) == "table" and vim.g.root_spec or M.spec
@@ -156,20 +168,21 @@ end
 -- * lsp root_dir
 -- * root pattern of filename of the current buffer
 -- * root pattern of cwd
----@param opts? {normalize?:boolean}
+---@param opts? {normalize?:boolean, buf?:number}
 ---@return string
 function M.get(opts)
-  local buf = vim.api.nvim_get_current_buf()
+  opts = opts or {}
+  local buf = opts.buf or vim.api.nvim_get_current_buf()
   local ret = M.cache[buf]
   if not ret then
-    local roots = M.detect { all = false }
+    local roots = M.detect { all = false, buf = buf }
     ret = roots[1] and roots[1].paths[1] or vim.uv.cwd()
     M.cache[buf] = ret
   end
   if opts and opts.normalize then
     return ret
   end
-  return RUtils.is_win() and (ret and ret:gsub("/", "\\")) or ret
+  return RUtils.is_win() and ret:gsub("/", "\\") or ret
 end
 
 function M.git()

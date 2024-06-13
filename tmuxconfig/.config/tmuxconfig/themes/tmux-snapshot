@@ -7,7 +7,7 @@ STATUSLINE_BG_MESSAGE="#FFFF00"
 BORDER_FG="#333333"
 BORDER_BG="#0A0A0A"
 
-SEPARATOR_FG="#363636"
+SEPARATOR_FG="#303030"
 SEPARATOR_ACTIVE_BG="#101010"
 
 WINDOW_BG_ACTIVE="#101010"
@@ -54,7 +54,7 @@ setw -g pane-border-status bottom
 
 setw -g pane-border-format "\
 #{?pane_active,#[fg=$STATUSLINE_BG_ACTIVE]$left_slant_separator,}\
-#[fg=$RED,bold]#{?pane_active,#[bg=$STATUSLINE_BG_ACTIVE],} #{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
+#[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$STATUSLINE_BG_ACTIVE],} #{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$WINDOW_BG_ACTIVE]$left_slant_separator,}"
 

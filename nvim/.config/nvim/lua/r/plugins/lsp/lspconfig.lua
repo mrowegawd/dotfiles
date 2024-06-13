@@ -9,6 +9,74 @@ local lsp = vim.g.lazyvim_python_lsp or "pyright"
 local ruff = vim.g.lazyvim_python_ruff or "ruff_lsp"
 
 return {
+  -- MASON NVIM
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    opts = {
+      ensure_installed = {
+        -- lua
+        "stylua",
+
+        -- ts,js,react
+        -- "typescript-language-server", -- do not install this, let typescript-tools handle this,
+        "js-debug-adapter",
+
+        -- golang
+        "gomodifytags", -- linter
+        "impl", -- linter
+        "delve", -- for debug
+
+        "goimports",
+        "gofumpt",
+        "golangci-lint",
+
+        -- bash,sh
+        "shellcheck",
+        -- TODO: remove shfmt, use bashls instead
+        "shfmt",
+
+        -- python
+        "debugpy",
+
+        -- kotlin
+        "ktlint",
+        "kotlin-debug-adapter",
+
+        -- docker
+        "hadolint",
+
+        -- ansible
+        "ansible-language-server",
+        "ansible-lint",
+      },
+      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
+    },
+    ---@param opts MasonSettings | {ensure_installed: string[]}
+    config = function(_, opts)
+      require("mason").setup(opts)
+      local mr = require "mason-registry"
+      mr:on("package:install:success", function()
+        vim.defer_fn(function()
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger {
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          }
+        end, 100)
+      end)
+
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+          end
+        end
+      end)
+    end,
+  },
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
@@ -148,21 +216,6 @@ return {
               scss = { lint = { unknownAtRules = "ignore" } },
             },
           },
-          taplo = {
-            keys = {
-              {
-                "K",
-                function()
-                  if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
-                    require("crates").show_popup()
-                  else
-                    vim.lsp.buf.hover()
-                  end
-                end,
-                desc = "LSP: show crate documentation [taplo]",
-              },
-            },
-          },
           yamlls = {
             -- Have to add this for yamlls to understand that we support line folding
             capabilities = {
@@ -278,7 +331,6 @@ return {
               },
             },
           },
-          neocmake = {},
           tailwindcss = {
             -- filetypes = { "html", "mdx", "javascript", "javascriptreact", "typescriptreact", "vue", "svelte" },
             -- -- https://github.com/neovim/neovim/issues/19118#issuecomment-1221522853
@@ -290,6 +342,34 @@ return {
             -- root_dir = function(...)
             --   return require("lspconfig.util").root_pattern ".git"(...)
             -- end,
+          },
+          lua_ls = {
+            -- mason = false, -- set to false if you don't want this server to be installed with mason
+            -- keys = {},
+            settings = {
+              Lua = {
+                workspace = {
+                  checkThirdParty = false,
+                },
+                codeLens = {
+                  enable = true,
+                },
+                completion = {
+                  callSnippet = "Replace",
+                },
+                doc = {
+                  privateName = { "^_" },
+                },
+                hint = {
+                  enable = true,
+                  setType = false,
+                  paramType = true,
+                  paramName = "Disable",
+                  semicolon = "Disable",
+                  arrayIndex = "Disable",
+                },
+              },
+            },
           },
         },
         ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
@@ -570,208 +650,6 @@ return {
       end
     end,
   },
-  -- MASON NVIM
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    build = ":MasonUpdate",
-    opts = {
-      ensure_installed = {
-        -- lua
-        "stylua",
-
-        -- ts,js,react
-        "prettier", -- use prettier instead of `prettierd`. Too many people get truncated files
-        -- "typescript-language-server", -- do not install this, let typescript-tools handle this,
-        "js-debug-adapter",
-
-        -- golang
-        "gomodifytags", -- linter
-        "impl", -- linter
-        "delve", -- for debug
-
-        "goimports",
-        "gofumpt",
-        "golangci-lint",
-
-        -- bash,sh
-        "shellcheck",
-        -- TODO: remove shfmt, use bashls instead
-        "shfmt",
-
-        -- python
-        "black",
-        -- "ruff", -- (use ruff insted of 'black' because its is rust, rust is fast!)
-        "debugpy",
-
-        -- rust
-        "codelldb",
-
-        -- cmake
-        "cmakelang",
-        "cmakelint",
-
-        -- kotlin
-        "ktlint",
-        "kotlin-debug-adapter",
-
-        -- markdown
-        "markdownlint",
-        "markdown-toc",
-        -- "marksman",
-        "codespell",
-        "cbfmt",
-
-        -- docker
-        "hadolint",
-
-        -- ansible
-        "ansible-language-server",
-        "ansible-lint",
-      },
-      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
-    },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require "mason-registry"
-      mr:on("package:install:success", function()
-        vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger {
-            event = "FileType",
-            buf = vim.api.nvim_get_current_buf(),
-          }
-        end, 100)
-      end)
-
-      mr.refresh(function()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end)
-    end,
-  },
-  -- LAZYDEV
-  {
-    "folke/lazydev.nvim",
-    ft = "lua",
-    cmd = "LazyDev",
-    opts = {
-      library = {
-        { path = "luvit-meta/library", words = { "vim%.uv" } },
-        -- { path = "LazyVim", words = { "LazyVim" } },
-        { path = "lazy.nvim", words = { "LazyVim" } },
-      },
-    },
-  },
-  -- LIVIT_META
-  {
-    -- Manage libuv types with lazy. Plugin will never be loaded
-    "Bilal2453/luvit-meta",
-    lazy = true,
-  },
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │   CMAKE                                                  │
-  --  ╰──────────────────────────────────────────────────────────╯
-  -- CMAKE-TOOLS (closed)
-  -- {
-  --   "civitasv/cmake-tools.nvim",
-  --   event = "LazyFile",
-  --   opts = true
-  -- },
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │   RUST                                                   │
-  --  ╰──────────────────────────────────────────────────────────╯
-  -- RUSTACEANVIM
-  {
-    -- install rust-analyzer: `rustup component add rust-analyzer` (dont need from Mason)
-    "mrcjkb/rustaceanvim",
-    version = "^4", -- Recommended
-    ft = { "rust" },
-    dependencies = {
-      "neovim/nvim-lspconfig",
-      {
-        "nvim-neotest/neotest",
-        optional = true,
-        opts = function(_, opts)
-          opts.adapters = opts.adapters or {}
-          vim.list_extend(opts.adapters, {
-            require "rustaceanvim.neotest",
-          })
-        end,
-      },
-    },
-    keys = {
-      {
-        "<Leader>fH",
-        function()
-          vim.cmd.RustLsp "openDocs"
-        end,
-        desc = "LPS: open rust docs [rustaceanvim]",
-        ft = "rust",
-      },
-      {
-        "<Leader>ca",
-        function()
-          vim.cmd.RustLsp "codeAction"
-        end,
-        desc = "LSP: code action [rustaceanvim]",
-        ft = "rust",
-      },
-      {
-        "<Leader>dd",
-        function()
-          vim.cmd.RustLsp "debuggables"
-        end,
-        desc = "Debug: debuggables [rustaceanvim]",
-        ft = "rust",
-      },
-    },
-    opts = {
-      server = {
-        default_settings = {
-          -- rust-analyzer language server configuration
-          ["rust-analyzer"] = {
-            cargo = {
-              allFeatures = true,
-              loadOutDirsFromCheck = true,
-              buildScripts = {
-                enable = true,
-              },
-            },
-            -- Add clippy lints for Rust.
-            checkOnSave = {
-              allFeatures = true,
-              command = "clippy",
-              extraArgs = { "--no-deps" },
-            },
-            procMacro = {
-              enable = true,
-              ignored = {
-                ["async-trait"] = { "async_trait" },
-                ["napi-derive"] = { "napi" },
-                ["async-recursion"] = { "async_recursion" },
-              },
-            },
-          },
-        },
-      },
-    },
-    config = function(_, opts)
-      vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
-
-      if vim.fn.executable "rust-analyzer" == 0 then
-        RUtils.error(
-          "**rust-analyzer** not found in PATH, please install it.\nhttps://rust-analyzer.github.io/",
-          { title = "rustaceanvim" }
-        )
-      end
-    end,
-  },
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   TYPESCRIPT                                             │
   --  ╰──────────────────────────────────────────────────────────╯
@@ -846,20 +724,6 @@ return {
     build = ":GoInstallDeps",
     dependencies = { "nvim-lua/plenary.nvim", "nvim-treesitter/nvim-treesitter" },
   },
-  --  ╭──────────────────────────────────────────────────────────╮
-  --  │   MARKDOWN                                               │
-  --  ╰──────────────────────────────────────────────────────────╯
-  -- MARKDOWN-PREVIEW
-  {
-    "iamcco/markdown-preview.nvim",
-    event = "VimEnter",
-    ft = "markdown",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-  },
-
   --  ╭──────────────────────────────────────────────────────────╮
   --  │   PYTHON                                                 │
   --  ╰──────────────────────────────────────────────────────────╯

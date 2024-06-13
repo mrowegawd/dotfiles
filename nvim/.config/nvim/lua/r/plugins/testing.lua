@@ -6,6 +6,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/neotest-go",
       "nvim-neotest/neotest-python",
+      "nvim-neotest/nvim-nio",
       "mrcjkb/rustaceanvim",
     },
     opts = {

@@ -16,6 +16,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field toggle r.utils.toggle
 ---@field session r.utils.session
 ---@field format r.utils.format
+---@field extras r.utils.extras
 ---@field buf r.utils.buf
 ---@field plugin r.utils.plugin
 ---@field terminal r.utils.terminal

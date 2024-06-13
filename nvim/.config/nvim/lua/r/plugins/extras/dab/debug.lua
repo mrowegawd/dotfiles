@@ -87,7 +87,6 @@ return {
       },
       {
         "rcarriga/nvim-dap-ui",
-        enabled = false,
         -- stylua: ignore
         keys = {
           { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },

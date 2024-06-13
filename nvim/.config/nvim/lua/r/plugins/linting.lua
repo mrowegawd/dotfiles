@@ -1,93 +1,4 @@
 return {
-  -- NONE-LS (disabled)
-  {
-    "nvimtools/none-ls.nvim",
-    event = "LazyFile",
-    enabled = false,
-    dependencies = { "mason.nvim", dir = "~/.local/src/nvim_plugins/null-ls-embedded" },
-    init = function()
-      RUtils.on_very_lazy(function()
-        RUtils.format.register {
-          name = "none-ls.nvim",
-          priority = 200, -- set higher than conform, the builtin formatter
-          primary = true,
-          format = function(buf)
-            return RUtils.lsp.format {
-              bufnr = buf,
-              filter = function(client)
-                return client.name == "null-ls"
-              end,
-            }
-          end,
-          sources = function(buf)
-            local ret = require("null-ls.sources").get_available(vim.bo[buf].filetype, "NULL_LS_FORMATTING") or {}
-            return vim.tbl_map(function(source)
-              return source.name
-            end, ret)
-          end,
-        }
-      end)
-    end,
-    opts = function(_, opts)
-      local nls = require "null-ls"
-      opts.root_dir = opts.root_dir
-        or require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
-      opts.sources = vim.list_extend(opts.sources or {}, {
-
-        -- lua
-        nls.builtins.formatting.stylua,
-
-        -- go
-        nls.builtins.formatting.gofumpt,
-        nls.builtins.formatting.goimports,
-        nls.builtins.diagnostics.golangci_lint,
-        nls.builtins.code_actions.gomodifytags,
-        nls.builtins.code_actions.impl,
-
-        nls.builtins.diagnostics.markdownlint.with {
-          extra_args = {
-            "--stdin",
-            "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json",
-          },
-        },
-
-        -- sh
-        nls.builtins.formatting.shfmt,
-
-        -- ts,js,react
-        -- nls.builtins.formatting.prettierd,
-        nls.builtins.diagnostics.eslint_d,
-        nls.builtins.code_actions.eslint_d,
-
-        -- docker
-        nls.builtins.diagnostics.hadolint,
-
-        -- ansible
-        nls.builtins.diagnostics.ansiblelint,
-
-        -- cmake
-        nls.builtins.diagnostics.cmake_lint,
-
-        nls.builtins.diagnostics.trail_space.with {
-          filetypes = { "org", "norg", "text" },
-        },
-        nls.builtins.formatting.trim_newlines.with {
-          filetypes = { "org", "norg", "text" },
-        },
-        nls.builtins.formatting.trim_whitespace.with {
-          filetypes = { "org", "norg", "text" },
-        },
-
-        nls.builtins.diagnostics.codespell.with {
-          filetypes = { "org", "norg", "text", "markdown" },
-        },
-
-        require("null-ls-embedded").nls_source.with {
-          filetypes = { "markdown", "html", "vue", "lua", "org", "norg" },
-        },
-      })
-    end,
-  },
   -- NVIM-LINT
   {
     "mfussenegger/nvim-lint",
@@ -97,10 +8,6 @@ return {
       events = { "BufWritePost", "BufReadPost", "InsertLeave" },
       linters_by_ft = {
         fish = { "fish" },
-        cmake = { "cmakelint" },
-        markdown = { "markdownlint", "codespell" },
-        norg = { "codespell" },
-        org = { "codespell" },
         go = { "golangcilint" },
         docker = { "hadolint" },
         kotlin = { "ktlin" },
@@ -114,13 +21,6 @@ return {
       -- or add custom linters.
       ---@type table<string,table>
       linters = {
-        markdownlint = {
-          args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
-        },
-        codespell = {
-          args = { "--ignore-words", vim.env.HOME .. "/.config/linters/cspell-ignore-words.txt" },
-        },
-
         -- Example of using selene only when a selene.toml file is present
         -- selene = {
         --   -- `condition` is another LazyVim extension that allows you to
