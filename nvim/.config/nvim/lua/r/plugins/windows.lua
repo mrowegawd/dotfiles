@@ -4,6 +4,12 @@ return {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
     cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
+    opts = {
+      -- NOTE: stickybuf conflict with toggleterm when closing with <c-x>,
+      -- stickybuf sepertinya secara default menganggap toggleterm adalah bufpinned (checked)
+      should_auto_pin = nil,
+      get_auto_pin = nil,
+    },
     keys = {
       {
         "<Leader>bp",
@@ -15,10 +21,9 @@ return {
             vim.cmd "PinBuffer"
           end
         end,
-        desc = "Buffer: Pin buffer [stickybuf]",
+        desc = "Buffer: pin buffer [stickybuf]",
       },
     },
-    config = true,
   },
   -- SMART-SPLITS
   {
@@ -244,7 +249,7 @@ return {
         for key, _ in pairs(nav2) do
           if key == "a-H" then
             vim.keymap.set("n", "<" .. key .. ">", function()
-              local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
+              local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "terminal" }
               if exclude_win.found then
                 return vim.cmd "vertical resize +5 "
               end
@@ -252,7 +257,7 @@ return {
             end)
           elseif key == "a-L" then
             vim.keymap.set("n", "<" .. key .. ">", function()
-              local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
+              local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "terminal" }
               if exclude_win.found then
                 return vim.cmd "vertical resize -5 "
               end
