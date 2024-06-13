@@ -780,10 +780,12 @@ M.Marks = {
 M.PinnedBuffer = {
   {
     provider = function()
-      local is_pinned = require("stickybuf").is_pinned()
-      if is_pinned then
-        -- return " " .. RUtils.config.icons.misc.marks .. " "
-        return " [BufPinned] "
+      if RUtils.has "stickybuf.nvim" then
+        local is_pinned = require("stickybuf").is_pinned()
+        if is_pinned then
+          -- return " " .. RUtils.config.icons.misc.marks .. " "
+          return " [BufPinned] "
+        end
       end
     end,
     hl = { fg = colors.diagnostic_warn },

@@ -143,7 +143,8 @@ local defaults = {
       telescope = " ",
       telescope2 = " ",
       telescope3 = " ",
-      terminal = " ",
+      terminal = " ",
+      terminal2 = " ",
       tools = " ",
       up = "⇡ ",
 
