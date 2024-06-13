@@ -726,7 +726,7 @@ M.Sessions = {
   -- provider = "",
   {
     provider = function()
-      local sess_icon = " "
+      local sess_icon = " 󰅟" -- "
       local sess_status = "Off"
 
       if RUtils.has "persistence.nvim" then
@@ -765,7 +765,7 @@ M.Marks = {
         return " " .. RUtils.config.icons.misc.marks .. " "
       end
     end,
-    hl = { fg = colors.diagnostic_warn },
+    hl = { fg = "red" },
   },
 }
 M.PinnedBuffer = {

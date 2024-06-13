@@ -11,6 +11,7 @@ return {
       save_dir = RUtils.config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
       extmarks = {
         qf_sigil = RUtils.config.icons.misc.marks,
+        qf_sign_hl = { fg = "red" },
       },
       marks = {
         excluded = {
