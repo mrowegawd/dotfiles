@@ -110,7 +110,7 @@ nnoremap / /\v
 vnoremap / <Esc>/\%V
 nnoremap <c-g> /\v
 
-cnoremap jk <C-C>
+cnoremap hh <C-C>
 nnoremap zl 10zl
 nnoremap zh 10zh
 nnoremap zL z60l
@@ -179,9 +179,7 @@ inoremap <c-b> <S-Left>
 inoremap <c-f> <S-Right>
 
 " jk for escaping (insert and commandline)
-inoremap jk <Esc>
-inoremap kj <Esc>
-xnoremap jk <Esc>
+inoremap hh <Esc>
 
 inoremap <c-a> <c-o>^
 inoremap <c-e> <c-o>$
