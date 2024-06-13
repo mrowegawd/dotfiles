@@ -1,4 +1,4 @@
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+-- local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 local visible_buffers = {}
 
@@ -82,47 +82,6 @@ return {
     "ahmedkhalf/project.nvim",
     event = "LazyFile",
     cond = vim.g.neovide ~= nil or not vim.env.TMUX,
-    keys = {
-      {
-        "<a-g>",
-        function()
-          local contents = require("project_nvim").get_recent_projects()
-          local reverse = {}
-          for i = #contents, 1, -1 do
-            reverse[#reverse + 1] = contents[i]
-          end
-
-          if #reverse == 0 then
-            local dropbox_path = RUtils.config.path.dropbox_path
-            local path_fzmark = dropbox_path .. "/data.programming.forprivate/marked-pwd"
-
-            local cat_fzmark = vim.api.nvim_exec2("!cat " .. path_fzmark, { output = true })
-            if cat_fzmark.output ~= nil then
-              local res = vim.split(cat_fzmark.output, "\n")
-              -- print(vim.inspect(#res - 1))
-              for index = 2, #res - 1 do
-                if #res[index] > 1 then
-                  reverse[#reverse + 1] = res[index]
-                end
-              end
-            end
-          end
-
-          return fzf_lua.fzf_exec(reverse, {
-            prompt = "   ",
-            winopts = {
-              title = RUtils.fzflua.format_title("FzMark", "󰈙"),
-            },
-            actions = {
-              ["default"] = function(e)
-                vim.cmd.cd(e[1])
-              end,
-            },
-          })
-        end,
-        desc = "Projects(project.nvim): open project lists",
-      },
-    },
     opts = {
       manual_mode = true,
       detection_methods = { "pattern" },
