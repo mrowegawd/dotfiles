@@ -1465,7 +1465,7 @@ return {
     cmd = "Trouble",
     keys = {
       {
-        "gr",
+        "gR",
         "<cmd>Trouble lsp_references toggle focus=true win.position=right<cr>",
         desc = "LSP: references [trouble]",
       },

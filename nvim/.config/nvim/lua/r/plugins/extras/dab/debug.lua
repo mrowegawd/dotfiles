@@ -1,90 +1,24 @@
-local fn = vim.fn
-
 local Highlight = require "r.settings.highlights"
+
+---@param config {args?:string[]|fun():string[]?}
+local function get_args(config)
+  local args = type(config.args) == "function" and (config.args() or {}) or config.args or {}
+  config = vim.deepcopy(config)
+  ---@cast args string[]
+  config.args = function()
+    local new_args = vim.fn.input("Run with args: ", table.concat(args, " ")) --[[@as string]]
+    return vim.split(vim.fn.expand(new_args) --[[@as string]], " ")
+  end
+  return config
+end
 
 return {
   -- NVIM-DAP
   {
     "mfussenegger/nvim-dap",
+    recommended = true,
+    desc = "Debugging support. Requires language specific adapters to be configured. (see lang extras)",
     dependencies = {
-
-      -- python
-      {
-        "mfussenegger/nvim-dap-python",
-        -- dependencies = { "williamboman/mason.nvim" },
-        config = function()
-          -- local path = require("mason-registry").get_package("debugpy"):get_install_path()
-          local path = vim.fn.stdpath "data" .. "/mason/packages/debugpy/venv/bin/python3"
-          require("dap-python").setup(path)
-        end,
-      },
-
-      {
-        "nvim-telescope/telescope-dap.nvim",
-        config = function()
-          require("telescope").load_extension "dap"
-        end,
-      },
-      -- golang
-      {
-        "leoluz/nvim-dap-go",
-        config = true,
-      },
-
-      { "theHamsta/nvim-dap-virtual-text", opts = { commented = true } },
-
-      -- {
-      --   "LiadOz/nvim-dap-repl-highlights",
-      --   config = true,
-      --   build = function()
-      --     if not require("nvim-treesitter.parsers").has_parser "dap_repl" then vim.cmd ":TSInstall dap_repl"
-      --     end
-      --   end,
-      -- },
-
-      {
-        "jbyuki/one-small-step-for-vimkind",
-        -- keys = { } -- Use ftplugin/lua
-        config = function()
-          -- local dap = require "dap"
-          -- dap.adapters.nlua = function(callback, config)
-          --   callback { type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 }
-          -- end
-
-          local dap = require "dap"
-          dap.adapters.nlua = function(callback, conf)
-            local adapter = {
-              type = "server",
-              host = conf.host or "127.0.0.1",
-              port = conf.port or 8086,
-            }
-            if conf.start_neovim then
-              local dap_run = dap.run
-              dap.run = function(c)
-                adapter.port = c.port
-                adapter.host = c.host
-              end
-              require("osv").run_this()
-              dap.run = dap_run
-            end
-            callback(adapter)
-          end
-          dap.configurations.lua = {
-            {
-              type = "nlua",
-              request = "attach",
-              name = "Run this file",
-              start_neovim = {},
-            },
-            {
-              type = "nlua",
-              request = "attach",
-              name = "Attach to running Neovim instance (port = 8086)",
-              port = 8086,
-            },
-          }
-        end,
-      },
       {
         "rcarriga/nvim-dap-ui",
         -- stylua: ignore
@@ -166,41 +100,77 @@ return {
           -- end
         end,
       },
+
+      -- virtual text for the debugger
+      {
+        "theHamsta/nvim-dap-virtual-text",
+        opts = {},
+      },
     },
+    -- stylua: ignore
     keys = {
+      { "<Leader>dB", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition" },
+      { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: toggle breakpoint" },
+      -- { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
+      { "<Leader>dc", function() require("dap").continue() end, desc = "Debug: continue" },
+      { "<Leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Debug: run with args" },
+      { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
+      { "<Leader>dC", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
+      { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug: run last" },
+
+      { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
+      { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
+      { "<Leader>dt", function() require("dap").terminate() end, desc = "Debug: terminate" },
+      { "<Leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Debug: widgets" },
+
       -- +----------------------------------------------------------+
-      -- DAP commands
+      -- Step-in, step-out, step-over | Stack-up Stack-down
+      -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       -- +----------------------------------------------------------+
-      -- { "<Leader>dR", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor [dap]" },
-      -- { "<Leader>dL", function() require("dap").run_last() end, desc = "Debug: run last [dap]" },
+      { "<Leader>di", function() require("dap").step_into() end, desc = "Debug: step into" },
+      { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
+      { "<Leader>dk", function() require("dap").up() end, desc = "Debug: setup up" },
+      { "<Leader>do", function() require("dap").step_out() end, desc = "Debug: step out" },
+      { "<Leader>dO", function() require("dap").step_over() end, desc = "Debug: step over" },
+      -- +----------------------------------------------------------+
+      -- Run and close the debug
+      -- +----------------------------------------------------------+
       {
-        "<Leader>dR",
+        "<Leader><F5>",
         function()
-          require("dap").repl.toggle(nil, "botright split")
+          require("dap").terminate()
+          require("dapui").close()
         end,
-        desc = "Debug: toggle REPL [dap]",
+        desc = "Debug: closing or quit debug [dap]",
       },
-      -- { "<Leader>dS", function() print(vim.inspect(require("dap").session())) end, desc = "Debug: get session [dap]" },
-      --  +----------------------------------------------------------+
-      --    Breakpoints
-      --  +----------------------------------------------------------+
-      -- { "<Leader>dc", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition [dap]" },
       {
-        "<Leader>dB",
+        "<F5>",
         function()
-          require("dap").clear_breakpoints()
+          local function status_dap(req)
+            local ok, _ = pcall(require, req)
+            if not ok then
+              return ""
+            end
+            return req.status()
+          end
+
+          if #status_dap(require "dap") > 0 then
+            return require("dap").disconnect()
+          else
+            if RUtils.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
+              return require("osv").run_this()
+            end
+            -- if RUtils.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
+            --   return vim.cmd.RustLsp "debuggables"
+            -- end
+            return require("dap").continue()
+          end
         end,
-        desc = "Debug: clear all breakpoints [dap]",
+        desc = "Debug: run or disconnect [dap]",
       },
-      -- { "<Leader>dbl", function() require("dap").set_breakpoint( nil, nil, fn.input "Log point message: ") end, desc = "Debug: log breakpoint [dap]", },
-      -- { "<Leader>dD", function() require("dap").list_breakpoints(true) end, desc = "Debug: list breakpoint qf [dap]", },
-      {
-        "<leader>db",
-        function()
-          require("dap").toggle_breakpoint()
-        end,
-        desc = "Debug: toggle breakpoint [dap]",
-      },
+      -- +----------------------------------------------------------+
+      -- Misc commands
+      -- +----------------------------------------------------------+
       {
         "<Leader>df",
         function()
@@ -208,7 +178,7 @@ return {
 
           RUtils.fzflua.send_cmds({
             breakpoint_set = function()
-              return require("dap").set_breakpoint(fn.input "Breakpoint condition: ")
+              return require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ")
             end,
             breakpoint_clear_all = function()
               return require("dap").clear_breakpoints()
@@ -236,188 +206,6 @@ return {
         end,
         desc = "Debug: list commands of debug",
       },
-      -- +----------------------------------------------------------+
-      -- Run and close the debug
-      -- +----------------------------------------------------------+
-      -- { "<Leader>dR", function() require("dap").restart_frame() end, desc = "Debug: restart [dap]" },
-      -- { "<Leader>dq", function() return require("dap").terminate() end, desc = "Debug: closing or quit debug [dap]", },
-      {
-        "<Leader><F5>",
-        function()
-          require("dap").terminate()
-          require("dapui").close()
-        end,
-        desc = "Debug: closing or quit debug [dap]",
-      },
-      {
-        "<F5>",
-        function()
-          local function status_dap(req)
-            local ok, _ = pcall(require, req)
-
-            if not ok then
-              return ""
-            end
-
-            return req.status()
-          end
-
-          if #status_dap(require "dap") > 0 then
-            return require("dap").disconnect()
-          else
-            if RUtils.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
-              return require("osv").run_this()
-            end
-
-            -- if RUtils.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
-            --   return vim.cmd.RustLsp "debuggables"
-            -- end
-            return require("dap").continue()
-          end
-        end,
-        desc = "Debug: run or disconnect [dap]",
-      },
-      -- +----------------------------------------------------------+
-      -- Step-in, step-out, step-over | Stack-up Stack-down
-      -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
-      -- +----------------------------------------------------------+
-      {
-        "<s-down>",
-        function()
-          require("dap").step_over()
-        end,
-        desc = "Debug: step-over [dap]",
-      },
-      {
-        "<s-right>",
-        function()
-          require("dap").step_into()
-        end,
-        desc = "Debug: step-into [dap]",
-      },
-      {
-        "<s-left>",
-        function()
-          require("dap").step_out()
-        end,
-        desc = "Debug: step-out [dap]",
-      },
-      {
-        "<leader>dk",
-        function()
-          require("dap").up()
-        end,
-        desc = "Debug: stack up [dap]",
-      },
-      {
-        "<leader>dj",
-        function()
-          require("dap").down()
-        end,
-        desc = "Debug: stack down [dap]",
-      },
-    },
-    opts = {
-      setup = {
-        vscode_js_debug = function()
-          local function get_js_debug()
-            local install_path = require("mason-registry").get_package("js-debug-adapter"):get_install_path()
-            return install_path .. "/js-debug/src/dapDebugServer.js"
-          end
-
-          for _, adapter in ipairs { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" } do
-            require("dap").adapters[adapter] = {
-              type = "server",
-              host = "localhost",
-              port = "${port}",
-              executable = {
-                command = "node",
-                args = {
-                  get_js_debug(),
-                  "${port}",
-                },
-              },
-            }
-          end
-
-          for _, language in ipairs { "typescript", "javascript" } do
-            require("dap").configurations[language] = {
-              {
-                type = "pwa-node",
-                request = "launch",
-                name = "Launch file",
-                program = "${file}",
-                cwd = "${workspaceFolder}",
-              },
-              {
-                type = "pwa-node",
-                request = "attach",
-                name = "Attach",
-                processId = require("dap.utils").pick_process,
-                cwd = "${workspaceFolder}",
-              },
-              {
-                type = "pwa-node",
-                request = "launch",
-                name = "Debug Jest Tests",
-                -- trace = true, -- include debugger info
-                runtimeExecutable = "node",
-                runtimeArgs = {
-                  "./node_modules/jest/bin/jest.js",
-                  "--runInBand",
-                },
-                rootPath = "${workspaceFolder}",
-                cwd = "${workspaceFolder}",
-                console = "integratedTerminal",
-                internalConsoleOptions = "neverOpen",
-              },
-              {
-                type = "pwa-chrome",
-                name = "Attach - Remote Debugging",
-                request = "attach",
-                program = "${file}",
-                cwd = vim.fn.getcwd(),
-                sourceMaps = true,
-                protocol = "inspector",
-                port = 9222, -- Start Chrome google-chrome --remote-debugging-port=9222
-                webRoot = "${workspaceFolder}",
-              },
-              {
-                type = "pwa-chrome",
-                name = "Launch Chrome",
-                request = "launch",
-                url = "http://localhost:5173", -- This is for Vite. Change it to the framework you use
-                webRoot = "${workspaceFolder}",
-                userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir",
-              },
-            }
-          end
-
-          for _, language in ipairs { "typescriptreact", "javascriptreact" } do
-            require("dap").configurations[language] = {
-              {
-                type = "pwa-chrome",
-                name = "Attach - Remote Debugging",
-                request = "attach",
-                program = "${file}",
-                cwd = vim.fn.getcwd(),
-                sourceMaps = true,
-                protocol = "inspector",
-                port = 9222, -- Start Chrome google-chrome --remote-debugging-port=9222
-                webRoot = "${workspaceFolder}",
-              },
-              {
-                type = "pwa-chrome",
-                name = "Launch Chrome",
-                request = "launch",
-                url = "http://localhost:5173", -- This is for Vite. Change it to the framework you use
-                webRoot = "${workspaceFolder}",
-                userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir",
-              },
-            }
-          end
-        end,
-      },
     },
     config = function()
       Highlight.plugin("dapHi", {
@@ -428,7 +216,7 @@ return {
         { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
       })
 
-      fn.sign_define {
+      vim.fn.sign_define {
         {
           name = "DapBreakpoint",
           texthl = "DapBreakpoint",
@@ -440,6 +228,34 @@ return {
           text = RUtils.config.icons.dap.Stopped,
         },
       }
+
+      -- setup dap config by VsCode launch.json file
+      local vscode = require "dap.ext.vscode"
+      local json = require "plenary.json"
+      vscode.json_decode = function(str)
+        return vim.json.decode(json.json_strip_comments(str))
+      end
     end,
+  },
+  -- MASON-NVIM-DAP.NVIM
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = "mason.nvim",
+    cmd = { "DapInstall", "DapUninstall" },
+    opts = {
+      -- Makes a best effort to setup the various debuggers with
+      -- reasonable debug configurations
+      automatic_installation = true,
+
+      -- You can provide additional configuration to the handlers,
+      -- see mason-nvim-dap README for more information
+      handlers = {},
+
+      -- You'll need to check that you have the required things installed
+      -- online, please don't ask me how to install them :)
+      ensure_installed = {
+        -- Update this to ensure that you have the debuggers for the langs you want
+      },
+    },
   },
 }

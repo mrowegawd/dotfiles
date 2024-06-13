@@ -3,6 +3,7 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 local M = {}
 
 local function gitfzflua(opts)
+  opts = opts or {}
   RUtils.map.nnoremap("<Leader>gfs", fzf_lua.git_status, { desc = "Git: show git status [fzflua]" })
   RUtils.map.nnoremap("<Leader>gfS", fzf_lua.git_stash, { desc = "Git: show git stash [fzflua]" })
   RUtils.map.nnoremap("<Leader>gfC", fzf_lua.git_commits, { desc = "Git: list commits repos [fzflua]" })
@@ -280,6 +281,7 @@ end
 
 function M.minigit()
   gitdiffview()
+  gitfzflua()
   lazygit()
 end
 

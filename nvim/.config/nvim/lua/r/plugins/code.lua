@@ -183,14 +183,14 @@ return {
             "s",
           }),
           ["<c-j>"] = cmp.mapping(function()
-            if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
+            if cmp.visible() or vim.fn.pumvisible() == 1 then
               cmp.select_next_item()
             else
               cmp.complete {}
             end
           end, { "i", "c" }),
           ["<c-k>"] = cmp.mapping(function()
-            if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
+            if cmp.visible() or vim.fn.pumvisible() == 1 then
               cmp.select_prev_item()
             end
           end, { "i", "c" }),

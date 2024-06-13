@@ -259,24 +259,19 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = "nvim-lua/plenary.nvim",
     opts = function()
-      require("r.keymaps.git").gitsigns()
       return {
         signs = {
           add = { text = "▎", numhl = "GitSignsAddNr" },
           change = { text = "▎", numhl = "GitSignsChangeNr" },
           delete = { text = "_", numhl = "GitSignsDeleteNr" },
           topdelete = { text = "‾", numhl = "GitSignsDeleteNr" },
-          changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
-          untracked = { text = "▎" },
+          -- changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
+          changedelete = { text = "~", numhl = "GitSignsChangeNr" },
+          -- untracked = { text = "▎" },H
+          untracked = { text = "┆" },
         },
-        update_debounce = 100,
-        max_file_length = 40000,
-        sign_priority = 15, -- higher than diagnostic,todo signs. lower than dapui breakpoint sign
-        attach_to_untracked = true,
         on_attach = function()
-          if vim.bo.ft == "markdown" then
-            return false
-          end
+          require("r.keymaps.git").gitsigns()
         end,
       }
     end,
@@ -294,7 +289,7 @@ return {
     event = "VeryLazy",
     keys = {
       {
-        "<leader>gto",
+        "<Leader>guo",
         function()
           require("mini.diff").toggle_overlay(0)
         end,
@@ -319,7 +314,7 @@ return {
           apply = "gh",
 
           -- Reset hunks inside a visual/operator region
-          -- reset = "<Leader>ghr",
+          -- reset = "<space>ghr",
           reset = "gH",
 
           -- Hunk range textobject to be used inside operator

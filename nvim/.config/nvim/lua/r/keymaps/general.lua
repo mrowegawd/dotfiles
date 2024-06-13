@@ -511,26 +511,46 @@ RUtils.map.nnoremap("<a-E>", function()
       vim.fn.system "wezterm cli activate-pane-direction Left"
     end
   else
-    vim.fn.system [[tmux select-pane -L]]
+    -- local current_pane = function()
+    --   return normalize_return(vim.fn.system [[tmux select-pane -L]])
+    -- end
+
+    local go_left = function()
+      vim.fn.system [[tmux select-pane -L]]
+    end
+    local go_right = function()
+      vim.fn.system [[tmux select-pane -R]]
+    end
+
+    go_left()
 
     local pane_left_currend_cmd_nnn = normalize_return(
       vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }']]
     )
-    if pane_left_currend_cmd_nnn == "nnn" then
-      vim.fn.system "tmux kill-pane"
-    end
+
+    local pane_left_current_cmd_zsh = normalize_return(
+      vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }']]
+    )
 
     local pane_left_current_cmd_lf = normalize_return(
       vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }']]
     )
+
+    if pane_left_currend_cmd_nnn == "nnn" then
+      vim.fn.system "tmux kill-pane"
+    end
+
     if pane_left_current_cmd_lf == "lf" then
       vim.fn.system "tmux kill-pane"
     end
 
+    if pane_left_current_cmd_zsh == "zsh" then
+      go_right()
+      local msg = fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
+      vim.fn.system(msg)
+      return
+    end
     local msg = fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
     vim.fn.system(msg)
-    -- local current_pane = normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}" ]])
-    --
-    -- vim.fn.system(string.format("tmux send-keys -t %s 'nnn -c %s' Enter", current_pane, dirname))
   end
 end)

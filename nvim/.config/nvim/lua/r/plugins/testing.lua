@@ -1,28 +1,13 @@
 return {
-  -- NEOTEST
+  -- recommended = true,
+  -- desc = "Neotest support. Requires language specific adapters to be configured. (see lang extras)",
   {
     "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-neotest/neotest-go",
-      "nvim-neotest/neotest-python",
-      "nvim-neotest/nvim-nio",
-      "mrcjkb/rustaceanvim",
-    },
+    dependencies = { "nvim-neotest/nvim-nio" },
     opts = {
       status = { virtual_text = true },
       output = { open_on_run = true },
-      adapters = {
-        ["rustaceanvim.neotest"] = {},
-        ["neotest-go"] = {
-          recursive_run = true,
-        },
-        ["neotest-python"] = {
-          -- Here you can specify the settings for the adapter, i.e.
-          -- runner = "pytest",
-          -- python = ".venv/bin/python",
-        },
-      },
+      adapters = {},
       summary = {
         mappings = {
           attach = "a",
@@ -123,45 +108,16 @@ return {
 
       require("neotest").setup(opts)
     end,
+    -- stylua: ignore
     keys = {
-      -- { "<Leader>tf", function() require("neotest").run.run(fn.expand "%") end, desc = "Testing: test file [neotest]" },
-      -- { "<Leader>tF", function() require("neotest").run.run(vim.uv.cwd()) end, "Testing: test all files [neotest]" },
-      -- { "<Leader>tc", function() require("neotest").run.stop { interactive = true, } end, desc = "Testing: stop [neotest]" },
-      {
-        "<Leader>tl",
-        function()
-          require("neotest").run.run_last()
-        end,
-        desc = "Testing: run last [neotest]",
-      },
-      {
-        "<Leader>td",
-        function()
-          require("neotest").run.run { strategy = "dap" }
-        end,
-        desc = "Testing: debug nearest [neotest]",
-      },
-      {
-        "<Leader>tt",
-        function()
-          require("neotest").run.run()
-        end,
-        desc = "Testing: test unit [neotest]",
-      },
-      {
-        "<Leader>to",
-        function()
-          require("neotest").summary.toggle()
-        end,
-        desc = "Testing: open output summary [neotest]",
-      },
-      {
-        "<Leader>tP",
-        function()
-          require("neotest").output.open { enter = true, short = false }
-        end,
-        desc = "Testing: preview [neotest]",
-      },
+      { "<Leader>tt", function() require("neotest").run.run(vim.fn.expand "%") end, desc = "Testing: run file" },
+      { "<Leader>tT", function() require("neotest").run.run(vim.uv.cwd()) end, desc = "Testing: run all test files" },
+      { "<Leader>tr", function() require("neotest").run.run() end, desc = "Testing: test nearest" },
+      { "<Leader>tl", function() require("neotest").run.run_last() end, desc = "Testing: run last" },
+      { "<Leader>to", function() require("neotest").summary.toggle() end, desc = "Testing: open/close summary" },
+      { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false } end, desc = "Testing: show output preview" },
+      { "<leader>tS", function() require("neotest").run.stop() end, desc = "Testing: stop" },
+      { "<leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Testing: toggle watch" },
       {
         "<Leader>tf",
         function()
@@ -217,6 +173,14 @@ return {
         end,
         desc = "Testing: list commands of testing",
       },
+    },
+  },
+  {
+    "mfussenegger/nvim-dap",
+    optional = true,
+    -- stylua: ignore
+    keys = {
+      { "<Leader>td", function() require("neotest").run.run({strategy = "dap"}) end, desc = "Debug Nearest" },
     },
   },
 }
