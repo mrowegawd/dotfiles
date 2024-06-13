@@ -478,6 +478,8 @@ return {
               if outline_win.found then
                 vim.api.nvim_set_current_win(outline_win.winid)
               end
+            elseif vim.bo.filetype == right_win then
+              vim.cmd [[wincmd p]]
             end
           end,
           desc = "Misc: move cursor to outline window [outline]",
