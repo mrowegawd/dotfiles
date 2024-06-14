@@ -260,6 +260,7 @@ return {
     dependencies = "nvim-lua/plenary.nvim",
     opts = function()
       return {
+        signs_staged_enable = false,
         signs = {
           add = { text = "▎", numhl = "GitSignsAddNr" },
           change = { text = "▎", numhl = "GitSignsChangeNr" },
