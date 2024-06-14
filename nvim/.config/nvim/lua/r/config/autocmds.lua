@@ -177,6 +177,7 @@ RUtils.cmd.augroup("WindowBehaviours", {
   command = function()
     if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
       vim.cmd.startinsert()
+
       RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
       RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
       RUtils.map.tnoremap("<a-x>", function()
@@ -185,48 +186,10 @@ RUtils.cmd.augroup("WindowBehaviours", {
         require("bufdelete").bufdelete(buf, true)
       end, { desc = "Terminal: close terminal" })
 
-      -- TODO: pilih kandidat prefix mapping dan get familiar dengan nya, utk mapping terminal #low #created:2024-06-05
-
-      -- ATTEMPT 1: prefix mod `arrow keys` = gagal! (jari tangan kriting)
-      -- RUtils.map.tnoremap("<Right>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
-      -- RUtils.map.tnoremap("<Left>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
-      -- RUtils.map.tnoremap("<Up>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
-      -- RUtils.map.tnoremap("<Down>", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
-
-      -- ATTEMPT 2: prefix mod `<c-w>` = gagal! (bikin ganggu fzf-lua, <c-w> untuk delete text line!)
-      -- RUtils.map.tnoremap("<c-w>h", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
-      -- RUtils.map.tnoremap("<c-w>l", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
-      -- RUtils.map.tnoremap("<c-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
-      -- RUtils.map.tnoremap("<c-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
-      -- RUtils.map.tnoremap("<c-w>L", function()
-      --   RUtils.map.feedkey("<C-\\><C-n>tL", "t")
-      -- end, { desc = "Terminal: next tab" })
-      -- RUtils.map.tnoremap("<c-w>H", function()
-      --   RUtils.map.feedkey("<C-\\><C-n>th", "t")
-      -- end, { desc = "Terminal: prev tab" })
-      -- RUtils.map.tnoremap("<c-w>f", function()
-      --   RUtils.map.feedkey("<C-\\><C-n><c-w>f", "t")
-      -- end, { desc = "Terminal: create new terminal from terminal mode" })
-
-      -- ATTEMPT 3: prefix mod `<c-a>` = gagal! (<c-a> di terminal, go to first line)
-
-      -- ATTEMPT 4: prefix mod `<c-hjkl>` = gagal! (bikin ganggu fzf-lua, <c-l/h> next/prev char)
-
-      -- ATTEMPT 5: prefix mod `<a-hjkl>` = gagal!
-      -- RUtils.map.tnoremap("<a-h>", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
-      -- RUtils.map.tnoremap("<a-l>", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
-      -- RUtils.map.tnoremap("<a-k>", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
-      -- RUtils.map.tnoremap("<a-j>", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
-
-      -- >>> ATTEMPT 6: prefix mod `<a-w>` = ?? (get familiar with this bindings maybe for some couple days?) <<<
-      -- RUtils.map.tnoremap("<a-w>h", "<cmd>wincmd h<cr>", { desc = "Terminal: left window" })
-      -- RUtils.map.tnoremap("<a-w>l", "<cmd>wincmd l<cr>", { desc = "Terminal: right window" })
-      -- RUtils.map.tnoremap("<a-w>k", "<cmd>wincmd k<cr>", { desc = "Terminal: up window" })
-      -- RUtils.map.tnoremap("<a-w>j", "<cmd>wincmd j<cr>", { desc = "Terminal: down window" })
       RUtils.map.tnoremap("<a-w>", function()
         RUtils.map.feedkey("<C-\\><C-n>", "t")
         require("fzf-lua").tabs()
-      end, { desc = "Terminal: down window" })
+      end, { desc = "Terminal: show tabs [fzflua]" })
       RUtils.map.tnoremap("<c-a-l>", function()
         RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
       end, { desc = "Terminal: next tab" })
