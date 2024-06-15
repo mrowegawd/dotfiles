@@ -180,7 +180,8 @@ end
 function M.clock_mode()
   M.toggle_right_term()
 
-  vim.cmd [[STerm $HOME/.asdf/shims/tclock clock -S]]
+  -- vim.cmd [[STerm $HOME/.asdf/shims/tclock clock -S]]
+  vim.cmd [[STerm tclock clock -S]]
 
   if win_height_term() > 10 then
     vim.api.nvim_win_set_height(0, 10)
