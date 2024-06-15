@@ -19,7 +19,7 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "K", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
+    -- { "K", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
     {
       "gd",
       function()

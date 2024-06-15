@@ -796,6 +796,7 @@ local function colorscheme_overrides()
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
 
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
 
       {

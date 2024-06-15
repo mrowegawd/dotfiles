@@ -35,6 +35,10 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.1 } } },
           },
+          ["neomodern"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
+          },
           ["lackluster"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
@@ -144,6 +148,7 @@ return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
+    enabled = false,
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
@@ -333,7 +338,7 @@ return {
   -- BUFFERLINE
   {
     "akinsho/bufferline.nvim",
-    event = "VeryLazy",
+    event = "UIEnter",
     -- keys = {
     --   { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
     --   { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },

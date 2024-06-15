@@ -2,39 +2,25 @@
 ! special
 *.foreground:   #bbbac1
 *.background:   #1b1a20
-*.cursorColor:  #dcd7ba
+*.cursorColor:  #bbbac1
 
-! black
-*.color0:       #090618
-*.color8:       #727169
+*.color0: #121112
+*.color1: #e67e80
+*.color2: #a7c080
+*.color3: #dbbc8a
+*.color4: #8da0d6
+*.color5: #817faf
+*.color6: #53a8b8
+*.color7: #bbbac1
 
-! red
-*.color1:       #c34043
-*.color9:       #e82424
-
-! green
-*.color2:       #76946a
-*.color10:      #98bb6c
-
-! yellow
-*.color3:       #c0a36e
-*.color11:      #e6c384
-
-! blue
-*.color4:       #7e9cd8
-*.color12:      #7fb4ca
-
-! magenta
-*.color5:       #957fb8
-*.color13:      #938aa9
-
-! cyan
-*.color6:       #6a9589
-*.color14:      #7aa89f
-
-! white
-*.color7:       #c8c093
-*.color15:      #dcd7ba
+*.color8: #686675
+*.color9: #e67e80
+*.color10: #a7c080
+*.color11: #dbbc8a
+*.color12: #8da0d6
+*.color13: #d6a56f
+*.color14: #53a8b8
+*.color15: #bbbac1
 
 ! -----------------------------
 ! -----------------------------
@@ -44,7 +30,7 @@
 
 ! SEPARATOR: separator_bg, separator_fg
 *color17: #734c3a
-*color18: #7c798b
+*color18: #2e2d34
 
 ! FZF: fzf_bg, fzf_fg, fzf_match,
 *color19: #18171c

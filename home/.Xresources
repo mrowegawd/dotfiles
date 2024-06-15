@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/lackluster"
+#include ".config/miscxrdb/xresource-theme/campfire"
 
 ! --------------
 ! XFT SETTINGS

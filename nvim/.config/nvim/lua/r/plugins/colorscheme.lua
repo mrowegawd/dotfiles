@@ -48,7 +48,6 @@ return {
       end
       return false
     end,
-    opts = true,
   },
   -- HORIZON
   {

@@ -327,21 +327,43 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
+# CAMPFIRE Alacritty Colors
+# Default colors
+[colors.primary]
+background = '#1b1a20'
+foreground = '#bbbac1'
 
-# LACKLUSTER COLORS
-colors:
-  primary:
-    background = '#0A0A0A'
+#[colors.cursor]
+#cursor = '#bbbac1'
+#text = '#1b1a20'
 
-  normal:
-    # black is gray0
-    black = '#080808'
-    red = '#D70000'
-    green = '#789978'
-    yellow = '#ffAA88'
-    blue = '#7788AA'
-    magenta = '#D7007D'
-    # cyan is set to lack
-    cyan = '#708090'
-    # white is set to luster
-    white = '#DEEEED'
+# Normal colors
+[colors.normal]
+black = '#121112'
+red = '#e67e80'
+green = '#a7c080'
+yellow = '#dbbc8a'
+blue = '#8da0d6'
+magenta = '#817faf'
+cyan = '#53a8b8'
+white = '#bbbac1'
+
+# Bright colors
+[colors.bright]
+black = '#686675'
+red = '#e67e80'
+green = '#a7c080'
+yellow = '#dbbc8a'
+blue = '#8da0d6'
+magenta = '#d6a56f'
+cyan = '#53a8b8'
+white = '#bbbac1'
+
+# Indexed Colors
+[[colors.indexed_colors]]
+index = 16
+color = '#e69875'
+
+[[colors.indexed_colors]]
+index = 17
+color = '#abbceb'
