@@ -1,6 +1,10 @@
 ---@class r.utils.fzflua
 local M = {}
 
+function M.default_title_prompt()
+  return "   "
+end
+
 function M.rectangle_win_pojokan()
   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
   local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
