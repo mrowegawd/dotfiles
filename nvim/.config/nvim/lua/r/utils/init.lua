@@ -21,6 +21,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field plugin r.utils.plugin
 ---@field terminal r.utils.terminal
 ---@field lazygit r.utils.lazygit
+---@field mini r.utils.mini
 ---@field lazydocker r.utils.lazydocker
 ---@field tiling r.utils.tiling
 ---@field uisec r.utils.uisec
