@@ -8,23 +8,49 @@ return {
   {
     "stevearc/conform.nvim",
     optional = true,
+    keys = {
+      {
+        "<leader>cE",
+        function()
+          require("conform").format { formatters = { "cbfmt" }, timeout_ms = 5000 }
+        end,
+        mode = { "n", "v" },
+        desc = "Format: cbfmt langs",
+      },
+    },
     opts = {
       formatters_by_ft = {
-        ["markdown"] = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc" },
-        ["markdown.mdx"] = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc" },
+        ["markdown"] = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc", "cbfmt" },
+        ["markdown.mdx"] = { { "prettierd", "prettier" }, "markdownlint", "markdown-toc", "cbfmt" },
+      },
+      formatters = {
+        cbfmt = {
+          prepend_args = { "--config=" .. vim.env.HOME .. "/.config/linters/.cbfmt.toml" },
+        },
       },
     },
   },
   {
     "williamboman/mason.nvim",
-    opts = { ensure_installed = { "markdownlint", "markdown-toc" } },
+    opts = { ensure_installed = { "markdownlint", "markdown-toc", "cbfmt" } },
   },
   {
     "mfussenegger/nvim-lint",
     optional = true,
     opts = {
       linters_by_ft = {
-        markdown = { "markdownlint" },
+        markdown = { "markdownlint", "codespell" },
+        norg = { "codespell" },
+        org = { "codespell" },
+      },
+
+      linters = {
+        markdownlint = {
+          args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
+        },
+        codespell = {
+          args = { "--config=" .. vim.env.HOME .. "/.config/linters/cspell.json" },
+        },
       },
     },
   },
@@ -36,58 +62,15 @@ return {
       },
     },
   },
-
-  -- Markdown preview
+  -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       vim.fn["mkdp#util#install"]()
     end,
-    -- keys = {
-    --   {
-    --     "<leader>cp",
-    --     ft = "markdown",
-    --     "<cmd>MarkdownPreviewToggle<cr>",
-    --     desc = "Markdown Preview",
-    --   },
-    -- },
     config = function()
       vim.cmd [[do FileType]]
-    end,
-  },
-
-  {
-    "lukas-reineke/headlines.nvim",
-    enabled = function()
-      if vim.g.neovide then
-        return false
-      end
-      return true
-    end,
-    opts = function()
-      local opts = {}
-      for _, ft in ipairs { "markdown", "norg", "rmd", "org" } do
-        opts[ft] = {
-          headline_highlights = {},
-          -- disable bullets for now. See https://github.com/lukas-reineke/headlines.nvim/issues/66
-          bullets = {},
-        }
-        for i = 1, 6 do
-          local hl = "Headline" .. i
-          vim.api.nvim_set_hl(0, hl, { link = "Headline", default = true })
-          table.insert(opts[ft].headline_highlights, hl)
-        end
-      end
-      return opts
-    end,
-    ft = { "markdown", "norg", "rmd", "org" },
-    config = function(_, opts)
-      -- PERF: schedule to prevent headlines slowing down opening a file
-      vim.schedule(function()
-        require("headlines").setup(opts)
-        require("headlines").refresh()
-      end)
     end,
   },
 }

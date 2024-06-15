@@ -263,56 +263,12 @@ return {
   {
     "dmmulroy/tsc.nvim",
     cmd = { "TSC" },
-    config = function()
-      local utils = require "tsc.utils"
-      require("tsc").setup {
-        auto_open_qflist = true,
-        auto_close_qflist = false,
-        auto_focus_qflist = false,
-        auto_start_watch_mode = false,
-        use_trouble_qflist = false,
-        use_diagnostics = false,
-        run_as_monorepo = false,
-        bin_path = utils.find_tsc_bin(),
-        enable_progress_notifications = true,
-        flags = {
-          noEmit = true,
-          watch = false,
-        },
-        hide_progress_notifications_from_history = true,
-        spinner = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" },
-        pretty_errors = true,
-      }
-      vim.api.nvim_exec_autocmds("FileType", {})
-    end,
+    config = true,
   },
   -- PACKAGE-INFO.NVIM
   {
     "vuki656/package-info.nvim",
     event = "BufEnter package.json",
-    config = function()
-      require("package-info").setup {
-        colors = {
-          up_to_date = "#3C4048", -- Text color for up to date package virtual text
-          outdated = "#fc514e", -- Text color for outdated package virtual text
-        },
-        icons = {
-          enable = true, -- Whether to display icons
-          style = {
-            up_to_date = RUtils.config.icons.misc.check, -- Icon for up to date packages
-            outdated = RUtils.config.icons.git.remove, -- Icon for outdated packages
-          },
-        },
-        autostart = true, -- Whether to autostart when `package.json` is opened
-        hide_up_to_date = true, -- It hides up to date versions when displaying virtual text
-        hide_unstable_versions = true, -- It hides unstable versions from version list e.g next-11.1.3-canary3
-
-        -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
-        -- The plugin will try to auto-detect the package manager based on
-        -- `yarn.lock` or `package-lock.json`. If none are found it will use the
-        -- provided one,                              if nothing is provided it will use `yarn`
-        package_manager = "yarn",
-      }
-    end,
+    config = true,
   },
 }

@@ -96,9 +96,6 @@ return {
           -- shfmt = {
           --   prepend_args = { "-i", "2", "-ci" },
           -- },
-          cbfmt = {
-            prepend_args = { "--config=" .. vim.env.HOME .. "/.config/linters/.cbfmt.toml" },
-          },
         },
       }
       return opts
