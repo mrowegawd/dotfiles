@@ -30,7 +30,7 @@ else
 
 	if not_in_tmux; then
 		# command ini bikin delay untuk beberapa saat, dunno how to fix
-		if wezterm cli list-clients >/dev/null 2>&1; then
+		if [ "$TERM_PROGRAM" = "WezTerm" ]; then
 			pane_id_right=$(wezterm cli get-pane-direction right)
 			wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
 			wezterm cli activate-pane-direction Up

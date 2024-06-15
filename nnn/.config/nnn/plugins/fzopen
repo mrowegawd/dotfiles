@@ -44,14 +44,16 @@ if type fzf >/dev/null 2>&1; then
 	fi
 
 	if not_in_tmux; then
-		pane_id_right=$(wezterm cli get-pane-direction right)
-		wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
-		wezterm cli activate-pane-direction Up
+		if [ "$TERM_PROGRAM" = "WezTerm" ]; then
+			pane_id_right=$(wezterm cli get-pane-direction right)
+			wezterm cli split-pane --bottom --move-pane-id "$pane_id_right" >/dev/null
+			wezterm cli activate-pane-direction Up
 
-		entry="$(eval "$cmd" | fzf --no-height -m --prompt 'Select To Open And Change Dir To: ')"
+			entry="$(eval "$cmd" | fzf --no-height -m --prompt 'Select To Open And Change Dir To: ')"
 
-		wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
-		wezterm cli activate-pane-direction Left
+			wezterm cli split-pane --right --move-pane-id "$pane_id_right" --percent 85 >/dev/null
+			wezterm cli activate-pane-direction Left
+		fi
 	else
 		entry="$(eval "$cmd" | fzf-tmux --no-height -m -xC -w '60%' -h '50%' --prompt 'Select To Open And Change Dir To: ')"
 	fi
