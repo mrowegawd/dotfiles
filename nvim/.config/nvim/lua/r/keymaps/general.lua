@@ -49,7 +49,7 @@ RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: o
 -- ╰──────────────────────────────────────────────────────────╯
 -- edit window state
 RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
-RUtils.map.nnoremap("ss", "<CMD>split|wincmd p<CR>", { desc = "View: horizontal split", silent = true })
+RUtils.map.nnoremap("ss", "<CMD>split<CR>", { desc = "View: horizontal split", silent = true })
 RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window to =", silent = true })
 RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force view to horizontal split", silent = true })
 RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force view to vertical split", silent = true })
