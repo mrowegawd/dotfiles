@@ -185,10 +185,6 @@ return {
             lazyterm()
           end,
 
-          -- TODO: ensure previewer works (image, gif, video)? #tag:low #created:4juni24
-          -- [x] video size is too big = hang
-          -- [x] image with big size = hang
-          -- [x] gif = idk
           toggle_open_preview = function(state)
             if state.use_image_nvim then
               if vim.g.neovide then
@@ -299,11 +295,12 @@ return {
               ["<Leader>ghr"] = "git_revert_file",
               ["<Leader>gc"] = "git_commit",
               ["gp"] = "noop",
+              ["w"] = "noop",
               ["gn"] = "noop",
               ["gg"] = "noop",
               ["i"] = "show_file_details",
               -- ["o"] = { "show_help", nowait = false, config = { title = "Order by", prefix_key = "o" } },
-              ["o"] = "noop",
+              ["o"] = "child_or_open",
               ["oc"] = { "order_by_created", nowait = false },
               ["od"] = { "order_by_diagnostics", nowait = false },
               ["om"] = { "order_by_modified", nowait = false },
@@ -337,6 +334,7 @@ return {
             ["<c-t>"] = "open_tabnew",
             ["<esc>"] = "revert_preview",
             ["m"] = "",
+            ["w"] = "noop",
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
             ["gh"] = "prev_source",
@@ -585,14 +583,14 @@ return {
           --     return vim.api.nvim_win_get_config(win).relative == ""
           --   end,
           -- },
-          -- {
-          --   ft = "noice",
-          --   size = { height = 0.4 },
-          --   ---@diagnostic disable-next-line: unused-local
-          --   filter = function(buf, win)
-          --     return vim.api.nvim_win_get_config(win).relative == ""
-          --   end,
-          -- },
+          {
+            ft = "noice",
+            size = { height = 0.4 },
+            ---@diagnostic disable-next-line: unused-local
+            filter = function(buf, win)
+              return vim.api.nvim_win_get_config(win).relative == ""
+            end,
+          },
           -- {
           --   ft = "lazyterm",
           --   title = "LazyTerm",
@@ -603,14 +601,14 @@ return {
           -- },
           "Trouble",
           { ft = "qf", title = "QuickFix" },
-          -- {
-          --   ft = "help",
-          --   size = { height = 20 },
-          --   -- don't open help files in edgy that we're editing
-          --   filter = function(buf)
-          --     return vim.bo[buf].buftype == "help"
-          --   end,
-          -- },
+          {
+            ft = "help",
+            size = { height = 20 },
+            -- don't open help files in edgy that we're editing
+            filter = function(buf)
+              return vim.bo[buf].buftype == "help"
+            end,
+          },
           -- { title = "Spectre", ft = "spectre_panel", size = { height = 0.4 } },
           -- { title = "Neotest Output", ft = "neotest-output-panel", size = { height = 15 } },
         },
@@ -631,7 +629,7 @@ return {
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "filesystem"
             end,
-            pinned = true,
+            -- pinned = true,
             open = function()
               vim.api.nvim_input "<esc><space>e"
             end,
@@ -643,16 +641,16 @@ return {
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "git_status"
             end,
-            pinned = true,
-            open = "Neotree position=right git_status",
+            -- pinned = true,
+            -- open = "Neotree position=right git_status",
           },
-          {
-            title = "Neo-Tree Other",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source ~= nil
-            end,
-          },
+          -- {
+          --   title = "Neo-Tree Other",
+          --   ft = "neo-tree",
+          --   filter = function(buf)
+          --     return vim.b[buf].neo_tree_source ~= nil
+          --   end,
+          -- },
         },
         keys = {
           ["<a-H>"] = function(win)
@@ -670,10 +668,29 @@ return {
         },
       }
 
+      -- -- only add neo-tree sources if they are enabled in config
+      -- local neotree_opts = RUtils.opts "neo-tree.nvim"
+      -- local neotree_sources = { buffers = "top", git_status = "right" }
+      --
+      -- for source, pos in pairs(neotree_sources) do
+      --   if vim.list_contains(neotree_opts.sources, source) then
+      --     table.insert(opts.left, 3, {
+      --       title = "Neo-Tree " .. source:gsub("_", " "),
+      --       ft = "neo-tree",
+      --       filter = function(buf)
+      --         return vim.b[buf].neo_tree_source == source
+      --       end,
+      --       pinned = true,
+      --       open = "Neotree position=" .. pos .. " " .. source,
+      --     })
+      --   end
+      -- end
+
       for _, pos in ipairs { "top", "bottom", "left", "right" } do
         opts[pos] = opts[pos] or {}
         table.insert(opts[pos], {
           ft = "trouble",
+          ---@diagnostic disable-next-line: unused-local
           filter = function(_buf, win)
             return vim.w[win].trouble
               and vim.w[win].trouble.position == pos
@@ -686,4 +703,36 @@ return {
       return opts
     end,
   },
+
+  -- Fix bufferline offsets when edgy is loaded
+  -- {
+  --   "akinsho/bufferline.nvim",
+  --   optional = true,
+  --   opts = function()
+  --     local Offset = require "bufferline.offset"
+  --     if not Offset.edgy then
+  --       local get = Offset.get
+  --       Offset.get = function()
+  --         if package.loaded.edgy then
+  --           local layout = require("edgy.config").layout
+  --           local ret = { left = "", left_size = 0, right = "", right_size = 0 }
+  --           for _, pos in ipairs { "left", "right" } do
+  --             local sb = layout[pos]
+  --             if sb and #sb.wins > 0 then
+  --               local title = " Sidebar" .. string.rep(" ", sb.bounds.width - 8)
+  --               ret[pos] = "%#EdgyTitle#" .. title .. "%*" .. "%#WinSeparator#│%*"
+  --               ret[pos .. "_size"] = sb.bounds.width
+  --             end
+  --           end
+  --           ret.total_size = ret.left_size + ret.right_size
+  --           if ret.total_size > 0 then
+  --             return ret
+  --           end
+  --         end
+  --         return get()
+  --       end
+  --       Offset.edgy = true
+  --     end
+  --   end,
+  -- },
 }
