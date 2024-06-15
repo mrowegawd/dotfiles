@@ -117,6 +117,21 @@ return {
   {
     "mrowegawd/nvim-treesitter-context",
     event = "LazyFile",
+    keys = {
+      {
+        "<leader>ut",
+        function()
+          local tsc = require "treesitter-context"
+          tsc.toggle()
+          if RUtils.inject.get_upvalue(tsc.toggle, "enabled") then
+            RUtils.info("Enabled Treesitter Context", { title = "Option" })
+          else
+            RUtils.warn("Disabled Treesitter Context", { title = "Option" })
+          end
+        end,
+        desc = "Toggle: treesitter context",
+      },
+    },
     opts = function()
       local Highlight = require "r.settings.highlights"
       Highlight.plugin("treesitter-context", {
