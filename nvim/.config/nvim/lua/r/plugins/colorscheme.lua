@@ -7,11 +7,19 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local lackluster_theme = { "lackluster", "lackluster-mint", "lackluster-hack" }
+      local lackluster_theme = { "lackluster", "lackluster-mint", "lackluster-hack", "lackluster-dark" }
       if vim.tbl_contains(lackluster_theme, colorscheme) then
         return true
       end
       return false
+    end,
+    config = function()
+      local lackluster = require "lackluster"
+      lackluster.setup {
+        disable_plugin = {
+          bufferline = true,
+        },
+      }
     end,
   },
   -- ROSE-PINE

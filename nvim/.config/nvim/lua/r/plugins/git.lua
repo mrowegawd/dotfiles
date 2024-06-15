@@ -266,9 +266,9 @@ return {
           change = { text = "▎", numhl = "GitSignsChangeNr" },
           delete = { text = "_", numhl = "GitSignsDeleteNr" },
           topdelete = { text = "‾", numhl = "GitSignsDeleteNr" },
-          -- changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
-          changedelete = { text = "~", numhl = "GitSignsChangeNr" },
-          -- untracked = { text = "▎" },H
+          changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
+          -- changedelete = { text = "~", numhl = "GitSignsChangeNr" },
+          -- untracked = { text = "▎" },
           untracked = { text = "┆" },
         },
         on_attach = function()

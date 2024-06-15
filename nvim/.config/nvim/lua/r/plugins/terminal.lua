@@ -217,4 +217,32 @@ return {
       },
     },
   },
+
+  -- Edgy integration
+  -- {
+  --   "folke/edgy.nvim",
+  --   optional = true,
+  --   opts = function(_, opts)
+  --     opts.right = opts.right or {}
+  --     table.insert(opts.right, {
+  --       title = "Clock Mode",
+  --       -- ft = "terminal",
+  --       pinned = true,
+  --       width = 0.3,
+  --       open = function()
+  --         vim.cmd [[STerm tclock clock -S]]
+  --       end,
+  --
+  --       -- filter = function(buf)
+  --       --   return vim.bo[buf].buftype == "terminal"
+  --       -- end,
+  --     })
+  --
+  --     -- opts.bottom = opts.bottom or {}
+  --     -- table.insert(opts.bottom, {
+  --     --   title = "DB Query Result",
+  --     --   ft = "dbout",
+  --     -- })
+  --   end,
+  -- },
 }

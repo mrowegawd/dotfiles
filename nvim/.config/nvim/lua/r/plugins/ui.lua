@@ -37,8 +37,11 @@ return {
           },
           ["lackluster"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-            -- { ["@ibl.indent.char.1"] = { fg = "blue" } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
+          },
+          ["lackluster-dark"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
           },
         },
       })
@@ -330,7 +333,7 @@ return {
   -- BUFFERLINE
   {
     "akinsho/bufferline.nvim",
-    event = "UIEnter",
+    event = "VeryLazy",
     -- keys = {
     --   { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
     --   { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
@@ -378,7 +381,7 @@ return {
         col_select_visible_fg = Highlight.tint(Highlight.get("Boolean", "fg"), -0.2)
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
-      elseif RUtils.config.colorscheme == "lackluster" then
+      elseif vim.tbl_contains({ "lackluster", "lackluster-dark" }, RUtils.config.colorscheme) then
         col_selected_bg_attr = "Normal"
       end
 

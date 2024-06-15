@@ -62,9 +62,6 @@ return {
       "onsails/lspkind.nvim",
       {
         "mangelozzi/nvim-rgflow.lua",
-        -- config = function(_, opts)
-        --   require("rgflow").setup(opts)
-        -- end,
         opts = {
           default_trigger_mappings = false,
           default_ui_mappings = false,
