@@ -1,9 +1,8 @@
 [languages]
 rust = ["rustfmt"]
-go = ["gofmt"]
+go = ["gofumpt"]
 sh = ["shfmt"]
 bash = ["shfmt"]
 kotlin = ["ktlin"]
 lua = ["stylua -s -"]
 python = ["black --fast -"]
-
