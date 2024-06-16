@@ -104,10 +104,10 @@ RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
 RUtils.map.nnoremap("<Leader>bn", "<CMD>vnew<CR>", { desc = "Buffer: close buffer" })
 RUtils.map.nnoremap("gh", function()
   return RUtils.fold.magic_prev_next_qf(true)
-end, { desc = "Buffer: magic gh" })
+end, { desc = "Buffer/Qf: magic gh" })
 RUtils.map.nnoremap("gl", function()
   return RUtils.fold.magic_prev_next_qf()
-end, { desc = "Buffer: magic gl" })
+end, { desc = "Buffer/Qf: magic gl" })
 
 local function magic_quit()
   local buf_fts = {
