@@ -69,7 +69,7 @@ return {
         end
       end
       return {
-        auto_brackets = { "python", "lua" }, -- configure any filetype to auto add brackets
+        auto_brackets = { "lua" }, -- configure any filetype to auto add brackets
         enabled = function()
           local disabled = false
           disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
@@ -233,98 +233,7 @@ return {
         },
       }
     end,
-
-    ---@param opts cmp.ConfigSchema | {auto_brackets?: string[]}
-    config = function(_, opts)
-      for _, source in ipairs(opts.sources) do
-        source.group_index = source.group_index or 1
-      end
-
-      local parse = require("cmp.utils.snippet").parse
-      require("cmp.utils.snippet").parse = function(input)
-        local ok, ret = pcall(parse, input)
-        if ok then
-          return ret
-        end
-        return RUtils.cmp.snippet_preview(input)
-      end
-
-      local cmp = require "cmp"
-      cmp.setup(opts)
-      cmp.event:on("confirm_done", function(event)
-        if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
-          RUtils.cmp.auto_brackets(event.entry)
-        end
-      end)
-      cmp.event:on("menu_opened", function(event)
-        RUtils.cmp.add_missing_snippet_docs(event.window)
-      end)
-
-      local tbl_custom_sources = {
-        { name = "nvim_lsp" },
-        { name = "snippets" },
-        { name = "path" },
-        { name = "emoji" },
-        {
-          name = "buffer",
-          max_item_count = 10,
-          option = {
-            get_bufnrs = function()
-              return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
-            end,
-          },
-        },
-      }
-
-      cmp.setup.filetype({ "norg", "neorg" }, {
-        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
-      })
-
-      cmp.setup.filetype({ "org", "orgagenda" }, {
-        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
-      })
-
-      cmp.setup.filetype("dap-repl", {
-        sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
-      })
-
-      cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-        sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
-      })
-
-      cmp.setup.cmdline(":", {
-        mapping = {
-          ["<c-y>"] = cmp.mapping(function()
-            cmp.confirm { select = true }
-            RUtils.map.feedkey("<CR>", "")
-          end, { "c" }),
-
-          ["<c-j>"] = cmp.mapping(function()
-            cmp.complete {}
-            if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
-              cmp.select_next_item()
-            else
-              cmp.complete {}
-            end
-          end, { "c" }),
-        },
-        sources = cmp.config.sources {
-          { name = "path" },
-          {
-            name = "cmdline",
-            option = {
-              ignore_cmds = { "Man", "!" },
-            },
-          },
-        },
-      })
-
-      cmp.setup.cmdline({ "/", "?" }, {
-        sources = cmp.config.sources {
-          { name = "buffer" },
-        },
-      })
-    end,
+    main = "r.utils.cmp",
   },
   -- NVIM-SNIPPETS
   {
@@ -375,6 +284,7 @@ return {
     "echasnovski/mini.pairs",
     event = "VeryLazy",
     opts = {
+      modes = { insert = true, command = true, terminal = false },
       -- skip autopair when next character is one of these
       skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
       -- skip autopair when the cursor is inside these treesitter nodes

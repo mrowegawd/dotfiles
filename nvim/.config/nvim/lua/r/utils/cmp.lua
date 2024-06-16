@@ -70,6 +70,11 @@ function M.add_missing_snippet_docs(window)
   end
 end
 
+function M.visible()
+  local ok, cmp = pcall(require, "cmp")
+  return ok and cmp.core.view:visible()
+end
+
 -- This is a better implementation of `cmp.confirm`:
 --  * check if the completion menu is visible without waiting for running sources
 --  * create an undo point before confirming
@@ -100,12 +105,13 @@ function M.expand(snippet)
   -- See: https://github.com/LazyVim/LazyVim/issues/3199
   local session = vim.snippet.active() and vim.snippet._session or nil
 
-  local ok = pcall(vim.snippet.expand, snippet)
+  local ok, err = pcall(vim.snippet.expand, snippet)
   if not ok then
     local fixed = M.snippet_fix(snippet)
     ok = pcall(vim.snippet.expand, fixed)
 
-    local msg = ok and "Failed to parse snippet,\nbut was able to fix it automatically." or "Failed to parse snippet."
+    local msg = ok and "Failed to parse snippet,\nbut was able to fix it automatically."
+      or ("Failed to parse snippet.\n" .. err)
 
     RUtils[ok and "warn" or "error"](
       ([[%s
@@ -120,6 +126,98 @@ function M.expand(snippet)
   if session then
     vim.snippet._session = session
   end
+end
+
+---@param opts cmp.ConfigSchema | {auto_brackets?: string[]}
+function M.setup(opts)
+  for _, source in ipairs(opts.sources) do
+    source.group_index = source.group_index or 1
+  end
+
+  local parse = require("cmp.utils.snippet").parse
+  require("cmp.utils.snippet").parse = function(input)
+    local ok, ret = pcall(parse, input)
+    if ok then
+      return ret
+    end
+    return LazyVim.cmp.snippet_preview(input)
+  end
+
+  local cmp = require "cmp"
+  cmp.setup(opts)
+  cmp.event:on("confirm_done", function(event)
+    if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
+      RUtils.cmp.auto_brackets(event.entry)
+    end
+  end)
+  cmp.event:on("menu_opened", function(event)
+    RUtils.cmp.add_missing_snippet_docs(event.window)
+  end)
+
+  local tbl_custom_sources = {
+    { name = "nvim_lsp" },
+    { name = "snippets" },
+    { name = "path" },
+    { name = "emoji" },
+    {
+      name = "buffer",
+      max_item_count = 10,
+      option = {
+        get_bufnrs = function()
+          return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
+        end,
+      },
+    },
+  }
+
+  cmp.setup.filetype({ "norg", "neorg" }, {
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
+  })
+
+  cmp.setup.filetype({ "org", "orgagenda" }, {
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
+  })
+
+  cmp.setup.filetype("dap-repl", {
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
+  })
+
+  cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+    sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
+  })
+
+  cmp.setup.cmdline(":", {
+    mapping = {
+      ["<c-y>"] = cmp.mapping(function()
+        cmp.confirm { select = true }
+        RUtils.map.feedkey("<CR>", "")
+      end, { "c" }),
+
+      ["<c-j>"] = cmp.mapping(function()
+        cmp.complete {}
+        if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
+          cmp.select_next_item()
+        else
+          cmp.complete {}
+        end
+      end, { "c" }),
+    },
+    sources = cmp.config.sources {
+      { name = "path" },
+      {
+        name = "cmdline",
+        option = {
+          ignore_cmds = { "Man", "!" },
+        },
+      },
+    },
+  })
+
+  cmp.setup.cmdline({ "/", "?" }, {
+    sources = cmp.config.sources {
+      { name = "buffer" },
+    },
+  })
 end
 
 return M
