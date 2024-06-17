@@ -650,4 +650,51 @@ return {
       }
     end,
   },
+  -- SNIPRUN
+  {
+    "michaelb/sniprun", -- task runner for code blocks
+    enabled = function()
+      return vim.fn.executable "cargo"
+    end,
+    build = "bash install.sh",
+    cmd = { "SnipRun" },
+    keys = {
+      {
+        "rf",
+        "<Plug>SnipRun",
+        ft = { "markdown", "org", "neorg" },
+        mode = "v",
+        desc = "Misc: visually selected lines [sniprun]",
+      },
+      {
+        "rf",
+        function()
+          local lang_conf = {}
+          lang_conf["markdown"] = { "```", "```" }
+          lang_conf["vimwiki"] = { "{{{", "}}}" }
+          lang_conf["norg"] = { "@code", "@end" }
+          lang_conf["org"] = { "#+BEGIN_SRC", "#+END_SRC" }
+          lang_conf["markdown.pandoc"] = { "```", "```" }
+
+          local function code_block_start()
+            return lang_conf[vim.bo.filetype][1]
+          end
+
+          local function code_block_end()
+            return lang_conf[vim.bo.filetype][2]
+          end
+
+          local linenr_from = vim.fn.search(code_block_start() .. ".\\+$", "bnW")
+          local linenr_until = vim.fn.search(code_block_end() .. ".*$", "nW")
+
+          vim.cmd("normal! " .. linenr_from + 1 .. "G")
+          vim.cmd "normal! V"
+          vim.cmd("normal! " .. linenr_until - 1 .. "G")
+          RUtils.map.feedkey("rf", "v")
+        end,
+        ft = { "markdown", "org", "neorg" },
+        desc = "Misc: run code block [sniprun",
+      },
+    },
+  },
 }
