@@ -15,15 +15,18 @@ local function opts_fzf(title, maps)
       title = " " .. title .. " ",
     },
     winopts_fn = function()
-      local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-      local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+      local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
+      local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
 
       local win_height = math.ceil(lines * 0.5)
       local win_width = math.ceil(columns * 0.22)
+      if columns < 120 then
+        win_width = 60
+      end
       local col = math.ceil((columns - lines) - 10)
       local row = math.ceil(lines - win_height)
       return {
-        width = win_width - 10,
+        width = win_width,
         height = win_height - 10,
         row = row,
         col = col,
