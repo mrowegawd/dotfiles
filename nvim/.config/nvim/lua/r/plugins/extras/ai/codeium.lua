@@ -1,27 +1,33 @@
 return {
-  -- CODEIUM (disabled)
+  -- CODEIUM
   {
-    "Exafunction/codeium.vim",
-    enabled = false,
-    event = "InsertEnter",
+    "nvim-cmp",
+    dependencies = {
+      {
+        "Exafunction/codeium.nvim",
+        cmd = "Codeium",
+        build = ":Codeium Auth",
+        opts = {},
+      },
+    },
+    ---@param opts cmp.ConfigSchema
+    opts = function(_, opts)
+      table.insert(opts.sources, 1, {
+        name = "codeium",
+        group_index = 1,
+        priority = 100,
+      })
 
-    config = function()
-      vim.g.codeium_disable_bindings = 1
-      vim.keymap.set("i", "<leader>aa", function()
-        return vim.fn["codeium#Accept"]()
-      end, { expr = true })
-      vim.keymap.set("i", "<leader>ac", function()
-        return vim.fn["codeium#CycleCompletions"](1)
-      end, { expr = true })
-      vim.keymap.set("i", "<leader>aR", function()
-        return vim.fn["codeium#CycleCompletions"](-1)
-      end, { expr = true })
-      vim.keymap.set("i", "<leader>al", function()
-        return vim.fn["codeium#Clear"]()
-      end, { expr = true })
-      vim.keymap.set("i", "<leader>aC", function()
-        return vim.fn["codeium#Complete"]()
-      end, { expr = true })
+      local cmp = require "cmp"
+      opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
+        ["<c-q>"] = cmp.mapping(function()
+          cmp.complete {
+            config = {
+              sources = { { name = "codeium" } },
+            },
+          }
+        end, { "i" }),
+      })
     end,
   },
 }

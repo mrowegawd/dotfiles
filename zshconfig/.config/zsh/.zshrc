@@ -284,8 +284,6 @@ source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
 [[ -f $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh ]] \
   && source $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 
-bindkey '^I' fzf_completion
-
 [[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
   && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
