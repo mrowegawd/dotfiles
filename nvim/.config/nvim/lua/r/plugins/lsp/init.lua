@@ -38,7 +38,7 @@ return {
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
-    event = "LazyFile",
+    event = "UIEnter",
     dependencies = {
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",

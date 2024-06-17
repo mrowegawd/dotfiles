@@ -289,6 +289,7 @@ return {
   -- CALENDAR
   {
     "renerocksai/calendar-vim",
+    event = "VeryLazy",
     cmd = "Calendar",
     init = function()
       vim.g.calendar_mark = "bottom"

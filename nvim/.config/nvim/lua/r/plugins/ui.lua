@@ -205,7 +205,7 @@ return {
             },
           },
           progress = { enabled = false },
-          hover = { enabled = false },
+          hover = { enabled = true },
           signature = { auto_open = { enabled = true }, enabled = false },
           override = {
             ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
@@ -386,6 +386,8 @@ return {
         col_selected_bg_attr = "PmenuSel"
         col_selected_fg_attr = "PmenuSel"
       elseif vim.tbl_contains({ "lackluster", "lackluster-dark" }, RUtils.config.colorscheme) then
+        col_selected_bg_attr = "Normal"
+      elseif vim.tbl_contains({ "selenized" }, RUtils.config.colorscheme) then
         col_selected_bg_attr = "Normal"
       end
 

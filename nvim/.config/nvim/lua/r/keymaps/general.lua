@@ -20,8 +20,8 @@ RUtils.map.inoremap("<c-b>", "<Esc>ba", silent)
 RUtils.map.inoremap("<c-f>", "<Esc>ea", silent)
 
 RUtils.map.inoremap("hh", "<Esc>")
-RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+-- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+-- RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ FOLDS                                                    │

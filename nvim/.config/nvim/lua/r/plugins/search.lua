@@ -840,6 +840,7 @@ return {
         pattern = "fzf",
         callback = function(bufn)
           vim.keymap.set("t", "<F2>", require("fzf-lua").builtin, { buffer = bufn.buf })
+          vim.keymap.set("t", "<a-x>", "<a-x>", { buffer = bufn.buf })
           -- vim.keymap.set("t", "<c-w>", "<c-w>", { buffer = buf, nowait = true })
         end,
       })
@@ -1226,10 +1227,11 @@ return {
         group = vim.api.nvim_create_augroup("TelescopeSetMap", { clear = true }),
         desc = "Set terminal mappings in telescope buffer.",
         pattern = "TelescopePrompt",
-        callback = function(buf)
+        callback = function(bufn)
           vim.keymap.set("i", "<F2>", function()
             vim.cmd "Telescope builtin"
-          end, { buffer = buf.buf })
+          end, { buffer = bufn.buf })
+          vim.keymap.set("t", "<a-x>", "<a-x>", { buffer = bufn.buf })
         end,
       })
       ---@diagnostic disable-next-line: undefined-field
