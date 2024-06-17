@@ -13,6 +13,19 @@ local function remove_alias(link)
   return link
 end
 
+local JSON_DECODE_OPTS = { luanil = { object = true, array = true } }
+
+---comment
+---@param json_str string
+---@return table|nil
+local function parse_json(json_str)
+  ---@type any
+  local json = vim.json.decode(json_str, JSON_DECODE_OPTS)
+  if json and type(json) == "table" then
+    return json
+  end
+end
+
 local function is_tag_or_link_at(line, col, opts)
   opts = opts or {}
   local initial_col = col
@@ -245,30 +258,32 @@ local function collect_all_tags_async(data, cb)
   coroutine.wrap(function()
     local co = coroutine.running()
 
-    RUtils.async.run_jobstart(cmd, function(_, dataout, event)
+    RUtils.cmd.run_jobstart(cmd, function(_, dataout, event)
       if event == "stdout" then
         if dataout then
           for _, line in ipairs(dataout) do
             if line ~= "" then
-              local json_data = vim.json.decode(line)
+              if string.match(line, "\\n") ~= nil then
+                local json_data = vim.json.decode(line)
 
-              local match_data = json_data.data
-              if match_data["path"] then
-                if match_data["lines"] then
-                  local line_text = match_data.lines.text
+                local match_data = json_data.data
+                if match_data["path"] then
+                  if match_data["lines"] then
+                    local line_text = match_data.lines.text
 
-                  -- hanya butuh tag yang berada pada line frontmatter
-                  if string.match(line_text, "%s*- ") then
-                    if match_data.line_number < 20 then
-                      data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
-                      coroutine.resume(co, 0)
+                    -- hanya butuh tag yang berada pada line frontmatter
+                    if string.match(line_text, "%s*- ") then
+                      if match_data.line_number < 20 then
+                        data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
+                        coroutine.resume(co, 0)
+                      end
                     end
-                  end
 
-                  if string.match(line_text, "^# ") then
-                    if match_data.line_number < 25 then
-                      data_title_out[#data_title_out + 1] = format_title_tag(match_data)
-                      coroutine.resume(co, 0)
+                    if string.match(line_text, "^# ") then
+                      if match_data.line_number < 25 then
+                        data_title_out[#data_title_out + 1] = format_title_tag(match_data)
+                        coroutine.resume(co, 0)
+                      end
                     end
                   end
                 end
@@ -505,48 +520,50 @@ local function list_tags_async(all_tags, is_set)
     coroutine.wrap(function()
       local co = coroutine.running()
 
-      RUtils.async.run_jobstart(cmd, function(_, dataout, event)
+      RUtils.cmd.run_jobstart(cmd, function(_, dataout, event)
         if event == "stdout" then
           if dataout and #dataout > 0 then
             for _, line in ipairs(dataout) do
               if #line > 0 then
-                local json_data = vim.json.decode(line)
-                local match_data = json_data.data
+                if string.match(line, "\\n") ~= nil then
+                  local json_data = vim.json.decode(line)
+                  local match_data = json_data.data
 
-                if match_data["path"] then
-                  if match_data["lines"] then
-                    local line_text = match_data.lines.text
-                    if string.match(line_text, "%s%s*- ") then
-                      local data_tags = format_data_tags(match_data)
+                  if match_data["path"] then
+                    if match_data["lines"] then
+                      local line_text = match_data.lines.text
+                      if string.match(line_text, "%s%s*- ") then
+                        local data_tags = format_data_tags(match_data)
 
-                      local title_s
-                      for _, x in pairs(data_title_out) do
-                        if x.path == data_tags.path then
-                          title_s = x.title
+                        local title_s
+                        for _, x in pairs(data_title_out) do
+                          if x.path == data_tags.path then
+                            title_s = x.title
+                          end
                         end
+
+                        data_tags.title = title_s
+                        data_tags_table[#data_tags_table + 1] = data_tags
+                        -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
+
+                        -- local fzf_str =
+                        --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+
+                        local fzf_str = string.format(
+                          "%-30s %-4s |%s",
+                          data_tags.tag,
+                          "[" .. data_tags.line_number .. "]",
+                          data_tags.title
+                        )
+
+                        -- TODO: ensure id note exists #postpone #25/5/saturday
+                        -- if is_set then
+                        -- end
+
+                        cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
+                          coroutine.resume(co, 0)
+                        end)
                       end
-
-                      data_tags.title = title_s
-                      data_tags_table[#data_tags_table + 1] = data_tags
-                      -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
-
-                      -- local fzf_str =
-                      --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
-
-                      local fzf_str = string.format(
-                        "%-30s %-4s |%s",
-                        data_tags.tag,
-                        "[" .. data_tags.line_number .. "]",
-                        data_tags.title
-                      )
-
-                      -- TODO: ensure id note exists #postpone #25/5/saturday
-                      -- if is_set then
-                      -- end
-
-                      cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
-                        coroutine.resume(co, 0)
-                      end)
                     end
                   end
                 end

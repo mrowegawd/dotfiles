@@ -1,8 +1,7 @@
 local LazyUtil = require "lazy.core.util"
 
----@class r.util: LazyUtilCore
+---@class r.utils: LazyUtilCore
 ---@field config LazyVimConfig
----@field async r.utils.async
 ---@field ui r.utils.ui
 ---@field notes r.utils.notes
 ---@field qf r.utils.qf
@@ -134,7 +133,7 @@ end
 
 ---@param name string
 function M.opts(name)
-  local plugin = require("lazy.core.config").spec.plugins[name]
+  local plugin = M.get_plugin(name)
   if not plugin then
     return {}
   end

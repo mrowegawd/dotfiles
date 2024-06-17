@@ -141,18 +141,18 @@ function M.setup(opts)
     if ok then
       return ret
     end
-    return LazyVim.cmp.snippet_preview(input)
+    return M.snippet_preview(input)
   end
 
   local cmp = require "cmp"
   cmp.setup(opts)
   cmp.event:on("confirm_done", function(event)
     if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
-      RUtils.cmp.auto_brackets(event.entry)
+      M.auto_brackets(event.entry)
     end
   end)
   cmp.event:on("menu_opened", function(event)
-    RUtils.cmp.add_missing_snippet_docs(event.window)
+    M.add_missing_snippet_docs(event.window)
   end)
 
   local tbl_custom_sources = {
@@ -190,14 +190,13 @@ function M.setup(opts)
     })),
   })
 
-  cmp.setup.filetype("dap-repl", {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
-  })
+  -- cmp.setup.filetype("dap-repl", {
+  --   sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
+  -- })
 
   cmp.setup.filetype("gitcommit", {
     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "emoji" } })),
   })
-
   cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
     sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
   })

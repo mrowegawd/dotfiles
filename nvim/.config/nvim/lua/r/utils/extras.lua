@@ -1,4 +1,4 @@
-local Config = require "lazyvim.config"
+local Config = require "r.config"
 local Float = require "lazy.view.float"
 local LazyConfig = require "lazy.core.config"
 local Plugin = require "lazy.core.plugin"
@@ -33,7 +33,7 @@ M.sources = {
   { name = "User", desc = "User extras", module = "plugins.extras" },
 }
 
-M.ns = vim.api.nvim_create_namespace "lazyvim.extras"
+M.ns = vim.api.nvim_create_namespace "rutils.extras"
 ---@type string[]
 M.state = nil
 
