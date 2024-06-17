@@ -87,7 +87,6 @@ return {
             return RUtils.cmp.expand(item.body)
           end,
         },
-        experimental = { ghost_text = false },
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
@@ -95,7 +94,11 @@ return {
           rg = 1,
           path = 1,
         },
-
+        experimental = {
+          ghost_text = {
+            hl_group = "CmpGhostText",
+          },
+        },
         formatting = {
           fields = { "kind", "abbr", "menu" },
           format = function(entry, item)
@@ -194,7 +197,7 @@ return {
               cmp.select_prev_item()
             end
           end, { "i", "c" }),
-          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+          ["<c-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
           ["<c-g>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
               cmd = "rg --files --hidden",
@@ -205,7 +208,7 @@ return {
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<CR>"] = RUtils.cmp.confirm(),
           ["<c-y>"] = RUtils.cmp.confirm { behavior = cmp.ConfirmBehavior.Replace },
-          ["<C-e>"] = function(fallback)
+          ["<c-e>"] = function(fallback)
             cmp.abort()
             fallback()
           end,

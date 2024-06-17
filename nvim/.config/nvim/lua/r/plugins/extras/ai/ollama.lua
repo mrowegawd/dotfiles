@@ -1,6 +1,8 @@
 return {
+  --
   {
     "David-Kunz/gen.nvim",
+    enabled = false,
     cmd = { "Gen" },
     -- enabled = false,
     config = function()
