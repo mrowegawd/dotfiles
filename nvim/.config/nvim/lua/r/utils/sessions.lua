@@ -53,7 +53,7 @@ function M.load_ses_dashboard()
     local async
     async = uv.new_async(vim.schedule_wrap(function()
       if async ~= nil then
-        require("qfsilet.note").todo_local()
+        require("qfsilet.note").get_todo()
         async:close()
       end
     end))
@@ -73,6 +73,8 @@ function M.load_ses_dashboard()
     if not vim.env.TMUX then
       RUtils.terminal.clock_mode()
     end
+
+    vim.cmd [[set cmdheight=0]]
   else
     RUtils.warn("can't find your session plugin!", { title = "Sessions" })
   end

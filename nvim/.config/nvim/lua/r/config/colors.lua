@@ -278,8 +278,8 @@ local general_overrides = function()
     -- { MyStatusLine_red_fg = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 } } },
     -- { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 } } },
     -- { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 } } },
-    { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 }, fg = "NONE", bold = true } },
+    { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 }, fg = "NONE", bold = true } },
+    { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 } } },
     { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.1 } } },
     { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
@@ -678,8 +678,8 @@ local function colorscheme_overrides()
     },
     ["kanagawa"] = {
       { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-
+      -- { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+      { ["@markup.quote.markdown"] = { bg = { from = "Boolean", attr = "fg", alter = -0.7 }, italic = true } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
@@ -1099,15 +1099,13 @@ local function colorscheme_overrides()
       { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
 
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-      { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
+      { MyQuickFixLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
       {
-        MyQuickFixLine = {
-          bg = { from = "Error", attr = "fg", alter = -0.7 },
-          -- fg = "NONE",
+        MyQuickFixLineEnter = {
+          bg = { from = "Error", attr = "fg", alter = -0.6 },
           bold = true,
         },
       },
-      { CursorLine = { bg = { from = "Normal", alter = 0.05 } } },
       {
         MyParentHint = {
           bg = { from = "CursorLine", attr = "bg" },

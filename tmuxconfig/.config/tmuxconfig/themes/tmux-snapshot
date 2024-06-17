@@ -1,20 +1,20 @@
-STATUSLINE_BG_ACTIVE="#b8795d"
-STATUSLINE_BG="#1b1a20"
-STATUSLINE_FG="#53a8b8"
+STATUSLINE_BG_ACTIVE="#776593"
+STATUSLINE_BG="#1f1f28"
+STATUSLINE_FG="#6a9589"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#734c3a"
-BORDER_BG="#1b1a20"
+BORDER_FG="#4a3f5c"
+BORDER_BG="#1f1f28"
 
-SEPARATOR_FG="#7c798b"
-SEPARATOR_ACTIVE_BG="#1b1a20"
+SEPARATOR_FG="#45455a"
+SEPARATOR_ACTIVE_BG="#1f1f28"
 
-WINDOW_BG_ACTIVE="#1b1a20"
-WINDOW_BG="#18171c"
+WINDOW_BG_ACTIVE="#1f1f28"
+WINDOW_BG="#1b1b24"
 
-RED="#e67e80"
-BLUE="#8da0d6"
+RED="#c34043"
+BLUE="#7e9cd8"
 
 left_separator=''
 left_separator_black=''
@@ -54,7 +54,7 @@ setw -g pane-border-status bottom
 
 setw -g pane-border-format "\
 #{?pane_active,#[fg=$STATUSLINE_BG_ACTIVE]$left_slant_separator,}\
-#[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$STATUSLINE_BG_ACTIVE],} #{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
+#[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$STATUSLINE_BG_ACTIVE],} #{?pane_active,#[fg=red] ,}#{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$WINDOW_BG_ACTIVE]$left_slant_separator,}"
 
@@ -97,11 +97,8 @@ set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
 #  ╓
 #  ║  RIGHT
 #  ╙
-set -g status-right-length 50
+set -g status-right-length 80
 set -g status-right "#[fg=$STATUSLINE_BG_ACTIVE,bold]#{pomodoro_status}\
-  #[fg=$STATUSLINE_FG,bold][Prefix:#{prefix}]\
-  #[fg=$STATUSLINE_FG,bold] #(date +"%H:%M")\
-  👨#(whoami)\
-  #[fg=$STATUSLINE_BG,bg=$BORDER_FG,bold] ❐ #S "
+ #[fg=white,bg=$RED,bold]  #(date +"%H:%M") #[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,bold] #{prefix} 👨#(whoami) #[fg=black,bg=$STATUSLINE_BG_ACTIVE,bold] ❐ #S "
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

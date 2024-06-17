@@ -543,29 +543,28 @@ return {
     end,
     opts = function()
       Highlight.plugin("NeoEdgyHi", {
-        -- { WinBar = { bg = RUtils.colortbl.statusline_bg } },
-        -- { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
-
-        { WinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
-        { WinBarNC = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
-        -- { WinBarNC = { bg = RUtils.colortbl.statusline_bg } },
-
+        { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 1 } } },
         { EdgyNormal = { bg = "NONE" } },
         {
           EdgyTitle = {
             fg = { from = "Directory", attr = "fg" },
             bold = true,
-            bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+            bg = { from = "EdgyWinBar" },
           },
         },
         {
           EdgyIcon = {
             bold = true,
-            bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+            bg = { from = "EdgyWinBar" },
             fg = RUtils.colortbl.statuslinenc_fg,
           },
         },
-        { EdgyIconActive = { bold = true, bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+        {
+          EdgyIconActive = {
+            bold = true,
+            bg = { from = "EdgyWinBar" },
+          },
+        },
         -- { AerialLine = { bg = { from = "MyQuickFixLine", attr = "bg" }, sp = "NONE" } },
       })
 
@@ -622,28 +621,28 @@ return {
           },
         },
         left = {
-          -- { title = "Neotest Summary", ft = "neotest-summary" },
-          {
-            title = "Explorer",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "filesystem"
-            end,
-            -- pinned = true,
-            open = function()
-              vim.api.nvim_input "<esc><space>e"
-            end,
-            size = { height = 0.6 },
-          },
-          {
-            title = "Git Status",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "git_status"
-            end,
-            -- pinned = true,
-            -- open = "Neotree position=right git_status",
-          },
+          { title = "Neotest Summary", ft = "neotest-summary" },
+          -- {
+          --   title = "Explorer",
+          --   ft = "neo-tree",
+          --   filter = function(buf)
+          --     return vim.b[buf].neo_tree_source == "filesystem"
+          --   end,
+          --   pinned = true,
+          --   open = function()
+          --     vim.api.nvim_input "<esc><space>e"
+          --   end,
+          --   size = { height = 0.6 },
+          -- },
+          -- {
+          --   title = "Git Status",
+          --   ft = "neo-tree",
+          --   filter = function(buf)
+          --     return vim.b[buf].neo_tree_source == "git_status"
+          --   end,
+          --   pinned = true,
+          --   open = "Neotree position=right git_status",
+          -- },
           -- {
           --   title = "Neo-Tree Other",
           --   ft = "neo-tree",
