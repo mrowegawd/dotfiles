@@ -243,7 +243,7 @@ return {
         "garymjr/nvim-snippets",
         opts = {
           friendly_snippets = false,
-          search_paths = { RUtils.config.path.snippet_path .. "/snippets" },
+          search_paths = { RUtils.config.path.snippet_path },
         },
       },
     },
