@@ -658,6 +658,12 @@ return {
     end,
     build = "bash install.sh",
     cmd = { "SnipRun" },
+    opts = {
+      display = { "Terminal" },
+      live_display = { "VirtualTextOk", "TerminalOk" },
+      -- selected_interpreters = { "Python3_fifo" },
+      -- repl_enable = { "Python3_fifo" },
+    },
     keys = {
       {
         "rf",

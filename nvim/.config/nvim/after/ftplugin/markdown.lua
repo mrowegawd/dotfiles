@@ -1,6 +1,6 @@
 local opt = vim.opt_local
 
-RUtils.map.nnoremap("rf", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true, desc = "Markdown: preview toggle" })
+RUtils.map.nnoremap("rF", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true, desc = "Markdown: preview toggle" })
 RUtils.map.nnoremap("ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 -- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]
 
