@@ -1,5 +1,5 @@
 return {
-  -- CHATGPT
+  -- CHATGPT (disabled)
   {
     "jackMort/ChatGPT.nvim",
     enabled = false,

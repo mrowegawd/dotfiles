@@ -1,5 +1,5 @@
 return {
-  --
+  -- GEN.NVIM (disabled)
   {
     "David-Kunz/gen.nvim",
     enabled = false,
