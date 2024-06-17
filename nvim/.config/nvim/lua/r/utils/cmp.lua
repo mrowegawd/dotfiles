@@ -135,6 +135,7 @@ function M.setup(opts)
   end
 
   local parse = require("cmp.utils.snippet").parse
+  ---@diagnostic disable-next-line: duplicate-set-field
   require("cmp.utils.snippet").parse = function(input)
     local ok, ret = pcall(parse, input)
     if ok then
@@ -158,7 +159,6 @@ function M.setup(opts)
     { name = "nvim_lsp" },
     { name = "snippets" },
     { name = "path" },
-    { name = "emoji" },
     {
       name = "buffer",
       max_item_count = 10,
@@ -171,15 +171,31 @@ function M.setup(opts)
   }
 
   cmp.setup.filetype({ "norg", "neorg" }, {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "neorg" } })),
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, {
+      { name = "neorg" },
+      { name = "emoji" },
+    })),
   })
 
   cmp.setup.filetype({ "org", "orgagenda" }, {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "orgmode" } })),
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, {
+      { name = "orgmode" },
+      { name = "emoji" },
+    })),
+  })
+
+  cmp.setup.filetype({ "markdown" }, {
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, {
+      { name = "emoji" },
+    })),
   })
 
   cmp.setup.filetype("dap-repl", {
     sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
+  })
+
+  cmp.setup.filetype("gitcommit", {
+    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "emoji" } })),
   })
 
   cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
