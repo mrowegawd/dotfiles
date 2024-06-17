@@ -267,9 +267,9 @@ function M.gitsigns()
         is_gitsigns_attach = true
       end
     end,
-    -- gitsign_reset_all = function()
-    --   gs.reset_buffer()
-    -- end,
+    git_browse = function()
+      RUtils.lazygit.browse()
+    end,
     -- gitsign_add_hunk_all = function()
     --   gs.stage_buffer()
     -- end,

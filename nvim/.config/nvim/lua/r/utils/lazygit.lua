@@ -158,4 +158,39 @@ function M.blame_line(opts)
   return require("lazy.util").float_cmd(cmd, opts)
 end
 
+function M.browse()
+  local lines = require("lazy.manage.process").exec { "git", "remote", "-v" }
+  local remotes = {} ---@type {name:string, url:string}[]
+
+  for _, line in ipairs(lines) do
+    local name, url = line:match "(%S+)%s+(%S+)%s+%(fetch%)"
+    if name and url then
+      if url:find "git@github.com" or url:find "git@bitbucket.org" or url:find "git@gitlab.com" then
+        url = url:gsub("git@(%S+):", "https://%1/"):gsub(".git$", "")
+      end
+      table.insert(remotes, { name = name, url = url })
+    end
+  end
+
+  local function open(remote)
+    if remote then
+      RUtils.info(("Opening [%s](%s)"):format(remote.name, remote.url))
+      vim.ui.open(remote.url)
+    end
+  end
+
+  if #remotes == 0 then
+    return RUtils.error "No git remotes found"
+  elseif #remotes == 1 then
+    return open(remotes[1])
+  end
+
+  vim.ui.select(remotes, {
+    prompt = "Select remote to browse",
+    format_item = function(item)
+      return item.name .. (" "):rep(8 - #item.name) .. " 🔗 " .. item.url
+    end,
+  }, open)
+end
+
 return M
