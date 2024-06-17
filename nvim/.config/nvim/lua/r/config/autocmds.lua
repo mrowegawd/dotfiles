@@ -176,7 +176,7 @@ RUtils.cmd.augroup("WindowBehaviours", {
   pattern = "*",
   command = function()
     if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
-      vim.cmd.startinsert()
+      -- vim.cmd.startinsert()
 
       RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
       RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
