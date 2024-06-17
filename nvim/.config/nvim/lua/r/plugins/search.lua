@@ -98,7 +98,6 @@ return {
       },
     },
     keys = {
-      { "<esc>", "<esc>", ft = "fzf", mode = "t", nowait = true },
       { "<a-w>", require("fzf-lua").tabs, desc = "Fzflua: select tabs" },
       { "sf", require("fzf-lua").buffers, desc = "Fzflua: select buffers" },
       { "sG", require("fzf-lua").lines, desc = "Fzflua: live grep on buffers" },
@@ -343,13 +342,14 @@ return {
           },
           commits = {
             prompt = RUtils.fzflua.default_title_prompt(),
+            no_header = true, -- disable default header
             preview = "git show --pretty='%Cred%H%n%Cblue%an <%ae>%n%C(yellow)%cD%n%Cgreen%s' --color {1}",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
+              ["--header"] = [[Alt-o: open browser | Alt-y: hash copy | Alt-d: diff commit | Alt-x: compare curdiff]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -357,7 +357,7 @@ return {
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
-              ["ctrl-o"] = function(selected, _)
+              ["alt-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -374,7 +374,7 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-z"] = function(selected, _)
+              ["alt-d"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
@@ -383,7 +383,7 @@ return {
 
                 RUtils.info("All diff " .. commit_hash, { title = "FZFGit: commits" })
               end,
-              ["ctrl-x"] = function(selected, _)
+              ["alt-x"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
@@ -402,20 +402,21 @@ return {
           bcommits = {
             -- debug = true,
             prompt = RUtils.fzflua.default_title_prompt(),
+            no_header = true, -- disable default header
             preview = "git diff --color {1}~1 {1} -- <file>",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Ctrl-z: diff commit | Ctrl-x: compare curdiff]],
+              ["--header"] = [[Alt-o: open browser | Alt-y: hash copy | Alt-d: diff commit | Alt-x: compare curdiff]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
-              ["ctrl-o"] = function(selected, _)
+              ["alt-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -432,7 +433,7 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-z"] = function(selected, _)
+              ["alt-d"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash
@@ -441,7 +442,7 @@ return {
 
                 RUtils.info("All diff " .. commit_hash, { title = "FZFGit: bcommits" })
               end,
-              ["ctrl-x"] = function(selected, _)
+              ["alt-x"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
