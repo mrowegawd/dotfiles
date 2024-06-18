@@ -484,7 +484,8 @@ M.Dap = {
 
 M.Clock = {
   condition = function()
-    return not vim.env.TMUX and not vim.tbl_contains({ "Outline", "aerial", "neo-tree" }, vim.bo[0].filetype)
+    return (not vim.env.TMUX and not vim.tbl_contains({ "Outline", "aerial", "neo-tree" }, vim.bo[0].filetype))
+      and not (vim.env.TERM_PROGRAM == "WezTerm")
   end,
   {
     provider = RUtils.config.icons.misc.separator_leg_down,

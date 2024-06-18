@@ -373,7 +373,7 @@ return {
       local col_test = { attribute = "fg", highlight = "Boolean" }
 
       local col_selected_fg, col_selected_bg
-      if not vim.env.TMUX then
+      if not vim.env.TMUX and not (vim.env.TERM_PROGRAM == "WezTerm") then
         col_selected_fg = { attribute = "bg", highlight = "Normal" }
         col_selected_bg = RUtils.colortbl.separator_fg
       else
