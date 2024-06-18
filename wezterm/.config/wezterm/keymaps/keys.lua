@@ -151,21 +151,40 @@ return {
 			if Util.is_tmux(pane) then
 				window:perform_action({ SendKey = { key = "x", mods = "ALT" } }, pane)
 			else
+				if KeymapUtil.is_in_nvim(pane) then
+					window:perform_action({ SendKey = { key = "x", mods = "ALT" } }, pane)
+					return
+				end
 				window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
 			end
 		end),
 	},
-	{
-		mods = "ALT",
-		key = "X",
-		action = wezterm.action_callback(function(window, pane)
-			if Util.is_tmux(pane) then
-				window:perform_action({ SendKey = { key = "X", mods = "ALT" } }, pane)
-			else
-				window:perform_action({ CloseCurrentTab = { confirm = true } }, pane)
-			end
-		end),
-	},
+	-- {
+	-- 	mods = "ALT",
+	-- 	key = "X",
+	-- 	action = wezterm.action_callback(function(window, pane)
+	-- 		if Util.is_tmux(pane) then
+	-- 			window:perform_action({ SendKey = { key = "X", mods = "ALT" } }, pane)
+	-- 		else
+	-- 			if KeymapUtil.is_in_nnn(pane) then
+	-- 				window:perform_action({ SendKey = { key = "X", mods = "ALT" } }, pane)
+	-- 				return
+	-- 			end
+	--
+	-- 			if KeymapUtil.is_in_lf(pane) then
+	-- 				window:perform_action({ SendKey = { key = "X", mods = "ALT" } }, pane)
+	-- 				return
+	-- 			end
+	--
+	-- 			if KeymapUtil.is_in_yazi(pane) then
+	-- 				window:perform_action({ SendKey = { key = "X", mods = "ALT" } }, pane)
+	-- 				return
+	-- 			end
+	--
+	-- 			window:perform_action({ CloseCurrentTab = { confirm = true } }, pane)
+	-- 		end
+	-- 	end),
+	-- },
 	{
 		mods = "NONE",
 		key = "q",

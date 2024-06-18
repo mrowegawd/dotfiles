@@ -5,15 +5,24 @@ local wezterm = require("wezterm")
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("update-right-status", function(window, pane)
 	local edge_background = Color.cyan
+	local edge_bg = Color.bg
 
 	-- local date = wezterm.strftime("%Y-%m-%d %H:%M")
 	local date = wezterm.strftime("%H:%M")
+	local username = os.getenv("USER") or os.getenv("LOGNAME") or os.getenv("USERNAME")
+
+	local clock_bg = Color.red
+	local clock_fg = Color.white
 
 	window:set_right_status(wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
+		{ Foreground = { Color = clock_fg } },
+		{ Background = { Color = clock_bg } },
+		{ Text = "  " .. date .. " " },
 		{ Foreground = { Color = edge_background } },
-		{ Text = "[Prefix:Alt]  " },
-		{ Text = " " .. date .. " " },
+		{ Background = { Color = edge_bg } },
+		{ Text = " Alt " },
+		{ Text = "👨" .. username .. " " },
 	}))
 end)
 
