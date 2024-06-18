@@ -668,7 +668,7 @@ return {
       {
         "rf",
         "<Plug>SnipRun",
-        ft = { "markdown", "org", "neorg" },
+        ft = { "markdown", "neorg" },
         mode = "v",
         desc = "Misc: visually selected lines [sniprun]",
       },
@@ -698,7 +698,7 @@ return {
           vim.cmd("normal! " .. linenr_until - 1 .. "G")
           RUtils.map.feedkey("rf", "v")
         end,
-        ft = { "markdown", "org", "neorg" },
+        ft = { "markdown", "neorg" },
         desc = "Misc: run code block [sniprun",
       },
     },
