@@ -70,9 +70,9 @@ function M.load_ses_dashboard()
       vim.cmd [[edit!]]
     end
 
-    if not vim.env.TMUX then
-      RUtils.terminal.clock_mode()
-    end
+    -- if not vim.env.TMUX then
+    --   RUtils.terminal.clock_mode()
+    -- end
 
     vim.cmd [[set cmdheight=0]]
   else

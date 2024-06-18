@@ -482,6 +482,24 @@ M.Dap = {
   hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
 }
 
+M.Clock = {
+  condition = function()
+    return not vim.env.TMUX and not vim.tbl_contains({ "Outline", "aerial", "neo-tree" }, vim.bo[0].filetype)
+  end,
+  {
+    provider = RUtils.config.icons.misc.separator_leg_down,
+    hl = function()
+      return { fg = colors.diagnostic_err, bg = colors.base_bg }
+    end,
+  },
+  {
+    provider = function()
+      return "  " .. os.date "%H:%M "
+    end,
+    hl = { bg = colors.diagnostic_err, fg = colors.base_fg, bold = true },
+  },
+}
+
 local function OverseerTasksForStatus(status)
   return {
     condition = function(self)
@@ -887,6 +905,7 @@ M.status_active_left = {
   M.Marks,
   M.BufferCwd,
   M.Ruler,
+  M.Clock,
 
   hl = { fg = colors.base_fg, bg = colors.base_bg },
   -- hl = { fg = colors.base_fg, bg = colors.base_bg },
