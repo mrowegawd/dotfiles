@@ -95,9 +95,7 @@ return {
           path = 1,
         },
         experimental = {
-          ghost_text = {
-            hl_group = "CmpGhostText",
-          },
+          ghost_text = true,
         },
         formatting = {
           fields = { "kind", "abbr", "menu" },
@@ -274,7 +272,7 @@ return {
       {
         "<S-Tab>",
         function()
-          return vim.snippet.active { direction = -1 } and "<cmd>lua vim.snippet.jump(-1)<cr>" or "<Tab>"
+          return vim.snippet.active { direction = -1 } and "<cmd>lua vim.snippet.jump(-1)<cr>" or "<S-Tab>"
         end,
         expr = true,
         silent = true,

@@ -275,8 +275,9 @@ return {
   --  ╰──────────────────────────────────────────────────────────╯
   -- LOG SYNTAX
   {
-    "mtdl9/vim-log-highlighting",
-    ft = "log",
+    "fei6409/log-highlight.nvim",
+    event = "BufRead *.log",
+    opts = {},
   },
   -- TASKWARRIOR SYNTAX
   {
