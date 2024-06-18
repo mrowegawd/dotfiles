@@ -265,25 +265,11 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- CREATED HIGHLIGHTS
     -----------------------------------------------------------------------
-    { MyStatusline = { fg = { from = "Normal", alter = 0.5 } } },
-    { Mystatusline_fg = { fg = { from = "LineNr", alter = 0.1 } } },
-    { Mystatusline_bg = { bg = { from = "Normal", alter = -0.1 } } },
 
-    { bufferline_unselected = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-    { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
-    { col_selected_bg_attr = { link = "Directory" } },
-    { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-    { bufferline_fill_fg = { bg = { from = "Normal", attr = "fg", alter = -0.1 } } },
-
-    -- { MyStatusLine_red_fg = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 } } },
-    -- { MyStatusLine_notif_fg = { fg = { from = "Boolean", atrr = "fg", alter = 0.1 } } },
-    -- { MyStatusLine_directory_fg = { fg = { from = "Directory", atrr = "fg", alter = 0.1 } } },
     { MyQuickFixLineEnter = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.5 }, fg = "NONE", bold = true } },
     { MyQuickFixLine = { bg = { from = "ErrorMsg", attr = "fg", alter = -0.7 } } },
     { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
     { MyCursorLine = { bg = { from = "Normal", alter = 0.1 } } },
-    { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
-    { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg" } } },
     { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
     {
       MyCodeUsage = {
@@ -299,7 +285,6 @@ local general_overrides = function()
       },
     },
     { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
-    { CodeBlock2 = { bg = "cyan" } },
     { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
 
     -----------------------------------------------------------------------
@@ -659,7 +644,6 @@ local function colorscheme_overrides()
       { DiagnosticFloatTitle = { bg = { from = "NormalFloat", attr = "bg" }, bold = true } },
       { DiagnosticFloatTitleIcon = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "@character" } } },
 
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       {
         LspCodeLens = {
           bg = { from = "Normal", attr = "bg", alter = -0.1 },
@@ -677,7 +661,6 @@ local function colorscheme_overrides()
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
     },
     ["kanagawa"] = {
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       -- { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
       { ["@markup.quote.markdown"] = { bg = { from = "Boolean", attr = "fg", alter = -0.7 }, italic = true } },
       {
@@ -793,7 +776,6 @@ local function colorscheme_overrides()
       },
     },
     ["neomodern"] = {
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
@@ -867,7 +849,6 @@ local function colorscheme_overrides()
         },
       },
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
       {
         MyParentHint = {
@@ -875,7 +856,6 @@ local function colorscheme_overrides()
           fg = { from = "LineNr", attr = "fg", alter = 1 },
         },
       },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 2.5 },
@@ -907,7 +887,6 @@ local function colorscheme_overrides()
           italic = true,
         },
       },
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       {
         FoldColumn = {
           bg = "NONE",
@@ -927,7 +906,6 @@ local function colorscheme_overrides()
           fg = { from = "LineNr", attr = "fg", alter = 1 },
         },
       },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 }, bg = { from = "Normal", attr = "bg" } } },
 
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.8 } } },
@@ -950,7 +928,6 @@ local function colorscheme_overrides()
           italic = true,
         },
       },
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       {
         FoldColumn = {
           bg = "NONE",
@@ -991,7 +968,6 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
 
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.28 } } },
       {
         qfFileName = {
@@ -1002,7 +978,6 @@ local function colorscheme_overrides()
 
       { MyQuickFixLineEnter = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
 
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
       { ["@org.agenda.scheduled"] = { fg = { from = "@tag.attribute", attr = "fg", alter = 0.2 } } },
@@ -1050,14 +1025,12 @@ local function colorscheme_overrides()
           italic = true,
         },
       },
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
       {
         FoldColumn = {
           bg = "NONE",
           fg = { from = "Normal", attr = "bg", alter = 0.7 },
         },
       },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { TroubleNormal = { inherit = "Normal" } },
       { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
       { markdownCode = { bg = "NONE" } },
@@ -1087,7 +1060,6 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
 
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       {
         LspCodeLens = {
           bg = { from = "Normal", attr = "bg", alter = -0.05 },
@@ -1096,7 +1068,6 @@ local function colorscheme_overrides()
         },
       },
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.2 } } },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
 
       { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       { MyQuickFixLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
@@ -1130,7 +1101,6 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 3 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.5 }, fg = { from = "CmpItemAbbr" } } },
 
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       {
         FoldColumn = {
           bg = "NONE",
@@ -1147,8 +1117,6 @@ local function colorscheme_overrides()
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.7 } } },
     },
     ["bamboo"] = {
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { ["@comment"] = { fg = { from = "@comment", attr = "fg", alter = -0.5 } } },
 
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
@@ -1170,7 +1138,6 @@ local function colorscheme_overrides()
 
       { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.1 } } },
 
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
       {
         StatusLine = {
@@ -1183,7 +1150,6 @@ local function colorscheme_overrides()
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     },
     ["vscode_modern"] = {
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
 
       {
@@ -1208,8 +1174,6 @@ local function colorscheme_overrides()
       { CmpItemKindProperty = { inherit = "@property" } },
       { CmpItemKindField = { inherit = "Function" } },
 
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { WhichKeyFloat = { inherit = "NormalFloat" } },
 
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
@@ -1243,14 +1207,12 @@ local function colorscheme_overrides()
       },
     },
     ["catppuccin-mocha"] = {
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
 
       { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
       { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
       { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
       { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
 
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
       {
         StatusLine = {
@@ -1260,7 +1222,6 @@ local function colorscheme_overrides()
       },
     },
     ["catppuccin-latte"] = {
-      { MySeparator_fg_inactive = { fg = { from = "LineNr", attr = "fg", alter = -0.3 } } },
 
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
       {
@@ -1286,7 +1247,6 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = -0.1 },
         },
       },
-      { MySeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { WinSeparator = { fg = { from = "@constructor", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 } } },
@@ -1320,9 +1280,6 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-
-      { bufferline_fill_bg = { bg = { from = "Normal", attr = "bg", alter = -0.45 } } },
-      { bufferline_selected_bg = { bg = { from = "Normal", attr = "bg" } } },
 
       -- CMP
       { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.3 }, bg = "NONE" } },

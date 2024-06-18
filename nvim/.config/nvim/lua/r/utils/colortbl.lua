@@ -8,8 +8,6 @@ local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 local pmenusel_fg = Highlight.get("PmenuSel", "bg")
 
--- local statusline_fg_inactive = Highlight.get("MySeparator_fg_inactive", "fg")
-
 local branch_fg = Highlight.tint(normal_fg, 4)
 local separator_fg = Highlight.tint(keyword_fg, -0.2)
 local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
