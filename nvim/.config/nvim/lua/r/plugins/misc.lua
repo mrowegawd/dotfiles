@@ -15,12 +15,12 @@ return {
   },
   -- UNDOTREE
   {
-    "mbbill/undotree",
-    cmd = "UndotreeToggle",
-    config = function()
-      vim.g.undotree_TreeNodeShape = "◦" -- Alternative: '◉'
-      vim.g.undotree_SetFocusWhenToggle = 1
-    end,
+    "jiaoshijie/undotree",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = true,
+    keys = { -- load the plugin only when using it's keybinding:
+      { "<leader>uu", "<cmd>lua require('undotree').toggle()<cr>", desc = "Misc: undo tree [undotree]" },
+    },
   },
   -- COMMENT-BOX
   {

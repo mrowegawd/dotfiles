@@ -334,6 +334,12 @@ return {
     "famiu/bufdelete.nvim",
     lazy = true,
   },
+  -- FIX-AUTO-SCROLL
+  {
+    "BranimirE/fix-auto-scroll.nvim",
+    config = true,
+    event = "VeryLazy",
+  },
   -- BUFFERLINE
   {
     "akinsho/bufferline.nvim",
