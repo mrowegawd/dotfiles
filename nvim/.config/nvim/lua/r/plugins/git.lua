@@ -262,11 +262,11 @@ return {
       return {
         signs_staged_enable = false,
         signs = {
-          add = { text = "▎", numhl = "GitSignsAddNr" },
-          change = { text = "▎", numhl = "GitSignsChangeNr" },
-          delete = { text = "_", numhl = "GitSignsDeleteNr" },
-          topdelete = { text = "‾", numhl = "GitSignsDeleteNr" },
-          changedelete = { text = "▎", numhl = "GitSignsChangeNr" },
+          add = { text = "▎" },
+          change = { text = "▎" },
+          delete = { text = "_" },
+          topdelete = { text = "‾" },
+          changedelete = { text = "▎" },
           -- changedelete = { text = "~", numhl = "GitSignsChangeNr" },
           -- untracked = { text = "▎" },
           untracked = { text = "┆" },
