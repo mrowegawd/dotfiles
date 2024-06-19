@@ -198,9 +198,6 @@ RUtils.map.cabbrev("qla", "qal!")
 -- RUtils.map.cabbrev("w1", "w")
 RUtils.map.cabbrev("w;", "update!")
 
--- I don't need help to show when I type <F1>.
-RUtils.map.nmap("<F1>", "<Nop>")
-RUtils.map.imap("<F1>", "<Nop>")
 RUtils.map.vmap("K", "<Nop>")
 
 -- ╭─────────────────────────────────────────────────────────╮
@@ -385,8 +382,8 @@ RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(true)
 end, { desc = "Misc: magic follow link (visual)" })
 
-RUtils.map.nnoremap("?", RUtils.map.show_help_buf_keymap, {
-  desc = "MISC: show keymap helps curbuf",
+RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
+  desc = "MISC: show keymaps curbuf",
   silent = true,
 })
 
