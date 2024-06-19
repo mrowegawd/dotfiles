@@ -32,6 +32,8 @@ if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/
 
 export TERMINAL="kitty"
 
+# Set PATH ditaruh disini karena alasan nya biar 'ensure` PATH terakses ketika
+# membuka neovide
 export PATH="$HOME/.poetry/bin:$PATH"
 
 # TODO: setting ini seperti nya berhasil
