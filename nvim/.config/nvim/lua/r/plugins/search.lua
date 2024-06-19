@@ -349,7 +349,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Alt-o: open browser | Alt-y: hash copy | Alt-h: commit history HEAD..hash | Alt-x: commit hash history]],
+              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Alt-h: commit history HEAD..hash | Alt-x: commit hash history]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -357,7 +357,7 @@ return {
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
-              ["alt-o"] = function(selected, _)
+              ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -368,9 +368,7 @@ return {
               ["alt-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
-                vim.fn.setreg("+", commit_hash)
-
-                RUtils.info("Copied: " .. commit_hash, { title = "FZFGit" })
+                RUtils.fzf_diffview.copy_to_clipboard(commit_hash)
 
                 require("fzf-lua").actions.resume()
               end,
@@ -382,6 +380,11 @@ return {
                 vim.cmd(cmdmsg)
 
                 RUtils.info("Commit hash history: HEAD.." .. commit_hash, { title = "FZFGit" })
+              end,
+              ["alt-g"] = function()
+                require("fzf-lua").fzf_live(function(query)
+                  return RUtils.fzf_diffview.git_log_content_finder(query, nil)
+                end, RUtils.fzf_diffview.opts_diffview_log("repo", "Search Repo Log Content> "))
               end,
               ["alt-x"] = function(selected, _)
                 local selection = selected[1]
@@ -404,14 +407,14 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Alt-o: open browser | Alt-y: hash copy | Alt-h: all hash commit hostory | Alt-x: commit hash history]],
+              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Alt-h: all hash commit hostory | Alt-g: grep commit history | Alt-x: commit hash history]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
-              ["alt-o"] = function(selected, _)
+              ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -422,9 +425,7 @@ return {
               ["alt-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
-                vim.fn.setreg("+", commit_hash)
-
-                RUtils.info("Copied: " .. commit_hash, { title = "FZFGit" })
+                RUtils.fzf_diffview.copy_to_clipboard(commit_hash)
 
                 require("fzf-lua").actions.resume()
               end,
@@ -438,6 +439,16 @@ return {
                 vim.cmd(cmdmsg)
 
                 RUtils.info("Commit hash history: " .. commit_hash, { title = "FZFGit" })
+              end,
+              ["alt-g"] = function()
+                local bufnr = vim.fn.bufnr()
+                require("fzf-lua").fzf_live(function(query)
+                  return RUtils.fzf_diffview.git_log_content_finder(query, bufnr)
+                end, RUtils.fzf_diffview.opts_diffview_log(
+                  "curbuf",
+                  "Search Curbuf Log Content> ",
+                  bufnr
+                ))
               end,
               ["alt-x"] = function(selected, _)
                 local selection = selected[1]

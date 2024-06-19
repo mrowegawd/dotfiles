@@ -235,12 +235,14 @@ return {
       elseif RUtils.has "fzf-lua" then
         opts.picker = "fzf-lua"
       else
+        ---@diagnostic disable-next-line: undefined-field
         RUtils.error "`octo.nvim` requires `telescope.nvim` or `fzf-lua`"
       end
 
       -- Keep some empty windows in sessions
       vim.api.nvim_create_autocmd("ExitPre", {
         group = vim.api.nvim_create_augroup("octo_exit_pre", { clear = true }),
+        ---@diagnostic disable-next-line: unused-local
         callback = function(ev)
           local keep = { "octo" }
           for _, win in ipairs(vim.api.nvim_list_wins()) do
