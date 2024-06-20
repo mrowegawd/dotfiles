@@ -291,7 +291,7 @@ return {
     "renerocksai/calendar-vim",
     event = "VeryLazy",
     cmd = "Calendar",
-    init = function()
+    config = function()
       vim.g.calendar_mark = "bottom"
       vim.g.calendar_keys = {
         goto_next_month = "<a-n>",
@@ -670,7 +670,7 @@ return {
         "<Plug>SnipRun",
         ft = { "markdown", "neorg" },
         mode = "v",
-        desc = "Misc: visually selected lines [sniprun]",
+        desc = "Misc: run visually selected lines [sniprun]",
       },
       {
         "rf",
@@ -700,6 +700,12 @@ return {
         end,
         ft = { "markdown", "neorg" },
         desc = "Misc: run code block [sniprun",
+      },
+      {
+        "rr",
+        "<Plug>SnipClose",
+        ft = { "markdown", "neorg" },
+        desc = "Misc: close [sniprun]",
       },
     },
   },
