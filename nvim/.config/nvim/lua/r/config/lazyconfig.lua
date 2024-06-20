@@ -25,9 +25,9 @@ require("lazy").setup {
     { import = "r.plugins" },
     { import = "r.plugins.extras.ai" },
     { import = "r.plugins.extras.dab" },
-    { import = "r.plugins.extras.lang" },
     { import = "r.plugins.extras.linting" },
     { import = "r.plugins.extras.formatter" },
+    { import = "r.plugins.extras.lang" },
   },
   change_detection = { notify = false },
   install = {
