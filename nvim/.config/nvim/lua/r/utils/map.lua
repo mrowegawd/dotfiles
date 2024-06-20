@@ -15,11 +15,12 @@ M.show_help_buf_keymap = function()
 
   local col = {}
   for _, tbl in pairs(tbl_maps) do
-    if tbl.desc ~= nil then -- remove nil desc
-      ---@diagnostic disable-next-line: undefined-field
-      local map_desc = string.format("%-14s | %s", RUtils.cmd.strip_whitespace(tbl.lhs), tbl.desc)
-      col[#col + 1] = map_desc
+    if tbl.desc == nil then -- remove nil desc
+      tbl.desc = "<builtin>"
     end
+    ---@diagnostic disable-next-line: undefined-field
+    local map_desc = string.format("%-14s | %s", RUtils.cmd.strip_whitespace(tbl.lhs), tbl.desc)
+    col[#col + 1] = map_desc
   end
 
   local opts = {
