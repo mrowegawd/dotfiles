@@ -685,6 +685,30 @@ return {
       --   end
       -- end
 
+      if RUtils.has "neo-tree.nvim" then
+        local pos = {
+          filesystem = "left",
+          git_status = "top",
+          -- buffers = "top",
+          -- document_symbols = "bottom",
+          -- diagnostics = "bottom",
+        }
+        local sources = RUtils.opts("neo-tree.nvim").sources or {}
+        for i, v in ipairs(sources) do
+          table.insert(opts.left, i, {
+            title = "Neo-Tree " .. v:gsub("_", " "):gsub("^%l", string.upper),
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == v
+            end,
+            pinned = true,
+            open = function()
+              vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, RUtils.root()))
+            end,
+          })
+        end
+      end
+
       for _, pos in ipairs { "top", "bottom", "left", "right" } do
         opts[pos] = opts[pos] or {}
         table.insert(opts[pos], {

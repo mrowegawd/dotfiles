@@ -263,6 +263,7 @@ return {
     opts = function()
       return {
         signs_staged_enable = false,
+        attach_to_untracked = true,
         signs = {
           add = { text = "▎" },
           change = { text = "▎" },
@@ -335,7 +336,7 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "GitHistory", "Git", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged" },
+    cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged" },
     dependencies = {
       "tpope/vim-rhubarb",
     },

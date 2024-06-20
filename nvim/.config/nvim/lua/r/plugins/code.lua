@@ -7,7 +7,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false, -- last release is way too old
-    event = { "InsertEnter", "CmdlineEnter" },
+    event = "InsertEnter",
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
       "hrsh7th/cmp-buffer",
@@ -133,6 +133,7 @@ return {
                   noice_popupmenu = "[Noice]",
                   buffer = "[BUF]",
                   spell = "[SPELL]",
+                  -- codeium = "[Copilot]",
                   orgmode = "[ORG]",
                   norg = "[NORG]",
                   rg = "[RG]",
@@ -408,8 +409,8 @@ return {
   -- LUAROCKS
   {
     "vhyrro/luarocks.nvim",
-    enabled = false,
-    priority = 1000,
+    event = "VeryLazy",
+    -- priority = 1000,
     config = true,
     opts = {
       rocks = {
