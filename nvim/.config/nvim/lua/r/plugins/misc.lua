@@ -111,9 +111,10 @@ return {
     },
     opts = true,
   },
-  -- POMMODORO-CLOCK
+  -- POMMODORO-CLOCK (disabled)
   {
     "jackMort/pommodoro-clock.nvim",
+    enabled = false,
     event = "LazyFile",
     dependencies = { "MunifTanjim/nui.nvim" },
     config = function()

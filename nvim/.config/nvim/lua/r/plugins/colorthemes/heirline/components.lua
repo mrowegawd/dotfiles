@@ -510,8 +510,16 @@ local function OverseerTasksForStatus(status)
       return string.format("%s%d", self.symbols[status], #self.tasks[status])
     end,
     hl = function()
+      local fg
+      if status == "RUNNING" then
+        fg = colors.diff_delete
+      elseif status == "SUCCESS" then
+        fg = colors.diff_add
+      else
+        fg = colors.diagnostic_err
+      end
       return {
-        fg = colors.diagnostic_err,
+        fg = fg,
         bg = colors.base_bg,
         bold = true,
       }

@@ -89,7 +89,6 @@ return {
       "ibhagwan/fzf-lua",
       "nvim-lua/plenary.nvim",
       "laher/neorg-exec",
-      "luarocks.nvim",
     },
     config = function(_, opts)
       RUtils.cmd.augroup("ManageNoteMappingNeorg", {
