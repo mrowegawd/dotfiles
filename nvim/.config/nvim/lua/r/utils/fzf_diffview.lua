@@ -459,27 +459,36 @@ end
 local diff_plugin = "diffview"
 
 M.open_diff_view = function(commit, file_name)
+  local cmds
+
   if file_name ~= nil and file_name ~= "" then
     if diff_plugin == "diffview" then
-      vim.api.nvim_command(":DiffviewOpen -uno " .. commit .. " -- " .. file_name)
+      cmds = "DiffviewOpen -uno " .. commit .. " -- " .. file_name
     elseif diff_plugin == "fugitive" then
-      vim.api.nvim_command(":Gvdiffsplit " .. commit .. ":" .. file_name)
+      cmds = "Gvdiffsplit " .. commit .. ":" .. file_name
     end
   else
     if diff_plugin == "diffview" then
-      vim.api.nvim_command(":DiffviewOpen -uno " .. commit)
+      cmds = "DiffviewOpen -uno " .. commit
     elseif diff_plugin == "fugitive" then
-      vim.api.nvim_command(":Gvdiffsplit " .. commit)
+      cmds = "Gvdiffsplit " .. commit
     end
   end
+
+  RUtils.info(cmds)
+  vim.cmd(cmds)
 end
 
 M.open_commit = function(commit_hash)
+  local cmds
   if diff_plugin == "diffview" then
-    vim.api.nvim_command(":DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash)
+    cmds = "DiffviewOpen -uno " .. commit_hash .. "~.." .. commit_hash
   elseif diff_plugin == "fugitive" then
-    vim.api.nvim_command(":Gedit " .. commit_hash)
+    cmds = "Gedit " .. commit_hash
   end
+
+  RUtils.info(cmds)
+  vim.cmd(cmds)
 end
 
 ---General action: Copy commit hash to system clipboard
