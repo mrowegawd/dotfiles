@@ -226,14 +226,7 @@ return {
           { name = "emoji" },
           { name = "orgmode" },
           { name = "vim-dadbod-completion" },
-          {
-            name = "buffer",
-            option = {
-              get_bufnrs = function()
-                return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
-              end,
-            },
-          },
+          { name = "buffer" },
         },
       }
     end,
