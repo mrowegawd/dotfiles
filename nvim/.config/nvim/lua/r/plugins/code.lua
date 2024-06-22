@@ -113,9 +113,8 @@ return {
 
             -- print(entry.source.name)
             local item_kind = item.kind
-
-            if item_kind == nil then
-              item_kind = "x"
+            if item_kind == nil then -- remove duplicate
+              return {}
             end
 
             item.menu = item_kind
