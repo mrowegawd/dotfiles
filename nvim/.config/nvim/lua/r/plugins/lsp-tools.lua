@@ -22,6 +22,7 @@ return {
   -- NVIM-DEVDOCS
   {
     "luckasRanarison/nvim-devdocs",
+    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope.nvim",

@@ -653,6 +653,7 @@ return {
   -- SNIPRUN
   {
     "michaelb/sniprun", -- task runner for code blocks
+    event = "VeryLazy",
     enabled = function()
       return vim.fn.executable "cargo"
     end,
