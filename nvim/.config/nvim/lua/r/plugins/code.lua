@@ -223,6 +223,9 @@ return {
             group_index = 0, -- Set group index to 0 to skip loading LuaLS completions
           },
           { name = "path" },
+          { name = "emoji" },
+          { name = "orgmode" },
+          { name = "vim-dadbod-completion" },
           {
             name = "buffer",
             option = {
@@ -249,36 +252,48 @@ return {
       },
     },
     opts = function(_, opts)
+      local cmp = require "cmp"
+
+      local function tab(fallback)
+        local entry = cmp.get_selected_entry()
+
+        if
+          cmp.visible()
+          and (
+            entry ~= nil
+            and not (entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$"))
+          )
+        then
+          cmp.confirm { select = false }
+        elseif vim.snippet.active { direction = 1 } then
+          vim.snippet.jump(1)
+        else
+          fallback()
+        end
+      end
+
+      local function shift_tab(fallback)
+        if vim.snippet.active { direction = -1 } then
+          vim.snippet.jump(-1)
+        else
+          fallback()
+        end
+      end
+
       opts.snippet = {
         expand = function(item)
           return RUtils.cmp.expand(item.body)
         end,
       }
+      opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
+        ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
+        ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
+      })
 
       if RUtils.has "nvim-snippets" then
         table.insert(opts.sources, { name = "snippets" })
       end
     end,
-    keys = {
-      {
-        "<Tab>",
-        function()
-          return vim.snippet.active { direction = 1 } and "<cmd>lua vim.snippet.jump(1)<cr>" or "<Tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = { "i", "s" },
-      },
-      {
-        "<S-Tab>",
-        function()
-          return vim.snippet.active { direction = -1 } and "<cmd>lua vim.snippet.jump(-1)<cr>" or "<S-Tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = { "i", "s" },
-      },
-    },
   },
   -- MINI.PAIRS
   {

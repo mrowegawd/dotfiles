@@ -155,51 +155,30 @@ function M.setup(opts)
     M.add_missing_snippet_docs(event.window)
   end)
 
-  local tbl_custom_sources = {
-    { name = "nvim_lsp" },
-    { name = "snippets" },
-    { name = "path" },
-    {
-      name = "buffer",
-      max_item_count = 10,
-      option = {
-        get_bufnrs = function()
-          return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
-        end,
-      },
-    },
-  }
-
-  cmp.setup.filetype({ "norg", "neorg" }, {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, {
-      { name = "neorg" },
-      { name = "emoji" },
-    })),
-  })
-
-  cmp.setup.filetype({ "org", "orgagenda" }, {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, {
-      { name = "orgmode" },
-      { name = "emoji" },
-    })),
-  })
-
-  cmp.setup.filetype({ "markdown" }, {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, {
-      { name = "emoji" },
-    })),
-  })
-
+  -- local tbl_custom_sources = {
+  --   { name = "nvim_lsp" },
+  --   { name = "snippets" },
+  --   { name = "path" },
+  --   {
+  --     name = "buffer",
+  --     max_item_count = 10,
+  --     option = {
+  --       get_bufnrs = function()
+  --         return vim.api.nvim_list_bufs() -- idk why this works rather than old commits
+  --       end,
+  --     },
+  --   },
+  -- }
   -- cmp.setup.filetype("dap-repl", {
   --   sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "dap" } })),
   -- })
-
-  cmp.setup.filetype("gitcommit", {
-    sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "emoji" } })),
-  })
-  cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-    sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
-  })
+  --
+  -- cmp.setup.filetype("gitcommit", {
+  --   sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "emoji" } })),
+  -- })
+  -- cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+  --   sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
+  -- })
 
   cmp.setup.cmdline(":", {
     mapping = {
