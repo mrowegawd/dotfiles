@@ -73,6 +73,8 @@ return {
         enabled = function()
           local disabled = false
           disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
+          disabled = disabled or (RUtils.cmd.get_option "buftype" == "terminal")
+          disabled = disabled or (RUtils.cmd.get_option "filetype" == "")
           disabled = disabled or (vim.fn.reg_recording() ~= "")
           disabled = disabled or (vim.fn.reg_executing() ~= "")
           return not disabled
@@ -247,6 +249,12 @@ return {
     opts = function(_, opts)
       local cmp = require "cmp"
 
+      -- local has_words_before = function()
+      --   ---@diagnostic disable-next-line: deprecated
+      --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+      --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+      -- end
+
       local function tab(fallback)
         local entry = cmp.get_selected_entry()
 
@@ -259,7 +267,11 @@ return {
         then
           cmp.confirm { select = false }
         elseif vim.snippet.active { direction = 1 } then
-          vim.snippet.jump(1)
+          vim.schedule(function()
+            vim.snippet.jump(1)
+          end)
+        -- elseif has_words_before() then
+        --   cmp.complete()
         else
           fallback()
         end
@@ -267,7 +279,9 @@ return {
 
       local function shift_tab(fallback)
         if vim.snippet.active { direction = -1 } then
-          vim.snippet.jump(-1)
+          vim.schedule(function()
+            vim.snippet.jump(-1)
+          end)
         else
           fallback()
         end
