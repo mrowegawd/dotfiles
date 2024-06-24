@@ -1131,6 +1131,8 @@ local function colorscheme_overrides()
       },
     },
     ["tokyonight"] = {
+      { ["@markup.quote.markdown"] = { bg = { from = "Boolean", attr = "fg", alter = -0.7 }, italic = true } },
+
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
