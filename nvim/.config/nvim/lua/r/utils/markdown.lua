@@ -13,18 +13,7 @@ local function remove_alias(link)
   return link
 end
 
-local JSON_DECODE_OPTS = { luanil = { object = true, array = true } }
-
----comment
----@param json_str string
----@return table|nil
-local function parse_json(json_str)
-  ---@type any
-  local json = vim.json.decode(json_str, JSON_DECODE_OPTS)
-  if json and type(json) == "table" then
-    return json
-  end
-end
+-- local JSON_DECODE_OPTS = { luanil = { object = true, array = true } }
 
 local function is_tag_or_link_at(line, col, opts)
   opts = opts or {}
@@ -241,11 +230,22 @@ local function format_title_tag(match_data)
   }
 end
 
+-- comment
+-- @param json_str string
+-- @return table|nil
+-- local function parse_json(json_str)
+--   ---@type any
+--   local json = vim.json.decode(json_str, JSON_DECODE_OPTS)
+--   if json and type(json) == "table" then
+--     return json
+--   end
+-- end
+
 local function collect_all_tags_async(data, cb)
   data = data or {}
 
   local rg_optsc = "--no-config --json --type=md --ignore-case"
-  local cmd = "rg "
+  local msg_cmds = "rg "
     .. rg_optsc
     .. ' -e "tags: .*[a-z]+[a-z0-9_/-]*[a-z0-9]+"'
     .. ' -e "^\\s\\s*- [a-z]+[a-z0-9_/-]*[a-z0-9]+$"'
@@ -253,19 +253,22 @@ local function collect_all_tags_async(data, cb)
     .. " "
     .. RUtils.config.path.wiki_path
 
-  -- print(cmd)
+  -- print(msg_cmds)
 
   coroutine.wrap(function()
     local co = coroutine.running()
 
-    RUtils.cmd.run_jobstart(cmd, function(_, dataout, event)
+    RUtils.cmd.run_jobstart(msg_cmds, function(_, dataout, event)
       if event == "stdout" then
         if dataout then
+          -- __AUTO_GENERATED_PRINT_VAR_START__
+          -- print([==[collect_all_tags_async#function#function#if#if dataout:]==], vim.inspect(dataout)) -- __AUTO_GENERATED_PRINT_VAR_END__
           for _, line in ipairs(dataout) do
             if line ~= "" then
-              if string.match(line, "\\n") ~= nil then
-                local json_data = vim.json.decode(line)
-
+              if string.match(line, "binary_offset") == nil then
+                local json_data = vim.fn.json_decode(line)
+                -- print(vim.inspect(json_data))
+                -- print(vim.inspect(line))
                 local match_data = json_data.data
                 if match_data["path"] then
                   if match_data["lines"] then
@@ -336,15 +339,18 @@ local function picker(contents)
   function tags_previewer:parse_entry(entry_str)
     local text = vim.split(entry_str, "|")
 
-    for _, x in pairs(data_tags_table) do
-      if x.title == text[2] then
-        return {
-          path = x.path,
-          line = x.line_number,
-          col = 1,
-        }
+    if text then
+      for _, x in pairs(data_tags_table) do
+        if x.title == text[2] then
+          return {
+            path = x.path,
+            line = x.line_number,
+            col = 1,
+          }
+        end
       end
     end
+    return {}
   end
 
   return require("fzf-lua").fzf_exec(contents, {
@@ -475,6 +481,11 @@ local function picker(contents)
     },
   })
 end
+-- Fungsi untuk memeriksa apakah string JSON valid
+local function is_valid_json(str)
+  local ok, _ = pcall(vim.json.decode, str)
+  return ok
+end
 
 local function list_tags_async(all_tags, is_set)
   is_set = is_set or false
@@ -513,58 +524,66 @@ local function list_tags_async(all_tags, is_set)
     line_e = string.format(' -e "%s" ', "^\\s\\s*- " .. all_tags[1] .. "$")
   end
 
-  local cmd = "rg " .. rg_optsc .. line_e .. RUtils.config.path.wiki_path
-  -- print(cmd)
+  local msg_cmd = "rg " .. rg_optsc .. line_e .. RUtils.config.path.wiki_path
 
   local contents = function(cb)
     coroutine.wrap(function()
       local co = coroutine.running()
 
-      RUtils.cmd.run_jobstart(cmd, function(_, dataout, event)
+      RUtils.cmd.run_jobstart(msg_cmd, function(_, dataout, event)
         if event == "stdout" then
           if dataout and #dataout > 0 then
             for _, line in ipairs(dataout) do
               if #line > 0 then
-                if string.match(line, "\\n") ~= nil then
-                  local json_data = vim.json.decode(line)
-                  local match_data = json_data.data
+                if string.match(line, "binary_offset") == nil then
+                  -- __AUTO_GENERATED_PRINT_VAR_START__
+                  -- print(vim.inspect(line)) -- __AUTO_GENERATED_PRINT_VAR_END__
+                  if is_valid_json(line) then
+                    local json_data = vim.json.decode(line)
+                    local match_data = json_data.data
 
-                  if match_data["path"] then
-                    if match_data["lines"] then
-                      local line_text = match_data.lines.text
-                      if string.match(line_text, "%s%s*- ") then
-                        local data_tags = format_data_tags(match_data)
+                    -- __AUTO_GENERATED_PRINT_VAR_START__
+                    -- print(vim.inspect(match_data)) -- __AUTO_GENERATED_PRINT_VAR_END__
 
-                        local title_s
-                        for _, x in pairs(data_title_out) do
-                          if x.path == data_tags.path then
-                            title_s = x.title
+                    if match_data["path"] then
+                      if match_data["lines"] then
+                        local line_text = match_data.lines.text
+                        if string.match(line_text, "%s%s*- ") then
+                          local data_tags = format_data_tags(match_data)
+
+                          local title_s
+                          for _, x in pairs(data_title_out) do
+                            if x.path == data_tags.path then
+                              title_s = x.title
+                            end
                           end
+
+                          data_tags.title = title_s
+                          data_tags_table[#data_tags_table + 1] = data_tags
+                          -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
+
+                          -- local fzf_str =
+                          --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
+
+                          local fzf_str = string.format(
+                            "%-30s %-4s |%s",
+                            data_tags.tag,
+                            "[" .. data_tags.line_number .. "]",
+                            data_tags.title
+                          )
+
+                          -- TODO: ensure id note exists #postpone #25/5/saturday
+                          -- if is_set then
+                          -- end
+
+                          cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
+                            coroutine.resume(co, 0)
+                          end)
                         end
-
-                        data_tags.title = title_s
-                        data_tags_table[#data_tags_table + 1] = data_tags
-                        -- data_tags_table_is_set[#data_tags_table_is_set + 1] = data_tags
-
-                        -- local fzf_str =
-                        --   string.format("%s| [%s] %s", data_tags.title, data_tags.line_number, data_tags.tag)
-
-                        local fzf_str = string.format(
-                          "%-30s %-4s |%s",
-                          data_tags.tag,
-                          "[" .. data_tags.line_number .. "]",
-                          data_tags.title
-                        )
-
-                        -- TODO: ensure id note exists #postpone #25/5/saturday
-                        -- if is_set then
-                        -- end
-
-                        cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
-                          coroutine.resume(co, 0)
-                        end)
                       end
                     end
+                    -- else
+                    --   print(line)
                   end
                 end
               end
@@ -621,9 +640,10 @@ function M.find_note_by_tag(data, is_set)
     list_tags_async(tags, true)
   else
     collect_all_tags_async(tags, function(all_tags)
-      vim.schedule(function()
-        list_tags_async(all_tags)
-      end)
+      -- print(vim.inspect(all_tags))
+      -- vim.schedule(function()
+      list_tags_async(all_tags)
+      -- end)
     end)
   end
 end
