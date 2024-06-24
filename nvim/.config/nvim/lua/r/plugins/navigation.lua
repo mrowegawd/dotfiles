@@ -42,7 +42,7 @@ return {
       local log = require "neo-tree.log"
 
       return {
-        sources = { "filesystem", "buffers", "git_status", "document_symbols" },
+        sources = { "filesystem", "git_status" },
         source_selector = {
           -- winbar = true,
           separator_active = "",
@@ -685,13 +685,37 @@ return {
       --   end
       -- end
 
+      -- if RUtils.has "neo-tree.nvim" then
+      --   local pos = {
+      --     filesystem = "left",
+      --     git_status = "top",
+      --     -- buffers = "top",
+      --     -- document_symbols = "bottom",
+      --     -- diagnostics = "bottom",
+      --   }
+      --   local sources = RUtils.opts("neo-tree.nvim").sources or {}
+      --   for i, v in ipairs(sources) do
+      --     table.insert(opts.left, i, {
+      --       title = "Neo-Tree " .. v:gsub("_", " "):gsub("^%l", string.upper),
+      --       ft = "neo-tree",
+      --       filter = function(buf)
+      --         return vim.b[buf].neo_tree_source == v
+      --       end,
+      --       pinned = true,
+      --       open = function()
+      --         vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, RUtils.root()))
+      --       end,
+      --     })
+      --   end
+      -- end
+
       if RUtils.has "neo-tree.nvim" then
         local pos = {
           filesystem = "left",
-          git_status = "top",
-          -- buffers = "top",
-          -- document_symbols = "bottom",
-          -- diagnostics = "bottom",
+          buffers = "top",
+          git_status = "right",
+          document_symbols = "bottom",
+          diagnostics = "bottom",
         }
         local sources = RUtils.opts("neo-tree.nvim").sources or {}
         for i, v in ipairs(sources) do
@@ -703,7 +727,7 @@ return {
             end,
             pinned = true,
             open = function()
-              vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, RUtils.root()))
+              vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, LazyVim.root()))
             end,
           })
         end

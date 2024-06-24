@@ -38,6 +38,7 @@ return {
         },
         pattern = {
           [".*/waybar/config"] = "jsonc",
+          ["%.vscode/.+%.json"] = "task",
           [".*/mako/config"] = "dosini",
           [".*/kitty/.+%.conf"] = "bash",
           [".*/hypr/.+%.conf"] = "hyprlang",

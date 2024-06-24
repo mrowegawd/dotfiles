@@ -127,6 +127,11 @@ return {
       },
     },
     config = function()
+      -- load mason-nvim-dap here, after all adapters have been setup
+      if RUtils.has "mason-nvim-dap.nvim" then
+        require("mason-nvim-dap").setup(RUtils.opts "mason-nvim-dap.nvim")
+      end
+
       Highlight.plugin("dapHi", {
         { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = "NONE" } },
         { DapStopped = { fg = { from = "Boolean", attr = "fg" }, bg = "NONE" } },

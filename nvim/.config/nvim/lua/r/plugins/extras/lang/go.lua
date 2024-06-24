@@ -112,14 +112,14 @@ return {
     "nvim-neotest/neotest",
     optional = true,
     dependencies = {
-      "nvim-neotest/neotest-go",
+      "fredrikaverpil/neotest-golang",
     },
     opts = {
       adapters = {
-        ["neotest-go"] = {
+        ["neotest-golang"] = {
           -- Here we can set options for neotest-go, e.g.
           -- args = { "-tags=integration" }
-          recursive_run = true,
+          dap_go_enabled = true, -- requires leoluz/nvim-dap-go
         },
       },
     },
