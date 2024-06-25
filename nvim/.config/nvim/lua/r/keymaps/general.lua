@@ -416,11 +416,14 @@ RUtils.map.nnoremap("<Localleader>r", function()
     sourcegraph_sg = function()
       cmd "SourcegraphSearch"
     end,
-    search_cheat = function()
+    cheat = function()
       cmd "Cheat"
     end,
-    search_cheatlist = function()
+    cheatlist = function()
       cmd "CheatList"
+    end,
+    restnvim = function()
+      cmd [[<Plug>RestNvim]]
     end,
     search_devdocs = function()
       local query = vim.fn.input "Search DevDocs: "
