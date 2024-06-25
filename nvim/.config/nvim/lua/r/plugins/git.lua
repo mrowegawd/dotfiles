@@ -79,9 +79,6 @@ return {
     "pwntester/octo.nvim",
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
-    init = function()
-      vim.treesitter.language.register("markdown", "octo")
-    end,
     opts = {
       -- picker = "telescope",
       picker = "fzf-lua",
@@ -230,9 +227,9 @@ return {
   {
     "pwntester/octo.nvim",
     opts = function(_, opts)
-      if RUtils.has "telescope.nvim" then
-        opts.picker = "telescope"
-      elseif RUtils.has "fzf-lua" then
+      -- if RUtils.has "telescope.nvim" then
+      --   opts.picker = "telescope"
+      if RUtils.has "fzf-lua" then
         opts.picker = "fzf-lua"
       else
         ---@diagnostic disable-next-line: undefined-field

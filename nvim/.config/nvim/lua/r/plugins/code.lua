@@ -427,30 +427,12 @@ return {
       },
     },
   },
-  -- LUAROCKS
-  {
-    "vhyrro/luarocks.nvim",
-    event = "VeryLazy",
-    -- priority = 1000,
-    config = true,
-    opts = {
-      rocks = {
-        "lua-utils.nvim",
-        "lua-curl",
-        "nvim-nio",
-        "mimetypes",
-        "pathlib.nvim",
-        "xml2lua",
-      }, -- Specify LuaRocks packages to install
-    },
-  },
   -- REST.NVIM
   {
     "rest-nvim/rest.nvim",
     ft = "http",
-    -- keys = {
-    --   { "<Leader>rr", "<Plug>RestNvim", desc = "Open(rest-nvim): execute HTTP request" },
-    dependencies = { "luarocks.nvim" },
+    cmd = { "Rest" },
+    keys = { { "<Leader>rr", "<CMD>Rest run<CR>", desc = "Open(rest-nvim): execute HTTP request" } },
     opts = { skip_ssl_verification = true },
     config = function(_, opts)
       require("rest-nvim").setup(opts)

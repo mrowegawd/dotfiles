@@ -83,7 +83,6 @@ return {
     -- },
     dependencies = {
       "nvim-telescope/telescope.nvim",
-      "luarocks.nvim",
       "nvim-neorg/neorg-telescope",
       "nvim-treesitter/nvim-treesitter",
       "ibhagwan/fzf-lua",
