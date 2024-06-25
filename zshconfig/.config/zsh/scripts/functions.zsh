@@ -27,70 +27,14 @@ build-install(){
   	sudo apt install urlview
   fi
 
-  if ! command -v eza >/dev/null; then
-    echo "Installing: eza - ls colors"
-  	cargo install eza
-    asdf reshim rust
-  fi
-
-  if ! command -v delta >/dev/null; then
-    echo "Installing: delta - color hunk"
-  	cargo install git-delta
-    asdf reshim rust
-  fi
-
-  if ! command -v rg >/dev/null; then
-    echo "Installing: rg - grep drugs"
-    cargo install ripgrep
-    asdf reshim rust
-  fi
-
-  # https://github.com/race604/clock-tui
-  if ! command -v tclock >/dev/null; then
-    echo "Installing: tclock - clock tui"
-    cargo install clock-tui
-    asdf reshim rust
-  fi
-
   if ! command -v bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     sudo apt install bat
   fi
 
-  if ! command -v lazygit >/dev/null; then
-    echo "Installing: lazygit - git GUI"
-    go install github.com/jesseduffield/lazygit@latest
-    asdf reshim golang
-  fi
-
   if ! command -v fd >/dev/null; then
     echo "Installing: fd - blazingly fast"
     sudo apt install fd-find
-  fi
-
-  if ! command -v lf >/dev/null; then
-    echo "Installing: lf - file manager"
-    env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
-    asdf reshim golang
-  fi
-
-  if ! command -v joshuto >/dev/null; then
-    echo "Installing: joshuto - file manager"
-    cargo install --git https://github.com/kamiyaa/joshuto.git --force
-    asdf reshim rust
-  fi
-
-  # Explore docker layer
-  if ! command -v dive >/dev/null; then
-    echo "Installing: dive - docker layer"
-    go install github.com/wagoodman/dive@latest
-    asdf reshim golang
-  fi
-
-  if ! command -v lazydocker >/dev/null; then
-    echo "Installing: lazydocker - docker GUI"
-    go install github.com/jesseduffield/lazydocker@latest
-    asdf reshim golang
   fi
 
   # Install: gifski
@@ -109,6 +53,70 @@ build-install(){
     sudo apt install sox
     sudo apt install libsox-fmt-all
   fi
+
+
+  if ! asdf which eza >/dev/null; then
+    echo "Installing: eza - ls colors"
+  	cargo install eza
+    asdf reshim rust
+  fi
+
+  if ! asdf which delta >/dev/null; then
+    echo "Installing: delta - color hunk"
+  	cargo install git-delta
+    asdf reshim rust
+  fi
+
+  if ! asdf which rg >/dev/null; then
+    echo "Installing: rg - grep drugs"
+    cargo install ripgrep
+    asdf reshim rust
+  fi
+
+  # https://github.com/race604/clock-tui
+  if ! asdf which tclock >/dev/null; then
+    echo "Installing: tclock - clock tui"
+    cargo install clock-tui
+    asdf reshim rust
+  fi
+
+  # if ! asdf which joshuto >/dev/null; then
+  #   echo "Installing: joshuto - file manager"
+  #   cargo install --git https://github.com/kamiyaa/joshuto.git --force
+  #   asdf reshim rust
+  # fi
+
+  if ! asdf which yazi >/dev/null; then
+    echo "Installing: yazi - file manager"
+    cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
+    asdf reshim rust
+  fi
+
+  if ! asdf which lf >/dev/null; then
+    echo "Installing: lf - file manager"
+    env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
+    asdf reshim golang
+  fi
+
+  if ! asdf which lazygit >/dev/null; then
+    echo "Installing: lazygit - git GUI"
+    go install github.com/jesseduffield/lazygit@latest
+    asdf reshim golang
+  fi
+
+  # Explore docker layer
+  if ! asdf which dive >/dev/null; then
+    echo "Installing: dive - docker layer"
+    go install github.com/wagoodman/dive@latest
+    asdf reshim golang
+  fi
+
+  if ! asdf which lazydocker >/dev/null; then
+    echo "Installing: lazydocker - docker GUI"
+    go install github.com/jesseduffield/lazydocker@latest
+    asdf reshim golang
+  fi
+
 }
 
 build-react() {
