@@ -727,7 +727,7 @@ return {
             end,
             pinned = true,
             open = function()
-              vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, LazyVim.root()))
+              vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, RUtils.root()))
             end,
           })
         end
