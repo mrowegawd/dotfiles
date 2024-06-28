@@ -191,8 +191,8 @@ return {
           end, { "i" }),
           ["<c-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<c-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
-          ["<CR>"] = RUtils.cmp.confirm(),
-          ["<c-y>"] = RUtils.cmp.confirm { behavior = cmp.ConfirmBehavior.Replace },
+          ["<cr>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+          ["<c-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
           ["<c-e>"] = function(fallback)
             cmp.abort()
             fallback()
@@ -269,31 +269,60 @@ return {
   -- NVIM-CMP Keys
   {
     "nvim-cmp",
-    keys = {
-      {
-        "<tab>",
-        function()
-          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
-        end,
-        expr = true,
-        silent = true,
-        mode = "i",
-      },
-      {
-        "<tab>",
-        function()
-          require("luasnip").jump(1)
-        end,
-        mode = "s",
-      },
-      {
-        "<s-tab>",
-        function()
-          require("luasnip").jump(-1)
-        end,
-        mode = { "i", "s" },
-      },
-    },
+    ---@param opts cmp.ConfigSchema
+    opts = function(_, opts)
+      local cmp = require "cmp"
+
+      opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
+        ["<Tab>"] = cmp.mapping {
+          i = function(fallback)
+            local entry = cmp.get_selected_entry()
+
+            if
+              cmp.visible()
+              and (
+                entry ~= nil
+                and not (
+                  entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$")
+                )
+              )
+            then
+              cmp.confirm { select = true }
+            elseif require("luasnip").expand_or_jumpable() then
+              require("luasnip").jump(1)
+            else
+              fallback()
+            end
+          end,
+          s = function(fallback)
+            if require("luasnip").expand_or_jumpable() then
+              require("luasnip").jump(1)
+            else
+              fallback()
+            end
+          end,
+          c = function(fallback)
+            if cmp.visible() then
+              local entry = cmp.get_selected_entry()
+              if not entry then
+                cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+              else
+                cmp.confirm()
+              end
+            else
+              fallback()
+            end
+          end,
+        },
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+          if require("luasnip").jumpable(-1) then
+            require("luasnip").jump(-1)
+          else
+            fallback()
+          end
+        end, { "i", "s" }),
+      })
+    end,
   },
   -- MINI.PAIRS
   {
