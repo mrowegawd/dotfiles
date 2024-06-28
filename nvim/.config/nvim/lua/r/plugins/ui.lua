@@ -260,6 +260,13 @@ return {
           },
         },
         routes = {
+          -- Do not show error messages for `-32603`
+          -- this will lead to an endless loop of errors
+          -- remove this line after this issue gets fixed or reverting back to the last working version
+          -- https://github.com/rust-lang/rust-analyzer/issues/17430
+          { filter = { event = "notify", find = "-32603" }, opts = { skip = true } },
+          { filter = { event = "lsp", find = "overly long loop" }, opts = { skip = true } },
+
           {
             opts = { skip = true },
             filter = {
@@ -275,6 +282,10 @@ return {
                 { event = "msg_show", find = "%d+ change" },
                 { event = "msg_show", find = "%d+ line" },
                 { event = "msg_show", find = "%d+ more line" },
+
+                -- Avoid show message from lsp_signature
+                { event = "msg_show", find = "lsp_signatur" },
+
                 -- { event = "msg_show", find = "error list" },
               },
             },
