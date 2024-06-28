@@ -67,3 +67,4 @@ packer_compiled.lua
 
 .scratch.note
 tmp
+nvim/.config/nvim/scratch_config.json
