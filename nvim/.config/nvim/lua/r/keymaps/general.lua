@@ -422,8 +422,8 @@ RUtils.map.nnoremap("<Localleader>r", function()
     cheatlist = function()
       cmd "CheatList"
     end,
-    restnvim = function()
-      cmd [[<Plug>RestNvim]]
+    kulala = function()
+      require("kulala").run()
     end,
     search_devdocs = function()
       local query = vim.fn.input "Search DevDocs: "
