@@ -21,6 +21,18 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- REST.NVIM (disabled)
+  {
+    "rest-nvim/rest.nvim",
+    enabled = false,
+    ft = "http",
+    cmd = { "Rest" },
+    keys = { { "<Leader>rr", "<CMD>Rest run<CR>", desc = "Open(rest-nvim): execute HTTP request" } },
+    opts = { skip_ssl_verification = true },
+    config = function(_, opts)
+      require("rest-nvim").setup(opts)
+    end,
+  },
   -- NEORG (disabled)
   {
     "nvim-neorg/neorg",

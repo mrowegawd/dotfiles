@@ -28,10 +28,10 @@ return {
     },
     -- stylua: ignore
     keys = {
-      { "<Leader>dB", function() require("dap").set_breakpoint(fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition" },
+      { "<Leader>dB", function() require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition" },
       { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: toggle breakpoint" },
       -- { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
-      { "<Leader>dc", function() require("dap").continue() end, desc = "Debug: continue" },
+      { "<Leader>dd", function() require("dap").continue() end, desc = "Debug: continue" },
       { "<Leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Debug: run with args" },
       { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
       { "<Leader>dC", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
@@ -39,7 +39,7 @@ return {
 
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
       { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
-      { "<Leader>dt", function() require("dap").terminate() end, desc = "Debug: terminate" },
+      { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate" },
       { "<Leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Debug: widgets" },
 
       -- +----------------------------------------------------------+
@@ -114,12 +114,18 @@ return {
             dap_continue_or_run = function()
               return require("dap").continue()
             end,
+            dap_printout_session = function()
+              return print(vim.inspect(require("dap").session()))
+            end,
             dap_close_or_quit = function()
               require("dap").terminate()
               require("dapui").close()
             end,
-            dap_printout_session = function()
-              return print(vim.inspect(require("dap").session()))
+            dap_GUI_toggle = function()
+              return require("dapui").toggle()
+            end,
+            dap_GUI_reset = function()
+              return require("dapui").open { reset = true }
             end,
           }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
         end,
@@ -132,9 +138,14 @@ return {
         require("mason-nvim-dap").setup(RUtils.opts "mason-nvim-dap.nvim")
       end
 
+      local yellow = Highlight.get("GitSignsChange", "fg")
+      local yellowlow = Highlight.tint(yellow, -0.7)
+      local yellowhi = Highlight.tint(yellow, 0.7)
       Highlight.plugin("dapHi", {
         { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = "NONE" } },
-        { DapStopped = { fg = { from = "Boolean", attr = "fg" }, bg = "NONE" } },
+        { DapStopped = { bg = yellowlow, fg = "NONE" } },
+        { DapStoppedIcon = { bg = yellowlow, fg = yellowhi } },
+        { DapStoppedMod = { bg = yellowlow, fg = yellowhi } },
         { DapUiPlayPause = { bg = RUtils.colortbl.statusline_bg } },
         { DapUiStop = { bg = RUtils.colortbl.statusline_bg } },
         { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
@@ -148,7 +159,9 @@ return {
         },
         {
           name = "DapStopped",
-          texthl = "DapStopped",
+          texthl = "DapStoppedIcon",
+          numhl = "DapStopped",
+          linehl = "DapStopped",
           text = RUtils.config.icons.dap.Stopped,
         },
       }
