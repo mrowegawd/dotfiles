@@ -18,6 +18,8 @@ function _G.Mardownfoldtext()
   return string.format("%s%s %s   %d", padding, icon, line, vim.v.foldend - vim.v.foldstart + 1)
 end
 
+RUtils.map.nmap("K", "<Nop>")
+
 -- opt.foldtext = "v:lua.Mardownfoldtext()"
 opt.foldtext = ""
 opt.foldexpr = "nvim_treesitter#foldexpr()"
