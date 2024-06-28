@@ -71,8 +71,9 @@ function M.add_missing_snippet_docs(window)
 end
 
 function M.visible()
-  local ok, cmp = pcall(require, "cmp")
-  return ok and cmp.core.view:visible()
+  ---@module 'cmp'
+  local cmp = package.loaded["cmp"]
+  return cmp and cmp.core.view:visible()
 end
 
 -- This is a better implementation of `cmp.confirm`:
@@ -135,24 +136,23 @@ function M.setup(opts)
   end
 
   local parse = require("cmp.utils.snippet").parse
-  ---@diagnostic disable-next-line: duplicate-set-field
   require("cmp.utils.snippet").parse = function(input)
     local ok, ret = pcall(parse, input)
     if ok then
       return ret
     end
-    return M.snippet_preview(input)
+    return RUtils.cmp.snippet_preview(input)
   end
 
   local cmp = require "cmp"
   cmp.setup(opts)
   cmp.event:on("confirm_done", function(event)
     if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
-      M.auto_brackets(event.entry)
+      RUtils.cmp.auto_brackets(event.entry)
     end
   end)
   cmp.event:on("menu_opened", function(event)
-    M.add_missing_snippet_docs(event.window)
+    RUtils.cmp.add_missing_snippet_docs(event.window)
   end)
 
   -- local tbl_custom_sources = {
