@@ -7,7 +7,7 @@ return {
   {
     "hrsh7th/nvim-cmp",
     version = false, -- last release is way too old
-    event = "InsertEnter",
+    event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
       "hrsh7th/cmp-buffer",
@@ -18,16 +18,6 @@ return {
       "lukas-reineke/cmp-under-comparator",
       "rcarriga/cmp-dap",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
-      --     luasnip.filetype_extend("python", { "django" })
-      --     luasnip.filetype_extend("django-html", { "html" })
-      --     luasnip.filetype_extend("htmldjango", { "html" })
-      --
-      --     luasnip.filetype_extend("javascript", { "html" })
-      --     luasnip.filetype_extend("javascript", { "javascriptreact" })
-      --     luasnip.filetype_extend("javascriptreact", { "html" })
-      --     luasnip.filetype_extend("typescript", { "html" })
-      --     luasnip.filetype_extend("typescriptreact", { "html", "react" })
-      --     -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     },
     opts = function()
       local cmp = require "cmp"
@@ -84,11 +74,6 @@ return {
           documentation = cmp.config.window.bordered(styldoc(true)),
         },
         completion = { completeopt = "menuone,noinsert,noselect" },
-        snippet = {
-          expand = function(item)
-            return RUtils.cmp.expand(item.body)
-          end,
-        },
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
@@ -234,73 +219,81 @@ return {
     end,
     main = "r.utils.cmp",
   },
-  -- NVIM-SNIPPETS
+  -- LUASNIP
   {
-    "nvim-cmp",
+    "L3MON4D3/LuaSnip",
+    event = "VeryLazy",
+    build = (not RUtils.is_win())
+        and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
+      or nil,
     dependencies = {
       {
-        "garymjr/nvim-snippets",
-        opts = {
-          friendly_snippets = false,
-          search_paths = { RUtils.config.path.snippet_path },
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+          "saadparwaiz1/cmp_luasnip",
         },
+        opts = function(_, opts)
+          opts.snippet = {
+            expand = function(args)
+              require("luasnip").lsp_expand(args.body)
+            end,
+          }
+          table.insert(opts.sources, { name = "luasnip" })
+        end,
       },
     },
-    opts = function(_, opts)
-      local cmp = require "cmp"
+    opts = {
+      history = true,
+      delete_check_events = "TextChanged",
+    },
+    config = function()
+      local luasnip = require "luasnip"
 
-      -- local has_words_before = function()
-      --   ---@diagnostic disable-next-line: deprecated
-      --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-      --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
-      -- end
-
-      local function tab(fallback)
-        local entry = cmp.get_selected_entry()
-
-        if
-          cmp.visible()
-          and (
-            entry ~= nil
-            and not (entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$"))
-          )
-        then
-          cmp.confirm { select = false }
-        elseif vim.snippet.active { direction = 1 } then
-          vim.schedule(function()
-            vim.snippet.jump(1)
-          end)
-        -- elseif has_words_before() then
-        --   cmp.complete()
-        else
-          fallback()
-        end
-      end
-
-      local function shift_tab(fallback)
-        if vim.snippet.active { direction = -1 } then
-          vim.schedule(function()
-            vim.snippet.jump(-1)
-          end)
-        else
-          fallback()
-        end
-      end
-
-      opts.snippet = {
-        expand = function(item)
-          return RUtils.cmp.expand(item.body)
-        end,
+      require("luasnip.loaders.from_vscode").lazy_load {
+        paths = RUtils.config.path.snippet_path,
       }
-      opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
-        ["<TAB>"] = cmp.mapping(tab, { "i", "s" }),
-        ["<S-TAB>"] = cmp.mapping(shift_tab, { "i", "s" }),
-      })
 
-      if RUtils.has "nvim-snippets" then
-        table.insert(opts.sources, { name = "snippets" })
-      end
+      luasnip.filetype_extend("python", { "django" })
+      luasnip.filetype_extend("django-html", { "html" })
+      luasnip.filetype_extend("htmldjango", { "html" })
+
+      luasnip.filetype_extend("javascript", { "html" })
+      luasnip.filetype_extend("javascript", { "javascriptreact" })
+      luasnip.filetype_extend("javascriptreact", { "html" })
+      luasnip.filetype_extend("typescript", { "html" })
+      luasnip.filetype_extend("typescriptreact", { "html", "react" })
+
+      luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     end,
+  },
+  -- NVIM-CMP Keys
+  {
+    "nvim-cmp",
+    keys = {
+      {
+        "<tab>",
+        function()
+          return require("luasnip").jumpable(1) and "<Plug>luasnip-jump-next" or "<tab>"
+        end,
+        expr = true,
+        silent = true,
+        mode = "i",
+      },
+      {
+        "<tab>",
+        function()
+          require("luasnip").jump(1)
+        end,
+        mode = "s",
+      },
+      {
+        "<s-tab>",
+        function()
+          require("luasnip").jump(-1)
+        end,
+        mode = { "i", "s" },
+      },
+    },
   },
   -- MINI.PAIRS
   {
@@ -380,40 +373,15 @@ return {
     opts = true,
     enabled = vim.fn.has "nvim-0.10" == 1,
   },
-  -- NVIM-COVERAGE
-  {
-    "andythigpen/nvim-coverage", -- Display test coverage information
-    dependencies = "nvim-lua/plenary.nvim",
-    cmd = {
-      "Coverage",
-      "CoverageSummary",
-      "CoverageLoad",
-      "CoverageShow",
-      "CoverageHide",
-      "CoverageToggle",
-      "CoverageClear",
-    },
-    config = function()
-      require("coverage").setup {
-        highlights = {
-          covered = { fg = "green" },
-          uncovered = { fg = "red" },
-        },
-      }
-
-      Highlight.plugin("coverage_hi", {
-        { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
-      })
-    end,
-  },
   -- SCRATCH
   {
     "LintaoAmons/scratch.nvim",
+    event = "VeryLazy",
     cmd = { "Scratch", "ScratchOpen" },
-    tag = "v0.13.2",
+    opts = {
+      scratch_file_dir = vim.fn.stdpath "cache" .. "/scratch.nvim", -- where your scratch files will be put
+      filetypes = { "lua", "js", "sh", "ts", "go", "txt", "md", "rs" }, -- you can simply put filetype here
+    },
     keys = {
       {
         "<Localleader>oS",
@@ -427,16 +395,39 @@ return {
       },
     },
   },
-  -- REST.NVIM
+  -- SESSION_KEYS (disabled)
   {
-    "rest-nvim/rest.nvim",
-    ft = "http",
-    cmd = { "Rest" },
-    keys = { { "<Leader>rr", "<CMD>Rest run<CR>", desc = "Open(rest-nvim): execute HTTP request" } },
-    opts = { skip_ssl_verification = true },
-    config = function(_, opts)
-      require("rest-nvim").setup(opts)
+    "shmerl/session-keys",
+    enabled = false,
+    config = function()
+      local session_keys = require "session-keys"
+      session_keys.sessions.dap = {
+        -- stylua: ignore
+        n = { -- mode 'n'
+          -- { lhs = "<F9>", rhs = function() require("dap").toggle_breakpoint() end },
+
+          { lhs = "<c-h>", rhs = function() require("dap").continue() end },
+          { lhs = "<c-j>", rhs = function() require("dap").step_over() end },
+          { lhs = "<c-l>", rhs = function() require("dap").step_into() end },
+          { lhs = "<c-k>", rhs = function() require("dap").up() end },
+          { lhs = "<c-o>", rhs = function() require("dap").step_out() end },
+
+          -- { lhs = "<F8>", rhs = function() require("dap").disconnect() end },
+          -- { lhs = "<F20>", rhs = function() require("dap").terminate() end },
+
+          -- { lhs = "<F17>", rhs = function() require("dap").run_last() end },
+          --
+          -- { lhs = "<F7>", rhs = function() require("dap").pause() end },
+          -- { lhs = "<F29>", rhs = function() require("dap").reverse_continue() end },
+          -- { lhs = "<F22>", rhs = function() require("dap").step_back() end },
+        },
+      }
     end,
+  },
+  -- KULALA
+  {
+    "mistweaverco/kulala.nvim",
+    event = "VeryLazy",
   },
   -- OVERSEER.NVIM
   {
@@ -515,6 +506,35 @@ return {
       require("overseer").setup(opts)
 
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
+    end,
+  },
+  -- NVIM-COVERAGE
+  {
+    "andythigpen/nvim-coverage", -- Display test coverage information
+    dependencies = "nvim-lua/plenary.nvim",
+    cmd = {
+      "Coverage",
+      "CoverageSummary",
+      "CoverageLoad",
+      "CoverageShow",
+      "CoverageHide",
+      "CoverageToggle",
+      "CoverageClear",
+    },
+    config = function()
+      require("coverage").setup {
+        highlights = {
+          covered = { fg = "green" },
+          uncovered = { fg = "red" },
+        },
+      }
+
+      Highlight.plugin("coverage_hi", {
+        { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
+      })
     end,
   },
   -- RUNMUX
