@@ -261,13 +261,19 @@ return {
       return {
         signs_staged_enable = false,
         attach_to_untracked = true,
+        signs_staged = {
+          add = { text = "▎" },
+          change = { text = "▎" },
+          delete = { text = "" },
+          topdelete = { text = "" },
+          changedelete = { text = "▎" },
+        },
         signs = {
           add = { text = "▎" },
           change = { text = "▎" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
+          delete = { text = "" },
+          topdelete = { text = "" },
           changedelete = { text = "▎" },
-          -- changedelete = { text = "~", numhl = "GitSignsChangeNr" },
           -- untracked = { text = "▎" },
           untracked = { text = "┆" },
         },
