@@ -56,7 +56,7 @@ return {
   {
     "ibhagwan/fzf-lua",
     version = false,
-    cmd = "FzfLua",
+    -- cmd = "FzfLua",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
@@ -97,53 +97,28 @@ return {
         },
       },
     },
+    --stylua: ignore
     keys = {
-      { "<a-w>", require("fzf-lua").tabs, desc = "Fzflua: select tabs" },
-      { "sf", require("fzf-lua").buffers, desc = "Fzflua: select buffers" },
-      { "sG", require("fzf-lua").lines, desc = "Fzflua: live grep on buffers" },
-      { "sH", require("fzf-lua").oldfiles, desc = "Fzflua: history buffer" },
-      { "z=", require("fzf-lua").spell_suggest, desc = "Fzflua: spell suggest" },
-      { "sg", require("fzf-lua").blines, desc = "FzfLua: live grep on curbuf" },
-      {
-        "sg",
-        function()
-          require("fzf-lua").blines { query = vim.fn.expand "<cword>" }
-        end,
-        desc = "Winav: live grep on curbuf (visual)",
-        mode = { "v" },
-      },
-      {
-        "sG",
-        function()
-          require("fzf-lua").lines { query = vim.fn.expand "<cword>" }
-        end,
-        desc = "Winav: live grep on buffers (visual) [fzflua]",
-        mode = { "v" },
-      },
-      { "<Leader>ff", require("fzf-lua").files, desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "<Leader>fC", require("fzf-lua").commands, desc = "Fzflua: commands", mode = "n" },
-      {
-        "gs",
-        -- RUtils.fzflua.symbols,
-        "<CMD>FzfLua lsp_document_symbols<CR>",
-        desc = "LSP: workspace symbols [fzflua]",
-      },
-      { "<Leader>fl", require("fzf-lua").resume, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fL", require("fzf-lua").command_history, desc = "Fzflua: command history" },
-      { "<Leader>fg", require("fzf-lua").live_grep_glob, desc = "Fzflua: live grep" },
-      { "<Leader>fg", require("fzf-lua").grep_visual, desc = "Fzflua: live grep (visual)", mode = { "v" } },
-      { "<Leader>fc", require("fzf-lua").changes, desc = "Fzflua: changes" },
-      { "<Leader>fj", require("fzf-lua").jumps, desc = "Fzflua: jumps" },
-      { "<Leader>fm", require("fzf-lua").marks, desc = "Fzflua: marks" },
-      { "<Leader>fs", require("fzf-lua").search_history, desc = "Fzflua: search history" },
-      {
-        "<Leader>fh",
-        function()
-          local j = vim.fn.expand "<cword>"
-          require("fzf-lua").help_tags { query = j }
-        end,
-        desc = "Fzflua: help tags",
-      },
+      { "<a-w>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
+      { "sf", function() require("fzf-lua").buffers() end, desc = "Fzflua: select buffers" },
+      { "sG", function() require("fzf-lua").lines() end, desc = "Fzflua: live grep on buffers" },
+      { "sH", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: history buffer" },
+      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
+      { "sg", function() require("fzf-lua").blines() end, desc = "FzfLua: live grep on curbuf", mode = { "n" } },
+      { "sg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on curbuf (visual)", mode = { "v" } },
+      { "sG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on buffers (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
+      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
+      { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: workspace symbols [fzflua]" },
+      { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
+      { "<Leader>fL", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
+      { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
+      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
+      { "<Leader>fc", function() require("fzf-lua").changes() end, desc = "Fzflua: changes" },
+      { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Fzflua: jumps" },
+      { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
+      { "<Leader>fs", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
+      { "<Leader>fh", function() local j = vim.fn.expand "<cword>" require("fzf-lua").help_tags { query = j } end, desc = "Fzflua: help tags" },
       {
         "<Leader>fh",
         function()
