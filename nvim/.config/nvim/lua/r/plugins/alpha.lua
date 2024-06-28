@@ -29,6 +29,19 @@ return {
       vim.cmd "highlight DashboardHeader guifg=#F7778F"
       vim.cmd "highlight DashboardCenter guifg=#F7778F"
 
+      -- open dashboard after closing lazy
+      if vim.o.filetype == "lazy" then
+        vim.api.nvim_create_autocmd("WinClosed", {
+          pattern = tostring(vim.api.nvim_get_current_win()),
+          once = true,
+          callback = function()
+            vim.schedule(function()
+              vim.api.nvim_exec_autocmds("UIEnter", { group = "dashboard" })
+            end)
+          end,
+        })
+      end
+
       return {
         theme = "doom",
         hide = {
@@ -39,7 +52,7 @@ return {
           relativenumber = false,
         },
         config = {
-          header = require "r.utils.logo"(5),
+          header = require "r.utils.logo"(2),
           center = {
             {
               action = [[lua require("fzf-lua").files()]],
