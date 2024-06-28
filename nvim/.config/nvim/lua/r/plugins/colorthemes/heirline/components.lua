@@ -170,17 +170,17 @@ M.Mode = {
       return { bg = self.mode_colors[mode], fg = colors.mod_norm_bg, bold = true }
     end,
   },
+  -- {
+  --   provider = RUtils.config.icons.misc.separator_up,
+  --   hl = function()
+  --     return { fg = colors.separator_fg_alt, bg = colors.base_bg }
+  --   end,
+  -- },
   {
-    provider = RUtils.config.icons.misc.separator_up,
+    provider = RUtils.config.icons.misc.separator_up .. " ",
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       return { fg = self.mode_colors[mode], bg = colors.separator_fg_alt }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { fg = colors.separator_fg_alt, bg = colors.base_bg }
     end,
   },
 }
