@@ -46,11 +46,17 @@ return {
       -- Step-in, step-out, step-over | Stack-up Stack-down
       -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       -- +----------------------------------------------------------+
-      { "<Leader>di", function() require("dap").step_into() end, desc = "Debug: step into" },
+      -- { "<Leader>di", function() require("dap").step_into() end, desc = "Debug: step into" },
+      -- { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
+      -- { "<Leader>dk", function() require("dap").up() end, desc = "Debug: setup up" },
+      -- { "<Leader>do", function() require("dap").step_out() end, desc = "Debug: step out" },
+      -- { "<Leader>dO", function() require("dap").step_over() end, desc = "Debug: step over" },
+
       { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
-      { "<Leader>dk", function() require("dap").up() end, desc = "Debug: setup up" },
-      { "<Leader>do", function() require("dap").step_out() end, desc = "Debug: step out" },
-      { "<Leader>dO", function() require("dap").step_over() end, desc = "Debug: step over" },
+      { "<S-Up>", function() require("dap").up() end, desc = "Debug: setup up" },
+      { "<S-Right>", function() require("dap").step_into() end, desc = "Debug: step into" },
+      { "<S-Left>", function() require("dap").step_out() end, desc = "Debug: step out" },
+      { "<S-Down>", function() require("dap").step_over() end, desc = "Debug: step over" },
       -- +----------------------------------------------------------+
       -- Run and close the debug
       -- +----------------------------------------------------------+

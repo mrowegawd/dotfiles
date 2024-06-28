@@ -155,6 +155,9 @@ local defaults = {
       separator_leg_down = "",
       separator_leg_up = "",
 
+      separator_leg_left = "",
+      -- "" },
+
       separator_hed_down = "",
       separator_hed_up = "",
     },

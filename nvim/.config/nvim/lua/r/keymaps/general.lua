@@ -437,39 +437,39 @@ RUtils.map.nnoremap("<Localleader>r", function()
     end,
     session_load = function()
       if RUtils.has "persistence.nvim" then
-        require("persistence").load()
-      elseif RUtils.has "resession.nvim" then
-        require("resession").load()
+        return require("persistence").load()
       end
+      if RUtils.has "resession.nvim" then
+        return require("resession").load()
+      end
+      RUtils.info "no session to load. abort it"
     end,
     session_load_cwd = function()
       if RUtils.has "resession.nvim" then
-        require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
-      else
-        RUtils.info "current plugin sessions, dont have this feature. so abort"
+        return require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
       end
+      RUtils.info "no session cwd to load. abort it"
     end,
     session_delete = function()
       if RUtils.has "resession.nvim" then
-        require("resession").delete()
-      else
-        print "do nothing, ignore me"
+        return require("resession").delete()
       end
+      RUtils.info "no plugin session actived. abort it"
     end,
     session_save = function()
       if RUtils.has "persistence.nvim" then
-        require("persistence").save()
-      elseif RUtils.has "resession.nvim" then
-        require("resession").save()
+        return require("persistence").save()
       end
+      if RUtils.has "resession.nvim" then
+        return require("resession").save()
+      end
+      RUtils.info "no session to save or no plugin session actived. abort it"
     end,
     session_save_cwd = function()
       if RUtils.has "resession.nvim" then
-        -- require("resession").load(vim.fn.getcwd(), { dir = "dirsession", silence_errors = true })
-        require("resession").save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
-      else
-        print "do nothinn, ignore me"
+        return require("resession").save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
       end
+      RUtils.info "no session cwd to save or no plugin session actived. abort it"
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
 end, { desc = "Misc: list commands" })

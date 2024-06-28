@@ -548,6 +548,8 @@ local general_overrides = function()
     { ["@org.latex"] = { inherit = "Statement" } },
     { ["@org.hyperlinks"] = { inherit = "Underlined" } },
     { ["@org.code"] = { inherit = "String" } },
+
+    { ["@markup.quote.markdown"] = { bg = { from = "Boolean", attr = "fg", alter = -0.8 }, italic = true } },
     -- ['@org.code.delimiter'] = 'String',
     -- ['@org.verbatim'] = 'String',
     -- ['@org.verbatim.delimiter'] = 'String',
@@ -661,8 +663,6 @@ local function colorscheme_overrides()
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
     },
     ["kanagawa"] = {
-      -- { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-      { ["@markup.quote.markdown"] = { bg = { from = "Boolean", attr = "fg", alter = -0.7 }, italic = true } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
@@ -1131,7 +1131,6 @@ local function colorscheme_overrides()
       },
     },
     ["tokyonight"] = {
-      { ["@markup.quote.markdown"] = { bg = { from = "Boolean", attr = "fg", alter = -0.7 }, italic = true } },
 
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 

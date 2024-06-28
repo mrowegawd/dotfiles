@@ -344,6 +344,7 @@ if vim.g.neovide then
   vim.g.neovide_cursor_animation_length = 0.1
   vim.g.neovide_cursor_trail_size = 0.5
   vim.g.neovide_cursor_animate_in_insert_mode = false
+  vim.g.neovide_hide_mouse_when_typing = true
   vim.g.neovide_cursor_vfx_mode = "railgun"
 
   vim.keymap.set("", "<C-=>", function()
@@ -363,15 +364,15 @@ if vim.g.neovide then
   -- vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
 
   vim.g.neovide_transparency = 0.9
-  vim.g.transparency = 0.8
+  -- vim.g.transparency = 0.8
 
   -- Helper function for transparency formatting
-  local alpha = function()
-    return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
-  end
+  -- local alpha = function()
+  --   return string.format("%x", math.floor(255 * (vim.g.transparency or 0.8)))
+  -- end
 
   -- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
-  vim.g.neovide_background_color = "#0f1117" .. alpha()
+  -- vim.g.neovide_background_color = "#0f1117" .. alpha()
 end
 
 -- Filetype detection
@@ -421,7 +422,7 @@ vim.g.HiFind = ""
 vim.g.HiSetSL = ""
 vim.g.HiFindTool = "rg -H --color=never --no-heading --column --smart-case"
 
--- forplugin: ggandor/lightspeed.nvim
+-- plugin: ggandor/lightspeed.nvim
 vim.g.lightspeed_no_default_keymaps = true
 
 -- Fix markdown indentation settings
