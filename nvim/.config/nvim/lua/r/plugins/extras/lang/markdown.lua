@@ -32,7 +32,7 @@ return {
   },
   {
     "williamboman/mason.nvim",
-    opts = { ensure_installed = { "markdownlint", "markdown-toc", "cbfmt" } },
+    opts = { ensure_installed = { "markdownlint", "markdown-toc", "cbfmt", "codespell" } },
   },
   {
     "mfussenegger/nvim-lint",
