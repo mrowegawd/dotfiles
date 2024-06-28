@@ -1,40 +1,4 @@
 return {
-  -- MASON NVIM
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    build = ":MasonUpdate",
-    opts = {
-      ensure_installed = {
-        -- lua
-        "stylua",
-      },
-      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
-    },
-    ---@param opts MasonSettings | {ensure_installed: string[]}
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require "mason-registry"
-      mr:on("package:install:success", function()
-        vim.defer_fn(function()
-          -- trigger FileType event to possibly load this newly installed LSP server
-          require("lazy.core.handler.event").trigger {
-            event = "FileType",
-            buf = vim.api.nvim_get_current_buf(),
-          }
-        end, 100)
-      end)
-
-      mr.refresh(function()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end)
-    end,
-  },
   -- NVIM-LSPCONFIG
   {
     "neovim/nvim-lspconfig",
@@ -93,16 +57,23 @@ return {
         },
         inlay_hints = {
           enabled = false,
-          exclude = {}, -- filetypes for which you don't want to enable inlay hints
+          exclude = { "vue" }, -- filetypes for which you don't want to enable inlay hints
         },
         codelens = { enabled = false },
         document_highlight = { enabled = true },
-        capabilities = {},
+        -- add any global capabilities here
+        capabilities = {
+          workspace = {
+            fileOperations = {
+              didRename = true,
+              willRename = true,
+            },
+          },
+        },
         format = { formatting_options = nil, timeout_ms = nil },
         -- LSP Server Settings
         ---@type lspconfig.options
         servers = {
-          zls = {},
           lua_ls = {
             -- mason = false, -- set to false if you don't want this server to be installed with mason
             -- keys = {},
@@ -268,6 +239,44 @@ return {
           return false
         end)
       end
+    end,
+  },
+  -- MASON NVIM
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    build = ":MasonUpdate",
+    opts_extend = { "ensure_installed" },
+    opts = {
+      ensure_installed = {
+        -- lua
+        "stylua",
+        "shfmt",
+      },
+      ui = { border = RUtils.config.icons.border.line, height = 0.8 },
+    },
+    ---@param opts MasonSettings | {ensure_installed: string[]}
+    config = function(_, opts)
+      require("mason").setup(opts)
+      local mr = require "mason-registry"
+      mr:on("package:install:success", function()
+        vim.defer_fn(function()
+          -- trigger FileType event to possibly load this newly installed LSP server
+          require("lazy.core.handler.event").trigger {
+            event = "FileType",
+            buf = vim.api.nvim_get_current_buf(),
+          }
+        end, 100)
+      end)
+
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
+          local p = mr.get_package(tool)
+          if not p:is_installed() then
+            p:install()
+          end
+        end
+      end)
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
