@@ -18,8 +18,6 @@ return {
   {
     "williamboman/mason.nvim",
     opts = { ensure_installed = { "shellcheck" } },
-    -- "shellcheck",
-    -- "shfmt",
   },
   -- add some stuff to treesitter
   {
@@ -32,7 +30,7 @@ return {
       end
 
       vim.filetype.add {
-        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi" },
+        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", http = "http" },
         filename = {
           ["vifmrc"] = "vim",
         },
@@ -50,6 +48,10 @@ return {
 
       if have "hypr" then
         add "hyprlang"
+      end
+
+      if have "http" then
+        add "http"
       end
 
       if have "fish" then
