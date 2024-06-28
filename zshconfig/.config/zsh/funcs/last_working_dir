@@ -4,8 +4,8 @@
 typeset -g ZSH_LAST_WORKING_DIRECTORY
 
 # Updates the last directory once directory is changed
-# autoload -U add-zsh-hook
-# add-zsh-hook chpwd chpwd_last_working_dir
+autoload -U add-zsh-hook
+add-zsh-hook chpwd chpwd_last_working_dir
 
 chpwd_last_working_dir() {
   # Don't run in subshells

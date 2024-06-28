@@ -27,11 +27,6 @@ build-install(){
   	sudo apt install urlview
   fi
 
-  if ! command -v bat >/dev/null; then
-    echo "Installing: bat - we cat before bat"
-    sudo apt install bat
-  fi
-
   if ! command -v fd >/dev/null; then
     echo "Installing: fd - blazingly fast"
     sudo apt install fd-find
@@ -54,6 +49,17 @@ build-install(){
     sudo apt install libsox-fmt-all
   fi
 
+  if ! asdf which bat >/dev/null; then
+    echo "Installing: bat - we cat before bat"
+  	cargo install bat
+    asdf reshim rust
+  fi
+
+  if ! asdf which tree-sitter >/dev/null; then
+    echo "Installing: tree-sitter-cli - tree-sitter-cli for nvim"
+  	cargo install tree-sitter-cli
+    asdf reshim rust
+  fi
 
   if ! asdf which eza >/dev/null; then
     echo "Installing: eza - ls colors"
