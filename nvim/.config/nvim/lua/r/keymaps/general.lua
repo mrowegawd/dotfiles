@@ -11,13 +11,13 @@ end
 -- │ EDITING TEXT                                             │
 -- ╰──────────────────────────────────────────────────────────╯
 -- Insert mode
-RUtils.map.inoremap("<c-a>", "<c-O>^", silent)
-RUtils.map.inoremap("<c-e>", "<c-O>$", silent)
-RUtils.map.inoremap("<c-d>", "<c-O>dw", silent)
-RUtils.map.inoremap("<c-l>", "<Right>", silent)
-RUtils.map.inoremap("<c-h>", "<Left>", silent)
-RUtils.map.inoremap("<c-b>", "<Esc>ba", silent)
-RUtils.map.inoremap("<c-f>", "<Esc>ea", silent)
+RUtils.map.inoremap("<C-a>", "<C-O>^", silent)
+RUtils.map.inoremap("<C-e>", "<C-O>$", silent)
+RUtils.map.inoremap("<C-d>", "<C-O>dw", silent)
+RUtils.map.inoremap("<C-l>", "<Right>", silent)
+RUtils.map.inoremap("<C-h>", "<Left>", silent)
+RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
+RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
 
 RUtils.map.inoremap("hh", "<Esc>")
 -- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
@@ -38,10 +38,10 @@ end, { desc = "Fold: magic prev closed" })
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ TERMINAL                                                │
 -- ╰─────────────────────────────────────────────────────────╯
-RUtils.map.tnoremap("<c-h>", "<Left>", { desc = "Terminal: left char" })
-RUtils.map.tnoremap("<c-l>", "<Right>", { desc = "Terminal: right char" })
-RUtils.map.tnoremap("<c-b>", "<c-Left>", { desc = "Terminal: backward" })
-RUtils.map.tnoremap("<c-f>", "<c-Right>", { desc = "Terminal: forward" })
+RUtils.map.tnoremap("<C-h>", "<Left>", { desc = "Terminal: left char" })
+RUtils.map.tnoremap("<C-l>", "<Right>", { desc = "Terminal: right char" })
+RUtils.map.tnoremap("<C-b>", "<C-Left>", { desc = "Terminal: backward" })
+RUtils.map.tnoremap("<C-f>", "<C-Right>", { desc = "Terminal: forward" })
 RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
 
 -- ╭──────────────────────────────────────────────────────────╮
@@ -87,8 +87,8 @@ RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close tab", silent
 
 RUtils.map.nnoremap("tl", "<CMD>tabnext<CR>", { desc = "Tab: next tab", silent = true })
 RUtils.map.nnoremap("th", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab", silent = true })
-RUtils.map.nnoremap("<c-a-l>", "<CMD>tabnext<CR>", { desc = "Tab: next tab (mod)", silent = true })
-RUtils.map.nnoremap("<c-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab (mod)", silent = true })
+RUtils.map.nnoremap("<C-a-l>", "<CMD>tabnext<CR>", { desc = "Tab: next tab (mod)", silent = true })
+RUtils.map.nnoremap("<C-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab (mod)", silent = true })
 
 RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab", silent = true })
 RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last tab", silent = true })
@@ -159,17 +159,17 @@ RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (v
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ COMMANDLINE                                              │
 -- ╰──────────────────────────────────────────────────────────╯
-RUtils.map.cnoremap("hh", "<c-c>", { desc = "Commandline: exit" })
-RUtils.map.cnoremap("<c-a>", "<Home>", { desc = "Commandline: go to first line" })
-RUtils.map.cnoremap("<c-e>", "<End>", { desc = "Commandline: go to the last line" })
-RUtils.map.cnoremap("<c-n>", "<Down>", { desc = "Commandline: next hist" })
-RUtils.map.cnoremap("<c-p>", "<Up>", { desc = "Commandline: prev hist" })
+RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
+RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: go to first line" })
+RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: go to the last line" })
+RUtils.map.cnoremap("<C-n>", "<Down>", { desc = "Commandline: next hist" })
+RUtils.map.cnoremap("<C-p>", "<Up>", { desc = "Commandline: prev hist" })
 RUtils.map.cnoremap("<a-n>", "<S-Down>", { desc = "Commandline: next hist" })
 RUtils.map.cnoremap("<a-p>", "<S-Up>", { desc = "Commandline: prev hist" })
-RUtils.map.cnoremap("<c-l>", "<Right>", { desc = "Commandline: next word" })
-RUtils.map.cnoremap("<c-h>", "<Left>", { desc = "Commandline: prev word" })
-RUtils.map.cnoremap("<c-f>", "<S-Right>", { desc = "Commandline: forward word" })
-RUtils.map.cnoremap("<c-b>", "<S-Left>", { desc = "Commandline: backward word" })
+RUtils.map.cnoremap("<C-l>", "<Right>", { desc = "Commandline: next word" })
+RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: prev word" })
+RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: forward word" })
+RUtils.map.cnoremap("<C-b>", "<S-Left>", { desc = "Commandline: backward word" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ CABBREV                                                  │
@@ -199,6 +199,7 @@ RUtils.map.cabbrev("qla", "qal!")
 RUtils.map.cabbrev("w;", "update!")
 
 RUtils.map.vmap("K", "<Nop>")
+RUtils.map.nmap("q", "<Nop>")
 
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ COMMANDS                                                │
@@ -285,7 +286,7 @@ end, { desc = "Toggle: treesitter highlight" })
 -- │ MISC                                                     │
 -- ╰──────────────────────────────────────────────────────────╯
 -- General
-RUtils.map.nnoremap("<c-g>", "/", nosilent)
+RUtils.map.nnoremap("<C-g>", "/", nosilent)
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit

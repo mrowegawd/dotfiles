@@ -19,7 +19,7 @@ local general_overrides = function()
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
     {
       Folded = {
-        bg = { from = "Normal", attr = "bg", alter = 0.1 },
+        bg = { from = "Normal", attr = "bg", alter = 0.4 },
         fg = { from = "Normal", attr = "bg", alter = 0.8 },
       },
     },
@@ -493,6 +493,10 @@ local general_overrides = function()
     { TelescopeResultsNormal = { link = "NormalFloat" } },
     { TelescopeResultsTitle = { fg = { from = "FloatBorder" }, bg = "NONE" } },
     { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
+
+    -- COC =============================================================
+    { CocPumMenu = { link = "CmpItemAbbr" } },
+    { CocMenuSel = { link = "PmenuSel" } },
 
     -- FZFLUA =============================================================
     { FzfLuaNormal = { inherit = "NormalFloat" } },

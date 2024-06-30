@@ -131,29 +131,29 @@ end
 
 ---@param opts cmp.ConfigSchema | {auto_brackets?: string[]}
 function M.setup(opts)
-  for _, source in ipairs(opts.sources) do
-    source.group_index = source.group_index or 1
-  end
-
-  local parse = require("cmp.utils.snippet").parse
-  require("cmp.utils.snippet").parse = function(input)
-    local ok, ret = pcall(parse, input)
-    if ok then
-      return ret
-    end
-    return RUtils.cmp.snippet_preview(input)
-  end
-
+  -- for _, source in ipairs(opts.sources) do
+  --   source.group_index = source.group_index or 1
+  -- end
+  --
+  -- local parse = require("cmp.utils.snippet").parse
+  -- require("cmp.utils.snippet").parse = function(input)
+  --   local ok, ret = pcall(parse, input)
+  --   if ok then
+  --     return ret
+  --   end
+  --   return RUtils.cmp.snippet_preview(input)
+  -- end
+  --
   local cmp = require "cmp"
   cmp.setup(opts)
-  cmp.event:on("confirm_done", function(event)
-    if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
-      RUtils.cmp.auto_brackets(event.entry)
-    end
-  end)
-  cmp.event:on("menu_opened", function(event)
-    RUtils.cmp.add_missing_snippet_docs(event.window)
-  end)
+  -- cmp.event:on("confirm_done", function(event)
+  --   if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
+  --     RUtils.cmp.auto_brackets(event.entry)
+  --   end
+  -- end)
+  -- cmp.event:on("menu_opened", function(event)
+  --   RUtils.cmp.add_missing_snippet_docs(event.window)
+  -- end)
 
   -- local tbl_custom_sources = {
   --   { name = "nvim_lsp" },
@@ -180,34 +180,26 @@ function M.setup(opts)
   --   sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
   -- })
 
+  -- local cmd_mapping = {
+  --   ["<C-e>"] = { c = cmp.mapping.abort() },
+  --   -- ["<C-y>"] = {
+  --   --   c = cmp.mapping.confirm {
+  --   --     behavior = cmp.ConfirmBehavior.Insert,
+  --   --     select = true,
+  --   --   },
+  --   -- },
+  -- }
   cmp.setup.cmdline(":", {
-    mapping = {
-      ["<c-y>"] = cmp.mapping(function()
-        cmp.confirm { select = true }
-        RUtils.map.feedkey("<CR>", "")
-      end, { "c" }),
-
-      ["<c-j>"] = cmp.mapping(function()
-        cmp.complete {}
-        if cmp.core.view:visible() or vim.fn.pumvisible() == 1 then
-          cmp.select_next_item()
-        else
-          cmp.complete {}
-        end
-      end, { "c" }),
-    },
-    sources = cmp.config.sources {
+    -- mapping = cmd_mapping,
+    sources = cmp.config.sources({
       { name = "path" },
-      {
-        name = "cmdline",
-        option = {
-          ignore_cmds = { "Man", "!" },
-        },
-      },
-    },
+    }, {
+      { name = "cmdline" },
+    }),
   })
 
   cmp.setup.cmdline({ "/", "?" }, {
+    -- mapping = cmd_mapping,
     sources = cmp.config.sources {
       { name = "buffer" },
     },
