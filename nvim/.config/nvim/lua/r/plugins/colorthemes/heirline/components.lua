@@ -219,7 +219,7 @@ M.Branch = {
 
   {
     provider = function(self)
-      return "  " .. self.status_dict.head .. " "
+      return "   " .. self.status_dict.head .. " "
     end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
@@ -395,9 +395,6 @@ M.FilePathQF = {
   },
 }
 M.FilePath = {
-  init = function(self)
-    self.bufname = vim.api.nvim_buf_get_name(0)
-  end,
   {
     provider = function()
       local opts = {
@@ -433,24 +430,49 @@ M.FilePath = {
       local sep = package.config:sub(1, 1)
       local parts = vim.split(path, "[\\/]")
       if #parts > 3 then
-        parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
+        -- parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
+        parts = { parts[1], "…", parts[#parts - 1] } -- remove the last one, to modified highlight filename
       end
 
       if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
-        return " " .. table.concat(parts, sep) .. " "
+        return " " .. table.concat(parts, sep) .. sep
       end
 
-      if filename == "" then
-        return string.upper(vim.bo.filetype) .. " "
+      if #filename == 0 then
+        return "[Unknown Filename]"
       end
 
-      return " " .. filename .. " "
+      if not Conditions.is_not_active() then
+        parts = vim.split(filename, "[\\/]")
+        table.remove(parts, #parts)
+        if #parts == 0 then
+          return " " .. table.concat(parts, sep)
+        end
+        return " " .. table.concat(parts, sep) .. sep
+      end
+
+      return " " .. filename
     end,
     hl = function()
       if Conditions.is_not_active() then
         return { fg = Col.statuslinenc_fg }
       end
       return { fg = colors.base_fg }
+    end,
+  },
+  {
+    provider = function()
+      local bufname = vim.api.nvim_buf_get_name(0)
+      local filename = vim.fn.fnamemodify(bufname, ":.")
+
+      if not Conditions.is_not_active() then
+        return RUtils.file.basename(filename) .. " "
+      end
+
+      return ""
+    end,
+    hl = function()
+      return { fg = colors.base_fg, bold = true, italic = true }
     end,
   },
 }
