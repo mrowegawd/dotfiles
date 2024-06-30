@@ -170,14 +170,8 @@ M.Mode = {
       return { bg = self.mode_colors[mode], fg = colors.mod_norm_bg, bold = true }
     end,
   },
-  -- {
-  --   provider = RUtils.config.icons.misc.separator_up,
-  --   hl = function()
-  --     return { fg = colors.separator_fg_alt, bg = colors.base_bg }
-  --   end,
-  -- },
   {
-    provider = RUtils.config.icons.misc.separator_up .. " ",
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       return { fg = self.mode_colors[mode], bg = colors.separator_fg_alt }
@@ -406,7 +400,18 @@ M.FilePath = {
   end,
   {
     provider = function()
+      local opts = {
+        relative = "cwd",
+        modified_hl = "Constant",
+      }
+
+      local path = vim.fn.expand "%:p" --[[@as string]]
+      if path == "" then
+        return ""
+      end
+
       local bufname = vim.api.nvim_buf_get_name(0)
+      local filename = vim.fn.fnamemodify(bufname, ":.")
 
       if vim.bo[0].filetype == "qf" then
         return ""
@@ -416,25 +421,27 @@ M.FilePath = {
         return ""
       end
 
-      if vim.bo[0].buftype == "terminal" then
-        local tname, _ = bufname:gsub(".*:", "")
-        -- remove '/usr/local/bin/fish;' part from tname
-        tname, _ = tname:gsub(".*;", "")
-        return tname .. " "
+      local root = RUtils.root.get { normalize = true }
+      local cwd = RUtils.root.cwd()
+
+      if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
+        path = path:sub(#cwd + 2)
+      else
+        path = path:sub(#root + 2)
       end
 
-      local filename = vim.fn.fnamemodify(bufname, ":.")
+      local sep = package.config:sub(1, 1)
+      local parts = vim.split(path, "[\\/]")
+      if #parts > 3 then
+        parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
+      end
+
+      if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
+        return " " .. table.concat(parts, sep) .. " "
+      end
+
       if filename == "" then
         return string.upper(vim.bo.filetype) .. " "
-      end
-      -- now, if the filename would occupy more than 90% of the available
-      -- space, we trim the file path to its initials
-      if not Conditions.width_percent_below(#filename, 0.60) and not Conditions.is_not_active() then
-        filename = vim.fs.basename(filename)
-      end
-
-      if not Conditions.width_percent_below(#filename, 0.20) and not Conditions.is_not_active() then
-        filename = vim.fn.pathshorten(filename)
       end
 
       return " " .. filename .. " "
