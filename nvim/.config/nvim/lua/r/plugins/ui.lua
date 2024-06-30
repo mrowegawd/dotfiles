@@ -230,9 +230,6 @@ return {
             ["cmp.entry.get_documentation"] = true,
           },
         },
-        cmdline = {
-          view = "cmdline_popup",
-        },
         redirect = { view = "popup", filter = { event = "msg_show" } },
         views = {
           cmdline_popup = {
