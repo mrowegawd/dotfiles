@@ -71,7 +71,11 @@ function M.icon(sign, len)
   sign = sign or {}
   len = len or 2
   local text = vim.fn.strcharpart(sign.text or "", 0, len) ---@type string
-  text = text .. string.rep(" ", len - vim.fn.strchars(text))
+  local space = " "
+  if sign.namespace and sign.namespace == "icontext" then
+    space = ""
+  end
+  text = text .. string.rep(space, len - vim.fn.strchars(text))
   return sign.texthl and ("%#" .. sign.texthl .. "#" .. text .. "%*") or text
 end
 
@@ -149,6 +153,7 @@ function M.statuscolumn()
     components[1] = M.icon(left or M.get_mark(buf, vim.v.lnum))
     -- Right: fold icon or git sign (only if file)
     components[3] = is_file and M.icon(fold or right) or ""
+    components[3] = components[3] .. M.icon { text = "▏", texthl = "LineNr", namespace = "icontext" } -- "│" "▏" "|"
   end
 
   -- Numbers in Neovim are weird
@@ -169,7 +174,7 @@ function M.statuscolumn()
   end
 
   if vim.v.virtnum ~= 0 then
-    components[2] = "%= "
+    components[2] = "%="
   end
 
   return table.concat(components, "")
