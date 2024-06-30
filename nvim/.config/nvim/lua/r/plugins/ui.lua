@@ -50,7 +50,7 @@ return {
         },
       })
       return {
-        scope = { show_start = false, show_end = false },
+        scope = { show_start = false, show_end = false, enabled = false },
         indent = {
           char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
           tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
@@ -97,6 +97,14 @@ return {
       scrolloff_on_enter = 7,
       exclude_buftypes = {},
     },
+  },
+  -- VIM-MATCHUP
+  {
+    "andymass/vim-matchup",
+    event = { "BufReadPost" },
+    config = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end,
   },
   -- NVIM-NOTIFY
   {
