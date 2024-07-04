@@ -71,6 +71,8 @@ fpath=(${ASDF_DIR}/completions $fpath)
 # fi;
 # autoload -U compinit && (compinit &; compinit -C)
 
+eval "$(zoxide init zsh)"
+
 # Check this link to find out how to make completion in zsh
 # https://thevaluable.dev/zsh-completion-guide-examples/
 zmodload zsh/complist

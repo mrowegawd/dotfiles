@@ -67,6 +67,12 @@ build-install(){
     asdf reshim rust
   fi
 
+  if ! asdf which zoxide >/dev/null; then
+    echo "Installing: zoxide - A smarter cd commands"
+    cargo install zoxide --locked
+    asdf reshim rust
+  fi
+
   if ! asdf which delta >/dev/null; then
     echo "Installing: delta - color hunk"
   	cargo install git-delta
