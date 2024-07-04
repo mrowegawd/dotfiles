@@ -451,7 +451,6 @@ return {
     event = "LspAttach",
     enabled = false,
     dependencies = {
-      { "nvim-tree/nvim-web-devicons" },
       { "nvim-treesitter/nvim-treesitter" },
     },
     config = function(_, opts)
@@ -1508,7 +1507,6 @@ return {
   {
     "stevearc/oil.nvim",
     enabled = false,
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     keys = {
       {
         "<Leader>e",
@@ -1601,7 +1599,6 @@ return {
     dependencies = {
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
       -- {
       --   "ten3roberts/window-picker.nvim",
       --   name = "window-picker",
@@ -1965,9 +1962,6 @@ return {
     "b0o/incline.nvim",
     enabled = false,
     event = "LazyFile",
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
     opts = function()
       return {
         highlight = {
@@ -2195,9 +2189,6 @@ return {
     "sontungexpt/sttusline",
     enabled = false,
     event = "BufEnter",
-    de1endencies = {
-      "nvim-tree/nvim-web-devicons",
-    },
     opts = function()
       local component = require "r.plugins.colorthemes.sttusline.components"
       return {
@@ -3455,7 +3446,6 @@ return {
         { DropBarIconUISeparatorMenu = { bg = { from = "ColorColumn" }, fg = { from = "DropBarIconUISeparator" } } },
       })
     end,
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("dropbar").setup {
         general = {
@@ -3688,7 +3678,6 @@ return {
   {
     "romgrk/barbar.nvim",
     dependencies = {
-      { "nvim-tree/nvim-web-devicons" },
       { "lewis6991/gitsigns.nvim" },
       -- { "rebelot/kanagawa.nvim" },
     },

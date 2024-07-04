@@ -19,7 +19,6 @@ return {
       "MunifTanjim/nui.nvim",
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
       -- {
       --   "ten3roberts/window-picker.nvim",
       --   name = "window-picker",
@@ -394,7 +393,6 @@ return {
   {
     "stevearc/aerial.nvim",
     event = "VeryLazy",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
       -- require("telescope").load_extension "aerial"

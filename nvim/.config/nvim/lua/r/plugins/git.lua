@@ -479,7 +479,6 @@ return {
     cmd = { "Fugit2", "Fugit2Graph" },
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "nvim-tree/nvim-web-devicons",
       "nvim-lua/plenary.nvim",
       {
         "chrisgrieser/nvim-tinygit",

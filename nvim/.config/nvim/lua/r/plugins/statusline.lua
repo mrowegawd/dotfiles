@@ -2,7 +2,6 @@ return {
   -- HEIRLINE
   {
     "rebelot/heirline.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
     event = "LazyFile",
     opts = function()
       local comp = require "r.plugins.colorthemes.heirline.components"

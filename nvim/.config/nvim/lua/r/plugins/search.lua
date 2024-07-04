@@ -58,7 +58,6 @@ return {
     version = false,
     cmd = "FzfLua",
     dependencies = {
-      "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
       {
         "mangelozzi/nvim-rgflow.lua",
