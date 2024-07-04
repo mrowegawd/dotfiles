@@ -56,7 +56,7 @@ return {
   {
     "ibhagwan/fzf-lua",
     version = false,
-    -- cmd = "FzfLua",
+    cmd = "FzfLua",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
       "onsails/lspkind.nvim",
@@ -101,17 +101,18 @@ return {
     keys = {
       { "<a-w>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
       { "sf", function() require("fzf-lua").buffers() end, desc = "Fzflua: select buffers" },
-      { "sG", function() require("fzf-lua").lines() end, desc = "Fzflua: live grep on buffers" },
-      { "sH", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: history buffer" },
-      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
       { "sg", function() require("fzf-lua").blines() end, desc = "FzfLua: live grep on curbuf", mode = { "n" } },
       { "sg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on curbuf (visual)", mode = { "v" } },
+      { "sG", function() require("fzf-lua").lines() end, desc = "Fzflua: live grep on buffers" },
       { "sG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on buffers (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>sc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
+      { "<Leader>sC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
+      { "<Leader>sa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
+      { "<Leader>sh", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: history buffer" },
+      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
       { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: workspace symbols [fzflua]" },
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fL", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
       { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fc", function() require("fzf-lua").changes() end, desc = "Fzflua: changes" },
@@ -857,6 +858,13 @@ return {
       -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "v" } },
       {
+        "<Leader>sn",
+        function()
+          require("telescope").extensions.luasnip.luasnip {}
+        end,
+        desc = "Telescope: luasnip list",
+      },
+      {
         "<Localleader><Localleader>",
         "<CMD>Telescope find_files<CR>",
         desc = "Telescope: files",
@@ -1222,6 +1230,7 @@ return {
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "live_grep_args"
       ---@diagnostic disable-next-line: undefined-field
+      telescope.load_extension "luasnip"
 
       local corrode_cfg = require "telescope._extensions.corrode.config"
       corrode_cfg.values = { theme = "ivy" }

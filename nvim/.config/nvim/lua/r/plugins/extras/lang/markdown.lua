@@ -64,7 +64,7 @@ return {
 
       linters = {
         ["markdownlint-cli2"] = {
-          args = { "--config=" .. vim.env.HOME .. "/.config/linters/.markdownlint.json" },
+          args = { "--config", vim.env.HOME .. "/.config/linters/.markdownlint.json" },
         },
         codespell = {
           args = { "--config=" .. vim.env.HOME .. "/.config/linters/cspell.json" },

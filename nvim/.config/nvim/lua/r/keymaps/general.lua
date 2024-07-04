@@ -26,7 +26,7 @@ RUtils.map.inoremap("hh", "<Esc>")
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ FOLDS                                                    │
 -- ╰──────────────────────────────────────────────────────────╯
-RUtils.map.nnoremap("<space><space>", "za", { desc = "Fold: toggle focus current fold/unfold" })
+RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
 RUtils.map.nnoremap("<a-n>", function()
   return RUtils.fold.magic_prev_next_move()

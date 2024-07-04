@@ -9,13 +9,12 @@ RUtils.config = M
 
 local home = os.getenv "HOME"
 local dropbox_path = fmt("%s/Dropbox", home, "Dropbox")
-local snippet_path = dropbox_path .. "/snippets-for-all"
-
-local colorscheme = "campfire"
-
 if RUtils.platform.is_wsl then
   dropbox_path = "/mnt/c/Users/moxli/Dropbox"
 end
+local snippet_path = dropbox_path .. "/snippets-for-all"
+
+local colorscheme = "tokyonight-storm"
 
 _G.base = {}
 
