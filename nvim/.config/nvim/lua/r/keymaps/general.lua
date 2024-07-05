@@ -488,6 +488,52 @@ end
 
 local fm_manager = vim.env.TERM_FILEMANAGER
 
+local go_left = function()
+  vim.fn.system [[tmux select-pane -L]]
+end
+
+-- local go_right = function()
+--   vim.fn.system [[tmux select-pane -R]]
+-- end
+
+local get_current_pane_id = function()
+  return normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}"]])
+end
+
+local pane_left_currend_cmd_nnn = function()
+  return normalize_return(
+    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }']]
+  )
+end
+
+local pane_left_current_cmd_zsh = function()
+  return normalize_return(
+    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }']]
+  )
+end
+
+local pane_left_current_cmd_tmux = function()
+  return normalize_return(
+    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tmux" { print $2; exit }']]
+  )
+end
+
+-- local pane_left_current_cmd_debug = function()
+--   return normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}"]])
+-- end
+--
+-- local pane_left_current_cmd_lf = function()
+--   return normalize_return(
+--     vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }']]
+--   )
+-- end
+--
+-- local pane_left_current_cmd_nvim = function()
+--   return normalize_return(
+--     vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }']]
+--   )
+-- end
+
 RUtils.map.nnoremap("<a-E>", function()
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
 
@@ -512,46 +558,27 @@ RUtils.map.nnoremap("<a-E>", function()
       vim.fn.system "wezterm cli activate-pane-direction Left"
     end
   else
-    -- local current_pane = function()
-    --   return normalize_return(vim.fn.system [[tmux select-pane -L]])
-    -- end
-
-    local go_left = function()
-      vim.fn.system [[tmux select-pane -L]]
-    end
-    local go_right = function()
-      vim.fn.system [[tmux select-pane -R]]
-    end
+    -- local get_total_active_panes = normalize_return(vim.fn.system [[ tmux display-message -p '#{window_panes}']])
+    local main_pane_id = get_current_pane_id()
+    local cmd_open_filemanager =
+      fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
 
     go_left()
 
-    local pane_left_currend_cmd_nnn = normalize_return(
-      vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }']]
-    )
-
-    local pane_left_current_cmd_zsh = normalize_return(
-      vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }']]
-    )
-
-    local pane_left_current_cmd_lf = normalize_return(
-      vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }']]
-    )
-
-    if pane_left_currend_cmd_nnn == "nnn" then
+    if pane_left_currend_cmd_nnn() == "nnn" then
       vim.fn.system "tmux kill-pane"
     end
 
-    if pane_left_current_cmd_lf == "lf" then
-      vim.fn.system "tmux kill-pane"
+    local cmd_backtopane = "tmux select-pane -t " .. main_pane_id
+
+    if pane_left_current_cmd_tmux() == "tmux" then
+      vim.fn.system(cmd_backtopane)
     end
 
-    if pane_left_current_cmd_zsh == "zsh" then
-      go_right()
-      local msg = fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
-      vim.fn.system(msg)
-      return
+    if pane_left_current_cmd_zsh() == "zsh" then
+      vim.fn.system(cmd_backtopane)
     end
-    local msg = fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
-    vim.fn.system(msg)
+
+    vim.fn.system(cmd_open_filemanager)
   end
 end)

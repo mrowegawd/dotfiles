@@ -844,7 +844,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.6 },
           bold = true,
         },
       },
