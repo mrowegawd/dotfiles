@@ -327,43 +327,30 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# CAMPFIRE Alacritty Colors
-# Default colors
 [colors.primary]
-background = '#1b1a20'
-foreground = '#bbbac1'
+foreground = '#bbc2cf'
+background ='#282c34'
 
-#[colors.cursor]
-#cursor = '#bbbac1'
-#text = '#1b1a20'
+[colors.cursor]
+cursor = '#51afef'
+text   = '#282c34'
 
-# Normal colors
 [colors.normal]
-black = '#121112'
-red = '#e67e80'
-green = '#a7c080'
-yellow = '#dbbc8a'
-blue = '#8da0d6'
-magenta = '#817faf'
-cyan = '#53a8b8'
-white = '#bbbac1'
+black   = '#282c34'
+red     = '#ff6c6b'
+green   = '#98be65'
+yellow  = '#ecbe7b'
+blue    = '#51afef'
+magenta = '#a9a1e1'
+cyan    = '#46d9ff'
+white   = '#bbc2cf'
 
-# Bright colors
 [colors.bright]
-black = '#686675'
-red = '#e67e80'
-green = '#a7c080'
-yellow = '#dbbc8a'
-blue = '#8da0d6'
-magenta = '#d6a56f'
-cyan = '#53a8b8'
-white = '#bbbac1'
-
-# Indexed Colors
-[[colors.indexed_colors]]
-index = 16
-color = '#e69875'
-
-[[colors.indexed_colors]]
-index = 17
-color = '#abbceb'
+black   = '#3f444a'
+red     = '#ff6c6b'
+green   = '#98be65'
+yellow  = '#da8548'
+blue    = '#51afef'
+magenta = '#a9a1e1'
+cyan    = '#46d9ff'
+white   = '#efefef'

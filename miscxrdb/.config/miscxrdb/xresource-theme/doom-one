@@ -1,0 +1,46 @@
+*.foreground: #bbc2cf
+*.background:#282c34
+
+*.color0: #282c34
+*.color1: #ff6c6b
+*.color2: #98be65
+*.color3: #ecbe7b
+*.color4: #51afef
+*.color5: #a9a1e1
+*.color6: #46d9ff
+*.color7: #bbc2cf
+*.color8: #3f444a
+*.color9: #ff6c6b
+*.color10: #98be65
+*.color11: #da8548
+*.color12: #51afef
+*.color13: #a9a1e1
+*.color14: #46d9ff
+*.color15: #efefef
+
+! -----------------------------
+! -----------------------------
+
+! MODE color
+*color16: #408cbf
+
+! SEPARATOR: separator_bg, separator_fg
+*color17: #285777
+*color18: #343a45
+
+! FZF: fzf_bg, fzf_fg, fzf_match,
+*color19: #24272e
+*color20: #b4c6ea
+*color21: #ffb49d
+
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*color22: #20465f
+*color23: #b4c6ea
+*color24: #ff7869
+
+! TMUX: main separator bg
+*color25: #14161a
+
+! TMUX: main window dan second window
+*color26: #282c34
+*color27: #24272e

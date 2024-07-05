@@ -1,0 +1,66 @@
+! Tender color scheme, made by jacoborus
+! adapted by Jose Esparza
+
+! special
+URxvt.foreground:   #eeeeee
+URxvt.background:   #282828
+URxvt.cursorColor:  #eeeeee
+
+! black
+URxvt.color0:       #282828
+URxvt.color8:       #4c4c4c
+
+! red
+URxvt.color1:       #f43753
+URxvt.color9:       #f43753
+
+! green
+URxvt.color2:       #c9d05c
+URxvt.color10:      #c9d05c
+
+! yellow
+URxvt.color3:       #ffc24b
+URxvt.color11:      #ffc24b
+
+! blue
+URxvt.color4:       #b3deef
+URxvt.color12:      #b3deef
+
+! magenta
+URxvt.color5:       #d3b987
+URxvt.color13:      #d3b987
+
+! cyan
+URxvt.color6:       #73cef4
+URxvt.color14:      #73cef4
+
+! white
+URxvt.color7:       #eeeeee
+URxvt.color15:      #feffff
+
+! -----------------------------
+! -----------------------------
+
+! MODE color
+*color16: #5ca4c3
+
+! SEPARATOR: separator_bg, separator_fg
+*color17: #39677a
+*color18: #999999
+
+! FZF: fzf_bg, fzf_fg, fzf_match,
+*color19: #242424
+*color20: #b4b4b4
+*color21: #ffb49d
+
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*color22: #2e5261
+*color23: #ffb49d
+*color24: #ff7869
+
+! TMUX: main separator bg
+*color25: #141414
+
+! TMUX: main window dan second window
+*color26: #282828
+*color27: #242424

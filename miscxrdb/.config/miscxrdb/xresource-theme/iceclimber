@@ -1,0 +1,47 @@
+*background: #171718
+*foreground: #bbbac1
+
+*color0: #2d2d2f
+*color1: #e67e80
+*color2: #7da77e
+*color3: #dbbc8a
+*color4: #8da0d6
+*color5: #817faf
+*color6: #559ba3
+*color7: #bbbac1
+
+*color8: #55555e
+*color9: #e67e80
+*color10: #7da77e
+*color11: #dbbc8a
+*color12: #8da0d6
+*color13: #e29eca
+*color14: #559ba3
+*color15: #bbbac1
+
+! -----------------------------
+! -----------------------------
+
+! MODE color
+*color16: #706e97
+
+! SEPARATOR: separator_bg, separator_fg
+*color17: #46455e
+*color18: #25252a
+
+! FZF: fzf_bg, fzf_fg, fzf_match,
+*color19: #141415
+*color20: #67676c
+*color21: #ffb49d
+
+! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+*color22: #38374b
+*color23: #ffffff
+*color24: #ff7869
+
+! TMUX: main separator bg
+*color25: #0b0b0c
+
+! TMUX: main window dan second window
+*color26: #171718
+*color27: #141415

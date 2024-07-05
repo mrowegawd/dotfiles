@@ -36,7 +36,7 @@ build-install(){
   # gihtub: https://github.com/sindresorhus/Gifski
   # install binary langsung dari link https://gif.ski/
 
-  # TODO: install pomodoro, didapat dari link youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
+  # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
   # https://github.com/caarlos0/timer
   # cara install `timer`:
   # echo 'deb [trusted=yes] https://repo.caarlos0.dev/apt/ /' | sudo tee /etc/apt/sources.list.d/caarlos0.list
@@ -60,6 +60,26 @@ build-install(){
   	cargo install tree-sitter-cli
     asdf reshim rust
   fi
+
+  if ! asdf which dua >/dev/null; then
+    echo "Installing: dua-cli - similiar with 'du', to check disk usage"
+    cargo install dua-cli
+    asdf reshim rust
+  fi
+
+  if ! asdf which procs >/dev/null; then
+    echo "Installing: procs - better than 'ps' command"
+    cargo install procs
+    asdf reshim rust
+  fi
+
+  # WARN: terjadi error ketika di install,
+  # idk source code nya mungkin ada yang error
+  # if ! asdf which openapi-tui >/dev/null; then
+  #   echo "Installing: openapi-tui - Terminal UI to list, browse and run APIs"
+  #   cargo install openapi-tui
+  #   asdf reshim rust
+  # fi
 
   if ! asdf which eza >/dev/null; then
     echo "Installing: eza - ls colors"
@@ -170,10 +190,10 @@ run-mark() {
       --preview-window right:50%:nohidden \
     --prompt "Jump to> ")
     if [[ -n $select ]]; then
-      if [[ ! -f $select ]]; then
-        cd $select
+      if [[ ! -d $select ]]; then
+        notify-send "invalid folder path:" "$select"
       else
-        echo -ne "[warn] this not folder??"
+        cd $select
       fi
 
     fi

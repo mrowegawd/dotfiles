@@ -12,8 +12,14 @@ local general_overrides = function()
     { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-    { CursorLineNr = { fg = { from = "Keyword", attr = "fg", alter = -0.2 }, bg = "NONE", bold = true } },
     { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+    {
+      CursorLineNr = {
+        fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+        bg = { from = "CursorLine", attr = "bg" },
+        bold = true,
+      },
+    },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
     { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
@@ -133,7 +139,7 @@ local general_overrides = function()
     -- TREESITTER LANGUAGE
     -----------------------------------------------------------------------
     -- lua
-    { ["@lsp.type.function.lua"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
+    -- { ["@lsp.type.function.lua"] = { fg = { from = "Identifier", attr = "fg" }, bold = true } },
     -- { ["@function.call.lua"] = { fg = { from = "Identifier", attr = "fg"}, bold = true } },
     -- { ['@lsp.type.variable.lua'] = { italic = true, fg = "green" } },
 
@@ -583,7 +589,7 @@ local general_overrides = function()
     -- BQF ================================================================
     { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
 
-    -- TODOTROUBLE ========================================================
+    -- TROUBLE ========================================================
     { TodoSignWarn = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticWarn" } } },
     { TodoSignFIX = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticSignError" } } },
     { TodoSignTODO = { bg = { from = "Normal", attr = "bg" }, fg = { from = "OrgDONE" } } },
@@ -593,6 +599,14 @@ local general_overrides = function()
     { GlancePreviewMatch = { fg = "#012D36", bg = "#FDA50F" } },
     { GlanceListMatch = { fg = dark_red, bg = "NONE" } },
     { GlancePreviewCursorLine = { bg = "#1b1c4b" } },
+
+    -- MARKDOWN ===========================================================
+    {
+      ["@markup.raw.markdown_inline"] = {
+        bg = { from = "Normal", attr = "bg", alter = -0.4 },
+        fg = { from = "ErrorMsg", attr = "fg" },
+      },
+    },
   }
 end
 
@@ -784,6 +798,21 @@ local function colorscheme_overrides()
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2 },
+        },
+      },
+
+      { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       {
         LspReferenceText = {
@@ -832,6 +861,12 @@ local function colorscheme_overrides()
       { CmpItemKindField = { inherit = "Function" } },
 
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 2 } } },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "fg", alter = -0.6 },
+        },
+      },
 
       {
         MyCodeUsage = {
@@ -846,14 +881,15 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = 1 },
         },
       },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { CursorLine = { bg = { from = "Normal", alter = 0.5 } } },
       {
-        Folded = {
-          bg = { from = "Normal", attr = "bg", alter = 0.7 },
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
         },
       },
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
       {
         MyParentHint = {
           bg = { from = "CursorLine", attr = "bg" },
@@ -953,6 +989,13 @@ local function colorscheme_overrides()
 
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
       {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+      {
         MyParentHint = {
           bg = { from = "CursorLine", attr = "bg" },
           fg = { from = "MyCodeUsage", attr = "fg", alter = 0.7 },
@@ -1012,6 +1055,7 @@ local function colorscheme_overrides()
       { LspReferenceRead = { fg = "NONE", undercurl = false, bold = false, bg = { from = "LspReferenceText" } } },
     },
     ["solarized-osaka"] = {
+      { CodeBlock1 = { bg = { from = "Normal", alter = 0.7 } } },
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 4.5 }, bg = "NONE" } },
       {
         PmenuSel = {
@@ -1035,13 +1079,30 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = 0.7 },
         },
       },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+        },
+      },
       { TroubleNormal = { inherit = "Normal" } },
-      { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
-      { markdownCode = { bg = "NONE" } },
 
-      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1 }, bg = { from = "Normal", attr = "bg" } } },
+      {
+        ["@markup.raw.markdown_inline"] = {
+          bg = { from = "Normal", attr = "bg", alter = -0.2 },
+          fg = { from = "ErrorMsg", attr = "fg" },
+        },
+      },
 
-      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 1.5 }, bg = { from = "Normal", attr = "bg" } } },
+      { CursorLine = { bg = { from = "Normal", alter = 0.4 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
       {
         MyParentHint = {
           bg = { from = "CursorLine", attr = "bg" },
@@ -1134,16 +1195,15 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["tokyonight"] = {
-
+    ["tokyonight-storm"] = {
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.6 }, bg = "NONE" } },
-
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
 
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
 
-      { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.8 },
@@ -1154,8 +1214,67 @@ local function colorscheme_overrides()
       { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     },
+    ["tokyonight-night"] = {
+      { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.7 }, bg = "NONE" } },
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
+
+      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          reverse = false,
+        },
+      },
+
+      { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+    },
+
+    ["doom-one"] = {
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+        },
+      },
+      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          reverse = false,
+        },
+      },
+    },
     ["vscode_modern"] = {
-      { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+        },
+      },
+
+      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       {
         MyParentHint = {
@@ -1169,10 +1288,35 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 1 },
           reverse = false,
         },
       },
+    },
+    ["tender"] = {
+      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      { CursorLineNr = { bg = { from = "CursorLine", attr = "bg" } } },
+
+      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+      {
+        Folded = {
+          -- bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          reverse = false,
+        },
+      },
+
+      { LeaveCursorLine = { bg = { from = "Normal", alter = 0.3 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     },
     ["rose-pine"] = {
       { CmpItemKindVariable = { inherit = "Constant" } },
