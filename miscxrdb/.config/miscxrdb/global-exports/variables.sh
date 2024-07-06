@@ -9,23 +9,23 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.config/miscxrdb/bin:$PATH"
 
 if command -v nvim &>/dev/null; then
-	export VISUAL="nvim"
-	export EDITOR="$VISUAL"
+  export VISUAL="nvim"
+  export EDITOR="$VISUAL"
 else
-	export VISUAL="vim"
-	export EDITOR="$VISUAL"
+  export VISUAL="vim"
+  export EDITOR="$VISUAL"
 fi
 
 if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
-	export BROWSER="/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe"
+  export BROWSER="/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe"
 else
-	export BROWSER="firefox"
+  export BROWSER="firefox"
 fi
 
 # nnn -c
 # lf
 # yazi
-export TERM_FILEMANAGER="nnn -c"
+export TERM_FILEMANAGER="yazi"
 
 #
 # }}}
