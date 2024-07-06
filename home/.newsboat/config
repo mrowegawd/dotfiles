@@ -3,7 +3,7 @@
 auto-reload                 yes
 browser                     firefox
 datetime-format             "%F"  # ISO 8601
-refresh-on-startup          yes
+refresh-on-startup          no
 player                      "mpv"
 download-path               "~/Downloads/%n"
 save-path                   "~/Downloads"
@@ -14,7 +14,7 @@ external-url-viewer         "urlview"
 
 # history-limit               0
 # max-items                   50
-cache-file                  ~/.cache/newsboat/cache.db
+cache-file                   ~/.cache/newsboat/cache.db
 
 notify-format               "%d new articles"
 notify-program              "/usr/local/bin/dunstify"
@@ -43,11 +43,11 @@ dialogs-title-format        "Dialogs"
 
 # COLORTHEME ------------------------------------------------------------------
 
-#color background          white     black
-color listnormal          blue      default
-color listfocus           yellow    black
+# color background          white     black
+color listnormal          cyan      default
+color listfocus           color226  color88
 color listnormal_unread   blue      default bold
-color listfocus_unread    yellow    black  bold
+color listfocus_unread    color226  color88  bold
 color info                red       default bold
 color article             blue      default
 
@@ -117,7 +117,7 @@ bind-key o open-in-browser-and-mark-read
 
 bind-key ^V edit-urls
 
-bind-key h quit
+# bind-key h quit
 
 bind-key r reload
 

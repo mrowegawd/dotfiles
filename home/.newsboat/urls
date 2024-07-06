@@ -13,6 +13,7 @@ MISC---------------------------------------------------------------------------
 "query:Tips:tags =~ \"programming|productivity\" and (title =~ \"tips|trick\")"
 "query:Security:tags =~ \"programming|productivity|linux\" and (title =~ \"hack|security\")"
 "query:Youtube method:tags =~ \"internetmarketing\" and (title =~ \"Youtube|YOUTUBE\")"
+"query:Composition:title =~ \"Composition|composition\""
 
 # query feeds
 "query:Unread Articles:unread = \"yes\" and tags !# \"pouet\" and tags !# \"page2rss\" and tags !# \"xiv\""
@@ -24,7 +25,7 @@ MISC---------------------------------------------------------------------------
 # "query:========================== :flags #\"z\""
 
 FORUMS-------------------------------------------------------------------------
-https://www.reddit.com/r/unixporn.rss "~REDDIT: Unixporn" tool
+# https://www.reddit.com/r/unixporn.rss "~REDDIT: Unixporn" tool
 https://www.reddit.com/r/commandline.rss "~REDDIT: Commandline" tool
 https://www.reddit.com/r/zsh+tmux.rss "~REDDIT: ZshTmux" tool
 https://www.reddit.com/r/ScriptSwap.rss "~REDDIT: ScriptSwap" linux tool
@@ -41,24 +42,28 @@ https://www.reddit.com/r/php.rss "~REDDIT: Php" php programming
 https://www.reddit.com/r/askprogramming+programming.rss "~REDDIT: Programming" learnprogramming programming
 https://www.reddit.com/r/coding.rss "~REDDIT: Coding" learnprogramming
 https://www.reddit.com/r/web_design.rss "~REDDIT: web_design" web programming
-https://www.reddit.com/r/django.rss "~REDDIT: Django" web programming
-https://www.reddit.com/r/sveltejs.rss "~REDDIT: Svelte" web programming
+https://www.reddit.com/r/django.rss "~REDDIT: Django" webdev framework
+https://www.reddit.com/r/sveltejs.rss "~REDDIT: Svelte" webdev framework
 https://www.reddit.com/r/kotlin.rss "~REDDIT: Kotlin" kotlin programming
 https://www.reddit.com/r/webdev.rss "~REDDIT: Webdev" web programming
+https://www.reddit.com/r/reactjs.rss "~REDDIT: Reactjs" react webdev
+https://www.reddit.com/r/react.rss "~REDDIT: React" react webdev
 https://www.reddit.com/r/frontend.rss "~REDDIT: Frontend" web programming
 https://www.reddit.com/r/TOR.rss "~REDDIT: Tor" tor tool
-https://www.reddit.com/r/neovim.rss "~REDDIT: Neovim" vim programming
-https://www.reddit.com/r/vimporn.rss "~REDDIT: Vimporn" vim
-https://www.reddit.com/r/vim.rss "~REDDIT: Vim" vim programming
-https://www.reddit.com/r/vimplugins.rss "~REDDIT: VimPlugins" vim tool
-https://www.reddit.com/r/firefox.rss "~REDDIT: Firefox" browser
+https://www.reddit.com/r/vimporn.rss "~REDDIT: Vimporn" vim editor
+https://www.reddit.com/r/vim.rss "~REDDIT: Vim" vim editor
+https://www.reddit.com/r/neovim.rss "~REDDIT: Neovim" vim editor
+https://www.reddit.com/r/orgmode.rss "~REDDIT: Orgmode" orgmode editor
+https://www.reddit.com/r/HelixEditor.rss "~REDDIT: Helix" helix editor
+https://www.reddit.com/r/vimplugins.rss "~REDDIT: VimPlugins" vim editor plugin
+https://www.reddit.com/r/firefox.rss "~REDDIT: Firefox" browser tool
 https://www.reddit.com/r/privacytoolsIO.rss "~REDDIT: PrivacytoolsIO" privacy security
 https://www.reddit.com/r/security.rss "~REDDIT: Security" security
-https://www.reddit.com/r/docker.rss "~REDDIT: Docker" docker web tool programming
-https://www.reddit.com/r/selenium.rss "~REDDIT: Selenium" browser python
-https://www.reddit.com/r/puppeteer.rss "~REDDIT: Puppeteer" browser python
+https://www.reddit.com/r/docker.rss "~REDDIT: Docker" docker webdev tool programming
+https://www.reddit.com/r/selenium.rss "~REDDIT: Selenium" browser tool
+https://www.reddit.com/r/puppeteer.rss "~REDDIT: Puppeteer" browser tool
 https://www.reddit.com/r/burp_suite+netsec+HowToHack+Hacking_Tutorials+Pentesting+LiveOverflow.rss "~REDDIT: Burp Suite" browser pantest python
-https://www.reddit.com/r/torrents.rss "~REDDIT: Torrents" tool programming
+https://www.reddit.com/r/torrents.rss "~REDDIT: Torrents" tool
 https://www.reddit.com/r/nginx.rss "~REDDIT: Nginx" web
 
 # "query:========================== :flags #\"z\""
@@ -67,9 +72,9 @@ NEWSFEED-----------------------------------------------------------------------
 # https://hackaday.com/blog/feed "~NEWSFEED: Hackaday" linux
 # https://www.tecmint.com/feed linux "~NEWSFEED: Techmint" linux
 # https://news.ycombinator.com/rss "~NEWSFEED: Ytcombinator" linux
-https://blog.codinghorror.com/rss "~NEWSFEED: Coddinghorror" programming
-http://www.integralist.co.uk/index.xml "~NEWSFEED: Integralist" programming
-https://nolanlawson.com/feed/ "~NEWSFEED: NolanLawson" web javascript programming
+https://blog.codinghorror.com/rss "~NEWSFEED: Coddinghorror" webblog
+http://www.integralist.co.uk/index.xml "~NEWSFEED: Integralist" webblog
+https://nolanlawson.com/feed/ "~NEWSFEED: NolanLawson" webdev javascript
 
 https://www.blackhatworld.com/forums/black-hat-seo-tools.9/index.rss "~NEWSFEED: Blackhatworld blackseo" internetmarketing
 https://www.blackhatworld.com/forums/-/index.rss "~NEWSFEED: Blackhatworld" internetmarketing
@@ -78,20 +83,25 @@ https://dev.to/feed/tag/python "~NEWSFEED: Dev.to/python" python programming
 https://dev.to/feed/tag/rust "~NEWSFEED: Dev.to/rust" rust programming
 https://dev.to/feed/tag/typescript "~NEWSFEED: Dev.to/typescript" typescript programming
 https://dev.to/feed/tag/javascript "~NEWSFEED: Dev.to/javascript" javascript programming
-https://dev.to/feed/tag/webdev "~NEWSFEED: Dev.to/webdev" web programming
-https://dev.to/feed/tag/django "~NEWSFEED: Dev.to/django" web programming
-https://dev.to/feed/tag/golang "~NEWSFEED: Dev.to/golang" golang programming
-https://dev.to/feed/tag/svelte "~NEWSFEED: Dev.to/svelte" web programming
+https://dev.to/feed/tag/webdev "~NEWSFEED: Dev.to/webdev" webdev
+https://dev.to/feed/tag/django "~NEWSFEED: Dev.to/django" web framework
+https://dev.to/feed/tag/golang "~NEWSFEED: Dev.to/golang" golang
+https://dev.to/feed/tag/svelte "~NEWSFEED: Dev.to/svelte" webdev framework
 https://dev.to/feed/tag/php "~NEWSFEED: Dev.to/php" php programming
-https://dev.to/feed/tag/vim "~NEWSFEED: Dev.to/vim" vim programming
+https://dev.to/feed/tag/vim "~NEWSFEED: Dev.to/vim" vim editor
+https://dev.to/feed/tag/neovim "~NEWSFEED: Dev.to/neovim" vim editor
 https://dev.to/feed/tag/git "~NEWSFEED: Dev.to/git" vim security productivity programming
 https://dev.to/feed/tag/privacy "~NEWSFEED: Dev.to/privacy" privacy programming
 https://dev.to/feed/tag/kotlin "~NEWSFEED: Dev.to/kotlin" kotlin programming
+https://dev.to/feed/tag/webdev "~NEWSFEED: Dev.to/webdev" webdev webblog
 https://dev.to/feed/tag/security "~NEWSFEED: Dev.to/security" security programming
 https://dev.to/feed/tag/fzf "~NEWSFEED: Dev.to/fzf" tool
-https://dev.to/feed/tag/rollup "~NEWSFEED: Dev.to/rollup" tool
+https://dev.to/feed/tag/rollup "~NEWSFEED: Dev.to/rollup" bundler
+https://dev.to/feed/tag/vite "~NEWSFEED: Dev.to/vite" bundler
+https://dev.to/feed/tag/react "~NEWSFEED: Dev.to/react" webdev framework
 https://dev.to/feed/tag/productivity "~NEWSFEED: Dev.to/productivity" productivity
 https://dev.to/feed/tag/programming "~NEWSFEED: Dev.to/programming" programming
+https://dev.to/feed/tag/note "~NEWSFEED: Dev.to/note" productivity
 
 # "query:========================== :flags #\"z\""
 
