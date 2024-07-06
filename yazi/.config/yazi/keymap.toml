@@ -1,4 +1,34 @@
-[[manager.prepend_keymap]]
-on   = [ "i" ]
-exec  = "plugin fg"
-desc = "find file by content (fuzzy match)"
+[manager]
+prepend_keymap = [
+  { on = [
+    "l",
+  ], run = "plugin --sync smart-enter", desc = "Enter child or open file" },
+
+  { on = [
+    "<c-j>",
+  ], run = "plugin fzmark", desc = "Enter child or open file" },
+
+  { on = [
+    "<a-p>",
+  ], run = "plugin opmpvlist", desc = "Open playlist with mpv on curdir" },
+
+  { on = [
+    "<a-g>",
+  ], run = "plugin opener --args=lazygit", desc = "Open lazygit" },
+
+  { on = [
+    "<a-d>",
+  ], run = "plugin opener --args=lazydocker", desc = "Open lazydocker" },
+
+  { on = [
+    "<a-y>",
+  ], run = "plugin opener --args=btop", desc = "Open btop" },
+
+  { on = [
+    "<a-t>",
+  ], run = "plugin opener --args=terminal", desc = "Cwd editor on dir yazi" },
+
+  { on = [
+    "<c-o>",
+  ], run = "plugin opcurdir", desc = "Cwd editor on dir yazi" },
+]

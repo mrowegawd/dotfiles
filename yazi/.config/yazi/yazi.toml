@@ -1,17 +1,16 @@
 # yazi.toml
 [manager]
 show_hidden = true
-ratio = [0, 3, 0] # set 0 - remove view panel
+ratio = [0, 3, 0]     # set 0 - remove view panel
 sort_dir_first = true
+
+play = [{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" }]
 
 [opener]
 edit = [
-	{ exec = '$EDITOR "$@"', block = true,  for = "unix" },
-	{ exec = 'code "%*"',    orphan = true, for = "windows" },
+  { run = '$EDITOR "$@"', block = true, for = "unix" },
+  { run = 'code "%*"', orphan = true, for = "windows" },
 ]
-# play = [
-# 	{ run = 'mpv "$@"', orphan = true, for = "unix" },
-# ]
-# open = [
-# 	{ run = 'xdg-open "$@"', desc = "Open" },
-# ]
+
+[open]
+rules = [{ mime = "video/*", use = ["play", "reveal"] }]
