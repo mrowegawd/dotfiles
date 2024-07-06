@@ -500,7 +500,7 @@ local get_current_pane_id = function()
   return normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id}"]])
 end
 
-local pane_left_currend_cmd_nnn = function()
+local pane_left_current_cmd_nnn = function()
   return normalize_return(
     vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }']]
   )
@@ -522,11 +522,17 @@ end
 --   return normalize_return(vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}"]])
 -- end
 --
--- local pane_left_current_cmd_lf = function()
---   return normalize_return(
---     vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }']]
---   )
--- end
+local pane_left_current_cmd_lf = function()
+  return normalize_return(
+    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "lf" { print $2; exit }']]
+  )
+end
+
+local pane_left_current_cmd_yazi = function()
+  return normalize_return(
+    vim.fn.system [[tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }']]
+  )
+end
 --
 -- local pane_left_current_cmd_nvim = function()
 --   return normalize_return(
@@ -565,7 +571,15 @@ RUtils.map.nnoremap("<a-E>", function()
 
     go_left()
 
-    if pane_left_currend_cmd_nnn() == "nnn" then
+    if pane_left_current_cmd_nnn() == "nnn" then
+      vim.fn.system "tmux kill-pane"
+    end
+
+    if pane_left_current_cmd_yazi() == "yazi" then
+      vim.fn.system "tmux kill-pane"
+    end
+
+    if pane_left_current_cmd_lf() == "lf" then
       vim.fn.system "tmux kill-pane"
     end
 
