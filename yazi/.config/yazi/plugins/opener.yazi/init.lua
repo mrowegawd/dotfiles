@@ -12,32 +12,28 @@ return {
 
 		local cwd = tostring(state())
 
-		local child, err
 		if action == "terminal" then
-			local termenv = os.getenv("TERMINAL")
-			if termenv == "kitty" then
-				child, err = Command(termenv):stdout(Command.PIPED):spawn()
-			else
-				child, err = Command(termenv):args({ "-c", cwd }):stdout(Command.PIPED):spawn()
-			end
-		else
-			child, err = Command("tmux")
-				:args({
-					"popup",
-					"-d",
-					cwd,
-					"-h",
-					"80%",
-					"-w",
-					"90%",
-					"-E",
-					action,
-				})
-				:stdin(Command.INHERIT)
-				:stdout(Command.PIPED)
-				:stderr(Command.INHERIT)
-				:spawn()
+			local termopen = os.getenv("TERMINAL")
+			os.execute([[bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && ]] .. termopen)
+			return
 		end
+
+		local child, err = Command("tmux")
+			:args({
+				"popup",
+				"-d",
+				cwd,
+				"-h",
+				"80%",
+				"-w",
+				"90%",
+				"-E",
+				action,
+			})
+			:stdin(Command.INHERIT)
+			:stdout(Command.PIPED)
+			:stderr(Command.INHERIT)
+			:spawn()
 
 		if not child then
 			return fail(tostring(action) .. " not  open?", err)

@@ -300,7 +300,7 @@ RUtils.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
 
 RUtils.map.nnoremap("<Leader>n", cmd.nohl, { desc = "Misc: clear searches" })
 RUtils.map.nnoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
-RUtils.map.inoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
+-- RUtils.map.inoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
 
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
 RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
@@ -388,7 +388,7 @@ RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
   silent = true,
 })
 
-RUtils.map.nnoremap("<a-o>", function()
+local funcme = function()
   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
   local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
 
@@ -399,8 +399,39 @@ RUtils.map.nnoremap("<a-o>", function()
     clock_mode = function()
       RUtils.terminal.clock_mode()
     end,
-  }, { winopts = { title = "Mods commands", row = row, col = col } })
-end, { desc = "Misc: list commands" })
+    newsboat = function()
+      RUtils.terminal.float_newsboat()
+    end,
+    calcure = function()
+      RUtils.terminal.float_calcure()
+    end,
+    btop = function()
+      RUtils.terminal.float_btop()
+    end,
+    rust_upserv = function()
+      print "sf"
+    end,
+    rust_upserv2 = function()
+      print "sf"
+    end,
+    rust_bench = function()
+      print "sf"
+    end,
+    gravterm = function()
+      print "sf"
+    end,
+    log_meta = function()
+      print "sf"
+    end,
+    r_kill = function()
+      RUtils.terminal.float_rkill()
+    end,
+  }, { winopts = { title = "fz-ctrlo", row = row, col = col } })
+end
+
+RUtils.map.nnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
+RUtils.map.tnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
+RUtils.map.vnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 
 RUtils.map.nnoremap("<Localleader>r", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()

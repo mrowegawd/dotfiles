@@ -49,7 +49,7 @@ return {
 		local command = [[tmux send-keys "cd ]] .. cwd .. [[" Enter]]
 		os.execute(command)
 
-		os.execute("sleep 0.3")
+		os.execute("sleep 0.5")
 
 		local openeditor = [[tmux send-keys "nvim" Enter]]
 		os.execute(openeditor)

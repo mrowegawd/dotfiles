@@ -251,7 +251,7 @@ keymap = [
     ":",
   ], run = "shell --block", desc = "Run a shell command (block the UI until the command finishes)" },
   { on = [
-    ".",
+    "H",
   ], run = "hidden toggle", desc = "Toggle the visibility of hidden files" },
   { on = [
     "s",

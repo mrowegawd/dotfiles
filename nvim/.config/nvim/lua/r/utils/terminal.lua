@@ -206,4 +206,52 @@ function M.smart_split()
   end
 end
 
+local Terminal = require("toggleterm.terminal").Terminal
+
+local calcure = Terminal:new {
+  cmd = "calcure",
+  hidden = true,
+  direction = "float",
+  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+}
+
+local newsboat = Terminal:new {
+  cmd = "proxychains -q newsboat",
+  hidden = true,
+  direction = "float",
+  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+}
+
+local btop = Terminal:new {
+  cmd = "btop",
+  hidden = true,
+  direction = "float",
+  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+}
+
+local rkill = Terminal:new {
+  -- to run alias, must have `source` the zshrc file
+  cmd = "source ~/.config/zsh/.zshrc; r_kill",
+  hidden = true,
+  direction = "float",
+  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+  close_on_exit = false,
+}
+
+function M.float_calcure()
+  return calcure:toggle()
+end
+
+function M.float_newsboat()
+  return newsboat:toggle()
+end
+
+function M.float_btop()
+  return btop:toggle()
+end
+
+function M.float_rkill()
+  return rkill:toggle()
+end
+
 return M

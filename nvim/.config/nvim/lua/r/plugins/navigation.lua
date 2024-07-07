@@ -284,10 +284,10 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<a-g>"] = "fzmark",
+              ["<c-j>"] = "fzmark",
               ["<a-t>"] = "open_terminal",
-              ["<a-G>"] = "open_lazygit",
-              ["<a-D>"] = "open_lazydocker",
+              ["<a-g>"] = "open_lazygit",
+              ["<a-d>"] = "open_lazydocker",
               ["<Leader>gha"] = "git_add_file",
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
@@ -311,10 +311,10 @@ return {
         },
         window = {
           mappings = {
-            ["<a-g>"] = "fzmark",
+            ["<c-j>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
-            ["<a-G>"] = "open_lazygit",
-            ["<a-D>"] = "open_lazydocker",
+            ["<a-g>"] = "open_lazygit",
+            ["<a-d>"] = "open_lazydocker",
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
