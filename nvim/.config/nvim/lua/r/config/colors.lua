@@ -707,6 +707,13 @@ local function colorscheme_overrides()
       { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
 
       {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 2 },
+        },
+      },
+
+      {
         LspReferenceText = {
           bg = { from = "Normal", attr = "bg", alter = 1.2 },
           fg = "NONE",
