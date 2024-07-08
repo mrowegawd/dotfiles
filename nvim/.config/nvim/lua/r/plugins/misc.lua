@@ -13,6 +13,11 @@ return {
     event = "CmdlineEnter",
     config = true,
   },
+  -- TABULARIZE
+  { -- tabularize lines of code
+    "godlygeek/tabular",
+    cmd = "Tabularize",
+  },
   -- UNDOTREE
   {
     "jiaoshijie/undotree",
