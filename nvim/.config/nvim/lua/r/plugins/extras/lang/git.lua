@@ -5,7 +5,7 @@ return {
   -- Treesitter git support
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = { ensure_installed = { "git_config", "gitcommit", "git_rebase", "gitignore", "gitattributes" } },
+    opts = { ensure_installed = { "git_config", "git_rebase", "gitignore", "gitattributes" } },
   },
   -- cmp.setup.filetype({ "gitcommit", "NeogitPopup", "NeogitCommitMessage" }, { sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "git" } }),
   -- })
