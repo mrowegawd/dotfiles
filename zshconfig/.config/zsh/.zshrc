@@ -15,9 +15,38 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
+
+# Noteme: source `asdf` sesuai dari README harus berada diatas sebelum line `compinit`
+source "$HOME/.asdf/asdf.sh"
+
+[[ -f "$HOME/.config/miscxrdb/fzf/fzf.config" ]] && source "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+[[ -f $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh ]] \
+  && source $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh
+
+[[ -f $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh ]] \
+  && source $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+
+[[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
+  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+zle -N autosuggest-accept
+[[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
+  && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+[[ ! -f $HOME/.config/zsh/.p10k.zsh ]] || source $HOME/.config/zsh/.p10k.zsh
+
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ OPTIONS                                                  ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+
+# Keep a ton of history.
+HISTSIZE=100000
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+HISTFILE=$ZSH_CACHE_DIR/.zsh_history
+
 setopt INTERACTIVE_COMMENTS
 setopt LONG_LIST_JOBS
 setopt NOTIFY
@@ -46,14 +75,6 @@ setopt SHARE_HISTORY             # Share your history across all your terminal w
 setopt HIST_SAVE_NO_DUPS
 unsetopt HIST_SAVE_NO_DUPS       # Write a duplicate event to the history file
 
-# Keep a ton of history.
-HISTSIZE=100000
-SAVEHIST=100000
-HISTFILE=$ZSH_CACHE_DIR/.zsh_history
-
-# Noteme: source `asdf` sesuai dari README harus berada diatas sebelum line `compinit`
-source "$HOME/.asdf/asdf.sh"
-
 fpath=($ZDOTDIR/funcs $fpath)
 fpath=(${ASDF_DIR}/completions $fpath)
 
@@ -61,32 +82,16 @@ fpath=(${ASDF_DIR}/completions $fpath)
 # ╏ COMPLETION                                               ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
 
-# Speed up zsh compinit by only checking cache once a day.
-# This piece of code is taken from
-# https://gist.github.com/ctechols/ca1035271ad13484128
-# if [[ -n ${ZDOTDIR:-${HOME}}/.zcompdump(#qN.mh+24) ]]; then
-#     compinit;
-# else
-#     compinit -C;
-# fi;
-# autoload -U compinit && (compinit &; compinit -C)
-
-eval "$(zoxide init zsh)"
-
 # Check this link to find out how to make completion in zsh
 # https://thevaluable.dev/zsh-completion-guide-examples/
 zmodload zsh/complist
-
 autoload -Uz $ZDOTDIR/funcs/*(.:t)
-autoload -Uz compinit ; compinit
+autoload -U compinit ; compinit
 _comp_options+=(globdots) # Include hidden files, when do 'cd ..<tab>'
 
 # Colorize completions using default `ls` colors.
 # zstyle ':completion:*' list-colors ''
-# zstyle ':completion:*' list-colors "${LS_COLORS}"
-
-# Akan memunculkan mode search ketika type `git <TAB>`
-# zstyle ':completion:*:*:*:default' menu yes select search
+zstyle ':completion:*' list-colors "${LS_COLORS}"
 
 # persistent reshahing i.e puts new executables in the $path
 # if no command is set typing in a line will cd by default
@@ -109,8 +114,6 @@ zstyle ':completion:*' list-suffixes true
 
 # disable sort when completing options of any command
 zstyle ':completion:complete:*:options' sort false
-# zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-zstyle ':fzf-tab:*' fzf-min-height 60
 
 # Make completion:
 # (stolen from Wincent)
@@ -123,9 +126,6 @@ zstyle ':completion:*' matcher-list '' \
   '+m:{[:upper:]}={[:lower:]}' \
   '+m:{_-}={-_}' \
   'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-
-# completion of ps command
-# zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 
 # Kill
 zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
@@ -155,6 +155,16 @@ zstyle ':chpwd:*' recent-dirs-default yes
 zstyle ':completion::complete:*' use-cache true
 zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR/zcompcache"
 
+zstyle ':completion:*:git-checkout:*' sort false
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' menu no
+
+# zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:*' fzf-min-height 10
+zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ':fzf-tab:complete:*' fzf-bindings \
+	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
+    'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
 
 # Completion for kitty
 if [[ "$TERM" == "xterm-kitty" ]]; then
@@ -184,14 +194,10 @@ export MANPAGER="/bin/sh -c \"col -b | \
 # @see: https://thevaluable.dev/zsh-install-configure-mouseless/
 bindkey -v # enables vi mode, using -e = emacs
 
-zle -N autosuggest-accept
-bindkey '^y'                  autosuggest-accept       # enter autosugest (c-y)
-
+bindkey '^y'                  autosuggest-accept                  # enter autosugest (c-y)
 bindkey '^?'                  backward-delete-char
-# bindkey '^h'                  backward-char            # backward (c-b)
-# bindkey '^l'                  forward-char             # forward char (c-f)
-bindkey '^b'                  backward-word            # backward (c-b)
-bindkey '^f'                  forward-word             # forward char (c-f)
+bindkey '^b'                  backward-word                       # backward (c-b)
+bindkey '^f'                  forward-word                        # forward char (c-f)
 bindkey '^a'                  beginning-of-line
 bindkey '^e'                  end-of-line
 
@@ -199,9 +205,8 @@ bindkey '^e'                  end-of-line
 autoload -U edit-command-line
 zle -N edit-command-line
 
-bindkey -M viins '^[q'        edit-command-line         # alt-q
-bindkey -M viins 'hh'         vi-cmd-mode               # 'jk' for Escape
-# bindkey -M viins ''           vi-cmd-mode               # 'kj' for <ESC>
+bindkey -M viins '^[q'        edit-command-line                   # alt-q
+bindkey -M viins 'hh'         vi-cmd-mode                         # 'jk' for Escape
 
 bindkey '^R'                  history-incremental-search-backward
 bindkey '^P'                  up-history
@@ -218,19 +223,20 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 
+# NOTE: we use powerlevel10k, so commented
 # Change cursor shape for different vi modes.
-function zle-keymap-select {
-  if [[ ${KEYMAP} == vicmd ]] ||
-     [[ $1 = 'block' ]]; then
-    echo -ne '\e[1 q'
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
-  fi
-}
-zle -N zle-keymap-select
+# function zle-keymap-select {
+#   if [[ ${KEYMAP} == vicmd ]] ||
+#      [[ $1 = 'block' ]]; then
+#     echo -ne '\e[1 q'
+#   elif [[ ${KEYMAP} == main ]] ||
+#        [[ ${KEYMAP} == viins ]] ||
+#        [[ ${KEYMAP} = '' ]] ||
+#        [[ $1 = 'beam' ]]; then
+#     echo -ne '\e[5 q'
+#   fi
+# }
+# zle -N zle-keymap-select
 
 # ╒══════════════════════════════════════════════════════════╕
 # │ SOURCE MISC (PLUGINS, ASDF, ETC)                         │
@@ -244,6 +250,7 @@ for script in $ZDOTDIR/scripts/*; do
   source $script
 done
 
+last_working_dir
 
 ###########################################
 # AUTO SSH-ADD (for git master)
@@ -278,20 +285,6 @@ done
 #   touch /tmp/auto-ssh
 # fi
 
-source "$HOME/.config/bashrc/aliases.bashrc"         # alias for all [bash/zsh]
-
-[[ -f $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh ]] \
-  && source $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh
-
-[[ -f $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh ]] \
-  && source $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh
-
-[[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
-  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-[[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
-  && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
-
 # ASDF for go
 if [ -d $(asdf where golang) ]; then
   export GOPATH=$(asdf where golang)/packages
@@ -299,27 +292,12 @@ if [ -d $(asdf where golang) ]; then
   export PATH="${PATH}:$(go env GOPATH)/bin"
 fi
 
-# FZF
-if [ -f "$HOME/.fzf.zsh" ]; then
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=241'
-  ZSH_AUTOSUGGEST_USE_ASYNC=1
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
 
-  [ -f "$HOME/.config/miscxrdb/fzf/fzf.config" ] && source "$HOME/.config/miscxrdb/fzf/fzf.config"
-  [ -f "$HOME/.fzf.zsh" ] && source $HOME/.fzf.zsh
-fi
-
-# GRCAT
-# if [ -f "/etc/grc.zsh" ]; then
-#   export GRCHPATH="/etc/grc.zsh"
-#   [ -s "$GRCHPATH" ] && . "$GRCHPATH"
-#   source /etc/grc.zsh
-# fi
+# To customize prompt, run `p10k configure`
+# Or edit $HOME/.config/zsh/.p10k.zsh.
 source $HOME/powerlevel10k/powerlevel10k.zsh-theme
-
-last_working_dir
-
-# To customize prompt, run `p10k configure` or edit $HOME/.config/zsh/.p10k.zsh.
-[[ ! -f $HOME/.config/zsh/.p10k.zsh ]] || source $HOME/.config/zsh/.p10k.zsh
 
 # unset ZSHENV_LOADED
 
