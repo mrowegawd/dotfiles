@@ -25,17 +25,8 @@ source "$HOME/.asdf/asdf.sh"
 [[ -f $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh ]] \
   && source $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh
 
-# basic file preview for ls (you can replace with something more sophisticated than head)
-zstyle ':completion::*:ls::*' fzf-completion-opts --preview='eval head {1}'
-
-# if other subcommand to git is given, show a git diff or git log
-zstyle ':completion::*:git::*,[a-z]*' fzf-completion-opts --preview='
-eval set -- {+1}
-for arg in "$@"; do
-    { git diff --color=always -- "$arg" | git log --color=always "$arg" } 2>/dev/null
-done'
-[[ -f $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh ]] \
-  && source $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+[[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]] \
+  && source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
 
 [[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
   && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -104,25 +95,25 @@ zstyle ':completion:*' list-colors "${LS_COLORS}"
 
 # persistent reshahing i.e puts new executables in the $path
 # if no command is set typing in a line will cd by default
-zstyle ':completion:*' menu select
-zstyle ':completion:*' rehash true
-zstyle ':completion:*:matches' group yes
-zstyle ':completion:*:options' description yes
-zstyle ':completion:*:options' auto-description '%d'
-zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
-zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
-zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-zstyle ':completion:*:default' list-prompt '%S%M matches%s'
-zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*' expand suffix
-zstyle ':completion:*' file-sort modification
-zstyle ':completion:*' list-suffixes true
+# zstyle ':completion:*' menu select
+# zstyle ':completion:*' rehash true
+# zstyle ':completion:*:matches' group yes
+# zstyle ':completion:*:options' description yes
+# zstyle ':completion:*:options' auto-description '%d'
+# zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
+# zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
+# zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+# zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+# zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+# zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
+# zstyle ':completion:*' group-name ''
+# zstyle ':completion:*' verbose yes
+# zstyle ':completion:*' expand suffix
+# zstyle ':completion:*' file-sort modification
+# zstyle ':completion:*' list-suffixes true
 
 # disable sort when completing options of any command
-zstyle ':completion:complete:*:options' sort false
+# zstyle ':completion:complete:*:options' sort false
 
 # Make completion:
 # (stolen from Wincent)
@@ -137,51 +128,88 @@ zstyle ':completion:*' matcher-list '' \
   'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
 # Kill
-zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
-zstyle ':completion:*:*:kill:*' menu select
-zstyle ':completion:*:*:kill:*' force-list always
-zstyle ':completion:*:*:kill:*' insert-ids single
+# zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
+# zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
+# zstyle ':completion:*:*:kill:*' menu select
+# zstyle ':completion:*:*:kill:*' force-list always
+# zstyle ':completion:*:*:kill:*' insert-ids single
+
+# zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+# zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview '[[ $group == "[process ID]" ]] && ps -p $word -o command -w | tail -n +2'
+# zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
 
 # completion of sudo command
 # zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin
 
 # Fuzzy match mistyped completions.
-zstyle ':completion:*' completer _oldlist _complete _match _approximate
-zstyle ':completion:*:match:*' original only
-zstyle ':completion:*:approximate:*' max-errors 1 numeric
+# zstyle ':completion:*' completer _oldlist _complete _match _approximate
+# zstyle ':completion:*:match:*' original only
+# zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
 # https://github.com/zsh-users/zsh/blob/master/Functions/Chpwd/cdr
-zstyle ':completion:*:*:cdr:*:*' menu selection
+# zstyle ':completion:*:*:cdr:*:*' menu selection
 
 # $WINDOWID is an environment variable set by kitty representing the window ID
 # of the OS window (NOTE this is not the same as the $KITTY_WINDOW_ID)
 # @see: https://github.com/kovidgoyal/kitty/pull/2877
-zstyle ':chpwd:*' recent-dirs-file $ZSH_CACHE_DIR/.chpwd-recent-dirs-${WINDOWID##*/} +
-zstyle ':completion:*' recent-dirs-insert always
-zstyle ':chpwd:*' recent-dirs-default yes
+# zstyle ':chpwd:*' recent-dirs-file $ZSH_CACHE_DIR/.chpwd-recent-dirs-${WINDOWID##*/} +
+# zstyle ':completion:*' recent-dirs-insert always
+# zstyle ':chpwd:*' recent-dirs-default yes
 
-zstyle ':completion::complete:*' use-cache true
-zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR/zcompcache"
+# zstyle ':completion::complete:*' use-cache true
+# zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR/zcompcache"
 
 zstyle ':completion:*:git-checkout:*' sort false
-zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':completion:*' menu no
+# zstyle ':completion:*' menu no
 
-# zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-zstyle ':fzf-tab:*' fzf-min-height 10
+# FZF_DEFAULT_OPTS="-e \
+#    --color 16,fg:10,bg:-1,hl:1,hl+:1,bg+:7,fg+:-1:underline \
+#    --color prompt:4,pointer:13,marker:13,spinner:3,info:3"
+# zstyle ':fzf-tab:*' fzf-flags $(echo $FZF_DEFAULT_OPTS)
+# zstyle ':fzf-tab:*' fzf-flags '--height=10'
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+zstyle ":fzf-tab:*" fzf-flags --height=70% \
+--no-separator --border "none" \
+--preview-window 'right:50%:nohidden:cycle'
+
+# zstyle ':fzf-tab:*' fzf-min-height 30
+# zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':fzf-tab:*' popup-min-size 80 0
+# zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
+# zstyle ':fzf-tab:*' popup-pad 80 80 # Not actually needed to elicit the bug, but it makes it easier to see
 zstyle ':fzf-tab:complete:*' fzf-bindings \
 	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
     'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
 # preview directory's content with eza when completing cd
-# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
-# zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
-# zstyle ':fzf-tab:complete:*' fzf-flags --preview-window 'right:50%:hidden:cycle'
-zstyle ':fzf-tab:complete:cd:*' fzf-flags --preview-window hidden
-zstyle ':fzf-tab:complete:cd:*' fzf-bindings 'ctrl-l:preview({_FTB_INIT_} exa -1 --color=always $realpath)'
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -a --tree --level=2 --icons --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-bindings 'ctrl-l:preview({_FTB_INIT_} eza -a --tree --level=2 --icons --color=always $realpath)'
 
+# show systemd unit status
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+
+zstyle ':completion:*:*:*:*:processes' command 'ps -ef --no-headers -w -w'
+zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
+  --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='down:15%:wrap'
+
+# show file contents
+# zstyle ':fzf-tab:complete:*:*' fzf-preview 'echo "\033[1m${(Q)group}\033[0m\n"
+# if [[ "${(Q)group}" == "[file]" ]]; then
+#   if [[ -n "${(Q)realpath}" ]]; then
+#     mime=$(file -bL --mime-type "${(Q)realpath}")
+#     category=${mime%%/*}
+#     if [[ -d "${(Q)realpath}" ]]; then
+#       eza --tree --level=2 --icons --color=always "${(Q)realpath}"
+#     elif [[ "$category" == "text" ]]; then
+#       prettybat --color=always --style=plain --paging=never "${(Q)realpath}"
+#     fi
+#   fi
+# elif [[ "${(Q)group}" == "[alias]" ]]; then
+#   echo "${(Q)desc}"
+# elif [[ "${(Q)group}" =~ "command]$" ]]; then
+#   which "${(Q)word}"
+# elif [[ "${(Q)group}" == "[parameter]" ]]; then
+#   echo "${(P)word}"
+# fi'
 
 # Completion for kitty
 if [[ "$TERM" == "xterm-kitty" ]]; then
