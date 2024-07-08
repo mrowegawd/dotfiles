@@ -3,8 +3,10 @@ local function check_file_extension(filename)
 	local pattern_mp4 = "%.mp4$"
 	local pattern_gif = "%.gif$"
 	local pattern_pdf = "%.pdf$"
-	local pattern_jpg = "%.png$"
-	local pattern_png = "%.jpg$"
+	local pattern_png = "%.png$"
+	local pattern_jpg = "%.jpg$"
+	local pattern_jpeg = "%.jpeg$"
+	local pattern_webp = "%.webp$"
 
 	if string.match(filename, pattern_mp3) then
 		return "mp3"
@@ -17,6 +19,10 @@ local function check_file_extension(filename)
 	elseif string.match(filename, pattern_jpg) then
 		return "jpg"
 	elseif string.match(filename, pattern_png) then
+		return "jpg"
+	elseif string.match(filename, pattern_webp) then
+		return "jpg"
+	elseif string.match(filename, pattern_jpeg) then
 		return "jpg"
 	else
 		return "none"

@@ -12,5 +12,5 @@ edit = [
   { run = 'code "%*"', orphan = true, for = "windows" },
 ]
 
-[open]
-rules = [{ mime = "video/*", use = ["play", "reveal"] }]
+# [open]
+# rules = [{ mime = "video/*", use = ["play", "reveal"] }]
