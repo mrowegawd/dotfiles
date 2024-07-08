@@ -16,6 +16,3 @@
 [submodule "zshconfig/.config/zsh/plugins/fzf-marks"]
 	path = zshconfig/.config/zsh/plugins/fzf-marks
 	url = https://github.com/urbainvaes/fzf-marks.git
-[submodule "zshconfig/.config/zsh/plugins/fzf-tab-completion"]
-	path = zshconfig/.config/zsh/plugins/fzf-tab-completion
-	url = https://github.com/lincheney/fzf-tab-completion.git

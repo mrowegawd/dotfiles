@@ -25,6 +25,15 @@ source "$HOME/.asdf/asdf.sh"
 [[ -f $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh ]] \
   && source $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh
 
+# basic file preview for ls (you can replace with something more sophisticated than head)
+zstyle ':completion::*:ls::*' fzf-completion-opts --preview='eval head {1}'
+
+# if other subcommand to git is given, show a git diff or git log
+zstyle ':completion::*:git::*,[a-z]*' fzf-completion-opts --preview='
+eval set -- {+1}
+for arg in "$@"; do
+    { git diff --color=always -- "$arg" | git log --color=always "$arg" } 2>/dev/null
+done'
 [[ -f $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh ]] \
   && source $ZSH_PLUGINS/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 
@@ -165,6 +174,14 @@ zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 zstyle ':fzf-tab:complete:*' fzf-bindings \
 	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
     'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
+# preview directory's content with eza when completing cd
+# zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+# zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
+# zstyle ':fzf-tab:complete:*' fzf-flags --preview-window 'right:50%:hidden:cycle'
+zstyle ':fzf-tab:complete:cd:*' fzf-flags --preview-window hidden
+zstyle ':fzf-tab:complete:cd:*' fzf-bindings 'ctrl-l:preview({_FTB_INIT_} exa -1 --color=always $realpath)'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
+
 
 # Completion for kitty
 if [[ "$TERM" == "xterm-kitty" ]]; then
