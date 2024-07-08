@@ -30,7 +30,9 @@ local function check_file_extension(filename)
 end
 
 return {
-	entry = function()
+	entry = function(_, args)
+		local action = args[1]
+
 		local h = cx.active.current.hovered
 		if h.cha.is_dir then
 			ya.manager_emit("enter" or "open", { hovered = true })
@@ -41,25 +43,31 @@ return {
 			local fpath_ext = check_file_extension(fpath)
 
 			if fpath_ext == "mp3" then
-				os.execute("mpv" .. fpath .. "  >/dev/null 2>&1 &")
+				os.execute("mpv '" .. fpath .. "'  >/dev/null 2>&1 &")
 			end
 
 			if fpath_ext == "pdf" then
-				os.execute("nohup zathura " .. fpath .. " >/dev/null 2>&1 &")
+				os.execute("zathura '" .. fpath .. "' >/dev/null 2>&1 &")
 			end
 
 			if fpath_ext == "mp4" then
-				os.execute("nohup mpv --autofit=1000x900 --geometry=-15-60 " .. fpath .. " >/dev/null 2>&1 &")
+				os.execute("mpv --autofit=1000x900 --geometry=-15-60 '" .. fpath .. "' >/dev/null 2>&1 &")
 			end
 
 			if fpath_ext == "jpg" then
-				os.execute("sxiv " .. fpath .. " >/dev/null 2>&1 &")
+				os.execute("sxiv '" .. fpath .. "' >/dev/null 2>&1 &")
 			end
 
 			if fpath_ext == "none" then
 				os.execute([[tmux select-pane -R]])
 
-				local command = [[tmux send-keys ":e ]] .. fpath .. [[" Enter]]
+				local open_mode = ":e "
+				if action == "vsplit" then
+					open_mode = ":vsplit "
+				elseif action == "split" then
+					open_mode = ":split "
+				end
+				local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
 				os.execute(command)
 			end
 		end
