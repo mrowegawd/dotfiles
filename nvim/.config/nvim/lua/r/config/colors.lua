@@ -687,6 +687,12 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2 },
+        },
+      },
     },
 
     ["lackluster"] = {
