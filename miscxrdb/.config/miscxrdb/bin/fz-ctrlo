@@ -62,11 +62,14 @@ session_exists() {
 #  +----------------------------------------------------------+
 
 show_apt_search() {
-  apt-cache search '' | sort | cut --delimiter ' ' --fields 1 | fzf-tmux -xC -w '80%' -h '50%' --prompt="Apt Search> " \
+  select=$(apt-cache search '' | sort | cut --delimiter ' ' --fields 1 | fzf-tmux -xC -w '80%' -h '50%' --prompt="Apt Search> " \
     --multi \
     --preview 'apt-cache show {1}' \
-    --preview-window right:70%:nohidden |
-    xargs -r sudo \$aptget install -y
+    --preview-window right:70%:nohidden)
+
+  [[ -z $select ]] && exit
+
+  sudo \$aptget install -y "$select"
 }
 
 #  +----------------------------------------------------------+
@@ -76,6 +79,42 @@ show_apt_search() {
 open_calc() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   tmux display-popup -E python -ic "from __future__ import division; from math import *; from random import *"
+}
+
+open_mutlilog() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  if [[ "$TERM" =~ "tmux".* ]] || [[ "$TERM" =~ "screen" ]]; then
+    if tmux list-window | grep logging >/dev/null; then
+      tmuxWindowName=$(tmux list-windows | grep logging | cut -d: -f1)
+      tmux kill-window -t "$tmuxWindowName"
+    fi
+    tmux new-window && tmux rename-window "logging" &&
+      tmux send-keys "sudo multitail -s 2 -cS alf_log /var/log/syslog /var/log/auth.log /var/log/kern.log && tmux kill-pane" enter
+  else
+    sudo multitail -cS alf_log -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
+  fi
+}
+
+open_newsboat() {
+  notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
+
+  session="tmp_newsboat"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+      -E -d "#{pane_current_path}" \
+      -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+        -E -d "#{pane_current_path}" \
+        -E "tmux attach -t $session"
+    fi
+  fi
 }
 
 open_rkill() {
@@ -285,19 +324,19 @@ tmux_create_sess() {
 #  +----------------------------------------------------------+
 
 callme() {
-  MENULIST="SHOW: apt search\nOPEN: _calc\nOPEN: _calcure\nOPEN: _ps_lsof\nOPEN: _systemctlUI\nOPEN: _ps_btop"
+  MENULIST="SHOW: apt search\nOPEN: calc\nOPEN: calcure\nOPEN: ps_lsof\nOPEN: systemctlUI\nOPEN: btop"
   MENULIST="$MENULIST\nTMUX: toggle status\nTMUX: toggle synchronize panes\nTMUX: clock mode\nTMUX: create session\nTMUX: select session"
-  MENULIST="$MENULIST\nRUN: rkill"
+  MENULIST="$MENULIST\nRUN: rkill\nRUN: multilog\nRUN: newsboat"
 
-  selected=$(echo -e "$MENULIST" | sort | fzf-tmux -xC -w '60%' -h '50%' --prompt="Select Command> ")
+  selected=$(echo -e "$MENULIST" | sort | fzf-tmux -xC -w '60%' -h '50%' --prompt="fz-ctrlo> ")
   [[ -z $selected ]] && exit
 
   case $selected in
-  "OPEN: _calc") open_calc ;;
-  "OPEN: _calcure") open_calcure ;;
-  "OPEN: _ps_lsof") open_ps_lsof ;;
-  "OPEN: _ps_btop") open_ps_btop ;;
-  "OPEN: _systemctlUI") open_systemctl_ui ;;
+  "OPEN: calc") open_calc ;;
+  "OPEN: calcure") open_calcure ;;
+  "OPEN: ps_lsof") open_ps_lsof ;;
+  "OPEN: btop") open_ps_btop ;;
+  "OPEN: systemctlUI") open_systemctl_ui ;;
   "SHOW: apt search") show_apt_search ;;
   "TMUX: clock mode") tmux_clock_mode ;;
   "TMUX: create session") tmux_create_sess ;;
@@ -305,6 +344,8 @@ callme() {
   "TMUX: toggle status") tmux_toggle_status ;;
   "TMUX: toggle synchronize panes") tmux_toggle_synchronize_panes ;;
   "RUN: rkill") open_rkill ;;
+  "RUN: multilog") open_mutlilog ;;
+  "RUN: newsboat") open_newsboat ;;
   *) exit ;;
   esac
 }
