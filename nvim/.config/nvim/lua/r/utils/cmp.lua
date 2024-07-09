@@ -146,6 +146,9 @@ function M.setup(opts)
   --
   local cmp = require "cmp"
   cmp.setup(opts)
+
+  local behavior_insert = { behavior = cmp.SelectBehavior.Insert }
+
   -- cmp.event:on("confirm_done", function(event)
   --   if vim.tbl_contains(opts.auto_brackets or {}, vim.bo.filetype) then
   --     RUtils.cmp.auto_brackets(event.entry)
@@ -180,17 +183,44 @@ function M.setup(opts)
   --   sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
   -- })
 
-  -- local cmd_mapping = {
-  --   ["<C-e>"] = { c = cmp.mapping.abort() },
-  --   -- ["<C-y>"] = {
-  --   --   c = cmp.mapping.confirm {
-  --   --     behavior = cmp.ConfirmBehavior.Insert,
-  --   --     select = true,
-  --   --   },
-  --   -- },
-  -- }
+  local cmd_mapping = {
+    ["<C-e>"] = { c = cmp.mapping.abort() },
+    ["<TAB>"] = {
+      c = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      },
+    },
+    ["<C-y>"] = {
+      c = cmp.mapping.confirm {
+        behavior = cmp.ConfirmBehavior.Insert,
+        select = true,
+      },
+    },
+
+    ["<C-j>"] = {
+      c = function()
+        if cmp.visible() then
+          cmp.select_next_item(behavior_insert)
+        else
+          cmp.complete {}
+        end
+      end,
+    },
+    ["<C-k>"] = {
+      c = function()
+        if cmp.visible() then
+          cmp.select_prev_item(behavior_insert)
+        end
+      end,
+    },
+  }
+
+  cmp.setup.filetype("gitcommit", {
+    mapping = cmd_mapping,
+  })
   cmp.setup.cmdline(":", {
-    -- mapping = cmd_mapping,
+    mapping = cmd_mapping,
     sources = cmp.config.sources({
       { name = "path" },
     }, {
@@ -199,7 +229,7 @@ function M.setup(opts)
   })
 
   cmp.setup.cmdline({ "/", "?" }, {
-    -- mapping = cmd_mapping,
+    mapping = cmd_mapping,
     sources = cmp.config.sources {
       { name = "buffer" },
     },

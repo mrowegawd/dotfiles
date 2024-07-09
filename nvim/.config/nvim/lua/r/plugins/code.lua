@@ -260,6 +260,7 @@ return {
           documentation = cmp.config.window.bordered(styldoc(true)),
         },
         completion = { completeopt = "menuone,noinsert,noselect" },
+        -- completeopt = { "menu", "menuone", "noinsert", "noselect" },
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
@@ -294,7 +295,7 @@ return {
               .. " "
               .. (
                 ({
-                  nvim_lsp = "[LSP]",
+                  -- nvim_lsp = "[LSP]",
                   obsidian = "[OBSIDIAN]",
                   obsidian_new = "[OBSIDIAN]",
                   nvim_lua = "[LUA]",
@@ -303,13 +304,14 @@ return {
                   neorg = "[NEORG]",
                   dictionary = "[DIC]",
                   noice_popupmenu = "[Noice]",
-                  buffer = "[BUF]",
+                  -- buffer = "[BUF]",
+
                   spell = "[SPELL]",
                   -- codeium = "[Copilot]",
                   orgmode = "[ORG]",
                   norg = "[NORG]",
                   rg = "[RG]",
-                  cmdline = "[CMD]",
+                  -- cmdline = "[CMD]",
                   git = "[GIT]",
                 })[entry.source.name] or ""
               )
@@ -371,6 +373,21 @@ return {
             "i",
             "s",
           }),
+          ["<C-j>"] = cmp.mapping(function()
+            local cmps = get_cmp()
+
+            if cmps.visible() then
+              cmps.select_next_item { behavior = "Select" }
+            else
+              cmps.complete {}
+            end
+          end, { "i" }),
+          ["<C-k>"] = cmp.mapping(function()
+            local cmps = get_cmp()
+            if cmps.visible() then
+              cmps.select_prev_item { behavior = "Select" }
+            end
+          end, { "i" }),
           -- WARN: cmp sometimes not triggering, check this issue
           -- https://github.com/hrsh7th/nvim-cmp/issues/1692
           -- https://github.com/hrsh7th/nvim-cmp/issues/1692#issuecomment-1855795126
@@ -398,10 +415,6 @@ return {
             entry_filter = function(entry)
               return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
             end,
-          },
-          {
-            name = "lazydev",
-            group_index = 0, -- Set group index to 0 to skip loading LuaLS completions
           },
           { name = "path" },
           { name = "emoji" },
@@ -477,34 +490,13 @@ return {
       local cmp = require "cmp"
 
       opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
-        ["<C-j>"] = cmp.mapping(function()
-          local cmps = get_cmp()
-          if cmps.visible() then
-            cmp.select_next_item { behavior = "insert" }
-            -- else
-            --   cmps.complete {}
-          end
-        end, { "i", "c" }),
-        ["<C-k>"] = cmp.mapping(function()
-          local cmps = get_cmp()
-          if cmps.visible() then
-            cmp.select_prev_item { behavior = "insert" }
-          end
-        end, { "i", "c" }),
         ["<Tab>"] = cmp.mapping {
           i = function(fallback)
-            local entry = cmp.get_selected_entry()
-
-            if
-              cmp.visible()
-              and (
-                entry ~= nil
-                and not (
-                  entry.source.name == "spell" and entry.context.cursor_before_line:match(entry:get_word() .. "$")
-                )
-              )
-            then
-              cmp.confirm { select = true }
+            if cmp.visible() then
+              cmp.confirm {
+                behavior = cmp.ConfirmBehavior.Replace,
+                select = true,
+              }
             elseif require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
             else
@@ -514,18 +506,6 @@ return {
           s = function(fallback)
             if require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
-            else
-              fallback()
-            end
-          end,
-          c = function(fallback)
-            if cmp.visible() then
-              local entry = cmp.get_selected_entry()
-              if not entry then
-                cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-              else
-                cmp.confirm()
-              end
             else
               fallback()
             end
@@ -583,7 +563,7 @@ return {
     opts = {
       library = {
         { path = "luvit-meta/library", words = { "vim%.uv" } },
-        { path = "lazy.nvim", words = { "LazyVim" } },
+        -- { path = "lazy.nvim", words = { "LazyVim" } },
       },
     },
   },
@@ -592,6 +572,12 @@ return {
     -- Manage libuv types with lazy. Plugin will never be loaded
     "Bilal2453/luvit-meta",
     lazy = true,
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      table.insert(opts.sources, { name = "lazydev", group_index = 0 })
+    end,
   },
   -- COMMENTS-TS-CONTEXT
   {
