@@ -536,14 +536,9 @@ local function list_tags_async(all_tags, is_set)
             for _, line in ipairs(dataout) do
               if #line > 0 then
                 if string.match(line, "binary_offset") == nil then
-                  -- __AUTO_GENERATED_PRINT_VAR_START__
-                  -- print(vim.inspect(line)) -- __AUTO_GENERATED_PRINT_VAR_END__
                   if is_valid_json(line) then
                     local json_data = vim.json.decode(line)
                     local match_data = json_data.data
-
-                    -- __AUTO_GENERATED_PRINT_VAR_START__
-                    -- print(vim.inspect(match_data)) -- __AUTO_GENERATED_PRINT_VAR_END__
 
                     if match_data["path"] then
                       if match_data["lines"] then

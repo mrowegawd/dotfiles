@@ -342,6 +342,7 @@ return {
           end,
         },
         sorting = defaults.sorting,
+        preselect = cmp.PreselectMode.None,
         mapping = {
           ["<C-r>"] = cmp.mapping(function(_)
             if callme == 0 then
@@ -356,7 +357,9 @@ return {
                       name = "buffer",
                       option = {
                         get_bufnrs = function()
-                          return vim.api.nvim_list_bufs()
+                          return vim.tbl_filter(function(buf)
+                            return vim.fn.buflisted(buf) == 1 and vim.fn.bufloaded(buf) == 1
+                          end, vim.api.nvim_list_bufs())
                         end,
                       },
                     },
@@ -371,20 +374,6 @@ return {
           -- WARN: cmp sometimes not triggering, check this issue
           -- https://github.com/hrsh7th/nvim-cmp/issues/1692
           -- https://github.com/hrsh7th/nvim-cmp/issues/1692#issuecomment-1855795126
-          ["<C-j>"] = cmp.mapping(function()
-            local cmps = get_cmp()
-            if cmps.visible() then
-              cmp.select_next_item { behavior = "insert" }
-            else
-              cmps.complete {}
-            end
-          end, { "i", "c" }),
-          ["<C-k>"] = cmp.mapping(function()
-            local cmps = get_cmp()
-            if cmps.visible() then
-              cmp.select_prev_item { behavior = "insert" }
-            end
-          end, { "i", "c" }),
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
           ["<C-g>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
@@ -397,7 +386,7 @@ return {
           ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<CR>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
-          ["<C-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+          ["<C-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
           ["<C-e>"] = function(fallback)
             cmp.abort()
             fallback()
@@ -418,7 +407,16 @@ return {
           { name = "emoji" },
           { name = "orgmode" },
           { name = "vim-dadbod-completion" },
-          { name = "buffer" },
+          {
+            name = "buffer",
+            option = {
+              get_bufnrs = function()
+                return vim.tbl_filter(function(buf)
+                  return vim.fn.buflisted(buf) == 1 and vim.fn.bufloaded(buf) == 1
+                end, vim.api.nvim_list_bufs())
+              end,
+            },
+          },
         },
       }
     end,
@@ -479,6 +477,20 @@ return {
       local cmp = require "cmp"
 
       opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
+        ["<C-j>"] = cmp.mapping(function()
+          local cmps = get_cmp()
+          if cmps.visible() then
+            cmp.select_next_item { behavior = "insert" }
+            -- else
+            --   cmps.complete {}
+          end
+        end, { "i", "c" }),
+        ["<C-k>"] = cmp.mapping(function()
+          local cmps = get_cmp()
+          if cmps.visible() then
+            cmp.select_prev_item { behavior = "insert" }
+          end
+        end, { "i", "c" }),
         ["<Tab>"] = cmp.mapping {
           i = function(fallback)
             local entry = cmp.get_selected_entry()
