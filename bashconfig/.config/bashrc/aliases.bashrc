@@ -125,13 +125,18 @@ alias :q=exit
 # ╰──────────────────────────────────────────────────────────╯
 # prefix: _c
 
-# check: size of disk currrent dir
+# check: size of disk currrent dir with du
 c_disk_du() {
   sudo du -a | sort -rn | head -30
 }
 
+# check: size of disk currrent dir with dua
+c_disk_dua() {
+  dua i .
+}
+
 # check: size of disk currrent dir (but human readable)
-c_disk_inhuman() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
+c_disk_print_inhuman() { du -b --max-depth 1 | sort -nr | perl -pe 's{([0-9]+)}{sprintf "%.1f%s", $1>=2**30? ($1/2**30, "G"): $1>=2**20? ($1/2**20, "M"): $1>=2**10? ($1/2**10, "K"): ($1, "")}e'; }
 
 # check: size of disk with target <file-or-path>
 c_disk_target() {
