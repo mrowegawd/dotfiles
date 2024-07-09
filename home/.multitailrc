@@ -1,103 +1,13 @@
-# Format of this file:
-#
-# include:configfile
-#             Also pars 'configfile'.
-#
-# defaultcscheme:<name of colorscheme>
-#             Selects the default color scheme to use. If this one is set, you
-#             no longer need -cS/-CS.
-#
-# colorscheme:<name of colorscheme>
-#             This name can be given for the commandline-parameter -cS. That
-#             way, one can select what colorscheme to use for the next
-#             logfile.
-#
-# cs_re:<color>:<regular expression>
-#             This defines a regular expression to find a particular string.
-#
-#             color: [fg],[bg],[attribute[/otherattribute]][|other colorpair+attribute]
-#             e.g.: red,,bold|red would give bold red for line 1 and just red for line 2, etc.
-# Possible colors: red, green, yellow, blue, magenta, cyan and white.
-#
-#
-# cs_re_s:<color>:<regular expression>
-#             Like cs_re but only the substrings are used(!). E.g.:
-#             ^....(...)...(...)
-#             In the example above only what matches between '(' and ')' is
-#             assigned a color. See the 'acctail' colorscheme for an example.
-#
-# cs_re_val_less:<color>:<value>:<regular expression>
-# cs_re_val_bigger:<color>:<value>:<regular expression>
-# cs_re_val_equal:<color>:<value>:<regular expression>
-#             Like cs_re_s(!) but here the value of the sub(!)-string is
-#             compared against the given value. e.g.:
-#             cs_re_val_less: if "<value>" less then the value matched with
-#             the regular expression, then use the selected color. Please
-#             note that you have to select the value in the string with a
-#             substring match; put '(' and ')' around it.
-#
-# mcsre:color:regexp
-# mcsre_s:color:regexp
-# mcsre_val_less/bigger/equal:color:regexp
-#             These work like their cs_re* sisters only they merge their
-#             attributes (colors, bold, bright, etd) with the previous
-#             merging one.
-#
-# scheme:<name of colorscheme>:<regular expression>
-#             This defines what colorscheme to use when the filename matches
-#             the given regular expression. This way, one can automatically
-#             use the correct colorscheme for certain files.
-#
-# check_mail:<seconds>
-#             How often MultiTail should check for new e-mail. You can switch
-#             mail-checking off by setting this value to 0.
-#
-# tab_stop:<number of spaces>
-#             Specifies the width of TAB characters. Default-value is 4.
-#
-# bind:key:program
-#             Binds a key to a external command. For example:
-#             bind:^j:/bin/bash   - binds ^j (control + j) to bash. While the
-#             selected program is running, MultiTail is suspended. MultiTail
-#             will automatically come back when the external command ends.
-#
-# titlebar:
-#             what to put in the titlebar of the xterm in which MultiTail is
-#             running. see below for details
-#
-# tail:tail_program
-#             path to the tail-program (in case you want to use turbotail or
-#             so instead of the regular tail)
-#
-# bright:(1|0)
-#             use bright colors (1) or not (0)
-#
-# abbreviate_filesize
-#             wether to abbreviate filesizes to xKB/MB/GB (1) or not (0)
-#
-# show_subwindow_id
-#             when set to 1 and merging multiple inputs (e.g. logfiles) the
-#             output show is prepended with a number indicating the input
-#
-# markerline_color
-#             with this one you can set how a markerline looks. e.g. yellow on
-#             red or so
-#
-# markerline_timestamp
-#             sets wether to put a timestamp in the markerline (1) or not (0)
-#
-# ts_format:<format>
-#             format of timestamps. see the man-page of 'strftime' for a list
-#             of the fields that can be used
-#
-# shell:<path>
-#             shell to use when invoking programs. default is /bin/sh
-#
-# umask:<mask>
-#             umask used when creating files
-#
-#defaultcscheme:syslog
-#
+# Pick default screen
+defaultcscheme:log
+# Default colorscheme for tomcat logs
+colorscheme:log
+cs_re:green:.*INFO.*
+cs_re:yellow:.*WARN.*
+cs_re:magenta:.*SEVERE.*
+cs_re:red:.*FATAL.*
+cs_re:red:.*ERROR.*
+cs_re:blue:.*DEBUG.*
 # /var/log/messages & .../syslog
 colorscheme:syslog:kernel and unsorted messages
 # segfaults
@@ -114,6 +24,38 @@ cs_re_s:,,bold:^... .. ..:..:.. [^ ]* ([A-z0-9]*)
 cs_re:red:scanlogd.*
 cs_re:yellow:Did.not
 #
+# Zarafa
+colorscheme:zarafa:www.zarafa.com
+cs_re:magenta:none
+cs_re:blue,,bold:debug
+cs_re:green,,bold:info
+cs_re:yellow:notice
+cs_re:yellow,,bold:warning
+cs_re:red:error
+cs_re:red,,blink:fatal
+cs_re:yellow::
+cs_re:green:^... ... .. ..:..:.. ....
+cs_re:cyan,,bold:/
+cs_re:red,,bold:\(
+cs_re:red,,bold:\)
+cs_re_s:yellow,,underline:User *([^ ]*)
+cs_re:magenta,,bold: *[a-z]*[0-9]+[a-z]*
+cs_re:red:\[
+cs_re:red:\]
+#
+# Oracle WebLogic
+colorscheme:weblogic
+cs_re_s:red,,bold:.*(<Error>).*
+cs_re_s:yellow:.*(<Warning>).*
+cs_re_s:blue:.*(<Debug>).*
+cs_re_s:green:.*(<.*>).*
+#
+# Oracle GoldenGate
+colorscheme:goldengate
+cs_re_s:red,,bold:.*( ERROR ).*
+cs_re_s:yellow:.*( WARNING ).*
+cs_re_s:green:.*( INFO ).*
+#
 # ssh
 colorscheme:ssh:www.openssh.org
 cs_re:yellow:error: Could not get shadow information for.*
@@ -129,6 +71,51 @@ cs_re:red:PAM session setup failed\[[0-9]*\]:.*
 cs_re_s:yellow,,bold:Failed ([^ ]*) for ([^ ]*) from ([^ ]*) port ([0-9]*).*
 cs_re:yellow:Failed [^ ]* for [^ ]* from [^ ]* port [0-9]* .*
 cs_re:red:Disconnecting: Too many authentication failures for.*
+#
+# PowerDNS
+colorscheme:powerdns:www.powerdns.com
+cs_re_s:green:Remote\ (.*)\ wants
+cs_re:blue:'.*'
+cs_re:red:MISS
+cs_re:green,,bold:HIT
+#
+# UUCP
+colorscheme:uucp:UUCP Log files
+cs_re:yellow:uucico
+cs_re:cyan:uuxqt
+cs_re:magenta:Receiving
+cs_re:magenta:Executing
+cs_re:magenta:Sending
+cs_re:cyan:Queuing
+cs_re:cyan:Calling system
+cs_re:green:Login successful
+cs_re:green:Handshake successful
+cs_re:green:Call complete
+cs_re:red:ERROR:.*
+#
+# ADB logcat
+colorscheme:logcat
+cs_re_s:blue,,bold:^./(dalvikvm)\(
+cs_re_s:blue,,bold:^./(Process)\(
+cs_re_s:cyan:^./(ActivityManager)\(
+cs_re_s:cyan:^./(ActivityThread)\(
+cs_re_s:white,,bold:^./([^\(]*)\(
+cs_re_s:green:^[^\(]*(\()[^\)]*(\))
+cs_re:red,,inverse:[Pp]ermission [Dd]eni[ae][dl]
+cs_re:red,,inverse:Caused by:
+cs_re:cyan::
+#cs_re:red,,inverse:^F
+#cs_re:red,,bold:^E
+#cs_re:yellow,,bold:^W
+#cs_re:cyan,,bold:^I
+#cs_re:green,,bold:^V
+#cs_re:white:^D
+cs_re_s:red,,inverse:^(F)/[^:]*: (.*)$
+cs_re_s:red:^(E)/[^:]*: (.*)$
+cs_re_s:yellow:^(W).[^:]*: (.*)$
+#cs_re_s:green:^(I).[^:]*: (.*)$
+cs_re_s:green:^(V)/[^:]*: (.*)$
+cs_re_s:black,,bold:^(D)/[^:]*: (.*)$
 #
 # linux iptables firewall
 colorscheme:liniptfw:Linux IPtables (2.6.x kernel)
@@ -669,19 +656,6 @@ cs_re:red:[0-9a-fx]*
 cs_re:cyan:[A-Z_]*
 # {}[]
 cs_re:yellow:[\[\]]*
-#
-# Argus
-colorscheme:argus:Argus http://qosient.com/argus/
-mcsre_s:,,bold:[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.([0-9]+).*[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\.([0-9]+)
-mcsre_val_bigger:red,,bold:20000:([0-9]+)[ ]+([0-9]+)[ ]+[A-Z][A-Z][A-Z]
-mcsre_s:magenta,,bold: (<->)
-mcsre_s:cyan,,bold: (<[-?])
-mcsre_s:yellow,,bold: ([-?]>)
-mcsre:,blue:.*tcp.*
-mcsre:,green:.*udp.*
-mcsre:,cyan:.*icmp.*
-mcsre:,,inverse:.*man.*
-#
 # ii - irc client
 colorscheme:ii:ii IRC client http://www.suckless.org/wiki/tools/irc
 cs_re_s:cyan:(^....-..-.. ..:..)
@@ -690,28 +664,6 @@ cs_re_s:green:^....-..-.. ..:.. <([[:alnum:]_\^\|`-]+)> (nion[ ,:].*)$
 cs_re_s:yellow:(((http|https|ftp|gopher)|mailto):(//)?[^ <>\"[:blank:]]*|(www|ftp)[0-9]?\.[-a-z0-9.]+)
 cs_re:blue:....-..-.. ..:...*has joined \#.*
 cs_re:blue:....-..-.. ..:.. .*changed mode.*
-#
-# irssi - irssi irc
-colorscheme:irssi:irssi irc
-cs_re_s:cyan:(^..:..)
-cs_re_s:blue:^..:.. (<( |@|\+)[[:alnum:]_\^\|`-]+>)
-cs_re_s:yellow:(((http|https|ftp|gopher)|mailto):(//)?[^ <>\"[:blank:]]*|(www|ftp)[0-9]?\.[-a-z0-9.]+)
-cs_re:magenta:^..:.. *\*.*$
-cs_re:green:..:...*has joined.*$
-cs_re:green:..:...*has left.*$
-cs_re:green:..:...*has quit.*$
-cs_re:green:..:...*is now known as.*$
-cs_re:green:..:...*-!-.*$
-cs_re:red:ataraxia.*$
-#
-# lime - limechat irc
-colorscheme:lime:limechat irc
-cs_re_s:cyan:(^..:..)
-cs_re_s:blue:^..:.. ([[:alnum:]_\^\|`-]+:)
-cs_re_s:yellow:(((http|https|ftp|gopher)|mailto):(//)?[^ <>\"[:blank:]]*|(www|ftp)[0-9]?\.[-a-z0-9.]+)
-cs_re:green:..:...*has joined.*
-cs_re:green:..:...*has left.*
-cs_re:red:ataraxia.*$
 #
 # Snort
 colorscheme:snort:Intrusion detector
@@ -890,10 +842,12 @@ cs_re:red,,bold:WARNING *[^ ]*: error:.*
 #              end offset: the position AFTER the last character for which the attributes are
 #              valid
 #              do NOT use spaces in each line!
-colorscript:cscriptexample:/etc/multitail/colors-example.pl:this is a barely functional example script
+#coorscript:cscriptexample:/etc/multitail/colors-example.pl:this is a barely functional example script
 #
 #
 # default colorschemes:
+scheme:uucp:/var/log/uucp/
+scheme:zarafa:/var/log/zarafa/
 scheme:postfix:/var/log/mail/
 scheme:sendmail:/var/log/mail/
 scheme:exim:/var/log/mail/
@@ -915,8 +869,6 @@ scheme:qmt-smtp:/var/log/qmail/submission/current
 scheme:qmt-clamd:/var/log/qmail/clamd/current
 scheme:qmt-spamassassin:/var/log/qmail/spam/current
 scheme:qmt-sophie:/var/log/qmail/sophie/current
-scheme:lime:.limechat/
-scheme:irssi:.irssi/
 # the following line is to show you that colorscripts can be used the same way as colorschemes
 scheme:cscriptexample:/dev/null
 #
@@ -927,272 +879,6 @@ scheme:cscriptexample:/dev/null
 # default number of lines to buffer globally
 # one can set only 1 of these two
 #global_default_nlines:500
-global_default_nkb:1MB
-#
-# how often to check for mail
-# set to 0 to disable
-# default is every 5 seconds
+global_default_nkb:8MB
+# disable checkmail
 check_mail:0
-#
-# width of a TAB-character. in the VI editor this is, for
-# example, 8. default in multitail is 4
-tab_stop:4
-#
-# what program to start when the user presses a key
-# ...:x:...  just that key
-# ...:^x:... that key with control
-#bind:g:/usr/bin/pine
-#bind:^k:/bin/bash
-#bind:^l:/usr/bin/telnet
-#bind:^s:/bin/su
-#
-# enable things with the xterm title bar
-# %f  changed file
-# %h  hostname
-# %l  system load
-# %m  "New mail" or nothing
-# %u  username
-# %t  date + time
-titlebar:%m %u@%h %f (%t) [%l]
-#
-# how timestrings will look when using '-ts'
-line_ts_format:%Y/%m/%d %H:%M:%S
-#
-# where to find tail. this is used when you don't use the default tail (using
-# turbotail for example)
-# or your tail is located somewhere else
-#tail:/usr/bin/tail
-# wether this tail only understands posix commands (=yes)
-posix_tail:no
-#
-# use bright colors
-#bright:1
-#
-# wether to abbreviate filesizes to xKB/MB/GB
-abbreviate_filesize:on
-#
-# show number of subwindow?
-show_subwindow_id:off
-#
-# attributes for the marker-line
-markerline_color:red,black,reverse
-#
-# show timestamp in markerline?
-markerline_timestamp:on
-# whot character to print in the markerline
-markerline_char:-
-#
-# attributes for the line that is printed when multitail switches subwindow
-changeline_color:blue,white,bold/reverse
-changeline_char:-
-#
-# line printed when nothing happens in a window for a while
-idleline_color:yellow,black,bold/reverse
-idleline_char:-
-#
-# line printed for multitail messages (regexp errors, file truncated, etc)
-msgline_color:magenta,black,bold/reverse
-msgline_char:-
-#
-# when converting to a timestring, use this format:
-# (also for markerline)
-ts_format:%b %d %H:%M:%S
-#
-# timestring format for conversions
-cnv_ts_format:%b %d %H:%M:%S %Y
-#
-# timestring format for statusline
-statusline_ts_format:%Y/%m/%d %H:%M:%S
-#
-# put statusline above the data instead below it?
-statusline_above_data:no
-#
-# statusline attributes
-statusline_attrs:white,black,reverse
-#
-# conversions
-# note: the part you want to have replaced must be between '(' and ')'
-# possible conversions:
-#	ip4tohost:   an ip-address in 4 byte dotted format to a hostname
-#	epochtodate: a value representing the number of seconds since 1970 to
-#	             a time-string. format of the string can be set with
-#	             "ts_format".
-#	errnotostr:  an errno-value to the error message it represents
-#	hextodec:    a hex-value into its decimal version
-#	dectohex:    a decimal value into hexadecimal
-#       tai64todate: converts a TAI64 string to a datestring (see http://cr.yp.to/libtai/tai64.html#tai64n for details)
-#       script       this is a special case: it requires an extra parameter (before the regular expression): this parameter
-#                    selects a script (perl, bash, as long as it is executable) which loops forever and then reads a line
-#                    ending with \n, processes it and then emits the converted output also ending with \n (in 1 write!)
-#                    Please note: when using perl, disable i/o buffering!
-#       abbrtok:     abbreviates a value to KB/MB/GB
-#       signrtostring: signal number to descriptive name
-convert:apache:ip4tohost:^([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
-convert:squid:epochtodate:^([0-9]*)
-convert:squid:ip4tohost:^[^ ]* *[0-9]* *([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
-convert:asterisk:epochtodate:^([0-9]*).([0-9]*)
-convert:nagios.log:epochtodate:^.([0-9]*).
-convert:qmailtimestr:tai64todate:^(@[^ ]*)
-convert:geoip:script:/etc/multitail/convert-geoip.pl:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})
-#
-# shell to invoke
-shell:/bin/bash
-#
-# default scrollback linewrap mode
-# default is yes (do wrap)
-dsblwm:yes
-#
-# should a popup box be displayed when a window closes by itself?
-warn_closed:yes
-#
-# allow 8 bit ascii? (e.g. umlauts etc.)
-allow_8bit:yes
-#
-# beep, flash, popup or none when error?
-beep_method:flash
-# in case of beep_method:popup; how long to display the popup before it
-# automatically disappears (in seconds)
-beep_popup_length:0.1
-#
-# ^x instead of an inverse .
-caret_notation:yes
-#
-# what umask to use when creating files
-umask:0022
-#
-# how often to refresh popups (in case applicable)
-popup_refresh_interval:5
-#
-# print a markerline when one merges multiple logfiles and tail changes
-# from one logfile to an other
-global_mark_change:no
-# default settings for files selected with a regular expression(!)
-default_mark_change:yes:/var/log/apache/.*
-#
-replace_by_markerline:-- MARK --
-#
-# what to buffer by default 'a'll or what went through the 'f'ilter
-default_bufferwhat:f
-#
-# should searches be case insentive? press 'I' in the main menu to toggle at run-time
-searches_case_insensitive:yes
-#
-# default linewrap mode
-# a: all
-# l: left
-# r: right
-# s: syslog
-# S: syslog w/o procname
-# o: offset
-# w: wordwrap
-default_linewrap:a
-#
-# follow filename instead of descriptor?
-follow_filename:yes
-#
-# filters (complete lines)
-filterscheme:syslog:removes '----mark----' and such
-rule:ev:---- MARK ----
-# on what file(s) to use the filter by default
-usefilterscheme:syslog:/var/log/messages
-#
-# edits (part of lines)
-# the type (e.g. 'ke') is like the commandswitch -ke/-kS/-kr etc.
-editscheme:syslog:removes '----'
-editrule:ke:----
-editrule:ke:make
-# on what file(s) to use the filter by default
-useeditscheme:syslog:/var/log/messages
-#
-# close windows when the end-of-file was reached?
-close_closed_windows:yes
-#
-# should we skip empty lines? (the scrollback window always displays them)
-suppress_empty_lines:yes
-#
-# how the splitline should look like
-splitline_attrs:white,black,reverse
-# can be attr (use attributes defined with splitline_attrs), regular (use statusline attributes), none (display none)
-splitline:attributes
-#
-# what attributes to use when displaying things in reverse (-eC/-ec, highlight in main menu)
-inverse:bold/reverse
-#
-# what key must the user press to abort an action? e.g. a menu or so
-# this parameter expects an ascii-value
-# e.g. control + a = 1
-# escape = 27 - please note that you would have to press it twice
-# ^g = 7
-abort_key:7
-# what key to press to exit multitail
-# ^c = 3
-exit_key:3
-#
-default_convert:apache:/var/log/apache/.*access
-default_convert:apache:/var/log/lighttpd/.*access
-default_convert:asterisk:/var/log/asterisk/messages
-default_convert:squid:/var/log/squid/
-default_convert:qmailtimestr:/var/log/qmail/qmail.smtpd.log
-#
-# when a buffer (for scrollback) gets too full, some lines must be freed (unless one sets the buffersize to unlimited)
-# with this parameter one can set the minimum lines to free. this parameter is implemented for efficiency as with a
-# 1MB buffer buffer management starts to use quit a bit of processortime
-min_shrink:10
-#
-# when scrolling or searching through the logging, show (sub-)window-nrs? (toggle with ^t)
-# press 't' to see a list of window-nrs and what's displayed in them
-scrollback_show_winnrs:no
-#
-# for word-wrap: what is the max length of a word which should still be wrapped
-wordwrapmaxlength:31
-#
-# for searches, multitail can remeber a history which can be retrieved with ^r or cursorkey down in places where
-# you can enter searchstrings
-# set 'history_size' to 0 to disable this feature
-searchhistory_file:~/.multitail.searchhistory
-# how many strings to remember
-searchhistory_size:0
-#
-# like searchhistory only for filenames, pathnames and commands
-cmdfile_history_file:~/.multitail.cmdfilehistory
-cmdfile_history_size:0
-#
-# default background color
-# comment this line to use the default terminal color
-#default_background_color:black
-#
-# in search-fields: give an empty edit-field or the previously used search string
-reuse_searchstring:no
-#
-# how many initial lines to tail at least initially (if available)
-min_n_bufferlines:500
-#
-# what characters to use for the borders around popups and such
-# comment-out to use defaults
-#box_bottom_left_hand_corner:+
-#box_bottom_right_hand_corner:+
-#box_bottom_side:-
-#box_left_side:|
-#box_right_side:|
-#box_top_left_hand_corner:+
-#box_top_right_hand_corner:+
-#box_top_side:-
-#
-# text to put in front of line with window-number
-window_number:[%02d]
-subwindow_number:[%02d]
-#
-# parameters for --limit / --Limit
-# format of timestamp in logging
-syslog_ts_format:%Y/%m/%d %H:%M:%S
-# show ip addresses or hostnames?
-resolv_ip_addresses:yes
-# show severity/facility? not shown in regular syslogd
-show_severity_facility:yes
-#
-# suppress colors in the scollback window? this speeds up scrolling a little
-scrollback_no_colors:no
-#
-# when you search in the scrollback: open new window with found strings (= on)
-# or jump to the next found (= off)
-scrollback_search_new_window:off

@@ -112,7 +112,6 @@
   # usage: git wd [diff-against=HEAD] [max-depth=4]
   wd = "!f() { git --paginate diff --dirstat=cumulative,files,0 ${1:-HEAD} | awk '{print $2}' | cut -d / -f1-${2:-4} | sort | uniq; }; f"
 
-  fl = l -u
   hide = update-index --assume-unchanged
   unhide = update-index --no-assume-unchanged
   unhide-all = update-index --really-refresh
@@ -130,20 +129,23 @@
   # Review helpers: https://blog.jez.io/cli-code-review/
   # https://github.com/jez/dotfiles/blob/d7b720fe13b6bc83829d248e23127b918d65de6e/util/gitconfig#L23-L53
   review-base = !git merge-base HEAD \"${review_base:-master}\"
+
   stat = !git --no-pager diff --stat $(git review-base)
   files = !git --no-pager diff --name-only $(git review-base)
+
   # Review by commit
   by-commit = !tig log --reverse $(git review-base)..HEAD
+
   # Show a markdown-formatted summary of commits from {review_base:-master} until HEAD
   pr-summary = !git log --reverse --format=\"- **%s** (%h)%n%n%w(74,2,2)%b\" \"${review_base:-master}\"..HEAD
+
   # split-diff style review using vim-fugitive Gdiff
   review = !$EDITOR -p $(git files) +\"tabdo Gdiff ${review_base:-master}\"
   reviewone = !$EDITOR -p +\"tabdo Gdiff ${review_base:-master}\"
   reviewf = !$EDITOR -p $(git files | fzf) +\"tabdo Gdiff ${review_base:-master}\"
 
-
-  # Open github repo on browser
-  # ex: git open [<remote>]
+  ;Open github repo on browser
+  ;ex: git open [<remote>]
   openurl = "!f() { URL=$(git config remote.\"${1:-origin}\".url); firefox \"${URL%%.git}\"; }; f"
   checkurl = "!git remote -v"
 
@@ -151,8 +153,8 @@
   sub   = submodule update --init --recursive
 
   # Hard reset and clean (unrecoverable)
-  ; reset = !"git reset --hard HEAD && git clean -fd"
-  reseth = reset --hard
+  reset-hard = reset --hard
+  reset-fuck = !"git reset --hard && git clean -fdx"
 
   # From https://gist.github.com/492227
   # head = log -n1
@@ -189,71 +191,68 @@
 
   #### LOGGING ####
   l = log --color=always --graph --pretty=format:\"%C(blue)%h %Creset- %C(green)(%cr) %Creset%s - %C(cyan)%aN %C(magenta)%d\" --date=auto:human
-  lme = "!sh -c \"git l $@ --author=\"$NAME\"\""
-  lshowAuthr = "!sh -c \"git l --author=\"$@\"\""
-  la = l --all
-  las = l --all --simplify-by-decoration
-  lastchange = log -p --follow -n 1
-  ll = log --cc
-  lnm = l --no-merges
+  log-all = l --all
+  log-author = "!sh -c \"git l $@ --author=\"$NAME\"\""
+  ll = l --cc
+  log-no-merges= l --no-merges
   ; patch = !git --no-pager diff --no-color | pbcopy | echo "Patch copied to clipboard"
 
   ; l = log --graph --abbrev-commit --decorate --format=lg1
   ; ll = "log --pretty=rlf"
 
-  l-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
-  l-timeline = log --format='%h %an %ar - %s'
-  l-local = log --oneline origin..HEAD
-  l-fetched = log --oneline HEAD..origin/master
+  log-refs = log --all --graph --decorate --oneline --simplify-by-decoration --no-merges
+  log-timeline = log --format='%h %an %ar - %s'
+  log-local = log --oneline -- origin..HEAD
+  log-fetched = log --oneline HEAD..origin/master
 
   # Show a specific format string and its number of log entries
-  l-of-format-and-count = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort; }; f"
-  l-of-count-and-format = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+  log-of-format-and-count = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort; }; f"
+  log-of-count-and-format = "!f() { format=\"$1\"; shift; git log $@ --format=oneline --format="$format" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
 
   # Show the number of log entries by a specific format string and date format string
-  l-of-format-and-count-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort -r; }; f"
-  l-of-count-and-format-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
+  log-of-format-and-count-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print i, a[i], int((a[i]/NR)*100) \"%\"}}' | sort -r; }; f"
+  log-of-count-and-format-with-date = "!f() { format=\"$1\"; shift; date_format=\"$1\"; shift; git log $@ --format=oneline --format=\"$format\" --date=format:\"$date_format\" | awk '{a[$0]++}END{for(i in a){print a[i], int((a[i]/NR)*100) \"%\", i}}' | sort -nr; }; f"
 
   # Show the number of log items by email
-  l-of-email-and-count            = "!f() { git l-of-format-and-count \"%aE\" $@; }; f"
-  l-of-count-and-email            = "!f() { git l-of-count-and-format \"%aE\" $@; }; f"
+  log-of-email-and-count            = "!f() { git log-of-format-and-count \"%aE\" $@; }; f"
+  log-of-count-and-email            = "!f() { git log-of-count-and-format \"%aE\" $@; }; f"
 
   # Show the number of log items by hour
-  l-of-hour-and-count             = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
-  l-of-count-and-hour             = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+  log-of-hour-and-count             = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
+  log-of-count-and-hour             = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%dT%H\" $@ ; }; f"
 
   # Show the number of log items by day
-  l-of-day-and-count              = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
-  l-of-count-and-day              = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+  log-of-day-and-count              = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
+  log-of-count-and-day              = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m-%d\" $@ ; }; f"
 
   # Show the number of log items by week
-  l-of-week-and-count             = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%Y#%V\" $@; }; f"
-  l-of-count-and-week             = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+  log-of-week-and-count             = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y#%V\" $@; }; f"
+  log-of-count-and-week             = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y#%V\" $@; }; f"
 
   # Show the number of log items by month
-  l-of-month-and-count            = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
-  l-of-count-and-month            = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+  log-of-month-and-count            = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
+  log-of-count-and-month            = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y-%m\" $@ ; }; f"
 
   # Show the number of log items by year
-  l-of-year-and-count             = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%Y\" $@ ; }; f"
-  l-of-count-and-year             = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%Y\" $@ ; }; f"
+  log-of-year-and-count             = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%Y\" $@ ; }; f"
+  log-of-count-and-year             = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%Y\" $@ ; }; f"
 
   # Show the number of log items by hour of day
-  l-of-hour-of-day-and-count      = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%H\" $@; }; f"
-  l-of-count-and-hour-of-day      = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%H\" $@; }; f"
+  log-of-hour-of-day-and-count      = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%H\" $@; }; f"
+  log-of-count-and-hour-of-day      = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%H\" $@; }; f"
 
   # Show the number of log items by day of week
-  l-of-day-of-week-and-count      = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%u\" $@; }; f"
-  l-of-count-and-day-of-week      = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%u\" $@; }; f"
+  log-of-day-of-week-and-count      = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%u\" $@; }; f"
+  log-of-count-and-day-of-week      = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%u\" $@; }; f"
 
   # Show the number of log items by week of year
-  l-of-week-of-year-and-count     = "!f() { git l-of-format-and-count-with-date \"%ad\" \"%V\" $@; }; f"
-  l-of-count-and-week-of-year     = "!f() { git l-of-count-and-format-with-date \"%ad\" \"%V\" $@; }; f"
+  log-of-week-of-year-and-count     = "!f() { git log-of-format-and-count-with-date \"%ad\" \"%V\" $@; }; f"
+  log-of-count-and-week-of-year     = "!f() { git log-of-count-and-format-with-date \"%ad\" \"%V\" $@; }; f"
 
 
   #### XCDCX ####
 
-  ; churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
+  churn = !"f() { git log --all --find-copies --find-renames --name-only --format='format:' \"$@\" | awk 'NF{a[$0]++}END{for(i in a){print a[i], i}}' | sort -rn;};f"
 
   # summary: print a helpful summary of some typical metrics
   summary = "!f() { \
@@ -273,8 +272,8 @@
     printf \"%d file count via git ls-files\n\" $(git ls-files | wc -l); \
     printf \"%d file count via find command\n\" $(find . | wc -l); \
     printf \"%d disk usage\n\" $(du -s | awk '{print $1}'); \
-    printf \"\nMost-active authors, with commit count and %%...\n\"; git l-of-count-and-email | head -7; \
-    printf \"\nMost-active dates, with commit count and %%...\n\"; git l-of-count-and-day | head -7; \
+    printf \"\nMost-active authors, with commit count and %%...\n\"; git log-of-count-and-email | head -7; \
+    printf \"\nMost-active dates, with commit count and %%...\n\"; git log-of-count-and-day | head -7; \
     printf \"\nMost-active files, with churn count\n\"; git churn | head -7; \
   }; f"
 
