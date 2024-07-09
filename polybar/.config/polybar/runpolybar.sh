@@ -11,18 +11,9 @@ while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
 # load monitor
 if type "xrandr"; then
-	for m in $(xrandr -q | grep -w "connected" | cut -d " " -f1); do
-
-		MONITOR=$m polybar -q top -c "$dir/bar/newback/config" &
-		# ~/.config/polybar/shades/launch.sh
-		# MONITOR=$m polybar --reload top &
-		# MONITOR=$m polybar --reload bottom &
-	done
+  for m in $(xrandr -q | grep -w "connected" | cut -d " " -f1); do
+    MONITOR=$m polybar -q top -c "$dir/bar/newback/config" &
+  done
 else
-	# polybar --reload top &
-
-	polybar -q top -c "$dir/bar/newback/config" &
-	# polybar -q top -c "$dir/bar/grayblocks/config" &
-	# "$dir/bar/grayblocks/launch.sh"
-	# polybar --reload bottom &
+  polybar -q top -c "$dir/bar/newback/config" &
 fi

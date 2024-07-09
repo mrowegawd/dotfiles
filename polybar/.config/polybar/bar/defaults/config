@@ -76,6 +76,7 @@ double-click-middle =
 double-click-right =
 cursor-click =
 cursor-scroll =
+
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;; Application Settings
 [settings]
