@@ -47,6 +47,10 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
           },
+          ["everforest"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
+          },
         },
       })
       return {

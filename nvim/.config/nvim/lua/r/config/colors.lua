@@ -806,6 +806,70 @@ local function colorscheme_overrides()
         },
       },
     },
+
+    ["everforest"] = {
+      { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
+
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          fg = { from = "Normal", attr = "bg", alter = -0.4 },
+        },
+      },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = -0.5 }, bg = "NONE" } },
+      { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", attr = "fg" } } },
+      { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.5 } } },
+      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = -0.1 }, fg = { from = "CmpItemAbbr" } } },
+      {
+        PmenuSel = {
+          bg = { from = "Normal", attr = "bg", alter = -0.4 },
+          fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 },
+          bold = true,
+          reverse = false,
+        },
+      },
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
+          bold = true,
+        },
+      },
+    },
+    ["sweetie"] = {
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+        },
+      },
+      { CursorLine = { bg = { from = "Normal", alter = 0.2 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+      { LeaveCursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+    },
     ["neomodern"] = {
       { MyQuickFixLineEnter = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
 

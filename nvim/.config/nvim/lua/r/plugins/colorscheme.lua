@@ -63,6 +63,57 @@ return {
       return false
     end,
   },
+  -- SWEETIE
+  {
+    "NTBBloodbath/sweetie.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local sweetie_theme = { "sweetie" }
+      if vim.tbl_contains(sweetie_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    init = function()
+      --- Default configuration
+      vim.g.sweetie = {
+        -- Pop-up menu pseudo-transparency
+        -- It requires `pumblend` option to have a non-zero value
+        pumblend = {
+          enable = true,
+          transparency_amount = 20,
+        },
+        palette = {
+          dark = {},
+          light = {},
+        },
+        -- Override default highlighting groups options
+        -- overrides = {
+        --   Comment = { italic = false },
+        --   CommentBold = { italic = false },
+        --   Keyword = { italic = false },
+        --   Boolean = { italic = false },
+        --   Class = { italic = false },
+        --   -- Optional, just if you use Java and you do not want some extra italics
+        --   -- ["@type.java"] = { italic = false },
+        --   -- ["@type.qualifier.java"] = { italic = false },
+        -- },
+        -- Custom plugins highlighting groups
+        integrations = {
+          lazy = true,
+          neorg = true,
+          neogit = true,
+          neomake = true,
+          telescope = true,
+        },
+        -- Enable custom cursor coloring even in terminal Neovim sessions
+        cursor_color = true,
+        -- Use sweetie's palette in `:terminal` instead of your default terminal colorscheme
+        terminal_colors = true,
+      }
+    end,
+  },
   -- DOOM-ONE
   {
     "NTBBloodbath/doom-one.nvim",
