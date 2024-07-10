@@ -7,10 +7,16 @@ local function check_file_extension(filename)
 	local pattern_jpg = "%.jpg$"
 	local pattern_jpeg = "%.jpeg$"
 	local pattern_webp = "%.webp$"
+	local pattern_mkv = "%.mkv$"
+	local pattern_avi = "%.avi$"
 
 	if string.match(filename, pattern_mp3) then
 		return "mp3"
 	elseif string.match(filename, pattern_mp4) then
+		return "mp4"
+	elseif string.match(filename, pattern_mkv) then
+		return "mp4"
+	elseif string.match(filename, pattern_avi) then
 		return "mp4"
 	elseif string.match(filename, pattern_gif) then
 		return "mp4"
