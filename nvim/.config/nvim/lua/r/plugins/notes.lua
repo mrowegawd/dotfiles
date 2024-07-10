@@ -84,6 +84,7 @@ return {
       },
       org_agenda_files = {
         fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+        fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
         fmt("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
         fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
         fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),

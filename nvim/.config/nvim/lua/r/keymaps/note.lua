@@ -44,7 +44,13 @@ function M.neorg_mappings_ft(bufnr)
             vim_width = math.floor(vim_width / 2 - 10)
             cmd(fmt("vertical resize %s", vim_width))
           else
-            vim.cmd [[AerialToggle]]
+            if RUtils.has "aerial.nvim" then
+              vim.cmd [[AerialToggle]]
+            end
+
+            if RUtils.has "outline.nvim" then
+              vim.cmd [[Outline]]
+            end
           end
         end,
         "Note: open toc",
