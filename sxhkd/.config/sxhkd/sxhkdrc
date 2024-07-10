@@ -193,14 +193,19 @@ super + F6
 super + F9
         pkill ffmpeg; dunstify "Record" "Quit.."
 
-# misc: run poweroff
+# misc: open poweroff
 super + shift + q
         $HOME/.config/rofi/powermenu/poweroff
 
-# misc: run mpv
+# misc: open youtube with mpv
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
+# misc: opne youtube playlist with mpv
+super + y
+        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
+
+# misc: open neovide
 super + shift + Return
         zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
 
