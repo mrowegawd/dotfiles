@@ -62,7 +62,11 @@ super + R
 # 	      bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
-alt + {shift+Tab,Tab}
+# alt + {shift+Tab,Tab}
+# 	      bspc desktop -f {prev,next}.local
+
+# workspace: focus next/prev workspace
+super + {shift+h,shift+l}
 	      bspc desktop -f {prev,next}.local
 
 # workspace: select workspace by number 1-9
@@ -182,7 +186,7 @@ super + shift + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
 # misc: call firefox (side by side)
-super + F8
+super + shift + j
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
 
 # misc: call zathura (side by side)
