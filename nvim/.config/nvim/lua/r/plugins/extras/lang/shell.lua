@@ -6,6 +6,23 @@ local function have(path)
   return vim.uv.fs_stat(xdg_config .. "/" .. path) ~= nil
 end
 
+RUtils.on_very_lazy(function()
+  vim.filetype.add {
+    extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", http = "http", task = "json" },
+    filename = {
+      ["vifmrc"] = "vim",
+    },
+    pattern = {
+      [".*/waybar/config"] = "jsonc",
+      ["%.vscode/tasks.json"] = "task",
+      [".*/mako/config"] = "dosini",
+      [".*/kitty/.+%.conf"] = "bash",
+      [".*/hypr/.+%.conf"] = "hyprlang",
+      ["%.env%.[%w_.-]+"] = "sh",
+    },
+  }
+end)
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -29,29 +46,10 @@ return {
         end
       end
 
-      vim.filetype.add {
-        extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", http = "http" },
-        filename = {
-          ["vifmrc"] = "vim",
-        },
-        pattern = {
-          [".*/waybar/config"] = "jsonc",
-          ["%.vscode/.+%.json"] = "task",
-          [".*/mako/config"] = "dosini",
-          [".*/kitty/.+%.conf"] = "bash",
-          [".*/hypr/.+%.conf"] = "hyprlang",
-          ["%.env%.[%w_.-]+"] = "sh",
-        },
-      }
-
       add "git_config"
 
       if have "hypr" then
         add "hyprlang"
-      end
-
-      if have "http" then
-        add "http"
       end
 
       if have "fish" then
