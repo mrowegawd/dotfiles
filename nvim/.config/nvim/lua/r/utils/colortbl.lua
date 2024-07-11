@@ -11,6 +11,7 @@ local pmenusel_fg = Highlight.get("PmenuSel", "bg")
 local branch_fg = Highlight.tint(normal_fg, 4)
 local separator_fg = Highlight.tint(keyword_fg, -0.2)
 local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
+local winseparator = Highlight.get("WinSeparator", "fg")
 
 if vim.tbl_contains({ "solarized-osaka-night", "farout-night" }, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(statusline_fg, 0.05)
@@ -55,7 +56,9 @@ local M = {
   diff_delete = Highlight.get("GitSignsChange", "fg"),
   diff_change = Highlight.get("GitSignsDelete", "fg"),
 
-  direcotory = Highlight.get("Directory", "fg"),
+  directory = Highlight.get("Directory", "fg"),
+  separator_trouble = Highlight.tint(winseparator, -0.2),
+  separator = winseparator,
 
   diagnostic_warn = Highlight.get("DiagnosticSignWarn", "fg"),
   diagnostic_err = Highlight.get("DiagnosticSignError", "fg"),
