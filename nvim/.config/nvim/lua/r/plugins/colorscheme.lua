@@ -1,6 +1,31 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  {
+    "romainl/Apprentice",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local apprentice_theme = { "apprentice" }
+      if vim.tbl_contains(apprentice_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+
+  {
+    "jnurmine/Zenburn",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local zenburn_theme = { "zenburn" }
+      if vim.tbl_contains(zenburn_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- LACKLUSTER.NVIM
   {
     "slugbyte/lackluster.nvim",
