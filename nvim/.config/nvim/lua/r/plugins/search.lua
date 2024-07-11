@@ -1452,7 +1452,7 @@ return {
     keys = {
       {
         "gR",
-        "<cmd>Trouble lsp_references toggle focus=true win.position=right<cr>",
+        "<cmd>Trouble lsp_references toggle focus=true win.position=left<cr>",
         desc = "LSP: references [trouble]",
       },
       -- {
@@ -1594,6 +1594,7 @@ return {
         keys = {
           ["<esc>"] = "cancel",
           ["q"] = "close",
+          ["o"] = "jump",
           ["<a-n>"] = "next",
           ["<a-p>"] = "prev",
         },

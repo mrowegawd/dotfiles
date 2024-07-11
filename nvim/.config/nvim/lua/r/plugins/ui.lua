@@ -90,6 +90,7 @@ return {
       }
     end,
   },
+  -- MINI.ICONS
   {
     "echasnovski/mini.icons",
     lazy = true,
