@@ -7,6 +7,8 @@
   "editor.scrollbar.horizontal": "auto",
   "editor.scrollbar.vertical": "auto",
   "editor.guides.indentation": false,
+  "editor.cursorSurroundingLines": 8,
+  "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
   "window.commandCenter": false,
   "window.titleBarStyle": "custom",
   "workbench.editor.showTabs": "none",
@@ -76,6 +78,8 @@
   "vim.hlsearch": true,
   "vim.sneak": true,
   "vim.highlightedyank.enable": true,
+  "vim.highlightedyank.color": "#a9dc7660",
+  "vim.highlightedyank.duration": 250,
   "vim.foldfix": true,
   "vim.leader": "<space>",
   "vim.handleKeys": {
@@ -142,10 +146,17 @@
       "before": ["<c-g>"],
       "after": ["/"]
     },
+
     {
       "before": ["<leader>", "f", "f"],
       "commands": ["workbench.action.quickOpen"]
     },
+
+    // {
+    //   "before": ["leader", "f", "f"],
+    //   "commands": ["find-it-faster.findWithinFiles"]
+    // }
+
     {
       "before": ["<leader>", "n"],
       "commands": [":nohl"]
@@ -271,13 +282,11 @@
     // GIT
     // -------------------------
     {
-      // move cursor to the next hunk
-      "before": ["g", "n"],
+      "before": ["g", "n"], // move cursor to the next hunk
       "commands": ["workbench.action.editor.nextChange"]
     },
     {
-      // move cursor to the prev hunk
-      "before": ["g", "p"],
+      "before": ["g", "p"], // move cursor to the prev hunk
       "commands": ["workbench.action.editor.previousChange"]
     },
 
@@ -288,6 +297,21 @@
     {
       "before": ["<leader>", "g", "t", "B"],
       "commands": ["gitlens.toggleFileBlame"]
+    },
+
+    {
+      "before": ["<leader>", "g", "P"], // Peek Git diff for the changed line
+      "commands": ["editor.action.dirtydiff.next"]
+    },
+
+    {
+      "before": ["<leader>", "g", "r"], // Revert hunk
+      "commands": ["git.revertSelectedRanges"]
+    },
+
+    {
+      "before": ["<leader>", "g", "o"], // Open file in GitHub
+      "commands": ["gitlens.openFileOnRemote"]
     },
 
     // -------------------------
@@ -312,10 +336,15 @@
       "commands": ["editor.action.revealDefinition"],
       "silent": true
     },
+    // {
+    //   "before": ["<F2>"],
+    //   "commands": ["editor.action.goToReferences"],
+    //   "silent": true
+    // },
+
     {
-      "before": ["<F2>"],
-      "commands": ["editor.action.goToReferences"],
-      "silent": true
+      "before": ["<leader>", "c", "a"], -- open code action
+      "commands": ["editor.action.quickFix"]
     },
 
     {
@@ -337,7 +366,7 @@
     },
 
     {
-      "before": ["g", "t"],
+      "before": ["g", "y"],
       "commands": ["editor.action.goToTypeDefinition"],
       "silent": true
     },
@@ -352,6 +381,26 @@
       "before": ["g", "O"],
       "commands": ["editor.showOutgoingCalls"],
       "silent": true
+    },
+    {
+      "key": "h",
+      "command": "editor.action.scrollLeftHover",
+      "when": "editorHoverFocused"
+    },
+    {
+      "key": "<c-d>",
+      "command": "editor.action.scrollDownHover",
+      "when": "editorHoverFocused"
+    },
+    {
+      "key": "<c-u>",
+      "command": "editor.action.scrollUpHover",
+      "when": "editorHoverFocused"
+    },
+    {
+      "key": "l",
+      "command": "editor.action.scrollRightHover",
+      "when": "editorHoverFocused"
     },
 
     // {
@@ -450,6 +499,19 @@
       "before": ["<"],
       "after": ["<", "g", "v"]
     }
+
+    // -------------------------
+    // GIT
+    // -------------------------
+    {
+      "before": ["<leader>", "g", "r"], // Revert hunk
+      "commands": ["git.revertSelectedRanges"]
+    },
+    {
+      "before": ["<leader>", "g", "o"], // Open file in GitHub
+      "commands": ["gitlens.openFileOnRemote"]
+    }
+  ]
   ],
   "vim.normalModeKeyBindingsNonRecursive": [],
   "workbench.iconTheme": "material-icon-theme",

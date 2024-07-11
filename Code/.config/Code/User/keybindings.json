@@ -65,6 +65,17 @@
     "when": "inFilesPicker && inQuickOpen"
   },
 
+  {
+    "key": "ctrl+d",
+    "command": "-editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
+  },
+  {
+    "key": "alt+d",
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
+  },
+
   // Open VSCode quick open in split mode
   // ini tidak berhasil, ctrl+v malah jadi paste!
   // {
@@ -156,10 +167,14 @@
     "command": "workbench.action.toggleSidebarVisibility"
   },
   {
+    "key": "alt+e",
+    "command": "workbench.action.toggleSidebarVisibility",
+    "when": "filesExplorerFocus && !inputFocus"
+  },
+  {
     "key": "alt+shift+e",
     "command": "revealInExplorer"
   },
-
   {
     // Open selected file in the first (left) editor group from File Explorer
     "key": "ctrl+v",
@@ -172,6 +187,42 @@
     "command": "explorer.openToSide",
     "args": { "group": 1 },
     "when": "explorerViewletVisible && filesExplorerFocus && !inputFocus"
+  },
+
+  {
+    "key": "a",
+    "command": "explorer.newFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  // {
+  //   "key": "A",
+  //   "command": "explorer.newFolder",
+  //   "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  // },
+  {
+    "key": "r",
+    "command": "renameFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "d",
+    "command": "deleteFile",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "x",
+    "command": "filesExplorer.cut",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  {
+    "key": "y",
+    "command": "filesExplorer.copy",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !inputFocus"
+  },
+  {
+    "key": "p",
+    "command": "filesExplorer.paste",
+    "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceReadonly && !inputFocus"
   },
 
   // -------------------------
