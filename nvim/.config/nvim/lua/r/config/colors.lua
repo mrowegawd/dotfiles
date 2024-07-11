@@ -36,7 +36,7 @@ local general_overrides = function()
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
 
-    { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.5 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.4 }, bg = "NONE" } },
     {
       FloatBorder = {
         bg = { from = "Normal", attr = "bg", alter = -0.1 },
@@ -57,7 +57,7 @@ local general_overrides = function()
     },
     { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-    { QuickFixLine = { bg = { from = "QuickFixLine", attr = "fg", alter = -0.6 }, underline = false } },
+    { QuickFixLine = { bg = { from = "Keyword", attr = "fg", alter = -0.5 }, underline = false } },
     -----------------------------------------------------------------------------//
     --  Spell
     -----------------------------------------------------------------------------//
@@ -604,6 +604,10 @@ local general_overrides = function()
         fg = { from = "ErrorMsg", attr = "fg" },
       },
     },
+
+    -- VIM.MATCHUP ========================================================
+    -- { MatchParen = { bg = { from = "MatchParen", attr = "bg", alter = -0.8 }, fg = "NONE", bold = false } },
+    { MatchParen = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE", bold = false } },
   }
 end
 
@@ -715,6 +719,8 @@ local function colorscheme_overrides()
         },
       },
 
+      { MatchParen = { bg = "NONE", fg = "NONE", bold = false } },
+
       {
         QuickFixLine = {
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
@@ -769,7 +775,14 @@ local function colorscheme_overrides()
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
-      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.7 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       {
         MyCodeUsage = {
@@ -945,6 +958,15 @@ local function colorscheme_overrides()
         Folded = {
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
           fg = { from = "Normal", attr = "bg", alter = 2 },
+        },
+      },
+
+      {
+        QuickFixLine = {
+          bg = { from = "Keyword", attr = "fg", alter = -0.5 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.8 },
+          bold = true,
+          underline = false,
         },
       },
 
@@ -1154,6 +1176,14 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        QuickFixLine = {
+          fg = { from = "Normal", attr = "fg", alter = 0.2 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.5 },
+          underline = false,
+        },
+      },
+
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
       { ["@org.agenda.scheduled"] = { fg = { from = "@tag.attribute", attr = "fg", alter = 0.2 } } },
@@ -1251,6 +1281,8 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
 
+      { MatchParen = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE", bold = false } },
+
       {
         LspCodeLens = {
           bg = { from = "Normal", attr = "bg", alter = -0.05 },
@@ -1330,6 +1362,7 @@ local function colorscheme_overrides()
     },
     ["tokyonight-night"] = {
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.7 }, bg = "NONE" } },
+      { MatchParen = { bg = { from = "MatchParen", attr = "bg", alter = -0.1 }, fg = "NONE", bold = false } },
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
 

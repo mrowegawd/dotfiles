@@ -44,18 +44,18 @@ URxvt.color15:      #feffff
 ! MODE color
 *color16: #5ca4c3
 
-! SEPARATOR: separator_bg, separator_fg
-*color17: #39677a
-*color18: #999999
+! SEPARATOR: winseparator_bg, winseparator_fg
+*color17: #545454
+*color18: #242424
 
-! FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: bg, fg and match
 *color19: #242424
 *color20: #b4b4b4
 *color21: #ffb49d
 
-! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF selection: bg, fg and match
 *color22: #2e5261
-*color23: #ffb49d
+*color23: #ffffff
 *color24: #ff7869
 
 ! TMUX: main separator bg

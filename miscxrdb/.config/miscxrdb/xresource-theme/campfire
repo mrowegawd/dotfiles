@@ -28,18 +28,18 @@
 ! MODE color
 *color16: #b8795d
 
-! SEPARATOR: separator_bg, separator_fg
-*color17: #734c3a
-*color18: #2e2d34
+! SEPARATOR: winseparator_bg, winseparator_fg
+*color17: #383643
+*color18: #18171c
 
-! FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: bg, fg and match
 *color19: #18171c
 *color20: #797590
 *color21: #ffb49d
 
-! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF selection: bg, fg and match
 *color22: #5c3c2e
-*color23: #ffffff
+*color23: #b5afd8
 *color24: #ff7869
 
 ! TMUX: main separator bg

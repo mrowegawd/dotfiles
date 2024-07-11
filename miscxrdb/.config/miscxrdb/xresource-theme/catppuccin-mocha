@@ -38,25 +38,25 @@
 ! -----------------------------
 
 ! MODE color
-*color16: #a284c5
+*color16: #a284c6
 
-! SEPARATOR: separator_bg, separator_fg
-*color17: #65537b
-*color18: #434369
+! SEPARATOR: winseparator_bg, winseparator_fg
+*color17: #3e3e62
+*color18: #1b1b2a
 
-! FZF: fzf_bg, fzf_fg, fzf_match,
-*color19: #1b1b29
-*color20: #8787cf
+! FZF: bg, fg and match
+*color19: #1b1b2a
+*color20: #8787d3
 *color21: #ffb49d
 
-! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
-*color22: #514262
-*color23: #ffffff
+! FZF selection: bg, fg and match
+*color22: #514263
+*color23: #cacaff
 *color24: #ff7869
 
 ! TMUX: main separator bg
 *color25: #0f0f17
 
 ! TMUX: main window dan second window
-*color26: #1e1e2e
-*color27: #1b1b29
+*color26: #1e1e2f
+*color27: #1b1b2a

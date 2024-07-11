@@ -233,16 +233,16 @@ function M.change_colors()
 ! MODE color
 *color16: %s
 
-! SEPARATOR: separator_bg, separator_fg
+! SEPARATOR: winseparator_bg, winseparator_fg
 *color17: %s
 *color18: %s
 
-! FZF: fzf_bg, fzf_fg, fzf_match,
+! FZF: bg, fg and match
 *color19: %s
 *color20: %s
 *color21: %s
 
-! FZF: fzf_selection_bg, fzf_selection_fg, fzf_selection_match
+! FZF selection: bg, fg and match
 *color22: %s
 *color23: %s
 *color24: %s
@@ -254,21 +254,21 @@ function M.change_colors()
 *color26: %s
 *color27: %s
 ]],
-    -- Mode
-    RUtils.colortbl.separator_fg,
+    -- Color Mode: Penanda
+    Highlight.tint(Highlight.get("Keyword", "fg"), -0.2),
 
-    -- Separator
+    -- WinSeparator: fg and bg
     Highlight.get("WinSeparator", "fg"),
-    RUtils.colortbl.separator_fg_alt,
+    Highlight.get("ColorColumn", "bg"),
 
-    -- FZF
+    -- FZF: bg, fg dan match
     Highlight.get("NormalFloat", "bg"),
     Highlight.get("CmpItemAbbr", "fg"),
     Highlight.get("CmpItemAbbrMatch", "fg"),
 
-    -- FZF
+    -- FZF selection: bg, fg dan match
     Highlight.get("PmenuSel", "bg"),
-    Highlight.get("PmenuSel", "fg"),
+    Highlight.tint(Highlight.get("CmpItemAbbr", "fg"), 0.5),
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"),
 
     -- Tmux

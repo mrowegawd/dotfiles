@@ -1,20 +1,20 @@
-STATUSLINE_BG_ACTIVE="#776593"
-STATUSLINE_BG="#1f1f28"
-STATUSLINE_FG="#6a9589"
+STATUSLINE_BG_ACTIVE="#447cab"
+STATUSLINE_BG="#1f1f1f"
+STATUSLINE_FG="#404040"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#4a3f5c"
-BORDER_BG="#1f1f28"
+BORDER_FG="#404040"
+BORDER_BG="#1f1f1f"
 
-SEPARATOR_FG="#45455a"
-SEPARATOR_ACTIVE_BG="#1f1f28"
+SEPARATOR_FG="#1b1b1b"
+SEPARATOR_ACTIVE_BG="#1f1f1f"
 
-WINDOW_BG_ACTIVE="#1f1f28"
-WINDOW_BG="#1b1b24"
+WINDOW_BG_ACTIVE="#1f1f1f"
+WINDOW_BG="#1b1b1b"
 
-RED="#c34043"
-BLUE="#7e9cd8"
+RED="#f44747"
+BLUE="#569cd6"
 
 left_separator=''
 left_separator_black=''
@@ -37,7 +37,7 @@ setw -g window-active-style bg=$WINDOW_BG_ACTIVE
 setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
 setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
 
-setw -g pane-border-status bottom
+setw -g pane-border-status top # bottom, top
 
 # setw -g pane-border-format "#{?window_zoomed_flag,#[fg=white]#[bg=$RED],}[ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
 # #{?window_zoomed_flag,#[fg=white]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
@@ -99,6 +99,6 @@ set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
 #  ╙
 set -g status-right-length 80
 set -g status-right "#[fg=$STATUSLINE_BG_ACTIVE,bold]#{pomodoro_status}\
- #[fg=white,bg=$RED,bold]  #(date +"%H:%M") #[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,bold] #{prefix} 👨#(whoami) #[fg=black,bg=$STATUSLINE_BG_ACTIVE,bold] ❐ #S "
+ #[fg=$RED,bold]  #(date +"%H:%M") #[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,bold] #{prefix} 👨#(whoami) #[fg=white,bold] ❐ #S "
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux
