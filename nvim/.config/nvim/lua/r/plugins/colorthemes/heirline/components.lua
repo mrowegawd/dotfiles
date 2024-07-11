@@ -1,4 +1,3 @@
-local fn = vim.fn
 local Conditions = require "heirline.conditions"
 local Col = RUtils.colortbl
 
@@ -94,6 +93,9 @@ local exclude = {
 } -- Ignore float windows and exclude filetype
 
 M.Mode = {
+  condition = function()
+    return not (vim.bo[0].filetype == "qf")
+  end,
   init = function(self)
     self.mode = vim.fn.mode(1) -- :h mode()
 
@@ -173,8 +175,35 @@ M.Mode = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
+      local cs = colors.separator_fg_al
+
+      if Conditions.is_not_active() then
+        cs = colors.separator_fg_al
+      end
+
+      if vim.bo[0].filetype == "qf" then
+        cs = colors.base_bg
+      end
+
       local mode = self.mode:sub(1, 1)
-      return { fg = self.mode_colors[mode], bg = colors.separator_fg_alt }
+      return { fg = self.mode_colors[mode], bg = cs }
+    end,
+  },
+
+  {
+    provider = function()
+      if vim.bo[0].filetype == "qf" then
+        return RUtils.config.icons.misc.separator_up
+      end
+    end,
+    -- RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local cs = Col.separator
+
+      if Conditions.is_not_active() then
+        cs = colors.basenc_bg
+      end
+      return { fg = colors.separator_fg_alt, bg = cs }
     end,
   },
 }
@@ -267,12 +296,12 @@ M.Mixindent = {
 
       local space_pat = [[\v^ +]]
       local tab_pat = [[\v^\t+]]
-      local space_indent = fn.search(space_pat, "nwc")
-      local tab_indent = fn.search(tab_pat, "nwc")
+      local space_indent = vim.fn.search(space_pat, "nwc")
+      local tab_indent = vim.fn.search(tab_pat, "nwc")
       local mixed = (space_indent > 0 and tab_indent > 0)
       local mixed_same_line
       if not mixed then
-        mixed_same_line = fn.search([[\v^(\t+ | +\t)]], "nwc")
+        mixed_same_line = vim.fn.search([[\v^(\t+ | +\t)]], "nwc")
         mixed = mixed_same_line > 0
       end
       if not mixed then
@@ -281,11 +310,11 @@ M.Mixindent = {
       if mixed_same_line ~= nil and mixed_same_line > 0 then
         return "MI:" .. mixed_same_line
       end
-      local space_indent_cnt = fn.searchcount({
+      local space_indent_cnt = vim.fn.searchcount({
         pattern = space_pat,
         max_count = 1e3,
       }).total
-      local tab_indent_cnt = fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
+      local tab_indent_cnt = vim.fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
       if space_indent_cnt > tab_indent_cnt then
         return "MI:" .. tab_indent
       else
@@ -303,27 +332,21 @@ M.FilePathQF = {
   end,
 
   {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { fg = colors.base_bg, bg = colors.diff_add }
-    end,
-  },
-  {
     provider = function()
       local msg
       if RUtils.qf.is_loclist() then
         msg = vim.fn.getloclist(0, { title = 0 }).title
       else
-        msg = string.format("%s/total?", vim.fn.getqflist({ id = 0 }).id)
+        msg = string.format("  %s/total?", vim.fn.getqflist({ id = 0 }).id)
       end
 
       return " " .. msg .. " "
     end,
     hl = function()
-      local cs = colors.base_bg
+      local cs = Col.separator
 
       if Conditions.is_not_active() then
-        cs = colors.basenc_bg
+        cs = colors.base_bg
       end
 
       return { fg = cs, bg = colors.diff_add, bold = true }
@@ -336,7 +359,7 @@ M.FilePathQF = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = colors.base_bg
+      local cs = Col.separator
 
       if Conditions.is_not_active() then
         cs = colors.basenc_bg
@@ -349,7 +372,7 @@ M.FilePathQF = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = colors.base_bg
+      local cs = Col.separator
 
       if Conditions.is_not_active() then
         cs = colors.basenc_bg
@@ -363,9 +386,9 @@ M.FilePathQF = {
       if RUtils.qf.is_loclist() then
         msg = vim.fn.getloclist(0, { title = 0 }).title
       else
-        msg = string.format("%s", vim.fn.getqflist({ title = 0 }).title)
+        msg = string.format(' Title -> "%s"', vim.fn.getqflist({ title = 0 }).title)
       end
-      return " " .. msg .. " "
+      return msg .. " "
     end,
     hl = function()
       local cs = colors.base_bg
@@ -385,7 +408,7 @@ M.FilePathQF = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = colors.base_bg
+      local cs = Col.separator
 
       if Conditions.is_not_active() then
         cs = colors.basenc_bg
@@ -395,6 +418,9 @@ M.FilePathQF = {
   },
 }
 M.FilePath = {
+  condition = function()
+    return not vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype)
+  end,
   {
     provider = function()
       local opts = {
@@ -479,7 +505,7 @@ M.FilePath = {
 M.FileFlags = {
   {
     condition = function()
-      return vim.bo.modified
+      return vim.bo.modified or not vim.bo[0].filetype == "trouble"
     end,
     provider = " " .. RUtils.config.icons.misc.boldclose,
     hl = { fg = colors.diagnostic_err },
@@ -632,7 +658,7 @@ M.LSPActive = {
 }
 M.FileIcon = {
   condition = function()
-    return vim.bo.filetype ~= "qf"
+    return not vim.tbl_contains({ "qf", "trouble", "Outline", "aerial" }, vim.bo[0].filetype)
   end,
   init = function(self)
     local filename = vim.api.nvim_buf_get_name(0)
@@ -852,7 +878,7 @@ M.BufferCwd = {
     self.bufnr = self.bufnr or 0
   end,
   condition = function()
-    return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width(80)
+    return not vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) and setcond.hide_in_width(80)
   end,
   provider = " ",
   {
@@ -867,7 +893,7 @@ M.BufferCwd = {
         return " " .. cwd .. "%*"
       end
     end,
-    hl = { fg = Col.direcotory, bg = colors.base_bg },
+    hl = { fg = Col.directory, bg = colors.base_bg },
   },
   {
     provider = " ",
@@ -945,7 +971,18 @@ M.status_active_left = {
   M.Ruler,
   M.Clock,
 
-  hl = { fg = colors.base_fg, bg = colors.base_bg },
+  hl = function()
+    if vim.bo[0].filetype == "qf" then
+      return { fg = colors.base_fg, bg = Col.separator }
+    end
+
+    if vim.bo[0].filetype == "trouble" then
+      return { fg = colors.base_fg, bg = Col.separator_trouble }
+    end
+    return { fg = colors.base_fg, bg = colors.base_bg }
+  end,
+
+  -- hl = { fg = colors.base_fg, bg = colors.base_bg },
   -- hl = { fg = colors.base_fg, bg = colors.base_bg },
 }
 
