@@ -33,11 +33,11 @@ function M.windows_is_opened(wins)
   for _, winnr in ipairs(vim.fn.range(1, vim.fn.winnr "$")) do
     local winbufnr = vim.fn.winbufnr(winnr)
     if
-      winbufnr > 0
-      and (
-        vim.tbl_contains(ft_wins, vim.api.nvim_get_option_value("filetype", { buf = winbufnr }))
-        or vim.tbl_contains(ft_wins, vim.api.nvim_get_option_value("buftype", { buf = winbufnr }))
-      )
+        winbufnr > 0
+        and (
+          vim.tbl_contains(ft_wins, vim.api.nvim_get_option_value("filetype", { buf = winbufnr }))
+          or vim.tbl_contains(ft_wins, vim.api.nvim_get_option_value("buftype", { buf = winbufnr }))
+        )
     then
       local winid = vim.fn.win_findbuf(winbufnr)[1] -- example winid: 1004, 1005
       outline_tbl = { found = true, winbufnr = winbufnr, winnr = winnr, winid = winid }
@@ -353,10 +353,10 @@ function M.get_visual_selection(opts)
     selection = string.sub(lines[1], cscol) .. "\n" .. string.sub(lines[n], 1, cecol)
   else
     selection = string.sub(lines[1], cscol)
-      .. "\n"
-      .. table.concat(lines, "\n", 2, n - 1)
-      .. "\n"
-      .. string.sub(lines[n], 1, cecol)
+        .. "\n"
+        .. table.concat(lines, "\n", 2, n - 1)
+        .. "\n"
+        .. string.sub(lines[n], 1, cecol)
   end
 
   return {

@@ -480,6 +480,79 @@ return {
     "mistweaverco/kulala.nvim",
     event = "VeryLazy",
   },
+  -- NVIM-SURROUND
+  {
+    -- how to use it: ysiw, yd<brackets>, yc<brackets>, ds<brackets>
+    "kylechui/nvim-surround",
+    event = "VeryLazy",
+    version = "*",
+    config = function()
+      local input = require("nvim-surround.input").get_input
+      require("nvim-surround").setup {
+        keymaps = {
+
+          insert = "<C-x>s", -- sebenarnya bagian ini ga dpake :(
+          insert_line = "<C-x>S", -- ini juga
+
+          normal = "ys",
+          normal_cur = "yss",
+          normal_line = "yS",
+          normal_cur_line = "ySS",
+          visual = "S",
+          visual_line = "gS",
+          delete = "ds",
+          change = "cs",
+          change_line = "cS",
+        },
+        -- Configuration here, or leave empty to use defaults
+        aliases = {
+          ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- any delimiter
+          ["b"] = { "{", "[", "(", "<" }, -- bracket
+          ["p"] = { "(" },
+        },
+        surrounds = {
+          ["f"] = {
+            change = {
+              target = "^.-([%w_.]+!?)()%(.-%)()()$",
+              replacement = function()
+                local result = input "Enter the function name: "
+                if result then
+                  return { { result }, { "" } }
+                end
+              end,
+            },
+          },
+          ["g"] = {
+            add = function()
+              local result = require("nvim-surround.config").get_input "Enter the generic name: "
+              if result then
+                return {
+                  { result .. "<" },
+                  { ">" },
+                }
+              end
+            end,
+            find = "[%w_]-<.->",
+            delete = "^([%w_]-<)().-(>)()$",
+          },
+          ["G"] = {
+            add = function()
+              local result = require("nvim-surround.config").get_input "Enter the generic name: "
+              if result then
+                return {
+                  { result .. "<" },
+                  { ">" },
+                }
+              end
+            end,
+            find = "[%w_]-<.->",
+            delete = "^([%w_]-<)().-(>)()$",
+          },
+        },
+        move_cursor = false,
+      }
+    end,
+  },
   -- OVERSEER.NVIM
   {
     "stevearc/overseer.nvim", -- Task runner and job management
