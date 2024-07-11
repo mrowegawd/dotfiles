@@ -24,13 +24,13 @@ prepend_keymap = [
   ], run = """ shell --block --confirm ' clear
 playlist="playlist.m3u"
 
-if [ -f "$playlist" ]; then
-  rm "$playlist"
+if [ ! -f "$playlist" ]; then
+  find . -type f -name "*.mp4" | while read -r file; do
+    echo "$file" >>"$playlist"
+  done
 fi
 
-find . -type f -name "*.mp4" | while read -r file; do
-  echo "$file" >>"$playlist"
-done
+# if playlist.mp3 not sorted, remove manually
 
 mpv --ontop --no-border --force-window \
   --autofit=1400x1200 \
@@ -224,7 +224,7 @@ keymap = [
     "unyank",
   ], desc = "Cancel the yank status of files" },
   { on = [
-    "d",
+    "x",
   ], run = [
     "yank --cut",
     "escape --visual --select",
@@ -242,7 +242,7 @@ keymap = [
     "_",
   ], run = "link --relative", desc = "Symlink the relative path of files" },
   { on = [
-    "x",
+    "d",
   ], run = [
     "remove",
     "escape --visual --select",
