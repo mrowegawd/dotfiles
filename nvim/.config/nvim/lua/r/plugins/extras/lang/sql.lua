@@ -83,7 +83,7 @@ return {
       table.insert(opts.right, {
         title = "Database",
         ft = "dbui",
-        pinned = true,
+        pinned = false,
         width = 0.3,
         open = function()
           vim.cmd "DBUI"
