@@ -187,6 +187,9 @@ function M.gitsigns()
     visual_operation "undo_stage_hunk"
   end, { desc = "Git: undo stage hunk (visual) [gitsigns]" })
   RUtils.map.nnoremap("<Leader>ghP", gs.preview_hunk_inline, { desc = "Git: preview hunk [gitsigns]" })
+  RUtils.map.nnoremap("<Leader>gP", function()
+    return require("vgit").buffer_hunk_preview()
+  end, { desc = "Git: preview hunk [gitsigns]" })
   RUtils.map.nnoremap("<Leader>gq", gs.setqflist, { desc = "Git: select all hunks and send to qf [gitsigns]" })
   RUtils.map.nnoremap(
     "<Leader>gul",

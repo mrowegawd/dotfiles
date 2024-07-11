@@ -277,6 +277,14 @@ return {
           -- untracked = { text = "▎" },
           untracked = { text = "┆" },
         },
+        preview_config = {
+          -- Options passed to nvim_open_win
+          border = "rounded",
+          style = "minimal",
+          relative = "cursor",
+          row = 0,
+          col = 1,
+        },
         on_attach = function()
           require("r.keymaps.git").gitsigns()
         end,
@@ -530,6 +538,38 @@ return {
       },
     },
   },
+  {
+    "tanvirtin/vgit.nvim",
+    -- event = "VeryLazy",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    keys = {
+      {
+        "<Leader>hb",
+        function()
+          return require("vgit").buffer_blame_preview()
+        end,
+        desc = "Git: next conflict [gitconflict]",
+      },
+    },
+    opts = {
+      settings = {
+        live_blame = {
+          enabled = false,
+        },
+        live_gutter = {
+          enabled = false,
+        },
+        authorship_code_lens = {
+          enabled = false,
+        },
+        scene = {
+          diff_preference = "split",
+        },
+      },
+    },
+  },
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
@@ -548,7 +588,6 @@ return {
         { DiffviewStatusUnmerged = { link = "DiffChangedChar" } },
         { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
         { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
-        { DiffviewCursorLine = { bg = { from = "MyQuickFixLine", attr = "bg" } } },
 
         { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
         { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
