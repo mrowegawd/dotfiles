@@ -47,20 +47,6 @@ return {
       }
     end,
   },
-  -- ROSE-PINE
-  {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local material_theme = { "rose-pine-moon", "rose-pine-main", "rose-pine-dawn" }
-      if vim.tbl_contains(material_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- NEOMODERN
   {
     "cdmill/neomodern.nvim",
@@ -183,50 +169,6 @@ return {
       vim.g.doom_one_plugin_lspsaga = false
     end,
   },
-  -- FLEXOKI
-  {
-    "kepano/flexoki-neovim",
-    name = "flexoki",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local flexoki_theme = { "flexoki-dark", "flexoki-light" }
-      if vim.tbl_contains(flexoki_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- NEOVIM-AYU
-  {
-    "Shatur/neovim-ayu",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local ayu_theme = { "ayu-dark", "ayu-light" }
-      if vim.tbl_contains(ayu_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("ayu").setup {
-        mirage = true,
-        overrides = {},
-        -- overrides = {
-        --   Normal = { bg = "None" },
-        --   ColorColumn = { bg = "None" },
-        --   SignColumn = { bg = "None" },
-        --   Folded = { bg = "None" },
-        --   FoldColumn = { bg = "None" },
-        --   CursorLine = { bg = "None" },
-        --   CursorColumn = { bg = "None" },
-        --   WhichKeyFloat = { bg = "None" },
-        --   VertSplit = { bg = "None" },
-        -- },
-      }
-    end,
-  },
   -- EVERFOREST
   {
     "neanias/everforest-nvim",
@@ -257,7 +199,7 @@ return {
       return false
     end,
   },
-  -- VSCODE_MODERN_THEME
+  -- VSCODE-MODERN-THEME
   {
     "gmr458/vscode_modern_theme.nvim",
     lazy = false,
@@ -302,22 +244,6 @@ return {
       end
       return false
     end,
-  },
-  -- BAMBOO.NVIM
-  {
-    "ribru17/bamboo.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local bambootheme = { "bamboo" }
-      if vim.tbl_contains(bambootheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = {
-      style = "multiplex", -- Choose between 'vulgaris' (regular), 'multiplex' (greener), and 'light'
-    },
   },
   -- SOLARIZED-OSAKA
   {
@@ -403,7 +329,7 @@ return {
       vim.g.background = "light"
     end,
     enabled = function()
-      local catppuccintheme = { "catppuccin-latte", "catppuccin-mocha" }
+      local catppuccintheme = { "catppuccin-mocha" }
       if vim.tbl_contains(catppuccintheme, colorscheme) then
         return true
       end

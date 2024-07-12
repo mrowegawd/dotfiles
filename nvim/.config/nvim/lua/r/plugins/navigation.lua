@@ -808,7 +808,22 @@ return {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
             { EdgyNormal = { bg = "NONE" } },
           },
+          ["everforest"] = {
+            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.5 } } },
+            { EdgyNormal = { bg = "NONE" } },
+            {
+              EdgyTitle = {
+                fg = { from = "Keyword", attr = "fg", alter = 0.7 },
+                bg = { from = "EdgyWinBar" },
+                alter = 0.1,
+                bold = true,
+              },
+            },
+          },
           ["*"] = {
+            { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE" } },
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 1 } } },
             { EdgyNormal = { bg = "NONE" } },
             {

@@ -14,9 +14,6 @@ local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
 
 if vim.tbl_contains({ "solarized-osaka-night", "farout-night" }, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(statusline_fg, 0.05)
-elseif vim.g.colorscheme == "catppuccin-latte" then
-  separator_fg_alt = Highlight.tint(statusline_fg, 0.8)
-  normal_fg = Highlight.tint(Highlight.get("Normal", "fg"), 0.5)
 end
 
 ---@class r.utils.colortbl

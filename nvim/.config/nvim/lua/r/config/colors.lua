@@ -122,6 +122,7 @@ local general_overrides = function()
     { LspKindConstructor = { link = "@constructor" } },
     { LspKindTypeParameter = { link = "@lsp.type.typeparameter" } },
     { LspKindValue = { link = "@string" } },
+    { LspInlayHint = { link = "@string" } },
 
     -- { LspKindSnippet = { link = "Conceal" } },
     { LspKindSnippet = { fg = { from = "Keyword", attr = "fg" } } },
@@ -890,16 +891,45 @@ local function colorscheme_overrides()
     },
 
     ["everforest"] = {
+      { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
+
       { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
+
+      {
+        QuickFixLine = {
+          bg = { from = "Keyword", attr = "fg", alter = -0.5 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.8 },
+          bold = true,
+          underline = false,
+        },
+      },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
       {
         Folded = {
           bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          fg = { from = "Normal", attr = "bg", alter = -0.4 },
+          fg = { from = "Normal", attr = "bg", alter = -0.2 },
         },
       },
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+      { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+      {
+        FloatBorder = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+        },
+      },
+      { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+      { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+      {
+        TreesitterContextSeparator = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+          bg = { from = "ColorColumn", attr = "bg" },
+        },
+      },
+      { FzfLuaBorder = { fg = { from = "WinSeparator" }, bg = { from = "NormalFloat", attr = "bg" } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
       {
@@ -924,8 +954,8 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.7 },
           bold = true,
         },
       },
@@ -1011,59 +1041,6 @@ local function colorscheme_overrides()
           fg = { from = "StatusLine", attr = "fg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.6 },
           bold = true,
-        },
-      },
-    },
-    ["flexoki"] = {
-      { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 6 }, bg = "NONE" } },
-      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 2 }, fg = { from = "CmpItemAbbr" } } },
-
-      { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
-
-      -- LSP
-      { CmpItemKindVariable = { inherit = "Constant" } },
-      { CmpItemKindProperty = { inherit = "@property" } },
-      { CmpItemKindField = { inherit = "Function" } },
-
-      {
-        Folded = {
-          bg = { from = "Normal", attr = "bg", alter = 1 },
-          fg = { from = "Normal", attr = "fg", alter = -0.6 },
-        },
-      },
-
-      {
-        MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "Normal", attr = "bg", alter = 1 },
-          italic = true,
-        },
-      },
-      {
-        FoldColumn = {
-          bg = "NONE",
-          fg = { from = "Normal", attr = "bg", alter = 1 },
-        },
-      },
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
-      { CursorLine = { bg = { from = "Normal", alter = 0.5 } } },
-      {
-        CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
-        },
-      },
-      {
-        MyParentHint = {
-          bg = { from = "CursorLine", attr = "bg" },
-          fg = { from = "LineNr", attr = "fg", alter = 1 },
-        },
-      },
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.6 },
         },
       },
     },
@@ -1457,31 +1434,6 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["rose-pine"] = {
-      { CmpItemKindVariable = { inherit = "Constant" } },
-      { CmpItemKindProperty = { inherit = "@property" } },
-      { CmpItemKindField = { inherit = "Function" } },
-
-      { WhichKeyFloat = { inherit = "NormalFloat" } },
-
-      -- { ["@org.agenda.scheduled"] = { fg = { from = "Boolean", attr = "fg", alter = 1 } } },
-      { ["@org.agenda.scheduled"] = { fg = "green" } },
-      -- { ["@org.agenda.scheduled_past"] = { bg = { from = "Normal", attr = "bg", alter = 2 } } },
-
-      {
-        MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
-          italic = true,
-        },
-      },
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
-        },
-      },
-    },
     ["catppuccin-mocha"] = {
 
       { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
@@ -1495,138 +1447,6 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
-    },
-    ["catppuccin-latte"] = {
-
-      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-      {
-        MyParentHint = {
-          bg = { from = "CursorLine", attr = "bg" },
-          fg = { from = "MyCodeUsage", attr = "fg", alter = -0.2 },
-        },
-      },
-      {
-        Folded = {
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
-        },
-      },
-      {
-        FoldColumn = {
-          bg = "NONE",
-          fg = { from = "Normal", attr = "bg", alter = -0.1 },
-        },
-      },
-      { WinSeparator = { fg = { from = "@constructor", attr = "fg", alter = 0.2 }, bg = "NONE" } },
-
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 } } },
-
-      -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = 0.1 } } },
-      -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = 0.1 } } },
-      -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = 0.1 } } },
-
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
-        },
-      },
-
-      {
-        MyStatusLine_directory_fg = {
-          fg = { from = "Directory", atrr = "fg", alter = 0.1 },
-          -- bg = { from = "StatusLine", attr = "bg" },
-        },
-      },
-      {
-        MyStatusLine_notif_fg = {
-          fg = { from = "Boolean", atrr = "fg", alter = 0.1 },
-          bg = { from = "StatusLine", attr = "bg" },
-        },
-      },
-      {
-        MyStatusLine_red_fg = {
-          fg = { from = "ErrorMsg", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLine", attr = "bg" },
-        },
-      },
-
-      -- CMP
-      { CmpItemAbbr = { fg = { from = "Normal", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { CmpItemAbbrMatchFuzzy = { fg = dark_red } },
-      { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 } } },
-
-      {
-        PmenuSel = {
-          bg = { from = "Statement", attr = "fg", alter = -0.3 },
-          fg = { from = "Normal", attr = "fg", alter = 6 },
-          bold = true,
-        },
-      },
-      {
-        Pmenu = {
-          fg = { from = "Normal", attr = "fg" },
-          bg = { from = "Normal", attr = "bg", alter = -0.2 },
-        },
-      },
-      { PmenuThumb = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
-
-      -- { PmenuSel = { bg = { from = "Boolean", attr = "fg", alter = 1.2 }, fg = "NONE" } },
-
-      -- TELESCOPE ==========================================================
-      { TelescopeNormal = { link = "NormalFloat" } },
-      { TelescopeBorder = { link = "NormalFloat" } },
-
-      -- Prompt
-      { TelescopePromptNormal = { link = "NormalFloat" } },
-      {
-        TelescopePromptTitle = {
-          bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "WarningMsg", alter = 0.5, bold = true },
-          bold = true,
-        },
-      },
-      { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-      { TelescopePromptPrefix = { bg = { from = "NormalFloat", attr = "bg" } } },
-      { TelescopePromptCounter = { bg = { from = "NormalFloat", attr = "bg" } } },
-
-      -- Preview
-      { TelescopePreviewNormal = { link = "NormalFloat" } },
-      {
-        TelescopePreviewTitle = {
-          bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "ColorColumn", alter = 0.14, bold = true },
-          bold = true,
-        },
-      },
-      { TelescopePreviewBorder = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "FloatBorder" } } },
-      { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
-      { TelescopeSelection = { inherit = "PmenuSel" } },
-      { TelescopeTitle = { fg = { from = "Boolean", attr = "fg" } } },
-
-      -- Results
-      { TelescopeResultsNormal = { link = "NormalFloat" } },
-      { TelescopeResultsTitle = { fg = { from = "FloatBorder" }, bg = "NONE" } },
-      { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-
-      -- FZFLUA =============================================================
-      { FzfLuaNormal = { inherit = "NormalFloat" } },
-      { FzfLuaBorder = { fg = { from = "FloatBorder" }, bg = { from = "NormalFloat", attr = "bg" } } },
-      {
-        FzfLuaTitle = {
-          fg = { from = "Boolean", attr = "fg", alter = 0.2 },
-          bg = { from = "FzfLuaNormal", attr = "bg" },
-        },
-      },
-      {
-        FzfLuaTitleIcon = {
-          fg = { from = "Boolean", attr = "fg", alter = 0.2 },
-          bg = { from = "FzfLuaNormal", attr = "bg" },
-        },
-      },
-      { FzfLuaCursorLine = { bg = { from = "ErrorMsg", alter = -0.8, attr = "fg" } } },
-
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 }, bg = { from = "Normal", attr = "bg" } } },
     },
   }
 

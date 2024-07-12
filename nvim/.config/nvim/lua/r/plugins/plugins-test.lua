@@ -862,9 +862,6 @@ return {
           ["*"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
-          ["catppuccin-latte"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
-          },
           ["farout"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
           },
@@ -876,9 +873,6 @@ return {
           },
           ["vscode_modern"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-          },
-          ["flexoki"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
           },
         },
       })
