@@ -32,7 +32,7 @@ return {
       return {
         modes = {
           char = {
-            keys = { "F", "t", "T", ";" }, -- remove "," from keys
+            keys = { "F", "T", ";" }, -- remove "," from keys
           },
           search = {
             enabled = false,

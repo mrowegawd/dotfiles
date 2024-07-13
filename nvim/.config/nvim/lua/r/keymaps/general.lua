@@ -433,7 +433,7 @@ RUtils.map.nnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 RUtils.map.tnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 RUtils.map.vnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 
-RUtils.map.nnoremap("<Localleader>r", function()
+RUtils.map.nnoremap("<Localleader>or", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
     loadqf = function()

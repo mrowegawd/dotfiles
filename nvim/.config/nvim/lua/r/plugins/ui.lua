@@ -386,22 +386,6 @@ return {
   {
     "akinsho/bufferline.nvim",
     event = { "BufRead", "BufNewFile" },
-    -- keys = {
-    --   { "gl", "<CMD>BufferLineCycleNext<CR>", desc = "Buffer(Bufferline): next buffer" },
-    --   { "gh", "<CMD>BufferLineCyclePrev<CR>", desc = "Buffer(Bufferline): prev buffer" },
-    --   -- { "<Leader><Left>", "<cmd>BufferLineMovePrev<cr>", desc = "Buffer(bufferline): move buffer prev" },
-    --   -- { "<Leader><Right>", "<cmd>BufferLineMoveNext<cr>", desc = "Buffer(bufferline): move buffer next" },
-    --
-    --   -- { "spp", "<Cmd>BufferLineTogglePin<CR>", desc = "Buffer(bufferline): toggle pin" },
-    --   -- {
-    --   --   "<Leader>bc",
-    --   --   "<Cmd>BufferLineGroupClose ungrouped<CR>",
-    --   --   desc = "Buffer(bufferline): delete non-pinned buffers",
-    --   -- },
-    --   -- { "sO", "<Cmd>BufferLineCloseOthers<CR>", desc = "Buffer(bufferline): delete other buffers" },
-    --   -- { "s#", "<Cmd>BufferLineCloseRight<CR>", desc = "Buffer(bufferline): delete buffers to the right" },
-    --   -- { "s@", "<Cmd>BufferLineCloseLeft<CR>", desc = "Buffer(bufferline): delete buffers to the left" },
-    -- },
     config = function(_, opts)
       require("bufferline").setup(opts)
       -- Fix bufferline when restoring a session
