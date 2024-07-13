@@ -211,7 +211,7 @@ return {
           -- https://github.com/hrsh7th/nvim-cmp/issues/1692
           -- https://github.com/hrsh7th/nvim-cmp/issues/1692#issuecomment-1855795126
           ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-          ["<C-g>"] = cmp.mapping(function()
+          ["<C-s>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
               cmd = "rg --files --hidden",
               winopts = { preview = { hidden = "nohidden" } },
@@ -712,7 +712,6 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     keys = {
-      { "<leader>r", "", desc = "Refactor: open", mode = { "n", "v" } },
       {
         "<leader>rs",
         function()

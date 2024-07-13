@@ -47,9 +47,8 @@ function M.get()
     {
       "<leader>cR",
       RUtils.lsp.rename_file,
-      desc = "LSP: rename file",
-      mode = { "n" },
       has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
+      desc = "LSP: rename file",
     },
     {
       "<a-q>",
