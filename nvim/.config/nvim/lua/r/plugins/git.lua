@@ -264,15 +264,19 @@ return {
         signs_staged = {
           add = { text = "▎" },
           change = { text = "▎" },
-          delete = { text = "" },
-          topdelete = { text = "" },
+          -- delete = { text = "" },
+          -- topdelete = { text = "" },
+          delete = { text = "▎" },
+          topdelete = { text = "▎" },
           changedelete = { text = "▎" },
         },
         signs = {
           add = { text = "▎" },
           change = { text = "▎" },
-          delete = { text = "" },
-          topdelete = { text = "" },
+          -- delete = { text = "" },
+          -- topdelete = { text = "" },
+          delete = { text = "▎" },
+          topdelete = { text = "▎" },
           changedelete = { text = "▎" },
           -- untracked = { text = "▎" },
           untracked = { text = "┆" },
@@ -288,59 +292,6 @@ return {
         on_attach = function()
           require("r.keymaps.git").gitsigns()
         end,
-      }
-    end,
-  },
-  -- MINI.GIT (disabled)
-  {
-    "echasnovski/mini-git",
-    version = false,
-    enabled = false,
-  },
-  -- MINI.DIFF (disabled)
-  {
-    "echasnovski/mini.diff",
-    enabled = false,
-    event = "VeryLazy",
-    keys = {
-      {
-        "<Leader>guo",
-        function()
-          require("mini.diff").toggle_overlay(0)
-        end,
-        desc = "Git: toggle mini.diff overlay [mini.diff]",
-      },
-    },
-    opts = function()
-      require("r.keymaps.git").minigit()
-      return {
-        view = {
-          style = "sign",
-          signs = {
-            add = "▎",
-            change = "▎",
-            delete = "",
-          },
-        },
-        -- Module mappings. Use `''` (empty string) to disable one.
-        mappings = {
-          -- Apply hunks inside a visual/operator region
-          -- apply = "<Leader>gha",
-          apply = "gh",
-
-          -- Reset hunks inside a visual/operator region
-          -- reset = "<space>ghr",
-          reset = "gH",
-
-          -- Hunk range textobject to be used inside operator
-          textobject = "",
-
-          -- Go to hunk range in corresponding direction
-          goto_first = "gF",
-          goto_prev = "gp",
-          goto_next = "gn",
-          goto_last = "gL",
-        },
       }
     end,
   },
@@ -538,9 +489,9 @@ return {
       },
     },
   },
+  -- VGIT
   {
     "tanvirtin/vgit.nvim",
-    -- event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },

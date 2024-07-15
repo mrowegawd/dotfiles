@@ -2,11 +2,16 @@ local Highlight = require "r.settings.highlights"
 
 local error_fg = Highlight.get("Error", "fg") or Highlight.get("Error", "bg")
 local keyword_fg = Highlight.get("Keyword", "fg")
+
 local statusline_bg = Highlight.get("StatusLine", "bg")
 local statusline_fg = Highlight.get("StatusLine", "fg")
+local statuslinenc_bg = Highlight.get("StatusLineNC", "bg")
+local statuslinenc_fg = Highlight.get("StatusLineNC", "fg")
+
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 local pmenusel_fg = Highlight.get("PmenuSel", "bg")
+local winseparator = Highlight.get("WinSeparator", "fg")
 
 local branch_fg = Highlight.tint(normal_fg, 4)
 local separator_fg = Highlight.tint(keyword_fg, -0.2)
@@ -21,8 +26,8 @@ local M = {
   statusline_fg = Highlight.tint(statusline_fg, 0.1),
   statusline_bg = Highlight.tint(statusline_bg, 0.6),
 
-  statuslinenc_bg = Highlight.tint(statusline_bg, 0.1),
-  statuslinenc_fg = Highlight.tint(statusline_fg, -0.2),
+  statuslinenc_bg = statuslinenc_bg,
+  statuslinenc_fg = statuslinenc_fg,
 
   separator_fg_inactive = Highlight.tint(statusline_bg, -0.8),
 

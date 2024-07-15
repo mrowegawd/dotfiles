@@ -219,14 +219,30 @@ return {
       }
     end,
   },
+  -- KANAGAWA-PAPER
+  {
+    "sho-87/kanagawa-paper.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local kanagawapaper_theme = { "kanagawa-paper" }
+      if vim.tbl_contains(kanagawapaper_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      dimInactive = false, -- disabled when transparent
+    },
+  },
   -- KANAGAWA
   {
     "rebelot/kanagawa.nvim",
     lazy = false,
     priority = 1000,
     enabled = function()
-      local kanagawatheme = { "kanagawa" }
-      if vim.tbl_contains(kanagawatheme, colorscheme) then
+      local kanagawa_theme = { "kanagawa" }
+      if vim.tbl_contains(kanagawa_theme, colorscheme) then
         return true
       end
       return false

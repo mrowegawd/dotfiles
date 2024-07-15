@@ -384,7 +384,7 @@ RUtils.map.vnoremap("<Leader>oo", function()
 end, { desc = "Misc: magic follow link (visual)" })
 
 RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
-  desc = "MISC: show keymaps curbuf",
+  desc = "Misc: show keymaps curbuf",
   silent = true,
 })
 

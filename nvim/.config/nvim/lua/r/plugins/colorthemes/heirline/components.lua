@@ -41,6 +41,7 @@ local colors = {
   base_bg = Col.statusline_bg,
   base_fg = Col.statusline_fg,
   basenc_bg = Col.statuslinenc_bg,
+  basenc_fg = Col.statuslinenc_fg,
 
   branch_fg = Col.branch_fg,
   terminal_fg = Col.terminal_fg,
@@ -189,7 +190,6 @@ M.Mode = {
       return { fg = self.mode_colors[mode], bg = cs }
     end,
   },
-
   {
     provider = function()
       if vim.bo[0].filetype == "qf" then
@@ -543,9 +543,9 @@ M.Clock = {
       and not (vim.env.TERM_PROGRAM == "WezTerm")
   end,
   {
-    provider = RUtils.config.icons.misc.separator_leg_down,
+    provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { fg = colors.diagnostic_err, bg = colors.base_bg }
+      return { bg = colors.diagnostic_err, fg = colors.base_bg }
     end,
   },
   {
@@ -998,7 +998,7 @@ M.status_not_active = {
   M.Gap,
   M.Ruler,
 
-  hl = { bg = colors.basenc_bg },
+  hl = { bg = colors.basenc_bg, fg = colors.basenc_fg },
 }
 
 return M

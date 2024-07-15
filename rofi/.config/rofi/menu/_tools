@@ -26,16 +26,12 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 	}
 
 	run_ffmpeg_record_fullscreen() {
-
 		GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
 		FPS="30"
 
-		FILE_ICONS="$HOME/Dropbox/data.programming.forprivate/icons/rec-button.png"
-		if [ -f "$FILE_ICONS" ]; then
-			dunstify "Record" "starting.." -i "$FILE_ICONS"
-		else
-			dunstify "Record" "starting.."
-		fi
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
 
 		ffmpeg -f x11grab -s "$GEOMETRY" -r "$FPS" -i :1.0 -f alsa -ac 2 \
 			-i default -vcodec libx264 -s "$GEOMETRY" \
@@ -60,12 +56,9 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 		GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
 		OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
 
-		FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-		if [ -f "$FILE_ICONS" ]; then
-			dunstify "Record" "starting.." -i "$FILE_ICONS"
-		else
-			dunstify "Record" "starting.."
-		fi
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Video" "starting.." -i "$FILE_ICONS"
 
 		ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :1.0"$OFFSET" -f alsa -ac 2 \
 			-i default -vcodec libx264 -s "$GEOMETRY" \
@@ -82,28 +75,26 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
 			dunstify "Saving record:" "$FILE_NAME_RECORD"
 		fi
 
-	}
+    fi
+  }
 
-	run_ffmpeg_stop() {
-		pkill ffmpeg
-		dunstify "Record" "quit.."
-	}
+  run_ffmpeg_stop() {
+    pkill ffmpeg
+    dunstify "Record" "quit.."
+  }
 
-	run_simplegif() {
+  run_simplegif() {
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
 
-		GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
-		SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
-		FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
-		if [ -f "$FILE_ICONS" ]; then
-			dunstify "Record" "starting.." -i "$FILE_ICONS"
-		else
-			dunstify "Record" "starting.."
-		fi
+    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
 
-		GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
-		OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
+      [[ -f "$FILE_ICONS" ]] && dunstify "Record Gif" "starting.." -i "$FILE_ICONS"
 
-		ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :1.0"$OFFSET" -f alsa -ac 2 \
+      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :1.0"$OFFSET" -f alsa -ac 2 \
 			-i default -vcodec libx264 -s "$GEOMETRY" \
 			-acodec libmp3lame -ab 128k -ar 44100 \
 			-threads 0 -f flv "$FILE_RECORDING_BAK"

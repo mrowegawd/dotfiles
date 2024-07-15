@@ -219,7 +219,7 @@ local newsboat = Terminal:new {
   cmd = "proxychains -q newsboat",
   hidden = true,
   direction = "float",
-  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+  float_opts = { width = vim.o.columns - 5, height = vim.o.lines - 5 },
 }
 
 local btop = Terminal:new {

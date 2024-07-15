@@ -382,249 +382,60 @@ return {
     config = true,
     event = "VeryLazy",
   },
-  -- BUFFERLINE
+  -- TABBY
   {
-    "akinsho/bufferline.nvim",
-    event = { "BufRead", "BufNewFile" },
-    config = function(_, opts)
-      require("bufferline").setup(opts)
-      -- Fix bufferline when restoring a session
-      vim.api.nvim_create_autocmd({ "BufAdd", "BufDelete" }, {
-        callback = function()
-          vim.schedule(function()
-            pcall(nvim_bufferline)
-          end)
+    "nanozuki/tabby.nvim",
+    config = function()
+      local theme = {
+        fill = "Normal",
+        -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+        head = "TabLine",
+        current_tab = "TabLineSel",
+        tab = "TabLine",
+        win = "TabLine",
+        tail = "TabLine",
+      }
+      require("tabby").setup {
+        line = function(line)
+          return {
+            -- {
+            --   { "  ", hl = theme.head },
+            --   line.sep("", theme.head, theme.fill),
+            -- },
+            line.tabs().foreach(function(tab)
+              local hl = tab.is_current() and theme.current_tab or theme.tab
+              return {
+                line.sep("", hl, theme.fill),
+                -- " ",
+                tab.is_current() and "" or "󰆣",
+                tab.number(),
+                -- tab.name(),
+                -- " ",
+                -- -- tab.close_btn "",
+                line.sep("", hl, theme.fill),
+                hl = hl,
+                margin = " ",
+              }
+            end),
+            line.spacer(),
+            line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+              return {
+                line.sep("", theme.win, theme.fill),
+                win.is_current() and "" or "",
+                win.buf_name(),
+                line.sep("", theme.win, theme.fill),
+                hl = theme.win,
+                margin = " ",
+              }
+            end),
+            {
+              line.sep("", theme.tail, theme.fill),
+              { "  ", hl = theme.tail },
+            },
+            hl = theme.fill,
+          }
         end,
-      })
-    end,
-    opts = function()
-      -- local col_base_fill_fg = RUtils.colortbl.statuslinenc_fg
-      local col_base_fg = { attribute = "bg", highlight = "Normal" }
-      local col_base_bg = { attribute = "bg", highlight = "Normal" }
-
-      local col_test = { attribute = "fg", highlight = "Boolean" }
-
-      local col_selected_fg, col_selected_bg
-      if not vim.env.TMUX and not (vim.env.TERM_PROGRAM == "WezTerm") then
-        col_selected_fg = { attribute = "bg", highlight = "Normal" }
-        col_selected_bg = RUtils.colortbl.separator_fg
-      else
-        col_selected_fg = { attribute = "fg", highlight = "Normal" }
-        col_selected_bg = { attribute = "bg", highlight = "Normal" }
-      end
-
-      local col_diagnostic_hint = { attribute = "fg", highlight = "DiagnosticHint" }
-      local col_diagnostic_info = { attribute = "fg", highlight = "DiagnosticInfo" }
-      local col_diagnostic_error = { attribute = "fg", highlight = "DiagnosticError" }
-      local col_diagnostic_warn = { attribute = "fg", highlight = "DiagnosticWarn" }
-
-      local bufferline = require "bufferline"
-      return {
-        options = {
-          mode = "tabs",
-          buffer_close_icon = "󰒲",
-          modified_icon = RUtils.config.icons.misc.close,
-          always_show_bufferline = false,
-          diagnostics = "nvim_lsp",
-          indicator = { icon = " ", style = "icon" },
-          persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
-          separator_style = "slope", -- "slant" | "slope" | "thick" | "thin" | { 'any', 'any' },
-          diagnostics_indicator = function(_, _, diag)
-            local icons = RUtils.config.icons.diagnostics
-            local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-              .. (diag.warning and icons.Warn .. diag.warning or "")
-            return vim.trim(ret)
-          end,
-          offsets = {
-            {
-              text = "EXPLORER",
-              filetype = "NvimTree",
-              highlight = "Directory",
-              text_align = "left",
-            },
-
-            {
-              text = " DIFF VIEW",
-              filetype = "DiffviewFiles",
-              highlight = "PanelHeading",
-              separator = true,
-            },
-
-            {
-              text = " DATABASE VIEWER",
-              filetype = "dbui",
-              highlight = "PanelHeading",
-              separator = true,
-            },
-
-            {
-              text = "EXPLORER",
-              filetype = "neo-tree",
-              highlight = "Directory",
-              text_align = "left",
-            },
-          },
-          groups = {
-            options = { toggle_hidden_on_enter = true },
-            items = {
-              bufferline.groups.builtin.pinned:with {
-                icon = "",
-              },
-              bufferline.groups.builtin.ungrouped,
-              {
-                name = "Dependencies",
-                icon = "",
-                highlight = { fg = "#ECBE7B" },
-                matcher = function(buf)
-                  return vim.startswith(buf.path, vim.env.VIMRUNTIME)
-                end,
-              },
-              {
-                name = "Terraform",
-                matcher = function(buf)
-                  return buf.name:match "%.tf" ~= nil
-                end,
-              },
-              {
-                name = "Kubernetes",
-                matcher = function(buf)
-                  return buf.name:match "kubernetes" and buf.name:match "%.yaml"
-                end,
-              },
-              {
-                name = "SQL",
-                matcher = function(buf)
-                  return buf.name:match "%.sql$"
-                end,
-              },
-              {
-                name = "tests",
-                icon = "",
-                matcher = function(buf)
-                  local name = buf.name
-                  return name:match "[_%.]spec" or name:match "[_%.]test"
-                end,
-              },
-              {
-                name = "docs",
-                icon = "",
-                matcher = function(buf)
-                  if vim.bo[buf.id].filetype == "man" or buf.path:match "man://" then
-                    return true
-                  end
-                  for _, ext in ipairs {
-                    "md",
-                    "txt",
-                    "org",
-                    "norg",
-                    "wiki",
-                  } do
-                    if ext == vim.fn.fnamemodify(buf.path, ":e") then
-                      return true
-                    end
-                  end
-                end,
-              },
-            },
-          },
-        },
-        highlights = {
-          fill = { fg = col_base_fg, bg = col_base_bg },
-          background = { bg = col_base_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ TAB                                                      ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          tab = { bg = col_base_bg },
-          tab_close = { bg = col_base_bg },
-          tab_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ INDICATOR                                                ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          indicator_visible = { fg = col_base_fg, bg = col_base_bg },
-          indicator_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ SEPARATOR                                                ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          separator = { fg = col_base_fg, bg = col_base_bg },
-          separator_visible = { fg = col_base_fg, bg = col_base_bg },
-          separator_selected = { fg = col_base_fg, bg = col_selected_bg },
-          tab_separator = { fg = col_test, bg = col_base_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ CLOSE                                                    ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          close_button = { fg = col_base_fg, bg = col_base_bg },
-          close_button_visible = { fg = col_base_fg, bg = col_base_bg },
-          close_button_selected = { fg = col_base_fg, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ BUFFER                                                   ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          buffer = { fg = col_base_bg, bg = col_base_bg },
-          buffer_visible = { fg = col_selected_fg, bg = col_base_bg },
-          buffer_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ PICK                                                     ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          pick = { bg = col_base_bg },
-          pick_visible = { fg = col_selected_fg, bg = col_selected_bg },
-          pick_selected = { fg = col_diagnostic_error, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ MODIFIED                                                 ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          modified = { fg = col_diagnostic_error, bg = col_base_bg },
-          modified_visible = { fg = col_diagnostic_error, bg = col_base_bg },
-          modified_selected = { fg = col_diagnostic_error, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ DUPLICATE                                                ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          duplicate = { bg = col_base_bg },
-          duplicate_visible = { fg = col_base_fg, bg = col_base_bg },
-          duplicate_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          -- ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
-          -- ╎ OFFSET                                                   ╎
-          -- └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-          offset_separator = { fg = col_selected_bg, bg = col_selected_bg },
-          -- ┍━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┑
-          -- │ DIAGNOSTICS                                              │
-          -- ┕━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┙
-          diagnostic_visible = { bg = col_selected_bg },
-          diagnostic_selected = { bg = col_selected_bg },
-          -- ╒══════════════════════════════════════════════════════════╕
-          -- │ WARNING                                                  │
-          -- ╘══════════════════════════════════════════════════════════╛
-          warning = { bg = col_base_bg },
-          warning_visible = { fg = col_diagnostic_warn, bg = col_selected_bg },
-          warning_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          warning_diagnostic = { fg = col_diagnostic_warn, bg = col_base_bg },
-          warning_diagnostic_visible = { fg = col_diagnostic_warn, bg = col_base_bg },
-          warning_diagnostic_selected = { fg = col_diagnostic_warn, bg = col_selected_bg },
-          -- ╒══════════════════════════════════════════════════════════╕
-          -- │ ERROR                                                    │
-          -- ╘══════════════════════════════════════════════════════════╛
-          error = { bg = col_base_bg },
-          error_visible = { fg = col_diagnostic_error, bg = col_base_bg },
-          error_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          error_diagnostic = { fg = col_diagnostic_error, bg = col_base_bg },
-          error_diagnostic_visible = { fg = col_diagnostic_error, bg = col_base_bg },
-          error_diagnostic_selected = { fg = col_diagnostic_error, bg = col_selected_bg },
-          -- ╒══════════════════════════════════════════════════════════╕
-          -- │ HINT                                                     │
-          -- ╘══════════════════════════════════════════════════════════╛
-          hint = { bg = col_base_bg },
-          hint_visible = { fg = col_diagnostic_hint, bg = col_base_bg },
-          hint_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          hint_diagnostic = { fg = col_diagnostic_hint, bg = col_base_bg },
-          hint_diagnostic_visible = { fg = col_diagnostic_hint, bg = col_base_bg },
-          hint_diagnostic_selected = { fg = col_diagnostic_hint, bg = col_selected_bg },
-          -- ╒══════════════════════════════════════════════════════════╕
-          -- │ INFO                                                     │
-          -- ╘══════════════════════════════════════════════════════════╛
-          info = { bg = col_base_bg },
-          info_visible = { fg = col_diagnostic_info, bg = col_base_bg },
-          info_selected = { fg = col_selected_fg, bg = col_selected_bg },
-          info_diagnostic = { fg = col_diagnostic_info, bg = col_base_bg },
-          info_diagnostic_visible = { fg = col_diagnostic_info, bg = col_base_bg },
-          info_diagnostic_selected = { fg = col_diagnostic_info, bg = col_selected_bg },
-        },
+        -- option = {}, -- setup modules' option,
       }
     end,
   },

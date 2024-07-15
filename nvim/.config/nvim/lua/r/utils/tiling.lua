@@ -1,4 +1,4 @@
--- Taken and convert from https://github.com/zhamlin/tiler.vim
+-- Taken from https://github.com/zhamlin/tiler.vim
 
 local fmt = string.format
 local api = vim.api
