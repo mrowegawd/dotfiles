@@ -242,13 +242,13 @@ keymap = [
     "_",
   ], run = "link --relative", desc = "Symlink the relative path of files" },
   { on = [
-    "d",
+    "D",
   ], run = [
     "remove",
     "escape --visual --select",
   ], desc = "Move the files to the trash" },
   { on = [
-    "X",
+    "d",
   ], run = [
     "remove --permanently",
     "escape --visual --select",

@@ -154,11 +154,11 @@ super + shift + n
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
 
 # misc: open empty float terminal
-super + shift + o
-        bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
+# super + shift + o
+#         bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
 
 # misc: open note inbox (capture notes)
-F8
+super + shift + e
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
 
 # misc: open bookrmark and pass
