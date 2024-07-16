@@ -13,9 +13,8 @@ return {
       },
     },
     opts = {
-
       defaults = {},
-      triggers = false,
+      -- triggers = false,
       spec = {
         {
           mode = { "n", "v" },
@@ -35,7 +34,7 @@ return {
           { "<Leader>u", group = "toggle" },
           { "<Leader>t", group = "testing" },
           { "<Leader>r", group = "refactor" },
-          { "<Leader>x", group = "diagnostics/quickfix" },
+          { "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
 
           { "<Localleader>d", group = "DB" },
           { "<Localleader>f", group = "note" },

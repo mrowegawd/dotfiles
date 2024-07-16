@@ -613,6 +613,8 @@ local general_overrides = function()
         fg = { from = "ErrorMsg", attr = "fg" },
       },
     },
+    -- TELESCOPE ==========================================================
+    { MiniAnimateCursor = { fg = "red", bg = "red" } },
 
     -- VIM.MATCHUP ========================================================
     -- { MatchParen = { bg = { from = "MatchParen", attr = "bg", alter = -0.8 }, fg = "NONE", bold = false } },

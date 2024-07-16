@@ -442,6 +442,9 @@ RUtils.map.nnoremap("<Localleader>or", function()
     saveqf = function()
       cmd "SaveQf"
     end,
+    open_url_tailwindcss = function()
+      cmd "!open https://tailwindcss.com"
+    end,
     lazy = function()
       cmd "Lazy"
     end,
