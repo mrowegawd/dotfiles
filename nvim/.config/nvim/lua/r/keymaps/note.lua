@@ -11,12 +11,19 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
-      ["<Localleader>ft"] = {
+      ["gs"] = {
         function()
           RUtils.markdown.find_local_titles()
           vim.cmd "normal! zz"
         end,
         desc = "Note: search title global [obsidian]",
+      },
+      ["gS"] = {
+        function()
+          RUtils.markdown.find_global_titles()
+          vim.cmd "normal! zz"
+        end,
+        desc = "Note: search global title global [obsidian]",
       },
       ["<leader>fT"] = {
         function()

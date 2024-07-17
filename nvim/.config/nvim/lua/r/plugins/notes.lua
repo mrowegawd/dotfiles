@@ -431,13 +431,6 @@ return {
         end,
         desc = "Note: find note by tags [obsidian]",
       },
-      {
-        "<Localleader>fT",
-        function()
-          RUtils.markdown.find_global_titles()
-        end,
-        desc = "Note: search title global [obsidian]",
-      },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",

@@ -663,6 +663,7 @@ return {
             ["zo"] = actions.open_fold,
             ["zc"] = actions.close_fold,
             ["za"] = actions.toggle_fold,
+            ["<BS>"] = actions.toggle_fold,
             ["<tab>"] = actions.toggle_fold,
             ["<s-tab>"] = actions.toggle_fold,
 
