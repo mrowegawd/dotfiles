@@ -1,388 +1,506 @@
+// check default keys:
+// https://github.com/brookhong/Surfingkeys/blob/master/src/content_scripts/common/default.js#L485-L491
+
+const {
+  Clipboard,
+  Front,
+  Hints,
+  RUNTIME,
+  Visual,
+  iunmap,
+  map,
+  imap,
+  cmap,
+  mapkey,
+  tabOpenLink,
+  unmap,
+} = api;
+
+unmap("H");
+unmap("<<");
+unmap(">>");
+
 // general settings
+settings.historyMUOrder = false;
 settings.tabsMRUOrder = false;
-settings.focusFirstCandidate = true;
-// settings.defaultSearchEngine = "d";
+settings.omnibarMaxResults = 20;
+settings.tabsThreshold = 0; // 常にomnibarを使う。
 
-api.map("r", "i");
+/**
+ * scrollByの動作がFirefox 65で予測不可能になったのでscrollToで再実装する。
+ * スムーズスクロールする。
+ * @param {number} size - スクロールするサイズ
+ * @param {number} ward - 1か-1でスクロールする方向を制御
+ */
+function scrollBySmooth(size, ward) {
+  window.scrollTo({
+    top: window.scrollY + ward * size,
+    left: 0,
+    behavior: "smooth",
+  });
+}
 
-// Object.assign(settings, {
-//   smoothScroll: false,
-//   createHintAlign: "left",
-//   focusFirstCandidate: true,
-//   caseSensitive: false
+/**
+ * 絶対位置スクロール。
+ * @param {number} position - スクロールする位置
+ */
+function scrollToSmooth(position) {
+  window.scrollTo({
+    top: position,
+    left: 0,
+    behavior: "smooth",
+  });
+}
+
+mapkey("<Ctrl-d>", "#2Scroll down of half", () => {
+  scrollBySmooth(window.innerHeight / 2, 1);
+});
+mapkey("<Ctrl-u>", "#2Scroll up of half", () => {
+  scrollBySmooth(window.innerHeight / 2, -1);
+});
+
+mapkey("gg", "#2Scroll to beginning", () => {
+  scrollToSmooth(0);
+});
+mapkey("G", "#2Scroll to ending", () => {
+  scrollToSmooth(document.body.scrollHeight);
+});
+
+// mapkey("t", "#2Scroll up of line", () => {
+//   scrollBySmooth(window.innerHeight / 10, -1);
 // });
-//
-// Object.assign(Hints, {
-//   // Only left hand keys
-//   characters: "asdfgqwertcvb"
+// mapkey("n", "#2Scroll down of line", () => {
+//   scrollBySmooth(window.innerHeight / 10, 1);
 // });
+
+mapkey("k", "#2Scroll up of line", () => {
+  scrollBySmooth(window.innerHeight / 10, -2);
+});
+mapkey("j", "#2Scroll down of line", () => {
+  scrollBySmooth(window.innerHeight / 10, 2);
+});
+
+mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
+  scrollBySmooth(window.innerHeight * 0.9, 1);
+});
+mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
+  scrollBySmooth(window.innerHeight * 0.9, -1);
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ EDITING                                                 │
+// ╰─────────────────────────────────────────────────────────╯
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ OPEN LINKS                                              │
+// ╰─────────────────────────────────────────────────────────╯
+
+map("mf", "cf");
+map("F", "gf");
+
+map("C", ";u");
+
+// TEST ============================================================
+// Forcing keymap H to remap arrowLeft?
+// map("H", "<ArrowLeft>");
+
+// Try to <esc> from insert mode, but this failed
+// imap("hh", "<Esc>");
 //
-// /* eslint-disable no-unused-vars */
-// const HELP = 0;
-// const MOUSE_CLICK = 1;
-// const SCROLL_PAGE = 2;
-// const TABS = 3;
-// const PAGE = 4;
-// const SESSIONS = 5;
-// const SEARCH = 6;
-// const CLIPBOARD = 7;
-// const OMNIBAR = 8;
-// const VISUAL = 9;
-// const VIM = 10;
-// const SETTINGS = 11;
-// const CHROME = 12;
-// const PROXY = 13;
-// const MISC = 14;
-// const INSERT = 15;
-// /* eslint-enable no-unused-vars */
+// mapkey(";dv", "#1Download video", function () {
+//   Hints.create("video", function (element) {
+//     var src = element.src || element.querySelector(`source[src$="mp4"]`).src;
 //
-// function keymap(group, fn) {
-//   const bind = mapkeyFn => (keys, annotation, cb, options) => {
-//     [].concat(keys).forEach(key => {
-//       mapkeyFn(key, `#${group}${annotation}`, cb, options);
+//     RUNTIME("download", {
+//       url: src,
 //     });
-//   };
-//
-//   const helpers = {
-//     normal: bind(mapkey),
-//     visual: bind(vmapkey),
-//     insert: bind(imapkey)
-//   };
-//
-//   return fn(helpers);
-// }
-//
-// function swap(key1, key2) {
-//   // Using underscore as a temporary variable to swap key bindings
-//   map("_", key1);
-//   map(key1, key2);
-//   map(key2, "_");
-//   unmap("_");
-// }
-//
-// function remap(newKey, oldKey) {
-//   map(newKey, oldKey);
-//   unmap(oldKey);
-// }
-//
-// // Bindings that I don't need
-// unmap("sp"); // namespace for Proxy bindings
-// unmap("cp"); // toggle proxy for current site
-// unmap("sfr"); // show failed web requests of current page
-// unmap("se"); // edit settings
-// unmap("sm"); // preview markdown
-// unmap("<Ctrl-Alt-d>"); // settings
-// unmap("Z"); // namespace for Session bindings
-// unmap("sql"); // show last action
-// iunmap(":"); // emoji completion
-//
-// keymap(HELP, ({ insert }) => {
-//   map(",", "<Alt-i>");
-//   unmap("<Alt-i>");
-//
-//   map("<Ctrl-q>", "<Alt-s>");
-//   insert("<Ctrl-q>", "Toggle SurfingKeys on current site", () =>
-//     Normal.toggleBlacklist()
-//   );
-//   unmap("<Alt-s>");
+//   });
 // });
-//
-// keymap(MOUSE_CLICK, () => {
-//   unmap("af");
-//
-//   // Open multiple links in a new tab
-//   remap("F", "cf");
-//   // Mouse out last element
-//   remap("gm", ";m");
-//   // Mouse over elements
-//   remap("gh", "<Ctrl-h>");
-//   // Mouse out elements
-//   remap("gH", "<Ctrl-j>");
-//
-//   remap("gq", "cq");
-//
-//   // FIXME "Go to the first edit box" doesn't work well on some sites
-//   swap("i", "gi");
-// });
-//
-// keymap(SCROLL_PAGE, () => {
-//   // Scroll page up/down
-//   map("<Ctrl-y>", "e");
-//   map("<Ctrl-e>", "d");
-//
-//   // Change scroll target
-//   remap("gs", "cs");
-//
-//   // Reset scroll target
-//   remap("gS", "cS");
-// });
-//
-// keymap(TABS, () => {
-//   // Go one tab left
-//   map("gh", "E");
-//   // Go one tab right
-//   map("gl", "R");
-//
-//   unmap("E");
-//
-//   // Go to last used tab
-//   remap("L", "<Ctrl-6>");
-//
-//   // pin/unpin current tab
-//   remap("gp", "<Alt-p>");
-//
-//   // mute/unmute current tab
-//   remap("gm", "<Alt-m>");
-//
-//   // Move current tab to left
-//   map("<c-h>", "<<");
-//   // Move current tab to right
-//   map("<c-l>", ">>");
-//
-//   // Choose a tab
-//   map("t", "T");
-//
-//   // Restore closed tab
-//   map("T", "X");
-//
-//   map("<c-f>", "/");
-// });
-//
-// keymap(PAGE, ({ normal }) => {
-//   normal("R", "Reload the page without cache", () =>
-//     RUNTIME("reloadTab", { nocache: true })
-//   );
-//
-//   map("gl", "sU");
-//   remap("gL", "su");
-//   unmap("sU");
-// });
-//
-// keymap(OMNIBAR, ({ normal }) => {
-//   unmap("o");
-//
-//   openOmnibarCombo("a", "Open a URL", {
-//     type: "URLs",
-//     extra: "getAllSites",
-//     noPrefix: true
-//   });
-//   openOmnibarCombo("x", "Open recently closed URL", {
-//     type: "URLs",
-//     extra: "getRecentlyClosed",
-//     noPrefix: true
-//   });
-//   openOmnibarCombo("u", "Open URL from tab history", {
-//     type: "URLs",
-//     extra: "getTabURLs",
-//     noPrefix: true
-//   });
-//   openOmnibar(";", "Open commands", { type: "Commands" });
-//
-//   const keyPrefix = "o";
-//
-//   normal(`${keyPrefix}t`, "Choose a tab with omnibar", () => {
-//     Front.openOmnibar({ type: "Tabs" });
-//   });
-//
-//   openOmnibarCombo("a", "Open a URL", { type: "URLs", extra: "getAllSites" });
-//   openOmnibarCombo("x", "Open recently closed URL", {
-//     type: "URLs",
-//     extra: "getRecentlyClosed"
-//   });
-//   openOmnibarCombo("u", "Open URL from tab history", {
-//     type: "URLs",
-//     extra: "getTabURLs"
-//   });
-//   openOmnibarCombo("b", "Open a bookmark", { type: "Bookmarks" });
-//   openOmnibarCombo("m", "Open URL from vim-like marks", { type: "VIMarks" });
-//   openOmnibarCombo("y", "Open URL from history", { type: "History" });
-//   normal(`${keyPrefix}i`, "Open incognito window", () => {
-//     runtime.command({ action: "openIncognito", url: window.location.href });
-//   });
-//
-//   // Helpers
-//
-//   function openOmnibar(key, annotation, options) {
-//     normal(key, annotation, () => {
-//       Front.openOmnibar(options);
-//     });
-//   }
-//
-//   function openOmnibarCombo(key, annotation, options) {
-//     const { noPrefix, ...opts } = options;
-//     const prefix = noPrefix ? "" : keyPrefix;
-//
-//     openOmnibar(`${prefix}${key}`, annotation, { ...opts, tabbed: false });
-//     openOmnibar(
-//       `${prefix}${key.toUpperCase()}`,
-//       `${annotation} in new tab`,
-//       opts
-//     );
-//   }
-// });
-//
-// // Theme
-//
-// const monospaceFontFamily =
-//   "FiraMono Nerd Font, Lucida Console, Courier, monospace";
-// const fontFamily = "system-ui, Helvetica, Verdana, Arial, sans-serif";
-//
-// // Colors
-// const white = "#ff0000";
-// const lightGray = "#a7aba9";
-// const gray = "#696b6a";
-// const darkGray = "#454746";
-// const black = "#282c2f";
-// const lightBlack = "#3c4043";
-// const aquamarine = "#24ddb2";
-// const yellow = "#fece48";
-// const lightYellow = "#fcdc7c";
-// const green = "#A6F772";
-// const lightGreen = "#C6F9A5";
-// const darkGreen = "#6A9E49";
-//
-// Hints.style(`
-//   font-family: ${monospaceFontFamily};
-// `);
-//
-// Hints.style(
-//   `
-//   font-family: ${fontFamily};
-//   border-color: ${darkGreen};
-//   background: linear-gradient(0deg, ${green}, ${lightGreen});
-// `,
-//   "text"
-// );
-//
-// settings.theme = `
-// #sk_omnibarSearchArea .prompt, #sk_omnibarSearchArea .resultPage {
-//     font-size: 10px;
-// }
-// .sk_theme {
-//     background: #282a36;
-//     color: #f8f8f2;
-// }
-// .sk_theme tbody {
-//     color: #ff5555;
-// }
-// .sk_theme input {
-//     color: #ffb86c;
-// }
-// .sk_theme .url {
-//     color: #6272a4;
-// }
-// #sk_omnibarSearchResult>ul>li {
-//     background: #282a36;
-// }
-// #sk_omnibarSearchResult ul li:nth-child(odd) {
-//     background: #282a36;
-// }
-// .sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
-//     background: #282a36;
-// }
-// .sk_theme .annotation {
-//     color: #6272a4;
-// }
-// .sk_theme .focused {
-//     background: #44475a !important;
-// }
-// .sk_theme kbd {
-//     background: #f8f8f2;
-//     color: #44475a;
-// }
-// .sk_theme .frame {
-//     background: #8178DE9E;
-// }
-// .sk_theme .omnibar_highlight {
-//     color: #8be9fd;
-// }
-// .sk_theme .omnibar_folder {
-//     color: #ff79c6;
-// }
-// .sk_theme .omnibar_timestamp {
-//     color: #bd93f9;
-// }
-// .sk_theme .omnibar_visitcount {
-//     color: #f1fa8c;
-// }
-//
-// .sk_theme .prompt, .sk_theme .resultPage {
-//     color: #50fa7b;
-// }
-// .sk_theme .feature_name {
-//     color: #ff5555;
-// }
-// .sk_omnibar_middle #sk_omnibarSearchArea {
-//     border-bottom: 1px solid #282a36;
-// }
-// #sk_status {
-//     border: 1px solid #282a36;
-// }
-// #sk_richKeystroke {
-//     background: #282a36;
-//     box-shadow: 0px 2px 10px rgba(40, 42, 54, 0.8);
-// }
-// #sk_richKeystroke kbd>.candidates {
-//     color: #ff5555;
-// }
-// #sk_keystroke {
-//     background-color: #282a36;
-//     color: #f8f8f2;
-// }
-// kbd {
-//     border: solid 1px #f8f8f2;
-//     border-bottom-color: #f8f8f2;
-//     box-shadow: inset 0 -1px 0 #f8f8f2;
-// }
-// #sk_frame {
-//     border: 4px solid #ff5555;
-//     background: #8178DE9E;
-//     box-shadow: 0px 0px 10px #DA3C0DCC;
-// }
-// #sk_banner {
-//     border: 1px solid #282a36;
-//     background: rgb(68, 71, 90);
-// }
-// div.sk_tabs_bg {
-//     background: #f8f8f2;
-// }
-// div.sk_tab {
-//     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6272a4), color-stop(100%,#44475a));
-// }
-// div.sk_tab_title {
-//     color: #f8f8f2;
-// }
-// div.sk_tab_url {
-//     color: #8be9fd;
-// }
-// div.sk_tab_hint {
-//     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f1fa8c), color-stop(100%,#ffb86c));
-//     color: #282a36;
-//     border: solid 1px #282a36;
-// }
-// #sk_bubble {
-//     border: 1px solid #f8f8f2;
-//     color: #282a36;
-//     background-color: #f8f8f2;
-// }
-// #sk_bubble * {
-//     color: #282a36 !important;
-// }
-// div.sk_arrow[dir=down]>div:nth-of-type(1) {
-//     border-top: 12px solid #f8f8f2;
-// }
-// div.sk_arrow[dir=up]>div:nth-of-type(1) {
-//     border-bottom: 12px solid #f8f8f2;
-// }
-// div.sk_arrow[dir=down]>div:nth-of-type(2) {
-//     border-top: 10px solid #f8f8f2;
-// }
-// div.sk_arrow[dir=up]>div:nth-of-type(2) {
-//     border-bottom: 10px solid #f8f8f2;
-// }
-// #sk_omnibar {
-//     width: 100%;
-//     left: 0%;
-// }`;
-//
-// // https://github.com/megalithic/dotfiles/blob/main/config/surfingkeys/config.js
+
+// END TEST ========================================================
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ OMNIBAR                                                 │
+// ╰─────────────────────────────────────────────────────────╯
+
+// The default is using <Tab> but in nvim I use `<c-j/k>` for item selection
+// with these remappings, I can use them now
+cmap("<Ctrl-j>", "<Tab>");
+cmap("<Ctrl-k>", "<Shift-Tab>");
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ TAB                                                     │
+// ╰─────────────────────────────────────────────────────────╯
+
+// Move tab left/right
+mapkey("<Alt-ArrowLeft>", "#3Move current tab to left", function () {
+  RUNTIME("moveTab", {
+    step: -1,
+  });
+});
+mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
+  RUNTIME("moveTab", {
+    step: 1,
+  });
+});
+
+map("<Alt-h>", "E");
+map("<Alt-H>", "E");
+map("gh", "E");
+map("gl", "R");
+
+map("<Space>ff", "T");
+
+map("<Ctrl-Alt-l>", "R");
+map("<Ctrl-Alt-h>", "E");
+
+mapkey("<Ctrl-o>", "backward", function () {
+  history.go(-1);
+});
+mapkey("<Ctrl-i>", "forward", function () {
+  history.go(1);
+});
+
+// reopen closed tab
+map("-", "X");
+
+// close tab
+mapkey("q", "#3Close current tab", () => {
+  RUNTIME("closeTab");
+});
+mapkey("<Space><Tab>", "#3Close current tab", () => {
+  RUNTIME("closeTab");
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ HISTORY                                                 │
+// ╰─────────────────────────────────────────────────────────╯
+
+// open current history tab
+mapkey("<Space>fs", "#8Open RecentlyClosed", () => {
+  Front.openOmnibar({ type: "RecentlyClosed" });
+});
+// open global history tab
+mapkey("<Space>fS", "#8Open History", () => {
+  Front.openOmnibar({ type: "History" });
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ BOOKMARKS                                               │
+// ╰─────────────────────────────────────────────────────────╯
+
+// Open bookmark
+mapkey("b", "#8Open a bookmark", function () {
+  Front.openOmnibar({ type: "Bookmarks" });
+});
+mapkey("<Alt-b>", "#8Open a bookmark", function () {
+  Front.openOmnibar({ type: "Bookmarks" });
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ ZOOM                                                    │
+// ╰─────────────────────────────────────────────────────────╯
+
+mapkey("<Ctrl-Home>", "#3zoom reset", function () {
+  RUNTIME("setZoom", {
+    zoomFactor: 0,
+  });
+});
+
+// ╭─────────────────────────────────────────────────────────╮
+// │ THEMES                                                  │
+// ╰─────────────────────────────────────────────────────────╯
+
+Hints.style(
+  "border: solid 1px #3D3E3E; color:#F92660; background: initial; background-color: #272822; font-family: Maple Mono Freeze; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);",
+);
+Hints.style(
+  "border: solid 1px #3D3E3E !important; padding: 1px !important; color: #A6E22E !important; background: #272822 !important; font-family: Maple Mono Freeze !important; box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8) !important;",
+  "text",
+);
+Visual.style("marks", "background-color: #A6E22E99;");
+Visual.style("cursor", "background-color: #F92660;");
+
+/* set theme */
+settings.theme = `
+.sk_theme {
+    font-family: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
+    font-size: 10pt;
+    background: #282828;
+    color: #ebdbb2;
+}
+.sk_theme tbody {
+    color: #b8bb26;
+}
+.sk_theme input {
+    color: #d9dce0;
+}
+.sk_theme .url {
+    color: #38971a;
+}
+.sk_theme .annotation {
+    color: #b16286;
+}
+
+#sk_omnibar {
+    width: 60%;
+    left:20%;
+    box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
+}
+
+.sk_omnibar_middle {
+	top: 15%;
+	border-radius: 10px;
+}
+
+
+.sk_theme .omnibar_highlight {
+    color: #ebdbb2;
+}
+.sk_theme #sk_omnibarSearchResult ul li:nth-child(odd) {
+    background: #282828;
+}
+
+.sk_theme #sk_omnibarSearchResult {
+    max-height: 60vh;
+    overflow: hidden;
+    margin: 0rem 0rem;
+}
+
+
+
+#sk_omnibarSearchResult > ul {
+	padding: 1.0em;
+}
+
+.sk_theme #sk_omnibarSearchResult ul li {
+    margin-block: 0.5rem;
+    padding-left: 0.4rem;
+}
+
+.sk_theme #sk_omnibarSearchResult ul li.focused {
+	background: #181818;
+	border-color: #181818;
+	border-radius: 12px;
+	position: relative;
+	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.8);
+}
+
+
+#sk_omnibarSearchArea > input {
+	display: inline-block;
+	width: 100%;
+	flex: 1;
+	font-size: 20px;
+	margin-bottom: 0;
+	padding: 0px 0px 0px 0.5rem;
+	background: transparent;
+	border-style: none;
+	outline: none;
+	padding-left: 18px;
+}
+
+
+#sk_tabs {
+	position: fixed;
+	top: 0;
+	left: 0;
+    background-color: rgba(0, 0, 0, 0);
+	overflow: auto;
+	z-index: 2147483000;
+    box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
+	margin-left: 1rem;
+	margin-top: 1.5rem;
+    border: solid 1px #282828;
+    border-radius: 15px;
+    background-color: #282828; 
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+
+#sk_tabs div.sk_tab {
+	vertical-align: bottom;
+	justify-items: center;
+	border-radius: 0px;
+    background: #282828;
+    //background: #181818 !important;
+
+	margin: 0px; 
+	box-shadow: 0px 0px 0px 0px rgba(245, 245, 0, 0.3); 
+	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.8) !important; 
+
+	/* padding-top: 2px; */
+	border-top: solid 0px black; 
+	margin-block: 0rem;
+}
+
+
+#sk_tabs div.sk_tab:not(:has(.sk_tab_hint)) {
+	background-color: #181818 !important;
+	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.8) !important;
+	border: 1px solid #181818;
+	border-radius: 20px;
+	position: relative;
+	z-index: 1;
+	margin-left: 1.8rem;
+	padding-left: 0rem;
+	margin-right: 0.7rem;
+}
+
+
+#sk_tabs div.sk_tab_title {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 10pt;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	padding-left: 5px;
+	color: #ebdbb2;
+}
+
+
+
+#sk_tabs.vertical div.sk_tab_hint {
+    position: inherit;
+    left: 8pt;
+    margin-top: 3px;
+    border: solid 1px #3D3E3E; color:#F92660; background: initial; background-color: #272822; font-family: Maple Mono Freeze;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.8);
+}
+
+#sk_tabs.vertical div.sk_tab_wrap {
+	display: inline-block;
+	margin-left: 0pt;
+	margin-top: 0px;
+	padding-left: 15px;
+}
+
+#sk_tabs.vertical div.sk_tab_title {
+	min-width: 100pt;
+	max-width: 20vw;
+}
+
+#sk_usage, #sk_popup, #sk_editor {
+	overflow: auto;
+	position: fixed;
+	width: 80%;
+	max-height: 80%;
+	top: 10%;
+	left: 10%;
+	text-align: left;
+	box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
+	z-index: 2147483298;
+	padding: 1rem;
+	border: 1px solid #282828;
+	border-radius: 10px;
+}
+
+#sk_keystroke {
+	padding: 6px;
+	position: fixed;
+	float: right;
+	bottom: 0px;
+	z-index: 2147483000;
+	right: 0px;
+	background: #282828;
+	color: #fff;
+	border: 1px solid #181818;
+	border-radius: 10px;
+	margin-bottom: 1rem;
+	margin-right: 1rem;
+	box-shadow: 0px 30px 50px rgba(0, 0, 0, 0.8);
+}
+
+#sk_status {
+	position: fixed;
+	/* top: 0; */
+	bottom: 0;
+	right: 39%;
+	z-index: 2147483000;
+	padding: 8px 8px 4px 8px;
+	border-radius: 5px;
+	border: 1px solid #282828;
+	font-size: 12px;
+	box-shadow: 0px 20px 40px 2px rgba(0, 0, 0, 1);
+	/* margin-bottom: 1rem; */
+	width: 20%;
+	margin-bottom: 1rem;
+}
+
+
+#sk_omnibarSearchArea {
+    border-bottom: 0px solid #282828;
+}
+
+
+#sk_omnibarSearchArea .resultPage {
+	display: inline-block;
+    font-size: 12pt;
+    font-style: italic;
+	width: auto;
+}
+
+#sk_omnibarSearchResult li div.url {
+	font-weight: normal;
+	white-space: nowrap;
+	color: #aaa;
+}
+
+.sk_theme .omnibar_highlight {
+	color: #11eb11;
+	font-weight: bold;
+}
+
+.sk_theme .omnibar_folder {
+	border: 1px solid #188888;
+	border-radius: 5px;
+	background: #188888;
+	color: #aaa;
+	box-shadow: 1px 1px 5px rgba(0, 8, 8, 1);
+}
+.sk_theme .omnibar_timestamp {
+	background: #cc4b9c;
+	border: 1px solid #cc4b9c;
+	border-radius: 5px;
+	color: #aaa;
+	box-shadow: 1px 1px 5px rgb(0, 8, 8);
+}
+#sk_omnibarSearchResult li div.title {
+	text-align: left;
+	max-width: 100%;
+	white-space: nowrap;
+	overflow: auto;
+}
+
+.sk_theme .separator {
+	color: #282828;
+}
+
+.sk_theme .prompt{
+	color: #aaa;
+	background-color: #181818;
+	border-radius: 10px;
+	padding-left: 22px;
+	padding-right: 21px;
+	/* padding: ; */
+	font-weight: bold;
+	box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.8);
+}
+
+
+
+#sk_status, #sk_find {
+	font-size: 10pt;
+	font-weight: bold;
+    text-align: center;
+    padding-right: 8px;
+}
+
+
+#sk_status span[style*="border-right: 1px solid rgb(153, 153, 153);"] {
+    display: none;
+}
+
+`;

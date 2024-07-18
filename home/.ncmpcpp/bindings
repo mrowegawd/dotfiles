@@ -468,11 +468,11 @@ def_key "-"
     volume_down
 
 # song: seek forward song
-def_key ";"
+def_key "L"
     seek_forward
 
 # song: seek backward song
-def_key ","
+def_key "J"
     seek_backward
 
 # song: play song or press enter
@@ -480,11 +480,11 @@ def_key "l"
     play_item
 
 # song: play next song
-def_key ">"
+def_key "ctrl-j"
     next
 
 # song: play prev song
-def_key "<"
+def_key "ctrl-k"
     previous
 
 # song: scroll to up
@@ -506,8 +506,8 @@ def_key "+"
     show_clock
 
 # misc: show lyrics
-def_key "."
-    show_lyrics
+# def_key "."
+#     show_lyrics
 
 # misc: show help
 def_key "?"
