@@ -19,7 +19,7 @@ return {
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-emoji",
       "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-path",
+      "FelipeLema/cmp-async-path",
       "lukas-reineke/cmp-under-comparator",
       "rcarriga/cmp-dap",
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
@@ -78,8 +78,7 @@ return {
           completion = cmp.config.window.bordered(styldoc()),
           documentation = cmp.config.window.bordered(styldoc(true)),
         },
-        completion = { completeopt = "menuone,noinsert,noselect" },
-        -- completeopt = { "menu", "menuone", "noinsert", "noselect" },
+        completion = { completeopt = "menu,noinsert,noselect" },
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
@@ -165,38 +164,48 @@ return {
         sorting = defaults.sorting,
         preselect = cmp.PreselectMode.None,
         mapping = {
-          ["<C-r>"] = cmp.mapping(function(_)
-            if callme == 0 then
-              callme = 1
-              cmp.complete {}
-            elseif callme == 1 then
-              callme = 0
-              cmp.complete {
-                config = {
-                  sources = {
-                    {
-                      name = "buffer",
-                      option = {
-                        get_bufnrs = function()
-                          return vim.tbl_filter(function(buf)
-                            return vim.fn.buflisted(buf) == 1 and vim.fn.bufloaded(buf) == 1
-                          end, vim.api.nvim_list_bufs())
-                        end,
-                      },
-                    },
-                  },
-                },
-              }
-            end
-          end, {
-            "i",
-            "s",
-          }),
+          -- ["<C-r>"] = cmp.mapping(function(_)
+          --   if callme == 0 then
+          --     callme = 1
+          --     cmp.complete {}
+          --   elseif callme == 1 then
+          --     callme = 0
+          --     cmp.complete {
+          --       config = {
+          --         sources = {
+          --           {
+          --             name = "buffer",
+          --             option = {
+          --               get_bufnrs = function()
+          --                 return vim.tbl_filter(function(buf)
+          --                   return vim.fn.buflisted(buf) == 1 and vim.fn.bufloaded(buf) == 1
+          --                 end, vim.api.nvim_list_bufs())
+          --               end,
+          --             },
+          --           },
+          --         },
+          --       },
+          --     }
+          --   end
+          -- end, {
+          --   "i",
+          --   "s",
+          -- }),
           ["<C-j>"] = cmp.mapping(function()
             local cmps = get_cmp()
+            local types = require "cmp.types"
 
             if cmps.visible() then
-              cmps.select_next_item { behavior = "Select" }
+              -- if cmps.complete_common_string() then
+              --   return
+              if #cmps.get_entries() == 1 then
+                cmps.confirm { select = true }
+              else
+                cmps.select_next_item {
+                  behavior = types.cmp.SelectBehavior.Select,
+                  -- behavior = "Insert",
+                }
+              end
             else
               cmps.complete {}
             end
@@ -207,10 +216,7 @@ return {
               cmps.select_prev_item { behavior = "Select" }
             end
           end, { "i" }),
-          -- WARN: cmp sometimes not triggering, check this issue
-          -- https://github.com/hrsh7th/nvim-cmp/issues/1692
-          -- https://github.com/hrsh7th/nvim-cmp/issues/1692#issuecomment-1855795126
-          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+          -- ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
           ["<C-s>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
               cmd = "rg --files --hidden",
@@ -231,16 +237,57 @@ return {
         sources = { -- remember: do not use `group_index`,
           {
             name = "nvim_lsp",
-            entry_filter = function(entry)
-              return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+            priority = 100,
+            group_index = 1,
+            -- entry_filter = function(entry)
+            --   return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+            -- end,
+          },
+          -- { name = "path", priority = 10, group_index = 9 },
+          { name = "async_path", priority = 30, group_index = 5 },
+          {
+            name = "emoji",
+            priority = 10,
+            group_index = 9,
+            entry_filter = function()
+              if vim.bo.filetype ~= "gitcommit" then
+                return false
+              end
+              return true
             end,
           },
-          { name = "path" },
-          { name = "emoji" },
-          { name = "orgmode" },
+          {
+            name = "git",
+            priority = 40,
+            group_index = 4,
+            entry_filter = function()
+              if vim.bo.filetype ~= "gitcommit" then
+                return false
+              end
+              return true
+            end,
+          },
+          {
+            name = "orgmode",
+            priority = 40,
+            group_index = 4,
+            entry_filter = function()
+              if vim.bo.filetype ~= "org" then
+                return false
+              end
+              return true
+            end,
+          },
           { name = "vim-dadbod-completion" },
           {
             name = "buffer",
+            max_item_count = 5,
+            keyword_length = 2,
+            priority = 50,
+            group_index = 4,
+            -- entry_filter = function(entry)
+            --   return not entry.exact
+            -- end,
             option = {
               get_bufnrs = function()
                 return vim.tbl_filter(function(buf)
@@ -268,17 +315,58 @@ return {
           "saadparwaiz1/cmp_luasnip",
         },
         opts = function(_, opts)
+          local cmp = get_cmp()
+
           opts.snippet = {
             expand = function(args)
               require("luasnip").lsp_expand(args.body)
             end,
           }
-          table.insert(opts.sources, { name = "luasnip" })
+
+          opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
+            ["<C-r>"] = cmp.mapping(function(_)
+              if callme == 0 then
+                callme = 1
+                cmp.complete {}
+              elseif callme == 1 then
+                callme = 2
+                cmp.complete {
+                  config = {
+                    sources = {
+                      {
+                        name = "buffer",
+                        option = {
+                          get_bufnrs = function()
+                            return vim.tbl_filter(function(buf)
+                              return vim.fn.buflisted(buf) == 1 and vim.fn.bufloaded(buf) == 1
+                            end, vim.api.nvim_list_bufs())
+                          end,
+                        },
+                      },
+                    },
+                  },
+                }
+              else
+                callme = 0
+                cmp.complete { config = { sources = { { name = "luasnip" } } } }
+              end
+            end, {
+              "i",
+              "s",
+            }),
+          })
+
+          table.insert(opts.sources, {
+            name = "luasnip",
+            priority = 50,
+            group_index = 2,
+            option = { show_autosnippets = true, use_show_condition = false },
+          })
         end,
       },
     },
     opts = {
-      history = true,
+      history = false,
       delete_check_events = "TextChanged",
     },
     config = function()
@@ -445,35 +533,6 @@ return {
         desc = "Misc: open scratch buffer [scratch]",
       },
     },
-  },
-  -- SESSION_KEYS (disabled)
-  {
-    "shmerl/session-keys",
-    enabled = false,
-    config = function()
-      local session_keys = require "session-keys"
-      session_keys.sessions.dap = {
-        -- stylua: ignore
-        n = { -- mode 'n'
-          -- { lhs = "<F9>", rhs = function() require("dap").toggle_breakpoint() end },
-
-          { lhs = "<c-h>", rhs = function() require("dap").continue() end },
-          { lhs = "<c-j>", rhs = function() require("dap").step_over() end },
-          { lhs = "<c-l>", rhs = function() require("dap").step_into() end },
-          { lhs = "<c-k>", rhs = function() require("dap").up() end },
-          { lhs = "<c-o>", rhs = function() require("dap").step_out() end },
-
-          -- { lhs = "<F8>", rhs = function() require("dap").disconnect() end },
-          -- { lhs = "<F20>", rhs = function() require("dap").terminate() end },
-
-          -- { lhs = "<F17>", rhs = function() require("dap").run_last() end },
-          --
-          -- { lhs = "<F7>", rhs = function() require("dap").pause() end },
-          -- { lhs = "<F29>", rhs = function() require("dap").reverse_continue() end },
-          -- { lhs = "<F22>", rhs = function() require("dap").step_back() end },
-        },
-      }
-    end,
   },
   -- KULALA
   {

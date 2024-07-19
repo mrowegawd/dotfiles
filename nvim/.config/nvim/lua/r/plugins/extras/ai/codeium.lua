@@ -23,7 +23,15 @@ return {
         ["<c-q>"] = cmp.mapping(function()
           cmp.complete {
             config = {
-              sources = { { name = "codeium" } },
+              sources = {
+                {
+                  name = "codeium",
+                  -- max_item_count = 5,
+                  keyword_length = 1,
+                  priority = 60,
+                  group_index = 4,
+                },
+              },
             },
           }
         end, { "i" }),

@@ -180,7 +180,10 @@ function M.setup(opts)
   --   sources = cmp.config.sources(vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "emoji" } })),
   -- })
   -- cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-  --   sources = vim.tbl_deep_extend("force", {}, tbl_custom_sources, { { name = "vim-dadbod-completion" } }),
+  --   sources = {
+  --     { name = "vim-dadbod-completion" },
+  --     { name = "buffer" },
+  --   },
   -- })
 
   local cmd_mapping = {
