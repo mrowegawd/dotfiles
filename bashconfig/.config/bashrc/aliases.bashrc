@@ -468,7 +468,8 @@ r_ytdl() {
 
 # run: convert youtube to mp3 <$URL_YOUTUBE>
 r_ytmp3() {
-  tsp youtube-dl --extract-audio --audio-format mp3 "$1"
+  # tsp youtube-dl --extract-audio --audio-format mp3 "$1"
+  tsp yt-dlp --extract-audio --audio-format mp3 "$1"
 }
 
 # run: hapus all current items all <$1>
