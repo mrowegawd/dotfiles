@@ -296,6 +296,8 @@ RUtils.map.nnoremap("<Leader>Y", function()
   vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
 end, { silent = true, desc = "Misc: yank current absolute path" })
 RUtils.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
+RUtils.map.nnoremap("<CR>", '"xciw', { desc = "Misc: change inner word" })
+RUtils.map.vnoremap("<CR>", '"xc', { desc = "Misc: change selection word" })
 
 RUtils.map.nnoremap("<Leader>n", cmd.nohl, { desc = "Misc: clear searches" })
 RUtils.map.nnoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
