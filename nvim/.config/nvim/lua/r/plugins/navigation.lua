@@ -425,6 +425,7 @@ return {
           ["<a-n>"] = "actions.down_and_scroll",
           ["<a-p>"] = "actions.up_and_scroll",
           ["{"] = false,
+          ["<BS>"] = "actions.tree_toggle",
           ["o"] = "actions.jump",
           ["}"] = false,
           ["[["] = false,
@@ -906,6 +907,7 @@ return {
             pinned = false,
             open = "Outline",
           },
+          { title = "Grug Far", ft = "grug-far", size = { width = 0.4 } },
         },
         left = {
           { title = "Neotest Summary", ft = "neotest-summary" },
