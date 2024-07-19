@@ -5,6 +5,7 @@ local Highlight = require "r.settings.highlights"
 local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, 0.5)
 local dark_green = Highlight.tint(UIPallette.palette.dark_green, 0.5)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
+local dark_red_more = Highlight.tint(dark_red, -0.4)
 
 local general_overrides = function()
   Highlight.all {
@@ -12,7 +13,7 @@ local general_overrides = function()
     { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-    { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+    { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     {
       CursorLineNr = {
         fg = { from = "Keyword", attr = "fg", alter = -0.2 },
@@ -22,7 +23,7 @@ local general_overrides = function()
     },
     { Type = { italic = true, bold = true } },
     { NormalFloat = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = { from = "Normal", attr = "fg" } } },
-    { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.5 }, italic = true } },
+    { Comment = { fg = { from = "Normal", attr = "fg", alter = -0.55 }, italic = true } },
     {
       Folded = {
         bg = { from = "Normal", attr = "bg", alter = 0.4 },
@@ -229,10 +230,22 @@ local general_overrides = function()
       },
     },
     {
+      DiagnosticsErrorNumHl = {
+        fg = { from = "DiagnosticError", attr = "fg" },
+        bg = "NONE",
+      },
+    },
+    {
       DiagnosticWarn = {
         fg = { from = "DiagnosticSignWarn", attr = "fg" },
         bg = { from = "DiagnosticSignWarn", attr = "fg", alter = -0.7 },
         italic = true,
+      },
+    },
+    {
+      DiagnosticsWarnNumHl = {
+        fg = { from = "DiagnosticSignWarn", attr = "fg" },
+        bg = "NONE",
       },
     },
     {
@@ -243,10 +256,22 @@ local general_overrides = function()
       },
     },
     {
+      DiagnosticsHintNumHl = {
+        fg = { from = "DiagnosticHint", attr = "fg" },
+        bg = "NONE",
+      },
+    },
+    {
       DiagnosticInfo = {
         fg = { from = "DiagnosticSignInfo", attr = "fg" },
         bg = { from = "DiagnosticSignInfo", attr = "fg", alter = -0.7 },
         italic = true,
+      },
+    },
+    {
+      DiagnosticsInfoNumHl = {
+        fg = { from = "DiagnosticInfo", attr = "fg" },
+        bg = "NONE",
       },
     },
 
@@ -527,10 +552,11 @@ local general_overrides = function()
     -- WHICH-KEY ==========================================================
     {
       WhichKeyBorder = {
-        fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 },
+        fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
+    { WhichKey = { fg = dark_red_more } },
 
     -- NOICE ==============================================================
     { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = "NONE" } },
@@ -667,6 +693,11 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = 1 },
         },
       },
+
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       { DiagnosticVirtualTextWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, sp = "NONE", undercurl = false } },
       { DiagnosticVirtualTextInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, sp = "NONE", undercurl = false } },
       {
@@ -697,6 +728,10 @@ local function colorscheme_overrides()
       },
     },
     ["kanagawa"] = {
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 4 },
@@ -718,13 +753,9 @@ local function colorscheme_overrides()
       },
     },
     ["kanagawa-paper"] = {
-      -- {
-      --   StatusLine = {
-      --     fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
-      --     bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-      --   },
-      -- },
-      --
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
       {
         Tabline = {
           bg = { from = "StatusLine", attr = "bg", alter = -0.8 },
@@ -795,6 +826,8 @@ local function colorscheme_overrides()
         },
       },
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
 
       {
         LspReferenceText = {
@@ -827,7 +860,10 @@ local function colorscheme_overrides()
     ["lackluster"] = {
       { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.7 } } },
       {
@@ -1021,7 +1057,10 @@ local function colorscheme_overrides()
       },
     },
     ["neomodern"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.25 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
       {
         Folded = {
@@ -1111,12 +1150,11 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
-      { LineNr = { bg = "NONE", fg = { from = "Folded", attr = "fg", alter = 0.5 } } },
-      { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 1.6 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
 
-      -- { illuminatedWordWrite = { bg = { from = "illuminatedWordWrite", attr = "bg", alter = -0.5 } } },
-      -- { illuminatedWordRead = { bg = { from = "illuminatedWordRead", attr = "bg", alter = -0.5 } } },
-      -- { illuminatedWordText = { bg = { from = "illuminatedWordText", attr = "bg", alter = -0.5 } } },
+      { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
 
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
       {
@@ -1136,6 +1174,10 @@ local function colorscheme_overrides()
     ["miasma"] = {
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 2 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.4 }, fg = { from = "CmpItemAbbr" } } },
+
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
 
       { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.28 } } },
       {
@@ -1294,6 +1336,10 @@ local function colorscheme_overrides()
 
       { MatchParen = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE", bold = false } },
 
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       {
         LspCodeLens = {
           bg = { from = "Normal", attr = "bg", alter = -0.05 },
@@ -1334,6 +1380,10 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 3 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 0.5 }, fg = { from = "CmpItemAbbr" } } },
 
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       {
         FoldColumn = {
           bg = "NONE",
@@ -1365,7 +1415,7 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
 
-      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -1403,7 +1453,7 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = 5 }, bg = "NONE" } },
       { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = 1 }, fg = { from = "CmpItemAbbr" } } },
 
-      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -1437,6 +1487,10 @@ local function colorscheme_overrides()
     },
 
     ["doom-one"] = {
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.25 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
       {
         Folded = {
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
@@ -1488,7 +1542,18 @@ local function colorscheme_overrides()
         },
       },
 
-      { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
+      {
+        LineNr = {
+          fg = { from = "LineNr", attr = "fg", alter = 0.4 },
+          bg = "NONE",
+        },
+      },
+      { LineNr1 = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = -0.25 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
+      { Comment = { fg = { from = "Comment", alter = -0.3 } } },
+      { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = -0.2 },
@@ -1580,6 +1645,10 @@ local function colorscheme_overrides()
       { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
       { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
       { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
+
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
 
       {
         StatusLine = {
