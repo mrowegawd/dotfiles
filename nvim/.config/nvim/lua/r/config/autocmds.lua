@@ -180,6 +180,7 @@ RUtils.cmd.augroup("WindowBehaviours", {
 
       RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
       RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+      RUtils.map.tnoremap("<c-space>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
       RUtils.map.tnoremap("<a-x>", function()
         -- RUtils.map.feedkey("<C-\\><C-n>:q!<CR>", "t")
         local buf = vim.api.nvim_get_current_buf()
@@ -221,6 +222,44 @@ RUtils.cmd.augroup("WindowBehaviours", {
         RUtils.map.feedkey("<C-\\><C-n><Leader>bd", "t")
       end, { desc = "Terminal: rescue buffer" })
     end
+  end,
+})
+
+RUtils.cmd.augroup("WindowDim", {
+  event = { "BufRead" },
+  pattern = { "*" },
+  command = function()
+    RUtils.windowdim.buf_enter()
+  end,
+}, {
+  event = { "BufEnter" },
+  pattern = { "*" },
+  command = function()
+    RUtils.windowdim.buf_enter()
+  end,
+}, {
+  event = { "VimEnter", "FocusGained", "WinEnter" },
+  pattern = "*",
+  command = function()
+    RUtils.windowdim.focus_gained()
+  end,
+}, {
+  event = { "VimLeave", "FocusLost", "WinLeave" },
+  pattern = "*",
+  command = function()
+    RUtils.windowdim.focus_lost()
+  end,
+}, {
+  event = { "WinEnter" },
+  pattern = "*",
+  command = function()
+    RUtils.windowdim.win_enter()
+  end,
+}, {
+  event = { "WinLeave" },
+  pattern = "*",
+  command = function()
+    RUtils.windowdim.win_leave()
   end,
 })
 

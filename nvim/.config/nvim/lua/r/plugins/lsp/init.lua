@@ -18,11 +18,12 @@ return {
         diagnostics = {
           underline = true,
           update_in_insert = false,
-          virtual_text = {
-            spacing = 4,
-            source = "if_many",
-            prefix = "■", -- "●"
-          },
+          -- virtual_text = {
+          --   spacing = 4,
+          --   source = "if_many",
+          --   prefix = "■", -- "●"
+          -- },
+          virtual_text = false,
           severity_sort = true,
           signs = {
             text = {
@@ -30,6 +31,12 @@ return {
               [vim.diagnostic.severity.WARN] = RUtils.config.icons.diagnostics.Warn,
               [vim.diagnostic.severity.HINT] = RUtils.config.icons.diagnostics.Hint,
               [vim.diagnostic.severity.INFO] = RUtils.config.icons.diagnostics.Info,
+            },
+            numhl = {
+              [vim.diagnostic.severity.ERROR] = "DiagnosticsErrorNumHl",
+              [vim.diagnostic.severity.WARN] = "DiagnosticsWarnNumHl",
+              [vim.diagnostic.severity.HINT] = "DiagnosticsHintNumHl",
+              [vim.diagnostic.severity.INFO] = "DiagnosticsInfoNumHl",
             },
           },
           float = {
@@ -130,6 +137,16 @@ return {
       RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
 
       RUtils.lsp.words.setup(opts.document_highlight)
+
+      if vim.fn.has "nvim-0.10.0" == 0 then
+        if type(opts.diagnostics.signs) ~= "boolean" then
+          for severity, icon in pairs(opts.diagnostics.signs.text) do
+            local name = vim.diagnostic.severity[severity]:lower():gsub("^%l", string.upper)
+            name = "DiagnosticSign" .. name
+            vim.fn.sign_define(name, { text = icon, texthl = name, numhl = name })
+          end
+        end
+      end
 
       if vim.fn.has "nvim-0.10" == 1 then
         -- inlay hints
