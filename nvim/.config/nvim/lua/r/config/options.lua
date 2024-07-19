@@ -83,7 +83,7 @@ opt.linespace = 0 -- font spacing
 opt.ruler = true -- show line,col at the cursor pos
 opt.signcolumn = "yes:1" -- Always show the sign column
 opt.number = true -- show absolute line no. at the cursor pos
-opt.relativenumber = true -- otherwise, show relative numbers in the ruler
+opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.breakindent = true -- start wrapped lines indented
 opt.linebreak = true -- do not break words on line wrap
 opt.showbreak = "↪ "
@@ -199,7 +199,7 @@ opt.fillchars = {
   --
   -- fold = "▶",
   -- vert = "¦", -- "┃",
-  vert = "┃",
+  -- vert = "┃",
   horiz = "-",
   foldopen = "", -- '▼'
   foldclose = "", -- '▶'

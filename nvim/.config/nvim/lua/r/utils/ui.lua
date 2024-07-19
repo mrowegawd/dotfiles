@@ -150,10 +150,10 @@ function M.statuscolumn()
     -- Left: mark or non-git sign
     -- components[1] = M.icon(M.get_mark(buf, vim.v.lnum) or left)
     -- Left: saat ini memakai custom mark dari qfsilet maka itu menggunakan `left` (saja) didahulukan dari pada `get_mark`,
-    components[1] = M.icon(left or M.get_mark(buf, vim.v.lnum))
+    components[1] = M.icon(left or M.get_mark(buf, vim.v.lnum) or right)
     -- Right: fold icon or git sign (only if file)
-    components[3] = is_file and M.icon(fold or right) or ""
-    components[3] = components[3] .. M.icon { text = "▏", texthl = "LineNr", namespace = "icontext" } -- "│" "▏" "|"
+    -- components[3] = is_file and M.icon(fold or right) or ""
+    components[3] = components[3] .. M.icon { text = "▏", texthl = "LineNr1", namespace = "icontext" } -- "│" "▏" "|"
   end
 
   -- Numbers in Neovim are weird
