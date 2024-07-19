@@ -3,7 +3,7 @@ local api, wo = vim.api, vim.wo
 
 local autocmds = {}
 
-local focused_colorcolumn = RUtils.cmd.tryjoin(Util.cmd.tryrange(80, 256), ",")
+local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ",")
 
 -- local winhighlight_blurred = table.concat({
 --   -- -- "IncSearch:ColorColumn",
@@ -183,7 +183,7 @@ local focus_window = function()
     colorcolumn_width = 200 -- 120
     -- colorcolumn_width = 200 -- 120
     -- end
-    focused_colorcolumn = RUtils.cmd.tryjoin(Util.cmd.tryrange(colorcolumn_width, 256), ",")
+    focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(colorcolumn_width, 256), ",")
     wo.colorcolumn = focused_colorcolumn
   end
 end
@@ -227,41 +227,41 @@ end
 --     end
 -- end
 
--- local set_cursorline = function(active)
---   local filetype, _ = RUtils.buf.get_bo_buft()
---   if autocmds.cursorline_blacklist[filetype] ~= true then
---     -- check jika window is floating, like TelescopePrompt
---     if api.nvim_win_get_config(0).relative ~= "" then
---       wo.cursorline = false
---     else
---       wo.cursorline = active
---     end
---     -- wo.cursorcolumn = active
---   end
--- end
+local set_cursorline = function(active)
+  local filetype, _ = RUtils.buf.get_bo_buft()
+  if autocmds.cursorline_blacklist[filetype] ~= true then
+    -- check jika window is floating, like TelescopePrompt
+    if api.nvim_win_get_config(0).relative ~= "" then
+      wo.cursorline = false
+    else
+      wo.cursorline = active
+    end
+    -- wo.cursorcolumn = active
+  end
+end
 
 autocmds.buf_enter = function()
   focus_window()
 end
 
 autocmds.focus_gained = function()
-  -- set_cursorline(true)
-  focus_window()
+  set_cursorline(true)
+  -- focus_window()
 end
 
 autocmds.focus_lost = function()
-  -- set_cursorline(true)
-  blur_window()
+  set_cursorline(true)
+  -- blur_window()
 end
 
 autocmds.win_enter = function()
-  -- set_cursorline(true)
-  focus_window()
+  set_cursorline(true)
+  -- focus_window()
 end
 
 autocmds.win_leave = function()
-  -- set_cursorline(false)
-  blur_window()
+  set_cursorline(false)
+  -- blur_window()
 end
 
 return autocmds

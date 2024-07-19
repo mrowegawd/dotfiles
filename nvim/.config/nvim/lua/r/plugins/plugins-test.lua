@@ -4002,7 +4002,7 @@ return {
   {
     "m-demare/hlargs.nvim",
     enabled = false,
-    event = "VeryLazy", --  "UIEnter"
+    event = "VeryLazy",
     opts = {
       color = "#ef9062",
       use_colorpalette = true,

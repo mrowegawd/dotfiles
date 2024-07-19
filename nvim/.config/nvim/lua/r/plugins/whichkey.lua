@@ -14,12 +14,17 @@ return {
     },
     opts = {
       defaults = {},
-      -- triggers = false,
       spec = {
         {
           mode = { "n", "v" },
           { "<Leader><tab>", group = "tabs" },
-          { "<Leader>b", group = "buffer" },
+          {
+            "<leader>b",
+            group = "buffer",
+            expand = function()
+              return require("which-key.extras").expand.buf()
+            end,
+          },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 

@@ -104,18 +104,18 @@ return {
       local TMUX = os.getenv "TMUX"
       if TMUX then
         local nav = {
-          ["a-h"] = function()
-            require("smart-splits").move_cursor_left()
-          end,
-          ["a-j"] = function()
-            require("smart-splits").move_cursor_down()
-          end,
-          ["a-k"] = function()
-            require("smart-splits").move_cursor_up()
-          end,
-          ["a-l"] = function()
-            require("smart-splits").move_cursor_right()
-          end,
+          -- ["a-h"] = function()
+          --   require("smart-splits").move_cursor_left()
+          -- end,
+          -- ["a-j"] = function()
+          --   require("smart-splits").move_cursor_down()
+          -- end,
+          -- ["a-k"] = function()
+          --   require("smart-splits").move_cursor_up()
+          -- end,
+          -- ["a-l"] = function()
+          --   require("smart-splits").move_cursor_right()
+          -- end,
           ["a-H"] = function()
             local exclude_win = RUtils.cmd.windows_is_opened { "aerial" }
             if exclude_win.found then
