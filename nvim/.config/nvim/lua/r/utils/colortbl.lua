@@ -1,6 +1,6 @@
 local Highlight = require "r.settings.highlights"
 
-local error_fg = Highlight.get("Error", "fg") or Highlight.get("Error", "bg")
+local error_fg = Highlight.get("ErrorMsg", "fg")
 local keyword_fg = Highlight.get("Keyword", "fg")
 
 local statusline_bg = Highlight.get("StatusLine", "bg")

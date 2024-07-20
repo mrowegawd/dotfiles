@@ -89,7 +89,7 @@ return {
           colors = {
             RgFlowInputPath = { link = "NormalFloat" },
             RgFlowInputBg = { link = "NormalFloat" },
-            RgFlowHeadLine = { link = "Error" },
+            RgFlowHeadLine = { link = "ErrorMsg" },
             RgFlowInputFlags = { link = "NormalFloat" },
             RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
           },
@@ -173,6 +173,10 @@ return {
         or nil
 
       return {
+        winopts = {
+          zindex = 10,
+          backdrop = 80,
+        },
         winopts_fn = function()
           local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
           local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
@@ -192,13 +196,14 @@ return {
             },
           }
         end,
+        -- fzf_colors = true,
         fzf_colors = {
-          ["fg"] = { "fg", "CmpItemAbbr" },
+          ["fg"] = { "fg", "Keyword" },
           ["bg"] = { "bg", "NormalFloat" },
           ["hl"] = { "fg", "CmpItemAbbrMatch" },
-          ["fg+"] = { "fg", "PmenuSel" },
-          ["bg+"] = { "bg", "PmenuSel" },
-          ["hl+"] = { "fg", "CmpItemAbbrMatchFuzzy" },
+          ["fg+"] = { "fg", "FzfLuaSel" },
+          ["bg+"] = { "bg", "FzfLuaSel" },
+          ["hl+"] = { "fg", "FzfLuaSel" },
           ["info"] = { "fg", "PreProc" },
           ["prompt"] = { "fg", "Conditional" },
           ["pointer"] = { "fg", "CmpItemAbbrMatch" },

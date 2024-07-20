@@ -30,9 +30,12 @@ function M.formatexpr()
   return vim.lsp.formatexpr { timeout_ms = 3000 }
 end
 
+---@param buf? number
+---@return (LazyFormatter|{active:boolean,resolved:string[]})[]
 function M.resolve(buf)
   buf = buf or vim.api.nvim_get_current_buf()
   local have_primary = false
+  ---@param formatter LazyFormatter
   return vim.tbl_map(function(formatter)
     local sources = formatter.sources(buf)
     local active = #sources > 0 and (not formatter.primary or not have_primary)
@@ -94,10 +97,19 @@ end
 
 ---@param buf? boolean
 function M.toggle(buf)
+  M.enable(not M.enabled(), buf)
+end
+
+---@param enable? boolean
+---@param buf? boolean
+function M.enable(enable, buf)
+  if enable == nil then
+    enable = true
+  end
   if buf then
-    vim.b.autoformat = not M.enabled()
+    vim.b.autoformat = enable
   else
-    vim.g.autoformat = not M.enabled()
+    vim.g.autoformat = enable
     vim.b.autoformat = nil
   end
   M.info()

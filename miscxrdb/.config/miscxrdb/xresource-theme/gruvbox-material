@@ -11,8 +11,8 @@
 *foreground: #d4be98
 
 ! Black + DarkGrey
-*color0:  #32302f
-*color8:  #32302f
+*color0:  #272625
+*color8:  #4f4c4a
 ! DarkRed + Red
 *color1:  #ea6962
 *color9:  #ea6962
@@ -46,18 +46,22 @@
 *color18: #242424
 
 ! FZF: bg, fg and match
-*color19: #242424
+*color19: #1c1c1c
 *color20: #787878
 *color21: #ffb49d
 
 ! FZF selection: bg, fg and match
-*color22: #5d2a27
-*color23: #b4b4b4
-*color24: #ff7869
+*color22: #bb544e
+*color23: #303030
+*color24: #303030
 
-! TMUX: main separator bg
-*color25: #141414
+! TMUX: win separator fg, fg_nc
+*color25: #2a2a2a
+*color26: #141414
+
+! TMUX: fg_nc
+*color27: #323232
 
 ! TMUX: main window dan second window
-*color26: #282828
-*color27: #242424
+*color28: #282828
+*color29: #242424

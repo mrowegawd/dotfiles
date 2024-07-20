@@ -1,3 +1,4 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! Tender color scheme, made by jacoborus
 ! adapted by Jose Esparza
 
@@ -49,18 +50,22 @@ URxvt.color15:      #feffff
 *color18: #242424
 
 ! FZF: bg, fg and match
-*color19: #242424
-*color20: #b4b4b4
+*color19: #1b1b1b
+*color20: #646464
 *color21: #ffb49d
 
 ! FZF selection: bg, fg and match
-*color22: #2e5261
-*color23: #ffffff
-*color24: #ff7869
+*color22: #5ca4c3
+*color23: #323232
+*color24: #323232
 
-! TMUX: main separator bg
-*color25: #141414
+! TMUX: win separator fg, fg_nc
+*color25: #3a3a3a
+*color26: #141414
+
+! TMUX: fg_nc
+*color27: #323232
 
 ! TMUX: main window dan second window
-*color26: #282828
-*color27: #242424
+*color28: #282828
+*color29: #242424

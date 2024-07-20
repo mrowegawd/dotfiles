@@ -43,6 +43,8 @@ GET_COL_24=$(xrdb -query | grep -i .color24 | cut -d':' -f2 | head -1 | xargs)
 GET_COL_25=$(xrdb -query | grep -i .color25 | cut -d':' -f2 | head -1 | xargs)
 GET_COL_26=$(xrdb -query | grep -i .color26 | cut -d':' -f2 | head -1 | xargs)
 GET_COL_27=$(xrdb -query | grep -i .color27 | cut -d':' -f2 | head -1 | xargs)
+GET_COL_28=$(xrdb -query | grep -i .color28 | cut -d':' -f2 | head -1 | xargs)
+GET_COL_29=$(xrdb -query | grep -i .color29 | cut -d':' -f2 | head -1 | xargs)
 
 # GET_FONT="$(grep -i font <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
 # GET_FONTSIZE="$(grep -i fontsize <~/.cache/paintee | head -1 | awk -F= '{print $2}' | xargs)"
@@ -76,68 +78,68 @@ GET_COL_27=$(xrdb -query | grep -i .color27 | cut -d':' -f2 | head -1 | xargs)
 # GET_MAGENTA="$(grep -i magenta <~/.cache/paintee | head -1 | awk -F= '{print $2}' | sed 's/\"//g')"
 
 lighten_color() {
-	hex_color="$1"
-	factor="$2"
+  hex_color="$1"
+  factor="$2"
 
-	# Validasi panjang HEX
-	if [[ ${#hex_color} -ne 7 ]]; then
-		echo "Error: HEX color must be in the format '#RRGGBB'."
-		exit 1
-	fi
+  # Validasi panjang HEX
+  if [[ ${#hex_color} -ne 7 ]]; then
+    echo "Error: HEX color must be in the format '#RRGGBB'."
+    exit 1
+  fi
 
-	# Ekstraksi komponen warna
-	r=$(printf "%d" 0x"${hex_color:1:2}")
-	g=$(printf "%d" 0x"${hex_color:3:2}")
-	b=$(printf "%d" 0x"${hex_color:5:2}")
+  # Ekstraksi komponen warna
+  r=$(printf "%d" 0x"${hex_color:1:2}")
+  g=$(printf "%d" 0x"${hex_color:3:2}")
+  b=$(printf "%d" 0x"${hex_color:5:2}")
 
-	# Mencerahkan setiap komponen warna
-	r=$(($r + $factor))
-	g=$(($g + $factor))
-	b=$(($b + $factor))
+  # Mencerahkan setiap komponen warna
+  r=$(($r + $factor))
+  g=$(($g + $factor))
+  b=$(($b + $factor))
 
-	# Batasi nilai maksimum ke 255
-	r=$(($r > 255 ? 255 : $r))
-	g=$(($g > 255 ? 255 : $g))
-	b=$(($b > 255 ? 255 : $b))
+  # Batasi nilai maksimum ke 255
+  r=$(($r > 255 ? 255 : $r))
+  g=$(($g > 255 ? 255 : $g))
+  b=$(($b > 255 ? 255 : $b))
 
-	# Format kembali ke format HEX
-	printf "#%02x%02x%02x\n" "$r" "$g" "$b"
+  # Format kembali ke format HEX
+  printf "#%02x%02x%02x\n" "$r" "$g" "$b"
 }
 darken_color() {
-	hex_color="$1"
-	factor="$2"
+  hex_color="$1"
+  factor="$2"
 
-	# Validasi panjang HEX
-	if [[ ${#hex_color} -ne 7 ]]; then
-		echo "Error: HEX color must be in the format '#RRGGBB'."
-		exit 1
-	fi
+  # Validasi panjang HEX
+  if [[ ${#hex_color} -ne 7 ]]; then
+    echo "Error: HEX color must be in the format '#RRGGBB'."
+    exit 1
+  fi
 
-	# Ekstraksi komponen warna
-	r=$(printf "%d" 0x"${hex_color:1:2}")
-	g=$(printf "%d" 0x"${hex_color:3:2}")
-	b=$(printf "%d" 0x"${hex_color:5:2}")
+  # Ekstraksi komponen warna
+  r=$(printf "%d" 0x"${hex_color:1:2}")
+  g=$(printf "%d" 0x"${hex_color:3:2}")
+  b=$(printf "%d" 0x"${hex_color:5:2}")
 
-	# Menggelapkan setiap komponen warna
-	r=$(($r - $factor))
-	g=$(($g - $factor))
-	b=$(($b - $factor))
+  # Menggelapkan setiap komponen warna
+  r=$(($r - $factor))
+  g=$(($g - $factor))
+  b=$(($b - $factor))
 
-	# Batasi nilai minimum ke 0
-	r=$(($r < 0 ? 0 : $r))
-	g=$(($g < 0 ? 0 : $g))
-	b=$(($b < 0 ? 0 : $b))
+  # Batasi nilai minimum ke 0
+  r=$(($r < 0 ? 0 : $r))
+  g=$(($g < 0 ? 0 : $g))
+  b=$(($b < 0 ? 0 : $b))
 
-	# Format kembali ke format HEX
-	printf "#%02x%02x%02x\n" "$r" "$g" "$b"
+  # Format kembali ke format HEX
+  printf "#%02x%02x%02x\n" "$r" "$g" "$b"
 }
 
 check_size_screen() {
-	size=$(xrandr | grep "*" | xargs | cut -d" " -f1)
+  size=$(xrandr | grep "*" | xargs | cut -d" " -f1)
 
-	if [[ $size == '1024x768' ]]; then
-		FONTSIZE="12"
-	else
-		FONTSIZE="16"
-	fi
+  if [[ $size == '1024x768' ]]; then
+    FONTSIZE="12"
+  else
+    FONTSIZE="16"
+  fi
 }

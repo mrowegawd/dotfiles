@@ -47,6 +47,10 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
           },
+          ["tender"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
         },
       })
       return {

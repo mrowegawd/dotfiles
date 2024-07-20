@@ -247,12 +247,16 @@ function M.change_colors()
 *color23: %s
 *color24: %s
 
-! TMUX: main separator bg
+! TMUX: win separator fg, fg_nc
 *color25: %s
+*color26: %s
+
+! TMUX: fg_nc
+*color27: %s
 
 ! TMUX: main window dan second window
-*color26: %s
-*color27: %s
+*color28: %s
+*color29: %s
 ]],
     -- Color Mode: Penanda
     Highlight.tint(Highlight.get("Keyword", "fg"), -0.2),
@@ -268,11 +272,15 @@ function M.change_colors()
 
     -- FZF selection: bg, fg dan match
     Highlight.get("PmenuSel", "bg"),
-    Highlight.tint(Highlight.get("CmpItemAbbr", "fg"), 0.5),
-    Highlight.get("CmpItemAbbrMatchFuzzy", "fg"),
+    Highlight.get("PmenuSel", "fg"),
+    Highlight.get("PmenuSel", "fg"),
 
-    -- Tmux
+    -- TMUX: winseparator fg,
+    Highlight.get("FzfLuaBorder", "fg"),
     Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
+
+    -- TMUX: fg_nc
+    Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.4),
 
     -- Tmux
     Highlight.get("Normal", "bg"),

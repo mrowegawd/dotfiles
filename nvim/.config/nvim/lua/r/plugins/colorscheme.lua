@@ -1,6 +1,28 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- FLOW
+  {
+    "0xstepit/flow.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local flow_theme = { "flow" }
+      if vim.tbl_contains(flow_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      require("flow").setup_options {
+        transparent = false, -- Set transparent background.
+        fluo_color = "pink", --  Fluo color: pink, yellow, orange, or green.
+        mode = "normal", -- Intensity of the palette: normal, dark, or bright. Notice that dark is ugly!
+        aggressive_spell = false, -- Display colors for spell check.
+      }
+    end,
+  },
+  -- APPRENTICE
   {
     "romainl/Apprentice",
     lazy = false,
@@ -8,19 +30,6 @@ return {
     enabled = function()
       local apprentice_theme = { "apprentice" }
       if vim.tbl_contains(apprentice_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-
-  {
-    "jnurmine/Zenburn",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local zenburn_theme = { "zenburn" }
-      if vim.tbl_contains(zenburn_theme, colorscheme) then
         return true
       end
       return false

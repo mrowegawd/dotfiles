@@ -33,18 +33,22 @@
 *color18: #001216
 
 ! FZF: bg, fg and match
-*color19: #001216
-*color20: #006e89
+*color19: #002c37
+*color20: #007896
 *color21: #ffb49d
 
 ! FZF selection: bg, fg and match
-*color22: #424c00
-*color23: #00a5cd
-*color24: #ff7869
+*color22: #697a00
+*color23: #00303c
+*color24: #00303c
 
-! TMUX: main separator bg
-*color25: #000a0c
+! TMUX: win separator fg, fg_nc
+*color25: #004b5b
+*color26: #000a0c
+
+! TMUX: fg_nc
+*color27: #00191e
 
 ! TMUX: main window dan second window
-*color26: #001419
-*color27: #001216
+*color28: #001419
+*color29: #001216

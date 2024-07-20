@@ -1,6 +1,6 @@
 local M = {}
 
----@param opts ConformOpts
+---@param opts conform.setupOpts
 function M.setup(_, opts)
   for _, key in ipairs { "format_on_save", "format_after_save" } do
     if opts[key] then
@@ -38,8 +38,7 @@ return {
           priority = 100,
           primary = true,
           format = function(buf)
-            local opts = RUtils.opts "conform.nvim"
-            require("conform").format(RUtils.merge({}, opts.format, { bufnr = buf }))
+            require("conform").format { bufnr = buf }
           end,
           sources = function(buf)
             local ret = require("conform").list_formatters(buf)
@@ -60,16 +59,14 @@ return {
           "Please refer to the docs at https://www.lazyvim.org/plugins/formatting",
         }, { title = "LazyVim" })
       end
-      ---@class ConformOpts
+      ---@type conform.setupOpts
       local opts = {
-        -- LazyVim will use these options when formatting with the conform.nvim formatter
-        format = {
+        default_format_opts = {
           timeout_ms = 3000,
           async = false, -- not recommended to change
           quiet = false, -- not recommended to change
           lsp_format = "fallback", -- not recommended to change
         },
-        ---@type table<string, conform.FormatterUnit[]>
         formatters_by_ft = {
           lua = { "stylua" },
           fish = { "fish_indent" },

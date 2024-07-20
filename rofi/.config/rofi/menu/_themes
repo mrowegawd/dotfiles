@@ -7,258 +7,259 @@ MISCXRDB_PATH="$HOME/.config/miscxrdb"
 ERROR_MSG="[!] Sorry..we abort it"
 
 set_rofi() {
-	_ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
+  _ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
 
-	if [ ! -d "$_ROFI_PATH" ]; then
-		dunstify "$ERROR_MSG" "Path $_ROFI_PATH do not exists!" && exit 1
-	fi
+  if [ ! -d "$_ROFI_PATH" ]; then
+    dunstify "$ERROR_MSG" "Path $_ROFI_PATH do not exists!" && exit 1
+  fi
 
-	cat "$_ROFI_PATH/colors/_nightly.rasi" >"$_ROFI_PATH/colors/nightly.rasi"
+  cat "$_ROFI_PATH/colors/_nightly.rasi" >"$_ROFI_PATH/colors/nightly.rasi"
 
-	sed -i -e "s/%%background%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%normal-foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%selected-normal-background%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%selected-alt%%/$GET_COL_16/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%background%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%normal-foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%selected-normal-background%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%selected-alt%%/$GET_COL_16/g" "$_ROFI_PATH/colors/nightly.rasi"
 
-	sed -i -e "s/%%border_alt%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%urgent%%/$GET_MAGENTA/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%border_alt%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%urgent%%/$GET_MAGENTA/g" "$_ROFI_PATH/colors/nightly.rasi"
 
-	sed -i -e "s/%%green%%/$GET_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%red%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%blue%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%yellow%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
-	sed -i -e "s/%%border%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%green%%/$GET_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%red%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%blue%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%yellow%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%border%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
 
 }
 set_dunst() {
-	_DUNST_PATH="$DOTFILES_PATH/dunst/.config/dunst"
+  _DUNST_PATH="$DOTFILES_PATH/dunst/.config/dunst"
 
-	[[ ! -d "$_DUNST_PATH" ]] && dunstify "<br>Path dunst: $_DUNST_PATH do not exists!" && exit 1
+  [[ ! -d "$_DUNST_PATH" ]] && dunstify "<br>Path dunst: $_DUNST_PATH do not exists!" && exit 1
 
-	cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
+  cat "$_DUNST_PATH/dunst-config" "$_DUNST_PATH/dunst-theme" >"$_DUNST_PATH/dunstrc"
 
-	sed -i -e "s/%%color_border%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%frame_border%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%color_border%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%frame_border%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
 
-	sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
 
-	sed -i -e "s/%%normal_bg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%normal_fg%%/$GET_CYAN/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%normal_frame_fg%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_bg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_fg%%/$GET_CYAN/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_frame_fg%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
 
-	sed -i -e "s/%%critical_fg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%critical_bg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%critical_frame_fg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%critical_fg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%critical_bg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%critical_frame_fg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
 
-	sed -i -e "s/%%background%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%foreground%%/$GET_FG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%background%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%foreground%%/$GET_FG/g" "$_DUNST_PATH/dunstrc"
 
-	NEW_FONTS="SF Mono"
-	NEW_FONTS_SIZE=16
+  NEW_FONTS="SF Mono"
+  NEW_FONTS_SIZE=16
 
-	sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
-	sed -i -e "s/%%font_size%%/$NEW_FONTS_SIZE/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%font_size%%/$NEW_FONTS_SIZE/g" "$_DUNST_PATH/dunstrc"
 
-	"$HOME/.config/dunst/rundust.sh" >/dev/null
+  "$HOME/.config/dunst/rundust.sh" >/dev/null
 }
 set_tmux() {
-	_PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot"
+  _PATH_TMUX_THEMES="$DOTFILES_PATH/tmuxconfig/.config/tmuxconfig/themes/tmux-snapshot"
 
-	if [ -f "$_PATH_TMUX_THEMES" ]; then
-		sleep 1
-		sed -i -e "s/^STATUSLINE_BG_ACTIVE=.*$/STATUSLINE_BG_ACTIVE=\"$GET_COL_16\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^STATUSLINE_BG=.*$/STATUSLINE_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$GET_CYAN\"/g" "$_PATH_TMUX_THEMES"
+  if [ -f "$_PATH_TMUX_THEMES" ]; then
+    sleep 1
+    sed -i -e "s/^STATUSLINE_BG_ACTIVE=.*$/STATUSLINE_BG_ACTIVE=\"$GET_COL_16\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^STATUSLINE_BG=.*$/STATUSLINE_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
 
-		sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_27\"/g" "$_PATH_TMUX_THEMES"
 
-		sed -i -e "s/^SEPARATOR_FG=.*$/SEPARATOR_FG=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^SEPARATOR_ACTIVE_BG=.*$/SEPARATOR_ACTIVE_BG=\"$GET_COL_26\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^SEPARATOR_FG=.*$/SEPARATOR_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^SEPARATOR_ACTIVE_BG=.*$/SEPARATOR_ACTIVE_BG=\"$GET_COL_27\"/g" "$_PATH_TMUX_THEMES"
 
-		sed -i -e "s/^WINDOW_BG_ACTIVE=.*$/WINDOW_BG_ACTIVE=\"$GET_COL_26\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^WINDOW_BG=.*$/WINDOW_BG=\"$GET_COL_27\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^WINDOW_BG_ACTIVE=.*$/WINDOW_BG_ACTIVE=\"$GET_COL_28\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^WINDOW_BG=.*$/WINDOW_BG=\"$GET_COL_28\"/g" "$_PATH_TMUX_THEMES"
 
-		sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
-		sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
-	else
-		dunstify "$_PATH_TMUX_THEMES not found"
-	fi
+    sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
+  else
+    dunstify "$_PATH_TMUX_THEMES not found"
+  fi
 
 }
 set_zathura() {
-	_ZATHURA_PATH="$DOTFILES_PATH/zathura/.config/zathura"
+  _ZATHURA_PATH="$DOTFILES_PATH/zathura/.config/zathura"
 
-	if [ ! -d "$_ZATHURA_PATH" ]; then
-		dunstify "$ERROR_MSG:<br>Path zathura: $_ZATHURA_PATH do not exists!" && exit 1
-	fi
+  if [ ! -d "$_ZATHURA_PATH" ]; then
+    dunstify "$ERROR_MSG:<br>Path zathura: $_ZATHURA_PATH do not exists!" && exit 1
+  fi
 
-	sed -i -e "s/^set default-bg.*/set default-bg \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
-	sed -i -e "s/^set default-fg.*/set default-fg \"$GET_FG\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e "s/^set default-bg.*/set default-bg \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e "s/^set default-fg.*/set default-fg \"$GET_FG\"/g" "$_ZATHURA_PATH/zathurarc"
 
-	sed -i -e "s/^set notification-bg.*/set notification-bg \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
-	sed -i -e "s/^set notification-fg.*/set notification-fg \"$GET_FG\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e "s/^set notification-bg.*/set notification-bg \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e "s/^set notification-fg.*/set notification-fg \"$GET_FG\"/g" "$_ZATHURA_PATH/zathurarc"
 
-	sed -i -e "s/^set highlight-color.*/set highlight-color \"$GET_RED\"/g" "$_ZATHURA_PATH/zathurarc"
-	sed -i -e 's/^set highlight-fg.*/set highlight-fg "#0e0807"/g' ~/.config/zathura/zathurarc
+  sed -i -e "s/^set highlight-color.*/set highlight-color \"$GET_RED\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e 's/^set highlight-fg.*/set highlight-fg "#0e0807"/g' ~/.config/zathura/zathurarc
 
-	sed -i -e "s/^set inputbar-bg.*/set inputbar-bg \"$GET_GREEN\"/g" "$_ZATHURA_PATH/zathurarc"
-	# sed -i -e "s/^set inputbar-fg.*/set inputbar-fg \"$GETFOREGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e "s/^set inputbar-bg.*/set inputbar-bg \"$GET_GREEN\"/g" "$_ZATHURA_PATH/zathurarc"
+  # sed -i -e "s/^set inputbar-fg.*/set inputbar-fg \"$GETFOREGROUND\"/g" "$_ZATHURA_PATH/zathurarc"
 
-	sed -i -e "s/^set recolor-lightcolor.*/set recolor-lightcolor \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
+  sed -i -e "s/^set recolor-lightcolor.*/set recolor-lightcolor \"$GET_BG\"/g" "$_ZATHURA_PATH/zathurarc"
 }
 set_vim() {
-	_PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/config/init.lua"
-	if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
-		PATH_NVIM="base2tone_space_dark"
-	else
-		PATH_NVIM=$_PATH_NVIM
-	fi
+  _PATH_NVIM="$DOTFILES_PATH/nvim/.config/nvim/lua/r/config/init.lua"
+  if [ "$_PATH_NVIM" == "base2tone-space-dark" ]; then
+    PATH_NVIM="base2tone_space_dark"
+  else
+    PATH_NVIM=$_PATH_NVIM
+  fi
 
-	sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$1\"/" "$PATH_NVIM"
+  sed -i -e "s/^local.colorscheme\s=.*/local colorscheme = \"$1\"/" "$PATH_NVIM"
 }
 set_terminal() {
-	# size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
-	# if [[ $size == "1024x768" ]]; then
-	# 	FONTSIZETERM="9"
-	# fi
+  # size=$(xrandr | grep '\*' | xargs | cut -d" " -f1)
+  # if [[ $size == "1024x768" ]]; then
+  # 	FONTSIZETERM="9"
+  # fi
 
-	# KITTY
-	# change colorscheme fpr spesific terminal (ex: kitty,st,alacritty)
-	# if [ "$TERMINAL" == "kitty" ]; then
-	FILES="$HOME/.config/kitty/colors/$1.conf"
-	if [ -f "$FILES" ]; then
-		KITTY="$HOME/.config/kitty/kitty.conf"
+  # KITTY
+  # change colorscheme fpr spesific terminal (ex: kitty,st,alacritty)
+  # if [ "$TERMINAL" == "kitty" ]; then
+  FILES="$HOME/.config/kitty/colors/$1.conf"
+  if [ -f "$FILES" ]; then
+    KITTY="$HOME/.config/kitty/kitty.conf"
 
-		sed -i -e "s/^include\s~\\/.config\\/kitty\\/colors.*/include ~\\/.config\\/kitty\\/colors\\/$1.conf/g" "$KITTY"
-		dunstify "theme kitty [+]"
-	else
-		dunstify "theme kitty [-]"
-	fi
+    sed -i -e "s/^include\s~\\/.config\\/kitty\\/colors.*/include ~\\/.config\\/kitty\\/colors\\/$1.conf/g" "$KITTY"
+    dunstify "theme kitty [+]"
+  else
+    dunstify "theme kitty [-]"
+  fi
 
-	# # ALACRITTY
-	if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
-		cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
-		cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
-		dunstify "theme alacritty [+]"
-	else
-		dunstify "theme alacritty [-]"
-	fi
+  # # ALACRITTY
+  if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
+    cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
+    cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
+    dunstify "theme alacritty [+]"
+  else
+    dunstify "theme alacritty [-]"
+  fi
 }
 
 set_btop() {
-	_BTOP_PATH="$DOTFILES_PATH/btop/.config/btop"
+  _BTOP_PATH="$DOTFILES_PATH/btop/.config/btop"
 
-	if [ ! -d "$_BTOP_PATH" ]; then
-		dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
-	fi
+  if [ ! -d "$_BTOP_PATH" ]; then
+    dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
+  fi
 
-	# theme[main_bg]="%%background%%"
+  # theme[main_bg]="%%background%%"
 
-	RED_LIGHT_1=$(lighten_color "$GET_RED" 40) # Misalnya, menambahkan 50 untuk mencerahkan
-	RED_LIGHT_2=$(lighten_color "$GET_RED" 80)
+  RED_LIGHT_1=$(lighten_color "$GET_RED" 40) # Misalnya, menambahkan 50 untuk mencerahkan
+  RED_LIGHT_2=$(lighten_color "$GET_RED" 80)
 
-	GREEN_LIGHT_1=$(lighten_color "$GET_GREEN_ALT" 40)
-	GREEN_LIGHT_2=$(lighten_color "$GET_GREEN_ALT" 80)
+  GREEN_LIGHT_1=$(lighten_color "$GET_GREEN_ALT" 40)
+  GREEN_LIGHT_2=$(lighten_color "$GET_GREEN_ALT" 80)
 
-	FOREGROUND_DARKEN_1=$(darken_color "$GET_FG" 100) # Misalnya, mengurangi 50 untuk menggelapkan
-	BACKGROUND_DARKEN_1=$(darken_color "$GET_FG" 100)
+  FOREGROUND_DARKEN_1=$(darken_color "$GET_FG" 100) # Misalnya, mengurangi 50 untuk menggelapkan
+  BACKGROUND_DARKEN_1=$(darken_color "$GET_FG" 100)
 
-	cat "$_BTOP_PATH/themes/_theme.theme" >"$_BTOP_PATH/themes/guard_theme.theme"
+  cat "$_BTOP_PATH/themes/_theme.theme" >"$_BTOP_PATH/themes/guard_theme.theme"
 
-	sed -i -e "s/%%background%%/$GET_BG/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%red_alt%%/$GET_RED_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%background%%/$GET_BG/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%red_alt%%/$GET_RED_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
-	sed -i -e "s/%%cyan%%/$GET_CYAN/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%cyan%%/$GET_CYAN/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
-	sed -i -e "s/%%green_alt%%/$GET_GREEN_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%green_alt%%/$GET_GREEN_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
-	sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
-	sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-	sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
 }
 
 set_fzf() {
-	FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
+  FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
 
-	if [ ! -d "$FZF_PATH_CONFIG" ]; then
-		dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
-	fi
+  if [ ! -d "$FZF_PATH_CONFIG" ]; then
+    dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
+  fi
 
-	cat "$FZF_PATH_CONFIG/_fzf.config" >"$FZF_PATH_CONFIG/fzf.config"
+  cat "$FZF_PATH_CONFIG/_fzf.config" >"$FZF_PATH_CONFIG/fzf.config"
 
-	sed -i -e "s/%%color_bg%%/$GET_COL_19/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_fg%%/$GET_COL_20/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_hl%%/$GET_COL_21/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_bg%%/$GET_COL_19/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_fg%%/$GET_COL_20/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_hl%%/$GET_COL_21/g" "$FZF_PATH_CONFIG/fzf.config"
 
-	sed -i -e "s/%%color_selection_bg%%/$GET_COL_22/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_selection_fg%%/$GET_COL_23/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_selection_hl%%/$GET_COL_24/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_selection_bg%%/$GET_COL_22/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_selection_fg%%/$GET_COL_23/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_selection_hl%%/$GET_COL_24/g" "$FZF_PATH_CONFIG/fzf.config"
 
-	sed -i -e "s/%%color_border%%/$GET_COL_17/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_gutter%%/$GET_COL_19/g" "$FZF_PATH_CONFIG/fzf.config"
-	sed -i -e "s/%%color_pointer%%/$GET_RED/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_border%%/$GET_COL_25/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_gutter%%/$GET_COL_19/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_pointer%%/$GET_RED/g" "$FZF_PATH_CONFIG/fzf.config"
 
 }
 
 set_eww() {
 
-	EWW_PATH="$HOME/.config/eww"
+  EWW_PATH="$HOME/.config/eww"
 
-	BG_DARKEN_1=$(darken_color "$GET_BLACK" 7) # Misalnya, mengurangi 50 untuk menggelapkan
+  BG_DARKEN_1=$(darken_color "$GET_BLACK" 7) # Misalnya, mengurangi 50 untuk menggelapkan
 
-	sed -i -e "s/^\$bg: .*/\$bg: $GET_BG;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$black: .*/\$black: $BG_DARKEN_1;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$altbg: .*/\$altbg: $GET_BLACK_ALT;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$bg: .*/\$bg: $GET_BG;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$black: .*/\$black: $BG_DARKEN_1;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$altbg: .*/\$altbg: $GET_BLACK_ALT;/g" "$EWW_PATH/eww.scss"
 
-	sed -i -e "s/^\$fg: .*/\$fg: $GET_FG;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$fg2: .*/\$fg2: $GET_FG;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$fg: .*/\$fg: $GET_FG;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$fg2: .*/\$fg2: $GET_FG;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
 
-	sed -i -e "s/^\$red: .*/\$red: $GET_RED;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$green: .*/\$green: $GET_GREEN;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$altgreen: .*/\$altgreen: $GET_GREEN_ALT;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$yellow: .*/\$yellow: $GET_YELLOW;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$altyellow: .*/\$altyellow: $GET_YELLOW_ALT;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$blue: .*/\$blue: $GET_BLUE;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$altblue: .*/\$altblue: $GET_BLUE_ALT;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$magenta: .*/\$magenta: $GET_MAGENTA;/g" "$EWW_PATH/eww.scss"
-	sed -i -e "s/^\$cyan: .*/\$cyan: $GET_CYAN;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$red: .*/\$red: $GET_RED;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$green: .*/\$green: $GET_GREEN;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$altgreen: .*/\$altgreen: $GET_GREEN_ALT;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$yellow: .*/\$yellow: $GET_YELLOW;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$altyellow: .*/\$altyellow: $GET_YELLOW_ALT;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$blue: .*/\$blue: $GET_BLUE;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$altblue: .*/\$altblue: $GET_BLUE_ALT;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$magenta: .*/\$magenta: $GET_MAGENTA;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$cyan: .*/\$cyan: $GET_CYAN;/g" "$EWW_PATH/eww.scss"
 
 }
 
 wm_bspwm() {
-	~/.config/bspwm/bspwmrc &>/dev/null
-	# ~/.config/bspwm/bspwmrc
-	# ~/.config/polybar/runpolybar.sh &>/dev/null
+  ~/.config/bspwm/bspwmrc &>/dev/null
+  # ~/.config/bspwm/bspwmrc
+  # ~/.config/polybar/runpolybar.sh &>/dev/null
 }
 wm_awesome() {
-	echo "awesome.restart()" | awesome-client
+  echo "awesome.restart()" | awesome-client
 }
 
 set_firefox() {
-	IGET_CUS="$(xrdb -query | grep 'color8:' | awk '{print $NF}' | head -1)"
+  IGET_CUS="$(xrdb -query | grep 'color8:' | awk '{print $NF}' | head -1)"
 
-	FIREFOX_DEFAULT_PATH="$HOME/.mozilla/firefox/oehc9lj6.default-esr/chrome/components"
-	# /home/mr00x/.mozilla/firefox/oehc9lj6.default-esr/chrome/components/ogx_root-personal.css
+  FIREFOX_DEFAULT_PATH="$HOME/.mozilla/firefox/oehc9lj6.default-esr/chrome/components"
+  # /home/mr00x/.mozilla/firefox/oehc9lj6.default-esr/chrome/components/ogx_root-personal.css
 
-	sed -i -e "s/--fuchsia:.*/--fuchsia: $IGET_CUS; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-	sed -i -e "s/--blue:.*/--blue: $GET_BLUE; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-	sed -i -e "s/--cyan:.*/--cyan: $GET_CYAN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-	sed -i -e "s/--green:.*/--green: $GET_GREEN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-	sed -i -e "s/--yellow:.*/--yellow: $GET_YELLOW; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+  sed -i -e "s/--fuchsia:.*/--fuchsia: $IGET_CUS; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+  sed -i -e "s/--blue:.*/--blue: $GET_BLUE; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+  sed -i -e "s/--cyan:.*/--cyan: $GET_CYAN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+  sed -i -e "s/--green:.*/--green: $GET_GREEN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+  sed -i -e "s/--yellow:.*/--yellow: $GET_YELLOW; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
 
-	sed -i -e "s/--red:.*/--red: $GET_RED; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+  sed -i -e "s/--red:.*/--red: $GET_RED; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
 
-	sed -i -e "s/background-color:.*/background-color: $GET_BG !important;/g" "$FIREFOX_DEFAULT_PATH/ogx_tricks.css"
+  sed -i -e "s/background-color:.*/background-color: $GET_BG !important;/g" "$FIREFOX_DEFAULT_PATH/ogx_tricks.css"
 }
 
 dir="$HOME/.config/rofi/menu"
@@ -266,71 +267,71 @@ theme="styles/big_center"
 rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
 
 (
-	[[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
-	_NAMETHEME=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_command -dmenu -p "  ")
-	[[ -z $_NAMETHEME ]] && exit 1
+  [[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
+  _NAMETHEME=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_command -dmenu -p "  ")
+  [[ -z $_NAMETHEME ]] && exit 1
 
-	STHEM="false"
+  STHEM="false"
 
-	array=()
-	while IFS= read -r -d $'\0'; do
-		array+=("$REPLY")
-	done < <(find "$HOME/.config/miscxrdb/xresource-theme" -type f -print0)
+  array=()
+  while IFS= read -r -d $'\0'; do
+    array+=("$REPLY")
+  done < <(find "$HOME/.config/miscxrdb/xresource-theme" -type f -print0)
 
-	for value in "${array[@]}"; do
+  for value in "${array[@]}"; do
 
-		if [[ "$_NAMETHEME" == "$(basename "$value")" ]]; then
-			STHEM="true"
-		fi
-	done
+    if [[ "$_NAMETHEME" == "$(basename "$value")" ]]; then
+      STHEM="true"
+    fi
+  done
 
-	if [[ $STHEM == "false" ]]; then
-		notify-send "Load theme: $_NAMETHEME" "Not found, abort it"
-		exit 1
-	fi
+  if [[ $STHEM == "false" ]]; then
+    notify-send "Load theme: $_NAMETHEME" "Not found, abort it"
+    exit 1
+  fi
 
-	# set new Xresources theme
-	if [ -n "$_NAMETHEME" ]; then
-		sed -i -e \
-			"s/^#include \\([^ ]*xresource-theme[^ ]*\\)/#include \"\\.config\\/miscxrdb\\/xresource-theme\\/$_NAMETHEME\"/g" \
-			"$DOTFILES_PATH/home/.Xresources"
-		xrdb ~/.Xresources
-		xrdb -merge ~/.Xresources
-		sleep 1
-	fi
+  # set new Xresources theme
+  if [ -n "$_NAMETHEME" ]; then
+    sed -i -e \
+      "s/^#include \\([^ ]*xresource-theme[^ ]*\\)/#include \"\\.config\\/miscxrdb\\/xresource-theme\\/$_NAMETHEME\"/g" \
+      "$DOTFILES_PATH/home/.Xresources"
+    xrdb ~/.Xresources
+    xrdb -merge ~/.Xresources
+    sleep 1
+  fi
 
-	#shellcheck source=/dev/null
-	. ~/.config/miscxrdb/exbin/get_xrdb_vars
+  #shellcheck source=/dev/null
+  . ~/.config/miscxrdb/exbin/get_xrdb_vars
 
-	sleep 1
-	set_rofi
-	_NOTIF_ROFI="Rofi        ✅"
-	set_dunst
-	_NOTIF_DUNST="Dunst       ✅"
-	set_tmux
-	_NOTIF_TMUX="Tmux        ✅"
-	set_btop
-	_NOTIF_BTOP="Btop        ✅"
-	set_eww
-	_NOTIF_EWW="Eww        ✅"
-	set_zathura
-	_NOTIF_ZATHURA="Zathura     ✅"
-	set_vim "$_NAMETHEME"
-	_NOTIF_VIM="Vim         ✅"
-	set_terminal "$_NAMETHEME"
-	_NOTIF_TERMINAL="Terminal    ✅"
-	set_firefox "$_NAMETHEME"
-	_NOTIF_FIREFOX="Firefox     ✅"
+  sleep 1
+  set_rofi
+  _NOTIF_ROFI="Rofi        ✅"
+  set_dunst
+  _NOTIF_DUNST="Dunst       ✅"
+  set_tmux
+  _NOTIF_TMUX="Tmux        ✅"
+  set_btop
+  _NOTIF_BTOP="Btop        ✅"
+  set_eww
+  _NOTIF_EWW="Eww        ✅"
+  set_zathura
+  _NOTIF_ZATHURA="Zathura     ✅"
+  set_vim "$_NAMETHEME"
+  _NOTIF_VIM="Vim         ✅"
+  set_terminal "$_NAMETHEME"
+  _NOTIF_TERMINAL="Terminal    ✅"
+  set_firefox "$_NAMETHEME"
+  _NOTIF_FIREFOX="Firefox     ✅"
 
-	case "$XDG_SESSION_DESKTOP" in
-	"bspwm") wm_bspwm ;;
-	"awesome") wm_awesome ;;
-	esac
+  case "$XDG_SESSION_DESKTOP" in
+  "bspwm") wm_bspwm ;;
+  "awesome") wm_awesome ;;
+  esac
 
-	xrdb -merge ~/.Xresources
-	sleep 1
-	set_fzf
+  xrdb -merge ~/.Xresources
+  sleep 1
+  set_fzf
 
-	dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
-		"\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
+  dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
+    "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
 )

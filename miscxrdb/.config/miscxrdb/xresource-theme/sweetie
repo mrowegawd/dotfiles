@@ -1,7 +1,7 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 
-*background:              #2a2a3e
-*foreground:             #fdfffd
+*background:              #2a2a3a
+*foreground:             #d3d7de
 
 ! cursor                  #75daff
 ! url_color               #b5e9ff
@@ -64,18 +64,22 @@
 *color18: #252534
 
 ! FZF: bg, fg and match
-*color19: #252534
-*color20: #bdbdff
+*color19: #1d1d29
+*color20: #696991
 *color21: #ffb49d
 
 ! FZF selection: bg, fg and match
-*color22: #2e4161
-*color23: #ffffff
-*color24: #ff7869
+*color22: #5c82c2
+*color23: #2a2a3a
+*color24: #2a2a3a
 
-! TMUX: main separator bg
-*color25: #15151d
+! TMUX: win separator fg, fg_nc
+*color25: #2c2c3c
+*color26: #15151d
+
+! TMUX: fg_nc
+*color27: #343448
 
 ! TMUX: main window dan second window
-*color26: #2a2a3a
-*color27: #252534
+*color28: #2a2a3a
+*color29: #252534

@@ -127,7 +127,7 @@ function M.tint(color, percent)
 end
 
 local err_warn = vim.schedule_wrap(function(group, attribute)
-  notify(fmt("failed to get highlight %s for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
+  notify(fmt("failed to get highlight [%s] for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
     title = fmt("Highlight - get(%s)", group),
   }) -- stylua: ignore
 end)

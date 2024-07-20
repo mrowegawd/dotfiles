@@ -142,7 +142,7 @@ return {
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.35 },
               },
             },
             {
@@ -151,9 +151,20 @@ return {
                 bg = { from = "TreesitterContext" },
               },
             },
-          },
-          ["catppuccin-latte"] = {
-            { TreesitterContextLineNumber = { fg = { from = "LineNr", attr = "fg", alter = -0.3 } } },
+            {
+              TreesitterContextBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
           },
         },
       })
