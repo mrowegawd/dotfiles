@@ -1,5 +1,5 @@
 configuration {
-    font:							              "SF Mono 14";
+    font:							              "JetBrainsMono NF 14";
     show-icons:                     false;
     icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";
@@ -16,7 +16,7 @@ configuration {
 
     kb-remove-to-eol:               "";
     kb-accept-entry:                "Control+m,Return,KP_Enter";
-    kb-row-up:                      "Up,Control+k,ISO_Left_Tab";
+    kb-row-up:                      "Up,Control+k";
     kb-row-down:                    "Down,Control+j";
 }
 
