@@ -1,3 +1,4 @@
+local is_render_markdown = true
 return {
   recommended = function()
     return RUtils.extras.wants {
@@ -85,10 +86,50 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
+      require("lazy").load { plugins = { "markdown-preview.nvim" } }
       vim.fn["mkdp#util#install"]()
     end,
     config = function()
       vim.cmd [[do FileType]]
+    end,
+  },
+  -- MARKDOWN.NVIM
+  {
+    "MeanderingProgrammer/markdown.nvim",
+    opts = {
+      file_types = { "markdown", "norg", "rmd", "org" },
+      code = {
+        sign = false,
+        width = "block",
+        right_pad = 1,
+      },
+      heading = {
+        sign = false,
+        -- icons = {},
+        icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+      },
+    },
+    keys = {
+      {
+        "<Leader>um",
+        function()
+          local m = require "render-markdown"
+          if not is_render_markdown then
+            m.enable()
+            is_render_markdown = true
+          else
+            m.disable()
+            is_render_markdown = false
+          end
+        end,
+        ft = { "markdown", "neorg", "org", "rmd" },
+        mode = { "v", "n" },
+        desc = "Misc: run visually selected lines [sniprun]",
+      },
+    },
+    ft = { "markdown", "norg", "rmd", "org" },
+    config = function(_, opts)
+      require("render-markdown").setup(opts)
     end,
   },
 }

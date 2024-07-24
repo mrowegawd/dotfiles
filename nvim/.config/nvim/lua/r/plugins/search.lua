@@ -1254,11 +1254,14 @@ return {
       {
         "<Leader>F",
         function()
-          local sel = RUtils.cmd.get_visual_selection { strict = true }
-          if sel then
-            local selection = RUtils.cmd.strip_whitespace(sel.selection)
-            require("grug-far").grug_far { prefills = { search = selection } }
-          end
+          local grug = require "grug-far"
+          local ext = vim.bo.buftype == "" and vim.fn.expand "%:e"
+          grug.grug_far {
+            transient = true,
+            prefills = {
+              filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+            },
+          }
         end,
         mode = { "v" },
         desc = "Misc: open grug (visual) [grugfar]",
