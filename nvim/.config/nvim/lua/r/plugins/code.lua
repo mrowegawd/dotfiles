@@ -359,7 +359,7 @@ return {
           table.insert(opts.sources, {
             name = "luasnip",
             priority = 50,
-            group_index = 2,
+            group_index = 1,
             option = { show_autosnippets = true, use_show_condition = false },
           })
         end,
