@@ -1,4 +1,5 @@
--- Taken from: https://github.com/wincent/wincent
+-- Taken from and credit: https://github.com/wincent/wincent
+---@class r.utils.windowdim
 local api, wo = vim.api, vim.wo
 
 local autocmds = {}
@@ -127,6 +128,7 @@ autocmds.cursorline_blacklist = {
   ["Outline"] = true,
   ["TelescopePrompt"] = true,
   ["alpha"] = true,
+  ["qf"] = true,
   ["command-t"] = true,
   ["dap-repl"] = true,
   ["dapui_breakpoints"] = true,
@@ -138,6 +140,10 @@ autocmds.cursorline_blacklist = {
   ["packer"] = true,
   ["tsplayground"] = true,
   ["undotree"] = true,
+}
+
+autocmds.cursorline_blacklist_buftype = {
+  ["quickfix"] = true,
 }
 
 autocmds.mkview_filetype_blacklist = {
@@ -236,7 +242,6 @@ local set_cursorline = function(active)
     else
       wo.cursorline = active
     end
-    -- wo.cursorcolumn = active
   end
 end
 

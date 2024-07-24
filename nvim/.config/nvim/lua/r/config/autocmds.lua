@@ -244,16 +244,10 @@ RUtils.cmd.augroup("WindowDim", {
     RUtils.windowdim.focus_gained()
   end,
 }, {
-  event = { "VimLeave", "FocusLost", "WinLeave" },
+  event = { "VimLeave", "FocusLost" },
   pattern = "*",
   command = function()
     RUtils.windowdim.focus_lost()
-  end,
-}, {
-  event = { "WinEnter" },
-  pattern = "*",
-  command = function()
-    RUtils.windowdim.win_enter()
   end,
 }, {
   event = { "WinLeave" },
