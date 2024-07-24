@@ -259,23 +259,23 @@ keymap = [
   { on = [
     "r",
   ], run = "rename --cursor=before_ext", desc = "Rename a file or directory" },
-  { on = [
-    ";",
-  ], run = "shell", desc = "Run a shell command" },
-  { on = [
-    ":",
-  ], run = "shell --block", desc = "Run a shell command (block the UI until the command finishes)" },
+  # { on = [
+  #   ";",
+  # ], run = "shell --interactive", desc = "Run a shell command" },
+  # { on = [
+  #   ":",
+  # ], run = "shell --block", desc = "Run a shell command (block the UI until the command finishes)" },
   { on = [
     "H",
   ], run = "hidden toggle", desc = "Toggle the visibility of hidden files" },
   { on = [
-    "s",
+    "S",
   ], run = "search fd", desc = "Search files by name using fd" },
   { on = [
-    "S",
+    "s",
   ], run = "search rg", desc = "Search files by content using ripgrep" },
   { on = [
-    "<C-s>",
+    "<C-x>",
   ], run = "search none", desc = "Cancel the ongoing search" },
   { on = [
     "z",

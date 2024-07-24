@@ -319,8 +319,8 @@ return {
             },
             ["o"] = "child_or_open",
             ["e"] = "child_or_open",
-            ["S"] = "filter_on_submit",
-            ["s"] = "fuzzy_finder_directory",
+            ["s"] = "filter_on_submit",
+            ["S"] = "fuzzy_finder_directory",
             ["t"] = "", -- disabled open tab
             ["P"] = "",
             ["z"] = "",
