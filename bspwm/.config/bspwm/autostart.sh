@@ -25,8 +25,8 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 # fi
 
 if [ -n "$(command -v clipmenud)" ]; then
-	killall -q clipmenud
-	clipmenud &
+  killall -q clipmenud
+  clipmenud &
 fi
 
 [ -f "$HOME/.config/polybar/runpolybar.sh" ] && "$HOME/.config/polybar/runpolybar.sh"
@@ -36,6 +36,6 @@ fi
 
 # Use `sync-update` to run dropbox
 if [ -n "$(command -v dropbox)" ]; then
-	killall -q dropbox
-	dropbox start &
+  killall -q dropbox
+  dropbox start &
 fi

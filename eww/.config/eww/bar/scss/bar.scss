@@ -1,6 +1,8 @@
 .bar {
-  font-family: "SF Mono";
-  font-size: 0.8rem;
+  font-family: "JetBrainsMono NF";
+  font-size: 1.1rem;
+  // margin: -2;
+  margin: 1px 1.2px 1px 1px;
   background-color: $bg;
   color: $fg;
   border-radius: 20px;
@@ -10,18 +12,19 @@
 .logo {
   font-family: inherit;
   .icon {
-    font-size: 1.2rem;
-    padding: 0.8em 1em 1em;
-    border-radius: 7px;
+    font-size: 1.5rem;
+    padding: 1em 1em 1em;
     color: $altblue;
   }
 }
 
 .icon {
-  margin: 1px 0 1px 2px;
+  // margin: 1px 1px 1px 1px;
+  margin: 1px 1.2px 1px 1px;
+  // margin: 2px 2px;
   color: $blue;
-  font-family: "SF Mono";
-  font-size: 1rem;
+  font-family: "JetBrainsMono NF";
+  font-size: 1.1rem;
 }
 
 // .icon:hover {
@@ -70,40 +73,40 @@
   padding: 1em 0.5em;
   font-size: 1.2em;
   font-family: $altfont;
-  .0,
-  .01,
-  .02,
-  .03,
-  .04,
-  .05,
-  .06,
-  .011,
-  .022,
-  .033,
-  .044,
-  .055,
-  .066 {
-    padding: 0.3em 0;
-  }
-  .0 {
-    color: $altbg;
-  }
-  .01,
-  .02,
-  .03,
-  .04,
-  .05,
-  .06 {
-    color: $altbg;
-  }
-  .011,
-  .022,
-  .033,
-  .044,
-  .055,
-  .066 {
-    color: $blue;
-  }
+  //   .0,
+  //   .01,
+  //   .02,
+  //   .03,
+  //   .04,
+  //   .05,
+  //   .06,
+  //   .011,
+  //   .022,
+  //   .033,
+  //   .044,
+  //   .055,
+  //   .066 {
+  //     padding: 0.3em 0;
+  //   }
+  //   .0 {
+  //     color: $altbg;
+  //   }
+  //   .01,
+  //   .02,
+  //   .03,
+  //   .04,
+  //   .05,
+  //   .06 {
+  //     color: $altbg;
+  //   }
+  //   .011,
+  //   .022,
+  //   .033,
+  //   .044,
+  //   .055,
+  //   .066 {
+  //     color: $blue;
+  //   }
   &:hover {
     color: $altblue;
   }
@@ -151,10 +154,11 @@
 
 .power-button {
   //background-color: $red;
-  // margin: 1em 1em 2em 1em;
+  margin: 1em 1.2em 1em 1em;
+  // margin: 15px 2px;
 
-  padding: 0.8em;
+  // padding: 0em;
   color: $red;
-  border-radius: 7px;
-  font-size: 1.5em;
+  border-radius: 2px;
+  font-size: 1.2em;
 }

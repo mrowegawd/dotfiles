@@ -8,6 +8,8 @@
 # For debug:
 # zmodload zsh/zprof
 
+[[ $- != *i* ]] && return
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of $HOME/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -34,8 +36,6 @@ source "$HOME/.asdf/asdf.sh"
 zle -N autosuggest-accept
 [[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
   && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-[[ ! -f $HOME/.config/zsh/.p10k.zsh ]] || source $HOME/.config/zsh/.p10k.zsh
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ OPTIONS                                                  ╏
@@ -338,7 +338,7 @@ if [ -d $(asdf where golang) ]; then
 fi
 
 eval "$(zoxide init zsh)"
-eval "$(fzf --zsh)"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # To customize prompt, run `p10k configure`
 # Or edit $HOME/.config/zsh/.p10k.zsh.
@@ -348,3 +348,6 @@ source $HOME/powerlevel10k/powerlevel10k.zsh-theme
 
 # For debug:
 # zprof
+
+# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

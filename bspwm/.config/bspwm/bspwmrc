@@ -1,14 +1,22 @@
 #! /bin/sh
 
+# - Line ini dibutuhkan karena saat menggunakan Debian 12, `~/.profile` tidak
+#   ter-load secara benar mungkin ada kesalahan install atau hal lain
+# - Line ini diperuntukkan untuk Debian 12, jika tidak menggunakannya
+#   hapus line source ini
+if [ -f "$HOME/.profile" ]; then
+  . "$HOME/.profile"
+fi
+
 export SXHKD_SHELL=/usr/bin/sh
 
 getcolors() {
-	#activate=$(xrdb -query | grep foreground | awk '{print $NF}')
-	# inactive=$(xrdb -query | grep background | cut -d':' -f2 | sed 's/ //g' | xargs)
-	MAGENTA=$(xrdb -query | grep 'color5:' | awk '{print $NF}')
-	# BLACK=$(xrdb -query | grep 'color0:' | awk '{print $NF}')
-	CYAN=$(xrdb -query | grep 'color9:' | head -1 | awk '{print $NF}')
-	# BLUE=$(xrdb -query | grep 'color6:' | head -1 | awk '{print $NF}')
+  #activate=$(xrdb -query | grep foreground | awk '{print $NF}')
+  # inactive=$(xrdb -query | grep background | cut -d':' -f2 | sed 's/ //g' | xargs)
+  MAGENTA=$(xrdb -query | grep 'color5:' | awk '{print $NF}')
+  # BLACK=$(xrdb -query | grep 'color0:' | awk '{print $NF}')
+  CYAN=$(xrdb -query | grep 'color9:' | head -1 | awk '{print $NF}')
+  # BLUE=$(xrdb -query | grep 'color6:' | head -1 | awk '{print $NF}')
 }
 
 getcolors
@@ -94,12 +102,12 @@ bspc wm --record-history on
 xsetroot -cursor_name left_ptr
 
 run_disowned() {
-	nohup "$@" >/dev/null 2>&1 &
+  nohup "$@" >/dev/null 2>&1 &
 }
 
 #Don't run if it's running
 run_once() {
-	pidof "$(basename "$1")" || run_disowned "$@"
+  pidof "$(basename "$1")" || run_disowned "$@"
 }
 
 # Reload sxhkd manually cause using USR1 hangs the keyboard frome time to time
@@ -119,18 +127,18 @@ pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
 
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
-	echo "dummy" >$startup_lock_file
+  echo "dummy" >$startup_lock_file
 
-	pkill mpdris2-rs || "$HOME/.local/bin/mpdris2-rs" &
+  pkill mpdris2-rs || "$HOME/.local/bin/mpdris2-rs" &
 
-	run_once firefox
-	[ -f ~/.lesskey ] && run_once lesskey
-	# [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
-	[ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
-	[ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
-	# [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
-	dropbox start &
-	run_once "$TERMINAL"
+  run_once firefox
+  [ -f ~/.lesskey ] && run_once lesskey
+  # [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
+  [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
+  [ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
+  # [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
+  dropbox start &
+  run_once "$TERMINAL"
 fi
 
 run_once xrdb ~/.Xresources

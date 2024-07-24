@@ -1,20 +1,21 @@
-STATUSLINE_BG_ACTIVE="#447cab"
-STATUSLINE_BG="#1f1f1f"
-STATUSLINE_FG="#404040"
+STATUSLINE_BG_ACTIVE="#c05d65"
+STATUSLINE_BG="#1B2228"
+STATUSLINE_FG="#384754"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#404040"
-BORDER_BG="#1f1f1f"
+BORDER_FG="#384754"
+BORDER_BG="#1B2228"
+BORDER_FG_NC="#212a32"
 
-SEPARATOR_FG="#1b1b1b"
-SEPARATOR_ACTIVE_BG="#1f1f1f"
+SEPARATOR_FG="#384754"
+SEPARATOR_ACTIVE_BG="#212a32"
 
-WINDOW_BG_ACTIVE="#1f1f1f"
-WINDOW_BG="#1b1b1b"
+WINDOW_BG_ACTIVE="#1b2228"
+WINDOW_BG="#1b2228"
 
-RED="#f44747"
-BLUE="#569cd6"
+RED="#F07580"
+BLUE="#75BDF0"
 
 left_separator=''
 left_separator_black=''
@@ -35,7 +36,7 @@ setw -g window-active-style bg=$WINDOW_BG_ACTIVE
 # setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
 
 setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
-setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
+setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG_NC
 
 setw -g pane-border-status top # bottom, top
 

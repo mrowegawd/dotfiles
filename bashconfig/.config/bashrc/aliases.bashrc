@@ -279,8 +279,11 @@ c_ii() {
   echo -e "\\n${RED}LAN Information :$NC"
   mylan
 
-  echo -e "\\n${RED}XDG SESSION TYPE (XDG_SESSION_TYPE): $NC"
+  echo -e "\\n${RED}XDG session type: $NC"
   echo -e "$XDG_SESSION_TYPE\n" # use `X11` or `Wayland`
+
+  echo -e "\\n${RED}XDG desktop session name: $NC"
+  echo -e "$XDG_SESSION_DESKTOP\n" # use `X11` or `Wayland`
 }
 
 mylan() {
