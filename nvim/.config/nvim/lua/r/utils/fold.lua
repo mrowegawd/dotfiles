@@ -25,27 +25,27 @@ local function foldClosed(winid, lnum)
   end)
 end
 
-function M.magic_prev_next_move(is_qf)
-  is_qf = is_qf or false
+function M.magic_jump_qf_or_fold(is_jump_prev)
+  is_jump_prev = is_jump_prev or false
 
   if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
     return RUtils.cmd.feedkey("<c-p>", "n")
   end
 
   if vim.wo.diff then
-    if is_qf then
+    if is_jump_prev then
       return RUtils.cmd.feedkey("[c", "n")
     else
       return RUtils.cmd.feedkey("]c", "n")
     end
   end
 
-  -- if qf_is_opened() then
-  if vim.bo[0].filetype == "qf" then
+  local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
+  if is_qf_opened.found then
     local cmd_msg_qf = "cnext"
     local cmd_msg_qf_end = "cfirst"
 
-    if is_qf then
+    if is_jump_prev then
       cmd_msg_qf = "cprevious"
       cmd_msg_qf_end = "clast"
     end
@@ -53,7 +53,6 @@ function M.magic_prev_next_move(is_qf)
     vim.schedule(function()
       local _, err = pcall(function()
         vim.cmd(cmd_msg_qf)
-        vim.cmd "wincmd p"
         vim.cmd "normal! zz"
       end)
 
@@ -62,59 +61,55 @@ function M.magic_prev_next_move(is_qf)
         vim.cmd "wincmd p"
       end
     end)
-
-    -- vim.schedule(function()
-    -- end)
-  end
-  -- end
-
-  if is_qf then
-    local count = vim.v.count1
-    local curLnum = api.nvim_win_get_cursor(0)[1]
-    local cnt = 0
-    local lnum
-    for i = curLnum - 1, 1, -1 do
-      if foldClosed(0, i) == i then
-        cnt = cnt + 1
-        lnum = i
-        if cnt == count then
-          break
-        end
-      end
-    end
-
-    if lnum then
-      cmd "norm! m`"
-      api.nvim_win_set_cursor(0, { lnum, 0 })
-    else
-      cmd "norm! zk"
-    end
   else
-    local count = vim.v.count1
-    local curLnum = api.nvim_win_get_cursor(0)[1]
-    local lineCount = api.nvim_buf_line_count(0)
-    local cnt = 0
-    local lnum
-    for i = curLnum + 1, lineCount do
-      if foldClosed(0, i) == i then
-        cnt = cnt + 1
-        lnum = i
-        if cnt == count then
-          break
+    if is_jump_prev then
+      local count = vim.v.count1
+      local curLnum = api.nvim_win_get_cursor(0)[1]
+      local cnt = 0
+      local lnum
+      for i = curLnum - 1, 1, -1 do
+        if foldClosed(0, i) == i then
+          cnt = cnt + 1
+          lnum = i
+          if cnt == count then
+            break
+          end
         end
       end
-    end
 
-    if lnum then
-      cmd "norm! m`"
-      api.nvim_win_set_cursor(0, { lnum, 0 })
+      if lnum then
+        cmd "norm! m`"
+        api.nvim_win_set_cursor(0, { lnum, 0 })
+      else
+        cmd "norm! zk"
+      end
     else
-      cmd "norm! zj"
+      local count = vim.v.count1
+      local curLnum = api.nvim_win_get_cursor(0)[1]
+      local lineCount = api.nvim_buf_line_count(0)
+      local cnt = 0
+      local lnum
+      for i = curLnum + 1, lineCount do
+        if foldClosed(0, i) == i then
+          cnt = cnt + 1
+          lnum = i
+          if cnt == count then
+            break
+          end
+        end
+      end
+
+      if lnum then
+        cmd "norm! m`"
+        api.nvim_win_set_cursor(0, { lnum, 0 })
+      else
+        cmd "norm! zj"
+      end
     end
   end
 end
 
-function M.magic_prev_next_qf(is_next)
+function M.magic_nextprev_list_qf_or_buf(is_next)
   is_next = is_next or false
   local cmd_msg
 
