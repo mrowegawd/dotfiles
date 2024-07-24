@@ -2,11 +2,15 @@
 
 # Usage example (crontab -e):
 # */20 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_drinkwater >/dev/null 2>&1
+#
+
+# atau coba command seperti ini:
+# */20 * * * *  DISPLAY=:0 /bin/bash /home/mr00x/.config/miscxrdb/bin/_drinkwater
 
 /usr/local/bin/dunstify --replace 31341 -i ~/.config/miscxrdb/icons/drinks.png "Jangan lupa minum"
 
 sound_man="$HOME/.config/miscxrdb/mp3-wav/occasion-gem-notification-google.mp3"
 
 if [ -f "$sound_man" ]; then
-	/usr/bin/play "$sound_man" 2>/dev/null
+  /usr/bin/play "$sound_man" 2>/dev/null
 fi

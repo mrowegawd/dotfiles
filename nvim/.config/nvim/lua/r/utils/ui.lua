@@ -109,51 +109,52 @@ end
 function M.statuscolumn()
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
-  local is_file = vim.bo[buf].buftype == ""
+  -- local is_file = vim.bo[buf].buftype == ""
   local show_signs = vim.wo[win].signcolumn ~= "no"
 
   local components = { "", "", "" } -- left, middle, right
 
-  local show_open_folds = true
-  local use_githl = {
-    folds_open = false, -- show fold sign when fold is open
-    folds_githl = false, -- highlight fold sign with git sign color
-  }
+  -- local show_open_folds = true
+  -- local use_githl = {
+  --   folds_open = false, -- show fold sign when fold is open
+  --   folds_githl = false, -- highlight fold sign with git sign color
+  -- }
 
   if show_signs then
     local signs = M.get_signs(buf, vim.v.lnum)
 
     ---@type Sign?,Sign?,Sign?
-    local left, right, fold, githl
+    -- local left, right, fold, githl
+    local left, right
     for _, s in ipairs(signs) do
       if s.name and (s.name:find "GitSign" or s.name:find "MiniDiffSign") then
         right = s
-        if use_githl then
-          githl = s["texthl"]
-        end
+        -- if use_githl then
+        --   githl = s["texthl"]
+        -- end
       else
         left = s
       end
     end
 
-    vim.api.nvim_win_call(win, function()
-      if vim.fn.foldclosed(vim.v.lnum) >= 0 then
-        fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = githl or "Folded" }
-      elseif
-        show_open_folds
-        and not RUtils.ui.skip_foldexpr[buf]
-        and tostring(vim.treesitter.foldexpr(vim.v.lnum)):sub(1, 1) == ">"
-      then -- fold start
-        fold = { text = vim.opt.fillchars:get().foldopen or "", texthl = githl }
-      end
-    end)
+    -- vim.api.nvim_win_call(win, function()
+    --   if vim.fn.foldclosed(vim.v.lnum) >= 0 then
+    --     fold = { text = vim.opt.fillchars:get().foldclose or "", texthl = githl or "Folded" }
+    --   elseif
+    --     show_open_folds
+    --     and not RUtils.ui.skip_foldexpr[buf]
+    --     and tostring(vim.treesitter.foldexpr(vim.v.lnum)):sub(1, 1) == ">"
+    --   then -- fold start
+    --     fold = { text = vim.opt.fillchars:get().foldopen or "", texthl = githl }
+    --   end
+    -- end)
     -- Left: mark or non-git sign
     -- components[1] = M.icon(M.get_mark(buf, vim.v.lnum) or left)
     -- Left: saat ini memakai custom mark dari qfsilet maka itu menggunakan `left` (saja) didahulukan dari pada `get_mark`,
     components[1] = M.icon(left or M.get_mark(buf, vim.v.lnum) or right)
     -- Right: fold icon or git sign (only if file)
     -- components[3] = is_file and M.icon(fold or right) or ""
-    components[3] = components[3] .. M.icon { text = "▏", texthl = "LineNr1", namespace = "icontext" } -- "│" "▏" "|"
+    components[3] = components[3] .. M.icon { text = "▏", texthl = "LineNr", namespace = "icontext" } -- "│" "▏" "|"
   end
 
   -- Numbers in Neovim are weird

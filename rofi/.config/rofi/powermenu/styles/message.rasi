@@ -4,7 +4,7 @@
 * {
     background-color:       @background;
     text-color:             @border;
-    font:                   "SF Mono 18";
+    font:                   "JetBrainsMono NF 18";
 }
 
 window {

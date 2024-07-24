@@ -64,17 +64,17 @@
 *color18: #252534
 
 ! FZF: bg, fg and match
-*color19: #1d1d29
-*color20: #696991
+*color19: #242432
+*color20: #a8a8e8
 *color21: #ffb49d
 
 ! FZF selection: bg, fg and match
 *color22: #5c82c2
-*color23: #2a2a3a
-*color24: #2a2a3a
+*color23: #43435c
+*color24: #43435c
 
 ! TMUX: win separator fg, fg_nc
-*color25: #2c2c3c
+*color25: #484864
 *color26: #15151d
 
 ! TMUX: fg_nc

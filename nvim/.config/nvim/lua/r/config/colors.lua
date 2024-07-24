@@ -280,8 +280,8 @@ local general_overrides = function()
     { MyMark = { fg = { from = "DiagnosticSignWarn", attr = "fg", alter = 0.5 }, bold = true, italic = true } },
     {
       MyCodeUsage = {
-        fg = { from = "Normal", attr = "bg", alter = 1 },
-        bg = { from = "Normal", attr = "bg", alter = -0.15 },
+        fg = { from = "Visual", attr = "bg", alter = 1 },
+        bg = { from = "Visual", attr = "bg", alter = -0.15 },
         italic = true,
       },
     },
@@ -291,7 +291,7 @@ local general_overrides = function()
         fg = { from = "MyCodeUsage", attr = "fg", alter = -0.1 },
       },
     },
-    { CodeBlock1 = { bg = { from = "Normal", alter = -0.3 } } },
+    { RenderMarkdownCode = { bg = { from = "Normal", alter = 0.3 } } },
     { CodeLine1 = { fg = { from = "ErrorMsg", attr = "fg" } } },
 
     -----------------------------------------------------------------------
@@ -371,7 +371,7 @@ local general_overrides = function()
     { CmpItemKindTabNine = { bg = "NONE", fg = "#118c74" } },
 
     -- AERIALS ============================================================
-    { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+    { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     { AerialBoolean = { link = "LspKindBoolean" } },
     { AerialBooleanIcon = { link = "LspKindBoolean" } },
 
@@ -490,44 +490,6 @@ local general_overrides = function()
       },
     },
 
-    -- TELESCOPE ==========================================================
-    { TelescopeNormal = { bg = "red", fg = "black" } },
-    { TelescopeBorder = { link = "NormalFloat" } },
-    { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
-    { TelescopeTitle = { fg = { from = "Boolean", attr = "fg" } } },
-
-    { TelescopeSelection = { inherit = "PmenuSel" } },
-    { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
-
-    -- prompt
-    { TelescopePromptNormal = { link = "NormalFloat" } },
-    {
-      TelescopePromptTitle = {
-        bg = { from = "NormalFloat", attr = "bg" },
-        fg = { from = "WarningMsg", alter = 0.5, bold = true },
-        bold = true,
-      },
-    },
-    { TelescopePromptBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-    { TelescopePromptPrefix = { bg = { from = "NormalFloat", attr = "bg" } } },
-    { TelescopePromptCounter = { bg = { from = "NormalFloat", attr = "bg" } } },
-
-    -- Preview
-    { TelescopePreviewNormal = { link = "NormalFloat" } },
-    {
-      TelescopePreviewTitle = {
-        bg = { from = "NormalFloat", attr = "bg" },
-        fg = { from = "ColorColumn", alter = 0.14, bold = true },
-        bold = true,
-      },
-    },
-    { TelescopePreviewBorder = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "FloatBorder" } } },
-
-    -- Results
-    { TelescopeResultsNormal = { link = "NormalFloat" } },
-    { TelescopeResultsTitle = { fg = { from = "FloatBorder" }, bg = "NONE" } },
-    { TelescopeResultsBorder = { bg = "NONE", fg = { from = "FloatBorder" } } },
-
     -- COC =============================================================
     { CocPumMenu = { link = "CmpItemAbbr" } },
     { CocMenuSel = { link = "PmenuSel" } },
@@ -559,6 +521,32 @@ local general_overrides = function()
 
     { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = -0.3 } } },
     { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
+
+    -- TELESCOPE ==========================================================
+    { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+    { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+    { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+    { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+
+    { TelescopeSelection = { inherit = "FzfLuaSel", underline = false, undercurl = false } },
+    { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
+
+    -- prompt
+    { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+    { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+    { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+    { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+    { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+
+    -- Preview
+    { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+    { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+    { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+
+    -- Results
+    { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+    { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+    { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
     -- WHICH-KEY ==========================================================
     {
@@ -742,6 +730,24 @@ local function colorscheme_overrides()
         },
       },
 
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -791,6 +797,15 @@ local function colorscheme_overrides()
         },
       },
 
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 4 },
@@ -838,6 +853,15 @@ local function colorscheme_overrides()
         },
       },
 
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 4 },
@@ -870,10 +894,9 @@ local function colorscheme_overrides()
         },
       },
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
-
       {
         PmenuSel = {
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "Keyword", attr = "fg", alter = 0.2 },
           fg = { from = "CmpItemAbbr", attr = "fg", alter = -0.6 },
           bold = true,
         },
@@ -902,6 +925,24 @@ local function colorscheme_overrides()
         },
       },
 
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 4 },
@@ -917,8 +958,8 @@ local function colorscheme_overrides()
 
       {
         Tabline = {
-          bg = { from = "StatusLine", attr = "bg", alter = -0.8 },
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
         },
       },
       {
@@ -947,6 +988,16 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg" },
         },
       },
+
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 6 },
@@ -1101,8 +1152,8 @@ local function colorscheme_overrides()
 
       {
         MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 5 },
-          bg = { from = "Normal", attr = "bg", alter = 1.5 },
+          fg = { from = "LineNr", attr = "fg", alter = 1 },
+          bg = { from = "LineNr", attr = "fg", alter = -0.3 },
           italic = true,
         },
       },
@@ -1239,6 +1290,12 @@ local function colorscheme_overrides()
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
+      {
+        CmpItemAbbr = {
+          fg = { from = "Normal", attr = "bg", alter = 3 },
+          bg = "NONE",
+        },
+      },
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "CmpItemAbbr" } } },
       {
         PmenuSel = {
@@ -1248,19 +1305,19 @@ local function colorscheme_overrides()
         },
       },
 
-      { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
+      { NormalFloat = { bg = { from = "Pmenu", alter = 0.1 } } },
       {
         FloatBorder = {
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
         },
       },
 
-      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg", alter = 0.1 } } },
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
-          bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
+          bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "NormalFloat", attr = "bg", alter = 1 },
         },
       },
 
@@ -1268,6 +1325,32 @@ local function colorscheme_overrides()
         FzfLuaTitle = {
           fg = { from = "Boolean", attr = "fg", alter = 0.2 },
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "LineNr", attr = "fg", alter = 1 },
+          bg = { from = "LineNr", attr = "fg", alter = -0.15 },
+          italic = true,
         },
       },
 
@@ -1315,6 +1398,13 @@ local function colorscheme_overrides()
       },
     },
     ["neomodern"] = {
+      { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+      {
+        RenderMarkdownCode = {
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          -- fg = { from = "Normal", attr = "bg", alter = 0.5 },
+        },
+      },
       {
         Pmenu = {
           bg = { from = "Normal", attr = "bg", alter = 1 },
@@ -1348,6 +1438,24 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg" },
         },
       },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.25 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -1451,6 +1559,24 @@ local function colorscheme_overrides()
         },
       },
 
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = 1 }, bg = "NONE" } },
 
       {
@@ -1499,6 +1625,20 @@ local function colorscheme_overrides()
           fg = { from = "MyCodeUsage", attr = "fg", alter = 0.7 },
         },
       },
+
+      {
+        Tabline = {
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
+        },
+      },
+
+      {
+        TablineSel = {
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+        },
+      },
     },
     ["miasma"] = {
       {
@@ -1539,6 +1679,24 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -1610,11 +1768,29 @@ local function colorscheme_overrides()
     },
     ["flow"] = {
       {
+        MyCodeUsage = {
+          fg = { from = "LineNr", attr = "fg", alter = 1 },
+          bg = { from = "LineNr", attr = "fg", alter = -0.15 },
+          italic = true,
+        },
+      },
+
+      {
         FzfLuaBorder = {
           fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
+
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       {
         QuickFixLine = {
@@ -1661,6 +1837,8 @@ local function colorscheme_overrides()
       },
     },
     ["solarized-osaka"] = {
+      { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+
       {
         CmpItemAbbr = {
           fg = { from = "Normal", attr = "bg", alter = 5 },
@@ -1687,11 +1865,11 @@ local function colorscheme_overrides()
         },
       },
 
-      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg", alter = 0.1 } } },
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
+          bg = { from = "NormalFloat", attr = "bg" },
           fg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
-          bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
 
@@ -1703,10 +1881,29 @@ local function colorscheme_overrides()
       },
 
       { CodeBlock1 = { bg = { from = "Normal", alter = 0.7 } } },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       {
         MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = { from = "Normal", attr = "bg", alter = 2.8 },
+          bg = { from = "Normal", attr = "bg", alter = 0.8 },
           italic = true,
         },
       },
@@ -1774,6 +1971,19 @@ local function colorscheme_overrides()
       },
     },
     ["selenized"] = {
+      { CodeLine1 = { fg = { from = "Error", attr = "fg" } } },
+      { ["@lsp.type.selfKeyword"] = { fg = { from = "Error", attr = "fg", alter = 0.2 } } },
+      { FzfLuaCursorLine = { bg = { from = "Error", alter = -0.8, attr = "fg" } } },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "LineNr", attr = "fg", alter = 0.8 },
+          bg = { from = "LineNr", attr = "fg", alter = -0.1 },
+          italic = true,
+        },
+      },
+
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
       {
         Folded = {
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
@@ -1802,7 +2012,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", attr = "fg", alter = 5 } } },
+      { CmpItemAbbrMatchFuzzy = { fg = { from = "Error", attr = "fg", alter = 5 } } },
 
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 }, fg = { from = "Pmenu", alter = 0.2 } } },
       {
@@ -1828,6 +2038,24 @@ local function colorscheme_overrides()
       },
 
       { MatchParen = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE", bold = false } },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -1876,6 +2104,15 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
+
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       {
         FoldColumn = {
@@ -1926,7 +2163,6 @@ local function colorscheme_overrides()
       },
 
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 }, fg = { from = "Pmenu", alter = 0.4 } } },
-      -- { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 }, fg = { from = "Pmenu", alter = 0.4 } } },
       {
         FloatBorder = {
           bg = { from = "NormalFloat", attr = "bg" },
@@ -1934,11 +2170,11 @@ local function colorscheme_overrides()
         },
       },
 
-      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg", alter = 0.1 } } },
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
+          bg = { from = "NormalFloat", attr = "bg" },
           fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
-          bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
 
@@ -1948,6 +2184,24 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.6 }, bg = "NONE" } },
 
@@ -2020,11 +2274,11 @@ local function colorscheme_overrides()
         },
       },
 
-      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg", alter = 0.1 } } },
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
         },
       },
 
@@ -2034,6 +2288,24 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.7 }, bg = "NONE" } },
       { MatchParen = { bg = { from = "MatchParen", attr = "bg", alter = -0.1 }, fg = "NONE", bold = false } },
@@ -2082,6 +2354,15 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg" },
         },
       },
+
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       {
         Folded = {
@@ -2140,6 +2421,15 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
+
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       {
         LineNr = {
@@ -2206,6 +2496,15 @@ local function colorscheme_overrides()
         },
       },
 
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -2213,6 +2512,14 @@ local function colorscheme_overrides()
         Folded = {
           -- bg = { from = "Normal", attr = "bg", alter = 0.7 },
           fg = { from = "Normal", attr = "bg", alter = 1.6 },
+        },
+      },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "Visual", attr = "bg", alter = 1 },
+          bg = { from = "Visual", attr = "bg", alter = -0.1 },
+          italic = true,
         },
       },
 

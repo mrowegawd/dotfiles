@@ -24,14 +24,8 @@ unmap(">>");
 settings.historyMUOrder = false;
 settings.tabsMRUOrder = false;
 settings.omnibarMaxResults = 20;
-settings.tabsThreshold = 0; // 常にomnibarを使う。
+settings.tabsThreshold = 0;
 
-/**
- * scrollByの動作がFirefox 65で予測不可能になったのでscrollToで再実装する。
- * スムーズスクロールする。
- * @param {number} size - スクロールするサイズ
- * @param {number} ward - 1か-1でスクロールする方向を制御
- */
 function scrollBySmooth(size, ward) {
   window.scrollTo({
     top: window.scrollY + ward * size,
@@ -40,10 +34,6 @@ function scrollBySmooth(size, ward) {
   });
 }
 
-/**
- * 絶対位置スクロール。
- * @param {number} position - スクロールする位置
- */
 function scrollToSmooth(position) {
   window.scrollTo({
     top: position,

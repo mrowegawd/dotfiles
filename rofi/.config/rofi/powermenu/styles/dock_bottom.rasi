@@ -1,5 +1,5 @@
 configuration {
-    font:                           "SF Mono 20";
+    font:                           "JetBrainsMono NF 20";
     show-icons:                     false;
     icon-theme: 					          "Papirus";
     drun-display-format:            "{name}";

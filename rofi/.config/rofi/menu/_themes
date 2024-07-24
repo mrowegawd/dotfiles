@@ -6,6 +6,9 @@ DOTFILES_PATH="$HOME/moxconf/development/dotfiles"
 MISCXRDB_PATH="$HOME/.config/miscxrdb"
 ERROR_MSG="[!] Sorry..we abort it"
 
+NEW_FONTS="JetBrainsMono NF"
+NEW_FONTS_SIZE=16
+
 set_rofi() {
   _ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
 
@@ -53,9 +56,6 @@ set_dunst() {
 
   sed -i -e "s/%%background%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%foreground%%/$GET_FG/g" "$_DUNST_PATH/dunstrc"
-
-  NEW_FONTS="SF Mono"
-  NEW_FONTS_SIZE=16
 
   sed -i -e "s/%%font_style%%/$NEW_FONTS/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%font_size%%/$NEW_FONTS_SIZE/g" "$_DUNST_PATH/dunstrc"
@@ -191,7 +191,7 @@ set_fzf() {
   FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
 
   if [ ! -d "$FZF_PATH_CONFIG" ]; then
-    dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
+    dunstify "$ERROR_MSG" "Path $FZF_PATH_CONFIG do not exists!" && exit 1
   fi
 
   cat "$FZF_PATH_CONFIG/_fzf.config" >"$FZF_PATH_CONFIG/fzf.config"
@@ -211,8 +211,11 @@ set_fzf() {
 }
 
 set_eww() {
-
   EWW_PATH="$HOME/.config/eww"
+
+  if [ ! -d "$EWW_PATH" ]; then
+    dunstify "$ERROR_MSG" "Path $EWW_PATH do not exists!" && exit 1
+  fi
 
   BG_DARKEN_1=$(darken_color "$GET_BLACK" 7) # Misalnya, mengurangi 50 untuk menggelapkan
 
@@ -250,16 +253,22 @@ set_firefox() {
 
   FIREFOX_DEFAULT_PATH="$HOME/.mozilla/firefox/oehc9lj6.default-esr/chrome/components"
   # /home/mr00x/.mozilla/firefox/oehc9lj6.default-esr/chrome/components/ogx_root-personal.css
+  #
+  if [ -d "$FIREFOX_DEFAULT_PATH" ]; then
 
-  sed -i -e "s/--fuchsia:.*/--fuchsia: $IGET_CUS; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-  sed -i -e "s/--blue:.*/--blue: $GET_BLUE; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-  sed -i -e "s/--cyan:.*/--cyan: $GET_CYAN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-  sed -i -e "s/--green:.*/--green: $GET_GREEN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
-  sed -i -e "s/--yellow:.*/--yellow: $GET_YELLOW; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+    sed -i -e "s/--fuchsia:.*/--fuchsia: $IGET_CUS; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+    sed -i -e "s/--blue:.*/--blue: $GET_BLUE; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+    sed -i -e "s/--cyan:.*/--cyan: $GET_CYAN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+    sed -i -e "s/--green:.*/--green: $GET_GREEN; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+    sed -i -e "s/--yellow:.*/--yellow: $GET_YELLOW; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
 
-  sed -i -e "s/--red:.*/--red: $GET_RED; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
+    sed -i -e "s/--red:.*/--red: $GET_RED; /" "$FIREFOX_DEFAULT_PATH/ogx_root-personal.css"
 
-  sed -i -e "s/background-color:.*/background-color: $GET_BG !important;/g" "$FIREFOX_DEFAULT_PATH/ogx_tricks.css"
+    sed -i -e "s/background-color:.*/background-color: $GET_BG !important;/g" "$FIREFOX_DEFAULT_PATH/ogx_tricks.css"
+  else
+    dunstify "$ERROR_MSG" "Path $FIREFOX_DEFAULT_PATH do not exists!"
+  fi
+
 }
 
 dir="$HOME/.config/rofi/menu"
@@ -300,6 +309,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
     sleep 1
   fi
 
+  xrdb -merge ~/.Xresources
   #shellcheck source=/dev/null
   . ~/.config/miscxrdb/exbin/get_xrdb_vars
 
@@ -323,14 +333,13 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
   set_firefox "$_NAMETHEME"
   _NOTIF_FIREFOX="Firefox     ✅"
 
-  case "$XDG_SESSION_DESKTOP" in
-  "bspwm") wm_bspwm ;;
-  "awesome") wm_awesome ;;
-  esac
-
-  xrdb -merge ~/.Xresources
   sleep 1
   set_fzf
+
+  # case "$DEKSTOP_SESSION" in
+  # # "bspwm") wm_bspwm ;;
+  # "awesome") wm_awesome ;;
+  # esac
 
   dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
     "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"

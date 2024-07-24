@@ -50,7 +50,7 @@ URxvt.color15:      #feffff
 *color18: #242424
 
 ! FZF: bg, fg and match
-*color19: #1b1b1b
+*color19: #191919
 *color20: #646464
 *color21: #ffb49d
 
@@ -60,7 +60,7 @@ URxvt.color15:      #feffff
 *color24: #323232
 
 ! TMUX: win separator fg, fg_nc
-*color25: #3a3a3a
+*color25: #434343
 *color26: #141414
 
 ! TMUX: fg_nc
