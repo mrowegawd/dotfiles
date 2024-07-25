@@ -65,10 +65,10 @@ RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
 -- RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
 -- RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
 
-RUtils.map.nnoremap("<a-h>", "<C-w>h", { desc = "View: left window (mod)", silent = true })
-RUtils.map.nnoremap("<a-l>", "<C-w>l", { desc = "View: right window (mod)", silent = true })
-RUtils.map.nnoremap("<a-j>", "<C-w>j", { desc = "View: down window (mod)", silent = true })
-RUtils.map.nnoremap("<a-k>", "<C-w>k", { desc = "View: up window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-h>", "<C-w>h", { desc = "View: left window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-l>", "<C-w>l", { desc = "View: right window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-j>", "<C-w>j", { desc = "View: down window (mod)", silent = true })
+-- RUtils.map.nnoremap("<a-k>", "<C-w>k", { desc = "View: up window (mod)", silent = true })
 
 if not RUtils.has "smart-splits.nvim" then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })

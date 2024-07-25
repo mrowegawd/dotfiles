@@ -149,9 +149,15 @@ build-install(){
     asdf reshim golang
   fi
 
-  if ! asdf which calcure >/dev/null; then
+  if ! command -v calcure >/dev/null; then
     echo "Installing: calcure - calendar TUI and task manager"
     pipx install calcure
+    asdf reshim python
+  fi
+
+  if ! command -v yt-dlp >/dev/null; then
+    echo "Installing: yt-dlp - download youtube video"
+    pipx install yt-dlp
     asdf reshim python
   fi
 
