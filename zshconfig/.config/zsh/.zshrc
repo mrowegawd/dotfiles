@@ -89,29 +89,31 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U compinit ; compinit
 _comp_options+=(globdots) # Include hidden files, when do 'cd ..<tab>'
 
-# Colorize completions using default `ls` colors.
-# zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-colors "${LS_COLORS}"
-
+# ─< config completion >────────────────────────────────────────────────
 # persistent reshahing i.e puts new executables in the $path
 # if no command is set typing in a line will cd by default
-# zstyle ':completion:*' menu select
-# zstyle ':completion:*' rehash true
-# zstyle ':completion:*:matches' group yes
-# zstyle ':completion:*:options' description yes
-# zstyle ':completion:*:options' auto-description '%d'
-# zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' rehash true
+zstyle ':completion:*:options' description no
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:corrections' format ' %F{green}-- %d (errors: %e) --%f'
 # zstyle ':completion:*:descriptions' format ' %F{yellow}-- %d --%f'
-# zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
-# zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
-# zstyle ':completion:*:default' list-prompt '%S%M matches%s'
+zstyle ':completion:*:messages' format ' %F{purple} -- %d --%f'
+zstyle ':completion:*:warnings' format ' %F{red}-- no matches found --%f'
+zstyle ':completion:*:default' list-prompt '%S%M matches%s'
 # zstyle ':completion:*' format ' %F{yellow}-- %d --%f'
-# zstyle ':completion:*' group-name ''
-# zstyle ':completion:*' verbose yes
-# zstyle ':completion:*' expand suffix
-# zstyle ':completion:*' file-sort modification
-# zstyle ':completion:*' list-suffixes true
-
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:matches' group yes
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' expand suffix
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*' list-suffixes true
+zstyle ':completion:*' completer _extensions _complete _approximate
+# Use cache for completion
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+# Colors for files and directories
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # disable sort when completing options of any command
 # zstyle ':completion:complete:*:options' sort false
 
@@ -127,24 +129,16 @@ zstyle ':completion:*' matcher-list '' \
   '+m:{_-}={-_}' \
   'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-# Kill
-# zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
+# ─< kill >─────────────────────────────────────────────────────────────
+zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,command -w'
 # zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01'
 # zstyle ':completion:*:*:kill:*' menu select
 # zstyle ':completion:*:*:kill:*' force-list always
 # zstyle ':completion:*:*:kill:*' insert-ids single
-
 # zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
-# zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview '[[ $group == "[process ID]" ]] && ps -p $word -o command -w | tail -n +2'
-# zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
 
-# completion of sudo command
+# ─< completion of sudo command >───────────────────────────────────────
 # zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin
-
-# Fuzzy match mistyped completions.
-# zstyle ':completion:*' completer _oldlist _complete _match _approximate
-# zstyle ':completion:*:match:*' original only
-# zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
 # https://github.com/zsh-users/zsh/blob/master/Functions/Chpwd/cdr
 # zstyle ':completion:*:*:cdr:*:*' menu selection
@@ -156,60 +150,57 @@ zstyle ':completion:*' matcher-list '' \
 # zstyle ':completion:*' recent-dirs-insert always
 # zstyle ':chpwd:*' recent-dirs-default yes
 
-# zstyle ':completion::complete:*' use-cache true
-# zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR/zcompcache"
-
-zstyle ':completion:*:git-checkout:*' sort false
-# zstyle ':completion:*' menu no
+# ── FZF-TAB ───────────────────────────────────────────────────────────
 
 # FZF_DEFAULT_OPTS="-e \
-#    --color 16,fg:10,bg:-1,hl:1,hl+:1,bg+:7,fg+:-1:underline \
+#    --color 16,fg:10,bg:9,hl:1,hl+:1,bg+:7,fg+:-1:underline \
 #    --color prompt:4,pointer:13,marker:13,spinner:3,info:3"
 # zstyle ':fzf-tab:*' fzf-flags $(echo $FZF_DEFAULT_OPTS)
-# zstyle ':fzf-tab:*' fzf-flags '--height=10'
+# zstyle ':fzf-tab:*' fzf-flags '--height='
+zstyle ':fzf-tab:*' continuous-trigger '/'
 zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-zstyle ":fzf-tab:*" fzf-flags --height=70% \
---no-separator --border "none" \
---preview-window 'right:50%:nohidden:cycle'
+# zstyle ":fzf-tab:*" fzf-flags '--height=' \
+# --no-separator --border "none" \
+# --preview-window 'right:50%:nohidden:cycle'
 
 # zstyle ':fzf-tab:*' fzf-min-height 30
-# zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':fzf-tab:*' popup-min-size 80 0
+zstyle ':fzf-tab:*' popup-min-size 70 8
 # zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
 # zstyle ':fzf-tab:*' popup-pad 80 80 # Not actually needed to elicit the bug, but it makes it easier to see
 zstyle ':fzf-tab:complete:*' fzf-bindings \
 	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
     'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
+
+# ─< preview cd >───────────────────────────────────────────────────────
 # preview directory's content with eza when completing cd
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -a --tree --level=2 --icons --color=always $realpath'
 zstyle ':fzf-tab:complete:cd:*' fzf-bindings 'ctrl-l:preview({_FTB_INIT_} eza -a --tree --level=2 --icons --color=always $realpath)'
 
-# show systemd unit status
+# To disable `fzf-tab` when completing cd
+# taken from: https://github.com/Aloxaf/fzf-tab/pull/293)
+# use:
+# zstyle ':fzf-tab:complete:cd:*' disabled-on any
+
+# ─< show systemd unit status >─────────────────────────────────────────
 zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
-zstyle ':completion:*:*:*:*:processes' command 'ps -ef --no-headers -w -w'
+# zstyle ':fzf-tab:complete:doc_im_ls:*' disabled-on any
+# zstyle ':completion:*:doc_im_ls:*' command "show_alias"
+# zstyle ':fzf-tab:complete:doc_im_ls:*' fzf-preview 'echo "mantap"'
+
+# zstyle ':completion:*:*:*:doc_im_ls:*' fzf-preview "show_alias"
+# zstyle ':fzf-tab:complete:doc_im_ls:argument-rest' command 'show_alias'
+# zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+#   [[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+
+# ─< preview for kill/ps >──────────────────────────────────────────────
 zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
   --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='down:15%:wrap'
+# https://github.com/Aloxaf/fzf-tab/wiki/Preview#killps-preview-of-full-commandline-arguments
+# zstyle ':completion:*:*:(kill|ps):*' complete-options false
+zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview $'[[ $group == "[process ID]" ]] && ps -f -p $word'  # only show items in group 'process ID'
+# zstyle ':fzf-tab:complete:(kill|ps):*' fzf-flags --no-sort --height=60% --color=16,hl:green --preview-window=down:18%:wrap
 
-# show file contents
-# zstyle ':fzf-tab:complete:*:*' fzf-preview 'echo "\033[1m${(Q)group}\033[0m\n"
-# if [[ "${(Q)group}" == "[file]" ]]; then
-#   if [[ -n "${(Q)realpath}" ]]; then
-#     mime=$(file -bL --mime-type "${(Q)realpath}")
-#     category=${mime%%/*}
-#     if [[ -d "${(Q)realpath}" ]]; then
-#       eza --tree --level=2 --icons --color=always "${(Q)realpath}"
-#     elif [[ "$category" == "text" ]]; then
-#       prettybat --color=always --style=plain --paging=never "${(Q)realpath}"
-#     fi
-#   fi
-# elif [[ "${(Q)group}" == "[alias]" ]]; then
-#   echo "${(Q)desc}"
-# elif [[ "${(Q)group}" =~ "command]$" ]]; then
-#   which "${(Q)word}"
-# elif [[ "${(Q)group}" == "[parameter]" ]]; then
-#   echo "${(P)word}"
-# fi'
 
 # Completion for kitty
 if [[ "$TERM" == "xterm-kitty" ]]; then

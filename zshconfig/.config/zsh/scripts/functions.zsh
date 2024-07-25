@@ -149,6 +149,12 @@ build-install(){
     asdf reshim golang
   fi
 
+  if ! asdf which calcure >/dev/null; then
+    echo "Installing: calcure - calendar TUI and task manager"
+    pipx install calcure
+    asdf reshim python
+  fi
+
 }
 
 build-react() {
@@ -188,7 +194,7 @@ run-mark() {
   else
     select=$(cat $cwd | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
       --preview-window right:50%:nohidden \
-    --prompt "Jump to> ")
+      --height=60% --prompt "Jump to> ")
     if [[ -n $select ]]; then
       if [[ ! -d $select ]]; then
         notify-send "invalid folder path:" "$select"
@@ -270,10 +276,49 @@ show_alias() {
     LBUFFER="${LBUFFER}$select "
     zle reset-prompt
     return
-  elif [[ $myargs[-1] == "git" ]]; then
-    local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
+
+  elif [[ $myargs[-2] == "alias" ]]; then
+    local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' \
+      | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
     if [[ -n $alias_sel ]]; then
       LBUFFER="git $alias_sel "
+      zle reset-prompt
+      return
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
+      return
+    fi
+
+  # for nvim, vim
+  elif [[ $myargs[-1] == "v" ]]; then
+    local select="**"
+    if [[ -n $select ]]; then
+      LBUFFER="${LBUFFER}$select"
+      zle reset-prompt
+      return
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
+      return
+    fi
+
+  elif [[ $myargs[-1] == "nvim" ]]; then
+    local select="**"
+    if [[ -n $select ]]; then
+      LBUFFER="${LBUFFER}$select"
+      zle reset-prompt
+      return
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
+      return
+    fi
+
+  elif [[ $myargs[-1] == "vim" ]]; then
+    local select="**"
+    if [[ -n $select ]]; then
+      LBUFFER="${LBUFFER}$select"
       zle reset-prompt
       return
     else
@@ -288,7 +333,8 @@ show_alias() {
     #
     FZF_DOCKER_PS_START_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
     FZF_DOCKER_PS_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}"
-    select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" | fzf --multi --header-lines=1 | awk '{print $1}' )
+    local select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" \
+      | fzf --multi --header-lines=1 | awk '{print $1}' )
     if [[ -n $select ]]; then
       LBUFFER="${LBUFFER}$select "
       zle reset-prompt
@@ -303,7 +349,17 @@ show_alias() {
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
     #
-    select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" | fzf --multi --header-lines=1 | awk '{print $1}' )
+    local select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" \
+      | fzf --multi --header-lines=1 | awk '{print $3}' )
+
+    if [[ -n $select ]]; then
+      LBUFFER="${LBUFFER}$select "
+      zle reset-prompt
+    else
+      LBUFFER="${LBUFFER}"
+      zle reset-prompt
+      return
+    fi
 
   elif [[ $myargs[-1] == "" ]]; then
     local alias_selected=$(
@@ -326,26 +382,11 @@ show_alias() {
       LBUFFER="${LBUFFER}"
       zle reset-prompt
     fi
-
+  else
+    # https://github.com/Aloxaf/fzf-tab/issues/65
+    fzf-tab-complete
   fi
 }
 
 zle -N show_alias
-bindkey '^o' show_alias
-
-
-# show_alias_git() {
-#   setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2>/dev/null
-#
-#   local alias_sel=$(git config --list | grep 'alias\.' | sed 's/alias\.\([^=]*\)=\(.*\)/\1\t\t => \2/' | fzf-tmux -p 80% | cut -d" " -f1 | xargs)
-#
-#   if [[ ! -n $alias_sel ]]; then
-#     return
-#   fi
-#
-#   LBUFFER="${LBUFFER}git $alias_sel "
-#   zle reset-prompt
-# }
-#
-# zle -N show_alias_git
-# bindkey '^q' show_alias_git
+bindkey '\t' show_alias
