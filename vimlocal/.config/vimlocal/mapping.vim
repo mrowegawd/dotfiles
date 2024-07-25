@@ -223,11 +223,26 @@ nnoremap sk                     <C-W>k
 nnoremap sh                     <C-W>h
 nnoremap sl                     <C-W>l
 
+nnoremap <c-j>                  <C-W>j
+nnoremap <c-k>                  <C-W>k
+nnoremap <c-h>                  <C-W>h
+nnoremap <c-l>                  <C-W>l
+
+" set <A-k>=^[k
+" set <A-j>=^[j
+" set <A-h>=^[h
+" set <A-l>=^[l
+
 " Resize the window
-nnoremap <silent> <S-Up>        :resize -2<CR>
-nnoremap <silent> <S-Down>      :resize +2<CR>
-nnoremap <silent> <S-Right>     :vertical resize -2<CR>
-nnoremap <silent> <S-Left>      :vertical resize +2<CR>
+" nnoremap <silent> <S-Up>        :resize -2<CR>
+" nnoremap <silent> <S-Down>      :resize +2<CR>
+" nnoremap <silent> <S-Right>     :vertical resize -2<CR>
+" nnoremap <silent> <S-Left>      :vertical resize +2<CR>
+
+nnoremap <silent> <C-K>         :resize -2<CR>
+nnoremap <silent> <C-J>         :resize +2<CR>
+nnoremap <silent> <C-H>         :vertical resize -2<CR>
+nnoremap <silent> <C-L>         :vertical resize +2<CR>
 
 nnoremap <silent> sv            :vsplit!<cr>
 nnoremap <silent> ss            :split!<cr>

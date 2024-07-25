@@ -1,21 +1,21 @@
-STATUSLINE_BG_ACTIVE="#c05d65"
-STATUSLINE_BG="#1B2228"
-STATUSLINE_FG="#384754"
+STATUSLINE_BG_ACTIVE="#b8795d"
+STATUSLINE_BG="#1b1a20"
+STATUSLINE_FG="#383643"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#384754"
-BORDER_BG="#1B2228"
-BORDER_FG_NC="#212a32"
+BORDER_FG="#383643"
+BORDER_BG="#1b1a20"
+BORDER_FG_NC="#212028"
 
-SEPARATOR_FG="#384754"
-SEPARATOR_ACTIVE_BG="#212a32"
+SEPARATOR_FG="#383643"
+SEPARATOR_ACTIVE_BG="#212028"
 
-WINDOW_BG_ACTIVE="#1b2228"
-WINDOW_BG="#1b2228"
+WINDOW_BG_ACTIVE="#1b1a20"
+WINDOW_BG="#1b1a20"
 
-RED="#F07580"
-BLUE="#75BDF0"
+RED="#e67e80"
+BLUE="#8da0d6"
 
 left_separator=''
 left_separator_black=''
@@ -83,6 +83,8 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
 #  ╓
 #  ║ LEFT
 #  ╙
+set -g status-left " #[fg=white,bold] ❐ #S "
+
 set -g window-status-format "#[fg=$STATUSLINE_BG]\
 #{?pane_synchronized,#[bg=$RED],}$left_slant_separator\
 #{?pane_synchronized,#[bg=$RED],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
@@ -100,6 +102,6 @@ set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
 #  ╙
 set -g status-right-length 80
 set -g status-right "#[fg=$STATUSLINE_BG_ACTIVE,bold]#{pomodoro_status}\
- #[fg=$RED,bold]  #(date +"%H:%M") #[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,bold] #{prefix} 👨#(whoami) #[fg=white,bold] ❐ #S "
+ #[fg=$RED,bold]  #(date +"%H:%M") #[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,bold] #{prefix} 👨#(whoami) "
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux
