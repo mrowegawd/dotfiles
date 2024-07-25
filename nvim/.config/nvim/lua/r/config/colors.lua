@@ -1400,6 +1400,13 @@ local function colorscheme_overrides()
     ["neomodern"] = {
       { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
       {
+        MyCodeUsage = {
+          fg = { from = "Function", attr = "fg", alter = 1 },
+          bg = { from = "Function", attr = "fg", alter = -0.15 },
+          italic = true,
+        },
+      },
+      {
         RenderMarkdownCode = {
           bg = { from = "Normal", attr = "bg", alter = 0.4 },
           -- fg = { from = "Normal", attr = "bg", alter = 0.5 },
@@ -1479,19 +1486,6 @@ local function colorscheme_overrides()
       },
 
       { CursorLine = { bg = { from = "Normal", alter = 0.25 } } },
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 6 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
-        },
-      },
 
       {
         LspReferenceText = {
@@ -1517,6 +1511,34 @@ local function colorscheme_overrides()
           underline = false,
           reverse = false,
           undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 6 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+        },
+      },
+
+      {
+        Tabline = {
+          bg = { from = "LineNr", attr = "fg", alter = -0.1 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
+        },
+      },
+
+      {
+        TablineSel = {
+          bg = { from = "LineNr", attr = "fg", alter = 0.8 },
+          fg = { from = "LineNr", attr = "fg", alter = 0.1 },
         },
       },
     },
@@ -1775,21 +1797,61 @@ local function colorscheme_overrides()
         },
       },
 
+      { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "CmpItemAbbr" } } },
+      {
+        PmenuSel = {
+          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          fg = { from = "CmpItemAbbr", attr = "fg", alter = -0.6 },
+          bold = true,
+        },
+      },
+
+      { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
+      {
+        FloatBorder = {
+          bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+        },
+      },
+
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
+          bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
+        },
+      },
+
+      {
+        FzfLuaTitle = {
+          fg = { from = "Boolean", attr = "fg", alter = 0.2 },
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
 
+      -- {
+      --   FzfLuaBorder = {
+      --     fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
+      --     bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
+      --   },
+      -- },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
       { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
       -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
       { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
       { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
       { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
       -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
       { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
       -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       {

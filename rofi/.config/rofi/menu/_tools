@@ -126,7 +126,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
       FILE_ICONS="$HOME/.config/miscxrdb/icons/rec-button.png"
       [[ -f "$FILE_ICONS" ]] && dunstify "Record Gif" "starting.." -i "$FILE_ICONS"
 
-      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :1.0"$OFFSET" -f alsa -ac 2 \
+      ffmpeg -f x11grab -s "$GEOMETRY" -r 30 -i :0"$OFFSET" -f alsa -ac 2 \
         -i default -vcodec libx264 -s "$GEOMETRY" \
         -acodec libmp3lame -ab 128k -ar 44100 \
         -threads 0 -f flv "$FILE_RECORDING_BAK"
