@@ -103,10 +103,12 @@ return {
         width = "block",
         right_pad = 1,
       },
+      acknowledge_conflicts = true,
+      latex = { enabled = false },
       heading = {
         sign = false,
-        -- icons = {},
-        icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+        icons = {},
+        -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
       },
     },
     keys = {
@@ -124,7 +126,7 @@ return {
         end,
         ft = { "markdown", "neorg", "org", "rmd" },
         mode = { "v", "n" },
-        desc = "Misc: run visually selected lines [sniprun]",
+        desc = "Misc: toggle render markdown [render-markdown]",
       },
     },
     ft = { "markdown", "norg", "rmd", "org" },
