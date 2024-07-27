@@ -137,7 +137,8 @@ if [ ! -f $startup_lock_file ]; then
   [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
   [ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
   # [ -n "$(command -v dropbox)" ] && killall -q dropbox &&
-  dropbox start &
+
+  [ -f ~/.dropbox-dist/dropboxd ] && run_once ~/.dropbox-dist/dropboxd start
   run_once "$TERMINAL"
 fi
 

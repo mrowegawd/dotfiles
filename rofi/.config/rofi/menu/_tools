@@ -139,7 +139,7 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
       if [[ -f $FILE_RECORDING ]]; then
         PATHGIF="$FILE_RECORDING.gif"
         "$HOME/.config/miscxrdb/exbin/gifgenerator" -o "$PATHGIF" "$FILE_RECORDING"
-
+        # ffmpeg -i "$FILE_RECORDING" -pix_fmt yuv420p - | gifski -o "$PATHGIF" -
         dunstify "Gif created:" "$PATHGIF"
       fi
 
