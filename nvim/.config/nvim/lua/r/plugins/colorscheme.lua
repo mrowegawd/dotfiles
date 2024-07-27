@@ -1,6 +1,20 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- Lazy
+  {
+    "vague2k/vague.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local vague_theme = { "vague" }
+      if vim.tbl_contains(vague_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {},
+  },
   -- FLOW
   {
     "0xstepit/flow.nvim",

@@ -47,6 +47,7 @@ return {
         "python",
         "query",
         "regex",
+        "latex",
         "toml",
         "tsx",
         "typescript",
@@ -189,6 +190,28 @@ return {
             },
           },
           ["solarized-osaka"] = {
+            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["vague"] = {
             { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             {
               TreesitterContextSeparator = {

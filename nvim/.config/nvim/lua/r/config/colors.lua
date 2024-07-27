@@ -840,6 +840,88 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["vague"] = {
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+
+      {
+        FzfLuaBorder = {
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.4 },
+          bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      -- prompt
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = -0.5 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = -0.5 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = -0.5 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "fg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+        },
+      },
+      {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2 },
+        },
+      },
+
+      {
+        Tabline = {
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 2.6 },
+        },
+      },
+
+      {
+        TablineSel = {
+          bg = { from = "StatusLine", attr = "bg", alter = 1 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+        },
+      },
+    },
 
     ["kanagawa"] = {
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
