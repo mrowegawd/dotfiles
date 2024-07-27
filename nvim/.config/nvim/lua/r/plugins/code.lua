@@ -285,7 +285,30 @@ return {
     build = (not RUtils.is_win())
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
       or nil,
+    keys = {
+      {
+        "<Leader>sn",
+        function()
+          require("scissors").editSnippet()
+        end,
+        desc = "edit snippet [nvim-scissors]",
+      },
+      {
+        "<Leader>sN",
+        function()
+          require("scissors").addNewSnippet()
+        end,
+        mode = { "n", "v" },
+        desc = "add snippet [nvim-scissors]",
+      },
+    },
     dependencies = {
+      {
+        "chrisgrieser/nvim-scissors",
+        opts = {
+          snippetDir = RUtils.config.path.snippet_path,
+        },
+      },
       {
         "hrsh7th/nvim-cmp",
         dependencies = {
@@ -299,7 +322,6 @@ return {
               require("luasnip").lsp_expand(args.body)
             end,
           }
-
           opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
             ["<C-r>"] = cmp.mapping(function(_)
               if callme == 0 then
@@ -332,7 +354,6 @@ return {
               "s",
             }),
           })
-
           table.insert(opts.sources, {
             name = "luasnip",
             priority = 50,
