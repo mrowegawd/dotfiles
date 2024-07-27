@@ -1,3 +1,4 @@
+local Highlight = require "r.settings.highlights"
 return {
   -- WHICH-KEY
   {
@@ -13,7 +14,25 @@ return {
       },
     },
     opts = {
+      preset = "helix",
       defaults = {},
+      plugins = {
+        marks = true,
+        registers = true,
+        spelling = {
+          enabled = true,
+          suggestions = 20,
+        },
+        presets = {
+          operators = false,
+          motions = false,
+          text_objects = false,
+          windows = false,
+          nav = false,
+          z = false,
+          g = false,
+        },
+      },
       spec = {
         {
           mode = { "n", "v" },
@@ -32,6 +51,7 @@ return {
           { "<Leader>gf", group = "gitfzflua" },
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "gittoggle" },
+          { "<Leader>gv", group = "gitvisual" },
 
           { "<Leader>a", group = "projectionist" },
           { "<Leader>c", group = "code" },
@@ -51,6 +71,10 @@ return {
     confi = function(_, opts)
       local wk = require "which-key"
       wk.setup(opts)
+
+      Highlight.plugin("whichkey_hijackcol", {
+        { WhichKeyBorder = { inherit = "FzfLuaBorder" } },
+      })
     end,
   },
 }
