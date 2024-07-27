@@ -21,6 +21,64 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- FUGIT2 (disabled)
+  {
+    "SuperBo/fugit2.nvim",
+    enabled = false,
+    cmd = { "Fugit2", "Fugit2Graph" },
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      {
+        "chrisgrieser/nvim-tinygit",
+        dependencies = { "stevearc/dressing.nvim" },
+      },
+    },
+    keys = { { "<leader>G", mode = "n", "<cmd>Fugit2<cr>", desc = "Git: open fugit2 [fugit2]" } },
+    opts = {
+      link_colors = {
+        Fugit2Header = "Label",
+        Fugit2ObjectId = "Comment",
+        Fugit2Author = "Tag",
+        Fugit2HelpHeader = "Label",
+        Fugit2HelpTag = "Tag",
+        Fugit2Heading = "PreProc",
+        Fugit2UntrackedHeading = "PreCondit",
+        Fugit2UnstagedHeading = "Macro",
+        Fugit2StagedHeading = "Include",
+        Fugit2MessageHeading = "diffAdded",
+        Fugit2Modifier = "Type",
+        Fugit2Ignored = "Ignore",
+        Fugit2Unstaged = "diffRemoved",
+        Fugit2Staged = "diffAdded",
+        Fugit2Modified = "Constant",
+        Fugit2Unchanged = "",
+        Fugit2Untracked = "Error",
+        Fugit2Instruction = "Type",
+        Fugit2Stop = "Function",
+        Fugit2Hash = "Identifier",
+        Fugit2SymbolicRef = "Function",
+        Fugit2Count = "Number",
+        Fugit2WindowHelp = "Comment",
+        Fugit2MenuHead = "Function",
+        Fugit2MenuKey = "Keyword",
+        Fugit2MenuArgOff = "Comment",
+        Fugit2MenuArgOn = "Number",
+        Fugit2BranchHead = "Type",
+        Fugit2FloatTitle = "@parameter",
+        Fugit2RebasePick = "diffAdded", -- green
+        Fugit2RebaseDrop = "diffRemoved", -- red
+        Fugit2RebaseSquash = "Type", -- yellow
+        Fugit2Branch1 = "GitSignsAdd", -- green
+        Fugit2Branch2 = "@field", --dark blue
+        Fugit2Branch3 = "Type", -- yellow
+        Fugit2Branch4 = "PreProc", -- orange
+        Fugit2Branch5 = "Error", --red
+        Fugit2Branch6 = "Keyword", -- violet
+        Fugit2Branch7 = "@parameter", -- blue
+      },
+    },
+  },
   -- HEADLINES.NVIM (disabled)
   {
     "lukas-reineke/headlines.nvim",
