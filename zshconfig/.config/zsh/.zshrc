@@ -113,7 +113,7 @@ zstyle ':completion:*' completer _extensions _complete _approximate
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 # Colors for files and directories
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # disable sort when completing options of any command
 # zstyle ':completion:complete:*:options' sort false
 

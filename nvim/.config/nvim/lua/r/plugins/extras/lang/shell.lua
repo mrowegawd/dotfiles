@@ -8,9 +8,19 @@ end
 
 RUtils.on_very_lazy(function()
   vim.filetype.add {
-    extension = { rasi = "rasi", rofi = "rasi", wofi = "rasi", http = "http", task = "json" },
+    extension = {
+      rasi = "rasi",
+      rofi = "rasi",
+      wofi = "rasi",
+      http = "http",
+      task = "json",
+      zsh = "sh",
+      sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+    },
     filename = {
       ["vifmrc"] = "vim",
+      [".zshrc"] = "sh",
+      [".zshenv"] = "sh",
     },
     pattern = {
       [".*/waybar/config"] = "jsonc",

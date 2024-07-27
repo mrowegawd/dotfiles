@@ -7,6 +7,9 @@ local function not_vscode()
   return vim.fn.exists "g:vscode" == 0
 end
 
+vim.cmd.highlight "Overnesting guibg=#E06C75"
+vim.fn.matchadd("Overnesting", ("\t"):rep(5) .. "\t*")
+
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ EDITING TEXT                                             │
 -- ╰──────────────────────────────────────────────────────────╯
@@ -244,6 +247,7 @@ RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo 
 RUtils.cmd.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: vnew" })
+
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ SCROLL                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
@@ -259,13 +263,15 @@ RUtils.map.nnoremap("zh", "z4h")
 RUtils.map.nnoremap("zL", "z60l")
 RUtils.map.nnoremap("zH", "z60h")
 
+-- Scroll Up/Down
 RUtils.map.nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
 RUtils.map.nnoremap(
   "<C-f>",
   [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
   { expr = true }
 )
-
+RUtils.map.nnoremap("J", "6j")
+RUtils.map.nnoremap("K", "6k")
 RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
@@ -368,7 +374,16 @@ RUtils.map.vnoremap(
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ MISC                                                     │
 -- ╰──────────────────────────────────────────────────────────╯
--- General
+-- Make register clean
+RUtils.map.nnoremap("x", "_x")
+RUtils.map.nnoremap("c", "_c")
+RUtils.map.nnoremap("dd", function()
+  if vim.fn.getline "." == "" then
+    return '"_dd'
+  end
+  return "dd"
+end, { expr = true })
+
 RUtils.map.nnoremap("<C-g>", "/", nosilent)
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
