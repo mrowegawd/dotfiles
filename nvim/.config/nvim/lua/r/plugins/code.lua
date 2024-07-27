@@ -25,6 +25,10 @@ return {
       { "roobert/tailwindcss-colorizer-cmp.nvim", config = true },
     },
     opts = function()
+      Highlight.plugin("cmp_hijackcol", {
+        { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
+      })
+
       local cmp = require "cmp"
       local defaults = require "cmp.config.default"()
 
@@ -155,42 +159,20 @@ return {
             -- for key, width in pairs(widths) do
             --   if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
             --     item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
-            --   end
-            -- end
+            --     end
+            --     end
 
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
         },
+        view = {
+          entries = {
+            follow_cursor = true,
+          },
+        },
         sorting = defaults.sorting,
         preselect = cmp.PreselectMode.None,
         mapping = {
-          -- ["<C-r>"] = cmp.mapping(function(_)
-          --   if callme == 0 then
-          --     callme = 1
-          --     cmp.complete {}
-          --   elseif callme == 1 then
-          --     callme = 0
-          --     cmp.complete {
-          --       config = {
-          --         sources = {
-          --           {
-          --             name = "buffer",
-          --             option = {
-          --               get_bufnrs = function()
-          --                 return vim.tbl_filter(function(buf)
-          --                   return vim.fn.buflisted(buf) == 1 and vim.fn.bufloaded(buf) == 1
-          --                 end, vim.api.nvim_list_bufs())
-          --               end,
-          --             },
-          --           },
-          --         },
-          --       },
-          --     }
-          --   end
-          -- end, {
-          --   "i",
-          --   "s",
-          -- }),
           ["<C-j>"] = cmp.mapping(function()
             local cmps = get_cmp()
             local types = require "cmp.types"
@@ -223,16 +205,14 @@ return {
               winopts = { preview = { hidden = "nohidden" } },
             }
           end, { "i" }),
-          -- ["<C-n>"] = cmp.config.disable,
-          -- ["<C-p>"] = cmp.config.disable,
           ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<CR>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
           ["<C-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
-          ["<C-e>"] = function(fallback)
-            cmp.abort()
-            fallback()
-          end,
+          -- ["<C-e>"] = function(fallback)
+          --   cmp.abort()
+          --   fallback()
+          -- end,
         },
         sources = { -- remember: do not use `group_index`,
           {
@@ -285,9 +265,6 @@ return {
             keyword_length = 2,
             priority = 50,
             group_index = 4,
-            -- entry_filter = function(entry)
-            --   return not entry.exact
-            -- end,
             option = {
               get_bufnrs = function()
                 return vim.tbl_filter(function(buf)
@@ -397,8 +374,8 @@ return {
       local cmp = require "cmp"
 
       opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
-        ["<Tab>"] = cmp.mapping {
-          i = function(fallback)
+        ["<a-j>"] = cmp.mapping {
+          i = function()
             if cmp.visible() then
               cmp.confirm {
                 behavior = cmp.ConfirmBehavior.Replace,
@@ -406,23 +383,17 @@ return {
               }
             elseif require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
-            else
-              fallback()
             end
           end,
-          s = function(fallback)
+          s = function()
             if require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
-            else
-              fallback()
             end
           end,
         },
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
+        ["<a-k>"] = cmp.mapping(function()
           if require("luasnip").jumpable(-1) then
             require("luasnip").jump(-1)
-          else
-            fallback()
           end
         end, { "i", "s" }),
       })
