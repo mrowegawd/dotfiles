@@ -13,10 +13,11 @@ end
 -- Insert mode
 RUtils.map.inoremap("<C-a>", "<C-O>^", silent)
 RUtils.map.inoremap("<C-e>", "<C-O>$", silent)
-RUtils.map.inoremap("<C-d>", "<C-O>dw", silent)
+RUtils.map.inoremap("<C-d>", "<esc>yypi", silent)
 RUtils.map.inoremap("<C-l>", "<Right>", silent)
 RUtils.map.inoremap("<C-h>", "<Left>", silent)
-RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
+-- RUtils.map.inoremap("<C-b>", "<Esc>ba", silent)
+RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
 
 RUtils.map.inoremap("hh", "<Esc>")
@@ -259,7 +260,7 @@ end, { desc = "Toggle: line numbers" })
 RUtils.map.nnoremap("<Leader>uc", function()
   RUtils.toggle("conceallevel", false, { 0, conceallevel })
 end, { desc = "Toggle: conceal" })
-RUtils.map.nnoremap("<Leader>us", function()
+RUtils.map.nnoremap("<Leader>uS", function()
   RUtils.toggle "spell"
 end, { desc = "Toggle: spelling" })
 RUtils.map.nnoremap("<Leader>ud", function()
@@ -434,7 +435,7 @@ RUtils.map.nnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 RUtils.map.tnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 RUtils.map.vnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
 
-RUtils.map.nnoremap("<Localleader>or", function()
+RUtils.map.nnoremap("<Localleader>of", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
     loadqf = function()

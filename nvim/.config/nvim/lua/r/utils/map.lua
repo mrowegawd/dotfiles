@@ -9,6 +9,19 @@ local recursive_map = function(mode, lhs, rhs, opts)
   map(mode, lhs, rhs, opts)
 end
 
+local function countSpaces(input)
+  local spaceCount = 0
+
+  -- Iterasi setiap karakter dalam string
+  for i = 1, #input do
+    local char = input:sub(i, i)
+    if char == " " then
+      spaceCount = spaceCount + 1
+    end
+  end
+
+  return spaceCount
+end
 M.show_help_buf_keymap = function()
   local ft = vim.bo[0].ft
   local tbl_maps = vim.api.nvim_buf_get_keymap(0, "n")
@@ -18,8 +31,18 @@ M.show_help_buf_keymap = function()
     if tbl.desc == nil then -- remove nil desc
       tbl.desc = "<builtin>"
     end
+
     ---@diagnostic disable-next-line: undefined-field
-    local map_desc = string.format("%-14s | %s", RUtils.cmd.strip_whitespace(tbl.lhs), tbl.desc)
+    local count_spaces = countSpaces(tbl.lhs)
+    ---@diagnostic disable-next-line: undefined-field
+    local lhs = tbl.lhs
+    if count_spaces > 0 then
+      ---@diagnostic disable-next-line: undefined-field
+      lhs = "<space>" .. RUtils.cmd.strip_whitespace(tbl.lhs)
+    end
+
+    ---@diagnostic disable-next-line: undefined-field
+    local map_desc = string.format("%-14s | %s", lhs, tbl.desc)
     col[#col + 1] = map_desc
   end
 
