@@ -32,10 +32,6 @@ build-install(){
     sudo apt install fd-find
   fi
 
-  # Install: gifski
-  # gihtub: https://github.com/sindresorhus/Gifski
-  # install binary langsung dari link https://gif.ski/
-
   # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
   # https://github.com/caarlos0/timer
   # cara install `timer`:
@@ -52,6 +48,15 @@ build-install(){
   if ! asdf which bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
   	cargo install bat
+    asdf reshim rust
+  fi
+
+  if ! asdf which gifski >/dev/null; then
+  # Install: gifski
+  # gihtub: https://github.com/sindresorhus/Gifski
+  # install binary langsung dari link https://gif.ski/
+    echo "Installing: gifski - Gif encoder"
+  	cargo install gifski
     asdf reshim rust
   fi
 
