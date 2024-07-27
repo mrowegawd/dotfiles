@@ -73,26 +73,47 @@ M.vmap = function(...)
   recursive_map("v", ...)
 end
 
+local detect_duplicate_map = function(...)
+  local args = { ... } -- Menyimpan argumen dalam sebuah table
+  local key = args[1] -- Misalkan 'n' adalah default mode jika tidak ada argumen
+  local key_alt = args[2] -- Mengambil argumen kedua sebagai key
+  local opts = args[3] -- Mengambil argumen kedua sebagai key
+  if opts and opts.unique == nil then
+    -- if opts.desc then
+    --   print(key .. " " .. opts.desc)
+    -- end
+    opts.unique = true
+  end
+  return key, key_alt, opts
+end
+
 M.nnoremap = function(...)
-  map("n", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("n", key, key_alt, opts)
 end
 M.xnoremap = function(...)
-  map("x", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("x", key, key_alt, opts)
 end
 M.vnoremap = function(...)
-  map("v", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("v", key, key_alt, opts)
 end
 M.inoremap = function(...)
-  map("i", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("i", key, key_alt, opts)
 end
 M.onoremap = function(...)
-  map("o", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("o", key, key_alt, opts)
 end
 M.cnoremap = function(...)
-  map("c", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("c", key, key_alt, opts)
 end
 M.tnoremap = function(...)
-  map("t", ...)
+  local key, key_alt, opts = detect_duplicate_map(...)
+  map("t", key, key_alt, opts)
 end
 
 M.cabbrev = function(short, long)
@@ -158,6 +179,9 @@ function M.on_attach(_, buffer, spec_maps)
       opts.has = nil
       opts.silent = opts.silent ~= false
       opts.buffer = buffer
+      -- if opts.unique == nil then
+      --   opts.unique = true
+      -- end
       map(keys.mode or "n", keys.lhs, keys.rhs, opts)
     end
   end

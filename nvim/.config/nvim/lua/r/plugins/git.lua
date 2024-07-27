@@ -319,7 +319,49 @@ return {
           col = 1,
         },
         on_attach = function()
-          require("r.keymaps.git").gitsigns()
+          local gs = package.loaded.gitsigns
+
+          local function map(mode, l, r, desc)
+            vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+          end
+
+          -- local function visual_operation(operator)
+          --   local visual_range = { start_pos = vim.fn.line "v", end_pos = vim.fn.line "." }
+          --   if visual_range.start_pos > visual_range.end_pos then
+          --     local tmp = visual_range.start_pos
+          --     visual_range.start_pos = visual_range.end_pos
+          --     visual_range.end_pos = tmp
+          --     gs[operator] { visual_range.start_pos, visual_range.end_pos }
+          --   end
+          -- end
+
+          -- stylua: ignore start
+          map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Git: stage hunk [gitsigns]")
+          map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Git: reset hunk [gitsigns]")
+          map("n", "<leader>ghu", gs.undo_stage_hunk, "Git: undo hunk [gitsigns]")
+          map("n", "<leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
+          map("n", "<leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
+          map("n", "<leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
+          -- map("n", "<leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
+          map("n", "<leader>ghB", function() gs.blame() end, "Git: open blame [gitsigns]")
+          map("n", "<leader>ghd", gs.diffthis, "Git: diffthis [gitsigns]")
+          map("n", "<leader>ghD", function() gs.diffthis "~" end, "Git: diffthis '~' [gitsigns]")
+          map("n", "<Leader>gq", gs.setqflist, "Git: select all hunks and send to qf [gitsigns]")
+
+          map("n", "gn", function()
+            if vim.wo.diff then
+              vim.cmd.normal { "]c", bang = true }
+            else
+              gs.nav_hunk "next"
+            end
+          end, "Git: next hunk [gitsigns]")
+          map("n", "gp", function()
+            if vim.wo.diff then
+              vim.cmd.normal { "[c", bang = true }
+            else
+              gs.nav_hunk "prev"
+            end
+          end, "Git: last hunk [gitsigns]")
         end,
       }
     end,
@@ -466,17 +508,93 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    -- keys = {
-    --   {
-    --     "<Leader>hb",
-    --     function()
-    --       return require("vgit").buffer_blame_preview()
-    --     end,
-    --     desc = "Git: next conflict [gitconflict]",
-    --   },
-    -- },
+    keys = {
+      {
+        "<Leader>ghP",
+        function()
+          return require("vgit").buffer_hunk_preview()
+        end,
+        desc = "Git: preview hunk [vgit]",
+      },
+      {
+        "<Leader>ghb",
+        function()
+          return require("vgit").buffer_blame_preview()
+        end,
+        desc = "Git: preview blame hunk [vgit]",
+      },
+    },
     opts = {
       settings = {
+        hls = {
+          GitBackground = "NormalFloat",
+          GitHeader = "Visual",
+          GitFooter = "Visual",
+          GitBorder = "LineNr",
+          GitLineNr = "VGitLineNr",
+          GitComment = "VGitComment",
+          GitSignsAdd = "GitSignsAdd",
+          GitSignsChange = "GitSignsChange",
+          GitSignsDelete = "GitSignsDelete",
+          GitWordAdd = {
+            gui = nil,
+            fg = nil,
+            bg = "#5d7a22",
+            sp = nil,
+            override = false,
+          },
+        },
+        signs = {
+          priority = 10,
+          definitions = {
+            GitSignsAddLn = {
+              linehl = "GitSignsAdd",
+              texthl = "GitSignsAdd",
+              numhl = nil,
+              icon = nil,
+              text = "",
+            },
+            GitSignsDeleteLn = {
+              linehl = "GitSignsDelete",
+              texthl = "GitSignsDelete",
+              numhl = nil,
+              icon = nil,
+              text = "",
+            },
+            GitSignsAdd = {
+              texthl = "GitSignsAdd",
+              linehl = "GitSignsAdd",
+              numhl = nil,
+              icon = nil,
+              text = "┃",
+            },
+            GitSignsDelete = {
+              texthl = "GitSignsDelete",
+              linehl = "GitSignsDelete",
+              numhl = nil,
+              icon = nil,
+              text = "┃",
+            },
+            GitSignsChange = {
+              texthl = "GitSignsChange",
+              linehl = "GitSignsChange",
+              numhl = nil,
+              icon = nil,
+              text = "┃",
+            },
+          },
+          usage = {
+            screen = {
+              add = "GitSignsAddLn",
+              remove = "GitSignsDeleteLn",
+            },
+            main = {
+              add = "GitSignsAdd",
+              remove = "GitSignsDelete",
+              change = "GitSignsChange",
+            },
+          },
+        },
         live_blame = {
           enabled = false,
         },
@@ -497,6 +615,56 @@ return {
     "sindrets/diffview.nvim",
     event = "LazyFile",
     dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      {
+        "<Leader>gvv",
+        function()
+          local current_line = vim.fn.line "."
+          local file = vim.fn.expand "%"
+          -- DiffviewFileHistory --follow -L{current_line},{current_line}:{file}
+          local str_cmds = string.format("DiffviewFileHistory --follow -L%s,%s:%s", current_line, current_line, file)
+          vim.cmd(str_cmds)
+        end,
+        desc = "Git: line hash history [diffview]",
+      },
+      {
+        "<Leader>gvv",
+        function()
+          local function exit_visual_mode()
+            -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
+            local ESC_FEEDKEY = vim.api.nvim_replace_termcodes("<ESC>", true, false, true)
+            vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+            vim.api.nvim_feedkeys("gv", "x", false)
+            vim.api.nvim_feedkeys(ESC_FEEDKEY, "n", true)
+          end
+
+          local function get_visual_selection_info()
+            exit_visual_mode()
+
+            local _, start_row, start_col, _ = unpack(vim.fn.getpos "'<")
+            local _, end_row, end_col, _ = unpack(vim.fn.getpos "'>")
+            start_row = start_row - 1
+            end_row = end_row - 1
+
+            return {
+              start_row = start_row,
+              start_col = start_col,
+              end_row = end_row,
+              end_col = end_col,
+            }
+          end
+
+          local v = get_visual_selection_info()
+          local file = vim.fn.expand "%"
+          -- DiffviewFileHistory --follow -L{range_start},{range_end}:{file}
+          local str_cmds =
+            string.format("DiffviewFileHistory --follow -L%s,%s:%s", v.start_row + 1, v.end_row + 1, file)
+          vim.cmd(str_cmds)
+        end,
+        mode = "v",
+        desc = "Git: line hash history [diffview]",
+      },
+    },
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
 
@@ -519,151 +687,146 @@ return {
       return {
         enhanced_diff_hl = true,
         diff_binaries = false, -- Show diffs for binaries
-        git_cmd = { "git" },
-        -- hooks = {
-        --   diff_buf_read = function()
-        --     local opt = vim.opt_local
-        --     opt.wrap, opt.list, opt.relativenumber = false, false, false
-        --     opt.colorcolumn = ""
-        --   end,
-        --   ---@diagnostic disable-next-line: unused-local
-        --   diff_buf_win_enter = function(bufnr, winid, ctx)
-        --     if ctx.layout_name:match "^diff2" then
-        --       if ctx.symbol == "a" then
-        --         vim.opt_local.winhl = table.concat({
-        --           "DiffAdd:DiffviewDiffAddAsDelete",
-        --           "DiffDelete:DiffviewDiffDelete",
-        --         }, ",")
-        --       elseif ctx.symbol == "b" then
-        --         vim.opt_local.winhl = table.concat({
-        --           "DiffDelete:DiffviewDiffDelete",
-        --         }, ",")
-        --       end
-        --     end
-        --   end,
-        -- },
-        view = {
-          -- Configure the layout and behavior of different types of views.
-          -- Available layouts:
-          --   |'diff1_plain'
-          --   |'diff2_horizontal'
-          --   |'diff2_vertical'
-          --   |'diff3_horizontal'
-          --   |'diff3_vertical'
-          --   |'diff3_mixed'
-          --   |'diff4_mixed'
-          -- For more info, see ':h diffview-config-view.x.layout'.
-          default = {
-            -- Config for changed files, and staged files in diff views.
-            layout = "diff2_horizontal",
-          },
-          merge_tool = {
-            -- Config for conflicted files in diff views during a merge or rebase.
-            layout = "diff3_horizontal",
-            disable_diagnostics = true, -- Temporarily disable diagnostics for conflict buffers while in the view.
-          },
-          file_history = {
-            -- Config for changed files in file history views.
-            layout = "diff2_horizontal",
-          },
-        },
         key_bindings = {
-
           disable_defaults = true, -- Disable the default key bindings
-          -- The `view` bindings are active in the diff buffers, only when the current
-          -- tabpage is a Diffview.
+          --stylua: ignore
           view = {
-            ["<tab>"] = actions.select_next_entry, -- Open the diff for the next file
-            ["<s-tab>"] = actions.select_prev_entry, -- Open the diff for the previous file
+            { "n", "<tab>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
+            { "n", "<s-tab>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview]" } },
 
-            ["gf"] = actions.goto_file, -- Open the file in a new split in previous tabpage
-            ["<C-s>"] = actions.goto_file_split, -- Open the file in a new split
-            ["<C-t>"] = actions.goto_file_tab, -- Open the file in a new tabpage
+            { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" } },
+            { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" } },
 
-            ["<space>E"] = actions.focus_files, -- Bring focus to the files panel
-            ["<space>e"] = actions.toggle_files, -- Toggle the files panel.
+            { "n", "gf", actions.goto_file_edit, { desc = "Git: open the file in the previous tabpage [diffview]" } },
+            { "n", "ss", actions.goto_file_split, { desc = "Git: open the file in a new split [diffview]" } },
+            { "n", "st", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
+            { "n", "tn", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
 
-            ["<F4>"] = actions.cycle_layout,
-            ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
+            { "n", "<Leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffivew]" } },
+            { "n", "<Leader>e", actions.toggle_files, { desc = "Git: Toggle the file panel [diffivew]" } },
+            { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle through available layouts [diffview]" } },
+
+            { "n", "[x", actions.prev_conflict, { desc = "In the merge-tool: jump to the previous conflict" } },
+            { "n", "]x", actions.next_conflict, { desc = "In the merge-tool: jump to the next conflict" } },
+
+            { "n", "<leader>co", actions.conflict_choose "ours", { desc = "Choose the OURS version of a conflict" } },
+            { "n", "<leader>ct", actions.conflict_choose "theirs", { desc = "Choose the THEIRS version of a conflict" }, },
+            { "n", "<leader>cb", actions.conflict_choose "base", { desc = "Choose the BASE version of a conflict" } },
+            { "n", "<leader>ca", actions.conflict_choose "all", { desc = "Choose all the versions of a conflict" } },
+            { "n", "dx", actions.conflict_choose "none", { desc = "Delete the conflict region" } },
+            { "n", "<leader>cO", actions.conflict_choose_all "ours", { desc = "Choose the OURS version of a conflict for the whole file" }, },
+            { "n", "<leader>cT", actions.conflict_choose_all "theirs", { desc = "Choose the THEIRS version of a conflict for the whole file" }, },
+            { "n", "<leader>cB", actions.conflict_choose_all "base", { desc = "Choose the BASE version of a conflict for the whole file" }, },
+            { "n", "<leader>cA", actions.conflict_choose_all "all", { desc = "Choose all the versions of a conflict for the whole file" }, },
+            { "n", "dX", actions.conflict_choose_all "none", { desc = "Delete the conflict region for the whole file" }, },
           },
+          --stylua: ignore
           file_panel = {
+            { "n", "j", actions.next_entry, { desc = "Git: cursor down [diffview]" }, },
+            { "n", "<down>", actions.next_entry, { desc = "Git: cursor down [diffview]" }, },
+            { "n", "k", actions.prev_entry, { desc = "Git: cursor up [diffview]" }, },
+            { "n", "<up>", actions.prev_entry, { desc = "Git: bring the cursor to the previous file entry [diffview]" }, },
+            { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
 
-            ["<a-d>"] = actions.scroll_view(0.25), -- Scroll the view down
-            ["<a-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
+            { "n", "-", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
+            { "n", "<Leader>ghs", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
+            { "n", "<Leader>ghS", actions.stage_all, { desc = "Git: stage all entries [diffview]" } },
+            { "n", "<Leader>ghR", actions.unstage_all, { desc = "Git: unstage all entries [diffview]" } },
+            { "n", "<Leader>ghr", actions.restore_entry, { desc = "Git: restore entry to the state on the left side [diffview]" }, },
+            { "n", "L", actions.open_commit_log, { desc = "Git: open the commit log panel [diffivew]" } },
 
-            ["j"] = actions.next_entry,
-            ["k"] = actions.prev_entry,
-            ["<a-n>"] = actions.select_next_entry,
-            ["<a-p>"] = actions.select_prev_entry,
-            ["<cr>"] = actions.select_entry,
-            ["<2-LeftMouse>"] = actions.select_entry,
+            { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview]" } },
+            { "n", "zO", actions.open_all_folds, { desc = "Git: expand all folds [diffview]" } },
+            { "n", "h", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
+            { "n", "zc", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
+            { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview]" } },
+            { "n", "zm", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
+            { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
 
-            ["<tab>"] = actions.select_next_entry,
-            ["<s-tab>"] = actions.select_prev_entry,
+            { "n", "<c-b>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview]" } },
+            { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
+            { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview]" } },
+            { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
 
-            ["<Leader>gha"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
-            ["<Leader>ghA"] = actions.stage_all, -- Stage all entries.
-            ["<Leader>ghR"] = actions.unstage_all, -- Unstage all entries.
-            ["<Leader>ghu"] = actions.restore_entry, -- Restore entry to the state on the left side.
-            ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
+            { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" }, },
+            { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" }, },
 
-            ["H"] = actions.listing_style, -- Toggle between 'list' and 'tree' views
-            ["f"] = actions.toggle_flatten_dirs, -- Flatten empty subdirectories in tree listing style.
+            { "n", "gf", actions.goto_file_edit, { desc = "Git: open the file in the previous tabpage [diffview]" }, },
+            { "n", "ss", actions.goto_file_split, { desc = "Git: Open the file in a new split [diffview]" }, },
+            { "n", "st", actions.goto_file_tab, { desc = "Git: open the file in a new tabpag [diffview]" }, },
+            { "n", "tn", actions.goto_file_tab, { desc = "Git: open the file in a new tabpag [diffview]" }, },
 
-            ["o"] = actions.goto_file_edit,
-            ["<c-t>"] = actions.goto_file_tab,
-            ["<c-s>"] = actions.goto_file_split,
+            { "n", "i", actions.listing_style, { desc = "Toggle between 'list' and 'tree' views" }, },
+            { "n", "f", actions.toggle_flatten_dirs, { desc = "Flatten empty subdirectories in tree listing style" }, },
 
-            ["<F4>"] = actions.cycle_layout,
-            ["L"] = actions.open_commit_log,
+            { "n", "R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview]" }, },
 
-            ["<a-E>"] = actions.focus_files,
-            ["<a-e>"] = actions.toggle_files,
+            { "n", "<leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview]" }, },
+            { "n", "<leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffview]" } },
+            { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle available layouts [diffview]" } },
 
-            ["gf"] = "",
-            ["<space><tab>"] = "<Cmd>DiffviewClose<CR>",
+            { "n", "[x", actions.prev_conflict, { desc = "Go to the previous conflict" } },
+            { "n", "]x", actions.next_conflict, { desc = "Go to the next conflict" } },
+            { "n", "g?", actions.help "file_panel", { desc = "Open the help panel" } },
+            { "n", "<leader>cO", actions.conflict_choose_all "ours", { desc = "Choose the OURS version of a conflict for the whole file" }, },
+            { "n", "<leader>cT", actions.conflict_choose_all "theirs", { desc = "Choose the THEIRS version of a conflict for the whole file" }, },
+            { "n", "<leader>cB", actions.conflict_choose_all "base", { desc = "Choose the BASE version of a conflict for the whole file" }, },
+            { "n", "<leader>cA", actions.conflict_choose_all "all", { desc = "Choose all the versions of a conflict for the whole file" }, },
+            { "n", "dX", actions.conflict_choose_all "none", { desc = "Delete the conflict region for the whole file" }, },
           },
+          --stylua: ignore
           file_history_panel = {
-            ["?"] = actions.options, -- Open the option panel
+            { "n", "j", actions.next_entry, { desc = "Git: bring the cursor to the next file entry [diffview]" }, },
+            { "n", "<down>", actions.next_entry, { desc = "Git: bring the cursor to the next file entry [diffview]" }, },
+            { "n", "k", actions.prev_entry, { desc = "Git: bring the cursor to the previous file entry [diffview]" }, },
+            { "n", "<up>", actions.prev_entry, { desc = "Git: bring the cursor to the previous file entry [diffview]" }, },
+            { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
 
-            ["<a-d>"] = actions.scroll_view(0.25), -- Scroll the view down
-            ["<a-u>"] = actions.scroll_view(-0.25), -- Scroll the view up
+            { "n", "g!", actions.options, { desc = "Git: open the option panel [diffview]" } },
+            { "n", "<C-A-d>", actions.open_in_diffview, { desc = "Git: open the entry under the cursor in a diffview [diffview]" }, },
+            { "n", "y", actions.copy_hash, { desc = "Git: copy the commit hash of the entry under the cursor [diffview]" }, },
+            { "n", "L", actions.open_commit_log, { desc = "Git: show commit details [diffview]" } },
+            { "n", "X", actions.restore_entry, { desc = "Git: restore file to the state from the selected entry [diffview]" }, },
 
-            ["zR"] = actions.open_all_folds,
-            ["zM"] = actions.close_all_folds,
-            ["zo"] = actions.open_fold,
-            ["zc"] = actions.close_fold,
-            ["za"] = actions.toggle_fold,
-            ["<BS>"] = actions.toggle_fold,
-            ["<tab>"] = actions.toggle_fold,
-            ["<s-tab>"] = actions.toggle_fold,
+            { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview]" } },
+            { "n", "zR", actions.open_all_folds, { desc = "Git: expand all folds [diffview]" } },
+            { "n", "zc", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
+            { "n", "h", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
+            { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview]" } },
+            { "n", "zm", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
+            { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
 
-            ["j"] = actions.next_entry,
-            ["k"] = actions.prev_entry,
-            -- ["<down>"] = actions.next_entry,
-            -- ["<up>"] = actions.prev_entry,
-            ["<a-n>"] = actions.select_next_entry,
-            ["<a-p>"] = actions.select_prev_entry,
-            ["<cr>"] = actions.select_entry,
-            ["<2-LeftMouse>"] = actions.select_entry,
 
-            ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
+            { "n", "<c-b>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview]" } },
+            { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
+            { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview]" } },
+            { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
+            { "n", "<tab>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
+            { "n", "<s-tab>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
 
-            ["o"] = actions.goto_file_edit,
-            ["<c-t>"] = actions.goto_file_tab,
-            ["<c-s>"] = actions.goto_file_split,
+            { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" }, },
+            { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" } },
 
-            ["<F4>"] = actions.cycle_layout,
-            ["L"] = actions.open_commit_log,
-            ["D"] = actions.open_in_diffview, -- Open the entry under the cursor in a diffview
-            ["y"] = actions.copy_hash, -- Copy the commit hash of the entry under the cursor
+            { "n", "gf", actions.goto_file_edit, { desc = "Git: open the file in the previous tabpage [diffview]" }, },
+            { "n", "ss", actions.goto_file_split, { desc = "Git: open the file in a new split [diffview]" } },
+            { "n", "st", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
+            { "n", "tn", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
 
-            ["<space>E"] = actions.focus_files,
-            ["<space>e"] = actions.toggle_files,
-          },
-          option_panel = {
-            ["<tab>"] = actions.select_entry,
-            ["q"] = actions.close,
+            { "n", "<leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview]" } },
+            { "n", "<leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffview]" } },
+            { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle available layouts [diffview]" } },
+
+            { "n", "g?", actions.help "file_history_panel", { desc = "Git: open the help panel [diffview]" } },
           },
         },
       }

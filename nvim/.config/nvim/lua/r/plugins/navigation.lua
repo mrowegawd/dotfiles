@@ -94,8 +94,8 @@ return {
               -- ["<Leader>ff"] = "filter_on_submit",
               -- ["gd"] = "fuzzy_finder_directory",
               -- ["<C-x>"] = "clear_filter",
-              ["gp"] = "prev_git_modified",
-              ["gn"] = "next_git_modified",
+              ["<a-p>"] = "prev_git_modified",
+              ["<a-n>"] = "next_git_modified",
               --["/"] = "filter_as_you_type", -- this was the default until v1.28
               -- ["D"] = "fuzzy_sorter_directory",
               -- ["/"] = "noop",

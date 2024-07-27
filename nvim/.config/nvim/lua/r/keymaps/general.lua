@@ -43,7 +43,41 @@ RUtils.map.tnoremap("<C-h>", "<Left>", { desc = "Terminal: left char" })
 RUtils.map.tnoremap("<C-l>", "<Right>", { desc = "Terminal: right char" })
 RUtils.map.tnoremap("<C-b>", "<C-Left>", { desc = "Terminal: backward" })
 RUtils.map.tnoremap("<C-f>", "<C-Right>", { desc = "Terminal: forward" })
+
 RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
+
+RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
+RUtils.map.tnoremap("<a-x>", function()
+  local buf = vim.api.nvim_get_current_buf()
+  require("bufdelete").bufdelete(buf, true)
+end, { desc = "Terminal: close terminal" })
+RUtils.map.tnoremap("<a-w>", function()
+  RUtils.map.feedkey("<C-\\><C-n>", "t")
+  require("fzf-lua").tabs()
+end, { desc = "Terminal: show tabs [fzflua]" })
+RUtils.map.tnoremap("<c-a-l>", function()
+  RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
+end, { desc = "Terminal: next tab" })
+RUtils.map.tnoremap("<c-a-h>", function()
+  RUtils.map.feedkey("<C-\\><C-n><c-a-h>", "t")
+end, { desc = "Terminal: prev tab" })
+
+-- Do not delete these line!
+
+RUtils.map.tnoremap("<a-f>", function()
+  -- RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
+  RUtils.terminal.toggle_right_term()
+end, { desc = "Terminal: new term split" })
+RUtils.map.tnoremap("<a-N>", function()
+  RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
+end, { desc = "Terminal: new tabterm" })
+RUtils.map.tnoremap("<a-CR>", function()
+  RUtils.terminal.smart_split()
+end, { desc = "Terminal: new term" })
+-- RUtils.map.tnoremap("<Leader>bd", function()
+--   RUtils.map.feedkey("<C-\\><C-n><Leader>bd", "t")
+-- end, { desc = "Terminal: rescue buffer" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ WINDOWS, VIEW AND NAV                                    │
@@ -54,6 +88,7 @@ RUtils.map.nnoremap("ss", "<CMD>split<CR>", { desc = "View: horizontal split", s
 RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window to =", silent = true })
 RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force view to horizontal split", silent = true })
 RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force view to vertical split", silent = true })
+RUtils.map.nnoremap("st", "<CMD>tabedit %<CR>", { desc = "View: view buffer in new tab", silent = true })
 
 -- navigate window
 RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true })
@@ -75,11 +110,8 @@ if not RUtils.has "smart-splits.nvim" then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
   RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
   RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
-  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +4<cr>", { desc = "View: increase window width" })
+  RUtils.map.nnoremap("<a-L>", "<cmd>vertical resize +3<cr>", { desc = "View: increase window width" })
 end
-
--- RUtils.map.nnoremap("sm", RUtils.toggle.maximize, { desc = "View: toggle zoom" })
--- RUtils.map.nnoremap("<a-m>", RUtils.toggle.maximize, { desc = "View: toggle zoom" })
 
 -- Tab
 RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab", silent = true })
@@ -282,6 +314,57 @@ RUtils.map.nnoremap("<Leader>uT", function()
   end
 end, { desc = "Toggle: treesitter highlight" })
 
+-- ╭─────────────────────────────────────────────────────────╮
+-- │ DIFF                                                    │
+-- ╰─────────────────────────────────────────────────────────╯
+
+-- Create a new scratch buffer
+vim.api.nvim_create_user_command("Ns", function()
+  vim.cmd [[
+		execute 'vsplit | enew'
+		setlocal buftype=nofile
+		setlocal bufhidden=hide
+		setlocal noswapfile
+	]]
+end, { nargs = 0 })
+
+-- Compare the clipboard to the current buffer
+vim.api.nvim_create_user_command("CompareClipboard", function()
+  local ftype = vim.api.nvim_eval "&filetype" -- original filetype
+  vim.cmd [[
+		tabnew %
+		Ns
+		normal! P
+		windo diffthis
+	]]
+  vim.cmd("set filetype=" .. ftype)
+end, { nargs = 0 })
+
+-- Compare the clipboard to a visual selection
+vim.api.nvim_create_user_command("CompareClipboardSelection", function()
+  vim.cmd [[
+		" yank visual selection to z register
+		normal! gv"zy
+		" open new tab, set options to prevent save prompt when closing
+		execute 'tabnew | setlocal buftype=nofile bufhidden=hide noswapfile'
+		" paste z register into new buffer
+		normal! V"zp
+		Ns
+		normal! Vp
+    " alternative: diffview
+		windo diffthis
+	]]
+end, {
+  nargs = 0,
+  range = true,
+})
+
+RUtils.map.vnoremap(
+  "<Leader>gvV",
+  "<esc><cmd>CompareClipboardSelection<cr>",
+  { desc = "Git: compare diff with selection clipboard (visual)" }
+)
+
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ MISC                                                     │
 -- ╰──────────────────────────────────────────────────────────╯
@@ -296,12 +379,12 @@ RUtils.map.nnoremap("<Leader>Y", function()
   vim.fn.setreg("+", path)
   vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
 end, { silent = true, desc = "Misc: yank current absolute path" })
-RUtils.map.nnoremap("Y", "y$", { desc = "Yank to end of line" })
 RUtils.map.nnoremap("<CR>", '"xciw', { desc = "Misc: change inner word" })
 RUtils.map.vnoremap("<CR>", '"xc', { desc = "Misc: change selection word" })
 
 RUtils.map.nnoremap("<Leader>n", cmd.nohl, { desc = "Misc: clear searches" })
-RUtils.map.nnoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
+-- WARN: bentrok dengan screen manager VGIT (check nanti)
+-- RUtils.map.nnoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
 -- RUtils.map.inoremap("<ESC>", cmd.noh, { desc = "Misc: clear searches" })
 
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -510,6 +593,60 @@ RUtils.map.nnoremap("<Localleader>of", function()
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
 end, { desc = "Misc: list commands" })
+
+RUtils.map.nnoremap("<Leader>gff", function()
+  local col, row = RUtils.fzflua.rectangle_win_pojokan()
+  RUtils.fzflua.send_cmds(
+    vim.tbl_deep_extend("force", {
+      diffview_open = function()
+        vim.cmd [[DiffviewOpen]]
+      end,
+      diffview_filehistory_repo = function()
+        vim.cmd [[DiffviewFileHistory]]
+      end,
+      diffview_filehistory_curbuf = function()
+        vim.cmd [[DiffviewFileHistory --follow %]]
+      end,
+      diffview_filehistory_line = function()
+        vim.cmd [[.DiffviewFileHistory --follow]]
+      end,
+      diffview_windo_this = function()
+        vim.cmd [[windo diffthis]]
+      end,
+      -- neogit = function()
+      --   vim.cmd [[Neogit]]
+      -- end,
+      git_worktree_create = function()
+        vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
+      end,
+      git_worktree_manage = function()
+        vim.cmd [[lua require("telescope").extensions.git_worktree.git_worktrees()]]
+      end,
+      git_conflict_collect_qf = function()
+        vim.cmd [[GitConflictListQf]]
+      end,
+      git_conflict_pilih_current_ours = function()
+        RUtils.info("Choosing ours (current)", { title = "GitConflict" })
+        vim.cmd [[GitConflictChooseOurs]]
+      end,
+      git_conflict_pilih_theirs = function()
+        RUtils.info("Choosing theirs (incoming)", { title = "GitConflict" })
+        vim.cmd [[GitConflictChooseTheirs]]
+      end,
+      git_conflict_pilih_none = function()
+        RUtils.info("Choosing none of them (deleted)", { title = "GitConflict" })
+        vim.cmd [[GitConflictChooseNone]]
+      end,
+      git_blame = function()
+        vim.cmd [[BlameToggle]]
+      end,
+      git_browse = function()
+        RUtils.lazygit.browse()
+      end,
+    }, {}),
+    { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
+  )
+end, { desc = "Git: list commands of git" })
 
 local function normalize_return(str)
   ---@diagnostic disable-next-line: redefined-local

@@ -1,5 +1,30 @@
 local cmd = vim.cmd
 
+vim.opt.foldopen:remove { "search" } -- no auto-open when searching, since the following snippet does that better
+vim.keymap.set("n", "/", "zn/", { desc = "Search & Pause Folds" })
+
+vim.on_key(function(char)
+  local key = vim.fn.keytrans(char)
+  local searchKeys = { "n", "N", "*", "#", "/", "?" }
+
+  local searchConfirmed = (key == "<CR>" and vim.fn.getcmdtype():find "[/?]" ~= nil)
+  if not (searchConfirmed or vim.fn.mode() == "n") then
+    return
+  end
+
+  local searchKeyUsed = searchConfirmed or (vim.tbl_contains(searchKeys, key))
+  local pauseFold = vim.opt.foldenable:get() and searchKeyUsed
+  local unpauseFold = not (vim.opt.foldenable:get()) and not searchKeyUsed
+
+  if pauseFold then
+    vim.opt.foldenable = false
+  elseif unpauseFold then
+    vim.opt.foldenable = true
+
+    vim.cmd.normal "zv" -- after closing folds, keep the *current* fold open
+  end
+end, vim.api.nvim_create_namespace "auto_pause_folds")
+
 RUtils.cmd.augroup("WrapSpell", {
   event = { "FileType" },
   pattern = { "gitcommit", "NeogitCommitMessage" },
@@ -170,58 +195,6 @@ RUtils.cmd.augroup("WindowBehaviours", {
     vim.opt_local.conceallevel = 2
     vim.opt_local.relativenumber = false
     vim.opt_local.number = false
-  end,
-}, {
-  event = { "BufEnter", "BufRead" },
-  pattern = "*",
-  command = function()
-    if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
-      -- vim.cmd.startinsert()
-
-      RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-      RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-      RUtils.map.tnoremap("<c-space>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
-      RUtils.map.tnoremap("<a-x>", function()
-        -- RUtils.map.feedkey("<C-\\><C-n>:q!<CR>", "t")
-        local buf = vim.api.nvim_get_current_buf()
-        require("bufdelete").bufdelete(buf, true)
-      end, { desc = "Terminal: close terminal" })
-
-      RUtils.map.tnoremap("<a-w>", function()
-        RUtils.map.feedkey("<C-\\><C-n>", "t")
-        require("fzf-lua").tabs()
-      end, { desc = "Terminal: show tabs [fzflua]" })
-      RUtils.map.tnoremap("<c-a-l>", function()
-        RUtils.map.feedkey("<C-\\><C-n><c-a-l>", "t")
-      end, { desc = "Terminal: next tab" })
-      RUtils.map.tnoremap("<c-a-h>", function()
-        RUtils.map.feedkey("<C-\\><C-n><c-a-h>", "t")
-      end, { desc = "Terminal: prev tab" })
-      RUtils.map.tnoremap("<a-m>", function()
-        RUtils.map.feedkey("<C-\\><C-n>sm", "t")
-        if vim.bo.buftype == "terminal" then
-          RUtils.map.feedkey("a", "t")
-        end
-      end, { desc = "Terminal: toggle zoom" })
-
-      -- ========================
-      -- Do not delete these line!
-      -- ========================
-
-      RUtils.map.tnoremap("<a-f>", function()
-        RUtils.terminal.toggle_right_term()
-        -- RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
-      end, { desc = "Terminal: new term split" })
-      RUtils.map.tnoremap("<a-N>", function()
-        RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")
-      end, { desc = "Terminal: new tabterm" })
-      RUtils.map.tnoremap("<a-CR>", function()
-        RUtils.terminal.smart_split()
-      end, { desc = "Terminal: new term" })
-      RUtils.map.tnoremap("<Leader>bd", function()
-        RUtils.map.feedkey("<C-\\><C-n><Leader>bd", "t")
-      end, { desc = "Terminal: rescue buffer" })
-    end
   end,
 })
 

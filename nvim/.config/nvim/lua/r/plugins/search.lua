@@ -110,7 +110,7 @@ return {
       { "<Leader>sh", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: history buffer" },
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: docoument symbols [fzflua]" },
+      { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
       { "gS", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
@@ -119,6 +119,12 @@ return {
       { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Fzflua: jumps" },
       { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
       { "<Leader>fs", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
+
+      { "<Leader>gfs", function() require("fzf-lua").git_status() end, desc = "Git: show git status [fzflua]" },
+      { "<Leader>gfS", function() require("fzf-lua").git_stash() end, desc = "Git: show git stash [fzflua]" },
+      { "<Leader>gfc", function() require("fzf-lua").git_bcommits() end, desc = "Git: list commits buffer [ [fzflua]" },
+      { "<Leader>gfC", function() require("fzf-lua").git_commits() end, desc = "Git: list commits repos [ [fzflua]" },
+
       { "<Leader>fh", function() local j = vim.fn.expand "<cword>" require("fzf-lua").help_tags { query = j } end, desc = "Fzflua: help tags" },
       {
         "<Leader>fh",
@@ -235,8 +241,8 @@ return {
 
             ["<a-p>"] = "toggle-preview",
 
-            ["<c-d>"] = "preview-page-down",
-            ["<c-u>"] = "preview-page-up",
+            ["<PageDown>"] = "preview-page-down",
+            ["<PageUp>"] = "preview-page-up",
           },
           fzf = {
             ["ctrl-d"] = "preview-page-down",
@@ -862,13 +868,13 @@ return {
       -- },
       -- { "sf", "<CMD>Telescope buffers<CR>", desc = "Telescope: find buffers" },
       { "<Leader>fk", "<CMD>Telescope keymaps<CR>", desc = "Telescope: keymaps", mode = { "n", "v" } },
-      {
-        "<Leader>sn",
-        function()
-          require("telescope").extensions.luasnip.luasnip {}
-        end,
-        desc = "Telescope: luasnip list",
-      },
+      -- {
+      --   "<Leader>sn",
+      --   function()
+      --     require("telescope").extensions.luasnip.luasnip {}
+      --   end,
+      --   desc = "Telescope: luasnip list",
+      -- },
       {
         "<Localleader><Localleader>",
         "<CMD>Telescope find_files<CR>",
@@ -1234,8 +1240,8 @@ return {
       telescope.load_extension "grepqf"
       ---@diagnostic disable-next-line: undefined-field
       telescope.load_extension "live_grep_args"
-      ---@diagnostic disable-next-line: undefined-field
-      telescope.load_extension "luasnip"
+      -----@diagnostic disable-next-line: undefined-field
+      --telescope.load_extension "luasnip"
 
       local corrode_cfg = require "telescope._extensions.corrode.config"
       corrode_cfg.values = { theme = "ivy" }

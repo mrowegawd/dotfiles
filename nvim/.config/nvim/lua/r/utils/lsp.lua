@@ -6,6 +6,7 @@ local M = {}
 ---@param opts? lsp.Client.filter
 function M.get_clients(opts)
   local ret = {} ---@type vim.lsp.Client[]
+
   if vim.lsp.get_clients then
     ret = vim.lsp.get_clients(opts)
   else

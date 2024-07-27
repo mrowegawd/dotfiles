@@ -1,7 +1,7 @@
-local opt = vim.opt_local
+local keymap, opt = vim.keymap, vim.opt_local
 
-RUtils.map.nnoremap("rF", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true, desc = "Markdown: preview toggle" })
-RUtils.map.nnoremap("ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
+keymap.set("n", "rF", "<CMD>MarkdownPreviewToggle<CR>", { buffer = true, desc = "Markdown: preview toggle" })
+keymap.set("n", "ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 -- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]
 
 opt.wrap = false
@@ -17,8 +17,6 @@ function _G.Mardownfoldtext()
   local padding = string.rep(" ", string.find(line, "[^%s]") - 1)
   return string.format("%s%s %s   %d", padding, icon, line, vim.v.foldend - vim.v.foldstart + 1)
 end
-
-RUtils.map.nmap("K", "<Nop>")
 
 -- opt.foldtext = "v:lua.Mardownfoldtext()"
 opt.foldtext = ""

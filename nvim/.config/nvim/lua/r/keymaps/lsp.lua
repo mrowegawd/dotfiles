@@ -43,13 +43,6 @@ function M.get()
       end,
       desc = "LSP: goto type definition",
     },
-    { "<leader>cA", RUtils.lsp.action.source, desc = "LSP: source action", has = "codeAction" },
-    {
-      "<leader>cR",
-      RUtils.lsp.rename_file,
-      has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
-      desc = "LSP: rename file",
-    },
     {
       "<a-q>",
       function()
@@ -65,6 +58,13 @@ function M.get()
       end,
       has = "documentHighlight",
       desc = "LSP: prev word reference",
+    },
+    { "<leader>cA", RUtils.lsp.action.source, desc = "LSP: source action", has = "codeAction" },
+    {
+      "<leader>cR",
+      RUtils.lsp.rename_file,
+      has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
+      desc = "LSP: rename file",
     },
     {
       "<Leader>cc",
@@ -195,20 +195,20 @@ function M.get()
     M._keys[#M._keys + 1] = { "<F2>", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
   end
 
-  if RUtils.has "lsp_signature.nvim" then
-    M._keys[#M._keys + 1] = {
-      "<c-s>",
-      function()
-        require("lsp_signature").toggle_float_win()
-      end,
-      mode = "i",
-      has = "signatureHelp",
-      desc = "LSP: toggle signature help [lsp-signature]",
-    }
-  else
-    M._keys[#M._keys + 1] =
-      { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" }
-  end
+  -- if RUtils.has "lsp_signature.nvim" then
+  --   M._keys[#M._keys + 1] = {
+  --     "<c-s>",
+  --     function()
+  --       require("lsp_signature").toggle_float_win()
+  --     end,
+  --     mode = "i",
+  --     has = "signatureHelp",
+  --     desc = "LSP: toggle signature help [lsp-signature]",
+  --   }
+  -- else
+  --   M._keys[#M._keys + 1] =
+  --     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" }
+  -- end
 
   if RUtils.has "goto-preview" then
     M._keys[#M._keys + 1] =

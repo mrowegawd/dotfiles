@@ -20,7 +20,7 @@ return {
     end,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     keys = {
-      { "<c-space>", desc = "Misc: increment selection [treesitter]" },
+      { "<c-space>", desc = "Misc: increment selection [treesitter]", unique = true },
       { "<bs>", desc = "Misc: iecrement selection (xmode) [treesitter]", mode = "x" },
     },
     opts_extend = { "ensure_installed" },

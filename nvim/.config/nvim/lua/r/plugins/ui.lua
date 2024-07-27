@@ -51,6 +51,10 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
+          ["vague"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
         },
       })
       return {
@@ -232,9 +236,15 @@ return {
     end,
     opts = function()
       Highlight.plugin("notify", {
-        { NoiceCmdlinePopupBorder = { fg = { from = "Directory" } } },
-        { NoiceCmdlinePopup = { bg = "NONE" } },
+        { NoiceCmdlinePopupBorder = { inherit = "FloatBorder" } },
+        { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
+        { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
+        { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
+        { NoiceCmdlinePopup = { inherit = "NormalFloat" } },
+        { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+
         { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
+        { NoicePopupBorder = { inherit = "FloatBorder" } },
       })
 
       return {

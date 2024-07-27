@@ -5,18 +5,24 @@ local opt = vim.opt_local
 opt.buflisted = false
 opt.winfixheight = true
 opt.cursorline = true
--- opt.signcolumn = "yes"
 opt.listchars:append "trail: "
 
--- Disable ctrl-i and ctrl-o
 keymap.set("n", "<c-i>", "<Nop>", {
   buffer = api.nvim_get_current_buf(),
 })
+
 keymap.set("n", "<c-o>", "<Nop>", {
   buffer = api.nvim_get_current_buf(),
 })
 
-RUtils.map.nnoremap("<leader>fq", function()
+keymap.set("n", "o", function()
+  RUtils.map.feedkey("<CR>", "n")
+end, {
+  buffer = api.nvim_get_current_buf(),
+  desc = "Qf: open item",
+})
+
+keymap.set("n", "<leader>fq", function()
   require("fzf-lua").quickfix {
     prompt = "  ",
     winopts = {
@@ -25,10 +31,10 @@ RUtils.map.nnoremap("<leader>fq", function()
   }
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: select items [fzflua]",
+  desc = "Qf: select items [fzflua]",
 })
 
-RUtils.map.nnoremap("<leader>fg", function()
+keymap.set("n", "<leader>fg", function()
   local path = require "fzf-lua.path"
   local qf_items = vim.fn.getqflist()
 
@@ -48,14 +54,7 @@ RUtils.map.nnoremap("<leader>fg", function()
   }
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: live grep items [fzflua]",
-})
-
-RUtils.map.nnoremap("o", function()
-  RUtils.map.feedkey("<CR>", "n")
-end, {
-  buffer = api.nvim_get_current_buf(),
-  desc = "QF: open item",
+  desc = "Qf: live grep items [fzflua]",
 })
 
 local function expose_items_qf(t)
@@ -90,16 +89,16 @@ local function expose_items_qf(t)
   end
 end
 
-RUtils.map.nnoremap("<Leader>wl", function()
+keymap.set("n", "<Leader>wl", function()
   expose_items_qf()
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: open items qf with stack window",
+  desc = "Qf: open items qf with stack window",
 })
 
-RUtils.map.nnoremap("<Leader>wL", function()
+keymap.set("n", "<Leader>wL", function()
   expose_items_qf "tab"
 end, {
   buffer = api.nvim_get_current_buf(),
-  desc = "QF: open items qf with tab window",
+  desc = "Qf: open items qf with tab window",
 })

@@ -201,7 +201,6 @@ function M.smart_split()
       vim.cmd [[STerm]]
     end
   else
-    RUtils.info "bro"
     vim.cmd [[STerm]]
   end
 end

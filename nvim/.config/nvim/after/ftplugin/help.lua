@@ -1,9 +1,4 @@
--- if vim.bo.ma then
---   return
--- end
-
--- local keymap = vim.keymap
-local opt_local = vim.opt_local
+local keymap, opt_local = vim.keymap, vim.opt_local
 
 opt_local.number = false
 opt_local.relativenumber = false
@@ -14,12 +9,12 @@ opt_local.conceallevel = 2
 -- open help buffers in new tabs by default
 -- vim.cmd.wincmd "L"
 
-RUtils.map.nnoremap("gd", "<c-]>", {
+keymap.set("n", "gd", "<c-]>", {
   buffer = true,
   desc = "Help: go to definition",
 })
 
-RUtils.map.nnoremap("<BS>", "<c-t>", {
+keymap.set("n", "<BS>", "<c-t>", {
   buffer = true,
   desc = "Help: go back last definition",
 })
