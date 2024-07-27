@@ -43,10 +43,10 @@ function scrollToSmooth(position) {
 }
 
 mapkey("<Ctrl-d>", "#2Scroll down of half", () => {
-  scrollBySmooth(window.innerHeight / 2, 1);
+  scrollBySmooth(window.innerHeight / 2, 2);
 });
 mapkey("<Ctrl-u>", "#2Scroll up of half", () => {
-  scrollBySmooth(window.innerHeight / 2, -1);
+  scrollBySmooth(window.innerHeight / 2, -2);
 });
 
 mapkey("gg", "#2Scroll to beginning", () => {
@@ -56,13 +56,6 @@ mapkey("G", "#2Scroll to ending", () => {
   scrollToSmooth(document.body.scrollHeight);
 });
 
-// mapkey("t", "#2Scroll up of line", () => {
-//   scrollBySmooth(window.innerHeight / 10, -1);
-// });
-// mapkey("n", "#2Scroll down of line", () => {
-//   scrollBySmooth(window.innerHeight / 10, 1);
-// });
-
 mapkey("k", "#2Scroll up of line", () => {
   scrollBySmooth(window.innerHeight / 10, -2);
 });
@@ -70,11 +63,18 @@ mapkey("j", "#2Scroll down of line", () => {
   scrollBySmooth(window.innerHeight / 10, 2);
 });
 
+mapkey("K", "#2Scroll up of line", () => {
+  scrollBySmooth(window.innerHeight / 10, 3);
+});
+mapkey("J", "#2Scroll down of line", () => {
+  scrollBySmooth(window.innerHeight / 10, 3);
+});
+
 mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
-  scrollBySmooth(window.innerHeight * 0.9, 1);
+  scrollBySmooth(window.innerHeight * 10, 3);
 });
 mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
-  scrollBySmooth(window.innerHeight * 0.9, -1);
+  scrollBySmooth(window.innerHeight * 10, -3);
 });
 
 // ╭─────────────────────────────────────────────────────────╮
