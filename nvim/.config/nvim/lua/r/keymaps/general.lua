@@ -272,6 +272,7 @@ RUtils.map.nnoremap(
 )
 RUtils.map.nnoremap("J", "6j")
 RUtils.map.nnoremap("K", "6k")
+RUtils.map.nnoremap("<c-j>", "J")
 RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 
@@ -375,8 +376,8 @@ RUtils.map.vnoremap(
 -- │ MISC                                                     │
 -- ╰──────────────────────────────────────────────────────────╯
 -- Make register clean
-RUtils.map.nnoremap("x", "_x")
-RUtils.map.nnoremap("c", "_c")
+-- RUtils.map.nnoremap("x", "_x")
+-- RUtils.map.nnoremap("c", "_c")
 RUtils.map.nnoremap("dd", function()
   if vim.fn.getline "." == "" then
     return '"_dd'
