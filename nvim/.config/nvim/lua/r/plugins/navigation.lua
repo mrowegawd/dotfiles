@@ -392,10 +392,10 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- AERIAL
+  -- AERIAL (disabled)
   {
     "stevearc/aerial.nvim",
-    -- enabled = false,
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -405,9 +405,8 @@ return {
       vim_width = math.floor(vim_width / 2 - 30)
 
       return {
-        attach_mode = "global",
-        backends = { "lsp", "treesitter", "markdown", "man" },
         layout = { min_width = vim_width },
+        backends = { "lsp", "markdown", "asciidoc", "man" },
         show_guides = true,
         guides = {
           mid_item = "├╴",
@@ -415,11 +414,10 @@ return {
           nested_top = "│ ",
           whitespace = "  ",
         },
+        -- highlight_mode = "full_width",
         manage_folds = false,
         link_tree_to_folds = false,
-        highlight_mode = "full_width",
         link_folds_to_tree = false,
-        filter_kind = false,
         icons = RUtils.config.icons.kinds,
         keymaps = {
           ["<a-n>"] = "actions.down_and_scroll",
@@ -430,14 +428,16 @@ return {
           ["}"] = false,
           ["[["] = false,
           ["]]"] = false,
+          ["zm"] = "actions.tree_close_all",
+          ["zO"] = "actions.tree_open_all",
         },
       }
     end,
   },
-  -- OUTLINE.NVIM (disabled)
+  -- OUTLINE.NVIM
   {
     "hedyhli/outline.nvim",
-    enabled = false,
+    -- enabled = false,
     event = "VeryLazy",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
@@ -448,6 +448,12 @@ return {
               OutlineCurrent = {
                 fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
                 bg = "NONE",
+              },
+            },
+            {
+              OutlineJumpHighlight = {
+                bg = "red",
+                fg = "NONE",
               },
             },
             {
@@ -532,6 +538,32 @@ return {
             {
               OutlineCurrent = {
                 fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+              },
+            },
+          },
+          ["vague"] = {
+            {
+              OutlineFoldMarker = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "FoldColumn", attr = "fg", alter = 0.3 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = -0.1 },
+                bg = { from = "Keyword", attr = "fg", alter = -0.5 },
               },
             },
           },
@@ -646,15 +678,15 @@ return {
         height = height - 1
       end
 
-      local function get_aerial()
-        local ok_aerial, aerial = pcall(require, "aerial")
-        return ok_aerial and aerial or {}
-      end
-
-      -- local function get_outline()
-      --   local ok_aerial, aerial = pcall(require, "outline")
+      -- local function get_aerial()
+      --   local ok_aerial, aerial = pcall(require, "aerial")
       --   return ok_aerial and aerial or {}
       -- end
+
+      local function get_outline()
+        local ok_aerial, aerial = pcall(require, "outline")
+        return ok_aerial and aerial or {}
+      end
 
       return {
         {
@@ -665,7 +697,7 @@ return {
           desc = "Misc: open file explore [neotree]",
         },
 
-        -- { TODO: ini error, cause flickring window
+        -- { -- TODO: ini error, cause flickring window
         --   "<leader>ue",
         --   function()
         --     require("edgy").toggle()
@@ -697,74 +729,29 @@ return {
           end,
           desc = "Misc: move cursor to outline window [outline]",
         },
-        {
-          "<Localleader>oa",
-          function()
-            vim.cmd [[AerialToggle right]]
-          end,
-          desc = "Misc: toggle aerial [aerial]",
-        },
         -- {
         --   "<Localleader>oa",
         --   function()
-        --     vim.cmd.Outline()
+        --     vim.cmd [[AerialToggle right]]
         --   end,
-        --   desc = "Misc: toggle open/close outline window [outline]",
+        --   desc = "Misc: toggle aerial [aerial]",
         -- },
         {
-          "<Localleader>oA",
+          "<Localleader>oa",
           function()
-            if vim.bo[0].filetype == "norg" then
-              return
-            end
-
-            local opts = {
-              title = "[Aerial]",
-              actions = {
-                ["default"] = function(selected, _)
-                  local sel = {}
-                  for word in selected[1]:gmatch "%w+" do
-                    table.insert(sel, word)
-                  end
-                  local selection = sel[1]
-
-                  if selection ~= nil and type(selection) == "string" then
-                    local opts_aerial = RUtils.opts "aerial.nvim"
-                    local aerial = get_aerial()
-                    local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
-                    if outline_win.found then
-                      vim.cmd [[AerialToggle]]
-                      -- outline.close_outline()
-                    end
-
-                    -- must reload
-                    vim.cmd "e "
-                    if selection == "all" then
-                      opts_aerial.filter_kind = false
-                    else
-                      opts_aerial.filter_kind = { selection }
-                    end
-                    aerial.setup(opts_aerial)
-                    vim.schedule(function()
-                      aerial.open()
-                    end)
-                  end
-                end,
-              },
-            }
-            RUtils.fzflua.cmd_filter_kind_lsp(opts)
+            vim.cmd.Outline()
           end,
-          desc = "Misc: change filter kind aerial [aerial]",
+          desc = "Misc: toggle open/close outline window [outline]",
         },
         -- {
         --   "<Localleader>oA",
         --   function()
-        --     if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
+        --     if vim.bo[0].filetype == "norg" then
         --       return
         --     end
         --
         --     local opts = {
-        --       title = "[Outline]",
+        --       title = "[Aerial]",
         --       actions = {
         --         ["default"] = function(selected, _)
         --           local sel = {}
@@ -774,23 +761,24 @@ return {
         --           local selection = sel[1]
         --
         --           if selection ~= nil and type(selection) == "string" then
-        --             local opts_outline = RUtils.opts "outline.nvim"
-        --             local outline = get_outline()
-        --             local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
+        --             local opts_aerial = RUtils.opts "aerial.nvim"
+        --             local aerial = get_aerial()
+        --             local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
         --             if outline_win.found then
-        --               vim.cmd.Outline()
+        --               vim.cmd [[AerialToggle]]
+        --               -- outline.close_outline()
         --             end
         --
         --             -- must reload
         --             vim.cmd "e "
         --             if selection == "all" then
-        --               opts_outline.symbols.filter = nil
+        --               opts_aerial.filter_kind = false
         --             else
-        --               opts_outline.symbols.filter = { selection }
+        --               opts_aerial.filter_kind = { selection }
         --             end
-        --             outline.setup(opts_outline)
+        --             aerial.setup(opts_aerial)
         --             vim.schedule(function()
-        --               outline.open_outline()
+        --               aerial.open()
         --             end)
         --           end
         --         end,
@@ -798,8 +786,52 @@ return {
         --     }
         --     RUtils.fzflua.cmd_filter_kind_lsp(opts)
         --   end,
-        --   desc = "Misc: change filter kind outline [outline]",
+        --   desc = "Misc: change filter kind aerial [aerial]",
         -- },
+        {
+          "<Localleader>oA",
+          function()
+            if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
+              return
+            end
+
+            local opts = {
+              title = "[Outline]",
+              actions = {
+                ["default"] = function(selected, _)
+                  local sel = {}
+                  for word in selected[1]:gmatch "%w+" do
+                    table.insert(sel, word)
+                  end
+                  local selection = sel[1]
+
+                  if selection ~= nil and type(selection) == "string" then
+                    local opts_outline = RUtils.opts "outline.nvim"
+                    local outline = get_outline()
+                    local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
+                    if outline_win.found then
+                      vim.cmd.Outline()
+                    end
+
+                    -- must reload
+                    vim.cmd "e "
+                    if selection == "all" then
+                      opts_outline.symbols.filter = nil
+                    else
+                      opts_outline.symbols.filter = { selection }
+                    end
+                    outline.setup(opts_outline)
+                    vim.schedule(function()
+                      outline.open_outline()
+                    end)
+                  end
+                end,
+              },
+            }
+            RUtils.fzflua.cmd_filter_kind_lsp(opts)
+          end,
+          desc = "Misc: change filter kind outline [outline]",
+        },
       }
     end,
     opts = function()
