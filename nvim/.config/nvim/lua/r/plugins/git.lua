@@ -83,7 +83,7 @@ return {
         desc = "Git: open git link on browser [gitlinker]",
       },
       {
-        "<leader>gy",
+        "<Leader>gy",
         desc = "Git: copy git link [gitlinker]",
       },
     },
@@ -215,12 +215,12 @@ return {
             close_review_tab = { lhs = "<C-c>", desc = "submit win - close review tab [octo]" },
           },
           review_diff = {
-            submit_review = { lhs = "<leader>vs", desc = "review diff - submit review [octo]" },
-            discard_review = { lhs = "<leader>vd", desc = "review diff - discard review [octo]" },
+            submit_review = { lhs = "<space>vs", desc = "review diff - submit review [octo]" },
+            discard_review = { lhs = "<space>vd", desc = "review diff - discard review [octo]" },
             add_review_comment = { lhs = "<space>ca", desc = "review diff - add a new review comment [octo]" },
             add_review_suggestion = { lhs = "<space>sa", desc = "review diff - add a new review suggestion [octo]" },
-            focus_files = { lhs = "<leader>e", desc = "review diff - move focus to changed file panel [octo]" },
-            toggle_files = { lhs = "<leader>b", desc = "review diff - hide/show changed files panel [octo]" },
+            focus_files = { lhs = "<space>e", desc = "review diff - move focus to changed file panel [octo]" },
+            toggle_files = { lhs = "<space>b", desc = "review diff - hide/show changed files panel [octo]" },
             next_thread = { lhs = "]t", desc = "review diff - move to next thread [octo]" },
             prev_thread = { lhs = "[t", desc = "review diff - move to previous thread [octo]" },
             select_next_entry = { lhs = "]q", desc = "review diff - move to next changed file [octo]" },
@@ -228,24 +228,24 @@ return {
             select_first_entry = { lhs = "[Q", desc = "review diff - move to first changed file [octo]" },
             select_last_entry = { lhs = "]Q", desc = "review diff - move to last changed file [octo]" },
             close_review_tab = { lhs = "<C-c>", desc = "review diff - close review tab [octo]" },
-            toggle_viewed = { lhs = "<leader><space>", desc = "review diff - toggle viewer viewed state [octo]" },
+            toggle_viewed = { lhs = "<space><space>", desc = "review diff - toggle viewer viewed state [octo]" },
             goto_file = { lhs = "gf", desc = "review diff - go to file [octo]" },
           },
           file_panel = {
-            submit_review = { lhs = "<leader>vs", desc = "file panel - submit review [octo]" },
-            discard_review = { lhs = "<leader>vd", desc = "file panel - discard review [octo]" },
+            submit_review = { lhs = "<space>vs", desc = "file panel - submit review [octo]" },
+            discard_review = { lhs = "<space>vd", desc = "file panel - discard review [octo]" },
             next_entry = { lhs = "j", desc = "file panel - move to next changed file [octo]" },
             prev_entry = { lhs = "k", desc = "file panel - move to previous changed file [octo]" },
             select_entry = { lhs = "<cr>", desc = "file panel - show selected changed file diffs [octo]" },
             refresh_files = { lhs = "R", desc = "file panel - refresh changed files panel [octo]" },
-            focus_files = { lhs = "<leader>e", desc = "file panel - move focus to changed file panel [octo]" },
-            toggle_files = { lhs = "<leader>b", desc = "file panel - hide/show changed files panel [octo]" },
+            focus_files = { lhs = "<space>e", desc = "file panel - move focus to changed file panel [octo]" },
+            toggle_files = { lhs = "<space>b", desc = "file panel - hide/show changed files panel [octo]" },
             select_next_entry = { lhs = "]q", desc = "file panel - move to next changed file [octo]" },
             select_prev_entry = { lhs = "[q", desc = "file panel - move to previous changed file [octo]" },
             select_first_entry = { lhs = "[Q", desc = "file panel - move to first changed file [octo]" },
             select_last_entry = { lhs = "]Q", desc = "file panel - move to last changed file [octo]" },
             close_review_tab = { lhs = "<C-c>", desc = "file panel - close review tab [octo]" },
-            toggle_viewed = { lhs = "<leader><space>", desc = "file panel - toggle viewer viewed state [octo]" },
+            toggle_viewed = { lhs = "<space><space>", desc = "file panel - toggle viewer viewed state [octo]" },
           },
           repo = {},
         },
@@ -336,16 +336,16 @@ return {
           -- end
 
           -- stylua: ignore start
-          map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Git: stage hunk [gitsigns]")
-          map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Git: reset hunk [gitsigns]")
-          map("n", "<leader>ghu", gs.undo_stage_hunk, "Git: undo hunk [gitsigns]")
-          map("n", "<leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
-          map("n", "<leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
-          map("n", "<leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
-          -- map("n", "<leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
-          map("n", "<leader>ghB", function() gs.blame() end, "Git: open blame [gitsigns]")
-          map("n", "<leader>ghd", gs.diffthis, "Git: diffthis [gitsigns]")
-          map("n", "<leader>ghD", function() gs.diffthis "~" end, "Git: diffthis '~' [gitsigns]")
+          map({ "n", "v" }, "<Leader>ghs", ":Gitsigns stage_hunk<CR>", "Git: stage hunk [gitsigns]")
+          map({ "n", "v" }, "<Leader>ghr", ":Gitsigns reset_hunk<CR>", "Git: reset hunk [gitsigns]")
+          map("n", "<Leader>ghu", gs.undo_stage_hunk, "Git: undo hunk [gitsigns]")
+          map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
+          map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
+          map("n", "<Leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
+          -- map("n", "<Leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
+          map("n", "<Leader>ghB", function() gs.blame() end, "Git: open blame [gitsigns]")
+          map("n", "<Leader>ghd", gs.diffthis, "Git: diffthis [gitsigns]")
+          map("n", "<Leader>ghD", function() gs.diffthis "~" end, "Git: diffthis '~' [gitsigns]")
           map("n", "<Leader>gq", gs.setqflist, "Git: select all hunks and send to qf [gitsigns]")
 
           map("n", "gn", function()
@@ -703,22 +703,24 @@ return {
             { "n", "tn", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
 
             { "n", "<Leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffivew]" } },
-            { "n", "<Leader>e", actions.toggle_files, { desc = "Git: Toggle the file panel [diffivew]" } },
+            { "n", "<Leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffivew]" } },
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle through available layouts [diffview]" } },
 
-            { "n", "[x", actions.prev_conflict, { desc = "In the merge-tool: jump to the previous conflict" } },
-            { "n", "]x", actions.next_conflict, { desc = "In the merge-tool: jump to the next conflict" } },
+            { "n", "<Leader>gp", actions.prev_conflict, { desc = "Git: in the merge-tool: jump to the previous conflict [diffview]" } },
+            { "n", "<Leader>gn", actions.next_conflict, { desc = "Git: in the merge-tool: jump to the next conflict [diffview]" } },
 
-            { "n", "<leader>co", actions.conflict_choose "ours", { desc = "Choose the OURS version of a conflict" } },
-            { "n", "<leader>ct", actions.conflict_choose "theirs", { desc = "Choose the THEIRS version of a conflict" }, },
-            { "n", "<leader>cb", actions.conflict_choose "base", { desc = "Choose the BASE version of a conflict" } },
-            { "n", "<leader>ca", actions.conflict_choose "all", { desc = "Choose all the versions of a conflict" } },
-            { "n", "dx", actions.conflict_choose "none", { desc = "Delete the conflict region" } },
-            { "n", "<leader>cO", actions.conflict_choose_all "ours", { desc = "Choose the OURS version of a conflict for the whole file" }, },
-            { "n", "<leader>cT", actions.conflict_choose_all "theirs", { desc = "Choose the THEIRS version of a conflict for the whole file" }, },
-            { "n", "<leader>cB", actions.conflict_choose_all "base", { desc = "Choose the BASE version of a conflict for the whole file" }, },
-            { "n", "<leader>cA", actions.conflict_choose_all "all", { desc = "Choose all the versions of a conflict for the whole file" }, },
-            { "n", "dX", actions.conflict_choose_all "none", { desc = "Delete the conflict region for the whole file" }, },
+            { "n", "<Leader>co", actions.conflict_choose "ours", { desc = "Git: choose the OURS version of a conflict [diffview]" } },
+            { "n", "<Leader>ct", actions.conflict_choose "theirs", { desc = "Git: choose the THEIRS version of a conflict [diffview]" }, },
+            { "n", "<Leader>cb", actions.conflict_choose "base", { desc = "Git: choose the BASE version of a conflict [diffview]" } },
+            { "n", "<Leader>ca", actions.conflict_choose "all", { desc = "Git: choose all the versions of a conflict [diffview]" } },
+
+            { "n", "dx", actions.conflict_choose "none", { desc = "Git: delete the conflict region [diffview]" } },
+            { "n", "dX", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview]" }, },
+
+            { "n", "<Leader>cO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview]" }, },
+            { "n", "<Leader>cT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview]" }, },
+            { "n", "<Leader>cB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview]" }, },
+            { "n", "<Leader>cA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview]" }, },
           },
           --stylua: ignore
           file_panel = {
@@ -757,27 +759,30 @@ return {
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" }, },
 
             { "n", "gf", actions.goto_file_edit, { desc = "Git: open the file in the previous tabpage [diffview]" }, },
-            { "n", "ss", actions.goto_file_split, { desc = "Git: Open the file in a new split [diffview]" }, },
+            { "n", "ss", actions.goto_file_split, { desc = "Git: open the file in a new split [diffview]" }, },
             { "n", "st", actions.goto_file_tab, { desc = "Git: open the file in a new tabpag [diffview]" }, },
             { "n", "tn", actions.goto_file_tab, { desc = "Git: open the file in a new tabpag [diffview]" }, },
 
-            { "n", "i", actions.listing_style, { desc = "Toggle between 'list' and 'tree' views" }, },
-            { "n", "f", actions.toggle_flatten_dirs, { desc = "Flatten empty subdirectories in tree listing style" }, },
+            { "n", "i", actions.listing_style, { desc = "Git: toggle between 'list' and 'tree' views [diffview]" }, },
+            { "n", "f", actions.toggle_flatten_dirs, { desc = "Git: flatten empty subdirectories in tree listing style [diffview]" }, },
 
             { "n", "R", actions.refresh_files, { desc = "Git: update stats and entries in the file list [diffview]" }, },
 
-            { "n", "<leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview]" }, },
-            { "n", "<leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffview]" } },
+            { "n", "<Leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview]" }, },
+            { "n", "<Leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffview]" } },
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle available layouts [diffview]" } },
 
-            { "n", "[x", actions.prev_conflict, { desc = "Go to the previous conflict" } },
-            { "n", "]x", actions.next_conflict, { desc = "Go to the next conflict" } },
-            { "n", "g?", actions.help "file_panel", { desc = "Open the help panel" } },
-            { "n", "<leader>cO", actions.conflict_choose_all "ours", { desc = "Choose the OURS version of a conflict for the whole file" }, },
-            { "n", "<leader>cT", actions.conflict_choose_all "theirs", { desc = "Choose the THEIRS version of a conflict for the whole file" }, },
-            { "n", "<leader>cB", actions.conflict_choose_all "base", { desc = "Choose the BASE version of a conflict for the whole file" }, },
-            { "n", "<leader>cA", actions.conflict_choose_all "all", { desc = "Choose all the versions of a conflict for the whole file" }, },
-            { "n", "dX", actions.conflict_choose_all "none", { desc = "Delete the conflict region for the whole file" }, },
+            { "n", "<Leader>gp", actions.prev_conflict, { desc = "Git: go to the previous conflict [diffview]" } },
+            { "n", "<Leader>gn", actions.next_conflict, { desc = "Git: go to the next conflict [diffview]" } },
+
+            { "n", "<Leader>cO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview]" }, },
+            { "n", "<Leader>cT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview]" }, },
+            { "n", "<Leader>cB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview]" }, },
+            { "n", "<Leader>cA", actions.conflict_choose_all "all", { desc = "Git: choose all the versions of a conflict for the whole file [diffview]" }, },
+
+            { "n", "dX", actions.conflict_choose_all "none", { desc = "Git: delete the conflict region for the whole file [diffview]" }, },
+
+            { "n", "g?", actions.help "file_panel", { desc = "Git: open the help panel [diffview]" } },
           },
           --stylua: ignore
           file_history_panel = {
@@ -822,8 +827,8 @@ return {
             { "n", "st", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
             { "n", "tn", actions.goto_file_tab, { desc = "Git: open the file in a new tabpage [diffview]" } },
 
-            { "n", "<leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview]" } },
-            { "n", "<leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffview]" } },
+            { "n", "<Leader>E", actions.focus_files, { desc = "Git: bring focus to the file panel [diffview]" } },
+            { "n", "<Leader>e", actions.toggle_files, { desc = "Git: toggle the file panel [diffview]" } },
             { "n", "<F4>", actions.cycle_layout, { desc = "Git: cycle available layouts [diffview]" } },
 
             { "n", "g?", actions.help "file_history_panel", { desc = "Git: open the help panel [diffview]" } },
