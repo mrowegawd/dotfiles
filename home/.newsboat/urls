@@ -82,7 +82,7 @@ https://www.reddit.com/r/TOR.rss "~REDDIT: Tor" tor tool
 NEWSFEED-----------------------------------------------------------------------
 # https://hackaday.com/blog/feed "~NEWSFEED: Hackaday" linux
 # https://www.tecmint.com/feed linux "~NEWSFEED: Techmint" linux
-# https://news.ycombinator.com/rss "~NEWSFEED: Ytcombinator" linux
+https://news.ycombinator.com/rss "~NEWSFEED: Ytcombinator" linux
 https://blog.codinghorror.com/rss "~NEWSFEED: Coddinghorror" webblog
 http://www.integralist.co.uk/index.xml "~NEWSFEED: Integralist" webblog
 https://nolanlawson.com/feed/ "~NEWSFEED: NolanLawson" webdev javascript

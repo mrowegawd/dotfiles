@@ -1,31 +1,7 @@
 # vim: set ft=conf
 
-# misc: edit/open urllist with vim
-bind <c-v>
-
-# misc: adding flag to url (isikan s saja)
-bind F
-
-# misc: check list tags
-bind t
-
-# misc: open in browser
-bind o
-
-# misc: open search
-bind <c-f>
-
-# misc: prefix macro
-bind ,
-
-# misc: run macro watch youtube
-bind ,v
-
-# misc: reload all article list (check new update)
-bind R
-
-# misc: reload the article (check new update)
-bind r
+# articlelist: edit urls
+bind E
 
 # articlelist: mark all items feed as read
 bind A
@@ -40,4 +16,31 @@ bind J
 bind K
 
 # articlelist: show the url
-bind u
+bind U
+
+# macro: prefix macro
+bind ,
+
+# macro: open video (watch youtube)
+bind ,v
+
+# misc: edit/open urllist with vim
+bind <c-v>
+
+# misc: set flag (isikan "s" saja)
+bind F
+
+# misc: open list tags
+bind t
+
+# misc: open in browser
+bind o
+
+# misc: search
+bind <c-g>
+
+# misc: reload all article list (check new update)
+bind R
+
+# misc: reload the article (check new update)
+bind r
