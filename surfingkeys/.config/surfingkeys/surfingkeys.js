@@ -1,5 +1,8 @@
 // check default keys:
 // https://github.com/brookhong/Surfingkeys/blob/master/src/content_scripts/common/default.js#L485-L491
+//
+// Awesome stuff
+// https://github.com/b0o/surfingkeys-conf
 
 const {
   Clipboard,
@@ -8,6 +11,7 @@ const {
   RUNTIME,
   Visual,
   iunmap,
+  addSearchAlias,
   map,
   imap,
   cmap,
@@ -64,11 +68,11 @@ mapkey("j", "#2Scroll down of line", () => {
 });
 
 mapkey("K", "#2Scroll up of line", () => {
-  scrollBySmooth(window.innerHeight / 10, 3);
+  scrollBySmooth(window.innerHeight / 10, -3);
 });
-mapkey("J", "#2Scroll down of line", () => {
-  scrollBySmooth(window.innerHeight / 10, 3);
-});
+// mapkey("J", "#2Scroll down of line", () => {
+//   scrollBySmooth(window.innerHeight / 10, 3);
+// });
 
 mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
   scrollBySmooth(window.innerHeight * 10, 3);
@@ -81,6 +85,18 @@ mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
 // │ EDITING                                                 │
 // ╰─────────────────────────────────────────────────────────╯
 
+// WARN: niatnya ingin run search, tapi ini salah
+// mapkey("<c-g>", "Search", function () {
+//   RUNTIME("search");
+// });
+
+mapkey("n", "Next search result", function () {
+  Visual.next(false);
+});
+mapkey("N", "Previous search result", function () {
+  Visual.next(true);
+});
+
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │
 // ╰─────────────────────────────────────────────────────────╯
@@ -89,6 +105,13 @@ map("mf", "cf");
 map("F", "gf");
 
 map("C", ";u");
+
+// mapkey("s", "Search in google in current tab", function () {
+//   Front.openOmnibar({ type: "SearchEngine", extra: "g", tabbed: false });
+// });
+// mapkey("S", "Search in google in new tab", function () {
+//   Front.openOmnibar({ type: "SearchEngine", extra: "g" });
+// });
 
 // TEST ============================================================
 // Forcing keymap H to remap arrowLeft?
@@ -132,6 +155,14 @@ mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
   RUNTIME("moveTab", {
     step: 1,
   });
+});
+
+mapkey("<Alt-w>", "Choose a tab with omnibar", function () {
+  Front.openOmnibar({ type: "Tabs" });
+});
+
+mapkey("M", "Mute/unmute current tab", function () {
+  RUNTIME("muteTab");
 });
 
 map("<Alt-h>", "E");
@@ -198,6 +229,60 @@ mapkey("<Ctrl-Home>", "#3zoom reset", function () {
 });
 
 // ╭─────────────────────────────────────────────────────────╮
+// │ SEARCH                                                  │
+// ╰─────────────────────────────────────────────────────────╯
+
+// Search engines (see https://github.com/b0o/surfingkeys-conf to add extra
+// completions)
+// mapkey('s', 'Search in google in current tab', function () {
+//     Front.openOmnibar({ type: 'SearchEngine', extra: 'g', tabbed: false });
+// });
+//
+// mapkey('S', 'Search in google in new tab', function () {
+//     Front.openOmnibar({ type: 'SearchEngine', extra: 'g' });
+
+addSearchAlias(
+  "s",
+  "StackOverflow",
+  "https://stackoverflow.com/search?q=",
+  "s",
+  "https://api.stackexchange.com/2.2/search/advanced?pagesize=10&" +
+    "order=desc&sort=relevance&site=stackoverflow&q=",
+  function (response) {
+    var res = JSON.parse(response.text)["items"];
+    return res.map(function (r) {
+      return {
+        title: "[" + r.score + "] " + r.title,
+        url: r.link,
+      };
+    });
+  },
+);
+
+addSearchAlias(
+  "g",
+  "GitHub",
+  "https://github.com/search?q=",
+  "s",
+  "https://api.github.com/search/repositories?order=desc&q=",
+  function (response) {
+    var res = JSON.parse(response.text)["items"];
+    return res.map(function (r) {
+      var prefix = "";
+      if (r.stargazers_count) {
+        prefix += "[★" + r.stargazers_count + "] ";
+      }
+      return {
+        title: prefix + r.description,
+        url: r.html_url,
+      };
+    });
+  },
+);
+
+addSearchAlias("y", "YouTube", "https://www.youtube.com/results?search_query=");
+
+// ╭─────────────────────────────────────────────────────────╮
 // │ THEMES                                                  │
 // ╰─────────────────────────────────────────────────────────╯
 
@@ -215,7 +300,7 @@ Visual.style("cursor", "background-color: #F92660;");
 settings.theme = `
 .sk_theme {
     font-family: Maple Mono Freeze,Input Sans Condensed, Charcoal, sans-serif;
-    font-size: 10pt;
+    font-size: 14px;
     background: #282828;
     color: #ebdbb2;
 }
@@ -412,7 +497,7 @@ settings.theme = `
 	padding: 8px 8px 4px 8px;
 	border-radius: 5px;
 	border: 1px solid #282828;
-	font-size: 12px;
+	font-size: 14px;
 	box-shadow: 0px 20px 40px 2px rgba(0, 0, 0, 1);
 	/* margin-bottom: 1rem; */
 	width: 20%;
@@ -427,7 +512,7 @@ settings.theme = `
 
 #sk_omnibarSearchArea .resultPage {
 	display: inline-block;
-    font-size: 12pt;
+    font-size: 14pt;
     font-style: italic;
 	width: auto;
 }
@@ -482,7 +567,7 @@ settings.theme = `
 
 
 #sk_status, #sk_find {
-	font-size: 10pt;
+	font-size: 14px;
 	font-weight: bold;
     text-align: center;
     padding-right: 8px;
