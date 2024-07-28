@@ -99,7 +99,29 @@ return {
     --stylua: ignore
     keys = {
       { "<a-w>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
-      { "sf", function() require("fzf-lua").buffers() end, desc = "Fzflua: select buffers" },
+      { "gb", function()
+        require("fzf-lua").buffers({
+          winopts = { preview = { hidden = "hidden" } },
+          winopts_fn = function()
+            local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+            local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+            local win_height = math.ceil(lines / 2)
+            local win_width = math.ceil(columns / 2)
+            local col = math.ceil((win_width / 2))
+            local row = math.ceil((win_height / 2))
+            return {
+              width = win_width,
+              height = win_height,
+              row = row,
+              col = col,
+              preview = {
+                vertical = "down:55%", -- up|down:size
+                horizontal = "right:45%", -- right|left:size
+              },
+            }
+          end,
+      }) end, desc = "Fzflua: select buffers" },
       { "sg", function() require("fzf-lua").blines() end, desc = "FzfLua: live grep on curbuf", mode = { "n" } },
       { "sg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on curbuf (visual)", mode = { "v" } },
       { "sG", function() require("fzf-lua").lines() end, desc = "Fzflua: live grep on buffers" },
