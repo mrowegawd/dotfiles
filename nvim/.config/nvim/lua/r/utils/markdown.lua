@@ -742,4 +742,93 @@ function M.find_local_titles()
   }
 end
 
+local cursorInCodeBlock = function(cursor_row, reverse)
+  if reverse == nil or reverse == false then
+    reverse = false
+  else
+    reverse = true
+  end
+  local lines = reverse and vim.api.nvim_buf_get_lines(0, cursor_row - 1, -1, false)
+    or vim.api.nvim_buf_get_lines(0, 0, cursor_row, false)
+  local fences = 0
+  for _, line_text in ipairs(lines) do
+    local _, count = string.gsub(line_text, "^```", "```")
+    fences = fences + count
+  end
+  if fences % 2 == 0 then
+    return false
+  end
+  return true
+end
+
+-- Taken from and credit: https://github.com/jakewvincent/mkdnflow.nvim/blob/0fa1e682e35d46cd1a0102cedd05b0283e41d18d/lua/mkdnflow/cursor.lua#L138
+function M.go_to_heading(anchor_text, reverse)
+  -- Record which line we're on; chances are the link goes to something later,
+  -- so we'll start looking from here onwards and then circle back to the beginning
+  local position = vim.api.nvim_win_get_cursor(0)
+  local starting_row, continue = position[1], true
+  local in_fenced_code_block = cursorInCodeBlock(starting_row, reverse)
+  local row = (reverse and starting_row - 1) or starting_row + 1
+  while continue do
+    local line = (reverse and vim.api.nvim_buf_get_lines(0, row - 1, row, false))
+      or vim.api.nvim_buf_get_lines(0, row - 1, row, false)
+    -- If the line has contents, do the thing
+    if line[1] then
+      -- Are we in a code block?
+      if string.find(line[1], "^```") then
+        -- Flip the truth value
+        in_fenced_code_block = not in_fenced_code_block
+      end
+      -- Does the line start with a hash?
+      local has_heading = string.find(line[1], "^#")
+      if has_heading and not in_fenced_code_block then
+        if anchor_text == nil then
+          -- Send the cursor to the heading
+          vim.api.nvim_win_set_cursor(0, { row, 0 })
+          continue = false
+        else
+          -- Format current heading to see if it matches our search term
+          local heading_as_anchor = links.formatLink(line[1], nil, 2)
+          if anchor_text == heading_as_anchor then
+            -- Set a mark
+            vim.api.nvim_buf_set_mark(0, "`", position[1], position[2], {})
+            -- Send the cursor to the row w/ the matching heading
+            vim.api.nvim_win_set_cursor(0, { row, 0 })
+            continue = false
+          end
+        end
+      end
+      row = (reverse and row - 1) or row + 1
+      if row == starting_row + 1 then
+        continue = false
+        if anchor_text == nil then
+          local message = "⬇️  Couldn't find a heading to go to!"
+          if not silent then
+            vim.api.nvim_echo({ { message, "WarningMsg" } }, true, {})
+          end
+        else
+          local message = "⬇️  Couldn't find a heading matching " .. anchor_text .. "!"
+          if not silent then
+            vim.api.nvim_echo({ { message, "WarningMsg" } }, true, {})
+          end
+        end
+      end
+    else
+      -- If the line does not have contents, start searching from the beginning
+      if anchor_text ~= nil or wrap == true then
+        row = (reverse and vim.api.nvim_buf_line_count(0)) or 1
+        in_fenced_code_block = false
+      else
+        continue = false
+        local place = (reverse and "beginning") or "end"
+        local preposition = (reverse and "after") or "before"
+        local message = "⬇️  There are no more headings " .. preposition .. " the " .. place .. " of the document!"
+        if not silent then
+          vim.api.nvim_echo({ { message, "WarningMsg" } }, true, {})
+        end
+      end
+    end
+  end
+end
+
 return M

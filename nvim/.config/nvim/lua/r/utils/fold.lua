@@ -40,6 +40,14 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
     end
   end
 
+  if vim.bo[0].filetype == "markdown" then
+    if is_jump_prev then
+      return RUtils.markdown.go_to_heading(nil, {})
+    else
+      return RUtils.markdown.go_to_heading(nil)
+    end
+  end
+
   local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
   if is_qf_opened.found then
     local cmd_msg_qf = "cnext"

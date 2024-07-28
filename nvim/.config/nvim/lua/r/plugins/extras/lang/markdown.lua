@@ -106,9 +106,14 @@ return {
       acknowledge_conflicts = true,
       latex = { enabled = false },
       heading = {
+        enabled = false,
         sign = false,
         icons = {},
         -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+      },
+      quote = {
+        -- Turn on / off block quote & callout rendering
+        enabled = false,
       },
     },
     keys = {
