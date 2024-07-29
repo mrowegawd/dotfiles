@@ -32,6 +32,11 @@ build-install(){
     sudo apt install fd-find
   fi
 
+  if ! command -v proxychains >/dev/null; then
+    echo "Installing: proxychains - wrapper for tor"
+    sudo apt install proxychains4
+  fi
+
   # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
   # https://github.com/caarlos0/timer
   # cara install `timer`:
