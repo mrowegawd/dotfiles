@@ -11,7 +11,7 @@ local statuslinenc_fg = Highlight.get("StatusLineNC", "fg")
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 local pmenusel_fg = Highlight.get("PmenuSel", "bg")
-local winseparator = Highlight.get("WinSeparator", "fg")
+-- local winseparator = Highlight.get("WinSeparator", "fg")
 
 local branch_fg = Highlight.tint(normal_fg, 4)
 local separator_fg = Highlight.tint(keyword_fg, -0.2)

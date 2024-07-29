@@ -368,6 +368,9 @@ return {
       })
 
       Highlight.plugin("NeoTree", {
+        { Directory = { link = "Keyword" } },
+        { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
+        { NeoTreeRootName = { fg = { from = "Normal", attr = "fg" } } },
         { NeoTreeNormal = { link = "PanelBackground" } },
         { NeoTreeNormalNC = { link = "PanelBackground" } },
         { NeoTreeCursorLine = { link = "CursorLine" } },
@@ -464,40 +467,18 @@ return {
             },
             {
               OutlineFoldMarker = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
                 bg = "NONE",
               },
             },
             {
               OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = -0.1 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
                 bg = "NONE",
               },
             },
             {
               OutlineLineno = {
-                bg = "NONE",
-              },
-            },
-          },
-          ["onedark"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = 0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.1 },
-                bg = "NONE",
-              },
-            },
-          },
-          ["solarized-osaka"] = {
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
                 bg = "NONE",
               },
             },
@@ -515,12 +496,6 @@ return {
                 bg = "NONE",
               },
             },
-            {
-              OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg" },
-                bg = "NONE",
-              },
-            },
           },
           ["miasma"] = {
             {
@@ -531,7 +506,7 @@ return {
             },
             {
               OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.05 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.1 },
                 bg = "NONE",
               },
             },
@@ -556,7 +531,7 @@ return {
             },
             {
               OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.3 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
                 bg = "NONE",
               },
             },
@@ -576,7 +551,13 @@ return {
             },
             {
               OutlineGuides = {
-                fg = { from = "FoldColumn", attr = "fg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineFoldMarker = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
                 bg = "NONE",
               },
             },
@@ -838,6 +819,14 @@ return {
       Highlight.plugin("NeoEdgyHi", {
         theme = {
           ["apprentice"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+            { EdgyNormal = { bg = "NONE" } },
+          },
+          ["lackluster"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+            { EdgyNormal = { bg = "NONE" } },
+          },
+          ["miasma"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
             { EdgyNormal = { bg = "NONE" } },
           },
