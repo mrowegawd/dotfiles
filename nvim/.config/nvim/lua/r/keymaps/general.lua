@@ -92,6 +92,7 @@ RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window
 RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force view to horizontal split", silent = true })
 RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force view to vertical split", silent = true })
 RUtils.map.nnoremap("st", "<CMD>tabedit %<CR>", { desc = "View: view buffer in new tab", silent = true })
+RUtils.map.nnoremap("sc", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
 
 -- navigate window
 RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true })
