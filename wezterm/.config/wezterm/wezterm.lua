@@ -198,15 +198,15 @@ config.font_rules = {
 	{
 		-- Normal
 		intensity = "Normal",
-		font = font_with_fallback("Liga SFMono Nerd Font", { weight = "Regular" }),
+		font = font_with_fallback("Monaspace Neon ExtraLight", { weight = "Regular" }),
 	},
 	{
 		-- Bold
 		italic = false,
-		font = font_with_fallback("Liga SFMono Nerd Font", { weight = "Bold" }),
+		font = font_with_fallback("JetBrainsMono Nerd Font", { weight = "Bold" }),
 	},
 	-- {
-	-- 	-- italic = true,
+	-- 	-- italic = true
 	-- 	intensity = "Half",
 	-- 	font = font_with_fallback("JetBrains Mono", { bold = false, italic = true }),
 	-- },

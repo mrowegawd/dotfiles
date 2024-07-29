@@ -845,6 +845,7 @@ local function colorscheme_overrides()
       },
     },
     ["vague"] = {
+
       {
         CmpItemAbbr = {
           fg = { from = "Normal", attr = "bg", alter = 5 },
@@ -957,6 +958,12 @@ local function colorscheme_overrides()
       },
 
       {
+        RenderMarkdownCode = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        },
+      },
+
+      {
         Tabline = {
           bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
           fg = { from = "WinSeparator", attr = "fg", alter = 1.5 },
@@ -993,22 +1000,34 @@ local function colorscheme_overrides()
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       {
+        Folded = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2 },
+        },
+      },
+      {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
-
       {
         StatusLineNC = {
           fg = { from = "StatusLine", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+
+      {
+        Tabline = {
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
         },
       },
       {
-        Folded = {
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
-          fg = { from = "Normal", attr = "bg", alter = 2 },
+        TablineSel = {
+          bg = { from = "StatusLine", attr = "bg", alter = 2 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 2 },
         },
       },
     },
@@ -1264,8 +1283,6 @@ local function colorscheme_overrides()
         },
       },
 
-      { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
-
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -1340,8 +1357,6 @@ local function colorscheme_overrides()
     },
     ["everforest"] = {
       { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
-
-      { CodeBlock1 = { bg = { from = "Normal", alter = 0.5 } } },
 
       {
         QuickFixLine = {
@@ -2012,7 +2027,7 @@ local function colorscheme_overrides()
       {
         StatusLineNC = {
           fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
       {
@@ -2071,8 +2086,6 @@ local function colorscheme_overrides()
           bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
         },
       },
-
-      { CodeBlock1 = { bg = { from = "Normal", alter = 0.7 } } },
 
       { TelescopeNormal = { inherit = "FzfLuaNormal" } },
       { TelescopeBorder = { inherit = "FzfLuaBorder" } },

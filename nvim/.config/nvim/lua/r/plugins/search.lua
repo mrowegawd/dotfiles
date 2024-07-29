@@ -159,7 +159,7 @@ return {
             end)
 
             if err then
-              RUtils.warn(selection .. "-> Not found ", { title = "FzfLua Help" })
+              RUtils.warn(selection .. " -> Not found ", { title = "FzfLua Help" })
             end
           end
         end,
