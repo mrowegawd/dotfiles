@@ -412,21 +412,6 @@ return {
       tokyonight.load()
     end,
   },
-  -- ONEDARK.NVIM
-  {
-    "navarasu/onedark.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local onedarktheme = { "onedark" }
-      if vim.tbl_contains(onedarktheme, colorscheme) then
-        return true
-      end
-    end,
-    opts = {
-      style = "darker",
-    },
-  },
   -- TENDER
   {
     "jacoborus/tender.vim",
