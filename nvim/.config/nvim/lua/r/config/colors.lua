@@ -1905,6 +1905,14 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        MyCodeUsage = {
+          fg = { from = "Normal", attr = "bg", alter = -0.5 },
+          bg = { from = "LineNr", attr = "fg", alter = 1 },
+          italic = true,
+        },
+      },
+
       { String = { fg = { from = "String", attr = "fg", alter = 0.4 } } },
       { Comment = { fg = { from = "Comment", attr = "fg", alter = -0.3 } } },
       { ["@org.agenda.scheduled"] = { fg = { from = "@tag.attribute", attr = "fg", alter = 0.2 } } },
@@ -1929,8 +1937,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.7 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
         },
       },
 

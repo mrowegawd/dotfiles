@@ -187,6 +187,21 @@ set_btop() {
 
 }
 
+set_yazi_theme() {
+  YAZI_FILE_THEME="$HOME/.config/yazi/theme.toml"
+
+  if [ ! -f "$YAZI_FILE_THEME" ]; then
+    dunstify "$ERROR_MSG" "Path $YAZI_FILE_THEME do not exists!" && exit 1
+  fi
+
+  NAME_THEME=$1
+  if [ "$1" = "vscode_modern" ]; then
+    NAME_THEME="vscode-modern"
+  fi
+
+  sed -i -e "s/^use.*/use = \"$NAME_THEME\"/g" "$YAZI_FILE_THEME"
+}
+
 set_fzf() {
   FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
 
@@ -335,6 +350,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
 
   sleep 1
   set_fzf
+  set_yazi_theme "$_NAMETHEME"
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;
