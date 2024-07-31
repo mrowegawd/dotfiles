@@ -287,14 +287,14 @@ return {
       or nil,
     keys = {
       {
-        "<Leader>sn",
+        "<Leader>fn",
         function()
           require("scissors").editSnippet()
         end,
         desc = "edit snippet [nvim-scissors]",
       },
       {
-        "<Leader>sN",
+        "<Leader>fN",
         function()
           require("scissors").addNewSnippet()
         end,
