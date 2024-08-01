@@ -1,3 +1,7 @@
+local function fail(s, ...)
+	ya.notify({ title = "Smart-Enter", content = string.format(s, ...), timeout = 5, level = "error" })
+end
+
 local function check_file_extension(filename)
 	local pattern_mp3 = "%.mp3$"
 	local pattern_mp4 = "%.mp4$"
@@ -35,17 +39,34 @@ local function check_file_extension(filename)
 	end
 end
 
+-- local get_current_directory = ya.sync(function(_)
+-- 	return tostring(cx.active.current.cwd)
+-- end)
+
+-- Taken from https://github.com/hankertrix/augment-command.yazi/tree/main
+local hovered_item_is_dir = ya.sync(function(_)
+	local hovered_item = cx.active.current.hovered
+	return hovered_item and hovered_item.cha.is_dir
+end)
+
+-- Function to get the hovered item path
+local get_hovered_item_path = ya.sync(function(_)
+	local hovered_item = cx.active.current.hovered
+	if hovered_item then
+		return tostring(cx.active.current.hovered.url)
+	else
+		return nil
+	end
+end)
+
 return {
 	entry = function(_, args)
 		local action = args[1]
 
-		local h = cx.active.current.hovered
-		if h.cha.is_dir then
+		if hovered_item_is_dir() then
 			ya.manager_emit("enter" or "open", { hovered = true })
 		else
-			-- local hx_command = "'\\e : o " .. tostring(h.url) .. " \\r'"
-
-			local fpath = tostring(h.url)
+			local fpath = tostring(get_hovered_item_path())
 			local fpath_ext = check_file_extension(fpath)
 
 			if fpath_ext == "mp3" then
@@ -67,14 +88,44 @@ return {
 			if fpath_ext == "none" then
 				os.execute([[tmux select-pane -R]])
 
-				local open_mode = ":e "
-				if action == "vsplit" then
-					open_mode = ":vsplit "
-				elseif action == "split" then
-					open_mode = ":split "
+				local child, err = Command("tmux")
+					:args({
+						"display-message",
+						"-p",
+						"'#{pane_current_command}'",
+					})
+					:stdin(Command.INHERIT)
+					:stdout(Command.PIPED)
+					:stderr(Command.INHERIT)
+					:spawn()
+
+				if not child then
+					return fail("check pane_current_command went wrong", err)
 				end
-				local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
-				os.execute(command)
+
+				local output, _ = child:wait_with_output()
+				if not output then
+					return fail("No output! %s", err)
+				elseif not output.status.success and output.status.code ~= 130 then
+					return fail("`something went wrong %s", output.status.code)
+				end
+
+				local pane_current_cmd = tostring(output.stdout:gsub("'", ""))
+				pane_current_cmd = pane_current_cmd:gsub("\n$", "")
+
+				if pane_current_cmd ~= "nvim" then
+					local commandquit = [[tmux send-keys "nvim ]] .. fpath .. [[" Enter]]
+					os.execute(commandquit)
+				else
+					local open_mode = ":e "
+					if action == "vsplit" then
+						open_mode = ":vsplit "
+					elseif action == "split" then
+						open_mode = ":split "
+					end
+					local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
+					os.execute(command)
+				end
 			end
 		end
 	end,

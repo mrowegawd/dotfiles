@@ -429,7 +429,7 @@ RUtils.map.nnoremap("<Leader>cd", function()
   vim.notify(fmt("ROOT CHANGED: %s", filepath))
 end, { desc = "Misc: change pwd to dir file" })
 
--- allow moving the cursor through wrapped lines using j and k,
+-- Allow moving the cursor through wrapped lines using j and k,
 -- note that I have line wrapping turned off but turned on only for Markdown
 RUtils.map.nnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
 RUtils.map.nnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })

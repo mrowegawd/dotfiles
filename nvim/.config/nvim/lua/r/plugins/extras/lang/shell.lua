@@ -33,6 +33,8 @@ RUtils.on_very_lazy(function()
   }
 end)
 
+vim.treesitter.language.register("bash", "zsh")
+
 return {
   {
     "neovim/nvim-lspconfig",

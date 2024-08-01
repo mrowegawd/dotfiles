@@ -134,6 +134,12 @@ build-install(){
     asdf reshim rust
   fi
 
+  if ! asdf which rust-analyzer >/dev/null; then
+    echo "Installing: rust-analyzer - manual install for LSP rust"
+    rustup component add rust-analyzer
+    asdf reshim rust
+  fi
+
   if ! asdf which lf >/dev/null; then
     echo "Installing: lf - file manager"
     env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
@@ -170,7 +176,6 @@ build-install(){
     pipx install yt-dlp
     asdf reshim python
   fi
-
 }
 
 build-react() {
@@ -282,8 +287,8 @@ show_alias() {
 
   local select
   local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
+  
 
-  # check jika first command diawali dengan string `doc_ ..`
   local doc_con="doc_con_"
   local doc_im="doc_im_"
 

@@ -61,15 +61,15 @@ end
 
 ---@param client vim.lsp.Client
 function M._check_methods(client, buffer)
-  -- don't trigger on invalid buffers
+  -- Don't trigger on invalid buffers
   if not vim.api.nvim_buf_is_valid(buffer) then
     return
   end
-  -- don't trigger on non-listed buffers
+  -- Don't trigger on non-listed buffers
   if not vim.bo[buffer].buflisted then
     return
   end
-  -- don't trigger on nofile buffers
+  -- Don't trigger on `nofile` buffers
   if vim.bo[buffer].buftype == "nofile" then
     return
   end
@@ -241,7 +241,7 @@ function M.format(opts)
     RUtils.opts("conform.nvim").format or {}
   )
   local ok, conform = pcall(require, "conform")
-  -- use conform for formatting with LSP when available,
+  -- Use conform for formatting with LSP when available,
   -- since it has better format diffing
   if ok then
     opts.formatters = {}
@@ -277,9 +277,6 @@ function M.words.setup(opts)
       group = vim.api.nvim_create_augroup("lsp_word_" .. buf, { clear = true }),
       buffer = buf,
       callback = function(ev)
-        -- if not RUtils.has(buf, "documentHighlight") then
-        --   return false
-        -- end
         if not ({ M.words.get() })[2] then
           if ev.event:find "CursorMoved" then
             vim.lsp.buf.clear_references()

@@ -31,8 +31,8 @@ local function opts_fzf(title, maps)
         row = row,
         col = col,
         preview = {
-          vertical = "down:55%", -- up|down:size
-          horizontal = "right:45%", -- right|left:size
+          vertical = "down:55%", -- `up|down:size`
+          horizontal = "right:45%", -- `right|left:size`
         },
       }
     end,
@@ -55,7 +55,6 @@ function M.open_agenda_file_lists()
     else
       path = string.gsub(x, [[%/%*$]], "")
     end
-    -- local path = string.gsub(x, [[%/%*$]], "")
     local dirs = scan.scan_dir(path)
     for _, file_path in pairs(dirs) do
       if not string.match(file_path, "org_archive") then
@@ -68,24 +67,6 @@ function M.open_agenda_file_lists()
       end
     end
   end
-
-  -- vim.ui.select(
-  --   org_todos,
-  --   { prompt = RUtils.config.icons.misc.pencil .. " Open OrgTodos ", kind = "pojokan" },
-  --   function(choice)
-  --     if choice == nil then
-  --       return
-  --     end
-  --     for _, x in pairs(org_backup) do
-  --       if choice == x.basename_file then
-  --         if RUtils.file.exists(x.full_path) then
-  --           return vim.cmd(":edit " .. x.full_path)
-  --         else
-  --           return RUtils.warn("Path not exists: " .. x.full_path, { title = "orgmode" })
-  --         end
-  --       end
-  --     end
-  --   end
 
   local contains_match = function(str_path, str)
     if str_path:match(str) then

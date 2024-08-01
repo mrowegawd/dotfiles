@@ -102,6 +102,7 @@ return {
         sign = false,
         width = "block",
         right_pad = 1,
+        position = "right",
       },
       acknowledge_conflicts = true,
       latex = { enabled = false },

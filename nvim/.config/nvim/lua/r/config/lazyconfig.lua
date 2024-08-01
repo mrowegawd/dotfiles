@@ -17,8 +17,6 @@ end
 opt.rtp:prepend(Lazypath)
 
 require("lazy").setup {
-  -- debug = true,
-  -- defaults = { lazy = true },
   lockfile = Data_path .. "/lazy-lock.json",
   concurrency = 20,
   spec = {
@@ -64,7 +62,6 @@ require("lazy").setup {
         "zip",
         "zipPlugin",
         "tutor",
-        -- "rplugin", -- (cant use "UpdateRemotePlugins" if disabled)
         "syntax",
         "synmenu",
         "optwin",

@@ -11,7 +11,7 @@ return {
   -- NVIM-CMP
   {
     "hrsh7th/nvim-cmp",
-    version = false, -- last release is way too old
+    version = false, -- Last release is way too old
     event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
@@ -52,7 +52,7 @@ return {
         end
       end
       return {
-        auto_brackets = { "lua" }, -- configure any filetype to auto add brackets
+        auto_brackets = { "lua" }, -- Configure any filetype to auto add brackets
         enabled = function()
           local disabled = false
           disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
@@ -117,9 +117,9 @@ return {
               item.abbr = label .. padding
             end
 
-            -- print(entry.source.name)
+            -- To check `print(entry.source.name)`
             local item_kind = item.kind
-            if item_kind == nil then -- remove duplicate
+            if item_kind == nil then -- Remove duplicate
               return {}
             end
 
@@ -127,7 +127,6 @@ return {
               .. " "
               .. (
                 ({
-                  -- nvim_lsp = "[LSP]",
                   obsidian = "[OBSIDIAN]",
                   obsidian_new = "[OBSIDIAN]",
                   nvim_lua = "[LUA]",
@@ -136,14 +135,11 @@ return {
                   neorg = "[NEORG]",
                   dictionary = "[DIC]",
                   noice_popupmenu = "[Noice]",
-                  -- buffer = "[BUF]",
 
                   spell = "[SPELL]",
-                  -- codeium = "[Copilot]",
                   orgmode = "[ORG]",
                   norg = "[NORG]",
                   rg = "[RG]",
-                  -- cmdline = "[CMD]",
                   git = "[GIT]",
                 })[entry.source.name] or ""
               )
@@ -194,7 +190,6 @@ return {
               cmps.select_prev_item { behavior = "Select" }
             end
           end, { "i" }),
-          -- ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
           ["<C-s>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
               cmd = "rg --files --hidden",
@@ -412,14 +407,14 @@ return {
     event = "VeryLazy",
     opts = {
       modes = { insert = true, command = true, terminal = false },
-      -- skip autopair when next character is one of these
+      -- Skip `autopair` when next character is one of these
       skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-      -- skip autopair when the cursor is inside these treesitter nodes
+      -- Skip `autopair` when the cursor is inside these `treesitter` nodes
       skip_ts = { "string" },
-      -- skip autopair when next character is closing pair
+      -- Skip `autopair` when next character is closing pair
       -- and there are more closing pairs than opening pairs
       skip_unbalanced = true,
-      -- better deal with markdown code blocks
+      -- Better deal with markdown code blocks
       markdown = true,
     },
     config = function(_, opts)
@@ -448,13 +443,12 @@ return {
     opts = {
       library = {
         { path = "luvit-meta/library", words = { "vim%.uv" } },
-        -- { path = "lazy.nvim", words = { "LazyVim" } },
       },
     },
   },
   -- LIVIT_META
   {
-    -- Manage libuv types with lazy. Plugin will never be loaded
+    -- Manage `libuv` types with lazy. Plugin will never be loaded
     "Bilal2453/luvit-meta",
     lazy = true,
   },
@@ -519,7 +513,7 @@ return {
   },
   -- NVIM-SURROUND
   {
-    -- how to use it: ysiw, yd<brackets>, yc<brackets>, ds<brackets>
+    -- how to use it: `ysiw`, `yd<brackets>`, `yc<brackets>`, `ds<brackets>`
     "kylechui/nvim-surround",
     event = "VeryLazy",
     version = "*",
@@ -527,9 +521,8 @@ return {
       local input = require("nvim-surround.input").get_input
       require("nvim-surround").setup {
         keymaps = {
-
-          insert = "<C-x>s", -- sebenarnya bagian ini ga dpake :(
-          insert_line = "<C-x>S", -- ini juga
+          insert = "<C-x>s",
+          insert_line = "<C-x>S",
 
           normal = "ys",
           normal_cur = "yss",
@@ -543,8 +536,8 @@ return {
         },
         -- Configuration here, or leave empty to use defaults
         aliases = {
-          ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- any delimiter
-          ["b"] = { "{", "[", "(", "<" }, -- bracket
+          ["d"] = { "{", "[", "(", "<", '"', "'", "`" }, -- Any delimiter
+          ["b"] = { "{", "[", "(", "<" }, -- Bracket
           ["p"] = { "(" },
         },
         surrounds = {
@@ -708,15 +701,9 @@ return {
     },
     keys = {
       { "rF", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
-      -- { "rp", "<Cmd> RmuxREPL <CR>", desc = "Tasks: open pane window REPL (if the language has any)" },
 
       { "rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
       { "rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
-
-      -- { "rc", "<Cmd> RmuxSendInterrupt <CR>", desc = "Tasks: send interrupt signal to targeted pane" },
-      -- { "rC", "<Cmd> RmuxSendInterruptAll <CR>", desc = "Tasks: send interrupt signal to all targeted pane" },
-
-      -- { "rt", "<Cmd> RmuxTargetPane <CR>", desc = "Tasks: change target pane" },
 
       { "rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
       { "rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
@@ -724,8 +711,6 @@ return {
       { "re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },
       { "rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Tasks: load global rmuxrc.json" },
       { "rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Tasks: show setup config" },
-
-      -- { "<a-f>", "<Cmd> RmuxToggleTerm <CR>", desc = "Tasks: open rmux toggle terminal" },
     },
     opts = {
       base = {
@@ -733,7 +718,7 @@ return {
         setnotif = true,
         auto_run_tasks = true,
         tbl_opened_panes = {},
-        run_with = "auto", -- mux, tt, wez, toggleterm
+        run_with = "auto", -- `mux, tt, wez, toggleterm`
       },
     },
     config = function(_, opts)
@@ -827,7 +812,7 @@ return {
       {
         "<leader>rp",
         function()
-          require("refactoring").debug.print_var()
+          require("refactoring").debug.print_var {}
         end,
         mode = "v",
         desc = "Refactor: debug print variable [refactoring]",
@@ -854,8 +839,8 @@ return {
       },
       printf_statements = {},
       print_var_statements = {},
-      show_success_message = true, -- shows a message with information about the refactor on success
-      -- i.e. [Refactor] Inlined 3 variable occurrences
+      show_success_message = true, -- Shows a message with information about the refactor on success
+      -- i.e. [Refactor] Unlined 3 variable occurrences
     },
     config = function(_, opts)
       require("refactoring").setup(opts)

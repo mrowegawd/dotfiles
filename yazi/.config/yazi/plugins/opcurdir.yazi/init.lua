@@ -3,7 +3,7 @@ local state = ya.sync(function()
 end)
 
 local function fail(s, ...)
-	ya.notify({ title = "Fzf", content = string.format(s, ...), timeout = 5, level = "error" })
+	ya.notify({ title = "Opcurdir", content = string.format(s, ...), timeout = 5, level = "error" })
 end
 
 return {
@@ -14,7 +14,7 @@ return {
 
 		os.execute([[tmux select-pane -R]])
 
-		local child, _ = Command("tmux")
+		local child, err = Command("tmux")
 			:args({
 				"display-message",
 				"-p",
@@ -29,7 +29,7 @@ return {
 			return fail("check pane_current_command went wrong", err)
 		end
 
-		local output, err = child:wait_with_output()
+		local output, _ = child:wait_with_output()
 		if not output then
 			return fail("No output! %s", err)
 		elseif not output.status.success and output.status.code ~= 130 then
