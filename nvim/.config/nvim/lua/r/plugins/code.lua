@@ -32,22 +32,6 @@ return {
       local cmp = require "cmp"
       local defaults = require "cmp.config.default"()
 
-      local function styldoc(is_border_set)
-        is_border_set = is_border_set or false
-
-        local opts = {
-          border = "",
-          winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
-          col_offset = -3, -- To fit lspkind icon
-          side_padding = 1, -- One character margin
-        }
-        if is_border_set then
-          opts.border = RUtils.config.icons.border.line
-          opts.winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None"
-        end
-        return opts
-      end
-
       local function get_lsp_completion_context(completion, source)
         local ok, source_name = pcall(function()
           return source.source.client.config.name
@@ -79,8 +63,34 @@ return {
           return not disabled
         end,
         window = {
-          completion = cmp.config.window.bordered(styldoc()),
-          documentation = cmp.config.window.bordered(styldoc(true)),
+          completion = cmp.config.window.bordered {
+            winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+            col_offset = -5, -- To fit `lspkind` icon
+            side_padding = 1, -- One character margin
+            border = {
+              { "󱐋", "WarningMsg" },
+              { "─", "WinSeparator" },
+              { "╮", "WinSeparator" },
+              { "│", "WinSeparator" },
+              { "╯", "WinSeparator" },
+              { "─", "WinSeparator" },
+              { "╰", "WinSeparator" },
+              { "│", "WinSeparator" },
+            },
+          },
+          documentation = cmp.config.window.bordered {
+            winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+            border = {
+              { "", "DiagnosticHint" },
+              { "─", "WinSeparator" },
+              { "╮", "WinSeparator" },
+              { "│", "WinSeparator" },
+              { "╯", "WinSeparator" },
+              { "─", "WinSeparator" },
+              { "╰", "WinSeparator" },
+              { "│", "WinSeparator" },
+            },
+          },
         },
         completion = { completeopt = "menu,noinsert,noselect" },
         duplicates = {
@@ -151,17 +161,6 @@ return {
               item.menu = item.menu .. completion_context
             end
 
-            -- local widths = {
-            --   abbr = vim.g.cmp_widths and vim.g.cmp_widths.abbr or 40,
-            --   menu = vim.g.cmp_widths and vim.g.cmp_widths.menu or 30,
-            -- }
-            --
-            -- for key, width in pairs(widths) do
-            --   if item[key] and vim.fn.strdisplaywidth(item[key]) > width then
-            --     item[key] = vim.fn.strcharpart(item[key], 0, width - 1) .. "…"
-            --     end
-            --     end
-
             return require("tailwindcss-colorizer-cmp").formatter(entry, item)
           end,
         },
@@ -178,14 +177,11 @@ return {
             local types = require "cmp.types"
 
             if cmps.visible() then
-              -- if cmps.complete_common_string() then
-              --   return
               if #cmps.get_entries() == 1 then
                 cmps.confirm { select = true }
               else
                 cmps.select_next_item {
                   behavior = types.cmp.SelectBehavior.Select,
-                  -- behavior = "Insert",
                 }
               end
             else
@@ -207,21 +203,16 @@ return {
           end, { "i" }),
           ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
           ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
+          ["<PageDown>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "c", "i" }),
+          ["<PageUp>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "c", "i" }),
           ["<CR>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
           ["<C-y>"] = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = true },
-          -- ["<C-e>"] = function(fallback)
-          --   cmp.abort()
-          --   fallback()
-          -- end,
         },
-        sources = { -- remember: do not use `group_index`,
+        sources = {
           {
             name = "nvim_lsp",
             priority = 100,
             group_index = 1,
-            -- entry_filter = function(entry)
-            --   return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
-            -- end,
           },
           -- { name = "path", priority = 10, group_index = 9 },
           { name = "async_path", priority = 30, group_index = 5 },
@@ -397,12 +388,7 @@ return {
       opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
         ["<a-j>"] = cmp.mapping {
           i = function()
-            if cmp.visible() then
-              cmp.confirm {
-                behavior = cmp.ConfirmBehavior.Replace,
-                select = true,
-              }
-            elseif require("luasnip").expand_or_jumpable() then
+            if require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
             end
           end,
