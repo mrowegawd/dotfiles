@@ -96,7 +96,7 @@ return {
         formatting = {
           fields = { "kind", "abbr", "menu" },
           format = function(entry, item)
-            local label_width = 30
+            local label_width = 50
             local label = item.abbr
             local truncated_label = vim.fn.strcharpart(label, 0, label_width)
 
