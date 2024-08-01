@@ -28,19 +28,20 @@ require("lazy").setup {
     { import = "r.plugins.extras.linting" },
     { import = "r.plugins.extras.formatter" },
     { import = "r.plugins.extras.lang" },
+    -- { import = "r.plugins.extras.text" },
   },
   change_detection = { notify = false },
   install = {
     missing = true,
   },
   ui = {
-    wrap = true, -- wrap the lines in the ui
+    wrap = true, -- Wrap the lines in the ui
     border = "rounded",
   },
   performance = {
-    reset_packpath = true, -- reset the package path to improve startup time
+    reset_packpath = true, -- Reset the package path to improve startup time
     rtp = {
-      reset = true, -- reset the runtime path to $VIMRUNTIME and your config directory
+      reset = true, -- Reset the runtime path to `$VIMRUNTIME` and your configuration directory
 
       -- To fix `:changes` showing invalid, remove `netrw*` from `disabled_plugins` field
       disabled_plugins = {
