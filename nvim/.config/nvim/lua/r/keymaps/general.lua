@@ -69,8 +69,8 @@ end, { desc = "Terminal: prev tab" })
 -- Do not delete these line!
 
 RUtils.map.tnoremap("<a-f>", function()
-  -- RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
-  RUtils.terminal.toggle_right_term()
+  RUtils.map.feedkey("<C-\\><C-n><a-f>", "t")
+  -- RUtils.terminal.toggle_right_term()
 end, { desc = "Terminal: new term split" })
 RUtils.map.tnoremap("<a-N>", function()
   RUtils.map.feedkey("<C-\\><C-n><a-N>", "t")

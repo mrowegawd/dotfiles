@@ -168,36 +168,56 @@ RUtils.cmd.augroup("LocateLastPosition", {
   end,
 })
 
-RUtils.cmd.augroup("WindowBehaviours", {
-  event = { "FileType" },
-  pattern = {
-    "orgagenda",
-    "capture",
-    "gitcommit",
-    "qf",
-    "NeogitCommitMessage",
-    "NeogitPopup",
-    -- "help",
-    -- "Trouble",
+RUtils.cmd.augroup(
+  "WindowBehaviours",
+  {
+    event = { "FileType" },
+    pattern = {
+      "orgagenda",
+      "capture",
+      "gitcommit",
+      "qf",
+      "NeogitCommitMessage",
+      "NeogitPopup",
+      -- "help",
+      -- "Trouble",
+    },
+    command = function()
+      cmd "wincmd J"
+      if vim.bo[0].filetype == "NeogitCommitMessage" then
+        cmd [[resize 20]]
+      end
+    end,
   },
-  command = function()
-    cmd "wincmd J"
-    if vim.bo[0].filetype == "NeogitCommitMessage" then
-      cmd [[resize 20]]
-    end
-  end,
-}, {
-  event = { "FileType" },
-  pattern = { "gitcommit", "NeogitCommitMessage" },
-  command = function()
-    vim.opt_local.spell = true
-    vim.opt_local.wrap = true
-    vim.opt_local.spelllang = { "en_us", "id" }
-    vim.opt_local.conceallevel = 2
-    vim.opt_local.relativenumber = false
-    vim.opt_local.number = false
-  end,
-})
+  {
+    event = { "FileType" },
+    pattern = { "gitcommit", "NeogitCommitMessage" },
+    command = function()
+      vim.opt_local.spell = true
+      vim.opt_local.wrap = true
+      vim.opt_local.spelllang = { "en_us", "id" }
+      vim.opt_local.conceallevel = 2
+      vim.opt_local.relativenumber = false
+      vim.opt_local.number = false
+    end,
+  },
+  -- Untuk handle color `cursorline` dan `signcolumn`  pada `toggleterm.nvim`
+  {
+    event = { "BufRead", "BufEnter" },
+    pattern = { "*" },
+    command = function()
+      vim.defer_fn(function()
+        if vim.bo.buftype == "terminal" then
+          vim.opt_local.cursorline = false
+          vim.opt_local.signcolumn = "no"
+        else
+          vim.opt_local.cursorline = true
+          vim.opt_local.signcolumn = "yes"
+        end
+      end, 100)
+    end,
+  }
+)
 
 RUtils.cmd.augroup("WindowDim", {
   event = { "BufRead" },

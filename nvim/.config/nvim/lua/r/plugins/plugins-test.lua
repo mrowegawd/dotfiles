@@ -21,6 +21,28 @@ local set_icons = function(icons_name)
 end
 
 return {
+  -- TERMIM.NVIM (disabled)
+  {
+    "2kabhishek/termim.nvim",
+    enabled = false,
+    cmd = { "Fterm", "FTerm", "Sterm", "STerm", "Vterm", "VTerm" },
+    keys = {
+      {
+        "<a-f>",
+        function()
+          RUtils.terminal.toggle_right_term()
+        end,
+        desc = "Terminal: new term split [termim.nvim]",
+      },
+      {
+        "<a-N>",
+        function()
+          vim.cmd.Fterm()
+        end,
+        desc = "Terminal: open new tabterm [termim.nvim]",
+      },
+    },
+  },
   -- FUGIT2 (disabled)
   {
     "SuperBo/fugit2.nvim",
