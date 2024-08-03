@@ -127,9 +127,10 @@ return {
       exclude_buftypes = {},
     },
   },
-  -- VIM-MATCHUP
+  -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
+    enabled = false,
     event = { "BufReadPost" },
     config = function()
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
@@ -148,16 +149,98 @@ return {
     end,
     opts = function()
       Highlight.plugin("NotifyCol", {
-        { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-        { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-        { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-        { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-        { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-        { NotifyERRORBody = { link = "NormalFloat" } },
-        { NotifyWARNBody = { link = "NormalFloat" } },
-        { NotifyINFOBody = { link = "NormalFloat" } },
-        { NotifyDEBUGBody = { link = "NormalFloat" } },
-        { NotifyTRACEBody = { link = "NormalFloat" } },
+        -- { NotifyBackground = { bg = { from = "DiagnosticWarn" } } },
+        -- { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
+        -- { NotifyERRORBody = { link = "NormalFloat" } },
+        -- { NotifyWARNBody = { link = "NormalFloat" } },
+
+        -- INFO
+        {
+          NotifyINFOBody = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticInfo", attr = "fg", alter = 5 },
+            bold = true,
+          },
+        },
+        {
+          NotifyINFOBorder = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.6 },
+          },
+        },
+        {
+          NotifyINFOTitle = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.2 },
+            bold = true,
+          },
+        },
+        {
+          NotifyINFOIcon = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.2 },
+          },
+        },
+
+        -- WARN
+        {
+          NotifyWARNBody = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = 5 },
+            bold = true,
+          },
+        },
+        {
+          NotifyWARNBorder = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.6 },
+          },
+        },
+        {
+          NotifyWARNTitle = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.2 },
+            bold = true,
+          },
+        },
+        {
+          NotifyWARNIcon = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.2 },
+          },
+        },
+
+        -- ERROR
+        {
+          NotifyERRORBody = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = 5 },
+            bold = true,
+          },
+        },
+        {
+          NotifyERRORBorder = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = -0.6 },
+          },
+        },
+        {
+          NotifyERRORTitle = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = -0.2 },
+            bold = true,
+          },
+        },
+        {
+          NotifyERRORIcon = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = -0.2 },
+          },
+        },
       })
 
       return {
@@ -408,6 +491,7 @@ return {
         fill = "Normal",
         -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
         head = "TabLine",
+        separator = { fg = Highlight.get("TabLine", "bg"), bg = "NONE" },
         current_tab = "TabLineSel",
         tab = "TabLine",
         win = "TabLine",
@@ -423,14 +507,14 @@ return {
             line.tabs().foreach(function(tab)
               local hl = tab.is_current() and theme.current_tab or theme.tab
               return {
-                line.sep("", hl, theme.fill),
+                line.sep("", hl, theme.separator),
                 -- " ",
                 tab.is_current() and "" or "󰆣",
                 tab.number(),
                 -- tab.name(),
                 -- " ",
                 -- -- tab.close_btn "",
-                line.sep("", hl, theme.fill),
+                line.sep("", hl, theme.separator),
                 hl = hl,
                 margin = " ",
               }
@@ -438,10 +522,10 @@ return {
             line.spacer(),
             line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
               return {
-                line.sep("", theme.win, theme.fill),
+                line.sep("", theme.win, theme.separator),
                 win.is_current() and "" or "",
                 win.buf_name(),
-                line.sep("", theme.win, theme.fill),
+                line.sep("", theme.win, theme.separator),
                 hl = theme.win,
                 margin = " ",
               }
