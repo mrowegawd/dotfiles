@@ -396,8 +396,8 @@ RUtils.map.nnoremap("<Leader>Y", function()
   vim.fn.setreg("+", path)
   vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
 end, { silent = true, desc = "Misc: yank current absolute path" })
-RUtils.map.nnoremap("<CR>", '"xciw', { desc = "Misc: change inner word" })
-RUtils.map.vnoremap("<CR>", '"xc', { desc = "Misc: change selection word" })
+-- RUtils.map.nnoremap("<CR>", '"xciw', { desc = "Misc: change inner word" })
+-- RUtils.map.vnoremap("<CR>", '"xc', { desc = "Misc: change selection word" })
 
 RUtils.map.nnoremap("<Leader>n", cmd.nohl, { desc = "Misc: clear searches" })
 -- WARN: bentrok dengan screen manager VGIT (check nanti)
@@ -439,7 +439,7 @@ RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr 
 RUtils.map.nnoremap("<Leader>P", function()
   local cwd = vim.fn.expand "%:p:h"
   local fname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":t")
-  RUtils.info(cwd .. "/" .. fname)
+  RUtils.info(cwd .. "/" .. fname, { title = "Current path" })
 end, { desc = "Misc: printout current path" })
 
 local function replace_keymap(confirmation, visual)
