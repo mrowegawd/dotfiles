@@ -190,7 +190,7 @@ return {
               cmps.select_prev_item { behavior = "Select" }
             end
           end, { "i" }),
-          ["<C-s>"] = cmp.mapping(function()
+          ["<C-g>"] = cmp.mapping(function()
             require("fzf-lua").complete_file {
               cmd = "rg --files --hidden",
               winopts = { preview = { hidden = "nohidden" } },
@@ -646,17 +646,55 @@ return {
         min_height = 15,
         max_height = 15,
         bindings = {
-          ["<S-tab>"] = "ScrollOutputUp",
-          ["<tab>"] = "ScrollOutputDown",
+          ["<PageUp>"] = "ScrollOutputUp",
+          ["<PageDown>"] = "ScrollOutputDown",
+          ["P"] = "TogglePreview",
+          ["<a-p>"] = "PrevTask",
+          ["<a-n>"] = "NextTask",
+          ["dd"] = "Dispose",
           ["q"] = function()
             vim.cmd "OverseerClose"
+          end,
+          ["R"] = function()
+            local sidebar = require "overseer.task_list.sidebar"
+            local sb = sidebar.get_or_create()
+            sb:run_action "restart"
           end,
           -- ["<c-k>"] = false,
           -- ["<c-j>"] = false,
         },
       },
+      task_editor = {
+        -- Set keymap to false to remove default behavior
+        -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
+        bindings = {
+          i = {
+            ["<a-n>"] = "Next",
+            ["<a-p>"] = "Prev",
+            ["<Tab>"] = "Next",
+            ["<S-Tab>"] = "Prev",
+            ["<CR>"] = "NextOrSubmit",
+            ["<C-s>"] = "Submit",
+            ["<C-c>"] = "Cancel",
+          },
+          n = {
+            ["<Tab>"] = "Next",
+            ["<S-Tab>"] = "Prev",
+            ["<a-n>"] = "Next",
+            ["<a-p>"] = "Prev",
+            ["<CR>"] = "NextOrSubmit",
+            ["<C-s>"] = "Submit",
+            ["q"] = "Cancel",
+            ["?"] = "ShowHelp",
+          },
+        },
+      },
     },
     config = function(_, opts)
+      Highlight.plugin("overseernvim", {
+        { OverseerTaskBorder = { fg = { from = "WinSeparator", attr = "fg" }, bg = "NONE" } },
+      })
+
       require("overseer").setup(opts)
 
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
