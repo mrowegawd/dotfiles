@@ -574,9 +574,6 @@ return {
   {
     "michaelb/sniprun", -- task runner for code blocks
     event = "VeryLazy",
-    enabled = function()
-      return vim.fn.executable "cargo"
-    end,
     build = "bash install.sh",
     cmd = { "SnipRun" },
     opts = {
