@@ -70,11 +70,19 @@ local function expose_items_qf(t)
     local filename = vim.api.nvim_buf_get_name(item.bufnr)
     if t == "tab" then
       vim.cmd("tabnew " .. filename)
-      vim.api.nvim_win_set_cursor(0, { tonumber(item.lnum), tonumber(item.col) })
+      local lnum = tonumber(item.lnum)
+      local line_count = vim.api.nvim_buf_line_count(item.bufnr)
+      if lnum > 0 and line_count > lnum then
+        vim.api.nvim_win_set_cursor(0, { lnum, tonumber(item.col) or 0 })
+      end
     else
       if tonumber(i) <= (total_expose_item - 1) then
         vim.cmd(t .. " " .. filename)
-        vim.api.nvim_win_set_cursor(0, { tonumber(item.lnum), tonumber(item.col) })
+        local lnum = tonumber(item.lnum)
+        local line_count = vim.api.nvim_buf_line_count(item.bufnr)
+        if lnum > 0 and line_count > lnum then
+          vim.api.nvim_win_set_cursor(0, { lnum, tonumber(item.col) or 0 })
+        end
       end
     end
   end
