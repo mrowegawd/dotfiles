@@ -818,35 +818,9 @@ return {
     opts = function()
       Highlight.plugin("NeoEdgyHi", {
         theme = {
-          ["apprentice"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
-            { EdgyNormal = { bg = "NONE" } },
-          },
-          ["lackluster"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
-            { EdgyNormal = { bg = "NONE" } },
-          },
-          ["miasma"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
-            { EdgyNormal = { bg = "NONE" } },
-          },
-          ["everforest"] = {
-            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.5 } } },
-            { EdgyNormal = { bg = "NONE" } },
-            {
-              EdgyTitle = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.7 },
-                bg = { from = "EdgyWinBar" },
-                alter = 0.1,
-                bold = true,
-              },
-            },
-          },
           ["*"] = {
             { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 1 } } },
+            { EdgyWinBar = { bg = { from = "WinSeparator", attr = "fg", alter = -0.2 } } },
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {
@@ -866,6 +840,56 @@ return {
               EdgyIconActive = {
                 bold = true,
                 bg = { from = "EdgyWinBar" },
+              },
+            },
+          },
+          ["apprentice"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+            { EdgyNormal = { bg = "NONE" } },
+          },
+          ["kanagawa"] = {
+            { EdgyWinBar = { bg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+          },
+          ["sweetie"] = {
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+          },
+          ["kanagawa-paper"] = {
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+          },
+          ["tender"] = {
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+          },
+          ["selenized"] = {
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+          },
+          ["vscode_modern"] = {
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+          },
+          ["lackluster"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
+            {
+              EdgyTitle = {
+                fg = { from = "Directory", attr = "fg", alter = 1 },
+                bg = { from = "EdgyWinBar" },
+                bold = true,
+              },
+            },
+          },
+          ["miasma"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+            { EdgyNormal = { bg = "NONE" } },
+          },
+          ["everforest"] = {
+            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.5 } } },
+            { EdgyNormal = { bg = "NONE" } },
+            {
+              EdgyTitle = {
+                fg = { from = "Keyword", attr = "fg", alter = 0.7 },
+                bg = { from = "EdgyWinBar" },
+                alter = 0.1,
+                bold = true,
               },
             },
           },

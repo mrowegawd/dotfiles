@@ -1570,30 +1570,110 @@ return {
     },
     opts = function()
       local icons_lsp = RUtils.config.icons.kinds
-      Highlight.plugin("trouble", {
-        { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
-        { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
-        { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
-        { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-        { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-        { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-        { TroubleIndent = { bg = "NONE", fg = { from = "FoldColumn", attr = "fg", alter = 0.1 } } },
-        { TroubleFile = { bg = "NONE", fg = { from = "Directory", attr = "fg", alter = 0.1 } } },
-        { TroubleTextOther = { bg = "NONE", bold = true } },
-        { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
-        { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-        { TroubleCode = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 }, underline = false } },
-        {
-          TroubleDiagnosticsCount = {
-            bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
-            fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
-            underline = false,
+      Highlight.plugin("troubleColHi", {
+        theme = {
+          ["*"] = {
+            { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
+            { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
+            { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
+            { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+            { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+            { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
+            { TroubleFile = { bg = "NONE", fg = { from = "Directory", attr = "fg", alter = 0.1 } } },
+            { TroubleTextOther = { bg = "NONE", bold = true } },
+            { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
+            { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.4 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 2 },
+              },
+            },
+            {
+              TroubleCode = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 }, underline = false },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+                underline = false,
+              },
+            },
           },
-        },
-        {
-          TroubleCount = {
-            bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
-            fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+          ["lackluster"] = {
+            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 5 } } },
+            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 5 } } },
+            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 6 } } },
+
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.4 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 3 },
+              },
+            },
+          },
+          ["selenized"] = {
+            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
+
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
+              },
+            },
+          },
+          ["solarized-osaka"] = {
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
+              },
+            },
+            {
+              TroubleFsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+              },
+            },
+          },
+          ["sweetie"] = {
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+          },
+          ["tender"] = {
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+          },
+          ["tokyonight-night"] = {
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 3 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
+              },
+            },
+          },
+          ["tokyonight-storm"] = {
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 3 },
+              },
+            },
+          },
+          ["farout"] = {
+            { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 1 } } },
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 1.5 } } },
+
+            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 4 } } },
+            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 4 } } },
+            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 5 } } },
           },
         },
       })

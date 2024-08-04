@@ -59,8 +59,8 @@ local M = {
 
   directory = Highlight.get("Directory", "fg"),
 
-  separator_trouble = Highlight.tint(keyword_fg, -0.75),
-  separator = Highlight.tint(keyword_fg, -0.6),
+  separator_trouble = Highlight.tint(normal_bg, 0.3),
+  separator = Highlight.tint(normal_bg, 0.3),
 
   diagnostic_warn = Highlight.get("DiagnosticSignWarn", "fg"),
   diagnostic_err = Highlight.get("DiagnosticSignError", "fg"),
