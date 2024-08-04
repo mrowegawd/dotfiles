@@ -198,8 +198,7 @@ opt.fillchars = {
   -- msgsep = " ", -- alternatives: ‾ ─
   --
   -- fold = "▶",
-  -- vert = "¦", -- "┃",
-  -- vert = "┃",
+  vert = "│", -- "¦", "┃", "┃", "\\", "▕", "│"
   horiz = "-",
   foldopen = "", -- '▼'
   foldclose = "", -- '▶'
