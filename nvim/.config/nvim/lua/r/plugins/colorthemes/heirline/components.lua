@@ -552,7 +552,7 @@ M.Clock = {
     provider = function()
       return "  " .. os.date "%H:%M "
     end,
-    hl = { bg = colors.diagnostic_err, fg = colors.base_fg, bold = true },
+    hl = { bg = colors.diagnostic_err, fg = "black", bold = true },
   },
 }
 

@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/kanagawa"
+#include ".config/miscxrdb/xresource-theme/iceclimber"
 
 ! --------------
 ! XFT SETTINGS
