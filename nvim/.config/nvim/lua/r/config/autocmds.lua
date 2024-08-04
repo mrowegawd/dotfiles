@@ -207,12 +207,9 @@ RUtils.cmd.augroup(
     pattern = { "*" },
     command = function()
       vim.defer_fn(function()
-        if vim.bo.buftype == "terminal" then
+        if vim.bo.buftype == "terminal" or vim.tbl_contains({ "gitcommit", "OverseerList" }, vim.bo.filetype) then
           vim.opt_local.cursorline = false
           vim.opt_local.signcolumn = "no"
-        else
-          vim.opt_local.cursorline = true
-          vim.opt_local.signcolumn = "yes"
         end
       end, 100)
     end,
