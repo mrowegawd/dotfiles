@@ -69,50 +69,57 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
         vim.cmd "wincmd p"
       end
     end)
-  else
-    if is_jump_prev then
-      local count = vim.v.count1
-      local curLnum = api.nvim_win_get_cursor(0)[1]
-      local cnt = 0
-      local lnum
-      for i = curLnum - 1, 1, -1 do
-        if foldClosed(0, i) == i then
-          cnt = cnt + 1
-          lnum = i
-          if cnt == count then
-            break
-          end
+    return
+  end
+
+  local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
+  if is_qf_trouble.found then
+    vim.api.nvim_set_current_win(is_qf_trouble.winid)
+    return
+  end
+
+  if is_jump_prev then
+    local count = vim.v.count1
+    local curLnum = api.nvim_win_get_cursor(0)[1]
+    local cnt = 0
+    local lnum
+    for i = curLnum - 1, 1, -1 do
+      if foldClosed(0, i) == i then
+        cnt = cnt + 1
+        lnum = i
+        if cnt == count then
+          break
         end
       end
+    end
 
-      if lnum then
-        cmd "norm! m`"
-        api.nvim_win_set_cursor(0, { lnum, 0 })
-      else
-        cmd "norm! zk"
-      end
+    if lnum then
+      cmd "norm! m`"
+      api.nvim_win_set_cursor(0, { lnum, 0 })
     else
-      local count = vim.v.count1
-      local curLnum = api.nvim_win_get_cursor(0)[1]
-      local lineCount = api.nvim_buf_line_count(0)
-      local cnt = 0
-      local lnum
-      for i = curLnum + 1, lineCount do
-        if foldClosed(0, i) == i then
-          cnt = cnt + 1
-          lnum = i
-          if cnt == count then
-            break
-          end
+      cmd "norm! zk"
+    end
+  else
+    local count = vim.v.count1
+    local curLnum = api.nvim_win_get_cursor(0)[1]
+    local lineCount = api.nvim_buf_line_count(0)
+    local cnt = 0
+    local lnum
+    for i = curLnum + 1, lineCount do
+      if foldClosed(0, i) == i then
+        cnt = cnt + 1
+        lnum = i
+        if cnt == count then
+          break
         end
       end
+    end
 
-      if lnum then
-        cmd "norm! m`"
-        api.nvim_win_set_cursor(0, { lnum, 0 })
-      else
-        cmd "norm! zj"
-      end
+    if lnum then
+      cmd "norm! m`"
+      api.nvim_win_set_cursor(0, { lnum, 0 })
+    else
+      cmd "norm! zj"
     end
   end
 end
