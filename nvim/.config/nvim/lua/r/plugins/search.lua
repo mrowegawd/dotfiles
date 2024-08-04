@@ -537,7 +537,7 @@ return {
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
             local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
-            local win_height = math.ceil(lines * 0.8)
+            local win_height = math.ceil(lines * 0.9)
             local win_width = math.ceil(columns * 1)
             local col = math.ceil((columns - win_width) * 1)
             local row = math.ceil((lines - win_height) * 1 - 3)
@@ -547,8 +547,8 @@ return {
               row = row,
               col = col,
               preview = {
-                vertical = "down:55%", -- up|down:size
-                horizontal = "up:45%", -- right|left:size
+                vertical = "down:40%", -- up|down:size
+                horizontal = "up:60%", -- right|left:size
               },
             }
           end,
