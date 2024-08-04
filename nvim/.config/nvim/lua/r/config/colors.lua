@@ -1661,7 +1661,7 @@ local function colorscheme_overrides()
       {
         FzfLuaPreviewBorder = {
           fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 },
-          bg = { from = "FzfluaBorder", attr = "bg" },
+          bg = { from = "FzfluaBorder", attr = "bg", alter = 0.05 },
         },
       },
       {
@@ -1742,7 +1742,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "fg", alter = 6 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
