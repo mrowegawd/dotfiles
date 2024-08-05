@@ -502,6 +502,31 @@ return {
       { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git: commit [fugitive]" },
     },
   },
+  -- GITGRAPH
+  {
+    "isakbm/gitgraph.nvim",
+    dependencies = { "sindrets/diffview.nvim" },
+    opts = {
+      symbols = {
+        merge_commit = "M",
+        commit = "*",
+      },
+      format = {
+        timestamp = "%H:%M:%S %d-%m-%Y",
+        fields = { "hash", "timestamp", "author", "branch_name", "tag" },
+      },
+    },
+    keys = {
+      {
+        "<Leader>gl",
+        function()
+          require("gitgraph").draw({}, { all = true, max_count = 5000 })
+        end,
+        mode = { "n", "v" },
+        desc = "Git: git graph [gitgraph]",
+      },
+    },
+  },
   -- VGIT
   {
     "tanvirtin/vgit.nvim",
