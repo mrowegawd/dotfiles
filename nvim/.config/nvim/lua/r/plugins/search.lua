@@ -201,10 +201,6 @@ return {
         or nil
 
       return {
-        winopts = {
-          zindex = 10,
-          backdrop = 80,
-        },
         winopts_fn = function()
           local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
           local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
