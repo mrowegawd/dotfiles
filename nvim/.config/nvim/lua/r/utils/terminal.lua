@@ -193,15 +193,16 @@ end
 
 function M.smart_split()
   if win_width_term() > win_height_term() then
-    __open_term()
+    -- __open_term()
 
     if win_width_term() > win_height_term() then
-      vim.cmd [[VTerm]]
+      -- vim.cmd [[VTerm]]
+      vim.cmd [[ToggleTerm direction=horizontal]]
     else
-      vim.cmd [[STerm]]
+      vim.cmd [[ToggleTerm direction=vertical]]
     end
   else
-    vim.cmd [[STerm]]
+    vim.cmd [[ToggleTerm direction=float]]
   end
 end
 
