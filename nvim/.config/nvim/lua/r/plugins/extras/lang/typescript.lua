@@ -73,45 +73,45 @@ return {
                   open = true,
                 }
               end,
-              desc = "Goto Source Definition",
+              desc = "LSP: goto source definition [vtsls]",
             },
+            -- {
+            --   "gR",
+            --   function()
+            --     RUtils.lsp.execute {
+            --       command = "typescript.findAllFileReferences",
+            --       arguments = { vim.uri_from_bufnr(0) },
+            --       open = true,
+            --     }
+            --   end,
+            --   desc = "LSP: file references [vtsls]",
+            -- },
             {
-              "gR",
-              function()
-                RUtils.lsp.execute {
-                  command = "typescript.findAllFileReferences",
-                  arguments = { vim.uri_from_bufnr(0) },
-                  open = true,
-                }
-              end,
-              desc = "File References",
-            },
-            {
-              "<leader>co",
+              "<Leader>co",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "Organize Imports",
+              desc = "LSP: organize imports [vtsls]",
             },
             {
-              "<leader>cM",
+              "<Leader>cM",
               RUtils.lsp.action["source.addMissingImports.ts"],
-              desc = "Add missing imports",
+              desc = "LSP: add missing imports [vtsls]",
             },
             {
-              "<leader>cu",
+              "<Leader>cu",
               RUtils.lsp.action["source.removeUnused.ts"],
-              desc = "Remove unused imports",
+              desc = "LSP: remove unused imports [vtsls]",
             },
             {
-              "<leader>cD",
+              "<Leader>cD",
               RUtils.lsp.action["source.fixAll.ts"],
-              desc = "Fix all diagnostics",
+              desc = "LSP: fix all diagnostics [vtsls]",
             },
             {
-              "<leader>cV",
+              "<Leader>cV",
               function()
                 RUtils.lsp.execute { command = "typescript.selectTypeScriptVersion" }
               end,
-              desc = "Select TS workspace version",
+              desc = "LSP: select ts workspace version [vtsls]",
             },
           },
         },

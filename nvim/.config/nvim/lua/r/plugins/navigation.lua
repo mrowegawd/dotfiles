@@ -439,8 +439,7 @@ return {
   },
   -- OUTLINE.NVIM
   {
-    "hedyhli/outline.nvim",
-    -- enabled = false,
+    "mrowegawd/outline.nvim",
     event = "VeryLazy",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
@@ -704,13 +703,20 @@ return {
           desc = "Misc: open file explore [neotree]",
         },
 
-        -- { -- TODO: ini error, cause flickring window
-        --   "<leader>ue",
-        --   function()
-        --     require("edgy").toggle()
-        --   end,
-        --   desc = "Misc: toggle edgy [edgy]",
-        -- },
+        {
+          "<leader>ue",
+          function()
+            require("edgy").toggle()
+          end,
+          desc = "Toggle: toggle edgy [edgy]",
+        },
+        {
+          "<leader>uE",
+          function()
+            require("edgy").select()
+          end,
+          desc = "Misc: select window [edgy]",
+        },
         {
           "<leader>ge",
           function()
@@ -723,15 +729,19 @@ return {
           desc = "Git: explore git status (callback fzflua) [neotree]",
         },
         {
-          "<Localleader>oo",
+          "ro",
           function()
-            if vim.bo.filetype ~= right_win then
-              local outline_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
-              if outline_win.found then
-                vim.api.nvim_set_current_win(outline_win.winid)
+            local right_win = { "trouble", "aerial", "Outline" }
+            for _, win in pairs(right_win) do
+              if vim.bo.filetype ~= win then
+                local win_checked = RUtils.cmd.windows_is_opened { win }
+                if win_checked.found then
+                  vim.api.nvim_set_current_win(win_checked.winid)
+                  break
+                end
+              elseif vim.tbl_contains(right_win, vim.bo.filetype) then
+                vim.cmd [[wincmd p]]
               end
-            elseif vim.bo.filetype == right_win then
-              vim.cmd [[wincmd p]]
             end
           end,
           desc = "Misc: move cursor to outline window [outline]",
@@ -1024,6 +1034,22 @@ return {
           ["<a-J>"] = function(win)
             win:resize("height", -5)
           end,
+          -- ["<c-q>"] = function(win)
+          --   if vim.bo.filetype == "trouble" then
+          --     local items = require("trouble").get_items {}
+          --
+          --     -- print(vim.inspect(items))
+          --     for _, x in pairs(items) do
+          --       print("filename: " .. x.filename)
+          --       print("buf: " .. x.buf)
+          --       print("end_post: " .. vim.inspect(x.end_pos))
+          --       print("post: " .. vim.inspect(x.pos))
+          --     end
+          --
+          --     return
+          --   end
+          --   win:hide()
+          -- end,
         },
       }
 

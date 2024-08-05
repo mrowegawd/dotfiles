@@ -60,9 +60,9 @@ function M.get()
       has = "documentHighlight",
       desc = "LSP: prev word reference",
     },
-    { "<leader>cA", RUtils.lsp.action.source, desc = "LSP: source action", has = "codeAction" },
+    { "<Leader>cA", RUtils.lsp.action.source, desc = "LSP: source action", has = "codeAction" },
     {
-      "<leader>cR",
+      "<Leader>cR",
       RUtils.lsp.rename_file,
       has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
       desc = "LSP: rename file",
@@ -181,7 +181,7 @@ function M.get()
 
   if RUtils.has "inc-rename.nvim" then
     M._keys[#M._keys + 1] = {
-      "<F2>",
+      "<Leader>cr",
       function()
         local inc_rename = require "inc_rename"
         return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
@@ -191,9 +191,10 @@ function M.get()
       has = "rename",
     }
   elseif RUtils.has "lspsaga.nvim" then
-    M._keys[#M._keys + 1] = { "<F2>", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [lspsaga]", has = "rename" }
+    M._keys[#M._keys + 1] =
+      { "<Leader>cr", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [lspsaga]", has = "rename" }
   else
-    M._keys[#M._keys + 1] = { "<F2>", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
+    M._keys[#M._keys + 1] = { "<Leader>cr", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
   end
 
   -- if RUtils.has "lsp_signature.nvim" then

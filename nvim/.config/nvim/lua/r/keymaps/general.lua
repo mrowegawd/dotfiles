@@ -572,6 +572,9 @@ RUtils.map.nnoremap("<Localleader>of", function()
     toggle_undotree = function()
       cmd "UndotreeToggle"
     end,
+    open_output_panel = function()
+      cmd "OutputPanel"
+    end,
     session_load = function()
       if RUtils.has "persistence.nvim" then
         return require("persistence").load()

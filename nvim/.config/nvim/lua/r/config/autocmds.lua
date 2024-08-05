@@ -208,7 +208,7 @@ RUtils.cmd.augroup(
     command = function()
       vim.defer_fn(function()
         if
-          vim.bo.buftype == "terminal"
+          vim.tbl_contains({ "terminal", "nofile" }, vim.bo.buftype)
           or vim.tbl_contains(
             { "gitcommit", "OverseerList", "grug-far", "DiffviewFileHistory", "DiffviewFiles" },
             vim.bo.filetype

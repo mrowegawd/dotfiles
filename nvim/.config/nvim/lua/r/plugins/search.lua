@@ -1485,9 +1485,10 @@ return {
     keys = {
       {
         "gR",
-        "<cmd>Trouble lsp_references toggle focus=true win.position=left<cr>",
+        "<cmd>Trouble lsp_references toggle focus=true<cr>",
         desc = "LSP: references [trouble]",
       },
+      { "<Leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
       -- {
       --   "gi",
       --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
@@ -1581,6 +1582,18 @@ return {
             { TroubleTextOther = { bg = "NONE", bold = true } },
             { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
             { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+
+            { TroubleIndentFoldClosed = { bg = "NONE" } },
+
+            { TroubleLspFilename = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+
+            { TroubleDiagnosticsBasename = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 2 },
+              },
+            },
 
             { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.4 } } },
             {

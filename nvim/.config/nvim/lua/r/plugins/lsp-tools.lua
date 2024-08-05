@@ -1,6 +1,14 @@
 local Highlight = require "r.settings.highlights"
 
 return {
+  -- OUTPUTPANEL
+  {
+    "mhanberg/output-panel.nvim",
+    event = "VeryLazy",
+    config = function()
+      require("output_panel").setup()
+    end,
+  },
   -- GOTOPREVIEW
   {
     "rmagatti/goto-preview",
