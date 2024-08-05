@@ -48,17 +48,17 @@
 *color18: #e3ddcc
 
 ! FZF: bg, fg and match
-*color19: #b1ab9e
+*color19: #f0e9d7
 *color20: #7e7b71
 *color21: #7f3c34
 
 ! FZF selection: bg, fg and match
-*color22: #979388
+*color22: #7e7b71
 *color23: #ffffff
 *color24: #ffffff
 
 ! TMUX: win separator fg, fg_nc
-*color25: #b7b7b7
+*color25: #a4a4a4
 *color26: #7e7b71
 
 ! TMUX: fg_nc

@@ -17,8 +17,13 @@ local branch_fg = Highlight.tint(normal_fg, 4)
 local separator_fg = Highlight.tint(keyword_fg, -0.2)
 local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
 
-if vim.tbl_contains({ "solarized-osaka-night", "farout-night" }, vim.g.colorscheme) then
+local separator_trouble = Highlight.tint(normal_bg, 0.3)
+local separator = Highlight.tint(normal_bg, 0.3)
+
+if vim.tbl_contains({ "solarized-osaka-night", "farout-night", "everforest" }, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(statusline_fg, 0.05)
+  separator_trouble = Highlight.tint(normal_bg, -0.1)
+  separator = Highlight.tint(normal_bg, -0.1)
 end
 
 ---@class r.utils.colortbl
@@ -59,8 +64,8 @@ local M = {
 
   directory = Highlight.get("Directory", "fg"),
 
-  separator_trouble = Highlight.tint(normal_bg, 0.3),
-  separator = Highlight.tint(normal_bg, 0.3),
+  separator_trouble = separator_trouble,
+  separator = separator,
 
   diagnostic_warn = Highlight.get("DiagnosticSignWarn", "fg"),
   diagnostic_err = Highlight.get("DiagnosticSignError", "fg"),

@@ -1613,6 +1613,19 @@ return {
               },
             },
           },
+          ["everforest"] = {
+            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
+              },
+            },
+          },
           ["selenized"] = {
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },

@@ -1448,7 +1448,7 @@ local function colorscheme_overrides()
       {
         FloatBorder = {
           bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+          fg = { from = "WinSeparator", attr = "fg" },
         },
       },
       { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
@@ -1461,11 +1461,11 @@ local function colorscheme_overrides()
       },
       { FzfLuaBorder = { fg = { from = "WinSeparator" }, bg = { from = "NormalFloat", attr = "bg" } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
-      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+      { CursorLine = { bg = "None" } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "CursorLine", attr = "bg" },
+          bg = { from = "Keyword", attr = "fg", alter = 1 },
           bold = true,
         },
       },
@@ -1473,15 +1473,74 @@ local function colorscheme_overrides()
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = -0.5 }, bg = "NONE" } },
       { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", attr = "fg" } } },
       { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.5 } } },
-      { Pmenu = { bg = { from = "NormalFloat", attr = "bg", alter = -0.1 }, fg = { from = "CmpItemAbbr" } } },
+      { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, fg = { from = "CmpItemAbbr" } } },
       {
         PmenuSel = {
-          bg = { from = "Normal", attr = "bg", alter = -0.4 },
+          bg = { from = "Normal", attr = "bg", alter = -0.5 },
           fg = { from = "CmpItemAbbr", attr = "fg", alter = 5 },
           bold = true,
           reverse = false,
         },
       },
+
+      { NormalFloat = { bg = { from = "Pmenu" } } },
+      {
+        FloatBorder = {
+          bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+      {
+        FzfLuaBorder = {
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        FzfLuaTitle = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        FzfLuaSel = {
+          bg = { from = "PmenuSel", alter = -0.4, attr = "bg" },
+          fg = { from = "PmenuSel", alter = 0.3, attr = "bg" },
+        },
+      },
+
+      { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = 0.5 } } },
+      { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
+
+      {
+        FzfLuaPreviewBorder = {
+          fg = { from = "FzfLuaBorder", attr = "fg" },
+          bg = { from = "FzfluaBorder", attr = "bg" },
+        },
+      },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = -0.5 },
@@ -1491,7 +1550,7 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          fg = { from = "StatusLine", attr = "bg", alter = -0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },

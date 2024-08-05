@@ -319,15 +319,25 @@ return {
     end,
     opts = function()
       Highlight.plugin("notify", {
-        { NoiceCmdlinePopupBorder = { inherit = "FloatBorder" } },
-        { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-        { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-        { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-        { NoiceCmdlinePopup = { inherit = "NormalFloat" } },
-        { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+        theme = {
+          ["*"] = {
+            { NoiceCmdlinePopupBorder = { inherit = "FloatBorder" } },
+            { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
+            { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
+            { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
+            { NoiceCmdlinePopup = { inherit = "NormalFloat" } },
+            { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
 
-        { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
-        { NoicePopupBorder = { inherit = "FloatBorder" } },
+            { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
+            { NoicePopupBorder = { inherit = "FloatBorder" } },
+          },
+          ["everforest"] = {
+            { NoiceCmdlinePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+            { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+          },
+        },
       })
 
       return {

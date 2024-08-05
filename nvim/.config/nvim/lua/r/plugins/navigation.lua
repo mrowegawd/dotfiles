@@ -542,6 +542,32 @@ return {
               },
             },
           },
+          ["everforest"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "Normal", attr = "bg", alter = -0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineFoldMarker = {
+                fg = { from = "Normal", attr = "bg", alter = -0.2 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+                bold = true,
+              },
+            },
+          },
           ["lackluster"] = {
             {
               OutlineDetails = {

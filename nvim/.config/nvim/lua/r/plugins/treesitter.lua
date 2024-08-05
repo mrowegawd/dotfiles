@@ -211,6 +211,28 @@ return {
               },
             },
           },
+          ["everforest"] = {
+            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = -0.05 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["vague"] = {
             { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             {
