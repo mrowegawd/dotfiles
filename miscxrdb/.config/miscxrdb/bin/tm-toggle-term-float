@@ -7,7 +7,7 @@ session_exists() {
 open_float_term() {
   session="tmp_float_term"
 
-  pane_width="$(tmux display -p '#{pane_width}')"
+  pane_width="$(tmux display -p '#{window_width}')"
   pane_stengah="$(("$pane_width" / 2))"
 
   width_pane="95"
