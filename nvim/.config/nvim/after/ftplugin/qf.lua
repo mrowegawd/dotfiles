@@ -104,6 +104,14 @@ end, {
   desc = "Qf: open items qf with stack window",
 })
 
+keymap.set("n", "<Leader>s", function()
+  vim.cmd [[cclose]]
+  vim.cmd [[Trouble quickfix]]
+end, {
+  buffer = api.nvim_get_current_buf(),
+  desc = "Qf: open in trouble",
+})
+
 keymap.set("n", "<Leader>wL", function()
   expose_items_qf "tab"
 end, {
