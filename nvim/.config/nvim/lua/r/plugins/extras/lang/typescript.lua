@@ -257,7 +257,8 @@ return {
   -- BETTER-TS-ERRORS
   {
     "dmmulroy/ts-error-translator.nvim",
-    config = true,
+    ft = { "typescript", "vue", "typescriptreact" },
+    opts = {},
   },
   -- TSC.NVIM
   {
