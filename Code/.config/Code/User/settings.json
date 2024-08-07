@@ -343,7 +343,7 @@
     // },
 
     {
-      "before": ["<leader>", "c", "a"], -- open code action
+      "before": ["<leader>", "c", "a"],
       "commands": ["editor.action.quickFix"]
     },
 
@@ -498,7 +498,7 @@
     {
       "before": ["<"],
       "after": ["<", "g", "v"]
-    }
+    },
 
     // -------------------------
     // GIT
@@ -511,7 +511,6 @@
       "before": ["<leader>", "g", "o"], // Open file in GitHub
       "commands": ["gitlens.openFileOnRemote"]
     }
-  ]
   ],
   "vim.normalModeKeyBindingsNonRecursive": [],
   "workbench.iconTheme": "material-icon-theme",
@@ -533,7 +532,6 @@
   "errorLens.enabledDiagnosticLevels": [
     "error",
     "warning",
-    "info",
-    "hint"
+    "info"
   ]
 }
