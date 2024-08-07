@@ -6,7 +6,6 @@ return {
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "LazyFile" },
-    -- lazy = false,
     main = "ibl",
     opts = function()
       Highlight.plugin("ibl_indentline", {
@@ -21,23 +20,19 @@ return {
           },
           ["farout"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-          },
-          ["ayu"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
           },
           ["solarized-osaka"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
           },
           ["neomodern"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
           },
           ["lackluster"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
           },
           ["lackluster-dark"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
@@ -58,9 +53,9 @@ return {
         },
       })
       return {
-        scope = { show_start = false, show_end = false, enabled = false },
+        scope = { show_start = true, show_end = false, enabled = true },
         indent = {
-          char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+          char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊
           tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
           repeat_linebreak = false,
         },

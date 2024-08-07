@@ -1576,38 +1576,85 @@ return {
             { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
             { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
             { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-            { TroubleFile = { bg = "NONE", fg = { from = "Directory", attr = "fg", alter = 0.1 } } },
-            { TroubleTextOther = { bg = "NONE", bold = true } },
-            { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
-            { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-
             { TroubleIndentFoldClosed = { bg = "NONE" } },
 
-            { TroubleLspFilename = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            -- { TroubleFile = { bg = "NONE", fg = { from = "Directory", attr = "fg", alter = 0.1 } } },
+            -- { TroubleTextOther = { bg = "NONE", bold = true } },
+            -- { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg" } } },
+            -- { TroubleFoldIcon = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
 
-            { TroubleDiagnosticsBasename = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            -- Directory
             {
-              TroubleDiagnosticsCount = {
+              TroubleDirectory = {
                 bg = { from = "Normal", attr = "bg", alter = 0.5 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 2 },
+              },
+            },
+            {
+              TroubleFsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
               },
             },
 
-            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.4 } } },
+            -- LSP
+            {
+              TroubleLspFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+              },
+            },
+            {
+              TroubleLspCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- Diagnostics
+            {
+              TroubleDiagnosticsBasename = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+              },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- TodoTrouble
+            {
+              TroubleTodoFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+              },
+            },
+
+            -- QF
+            {
+              TroubleQfFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+              },
+            },
+            {
+              TroubleQfPos = {
+                bg = "NONE",
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+              },
+            },
             {
               TroubleQfCount = {
                 bg = { from = "Normal", attr = "bg", alter = 0.5 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 2 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
               },
             },
+
+            -- Dunno
             {
-              TroubleCode = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 }, underline = false },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "WinSeparator", attr = "fg", alter = -0.5 },
+              TroubleCode = {
+                bg = "NONE",
                 fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
                 underline = false,
               },
@@ -1631,10 +1678,42 @@ return {
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
 
+            -- Directory
+            {
+              TroubleDirectory = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
+            {
+              TroubleFsCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
+              },
+            },
+
+            -- Diagnostics
+            {
+              TroubleDiagnosticsBasename = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- QF
+            {
+              TroubleQfFilename = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
             { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
             {
               TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.5 },
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
                 fg = { from = "WinSeparator", attr = "fg", alter = 5 },
               },
             },
@@ -1643,6 +1722,51 @@ return {
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
+
+            -- Directory
+            {
+              TroubleDirectory = {
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+              },
+            },
+            {
+              TroubleFsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
+              },
+            },
+
+            -- QF
+            {
+              TroubleQfFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+              },
+            },
+            {
+              TroubleQfPos = {
+                bg = "NONE",
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+              },
+            },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
+              },
+            },
+
+            -- Diagnostics
+            {
+              TroubleDiagnosticsBasename = {
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+              },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
 
             { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
             {
@@ -1653,15 +1777,61 @@ return {
             },
           },
           ["solarized-osaka"] = {
+            -- Directory
             {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = 1.5 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
+              TroubleDirectory = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
               },
             },
             {
               TroubleFsCount = {
                 bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- LSP
+            {
+              TroubleLspFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+              },
+            },
+            {
+              TroubleLspCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- Diagnostics
+            {
+              TroubleDiagnosticsBasename = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+              },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- QF
+            {
+              TroubleQfFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 1 },
+              },
+            },
+            {
+              TroubleQfPos = {
+                bg = "NONE",
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+              },
+            },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 1.5 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
               },
             },
           },
@@ -1696,6 +1866,64 @@ return {
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 4 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 4 } } },
             { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 5 } } },
+
+            -- Directory
+            {
+              TroubleDirectory = {
+                bg = { from = "Normal", attr = "bg", alter = 2 },
+              },
+            },
+            {
+              TroubleFsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 2.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- LSP
+            {
+              TroubleLspFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 2 },
+              },
+            },
+            {
+              TroubleLspCount = {
+                bg = { from = "Normal", attr = "bg", alter = 2.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- Diagnostics
+            {
+              TroubleDiagnosticsBasename = {
+                bg = { from = "Normal", attr = "bg", alter = 2 },
+              },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = 2.5 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- QF
+            {
+              TroubleQfFilename = {
+                bg = { from = "Normal", attr = "bg", alter = 2 },
+              },
+            },
+            {
+              TroubleQfPos = {
+                bg = "NONE",
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+              },
+            },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = 2.5 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
+              },
+            },
           },
         },
       })

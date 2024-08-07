@@ -766,6 +766,15 @@ local function colorscheme_overrides()
       { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -800,6 +809,15 @@ local function colorscheme_overrides()
       },
     },
     ["horizon"] = {
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { FzfLuaFzfNormal = { fg = { from = "Keyword", attr = "fg" } } },
       { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = -0.3 } } },
@@ -1000,6 +1018,15 @@ local function colorscheme_overrides()
     },
 
     ["kanagawa"] = {
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -1071,6 +1098,14 @@ local function colorscheme_overrides()
       },
     },
     ["kanagawa-paper"] = {
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -1184,6 +1219,13 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        FzfLuaPreviewBorder = {
+          fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 },
+          bg = { from = "FzfluaBorder", attr = "bg" },
+        },
+      },
+
       { TelescopeBorder = { inherit = "FzfLuaBorder" } },
       -- prompt
       { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
@@ -1233,11 +1275,11 @@ local function colorscheme_overrides()
       { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.5 }, fg = "NONE" } },
 
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
-      { CursorLine = { bg = "NONE" } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "LineNr", attr = "fg", alter = 0.5 },
+          bg = { from = "CursorLine", attr = "bg" },
           bold = true,
         },
       },
@@ -1461,11 +1503,11 @@ local function colorscheme_overrides()
       },
       { FzfLuaBorder = { fg = { from = "WinSeparator" }, bg = { from = "NormalFloat", attr = "bg" } } },
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
-      { CursorLine = { bg = "None" } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "Keyword", attr = "fg", alter = 1 },
+          bg = { from = "CursorLine", attr = "bg" },
           bold = true,
         },
       },
@@ -1638,7 +1680,8 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = 1 },
         },
       },
-      { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
+
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = -0.2 },
@@ -1773,7 +1816,8 @@ local function colorscheme_overrides()
 
       {
         LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          -- bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          bg = "NONE",
           fg = "NONE",
           underline = false,
           reverse = false,
@@ -2016,6 +2060,15 @@ local function colorscheme_overrides()
       { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -2163,6 +2216,15 @@ local function colorscheme_overrides()
       { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
       { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       {
         QuickFixLine = {
@@ -2503,6 +2565,15 @@ local function colorscheme_overrides()
       },
     },
     ["tokyonight-storm"] = {
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { FzfLuaFzfNormal = { fg = { from = "Keyword", attr = "fg", alter = -0.3 } } },
       { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = -0.2 } } },
 
@@ -2694,6 +2765,15 @@ local function colorscheme_overrides()
       { WinSeparator = { fg = { from = "Keyword", attr = "fg", alter = -0.7 }, bg = "NONE" } },
       { MatchParen = { bg = { from = "MatchParen", attr = "bg", alter = -0.1 }, fg = "NONE", bold = false } },
 
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -2747,6 +2827,13 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        FzfLuaPreviewBorder = {
+          fg = { from = "FzfLuaBorder", attr = "fg", alter = 0.1 },
+          bg = { from = "FzfluaBorder", attr = "bg" },
+        },
+      },
+
       { TelescopeBorder = { inherit = "FzfLuaBorder" } },
       -- prompt
       { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
@@ -2762,11 +2849,11 @@ local function colorscheme_overrides()
           fg = { from = "Normal", attr = "bg", alter = 1.6 },
         },
       },
-      { CursorLine = { bg = "NONE" } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "LineNr", attr = "fg", alter = 0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
           bold = true,
         },
       },
@@ -2840,13 +2927,11 @@ local function colorscheme_overrides()
       { LineNrBelow = { link = "LineNr" } },
 
       { Comment = { fg = { from = "Comment", alter = -0.3 } } },
-      -- { CursorLine = { bg = { from = "Normal", alter = 0.3 } } },
-      { CursorLine = { bg = "NONE" } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
       {
         CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "LineNr", attr = "fg", alter = 0.5 },
-          -- bg = { from = "CursorLine", attr = "bg" },
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
           bold = true,
         },
       },
@@ -2887,8 +2972,14 @@ local function colorscheme_overrides()
       },
     },
     ["tender"] = {
-      { CursorLine = { bg = { from = "Normal", alter = 0.1 } } },
-      { CursorLineNr = { bg = { from = "CursorLine", attr = "bg" } } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       {
         FzfLuaBorder = {

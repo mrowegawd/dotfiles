@@ -1325,12 +1325,6 @@ return {
           ["farout"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
           },
-          ["ayu"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
-          },
-          ["nord"] = {
-            { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-          },
           ["vscode_modern"] = {
             { MiniIndentscopeSymbol = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
           },
