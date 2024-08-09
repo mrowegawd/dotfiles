@@ -363,7 +363,7 @@ if vim.g.neovide then
   vim.keymap.set("", "<C-Home>", "<CMD>lua vim.g.neovide_scale_factor = 1<CR>", { noremap = true })
   -- vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
 
-  vim.g.neovide_transparency = 0.9
+  vim.g.neovide_transparency = 0.92
   -- vim.g.transparency = 0.8
 
   -- Helper function for transparency formatting
