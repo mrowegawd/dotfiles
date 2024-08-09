@@ -50,16 +50,16 @@ function M.load_ses_dashboard()
       vim.cmd [[wincmd p]]
     end
 
-    -- local async
-    -- async = uv.new_async(vim.schedule_wrap(function()
-    --   if async ~= nil then
-    --     require("qfsilet.note").get_todo()
-    --     async:close()
-    --   end
-    -- end))
-    -- if async ~= nil then
-    --   async:send()
-    -- end
+    local async
+    async = uv.new_async(vim.schedule_wrap(function()
+      if async ~= nil then
+        require("qfsilet.note").get_todo()
+        async:close()
+      end
+    end))
+    if async ~= nil then
+      async:send()
+    end
 
     -- if sessions are not loaded, do not run this command,
     if vim.bo[0].filetype ~= "dashboard" then
