@@ -97,13 +97,29 @@ return {
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = function()
       Highlight.plugin("octo_hijackcol", {
+        -- {
+        --   OctoNormal = {
+        --     -- fg = { from = "Normal", attr = "bg", alter = 9 },
+        --     bg = { from = "Normal", attr = "bg", alter = 1.5 },
+        --   },
+        -- },
+        -- { OctoEditable = { bg = { from = "ColorColumn" } } },
         {
-          OctoNormal = {
-            -- fg = { from = "Normal", attr = "bg", alter = 9 },
-            bg = { from = "Normal", attr = "bg", alter = 1.5 },
+          OctoBubble = {
+            bg = { from = "Keyword", attr = "fg", alter = -0.3 },
+            fg = { from = "Normal", attr = "bg" },
+            bold = true,
           },
         },
+        -- {
+        --   OctoSignColumn = {
+        --     bg = { from = "ErrorMsg", attr = "fg", alter = -0.1 },
+        --   },
+        -- },
       })
+
+      vim.treesitter.language.register("markdown", "octo")
+
       return {
         picker = "telescope",
         -- picker = "fzf-lua",
@@ -256,9 +272,9 @@ return {
   {
     "pwntester/octo.nvim",
     opts = function(_, opts)
-      -- if RUtils.has "telescope.nvim" then
-      --   opts.picker = "telescope"
-      if RUtils.has "fzf-lua" then
+      if RUtils.has "telescope.nvim" then
+        opts.picker = "telescope"
+      elseif RUtils.has "fzf-lua" then
         opts.picker = "fzf-lua"
       else
         ---@diagnostic disable-next-line: undefined-field

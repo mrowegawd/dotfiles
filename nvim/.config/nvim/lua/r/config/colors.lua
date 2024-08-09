@@ -620,8 +620,6 @@ local general_overrides = function()
 
     -- BUFFERLINE =========================================================
     { BufferLineIndicatorSelected = { bg = { from = "ColorColumn" } } },
-    { OctoEditable = { bg = { from = "ColorColumn" } } },
-    { OctoBubble = { link = "Normal" } },
 
     -- BQF ================================================================
     { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
@@ -1812,7 +1810,14 @@ local function colorscheme_overrides()
         },
       },
 
-      { CursorLine = { bg = "NONE" } },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       {
         LspReferenceText = {
@@ -2889,7 +2894,7 @@ local function colorscheme_overrides()
     ["vscode_modern"] = {
       {
         Folded = {
-          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
           fg = { from = "Normal", attr = "bg", alter = 1.6 },
         },
       },
