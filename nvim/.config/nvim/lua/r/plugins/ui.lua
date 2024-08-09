@@ -517,6 +517,7 @@ return {
   -- TABBY
   {
     "nanozuki/tabby.nvim",
+    event = "VeryLazy",
     config = function()
       local theme = {
         fill = "Normal",
