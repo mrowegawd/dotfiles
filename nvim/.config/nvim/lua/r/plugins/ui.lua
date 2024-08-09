@@ -1,6 +1,12 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
+-- local pending_notifications = {}
+local old_notify = vim.notify
+-- vim.notify = function(...)
+--   table.insert(pending_notifications, vim.F.pack_len(...))
+-- end
+
 return {
   -- INDENT-BLANKLINE
   {
@@ -257,6 +263,26 @@ return {
           vim.api.nvim_win_set_config(win, { zindex = 175 })
         end,
       }
+    end,
+    config = function(_, opts)
+      vim.notify = old_notify
+      local notify = require "notify"
+      vim.notify = notify
+      notify.setup(opts)
+
+      -- Taken from: https://github.com/rcarriga/nvim-notify/issues/189#issuecomment-2225599658
+      local util = require "notify.stages.util"
+      local get_slot_range = util.get_slot_range
+      local override = function(direction)
+        local a, b = get_slot_range(direction)
+        if direction == util.DIRECTION.TOP_DOWN then
+          b = b - 1
+        elseif direction == util.DIRECTION.BOTTOM_UP then
+          a = a - 1
+        end
+        return a, b
+      end
+      util.get_slot_range = override
     end,
   },
   -- NOICE
