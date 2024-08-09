@@ -21,15 +21,22 @@ local function picker(contents, tbl_cts, fzf_opts)
   end
 
   function tags_previewer:parse_entry(entry_str)
+    local data
     for _, x in pairs(tbl_cts) do
       if x.text == entry_str then
-        return {
+        data = {
           path = x.filename,
           line = x.lnum,
           col = x.col,
         }
+      else
       end
     end
+
+    if data then
+      return data
+    end
+    return {}
   end
 
   require("fzf-lua").fzf_exec(contents, {
