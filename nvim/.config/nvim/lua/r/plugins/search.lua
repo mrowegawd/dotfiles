@@ -263,6 +263,7 @@ return {
             ["<PageUp>"] = "preview-page-up",
           },
           fzf = {
+            ["alt-a"] = "toggle-all",
             ["ctrl-d"] = "preview-page-down",
             ["ctrl-u"] = "preview-page-up",
           },
@@ -1121,12 +1122,19 @@ return {
           --     return string.format("%s (%s)", tail, path)
           -- end,
           -- path_display = "smart",
-          sorting_strategy = "descending",
+          -- sorting_strategy = "descending",
           scroll_strategy = "cycle",
-          layout_strategy = "flex",
+          -- layout_strategy = "flex",
+          -- layout_config = {
+          --   horizontal = { preview_width = 0.55 },
+          -- },
+          sorting_strategy = "ascending",
+          theme = "ivy",
           layout_config = {
+            height = 35,
             horizontal = { preview_width = 0.55 },
           },
+          layout_strategy = "bottom_pane",
           prompt_prefix = "  ",
           selection_caret = " ",
           cycle_layout_list = { -- digunakan ketika use <c-l>
@@ -1228,6 +1236,7 @@ return {
         },
         extensions = {
           lazy = themes.get_ivy {},
+          octo = themes.get_ivy {},
           -- dap = themes.get_ivy {}, -- not working
           live_grep_args = themes.get_ivy {
             auto_quoting = false, -- enable/disable auto-quoting
