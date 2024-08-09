@@ -1,63 +1,6 @@
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- GLANCE
-  {
-    "DNLHC/glance.nvim",
-    event = "LspAttach",
-    cmd = { "Glance" },
-    opts = function()
-      local actions = require("glance").actions
-      return {
-        -- height = 18, -- Height of the window
-        zindex = 100,
-        preview_win_opts = { relativenumber = false, wrap = false },
-        -- theme = { enable = true, mode = "darken" },
-        folds = {
-          fold_closed = "",
-          fold_open = "",
-          folded = true, -- Automatically fold list on startup
-        },
-        mappings = {
-          list = {
-            ["<C-u>"] = actions.preview_scroll_win(5),
-            ["<C-d>"] = actions.preview_scroll_win(-5),
-            ["<c-v>"] = actions.jump_vsplit,
-            ["<c-s>"] = actions.jump_split,
-            ["<c-t>"] = actions.jump_tab,
-            ["<c-n>"] = actions.next_location,
-            ["<c-p>"] = actions.previous_location,
-            ["<a-n>"] = actions.next_location,
-            ["<a-p>"] = actions.previous_location,
-            ["h"] = actions.close_fold,
-            ["zm"] = actions.close_fold,
-            ["l"] = actions.open_fold,
-            ["zo"] = actions.open_fold,
-            ["za"] = actions.open_fold,
-            ["<C-l>"] = "",
-            ["<C-j>"] = "",
-            ["<C-k>"] = "",
-            ["<a-h>"] = actions.enter_win "preview",
-            ["<c-h>"] = actions.enter_win "preview",
-            ["p"] = actions.enter_win "preview",
-          },
-          preview = {
-            ["ql"] = actions.close,
-            ["p"] = actions.enter_win "list",
-            ["<c-n>"] = actions.next_location,
-            ["<c-p>"] = actions.previous_location,
-            ["<a-n>"] = actions.next_location,
-            ["<a-p>"] = actions.previous_location,
-            ["<a-l>"] = actions.enter_win "list",
-            ["<c-l>"] = actions.enter_win "list",
-            ["<C-h>"] = "",
-            ["<C-j>"] = "",
-            ["<C-k>"] = "",
-          },
-        },
-      }
-    end,
-  },
   -- OUTPUTPANEL
   {
     "mhanberg/output-panel.nvim",
@@ -214,6 +157,92 @@ return {
           }, bufnr)
         end,
       })
+    end,
+  },
+  -- GLANCE
+  {
+    "DNLHC/glance.nvim",
+    event = "LspAttach",
+    cmd = { "Glance" },
+    opts = function()
+      Highlight.plugin("glanceHi", {
+        { GlancePreviewNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+        { GlancePreviewCursorLine = { bg = { from = "CursorLine", attr = "bg" } } },
+        { GlancePreviewLineNr = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+        -- { GlanceListNormal = { bg = { from = "NormalFloat", attr = "bg", alter = -0.8 } } },
+        { GlanceListCursorLine = { bg = { from = "CursorLine", attr = "bg" } } },
+      })
+
+      local actions = require("glance").actions
+
+      return {
+        height = 30, -- Height of the window
+        zindex = 100,
+        preview_win_opts = { relativenumber = false, wrap = false },
+        folds = {
+          fold_closed = "",
+          fold_open = "",
+          folded = true, -- Automatically fold list on startup
+        },
+        -- Taken from https://github.com/DNLHC/glance.nvim#hooks
+        -- Don't open glance when there is only one result and it is
+        -- located in the current buffer, open otherwise
+        hooks = {
+          ---@diagnostic disable-next-line: unused-local
+          before_open = function(results, open, jump, method)
+            local uri = vim.uri_from_bufnr(0)
+            if #results == 1 then
+              local target_uri = results[1].uri or results[1].targetUri
+
+              if target_uri == uri then
+                jump(results[1])
+              else
+                open(results)
+              end
+            else
+              open(results)
+            end
+          end,
+        },
+        mappings = {
+          list = {
+            ["<C-u>"] = actions.preview_scroll_win(5),
+            ["<C-d>"] = actions.preview_scroll_win(-5),
+            ["<c-v>"] = actions.jump_vsplit,
+            ["<c-s>"] = actions.jump_split,
+            ["<c-t>"] = actions.jump_tab,
+            ["<c-n>"] = actions.next_location,
+            ["<c-p>"] = actions.previous_location,
+            ["<a-n>"] = actions.next_location,
+            ["<a-p>"] = actions.previous_location,
+            ["h"] = actions.close_fold,
+            ["zm"] = actions.close_fold,
+            ["l"] = actions.open_fold,
+            ["zo"] = actions.open_fold,
+            ["za"] = actions.open_fold,
+            ["<C-l>"] = "",
+            ["<C-j>"] = "",
+            ["<C-k>"] = "",
+            ["<a-h>"] = actions.enter_win "preview",
+            ["<c-h>"] = actions.enter_win "preview",
+            ["p"] = actions.enter_win "preview",
+          },
+          preview = {
+            ["ql"] = actions.close,
+            ["p"] = actions.enter_win "list",
+            ["<c-n>"] = actions.next_location,
+            ["<c-p>"] = actions.previous_location,
+            ["<a-n>"] = actions.next_location,
+            ["<a-p>"] = actions.previous_location,
+            ["<a-l>"] = actions.enter_win "list",
+            ["<c-l>"] = actions.enter_win "list",
+            ["<C-h>"] = "",
+            ["<C-j>"] = "",
+            ["<C-k>"] = "",
+          },
+        },
+      }
     end,
   },
 }

@@ -226,12 +226,12 @@ opt.hidden = true -- do not unload buffer when abandoned
 -- timings {{{1
 -----------------------------------------------------------------------------//
 -- updatetime = 50
-opt.updatetime = 300
+opt.updatetime = 400
 opt.timeout = true
+opt.ttimeoutlen = 5
 if not vim.g.vscode then
   opt.timeoutlen = 500 -- Lower than default (1000) to quickly trigger which-key
 end
-opt.ttimeoutlen = 10
 
 --[[
      shda (info for vim): session data history
@@ -281,7 +281,8 @@ opt.undofile = true -- don't create root-owned files
 -- end
 opt.wrap = false -- Disable wrapping of lines longer than the width of window.
 opt.mouse = "a" -- Enable mouse support.
--- mousescroll = "ver:0,hor:0", -- "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
+opt.smoothscroll = true
+opt.mousescroll = { "hor:1", "ver:1" } -- "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
 opt.guicursor = "n:blinkon200,i-ci-ve:ver25" -- Enable cursor blink.
 opt.autochdir = false -- Use current file dir as working dir (See project.nvim)
 opt.scrolloff = 5 -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.
@@ -315,7 +316,6 @@ opt.diffopt = opt.diffopt
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "terminal" }
 
 opt.foldmethod = "expr"
-opt.smoothscroll = true
 opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
 opt.foldtext = ""
 
