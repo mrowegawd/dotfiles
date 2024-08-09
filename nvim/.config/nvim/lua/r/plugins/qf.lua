@@ -2,7 +2,6 @@ return {
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    event = "LazyFile",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
