@@ -1321,12 +1321,6 @@ return {
     event = "LazyFile",
     cmd = { "TodoTrouble", "TodoTelescope" },
     keys = {
-      { "<Leader>xt", "<cmd>TodoTrouble<cr>", desc = "Misc: todo trouble (trouble) [todo-comments]" },
-      {
-        "<Leader>xT",
-        "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",
-        desc = "Misc: search Todo/Fix/Fixme (trouble) [todo-comments]",
-      },
       {
         "<Leader>fT",
         function()
@@ -1497,7 +1491,7 @@ return {
         "<cmd>Trouble lsp_references toggle focus=true<cr>",
         desc = "LSP: references [trouble]",
       },
-      { "<Leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
+      -- { "<Leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "LSP: open symbols with trouble [trouble]" },
       -- {
       --   "gi",
       --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
@@ -1541,16 +1535,6 @@ return {
         end,
         desc = "Diagnostic: document diagnostic [trouble]",
       },
-      -- {
-      --   "<Leader>cs",
-      --   "<cmd>Trouble symbols toggle focus=false<cr>",
-      --   desc = "LSP: open symbols with trouble [trouble]",
-      -- },
-      -- {
-      --   "<Leader>cS",
-      --   "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-      --   desc = "LSP: LSP references/definitions/... [trouble]",
-      -- },
       {
         "<Leader>xl",
         function()
