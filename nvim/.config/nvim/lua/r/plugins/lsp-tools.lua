@@ -1,6 +1,63 @@
 local Highlight = require "r.settings.highlights"
 
 return {
+  -- GLANCE
+  {
+    "DNLHC/glance.nvim",
+    event = "LspAttach",
+    cmd = { "Glance" },
+    opts = function()
+      local actions = require("glance").actions
+      return {
+        -- height = 18, -- Height of the window
+        zindex = 100,
+        preview_win_opts = { relativenumber = false, wrap = false },
+        -- theme = { enable = true, mode = "darken" },
+        folds = {
+          fold_closed = "",
+          fold_open = "",
+          folded = true, -- Automatically fold list on startup
+        },
+        mappings = {
+          list = {
+            ["<C-u>"] = actions.preview_scroll_win(5),
+            ["<C-d>"] = actions.preview_scroll_win(-5),
+            ["<c-v>"] = actions.jump_vsplit,
+            ["<c-s>"] = actions.jump_split,
+            ["<c-t>"] = actions.jump_tab,
+            ["<c-n>"] = actions.next_location,
+            ["<c-p>"] = actions.previous_location,
+            ["<a-n>"] = actions.next_location,
+            ["<a-p>"] = actions.previous_location,
+            ["h"] = actions.close_fold,
+            ["zm"] = actions.close_fold,
+            ["l"] = actions.open_fold,
+            ["zo"] = actions.open_fold,
+            ["za"] = actions.open_fold,
+            ["<C-l>"] = "",
+            ["<C-j>"] = "",
+            ["<C-k>"] = "",
+            ["<a-h>"] = actions.enter_win "preview",
+            ["<c-h>"] = actions.enter_win "preview",
+            ["p"] = actions.enter_win "preview",
+          },
+          preview = {
+            ["ql"] = actions.close,
+            ["p"] = actions.enter_win "list",
+            ["<c-n>"] = actions.next_location,
+            ["<c-p>"] = actions.previous_location,
+            ["<a-n>"] = actions.next_location,
+            ["<a-p>"] = actions.previous_location,
+            ["<a-l>"] = actions.enter_win "list",
+            ["<c-l>"] = actions.enter_win "list",
+            ["<C-h>"] = "",
+            ["<C-j>"] = "",
+            ["<C-k>"] = "",
+          },
+        },
+      }
+    end,
+  },
   -- OUTPUTPANEL
   {
     "mhanberg/output-panel.nvim",

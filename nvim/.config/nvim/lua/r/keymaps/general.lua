@@ -490,7 +490,7 @@ RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
   silent = true,
 })
 
-local funcme = function()
+local func_cmds = function()
   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
   local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
 
@@ -531,9 +531,9 @@ local funcme = function()
   }, { winopts = { title = "fz-ctrlo", row = row, col = col } })
 end
 
-RUtils.map.nnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
-RUtils.map.tnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
-RUtils.map.vnoremap("<a-o>", funcme, { desc = "Misc: list commands" })
+RUtils.map.nnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
+RUtils.map.tnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
+RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 
 RUtils.map.nnoremap("<Localleader>of", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()

@@ -19,31 +19,10 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
+    -- { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
+    { "gk", vim.lsp.buf.hover, desc = "LSP: show hover [noice]" },
     { "gK", vim.lsp.buf.signature_help, desc = "LSP: signature help", has = "signatureHelp" },
-    {
-      "gd",
-      function()
-        require("telescope.builtin").lsp_definitions { reuse_win = true }
-      end,
-      desc = "LSP: goto definition",
-      has = "definition",
-    },
-    { "gD", vim.lsp.buf.declaration, desc = "LSP: goto declaration" },
-    {
-      "gI",
-      function()
-        require("telescope.builtin").lsp_implementations { reuse_win = true }
-      end,
-      desc = "LSP: goto implementation",
-    },
-    {
-      "gy",
-      function()
-        require("telescope.builtin").lsp_type_definitions { reuse_win = true }
-      end,
-      desc = "LSP: goto type definition",
-    },
+    { "gD", vim.lsp.buf.declaration, desc = "LSP: declaration" },
     {
       "<a-q>",
       function()
@@ -195,6 +174,65 @@ function M.get()
       { "<Leader>cr", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [lspsaga]", has = "rename" }
   else
     M._keys[#M._keys + 1] = { "<Leader>cr", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
+  end
+
+  if RUtils.has "glance.nvim" then
+    M._keys[#M._keys + 1] = {
+      "grr",
+      "<CMD>Glance references<CR>",
+      has = "references",
+      desc = "LSP: references [glance",
+    }
+  end
+
+  if RUtils.has "glance.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gd",
+      "<CMD>Glance definitions<CR>",
+      has = "definition",
+      desc = "LSP: definitions [glance]",
+    }
+  else
+    M._keys[#M._keys + 1] = {
+      "gd",
+      function()
+        require("telescope.builtin").lsp_definitions { reuse_win = true }
+      end,
+      desc = "LSP: definitions",
+      has = "definition",
+    }
+  end
+
+  if RUtils.has "glance.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gi",
+      "<CMD>Glance implementations<CR>",
+      desc = "LSP: implementations [glance]",
+    }
+  else
+    M._keys[#M._keys + 1] = {
+      "gi",
+      function()
+        require("telescope.builtin").lsp_implementations { reuse_win = true }
+      end,
+      desc = "LSP: implementations",
+    }
+  end
+
+  if RUtils.has "glance.nvim" then
+    M._keys[#M._keys + 1] = {
+      "gt",
+      "<CMD>Glance type_definitions<CR>",
+      desc = "LSP: type definitions [glance]",
+    }
+  else
+    M._keys[#M._keys + 1] = {
+      "gt",
+      function()
+        require("telescope.builtin").lsp_type_definitions { reuse_win = true }
+      end,
+      desc = "LSP: type definitions",
+    }
   end
 
   -- if RUtils.has "lsp_signature.nvim" then
