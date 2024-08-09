@@ -904,7 +904,7 @@ return {
       -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
       -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
       -- { "<Leader>fC", "<CMD>Telescope commands<CR>", desc = "Telescope: commands" },
-      -- { "<Leader>fl", "<CMD>Telescope resume<CR>", desc = "Telescope: resume (last search)" },
+      { "<Leader>fL", "<CMD>Telescope resume<CR>", desc = "Telescope: resume (last search)" },
       -- { "<Leader>f=", "<CMD>Telescope spell_suggest theme=get_cursor<CR>", desc = "Telescope: spell suggest" },
       -- { "<Leader>fF", "<CMD>Telescope lazy theme=ivy<CR>", desc = "Telescope: plugins files" },
       -- {
