@@ -163,6 +163,7 @@ return {
   {
     "DNLHC/glance.nvim",
     event = "LspAttach",
+    enabled = false,
     cmd = { "Glance" },
     opts = function()
       Highlight.plugin("glanceHi", {

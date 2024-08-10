@@ -98,6 +98,12 @@ return {
     },
     --stylua: ignore
     keys = {
+      { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
+      { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
+
+      { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
+      { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
+
       { "<a-w>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
       { "gb", function()
         require("fzf-lua").buffers({
@@ -805,8 +811,26 @@ return {
           finder = {
             prompt = RUtils.fzflua.default_title_prompt(),
             winopts = {
-              title = RUtils.fzflua.format_title("LSP Finder", ""),
+              title = RUtils.fzflua.format_title("Finder", ""),
+              -- relative = "cursor",
             },
+            winopts_fn = function()
+              local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+              local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+              local win_height = math.ceil(lines * 0.65)
+              local win_width = math.ceil(columns * 2)
+              return {
+                width = win_width,
+                height = win_height,
+                row = 13,
+                -- col = 14,
+                preview = {
+                  vertical = "down:45%", -- up|down:size
+                  horizontal = "left:55%", -- right|left:size
+                },
+              }
+            end,
           },
         },
         diagnostics = {
