@@ -225,8 +225,7 @@ opt.hidden = true -- do not unload buffer when abandoned
 -----------------------------------------------------------------------------//
 -- timings {{{1
 -----------------------------------------------------------------------------//
--- updatetime = 50
--- opt.updatetime = 400
+opt.updatetime = 400
 opt.timeout = true
 opt.ttimeoutlen = 5
 if not vim.g.vscode then

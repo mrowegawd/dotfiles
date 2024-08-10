@@ -199,9 +199,6 @@ local data_title_out = {}
 
 local insert_tags = {}
 
-local builtin = require "fzf-lua.previewer.builtin"
-local tags_previewer = builtin.buffer_or_file:extend()
-
 local function format_data_tags(match_data)
   local line = string.gsub(match_data.lines.text, '"(%d+)"', "%1")
   line = string.gsub(line, "-%s", "")
@@ -331,37 +328,44 @@ local function format_prompt_strings()
   )
 end
 
-local function picker(contents)
-  function tags_previewer:new(o, opts, fzf_win)
-    tags_previewer.super.new(self, o, opts, fzf_win)
-    setmetatable(self, tags_previewer)
-    return self
-  end
+local builtin = require "fzf-lua.previewer.builtin"
+local Tagpreviewer = builtin.buffer_or_file:extend()
 
-  function tags_previewer:parse_entry(entry_str)
-    local text = vim.split(entry_str, "|")
+function Tagpreviewer:new(o, opts, fzf_win)
+  Tagpreviewer.super.new(self, o, opts, fzf_win)
+  setmetatable(self, Tagpreviewer)
+  return self
+end
 
-    local data
-    if text then
-      for _, x in pairs(data_tags_table) do
-        if x.title == text[2] then
-          data = {
-            path = x.path,
-            line = x.line_number,
-            col = 1,
-          }
-        end
+function Tagpreviewer:parse_entry(entry_str)
+  local text = vim.split(entry_str, "|")
+
+  local data
+  if text then
+    for _, x in pairs(data_tags_table) do
+      if x.title == text[2] then
+        data = {
+          path = x.path,
+          line = x.line_number,
+          col = 1,
+        }
       end
     end
-
-    if data then
-      return data
-    end
-    return {}
   end
 
+  if data then
+    return data
+  end
+  return {}
+end
+
+local function picker(contents)
   return require("fzf-lua").fzf_exec(contents, {
-    previewer = tags_previewer,
+    previewer = {
+      _ctor = function()
+        return Tagpreviewer
+      end,
+    },
     prompt = "   ",
     winopts = {
       title = format_prompt_strings(),
@@ -575,10 +579,6 @@ local function list_tags_async(all_tags, is_set)
                               data_tags.title
                             )
 
-                            -- TODO: ensure id note exists #postpone #25/5/saturday
-                            -- if is_set then
-                            -- end
-
                             cb(require("fzf-lua").make_entry.file(fzf_str, {}), function()
                               coroutine.resume(co, 0)
                             end)
@@ -682,13 +682,13 @@ function M.find_local_titles()
   local starting_bufname = vim.api.nvim_buf_get_name(0)
   local fullname = vim.fn.fnamemodify(starting_bufname, ":p")
 
-  function tags_previewer:new(o, opts, fzf_win)
-    tags_previewer.super.new(self, o, opts, fzf_win)
-    setmetatable(self, tags_previewer)
+  function Tagpreviewer:new(o, opts, fzf_win)
+    Tagpreviewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, Tagpreviewer)
     return self
   end
 
-  function tags_previewer:parse_entry(entry_str)
+  function Tagpreviewer:parse_entry(entry_str)
     local entry_str_strip = RUtils.fzflua.__strip_str(entry_str)
     if entry_str_strip then
       local x = vim.split(entry_str_strip, ":")
@@ -702,7 +702,7 @@ function M.find_local_titles()
 
   return require("fzf-lua").grep {
     prompt = "   ",
-    previewer = tags_previewer,
+    previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
     search = "^#.*",

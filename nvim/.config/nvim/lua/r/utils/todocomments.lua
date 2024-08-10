@@ -1,11 +1,11 @@
 ---@class r.utils.todocomments
 local M = {}
 
-local builtin = require "fzf-lua.previewer.builtin"
-local tags_previewer = builtin.buffer_or_file:extend()
-
 local tbl_dat = {}
 local tbl_dat_note = {}
+
+local builtin = require "fzf-lua.previewer.builtin"
+local Todopreviewer = builtin.buffer_or_file:extend()
 
 local function picker(contents, tbl_cts, fzf_opts)
   vim.validate {
@@ -14,13 +14,22 @@ local function picker(contents, tbl_cts, fzf_opts)
     tbl_cts = { tbl_cts, "table" },
   }
 
-  function tags_previewer:new(o, opts, fzf_win)
-    tags_previewer.super.new(self, o, opts, fzf_win)
-    setmetatable(self, tags_previewer)
+  function Todopreviewer:new(o, opts, fzf_win)
+    Todopreviewer.super.new(self, o, opts, fzf_win)
+    setmetatable(self, Todopreviewer)
     return self
   end
 
-  function tags_previewer:parse_entry(entry_str)
+  function Todopreviewer:gen_winopts()
+    local winopts = {
+      wrap = self.win.preview_wrap,
+      cursorline = false,
+      number = false,
+    }
+    return vim.tbl_extend("keep", winopts, self.winopts)
+  end
+
+  function Todopreviewer:parse_entry(entry_str)
     local data
     for _, x in pairs(tbl_cts) do
       if x.text == entry_str then
@@ -29,7 +38,6 @@ local function picker(contents, tbl_cts, fzf_opts)
           line = x.lnum,
           col = x.col,
         }
-      else
       end
     end
 
@@ -40,7 +48,11 @@ local function picker(contents, tbl_cts, fzf_opts)
   end
 
   require("fzf-lua").fzf_exec(contents, {
-    previewer = tags_previewer,
+    previewer = {
+      _ctor = function()
+        return Todopreviewer
+      end,
+    },
     winopts = {
       title = RUtils.fzflua.format_title(
         "Todocomments > " .. fzf_opts.title,
@@ -49,7 +61,6 @@ local function picker(contents, tbl_cts, fzf_opts)
       ),
     },
     prompt = "   ",
-
     actions = {
       ["default"] = function(selected, _)
         local sel = selected[1]
