@@ -55,7 +55,7 @@ setopt AUTOPARAMSLASH            # tab completing directory appends a slash
 setopt AUTO_CD
 setopt AUTO_PUSHD                # Push the current directory visited on the stack.
 setopt COMPLETE_ALIASES
-setopt CORRECT                  # command auto-correction
+setopt CORRECT                   # command auto-correction
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
 setopt HIST_BEEP
 setopt HIST_EXPIRE_DUPS_FIRST

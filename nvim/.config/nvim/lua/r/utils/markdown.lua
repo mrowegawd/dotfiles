@@ -341,16 +341,21 @@ local function picker(contents)
   function tags_previewer:parse_entry(entry_str)
     local text = vim.split(entry_str, "|")
 
+    local data
     if text then
       for _, x in pairs(data_tags_table) do
         if x.title == text[2] then
-          return {
+          data = {
             path = x.path,
             line = x.line_number,
             col = 1,
           }
         end
       end
+    end
+
+    if data then
+      return data
     end
     return {}
   end
