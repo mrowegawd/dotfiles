@@ -23,7 +23,7 @@ local function picker(contents, tbl_cts, fzf_opts)
   function Todopreviewer:gen_winopts()
     local winopts = {
       wrap = self.win.preview_wrap,
-      cursorline = false,
+      -- cursorline = false,
       number = false,
     }
     return vim.tbl_extend("keep", winopts, self.winopts)
