@@ -1,21 +1,21 @@
-STATUSLINE_BG_ACTIVE="#447cab"
-STATUSLINE_BG="#1f1f1f"
-STATUSLINE_FG="#404040"
+STATUSLINE_BG_ACTIVE="#706e97"
+STATUSLINE_BG="#171718"
+STATUSLINE_FG="#2f2f32"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#404040"
-BORDER_BG="#1f1f1f"
-BORDER_FG_NC="#262626"
+BORDER_FG="#2f2f32"
+BORDER_BG="#171718"
+BORDER_FG_NC="#1c1c1e"
 
-SEPARATOR_FG="#404040"
-SEPARATOR_ACTIVE_BG="#262626"
+SEPARATOR_FG="#2f2f32"
+SEPARATOR_ACTIVE_BG="#1c1c1e"
 
-WINDOW_BG_ACTIVE="#1f1f1f"
-WINDOW_BG="#1f1f1f"
+WINDOW_BG_ACTIVE="#171718"
+WINDOW_BG="#171718"
 
-RED="#f44747"
-BLUE="#569cd6"
+RED="#e67e80"
+BLUE="#8da0d6"
 
 left_separator=''
 left_separator_black=''
@@ -91,11 +91,12 @@ set -g window-status-format "#[fg=$STATUSLINE_BG]\
 #{?pane_synchronized,#[bg=$RED],}$left_slant_separator#[fg=$STATUSLINE_BG]\
 #{?pane_synchronized,#[fg=$RED],}$left_slant_separator"
 
-set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
-#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG,bg=$STATUSLINE_BG_ACTIVE,bold]#{?window_zoomed_flag,#[bg=$RED],}\
+set -g window-status-current-format "#[fg=$BORDER_FG]\
+#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}\
+$left_slant_separator#[fg=$STATUSLINE_BG_ACTIVE,bg=$BORDER_FG,bold]#{?window_zoomed_flag,#[bg=$RED],}\
 #{?pane_synchronized,#[bg=yellow] [SYNC],}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],}\
- #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$STATUSLINE_BG_ACTIVE],}#[bg=$STATUSLINE_BG_ACTIVE,fg=$SEPARATOR_FG]\
-#{?pane_synchronized,#[bg=yellow],}#{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$SEPARATOR_FG,fg=$STATUSLINE_BG]$left_slant_separator"
+ #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$BORDER_FG],}#[bg=$BORDER_FG,fg=$SEPARATOR_FG]\
+#{?pane_synchronized,#[bg=yellow],}#{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$BORDER_FG,fg=$STATUSLINE_BG]$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT
