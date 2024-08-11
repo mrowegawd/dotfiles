@@ -173,36 +173,21 @@
     // -------------------------
     // NAVIGATE
     // -------------------------
-
-    {
-      // next buffer
-      "before": ["g", "l"],
-      "commands": ["workbench.action.nextEditor"]
-    },
-    {
-      // prev buffer
-      "before": ["g", "h"],
-      "commands": ["workbench.action.previousEditor"]
-    },
     {
       "before": ["s", "h"],
-      "commands": ["workbench.action.focusLeftGroup"]
+      "commands": ["workbench.action.navigateLeft"]
     },
     {
       "before": ["s", "l"],
-      "commands": ["workbench.action.focusRightGroup"]
+      "commands": ["workbench.action.navigateRight"]
     },
     {
       "before": ["s", "k"],
-      "commands": ["workbench.action.focusAboveGroup"]
+      "commands": ["workbench.action.navigateUp"]
     },
     {
       "before": ["s", "j"],
-      "commands": ["workbench.action.focusAboveGroup"]
-    },
-    {
-      "before": ["s", "j"],
-      "commands": ["workbench.action.focusAboveGroup"]
+      "commands": ["workbench.action.navigateDown"]
     },
     {
       "before": ["s", "v"],
@@ -215,6 +200,16 @@
     {
       "before": ["s", "m"],
       "commands": ["workbench.action.maximizeEditor"]
+    },
+    {
+      // next buffer
+      "before": ["g", "l"],
+      "commands": ["workbench.action.nextEditor"]
+    },
+    {
+      // prev buffer
+      "before": ["g", "h"],
+      "commands": ["workbench.action.previousEditor"]
     },
 
     {
@@ -320,63 +315,58 @@
 
     {
       "before": ["g", "S"],
-      "commands": ["workbench.action.showAllSymbols"]
+      "commands": ["workbench.action.showAllSymbols"],
+      "silent": true
     },
     {
       "before": ["g", "s"],
-      "commands": ["workbench.action.gotoSymbol"]
+      "commands": ["workbench.action.gotoSymbol"],
+      "silent": true
     },
-
     {
-      "before": ["K"],
-      "commands": ["editor.action.showHover"]
+      "before": ["g", "k"],
+      "commands": ["editor.action.showHover"],
+      "silent": true
     },
     {
       "before": ["g", "d"],
       "commands": ["editor.action.revealDefinition"],
       "silent": true
     },
-    // {
-    //   "before": ["<F2>"],
-    //   "commands": ["editor.action.goToReferences"],
-    //   "silent": true
-    // },
-
     {
       "before": ["<leader>", "c", "a"],
       "commands": ["editor.action.quickFix"]
     },
-
     {
       "before": ["g", "R"],
       "commands": ["references-view.findReferences"],
       "silent": true
     },
-
     {
-      "before": ["g", "r"],
+      "before": ["g", "r", "r"],
       "commands": ["editor.action.goToReferences"],
       "silent": true
     },
-
     {
       "before": ["g", "P"],
       "commands": ["editor.action.peekTypeDefinition"],
       "silent": true
     },
-
     {
-      "before": ["g", "y"],
+      "before": ["g", "t"],
       "commands": ["editor.action.goToTypeDefinition"],
       "silent": true
     },
-
+    {
+      "before": ["g", "i"],
+      "commands": ["editor.action.goToImplementation"],
+      "silent": true
+    },
     {
       "before": ["g", "I"],
       "commands": ["editor.showCallHierarchy"],
       "silent": true
     },
-
     {
       "before": ["g", "O"],
       "commands": ["editor.showOutgoingCalls"],

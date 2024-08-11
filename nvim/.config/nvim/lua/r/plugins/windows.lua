@@ -104,16 +104,16 @@ return {
       local TMUX = os.getenv "TMUX"
       if TMUX then
         local nav = {
-          ["a-h"] = function()
+          ["c-h"] = function()
             require("smart-splits").move_cursor_left()
           end,
-          ["a-j"] = function()
+          ["c-j"] = function()
             require("smart-splits").move_cursor_down()
           end,
-          ["a-k"] = function()
+          ["c-k"] = function()
             require("smart-splits").move_cursor_up()
           end,
-          ["a-l"] = function()
+          ["c-l"] = function()
             require("smart-splits").move_cursor_right()
           end,
           ["a-H"] = function()
@@ -142,10 +142,10 @@ return {
         end
       else
         local nav = {
-          ["a-h"] = "Left",
-          ["a-j"] = "Down",
-          ["a-k"] = "Up",
-          ["a-l"] = "Right",
+          ["c-h"] = "Left",
+          ["c-j"] = "Down",
+          ["c-k"] = "Up",
+          ["c-l"] = "Right",
         }
         local nav2 = {
           ["a-H"] = "Left",
@@ -155,10 +155,10 @@ return {
         }
 
         local navVim = {
-          ["a-h"] = "h",
-          ["a-j"] = "j",
-          ["a-k"] = "k",
-          ["a-l"] = "l",
+          ["c-h"] = "h",
+          ["c-j"] = "j",
+          ["c-k"] = "k",
+          ["c-l"] = "l",
         }
 
         local function detect_opened_windows()

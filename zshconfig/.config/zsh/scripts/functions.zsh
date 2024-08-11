@@ -230,7 +230,7 @@ run-mark() {
 }
 
 zle -N run-mark
-bindkey '^j' run-mark
+bindkey '^o' run-mark
 
 function fg-bg(){
   if [[ $#BUFFER -eq 0 ]]; then

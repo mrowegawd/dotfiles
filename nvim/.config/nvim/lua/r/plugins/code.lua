@@ -173,13 +173,13 @@ return {
             local types = require "cmp.types"
 
             if cmps.visible() then
-              if #cmps.get_entries() == 1 then
-                cmps.confirm { select = true }
-              else
-                cmps.select_next_item {
-                  behavior = types.cmp.SelectBehavior.Select,
-                }
-              end
+              -- if #cmps.get_entries() == 1 then
+              --   cmps.confirm { select = true }
+              -- else
+              cmps.select_next_item {
+                behavior = types.cmp.SelectBehavior.Select,
+              }
+              -- end
             else
               cmps.complete {}
             end
@@ -381,7 +381,7 @@ return {
       local cmp = require "cmp"
 
       opts.mapping = vim.tbl_deep_extend("force", {}, opts.mapping, {
-        ["<a-j>"] = cmp.mapping {
+        ["<c-p>"] = cmp.mapping {
           i = function()
             if require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
@@ -393,7 +393,7 @@ return {
             end
           end,
         },
-        ["<a-k>"] = cmp.mapping(function()
+        ["<c-n>"] = cmp.mapping(function()
           if require("luasnip").jumpable(-1) then
             require("luasnip").jump(-1)
           end
@@ -649,8 +649,8 @@ return {
           ["<PageUp>"] = "ScrollOutputUp",
           ["<PageDown>"] = "ScrollOutputDown",
           ["P"] = "TogglePreview",
-          ["<a-p>"] = "PrevTask",
-          ["<a-n>"] = "NextTask",
+          ["<c-p>"] = "PrevTask",
+          ["<c-n>"] = "NextTask",
           ["dd"] = "Dispose",
           ["q"] = function()
             vim.cmd "OverseerClose"
@@ -669,10 +669,10 @@ return {
         -- You can add custom keymaps here as well (anything vim.keymap.set accepts)
         bindings = {
           i = {
-            ["<a-n>"] = "Next",
-            ["<a-p>"] = "Prev",
             ["<Tab>"] = "Next",
             ["<S-Tab>"] = "Prev",
+            ["<c-n>"] = "Next",
+            ["<c-p>"] = "Prev",
             ["<CR>"] = "NextOrSubmit",
             ["<C-s>"] = "Submit",
             ["<C-c>"] = "Cancel",
@@ -680,8 +680,8 @@ return {
           n = {
             ["<Tab>"] = "Next",
             ["<S-Tab>"] = "Prev",
-            ["<a-n>"] = "Next",
-            ["<a-p>"] = "Prev",
+            ["<c-n>"] = "Next",
+            ["<c-p>"] = "Prev",
             ["<CR>"] = "NextOrSubmit",
             ["<C-s>"] = "Submit",
             ["q"] = "Cancel",

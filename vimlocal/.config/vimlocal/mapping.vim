@@ -239,10 +239,10 @@ nnoremap <c-l>                  <C-W>l
 " nnoremap <silent> <S-Right>     :vertical resize -2<CR>
 " nnoremap <silent> <S-Left>      :vertical resize +2<CR>
 
-nnoremap <silent> <C-K>         :resize -2<CR>
-nnoremap <silent> <C-J>         :resize +2<CR>
-nnoremap <silent> <C-H>         :vertical resize -2<CR>
-nnoremap <silent> <C-L>         :vertical resize +2<CR>
+" nnoremap <silent> <C-K>         :resize -2<CR>
+" nnoremap <silent> <C-J>         :resize +2<CR>
+" nnoremap <silent> <C-H>         :vertical resize -2<CR>
+" nnoremap <silent> <C-L>         :vertical resize +2<CR>
 
 nnoremap <silent> sv            :vsplit!<cr>
 nnoremap <silent> ss            :split!<cr>

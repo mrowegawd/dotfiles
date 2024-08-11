@@ -45,7 +45,7 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { "f", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
+      { "ff", function() require("flash").jump() end, mode = { "n", "x", "o" }, },
       -- { "S", function() require("flash").treesitter() end, mode = { "o", "x" } },
       -- { "r", function() require("flash").remote() end, mode = "o", desc = "Remote Flash" },
       -- { "<c-s>", function() require("flash").toggle() end, mode = { "c" }, desc = "Toggle Flash Search" },
@@ -1176,9 +1176,6 @@ return {
               ["<s-down>"] = actions.cycle_history_next,
               ["<s-up>"] = actions.cycle_history_prev,
 
-              ["<c-p>"] = actions.results_scrolling_up,
-              ["<c-n>"] = actions.results_scrolling_down,
-
               ["<c-u>"] = actions.preview_scrolling_up,
               ["<c-d>"] = actions.preview_scrolling_down,
 
@@ -1194,6 +1191,9 @@ return {
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
               ["<F4>"] = layout_actions.cycle_layout_next,
+
+              ["<c-p>"] = actions.results_scrolling_up,
+              ["<c-n>"] = actions.results_scrolling_down,
 
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
@@ -1979,8 +1979,8 @@ return {
           ["<esc>"] = "cancel",
           ["q"] = "close",
           ["o"] = "jump",
-          ["<a-n>"] = "next",
-          ["<a-p>"] = "prev",
+          ["<c-n>"] = "next",
+          ["<c-p>"] = "prev",
         },
       }
     end,

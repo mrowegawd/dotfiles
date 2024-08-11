@@ -151,8 +151,8 @@ return {
             goto_issue = { lhs = "<space>gi", desc = "issue - navigate to a local repo issue [octo]" },
             add_comment = { lhs = "<space>ca", desc = "issue - add comment [octo]" },
             delete_comment = { lhs = "<space>cd", desc = "issue - delete comment [octo]" },
-            next_comment = { lhs = "<a-n>", desc = "issue - go to next comment [octo]" },
-            prev_comment = { lhs = "<a-p>", desc = "issue - go to previous comment [octo]" },
+            next_comment = { lhs = "<c-n>", desc = "issue - go to next comment [octo]" },
+            prev_comment = { lhs = "<c-p>", desc = "issue - go to previous comment [octo]" },
             react_hooray = { lhs = "<space>rp", desc = "issue - add/remove 🎉 reaction [octo]" },
             react_heart = { lhs = "<space>rh", desc = "issue - add/remove ❤️ reaction [octo]" },
             react_eyes = { lhs = "<space>re", desc = "issue - add/remove 👀 reaction [octo]" },
@@ -187,8 +187,8 @@ return {
             goto_issue = { lhs = "<space>gi", desc = "pull request - navigate to a local repo issue [octo]" },
             add_comment = { lhs = "<space>ca", desc = "pull request - add comment [octo]" },
             delete_comment = { lhs = "<space>cd", desc = "pull request - delete comment [octo]" },
-            next_comment = { lhs = "<a-n>", desc = "pull request - go to next comment [octo]" },
-            prev_comment = { lhs = "<a-p>", desc = "pull request - go to previous comment [octo]" },
+            next_comment = { lhs = "<c-n>", desc = "pull request - go to next comment [octo]" },
+            prev_comment = { lhs = "<c-p>", desc = "pull request - go to previous comment [octo]" },
             react_hooray = { lhs = "<space>rp", desc = "pull request - add/remove 🎉 reaction [octo]" },
             react_heart = { lhs = "<space>rh", desc = "pull request - add/remove ❤️ reaction [octo]" },
             react_eyes = { lhs = "<space>re", desc = "pull request - add/remove 👀 reaction [octo]" },
@@ -208,8 +208,8 @@ return {
             add_comment = { lhs = "<space>ca", desc = "review thread - add comment [octo]" },
             add_suggestion = { lhs = "<space>sa", desc = "review thread - add suggestion [octo]" },
             delete_comment = { lhs = "<space>cd", desc = "review thread - delete comment [octo]" },
-            next_comment = { lhs = "<a-n>", desc = "review thread - go to next comment [octo]" },
-            prev_comment = { lhs = "<a-p>", desc = "review thread - go to previous comment [octo]" },
+            next_comment = { lhs = "<c-n>", desc = "review thread - go to next comment [octo]" },
+            prev_comment = { lhs = "<c-p>", desc = "review thread - go to previous comment [octo]" },
             select_next_entry = { lhs = "]q", desc = "review thread - move to next changed file [octo]" },
             select_prev_entry = { lhs = "[q", desc = "review thread - move to previous changed file [octo]" },
             select_first_entry = { lhs = "[Q", desc = "review thread - move to first changed file [octo]" },
@@ -479,8 +479,8 @@ return {
           vim.opt_local.winfixbuf = true
           -- Mappings
           vim.keymap.set("n", "q", RUtils.cmd.quit_return, { buffer = e.buf })
-          vim.keymap.set("n", "<a-n>", "]c", { buffer = e.buf, remap = true })
-          vim.keymap.set("n", "<a-p>", "[c", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<c-n>", "]c", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<c-p>", "[c", { buffer = e.buf, remap = true })
           -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
           vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
           vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
@@ -793,8 +793,8 @@ return {
             { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
+            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
+            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
 
             { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" }, },
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" }, },
@@ -857,8 +857,8 @@ return {
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
             { "n", "<tab>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
             { "n", "<s-tab>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
-            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
-            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
+            { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
+            { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
 
             { "n", "gg", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" }, },
             { "n", "G", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" } },

@@ -32,21 +32,16 @@ RUtils.map.inoremap("hh", "<Esc>")
 -- ╰──────────────────────────────────────────────────────────╯
 RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("<a-n>", function()
+RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
 end, { desc = "Fold: magic next closed" })
-RUtils.map.nnoremap("<a-p>", function()
+RUtils.map.nnoremap("<c-p>", function()
   return RUtils.fold.magic_jump_qf_or_fold(true)
 end, { desc = "Fold: magic prev closed" })
 
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ TERMINAL                                                │
 -- ╰─────────────────────────────────────────────────────────╯
-RUtils.map.tnoremap("<C-h>", "<Left>", { desc = "Terminal: left char" })
-RUtils.map.tnoremap("<C-l>", "<Right>", { desc = "Terminal: right char" })
-RUtils.map.tnoremap("<C-b>", "<C-Left>", { desc = "Terminal: backward" })
-RUtils.map.tnoremap("<C-f>", "<C-Right>", { desc = "Terminal: forward" })
-
 RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
 
 RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
@@ -200,8 +195,6 @@ RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: go to first line" 
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: go to the last line" })
 RUtils.map.cnoremap("<C-n>", "<Down>", { desc = "Commandline: next hist" })
 RUtils.map.cnoremap("<C-p>", "<Up>", { desc = "Commandline: prev hist" })
-RUtils.map.cnoremap("<a-n>", "<S-Down>", { desc = "Commandline: next hist" })
-RUtils.map.cnoremap("<a-p>", "<S-Up>", { desc = "Commandline: prev hist" })
 RUtils.map.cnoremap("<C-l>", "<Right>", { desc = "Commandline: next word" })
 RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: prev word" })
 RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: forward word" })
@@ -271,9 +264,9 @@ RUtils.map.nnoremap(
   [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
   { expr = true }
 )
-RUtils.map.nnoremap("J", "6j")
-RUtils.map.nnoremap("K", "6k")
-RUtils.map.nnoremap("<c-j>", "J")
+-- RUtils.map.nnoremap("J", "6j")
+-- RUtils.map.nnoremap("K", "6k")
+-- RUtils.map.nnoremap("<c-j>", "J")
 RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
 RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 

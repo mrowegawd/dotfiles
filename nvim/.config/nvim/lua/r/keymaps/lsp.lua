@@ -47,6 +47,20 @@ function M.get()
       desc = "LSP: rename file",
     },
     {
+      "gI",
+      function()
+        require("fzf-lua").lsp_incoming_calls()
+      end,
+      desc = "LSP: incoming calls [fzflua]",
+    },
+    {
+      "gO",
+      function()
+        require("fzf-lua").lsp_outgoing_calls()
+      end,
+      desc = "LSP: outgoing calls [fzflua]",
+    },
+    {
       "<Leader>cc",
       function()
         vim.lsp.codelens.run()

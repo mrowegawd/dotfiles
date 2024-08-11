@@ -17,8 +17,20 @@ prepend_keymap = [
     "<c-s>",
   ], run = "plugin --sync smart-enter --args=split", desc = "Open split the selected file" },
   { on = [
-    "<c-j>",
+    "<c-o>",
   ], run = "plugin fzmark", desc = "Open fzmark" },
+  # { on = [
+  #   "<c-o>",
+  # ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
+  { on = [
+    "<c-g>",
+  ], run = "plugin opener --args=lazygit", desc = "Open lazygit" },
+  { on = [
+    "<c-d>",
+  ], run = "plugin opener --args=lazydocker", desc = "Open lazydocker" },
+  { on = [
+    "<c-t>",
+  ], run = "plugin opener --args=terminal", desc = "Open terminal on target dir yazi" },
   { on = [
     "<a-p>",
   ], run = """ shell --block --confirm ' clear
@@ -37,18 +49,6 @@ mpv --ontop --no-border --force-window \
   --playlist="$playlist" --osd-level=1
 '
 """, desc = "Play playlist on mpv" },
-  { on = [
-    "<a-g>",
-  ], run = "plugin opener --args=lazygit", desc = "Open lazygit" },
-  { on = [
-    "<a-d>",
-  ], run = "plugin opener --args=lazydocker", desc = "Open lazydocker" },
-  { on = [
-    "<a-t>",
-  ], run = "plugin opener --args=terminal", desc = "Open terminal on target dir yazi" },
-  { on = [
-    "<c-o>",
-  ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
 ]
 
 keymap = [
@@ -79,16 +79,22 @@ keymap = [
   # ╎ Navigation                                               ╎
   # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
   { on = [
+    "<c-k>",
+  ], run = "arrow -1", desc = "Move cursor up" },
+  { on = [
+    "<c-j>",
+  ], run = "arrow 1", desc = "Move cursor down" },
+  { on = [
     "k",
   ], run = "arrow -1", desc = "Move cursor up" },
   { on = [
     "j",
   ], run = "arrow 1", desc = "Move cursor down" },
   { on = [
-    "K",
+    "<C-p>",
   ], run = "arrow -5", desc = "Move cursor up 5 lines" },
   { on = [
-    "J",
+    "<C-n>",
   ], run = "arrow 5", desc = "Move cursor down 5 lines" },
   { on = [
     "<S-Up>",

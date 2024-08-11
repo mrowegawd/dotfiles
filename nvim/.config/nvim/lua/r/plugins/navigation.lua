@@ -94,8 +94,8 @@ return {
               -- ["<Leader>ff"] = "filter_on_submit",
               -- ["gd"] = "fuzzy_finder_directory",
               -- ["<C-x>"] = "clear_filter",
-              ["<a-p>"] = "prev_git_modified",
-              ["<a-n>"] = "next_git_modified",
+              ["<c-p>"] = "prev_git_modified",
+              ["<c-n>"] = "next_git_modified",
               --["/"] = "filter_as_you_type", -- this was the default until v1.28
               -- ["D"] = "fuzzy_sorter_directory",
               -- ["/"] = "noop",
@@ -284,10 +284,10 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<c-j>"] = "fzmark",
-              ["<a-t>"] = "open_terminal",
-              ["<a-g>"] = "open_lazygit",
-              ["<a-d>"] = "open_lazydocker",
+              ["<c-f>"] = "fzmark",
+              ["<c-t>"] = "open_terminal",
+              ["<c-g>"] = "open_lazygit",
+              ["<c-d>"] = "open_lazydocker",
               ["<Leader>gha"] = "git_add_file",
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
@@ -305,10 +305,10 @@ return {
         },
         window = {
           mappings = {
-            ["<c-j>"] = "fzmark",
-            ["<a-t>"] = "open_terminal",
-            ["<a-g>"] = "open_lazygit",
-            ["<a-d>"] = "open_lazydocker",
+            ["<c-o>"] = "fzmark",
+            ["<c-t>"] = "open_terminal",
+            ["<c-g>"] = "open_lazygit",
+            ["<c-d>"] = "open_lazydocker",
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
@@ -326,7 +326,7 @@ return {
             ["z"] = "",
             ["<c-s>"] = "open_split",
             ["<c-v>"] = "open_vsplit",
-            ["<c-t>"] = "open_tabnew",
+            -- ["<c-t>"] = "open_tabnew",
             ["<esc>"] = "revert_preview",
             ["m"] = "",
             ["w"] = "noop",
@@ -423,8 +423,8 @@ return {
         link_folds_to_tree = false,
         icons = RUtils.config.icons.kinds,
         keymaps = {
-          ["<a-n>"] = "actions.down_and_scroll",
-          ["<a-p>"] = "actions.up_and_scroll",
+          ["<c-n>"] = "actions.down_and_scroll",
+          ["<c-p>"] = "actions.up_and_scroll",
           ["{"] = false,
           ["<BS>"] = "actions.tree_toggle",
           ["o"] = "actions.jump",
@@ -667,8 +667,8 @@ return {
           fold_all = { "zm", "zM" },
           unfold_all = { "zO", "zR" },
           fold_reset = "<space><space>",
-          down_and_jump = "<a-n>",
-          up_and_jump = "<a-p>",
+          down_and_jump = "<c-n>",
+          up_and_jump = "<c-p>",
         },
       }
     end,

@@ -1,31 +1,22 @@
 [
   // -------------------------
-  // RESET ZOOM
+  // MISC
   // -------------------------
+
+  // {
+  //   "key": "ctrl+d",
+  //   "command": "-editor.action.addSelectionToNextFindMatch",
+  //   "when": "editorFocus"
+  // },
   {
-    "key": "escape",
-    "command": "editor.action.cancelSelectionAnchor",
-    "when": "editorTextFocus && selectionAnchorSet"
+    "key": "alt+d",
+    "command": "editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
   },
-  { "key": "ctrl+=", "command": "editor.action.fontZoomIn" },
-  { "key": "ctrl+-", "command": "editor.action.fontZoomOut" },
-  { "key": "ctrl+Home", "command": "editor.action.fontZoomReset" },
 
   // -------------------------
-  // NAVIGATE INSERT MODE
+  // SELECT SUGGESTION (Ctrl+j/k or Alt+j/k)
   // -------------------------
-  {
-    // Navigate go/back fast word (when insert mode)
-    "key": "ctrl+b",
-    "command": "cursorWordLeft",
-    "when": "vim.active && vim.mode == 'Insert'"
-  },
-  {
-    "key": "ctrl+f",
-    "command": "cursorWordRight",
-    "when": "vim.active && vim.mode == 'Insert'"
-  },
-
   {
     "key": "ctrl+j",
     "command": "selectNextSuggestion",
@@ -66,14 +57,9 @@
   },
 
   {
-    "key": "ctrl+d",
-    "command": "-editor.action.addSelectionToNextFindMatch",
-    "when": "editorFocus"
-  },
-  {
-    "key": "alt+d",
-    "command": "editor.action.addSelectionToNextFindMatch",
-    "when": "editorFocus"
+    "key": "ctrl+y",
+    "command": "acceptSelectedSuggestion",
+    "when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
   },
 
   // Open VSCode quick open in split mode
@@ -85,38 +71,69 @@
   // },
 
   // -------------------------
-  // NAVIGATE WINDOW
+  // NAVIGATE
   // -------------------------
+  // INSERT MODE --------------------------------------------------
   {
-    "key": "alt+h",
-    "command": "workbench.action.navigateLeft"
+    // Navigate go/back fast word (when insert mode)
+    "key": "ctrl+b",
+    "command": "cursorWordLeft",
+    "when": "vim.active && vim.mode == 'Insert'"
   },
   {
-    "key": "alt+l",
-    "command": "workbench.action.navigateRight"
+    "key": "ctrl+f",
+    "command": "cursorWordRight",
+    "when": "vim.active && vim.mode == 'Insert'"
+  },
+
+  // INSERT WINDOW ------------------------------------------------
+  // Taken from: https://vspacecode.github.io/docs/bonus/
+  {
+    "key": "ctrl+h",
+    "command": "workbench.action.navigateLeft",
+    "when": "!inQuickOpen && !suggestWidgetVisible && !parameterHintsVisible && !isInDiffEditor",
   },
   {
-    "key": "alt+k",
-    "command": "workbench.action.navigateUp"
+    "key": "ctrl+l",
+    "command": "workbench.action.navigateRight",
+    "when": "!codeActionMenuVisible && !inQuickOpen && !suggestWidgetVisible && !parameterHintsVisible"
   },
   {
-    "key": "alt+j",
-    "command": "workbench.action.navigateDown"
+    "key": "ctrl+k",
+    "command": "workbench.action.navigateUp",
+    "when": "!codeActionMenuVisible && !inQuickOpen && !suggestWidgetVisible && !parameterHintsVisible"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.navigateDown",
+    "when": "!codeActionMenuVisible && !inQuickOpen && !suggestWidgetVisible && !parameterHintsVisible"
   },
 
   // -------------------------
-  // FOLD
+  // ZOOM WINDOW
   // -------------------------
+  {
+    "key": "escape",
+    "command": "editor.action.cancelSelectionAnchor",
+    "when": "editorTextFocus && selectionAnchorSet"
+  },
+  { "key": "ctrl+=", "command": "editor.action.fontZoomIn" },
+  { "key": "ctrl+-", "command": "editor.action.fontZoomOut" },
+  { "key": "ctrl+Home", "command": "editor.action.fontZoomReset" },
 
+
+  // -------------------------
+  // SCROLL WINDOW
+  // -------------------------
   {
     // jump prev closed fold
-    "key": "alt+p",
+    "key": "ctrl+p",
     "command": "editor.gotoPreviousFold",
     "when": "editorTextFocus"
   },
   {
     // jump next closed fold
-    "key": "alt+n",
+    "key": "ctrl+n",
     "command": "editor.gotoNextFold",
     "when": "editorTextFocus"
   },
