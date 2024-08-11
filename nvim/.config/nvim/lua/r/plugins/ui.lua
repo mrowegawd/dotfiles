@@ -254,11 +254,12 @@ return {
         max_height = function()
           return math.floor(vim.o.lines * 0.8)
         end,
-        render = function(...)
-          local notification = select(2, ...)
-          local style = RUtils.cmd.falsy(notification.title[1]) and "minimal" or "default"
-          require("notify.render")[style](...)
-        end,
+        -- render = function(...)
+        --   local notification = select(2, ...)
+        --   local style = RUtils.cmd.falsy(notification.title[1]) and "minimal" or "default"
+        --   require("notify.render")[style](...)
+        -- end,
+        render = "wrapped-compact",
         on_open = function(win)
           vim.api.nvim_win_set_config(win, { zindex = 175 })
         end,
