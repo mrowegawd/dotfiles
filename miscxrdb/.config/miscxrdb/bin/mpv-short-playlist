@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Note:
+# - Script kecil ini digunakan untuk menyortir playlist mpv
+# - saat ini hanya digunakan sebagai utils func untuk command pada tool yazi
+sed 's/^\.\///' "$1" | sort -t ' ' -k 1,1n | sed 's/^/.\//' >"$2"

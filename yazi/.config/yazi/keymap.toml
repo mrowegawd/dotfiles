@@ -42,6 +42,10 @@ if [ ! -f "$playlist" ]; then
   done
 fi
 
+temp_file=$(mktemp)
+mpv-short-playlist "$playlist" "$temp_file"
+cat "$temp_file" > "$playlist"
+
 # if playlist.mp3 not sorted, remove manually
 
 mpv --ontop --no-border --force-window \
