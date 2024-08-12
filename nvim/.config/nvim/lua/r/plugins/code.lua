@@ -506,14 +506,9 @@ return {
       },
     },
   },
-  -- KULALA
-  {
-    "mistweaverco/kulala.nvim",
-    event = "VeryLazy",
-  },
   -- NVIM-SURROUND
   {
-    -- how to use it: `ysiw`, `yd<brackets>`, `yc<brackets>`, `ds<brackets>`
+    -- how to use it: `ysiw`, `yc<brackets>`, `yd<brackets>`
     "kylechui/nvim-surround",
     event = "VeryLazy",
     version = "*",

@@ -127,7 +127,8 @@ return {
             }
           end,
       }) end, desc = "Fzflua: select buffers" },
-      { "<leader>sg", function() require("fzf-lua").blines() end, desc = "FzfLua: live grep on curbuf", mode = { "n" } },
+      { "<Leader>s", "", desc = "+fzfcustom" },
+      { "<Leader>sg", function() require("fzf-lua").blines() end, desc = "FzfLua: live grep on curbuf", mode = { "n" } },
       { "<Leader>sg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on curbuf (visual)", mode = { "v" } },
       { "<Leader>sG", function() require("fzf-lua").lines() end, desc = "Fzflua: live grep on buffers" },
       { "<Leader>sG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>" } end, desc = "Winav: live grep on buffers (visual) [fzflua]", mode = { "v" } },

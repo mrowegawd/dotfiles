@@ -243,4 +243,32 @@ return {
       }
     end,
   },
+  -- KULALA
+  {
+    "mistweaverco/kulala.nvim",
+    ft = "http",
+    config = true,
+    keys = {
+      { "<Leader>R", "", desc = "+rest" },
+      { "rf", "<cmd>lua require('kulala').run()<cr>", ft = "http", desc = "Kulala: send the request" },
+      { "rH", "<cmd>lua require('kulala').toggle_view()<cr>", ft = "http", desc = "Kulala: toggle headers/body" },
+      { "rF", "<cmd>lua require('kulala').scratchpad()<cr>", ft = "http", desc = "Kulala: open scratchpad" },
+      { "<leader>Rc", "<cmd>lua require('kulala').copy()<cr>", desc = "Kulala: copy as cURL" },
+      { "R", "<cmd>lua require('kulala').replay()<cr>", desc = "Kulala: replay the last request" },
+      {
+        "<c-p>",
+        "<cmd>lua require('kulala').jump_prev()<cr>",
+        ft = "http",
+        desc = "Kulala: jump to previous request",
+      },
+      {
+        "<c-n>",
+        "<cmd>lua require('kulala').jump_next()<cr>",
+        ft = "http",
+        desc = "Kulala: jump to next request",
+      },
+      -- Closes the kulala window and also the current buffer if it is a .http or .rest file
+      { "rr", "<cmd>lua require('kulala').close()<cr>", ft = "http", desc = "Kulala: close window" },
+    },
+  },
 }
