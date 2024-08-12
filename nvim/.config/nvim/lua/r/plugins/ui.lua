@@ -293,6 +293,28 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
+        "<Localleader>nf",
+        function()
+          local Config = require "noice.config"
+          local Manager = require "noice.message.manager"
+
+          local messages = Manager.get(Config.options.commands.history.filter, {
+            history = true,
+            sort = true,
+            reverse = true,
+          })
+
+          if #messages == 0 then
+            print "Noice notification list is empty"
+            return
+          end
+
+          require("noice").cmd "fzf"
+        end,
+        desc = "Noice: notification history",
+      },
+
+      {
         "<S-CR>",
         ---@diagnostic disable-next-line: param-type-mismatch
         function()
