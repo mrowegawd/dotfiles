@@ -280,7 +280,7 @@ return {
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[Alt-y: copy/yank path | Alt-g: rgflow]] },
+          fzf_opts = { ["--header"] = [[ctrl-y: copy/yank path | ctrl-g: rgflow]] },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
@@ -303,7 +303,7 @@ return {
                 end
               end
             end,
-            ["alt-g"] = function(_, args)
+            ["ctrl-g"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -314,12 +314,12 @@ return {
                 end,
               })
             end,
-            ["alt-y"] = function(selected, _)
+            ["ctrl-y"] = function(selected, _)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
               local pth = selected[1]:sub(slice_num_str)
               vim.fn.setreg([[+]], pth)
 
-              RUtils.info("copy: " .. pth, { title = "Path" })
+              RUtils.info(pth .. " copied to clipboard", { title = "Path Copy" })
 
               require("fzf-lua").actions.resume()
             end,
@@ -361,7 +361,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Alt-h: commit history HEAD..hash | Alt-x: commit hash history]],
+              ["--header"] = [[ctrl-o: open browser | ctrl-y: hash copy | ctrl-h: commit history HEAD..hash | ctrl-x: commit hash history]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -377,14 +377,14 @@ return {
 
                 vim.cmd("GBrowse " .. commit_hash)
               end,
-              ["alt-y"] = function(selected, _)
+              ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 RUtils.fzf_diffview.copy_to_clipboard(commit_hash)
 
                 require("fzf-lua").actions.resume()
               end,
-              ["alt-h"] = function(selected, _)
+              ["ctrl-h"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -393,12 +393,12 @@ return {
 
                 RUtils.info("Commit hash history: HEAD.." .. commit_hash, { title = "FZFGit" })
               end,
-              ["alt-g"] = function()
+              ["ctrl-g"] = function()
                 require("fzf-lua").fzf_live(function(query)
                   return RUtils.fzf_diffview.git_log_content_finder(query, nil)
                 end, RUtils.fzf_diffview.opts_diffview_log("repo", "Search Repo Log Content> "))
               end,
-              ["alt-x"] = function(selected, _)
+              ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = "DiffviewOpen -uno " .. commit_hash
@@ -419,7 +419,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Alt-h: all hash commit hostory | Alt-g: grep commit history | Alt-x: commit hash history]],
+              ["--header"] = [[ctrl-o: open browser | ctrl-y: hash copy | ctrl-h: all hash commit hostory | ctrl-g: grep commit history | ctrl-x: commit hash history]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -434,14 +434,14 @@ return {
 
                 vim.cmd("GBrowse " .. commit_hash)
               end,
-              ["alt-y"] = function(selected, _)
+              ["ctrl-y"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 RUtils.fzf_diffview.copy_to_clipboard(commit_hash)
 
                 require("fzf-lua").actions.resume()
               end,
-              ["alt-h"] = function(selected, _)
+              ["ctrl-h"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
@@ -452,7 +452,7 @@ return {
 
                 RUtils.info("Commit hash history: " .. commit_hash, { title = "FZFGit" })
               end,
-              ["alt-g"] = function()
+              ["ctrl-g"] = function()
                 local bufnr = vim.fn.bufnr()
                 require("fzf-lua").fzf_live(function(query)
                   return RUtils.fzf_diffview.git_log_content_finder(query, bufnr)
@@ -462,7 +462,7 @@ return {
                   bufnr
                 ))
               end,
-              ["alt-x"] = function(selected, _)
+              ["ctrl-x"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = "DiffviewOpen -uno " .. commit_hash
@@ -524,7 +524,7 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[Ctrl-g: grep_lgrep | Alt-g: rgflow]] },
+          fzf_opts = { ["--header"] = [[alt-g: grep_lgrep | ctrl-g: rgflow]] },
           winopts = {
             title = RUtils.fzflua.format_title(
               "Grep",
@@ -556,8 +556,8 @@ return {
             }
           end,
           actions = {
-            ["ctrl-g"] = { actions.grep_lgrep },
-            ["alt-g"] = function(_, args)
+            ["alt-g"] = { actions.grep_lgrep },
+            ["ctrl-g"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -648,7 +648,6 @@ return {
           actions = {
             ["default"] = actions.buf_edit_or_qf,
 
-            -- ["alt-l"] = actions.buf_sel_to_ll,
             ["ctrl-q"] = actions.buf_sel_to_qf,
 
             ["ctrl-s"] = actions.buf_split,
@@ -759,11 +758,11 @@ return {
               fullscreen = false,
             },
             fzf_opts = {
-              ["--header"] = [[Alt-g: Filter LSP  | Alt-x: Workspace Symbols]],
+              ["--header"] = [[ctrl-g: Filter LSP  | ctrl-x: Workspace Symbols]],
               ["--reverse"] = false,
             },
             actions = {
-              ["alt-g"] = function()
+              ["ctrl-g"] = function()
                 local opts = {
                   title = "[LSP Symbols]",
                   actions = {
@@ -791,7 +790,7 @@ return {
                 RUtils.fzflua.cmd_filter_kind_lsp(opts)
               end,
 
-              ["alt-x"] = function()
+              ["ctrl-x"] = function()
                 local cwd = vim.loop.cwd()
                 local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
 
