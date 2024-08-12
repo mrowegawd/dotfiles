@@ -1,0 +1,29 @@
+gui:
+  scrollHeight: 2 # how many lines you scroll by
+  scrollPastBottom: true # enable scrolling past the bottom
+  sidePanelWidth: 0.3333 # number from 0 to 1
+  expandFocusedSidePanel: false
+  mainPanelSplitMode: "horizontal" # one of 'horizontal' | 'flexible' | 'vertical'
+  commitLength:
+    show: true
+  mouseEvents: true
+  skipStashWarning: false
+  showFileTree: true # for rendering changes files in a tree format
+  showListFooter: true # for seeing the '5 of 20' message in list panels
+  showRandomTip: true
+  showCommandLog: true
+  commandLogSize: 8
+  theme:
+    activeBorderColor:
+      - "#64a5cc"
+      - bold
+    inactiveBorderColor:
+      - "#292a37"
+    optionsTextColor:
+      - "#5b5e85"
+    selectedLineBgColor:
+      - "#af3c3c"
+    defaultFgColor:
+      - "#3c3d4c"
+    searchingActiveBorderColor:
+      - "#eed49f"

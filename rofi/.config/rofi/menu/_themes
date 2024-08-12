@@ -225,6 +225,27 @@ set_fzf() {
 
 }
 
+set_lazygit() {
+  LAZYGIT_PATH="$HOME/.config/lazygit"
+  THEME_LAZYGIT="$LAZYGIT_PATH/themes/_themes_cfg"
+
+  if [ -f "$THEME_LAZYGIT" ]; then
+    cp "$LAZYGIT_PATH/themes/_themes" "$THEME_LAZYGIT"
+
+    border_color=$(lighten_color "$GET_COL_27" 10)    # Misalnya, mengurangi 50 untuk menggelapkan
+    default_fg_color=$(lighten_color "$GET_COL_17" 25) # Misalnya, mengurangi 50 untuk menggelapkan
+
+    sed -i -e "s/%%active_border_color%%/$GET_COL_16/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%inactive_border_color%%/$border_color/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%options_text_color%%/$GET_COL_20/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_22/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%default_fg_color%%/$default_fg_color/g" "$THEME_LAZYGIT"
+
+    cat "$LAZYGIT_PATH/_config.yml" "$THEME_LAZYGIT" >"$LAZYGIT_PATH/config.yml"
+  fi
+
+}
+
 set_eww() {
   EWW_PATH="$HOME/.config/eww"
 
@@ -351,6 +372,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
   sleep 1
   set_fzf
   set_yazi_theme "$_NAMETHEME"
+  set_lazygit
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;
