@@ -277,7 +277,7 @@ function M.change_colors()
     Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
 
     -- TMUX: fg_nc
-    Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.4),
+    Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1),
 
     -- Tmux
     Highlight.get("Normal", "bg"),

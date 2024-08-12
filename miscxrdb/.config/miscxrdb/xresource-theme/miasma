@@ -45,7 +45,7 @@ URxvt.colorUL:  #5f875f
 *color16: #4c6c4c
 
 ! SEPARATOR: winseparator_bg, winseparator_fg
-*color17: #474747
+*color17: #2d2d2d
 *color18: #1e1e1e
 
 ! FZF: bg, fg and match
@@ -59,11 +59,11 @@ URxvt.colorUL:  #5f875f
 *color24: #282828
 
 ! TMUX: win separator fg, fg_nc
-*color25: #2a2a2a
+*color25: #242424
 *color26: #111111
 
 ! TMUX: fg_nc
-*color27: #2a2a2a
+*color27: #282828
 
 ! TMUX: main window dan second window
 *color28: #222222

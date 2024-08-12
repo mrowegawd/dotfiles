@@ -40,7 +40,7 @@
 *color16: #bc9a30
 
 ! SEPARATOR: winseparator_bg, winseparator_fg
-*color17: #217d97
+*color17: #155161
 *color18: #0e3640
 
 ! FZF: bg, fg and match
@@ -54,11 +54,11 @@
 *color24: #103c48
 
 ! TMUX: win separator fg, fg_nc
-*color25: #103e4b
+*color25: #10404d
 *color26: #081e24
 
 ! TMUX: fg_nc
-*color27: #134b5a
+*color27: #124857
 
 ! TMUX: main window dan second window
 *color28: #103c48

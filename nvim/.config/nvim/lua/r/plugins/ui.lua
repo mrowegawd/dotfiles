@@ -61,7 +61,7 @@ return {
       return {
         scope = { show_start = true, show_end = false, enabled = true },
         indent = {
-          char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊
+          char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
           tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
           repeat_linebreak = false,
         },
@@ -371,7 +371,7 @@ return {
       Highlight.plugin("notify", {
         theme = {
           ["*"] = {
-            { NoiceCmdlinePopupBorder = { inherit = "FloatBorder" } },
+            { NoiceCmdlinePopupBorder = { inherit = "WinSeparator" } },
             { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
