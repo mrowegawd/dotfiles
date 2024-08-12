@@ -26,9 +26,10 @@ return {
       preview_empty_name = false, -- whether an empty new name should be previewed; if false the command preview will be cancel
     },
   },
-  -- NVIM-DEVDOCS
+  -- NVIM-DEVDOCS (disabled)
   {
     "luckasRanarison/nvim-devdocs",
+    enabled = false,
     event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
