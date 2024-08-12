@@ -39,17 +39,6 @@ RUtils.cmd.augroup("WrapSpell", {
   end,
 })
 
--- NOTE: It seems this fix error invalid window from `resession.nvim'`
--- RUtils.cmd.augroup("ForceCloseQFToAvoidSessionError", {
---   event = { "VimLeavePre", "VimLeave" },
---   command = function()
---     local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
---     if is_qf_opened.found then
---       vim.cmd [[cclose]]
---     end
---   end,
--- })
-
 RUtils.cmd.augroup("WrapFt", {
   event = { "FileType" },
   pattern = { "typescriptreact", "typescript" },
