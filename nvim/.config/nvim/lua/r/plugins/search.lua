@@ -102,7 +102,6 @@ return {
       { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
 
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
-      { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
       { "<a-w>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
       { "gb", function()

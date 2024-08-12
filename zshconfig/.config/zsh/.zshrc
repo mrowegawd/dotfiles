@@ -230,12 +230,17 @@ export MANPAGER="/bin/sh -c \"col -b | \
 # @see: https://thevaluable.dev/zsh-install-configure-mouseless/
 bindkey -v # enables vi mode, using -e = emacs
 
+# This is a widget (`autosuggest-accept`, `backward-char`, `backward-word`, `beginning-of-line`)
+# to check these commands run: `zle -al`
+
 bindkey '^y'                  autosuggest-accept                  # enter autosugest (c-y)
 bindkey '^?'                  backward-delete-char
 bindkey '^b'                  backward-word                       # backward (c-b)
 bindkey '^f'                  forward-word                        # forward char (c-f)
 bindkey '^a'                  beginning-of-line
 bindkey '^e'                  end-of-line
+bindkey '^l'                  forward-char
+bindkey '^h'                  backward-char
 
 # Shortcut bind to edit line text
 autoload -U edit-command-line
