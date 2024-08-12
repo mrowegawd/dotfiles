@@ -520,14 +520,14 @@ return {
           insert_line = "<C-x>S",
 
           normal = "ys",
-          normal_cur = "yss",
-          normal_line = "yS",
+          normal_cur = "ya",
+          normal_line = "ySA",
           normal_cur_line = "ySS",
           visual = "S",
           visual_line = "gS",
-          delete = "ds",
-          change = "cs",
-          change_line = "cS",
+          delete = "yd",
+          change = "yc",
+          change_line = "yC",
         },
         -- Configuration here, or leave empty to use defaults
         aliases = {

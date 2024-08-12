@@ -56,6 +56,7 @@ return {
         "xml",
         "yaml",
         "http",
+        "graphql",
       },
       incremental_selection = {
         enable = true,

@@ -40,15 +40,15 @@ RUtils.cmd.augroup("WrapSpell", {
 })
 
 -- NOTE: It seems this fix error invalid window from `resession.nvim'`
-RUtils.cmd.augroup("ForceCloseQFToAvoidSessionError", {
-  event = { "VimLeavePre", "VimLeave" },
-  command = function()
-    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
-    if is_qf_opened.found then
-      vim.cmd [[cclose]]
-    end
-  end,
-})
+-- RUtils.cmd.augroup("ForceCloseQFToAvoidSessionError", {
+--   event = { "VimLeavePre", "VimLeave" },
+--   command = function()
+--     local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
+--     if is_qf_opened.found then
+--       vim.cmd [[cclose]]
+--     end
+--   end,
+-- })
 
 RUtils.cmd.augroup("WrapFt", {
   event = { "FileType" },
@@ -304,3 +304,12 @@ vim.cmd [[
   " :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
   :autocmd BufEnter *.mp4 exec "!bspc rule -a \\* -o state=tiled focus=true && mpv ///".expand("%") | :bw
 ]]
+
+-- To check error when quit from nvim
+-- commented when you not using it
+-- taken from info:   https://www.reddit.com/r/neovim/comments/10magvp/how_to_see_messages_that_are_displayed_when
+vim.api.nvim_create_autocmd({ "QuitPre" }, {
+  callback = function()
+    vim.cmd "redir! > /tmp/nvim_msgs.txt"
+  end,
+})

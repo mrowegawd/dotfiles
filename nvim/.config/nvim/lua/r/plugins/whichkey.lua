@@ -55,7 +55,6 @@ return {
 
           { "<Leader>a", group = "projectionist" },
           { "<Leader>c", group = "code" },
-          { "<Leader>s", group = "fzfcustom" },
           { "<Leader>u", group = "toggle" },
           { "<Leader>t", group = "testing" },
           { "<Leader>r", group = "refactor" },
