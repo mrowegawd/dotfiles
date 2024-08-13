@@ -34,34 +34,3 @@
 ! LightGrey + White
 *color7:  #d4be98
 *color15: #d4be98
-
-! -----------------------------
-! -----------------------------
-
-! MODE color
-*color16: #bb544e
-
-! SEPARATOR: winseparator_bg, winseparator_fg
-*color17: #363636
-*color18: #242424
-
-! FZF: bg, fg and match
-*color19: #1c1c1c
-*color20: #787878
-*color21: #ffb49d
-
-! FZF selection: bg, fg and match
-*color22: #bb544e
-*color23: #303030
-*color24: #303030
-
-! TMUX: win separator fg, fg_nc
-*color25: #303030
-*color26: #141414
-
-! TMUX: fg_nc
-*color27: #303030
-
-! TMUX: main window dan second window
-*color28: #282828
-*color29: #242424

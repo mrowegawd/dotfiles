@@ -1,11 +1,7 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
--- local pending_notifications = {}
 local old_notify = vim.notify
--- vim.notify = function(...)
---   table.insert(pending_notifications, vim.F.pack_len(...))
--- end
 
 return {
   -- INDENT-BLANKLINE
@@ -18,14 +14,14 @@ return {
         theme = {
           ["*"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.25 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
           },
           ["selenized"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
           ["farout"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
           },
           ["solarized-osaka"] = {
@@ -37,12 +33,8 @@ return {
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
           },
           ["lackluster"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
-          },
-          ["lackluster-dark"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
           },
           ["everforest"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
@@ -55,6 +47,10 @@ return {
           ["vague"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["horizon"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
           },
         },
       })
@@ -371,7 +367,7 @@ return {
       Highlight.plugin("notify", {
         theme = {
           ["*"] = {
-            { NoiceCmdlinePopupBorder = { inherit = "WinSeparator" } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "WinSeparator", alter = 0.5, bg = "NONE" } } },
             { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },

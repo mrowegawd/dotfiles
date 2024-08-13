@@ -1,48 +1,4 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
-gui:
-  # stuff relating to the UI
-  scrollHeight: 2 # how many lines you scroll by
-  scrollPastBottom: true # enable scrolling past the bottom
-  sidePanelWidth: 0.3333 # number from 0 to 1
-  expandFocusedSidePanel: false
-  mainPanelSplitMode: "horizontal" # one of 'horizontal' | 'flexible' | 'vertical'
-  theme:
-    activeBorderColor:
-      - "#89ddff"
-      - bold
-    inactiveBorderColor:
-      - "#565f89"
-    optionsTextColor:
-      - "#3d59a1"
-    selectedLineBgColor:
-      - "#495257"
-      - bold
-  #   activeBorderColor:
-  #     - white
-  #     - bold
-  #   inactiveBorderColor:
-  #     - green
-  #   optionsTextColor:
-  #     - blue
-  #   selectedLineBgColor:
-  #     - default
-  #   selectedRangeBgColor:
-  #     - blue
-  #   cherryPickedCommitBgColor:
-  #     - blue
-  #   cherryPickedCommitFgColor:
-  #     - cyan
-  #   unstagedChangesColor:
-  #     - red
-  commitLength:
-    show: true
-  mouseEvents: true
-  skipStashWarning: false
-  showFileTree: true # for rendering changes files in a tree format
-  showListFooter: true # for seeing the '5 of 20' message in list panels
-  showRandomTip: true
-  showCommandLog: true
-  commandLogSize: 8
 git:
   paging:
     colorArg: "always"
@@ -207,3 +163,32 @@ keybinding:
     init: "i"
     update: "u"
     bulkMenu: "b"
+gui:
+  scrollHeight: 2 # how many lines you scroll by
+  scrollPastBottom: true # enable scrolling past the bottom
+  sidePanelWidth: 0.3333 # number from 0 to 1
+  expandFocusedSidePanel: false
+  mainPanelSplitMode: "horizontal" # one of 'horizontal' | 'flexible' | 'vertical'
+  commitLength:
+    show: true
+  mouseEvents: true
+  skipStashWarning: false
+  showFileTree: true # for rendering changes files in a tree format
+  showListFooter: true # for seeing the '5 of 20' message in list panels
+  showRandomTip: true
+  showCommandLog: true
+  commandLogSize: 8
+  theme:
+    activeBorderColor:
+      - "#447cab"
+      - bold
+    inactiveBorderColor:
+      - "#292929"
+    optionsTextColor:
+      - "#1f1f1f"
+    selectedLineBgColor:
+      - "#002c5b"
+    defaultFgColor:
+      - "#5b5b5b"
+    searchingActiveBorderColor:
+      - "#eed49f"

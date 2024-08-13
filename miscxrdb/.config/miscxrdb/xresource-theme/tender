@@ -38,34 +38,3 @@ URxvt.color14:      #73cef4
 ! white
 URxvt.color7:       #eeeeee
 URxvt.color15:      #feffff
-
-! -----------------------------
-! -----------------------------
-
-! MODE color
-*color16: #5ca4c3
-
-! SEPARATOR: winseparator_bg, winseparator_fg
-*color17: #363636
-*color18: #242424
-
-! FZF: bg, fg and match
-*color19: #191919
-*color20: #646464
-*color21: #ffb49d
-
-! FZF selection: bg, fg and match
-*color22: #5ca4c3
-*color23: #323232
-*color24: #323232
-
-! TMUX: win separator fg, fg_nc
-*color25: #2b2b2b
-*color26: #141414
-
-! TMUX: fg_nc
-*color27: #303030
-
-! TMUX: main window dan second window
-*color28: #282828
-*color29: #242424

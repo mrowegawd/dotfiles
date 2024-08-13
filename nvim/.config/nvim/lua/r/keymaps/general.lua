@@ -42,6 +42,7 @@ end, { desc = "Fold: magic prev closed" })
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ TERMINAL                                                │
 -- ╰─────────────────────────────────────────────────────────╯
+
 RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
 
 RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })

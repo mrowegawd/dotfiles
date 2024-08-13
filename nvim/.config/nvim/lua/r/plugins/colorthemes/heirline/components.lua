@@ -344,27 +344,41 @@ M.FilePathQF = {
     end,
     hl = function()
       local cs = Col.separator
+      local bg = colors.diff_add
 
       if Conditions.is_not_active() then
-        cs = colors.base_bg
+        bg = colors.mode_bg
+        cs = colors.base_fg
       end
 
-      return { fg = cs, bg = colors.diff_add, bold = true }
+      return { fg = cs, bg = bg, bold = true }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = { bg = colors.separator_fg_alt, fg = colors.diff_add },
+    hl = function()
+      local cs = colors.diff_add
+      local bg = colors.separator_fg_alt
+
+      if Conditions.is_not_active() then
+        cs = colors.mode_bg
+        bg = colors.base_bg
+      end
+
+      return { fg = cs, bg = bg, bold = true }
+    end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = Col.separator
+      local bg = Col.separator
+      local cs = colors.separator_fg_alt
 
       if Conditions.is_not_active() then
-        cs = colors.basenc_bg
+        bg = colors.basenc_bg
+        cs = colors.base_bg
       end
-      return { fg = colors.separator_fg_alt, bg = cs }
+      return { fg = cs, bg = bg }
     end,
   },
 
@@ -373,11 +387,13 @@ M.FilePathQF = {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       local cs = Col.separator
+      local bg = colors.diff_change
 
       if Conditions.is_not_active() then
         cs = colors.basenc_bg
+        bg = colors.mode_bg
       end
-      return { fg = cs, bg = colors.diff_change }
+      return { fg = cs, bg = bg }
     end,
   },
   {
@@ -391,29 +407,40 @@ M.FilePathQF = {
       return msg .. " "
     end,
     hl = function()
-      local cs = colors.base_bg
+      local cs = colors.basenc_bg
+      local bg = colors.diff_change
 
       if Conditions.is_not_active() then
-        cs = colors.basenc_bg
+        bg = colors.mode_bg
+        cs = colors.base_fg
       end
-      return { fg = cs, bg = colors.diff_change, bold = true }
+      return { fg = cs, bg = bg, bold = true }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { fg = colors.diff_change, bg = colors.separator_fg_alt }
+      local bg = colors.separator_fg_alt
+      local cs = colors.diff_change
+
+      if Conditions.is_not_active() then
+        cs = colors.mode_bg
+        bg = colors.base_bg
+      end
+      return { fg = cs, bg = bg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = Col.separator
+      local cs = Col.separator_fg_alt
+      local bg = Col.separator
 
       if Conditions.is_not_active() then
-        cs = colors.basenc_bg
+        bg = colors.basenc_bg
+        cs = colors.base_bg
       end
-      return { fg = colors.separator_fg_alt, bg = cs }
+      return { fg = cs, bg = bg }
     end,
   },
 }

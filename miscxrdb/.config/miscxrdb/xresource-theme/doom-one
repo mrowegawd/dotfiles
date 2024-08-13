@@ -19,34 +19,3 @@
 *.color13: #a9a1e1
 *.color14: #46d9ff
 *.color15: #efefef
-
-! -----------------------------
-! -----------------------------
-
-! MODE color
-*color16: #408cbf
-
-! SEPARATOR: winseparator_bg, winseparator_fg
-*color17: #363b46
-*color18: #24272e
-
-! FZF: bg, fg and match
-*color19: #191c20
-*color20: #646e82
-*color21: #ffb49d
-
-! FZF selection: bg, fg and match
-*color22: #408cbf
-*color23: #323741
-*color24: #323741
-
-! TMUX: win separator fg, fg_nc
-*color25: #2b2f38
-*color26: #14161a
-
-! TMUX: fg_nc
-*color27: #30353f
-
-! TMUX: main window dan second window
-*color28: #282c34
-*color29: #24272e

@@ -222,69 +222,63 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
-  local jj = fmt(
+  local master_colors = fmt(
     [[
 ! -----------------------------
 ! -----------------------------
 
-! MODE color
+! State Mode color: fg, bg
 *color16: %s
-
-! SEPARATOR: winseparator_bg, winseparator_fg
 *color17: %s
-*color18: %s
 
-! FZF: bg, fg and match
+-- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,
+*color18: %s
 *color19: %s
+
+! TMUX: Bg active, Bg_nc
 *color20: %s
 *color21: %s
 
-! FZF selection: bg, fg and match
+! FZF: bg, fg and match
 *color22: %s
 *color23: %s
 *color24: %s
 
-! TMUX: win separator fg, fg_nc
+! FZF selection: bg, fg, match
 *color25: %s
 *color26: %s
-
-! TMUX: fg_nc
 *color27: %s
 
-! TMUX: main window dan second window
+! FZF Border
 *color28: %s
-*color29: %s
 ]],
-    -- Color Mode: Penanda
-    Highlight.tint(Highlight.get("Keyword", "fg"), -0.2),
+    -- State Mode Color
+    Highlight.tint(Highlight.get("Keyword", "fg"), -0.2), -- 16
+    Highlight.get("WinSeparator", "fg"), -- 17
 
-    -- WinSeparator: fg and bg
-    Highlight.get("WinSeparator", "fg"),
-    Highlight.get("ColorColumn", "bg"),
+    -- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,
+    Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.8), -- 18
+    Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1), -- 19
+
+    -- TMUX: Bg_active, Bg_nc
+    Highlight.get("Normal", "bg"), -- 20
+    Highlight.get("Normal", "bg"), -- 21
 
     -- FZF: bg, fg dan match
-    Highlight.get("NormalFloat", "bg"),
-    Highlight.get("CmpItemAbbr", "fg"),
-    Highlight.get("CmpItemAbbrMatch", "fg"),
+    Highlight.get("NormalFloat", "bg"), -- 22
+    Highlight.get("CmpItemAbbr", "fg"), -- 23
+    Highlight.get("CmpItemAbbrMatch", "fg"), --24
 
-    -- FZF selection: bg, fg dan match
-    Highlight.get("PmenuSel", "bg"),
-    Highlight.get("PmenuSel", "fg"),
-    Highlight.get("PmenuSel", "fg"),
+    -- FZF selection: bg, fg
+    Highlight.get("PmenuSel", "bg"), -- 25
+    Highlight.get("PmenuSel", "fg"), -- 26
+    Highlight.get("CmpItemAbbrMatchFuzzy", "fg"), --27
 
-    -- TMUX: winseparator fg,
-    Highlight.get("FzfLuaBorder", "fg"),
-    Highlight.tint(Highlight.get("Normal", "bg"), -0.5),
-
-    -- TMUX: fg_nc
-    Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1),
-
-    -- Tmux
-    Highlight.get("Normal", "bg"),
-    Highlight.get("ColorColumn", "bg")
+    -- FZF: border
+    Highlight.get("FzfLuaBorder", "fg") -- 28
   )
 
-  local master_color_path = "/tmp/masterColors"
+  local master_color_path = "/tmp/master-colors-themes"
 
   if RUtils.file.is_file(master_color_path) then
     vim.fn.system(fmt("rm %s", master_color_path))
@@ -292,7 +286,7 @@ function M.change_colors()
 
   local fp = io.open(master_color_path, "a")
   if fp then
-    fp:write(jj)
+    fp:write(master_colors)
     fp:close()
   end
 end

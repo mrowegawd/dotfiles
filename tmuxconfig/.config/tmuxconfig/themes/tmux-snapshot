@@ -54,8 +54,8 @@ setw -g pane-border-status top # bottom, top
 # #[fg=black,bold]#{?pane_active,#[fg=$blue]$left_slant_separator ,}#[bg=black,bold] "
 
 setw -g pane-border-format "\
-#{?pane_active,#[fg=$STATUSLINE_BG_ACTIVE]$left_slant_separator,}\
-#[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$STATUSLINE_BG_ACTIVE],} #{?pane_active,#[fg=red] ,}#{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
+#{?pane_active,#[fg=$STATUSLINE_FG_ACTIVE]$left_slant_separator,}\
+#[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$STATUSLINE_FG_ACTIVE],} #{?pane_active,#[fg=red] ,}#{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$WINDOW_BG_ACTIVE]$left_slant_separator,}"
 
@@ -86,17 +86,17 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
 set -g status-left " #[fg=white,bold] ❐ #S "
 
 set -g window-status-format "#[fg=$STATUSLINE_BG]\
-#{?pane_synchronized,#[bg=$RED],}$left_slant_separator\
-#{?pane_synchronized,#[bg=$RED],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
-#{?pane_synchronized,#[bg=$RED],}$left_slant_separator#[fg=$STATUSLINE_BG]\
-#{?pane_synchronized,#[fg=$RED],}$left_slant_separator"
+#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator\
+#{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
+#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG]\
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_ACTIVE],}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator"
 
-set -g window-status-current-format "#[fg=$BORDER_FG]\
-#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}\
-$left_slant_separator#[fg=$STATUSLINE_BG_ACTIVE,bg=$BORDER_FG,bold]#{?window_zoomed_flag,#[bg=$RED],}\
-#{?pane_synchronized,#[bg=yellow] [SYNC],}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],}\
- #I: #{b:pane_current_path} #{?window_zoomed_flag,#[bg=$BORDER_FG],}#[bg=$BORDER_FG,fg=$SEPARATOR_FG]\
-#{?pane_synchronized,#[bg=yellow],}#{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$BORDER_FG,fg=$STATUSLINE_BG]$left_slant_separator"
+set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
+#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=$STATUSLINE_FG_ACTIVE,bg=$STATUSLINE_BG_ACTIVE,bold]\
+#{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}\
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],} #I: #{b:pane_current_path} \
+#{?window_zoomed_flag,#[bg=$STATUSLINE_FG],}#[bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG_ACTIVE]#{?pane_synchronized,#[bg=yellow],}\
+#{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG]$left_slant_separator"
 
 #  ╓
 #  ║  RIGHT
