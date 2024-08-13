@@ -32,22 +32,6 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
     return RUtils.cmd.feedkey("<c-p>", "n")
   end
 
-  if vim.wo.diff then
-    if is_jump_prev then
-      return RUtils.cmd.feedkey("[c", "n")
-    else
-      return RUtils.cmd.feedkey("]c", "n")
-    end
-  end
-
-  if vim.bo[0].filetype == "markdown" then
-    if is_jump_prev then
-      return RUtils.markdown.go_to_heading(nil, {})
-    else
-      return RUtils.markdown.go_to_heading(nil)
-    end
-  end
-
   local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
   if is_qf_opened.found then
     local cmd_msg_qf = "cnext"
@@ -76,6 +60,22 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
   if is_qf_trouble.found then
     vim.api.nvim_set_current_win(is_qf_trouble.winid)
     return
+  end
+
+  if vim.wo.diff then
+    if is_jump_prev then
+      return RUtils.cmd.feedkey("[c", "n")
+    else
+      return RUtils.cmd.feedkey("]c", "n")
+    end
+  end
+
+  if vim.bo[0].filetype == "markdown" then
+    if is_jump_prev then
+      return RUtils.markdown.go_to_heading(nil, {})
+    else
+      return RUtils.markdown.go_to_heading(nil)
+    end
   end
 
   if is_jump_prev then

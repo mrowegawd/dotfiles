@@ -396,8 +396,7 @@ show_alias() {
   elif [[ $myargs[-1] == "" ]]; then
     local alias_selected=$(
     awk '/\(\)/&& last {print $1,"\t",last} {last=""} /^#/{last=$0}' ~/.config/bashrc/aliases.bashrc |
-      column -t -s $'\t' | sed 's/#//' | sed 's/()//' | grcat alias.grc |
-      fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
+      column -t -s $'\t' | sed 's/#//' | sed 's/()//' | fzf-tmux -xC -w '60%' -h '50%' --exit-0 --ansi
     )
 
     if [[ -n $alias_selected ]]; then
