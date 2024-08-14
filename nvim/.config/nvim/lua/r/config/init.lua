@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "darkforest"
+local colorscheme = "gruvbox-material"
 
 _G.base = {}
 
