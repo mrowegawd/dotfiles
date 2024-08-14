@@ -327,6 +327,19 @@ local general_overrides = function()
     },
 
     {
+      CmpItemIconWarningMsg = {
+        bg = { from = "NormalFloat", attr = "bg" },
+        fg = { from = "WarningMsg", attr = "fg" },
+      },
+    },
+
+    {
+      CmpItemFloatBorder = {
+        bg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "FloatBorder", attr = "fg", alter = 0.4 },
+      },
+    },
+    {
       CmpItemAbbr = {
         fg = { from = "Normal", attr = "bg", alter = 1.5 },
         bg = "NONE",
@@ -724,8 +737,20 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.1 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -827,6 +852,26 @@ local function colorscheme_overrides()
 
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.5 }, underline = false } },
 
+      { NormalFloat = { bg = { from = "Pmenu", alter = -0.2 } } },
+      {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.1 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
+
       { FzfLuaFzfNormal = { fg = { from = "Keyword", attr = "fg" } } },
       { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = -0.3 } } },
@@ -881,7 +926,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "WinSeparator", attr = "fg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.05 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
       {
@@ -1025,7 +1070,7 @@ local function colorscheme_overrides()
     },
 
     ["kanagawa"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.68 } } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -1053,6 +1098,19 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.1 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
+
       { TelescopeBorder = { inherit = "FzfLuaBorder" } },
       -- prompt
       { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
@@ -1074,13 +1132,13 @@ local function colorscheme_overrides()
 
       {
         Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
-          fg = { from = "Normal", attr = "bg", alter = 2 },
         },
       },
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 4 },
+          fg = { from = "Normal", attr = "bg", alter = 4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
@@ -1093,14 +1151,14 @@ local function colorscheme_overrides()
 
       {
         Tabline = {
-          bg = { from = "StatusLine", attr = "bg", alter = 1.5 },
           fg = { from = "WinSeparator", attr = "fg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
       {
         TablineSel = {
-          bg = { from = "StatusLine", attr = "bg", alter = 2.5 },
           fg = { from = "WinSeparator", attr = "fg", alter = 3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 1.5 },
         },
       },
     },
@@ -1134,8 +1192,8 @@ local function colorscheme_overrides()
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.8 }, fg = { from = "CmpItemAbbr" } } },
       {
         PmenuSel = {
-          bg = { from = "Keyword", attr = "fg", alter = 0.2 },
           fg = { from = "CmpItemAbbr", attr = "fg", alter = -0.6 },
+          bg = { from = "Keyword", attr = "fg", alter = 0.2 },
           bold = true,
         },
       },
@@ -1143,8 +1201,21 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -1203,8 +1274,8 @@ local function colorscheme_overrides()
 
       {
         Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 1.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
         },
       },
       {
@@ -1236,6 +1307,26 @@ local function colorscheme_overrides()
           bg = "NONE",
         },
       },
+      { NormalFloat = { bg = { from = "Pmenu", alter = -0.2 } } },
+      {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.3 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
+
       {
         FzfLuaBorder = {
           fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
@@ -1363,8 +1454,8 @@ local function colorscheme_overrides()
 
       {
         PmenuSel = {
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
           fg = { from = "CmpItemAbbr", attr = "fg", alter = -0.6 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
           bold = true,
         },
       },
@@ -1374,16 +1465,29 @@ local function colorscheme_overrides()
 
       {
         FzfLuaSel = {
-          bg = { from = "PmenuSel", alter = -0.4, attr = "bg" },
           fg = { from = "PmenuSel", alter = 0.3, attr = "bg" },
+          bg = { from = "PmenuSel", alter = -0.4, attr = "bg" },
         },
       },
 
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -1660,7 +1764,20 @@ local function colorscheme_overrides()
       {
         FloatBorder = {
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.4 },
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -1746,15 +1863,15 @@ local function colorscheme_overrides()
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
-          bg = { from = "StatusLine", attr = "bg" },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
 
       {
         TablineSel = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
     },
@@ -1782,8 +1899,21 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.2 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
       {
@@ -1924,23 +2054,30 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.2 } } },
       {
         FloatBorder = {
-          bg = { from = "NormalFloat", attr = "bg" },
           fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+          bg = { from = "NormalFloat", attr = "bg" },
         },
       },
 
       { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
 
       {
-        FloatBorder = {
-          bg = { from = "Pmenu", attr = "bg", alter = -0.3 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
         },
       },
       {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
+
+      {
         FzfLuaBorder = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 2 },
           bg = { from = "NormalFloat", attr = "bg" },
+          fg = { from = "WinSeparator", attr = "fg", alter = 2 },
         },
       },
       {
@@ -2058,7 +2195,7 @@ local function colorscheme_overrides()
           bg = "NONE",
         },
       },
-      { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -0.3 }, fg = { from = "CmpItemAbbr", attr = "fg" } } },
+      { Pmenu = { bg = { from = "Normal", attr = "bg", alter = 0.5 }, fg = { from = "CmpItemAbbr", attr = "fg" } } },
 
       {
         PmenuSel = {
@@ -2068,11 +2205,23 @@ local function colorscheme_overrides()
         },
       },
 
-      { NormalFloat = { bg = { from = "Pmenu", alter = -0.3 }, fg = { from = "Normal", attr = "bg", alter = 4 } } },
+      { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 }, fg = { from = "Normal", attr = "bg", alter = 4 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 2 },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -2157,7 +2306,7 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
         },
       },
@@ -2170,15 +2319,15 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
         },
       },
 
       {
         TablineSel = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
       {
@@ -2212,8 +2361,8 @@ local function colorscheme_overrides()
       { Pmenu = { bg = { from = "Normal", attr = "bg", alter = -0.2 }, fg = { from = "CmpItemAbbr" } } },
       {
         PmenuSel = {
-          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
           fg = { from = "CmpItemAbbr", attr = "fg", alter = -0.6 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.2 },
           bold = true,
         },
       },
@@ -2221,16 +2370,28 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
         },
       },
 
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
       { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
-          bg = { from = "NormalFloat", attr = "bg" },
           fg = { from = "WinSeparator", attr = "fg", alter = -0.15 },
+          bg = { from = "NormalFloat", attr = "bg" },
         },
       },
 
@@ -2243,8 +2404,8 @@ local function colorscheme_overrides()
 
       {
         FzfLuaPreviewBorder = {
-          bg = { from = "FzfluaBorder", attr = "bg" },
           fg = { from = "FzfluaBorder", attr = "bg", alter = 0.7 },
+          bg = { from = "FzfluaBorder", attr = "bg" },
         },
       },
 
@@ -2266,10 +2427,20 @@ local function colorscheme_overrides()
       { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       {
         QuickFixLine = {
-          bg = { from = "CursorLine", attr = "fg", alter = 5 },
-          fg = { from = "CursorLine", attr = "fg", alter = 3 },
+          -- fg = { from = "CursorLine", attr = "fg", alter = 3 },
+          fg = "NONE",
+          bg = { from = "CursorLine", attr = "bg", alter = 0.6 },
           underline = false,
           reverse = false,
         },
@@ -2334,26 +2505,37 @@ local function colorscheme_overrides()
       },
 
       { NormalFloat = { bg = { from = "Pmenu", alter = 0.1 }, fg = { from = "Pmenu", attr = "fg", alter = 0.5 } } },
-
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 1 },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg" },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
       { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
-          bg = { from = "NormalFloat", attr = "bg" },
           fg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
+          bg = { from = "NormalFloat", attr = "bg" },
         },
       },
 
       {
         FzfLuaPreviewBorder = {
-          bg = { from = "FzfluaBorder", attr = "bg" },
           fg = { from = "FzfluaBorder", attr = "bg", alter = 0.4 },
+          bg = { from = "FzfluaBorder", attr = "bg" },
         },
       },
 
@@ -2504,8 +2686,21 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 }, fg = { from = "Pmenu", alter = 0.2 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -2650,8 +2845,21 @@ local function colorscheme_overrides()
       { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 }, fg = { from = "Pmenu", alter = 0.4 } } },
       {
         FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
           bg = { from = "NormalFloat", attr = "bg" },
-          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -2775,7 +2983,7 @@ local function colorscheme_overrides()
       { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
       {
         FzfLuaBorder = {
-          bg = { from = "NormalFloat", attr = "bg", alter = 0.1 },
+          bg = { from = "NormalFloat", attr = "bg", alter = 0.2 },
           fg = { from = "WinSeparator", attr = "fg" },
         },
       },
@@ -2870,6 +3078,24 @@ local function colorscheme_overrides()
       { LineNrBelow = { link = "LineNr" } },
 
       {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
+      {
         FzfLuaBorder = {
           fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
           bg = { from = "NormalFloat", attr = "bg" },
@@ -2894,35 +3120,35 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
           fg = { from = "Normal", attr = "bg", alter = 1.6 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 6 },
+          fg = { from = "StatusLine", attr = "bg", alter = 4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.6 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
         },
       },
 
       {
         TablineSel = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
           fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
         },
       },
     },
@@ -2931,6 +3157,27 @@ local function colorscheme_overrides()
         Folded = {
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
           fg = { from = "Normal", attr = "bg", alter = 1.6 },
+        },
+      },
+
+      { NormalFloat = { bg = { from = "Pmenu", alter = -0.1 } } },
+      {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.8 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
         },
       },
 
@@ -3012,6 +3259,25 @@ local function colorscheme_overrides()
       },
     },
     ["tender"] = {
+      { NormalFloat = { bg = { from = "Pmenu", alter = -0.2 } } },
+      {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = 0.5 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg", alter = 0.3 },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "CmpItemFloatBorder", attr = "bg" },
+        },
+      },
       {
         FzfLuaBorder = {
           fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },

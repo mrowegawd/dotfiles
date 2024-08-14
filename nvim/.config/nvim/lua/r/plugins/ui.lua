@@ -49,7 +49,7 @@ return {
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
           ["horizon"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
           },
         },
@@ -379,6 +379,12 @@ return {
           },
           ["everforest"] = {
             { NoiceCmdlinePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+            { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+          },
+          ["lackluster"] = {
+            { NoiceCmdlinePopupBorder = { inherit = "FloatBorder" } },
             { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
 
             { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
