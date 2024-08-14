@@ -188,6 +188,8 @@ end
 RUtils.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (visual)" })
 
+RUtils.map.nnoremap("B", "<C-^>", { desc = "Buffer: alternate file" })
+
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ COMMANDLINE                                              │
 -- ╰──────────────────────────────────────────────────────────╯

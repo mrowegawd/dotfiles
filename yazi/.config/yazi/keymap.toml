@@ -53,6 +53,12 @@ mpv --ontop --no-border --force-window \
   --playlist="$playlist" --osd-level=1
 '
 """, desc = "Play playlist on mpv" },
+  { on = [
+    "B",
+  ], run = "plugin alternate --args=toggle", desc = "Toggle alternate dir" },
+  { on = [
+    "<A-b>",
+  ], run = "plugin alternate --args=save", desc = "Save alternate dir" },
 ]
 
 keymap = [
