@@ -270,8 +270,8 @@ function M.change_colors()
     Highlight.get("CmpItemAbbrMatch", "fg"), --24
 
     -- FZF selection: bg, fg
-    Highlight.get("PmenuSel", "bg"), -- 25
-    Highlight.get("PmenuSel", "fg"), -- 26
+    Highlight.get("FzfLuaSel", "bg"), -- 25
+    Highlight.get("CmpItemAbbr", "fg"), -- 26
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"), --27
 
     -- FZF: border

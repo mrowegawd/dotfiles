@@ -378,7 +378,7 @@ return {
         { NeoTreeStatusLine = { link = "PanelStusLine" } },
         { NeoTreeWinSeparator = { link = "WinSeparator" } },
         { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-        { NeoTreeIndentMarker = { fg = { from = "ColorColumn", attr = "bg", alter = 0.2 }, bold = false } },
+        { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 0.5 }, bold = false } },
         { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
         { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
 

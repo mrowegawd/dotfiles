@@ -87,10 +87,10 @@ return {
             },
           },
           colors = {
-            RgFlowInputPath = { link = "NormalFloat" },
-            RgFlowInputBg = { link = "NormalFloat" },
-            RgFlowHeadLine = { link = "ErrorMsg" },
-            RgFlowInputFlags = { link = "NormalFloat" },
+            --   RgFlowInputPath = { link = "NormalFloat" },
+            --   -- RgFlowInputBg = { link = "NormalFloat" },
+            --   -- RgFlowHeadLine = { link = "NormalFloat" },
+            --   -- RgFlowInputFlags = { link = "NormalFloat" },
             RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
           },
         },
@@ -100,6 +100,7 @@ return {
     keys = {
       { "<c-j>", "<c-j>", ft = "fzf", mode = "t", nowait = true },
       { "<c-k>", "<c-k>", ft = "fzf", mode = "t", nowait = true },
+      { "<c-h>", "<Left>", ft = "fzf", mode = "t", nowait = true },
 
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
@@ -207,6 +208,9 @@ return {
         or nil
 
       return {
+        winopts = {
+          backdrop = 100,
+        },
         winopts_fn = function()
           local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
           local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
@@ -228,19 +232,19 @@ return {
         end,
         -- fzf_colors = true,
         fzf_colors = {
-          ["fg"] = { "fg", "Keyword" },
+          ["fg"] = { "fg", "CmpItemAbbr" },
           ["bg"] = { "bg", "NormalFloat" },
           ["hl"] = { "fg", "CmpItemAbbrMatch" },
-          ["fg+"] = { "fg", "FzfLuaSel" },
+          ["fg+"] = { "fg", "CmpItemAbbr" },
           ["bg+"] = { "bg", "FzfLuaSel" },
-          ["hl+"] = { "fg", "FzfLuaSel" },
+          ["hl+"] = { "fg", "CmpItemAbbrMatchFuzzy" },
           ["info"] = { "fg", "PreProc" },
           ["prompt"] = { "fg", "Conditional" },
-          ["pointer"] = { "fg", "CmpItemAbbrMatch" },
+          ["pointer"] = { "fg", "FzfLuaFzfPointer" },
           ["marker"] = { "fg", "Keyword" },
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "Comment" },
-          ["gutter"] = { "bg", "NormalFloat" },
+          ["gutter"] = { "bg", "FloatBorder" },
         },
         previewers = {
           builtin = {
@@ -269,7 +273,7 @@ return {
             ["<PageUp>"] = "preview-page-up",
           },
           fzf = {
-            ["alt-a"] = "toggle-all",
+            ["ctrl-a"] = "toggle-all",
             ["ctrl-d"] = "preview-page-down",
             ["ctrl-u"] = "preview-page-up",
           },
@@ -280,11 +284,16 @@ return {
           cwd_prompt = false,
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
-          fzf_opts = { ["--header"] = [[ctrl-y: copy/yank path | ctrl-g: rgflow]] },
+          fzf_opts = {
+            ["--header"] = [[ctrl-r: rgflow | ctrl-y: copy/yank path | alt-g: toggle ignore | alt-h: toggle hidden]],
+          },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
           actions = {
+            ["alt-g"] = actions.toggle_ignore,
+            ["alt-h"] = actions.toggle_hidden,
+            ["ctrl-q"] = actions.file_sel_to_qf,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
               local selected_item = selected[1]
@@ -303,7 +312,7 @@ return {
                 end
               end
             end,
-            ["ctrl-g"] = function(_, args)
+            ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.fd_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -348,6 +357,7 @@ return {
               -- },
               ["left"] = false,
               ["right"] = false,
+              ["ctrl-q"] = actions.file_sel_to_qf,
               ["ctrl-s"] = { actions.git_stage_unstage, actions.resume },
               ["ctrl-x"] = { actions.git_reset, actions.resume },
             },
@@ -361,11 +371,11 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[ctrl-o: open browser | ctrl-y: hash copy | ctrl-h: commit history HEAD..hash | ctrl-x: commit hash history]],
+              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-h: hHEAD..hash | ctrl-x: hhistory]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
-              ["right"] = actions.git_checkout,
+              ["ctrl-q"] = actions.file_sel_to_qf,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
@@ -419,12 +429,13 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
             fzf_opts = {
-              ["--header"] = [[ctrl-o: open browser | ctrl-y: hash copy | ctrl-h: all hash commit hostory | ctrl-g: grep commit history | ctrl-x: commit hash history]],
+              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-h: hHead..head | ctrl-g: hgrep | ctrl-x: hhistory]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
+              ["ctrl-q"] = actions.file_sel_to_qf,
               ["ctrl-t"] = actions.git_buf_tabedit,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
@@ -484,6 +495,7 @@ return {
             },
             actions = {
               ["default"] = actions.git_switch,
+              ["ctrl-q"] = actions.file_sel_to_qf,
             },
           },
           stash = {
@@ -524,7 +536,9 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          fzf_opts = { ["--header"] = [[alt-g: grep_lgrep | ctrl-g: rgflow]] },
+          fzf_opts = {
+            ["--header"] = [[ctrl-r: rgflow | ctrl-g: grep_lgrep | alt-g: toggle ignore | alt-h: toggle hidden]],
+          },
           winopts = {
             title = RUtils.fzflua.format_title(
               "Grep",
@@ -556,8 +570,10 @@ return {
             }
           end,
           actions = {
-            ["alt-g"] = { actions.grep_lgrep },
-            ["ctrl-g"] = function(_, args)
+            ["alt-g"] = actions.toggle_ignore,
+            ["alt-h"] = actions.toggle_hidden,
+            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
                 custom_start = function(pattern, flags, path)
                   args.cwd = path
@@ -575,6 +591,7 @@ return {
           files_only = true,
           actions = {
             ["ctrl-x"] = { actions.arg_del, actions.resume },
+            ["ctrl-q"] = actions.file_sel_to_qf,
           },
         },
         builtin = {
@@ -605,7 +622,7 @@ return {
             ["--with-nth"] = "-1..",
           },
           actions = {
-            ["alt-q"] = { actions.file_sel_to_qf },
+            ["ctrl-q"] = actions.file_sel_to_qf,
           },
         },
         highlights = {
@@ -625,6 +642,7 @@ return {
           actions = {
             -- actions inherit from 'actions.buffers' and merge
             ["default"] = actions.buf_switch,
+            ["ctrl-q"] = actions.file_sel_to_qf,
             ["ctrl-x"] = { actions.buf_del, actions.resume },
           },
           fzf_opts = {
@@ -696,7 +714,7 @@ return {
           actions = {
             -- actions inherit from 'actions.files' and merge
             -- this action toggles between 'grep' and 'live_grep'
-            ["ctrl-g"] = { actions.grep_lgrep },
+            ["ctrl-g"] = actions.grep_lgrep,
           },
           no_header = false, -- hide grep|cwd header?
           no_header_i = false, -- hide interactive header?
@@ -758,11 +776,13 @@ return {
               fullscreen = false,
             },
             fzf_opts = {
-              ["--header"] = [[ctrl-g: Filter LSP  | ctrl-x: Workspace Symbols]],
+              ["--header"] = [[ctrl-x: filter LSP  | ctrl-r: workspace symbols]],
               ["--reverse"] = false,
             },
             actions = {
-              ["ctrl-g"] = function()
+              ["ctrl-q"] = actions.file_sel_to_qf,
+              ["ctrl-g"] = actions.grep_lgrep,
+              ["ctrl-x"] = function()
                 local opts = {
                   title = "[LSP Symbols]",
                   actions = {
@@ -789,8 +809,7 @@ return {
                 }
                 RUtils.fzflua.cmd_filter_kind_lsp(opts)
               end,
-
-              ["ctrl-x"] = function()
+              ["ctrl-r"] = function()
                 local cwd = vim.loop.cwd()
                 local extend_title_cs = RUtils.fzflua.extend_title_fzf({ cwd = cwd }, "Workspace Symbols")
 
@@ -830,6 +849,9 @@ return {
                 },
               }
             end,
+            actions = {
+              ["ctrl-q"] = actions.file_sel_to_qf,
+            },
           },
         },
         diagnostics = {
@@ -840,6 +862,9 @@ return {
           git_icons = false,
           diag_icons = true,
           icon_padding = "", -- add padding for wide diagnostics signs
+          actions = {
+            ["ctrl-q"] = actions.file_sel_to_qf,
+          },
         },
         complete_path = {
           prompt = RUtils.fzflua.default_title_prompt(),
@@ -1170,41 +1195,50 @@ return {
           borderchars = { "─", "│", "─", "│", "┌", "┐", "┘", "└" },
           mappings = {
             i = {
-              ["<esc>"] = actions.close,
+              ["<ESC>"] = actions.close,
 
-              ["<s-down>"] = actions.cycle_history_next,
-              ["<s-up>"] = actions.cycle_history_prev,
+              ["<C-down>"] = actions.cycle_history_next,
+              ["<C-up>"] = actions.cycle_history_prev,
 
-              ["<c-u>"] = actions.preview_scrolling_up,
-              ["<c-d>"] = actions.preview_scrolling_down,
+              ["<C-n>"] = actions.results_scrolling_down,
+              ["<C-p>"] = actions.results_scrolling_up,
 
-              ["<a-a>"] = actions.toggle_all,
-              ["<a-q>"] = actions.send_to_qflist + actions.open_qflist,
+              ["<PageUp>"] = actions.preview_scrolling_up,
+              ["<PageDown>"] = actions.preview_scrolling_down,
+
+              ["<C-a>"] = actions.toggle_all,
+              ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
 
               ["<CR>"] = stopinsert(actions.select_default),
               ["<C-s>"] = stopinsert(actions.select_horizontal),
               ["<C-v>"] = stopinsert(actions.select_vertical),
               ["<C-t>"] = stopinsert(actions.select_tab),
 
-              ["<c-r>"] = actions.to_fuzzy_refine,
+              ["<C-r>"] = actions.to_fuzzy_refine,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
               ["<F4>"] = layout_actions.cycle_layout_next,
 
-              ["<c-p>"] = actions.results_scrolling_up,
-              ["<c-n>"] = actions.results_scrolling_down,
+              ["<C-j>"] = actions.move_selection_next,
+              ["<C-k>"] = actions.move_selection_previous,
+
+              ["<A-p>"] = layout_actions.toggle_preview,
+            },
+            n = {
+              ["<ESC>"] = actions.close,
+              ["q"] = actions.close,
+
+              ["<C-down>"] = actions.cycle_history_next,
+              ["<C-up>"] = actions.cycle_history_prev,
+
+              ["<PageUp>"] = actions.preview_scrolling_up,
+              ["<PageDown>"] = actions.preview_scrolling_down,
 
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
 
-              ["<a-p>"] = layout_actions.toggle_preview,
-            },
-            n = {
-              ["<esc>"] = actions.close,
-              ["q"] = actions.close,
-
-              ["<c-f>"] = actions.results_scrolling_up,
-              ["<c-b>"] = actions.results_scrolling_down,
+              ["<C-n>"] = actions.results_scrolling_up,
+              ["<C-p>"] = actions.results_scrolling_down,
 
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
             },
@@ -1789,65 +1823,6 @@ return {
               TroubleQfCount = {
                 bg = { from = "Normal", attr = "bg", alter = 1 },
                 fg = { from = "WinSeparator", attr = "fg", alter = 5 },
-              },
-            },
-          },
-          ["solarized-osaka"] = {
-            -- Directory
-            {
-              TroubleDirectory = {
-                bg = { from = "Normal", attr = "bg", alter = 1 },
-              },
-            },
-            {
-              TroubleFsCount = {
-                bg = { from = "Normal", attr = "bg", alter = 1.5 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- LSP
-            {
-              TroubleLspFilename = {
-                bg = { from = "Normal", attr = "bg", alter = 1 },
-              },
-            },
-            {
-              TroubleLspCount = {
-                bg = { from = "Normal", attr = "bg", alter = 1.5 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- Diagnostics
-            {
-              TroubleDiagnosticsBasename = {
-                bg = { from = "Normal", attr = "bg", alter = 1 },
-              },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "Normal", attr = "bg", alter = 1.5 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- QF
-            {
-              TroubleQfFilename = {
-                bg = { from = "Normal", attr = "bg", alter = 1 },
-              },
-            },
-            {
-              TroubleQfPos = {
-                bg = "NONE",
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
-              },
-            },
-            {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = 1.5 },
-                fg = { from = "Normal", attr = "fg", alter = -0.1 },
               },
             },
           },

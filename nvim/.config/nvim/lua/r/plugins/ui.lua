@@ -24,10 +24,6 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
           },
-          ["solarized-osaka"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 3 } } },
-          },
           ["neomodern"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
@@ -311,7 +307,7 @@ return {
             return
           end
 
-          require("noice").cmd "fzf"
+          require("noice").cmd "telescope"
         end,
         desc = "Noice: notification history",
       },
@@ -367,7 +363,7 @@ return {
       Highlight.plugin("notify", {
         theme = {
           ["*"] = {
-            { NoiceCmdlinePopupBorder = { fg = { from = "WinSeparator", alter = 0.5, bg = "NONE" } } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "FloatBorder", bg = { from = "NormalFloat" } } } },
             { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
@@ -378,15 +374,11 @@ return {
             { NoicePopupBorder = { inherit = "FloatBorder" } },
           },
           ["everforest"] = {
-            { NoiceCmdlinePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
             { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
-
             { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
           },
           ["lackluster"] = {
-            { NoiceCmdlinePopupBorder = { inherit = "FloatBorder" } },
             { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
-
             { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
           },
         },

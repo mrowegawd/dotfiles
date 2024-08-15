@@ -20,7 +20,7 @@ local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
 local separator_trouble = Highlight.tint(normal_bg, 0.3)
 local separator = Highlight.tint(normal_bg, 0.3)
 
-if vim.tbl_contains({ "solarized-osaka-night", "farout-night", "everforest" }, vim.g.colorscheme) then
+if vim.tbl_contains({ "farout-night", "everforest" }, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(statusline_fg, 0.05)
   separator_trouble = Highlight.tint(normal_bg, -0.1)
   separator = Highlight.tint(normal_bg, -0.1)
