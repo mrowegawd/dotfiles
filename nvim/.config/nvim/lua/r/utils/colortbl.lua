@@ -20,15 +20,20 @@ local separator_fg_alt = Highlight.tint(statusline_bg, 0.5)
 local separator_trouble = Highlight.tint(normal_bg, 0.3)
 local separator = Highlight.tint(normal_bg, 0.3)
 
-if vim.tbl_contains({ "farout-night", "everforest" }, vim.g.colorscheme) then
+local mode_bg = Highlight.tint(statusline_bg, 1)
+local statusline_fgc = Highlight.tint(statusline_fg, 0.1)
+
+if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(statusline_fg, 0.05)
   separator_trouble = Highlight.tint(normal_bg, -0.1)
   separator = Highlight.tint(normal_bg, -0.1)
+  mode_bg = Highlight.tint(statusline_bg, 0.48)
+  statusline_fgc = Highlight.tint(statusline_fg, 0.3)
 end
 
 ---@class r.utils.colortbl
 local M = {
-  statusline_fg = Highlight.tint(statusline_fg, 0.1),
+  statusline_fg = statusline_fgc,
   statusline_bg = Highlight.tint(statusline_bg, 0.6),
 
   statuslinenc_bg = statuslinenc_bg,
@@ -45,7 +50,7 @@ local M = {
   filename_fg = Highlight.tint(statusline_bg, 6),
   modified_fg = Highlight.tint(error_fg, 0.3),
 
-  mode_bg = Highlight.tint(statusline_bg, 1),
+  mode_bg = mode_bg,
 
   disorent = Highlight.tint(statusline_bg, 0.5),
 

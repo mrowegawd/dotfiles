@@ -49,8 +49,9 @@ cat "$temp_file" > "$playlist"
 # if playlist.mp3 not sorted, remove manually
 
 mpv --ontop --no-border --force-window \
+  --really-quiet \
   --autofit=1400x1200 \
-  --playlist="$playlist" --osd-level=1
+  --playlist="$playlist" --osd-level=1 >/dev/null 2>&1 &
 '
 """, desc = "Play playlist on mpv" },
   { on = [

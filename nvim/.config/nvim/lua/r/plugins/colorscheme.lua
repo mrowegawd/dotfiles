@@ -1,20 +1,6 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
-  -- Lazy
-  {
-    "vague2k/vague.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local vague_theme = { "vague" }
-      if vim.tbl_contains(vague_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = {},
-  },
   -- FLOW
   {
     "0xstepit/flow.nvim",
@@ -34,19 +20,6 @@ return {
         mode = "normal", -- Intensity of the palette: normal, dark, or bright. Notice that dark is ugly!
         aggressive_spell = false, -- Display colors for spell check.
       }
-    end,
-  },
-  -- APPRENTICE
-  {
-    "romainl/Apprentice",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local apprentice_theme = { "apprentice" }
-      if vim.tbl_contains(apprentice_theme, colorscheme) then
-        return true
-      end
-      return false
     end,
   },
   -- LACKLUSTER.NVIM
@@ -148,50 +121,6 @@ return {
       }
     end,
   },
-  -- DOOM-ONE
-  {
-    "NTBBloodbath/doom-one.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local doom_theme = { "doom-one" }
-      if vim.tbl_contains(doom_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      -- Add color to cursor
-      vim.g.doom_one_cursor_coloring = false
-      -- Set :terminal colors
-      vim.g.doom_one_terminal_colors = true
-      -- Enable italic comments
-      vim.g.doom_one_italic_comments = false
-      -- Enable TS support
-      vim.g.doom_one_enable_treesitter = true
-      -- Color whole diagnostic text or only underline
-      vim.g.doom_one_diagnostics_text_color = false
-      -- Enable transparent background
-      vim.g.doom_one_transparent_background = false
-
-      -- Pumblend transparency
-      vim.g.doom_one_pumblend_enable = false
-      vim.g.doom_one_pumblend_transparency = 20
-
-      -- Plugins integration
-      vim.g.doom_one_plugin_neorg = true
-      vim.g.doom_one_plugin_barbar = false
-      vim.g.doom_one_plugin_telescope = false
-      vim.g.doom_one_plugin_neogit = true
-      vim.g.doom_one_plugin_nvim_tree = true
-      vim.g.doom_one_plugin_dashboard = true
-      vim.g.doom_one_plugin_startify = true
-      vim.g.doom_one_plugin_whichkey = true
-      vim.g.doom_one_plugin_indent_blankline = true
-      vim.g.doom_one_plugin_vim_illuminate = true
-      vim.g.doom_one_plugin_lspsaga = false
-    end,
-  },
   -- EVERFOREST
   {
     "neanias/everforest-nvim",
@@ -242,21 +171,17 @@ return {
       }
     end,
   },
-  -- KANAGAWA-PAPER
   {
-    "sho-87/kanagawa-paper.nvim",
+    "nyoom-engineering/oxocarbon.nvim",
     lazy = false,
     priority = 1000,
     enabled = function()
-      local kanagawapaper_theme = { "kanagawa-paper" }
-      if vim.tbl_contains(kanagawapaper_theme, colorscheme) then
+      local oxocarbontheme = { "oxocarbon" }
+      if vim.tbl_contains(oxocarbontheme, colorscheme) then
         return true
       end
       return false
     end,
-    opts = {
-      dimInactive = false, -- disabled when transparent
-    },
   },
   -- KANAGAWA
   {
@@ -279,19 +204,6 @@ return {
     enabled = function()
       local selenizedtheme = { "selenized" }
       if vim.tbl_contains(selenizedtheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- MIASMA
-  {
-    "xero/miasma.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local colormiasma = { "miasma" }
-      if vim.tbl_contains(colormiasma, colorscheme) then
         return true
       end
       return false
@@ -322,7 +234,7 @@ return {
       vim.g.background = "light"
     end,
     enabled = function()
-      local catppuccintheme = { "catppuccin-mocha" }
+      local catppuccintheme = { "catppuccin-mocha", "catppuccin-latte" }
       if vim.tbl_contains(catppuccintheme, colorscheme) then
         return true
       end
@@ -334,6 +246,74 @@ return {
         dark = "mocha",
       },
     },
+  },
+  {
+    "NLKNguyen/papercolor-theme",
+    priority = 1000,
+    init = function()
+      vim.g.background = "light"
+    end,
+    enabled = function()
+      local papercolortheme = { "PaperColor" }
+      if vim.tbl_contains(papercolortheme, colorscheme) then
+        return true
+      end
+    end,
+  },
+  {
+    "EdenEast/nightfox.nvim",
+    priority = 1000,
+    init = function()
+      vim.g.background = "light"
+    end,
+    enabled = function()
+      local nightfoxtheme = { "dawnfox", "duskfox", "nightfox", "dayfox", "nordfox", "terafox" }
+      if vim.tbl_contains(nightfoxtheme, colorscheme) then
+        return true
+      end
+    end,
+    config = function()
+      require("nightfox").setup {
+        options = {
+          -- Compiled file's destination location
+          compile_path = vim.fn.stdpath "cache" .. "/nightfox",
+          compile_file_suffix = "_compiled", -- Compiled file suffix
+          transparent = false, -- Disable setting background
+          terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
+          dim_inactive = false, -- Non focused panes set to alternative background
+          module_default = true, -- Default enable value for modules
+          colorblind = {
+            enable = false, -- Enable colorblind support
+            simulate_only = false, -- Only show simulated colorblind colors and not diff shifted
+            severity = {
+              protan = 0, -- Severity [0,1] for protan (red)
+              deutan = 0, -- Severity [0,1] for deutan (green)
+              tritan = 0, -- Severity [0,1] for tritan (blue)
+            },
+          },
+          styles = { -- Style to be applied to different syntax groups
+            comments = "italic", -- Value is any valid attr-list value `:help attr-list`
+            conditionals = "NONE",
+            constants = "NONE",
+            functions = "NONE",
+            keywords = "NONE",
+            numbers = "NONE",
+            operators = "NONE",
+            strings = "NONE",
+            types = "NONE",
+            variables = "NONE",
+          },
+          inverse = { -- Inverse highlight for different types
+            match_paren = false,
+            visual = false,
+            search = false,
+          },
+        },
+        palettes = {},
+        specs = {},
+        groups = {},
+      }
+    end,
   },
   -- TOKYONIGHT
   {
@@ -364,18 +344,6 @@ return {
       local tokyonight = require "tokyonight"
       tokyonight.setup(opts)
       tokyonight.load()
-    end,
-  },
-  -- TENDER
-  {
-    "jacoborus/tender.vim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local tendertheme = { "tender" }
-      if vim.tbl_contains(tendertheme, colorscheme) then
-        return true
-      end
     end,
   },
 }

@@ -275,13 +275,13 @@ return {
       },
     },
     config = function(_, opts)
-      Highlight.plugin("Org_HiCus", {
-        theme = {
-          ["miasma"] = {
-            { OrgAgendaScheduled = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
-          },
-        },
-      })
+      -- Highlight.plugin("Org_HiCus", {
+      --   theme = {
+      --     ["miasma"] = {
+      --       { OrgAgendaScheduled = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
+      --     },
+      --   },
+      -- })
 
       local orgmode = require "orgmode"
       orgmode.setup(opts)

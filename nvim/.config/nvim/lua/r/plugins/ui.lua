@@ -3,6 +3,13 @@ local Highlight = require "r.settings.highlights"
 
 local old_notify = vim.notify
 
+local is_show_start = function()
+  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
+    return false
+  end
+  return true
+end
+
 return {
   -- INDENT-BLANKLINE
   {
@@ -40,21 +47,29 @@ return {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
-          ["vague"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
           ["horizon"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
           },
+          ["dawnfox"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+          },
+          ["dayfox"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
+          ["catppuccin-latte"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.03 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
         },
       })
       return {
-        scope = { show_start = true, show_end = false, enabled = true },
+        scope = { show_start = is_show_start(), show_end = false, enabled = true },
         indent = {
           char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
-          tab_char = "┊", -- │, ┊, │, ▏, ┆, ┊, , ┊
+          tab_char = "▏", -- "┊" -- │, ┊, │, ▏, ┆, ┊, , ┊
           repeat_linebreak = false,
         },
         exclude = {

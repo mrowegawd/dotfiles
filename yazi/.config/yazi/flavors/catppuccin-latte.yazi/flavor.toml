@@ -3,10 +3,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#54575d" }
+cwd = { fg = "#a7a8ac" }
 
 # Hovered
-hovered = { bg = "#373c48" }
+hovered = { bg = "#e3ddf8" }
 preview_hovered = { underline = true }
 
 # Find
@@ -44,9 +44,8 @@ separator_close = ""
 separator_style = { fg = "#45475a", bg = "#45475a" }
 
 # Mode
-# StatusLineNC  xxx guifg=#a8b8dc guibg=#3a404d
-mode_normal = { fg = "#a8b8dc", bg = "#3a404d", bold = true }
-mode_select = { fg = "#1e1e2e", bg = "#2257a0", bold = true }
+mode_normal = { fg = "#1e1e2e", bg = "#8839f0", bold = true }
+mode_select = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
 mode_unset = { fg = "#1e1e2e", bg = "#f2cdcd", bold = true }
 
 # Progress
@@ -156,8 +155,8 @@ rules = [
   { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#a6e3a1" },
 
   # Fallback
-  { name = "*", fg = "#bbc2cf" },
-  { name = "*/", fg = "#51afef" },
+  { name = "*", fg = "#4c4f6a" },
+  { name = "*/", fg = "#1e66f6" },
 ]
 
 # : }}}

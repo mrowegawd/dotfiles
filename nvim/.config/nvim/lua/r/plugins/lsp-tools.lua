@@ -14,7 +14,11 @@ return {
     "rmagatti/goto-preview",
     event = "VeryLazy",
     config = function()
-      require("goto-preview").setup {}
+      require("goto-preview").setup {
+        post_open_hook = function(_, win)
+          vim.api.nvim_set_option_value("winhighlight", "Normal:NormalFloat,FloatBorder:FloatBorder", { win = win })
+        end,
+      }
     end,
   },
   -- INCRENAME

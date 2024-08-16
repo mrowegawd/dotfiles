@@ -67,6 +67,9 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_26=$(grep -i color26 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_27=$(grep -i color27 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_28=$(grep -i color28 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -356,16 +359,11 @@ set_lazygit() {
   if [ -f "$THEME_LAZYGIT" ]; then
     cp "$LAZYGIT_PATH/themes/_themes" "$THEME_LAZYGIT"
 
-    # border_color=$(lighten_color "$GET_COL_17" 10)     # Misalnya, mengurangi 50 untuk menggelapkan
-    default_fg_color=$(lighten_color "$GET_COL_17" 30) # Misalnya, mengurangi 50 untuk menggelapkan
-
-    selected_line_bg_color=$(darken_color "$GET_COL_16" 20) # Misalnya, mengurangi 50 untuk menggelapkan
-
     sed -i -e "s/%%active_border_color%%/$GET_COL_16/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%inactive_border_color%%/$GET_COL_17/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%inactive_border_color%%/$GET_COL_31/g" "$THEME_LAZYGIT"
     sed -i -e "s/%%options_text_color%%/$GET_COL_20/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%selected_line_bg_color%%/$selected_line_bg_color/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%default_fg_color%%/$default_fg_color/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_30/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%default_fg_color%%/$GET_COL_29/g" "$THEME_LAZYGIT"
 
     cat "$LAZYGIT_PATH/_config.yml" "$THEME_LAZYGIT" >"$LAZYGIT_PATH/config.yml"
   fi

@@ -70,7 +70,7 @@ return {
 			local fpath_ext = check_file_extension(fpath)
 
 			if fpath_ext == "mp3" then
-				os.execute("mpv '" .. fpath .. "'  >/dev/null 2>&1 &")
+				os.execute("mpv --really-quiet '" .. fpath .. "'  >/dev/null 2>&1 &")
 			end
 
 			if fpath_ext == "pdf" then
@@ -78,7 +78,9 @@ return {
 			end
 
 			if fpath_ext == "mp4" then
-				os.execute("mpv --autofit=1000x900 --geometry=-15-60 '" .. fpath .. "' >/dev/null 2>&1 &")
+				os.execute(
+					"mpv --really-quiet --autofit=1000x900 --geometry=-15-60 '" .. fpath .. "' >/dev/null 2>&1 &"
+				)
 			end
 
 			if fpath_ext == "jpg" then

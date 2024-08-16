@@ -222,6 +222,20 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
+  local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.8)
+
+  local lazygit_default_fg = Highlight.get("Normal", "fg")
+  local lazygit_default_bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.2)
+  local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
+
+  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
+    statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.2)
+
+    lazygit_default_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
+    lazygit_default_bg = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
+    lazygit_border_fg = Highlight.tint(Highlight.get("FzfLuaBorder", "fg"), 0.1) -- 31
+  end
+
   local master_colors = fmt(
     [[
 ! -----------------------------
@@ -251,13 +265,18 @@ function M.change_colors()
 
 ! FZF Border
 *color28: %s
+
+! Lazygit: fg, bg, border fg
+*color29: %s
+*color30: %s
+*color31: %s
 ]],
     -- State Mode Color
     Highlight.tint(Highlight.get("Keyword", "fg"), -0.2), -- 16
     Highlight.get("WinSeparator", "fg"), -- 17
 
     -- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,
-    Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.8), -- 18
+    statusline_fg, -- 18
     Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1), -- 19
 
     -- TMUX: Bg_active, Bg_nc
@@ -275,7 +294,12 @@ function M.change_colors()
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"), --27
 
     -- FZF: border
-    Highlight.get("FzfLuaBorder", "fg") -- 28
+    Highlight.get("FzfLuaBorder", "fg"), -- 28
+
+    -- Lazygit: fg, bg, border fg
+    lazygit_default_fg, -- 29
+    lazygit_default_bg, -- 30
+    lazygit_border_fg -- 31
   )
 
   local master_color_path = "/tmp/master-colors-themes"

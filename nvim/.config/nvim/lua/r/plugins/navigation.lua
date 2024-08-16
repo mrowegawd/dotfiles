@@ -368,26 +368,33 @@ return {
       })
 
       Highlight.plugin("NeoTree", {
-        { Directory = { link = "Keyword" } },
-        { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
-        { NeoTreeRootName = { fg = { from = "Normal", attr = "fg" } } },
-        { NeoTreeNormal = { link = "PanelBackground" } },
-        { NeoTreeNormalNC = { link = "PanelBackground" } },
-        { NeoTreeCursorLine = { link = "CursorLine" } },
-        { NeoTreeRootName = { underline = false } },
-        { NeoTreeStatusLine = { link = "PanelStusLine" } },
-        { NeoTreeWinSeparator = { link = "WinSeparator" } },
-        { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-        { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 0.5 }, bold = false } },
-        { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
-        { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
+        theme = {
+          ["*"] = {
+            { Directory = { link = "Keyword" } },
+            { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
+            { NeoTreeRootName = { fg = { from = "Normal", attr = "fg" } } },
+            { NeoTreeNormal = { link = "PanelBackground" } },
+            { NeoTreeNormalNC = { link = "PanelBackground" } },
+            { NeoTreeCursorLine = { link = "CursorLine" } },
+            { NeoTreeRootName = { underline = false } },
+            { NeoTreeStatusLine = { link = "PanelStusLine" } },
+            { NeoTreeWinSeparator = { link = "WinSeparator" } },
+            { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
+            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 0.5 }, bold = false } },
+            { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
+            { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
 
-        { NeoTreeGitAdded = { link = "GitSignsAdd" } },
-        { NeoTreeGitModified = { link = "GitSignsChange" } },
-        {
-          NeoTreeTabSeparatorInactive = {
-            inherit = "NeoTreeTabInactive",
-            fg = { from = "PanelDarkBackground", attr = "bg" },
+            { NeoTreeGitAdded = { link = "GitSignsAdd" } },
+            { NeoTreeGitModified = { link = "GitSignsChange" } },
+            {
+              NeoTreeTabSeparatorInactive = {
+                inherit = "NeoTreeTabInactive",
+                fg = { from = "PanelDarkBackground", attr = "bg" },
+              },
+            },
+          },
+          ["everforest"] = {
+            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bold = false } },
           },
         },
       })
@@ -515,33 +522,33 @@ return {
               },
             },
           },
-          ["vague"] = {
-            {
-              OutlineFoldMarker = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
+          ["everforest"] = {
             {
               OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.1 },
+                fg = { from = "Comment", attr = "fg", alter = -0.05 },
                 bg = "NONE",
               },
             },
             {
               OutlineGuides = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                fg = { from = "Normal", attr = "bg", alter = -0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineFoldMarker = {
+                fg = { from = "Normal", attr = "bg", alter = -0.2 },
                 bg = "NONE",
               },
             },
             {
               OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = -0.1 },
-                bg = { from = "Keyword", attr = "fg", alter = -0.5 },
+                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+                bold = true,
               },
             },
           },
-          ["everforest"] = {
+          ["dayfox"] = {
             {
               OutlineDetails = {
                 fg = { from = "Comment", attr = "fg", alter = -0.05 },
@@ -889,9 +896,6 @@ return {
           ["sweetie"] = {
             { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
           },
-          ["kanagawa-paper"] = {
-            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-          },
           ["tender"] = {
             { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
           },
@@ -911,9 +915,19 @@ return {
               },
             },
           },
-          ["miasma"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+          ["catppuccin-latte"] = {
+            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.5 } } },
             { EdgyNormal = { bg = "NONE" } },
+            {
+              EdgyTitle = {
+                fg = { from = "Keyword", attr = "fg" },
+                bg = { from = "EdgyWinBar" },
+                alter = 0.1,
+                bold = true,
+              },
+            },
           },
           ["everforest"] = {
             { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
