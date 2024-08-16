@@ -50,7 +50,8 @@ cat "$temp_file" > "$playlist"
 
 mpv --ontop --no-border --force-window \
   --really-quiet \
-  --autofit=1400x1200 \
+  --autofit=800x787 \
+  --geometry=-15-60 \
   --playlist="$playlist" --osd-level=1 >/dev/null 2>&1 &
 '
 """, desc = "Play playlist on mpv" },

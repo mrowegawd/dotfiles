@@ -3,6 +3,7 @@
 show_hidden = true
 ratio = [0, 3, 0]     # set 0 - remove view panel
 sort_dir_first = true
+sort_by = "natural"
 
 play = [{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" }]
 

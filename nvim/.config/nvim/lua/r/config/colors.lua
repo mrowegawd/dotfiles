@@ -12,7 +12,7 @@ local general_overrides = function()
     { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
     { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-    { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.65 } } },
+    { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
     { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.75 } } },
     {
       CursorLineNr = {
@@ -32,7 +32,7 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.35 }, bg = "NONE" } },
     { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
@@ -78,7 +78,7 @@ local general_overrides = function()
     { NormalFloat = { bg = { from = "Pmenu", alter = -0.2 } } },
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = 0.6 },
+        fg = { from = "NormalFloat", attr = "bg", alter = 1 },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -567,7 +567,7 @@ local general_overrides = function()
     { FzfLuaPreviewNormal = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
     {
       FzfLuaPreviewBorder = {
-        fg = { from = "FzfLuaNormal", attr = "bg", alter = 0.5 },
+        fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "FzfLuaNormal", attr = "bg" },
       },
     },
