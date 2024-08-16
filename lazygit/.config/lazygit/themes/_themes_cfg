@@ -15,15 +15,15 @@ gui:
   commandLogSize: 8
   theme:
     activeBorderColor:
-      - "#bb544e"
+      - "#447cab"
       - bold
     inactiveBorderColor:
-      - "#363636"
+      - "#292929"
     optionsTextColor:
-      - "#282828"
+      - "#1f1f1f"
     selectedLineBgColor:
-      - "#6b0400"
+      - "#306897"
     defaultFgColor:
-      - "#686868"
+      - "#474747"
     searchingActiveBorderColor:
       - "#eed49f"
