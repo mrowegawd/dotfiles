@@ -1,22 +1,22 @@
-STATUSLINE_FG_ACTIVE="#bb544e"
-STATUSLINE_BG_ACTIVE="#363636"
-STATUSLINE_FG="#616161"
-STATUSLINE_BG="#282828"
+STATUSLINE_FG_ACTIVE="#447cab"
+STATUSLINE_BG_ACTIVE="#292929"
+STATUSLINE_FG="#494949"
+STATUSLINE_BG="#1f1f1f"
 
 STATUSLINE_BG_MESSAGE="#FFFF00"
 
-BORDER_FG="#363636"
-BORDER_BG="#282828"
-BORDER_FG_NC="#303030"
+BORDER_FG="#292929"
+BORDER_BG="#1f1f1f"
+BORDER_FG_NC="#242424"
 
-SEPARATOR_FG="#bb544e"
-SEPARATOR_ACTIVE_BG="#cc6054"
+SEPARATOR_FG="#142433"
+SEPARATOR_ACTIVE_BG="#ff7869"
 
-WINDOW_BG_ACTIVE="#282828"
-WINDOW_BG="#282828"
+WINDOW_BG_ACTIVE="#1f1f1f"
+WINDOW_BG="#1f1f1f"
 
-RED="#ea6962"
-BLUE="#7daea3"
+RED="#f44747"
+BLUE="#569cd6"
 
 left_separator=''
 left_separator_black=''
@@ -87,10 +87,10 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
 set -g status-left " #[fg=white,bold] ❐ #S "
 
 set -g window-status-format "#[fg=$STATUSLINE_BG]\
-#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator\
-#{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
-#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG]\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_ACTIVE],}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator"
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator\
+#{?window_zoomed_flag,#[fg=$STATUSLINE_FG] [ZOOM], }#{?pane_synchronized,#[bg=yellow] [SYNC],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG],}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG]\
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG],}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator"
 
 set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE]\
 #{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=$STATUSLINE_FG_ACTIVE,bg=$STATUSLINE_BG_ACTIVE,bold]\
