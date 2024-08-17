@@ -1,8 +1,6 @@
 local fmt, api = string.format, vim.api
 local uv = vim.uv
 
-local Highlight = require "r.settings.highlights"
-
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
 return {
@@ -275,14 +273,6 @@ return {
       },
     },
     config = function(_, opts)
-      -- Highlight.plugin("Org_HiCus", {
-      --   theme = {
-      --     ["miasma"] = {
-      --       { OrgAgendaScheduled = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
-      --     },
-      --   },
-      -- })
-
       local orgmode = require "orgmode"
       orgmode.setup(opts)
     end,
@@ -398,8 +388,8 @@ return {
             winopts = {
               title = RUtils.fzflua.format_title(
                 "Obsidian > Grep",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3),
-                "GitSignsChange"
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3)
+                -- "GitSignsChange"
               ),
             },
           }
@@ -421,8 +411,8 @@ return {
               winopts = {
                 title = RUtils.fzflua.format_title(
                   "Obsidian > Grep",
-                  RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3),
-                  "GitSignsChange"
+                  RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3)
+                  -- "GitSignsChange"
                 ),
               },
             }
@@ -444,8 +434,8 @@ return {
               -- fullscreen = true,
               title = RUtils.fzflua.format_title(
                 "Obsidian > Note files",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.bookmark),
-                "GitSignsChange"
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.bookmark)
+                -- "GitSignsChange"
               ),
             },
           }

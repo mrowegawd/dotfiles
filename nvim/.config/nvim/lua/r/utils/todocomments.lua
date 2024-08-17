@@ -56,8 +56,8 @@ local function picker(contents, tbl_cts, fzf_opts)
     winopts = {
       title = RUtils.fzflua.format_title(
         "Todocomments > " .. fzf_opts.title,
-        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.check_big),
-        "GitSignsChange"
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.check_big)
+        -- "GitSignsChange"
       ),
     },
     prompt = "   ",

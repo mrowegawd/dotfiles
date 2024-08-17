@@ -1,10 +1,8 @@
 ---@class r.utils.markdown
 local M = {}
 
--- local search_mode = "files"
--- local filename_part = ""
-
 local title, kind
+
 local function remove_alias(link)
   local split_index = string.find(link, "%s*|")
   if split_index ~= nil and type(split_index) == "number" then
@@ -12,8 +10,6 @@ local function remove_alias(link)
   end
   return link
 end
-
--- local JSON_DECODE_OPTS = { luanil = { object = true, array = true } }
 
 local function is_tag_or_link_at(line, col, opts)
   opts = opts or {}
@@ -323,8 +319,8 @@ local function format_prompt_strings()
   end
   return RUtils.fzflua.format_title(
     title_fzf,
-    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag),
-    "GitSignsChange"
+    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag)
+    -- "GitSignsChange"
   )
 end
 
@@ -359,22 +355,10 @@ function Tagpreviewer:parse_entry(entry_str)
   return {}
 end
 
-local function picker(contents)
-  return require("fzf-lua").fzf_exec(contents, {
-    previewer = {
-      _ctor = function()
-        return Tagpreviewer
-      end,
-    },
-    prompt = "   ",
-    winopts = {
-      title = format_prompt_strings(),
-    },
-
-    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: add tag | Ctrl-r: reload | Ctrl-g: search by regex]] },
-
-    actions = {
-      ["default"] = function(selected, _)
+local function picker(contents, actions)
+  actions = actions
+    or {
+      ["enter"] = function(selected, _)
         local sel = selected[1]
         sel = vim.split(sel, "|")
         for _, x in pairs(data_tags_table) do
@@ -489,10 +473,23 @@ local function picker(contents)
         vim.fn.setqflist({}, "r", what)
         vim.cmd "copen"
       end,
+    }
+
+  return require("fzf-lua").fzf_exec(contents, {
+    previewer = {
+      _ctor = function()
+        return Tagpreviewer
+      end,
     },
+    prompt = "   ",
+    winopts = {
+      title = format_prompt_strings(),
+    },
+    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: add tag | Ctrl-r: reload | Ctrl-g: search by regex]] },
+    actions = actions,
   })
 end
--- Fungsi untuk memeriksa apakah string JSON valid
+
 local function is_valid_json(str)
   local ok, _ = pcall(vim.json.decode, str)
   return ok
@@ -613,6 +610,9 @@ local function list_tags_async(all_tags, is_set)
   return picker(contents)
 end
 
+local regex_title = [[^#{1,}\s[\w<`].*$]]
+-- [[^#{1,}\s\w.*$]]
+
 function M.find_note_by_tag(data, is_set)
   is_set = is_set or false
   data = data or {}
@@ -650,19 +650,11 @@ function M.find_note_by_tag(data, is_set)
   end
 end
 
-function M.find_by_categories()
-  collect_all_tags_async(tags, function(all_tags)
-    vim.schedule(function()
-      picker(all_tags)
-    end)
-  end)
-end
-
 function M.find_global_titles()
-  return require("fzf-lua").grep {
+  require("fzf-lua").grep {
     prompt = "   ",
     cwd = RUtils.config.path.wiki_path,
-    search = "^#.*",
+    search = regex_title,
     rg_glob = false,
     no_esc = true,
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
@@ -671,8 +663,7 @@ function M.find_global_titles()
       fullscreen = true,
       title = RUtils.fzflua.format_title(
         "Obsidian > Search Global Note Titles",
-        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
-        "GitSignsChange"
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)
       ),
     },
   }
@@ -705,7 +696,7 @@ function M.find_local_titles()
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
-    search = "^#.*",
+    search = regex_title,
     rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. fullname
       .. " -e ",
@@ -718,7 +709,7 @@ function M.find_local_titles()
       ),
     },
     actions = {
-      ["default"] = function(selected, _)
+      ["enter"] = function(selected, _)
         local sel = RUtils.fzflua.__strip_str(selected[1])
         if sel then
           sel = vim.split(sel, ":")
@@ -742,6 +733,109 @@ function M.find_local_titles()
           vim.cmd("split " .. fullname)
           vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
         end
+      end,
+    },
+  }
+end
+
+function M.find_local_sitelink()
+  require("fzf-lua").lgrep_curbuf {
+    prompt = "  ",
+    winopts = {
+      title = RUtils.fzflua.format_title("Note: title curbuf", ""),
+    },
+    no_esc = true,
+    search = [[http.*$]],
+    formatter = false,
+    actions = {
+      ["enter"] = function(selected, _)
+        local sel = selected[1]
+        local sel_str = RUtils.fzflua.__strip_str(sel)
+
+        if sel_str then
+          local line_number = tonumber(sel_str:match "[%d]+")
+          local line_count = vim.api.nvim_buf_line_count(0) + 1
+
+          if line_count > line_number then
+            vim.api.nvim_win_set_cursor(0, { line_number, 1 })
+          end
+        end
+      end,
+    },
+  }
+end
+
+function M.insert_by_categories()
+  collect_all_tags_async(tags, function(all_tags)
+    vim.schedule(function()
+      picker(all_tags, {
+        ["enter"] = function(selected, _)
+          local selection = selected[1]
+          vim.api.nvim_put({ selection }, "c", false, true)
+        end,
+      })
+    end)
+  end)
+end
+
+function M.insert_local_titles()
+  require("fzf-lua").lgrep_curbuf {
+    prompt = "  ",
+    winopts = {
+      title = RUtils.fzflua.format_title("Note: title curbuf", ""),
+    },
+    no_esc = true,
+    search = regex_title,
+    formatter = false,
+    actions = {
+      ["enter"] = function(selected, _)
+        local sel = selected[1]
+        local sel_str = RUtils.fzflua.__strip_str(sel)
+
+        if sel_str then
+          local ss = string.match(sel_str, "([%w-_%s]+%.%w+)%:?")
+          local filename = string.match(ss, "([%w-_%s]+)")
+          local title_cur_note = string.match(sel_str, "(#[%w-_=`%s]+)")
+
+          vim.api.nvim_put({
+            "[[" .. filename .. title_cur_note .. "]]",
+          }, "c", false, true)
+        end
+      end,
+    },
+  }
+end
+
+function M.insert_global_titles()
+  require("fzf-lua").live_grep_glob {
+    prompt = "  ",
+    winopts = {
+      title = RUtils.fzflua.format_title("Note: title global", ""),
+    },
+    rg_glob = false,
+    no_esc = true,
+    search = regex_title,
+    cwd = RUtils.config.path.wiki_path,
+    rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" -e ]],
+    actions = {
+      ["enter"] = function(selected, _)
+        local selection = selected[1]
+
+        local parts = vim.split(selection, ".md")
+        local path_name = vim.split(parts[1], "/")
+        local path_file = path_name[#path_name]
+
+        local path_heading = vim.split(parts[2], "#")
+        -- remove space
+        local path_linkheading = string.gsub(path_heading[#path_heading], "^%s", "")
+
+        local path_str = RUtils.fzflua.__strip_str(path_file)
+        if path_str == nil then
+          return
+        end
+        vim.api.nvim_put({
+          "[[" .. path_str .. "#" .. path_linkheading .. "]]",
+        }, "c", false, true)
       end,
     },
   }

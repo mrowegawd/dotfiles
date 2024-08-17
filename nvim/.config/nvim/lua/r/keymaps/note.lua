@@ -11,26 +11,33 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: insert image",
       },
-      ["gs"] = {
+      ["t<CR>"] = {
         function()
           RUtils.markdown.find_local_titles()
-          vim.cmd "normal! zz"
+          vim.cmd "normal! zRzz" -- open all closed fold (but it doesnt work)
         end,
-        desc = "Note: search title global [obsidian]",
+        desc = "Note: search local titles [obsidian]",
       },
-      ["gS"] = {
+      ["T<CR>"] = {
         function()
           RUtils.markdown.find_global_titles()
-          vim.cmd "normal! zz"
+          vim.cmd "normal! zRzz"
         end,
-        desc = "Note: search global title global [obsidian]",
+        desc = "Note: search global titles [obsidian]",
+      },
+      ["l<cr>"] = {
+        function()
+          RUtils.markdown.find_local_sitelink()
+          vim.cmd "normal! zRzz"
+        end,
+        "Note: find sitelink (curbuf)",
       },
       ["<leader>fT"] = {
         function()
           RUtils.todocomments.search_global_note {
             title = "Todo Note Global",
           }
-          vim.cmd "normal! zz"
+          vim.cmd "normal! zRzz"
         end,
         "Note: search todo global note [fzflua]",
       },
@@ -69,169 +76,22 @@ function M.neorg_mappings_ft(bufnr)
         "Note: followlink vertical split",
       },
     },
-
     ["i"] = {
       ["c<cr>"] = {
         function()
-          local note_ext = "norg"
-          if vim.bo[0].filetype == "markdown" then
-            note_ext = "md"
-          end
-
-          if note_ext == "md" then
-            local opts = {
-              prompt = "  ",
-              winopts = {
-                -- split = "belowright new | wincmd J | resize 40",
-                title = RUtils.fzflua.format_title("Note: insert categories", ""),
-                preview = {
-                  hidden = "hidden",
-                  vertical = "up:55%",
-                  horizontal = "right:60%",
-                  layout = "vertical",
-                },
-              },
-              actions = {
-                ["default"] = function(selected, _)
-                  local selection = selected[1]
-                  -- local str_path = selection:match "%[(.*)%]"
-
-                  vim.api.nvim_put({ selection }, "c", false, true)
-                end,
-              },
-            }
-
-            return require("fzf-lua").fzf_exec(RUtils.neorg.find_by_categories(), opts)
-          end
+          RUtils.markdown.insert_by_categories()
         end,
         "Note: insert categories (curbuf)",
       },
-      ["l<cr>"] = {
-        function()
-          local opts = {
-            prompt = "  ",
-            winopts = {
-              -- split = "belowright new | wincmd J | resize 40",
-              title = RUtils.fzflua.format_title("Note: link curbuf", ""),
-              preview = {
-                hidden = "hidden",
-                vertical = "up:55%",
-                horizontal = "right:60%",
-                layout = "vertical",
-              },
-            },
-            actions = {
-              ["default"] = function(selected, _)
-                local selection = selected[1]
-                local str_path = selection:match "%[(.*)%]"
-
-                vim.api.nvim_put({
-                  "[" .. str_path .. "]",
-                }, "c", false, true)
-              end,
-            },
-          }
-
-          return require("fzf-lua").fzf_exec(RUtils.neorg.finder_sitelinkable(), opts)
-        end,
-        "Note: insert link (curbuf)",
-      },
       ["t<cr>"] = {
         function()
-          local opts = {
-            prompt = "  ",
-            winopts = {
-              title = RUtils.fzflua.format_title("Note: title curbuf", ""),
-            },
-            actions = {
-              ["default"] = function(selected, _)
-                local selection = selected[1]
-                local str_path = string.gsub(selection:match "|.*$", "| ", "")
-
-                -- print(str_path)
-
-                vim.api.nvim_put({
-                  "{" .. str_path .. "}",
-                }, "c", false, true)
-              end,
-            },
-          }
-
-          return require("fzf-lua").fzf_exec(RUtils.neorg.finder_linkable(), opts)
+          RUtils.markdown.insert_local_titles()
         end,
         "Note: insert title (curbuf)",
       },
       ["T<cr>"] = {
         function()
-          local note_ext = "norg"
-          if vim.bo[0].filetype == "markdown" then
-            note_ext = "md"
-          end
-
-          local opts = {
-            prompt = "  ",
-            winopts = {
-              title = RUtils.fzflua.format_title("Note: title global", ""),
-            },
-            actions = {
-              ["default"] = function(selected, _)
-                local selection = selected[1]
-
-                if note_ext == "norg" then
-                  local link_path = selection:match "[^%s]+"
-
-                  local title = selection:match "*.+$"
-                  local trim_title = string.gsub(title, "*", "")
-
-                  vim.api.nvim_put({
-                    "[" .. trim_title .. "]" .. "{:$/" .. link_path .. ":" .. title .. "}",
-                  }, "c", false, true)
-                else
-                  local parts = vim.split(selection, ".md")
-                  local path_name = vim.split(parts[1], "/")
-                  local path_file = path_name[#path_name]
-
-                  local path_heading = vim.split(parts[2], "#")
-                  -- remove space
-                  local path_linkheading = string.gsub(path_heading[#path_heading], "^%s", "")
-
-                  local path_str = RUtils.fzflua.__strip_str(path_file)
-                  if path_str == nil then
-                    return
-                  end
-                  vim.api.nvim_put({
-                    "[[" .. path_str .. "#" .. path_linkheading .. "]]",
-                  }, "c", false, true)
-                end
-              end,
-            },
-          }
-
-          if note_ext == "neorg" then
-            opts.fzf_opts = {
-              ["--preview"] = require("fzf-lua").shell.preview_action_cmd(function(items)
-                local selection = items[1]:match "[^%s]+" .. "." .. note_ext
-                selection = os.getenv "HOME" .. "/Dropbox/neorg/" .. selection
-
-                return "cat " .. selection
-              end),
-            }
-          end
-
-          if note_ext == "md" then
-            opts.search = [[^#.*]]
-            opts.cwd = RUtils.config.path.wiki_path
-            opts.rg_opts =
-              [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" -e ]]
-          end
-
-          opts.rg_glob = false
-          opts.no_esc = true
-          if note_ext == "norg" then
-            return require("fzf-lua").fzf_exec(RUtils.neorg.finder_linkableGlobal(), opts)
-          else
-            return require("fzf-lua").grep(opts)
-          end
+          RUtils.markdown.insert_global_titles()
         end,
         "Note: insert title (global)",
       },

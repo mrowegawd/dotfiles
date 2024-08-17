@@ -1,5 +1,5 @@
 local fmt = string.format
-local neorg = require "neorg"
+-- local neorg = require "neorg"
 
 ---@class r.utils.neorg
 local M = {}
