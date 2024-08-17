@@ -246,10 +246,10 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- DIAGNOSTIC
     -----------------------------------------------------------------------
-    { DiagnosticSignError = { bg = { from = "Normal", attr = "bg" } } },
-    { DiagnosticSignWarn = { bg = { from = "Normal", attr = "bg" } } },
-    { DiagnosticSignInfo = { bg = { from = "Normal", attr = "bg" } } },
-    { DiagnosticSignHint = { bg = { from = "Normal", attr = "bg" } } },
+    { DiagnosticSignError = { bg = "NONE" } },
+    { DiagnosticSignWarn = { bg = "NONE" } },
+    { DiagnosticSignInfo = { bg = "NONE" } },
+    { DiagnosticSignHint = { bg = "NONE" } },
 
     -- Floating windows
     { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
@@ -1483,6 +1483,7 @@ local function colorscheme_overrides()
       },
     },
     ["dayfox"] = {
+      { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bg = "NONE" } },
       { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.4 }, italic = true } },
       { CursorLine = { bg = "#e3ddf8" } },
       {
@@ -1508,6 +1509,8 @@ local function colorscheme_overrides()
       },
 
       { ["@punctuation.bracket"] = { fg = { from = "Keyword", attr = "fg", alter = -0.2 } } },
+
+      { ["@lsp.type.parameter"] = { italic = true, bold = true, fg = { from = "Keyword" } } },
 
       { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = -0.3 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -1564,9 +1567,9 @@ local function colorscheme_overrides()
       },
       {
         FzfLuaTitle = {
-          -- fg = { from = "Boolean", attr = "fg", alter = 0.2 },
           fg = "NONE",
-          bg = { from = "NormalFloat", attr = "bg" },
+          bg = "NONE",
+          -- bg = { from = "NormalFloat", attr = "bg" },
         },
       },
       {
@@ -1611,11 +1614,43 @@ local function colorscheme_overrides()
       { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
       { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
       -- Results
-      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      {
+        TelescopeResultsNormal = {
+          bg = { from = "FzfLuaNormal", attr = "bg" },
+          fg = { from = "FzfLuaDirPart", attr = "fg" },
+        },
+      },
       { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
       { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
 
       -----
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = 0.8 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = 0.8 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = 0.8 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = -0.6 },

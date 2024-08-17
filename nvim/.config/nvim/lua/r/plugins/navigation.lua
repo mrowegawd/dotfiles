@@ -503,25 +503,6 @@ return {
               },
             },
           },
-          ["miasma"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-              },
-            },
-          },
           ["everforest"] = {
             {
               OutlineDetails = {
@@ -911,6 +892,20 @@ return {
               EdgyTitle = {
                 fg = { from = "Directory", attr = "fg", alter = 1 },
                 bg = { from = "EdgyWinBar" },
+                bold = true,
+              },
+            },
+          },
+          ["dayfox"] = {
+            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.5 } } },
+            { EdgyNormal = { bg = "NONE" } },
+            {
+              EdgyTitle = {
+                fg = { from = "Keyword", attr = "fg" },
+                bg = { from = "EdgyWinBar" },
+                alter = 0.1,
                 bold = true,
               },
             },

@@ -285,6 +285,7 @@ return {
           no_header = true, -- disable default header
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
+            -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
             ["--header"] = [[ctrl-r: rgflow | ctrl-y: copy/yank path | alt-g: toggle ignore | alt-h: toggle hidden]],
           },
           fd_opts = fd_opts,
@@ -1705,7 +1706,7 @@ return {
             {
               TroubleCode = {
                 bg = "NONE",
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+                fg = { from = "ErrorMsg", attr = "fg" },
                 underline = false,
               },
             },
@@ -1751,6 +1752,64 @@ return {
               TroubleDiagnosticsCount = {
                 bg = { from = "Normal", attr = "bg", alter = -0.2 },
                 fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- QF
+            {
+              TroubleQfFilename = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
+            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.05 } } },
+            {
+              TroubleQfCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
+              },
+            },
+          },
+          ["dayfox"] = {
+            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+
+            -- Directory
+            {
+              TroubleDirectory = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
+            {
+              TroubleFsCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "Normal", attr = "fg", alter = -0.1 },
+              },
+            },
+
+            -- Diagnostics
+            {
+              TroubleDiagnosticsBasename = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
+            {
+              TroubleDiagnosticsCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "Normal", attr = "fg" },
+              },
+            },
+
+            -- LSP
+            {
+              TroubleLspFilename = {
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+              },
+            },
+            {
+              TroubleLspCount = {
+                bg = { from = "Normal", attr = "bg", alter = -0.2 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
               },
             },
 

@@ -33,7 +33,7 @@ GET_MAGENTA=$(xrdb -query | grep -i .color5 | cut -d':' -f2 | head -1 | xargs)
 GET_CYAN=$(xrdb -query | grep -i .color6 | cut -d':' -f2 | head -1 | xargs)
 # GET_CYAN_ALT=$(xrdb -query | grep -i .color14 | cut -d':' -f2 | head -1 | xargs)
 
-# GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 # GET_WHITE_ALT=$(xrdb -query | grep -i .color15 | cut -d':' -f2 | head -1 | xargs)
 
 GET_COL_16="#6c8cac"
@@ -376,7 +376,7 @@ set_eww() {
     dunstify "$ERROR_MSG" "Path $EWW_PATH do not exists!" && exit 1
   fi
 
-  BG_DARKEN_1=$(darken_color "$GET_BLACK" 7) # Misalnya, mengurangi 50 untuk menggelapkan
+  BG_DARKEN_1=$(darken_color "$GET_COL_17" 10) # Misalnya, mengurangi 50 untuk menggelapkan
 
   sed -i -e "s/^\$bg: .*/\$bg: $GET_BG;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$black: .*/\$black: $BG_DARKEN_1;/g" "$EWW_PATH/eww.scss"
