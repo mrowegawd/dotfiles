@@ -601,13 +601,18 @@ local general_overrides = function()
     -- TELESCOPE ==========================================================
     { TelescopeNormal = { inherit = "FzfLuaNormal" } },
     { TelescopeBorder = { inherit = "FzfLuaBorder" } },
-    { TelescopeMatching = { inherit = "CmpItemAbbrMatchFuzzy" } },
+    { TelescopeMatching = { link = "CmpItemAbbrMatchFuzzy" } },
     { TelescopeTitle = { inherit = "FzfLuaTitle" } },
 
-    { TelescopeSelection = { link = "FzfLuaSel" } },
+    {
+      TelescopeSelection = {
+        fg = { from = "FzfLuaSel", attr = "fg", alter = 0.8 },
+        bg = { from = "FzfLuaSel", attr = "bg" },
+      },
+    },
     { TelescopeSelectionCaret = { bg = "NONE", fg = "green" } },
 
-    -- prompt
+    -- Prompt
     { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
     { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
     { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
