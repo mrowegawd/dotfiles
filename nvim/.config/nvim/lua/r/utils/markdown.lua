@@ -658,7 +658,7 @@ function M.find_global_titles()
     rg_glob = false,
     no_esc = true,
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
-    rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
+    -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
     winopts = {
       fullscreen = true,
       title = RUtils.fzflua.format_title(
@@ -765,6 +765,43 @@ function M.find_local_sitelink()
   }
 end
 
+local function get_sel_text()
+  vim.cmd "normal yi]"
+  title = vim.fn.getreg '"0'
+
+  local stitle = title
+
+  if string.find(title, "%[") or string.find(title, "%]") then
+    stitle = string.gsub(stitle, "%[", "")
+    stitle = string.gsub(stitle, "%]", "")
+  end
+
+  return stitle
+end
+
+function M.find_backlinks()
+  local curr_line = vim.fn.getline "."
+  local stitle = ""
+  if curr_line == "" then
+    local filename = vim.api.nvim_buf_get_name(0)
+    local base_fn = RUtils.file.basename(filename)
+    if string.find(base_fn, "%.md") then
+      stitle = string.gsub(base_fn, "%.md", "")
+    end
+  else
+    stitle = get_sel_text()
+  end
+
+  require("fzf-lua").grep {
+    cwd = RUtils.config.path.wiki_path,
+    search = "[[" .. stitle,
+    no_header = true,
+    no_header_i = true,
+    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+    fzf_opts = { ["--header"] = false }, -- do not display our custom header
+  }
+end
+
 function M.insert_by_categories()
   collect_all_tags_async(tags, function(all_tags)
     vim.schedule(function()
@@ -807,7 +844,7 @@ function M.insert_local_titles()
 end
 
 function M.insert_global_titles()
-  require("fzf-lua").live_grep_glob {
+  require("fzf-lua").grep {
     prompt = "  ",
     winopts = {
       title = RUtils.fzflua.format_title("Note: title global", ""),
@@ -816,7 +853,7 @@ function M.insert_global_titles()
     no_esc = true,
     search = regex_title,
     cwd = RUtils.config.path.wiki_path,
-    rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" -e ]],
+    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     actions = {
       ["enter"] = function(selected, _)
         local selection = selected[1]

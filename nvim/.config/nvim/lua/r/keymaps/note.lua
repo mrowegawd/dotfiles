@@ -25,6 +25,12 @@ function M.neorg_mappings_ft(bufnr)
         end,
         desc = "Note: search global titles [obsidian]",
       },
+      ["grr"] = {
+        function()
+          RUtils.markdown.find_backlinks()
+        end,
+        desc = "Note: find backlinks (like references)",
+      },
       ["l<cr>"] = {
         function()
           RUtils.markdown.find_local_sitelink()
@@ -39,7 +45,7 @@ function M.neorg_mappings_ft(bufnr)
           }
           vim.cmd "normal! zRzz"
         end,
-        "Note: search todo global note [fzflua]",
+        "Note: search todocomment global note [fzflua]",
       },
       ["<leader>ft"] = {
         function()
@@ -47,7 +53,7 @@ function M.neorg_mappings_ft(bufnr)
             title = "Todo Note Curbuf",
           }
         end,
-        "Note: search todo local note [fzflua]",
+        "Note: search todocomment local note [fzflua]",
       },
       ["<Localleader>oa"] = {
         function()
