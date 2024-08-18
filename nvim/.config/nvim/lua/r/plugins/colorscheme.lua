@@ -22,7 +22,7 @@ return {
       }
     end,
   },
-  -- LACKLUSTER.NVIM
+  -- LACKLUSTER
   {
     "slugbyte/lackluster.nvim",
     lazy = false,
@@ -134,8 +134,21 @@ return {
       return false
     end,
     config = function()
-      vim.opt.background = "light"
+      vim.cmd [[set background=light]]
       require("everforest").setup()
+    end,
+  },
+  -- MELANGE
+  {
+    "savq/melange-nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local melangetheme = { "melange" }
+      if vim.tbl_contains(melangetheme, colorscheme) then
+        return true
+      end
+      return false
     end,
   },
   -- FAROUT
@@ -171,6 +184,7 @@ return {
       }
     end,
   },
+  -- OXOCARBON
   {
     "nyoom-engineering/oxocarbon.nvim",
     lazy = false,
@@ -230,9 +244,6 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     priority = 1000,
-    init = function()
-      vim.g.background = "light"
-    end,
     enabled = function()
       local catppuccintheme = { "catppuccin-mocha", "catppuccin-latte" }
       if vim.tbl_contains(catppuccintheme, colorscheme) then
@@ -247,12 +258,10 @@ return {
       },
     },
   },
+  -- PAPERCOLOR
   {
     "NLKNguyen/papercolor-theme",
     priority = 1000,
-    init = function()
-      vim.g.background = "light"
-    end,
     enabled = function()
       local papercolortheme = { "PaperColor" }
       if vim.tbl_contains(papercolortheme, colorscheme) then
@@ -260,12 +269,10 @@ return {
       end
     end,
   },
+  -- NIGHTFOX
   {
     "EdenEast/nightfox.nvim",
     priority = 1000,
-    init = function()
-      vim.g.background = "light"
-    end,
     enabled = function()
       local nightfoxtheme = { "dawnfox", "duskfox", "nightfox", "dayfox", "nordfox", "terafox" }
       if vim.tbl_contains(nightfoxtheme, colorscheme) then
@@ -273,6 +280,10 @@ return {
       end
     end,
     config = function()
+      if vim.g.colorscheme == "dawnfox" then
+        vim.cmd [[set background=light]]
+      end
+
       require("nightfox").setup {
         options = {
           -- Compiled file's destination location
@@ -322,7 +333,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local colorstokyonight = { "tokyonight-night", "tokyonight-storm" }
+      local colorstokyonight = { "tokyonight-night", "tokyonight-storm", "tokyonight-day" }
       if vim.tbl_contains(colorstokyonight, colorscheme) then
         return true
       end

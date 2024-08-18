@@ -23,13 +23,13 @@ prepend_keymap = [
   #   "<c-o>",
   # ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
   { on = [
-    "<c-g>",
+    "<a-g>",
   ], run = "plugin opener --args=lazygit", desc = "Open lazygit" },
   { on = [
-    "<c-d>",
+    "<a-d>",
   ], run = "plugin opener --args=lazydocker", desc = "Open lazydocker" },
   { on = [
-    "<c-t>",
+    "<a-t>",
   ], run = "plugin opener --args=terminal", desc = "Open terminal on target dir yazi" },
   { on = [
     "<a-p>",
@@ -240,7 +240,7 @@ keymap = [
     "Y",
   ], run = [
     "unyank",
-  ], desc = "Cancel the yank status of files" },
+  ], desc = "Cancel the yank or cut status of files" },
   { on = [
     "x",
   ], run = [

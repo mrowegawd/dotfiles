@@ -5,7 +5,7 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#545454" }
+cwd = { fg = "#b1ac9e" }
 
 # Hovered
 hovered = { bg = "#f0e9d7" }
@@ -16,8 +16,8 @@ find_keyword = { fg = "#b8bb26", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#293b44", bg = "#293b44" }
-marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
+marker_selected = { fg = "#293b44", bg = "#b9c346" }
+marker_copied = { fg = "#b8bb26", bg = "#f5ae14" }
 marker_cut = { fg = "#fb4934", bg = "#fb4934" }
 
 # Tab
@@ -40,10 +40,10 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#363230" }
+separator_style = { fg = "#6b6461", bg = "#fdf6e3" }
 
 # Mode
-mode_normal = { fg = "#3d3d3d", bg = "#f85552", bold = true }
+mode_normal = { fg = "#5c6a72", bg = "#f85552", bold = true }
 mode_select = { fg = "#87afd7", bg = "#592a4a", bold = true }
 mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 
@@ -141,7 +141,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#5c6a72" },
-  { name = "*/", fg = "#f85552" },
+  { name = "*/", fg = "#8da101" },
 ]
 
 # : }}}

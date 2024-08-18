@@ -60,6 +60,10 @@ return {
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
           },
           ["catppuccin-latte"] = {
+            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
+          ["tokyonight-day"] = {
             { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.03 } } },
             { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
           },

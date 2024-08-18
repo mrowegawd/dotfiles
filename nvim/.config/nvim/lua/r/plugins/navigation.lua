@@ -284,10 +284,10 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<c-f>"] = "fzmark",
-              ["<c-t>"] = "open_terminal",
-              ["<c-g>"] = "open_lazygit",
-              ["<c-d>"] = "open_lazydocker",
+              ["<c-j>"] = "fzmark",
+              ["<a-t>"] = "open_terminal",
+              ["<a-g>"] = "open_lazygit",
+              ["<a-d>"] = "open_lazydocker",
               ["<Leader>gha"] = "git_add_file",
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
@@ -305,10 +305,10 @@ return {
         },
         window = {
           mappings = {
-            ["<c-o>"] = "fzmark",
-            ["<c-t>"] = "open_terminal",
-            ["<c-g>"] = "open_lazygit",
-            ["<c-d>"] = "open_lazydocker",
+            ["<c-j>"] = "fzmark",
+            ["<a-t>"] = "open_terminal",
+            ["<a-g>"] = "open_lazygit",
+            ["<a-d>"] = "open_lazydocker",
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
@@ -500,6 +500,32 @@ return {
               OutlineCurrent = {
                 fg = { from = "Error", attr = "fg", alter = -0.1 },
                 bg = "NONE",
+              },
+            },
+          },
+          ["tokyonight-day"] = {
+            {
+              OutlineDetails = {
+                fg = { from = "Comment", attr = "fg", alter = -0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineGuides = {
+                fg = { from = "Normal", attr = "bg", alter = -0.05 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineFoldMarker = {
+                fg = { from = "Normal", attr = "bg", alter = -0.2 },
+                bg = "NONE",
+              },
+            },
+            {
+              OutlineCurrent = {
+                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
+                bold = true,
               },
             },
           },
@@ -918,6 +944,20 @@ return {
             {
               EdgyTitle = {
                 fg = { from = "Keyword", attr = "fg" },
+                bg = { from = "EdgyWinBar" },
+                alter = 0.1,
+                bold = true,
+              },
+            },
+          },
+          ["tokyonight-day"] = {
+            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.54 } } },
+            { EdgyNormal = { bg = "NONE" } },
+            {
+              EdgyTitle = {
+                fg = { from = "Keyword", attr = "fg", alter = 0.7 },
                 bg = { from = "EdgyWinBar" },
                 alter = 0.1,
                 bold = true,

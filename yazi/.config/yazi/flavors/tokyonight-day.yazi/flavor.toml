@@ -5,10 +5,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#b8b5b2" }
+cwd = { fg = "#b4b4b8" }
 
 # Hovered
-hovered = { bg = "#e3ddf8" }
+hovered = { bg = "#d3d4d9" }
 preview_hovered = { underline = true }
 
 # Find
@@ -16,7 +16,7 @@ find_keyword = { fg = "#b8bb26", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#223249", bg = "#e7d2be" }
+marker_selected = { fg = "#283457", bg = "#283457" }
 marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
 marker_cut = { fg = "#fb4934", bg = "#fb4934" }
 
@@ -43,8 +43,8 @@ separator_close = ""
 separator_style = { fg = "#6b6461", bg = "#363230" }
 
 # Mode
-mode_normal = { fg = "#c8b1ec", bg = "#6e33ce", bold = true }
-mode_select = { fg = "#ffffff", bg = "#223249", bold = true }
+mode_normal = { fg = "#87afd7", bg = "#007197", bold = true }
+mode_select = { fg = "#87afd7", bg = "#283457", bold = true }
 mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 
 # Progress
@@ -93,7 +93,7 @@ hovered = { underline = true }
 # : }}}
 
 
-# :  {{{
+# : Which {{{
 
 [which]
 mask = { bg = "#3c3836" }
@@ -140,8 +140,8 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#3d2b5a" },
-  { name = "*/", fg = "#223d90" },
+  { name = "*", fg = "#3760bf" },
+  { name = "*/", fg = "#2e7de9" },
 ]
 
 # : }}}

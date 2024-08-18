@@ -82,7 +82,6 @@ keybinding:
     scrollDownMain-alt2: "<c-d>" # main panel scroll down
     scrollUpMain-alt1: "" # main panel scroll up
     scrollDownMain-alt1: "" # main panel scroll down
-    executeCustomCommand: ":"
     createRebaseOptionsMenu: "m"
     pushFiles: "P"
     pullFiles: "p"

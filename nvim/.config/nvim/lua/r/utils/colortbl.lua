@@ -29,6 +29,10 @@ if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
   separator = Highlight.tint(normal_bg, -0.1)
   mode_bg = Highlight.tint(statusline_bg, 0.48)
   statusline_fgc = Highlight.tint(statusline_fg, 0.3)
+
+  statuslinenc_bg = Highlight.tint(statuslinenc_bg, 0.08)
+
+  separator_fg_alt = Highlight.tint(separator_fg_alt, 0.7)
 end
 
 ---@class r.utils.colortbl

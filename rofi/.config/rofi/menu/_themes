@@ -214,6 +214,8 @@ set_tmux() {
 
     sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
+
+    sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$GET_YELLOW\"/g" "$_PATH_TMUX_THEMES"
   else
     dunstify "$_PATH_TMUX_THEMES not found"
   fi

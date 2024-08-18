@@ -229,7 +229,7 @@ function M.change_colors()
   local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.2)
+    statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
 
     lazygit_default_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
     lazygit_default_bg = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30

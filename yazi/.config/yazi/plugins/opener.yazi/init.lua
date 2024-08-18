@@ -39,9 +39,9 @@ return {
 			return fail(tostring(action) .. " not  open?", err)
 		end
 
-		local output, err = child:wait_with_output()
+		local output, errc = child:wait_with_output()
 		if not output then
-			return fail("No output! %s", err)
+			return fail("No output! %s", errc)
 		elseif not output.status.success and output.status.code ~= 130 then
 			return fail("`something went wrong %s", output.status.code)
 		end

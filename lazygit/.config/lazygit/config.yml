@@ -82,7 +82,6 @@ keybinding:
     scrollDownMain-alt2: "<c-d>" # main panel scroll down
     scrollUpMain-alt1: "" # main panel scroll up
     scrollDownMain-alt1: "" # main panel scroll down
-    executeCustomCommand: ":"
     createRebaseOptionsMenu: "m"
     pushFiles: "P"
     pullFiles: "p"
@@ -180,14 +179,14 @@ gui:
   commandLogSize: 8
   theme:
     activeBorderColor:
-      - "#6087cc"
+      - "#008c8c"
       - bold
     inactiveBorderColor:
-      - "#222222"
+      - "#2c2c2c"
     optionsTextColor:
-      - "#161616"
+      - "#1c1c1c"
     selectedLineBgColor:
-      - "#6087cc"
+      - "#008c8c"
     defaultFgColor:
       - "#d0d0d0"
     searchingActiveBorderColor:
