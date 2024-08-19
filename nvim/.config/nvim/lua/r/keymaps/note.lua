@@ -38,7 +38,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: find sitelink (curbuf)",
       },
-      ["<leader>fT"] = {
+      ["<Leader>fT"] = {
         function()
           RUtils.todocomments.search_global_note {
             title = "Todo Note Global",
@@ -47,7 +47,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: search todocomment global note [fzflua]",
       },
-      ["<leader>ft"] = {
+      ["<Leader>ft"] = {
         function()
           RUtils.todocomments.search_local {
             title = "Todo Note Curbuf",

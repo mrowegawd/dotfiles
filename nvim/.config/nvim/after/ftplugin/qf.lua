@@ -22,7 +22,7 @@ end, {
   desc = "Qf: open item",
 })
 
-keymap.set("n", "<leader>fq", function()
+keymap.set("n", "<Leader>fq", function()
   require("fzf-lua").quickfix {
     prompt = "  ",
     winopts = {
@@ -34,7 +34,7 @@ end, {
   desc = "Qf: select items [fzflua]",
 })
 
-keymap.set("n", "<leader>fg", function()
+keymap.set("n", "<Leader>fg", function()
   local path = require "fzf-lua.path"
   local qf_items = vim.fn.getqflist()
 
