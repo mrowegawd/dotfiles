@@ -392,7 +392,7 @@ local function picker(contents, actions)
         end
       end,
 
-      ["ctrl-a"] = function(selected, _)
+      ["ctrl-y"] = function(selected, _)
         local sel = selected[1]
         sel = vim.split(sel, " ")
         -- sel = vim.split(sel[1], " ")
@@ -462,7 +462,7 @@ local function picker(contents, actions)
         end,
       },
 
-      ["alt-q"] = function(selected, _)
+      ["ctrl-q"] = function(selected, _)
         local function check_tbl_element(tbl, element)
           for _, x in pairs(tbl) do
             if x["text"] == element then
@@ -528,7 +528,7 @@ local function picker(contents, actions)
     winopts = {
       title = format_prompt_strings(),
     },
-    fzf_opts = { ["--header"] = [[ctrl-t: filter by tag | ctrl-a: add tag | ctrl-r: reload | ctrl-g: grep filter]] },
+    fzf_opts = { ["--header"] = [[ctrl-t: filter by tag | ctrl-y: add tag | ctrl-r: reload | ctrl-g: grep filter]] },
     actions = actions,
   })
 end

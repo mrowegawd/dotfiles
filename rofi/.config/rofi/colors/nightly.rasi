@@ -1,16 +1,16 @@
 * {
 
-    background:                     #1c1c1c;
-    foreground:                     #1c1c1c;
-    background-alt:                 #1c1c1c;
-    border:               			    #5fafd7;
-    border-alt:               		  #d7af5f;
-    selected:               		    #af005f;
-    selected-alt:               		#008c8c;
-    urgent:                         #808080;
+    background:                     #103c48;
+    foreground:                     #103c48;
+    background-alt:                 #103c48;
+    border:               			    #4695f7;
+    border-alt:               		  #dbb32d;
+    selected:               		    #fa5750;
+    selected-alt:               		#bc9a30;
+    urgent:                         #f275be;
 
-    green:                          #5faf00;
-    red:                            #af005f;
-    blue:                           #5fafd7;
-    yellow:                         #d7af5f;
+    green:                          #75b938;
+    red:                            #fa5750;
+    blue:                           #4695f7;
+    yellow:                         #dbb32d;
 }

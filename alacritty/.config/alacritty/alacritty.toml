@@ -327,44 +327,32 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# TokyoNight Alacritty Colors
-# Default colors
 [colors.primary]
-background = '#e1e2e7'
-foreground = '#3760bf'
+foreground= "#adbcbc"
+background= "#103c48"
 
-#[colors.cursor]
-#cursor = '#3760bf'
-#text = '#e1e2e7'
+[colors.cursor]
+text = '0x21222c'
+cursor = '0xff0000'
 
-# Normal colors
 [colors.normal]
-black = '#b4b5b9'
-red = '#f52a65'
-green = '#587539'
-yellow = '#8c6c3e'
-blue = '#2e7de9'
-magenta = '#9854f1'
-cyan = '#007197'
-white = '#6172b0'
+black =   "#174956"
+red =     "#fa5750"
+green =   "#75b938"
+yellow =  "#dbb32d"
+blue =    "#4695f7"
+magenta = "#f275be"
+cyan =    "#41c7b9"
+white =   "#72898f"
 
-# Bright colors
+
 [colors.bright]
-black = '#a1a6c5'
-red = '#f52a65'
-green = '#587539'
-yellow = '#8c6c3e'
-blue = '#2e7de9'
-magenta = '#9854f1'
-cyan = '#007197'
-white = '#3760bf'
-
-# Indexed Colors
-[[colors.indexed_colors]]
-index = 16
-color = '#b15c00'
-
-[[colors.indexed_colors]]
-index = 17
-color = '#c64343'
+black =    "#325b66"
+red =      "#ff665c"
+green =    "#84c747"
+yellow=    "#ebc13d"
+blue =     "#58a3ff"
+magenta =  "#ff84cd"
+cyan =    "#53d6c7"
+white =   "#cad8d9"
 

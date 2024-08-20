@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/PaperColor"
+#include ".config/miscxrdb/xresource-theme/selenized"
 
 ! --------------
 ! XFT SETTINGS

@@ -1458,6 +1458,11 @@ local function colorscheme_overrides()
     ["selenized"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 0.8 }, italic = true } },
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.3 } } },
+
+      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
+
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -1504,6 +1509,33 @@ local function colorscheme_overrides()
         FzfLuaSel = {
           fg = { from = "PmenuSel", attr = "bg", alter = 0.2 },
           bg = { from = "PmenuSel", attr = "bg", alter = -0.2 },
+        },
+      },
+
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = 1.2 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = 1.2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = 1.2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
         },
       },
     },
