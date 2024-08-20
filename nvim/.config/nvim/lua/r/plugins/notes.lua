@@ -520,7 +520,10 @@ return {
 
       note_frontmatter_func = function(note)
         local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-        if note.metadata ~= nil and require("obsidian").util.table_length(note.metadata) > 0 then
+        -- if out.date == nil then
+        --   out.date = os.date "%Y-%m-%d %H:%M"
+        -- end
+        if note.metadata ~= nil and vim.tbl_isempty(note.metadata) then
           for k, v in pairs(note.metadata) do
             print(k, v)
             out[k] = v
@@ -544,6 +547,18 @@ return {
             return require("obsidian").util.toggle_checkbox()
           end,
           opts = { buffer = true },
+        },
+        ["gf"] = {
+          action = function()
+            return require("obsidian").util.gf_passthrough()
+          end,
+          opts = { noremap = false, expr = true, buffer = true },
+        },
+        ["<cr>"] = {
+          action = function()
+            return require("obsidian").util.smart_action()
+          end,
+          opts = { buffer = true, expr = true },
         },
       },
 

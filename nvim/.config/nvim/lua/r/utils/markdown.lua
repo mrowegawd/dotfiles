@@ -127,7 +127,7 @@ function M.follow_link(is_selection)
       local fzflua = require "fzf-lua"
       fzflua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
     else
-      if require("obsidian").util.cursor_on_markdown_link() then
+      if require("obsidian").util.cursor_on_markdown_link(nil, nil, true) then
         vim.cmd "ObsidianFollowLink"
       end
     end
@@ -141,9 +141,8 @@ function M.follow_link(is_selection)
     --   url = string.format("https://github.com/%s", url)
     if uri ~= "" then
       if vim.bo.filetype == "markdown" then
-        if require("obsidian").util.cursor_on_markdown_link() then
+        if require("obsidian").util.cursor_on_markdown_link(nil, nil, true) then
           vim.cmd "ObsidianFollowLink"
-          return
         end
       else
         url = url
