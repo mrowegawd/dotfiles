@@ -195,31 +195,30 @@ local data_title_out = {}
 
 local insert_tags = {}
 
-local function format_data_tags(match_data)
-  local line = string.gsub(match_data.lines.text, '"(%d+)"', "%1")
+local function format_data_tags(data_tag)
+  local line = string.gsub(data_tag.lines.text, '"(%d+)"', "%1")
   line = string.gsub(line, "-%s", "")
   return {
     tag = RUtils.cmd.strip_whitespace(line),
-    line_number = match_data.line_number,
-    path = match_data.path.text,
+    line_number = data_tag.line_number,
+    path = data_tag.path.text,
     title = "",
   }
 end
 
-local function format_tag_text(match_data)
-  local line = string.gsub(match_data.lines.text, '\\"', "")
-  -- local line = string.gsub(match_data.lines.text, '"(%d+)"', "%1")
+local function format_tag_text(data_tag)
+  local line = string.gsub(data_tag.lines.text, '\\"', "")
   line = string.gsub(line, "-%s", "") -- remove strip '- tags'
   return RUtils.cmd.strip_whitespace(line)
 end
 
-local function format_title_tag(match_data)
-  local line = string.gsub(match_data.lines.text, '\\"', "")
+local function format_title_tag(data_tag)
+  local line = string.gsub(data_tag.lines.text, '\\"', "")
   line = string.gsub(line, "#%s", "")
   return {
     title = RUtils.cmd.strip_whitespace(line),
-    line_number = match_data.line_number,
-    path = match_data.path.text,
+    line_number = data_tag.line_number,
+    path = data_tag.path.text,
   }
 end
 
@@ -406,7 +405,7 @@ local function picker(contents, actions)
 
       ["ctrl-t"] = function()
         if #insert_tags == 0 then
-          print "add tags first"
+          RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
           require("fzf-lua").actions.resume()
           return
         end
@@ -418,6 +417,50 @@ local function picker(contents, actions)
         insert_tags = {}
         M.find_note_by_tag()
       end,
+
+      -- https://github.com/ibhagwan/fzf-lua/discussions/1211
+      ["ctrl-g"] = {
+        prefix = "select-all",
+        fn = function(selected, _)
+          local check_tbl_element = function(tbl, path)
+            for _, x in pairs(tbl) do
+              if x.title == path then
+                return true
+              end
+            end
+            return false
+          end
+
+          local newtbl = {}
+          for _, sel in pairs(selected) do
+            local seltitle = vim.split(sel, "|")
+            for _, x in pairs(data_tags_table) do
+              if x.title == seltitle[2] then
+                if not check_tbl_element(newtbl, x.title) then
+                  newtbl[#newtbl + 1] = x
+                end
+              end
+            end
+          end
+
+          local cmdscs = {}
+          for _, y in pairs(newtbl) do
+            cmdscs[#cmdscs + 1] = y.path
+          end
+
+          local rg_optssc = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+            .. table.concat(cmdscs, " ")
+            .. " -e "
+
+          require("fzf-lua").live_grep {
+            -- debug = true,
+            rg_glob = false,
+            no_esc = true,
+            rg_opts = rg_optssc,
+            winopts = { title = RUtils.fzflua.format_title("Grep filter note", " ") },
+          }
+        end,
+      },
 
       ["alt-q"] = function(selected, _)
         local function check_tbl_element(tbl, element)
@@ -485,7 +528,7 @@ local function picker(contents, actions)
     winopts = {
       title = format_prompt_strings(),
     },
-    fzf_opts = { ["--header"] = [[Ctrl-t: filter by tag | Ctrl-a: add tag | Ctrl-r: reload | Ctrl-g: search by regex]] },
+    fzf_opts = { ["--header"] = [[ctrl-t: filter by tag | ctrl-a: add tag | ctrl-r: reload | ctrl-g: grep filter]] },
     actions = actions,
   })
 end

@@ -1456,6 +1456,7 @@ local function colorscheme_overrides()
       },
     },
     ["selenized"] = {
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = 0.8 }, italic = true } },
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       {
         CursorLineNr = {
