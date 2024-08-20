@@ -920,7 +920,7 @@ function M.insert_global_titles()
   }
 end
 
-local cursorInCodeBlock = function(cursor_row, reverse)
+local cursor_in_code_block = function(cursor_row, reverse)
   if reverse == nil or reverse == false then
     reverse = false
   else
@@ -945,7 +945,7 @@ function M.go_to_heading(anchor_text, reverse)
   -- so we'll start looking from here onwards and then circle back to the beginning
   local position = vim.api.nvim_win_get_cursor(0)
   local starting_row, continue = position[1], true
-  local in_fenced_code_block = cursorInCodeBlock(starting_row, reverse)
+  local in_fenced_code_block = cursor_in_code_block(starting_row, reverse)
   local row = (reverse and starting_row - 1) or starting_row + 1
   while continue do
     local line = (reverse and vim.api.nvim_buf_get_lines(0, row - 1, row, false))
