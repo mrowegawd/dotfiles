@@ -19,9 +19,9 @@ prepend_keymap = [
   { on = [
     "<c-o>",
   ], run = "plugin fzmark", desc = "Open fzmark" },
-  # { on = [
-  #   "<c-o>",
-  # ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
+  { on = [
+    "<c-e>",
+  ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
   { on = [
     "<a-g>",
   ], run = "plugin opener --args=lazygit", desc = "Open lazygit" },

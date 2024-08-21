@@ -53,12 +53,19 @@ mapkey("<Ctrl-u>", "#2Scroll up of half", () => {
   scrollBySmooth(window.innerHeight / 2, -2);
 });
 
-mapkey("gg", "#2Scroll to beginning", () => {
-  scrollToSmooth(0);
+mapkey("G", "#2Jump to the bottom of the page", () => {
+  scrollToSmooth(1000000000);
 });
-mapkey("G", "#2Scroll to ending", () => {
-  scrollToSmooth(document.body.scrollHeight);
+mapkey("gg", "#2Jump to the top of the page", () => {
+  scrollToSmooth(-1000000000);
 });
+
+// mapkey("gg", "Jump to the top of the page", function () {
+//   window.scrollTo(0, window.pageYOffset - 1000000000);
+// });
+// mapkey("G", "Jump to the bottom of the page", function () {
+//   window.scrollTo(0, window.pageYOffset + 1000000000);
+// });
 
 mapkey("k", "#2Scroll up of line", () => {
   scrollBySmooth(window.innerHeight / 10, -2);
@@ -74,9 +81,9 @@ mapkey("K", "#2Scroll up of line", () => {
 //   scrollBySmooth(window.innerHeight / 10, 3);
 // });
 
-mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
-  scrollBySmooth(window.innerHeight * 10, 3);
-});
+// mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
+//   scrollBySmooth(window.innerHeight * 10, 3);
+// });
 mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
   scrollBySmooth(window.innerHeight * 10, -3);
 });
