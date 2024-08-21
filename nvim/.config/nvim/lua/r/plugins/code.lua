@@ -644,8 +644,10 @@ return {
           ["<PageUp>"] = "ScrollOutputUp",
           ["<PageDown>"] = "ScrollOutputDown",
           ["P"] = "TogglePreview",
-          ["<c-p>"] = "PrevTask",
-          ["<c-n>"] = "NextTask",
+          ["<C-p>"] = "PrevTask",
+          ["<C-n>"] = "NextTask",
+          ["<C-h>"] = false, -- disabled because conflict with move_cursor window
+          ["<C-l>"] = false,
           ["dd"] = "Dispose",
           ["q"] = function()
             vim.cmd "OverseerClose"
@@ -655,8 +657,6 @@ return {
             local sb = sidebar.get_or_create()
             sb:run_action "restart"
           end,
-          -- ["<c-k>"] = false,
-          -- ["<c-j>"] = false,
         },
       },
       task_editor = {
@@ -666,19 +666,27 @@ return {
           i = {
             ["<Tab>"] = "Next",
             ["<S-Tab>"] = "Prev",
-            ["<c-n>"] = "Next",
-            ["<c-p>"] = "Prev",
+            ["<C-n>"] = "Next",
+            ["<C-p>"] = "Prev",
             ["<CR>"] = "NextOrSubmit",
             ["<C-s>"] = "Submit",
             ["<C-c>"] = "Cancel",
+            ["<C-k>"] = false,
+            ["<C-j>"] = false,
+            ["<C-h>"] = false,
+            ["<C-l>"] = false,
           },
           n = {
+            ["<CR>"] = "NextOrSubmit",
             ["<Tab>"] = "Next",
             ["<S-Tab>"] = "Prev",
-            ["<c-n>"] = "Next",
-            ["<c-p>"] = "Prev",
-            ["<CR>"] = "NextOrSubmit",
+            ["<C-n>"] = "Next",
+            ["<C-p>"] = "Prev",
             ["<C-s>"] = "Submit",
+            ["<C-k>"] = false,
+            ["<C-j>"] = false,
+            ["<C-h>"] = false,
+            ["<C-l>"] = false,
             ["q"] = "Cancel",
             ["?"] = "ShowHelp",
           },
