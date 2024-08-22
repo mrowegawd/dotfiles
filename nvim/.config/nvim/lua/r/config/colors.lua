@@ -1212,6 +1212,17 @@ local function colorscheme_overrides()
       },
     },
     ["oxocarbon"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
+      { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 4 },
