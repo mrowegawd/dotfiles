@@ -721,6 +721,7 @@ local general_overrides = function()
       ["@markup.raw.markdown_inline"] = {
         bg = { from = "Normal", attr = "bg", alter = -0.4 },
         fg = { from = "ErrorMsg", attr = "fg" },
+        reverse = false,
       },
     },
 
@@ -1468,7 +1469,8 @@ local function colorscheme_overrides()
       },
     },
     ["selenized"] = {
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = 0.8 }, italic = true } },
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = 1 }, italic = true } },
+      -- { ["@Comment"] = { fg = { from = "Comment", attr = "fg", alter = 0.5 }, italic = true } },
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.3 } } },
