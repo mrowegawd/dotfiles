@@ -190,7 +190,7 @@ super + shift + j
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
 
 # misc: call zathura (side by side)
-super + F6
+super + F8
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
 
 # misc: close/quit video record
