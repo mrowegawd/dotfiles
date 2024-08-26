@@ -686,6 +686,23 @@ return {
 
     opts = {
       templates = { "builtin", "user" },
+      actions = {
+        -- How to stop horizontal scroll??
+        -- relate issue https://github.com/stevearc/overseer.nvim/issues/207
+        ["open tab"] = {
+          desc = "Open this task in a new tab",
+          run = function(task)
+            local overseer_util = require "overseer.util"
+            local bufnr = task:get_bufnr()
+            if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+              vim.cmd.tabnew()
+              overseer_util.set_term_window_opts()
+              vim.api.nvim_win_set_buf(0, task:get_bufnr())
+              overseer_util.scroll_to_end(0)
+            end
+          end,
+        },
+      },
       component_aliases = {
         log = {
           {
