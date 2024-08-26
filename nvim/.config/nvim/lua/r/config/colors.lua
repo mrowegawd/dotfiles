@@ -574,6 +574,7 @@ local general_overrides = function()
     {
       FzfLuaPreviewTitle = {
         bg = { from = "Keyword", attr = "fg", alter = -0.1 },
+        fg = { from = "Normal", attr = "bg" },
       },
     },
 

@@ -16,10 +16,10 @@ end
 
 function M.format_title(str, icon, icon_hl)
   return {
-    { " ", "NormalFLoat" },
-    { (icon and icon .. " " or ""), icon_hl or "FzfLuaTitle" },
-    { str, "FzfLuaTitle" },
-    { " ", "NormalFLoat" },
+    { " ", "FzfLuaPreviewTitle" },
+    { (icon and icon .. " " or ""), icon_hl or "FzfLuaPreviewTitle" },
+    { str, "FzfLuaPreviewTitle" },
+    { " ", "FzfLuaPreviewTitle" },
   }
 end
 
