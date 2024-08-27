@@ -16,6 +16,11 @@ return {
     opts = {
       preset = "helix",
       defaults = {},
+      icons = {
+        breadcrumb = "  ", -- symbol used in the command line area that shows your active key combo
+        separator = "  ", -- symbol used between a key and it's label
+        mappings = false,
+      },
       plugins = {
         marks = true,
         registers = true,
@@ -36,7 +41,8 @@ return {
       spec = {
         {
           mode = { "n", "v" },
-          { "<Leader><tab>", group = "tabs" },
+          --{ "<Leader><tab>", group = "tabs" },
+          { "s", group = "tabs" },
           {
             "<leader>b",
             group = "buffer",
@@ -50,6 +56,7 @@ return {
           { "<Leader>g", group = "git" },
           { "<Leader>gf", group = "gitfzflua" },
           { "<Leader>gh", group = "hunks" },
+          { "<Leader>o", group = "linking" },
           { "<Leader>gu", group = "gittoggle" },
           { "<Leader>gv", group = "gitvisual" },
 
@@ -68,12 +75,12 @@ return {
       },
     },
     confi = function(_, opts)
+      Highlight.plugin("whichkey_hijackcol", {
+        { WhichKeyBorder = { bg = { from = "FzfLuaBorder", attr = "fg" } } },
+        { WhichKeyTitle = { bg = { from = "FzfLuaBorder", attr = "fg" } } },
+      })
       local wk = require "which-key"
       wk.setup(opts)
-
-      Highlight.plugin("whichkey_hijackcol", {
-        { WhichKeyBorder = { inherit = "FzfLuaBorder" } },
-      })
     end,
   },
 }

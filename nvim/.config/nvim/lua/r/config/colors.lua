@@ -5,7 +5,7 @@ local Highlight = require "r.settings.highlights"
 local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, 0.5)
 local dark_green = Highlight.tint(UIPallette.palette.dark_green, 0.5)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
-local dark_red_more = Highlight.tint(dark_red, -0.4)
+-- local dark_red_more = Highlight.tint(dark_red, -0.4)
 
 local general_overrides = function()
   Highlight.all {
@@ -634,15 +634,6 @@ local general_overrides = function()
     },
     { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
     { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
-
-    -- WHICH-KEY ==========================================================
-    {
-      WhichKeyBorder = {
-        fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-        bg = { from = "NormalFloat", attr = "bg" },
-      },
-    },
-    { WhichKey = { fg = dark_red_more } },
 
     -- NOICE ==============================================================
     { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = "NONE" } },
