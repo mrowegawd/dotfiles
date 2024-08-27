@@ -17,13 +17,15 @@ return {
     cron_notifier = function(tasks)
       for _, task in ipairs(tasks) do
         local subtitle = fmt("%s", task.title)
+        local date = task.time:to_string()
+        local time = vim.split(date, " ")
 
         if vim.fn.executable "dunstify" == 1 then
           vim.uv.spawn("dunstify", {
             args = {
               "-t",
               "8000",
-              fmt("%s", subtitle),
+              fmt("%s - %s", tostring(time[3]), subtitle),
               fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
               "-u",
               "normal",
