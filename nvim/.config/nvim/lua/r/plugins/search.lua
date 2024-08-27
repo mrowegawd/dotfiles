@@ -347,7 +347,7 @@ return {
           },
           status = {
             prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = { title = RUtils.fzflua.format_title("Git Status", "", "GitSignsAdd") },
+            winopts = { title = RUtils.fzflua.format_title("Git Status", "") },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               -- actions inherit from 'actions.files' and merge
@@ -370,7 +370,7 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = RUtils.fzflua.format_title("Repo Commits", "", "GitSignsAdd") },
+            winopts = { title = RUtils.fzflua.format_title("Repo Commits", "") },
             fzf_opts = {
               ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-h: hHEAD..hash | ctrl-x: hhistory]],
             },
@@ -428,7 +428,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "", "GitSignsAdd") },
+            winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "") },
             fzf_opts = {
               ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-h: hHead..head | ctrl-g: hgrep | ctrl-x: hhistory]],
             },
@@ -1602,7 +1602,7 @@ return {
           end
           vim.cmd "Trouble loclist toggle"
         end,
-        desc = "QF: open location list with [trouble]",
+        desc = "Qf: open location list with [trouble]",
       },
       {
         "<Leader>xq",
@@ -1613,7 +1613,7 @@ return {
           end
           vim.cmd "Trouble qflist toggle"
         end,
-        desc = "QF: open quickfix list with [trouble]",
+        desc = "Qf: open quickfix list with [trouble]",
       },
     },
     opts = function()

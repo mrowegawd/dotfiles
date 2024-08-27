@@ -56,6 +56,6 @@ vim.opt.list = false
 -- end
 
 -- Mappings
--- keymap.set({ "n", "i" }, "<F4>", run_tmux_pane, { buffer = true, desc = "Task: run tmux pane" })
--- keymap.set({ "n", "i" }, "<F4>", run_overseer, { buffer = true, desc = "Task: run overseer" })
--- keymap.set("n", "rf", run_toggleterm, { buffer = true, desc = "Task: run with toggleterm" })
+-- keymap.set({ "n", "i" }, "<F4>", run_tmux_pane, { buffer = true, desc = "Tasks: run tmux pane" })
+-- keymap.set({ "n", "i" }, "<F4>", run_overseer, { buffer = true, desc = "Tasks: run overseer" })
+-- keymap.set("n", "rf", run_toggleterm, { buffer = true, desc = "Tasks: run with toggleterm" })

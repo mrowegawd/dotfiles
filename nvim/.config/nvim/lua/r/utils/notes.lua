@@ -12,7 +12,7 @@ local function opts_fzf(title, maps)
   return {
     prompt = "   ",
     winopts = {
-      title = " " .. title .. " ",
+      title = RUtils.fzflua.format_title(title, "󰈙"),
     },
     winopts_fn = function()
       local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })

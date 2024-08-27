@@ -746,8 +746,7 @@ function M.find_local_titles()
       fullscreen = true,
       title = RUtils.fzflua.format_title(
         "Obsidian > Search Local Note Titles",
-        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code),
-        "GitSignsChange"
+        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)
       ),
     },
     actions = {

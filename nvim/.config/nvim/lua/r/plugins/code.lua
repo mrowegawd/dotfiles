@@ -672,21 +672,21 @@ return {
         function()
           return vim.cmd "OverseerToggle!"
         end,
-        desc = "Task: toggle [overseer]",
+        desc = "Tasks: toggle [overseer]",
       },
       {
         "rf",
         function()
           return vim.cmd "OverseerRun"
         end,
-        desc = "Task: run [overseer]",
+        desc = "Tasks: run [overseer]",
       },
       {
         "rd",
         function()
           return vim.cmd "OverseerDebugParser"
         end,
-        desc = "Task: run [overseer]",
+        desc = "Tasks: run [overseer]",
       },
     },
 
