@@ -33,7 +33,7 @@ return {
       },
     },
     dependencies = {
-      "hrsh7th/nvim-cmp",
+      "yioneko/nvim-cmp",
       "nvim-treesitter/nvim-treesitter",
       "lukas-reineke/indent-blankline.nvim",
       {

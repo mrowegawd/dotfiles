@@ -10,8 +10,10 @@ end
 return {
   -- NVIM-CMP
   {
-    "hrsh7th/nvim-cmp",
-    version = false, -- Last release is way too old
+    -- "hrsh7th/nvim-cmp",
+    -- version = false, -- Last release is way too old
+    "yioneko/nvim-cmp",
+    branch = "perf",
     event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
@@ -102,6 +104,10 @@ return {
         },
         experimental = {
           ghost_text = true,
+        },
+        performance = {
+          debounce = 0, -- default is 60ms
+          throttle = 0, -- default is 30ms
         },
         formatting = {
           fields = { "kind", "abbr", "menu" },
@@ -296,7 +302,7 @@ return {
         },
       },
       {
-        "hrsh7th/nvim-cmp",
+        "yioneko/nvim-cmp",
         dependencies = {
           "saadparwaiz1/cmp_luasnip",
         },
@@ -453,7 +459,7 @@ return {
     lazy = true,
   },
   {
-    "hrsh7th/nvim-cmp",
+    "yioneko/nvim-cmp",
     opts = function(_, opts)
       table.insert(opts.sources, { name = "lazydev", group_index = 0 })
     end,
