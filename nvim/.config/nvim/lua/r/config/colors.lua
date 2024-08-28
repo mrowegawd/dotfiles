@@ -1179,6 +1179,8 @@ local function colorscheme_overrides()
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
       { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
 
+      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
+
       {
         MyCodeUsage = {
           fg = { from = "Normal", attr = "bg", alter = 3 },
