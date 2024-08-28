@@ -1176,6 +1176,17 @@ local function colorscheme_overrides()
       },
     },
     ["sweetie"] = {
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
+      { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "Normal", attr = "bg", alter = 3 },
+          bg = { from = "Visual", attr = "bg", alter = 0.1 },
+          italic = true,
+        },
+      },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 4 },
