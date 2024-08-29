@@ -1176,6 +1176,15 @@ local function colorscheme_overrides()
       },
     },
     ["sweetie"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.67 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
       { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
 
