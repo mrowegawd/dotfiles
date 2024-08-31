@@ -1175,6 +1175,71 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["evangelion"] = {
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, bg = "NONE", italic = true, reverse = false } },
+      { ["@lsp.type.comment"] = { inherit = "Comment" } },
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      {
+        QuickFixLine = {
+          bg = { from = "CursorLine", attr = "bg", alter = 0.4 },
+          fg = { from = "CursorLine", attr = "bg", alter = 4 },
+          underline = false,
+        },
+      },
+      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
+      { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
+
+      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
+
+      { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", attr = "fg" } } },
+      { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "fg" } } },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "Directory", attr = "fg", alter = 0.5 },
+          bg = { from = "Visual", attr = "bg", alter = -0.8 },
+          italic = true,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+        },
+      },
+    },
     ["sweetie"] = {
       { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.67 } } },
       {

@@ -1,6 +1,19 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- EVANGELION
+  {
+    "xero/evangelion.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local evangelion_theme = { "evangelion" }
+      if vim.tbl_contains(evangelion_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- FLOW
   {
     "0xstepit/flow.nvim",
