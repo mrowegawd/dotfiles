@@ -98,13 +98,19 @@ function M.foldtext()
   return ret
 end
 
-function _G.custom_fold_text()
-  local line = vim.fn.getline(vim.v.foldstart)
+-- local function get()
+--   return vim.opt_local.number:get() or vim.opt_local.relativenumber:get()
+--   -- return vim.opt.number:get() or vim.opt_local.relativenumber:get()
+--   -- return vim.opt.number:get()
+-- end
 
-  local line_count = vim.v.foldend - vim.v.foldstart + 1
-
-  return " ⚡ " .. line .. ": " .. line_count .. " lines"
-end
+-- function _G.custom_fold_text()
+--   local line = vim.fn.getline(vim.v.foldstart)
+--
+--   local line_count = vim.v.foldend - vim.v.foldstart + 1
+--
+--   return " ⚡ " .. line .. ": " .. line_count .. " lines"
+-- end
 
 function M.statuscolumn()
   local win = vim.g.statusline_winid
@@ -155,6 +161,9 @@ function M.statuscolumn()
     -- Right: fold icon or git sign (only if file)
     -- components[3] = is_file and M.icon(fold or right) or ""
     components[3] = components[3] .. M.icon { text = "│", texthl = "WinSeparator", namespace = "icontext" } -- "│" "▏" "|"
+    -- if get() then
+    --   components[3] = components[3] .. M.icon { text = "│", texthl = "WinSeparator", namespace = "icontext" } -- "│" "▏" "|"
+    -- end
   end
 
   -- Numbers in Neovim are weird
