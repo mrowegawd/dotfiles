@@ -1,3 +1,5 @@
+local Highlight = require "r.settings.highlights"
+
 local is_render_markdown = true
 return {
   recommended = function()
@@ -137,6 +139,30 @@ return {
     },
     ft = { "markdown", "norg", "rmd", "org" },
     config = function(_, opts)
+      Highlight.plugin("rendermarkdownHi", {
+        theme = {
+          ["*"] = {
+            { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
+            { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
+          },
+          ["evangelion"] = {
+            {
+              RenderMarkdownCodeInline = {
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bold = true,
+              },
+            },
+          },
+        },
+      })
       require("render-markdown").setup(opts)
     end,
   },

@@ -1967,7 +1967,7 @@ local function colorscheme_overrides()
       { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },
       { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
 
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.2 }, italic = true } },
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 }, italic = true } },
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = -0.2 },
