@@ -803,6 +803,15 @@ local function colorscheme_overrides()
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
     },
     ["kanagawa"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
@@ -1521,6 +1530,15 @@ local function colorscheme_overrides()
       },
     },
     ["flow"] = {
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.3 } } },
+      {
+        MyCodeUsage = {
+          fg = { from = "Directory", attr = "fg", alter = 0.2 },
+          bg = { from = "Directory", attr = "fg", alter = -0.5 },
+          italic = true,
+        },
+      },
+
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 5 },
@@ -1548,7 +1566,6 @@ local function colorscheme_overrides()
     },
     ["selenized"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1 }, italic = true } },
-      -- { ["@Comment"] = { fg = { from = "Comment", attr = "fg", alter = 0.5 }, italic = true } },
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.3 } } },
@@ -1668,7 +1685,7 @@ local function colorscheme_overrides()
     },
     ["dayfox"] = {
       { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bg = "NONE" } },
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 }, italic = true } },
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
       { CursorLine = { bg = "#e3ddf8" } },
 
       { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },

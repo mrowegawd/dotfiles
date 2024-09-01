@@ -142,21 +142,75 @@ return {
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
-            { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
+            { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
           },
-          ["evangelion"] = {
+          ["farout"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["PaperColor"] = {
             {
               RenderMarkdownCodeInline = {
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
                 fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
                 bold = true,
               },
             },
             {
               ["@markup.raw.markdown_inline"] = {
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
                 fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                bold = true,
+              },
+            },
+          },
+          ["lackluster"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["selenized"] = {
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                bold = true,
+              },
+            },
+          },
+          ["melange"] = {
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                bold = true,
+              },
+            },
+          },
+          ["evangelion"] = {
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
+                bg = { from = "Normal", attr = "bg", alter = 0.3 },
                 bold = true,
               },
             },
