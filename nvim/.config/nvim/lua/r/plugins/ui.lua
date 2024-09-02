@@ -74,7 +74,6 @@ return {
         indent = {
           char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
           tab_char = "▏", -- "┊" -- │, ┊, │, ▏, ┆, ┊, , ┊
-          repeat_linebreak = false,
         },
         exclude = {
           filetypes = {
