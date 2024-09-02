@@ -1,7 +1,7 @@
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system { "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }
+  local out = vim.fn.system { "git", "clone", "--filter=blob:none", lazyrepo, lazypath }
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
@@ -16,7 +16,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
   lockfile = vim.fn.stdpath "data" .. "/lazy-lock.json",
-  concurrency = 20,
   spec = {
     { import = "r.plugins" },
     { import = "r.plugins.extras.ai" },
@@ -31,8 +30,14 @@ require("lazy").setup {
     missing = true,
   },
   ui = {
-    wrap = true, -- Wrap the lines in the ui
     border = "rounded",
+    size = { width = 0.8, height = 0.8 },
+    backdrop = 100,
+    wrap = false,
+  },
+  checker = { enabled = true }, --   automatically check for plugin updates
+  defaults = {
+    version = false, -- always use the latest git commit
   },
   performance = {
     reset_packpath = true, -- Reset the package path to improve startup time
