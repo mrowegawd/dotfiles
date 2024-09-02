@@ -6,5 +6,5 @@ tags
 .gitignore
 
 # folder
-#.venv
+.venv
 #.vim

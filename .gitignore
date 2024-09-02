@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+helix/.config/helix/runtime
+
 .session.vim
 
 connections.json
