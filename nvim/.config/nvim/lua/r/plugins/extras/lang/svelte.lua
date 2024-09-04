@@ -28,7 +28,7 @@ return {
             {
               "<leader>co",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "Organize Imports",
+              desc = "Action: organize imports",
             },
           },
           capabilities = {

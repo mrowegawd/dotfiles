@@ -39,12 +39,12 @@ function M.get()
       has = "documentHighlight",
       desc = "LSP: prev word reference",
     },
-    { "<Leader>cA", RUtils.lsp.action.source, desc = "LSP: source action", has = "codeAction" },
+    { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action", has = "codeAction" },
     {
       "<Leader>cR",
       RUtils.lsp.rename_file,
       has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
-      desc = "LSP: rename file",
+      desc = "Action: rename file",
     },
     {
       "gI",
@@ -65,14 +65,14 @@ function M.get()
       function()
         vim.lsp.codelens.run()
       end,
-      desc = "LSP: run codelens",
+      desc = "Action: run codelens",
     },
     {
       "<Leader>cC",
       function()
         vim.lsp.codelens.refresh()
       end,
-      desc = "LSP: codelens refresh",
+      desc = "Action: codelens refresh",
     },
     --  +----------------------------------------------------------+
     --  Diagnostics
@@ -165,11 +165,11 @@ function M.get()
       function()
         vim.cmd.RustLsp "codeAction"
       end,
-      desc = "LSP: code action [rustaceanvim]",
+      desc = "Action: code action [rustaceanvim]",
       buffer = vim.api.nvim_get_current_buf(),
     }
   else
-    M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "LSP: code action" }
+    M._keys[#M._keys + 1] = { "<Leader>ca", vim.lsp.buf.code_action, has = "codeAction", desc = "Action: code action" }
   end
 
   if RUtils.has "inc-rename.nvim" then
@@ -180,14 +180,14 @@ function M.get()
         return ":" .. inc_rename.config.cmd_name .. " " .. vim.fn.expand "<cword>"
       end,
       expr = true,
-      desc = "LSP: rename [inc-rename]",
+      desc = "Action: rename [inc-rename]",
       has = "rename",
     }
   elseif RUtils.has "lspsaga.nvim" then
     M._keys[#M._keys + 1] =
-      { "<Leader>cr", "<CMD> Lspsaga rename <CR>", desc = "LSP: rename [lspsaga]", has = "rename" }
+      { "<Leader>cr", "<CMD> Lspsaga rename <CR>", desc = "Action: rename [lspsaga]", has = "rename" }
   else
-    M._keys[#M._keys + 1] = { "<Leader>cr", vim.lsp.buf.rename, desc = "LSP: rename", has = "rename" }
+    M._keys[#M._keys + 1] = { "<Leader>cr", vim.lsp.buf.rename, desc = "Action: rename", has = "rename" }
   end
 
   if RUtils.has "glance.nvim" then

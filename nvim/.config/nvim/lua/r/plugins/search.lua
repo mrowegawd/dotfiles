@@ -1549,7 +1549,6 @@ return {
         "<cmd>Trouble lsp_references toggle focus=true<cr>",
         desc = "LSP: references [trouble]",
       },
-      -- { "<Leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "LSP: open symbols with trouble [trouble]" },
       -- {
       --   "gi",
       --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",

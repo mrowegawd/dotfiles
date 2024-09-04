@@ -18,7 +18,7 @@ return {
           require("conform").format { formatters = { "cbfmt" }, timeout_ms = 5000 }
         end,
         mode = { "n", "v" },
-        desc = "Format: cbfmt langs",
+        desc = "Action: cbfmt langs",
       },
     },
     opts = {

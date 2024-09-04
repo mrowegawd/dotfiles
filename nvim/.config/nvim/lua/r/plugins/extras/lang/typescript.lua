@@ -89,29 +89,29 @@ return {
             {
               "<Leader>co",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "LSP: organize imports [vtsls]",
+              desc = "Action: organize imports [vtsls]",
             },
             {
               "<Leader>cM",
               RUtils.lsp.action["source.addMissingImports.ts"],
-              desc = "LSP: add missing imports [vtsls]",
+              desc = "Action: add missing imports [vtsls]",
             },
             {
               "<Leader>cu",
               RUtils.lsp.action["source.removeUnused.ts"],
-              desc = "LSP: remove unused imports [vtsls]",
+              desc = "Action: remove unused imports [vtsls]",
             },
             {
               "<Leader>cD",
               RUtils.lsp.action["source.fixAll.ts"],
-              desc = "LSP: fix all diagnostics [vtsls]",
+              desc = "Action: fix all diagnostics [vtsls]",
             },
             {
               "<Leader>cV",
               function()
                 RUtils.lsp.execute { command = "typescript.selectTypeScriptVersion" }
               end,
-              desc = "LSP: select ts workspace version [vtsls]",
+              desc = "Action: select ts workspace version [vtsls]",
             },
           },
         },

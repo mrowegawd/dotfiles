@@ -27,7 +27,7 @@ return {
           require("conform").format { formatters = { "injected" }, timeout_ms = 3000 }
         end,
         mode = { "n", "v" },
-        desc = "LSP: format injected langs [conform]",
+        desc = "Action: format injected langs [conform]",
       },
     },
     init = function()

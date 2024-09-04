@@ -50,7 +50,7 @@ return {
             {
               "<leader>co",
               RUtils.lsp.action["source.organizeImports"],
-              desc = "Organize Imports",
+              desc = "Action: organize imports",
             },
           },
         },
@@ -118,7 +118,9 @@ return {
     },
     --  Call config for python files and load the cached venv automatically
     ft = "python",
-    keys = { { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Misc: select virtualenv [venv-selector]", ft = "python" } },
+    keys = {
+      { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Action: select virtualenv [venv-selector]", ft = "python" },
+    },
   },
   {
     "yioneko/nvim-cmp",
