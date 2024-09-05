@@ -35,7 +35,7 @@ require("lazy").setup {
     backdrop = 100,
     wrap = false,
   },
-  checker = { enabled = true }, --   automatically check for plugin updates
+  checker = { enabled = false }, --   automatically check for plugin updates
   defaults = {
     version = false, -- always use the latest git commit
   },
