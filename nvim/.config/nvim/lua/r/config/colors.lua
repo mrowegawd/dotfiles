@@ -751,6 +751,9 @@ local general_overrides = function()
     -- VGIT ========================================================
     { VGitLineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = 1 } } },
     { VGitComment = { bg = "NONE", fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
+
+    -- LAZYVIM =====================================================
+    { LazyNormal = { inherit = "NormalFloat" } },
   }
 end
 
