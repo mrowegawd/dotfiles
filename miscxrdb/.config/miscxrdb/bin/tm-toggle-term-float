@@ -1,5 +1,7 @@
 #!/bin/bash
 
+extra_size=20
+
 session_exists() {
   tmux has-session -t "=$1"
 }
@@ -8,12 +10,8 @@ open_float_term() {
   session="tmp_float_term"
 
   pane_width="$(tmux display -p '#{window_width}')"
-  pane_stengah="$(("$pane_width" / 2))"
-
-  width_pane="95"
-  if [ "$pane_stengah" == 100 ] && [ "$pane_stengah" -lt 150 ]; then
-    width_pane="60"
-  fi
+  width_pane2="$(("$pane_width" / 2))"
+  width_pane="$(("$width_pane2" / 2 + "$extra_size"))"
 
   if ! session_exists "$session"; then
     set -gF '@last_session_name' '#S'
