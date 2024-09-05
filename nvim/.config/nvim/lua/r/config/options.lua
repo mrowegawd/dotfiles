@@ -156,35 +156,7 @@ opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
 
--- c: auto-wrap comments using textwidth
--- r: auto-insert the current comment leader after hitting <Enter>
--- o: auto-insert the current comment leader after hitting 'o' or 'O'
--- q: allow formatting comments with 'gq'
--- n: recognize numbered lists
--- 1: don't break a line after a one-letter word
--- j: remove comment leader when it makes sense
--- this gets overwritten by ftplugins (:verb set fo)
--- we use autocmd to remove 'o' in '/lua/autocmd.lua'
--- [comments borrowed from tjdevries]
--- opt.formatoptions = "jtcqln" -- tcqj
-opt.formatoptions = {
-  ["1"] = false,
-  ["2"] = false, -- Use indent from 2nd line of a paragraph
-  a = false, -- Auto formatting is BAD.
-  q = true, -- continue comments with gq"
-  c = false, -- Auto-wrap comments using textwidth
-  r = false, -- Continue comments when pressing Enter
-  o = false, -- Automatically insert the current comment leader after hitting 'o' or 'O'
-  n = true, -- Recognize numbered lists
-  t = false, -- autowrap lines using text width value
-  j = true, -- remove a comment leader when joining lines.
-  -- Only break if the line was not longer than 'textwidth' when the insert
-  -- started and only at a white character that has been entered during the
-  -- current insert command.
-  l = false,
-  v = false,
-}
-
+opt.formatoptions = "jcroqlnt" -- tcqj
 opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
 opt.splitright = true -- ':vnew' ':vsplit' right of current
