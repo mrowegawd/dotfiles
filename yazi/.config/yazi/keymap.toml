@@ -12,10 +12,10 @@ prepend_keymap = [
   ], run = "plugin smart-enter", desc = "Open the selected files" },
   { on = [
     "<c-v>",
-  ], run = "plugin --sync smart-enter --args=vsplit", desc = "Open vsplit the selected file" },
+  ], run = "plugin smart-enter --args=vsplit", desc = "Open vsplit the selected item" },
   { on = [
     "<c-s>",
-  ], run = "plugin --sync smart-enter --args=split", desc = "Open split the selected file" },
+  ], run = "plugin smart-enter --args=split", desc = "Open split the selected item" },
   { on = [
     "<c-o>",
   ], run = "plugin fzmark", desc = "Open fzmark" },

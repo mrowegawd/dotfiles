@@ -123,7 +123,7 @@ return {
 					if action == "vsplit" then
 						open_mode = ":vsplit "
 					elseif action == "split" then
-						open_mode = ":split "
+						open_mode = ":sp "
 					end
 					local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
 					os.execute(command)
