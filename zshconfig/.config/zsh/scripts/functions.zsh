@@ -189,23 +189,28 @@ build-install(){
   fi
 }
 
-build-react() {
-  Green=$(tput setaf 2)        # Green
-  Color_Off=$(tput sgr0)       # Text Reset
+Green=$(tput setaf 2)        # Green
+Color_Off=$(tput sgr0)       # Text Reset
 
+build-python() {
   if [[ $1 == "" ]]; then
-    echo "You can use custom name project:\n 'build-react <name-project>'"
-    echo -e "\n\nCreate default name for your react: '${Green}react-starter${Color_Off}'\n\n"
+    echo "Define your project name:\n Ex: 'build-python <name-project>'"
   else
-    echo -e "\nName of your project name: '${Green}$1${Color_Off}'\n\n"
+    poetry new "$1"
+    cd "$1"
   fi
-  git clone https://github.com/mrowegawd/react-starter.git $@
+}
+
+
+build-react() {
+  if [[ $1 == "" ]]; then
+    echo "Define your project name:\n Ex: 'build-react <name-project>'"
+  else
+    git clone https://github.com/mrowegawd/react-starter.git $@
+  fi
 }
 
 build-go() {
-  Green=$(tput setaf 2)        # Green
-  Color_Off=$(tput sgr0)       # Text Reset
-
   if [[ $1 == "" ]]; then
     echo "Define your project name:\n Ex: 'build-go <name-project>'"
   else
