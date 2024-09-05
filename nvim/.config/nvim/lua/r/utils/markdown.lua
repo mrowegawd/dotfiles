@@ -862,6 +862,7 @@ function M.insert_local_titles()
     winopts = {
       title = RUtils.fzflua.format_title("Note: title curbuf", ""),
     },
+    rg_glob = false,
     no_esc = true,
     search = regex_title,
     formatter = false,
@@ -871,12 +872,11 @@ function M.insert_local_titles()
         local sel_str = RUtils.fzflua.__strip_str(sel)
 
         if sel_str then
-          local ss = string.match(sel_str, "([%w-_%s]+%.%w+)%:?")
-          local filename = string.match(ss, "([%w-_%s]+)")
-          local title_cur_note = string.match(sel_str, "(#[%w-_=`%s]+)")
+          local title_cur_note = string.match(sel_str, "(#[%w-_=:.,(){}`%s]+)")
+          title_cur_note = string.gsub(title_cur_note, "^#%s", "")
 
           vim.api.nvim_put({
-            "[[" .. filename .. title_cur_note .. "]]",
+            "[[#" .. title_cur_note .. "]]",
           }, "c", false, true)
         end
       end,

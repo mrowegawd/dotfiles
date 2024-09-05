@@ -9,7 +9,7 @@ function M.neorg_mappings_ft(bufnr)
         function()
           return RUtils.maim.insert()
         end,
-        "Note: insert image",
+        desc = "Note: insert image",
       },
       ["t<CR>"] = {
         function()
