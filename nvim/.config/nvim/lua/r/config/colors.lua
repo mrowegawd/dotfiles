@@ -32,7 +32,7 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.35 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.4 }, bg = "NONE" } },
     { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
@@ -1877,6 +1877,16 @@ local function colorscheme_overrides()
       },
     },
     ["nightfox"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
       {
         Comment = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
@@ -1912,6 +1922,16 @@ local function colorscheme_overrides()
       },
     },
     ["terafox"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
       {
         Comment = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
