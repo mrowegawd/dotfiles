@@ -33,7 +33,7 @@ size = 11
 # style = "Regular"
 
 [font.normal]
-family = "Monaspace Neon ExtraLight"
+family = "SF Mono"
 style = "Regular"
 
 [font.bold]
