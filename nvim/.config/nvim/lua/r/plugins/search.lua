@@ -1579,7 +1579,7 @@ return {
 
           vim.cmd [[Trouble diagnostics toggle]]
         end,
-        desc = "Diagnostic: workspaces diagnostic [trouble]",
+        desc = "Diagnostic: list workspaces diagnostic [trouble]",
       },
       {
         "<Leader>xx",
@@ -1590,7 +1590,7 @@ return {
           end
           vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
         end,
-        desc = "Diagnostic: document diagnostic [trouble]",
+        desc = "Diagnostic: list document diagnostic [trouble]",
       },
       {
         "<Leader>xl",
