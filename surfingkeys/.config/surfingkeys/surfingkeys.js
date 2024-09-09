@@ -172,8 +172,9 @@ mapkey("M", "Mute/unmute current tab", function () {
   RUNTIME("muteTab");
 });
 
-map("<Alt-h>", "E");
-map("<Alt-H>", "E");
+// map("<Alt-h>", "E");
+// map("<Alt-H>", "E");
+
 map("gh", "E");
 map("gl", "R");
 
@@ -266,8 +267,40 @@ addSearchAlias(
   },
 );
 
+// Alias for search on google
 addSearchAlias(
   "g",
+  "Google",
+  "https://www.google.com/search?q=",
+  "s",
+  "https://www.google.com/complete/search?client=chrome-omni&gs_ri=chrome-ext&oit=1&cp=1&pgcl=7&q=",
+  function (response) {
+    var res = eval(response.text);
+    Omnibar.listWords(res[1]);
+  },
+);
+
+// mapkey("p", "Open the clipboard in the current tab", function () {
+//   let data;
+//   Clipboard.read(function (response) {
+//     if (
+//       response.data.startsWith("http://") ||
+//       response.data.startsWith("https://") ||
+//       response.data.startsWith("www.")
+//     ) {
+//       data = response.data;
+//     } else {
+//       data = "https://www.google.com/search?q=" + response.data;
+//     }
+//     RUNTIME("openLink", {
+//       tab: { tabbed: false },
+//       url: data,
+//     });
+//   });
+// });
+
+addSearchAlias(
+  "G",
   "GitHub",
   "https://github.com/search?q=",
   "s",
