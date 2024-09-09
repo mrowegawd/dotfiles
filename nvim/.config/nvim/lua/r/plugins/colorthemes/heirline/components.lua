@@ -484,11 +484,11 @@ M.FilePath = {
       local parts = vim.split(path, "[\\/]")
       if #parts > 3 then
         -- parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
-        parts = { parts[1], "…", parts[#parts - 1] } -- remove the last one, to modified highlight filename
-      end
+        parts = { parts[1], "…", parts[#parts - 2] } -- remove the last one, to modified highlight filename
 
-      if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
-        return " " .. table.concat(parts, sep) .. sep
+        if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
+          return " " .. table.concat(parts, sep) .. sep
+        end
       end
 
       if #filename == 0 then
@@ -498,12 +498,14 @@ M.FilePath = {
       if not Conditions.is_not_active() then
         parts = vim.split(filename, "[\\/]")
         table.remove(parts, #parts)
-        if #parts == 0 then
-          return " " .. table.concat(parts, sep)
-        end
+        -- if #parts == 0 then
+        --   return " coy "
+        --   -- return " " .. table.concat(parts, sep)
+        -- end
         return " " .. table.concat(parts, sep) .. sep
       end
 
+      -- return statusline path untuk non active window
       return " " .. filename
     end,
     hl = function()
@@ -525,7 +527,7 @@ M.FilePath = {
       return ""
     end,
     hl = function()
-      return { fg = colors.base_fg, bold = true, italic = true }
+      return { fg = "white", bold = true, italic = true }
     end,
   },
 }

@@ -857,7 +857,7 @@ return {
         },
         diagnostics = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("Diagnostics", "", "DiagnosticError") },
+          winopts = { title = RUtils.fzflua.format_title("Diagnostics", "") },
           cwd_only = false,
           file_icons = true,
           git_icons = false,

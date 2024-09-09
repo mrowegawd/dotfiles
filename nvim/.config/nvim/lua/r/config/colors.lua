@@ -153,7 +153,7 @@ local general_overrides = function()
 
     {
       LspReferenceText = {
-        bg = { from = "LspReferenceText", attr = "bg", alter = -0.4 },
+        bg = { from = "LspReferenceText", attr = "bg" },
         fg = "NONE",
         underline = false,
         reverse = false,
@@ -162,7 +162,7 @@ local general_overrides = function()
     },
     {
       LspReferenceWrite = {
-        bg = { from = "LspReferenceWrite", attr = "bg", alter = -0.4 },
+        bg = { from = "LspReferenceWrite", attr = "bg", alter = -0.2 },
         underline = false,
         reverse = false,
         undercurl = false,
@@ -171,7 +171,7 @@ local general_overrides = function()
 
     {
       LspReferenceRead = {
-        bg = { from = "LspReferenceRead", attr = "bg", alter = -0.4 },
+        bg = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
         underline = false,
         reverse = false,
         undercurl = false,
@@ -342,6 +342,13 @@ local general_overrides = function()
     {
       markdownBold = {
         fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+        bold = true,
+      },
+    },
+    {
+      ["@markup.strong.markdown_inline"] = {
+        fg = { from = "Normal", attr = "fg", alter = 0.5 },
+        bg = { from = "Normal", attr = "bg", alter = 0.2 },
         bold = true,
       },
     },
@@ -807,6 +814,7 @@ local function colorscheme_overrides()
     },
     ["kanagawa"] = {
       { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
+
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -1209,7 +1217,7 @@ local function colorscheme_overrides()
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
-      { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
+      -- { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
 
       { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
@@ -1262,8 +1270,34 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = 0.8 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = 1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = 1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
-      { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
 
       { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
@@ -1533,6 +1567,15 @@ local function colorscheme_overrides()
       },
     },
     ["flow"] = {
+      {
+        QuickFixLine = {
+          bg = { from = "CursorLine", attr = "bg", alter = 0.4 },
+          fg = { from = "CursorLine", attr = "bg", alter = 4 },
+          underline = false,
+        },
+      },
+      { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
+
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.3 } } },
       {
         MyCodeUsage = {
@@ -1572,6 +1615,13 @@ local function colorscheme_overrides()
       { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.3 } } },
+
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+        },
+      },
 
       { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
@@ -1621,33 +1671,6 @@ local function colorscheme_overrides()
         FzfLuaSel = {
           fg = { from = "PmenuSel", attr = "bg", alter = 0.2 },
           bg = { from = "PmenuSel", attr = "bg", alter = -0.2 },
-        },
-      },
-
-      {
-        LspReferenceText = {
-          bg = { from = "LspReferenceText", attr = "bg", alter = 1.2 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "LspReferenceWrite", attr = "bg", alter = 1.2 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        LspReferenceRead = {
-          bg = { from = "LspReferenceRead", attr = "bg", alter = 1.2 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
         },
       },
     },
@@ -2236,6 +2259,41 @@ local function colorscheme_overrides()
     ["vscode_modern"] = {
       { CmpItemAbbrMatchFuzzy = { fg = { from = "GitSignsDelete", attr = "fg" } } },
       { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg" } } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = -0.4 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "Visual", attr = "bg", alter = 1 },
+          bg = { from = "Visual", attr = "bg", alter = -0.5 },
+          italic = true,
+        },
+      },
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 6 },
