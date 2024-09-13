@@ -16,6 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup {
   lockfile = vim.fn.stdpath "data" .. "/lazy-lock.json",
+  concurrency = 20,
   spec = {
     { import = "r.plugins" },
     { import = "r.plugins.extras.ai" },
