@@ -3844,35 +3844,6 @@ return {
     event = "LazyFile",
     dependencies = { "neovim/nvim-lspconfig" },
   },
-  -- LSP_SIGNATURE.NVIM (disabled)
-  {
-    -- lsp_signature.nvim [auto params help]
-    -- https://github.com/ray-x/lsp_signature.nvim
-    "ray-x/lsp_signature.nvim",
-    enabled = false,
-    event = "LazyFile",
-    opts = function()
-      -- Apply globals from 1-options.lua
-      local is_enabled = vim.g.lsp_signature_enabled
-      local round_borders = { border = "rounded" }
-      return {
-
-        -- Window mode
-        floating_window = is_enabled, -- Display it as floating window.
-        hi_parameter = "IncSearch", -- Color to highlight floating window.
-        handler_opts = round_borders, -- Window style
-
-        -- Hint mode
-        hint_enable = false, -- Display it as hint.
-        hint_prefix = "👈 ",
-
-        -- Additionally, you can use <space>ui to toggle inlay hints.
-      }
-    end,
-    config = function(_, opts)
-      require("lsp_signature").setup(opts)
-    end,
-  },
   -- BARBAR.NVIM
   {
     "romgrk/barbar.nvim",

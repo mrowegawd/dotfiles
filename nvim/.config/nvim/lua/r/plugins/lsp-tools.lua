@@ -141,27 +141,18 @@ return {
   -- LSP-SIGNATURE
   {
     "ray-x/lsp_signature.nvim",
-    event = "VeryLazy",
-    config = function()
+    event = "VeryLazy", -- "InsertEnter",
+    opts = {
+      bind = true,
+      handler_opts = {
+        border = "rounded",
+      },
+    },
+    config = function(_, opts)
       Highlight.plugin("lspSignatureUIcol", {
-        { LspSignatureActiveParameter = { bg = "NONE", fg = "#ED9455" } },
+        { LspSignatureActiveParameter = { fg = "white", bg = "#ED9455" } },
       })
-
-      RUtils.cmd.augroup("AttachLSPSignature", {
-        event = { "LspAttach" },
-        command = function(args)
-          local bufnr = args.buf
-          require("lsp_signature").on_attach({
-            hint_prefix = "● ",
-            -- floating_window = false, -- disable more content window
-            bind = true,
-            max_width = 80,
-            handler_opts = {
-              border = "single",
-            },
-          }, bufnr)
-        end,
-      })
+      require("lsp_signature").setup(opts)
     end,
   },
   -- GLANCE

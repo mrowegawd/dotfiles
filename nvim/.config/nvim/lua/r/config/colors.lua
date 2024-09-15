@@ -1663,16 +1663,28 @@ local function colorscheme_overrides()
         },
       },
       {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          bg = { from = "Normal", attr = "bg", alter = 0.1 },
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+      {
         Tabline = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
 
       {
         TablineSel = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
         },
       },
     },
