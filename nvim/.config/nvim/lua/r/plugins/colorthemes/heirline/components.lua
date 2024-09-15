@@ -3,6 +3,13 @@ local Col = RUtils.colortbl
 
 local M = {}
 
+local is_show_start = function()
+  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
+    return "gray"
+  end
+  return "white"
+end
+
 local Spacer = { provider = " " }
 
 local function rpad(child)
@@ -527,7 +534,7 @@ M.FilePath = {
       return ""
     end,
     hl = function()
-      return { fg = "white", bold = true, italic = true }
+      return { fg = is_show_start(), bold = true, italic = true }
     end,
   },
 }

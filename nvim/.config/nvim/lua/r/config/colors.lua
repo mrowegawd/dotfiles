@@ -1018,6 +1018,414 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["dawnfox"] = {
+      { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
+      { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },
+
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
+
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = -0.2 },
+          bg = { from = "Normal", attr = "bg", alter = -0.07 },
+          h,
+        },
+      },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+      { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 }, bg = "NONE" } },
+      { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+      {
+        TreesitterContextSeparator = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+          bg = { from = "ColorColumn", attr = "bg" },
+        },
+      },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.06 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+      {
+        QuickFixLine = {
+          bg = { from = "CursorLine", attr = "bg", alter = -0.05 },
+          fg = "NONE",
+          underline = false,
+        },
+      },
+      {
+        qfFileName = {
+          fg = { from = "Directory", attr = "fg", alter = -0.1 },
+          bg = "NONE",
+        },
+      },
+
+      {
+        CmpItemAbbr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.3 },
+          bg = "NONE",
+        },
+      },
+      {
+        Pmenu = {
+          fg = { from = "Normal", attr = "fg", alter = -0.1 },
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+        },
+      },
+      {
+        PmenuSel = {
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          bold = true,
+          reverse = false,
+        },
+      },
+
+      {
+        PmenuThumb = {
+          bg = { from = "Pmenu", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      { NormalFloat = { bg = { from = "Pmenu", attr = "bg" } } },
+      {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = -0.1 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+      {
+        FzfLuaBorder = {
+          fg = { from = "FloatBorder", attr = "fg" },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg" },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+
+      {
+        FzfLuaTitle = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "bg", alter = 0.3 },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
+
+      { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.04 } } },
+
+      { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = 0.5 } } },
+      { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
+
+      { FzfLuaPreviewNormal = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
+      {
+        FzfLuaPreviewBorder = {
+          fg = { from = "FzfLuaBorder", attr = "fg" },
+          bg = { from = "FzfluaBorder", attr = "bg" },
+        },
+      },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.45 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg" },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+    },
+    ["rose-pine"] = {
+      { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
+      { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },
+
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
+
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = -0.2 },
+          bg = { from = "Normal", attr = "bg", alter = -0.07 },
+          h,
+        },
+      },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 } } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+      { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 }, bg = "NONE" } },
+      { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
+      {
+        TreesitterContextSeparator = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+          bg = { from = "ColorColumn", attr = "bg" },
+        },
+      },
+      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.06 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+      {
+        QuickFixLine = {
+          bg = { from = "CursorLine", attr = "bg", alter = -0.05 },
+          fg = "NONE",
+          underline = false,
+        },
+      },
+      {
+        qfFileName = {
+          fg = { from = "Directory", attr = "fg", alter = -0.1 },
+          bg = "NONE",
+        },
+      },
+
+      {
+        CmpItemAbbr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.3 },
+          bg = "NONE",
+        },
+      },
+      {
+        Pmenu = {
+          fg = { from = "Normal", attr = "fg", alter = -0.1 },
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+        },
+      },
+      {
+        PmenuSel = {
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          bold = true,
+          reverse = false,
+        },
+      },
+
+      {
+        PmenuThumb = {
+          bg = { from = "Pmenu", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      { NormalFloat = { bg = { from = "Pmenu", attr = "bg" } } },
+      {
+        FloatBorder = {
+          fg = { from = "NormalFloat", attr = "bg", alter = -0.1 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
+
+      {
+        FzfLuaBorder = {
+          fg = { from = "FloatBorder", attr = "fg" },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        CmpItemIconWarningMsg = {
+          fg = { from = "WarningMsg", attr = "fg" },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+
+      {
+        CmpItemFloatBorder = {
+          fg = { from = "FloatBorder", attr = "fg" },
+          bg = { from = "Pmenu", attr = "bg" },
+        },
+      },
+
+      {
+        FzfLuaTitle = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          bg = { from = "NormalFloat", attr = "bg" },
+        },
+      },
+
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "bg", alter = 0.3 },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
+
+      { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.04 } } },
+
+      { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = 0.5 } } },
+      { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
+
+      { FzfLuaPreviewNormal = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
+      {
+        FzfLuaPreviewBorder = {
+          fg = { from = "FzfLuaBorder", attr = "fg" },
+          bg = { from = "FzfluaBorder", attr = "bg" },
+        },
+      },
+
+      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
+      -- prompt
+      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
+      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
+      -- Preview
+      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
+      -- Results
+      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
+      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
+      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.45 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg" },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+    },
     ["everforest"] = {
       { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
       { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },
@@ -1192,6 +1600,79 @@ local function colorscheme_overrides()
         TablineSel = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+    },
+    ["lavish"] = {
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, bg = "NONE", italic = true, reverse = false } },
+      { ["@lsp.type.comment"] = { inherit = "Comment" } },
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      {
+        QuickFixLine = {
+          bg = { from = "CursorLine", attr = "bg", alter = 0.4 },
+          fg = { from = "CursorLine", attr = "bg", alter = 4 },
+          underline = false,
+        },
+      },
+      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.2 } } },
+
+      {
+        ["RenderMarkdownCodeInline"] = {
+          fg = { from = "Directory", attr = "fg", alter = 0.5 },
+          bg = { from = "Directory", attr = "fg", alter = 0.4 },
+          bold = true,
+        },
+      },
+
+      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = 1.2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = 1.2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
     },

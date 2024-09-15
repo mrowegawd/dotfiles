@@ -1,6 +1,21 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  {
+    "ferdinandrau/lavish.nvim",
+    priority = 1000,
+    enabled = function()
+      local lavish_theme = { "lavish", "lavish-dark" }
+      if vim.tbl_contains(lavish_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      vim.opt.background = "dark"
+      require("lavish").apply()
+    end,
+  },
   -- EVANGELION
   {
     "xero/evangelion.nvim",
@@ -337,6 +352,20 @@ return {
         specs = {},
         groups = {},
       }
+    end,
+  },
+  -- ROSE-PINE
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local material_theme = { "rose-pine-moon", "rose-pine-main", "rose-pine-dawn" }
+      if vim.tbl_contains(material_theme, colorscheme) then
+        return true
+      end
+      return false
     end,
   },
   -- TOKYONIGHT
