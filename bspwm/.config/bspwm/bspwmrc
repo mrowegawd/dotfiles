@@ -70,6 +70,7 @@ bspc rule -a st:ncmpcpp state=floating
 # bspc rule -a URxvt:urxvt_keys_help state=floating center=true rectangle=500x300+0+0
 bspc rule -a "discord" desktop=$desk_doc follow=on
 bspc rule -a "Firefox-esr" desktop=$desk_web
+bspc rule -a "Zen Browser" desktop=$desk_web
 bspc rule -a "Navigator" desktop=$desk_web
 
 bspc rule -a Yad state=floating center=off
@@ -131,7 +132,9 @@ if [ ! -f $startup_lock_file ]; then
 
   pkill mpdris2-rs || "$HOME/.local/bin/mpdris2-rs" &
 
-  run_once firefox
+  # run_once firefox
+  run_once zen-browser
+
   [ -f ~/.lesskey ] && run_once lesskey
   # [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
   [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
