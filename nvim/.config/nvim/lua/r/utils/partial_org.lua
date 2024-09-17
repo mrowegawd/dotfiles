@@ -24,7 +24,7 @@ return {
           vim.uv.spawn("dunstify", {
             args = {
               "-t",
-              "8000",
+              "12000",
               fmt("%s - %s", tostring(time[3]), subtitle),
               fmt("--icon=%s/.config/miscxrdb/icons/bell.png", os.getenv "HOME"),
               "-u",
