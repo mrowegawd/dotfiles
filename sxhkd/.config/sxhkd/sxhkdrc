@@ -69,6 +69,9 @@ super + R
 super + {shift+h,shift+l}
 	      bspc desktop -f {prev,next}.local
 
+super + {shift+k,shift+j}
+	      bspc desktop -f {prev,next}.local
+
 # workspace: select workspace by number 1-9
 super + {_,shift + }{1-9,0}
         bspc {desktop -f,node -d} '^{1-9,10}'
@@ -141,21 +144,21 @@ super + shift + ctrl + p
 super + Return
         $TERMINAL
 
-# misc: open tools
-super + shift + t
-        zsh -c "$HOME/.config/rofi/menu/_tools"
-
 # misc: open rofi_menu
 super + u
         $HOME/.config/rofi/menu/menu
 
+# misc: close/kill current app/window
+super + End
+        xdo close
+
+# misc: open tools
+super + shift + t
+        zsh -c "$HOME/.config/rofi/menu/_tools"
+
 # misc: open ncmpcpp
 super + shift + n
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
-
-# misc: open empty float terminal
-# super + shift + o
-#         bspc rule -a \* -o state=floating $TERMINAL && $TERMINAL
 
 # misc: open note inbox (capture notes)
 super + shift + e
@@ -165,17 +168,13 @@ super + shift + e
 super + shift + p
         $HOME/.config/miscxrdb/bpswm/scripts/bookrmark-pass
 
-# misc: close/kill current app/window
-super + End
-        xdo close
-
 # misc: reload/restart sxhkd config
 super + shift + F8
         pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
 
-# misc: record video quit
+# misc: quit/kill record video
 super + shift + F9
-        pkill ffmpeg && dunstify "Record" "quit..."
+        pkill ffmpeg; dunstify "Record" "Quit ffmpeg.."
 
 # misc: reload/restart bspwm config
 super + shift + F12
@@ -192,10 +191,6 @@ super + shift + j
 # misc: call zathura (side by side)
 super + F8
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
-
-# misc: close/quit video record
-super + F9
-        pkill ffmpeg; dunstify "Record" "Quit.."
 
 # misc: open poweroff
 super + shift + q

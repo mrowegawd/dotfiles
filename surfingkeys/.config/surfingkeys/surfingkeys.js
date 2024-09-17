@@ -183,6 +183,10 @@ map("<Space>ff", "T");
 map("<Ctrl-Alt-l>", "R");
 map("<Ctrl-Alt-h>", "E");
 
+// Side tabbar zen-browser is left side sometimes make confuse
+map("<Ctrl-Alt-j>", "R");
+map("<Ctrl-Alt-k>", "E");
+
 mapkey("<Ctrl-o>", "backward", function () {
   history.go(-1);
 });
