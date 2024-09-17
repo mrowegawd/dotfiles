@@ -44,23 +44,6 @@
 // ========================
 // WORKSPACES
 // ========================
-.workspaces button {
-  padding: 0 15px 0 15px;
-  transition: all;
-  transition-duration: 0.4s;
-}
-
-.workspaces button:hover {
-  transition: all;
-  transition-duration: 0.6s;
-  background-color: $blue;
-  color: $bg;
-}
-
-.curr-workspace {
-  color: $bg;
-  background-color: $bg;
-}
 
 .left-menu-button {
   padding: 0px 12px;
@@ -70,45 +53,29 @@
 .ws {
   background-color: $black;
   border-radius: 20px;
-  padding: 1em 0.5em;
-  font-size: 1.2em;
+  // padding: 1em 0.5em;
+  font-size: 1.5em;
   font-family: $altfont;
-  //   .0,
-  //   .01,
-  //   .02,
-  //   .03,
-  //   .04,
-  //   .05,
-  //   .06,
-  //   .011,
-  //   .022,
-  //   .033,
-  //   .044,
-  //   .055,
-  //   .066 {
-  //     padding: 0.3em 0;
-  //   }
-  //   .0 {
-  //     color: $altbg;
-  //   }
-  //   .01,
-  //   .02,
-  //   .03,
-  //   .04,
-  //   .05,
-  //   .06 {
-  //     color: $altbg;
-  //   }
-  //   .011,
-  //   .022,
-  //   .033,
-  //   .044,
-  //   .055,
-  //   .066 {
-  //     color: $blue;
-  //   }
+
+  button {
+    margin: 0px 3px;
+    color: $blue;
+  }
+
+  .occupied {
+    color: $blue;
+  }
+
+  .focused {
+    color: $red;
+  }
+
+  .urgent {
+    color: $magenta;
+  }
+
   &:hover {
-    color: $altblue;
+    color: $fg2;
   }
 }
 
