@@ -88,14 +88,14 @@ set -g status-left " #[fg=$STATUSLINE_FG,bold] ❐ #S "
 
 set -g window-status-format "#[fg=$STATUSLINE_BG]\
 #{?window_zoomed_flag,#[fg=$STATUSLINE_BG],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_FG] [ZOOM], }#{?pane_synchronized,#[bg=yellow] [SYNC],}#[fg=$STATUSLINE_FG,bold] #I: #{b:pane_current_path} #[fg=$STATUSLINE_BG]\
+#{?window_zoomed_flag,#[fg=$STATUSLINE_FG] [ZOOM], }#{?pane_synchronized,#[bg=yellow] [SYNC],}#[fg=$STATUSLINE_FG,bold] #I: #{=30:#{b:pane_current_path}} #[fg=$STATUSLINE_BG]\
 #{?window_zoomed_flag,#[fg=$STATUSLINE_BG] ,}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG]\
 #{?window_zoomed_flag,#[fg=$STATUSLINE_BG] ,}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator"
 
 set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE] \
 #{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=$STATUSLINE_FG_ACTIVE,bg=$STATUSLINE_BG_ACTIVE,bold]\
 #{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],} #I: #{b:pane_current_path} \
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],} #I: #{=30:#{b:pane_current_path}} \
 #{?window_zoomed_flag,#[bg=$STATUSLINE_FG],}#[bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG_ACTIVE]#{?pane_synchronized,#[bg=yellow],}\
 #{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG]$left_slant_separator"
 
