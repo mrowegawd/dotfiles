@@ -385,7 +385,7 @@ set_eww() {
   sed -i -e "s/^\$altbg: .*/\$altbg: $GET_BLACK_ALT;/g" "$EWW_PATH/eww.scss"
 
   sed -i -e "s/^\$fg: .*/\$fg: $GET_FG;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$fg2: .*/\$fg2: $GET_FG;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$fg2: .*/\$fg2: $GET_YELLOW;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
 
   sed -i -e "s/^\$red: .*/\$red: $GET_RED;/g" "$EWW_PATH/eww.scss"

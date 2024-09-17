@@ -43,7 +43,7 @@ separator_close = ""
 separator_style = { fg = "#3c3836", bg = "#3c3836" }
 
 # Mode
-mode_normal = { fg = "#282828", bg = "#a67458", bold = true }
+mode_normal = { fg = "#282828", bg = "#b2719b", bold = true }
 mode_select = { fg = "#569cd6", bg = "#264f78", bold = true }
 mode_unset = { fg = "#282828", bg = "#d3869b", bold = true }
 
@@ -141,7 +141,9 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#cbcbc6" },
-  { name = "*/", fg = "#a67458" },
+  { name = "*/", fg = "#b2719b" },
+
 ]
+
 
 # : }}}
