@@ -14,7 +14,7 @@ return {
   -- INDENT-BLANKLINE
   {
     "lukas-reineke/indent-blankline.nvim",
-    event = "BufReadPre",
+    event = "VimEnter",
     main = "ibl",
     opts = function()
       Highlight.plugin("ibl_indentline", {
