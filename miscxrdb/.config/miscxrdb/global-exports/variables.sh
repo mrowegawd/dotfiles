@@ -16,11 +16,12 @@ else
   export EDITOR="$VISUAL"
 fi
 
-if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
-  export BROWSER="/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe"
-else
-  export BROWSER="firefox"
-fi
+# if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
+#   export BROWSER="/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe"
+# else
+#   # export BROWSER="firefox"
+#   export BROWSER="zen-browser"
+# fi
 
 # nnn -c
 # lf
