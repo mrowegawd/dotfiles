@@ -24,6 +24,16 @@ return {
       local resession = require "resession"
       resession.setup(opts)
 
+      vim.keymap.set("n", "<Leader>ss", resession.save, { desc = "Misc: session save [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>st", function()
+        resession.save_tab()
+      end, { desc = "Misc: session save tab [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>so", resession.load, { desc = "Misc: session load [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sl", function()
+        resession.load(nil, { reset = false })
+      end, { desc = "Misc: session load cwd [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Misc: session delete [resession.nvim]" })
+
       resession.add_hook("pre_save", function()
         visible_buffers = {}
         for _, winid in ipairs(vim.api.nvim_list_wins()) do
