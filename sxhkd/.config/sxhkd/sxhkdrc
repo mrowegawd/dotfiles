@@ -185,11 +185,11 @@ super + shift + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
 # misc: call firefox (side by side)
-super + shift + j
+super + F8
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
 
 # misc: call zathura (side by side)
-super + F8
+super + F9
         $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
 
 # misc: open poweroff

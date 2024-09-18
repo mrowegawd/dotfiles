@@ -327,32 +327,31 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
+# Colors (Horizon Dark)
+
+# Primary colors
 [colors.primary]
-foreground= "#adbcbc"
-background= "#103c48"
+background = '#1c1e26'
+foreground = '#e0e0e0'
 
-[colors.cursor]
-text = '0x21222c'
-cursor = '0xff0000'
-
+# Normal colors
 [colors.normal]
-black =   "#174956"
-red =     "#fa5750"
-green =   "#75b938"
-yellow =  "#dbb32d"
-blue =    "#4695f7"
-magenta = "#f275be"
-cyan =    "#41c7b9"
-white =   "#72898f"
+black = '#16161c'
+red = '#e95678'
+green = '#29d398'
+yellow = '#fab795'
+blue = '#26bbd9'
+magenta = '#ee64ac'
+cyan = '#59e1e3'
+white = '#d5d8da'
 
-
+# Bright colors
 [colors.bright]
-black =    "#325b66"
-red =      "#ff665c"
-green =    "#84c747"
-yellow=    "#ebc13d"
-blue =     "#58a3ff"
-magenta =  "#ff84cd"
-cyan =    "#53d6c7"
-white =   "#cad8d9"
-
+black = '#5b5858'
+red = '#ec6a88'
+green = '#3fdaa4'
+yellow = '#fbc3a7'
+blue = '#3fc4de'
+magenta = '#f075b5'
+cyan = '#6be4e6'
+white = '#d5d8da'
