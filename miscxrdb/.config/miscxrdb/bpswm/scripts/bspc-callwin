@@ -24,12 +24,14 @@ toggle_call_win() {
     if [ "$1" == "firefox" ]; then
       if [[ $(xdotool getwindowname "$VAR") == *"Mozilla"* ]] || [[ $(xdotool getwindowname "$VAR") == *"Zen Browser"* ]]; then
         make_call "$MARK_FILE" "$VAR" "$POSITION_WIN"
+        break
       fi
     fi
 
     if [ "$1" == "zathura" ]; then
       if [[ $(xdotool getwindowname "$VAR") == *".pdf"* ]]; then
         make_call "$MARK_FILE" "$VAR" "$POSITION_WIN"
+        break
       fi
     fi
   done
