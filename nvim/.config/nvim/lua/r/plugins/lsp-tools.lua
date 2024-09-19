@@ -150,7 +150,7 @@ return {
     },
     config = function(_, opts)
       Highlight.plugin("lspSignatureUIcol", {
-        { LspSignatureActiveParameter = { fg = "white", bg = "#ED9455" } },
+        { LspSignatureActiveParameter = { fg = "white", bg = "NONE", bold = true, underline = true } },
       })
       require("lsp_signature").setup(opts)
     end,
