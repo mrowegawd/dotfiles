@@ -163,7 +163,7 @@ function M.follow_link(is_selection)
       end
     end
 
-    vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "firefox", url }, { detach = true })
+    vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
   end
 end
 

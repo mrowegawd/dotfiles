@@ -146,7 +146,7 @@
 
   ;Open github repo on browser
   ;ex: git open [<remote>]
-  openurl = "!f() { URL=$(git config remote.\"${1:-origin}\".url); firefox \"${URL%%.git}\"; }; f"
+  openurl = "!f() { URL=$(git config remote.\"${1:-origin}\".url); xdg-open \"${URL%%.git}\"; }; f"
   checkurl = "!git remote -v"
 
   # Update submodule
