@@ -809,6 +809,7 @@ local function colorscheme_overrides()
           bold = true,
         },
       },
+      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
     },
