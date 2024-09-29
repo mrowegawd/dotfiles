@@ -474,9 +474,9 @@ keymap = [
   # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
   # ╎ Tasks                                                    ╎
   # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-  { on = [
-    "w",
-  ], run = "tasks_show", desc = "Show the tasks manager" },
+  # { on = [
+  #   "w",
+  # ], run = "tasks_show", desc = "Show the tasks manager" },
 
   # Goto
   { on = [
