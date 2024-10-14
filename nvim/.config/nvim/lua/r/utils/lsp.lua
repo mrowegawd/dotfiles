@@ -130,6 +130,7 @@ function M.rename_file()
   vim.ui.input({
     prompt = "New File Name: ",
     default = extra,
+    completion = "file",
   }, function(new)
     if not new or new == "" or new == extra then
       return
@@ -180,6 +181,15 @@ end
 function M.get_config(server)
   local configs = require "lspconfig.configs"
   return rawget(configs, server)
+end
+
+---@return {default_config:lspconfig.Config}
+function M.get_raw_config(server)
+  local ok, ret = pcall(require, "lspconfig.configs." .. server)
+  if ok then
+    return ret
+  end
+  return require("lspconfig.server_configurations." .. server)
 end
 
 function M.is_enabled(server)

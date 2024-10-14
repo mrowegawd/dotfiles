@@ -121,6 +121,7 @@ RUtils.cmd.augroup("SmartClose", {
     "checkhealth",
     "neotest-summary",
     "neotest-output-panel",
+    "gitsigns.blame",
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
