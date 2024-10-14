@@ -1,7 +1,4 @@
 return {
-  -- ts,js,react
-  -- "typescript-language-server", -- do not install this, let typescript-tools handle this,
-  --"js-debug-adapter",
   recommended = function()
     return RUtils.extras.wants {
       ft = {
@@ -22,6 +19,8 @@ return {
     opts = {
       -- make sure mason installs the server
       servers = {
+        --- @deprecated -- tsserver renamed to ts_ls but not yet released, so keep this for now
+        --- the proper approach is to check the nvim-lspconfig release version when it's released to determine the server name dynamically
         tsserver = {
           enabled = false,
         },

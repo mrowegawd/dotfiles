@@ -121,10 +121,20 @@ RUtils.cmd.augroup("SmartClose", {
     "checkhealth",
     "neotest-summary",
     "neotest-output-panel",
+    "gitsigns.blame",
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    vim.schedule(function()
+      vim.keymap.set("n", "q", function()
+        vim.cmd "close"
+        pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+      end, {
+        buffer = event.buf,
+        silent = true,
+        desc = "Quit buffer",
+      })
+    end)
   end,
 })
 
