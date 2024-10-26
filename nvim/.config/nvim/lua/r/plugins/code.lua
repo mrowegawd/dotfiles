@@ -10,10 +10,8 @@ end
 return {
   -- NVIM-CMP
   {
-    -- "hrsh7th/nvim-cmp",
-    -- version = false, -- Last release is way too old
-    "yioneko/nvim-cmp",
-    branch = "perf",
+    "hrsh7th/nvim-cmp",
+    version = false, -- Last release is way too old
     event = { "InsertEnter", "CmdLineEnter" },
     dependencies = {
       "davidsierradz/cmp-conventionalcommits",
