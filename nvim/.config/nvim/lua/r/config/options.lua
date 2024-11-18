@@ -4,6 +4,13 @@ g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
 g.dotfiles = env.DOTFILES or fn.expand "~/.dotfiles"
 g.os = loop.os_uname().sysname
 
+-- Hide deprecation warnings
+vim.g.deprecation_warnings = false
+
+-- if the completion engine supports the AI source,
+-- use that instead of inline suggestions
+vim.g.ai_cmp = true
+
 vim.g.open_command = g.os == "Darwin" and "open" or "xdg-open"
 vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
 vim.g.work_dir = g.projects_dir .. "/work"
@@ -16,6 +23,7 @@ opt.secure = true
 opt.modelines = 1 -- read a modeline at EOF
 opt.confirm = false -- Confirm to save changes before exiting modified buffer
 opt.completeopt = "menu,menuone,noinsert,noselect"
+opt.spelloptions:append "noplainbuffer"
 opt.errorbells = false -- disable error bells (no beep/flash)
 opt.visualbell = false
 opt.jumpoptions = "view" -- mapping jump c-i/o is suck, so I use `stack` mode (agar level insane berkurang diotak)
@@ -26,6 +34,7 @@ opt.fileformats = { "unix", "mac", "dos" }
 -- only set clipboard if not in ssh, to make sure the OSC 52
 -- integration works automatically. Requires Neovim >= 0.10.0
 opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+
 -- local plat = require "r.utils.platform"
 -- if plat.is_mac then
 --
@@ -80,7 +89,7 @@ opt.cmdheight = 0 -- cmdline height: 0 1 2
 opt.laststatus = 2 -- 2 = always show status line (filename, etc)
 opt.textwidth = 80 -- max inserted text width for paste operations
 opt.linespace = 0 -- font spacing
-opt.ruler = true -- show line,col at the cursor pos
+opt.ruler = false -- disable default ruler, 'ruler' is -> show line,col at the cursor pos
 opt.signcolumn = "yes:1" -- Always show the sign column
 opt.number = true -- show absolute line no. at the cursor pos
 opt.relativenumber = false -- otherwise, show relative numbers in the ruler

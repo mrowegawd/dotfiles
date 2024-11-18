@@ -31,6 +31,7 @@ return {
 
       local cmp = require "cmp"
       local defaults = require "cmp.config.default"()
+      local auto_select = true
 
       local function get_lsp_completion_context(completion, source)
         local ok, source_name = pcall(function()
@@ -51,8 +52,12 @@ return {
           return completion.detail
         end
       end
+
       return {
-        auto_brackets = { "lua" }, -- Configure any filetype to auto add brackets
+        auto_brackets = {}, -- Configure any filetype to auto add brackets
+        completion = {
+          completeopt = "menu,menuone,noinsert" .. (auto_select and "" or ",noselect"),
+        },
         enabled = function()
           local disabled = false
           disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
@@ -92,7 +97,6 @@ return {
             },
           },
         },
-        completion = { completeopt = "menu,noinsert,noselect" },
         duplicates = {
           nvim_lsp = 1,
           luasnip = 1,
@@ -101,7 +105,10 @@ return {
           path = 1,
         },
         experimental = {
-          ghost_text = true,
+          -- only show ghost text when we show ai completions
+          ghost_text = vim.g.ai_cmp and {
+            hl_group = "CmpGhostText",
+          } or false,
         },
         performance = {
           debounce = 0, -- default is 60ms
@@ -271,7 +278,8 @@ return {
   -- LUASNIP
   {
     "L3MON4D3/LuaSnip",
-    event = "VeryLazy",
+    -- enabled = false,
+    -- lazy = true,
     build = (not RUtils.is_win())
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
       or nil,
@@ -300,7 +308,7 @@ return {
         },
       },
       {
-        "yioneko/nvim-cmp",
+        "hrsh7th/nvim-cmp",
         dependencies = {
           "saadparwaiz1/cmp_luasnip",
         },
@@ -457,7 +465,8 @@ return {
     lazy = true,
   },
   {
-    "yioneko/nvim-cmp",
+    "hrsh7th/nvim-cmp",
+    optional = true,
     opts = function(_, opts)
       table.insert(opts.sources, { name = "lazydev", group_index = 0 })
     end,
@@ -486,7 +495,6 @@ return {
     "folke/ts-comments.nvim",
     event = "VeryLazy",
     opts = true,
-    enabled = vim.fn.has "nvim-0.10" == 1,
   },
   -- SCRATCH
   {

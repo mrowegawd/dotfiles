@@ -58,7 +58,7 @@ return {
     },
   },
   {
-    "yioneko/nvim-cmp",
+    "hrsh7th/nvim-cmp",
     dependencies = {
       { "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
     },
