@@ -1,7 +1,7 @@
 -- Taken from and credit: https://github.com/wincent/wincent
----@class r.utils.windowdim
 local api, wo = vim.api, vim.wo
 
+---@class r.utils.windowdim
 local autocmds = {}
 
 local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ",")
@@ -34,16 +34,16 @@ local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ","
 --   "SignColumn:ColorColumn",
 -- }, ",")
 
-local winhighlight_blurred = table.concat({
-  "CursorLineNr:LineNr",
-  "EndOfBuffer:ColorColumn",
-  -- "IncSearch:ColorColumn",
-  "Normal:ColorColumn",
-  "NormalNC:ColorColumn",
-  "SignColumn:ColorColumn",
-  "WinBar:ColorColumn",
-  "NormalFloat:ColorColumn",
-}, ",")
+-- local winhighlight_blurred = table.concat({
+--   "CursorLineNr:LineNr",
+--   "EndOfBuffer:ColorColumn",
+--   -- "IncSearch:ColorColumn",
+--   "Normal:ColorColumn",
+--   "NormalNC:ColorColumn",
+--   "SignColumn:ColorColumn",
+--   "WinBar:ColorColumn",
+--   "NormalFloat:ColorColumn",
+-- }, ",")
 
 -- Jangan bikin ft ini effect windowdim
 autocmds.winhighlight_filetype_blacklist = {
@@ -120,12 +120,16 @@ autocmds.number_blacklist = {
   ["BufTerm"] = false,
 }
 
+autocmds.ignore_cursorline = {
+  ["Outline"] = true,
+}
+
 autocmds.cursorline_blacklist = {
   ["CommandTMatchListing"] = true,
   ["CommandTPrompt"] = true,
   ["CommandTTitle"] = true,
   ["NvimTree"] = true,
-  ["Outline"] = true,
+  ["Outline"] = false,
   ["TelescopePrompt"] = true,
   ["alpha"] = true,
   ["qf"] = true,
@@ -194,16 +198,16 @@ local focus_window = function()
   end
 end
 
-local blur_window = function()
-  local filetype, _ = RUtils.buf.get_bo_buft()
-
-  if
-    filetype == ""
-    or autocmds.winhighlight_filetype_blacklist[filetype] ~= true and api.nvim_win_get_config(0).relative ~= "win"
-  then
-    wo.winhighlight = winhighlight_blurred
-  end
-end
+-- local blur_window = function()
+--   local filetype, _ = RUtils.buf.get_bo_buft()
+--
+--   if
+--     filetype == ""
+--     or autocmds.winhighlight_filetype_blacklist[filetype] ~= true and api.nvim_win_get_config(0).relative ~= "win"
+--   then
+--     wo.winhighlight = winhighlight_blurred
+--   end
+-- end
 
 -- http://vim.wikia.com/wiki/Make_views_automatic
 -- local mkview = function()
@@ -235,7 +239,12 @@ end
 
 local set_cursorline = function(active)
   local filetype, _ = RUtils.buf.get_bo_buft()
-  if autocmds.cursorline_blacklist[filetype] ~= true then
+  if autocmds.ignore_cursorline[filetype] ~= false then
+    return
+  end
+
+  -- blur_window()
+  if autocmds.cursorline_blacklist[filetype] ~= true or autocmds.cursorline_blacklist_buftype[filetype] ~= true then
     -- check jika window is floating, like TelescopePrompt
     if api.nvim_win_get_config(0).relative ~= "" then
       wo.cursorline = false
@@ -251,12 +260,10 @@ end
 
 autocmds.focus_gained = function()
   set_cursorline(true)
-  -- focus_window()
 end
 
 autocmds.focus_lost = function()
   set_cursorline(true)
-  -- blur_window()
 end
 
 autocmds.win_enter = function()

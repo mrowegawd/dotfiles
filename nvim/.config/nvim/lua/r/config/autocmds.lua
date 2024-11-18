@@ -104,37 +104,41 @@ RUtils.cmd.augroup("DisableJsonConceal", {
 RUtils.cmd.augroup("SmartClose", {
   event = { "FileType" },
   pattern = {
+    "DressingSelect",
     "PlenaryTestPopup",
+    "checkhealth",
+    "filetree",
+    "gitsigns.blame",
     "help",
     "lspinfo",
     "man",
+    "neotest-output",
+    "neotest-output-panel",
+    "neotest-summary",
+    "noice",
     "notify",
-    "DressingSelect",
-    "filetree",
     "qf",
     "query",
-    "noice",
+    "snacks_notif",
     "spectre_panel",
     "startuptime",
     "tsplayground",
-    "neotest-output",
-    "checkhealth",
-    "neotest-summary",
-    "neotest-output-panel",
-    "gitsigns.blame",
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.schedule(function()
-      vim.keymap.set("n", "q", function()
-        vim.cmd "close"
-        pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
-      end, {
-        buffer = event.buf,
-        silent = true,
-        desc = "Quit buffer",
-      })
-    end)
+
+    if vim.api.nvim_win_is_valid(event.buf) then
+      vim.schedule(function()
+        vim.keymap.set("n", "q", function()
+          vim.cmd "close"
+          pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+        end, {
+          buffer = event.buf,
+          silent = true,
+          desc = "Quit buffer",
+        })
+      end)
+    end
   end,
 })
 
@@ -209,7 +213,9 @@ RUtils.cmd.augroup(
         if
           vim.tbl_contains({ "terminal", "nofile" }, vim.bo.buftype)
           or vim.tbl_contains(
-            { "gitcommit", "OverseerList", "grug-far", "DiffviewFileHistory", "DiffviewFiles" },
+            -- { "gitcommit", "OverseerList", "grug-far", "DiffviewFileHistory", "DiffviewFiles" },
+            -- { "gitcommit", "OverseerList", "grug-far", "DiffviewFiles" },
+            { "gitcommit", "OverseerList", "grug-far" },
             vim.bo.filetype
           )
         then
