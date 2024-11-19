@@ -1358,20 +1358,34 @@ return {
         desc = "Misc: open grug (visual) [grugfar]",
       },
     },
-    opts = {
-      keymaps = {
-        replace = { n = "<c-c>" },
-        qflist = { n = "<c-q>" },
-        syncLocations = { n = "<Localleader>s" },
-        syncLine = { n = "<Localleader>l" },
-        close = { n = "q" },
-        historyOpen = { n = "<Leader>h" },
-        historyAdd = { n = "<Leader>A" },
-        refresh = { n = "R" },
-        gotoLocation = { n = "<enter>" },
-        pickHistoryEntry = { n = "<enter>" },
-      },
-    },
+    opts = function()
+      local norm = Highlight.get("Directory", "fg")
+      local bg = Highlight.tint(norm, -0.6)
+      local fg = Highlight.tint(norm, 0.5)
+      Highlight.plugin("grugfarHiCo", {
+        {
+          GrugFarResultsPath = {
+            bg = bg,
+            fg = fg,
+            bold = true,
+          },
+        },
+      })
+      return {
+        keymaps = {
+          replace = { n = "<c-c>" },
+          qflist = { n = "<c-q>" },
+          syncLocations = { n = "<Localleader>s" },
+          syncLine = { n = "<Localleader>l" },
+          close = { n = "q" },
+          historyOpen = { n = "<Leader>h" },
+          historyAdd = { n = "<Leader>A" },
+          refresh = { n = "R" },
+          gotoLocation = { n = "<enter>" },
+          pickHistoryEntry = { n = "<enter>" },
+        },
+      }
+    end,
   },
   -- TODOCOMMENTS
   {
