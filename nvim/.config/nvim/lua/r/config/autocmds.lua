@@ -211,13 +211,8 @@ RUtils.cmd.augroup(
     command = function()
       vim.defer_fn(function()
         if
-          vim.tbl_contains({ "terminal", "nofile" }, vim.bo.buftype)
-          or vim.tbl_contains(
-            -- { "gitcommit", "OverseerList", "grug-far", "DiffviewFileHistory", "DiffviewFiles" },
-            -- { "gitcommit", "OverseerList", "grug-far", "DiffviewFiles" },
-            { "gitcommit", "OverseerList", "grug-far" },
-            vim.bo.filetype
-          )
+          vim.tbl_contains({ "terminal" }, vim.bo.buftype)
+          or vim.tbl_contains({ "gitcommit", "OverseerList" }, vim.bo.filetype)
         then
           vim.opt_local.cursorline = false
           vim.opt_local.signcolumn = "no"
