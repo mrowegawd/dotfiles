@@ -6,6 +6,9 @@ local have_cmake = vim.fn.executable "cmake" == 1
 local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 
+local telescope_toggle_fullscreen = true
+local telescope_layout_strategy_height = 0
+
 return {
   -- FLASH.NVIM
   {
@@ -1166,21 +1169,11 @@ return {
             "^site-packages/",
             "%.yarn/.*",
           },
-          -- path_display = function(opts, path)
-          --     local tail = require("telescope.utils").path_tail(path)
-          --     return string.format("%s (%s)", tail, path)
-          -- end,
-          -- path_display = "smart",
-          -- sorting_strategy = "descending",
           scroll_strategy = "cycle",
-          -- layout_strategy = "flex",
-          -- layout_config = {
-          --   horizontal = { preview_width = 0.55 },
-          -- },
           sorting_strategy = "ascending",
           theme = "ivy",
           layout_config = {
-            height = 35,
+            -- height = 35,
             horizontal = { preview_width = 0.55 },
           },
           layout_strategy = "bottom_pane",
@@ -1219,6 +1212,27 @@ return {
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
 
               ["<F4>"] = layout_actions.cycle_layout_next,
+
+              ["<F3>"] = function(prompt_bufnr)
+                local action_state = require "telescope.actions.state"
+                local picker = action_state.get_current_picker(prompt_bufnr)
+                picker.layout_config = picker.layout_config or {}
+                picker.layout_config[picker.layout_strategy] = picker.layout_config[picker.layout_strategy] or {}
+
+                if telescope_layout_strategy_height == 0 then
+                  telescope_layout_strategy_height = picker.layout_config[picker.layout_strategy].height
+                end
+
+                if telescope_toggle_fullscreen then
+                  picker.layout_config[picker.layout_strategy].height = 90
+                  telescope_toggle_fullscreen = false
+                else
+                  picker.layout_config[picker.layout_strategy].height = telescope_layout_strategy_height
+                  telescope_toggle_fullscreen = true
+                end
+
+                picker:full_layout_update()
+              end,
 
               ["<C-j>"] = actions.move_selection_next,
               ["<C-k>"] = actions.move_selection_previous,
