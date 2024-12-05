@@ -45,6 +45,13 @@ RUtils.cmd.augroup("WrapFt", {
   command = function()
     vim.opt_local.wrap = true
   end,
+}, {
+  event = { "FileType" },
+  pattern = { "undotree" },
+  command = function()
+    vim.keymap.set("n", "<c-n>", "<Plug>UndotreePreviousState", { buffer = true })
+    vim.keymap.set("n", "<c-p>", "<Plug>UndotreeNextState", { buffer = true })
+  end,
 })
 
 RUtils.cmd.augroup("LargeFileSettings", {

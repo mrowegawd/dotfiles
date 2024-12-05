@@ -407,3 +407,9 @@ vim.g.lightspeed_no_default_keymaps = true
 
 -- Fix markdown indentation settings
 vim.g.markdown_recommended_style = 0
+
+-- plugin: mbbill/undotree
+vim.g.undotree_WindowLayout = 2
+-- vim.g.undotree_HighlightChangedText = 0
+vim.g.undotree_SetFocusWhenToggle = 1
+vim.g.undotree_DiffCommand = "diff -u"

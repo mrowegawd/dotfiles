@@ -14,17 +14,16 @@ return {
     config = true,
   },
   -- TABULARIZE
-  { -- tabularize lines of code
-    "godlygeek/tabular",
+  {
+    "godlygeek/tabular", -- tabularize lines of code
     cmd = "Tabularize",
   },
   -- UNDOTREE
   {
-    "jiaoshijie/undotree",
-    dependencies = "nvim-lua/plenary.nvim",
-    config = true,
-    keys = { -- load the plugin only when using it's keybinding:
-      { "<Leader>uu", "<cmd>lua require('undotree').toggle()<cr>", desc = "Toggle: undo tree [undotree]" },
+    "mbbill/undotree",
+    cmd = "UndotreeToggle",
+    keys = {
+      { "<Leader>uu", ":UndotreeToggle<cr>", desc = "Toggle: undotree [undotree]" },
     },
   },
   -- COMMENT-BOX
@@ -88,7 +87,6 @@ return {
   -- SG.NVIM
   {
     "sourcegraph/sg.nvim",
-    enabled = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = { "SourcegraphSearch", "SourcegraphLogin" },
     -- You must do this first before using it:
