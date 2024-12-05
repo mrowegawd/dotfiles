@@ -289,7 +289,7 @@ return {
         function()
           require("scissors").editSnippet()
         end,
-        desc = "edit snippet [nvim-scissors]",
+        desc = "Misc: edit snippet [nvim-scissors]",
       },
       {
         "<Leader>fN",
@@ -297,7 +297,7 @@ return {
           require("scissors").addNewSnippet()
         end,
         mode = { "n", "v" },
-        desc = "add snippet [nvim-scissors]",
+        desc = "Misc: add snippet [nvim-scissors]",
       },
     },
     dependencies = {

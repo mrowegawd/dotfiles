@@ -97,13 +97,6 @@ return {
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = function()
       Highlight.plugin("octo_hijackcol", {
-        -- {
-        --   OctoNormal = {
-        --     -- fg = { from = "Normal", attr = "bg", alter = 9 },
-        --     bg = { from = "Normal", attr = "bg", alter = 1.5 },
-        --   },
-        -- },
-        -- { OctoEditable = { bg = { from = "ColorColumn" } } },
         {
           OctoBubble = {
             bg = { from = "Keyword", attr = "fg", alter = -0.3 },
@@ -111,11 +104,6 @@ return {
             bold = true,
           },
         },
-        -- {
-        --   OctoSignColumn = {
-        --     bg = { from = "ErrorMsg", attr = "fg", alter = -0.1 },
-        --   },
-        -- },
       })
 
       vim.treesitter.language.register("markdown", "octo")
