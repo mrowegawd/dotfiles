@@ -41,6 +41,7 @@ return {
       "GitConflictChooseTheirs",
       "GitConflictChooseBoth",
       "GitConflictChooseNone",
+      "GitConflictRefresh",
       "GitConflictNextConflict",
       "GitConflictPrevConflict",
       "GitConflictListQf",
