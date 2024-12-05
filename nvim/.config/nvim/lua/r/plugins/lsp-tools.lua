@@ -1,5 +1,16 @@
 local Highlight = require "r.settings.highlights"
 
+-- ignore lsp_lines for spesific filetypes
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "lazy",
+  callback = function()
+    local previous = not require("lsp_lines").toggle()
+    if not previous then
+      require("lsp_lines").toggle()
+    end
+  end,
+})
+
 return {
   -- OUTPUTPANEL
   {
@@ -137,6 +148,11 @@ return {
         vt_position = "end_of_line",
       }
     end,
+  },
+  -- LSP-LINES
+  {
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    opts = true,
   },
   -- LSP-SIGNATURE
   {
