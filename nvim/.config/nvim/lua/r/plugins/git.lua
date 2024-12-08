@@ -62,12 +62,6 @@ return {
       default_commands = true, -- disable commands created by this plugin
     },
   },
-  -- BLAME.NVIM
-  {
-    "FabijanZulj/blame.nvim",
-    cmd = { "BlameToggle" },
-    config = true,
-  },
   -- GITLINKER
   {
     "ruifm/gitlinker.nvim", -- generate shareable file permalinks
@@ -505,31 +499,6 @@ return {
         desc = "Git: open fugitive [fugitive]",
       },
       { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git: commit [fugitive]" },
-    },
-  },
-  -- GITGRAPH
-  {
-    "isakbm/gitgraph.nvim",
-    dependencies = { "sindrets/diffview.nvim" },
-    opts = {
-      symbols = {
-        merge_commit = "M",
-        commit = "*",
-      },
-      format = {
-        timestamp = "%H:%M:%S %d-%m-%Y",
-        fields = { "hash", "timestamp", "author", "branch_name", "tag" },
-      },
-    },
-    keys = {
-      {
-        "<Leader>gl",
-        function()
-          require("gitgraph").draw({}, { all = true, max_count = 5000 })
-        end,
-        mode = { "n", "v" },
-        desc = "Git: git graph [gitgraph]",
-      },
     },
   },
   -- VGIT
