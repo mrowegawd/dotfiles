@@ -159,52 +159,109 @@ return {
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
   },
+  -- SNACKS
   {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
     opts = function()
       Highlight.plugin("NotifyCol", {
         -- INFO
         {
+          SnacksNotifierInfo = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticInfo", attr = "fg", alter = 5 },
             bold = true,
           },
         },
         {
+          SnacksNotifierBorderInfo = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.4 },
           },
         },
         {
+          SnacksNotifierTitleInfo = {
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticInfo", attr = "fg", alter = 0.5 },
             bold = true,
           },
         },
 
+        -- ERROR
         {
+          SnacksNotifierError = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = 5 },
             bold = true,
           },
         },
         {
+          SnacksNotifierBorderError = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = -0.4 },
           },
         },
         {
+          SnacksNotifierTitleError = {
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticError", attr = "fg", alter = 0.5 },
             bold = true,
           },
         },
 
+        -- WARN
         {
+          SnacksNotifierWarn = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = 5 },
             bold = true,
           },
         },
         {
+          SnacksNotifierBorderWarn = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.4 },
           },
         },
         {
+          SnacksNotifierTitleWarn = {
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
+            fg = { from = "DiagnosticWarn", attr = "fg", alter = 0.5 },
             bold = true,
           },
         },
       })
 
+      -- Toggle the profiler
+      Snacks.toggle.profiler():map "<leader>pp"
+      -- Toggle the profiler highlights
+      Snacks.toggle.profiler_highlights():map "<leader>ph"
+
       return {
+        bigfile = { enabled = true },
+        notifier = { enabled = true },
+        quickfile = { enabled = true },
+        -- statuscolumn = { enabled = false }, -- we set this in options.lua
+        -- toggle = { map = LazyVim.safe_keymap_set },
+        words = { enabled = true },
       }
     end,
+    -- stylua: ignore
+    keys = {
+      { "<Leader>.",  function() Snacks.scratch() end, desc = "Misc: toggle scratch buffer [snacks]" },
+      { "<Leader>S",  function() Snacks.scratch.select() end, desc = "Misc: select scratch buffer [snacks]" },
+      { "<Leader>ps", function() Snacks.profiler.scratch() end, desc = "Misc: profiler scratch buffer [snacks]" },
+      { "<Leader>FC", function() Snacks.notifier.show_history() end, desc = "Misc: notification history [snacks]" },
+      { "<Leader>un", function() Snacks.notifier.hide() end, desc = "Misc: dismiss all notifications [snacks]" },
+    },
     config = function(_, opts)
+      local notify = vim.notify
+      require("snacks").setup(opts)
+      -- HACK: restore vim.notify after snacks setup and let noice.nvim take over
+      -- this is needed to have early notifications show up in noice history
+      if RUtils.has "noice.nvim" then
+        vim.notify = notify
       end
     end,
   },
@@ -361,12 +418,8 @@ return {
           },
         },
         routes = {
-          -- Do not show error messages for `-32603`
-          -- this will lead to an endless loop of errors
-          -- remove this line after this issue gets fixed or reverting back to the last working version
-          -- https://github.com/rust-lang/rust-analyzer/issues/17430
-          { filter = { event = "notify", find = "-32603" }, opts = { skip = true } },
           { filter = { event = "lsp", find = "overly long loop" }, opts = { skip = true } },
+          { filter = { event = "notify", find = "position_encoding" }, opts = { skip = true } },
 
           {
             opts = { skip = true },
