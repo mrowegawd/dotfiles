@@ -1,7 +1,6 @@
 (include "./bar/widgets/left-widgets.yuck")
 ;(include "./bar/widgets/center-widgets.yuck")
 (include "./bar/widgets/right-widgets.yuck")
-; (include "./dashboard/dashboard.yuck")
 (include "./variables.yuck")
 
 

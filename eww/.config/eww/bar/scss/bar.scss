@@ -1,5 +1,10 @@
+* {
+  all: unset;
+  transition: 200ms ease-out;
+}
+
 .bar {
-  font-family: "JetBrainsMono NF";
+  font-family: $altfont;
   font-size: 1.1rem;
   // margin: -2;
   margin: 1px 1.2px 1px 1px;
@@ -19,27 +24,28 @@
 }
 
 .icon {
-  // margin: 1px 1px 1px 1px;
-  margin: 1px 1.2px 1px 1px;
-  // margin: 2px 2px;
+  margin: 1px 5px 1px 1px;
+  border-radius: 10px;
   color: $blue;
-  font-family: "JetBrainsMono NF";
-  font-size: 1.1rem;
+  font-family: $altfont;
+  font-size: 1.4rem;
+  // padding: 1px 1px 1px 1px;
 }
 
-// .icon:hover {
-//   color: $green;
-// }
-//
-// .calendar {
-//   font-family: 'JetBrainsMono Nerd Font';
-//   font-size: 0.85rem;
-//   background-color: $background;
-//   color: $foreground;
-//   border-radius: 7px;
-//   border: 5px solid $background;
-// }
-//
+.texting {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+tooltip {
+  font-family: $altfont;
+  background-color: $fg2;
+  border-radius: 15px;
+  min-height: 7px;
+  min-width: 70px;
+  font-size: 1.5em;
+  color: $bg;
+}
 
 // ========================
 // WORKSPACES
@@ -100,12 +106,15 @@
 // ========================
 // TIME
 // ========================
-.time {
-  background-color: $black;
-  border-radius: 10px;
-  padding: 0.4em;
-  // padding: 0 15px 0 15px;
+
+.clock {
+  // background-color: $altbg;
+  border-radius: 15px;
+  padding: 8px 2px 0 2px;
+  font-size: 1.3em;
+  color: $fg2;
 }
+
 .hour {
   font-size: 1.4em;
   font-weight: bolder;

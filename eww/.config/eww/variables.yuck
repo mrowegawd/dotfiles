@@ -8,15 +8,12 @@
 (defpoll gpu_usage :interval "1s"
   "nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | awk '{ print \"\"$1\"\"}'")
 
-(defpoll calendar_day :interval "10h"
-  "date '+%d'")
 
 (defpoll volume :interval "1s"
   "amixer sget Master | awk -F'[][]' '/Right:|Mono:/ && NF > 1 {sub(/%/, \"\"); printf \"%0.0f\", $2}'")
 
-(defpoll calendar_month :interval "10h"
-  "month=$(date +%m) | month=$((month-1)) | echo $month")
-
-
-(defpoll time :interval "10s"
-  `date "+%H:%M"`)
+(defpoll dateVar :interval "600s" "date '+%A %d.%m.%y +%H:%M'")
+; (defpoll time :interval "10s" `date "+%H:%M"`)
+(defpoll time :interval "20h" "date '+%d'")
+(defpoll calendar_year :interval "20h" "date '+%H'")
+(defpoll calendar_month :interval "20h" "date '+%m'")

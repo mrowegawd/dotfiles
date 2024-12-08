@@ -20,5 +20,6 @@
    ;(gpu)
   (disk)
   (audio)
-   ;(time)
+   (time)
+   ; (date)
    (power)))
