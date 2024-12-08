@@ -274,9 +274,13 @@ return {
 
             ["<PageDown>"] = "preview-page-down",
             ["<PageUp>"] = "preview-page-up",
+
+            ["<c-u>"] = "preview-page-up",
+            ["<c-d>"] = "preview-page-down",
           },
           fzf = {
             ["ctrl-a"] = "toggle-all",
+
             ["ctrl-d"] = "preview-page-down",
             ["ctrl-u"] = "preview-page-up",
           },
