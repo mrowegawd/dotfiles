@@ -7,7 +7,7 @@ return {
       "MunifTanjim/nui.nvim",
     },
     opts = {
-      save_dir = RUtils.config.path.home .. "/Dropbox/neorg/orgmode/project-todo",
+      save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",
       extmarks = {
         qf_sigil = RUtils.config.icons.misc.marks,
         qf_sign_hl = { fg = "red" },
@@ -16,11 +16,8 @@ return {
         excluded = {
           buftypes = {},
           filetypes = {
-            "calendar",
             "DiffviewFiles",
             "NeogitCommitMessage",
-            "calendar",
-            "neo-tree",
             "NeogitPopup",
             "NeogitStatus",
             "NvimTree",
@@ -28,6 +25,8 @@ return {
             "TelescopePrompt",
             "TelescopeResults",
             "alpha",
+            "calendar",
+            "calendar",
             "checkhealth",
             "dashboard",
             "fzf",
@@ -39,6 +38,7 @@ return {
             "man",
             "markdown",
             "mason",
+            "neo-tree",
             "neorg",
             "norg",
             "org",
