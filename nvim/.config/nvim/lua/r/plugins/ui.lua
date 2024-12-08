@@ -1,8 +1,6 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
-local old_notify = vim.notify
-
 local is_show_start = function()
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     return false
@@ -161,153 +159,53 @@ return {
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
   },
-  -- NVIM-NOTIFY
   {
-    "rcarriga/nvim-notify",
-    init = function()
-      -- when noice is not enabled, install notify on VeryLazy
-      if not RUtils.has "noice.nvim" then
-        RUtils.on_very_lazy(function()
-          vim.notify = require "notify"
-        end)
-      end
-    end,
     opts = function()
       Highlight.plugin("NotifyCol", {
-        -- { NotifyBackground = { bg = { from = "DiagnosticWarn" } } },
-        -- { NotifyERRORBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyWARNBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyINFOBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyDEBUGBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyTRACEBorder = { bg = { from = "NormalFloat" } } },
-        -- { NotifyERRORBody = { link = "NormalFloat" } },
-        -- { NotifyWARNBody = { link = "NormalFloat" } },
-
         -- INFO
         {
-          NotifyINFOBody = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
             fg = { from = "DiagnosticInfo", attr = "fg", alter = 5 },
             bold = true,
           },
         },
         {
-          NotifyINFOBorder = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.6 },
           },
         },
         {
-          NotifyINFOTitle = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.2 },
             bold = true,
-          },
-        },
-        {
-          NotifyINFOIcon = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticInfo", attr = "fg", alter = -0.2 },
           },
         },
 
-        -- WARN
         {
-          NotifyWARNBody = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticWarn", attr = "fg", alter = 5 },
             bold = true,
           },
         },
         {
-          NotifyWARNBorder = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.6 },
           },
         },
         {
-          NotifyWARNTitle = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.2 },
             bold = true,
-          },
-        },
-        {
-          NotifyWARNIcon = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.2 },
           },
         },
 
-        -- ERROR
         {
-          NotifyERRORBody = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticError", attr = "fg", alter = 5 },
             bold = true,
           },
         },
         {
-          NotifyERRORBorder = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticError", attr = "fg", alter = -0.6 },
           },
         },
         {
-          NotifyERRORTitle = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticError", attr = "fg", alter = -0.2 },
             bold = true,
-          },
-        },
-        {
-          NotifyERRORIcon = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.8 },
-            fg = { from = "DiagnosticError", attr = "fg", alter = -0.2 },
           },
         },
       })
 
       return {
-        stages = "static",
-        timeout = 5000,
-        max_width = function()
-          return math.floor(vim.o.columns * 0.6)
-        end,
-        top_down = false,
-        max_height = function()
-          return math.floor(vim.o.lines * 0.8)
-        end,
-        -- render = function(...)
-        --   local notification = select(2, ...)
-        --   local style = RUtils.cmd.falsy(notification.title[1]) and "minimal" or "default"
-        --   require("notify.render")[style](...)
-        -- end,
-        render = "wrapped-compact",
-        on_open = function(win)
-          vim.api.nvim_win_set_config(win, { zindex = 175 })
-        end,
       }
     end,
     config = function(_, opts)
-      vim.notify = old_notify
-      local notify = require "notify"
-      vim.notify = notify
-      notify.setup(opts)
-
-      -- Taken from: https://github.com/rcarriga/nvim-notify/issues/189#issuecomment-2225599658
-      local util = require "notify.stages.util"
-      local get_slot_range = util.get_slot_range
-      local override = function(direction)
-        local a, b = get_slot_range(direction)
-        if direction == util.DIRECTION.TOP_DOWN then
-          b = b - 1
-        elseif direction == util.DIRECTION.BOTTOM_UP then
-          a = a - 1
-        end
-        return a, b
       end
-      util.get_slot_range = override
     end,
   },
   -- NOICE
