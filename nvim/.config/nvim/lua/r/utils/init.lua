@@ -165,6 +165,11 @@ function M.lazy_notify()
   local timer = vim.uv.new_timer()
   local check = assert(vim.uv.new_check())
 
+  if timer == nil then
+    print "utils/init.lua: timer is nil, cant use lazy_notify"
+    return
+  end
+
   local replay = function()
     timer:stop()
     check:stop()
