@@ -26,14 +26,14 @@ RUtils.on_very_lazy(function()
       [".*/waybar/config"] = "jsonc",
       ["%.vscode/tasks.json"] = "task",
       [".*/mako/config"] = "dosini",
-      [".*/kitty/.+%.conf"] = "bash",
+      [".*/kitty/.+%.conf"] = "kitty",
       [".*/hypr/.+%.conf"] = "hyprlang",
       ["%.env%.[%w_.-]+"] = "sh",
     },
   }
 end)
 
-vim.treesitter.language.register("bash", "zsh")
+vim.treesitter.language.register("bash", "kitty")
 
 return {
   {
