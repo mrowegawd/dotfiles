@@ -379,7 +379,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Repo Commits", "") },
             fzf_opts = {
-              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-h: hHEAD..hash | ctrl-x: hhistory]],
+              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-d: diff hHead..head | ctrl-x: hhistory]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -402,7 +402,7 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-h"] = function(selected, _)
+              ["ctrl-d"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -437,7 +437,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "") },
             fzf_opts = {
-              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-h: hHead..head | ctrl-g: hgrep | ctrl-x: hhistory]],
+              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-d: diff hHead..head | ctrl-g: hgrep | ctrl-x: hhistory]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -460,7 +460,7 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-h"] = function(selected, _)
+              ["ctrl-d"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
