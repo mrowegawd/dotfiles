@@ -172,7 +172,7 @@ super + shift + p
 super + shift + F8
         pkill -USR1 -x sxhkd && SLEEP=2 dunstify "Reload SXHKD:" "Reload config.."
 
-# misc: quit/kill record video
+# misc: quit/stop record video
 super + shift + F9
         pkill ffmpeg; dunstify "Record" "Quit ffmpeg.."
 
@@ -180,7 +180,7 @@ super + shift + F9
 super + shift + F12
         bspc wm -r && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
 
-# misc: change background img
+# misc: change wallpaper
 super + shift + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
