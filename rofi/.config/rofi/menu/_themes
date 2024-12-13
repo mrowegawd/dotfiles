@@ -12,7 +12,7 @@ NEW_FONTS_SIZE=16
 GET_FG=$(xrdb -query | grep -i foreground | cut -d':' -f2 | xargs)
 GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 
-GET_BLACK=$(xrdb -query | grep -i .color0 | cut -d':' -f2 | head -1 | xargs)
+# GET_BLACK=$(xrdb -query | grep -i .color0 | cut -d':' -f2 | head -1 | xargs)
 GET_BLACK_ALT=$(xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs)
 
 GET_RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
@@ -33,7 +33,7 @@ GET_MAGENTA=$(xrdb -query | grep -i .color5 | cut -d':' -f2 | head -1 | xargs)
 GET_CYAN=$(xrdb -query | grep -i .color6 | cut -d':' -f2 | head -1 | xargs)
 # GET_CYAN_ALT=$(xrdb -query | grep -i .color14 | cut -d':' -f2 | head -1 | xargs)
 
-GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+# GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 # GET_WHITE_ALT=$(xrdb -query | grep -i .color15 | cut -d':' -f2 | head -1 | xargs)
 
 GET_COL_16="#6c8cac"
@@ -70,6 +70,17 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  # GIT, git_add, git_change, git_delete, git_text
+  # GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_33=$(grep -i color33 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_34=$(grep -i color34 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_35=$(grep -i color35 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  # GIT, gitlinenumber: add, change, delete
+  GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -221,6 +232,27 @@ set_tmux() {
   fi
 
 }
+set_delta_theme() {
+  _DELTA_PATH="$HOME/.config/delta/themes"
+
+  if [ ! -f "$_DELTA_PATH" ]; then
+    dunstify "$ERROR_MSG:<br>Path delta: $_DELTA_PATH do not exists!" && exit 1
+  fi
+
+  # For line number
+  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$GET_COL_38\" italic/g" "$_DELTA_PATH"
+  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$GET_COL_36\" italic/g" "$_DELTA_PATH"
+
+  # For hunk minus
+  sed -i -e "s/^minus-emph-style.*/minus-emph-style = syntax bold \"$GET_COL_35\"/g" "$_DELTA_PATH"
+  sed -i -e "s/^minus-style.*/minus-style = syntax \"$GET_COL_34\"/g" "$_DELTA_PATH"
+
+  # For hunk plus
+  sed -i -e "s/^plus-emph-style.*/plus-emph-style = syntax bold \"$GET_COL_35\"/g" "$_DELTA_PATH"
+  sed -i -e "s/^plus-style.*/plus-style = syntax \"$GET_COL_33\"/g" "$_DELTA_PATH"
+
+}
+
 set_zathura() {
   _ZATHURA_PATH="$DOTFILES_PATH/zathura/.config/zathura"
 
@@ -496,6 +528,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
   set_fzf
   set_yazi_theme "$_NAMETHEME"
   set_lazygit
+  set_delta_theme
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;
