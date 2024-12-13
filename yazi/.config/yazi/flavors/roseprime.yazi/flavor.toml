@@ -1,0 +1,143 @@
+# vim:fileencoding=utf-8:foldmethod=marker
+
+# Taken from: https://github.com/yazi-rs/flavors?tab=readme-ov-file
+
+# : Manager {{{
+
+[manager]
+cwd = { fg = "#4d4d5b" }
+
+hovered = { fg = "#ad82a2", bg = "#182533" }
+preview_hovered = { fg = "#ad82a2", bg = "#16171b" }
+
+find_keyword = { fg = "#9b9af5", italic = true }
+find_position = { fg = "#9b9af5", bg = "reset", italic = true }
+
+marker_copied = { fg = "#d2af98", bg = "#d2af98" }
+marker_cut = { fg = "#ba5f60", bg = "#ba5f60" }
+marker_selected = { fg = "#9b9af5", bg = "#9b9af5" }
+
+tab_active = { fg = "#c76f82", bg = "#262830" }
+tab_inactive = { fg = "#666a82", bg = "#262830" }
+tab_width = 1
+
+count_cut = { fg = "#9b9af5", bg = "#16171b" }
+count_copied = { fg = "#9b9af5", bg = "#16171b" }
+count_selected = { fg = "#9b9af5", bg = "#16171b" }
+
+border_symbol = "│"
+border_style = { fg = "#666a82" }
+
+# Highlighting
+# syntect_theme = "~/.config/yazi/Gruvbox-Dark.tmTheme"
+
+# : }}}
+
+
+# : Status {{{
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#262830", bg = "#262830" }
+
+mode_normal = { fg = "#121315", bg = "#95b1fc", bold = true }
+mode_select = { fg = "#121315", bg = "#9b9af5", bold = true }
+mode_unset = { fg = "#121315", bg = "#6397cf", bold = true }
+
+progress_label = { fg = "#9b9af5", bold = true }
+progress_normal = { fg = "#9b9af5", bg = "#262830" }
+progress_error = { fg = "#121315", bg = "#ba5f60" }
+
+permissions_t = { fg = "#adadcc" }
+permissions_r = { fg = "#d2af98" }
+permissions_w = { fg = "#c76f82" }
+permissions_x = { fg = "#95b1fc" }
+permissions_s = { fg = "#838196" }
+
+# : }}}
+
+
+# : Input {{{
+
+[input]
+border = { fg = "#666a82" }
+title = {}
+value = {}
+selected = { reversed = true }
+
+# : }}}
+
+
+# : Select {{{
+
+[select]
+border = { fg = "#666a82" }
+active = { fg = "#6397cf" }
+inactive = {}
+
+# : }}}
+
+
+# : Tasks {{{
+
+[tasks]
+border = { fg = "#666a82" }
+title = {}
+hovered = { underline = true }
+
+# : }}}
+
+
+# :  {{{
+
+[which]
+mask = { bg = "#101113" }
+cand = { fg = "#ad82a2" }
+rest = { fg = "#9bbdb8" }
+desc = { fg = "#d2af98" }
+separator = "  "
+separator_style = { fg = "#838196" }
+
+# : }}}
+
+
+# : Help {{{
+
+[help]
+on = { fg = "#9bbdb8" }
+run = { fg = "#d2af98" }
+desc = { fg = "#666a82" }
+hovered = { fg = "#ad82a2", bg = "#16171b", bold = true }
+footer = { fg = "#666a82", bg = "#16171b" }
+
+# : }}}
+
+
+# : File-specific styles {{{
+
+[filetype]
+
+rules = [
+  # Images
+  { mime = "image/*", fg = "#83a598" },
+
+  # Videos
+  { mime = "video/*", fg = "#b8bb26" },
+  { mime = "audio/*", fg = "#b8bb26" },
+
+  # Archives
+  { mime = "application/zip", fg = "#fe8019" },
+  { mime = "application/gzip", fg = "#fe8019" },
+  { mime = "application/x-tar", fg = "#fe8019" },
+  { mime = "application/x-bzip", fg = "#fe8019" },
+  { mime = "application/x-bzip2", fg = "#fe8019" },
+  { mime = "application/x-7z-compressed", fg = "#fe8019" },
+  { mime = "application/x-rar", fg = "#fe8019" },
+
+  # Fallback
+  { name = "*", fg = "#bbbac1" },
+  { name = "*/", fg = "#8c8abd" },
+]
+
+# : }}}

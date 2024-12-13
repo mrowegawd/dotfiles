@@ -77,7 +77,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local neomodern_theme = { "iceclimber", "coffeecat", "darkforest", "campfire", "roseprime", "daylight" }
+      local neomodern_theme = { "iceclimber", "coffeecat", "darkforest", "roseprime", "daylight" }
       if vim.tbl_contains(neomodern_theme, colorscheme) then
         return true
       end
