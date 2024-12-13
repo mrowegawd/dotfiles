@@ -2398,6 +2398,9 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["neomodern"] = {
+      { Search = { bg = "red" } },
+    },
     ["nightfox"] = {
       { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
       {
