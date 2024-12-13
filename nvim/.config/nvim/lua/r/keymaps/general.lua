@@ -259,46 +259,27 @@ RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = t
 -- │ TOGGLE                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
 
-RUtils.map.nnoremap("<Leader>uF", function()
-  RUtils.format.toggle()
-end, { desc = "Toggle: toggle auto format (global)" })
-RUtils.map.nnoremap("<Leader>uf", function()
-  RUtils.format.toggle(true)
-end, { desc = "Toggle: auto format (buffer)" })
-RUtils.map.nnoremap("<Leader>uw", function()
-  RUtils.toggle "wrap"
-end, { desc = "Toggle: wrap" })
-local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
-RUtils.map.nnoremap("<Leader>uL", function()
-  RUtils.toggle "relativenumber"
-end, { desc = "Toggle: relative line numbers" })
-RUtils.map.nnoremap("<Leader>ul", function()
-  RUtils.toggle.number()
-end, { desc = "Toggle: line numbers" })
-RUtils.map.nnoremap("<Leader>uc", function()
-  RUtils.toggle("conceallevel", false, { 0, conceallevel })
-end, { desc = "Toggle: conceal" })
-RUtils.map.nnoremap("<Leader>uS", function()
-  RUtils.toggle "spell"
-end, { desc = "Toggle: spelling" })
-RUtils.map.nnoremap("<Leader>ud", function()
-  RUtils.toggle.diagnostics()
-end, { desc = "Toggle: diagnostic" })
-if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
-  RUtils.map.nnoremap("<Leader>uh", function()
-    RUtils.toggle.inlay_hints()
-  end, { desc = "Toggle: inlay hints" })
+Snacks.toggle.zoom():map "sm"
+Snacks.toggle.zen():map "<Leader>uz"
+Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map "<Leader>ub"
+Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
+Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
+Snacks.toggle.line_number():map "<leader>ul"
+--stylua: ignore
+Snacks.toggle .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
+--stylua: ignore
+Snacks.toggle .option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
+
+Snacks.toggle.option("spell", { name = "Spelling" }):map "<Leader>us"
+Snacks.toggle.scroll():map "<Leader>uS"
+Snacks.toggle.animate():map "<Leader>ua"
+Snacks.toggle.treesitter():map "<Leader>uT"
+Snacks.toggle.profiler():map "<leader>dpp"
+Snacks.toggle.profiler_highlights():map "<leader>dph"
+
+if vim.lsp.inlay_hint then
+  Snacks.toggle.inlay_hints():map "<Leader>uh"
 end
-RUtils.map.nnoremap("<Leader>ub", function()
-  RUtils.toggle("background", false, { "light", "dark" })
-end, { desc = "Toggle: background" })
-RUtils.map.nnoremap("<Leader>uT", function()
-  if vim.b.ts_highlight then
-    vim.treesitter.stop()
-  else
-    vim.treesitter.start()
-  end
-end, { desc = "Toggle: treesitter highlight" })
 
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ DIFF                                                    │
@@ -514,7 +495,7 @@ RUtils.map.nnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.tnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 
-RUtils.map.nnoremap("<Localleader>of", function()
+RUtils.map.nnoremap("<Leader>uf", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
     loadqf = function()
@@ -551,8 +532,20 @@ RUtils.map.nnoremap("<Localleader>of", function()
     toggle_undotree = function()
       cmd "UndotreeToggle"
     end,
+    refresh_symbol_usage = function()
+      require("symbol-usage").refresh()
+    end,
     open_output_panel = function()
       cmd "OutputPanel"
+    end,
+    resume_telescope = function()
+      vim.cmd [[Telescope resume]]
+    end,
+    resume_fzf = function()
+      vim.cmd [[FzfLua resume]]
+    end,
+    diagnostic_lsp_lines_toggle = function()
+      require("lsp_lines").toggle()
     end,
     session_load = function()
       if RUtils.has "persistence.nvim" then
@@ -636,7 +629,8 @@ RUtils.map.nnoremap("<Leader>gff", function()
         vim.cmd [[GitConflictChooseNone]]
       end,
       git_blame = function()
-        vim.cmd [[BlameToggle]]
+        local gs = package.loaded.gitsigns
+        gs.blame()
       end,
       git_browse = function()
         RUtils.lazygit.browse()

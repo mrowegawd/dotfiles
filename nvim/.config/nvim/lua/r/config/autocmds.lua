@@ -109,7 +109,7 @@ RUtils.cmd.augroup("DisableJsonConceal", {
 })
 
 RUtils.cmd.augroup("SmartClose", {
-  event = { "FileType" },
+  event = "FileType",
   pattern = {
     "DressingSelect",
     "PlenaryTestPopup",
