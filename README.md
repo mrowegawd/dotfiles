@@ -4,7 +4,6 @@
 
 ## Fonts
 
-To get ligature/italic font support there are a number of steps. You'll want to
-source a font like [JetBrains Mono](https://www.jetbrains.com/lp/mono/) and install it.
-If you want icons you'll probably want the [Nerd Fonts](https://www.nerdfonts.com/font-downloads) version
-or check [Nerd Fonts release](https://github.com/ryanoasis/nerd-fonts/releases) (I use **SF Mono** and **Victor Mono**)
+- [JetBrains Mono](https://www.jetbrains.com/lp/mono/)
+- [Nerd Fonts release](https://github.com/ryanoasis/nerd-fonts/releases) (I use **SF Mono**, **Victor Mono**, **Mapple Mono** )
+- [Maple Fonts](https://github.com/subframe7536/maple-font/releases)
