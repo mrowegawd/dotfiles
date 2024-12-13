@@ -284,7 +284,7 @@ return {
         git_status = {
           window = {
             mappings = {
-              ["<c-j>"] = "fzmark",
+              ["<c-o>"] = "fzmark",
               ["<a-t>"] = "open_terminal",
               ["<a-g>"] = "open_lazygit",
               ["<a-d>"] = "open_lazydocker",
@@ -305,7 +305,7 @@ return {
         },
         window = {
           mappings = {
-            ["<c-j>"] = "fzmark",
+            ["<c-o>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
             ["<a-g>"] = "open_lazygit",
             ["<a-d>"] = "open_lazydocker",
