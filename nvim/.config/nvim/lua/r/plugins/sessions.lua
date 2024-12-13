@@ -1,5 +1,3 @@
-local visible_buffers = {}
-
 return {
   --  ╭──────────────────────────────────────────────────────────╮
   --  │                         SESSION                          │
@@ -16,7 +14,7 @@ return {
         if not require("resession").default_buf_filter(bufnr) then
           return false
         end
-        return visible_buffers[bufnr]
+        return true
       end,
       extensions = { quickfix = {} },
     },
@@ -24,26 +22,21 @@ return {
       local resession = require "resession"
       resession.setup(opts)
 
-      resession.add_hook("pre_save", function()
-        visible_buffers = {}
-        for _, winid in ipairs(vim.api.nvim_list_wins()) do
-          if vim.api.nvim_win_is_valid(winid) then
-            visible_buffers[vim.api.nvim_win_get_buf(winid)] = winid
+      vim.keymap.set("n", "<Leader>sS", function()
+        vim.ui.input({ prompt = "Session name" }, function(selected)
+          if selected then
+            resession.save(selected, {})
           end
-        end
-      end)
-
-      vim.keymap.set("n", "<Leader>sS", resession.save, { desc = "Misc: session save rename [resession.nvim]" })
-      vim.keymap.set("n", "<Leader>ss", function()
-        resession.save "last"
-      end, { desc = "Misc: session save last [resession.nvim]" })
-      vim.keymap.set("n", "<Leader>st", function()
-        resession.save_tab()
-      end, { desc = "Misc: session save tab [resession.nvim]" })
-      vim.keymap.set("n", "<Leader>so", resession.load, { desc = "Misc: session load [resession.nvim]" })
-      vim.keymap.set("n", "<Leader>sl", function()
-        resession.load(nil, { reset = false })
-      end, { desc = "Misc: session load cwd [resession.nvim]" })
+        end)
+      end, { desc = "Misc: save with session name [resession.nvim]" })
+      --stylua: ignore
+      vim.keymap.set("n", "<Leader>ss", function() resession.save() end, { desc = "Misc: save session with current name [resession.nvim]" })
+      --stylua: ignore
+      vim.keymap.set("n", "<Leader>st", function() resession.save_tab() end, { desc = "Misc: save session tab [resession.nvim]" })
+      --stylua: ignore
+      vim.keymap.set("n", "<Leader>sL", function() resession.load() end, { desc = "Misc: load from list sessions [resession.nvim]" })
+      --stylua: ignore
+      vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Misc: load last session [resession.nvim]" })
       vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Misc: session delete [resession.nvim]" })
 
       vim.api.nvim_create_user_command("SessionDetach", function()
@@ -73,7 +66,6 @@ return {
       RUtils.cmd.augroup("ResessionLeave", {
         event = { "VimLeavePre" },
         command = function()
-          -- resession.save(vim.fn.getcwd(), { dir = "dirsession", notify = false })
           resession.save "last"
         end,
       })
