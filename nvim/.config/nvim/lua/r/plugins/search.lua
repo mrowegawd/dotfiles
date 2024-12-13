@@ -108,7 +108,7 @@ return {
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
       { "<a-w>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
-      { "gb", function()
+      { "fb", function()
         require("fzf-lua").buffers({
           winopts = { preview = { hidden = "hidden" } },
           winopts_fn = function()
