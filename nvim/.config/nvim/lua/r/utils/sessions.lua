@@ -1,21 +1,17 @@
 ---@class r.utils.session
 local M = {}
 
-local uv = vim.loop
-
 function M.save_ses()
   local MS = require "mini.sessions"
-  -- local branch_name = vim.fn["FugitiveHead"]() or "temp"
-  -- local cwd = vim.fn.fnameescape(vim.cfg.runtime__starts_cwd)
-  -- local session_name = string.format("%s_%s", branch_name, cwd)
-  -- -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
-  -- local session_name = "fasfd"
-  -- session_name = string.gsub(session_name, "[/\\ .]", "_")
-
   local branch_name = "temp"
-  local cwd = vim.fn.fnameescape(vim.uv.cwd())
+  local path_cwd = vim.uv.cwd()
+
+  local cwd = ""
+  if type(path_cwd) == "string" then
+    cwd = vim.fn.fnameescape(path_cwd)
+  end
   local session_name = string.format("%s_%s", branch_name, cwd)
-  -- -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
+  -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
   session_name = string.gsub(session_name, "[/\\ .]", "_")
   MS.write(session_name, {
     force = true,
@@ -24,9 +20,14 @@ end
 
 function M.load_ses()
   local MS = require "mini.sessions"
-  -- local branch_name = vim.fn["FugitiveHead"]() or "temp"
   local branch_name = "temp"
-  local cwd = vim.fn.fnameescape(vim.uv.cwd())
+  local path_cwd = vim.uv.cwd()
+
+  local cwd = ""
+  if type(path_cwd) == "string" then
+    cwd = vim.fn.fnameescape(path_cwd)
+  end
+
   local session_name = string.format("%s_%s", branch_name, cwd)
   -- -- replace slash, space, backslash, dot etc specifical char in session_name to underscore
   session_name = string.gsub(session_name, "[/\\ .]", "_")
@@ -41,6 +42,8 @@ function M.load_ses()
 end
 
 function M.load_ses_dashboard()
+  local uv = vim.loop
+
   local ses_plugin = "resession.nvim"
 
   if RUtils.has(ses_plugin) then
@@ -64,7 +67,7 @@ function M.load_ses_dashboard()
       async:send()
     end
 
-    -- if sessions are not loaded, do not run this command,
+    -- if sessions are not loaded, dont run this command
     if vim.bo[0].filetype ~= "dashboard" then
       if vim.bo[0].filetype == "" then
         return
@@ -72,9 +75,9 @@ function M.load_ses_dashboard()
       vim.cmd [[edit!]]
     end
 
-    -- if not vim.env.TMUX then
-    --   RUtils.terminal.clock_mode()
-    -- end
+    if not vim.env.TMUX then
+      RUtils.terminal.clock_mode()
+    end
 
     vim.cmd [[set cmdheight=0]]
   else
