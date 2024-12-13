@@ -71,16 +71,6 @@ return {
   {
     "Wansmer/symbol-usage.nvim",
     event = "BufReadPre", -- need run before LspAttach if you use nvim 0.9. On 0.10 use 'LspAttach'
-    keys = {
-      {
-        "<Leader>us",
-        function()
-          require("symbol-usage").refresh()
-          RUtils.info("Refresh", { title = "Symbol-usage" })
-        end,
-        desc = "Toggle: symbol-usage refresh [symbol-usage]",
-      },
-    },
     opts = function()
       local function h(name)
         return vim.api.nvim_get_hl(0, { name = name })

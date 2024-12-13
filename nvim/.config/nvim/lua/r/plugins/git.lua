@@ -462,8 +462,9 @@ return {
           vim.opt_local.winfixbuf = true
           -- Mappings
           vim.keymap.set("n", "q", RUtils.cmd.quit_return, { buffer = e.buf })
-          vim.keymap.set("n", "<c-n>", "]c", { buffer = e.buf, remap = true })
-          vim.keymap.set("n", "<c-p>", "[c", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<c-n>", "j", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<c-p>", "k", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<tab>", "=", { buffer = e.buf, remap = true })
           -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
           vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
           vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
