@@ -874,7 +874,7 @@ M.Sessions = {
         else
           local ses_resession_get_current = ses_resession.get_current()
           if ses_resession_get_current ~= nil then
-            sess_status = "On"
+            sess_status = "[" .. ses_resession_get_current .. "]"
           end
         end
       end
