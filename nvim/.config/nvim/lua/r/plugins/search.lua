@@ -511,7 +511,7 @@ return {
             --     cmd = "git --no-pager stash list",
             --     preview = "git --no-pager stash show --patch --color {1}",
             winopts = {
-              title = RUtils.fzflua.format_title("Stash", "", "GitSignsAdd"),
+              title = RUtils.fzflua.format_title("Stash", ""),
             },
             --     actions = {
             --         ["default"] = actions.git_stash_apply,
