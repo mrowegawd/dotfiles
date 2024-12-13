@@ -3,27 +3,36 @@ local M = {}
 
 M.palette = {
   green = "#98c379",
-  green_git_bg = "#505000",
   dark_green = "#10B981",
+
   blue = "#82AAFE",
   dark_blue = "#4e88ff",
+
   bright_blue = "#51afef",
   teal = "#15AABF",
   pale_pink = "#b490c0",
   magenta = "#c678dd",
+
   pale_red = "#E06C75",
   light_red = "#c43e1f",
-  red_git_bg = "#500000",
   dark_red = "#be5046",
-  text_git_bg = "#500050",
+
   dark_orange = "#FF922B",
+
   bright_yellow = "#FAB005",
-  yellow_git_bg = "#505000",
   light_yellow = "#e5c07b",
+
   whitesmoke = "#9E9E9E",
+
   light_gray = "#626262",
   comment_grey = "#5c6370",
+
   grey = "#3E4556",
+
+  green_git_bg = "#505000",
+  red_git_bg = "#500000",
+  text_git_bg = "#500050",
+  yellow_git_bg = "#505000",
 }
 
 ---@class Decorations

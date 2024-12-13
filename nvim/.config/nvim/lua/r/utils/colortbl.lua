@@ -68,8 +68,8 @@ local M = {
   mod_term = Highlight.get("Boolean", "fg"),
 
   diff_add = Highlight.get("GitSignsAdd", "fg"),
-  diff_delete = Highlight.get("GitSignsChange", "fg"),
-  diff_change = Highlight.get("GitSignsDelete", "fg"),
+  diff_change = Highlight.get("GitSignsChange", "fg"),
+  diff_delete = Highlight.get("GitSignsDelete", "fg"),
 
   directory = Highlight.get("Directory", "fg"),
 

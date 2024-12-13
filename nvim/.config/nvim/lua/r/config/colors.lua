@@ -2,10 +2,12 @@ local UIPallette = require("r.utils").uisec
 
 local Highlight = require "r.settings.highlights"
 
-local dark_orange = Highlight.tint(UIPallette.palette.dark_orange, 0.5)
-local dark_green = Highlight.tint(UIPallette.palette.dark_green, 0.5)
-local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.5)
--- local dark_red_more = Highlight.tint(dark_red, -0.4)
+local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
+local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
+local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
+local light_red = Highlight.tint(UIPallette.palette.pale_red, 0.3)
+
+local base = "#1c1e26"
 
 local general_overrides = function()
   Highlight.all {
@@ -211,9 +213,6 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- These highlights are syntax groups that are set in diff.vim
     -- { GitSignsAdd = { bg = { from = "ColorColumn"} } },
-    -- { diffAdded = { inherit = 'DiffAdd' } },
-    -- { diffChanged = { inherit = 'DiffChange' } },
-    -- { diffRemoved = { link = 'DiffDelete' } },
     -- { diffBDiffer = { link = 'WarningMsg' } },
     -- { diffCommon = { link = 'WarningMsg' } },
     -- { diffDiffer = { link = 'WarningMsg' } },
@@ -224,13 +223,18 @@ local general_overrides = function()
     -- { diffNoEOL = { link = 'WarningMsg' } },
     -- { diffOnly = { link = 'WarningMsg' } },
 
-    { diffAdd = { bg = UIPallette.palette.green_git_bg, fg = "NONE", bold = true } },
-    { diffChange = { bg = UIPallette.palette.yellow_git_bg, fg = "NONE", bold = true } },
-    { diffDelete = { bg = UIPallette.palette.red_git_bg, fg = "NONE", bold = true } },
-    { diffText = { bg = UIPallette.palette.text_git_bg, fg = "NONE", bold = true } },
+    { diffAdd = { bg = Highlight.darken(dark_green, 0.3, base), fg = "NONE", bold = true } },
+    { diffChange = { bg = Highlight.darken(dark_yellow, 0.4, base), fg = "NONE", bold = true } },
+    -- stylua: ignore
+    { diffDelete = { bg = Highlight.darken(dark_red, 0.1, base), fg = Highlight.darken(dark_red, 0.2, base), bold = true, }, },
+    { diffText = { bg = Highlight.darken(light_red, 0.3, base), fg = "NONE", bold = true } },
+
+    { diffAdded = { inherit = "DiffAdd" } },
+    { diffChanged = { inherit = "DiffChange" } },
+    { diffRemoved = { inherit = "DiffDelete" } },
 
     { GitSignsAdd = { bg = "NONE", fg = dark_green } },
-    { GitSignsChange = { bg = "NONE", fg = dark_orange } },
+    { GitSignsChange = { bg = "NONE", fg = dark_yellow } },
     { GitSignsDelete = { bg = "NONE", fg = dark_red } },
 
     { NeogitDiffAdd = { link = "diffAdd" } },
@@ -582,6 +586,7 @@ local general_overrides = function()
       FzfLuaPreviewTitle = {
         bg = { from = "Keyword", attr = "fg", alter = -0.1 },
         fg = { from = "Normal", attr = "bg" },
+        bold = true,
       },
     },
 
