@@ -1308,7 +1308,7 @@ pr_npm_i_saveGlobal() {
 
 }
 
-# npm: check: outdated global packages
+# npm: check outdated global packages
 pr_npm_c_goutdated() {
   npm outdated -g
 }
@@ -1335,7 +1335,7 @@ pr_pip_search() {
   fi
 }
 
-# pip: check: show package <$PACKAGE>++
+# pip: check show package <$PACKAGE>++
 pr_pip_show() {
   if [ -n "$1" ]; then
     pip show "$1"
@@ -1344,7 +1344,7 @@ pr_pip_show() {
   fi
 }
 
-# pip: check: list packages <$PACKAGE>++
+# pip: check list packages <$PACKAGE>++
 pr_pip_c_ls() {
   pip list | less
 }
@@ -1422,7 +1422,7 @@ pr_pipenv_i_requirments() {
   fi
 }
 
-# pipenv: check: security vulnerabilities
+# pipenv: check security vulnerabilities
 pr_pipenv_c_vuln() {
   pipenv check
 }
