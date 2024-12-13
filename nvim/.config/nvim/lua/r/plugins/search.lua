@@ -377,7 +377,7 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = RUtils.fzflua.format_title("Repo Commits", "") },
+            winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = {
               ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-d: diff hHead..head | ctrl-x: hhistory]],
             },
@@ -435,7 +435,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = { title = RUtils.fzflua.format_title("Curbuf Commits", "") },
+            winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = {
               ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-d: diff hHead..head | ctrl-g: hgrep | ctrl-x: hhistory]],
             },
