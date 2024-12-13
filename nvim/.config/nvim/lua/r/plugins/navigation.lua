@@ -716,6 +716,14 @@ return {
           end,
           desc = "Misc: open file explore [neotree]",
         },
+        {
+          "<a-W>",
+          function()
+            local wiki_path = RUtils.config.path.wiki_path
+            vim.cmd(string.format("Neotree dir=%s", wiki_path))
+          end,
+          desc = "Misc: open file wikis explore [neotree]",
+        },
 
         {
           "<leader>ue",
