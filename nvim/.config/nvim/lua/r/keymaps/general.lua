@@ -146,31 +146,13 @@ local function magic_quit()
     ["octo"] = "bd",
     ["log"] = "bd",
     ["Outline"] = "bd",
-    -- ["qf"] = "bnext | bdelete #",
-    -- ["DiffviewFileHistory"] = function()
-    --   local view = require("diffview.lib").get_current_view()
-    --   if view then
-    --     vim.cmd "DiffviewClose"
-    --   end
-    -- end,
-    --
-    -- ["DiffviewFiles"] = function()
-    --   local view = require("diffview.lib").get_current_view()
-    --   if view then
-    --     vim.cmd "DiffviewClose"
-    --   end
-    -- end,
+    ["DiffviewFileHistory"] = function()
+      vim.cmd "DiffviewClose"
+    end,
+    ["DiffviewFiles"] = function()
+      vim.cmd "DiffviewClose"
+    end,
   }
-
-  -- for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-  --   local bufnr = vim.api.nvim_win_get_buf(winid)
-  --   local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-  --   if vim.bo[0].filetype ~= buf_ft then
-  --     return print(bufnr)
-  --   else
-  --     return cmd [[q!]]
-  --   end
-  -- end
 
   if buf_fts[vim.bo[0].filetype] then
     if type(buf_fts[vim.bo[0].filetype]) == "function" then
@@ -179,6 +161,12 @@ local function magic_quit()
       cmd(buf_fts[vim.bo[0].filetype])
     end
   else
+    local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
+    if bufname and bufname:match "diffview://" then
+      vim.cmd "DiffviewClose"
+      return
+    end
+
     cmd [[q!]]
   end
 end

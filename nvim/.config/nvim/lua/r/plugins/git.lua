@@ -691,8 +691,8 @@ return {
           disable_defaults = true, -- Disable the default key bindings
           --stylua: ignore
           view = {
-            { "n", "<tab>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
-            { "n", "<s-tab>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview]" } },
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview]" } },
 
             { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" } },
             { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" } },
