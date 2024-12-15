@@ -293,7 +293,6 @@ return {
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
               ["<Leader>ghr"] = "git_revert_file",
-              ["<Leader>gc"] = "git_commit",
               ["gp"] = "noop",
               ["w"] = "noop",
               ["gn"] = "noop",
@@ -728,17 +727,17 @@ return {
           end,
           desc = "Misc: open file wikis explore [neotree]",
         },
-        {
-          "<leader>ge",
-          function()
-            if RUtils.has "neo-tree.nvim" then
-              return vim.cmd "Neotree git_status"
-            else
-              return require("fzf-lua").git_status()
-            end
-          end,
-          desc = "Git: explore git status (callback fzflua) [neotree]",
-        },
+        -- {
+        --   "<Leader>ge",
+        --   function()
+        --     if RUtils.has "neo-tree.nvim" then
+        --       return vim.cmd "Neotree git_status"
+        --     else
+        --       return require("fzf-lua").git_status()
+        --     end
+        --   end,
+        --   desc = "Git: explore git status (callback fzflua) [neotree]",
+        -- },
         {
           "ro",
           function()
@@ -765,11 +764,11 @@ return {
         --   desc = "Misc: toggle aerial [aerial]",
         -- },
         {
-          "<Localleader>oa",
+          "<Leader>oa",
           function()
             vim.cmd.Outline()
           end,
-          desc = "Misc: toggle open/close outline window [outline]",
+          desc = "Open: outline window [outline]",
         },
         -- {
         --   "<Localleader>oA",
@@ -817,7 +816,7 @@ return {
         --   desc = "Misc: change filter kind aerial [aerial]",
         -- },
         {
-          "<Localleader>oA",
+          "<Leader>oA",
           function()
             if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
               return
@@ -858,7 +857,7 @@ return {
             }
             RUtils.fzflua.cmd_filter_kind_lsp(opts)
           end,
-          desc = "Misc: change filter kind outline [outline]",
+          desc = "Open: filter kind for outline [outline]",
         },
       }
     end,

@@ -545,14 +545,14 @@ return {
     },
     keys = {
       {
-        "<Localleader>oS",
+        "<Leader>oS",
         "<CMD>Scratch<CR>",
-        desc = "Misc: select filetype for scratch buffer [scratch]",
+        desc = "Open: select list scratch ft [scratch]",
       },
       {
-        "<Localleader>os",
+        "<Leader>os",
         "<CMD>ScratchOpen<CR>",
-        desc = "Misc: open scratch buffer [scratch]",
+        desc = "Open: scratch buffer [scratch]",
       },
     },
   },

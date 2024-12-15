@@ -114,24 +114,4 @@ return {
     },
     opts = true,
   },
-  -- POMMODORO-CLOCK (disabled)
-  {
-    "jackMort/pommodoro-clock.nvim",
-    enabled = false,
-    event = "LazyFile",
-    dependencies = { "MunifTanjim/nui.nvim" },
-    config = function()
-      require("pommodoro-clock").setup {
-        modes = {
-          ["work"] = { "POMMODORO", 25 },
-          ["short_break"] = { "SHORT BREAK", 5 },
-          ["long_break"] = { "LONG BREAK", 30 },
-        },
-        animation_duration = 300,
-        animation_fps = 30,
-        say_command = "none",
-        sound = "none", -- set to "none" to disable
-      }
-    end,
-  },
 }

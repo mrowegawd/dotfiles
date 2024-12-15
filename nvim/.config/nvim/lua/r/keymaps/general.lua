@@ -282,7 +282,7 @@ end, {
 })
 
 RUtils.map.vnoremap(
-  "<Leader>gvV",
+  "<Leader>gV",
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
@@ -359,10 +359,10 @@ RUtils.map.nnoremap("sr", replace_keymap, { desc = "Misc: find and replace under
 RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace (visual)" })
 RUtils.map.nnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(false)
-end, { desc = "Misc: magic follow link" })
+end, { desc = "Open: browse under cursor/follow linke note" })
 RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(true)
-end, { desc = "Misc: magic follow link (visual)" })
+end, { desc = "Open: browse under cursor/follow linke note (visual)" })
 RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
   desc = "Misc: show keymaps curbuf",
   silent = true,
@@ -396,12 +396,12 @@ if vim.fn.executable "lazygit" == 1 then
   RUtils.map.nnoremap("<Leader>gG", function()
     Snacks.lazygit()
   end, { desc = "Git: lazygit (cwd) [snacks]" })
-  RUtils.map.nnoremap("<Leader>gf", function()
-    Snacks.lazygit.log_file()
-  end, { desc = "Git: lazygit current file history" })
-  RUtils.map.nnoremap("<Leader>gL", function()
-    Snacks.lazygit.log { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit log" })
+  -- RUtils.map.nnoremap("<Leader>gf", function()
+  --   Snacks.lazygit.log_file()
+  -- end, { desc = "Git: lazygit current file history" })
+  -- RUtils.map.nnoremap("<Leader>gL", function()
+  --   Snacks.lazygit.log { cwd = RUtils.root.git() }
+  -- end, { desc = "Git: lazygit log" })
   -- RUtils.map.nnoremap("<Leader>gLL", function()
   --   Snacks.lazygit.log()
   -- end, { desc = "Git: lazygit log (cwd)" })
@@ -508,9 +508,6 @@ RUtils.map.nnoremap("<Leader>uf", function()
     refresh_symbol_usage = function()
       require("symbol-usage").refresh()
     end,
-    open_output_panel = function()
-      cmd "OutputPanel"
-    end,
     resume_telescope = function()
       vim.cmd [[Telescope resume]]
     end,
@@ -557,8 +554,8 @@ RUtils.map.nnoremap("<Leader>uf", function()
       RUtils.info "no session cwd to save or no plugin session actived. abort it"
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
-end, { desc = "Misc: list commands" })
-RUtils.map.nnoremap("<Leader>gff", function()
+end, { desc = "Misc: list commands of misc" })
+RUtils.map.nnoremap("<Leader>gf", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds(
     vim.tbl_deep_extend("force", {

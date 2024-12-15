@@ -16,6 +16,13 @@ return {
   {
     "mhanberg/output-panel.nvim",
     event = "VeryLazy",
+    keys = {
+      {
+        "<Leader>oP",
+        "<CMD>OutputPanel<CR>",
+        desc = "Open: output panel [output-panel]",
+      },
+    },
     config = function()
       require("output_panel").setup()
     end,

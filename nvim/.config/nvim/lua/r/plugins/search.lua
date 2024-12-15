@@ -152,10 +152,10 @@ return {
       { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
       { "<Leader>fs", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
 
-      { "<Leader>gfs", function() require("fzf-lua").git_status() end, desc = "Git: show git status [fzflua]" },
-      { "<Leader>gfS", function() require("fzf-lua").git_stash() end, desc = "Git: show git stash [fzflua]" },
-      { "<Leader>gfc", function() require("fzf-lua").git_bcommits() end, desc = "Git: list commits buffer [ [fzflua]" },
-      { "<Leader>gfC", function() require("fzf-lua").git_commits() end, desc = "Git: list commits repos [ [fzflua]" },
+      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
+      { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
+      { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
+      { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
 
       { "<Leader>fh", function() local j = vim.fn.expand "<cword>" require("fzf-lua").help_tags { query = j } end, desc = "Fzflua: help tags" },
       {

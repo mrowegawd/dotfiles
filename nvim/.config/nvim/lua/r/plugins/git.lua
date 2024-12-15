@@ -47,13 +47,14 @@ return {
       "GitConflictListQf",
     },
     keys = {
+      { "<Leader>gr", "<CMD>GitConflictRefresh<CR>", desc = "Git: start gitconflict [gitconflict]" },
       {
-        "<Leader>gn",
+        "<g-down>",
         "<CMD>GitConflictNextConflict<CR>",
         desc = "Git: next conflict [gitconflict]",
       },
       {
-        "<Leader>gp",
+        "<g-up>",
         "<CMD>GitConflictPrevConflict<CR>",
         desc = "Git: prev conflict [gitconflict]",
       },
@@ -341,10 +342,10 @@ return {
           map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
           map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
           map("n", "<Leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
+
+          map("n", "<Leader>gb", function() gs.blame() end, "Git: blame [gitsigns]")
           -- map("n", "<Leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
-          map("n", "<Leader>ghB", function() gs.blame() end, "Git: open blame [gitsigns]")
-          map("n", "<Leader>ghd", gs.diffthis, "Git: diffthis [gitsigns]")
-          map("n", "<Leader>ghD", function() gs.diffthis "~" end, "Git: diffthis '~' [gitsigns]")
+
           map("n", "<Leader>xg", gs.setqflist, "Git: hunks quickfix [gitsigns] [trouble]")
 
           map("n", "gn", function()
@@ -499,7 +500,6 @@ return {
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
       },
-      { "<Leader>gc", "<CMD> Git commit <CR>", desc = "Git: commit [fugitive]" },
     },
   },
   -- VGIT
@@ -510,18 +510,18 @@ return {
     },
     keys = {
       {
-        "<Leader>ghP",
+        "<Leader>gP",
         function()
           return require("vgit").buffer_hunk_preview()
         end,
         desc = "Git: preview hunk [vgit]",
       },
       {
-        "<Leader>ghb",
+        "<Leader>gB",
         function()
           return require("vgit").buffer_blame_preview()
         end,
-        desc = "Git: preview blame hunk [vgit]",
+        desc = "Git: blame preview [vgit]",
       },
     },
     opts = {
@@ -617,7 +617,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       {
-        "<Leader>gvv",
+        "<Leader>gv",
         function()
           local current_line = vim.fn.line "."
           local file = vim.fn.expand "%"
@@ -628,7 +628,7 @@ return {
         desc = "Git: line hash history [diffview]",
       },
       {
-        "<Leader>gvv",
+        "<Leader>gv",
         function()
           local function exit_visual_mode()
             -- Exit visual mode, otherwise `getpos` will return postion of the last visual selection
@@ -851,13 +851,6 @@ return {
     },
     cmd = "Neogit",
     -- keys = {
-    --   {
-    --     "<Leader>gc",
-    --     function()
-    --       require("neogit").open { "commit" }
-    --     end,
-    --     desc = "Git(neogit): create commit",
-    --   },
     --   {
     --     "<Leader>gN",
     --     function()

@@ -60,14 +60,6 @@ return {
       }
       return {
         {
-          "<Localleader>oc",
-          function()
-            RUtils.terminal.float_calcure()
-          end,
-          mode = { "n", "v", "t" },
-          desc = "Terminal: calcure [toggleterm]",
-        },
-        {
           "<a-f>",
           function()
             zsh:toggle()

@@ -45,31 +45,31 @@ return {
       spec = {
         {
           mode = { "n", "v" },
-          { "<leader>b", group = "buffer" },
-          { "<leader>ba", group = "projectionist" },
+          { "<Leader>a", group = "add/qf/ql" },
+
+          { "<Leader>b", group = "buffer" },
+          { "<Leader>ba", group = "projectionist" },
+
+          { "<Leader>c", group = "code" },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
           { "<Leader>g", group = "git" },
-          { "<Leader>gf", group = "git-fzflua" },
           { "<Leader>gh", group = "hunks" },
-          { "<Leader>o", group = "linking" },
           { "<Leader>gu", group = "git-toggle" },
-          { "<Leader>gv", group = "git-visual" },
 
-          { "<Leader>a", group = "add/qf/ql" },
-          { "<Leader>c", group = "code" },
-          { "<Leader>u", group = "toggle" },
-          { "<Leader>t", group = "testing" },
+          { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },
-          { "<leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
+          { "<Leader>t", group = "testing" },
+          { "<Leader>u", group = "toggle" },
 
+          { "<Leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
+
+          { "<Localleader>N", group = "noice" },
           { "<Localleader>d", group = "database" },
           { "<Localleader>n", group = "note" },
           { "<Localleader>o", group = "open/misc" },
           { "<Localleader>r", group = "refactoring" },
-
-          { "<Localleader>N", group = "noice" },
           { "<Localleader>s", group = "snacks" },
         },
       },
