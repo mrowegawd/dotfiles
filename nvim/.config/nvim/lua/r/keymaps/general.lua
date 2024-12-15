@@ -112,7 +112,6 @@ end
 -- Tab
 RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab", silent = true })
 RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close tab", silent = true })
-RUtils.map.nnoremap("T", "<c-w>T", { desc = "Tab: convert buffer split to tab window", silent = true })
 
 RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab", silent = true })
 RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last tab", silent = true })
@@ -128,12 +127,11 @@ RUtils.map.nnoremap("<C-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab (
 -- │ BUFFER                                                  │
 -- ╰─────────────────────────────────────────────────────────╯
 
-RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: break buffer/change to new tab" })
-RUtils.map.nnoremap("<Leader>bO", RUtils.buf._only, { desc = "Buffer: buffonly" })
-RUtils.map.nnoremap("<Leader>bb", "<cmd>e #<cr>", { desc = "Buffer: switch to other buffer" })
+RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer split into tab window" })
+RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate file" })
 RUtils.map.nnoremap("<Leader>bd", RUtils.ui.bufremove, { desc = "Buffer: delete buffer" })
 RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
-RUtils.map.nnoremap("<Leader>bn", "<CMD>vnew<CR>", { desc = "Buffer: close buffer" })
+RUtils.map.nnoremap("<Leader>bn", "<CMD>vnew<CR>", { desc = "Buffer: open split new buffer" })
 RUtils.map.nnoremap("gh", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf(true)
 end, { desc = "Buffer/Qf: magic gh" })
@@ -175,8 +173,6 @@ local function magic_quit()
 end
 RUtils.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (visual)" })
-
-RUtils.map.nnoremap("B", "<C-^>", { desc = "Buffer: alternate file" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ COMMANDLINE                                              │
