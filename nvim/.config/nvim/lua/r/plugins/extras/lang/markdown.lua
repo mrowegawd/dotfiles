@@ -120,7 +120,7 @@ return {
     },
     keys = {
       {
-        "<Leader>um",
+        "<Localleader>nr",
         function()
           local m = require "render-markdown"
           if not is_render_markdown then
@@ -133,7 +133,7 @@ return {
         end,
         ft = { "markdown", "neorg", "org", "rmd" },
         mode = { "v", "n" },
-        desc = "Misc: toggle render markdown [render-markdown]",
+        desc = "Note: toggle render markdown [render-markdown]",
       },
     },
     ft = { "markdown", "norg", "rmd", "org" },

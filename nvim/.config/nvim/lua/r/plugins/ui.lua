@@ -138,18 +138,6 @@ return {
     ft = "help",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
-  -- NEOZOOM
-  {
-    "nyngwang/NeoZoom.lua",
-    keys = {
-      { "sm", "<CMD>NeoZoomToggle<CR>", desc = "View: toggle zoom [neozoom]" },
-      { "<a-m>", "<CMD>NeoZoomToggle<CR>", desc = "View: toggle zoom [neozoom]", mode = { "n", "t" } },
-    },
-    opts = {
-      scrolloff_on_enter = 7,
-      exclude_buftypes = {},
-    },
-  },
   -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
@@ -281,28 +269,28 @@ return {
         desc = "Noice: redirect cmdline",
       },
       {
-        "<Localleader>nd",
+        "<Localleader>Nd",
         function()
           require("noice").cmd "dismiss"
         end,
         desc = "Noice: dismiss all",
       },
       {
-        "<Localleader>nl",
+        "<Localleader>Nl",
         function()
           require("noice").cmd "last"
         end,
         desc = "Noice: last message",
       },
       {
-        "<Localleader>nh",
+        "<Localleader>Nh",
         function()
           require("noice").cmd "history"
         end,
         desc = "Noice: history",
       },
       {
-        "<Localleader>nf",
+        "<Localleader>Nf",
         function()
           require("noice").cmd "pick"
         end,

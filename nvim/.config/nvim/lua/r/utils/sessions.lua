@@ -61,10 +61,12 @@ function M.load_ses_dashboard()
           local async
           async = uv.new_async(vim.schedule_wrap(function()
             if async ~= nil then
-    if #vim.fn.getqflist() > 0 then
-      vim.cmd [[copen]]
-      vim.cmd [[wincmd p]]
-    end
+              -- NOTE: terkadang error kalau item list session tidak kita select
+              -- seharunya diperbaiki itu
+              if #vim.fn.getqflist() > 0 then
+                vim.cmd [[copen]]
+                vim.cmd [[wincmd p]]
+              end
 
               if vim.bo[0].filetype ~= "dashboard" then
                 if vim.bo[0].filetype == "" then
@@ -73,26 +75,25 @@ function M.load_ses_dashboard()
                 vim.cmd [[edit!]]
               end
 
-        require("qfsilet.note").get_todo()
+              require("qfsilet.note").get_todo()
 
               vim.cmd [[set cmdheight=0]]
+              async:close()
+            end
+          end))
 
-        async:close()
-      end
-    end))
-
-    if async ~= nil then
-      async:send()
-    end
+          if async ~= nil then
+            async:send()
+          end
 
           -- ensure treesitter loaded
-    if vim.bo[0].filetype ~= "dashboard" then
-      if vim.bo[0].filetype == "" then
-        return
-      end
-      vim.cmd [[edit!]]
-    end
-    end
+          if vim.bo[0].filetype ~= "dashboard" then
+            if vim.bo[0].filetype == "" then
+              return
+            end
+            vim.cmd [[edit!]]
+          end
+        end
       end,
     })
   else

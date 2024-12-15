@@ -30,7 +30,7 @@ fi
 # shellcheck source=/dev/null
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
-export TERMINAL="alacritty"
+export TERMINAL="kitty"
 
 # Set PATH ditaruh disini karena alasan nya biar 'ensure` PATH terakses ketika
 # membuka neovide
@@ -67,7 +67,7 @@ if grep -qi microsoft /proc/version; then
       sudo_autopasswd
 
       # Create user runtime directories
-      sudo mkdir $XDG_RUNTIME_DIR && sudo chmod 700 $XDG_RUNTIME_DIR && sudo chown $(id -un):$(id -gn) $XDG_RUNTIME_DIR
+      sudo mkdir "$XDG_RUNTIME_DIR" && sudo chmod 700 "$XDG_RUNTIME_DIR" && sudo chown $(id -un):$(id -gn) "$XDG_RUNTIME_DIR"
 
       # System D-Bus
       sudo service dbus start

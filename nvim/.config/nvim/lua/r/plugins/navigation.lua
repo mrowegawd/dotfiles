@@ -661,6 +661,9 @@ return {
           live = true,
           winhl = "NormalFloat:NormalFloat",
         },
+        providers = {
+          priority = { "lsp", "markdown", "norg" },
+        },
         -- These keymaps can be a string or a table for multiple keys.
         -- Set to `{}` to disable. (Using 'nil' will fallback to default keys)
         keymaps = {
@@ -723,21 +726,6 @@ return {
             vim.cmd(string.format("Neotree dir=%s", wiki_path))
           end,
           desc = "Misc: open file wikis explore [neotree]",
-        },
-
-        {
-          "<leader>ue",
-          function()
-            require("edgy").toggle()
-          end,
-          desc = "Toggle: toggle edgy [edgy]",
-        },
-        {
-          "<leader>uE",
-          function()
-            require("edgy").select()
-          end,
-          desc = "Misc: select window [edgy]",
         },
         {
           "<leader>ge",

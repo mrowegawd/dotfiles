@@ -128,11 +128,21 @@ local function __open_term()
     local wins_togal = get_total_wins()
 
     if #wins_togal == 1 then
-      vim.cmd.Vterm()
+      if RUtils.has "termim.nvim" then
+        vim.cmd.Vterm()
+      end
+      if RUtils.has "nvim-toggleterm.lua" then
+        vim.cmd.ToggleTerm()
+      end
       vim.cmd.startinsert()
       vim.api.nvim_win_set_width(0, 50)
     elseif #wins_togal > 1 then
-      vim.cmd.Vterm()
+      if RUtils.has "termim.nvim" then
+        vim.cmd.Vterm()
+      end
+      if RUtils.has "nvim-toggleterm.lua" then
+        vim.cmd.ToggleTerm()
+      end
       vim.cmd.startinsert()
       vim.cmd [[wincmd L]]
       vim.api.nvim_win_set_width(0, 50)
@@ -144,10 +154,6 @@ local function __open_term()
 end
 
 function M.toggle_right_term()
-  if not RUtils.has "termim.nvim" then
-    RUtils.warn "This extension requires termim.nvim "
-  end
-
   if (vim.bo.filetype == "" and vim.bo.buftype == "terminal") or vim.bo.filetype == "toggleterm" then
     if win_width_term() < 50 then
       vim.api.nvim_win_set_width(0, 50)
@@ -157,8 +163,6 @@ function M.toggle_right_term()
   end
 
   __open_term()
-
-  -- RUtils.info(vim.inspect(term_win.main_toggle))
 
   for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
     local winbufnr = vim.fn.winbufnr(vim.api.nvim_win_get_number(winid))
@@ -179,9 +183,15 @@ end
 
 function M.clock_mode()
   M.toggle_right_term()
+  local sterm_ok, _ = pcall(require, "sterm")
+  if sterm_ok then
+    vim.cmd [[STerm tclock clock -S]]
+  end
 
-  -- vim.cmd [[STerm $HOME/.asdf/shims/tclock clock -S]]
-  vim.cmd [[STerm tclock clock -S]]
+  local toggleterm_ok, _ = pcall(require, "toggleterm")
+  if toggleterm_ok then
+    vim.cmd [[TermExec dir=vertical size=50 cmd="tclock clock -S"]]
+  end
 
   if win_height_term() > 10 then
     vim.api.nvim_win_set_height(0, 10)
@@ -193,10 +203,7 @@ end
 
 function M.smart_split()
   if win_width_term() > win_height_term() then
-    -- __open_term()
-
     if win_width_term() > win_height_term() then
-      -- vim.cmd [[VTerm]]
       vim.cmd [[ToggleTerm direction=horizontal]]
     else
       vim.cmd [[ToggleTerm direction=vertical]]

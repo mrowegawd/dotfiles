@@ -379,7 +379,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", "") },
             fzf_opts = {
-              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-d: diff hHead..head | ctrl-x: hhistory]],
+              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | alt-d: diffopen Head..commit | alt-h: diffopen commit]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -402,28 +402,27 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-d"] = function(selected, _)
+              ["alt-d"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
-                local cmdmsg = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash
+                local cmdmsg = "DiffviewOpen -uno " .. "HEAD.." .. commit_hash .. "~1"
                 vim.cmd(cmdmsg)
 
-                RUtils.info("Commit hash history: HEAD.." .. commit_hash, { title = "FZFGit" })
+                RUtils.info("Diffopen: HEAD~1.." .. commit_hash .. "~1", { title = "FZFGit" })
               end,
               ["ctrl-g"] = function()
                 require("fzf-lua").fzf_live(function(query)
                   return RUtils.fzf_diffview.git_log_content_finder(query, nil)
                 end, RUtils.fzf_diffview.opts_diffview_log("repo", "Search Repo Log Content> "))
               end,
-              ["ctrl-x"] = function(selected, _)
+              ["alt-h"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
-                local cmdmsg = "DiffviewOpen -uno " .. commit_hash
+                local cmdmsg = "DiffviewOpen " .. commit_hash
 
                 vim.cmd(cmdmsg)
-
-                RUtils.info("All history commit: " .. commit_hash, { title = "FZFGit" })
+                RUtils.info("DiffOpen: " .. commit_hash, { title = "FZFGit" })
               end,
             },
           },
@@ -437,7 +436,7 @@ return {
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
             winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
             fzf_opts = {
-              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | ctrl-d: diff hHead..head | ctrl-g: hgrep | ctrl-x: hhistory]],
+              ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | alt-d: diffopen Head..commit | alt-h: diffopen commit]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -460,16 +459,14 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["ctrl-d"] = function(selected, _)
+              ["alt-d"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
 
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
-
                 vim.cmd(cmdmsg)
-
-                RUtils.info("Commit hash history: " .. commit_hash, { title = "FZFGit" })
+                RUtils.info("Diffopen: " .. commit_hash .. " -- ", { title = "FZFGit" })
               end,
               ["ctrl-g"] = function()
                 local bufnr = vim.fn.bufnr()
@@ -481,7 +478,7 @@ return {
                   bufnr
                 ))
               end,
-              ["ctrl-x"] = function(selected, _)
+              ["alt-h"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local cmdmsg = "DiffviewOpen -uno " .. commit_hash
@@ -1602,7 +1599,7 @@ return {
       --   desc = "LSP: type definitions [trouble]",
       -- },
       {
-        "<Leader>xX",
+        "<Leader>xD",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then
@@ -1611,10 +1608,10 @@ return {
 
           vim.cmd [[Trouble diagnostics toggle]]
         end,
-        desc = "Diagnostic: list workspaces diagnostic [trouble]",
+        desc = "Diagnostic: workspaces diagnostics [trouble]",
       },
       {
-        "<Leader>xx",
+        "<Leader>xd",
         function()
           local qf_win = RUtils.cmd.windows_is_opened { "qf" }
           if qf_win.found then
@@ -1622,7 +1619,7 @@ return {
           end
           vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
         end,
-        desc = "Diagnostic: list document diagnostic [trouble]",
+        desc = "Diagnostic: document diagnostisc [trouble]",
       },
       {
         "<Leader>xl",

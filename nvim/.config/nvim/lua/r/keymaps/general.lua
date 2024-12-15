@@ -422,6 +422,24 @@ RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mis
 RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
 RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
 
+if vim.fn.executable "lazygit" == 1 then
+  RUtils.map.nnoremap("<Leader>gg", function()
+    Snacks.lazygit { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit (root dir) [snacks]" })
+  RUtils.map.nnoremap("<Leader>gG", function()
+    Snacks.lazygit()
+  end, { desc = "Git: lazygit (cwd) [snacks]" })
+  RUtils.map.nnoremap("<Leader>gf", function()
+    Snacks.lazygit.log_file()
+  end, { desc = "Git: lazygit current file history" })
+  RUtils.map.nnoremap("<Leader>gL", function()
+    Snacks.lazygit.log { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit log" })
+  -- RUtils.map.nnoremap("<Leader>gLL", function()
+  --   Snacks.lazygit.log()
+  -- end, { desc = "Git: lazygit log (cwd)" })
+end
+
 -- ╭─────────────────────────────────────────────────────────╮
 -- │ COMMANDS                                                │
 -- ╰─────────────────────────────────────────────────────────╯

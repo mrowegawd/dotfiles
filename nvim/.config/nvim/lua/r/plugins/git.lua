@@ -345,7 +345,7 @@ return {
           map("n", "<Leader>ghB", function() gs.blame() end, "Git: open blame [gitsigns]")
           map("n", "<Leader>ghd", gs.diffthis, "Git: diffthis [gitsigns]")
           map("n", "<Leader>ghD", function() gs.diffthis "~" end, "Git: diffthis '~' [gitsigns]")
-          map("n", "<Leader>gq", gs.setqflist, "Git: select all hunks and send to qf [gitsigns]")
+          map("n", "<Leader>xg", gs.setqflist, "Git: hunks quickfix [gitsigns] [trouble]")
 
           map("n", "gn", function()
             if vim.wo.diff then

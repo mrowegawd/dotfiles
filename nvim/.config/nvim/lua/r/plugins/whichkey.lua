@@ -14,12 +14,16 @@ return {
       },
     },
     opts = {
-      preset = "helix",
+      -- preset = "helix",
       defaults = {},
       icons = {
         breadcrumb = " ", -- symbol used in the command line area that shows your active key combo
         separator = " ", -- symbol used between a key and it's label
         mappings = false,
+      },
+      keys = {
+        scroll_down = "<c-d>", -- binding to scroll down inside the popup
+        scroll_up = "<c-u>", -- binding to scroll up inside the popup
       },
       plugins = {
         marks = true,
@@ -65,11 +69,11 @@ return {
           { "<Leader>u", group = "toggle" },
           { "<Leader>t", group = "testing" },
           { "<Leader>r", group = "refactor" },
-          { "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
+          { "<leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
           { "<Localleader>d", group = "DB" },
-          { "<Localleader>f", group = "note" },
-          { "<Localleader>n", group = "noice" },
+          { "<Localleader>n", group = "note" },
+          { "<Localleader>N", group = "noice" },
           { "<Localleader>o", group = "open/misc" },
         },
       },

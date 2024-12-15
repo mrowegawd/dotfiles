@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/horizon"
+#include ".config/miscxrdb/xresource-theme/coffeecat"
 
 ! --------------
 ! XFT SETTINGS

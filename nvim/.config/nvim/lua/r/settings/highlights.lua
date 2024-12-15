@@ -126,6 +126,39 @@ function M.tint(color, percent)
   return fmt("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
 
+---@param hex_str string hexadecimal value of a color
+local hex_to_rgb = function(hex_str)
+  local hex = "[abcdef0-9][abcdef0-9]"
+  local pat = "^#(" .. hex .. ")(" .. hex .. ")(" .. hex .. ")$"
+  hex_str = string.lower(hex_str)
+
+  assert(string.find(hex_str, pat) ~= nil, "hex_to_rgb: invalid hex_str: " .. tostring(hex_str))
+
+  local red, green, blue = string.match(hex_str, pat)
+  return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
+end
+
+-- local bg = "#000000"
+
+---@param fg string forecrust color
+---@param bg string background color
+---@param alpha number number between 0 and 1. 0 results in bg, 1 results in fg
+function M.blend(fg, bg, alpha)
+  bg = hex_to_rgb(bg)
+  fg = hex_to_rgb(fg)
+
+  local blendChannel = function(i)
+    local ret = (alpha * fg[i] + ((1 - alpha) * bg[i]))
+    return math.floor(math.min(math.max(0, ret), 255) + 0.5)
+  end
+
+  return string.format("#%02X%02X%02X", blendChannel(1), blendChannel(2), blendChannel(3))
+end
+
+function M.darken(hex, amount, bg)
+  return M.blend(hex, bg, math.abs(amount))
+end
+
 local err_warn = vim.schedule_wrap(function(group, attribute)
   notify(fmt("failed to get highlight [%s] for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
     title = fmt("Highlight - get(%s)", group),

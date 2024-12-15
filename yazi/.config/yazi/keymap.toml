@@ -357,6 +357,9 @@ keymap = [
     "/",
   ], run = "find --smart", desc = "Find next file" },
   { on = [
+    "<c-g>",
+  ], run = "find --smart", desc = "Find next file" },
+  { on = [
     "?",
   ], run = "find --previous --smart", desc = "Find previous file" },
   { on = [

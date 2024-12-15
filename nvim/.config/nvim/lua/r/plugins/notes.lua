@@ -11,21 +11,21 @@ return {
     ft = "org",
     keys = {
       {
-        "<Localleader>fA",
+        "<Localleader>nA",
         function()
           return RUtils.notes.open_agenda_file_lists()
         end,
         desc = "Note: open agenda file list [orgmode]",
       },
       {
-        "<Localleader>fc",
+        "<Localleader>nc",
         function()
           require("orgmode").action "capture.prompt"
         end,
         desc = "Note: capture note [orgmode]",
       },
       {
-        "<Localleader>fa",
+        "<Localleader>na",
         function()
           require("orgmode").action "agenda.prompt"
         end,
@@ -171,8 +171,8 @@ return {
         disable_all = false,
         prefix = "<Leader>g",
         global = {
-          org_capture = "<Localleader>fc",
-          org_agenda = "<Localleader>fa",
+          org_capture = "<Localleader>nc",
+          org_agenda = "<Localleader>na",
         },
         agenda = {
           org_agenda_later = "f",
@@ -379,7 +379,7 @@ return {
     cmd = { "ObsidianDailies" },
     keys = {
       {
-        "<Localleader>fg",
+        "<Localleader>ng",
         function()
           return fzf_lua.live_grep_glob {
             prompt = "  ",
@@ -397,7 +397,7 @@ return {
         desc = "Note: live grep notes [obsidian]",
       },
       {
-        "<Localleader>fg",
+        "<Localleader>ng",
         function()
           local viz = RUtils.cmd.get_visual_selection { strict = true }
           if viz then
@@ -422,7 +422,7 @@ return {
         mode = "v",
       },
       {
-        "<Localleader>ff",
+        "<Localleader>nf",
         function()
           return fzf_lua.files {
             prompt = "   ",
@@ -443,17 +443,17 @@ return {
         desc = "Note: find note files [obsidian]",
       },
       {
-        "<Localleader>fn",
+        "<Localleader>nn",
         ":ObsidianNew ",
         desc = "Note: create new note [obsidian]",
       },
       {
-        "<Localleader>fN",
+        "<Localleader>nN",
         "<CMD>ObsidianDailies<CR>",
-        desc = "Note: open create new note dailies [obsidian]",
+        desc = "Note: open and select daily note [obsidian]",
       },
       {
-        "<Localleader>fl",
+        "<Localleader>nl",
         function()
           RUtils.markdown.find_note_by_tag()
         end,
