@@ -23,7 +23,6 @@ local LazyUtil = require "lazy.core.util"
 ---@field inject r.utils.inject
 ---@field platform r.utils.platform
 ---@field file r.utils.file
----@field neorg r.utils.neorg
 ---@field markdown r.utils.markdown
 ---@field windowdim r.utils.windowdim
 ---@field maim r.utils.maim

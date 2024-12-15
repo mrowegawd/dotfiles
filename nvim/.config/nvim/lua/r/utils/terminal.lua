@@ -1,5 +1,5 @@
----@class r.utils.terminal
 ---@overload fun(cmd: string|string[], opts: LazyTermOpts): LazyFloat
+---@class r.utils.terminal
 local M = setmetatable({}, {
   __call = function(m, ...)
     return m.open(...)
@@ -84,24 +84,6 @@ function M.open(cmd, opts)
   return terminals[termkey]
 end
 
-local function get_total_wins()
-  local tbl_winsplits = {}
-  local win_amount = vim.api.nvim_tabpage_list_wins(0)
-  for _, winnr in ipairs(win_amount) do
-    if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
-      local winbufnr = vim.fn.winbufnr(winnr)
-
-      if winbufnr > 0 then
-        local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
-        if not vim.tbl_contains({ "notify" }, winft) and #winft > 0 then
-          table.insert(tbl_winsplits, winft)
-        end
-      end
-    end
-  end
-  return tbl_winsplits
-end
-
 local function win_width_term()
   return vim.fn.winwidth(0)
 end
@@ -125,7 +107,7 @@ local term_win = {
 local function __open_term()
   local term = RUtils.cmd.windows_is_opened { "terminal" }
   if not term.found then
-    local wins_togal = get_total_wins()
+    local wins_togal = RUtils.cmd.get_total_wins()
 
     if #wins_togal == 1 then
       if RUtils.has "termim.nvim" then
