@@ -173,11 +173,12 @@ return {
           end,
 
           open_lazygit = function()
-            RUtils.lazygit.open { ctrl_hjkl = true }
+            Snacks.lazygit()
           end,
 
           open_lazydocker = function()
-            RUtils.lazydocker.open { ctrl_hjkl = true }
+            RUtils.warn("not implemented yet!", { title = "Lazydocker" })
+            --   Snacks.lazydocker()
           end,
 
           open_terminal = function()

@@ -11,17 +11,13 @@ local LazyUtil = require "lazy.core.util"
 ---@field colortbl r.utils.colortbl
 ---@field fzf_diffview r.utils.fzf_diffview
 ---@field fzflua r.utils.fzflua
----@field telescope r.utils.telescope
----@field toggle r.utils.toggle
 ---@field session r.utils.session
 ---@field format r.utils.format
 ---@field extras r.utils.extras
 ---@field buf r.utils.buf
 ---@field plugin r.utils.plugin
 ---@field terminal r.utils.terminal
----@field lazygit r.utils.lazygit
 ---@field mini r.utils.mini
----@field lazydocker r.utils.lazydocker
 ---@field tiling r.utils.tiling
 ---@field uisec r.utils.uisec
 ---@field inject r.utils.inject
@@ -34,7 +30,6 @@ local LazyUtil = require "lazy.core.util"
 ---@field cmd r.utils.cmd
 ---@field map r.utils.map
 ---@field cmp r.utils.cmp
----@field tsformat r.utils.tsformat
 ---@field todocomments r.utils.todocomments
 local M = {}
 

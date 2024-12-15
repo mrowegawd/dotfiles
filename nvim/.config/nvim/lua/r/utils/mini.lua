@@ -1,47 +1,6 @@
 ---@class r.utils.mini
 local M = {}
 
----@alias Mini.ai.loc {line:number, col:number}
----@alias Mini.ai.region {from:Mini.ai.loc, to:Mini.ai.loc}
-
--- Mini.ai indent text object
--- For "a", it will include the non-whitespace line surrounding the indent block.
--- "a" is line-wise, "i" is character-wise.
-function M.ai_indent(ai_type)
-  local spaces = (" "):rep(vim.o.tabstop)
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  local indents = {} ---@type {line: number, indent: number, text: string}[]
-
-  for l, line in ipairs(lines) do
-    if not line:find "^%s*$" then
-      indents[#indents + 1] = { line = l, indent = #line:gsub("\t", spaces):match "^%s*", text = line }
-    end
-  end
-
-  local ret = {} ---@type (Mini.ai.region | {indent: number})[]
-
-  for i = 1, #indents do
-    if i == 1 or indents[i - 1].indent < indents[i].indent then
-      local from, to = i, i
-      for j = i + 1, #indents do
-        if indents[j].indent < indents[i].indent then
-          break
-        end
-        to = j
-      end
-      from = ai_type == "a" and from > 1 and from - 1 or from
-      to = ai_type == "a" and to < #indents and to + 1 or to
-      ret[#ret + 1] = {
-        indent = indents[i].indent,
-        from = { line = indents[from].line, col = ai_type == "a" and 1 or indents[from].indent + 1 },
-        to = { line = indents[to].line, col = #indents[to].text },
-      }
-    end
-  end
-
-  return ret
-end
-
 -- taken from MiniExtra.gen_ai_spec.buffer
 function M.ai_buffer(ai_type)
   local start_line, end_line = 1, vim.fn.line "$"
@@ -60,57 +19,78 @@ function M.ai_buffer(ai_type)
 end
 
 -- register all text objects with which-key
-function M.ai_whichkey()
-  ---@type table<string, string|table>
-  local i = {
-    [" "] = "Whitespace",
-    ['"'] = 'Balanced "',
-    ["'"] = "Balanced '",
-    ["`"] = "Balanced `",
-    ["("] = "Balanced (",
-    [")"] = "Balanced ) including white-space",
-    [">"] = "Balanced > including white-space",
-    ["<lt>"] = "Balanced <",
-    ["]"] = "Balanced ] including white-space",
-    ["["] = "Balanced [",
-    ["}"] = "Balanced } including white-space",
-    ["{"] = "Balanced {",
-    ["?"] = "User Prompt",
-    _ = "Underscore",
-    a = "Argument",
-    b = "Balanced ), ], }",
-    c = "Class",
-    d = "Digit(s)",
-    e = "Word in CamelCase & snake_case",
-    f = "Function",
-    g = "Entire file",
-    i = "Indent",
-    o = "Block, conditional, loop",
-    q = "Quote `, \", '",
-    t = "Tag",
-    u = "Use/call function & method",
-    U = "Use/call without dot in name",
+---@param opts table
+function M.ai_whichkey(opts)
+  local objects = {
+    { " ", desc = "whitespace" },
+    { '"', desc = '" string' },
+    { "'", desc = "' string" },
+    { "(", desc = "() block" },
+    { ")", desc = "() block with ws" },
+    { "<", desc = "<> block" },
+    { ">", desc = "<> block with ws" },
+    { "?", desc = "user prompt" },
+    { "U", desc = "use/call without dot" },
+    { "[", desc = "[] block" },
+    { "]", desc = "[] block with ws" },
+    { "_", desc = "underscore" },
+    { "`", desc = "` string" },
+    { "a", desc = "argument" },
+    { "b", desc = ")]} block" },
+    { "c", desc = "class" },
+    { "d", desc = "digit(s)" },
+    { "e", desc = "CamelCase / snake_case" },
+    { "f", desc = "function" },
+    { "g", desc = "entire file" },
+    { "i", desc = "indent" },
+    { "o", desc = "block, conditional, loop" },
+    { "q", desc = "quote `\"'" },
+    { "t", desc = "tag" },
+    { "u", desc = "use/call" },
+    { "{", desc = "{} block" },
+    { "}", desc = "{} with ws" },
   }
-  local a = vim.deepcopy(i)
-  for k, v in pairs(a) do
-    a[k] = v:gsub(" including.*", "")
-  end
 
-  local ic = vim.deepcopy(i)
-  local ac = vim.deepcopy(a)
-  for key, name in pairs { n = "Next", l = "Last" } do
-    i[key] = vim.tbl_extend("force", { name = "Inside " .. name .. " textobject" }, ic)
-    a[key] = vim.tbl_extend("force", { name = "Around " .. name .. " textobject" }, ac)
+  ---@type wk.Spec[]
+  local ret = { mode = { "o", "x" } }
+  ---@type table<string, string>
+  local mappings = vim.tbl_extend("force", {}, {
+    around = "a",
+    inside = "i",
+    around_next = "an",
+    inside_next = "in",
+    around_last = "al",
+    inside_last = "il",
+  }, opts.mappings or {})
+  mappings.goto_left = nil
+  mappings.goto_right = nil
+
+  for name, prefix in pairs(mappings) do
+    name = name:gsub("^around_", ""):gsub("^inside_", "")
+    ret[#ret + 1] = { prefix, group = name }
+    for _, obj in ipairs(objects) do
+      local desc = obj.desc
+      if prefix:sub(1, 1) == "i" then
+        desc = desc:gsub(" with ws", "")
+      end
+      ret[#ret + 1] = { prefix .. obj[1], desc = obj.desc }
+    end
   end
-  require("which-key").register {
-    mode = { "o", "x" },
-    i = i,
-    a = a,
-  }
+  require("which-key").add(ret, { notify = false })
 end
 
 ---@param opts {skip_next: string, skip_ts: string[], skip_unbalanced: boolean, markdown: boolean}
 function M.pairs(opts)
+  Snacks.toggle({
+    name = "Mini Pairs",
+    get = function()
+      return not vim.g.minipairs_disable
+    end,
+    set = function(state)
+      vim.g.minipairs_disable = not state
+    end,
+  }):map "<leader>up"
+
   local pairs = require "mini.pairs"
   pairs.setup(opts)
   local open = pairs.open

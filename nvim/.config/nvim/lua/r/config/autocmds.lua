@@ -261,14 +261,6 @@ RUtils.cmd.augroup("WindowDim", {
   end,
 })
 
--- RUtils.cmd.augroup("ConvertNorg", {
---   event = { "BufWritePost" },
---   pattern = { "*.norg" },
---   command = function()
---     RUtils.neorg.convert_norg_to_markdown()
---   end,
--- })
-
 RUtils.cmd.augroup("CheckOutsideTime", {
   -- automatically check for changed files outside vim
   event = { "FocusGained", "TermClose", "TermLeave" },

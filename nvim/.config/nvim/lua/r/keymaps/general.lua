@@ -416,11 +416,11 @@ RUtils.map.vnoremap("j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr 
 RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 
 -- Visual
-RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
-RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
+-- RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
+-- RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
 
-RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
-RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
+-- RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
+-- RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
 
 if vim.fn.executable "lazygit" == 1 then
   RUtils.map.nnoremap("<Leader>gg", function()
@@ -637,9 +637,6 @@ RUtils.map.nnoremap("<Leader>gff", function()
       git_blame = function()
         local gs = package.loaded.gitsigns
         gs.blame()
-      end,
-      git_browse = function()
-        RUtils.lazygit.browse()
       end,
     }, {}),
     { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
