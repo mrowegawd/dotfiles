@@ -47,7 +47,7 @@ return {
       "GitConflictListQf",
     },
     keys = {
-      { "<Leader>gr", "<CMD>GitConflictRefresh<CR>", desc = "Git: start gitconflict [gitconflict]" },
+      { "<Leader>gr", "<CMD>GitConflictRefresh<CR>", desc = "Git: start/refresh git conflict [gitconflict]" },
       {
         "<g-down>",
         "<CMD>GitConflictNextConflict<CR>",
