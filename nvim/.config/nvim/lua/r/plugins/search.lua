@@ -1353,12 +1353,12 @@ return {
     cmd = { "GrugFar" },
     keys = {
       {
-        "<Leader>F",
+        "<Leader>uF",
         "<CMD>GrugFar<CR>",
         desc = "Misc: open grug [grugfar]",
       },
       {
-        "<Leader>F",
+        "<Leader>uF",
         function()
           local grug = require "grug-far"
           local ext = vim.bo.buftype == "" and vim.fn.expand "%:e"

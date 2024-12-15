@@ -249,14 +249,15 @@ return {
     "mistweaverco/kulala.nvim",
     ft = "http",
     config = true,
+    --stylua: ignore
     keys = {
-      { "<leader>R", "", desc = "Kulala: rest", ft = "http" },
-      { "rb", "<cmd>lua require('kulala').scratchpad()<cr>", desc = "Kulala: open scratchpad", ft = "http" },
-      { "rc", "<cmd>lua require('kulala').copy()<cr>", desc = "Kulala: copy as cURL", ft = "http" },
-      { "rf", "<cmd>lua require('kulala').run()<cr>", desc = "Kulala: send the request", ft = "http" },
-      { "rH", "<cmd>lua require('kulala').toggle_view()<cr>", desc = "Kulala: toggle headers/body", ft = "http" },
-      { "ri", "<cmd>lua require('kulala').inspect()<cr>", desc = "Kulala: inspect current request", ft = "http" },
-      { "rr", "<cmd>lua require('kulala').close()<cr>", desc = "Kulala: close window", ft = "http" },
+      { "<Leader>r", "", desc = "Kulala: rest", ft = "http" },
+      { "<Leader>rb", "<cmd>lua require('kulala').scratchpad()<cr>", desc = "Tasks: open scratchpad [kulala]", ft = "http" },
+      { "<Leader>rc", "<cmd>lua require('kulala').copy()<cr>", desc = "Tasks: copy as cURL [kulala]", ft = "http" },
+      { "<Leader>rf", "<cmd>lua require('kulala').run()<cr>", desc = "Tasks: send the request [kulala]", ft = "http" },
+      { "<Leader>rH", "<cmd>lua require('kulala').toggle_view()<cr>", desc = "Kulala: toggle headers/body [kulala]", ft = "http", },
+      { "<Leader>ri", "<cmd>lua require('kulala').inspect()<cr>", desc = "Tasks: inspect current request [kulala]", ft = "http", },
+      { "<Leader>rr", "<cmd>lua require('kulala').close()<cr>", desc = "Tasks: close window [kulala]", ft = "http" },
       {
         "<c-p>",
         "<cmd>lua require('kulala').jump_prev()<cr>",

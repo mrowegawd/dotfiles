@@ -4,10 +4,10 @@ return {
   -- TRANSLATE.NVIM
   {
     "voldikss/vim-translator",
+    cmd = "TranslateW",
     keys = {
-      { "<Localleader>ot", "<Plug>TranslateW", desc = "Misc: translate on cursor [vim-translator]" },
       {
-        "<Localleader>ot",
+        "<Leader>ut",
         "<Plug>TranslateWV",
         desc = "Misc: translate on select visual mode [vim-translator]",
         mode = { "v" },

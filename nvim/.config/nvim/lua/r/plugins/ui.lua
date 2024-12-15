@@ -221,11 +221,6 @@ return {
         },
       })
 
-      -- Toggle the profiler
-      Snacks.toggle.profiler():map "<leader>pp"
-      -- Toggle the profiler highlights
-      Snacks.toggle.profiler_highlights():map "<leader>ph"
-
       return {
         bigfile = { enabled = true },
         notifier = { enabled = true },
@@ -237,11 +232,12 @@ return {
     end,
     -- stylua: ignore
     keys = {
-      { "<Leader>.",  function() Snacks.scratch() end, desc = "Misc: toggle scratch buffer [snacks]" },
-      { "<Leader>S",  function() Snacks.scratch.select() end, desc = "Misc: select scratch buffer [snacks]" },
-      { "<Leader>ps", function() Snacks.profiler.scratch() end, desc = "Misc: profiler scratch buffer [snacks]" },
-      { "<Leader>FC", function() Snacks.notifier.show_history() end, desc = "Misc: notification history [snacks]" },
-      { "<Leader>un", function() Snacks.notifier.hide() end, desc = "Misc: dismiss all notifications [snacks]" },
+      -- { "<Localleader>s.", function() Snacks.scratch() end, desc = "Snacks: toggle scratch buffer" },
+      -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
+      -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
+
+      { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snacks: notification history" },
+      { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snacks: dismiss all notifications" },
     },
     config = function(_, opts)
       local notify = vim.notify

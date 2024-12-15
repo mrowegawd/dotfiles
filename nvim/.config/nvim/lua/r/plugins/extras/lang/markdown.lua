@@ -13,7 +13,7 @@ return {
     optional = true,
     keys = {
       {
-        "<leader>cE",
+        "<Leader>cE",
         function()
           require("conform").format { formatters = { "cbfmt" }, timeout_ms = 5000 }
         end,

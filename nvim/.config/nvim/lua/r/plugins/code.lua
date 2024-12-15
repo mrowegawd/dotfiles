@@ -772,17 +772,17 @@ return {
       "stevearc/overseer.nvim",
     },
     keys = {
-      { "rF", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
+      { "<Leader>rF", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
 
-      { "rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
-      { "rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
+      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
+      { "<Leader>rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
 
-      { "rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
-      { "rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
+      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
+      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
 
-      { "re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },
-      { "rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Tasks: load global rmuxrc.json" },
-      { "rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Tasks: show setup config" },
+      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },
+      { "<Leader>rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Tasks: load global rmuxrc.json" },
+      { "<Leader>rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Tasks: show setup config" },
     },
     opts = {
       base = {
@@ -807,87 +807,87 @@ return {
     },
     keys = {
       {
-        "<leader>rs",
+        "<Localleader>rs",
         function()
           require("telescope").extensions.refactoring.refactors()
         end,
         mode = "v",
-        desc = "Refactor: select (visual) [refactoring]",
+        desc = "Reactoring: select (visual) [refactoring]",
       },
       {
-        "<leader>ri",
+        "<Localleader>ri",
         function()
           require("refactoring").refactor "Inline Variable"
         end,
         mode = { "n", "v" },
-        desc = "Refactor: inline variable [refactoring]",
+        desc = "Reactoring: inline variable [refactoring]",
       },
       {
-        "<leader>rb",
+        "<Localleader>rb",
         function()
           require("refactoring").refactor "Extract Block"
         end,
-        desc = "Refactor: extract block [refactoring]",
+        desc = "Reactoring: extract block [refactoring]",
       },
       {
-        "<leader>rf",
+        "<Localleader>rf",
         function()
           require("refactoring").refactor "Extract Block To File"
         end,
-        desc = "Refactor: extract block to file [refactoring]",
+        desc = "Reactoring: extract block to file [refactoring]",
       },
       {
-        "<leader>rP",
+        "<Localleader>rP",
         function()
           require("refactoring").debug.printf { below = false }
         end,
-        desc = "Refactor: debug print [refactoring]",
+        desc = "Reactoring: debug print [refactoring]",
       },
       {
-        "<leader>rp",
+        "<Localleader>rp",
         function()
           require("refactoring").debug.print_var { normal = true }
         end,
-        desc = "Refactor: debug print variable [refactoring]",
+        desc = "Reactoring: debug print variable [refactoring]",
       },
       {
-        "<leader>rc",
+        "<Localleader>rc",
         function()
           require("refactoring").debug.cleanup {}
         end,
-        desc = "Refactor: debug cleanup [refactoring]",
+        desc = "Reactoring: debug cleanup [refactoring]",
       },
       {
-        "<leader>rf",
+        "<Localleader>rf",
         function()
           require("refactoring").refactor "Extract Function"
         end,
         mode = "v",
-        desc = "Refactor: extract function [refactoring]",
+        desc = "Reactoring: extract function [refactoring]",
       },
       {
-        "<leader>rF",
+        "<Localleader>rF",
         function()
           require("refactoring").refactor "Extract Function To File"
         end,
         mode = "v",
-        desc = "Refactor: extract function to file (visual) [refactoring]",
+        desc = "Reactoring: extract function to file (visual) [refactoring]",
       },
       {
-        "<leader>rx",
+        "<Localleader>rx",
         function()
           require("refactoring").refactor "Extract Variable"
         end,
         mode = "v",
-        desc = "Refactor: extract variable (visual) [refactoring]",
+        desc = "Reactoring: extract variable (visual) [refactoring]",
       },
       {
-        "<leader>rp",
+        "<Localleader>rp",
         function()
           require("refactoring").debug.print_var {}
         end,
         mode = "v",
-        desc = "Refactor: debug print variable [refactoring]",
+        desc = "Reactoring: debug print variable [refactoring]",
       },
     },
     opts = {

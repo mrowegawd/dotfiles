@@ -261,8 +261,9 @@ Snacks.toggle.option("spell", { name = "Spelling" }):map "<Leader>us"
 Snacks.toggle.scroll():map "<Leader>uS"
 Snacks.toggle.animate():map "<Leader>ua"
 Snacks.toggle.treesitter():map "<Leader>uT"
-Snacks.toggle.profiler():map "<leader>dpp"
-Snacks.toggle.profiler_highlights():map "<leader>dph"
+
+Snacks.toggle.profiler():map "<Localleader>spp"
+Snacks.toggle.profiler_highlights():map "<Localleader>sph"
 
 if vim.lsp.inlay_hint then
   Snacks.toggle.inlay_hints():map "<Leader>uh"

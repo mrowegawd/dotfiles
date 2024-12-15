@@ -14,7 +14,7 @@ return {
       },
     },
     opts = {
-      -- preset = "helix",
+      preset = "helix",
       defaults = {},
       icons = {
         breadcrumb = " ", -- symbol used in the command line area that shows your active key combo
@@ -45,15 +45,7 @@ return {
       spec = {
         {
           mode = { "n", "v" },
-          --{ "<Leader><tab>", group = "tabs" },
-          { "s", group = "tabs" },
-          {
-            "<leader>b",
-            group = "buffer",
-            expand = function()
-              return require("which-key.extras").expand.buf()
-            end,
-          },
+          { "<leader>b", group = "buffer" },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
@@ -68,13 +60,16 @@ return {
           { "<Leader>c", group = "code" },
           { "<Leader>u", group = "toggle" },
           { "<Leader>t", group = "testing" },
-          { "<Leader>r", group = "refactor" },
+          { "<Leader>r", group = "run/tasks" },
           { "<leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
-          { "<Localleader>d", group = "DB" },
+          { "<Localleader>d", group = "database" },
           { "<Localleader>n", group = "note" },
-          { "<Localleader>N", group = "noice" },
           { "<Localleader>o", group = "open/misc" },
+          { "<Localleader>r", group = "refactoring" },
+
+          { "<Localleader>N", group = "noice" },
+          { "<Localleader>s", group = "snacks" },
         },
       },
     },
