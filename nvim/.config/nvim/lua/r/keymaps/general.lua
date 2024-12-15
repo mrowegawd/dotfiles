@@ -138,41 +138,8 @@ end, { desc = "Buffer/Qf: magic gh" })
 RUtils.map.nnoremap("gl", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf()
 end, { desc = "Buffer/Qf: magic gl" })
-
-local function magic_quit()
-  local buf_fts = {
-    ["fugitive"] = "bd",
-    ["Trouble"] = "bd",
-    ["help"] = "bd",
-    ["octo"] = "bd",
-    ["log"] = "bd",
-    ["Outline"] = "bd",
-    ["DiffviewFileHistory"] = function()
-      vim.cmd "DiffviewClose"
-    end,
-    ["DiffviewFiles"] = function()
-      vim.cmd "DiffviewClose"
-    end,
-  }
-
-  if buf_fts[vim.bo[0].filetype] then
-    if type(buf_fts[vim.bo[0].filetype]) == "function" then
-      buf_fts[vim.bo[0].filetype]()
-    else
-      cmd(buf_fts[vim.bo[0].filetype])
-    end
-  else
-    local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
-    if bufname and bufname:match "diffview://" then
-      vim.cmd "DiffviewClose"
-      return
-    end
-
-    cmd [[q!]]
-  end
-end
-RUtils.map.nnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit" })
-RUtils.map.vnoremap("<Leader><TAB>", magic_quit, { desc = "Buffer: magic exit (visual)" })
+RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
+RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
 
 -- ╭──────────────────────────────────────────────────────────╮
 -- │ COMMANDLINE                                              │
@@ -340,7 +307,7 @@ RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
 RUtils.map.vnoremap("p", "pgvy")
 RUtils.map.nnoremap("<Leader>cd", function()
   local filepath = fn.expand "%:p:h" -- code
-  cmd(fmt("cd %s", filepath))
+  vim.cmd(fmt("cd %s", filepath))
   vim.notify(fmt("ROOT CHANGED: %s", filepath))
 end, { desc = "Action: change pwd to dir file" })
 RUtils.map.nnoremap("<Leader>Y", function()
@@ -348,7 +315,7 @@ RUtils.map.nnoremap("<Leader>Y", function()
   vim.fn.setreg("+", path)
   vim.notify(path, vim.log.levels.INFO, { title = "Yanked absolute path" })
 end, { silent = true, desc = "Misc: yank current absolute path" })
-RUtils.map.nnoremap("<Leader>n", cmd.nohl, { desc = "Misc: clear searches" })
+RUtils.map.nnoremap("<Leader>n", vim.cmd.nohl, { desc = "Misc: clear searches" })
 RUtils.map.vnoremap(">", ">gv", { desc = "Misc: next align lines (visual)" })
 RUtils.map.vnoremap("<", "<gv", { desc = "Misc: prev align lines (visual)" })
 RUtils.map.nnoremap("vv", [[^vg_]], { desc = "Misc: select text lines" })

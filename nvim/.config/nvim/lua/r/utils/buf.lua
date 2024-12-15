@@ -58,7 +58,45 @@ function M.smart_quit()
   end
 end
 
-function M.getfsize(bufnr)
+function M.magic_quit()
+  local buf_fts = {
+    ["fugitive"] = "bd",
+    ["Trouble"] = "bd",
+    ["help"] = "bd",
+    ["octo"] = "bd",
+    ["log"] = "bd",
+    ["Outline"] = "bd",
+    ["DiffviewFileHistory"] = function()
+      vim.cmd "DiffviewClose"
+    end,
+    ["DiffviewFiles"] = function()
+      vim.cmd "DiffviewClose"
+    end,
+  }
+
+  if buf_fts[vim.bo[0].filetype] then
+    if type(buf_fts[vim.bo[0].filetype]) == "function" then
+      buf_fts[vim.bo[0].filetype]()
+    else
+      vim.cmd(buf_fts[vim.bo[0].filetype])
+    end
+  else
+    local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
+    if bufname and bufname:match "diffview://" then
+      vim.cmd "DiffviewClose"
+      return
+    end
+
+    if bufname and bufname:match "gitsigns://" then
+      vim.cmd "close"
+      return
+    end
+
+    M.smart_quit()
+  end
+end
+
+function M.get_fsize(bufnr)
   local file = nil
   if bufnr == nil then
     file = vim.fn.expand "%:p"
@@ -78,7 +116,7 @@ function M.is_big_file(buf, opts)
   local size = opts.size or (1024 * 1000)
   local lines = opts.lines or 3500
 
-  if M.getfsize(buf) > size then
+  if M.get_fsize(buf) > size then
     return true
   end
 
