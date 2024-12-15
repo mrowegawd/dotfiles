@@ -327,6 +327,11 @@ return {
                 cmp.complete {}
               elseif callme == 1 then
                 callme = 2
+                if not vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
+                  cmp.complete { config = { sources = { { name = "codeium" } } } }
+                end
+              elseif callme == 2 then
+                callme = 3
                 cmp.complete {
                   config = {
                     sources = {

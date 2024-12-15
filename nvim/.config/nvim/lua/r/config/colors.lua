@@ -7,7 +7,7 @@ local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 local light_red = Highlight.tint(UIPallette.palette.pale_red, 0.3)
 
-local base = "#1c1e26"
+local base = Highlight.get("Normal", "bg")
 
 local general_overrides = function()
   Highlight.all {
@@ -731,7 +731,7 @@ local general_overrides = function()
     -- RGFLOW =============================================================
     {
       RgFlowHeadLine = {
-        bg = { from = "NormalFloat", attr = "bg" },
+        bg = Highlight.darken(dark_yellow, 0.1, base),
         fg = { from = "NormalFloat", attr = "bg" },
       },
     },

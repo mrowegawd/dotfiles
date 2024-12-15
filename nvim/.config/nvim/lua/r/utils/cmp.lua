@@ -222,10 +222,22 @@ function M.setup(opts)
   cmp.setup.filetype("gitcommit", {
     mapping = cmd_mapping,
   })
+
+  cmp.setup.filetype({ "org", "rgflow" }, {
+    sources = cmp.config.sources({
+      { name = "emoji" },
+      { name = "async_path" },
+      { name = "luasnip" },
+    }, {
+      { name = "cmdline" },
+      { name = "buffer" },
+    }),
+  })
+
   cmp.setup.cmdline(":", {
     mapping = cmd_mapping,
     sources = cmp.config.sources({
-      { name = "path" },
+      { name = "async_path" },
     }, {
       { name = "cmdline" },
     }),
