@@ -1,6 +1,7 @@
 return {
   "tpope/vim-projectionist",
   event = "VeryLazy",
+  cmd = { "A", "AV", "AS", "AT" },
   config = function()
     vim.g.projectionist_heuristics = {
       ["*"] = {
@@ -193,9 +194,9 @@ return {
     }
   end,
   keys = {
-    { "<leader>A", "<Cmd>A<CR>", desc = "Projectionist: edit alternate" },
-    { "<leader>av", "<Cmd>AV<CR>", desc = "Projectionist: vsplit alternate" },
-    { "<leader>as", "<Cmd>AS<CR>", desc = "Projectionist: split test" },
-    { "<leader>at", "<Cmd>At<CR>", desc = "Projectionist: tab test" },
+    { "<Leader>baa", "<Cmd>A<CR>", desc = "Buffer: edit alternate [projectionist]" },
+    { "<Leader>bav", "<Cmd>AV<CR>", desc = "Buffer: vsplit alternate [projectionist]" },
+    { "<Leader>bas", "<Cmd>AS<CR>", desc = "Buffer: split test [projectionist]" },
+    { "<Leader>bat", "<Cmd>AT<CR>", desc = "Buffer: tab test [projectionist]" },
   },
 }

@@ -46,17 +46,18 @@ return {
         {
           mode = { "n", "v" },
           { "<leader>b", group = "buffer" },
+          { "<leader>ba", group = "projectionist" },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
           { "<Leader>g", group = "git" },
-          { "<Leader>gf", group = "gitfzflua" },
+          { "<Leader>gf", group = "git-fzflua" },
           { "<Leader>gh", group = "hunks" },
           { "<Leader>o", group = "linking" },
-          { "<Leader>gu", group = "gittoggle" },
-          { "<Leader>gv", group = "gitvisual" },
+          { "<Leader>gu", group = "git-toggle" },
+          { "<Leader>gv", group = "git-visual" },
 
-          { "<Leader>a", group = "projectionist" },
+          { "<Leader>a", group = "add/qf/ql" },
           { "<Leader>c", group = "code" },
           { "<Leader>u", group = "toggle" },
           { "<Leader>t", group = "testing" },
