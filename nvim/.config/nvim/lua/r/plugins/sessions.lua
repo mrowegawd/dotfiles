@@ -34,9 +34,9 @@ return {
       --stylua: ignore
       vim.keymap.set("n", "<Leader>st", function() resession.save_tab() end, { desc = "Misc: save session tab [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>sL", function() resession.load() end, { desc = "Misc: load from list sessions [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sl", function() resession.load() end, { desc = "Misc: load from list sessions [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Misc: load last session [resession.nvim]" })
+      -- vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Misc: load last session [resession.nvim]" })
       vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Misc: session delete [resession.nvim]" })
 
       vim.api.nvim_create_user_command("SessionDetach", function()

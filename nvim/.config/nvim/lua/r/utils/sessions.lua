@@ -48,17 +48,35 @@ function M.load_ses_dashboard()
 
   if RUtils.has(ses_plugin) then
     local resession = require "resession"
-    resession.load "last"
+    resession.load()
 
+    vim.api.nvim_create_autocmd("BufWinEnter", {
+      group = vim.api.nvim_create_augroup("ResessionLoadTest", { clear = true }),
+      pattern = "*",
+      once = true,
+      callback = function()
+        local ft = vim.bo[0].filetype
+        vim.cmd [[set cmdheight=0]]
+        if ft and ft ~= "fzf" then
+          local async
+          async = uv.new_async(vim.schedule_wrap(function()
+            if async ~= nil then
     if #vim.fn.getqflist() > 0 then
       vim.cmd [[copen]]
       vim.cmd [[wincmd p]]
     end
 
-    local async
-    async = uv.new_async(vim.schedule_wrap(function()
-      if async ~= nil then
+              if vim.bo[0].filetype ~= "dashboard" then
+                if vim.bo[0].filetype == "" then
+                  return
+                end
+                vim.cmd [[edit!]]
+              end
+
         require("qfsilet.note").get_todo()
+
+              vim.cmd [[set cmdheight=0]]
+
         async:close()
       end
     end))
@@ -67,21 +85,18 @@ function M.load_ses_dashboard()
       async:send()
     end
 
-    -- if sessions are not loaded, dont run this command
+          -- ensure treesitter loaded
     if vim.bo[0].filetype ~= "dashboard" then
       if vim.bo[0].filetype == "" then
         return
       end
       vim.cmd [[edit!]]
     end
-
-    if not vim.env.TMUX then
-      RUtils.terminal.clock_mode()
     end
-
-    vim.cmd [[set cmdheight=0]]
+      end,
+    })
   else
-    RUtils.warn("can't find your" .. ses_plugin .. " !", { title = "Sessions" })
+    RUtils.warn("Cannot load sessions, plugin " .. ses_plugin .. " error?", { title = "Sessions" })
   end
 end
 
