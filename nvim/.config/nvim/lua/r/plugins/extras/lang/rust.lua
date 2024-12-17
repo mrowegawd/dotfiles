@@ -1,5 +1,8 @@
 local ran_once = false
 
+vim.g.lazyvim_rust_diagnostics = "rust-analyzer"
+local diagnostics = vim.g.lazyvim_rust_diagnostics or "rust-analyzer"
+
 return {
   recommended = function()
     return RUtils.extras.wants {
@@ -8,25 +11,23 @@ return {
     }
   end,
 
-  -- Extend auto completion
+  -- LSP for Cargo.toml
   {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      {
-        "Saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
-        opts = {
-          completion = {
-            cmp = { enabled = true },
-          },
+    "Saecki/crates.nvim",
+    event = { "BufRead Cargo.toml" },
+    opts = {
+      completion = {
+        crates = {
+          enabled = true,
         },
       },
+      lsp = {
+        enabled = true,
+        actions = true,
+        completion = true,
+        hover = true,
+      },
     },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      opts.sources = opts.sources or {}
-      table.insert(opts.sources, { name = "crates" })
-    end,
   },
 
   -- Add Rust & related to treesitter
@@ -79,18 +80,6 @@ return {
         },
       },
       server = {
-        handlers = {
-          ["experimental/serverStatus"] = function(_, result, ctx, _)
-            if result.quiescent and not ran_once then
-              for _, bufnr in ipairs(vim.lsp.get_buffers_by_client_id(ctx.client_id)) do
-                if ran_once then
-                  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-                end
-              end
-              ran_once = true
-            end
-          end,
-        },
         -- on_attach = function(_, bufnr)
         -- vim.keymap.set("n", "<leader>cR", function()
         --   vim.cmd.RustLsp "codeAction"
@@ -109,8 +98,12 @@ return {
                 enable = true,
               },
             },
-            -- Add clippy lints for Rust.
-            checkOnSave = true,
+            -- Add clippy lints for Rust if using rust-analyzer
+            checkOnSave = diagnostics == "rust-analyzer",
+            -- Enable diagnostics if using rust-analyzer
+            diagnostics = {
+              enable = diagnostics == "rust-analyzer",
+            },
             procMacro = {
               enable = true,
               ignored = {
@@ -119,11 +112,37 @@ return {
                 ["async-recursion"] = { "async_recursion" },
               },
             },
+            files = {
+              excludeDirs = {
+                ".direnv",
+                ".git",
+                ".github",
+                ".gitlab",
+                "bin",
+                "node_modules",
+                "target",
+                "venv",
+                ".venv",
+              },
+            },
           },
         },
       },
     },
     config = function(_, opts)
+      if RUtils.has "mason.nvim" then
+        local package_path = require("mason-registry").get_package("codelldb"):get_install_path()
+        local codelldb = package_path .. "/extension/adapter/codelldb"
+        local library_path = package_path .. "/extension/lldb/lib/liblldb.dylib"
+        local uname = io.popen("uname"):read "*l"
+
+        if uname == "Linux" then
+          library_path = package_path .. "/extension/lldb/lib/liblldb.so"
+        end
+        opts.dap = {
+          adapter = require("rustaceanvim.config").get_codelldb_adapter(codelldb, library_path),
+        }
+      end
       vim.g.rustaceanvim = vim.tbl_deep_extend("keep", vim.g.rustaceanvim or {}, opts or {})
       if vim.fn.executable "rust-analyzer" == 0 then
         RUtils.error(
@@ -139,6 +158,9 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        bacon_ls = {
+          enabled = diagnostics == "bacon-ls",
+        },
         taplo = {
           keys = {
             {
@@ -154,6 +176,7 @@ return {
             },
           },
         },
+        rust_analyzer = { enabled = false },
       },
     },
   },
