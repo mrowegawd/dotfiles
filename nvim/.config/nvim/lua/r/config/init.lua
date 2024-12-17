@@ -266,7 +266,7 @@ local defaults = {
       Package = " ",
       Property = " ", -- " "
       Reference = " ",
-      Snippet = " ",
+      Snippet = "󱄽 ", -- " ",
       String = " ", -- " " "﬌ "
       Struct = " ", -- " " "󰆼 "
       TabNine = "󰏚 ",
@@ -358,7 +358,7 @@ function M.setup(opts)
 
       local health = require "lazy.health"
       vim.list_extend(health.valid, {
-        -- "recommended",
+        "recommended",
         -- "desc",
         -- "vscode",
       })
