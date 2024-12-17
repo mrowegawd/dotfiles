@@ -251,10 +251,6 @@ return {
         },
         previewers = {
           builtin = {
-            treesitter = {
-              enable = true,
-              disable = { "tex", "markdown" },
-            },
             extensions = {
               ["html"] = html_preview_command,
               ["jpg"] = img_preview_command,
