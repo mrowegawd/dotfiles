@@ -149,33 +149,35 @@ function M.has(buffer, method)
   end
   return false
 end
-
 function M.resolve(buffer, spec_maps)
   local Keys = require "lazy.core.handler.keys"
   if not Keys.resolve then
     return {}
   end
-  -- local spec = M.get()
+  local spec = vim.tbl_extend("force", {}, spec_maps)
   local opts = RUtils.opts "nvim-lspconfig"
   if opts ~= nil then
     local clients = RUtils.lsp.get_clients { bufnr = buffer }
     for _, client in ipairs(clients) do
       if opts.servers ~= nil then
         local maps = opts.servers[client.name] and opts.servers[client.name].keys or {}
-        vim.list_extend(spec_maps, maps)
+        vim.list_extend(spec, maps)
       end
     end
   end
-  return Keys.resolve(spec_maps)
+  return Keys.resolve(spec)
 end
-
 function M.on_attach(_, buffer, spec_maps)
   local Keys = require "lazy.core.handler.keys"
   local keymaps = M.resolve(buffer, spec_maps)
 
   for _, keys in pairs(keymaps) do
-    if not keys.has or M.has(buffer, keys.has) then
+    local has = not keys.has or M.has(buffer, keys.has)
+    local cond = not (keys.cond == false or ((type(keys.cond) == "function") and not keys.cond()))
+
+    if has and cond then
       local opts = Keys.opts(keys)
+      opts.cond = nil
       opts.has = nil
       opts.silent = opts.silent ~= false
       opts.buffer = buffer
