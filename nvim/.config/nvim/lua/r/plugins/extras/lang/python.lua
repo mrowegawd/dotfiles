@@ -91,11 +91,6 @@ return {
       },
     },
   },
-  -- Ensure debugpy tools are installed
-  {
-    "williamboman/mason.nvim",
-    opts = { ensure_installed = { "debugpy" } },
-  },
   {
     "mfussenegger/nvim-dap",
     optional = true,

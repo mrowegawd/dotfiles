@@ -66,7 +66,7 @@ local general_overrides = function()
     },
     {
       Pmenu = {
-        fg = { from = "Normal", attr = "bg", alter = 0.8 },
+        fg = { from = "Normal", attr = "bg", alter = 3 },
         bg = { from = "Normal", attr = "bg", alter = -0.2 },
       },
     },
@@ -383,6 +383,20 @@ local general_overrides = function()
 
     -- CMP ================================================================
     {
+      CmpDocNormal = {
+        fg = { from = "Keyword", attr = "fg", alter = -0.15 },
+        bg = { from = "Pmenu", attr = "bg" },
+      },
+    },
+    {
+      CmpDocFloatBorder = {
+        fg = { from = "FloatBorder", attr = "fg", alter = 0.2 },
+        bg = { from = "Pmenu", attr = "bg" },
+      },
+    },
+    { CmpGhostText = { fg = { from = "Comment", attr = "fg" }, bg = "NONE" } },
+    { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
+    {
       CmpItemIconWarningMsg = {
         fg = { from = "WarningMsg", attr = "fg" },
         bg = { from = "NormalFloat", attr = "bg" },
@@ -553,7 +567,6 @@ local general_overrides = function()
         fg = { from = "Directory", attr = "fg", alter = -0.3 },
       },
     },
-
     { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
     { TreesitterContext = { bg = { from = "ColorColumn" } } },
     {

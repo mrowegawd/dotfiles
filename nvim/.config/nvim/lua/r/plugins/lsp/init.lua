@@ -67,7 +67,6 @@ return {
           exclude = { "vue" }, -- filetypes for which you don't want to enable inlay hints
         },
         codelens = { enabled = false },
-        document_highlight = { enabled = true },
         -- add any global capabilities here
         capabilities = {
           workspace = {
@@ -136,8 +135,6 @@ return {
       RUtils.lsp.setup()
       RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
 
-      RUtils.lsp.words.setup(opts.document_highlight)
-
       if vim.fn.has "nvim-0.10.0" == 0 then
         if type(opts.diagnostics.signs) ~= "boolean" then
           for severity, icon in pairs(opts.diagnostics.signs.text) do
@@ -190,11 +187,13 @@ return {
 
       local servers = opts.servers
       local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+      local has_blink, blink = pcall(require, "blink.cmp")
       local capabilities = vim.tbl_deep_extend(
         "force",
         {},
         vim.lsp.protocol.make_client_capabilities(),
         has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+        has_blink and blink.get_lsp_capabilities() or {},
         opts.capabilities or {}
       )
 

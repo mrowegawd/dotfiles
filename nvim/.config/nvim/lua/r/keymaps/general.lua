@@ -24,7 +24,12 @@ RUtils.map.inoremap("<C-h>", "<Left>", silent)
 RUtils.map.inoremap("<C-b>", "<Esc>bi", silent)
 RUtils.map.inoremap("<C-f>", "<Esc>ea", silent)
 
-RUtils.map.inoremap("hh", "<Esc>")
+-- RUtils.map.inoremap("hh", "<Esc>")
+RUtils.map.inoremap("hh", function()
+  vim.cmd "noh"
+  RUtils.cmp.actions.snippet_stop()
+  return "<Esc>"
+end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 -- RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 
@@ -224,6 +229,7 @@ Snacks.toggle .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and
 --stylua: ignore
 Snacks.toggle .option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
 
+Snacks.toggle.diagnostics():map "<Leader>ud"
 Snacks.toggle.option("spell", { name = "Spelling" }):map "<Leader>us"
 Snacks.toggle.scroll():map "<Leader>uS"
 Snacks.toggle.animate():map "<Leader>ua"
@@ -291,9 +297,21 @@ RUtils.map.vnoremap(
 -- │ MISC                                                     │
 -- ╰──────────────────────────────────────────────────────────╯
 
--- Make register clean
--- RUtils.map.nnoremap("x", "_x")
--- RUtils.map.nnoremap("c", "_c")
+RUtils.map.nnoremap("<Esc>", function()
+  vim.cmd "noh"
+  RUtils.cmp.actions.snippet_stop()
+  return "<Esc>"
+end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
+RUtils.map.inoremap("<Esc>", function()
+  vim.cmd "noh"
+  RUtils.cmp.actions.snippet_stop()
+  return "<Esc>"
+end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
+RUtils.map.nnoremap(
+  "<Leader>ur",
+  "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+  { desc = "Misc: redraw / clear hlsearch / diff update" }
+)
 RUtils.map.nnoremap("dd", function()
   if vim.fn.getline "." == "" then
     return '"_dd'

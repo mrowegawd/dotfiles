@@ -65,7 +65,9 @@ function M.magic_quit()
     ["help"] = "bd",
     ["octo"] = "bd",
     ["log"] = "bd",
-    ["Outline"] = "bd",
+    ["Outline"] = function()
+      vim.cmd "OutlineClose"
+    end,
     ["DiffviewFileHistory"] = function()
       vim.cmd "DiffviewClose"
     end,
@@ -77,9 +79,10 @@ function M.magic_quit()
   if buf_fts[vim.bo[0].filetype] then
     if type(buf_fts[vim.bo[0].filetype]) == "function" then
       buf_fts[vim.bo[0].filetype]()
-    else
-      vim.cmd(buf_fts[vim.bo[0].filetype])
+      return
     end
+
+    vim.cmd(buf_fts[vim.bo[0].filetype])
   else
     local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
     if bufname and bufname:match "diffview://" then

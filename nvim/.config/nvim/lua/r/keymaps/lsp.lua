@@ -26,23 +26,31 @@ function M.get()
     {
       "<a-q>",
       function()
-        RUtils.lsp.words.jump(vim.v.count1, true)
+        Snacks.words.jump(-vim.v.count1)
       end,
       has = "documentHighlight",
+      cond = function()
+        return Snacks.words.is_enabled()
+      end,
       desc = "LSP: next word reference",
     },
     {
       "<a-Q>",
       function()
-        RUtils.lsp.words.jump(-vim.v.count1, true)
+        Snacks.words.jump(vim.v.count1)
       end,
       has = "documentHighlight",
+      cond = function()
+        return Snacks.words.is_enabled()
+      end,
       desc = "LSP: prev word reference",
     },
     { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action", has = "codeAction" },
     {
       "<Leader>cR",
-      RUtils.lsp.rename_file,
+      function()
+        Snacks.rename.rename_file()
+      end,
       has = { "workspace/didRenameFiles", "workspace/willRenameFiles" },
       desc = "Action: rename file",
     },

@@ -228,6 +228,33 @@ return {
         -- statuscolumn = { enabled = false }, -- we set this in options.lua
         -- toggle = { map = LazyVim.safe_keymap_set },
         words = { enabled = true },
+        dashboard = {
+          preset = {
+            keys = {
+              { icon = " ", key = "f", desc = "Find File", action = ':lua require("fzf-lua").files()' },
+              { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
+              { icon = " ", key = "r", desc = "Recent Files", action = ':lua require("fzf-lua").oldfiles()' },
+              {
+                icon = " ",
+                key = "s",
+                desc = "Restore Session",
+                action = ':lua require("r.utils.sessions").load_ses_dashboard()',
+              },
+              -- { icon = "󱞁 ", key = "w", desc = "Obsidian Notes", action = ":ObsidianQuickSwitch" },
+              -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
+              { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy" },
+              { icon = " ", key = "q", desc = "Quit", action = ":qa" },
+            },
+            header = require("r.utils").logo(),
+          },
+          sections = {
+            { section = "header", padding = 1, align = "center" },
+            { icon = " ", title = "Recent Files", section = "recent_files", limit = 4, padding = 1 },
+            { section = "keys", gap = 1, padding = 1 },
+            { section = "startup" },
+            -- { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+          },
+        },
       }
     end,
     -- stylua: ignore
@@ -338,9 +365,8 @@ return {
           },
           progress = { enabled = false },
           hover = { enabled = true },
-          signature = { auto_open = { enabled = true }, enabled = false },
           override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = false,
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
             ["vim.lsp.util.stylize_markdown"] = true,
             ["cmp.entry.get_documentation"] = true,
           },
