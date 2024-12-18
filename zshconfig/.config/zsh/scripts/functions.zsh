@@ -199,7 +199,7 @@ Color_Off=$(tput sgr0)       # Text Reset
 
 build-python() {
   if [[ $1 == "" ]]; then
-    echo "Define your project name:\n Ex: 'build-python <name-project>'"
+    echo "Must define project name:\nEx: 'build-python <name-project>'"
   else
     poetry new "$1"
     cd "$1"
@@ -209,7 +209,7 @@ build-python() {
 
 build-react() {
   if [[ $1 == "" ]]; then
-    echo "Define your project name:\n Ex: 'build-react <name-project>'"
+    echo "Must define project name:\n Ex: 'build-react <name-project>'"
   else
     git clone https://github.com/mrowegawd/react-starter.git $@
   fi
@@ -217,7 +217,7 @@ build-react() {
 
 build-go() {
   if [[ $1 == "" ]]; then
-    echo "Define your project name:\n Ex: 'build-go <name-project>'"
+    echo "Must define project name:\n Ex: 'build-go <name-project>'"
   else
     mkdir -p $1
     cd $1
