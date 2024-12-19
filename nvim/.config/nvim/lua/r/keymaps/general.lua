@@ -592,6 +592,12 @@ RUtils.map.nnoremap("<Leader>gf", function()
       diffview_windo_this = function()
         vim.cmd [[windo diffthis]]
       end,
+      git_pr_openpr = function()
+        vim.cmd [[GHOpenPR]]
+      end,
+      git_pr_openissue = function()
+        vim.cmd [[GHOpenIssue]]
+      end,
       git_worktree_create = function()
         vim.cmd [[lua require("telescope").extensions.git_worktree.create_git_worktrees()]]
       end,
