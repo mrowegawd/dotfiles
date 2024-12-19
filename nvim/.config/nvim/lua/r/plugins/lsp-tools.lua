@@ -150,7 +150,15 @@ return {
   {
     "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     event = "LspAttach",
-    -- enabled = false,
+    keys = {
+      {
+        "<Leader>uD",
+        function()
+          require("lsp_lines").toggle()
+        end,
+        desc = "Misc: toggle lsp_lines [lsp_lines]",
+      },
+    },
     config = function()
       require("lsp_lines").setup()
 
@@ -181,6 +189,7 @@ return {
   -- LSP-SIGNATURE
   {
     "ray-x/lsp_signature.nvim",
+    enabled = false,
     event = "VeryLazy", -- "InsertEnter",
     opts = {
       bind = true,
