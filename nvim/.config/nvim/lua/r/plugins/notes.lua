@@ -208,13 +208,13 @@ return {
           org_agenda_show_help = "?",
         },
         capture = {
-          org_capture_finalize = "<CR>",
+          rg_capture_finalize = "<C-c>",
           org_capture_refile = "<Leader>or",
           org_capture_kill = { "q", "<ESC>" },
           org_capture_show_help = "?",
         },
         note = {
-          org_note_finalize = "<CR>",
+          org_note_finalize = "<C-c>",
           org_note_kill = "<prefix>k",
         },
         org = {
