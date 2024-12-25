@@ -45,15 +45,6 @@ return {
             },
           },
         },
-        ruff_lsp = {
-          keys = {
-            {
-              "<leader>co",
-              RUtils.lsp.action["source.organizeImports"],
-              desc = "Action: organize imports",
-            },
-          },
-        },
       },
       setup = {
         [ruff] = function()
@@ -68,7 +59,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = function(_, opts)
-      local servers = { "pyright", "basedpyright", "ruff", "ruff_lsp", ruff, lsp }
+      local servers = { "pyright", "basedpyright", "ruff", ruff, lsp }
       for _, server in ipairs(servers) do
         opts.servers[server] = opts.servers[server] or {}
         opts.servers[server].enabled = server == lsp or server == ruff
