@@ -1,6 +1,7 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- LAVISH
   {
     "ferdinandrau/lavish.nvim",
     priority = 1000,

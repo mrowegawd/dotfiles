@@ -40,10 +40,10 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#363230" }
+separator_style = { fg = "#6b6461", bg = "#212e40" }
 
 # Mode
-mode_normal = { fg = "#2a2a2f", bg = "#9d79d6", bold = true }
+mode_normal = { fg = "#ffffff", bg = "#212e40", bold = true }
 mode_select = { fg = "#ffffff", bg = "#223249", bold = true }
 mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 

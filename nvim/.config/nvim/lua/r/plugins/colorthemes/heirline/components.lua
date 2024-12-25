@@ -44,18 +44,20 @@ local setcond = {
 }
 
 local colors = {
-
   base_bg = Col.statusline_bg,
   base_fg = Col.statusline_fg,
+
   basenc_bg = Col.statuslinenc_bg,
   basenc_fg = Col.statuslinenc_fg,
 
   branch_fg = Col.branch_fg,
   terminal_fg = Col.terminal_fg,
+  keyword = Col.keyword,
 
   mode_bg = Col.mode_bg,
   filename_fg = Col.mode_bg,
   modified_fg = Col.modified_fg,
+  directory = Col.directory,
 
   coldisorent = Col.disorent,
 
@@ -155,7 +157,7 @@ M.Mode = {
       t = "",
     },
     mode_colors = {
-      n = colors.separator_fg,
+      n = colors.keyword,
       i = colors.mod_ins,
       v = colors.mod_vis,
       V = colors.mod_vis,
@@ -205,12 +207,13 @@ M.Mode = {
     end,
     -- RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = Col.separator
+      local bg = colors.separator_fg
 
       if Conditions.is_not_active() then
-        cs = colors.basenc_bg
+        bg = colors.separator_fg
       end
-      return { fg = colors.separator_fg_alt, bg = cs }
+
+      return { fg = colors.separator_fg_alt, bg = bg }
     end,
   },
 }
@@ -350,42 +353,42 @@ M.FilePathQF = {
       return " " .. msg .. " "
     end,
     hl = function()
-      local cs = Col.separator
+      local fg = colors.mode_bg
       local bg = colors.diff_add
 
       if Conditions.is_not_active() then
+        fg = colors.basenc_fg
         bg = colors.mode_bg
-        cs = colors.base_fg
       end
 
-      return { fg = cs, bg = bg, bold = true }
+      return { fg = fg, bg = bg, bold = true }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = colors.diff_add
-      local bg = colors.separator_fg_alt
+      local fg = colors.diff_add
+      local bg = colors.mode_bg
 
       if Conditions.is_not_active() then
-        cs = colors.mode_bg
-        bg = colors.base_bg
+        fg = colors.mode_bg
+        bg = colors.separator_fg_alt
       end
 
-      return { fg = cs, bg = bg, bold = true }
+      return { fg = fg, bg = bg, bold = true }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local bg = Col.separator
-      local cs = colors.separator_fg_alt
+      local fg = colors.mode_bg
+      local bg = colors.base_bg
 
       if Conditions.is_not_active() then
         bg = colors.basenc_bg
-        cs = colors.base_bg
+        fg = colors.separator_fg_alt
       end
-      return { fg = cs, bg = bg }
+      return { fg = fg, bg = bg }
     end,
   },
 
@@ -393,14 +396,14 @@ M.FilePathQF = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = Col.separator
+      local fg = colors.base_bg
       local bg = colors.diff_change
 
       if Conditions.is_not_active() then
-        cs = colors.basenc_bg
+        fg = colors.basenc_bg
         bg = colors.mode_bg
       end
-      return { fg = cs, bg = bg }
+      return { fg = fg, bg = bg }
     end,
   },
   {
@@ -414,40 +417,40 @@ M.FilePathQF = {
       return msg .. " "
     end,
     hl = function()
-      local cs = colors.basenc_bg
+      local fg = colors.basenc_bg
       local bg = colors.diff_change
 
       if Conditions.is_not_active() then
         bg = colors.mode_bg
-        cs = colors.base_fg
+        fg = colors.basenc_fg
       end
-      return { fg = cs, bg = bg, bold = true }
+      return { fg = fg, bg = bg, bold = true }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local bg = colors.separator_fg_alt
-      local cs = colors.diff_change
+      local bg = colors.mode_bg
+      local fg = colors.diff_change
 
       if Conditions.is_not_active() then
-        cs = colors.mode_bg
-        bg = colors.base_bg
+        fg = colors.mode_bg
+        bg = colors.separator_fg_alt
       end
-      return { fg = cs, bg = bg }
+      return { fg = fg, bg = bg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local cs = Col.separator_fg_alt
-      local bg = Col.separator
+      local fg = colors.mode_bg
+      local bg = colors.base_bg
 
       if Conditions.is_not_active() then
+        fg = colors.separator_fg_alt
         bg = colors.basenc_bg
-        cs = colors.base_bg
       end
-      return { fg = cs, bg = bg }
+      return { fg = fg, bg = bg }
     end,
   },
 }
@@ -517,7 +520,7 @@ M.FilePath = {
     end,
     hl = function()
       if Conditions.is_not_active() then
-        return { fg = Col.statuslinenc_fg }
+        return { fg = colors.basenc_fg }
       end
       return { fg = colors.base_fg }
     end,
@@ -929,7 +932,7 @@ M.BufferCwd = {
         return " " .. cwd .. "%*"
       end
     end,
-    hl = { fg = Col.directory, bg = colors.base_bg },
+    hl = { fg = colors.directory, bg = colors.base_bg },
   },
   {
     provider = " ",
@@ -1008,18 +1011,12 @@ M.status_active_left = {
   M.Clock,
 
   hl = function()
-    if vim.bo[0].filetype == "qf" then
-      return { fg = colors.base_fg, bg = Col.separator }
+    if vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) then
+      return { fg = colors.base_fg, bg = colors.base_bg }
     end
 
-    if vim.bo[0].filetype == "trouble" then
-      return { fg = colors.base_fg, bg = Col.separator_trouble }
-    end
     return { fg = colors.base_fg, bg = colors.base_bg }
   end,
-
-  -- hl = { fg = colors.base_fg, bg = colors.base_bg },
-  -- hl = { fg = colors.base_fg, bg = colors.base_bg },
 }
 
 M.status_not_active = {

@@ -829,6 +829,20 @@ local function colorscheme_overrides()
       { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
+
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+        },
+      },
     },
     ["kanagawa"] = {
       { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
@@ -1418,14 +1432,14 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = -0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.45 },
+          fg = { from = "StatusLine", attr = "bg", alter = -0.7 },
+          bg = { from = "Normal", attr = "bg", alter = -0.6 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg" },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
         },
       },
@@ -1822,14 +1836,14 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 4 },
+          fg = { from = "StatusLine", attr = "bg", alter = 4.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -1863,14 +1877,14 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
@@ -1890,6 +1904,31 @@ local function colorscheme_overrides()
     },
     ["PaperColor"] = {
       {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
@@ -1898,7 +1937,7 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -2099,7 +2138,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "StatusLine", attr = "bg", alter = 5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
       {
@@ -2151,7 +2190,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.2 }, underline = false } },
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.2 }, underline = false, reverse = false } },
 
       { FzfLuaCursorLine = { bg = { from = "CursorLine", alter = 0.4, attr = "bg" } } },
       { ErrorMsg = { fg = "red" } },
@@ -2164,7 +2203,7 @@ local function colorscheme_overrides()
       },
       {
         PmenuSel = {
-          fg = "NONE",
+          fg = { from = "CursorLine", attr = "bg", alter = 5 },
           bg = { from = "CursorLine", attr = "bg", alter = 0.2 },
           bold = true,
         },
@@ -2182,6 +2221,18 @@ local function colorscheme_overrides()
         FzfLuaSel = {
           fg = { from = "PmenuSel", attr = "bg", alter = 0.2 },
           bg = { from = "PmenuSel", attr = "bg", alter = -0.2 },
+        },
+      },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.6 },
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
     },
@@ -2411,7 +2462,23 @@ local function colorscheme_overrides()
       },
     },
     ["neomodern"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+
       { Search = { bg = "red" } },
+
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 6 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+        },
+      },
     },
     ["nightfox"] = {
       { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
@@ -2432,14 +2499,14 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
@@ -2477,14 +2544,14 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
@@ -2515,14 +2582,14 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "StatusLine", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
@@ -2744,14 +2811,14 @@ local function colorscheme_overrides()
     ["tokyonight-night"] = {
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
