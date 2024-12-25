@@ -1,4 +1,12 @@
 return {
+  -- QUICKER
+  {
+    "stevearc/quicker.nvim",
+    event = "FileType qf",
+    ---@module "quicker"
+    ---@type quicker.SetupOptions
+    opts = {},
+  },
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
