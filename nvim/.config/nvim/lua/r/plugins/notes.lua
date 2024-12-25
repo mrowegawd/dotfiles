@@ -8,7 +8,7 @@ return {
   {
     "nvim-orgmode/orgmode",
     event = "VeryLazy",
-    ft = "org",
+    ft = { "org", "orgagenda" },
     keys = {
       {
         "<Localleader>nA",
@@ -93,7 +93,7 @@ return {
       org_todo_keywords = {
         "TODO(t)",
         "HOLD(h)", -- task yang ditangguhkan, no hint to continue
-        "INPROGRESS(i)", -- task yang sedang dikerjakan
+        "PROGRESS(p)", -- task yang sedang dikerjakan
         "CHECK(c)", -- task yang boleh dikerjakan saat free-time
         "HBD(b)",
         "|",
@@ -103,7 +103,7 @@ return {
       org_todo_keyword_faces = {
         CHECK = ":foreground royalblue :weight bold :slant",
         TODO = ":foreground red :weight bold :slant",
-        INPROGRESS = ":foreground green :background black :weight bold :slant italic",
+        PROGRESS = ":foreground green :background black :weight bold :slant italic",
         UNTASK = ":foreground deeppink :weight bold",
         HBD = ":foreground pink :weight bold :slant",
         HOLD = ":foreground gray :weight bold :slant",
@@ -145,28 +145,7 @@ return {
         --     filetype = "markdown",
         -- },
       },
-      -- win_split_mode = function(name)
-      --   local bufnr = vim.api.nvim_create_buf(false, true)
-      --   --- Setting buffer name is required
-      --   vim.api.nvim_buf_set_name(bufnr, name)
-      --   local fill = 0.4
-      --   local width = math.floor((vim.o.columns * fill))
-      --   local height = math.floor((vim.o.lines * fill))
-      --   local row = math.floor((((vim.o.lines - height) / 2) - 1))
-      --   local col = math.floor(((vim.o.columns - width) / 2))
-      --   vim.api.nvim_open_win(bufnr, true, {
-      --     relative = "win",
-      --     width = width,
-      --     height = height,
-      --     row = row,
-      --     col = col,
-      --     style = "minimal",
-      --     border = "rounded",
-      --   })
-      -- end,
-
       win_split_mode = { "float", 0.6 },
-      -- win_split_mode = "float",
       mappings = {
         disable_all = false,
         prefix = "<Leader>g",
@@ -208,7 +187,7 @@ return {
           org_agenda_show_help = "?",
         },
         capture = {
-          rg_capture_finalize = "<C-c>",
+          org_capture_finalize = "<C-c>",
           org_capture_refile = "<Leader>or",
           org_capture_kill = { "q", "<ESC>" },
           org_capture_show_help = "?",
@@ -533,7 +512,7 @@ return {
       end,
 
       completion = {
-        nvim_cmp = true,
+        nvim_cmp = false,
         min_chars = 2,
       },
 
@@ -569,6 +548,11 @@ return {
 
     config = function(_, opts)
       require("obsidian").setup(opts)
+
+      -- local cmp = require "cmp"
+      -- cmp.register_source("obsidian", require("cmp_obsidian").new())
+      -- cmp.register_source("obsidian_new", require("cmp_obsidian_new").new())
+      -- cmp.register_source("obsidian_tags", require("cmp_obsidian_tags").new())
 
       RUtils.cmd.augroup("ManageNoteMappingMarkdown", {
         event = { "FileType" },
@@ -623,10 +607,10 @@ return {
           vim.cmd("normal! " .. linenr_from + 1 .. "G")
           vim.cmd "normal! V"
           vim.cmd("normal! " .. linenr_until - 1 .. "G")
-          RUtils.map.feedkey("rf", "v")
+          RUtils.map.feedkey("<Leader>rf", "v")
         end,
         ft = { "markdown", "neorg" },
-        desc = "Misc: run code block [sniprun",
+        desc = "Misc: run code block [sniprun]",
       },
       {
         "<Leader>rr",
@@ -649,6 +633,32 @@ return {
             name = "Orgmode",
             module = "orgmode.org.autocompletion.blink",
             fallbacks = { "buffer" },
+          },
+        },
+      },
+    },
+  },
+  -- obsidian blink source
+  {
+    "saghen/blink.cmp",
+    optional = true,
+    dependencies = { "epwalsh/obsidian.nvim", "saghen/blink.compat" },
+    opts = {
+      sources = {
+        -- compat = { "obsidian", "obsidian_new", "obsidian_tags" },
+        compat = { "obsidian", "obsidian_new", "obsidian_tags" },
+        providers = {
+          obsidian = {
+            kind = "Obsidian",
+            async = true,
+          },
+          obsidian_new = {
+            kind = "Obsidian",
+            async = true,
+          },
+          obsidian_tags = {
+            kind = "Obsidian",
+            async = true,
           },
         },
       },
