@@ -119,8 +119,8 @@ return {
       { "<Leader>tl", function() require("neotest").run.run_last() end, desc = "Testing: run last" },
       { "<Leader>to", function() require("neotest").summary.toggle() end, desc = "Testing: open/close summary" },
       { "<Leader>tP", function() require("neotest").output.open { enter = true, short = false } end, desc = "Testing: show output preview" },
-      { "<leader>tS", function() require("neotest").run.stop() end, desc = "Testing: stop" },
-      { "<leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Testing: toggle watch" },
+      { "<Leader>tS", function() require("neotest").run.stop() end, desc = "Testing: stop" },
+      { "<Leader>tw", function() require("neotest").watch.toggle(vim.fn.expand("%")) end, desc = "Testing: toggle watch" },
       {
         "<Leader>tf",
         function()

@@ -456,18 +456,21 @@ return {
     opts = true,
     keys = {
       {
-        "<S-TAB>",
+        "`",
         function()
           require("fold-cycle").open()
         end,
         desc = "Fold: cycle fold [fold-cycle]",
+        mode = { "v", "n" },
       },
     },
   },
-  -- BEACON
+  -- BEACON (disabled)
   {
+    -- flash cursor when jumps or moves between windows.
     "rainbowhxch/beacon.nvim",
     event = "LazyFile",
+    enabled = false,
     cond = vim.g.neovide == nil,
     opts = function()
       Highlight.plugin("beaconHiC", {
@@ -581,5 +584,81 @@ return {
         return package.loaded["nvim-web-devicons"]
       end
     end,
+  },
+  -- DRESSING
+  {
+    "stevearc/dressing.nvim",
+    -- enabled = false,
+    event = "VimEnter",
+    opts = {
+      input = { enabled = true },
+      select = {
+        -- priority: use fzf_lua first before anything else
+        backend = { "fzf_lua", "builtin" },
+        builtin = {
+          border = RUtils.config.icons.border.line,
+          min_height = 10,
+          win_options = { winblend = 10 },
+          mappings = { n = { ["q"] = "Close" } },
+        },
+        get_config = function(opts)
+          opts.prompt = opts.prompt and opts.prompt:gsub(":", "")
+          if opts.kind == "codeaction" then
+            return {
+              backend = "fzf_lua",
+              fzf_lua = RUtils.fzflua.cursor_dropdown {
+                prompt = "  ",
+                winopts = { title = opts.prompt, relative = "cursor" },
+              },
+            }
+          end
+          if opts.kind == "orgmode" then
+            return {
+              backend = "nui",
+              nui = {
+                position = "90%",
+                border = { style = RUtils.config.icons.border.line },
+                min_width = math.floor(vim.o.columns / 2 - 50),
+              },
+            }
+          end
+          if opts.kind == "pojokan" then
+            local col, row = RUtils.fzflua.rectangle_win_pojokan()
+            return {
+              backend = "fzf_lua",
+              fzf_lua = RUtils.fzflua.cursor_dropdown {
+                winopts = {
+                  title = opts.prompt,
+                  relative = "editor",
+                  col = col,
+                  row = row,
+                },
+                prompt = "  ",
+              },
+            }
+          end
+          return {
+            backend = "fzf_lua",
+            fzf_lua = RUtils.fzflua.dropdown {
+              winopts = { title = opts.prompt, height = 0.33, row = 0.5 },
+            },
+          }
+        end,
+        nui = {
+          min_height = 10,
+          win_options = {
+            winhighlight = table.concat({
+              "Normal:Italic",
+              "FloatBorder:FloatBorder",
+              "FloatTitle:Title",
+              "CursorLine:Visual",
+            }, ","),
+          },
+        },
+      },
+      win_options = {
+        winhighlight = "FloatBorder:FzfLuaBorder",
+      },
+    },
   },
 }

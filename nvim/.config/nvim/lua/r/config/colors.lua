@@ -668,7 +668,6 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- ORGMODE
     -----------------------------------------------------------------------
-    { OrgDONE = { fg = "#00FF00" } },
     { ["@org.headline.level1.org"] = { fg = "#4d85c3", bold = true, italic = true } },
     { ["@org.headline.level2.org"] = { fg = "#389674", bold = true, italic = true } },
     { ["@org.headline.level3.org"] = { fg = "#b0be1e", bold = true, italic = true } },

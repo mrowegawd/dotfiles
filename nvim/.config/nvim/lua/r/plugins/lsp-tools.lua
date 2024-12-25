@@ -186,7 +186,7 @@ return {
       })
     end,
   },
-  -- LSP-SIGNATURE
+  -- LSP-SIGNATURE (disabled)
   {
     "ray-x/lsp_signature.nvim",
     enabled = false,

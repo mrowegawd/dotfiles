@@ -104,7 +104,7 @@ return {
       vim.g.cheat_default_window_layout = "vertical_split"
     end,
   },
-  -- HAWTKEYS (disabled)
+  -- HAWTKEYS
   { -- use only when necessary.
     "tris203/hawtkeys.nvim",
     -- enabled = false,
