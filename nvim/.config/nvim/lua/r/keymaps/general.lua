@@ -386,6 +386,7 @@ RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
   silent = true,
 })
 
+-- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
 RUtils.map.xnoremap("n", "'Nn'[v:searchforward]", { expr = true, desc = "Misc: next search result" })
 RUtils.map.onoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
