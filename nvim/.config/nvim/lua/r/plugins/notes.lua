@@ -593,14 +593,14 @@ return {
     },
     keys = {
       {
-        "rf",
+        "<Leader>rf",
         "<Plug>SnipRun",
         ft = { "markdown", "neorg" },
         mode = "v",
         desc = "Misc: run visually selected lines [sniprun]",
       },
       {
-        "rf",
+        "<Leader>rf",
         function()
           local lang_conf = {}
           lang_conf["markdown"] = { "```", "```" }
@@ -629,10 +629,28 @@ return {
         desc = "Misc: run code block [sniprun",
       },
       {
-        "rr",
+        "<Leader>rr",
         "<Plug>SnipClose",
         ft = { "markdown", "neorg" },
         desc = "Misc: close [sniprun]",
+      },
+    },
+  },
+  -- org blink source
+  {
+    "saghen/blink.cmp",
+    optional = true,
+    dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
+    opts = {
+      sources = {
+        compat = { "orgmode" },
+        providers = {
+          orgmode = {
+            name = "Orgmode",
+            module = "orgmode.org.autocompletion.blink",
+            fallbacks = { "buffer" },
+          },
+        },
       },
     },
   },
