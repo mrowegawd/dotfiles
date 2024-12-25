@@ -337,18 +337,18 @@ return {
             { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-            { NoiceCmdlinePopup = { inherit = "NormalFloat" } },
-            { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+            { NoiceCmdlinePopup = { bg = { from = "NormalFloat", attr = "bg", alter = -0.15 } } },
+            { NoiceCmdlineIcon = { bg = "NONE" } },
 
             { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
             { NoicePopupBorder = { inherit = "FloatBorder" } },
           },
           ["everforest"] = {
-            { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+            { NoiceCmdlineIcon = { bg = "NONE" } },
             { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
           },
           ["lackluster"] = {
-            { NoiceCmdlineIcon = { bg = { from = "NormalFloat", attr = "bg" } } },
+            { NoiceCmdlineIcon = { bg = "NONE" } },
             { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
           },
         },
