@@ -1,116 +1,7 @@
 local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
-local is_show_start = function()
-  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    return false
-  end
-  return true
-end
-
 return {
-  -- INDENT-BLANKLINE
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "VimEnter",
-    main = "ibl",
-    opts = function()
-      Highlight.plugin("ibl_indentline", {
-        theme = {
-          ["*"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.25 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
-          },
-          ["selenized"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["farout"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
-          },
-          ["neomodern"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-          },
-          ["lackluster"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 2 } } },
-          },
-          ["everforest"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
-          },
-          ["tender"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["horizon"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
-          },
-          ["dawnfox"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.3 } } },
-          },
-          ["dayfox"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-          },
-          ["catppuccin-latte"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-          },
-          ["tokyonight-day"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.03 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-          },
-          ["evangelion"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["rose-pine"] = {
-            { ["@ibl.indent.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            { ["@ibl.scope.char.1"] = { fg = { from = "Normal", attr = "bg", alter = -0.4 } } },
-          },
-        },
-      })
-      return {
-        scope = { show_start = is_show_start(), show_end = false, enabled = true },
-        indent = {
-          char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
-          tab_char = "▏", -- "┊" -- │, ┊, │, ▏, ┆, ┊, , ┊
-        },
-        exclude = {
-          filetypes = {
-            "NvimTree",
-            "dashboard",
-            "dbout",
-            "flutterToolsOutline",
-            "fzf",
-            "fzflua",
-            "git",
-            "gitcommit",
-            "help",
-            "log",
-            "man",
-            "markdown",
-            "neo-tree",
-            "neo-tree-popup",
-            "norg",
-            "calendar",
-            "org",
-            "orgagenda",
-            "sagafinder",
-            "trouble",
-            "txt",
-            "undotree",
-            "",
-          },
-        },
-      }
-    end,
-  },
   -- MINI.ICONS
   {
     "echasnovski/mini.icons",
@@ -154,6 +45,9 @@ return {
     lazy = false,
     opts = function()
       Highlight.plugin("NotifyCol", {
+        theme = {
+          ["*"] = {
+            { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
         -- INFO
         {
           SnacksNotifierInfo = {
@@ -219,12 +113,31 @@ return {
             bold = true,
           },
         },
+          },
+        },
       })
 
       return {
         bigfile = { enabled = true },
         notifier = { enabled = true },
         quickfile = { enabled = true },
+        indent = {
+          enabled = true,
+          -- priority = 1,
+          char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
+          only_scope = false,
+          only_current = false,
+          hl = {
+            "SnacksIndent1",
+            "SnacksIndent2",
+            "SnacksIndent3",
+            "SnacksIndent4",
+            "SnacksIndent5",
+            "SnacksIndent6",
+            "SnacksIndent7",
+            "SnacksIndent8",
+          },
+        },
         -- statuscolumn = { enabled = false }, -- we set this in options.lua
         -- toggle = { map = LazyVim.safe_keymap_set },
         words = { enabled = true },
