@@ -290,14 +290,23 @@ set_terminal() {
   # 	FONTSIZETERM="9"
   # fi
 
-  # KITTY
-  # change colorscheme fpr spesific terminal (ex: kitty,st,alacritty)
-  # if [ "$TERMINAL" == "kitty" ]; then
-  FILES="$HOME/.config/kitty/colors/$1.conf"
-  if [ -f "$FILES" ]; then
-    KITTY="$HOME/.config/kitty/kitty.conf"
+  # GHOSTTY
+  GHOSTTY_THEME_PATH="$HOME/.config/ghostty/themes/$1"
+  if [ -f "$GHOSTTY_THEME_PATH" ]; then
+    GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
 
-    sed -i -e "s/^include\s~\\/.config\\/kitty\\/colors.*/include ~\\/.config\\/kitty\\/colors\\/$1.conf/g" "$KITTY"
+    sed -i -e "s/^theme.=.*/theme = $1/g" "$GHOSTTY_CONFIG"
+    dunstify "theme ghostty [+]"
+  else
+    dunstify "theme ghostty [-]"
+  fi
+
+  # KITTY
+  KITTY_THEME_PATH="$HOME/.config/kitty/colors/$1.conf"
+  if [ -f "$KITTY_THEME_PATH" ]; then
+    KITTY_CONFIG="$HOME/.config/kitty/kitty.conf"
+
+    sed -i -e "s/^include\s~\\/.config\\/kitty\\/colors.*/include ~\\/.config\\/kitty\\/colors\\/$1.conf/g" "$KITTY_CONFIG"
     dunstify "theme kitty [+]"
   else
     dunstify "theme kitty [-]"
@@ -394,9 +403,9 @@ set_lazygit() {
     cp "$LAZYGIT_PATH/themes/_themes" "$THEME_LAZYGIT"
 
     sed -i -e "s/%%active_border_color%%/$GET_COL_16/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%inactive_border_color%%/$GET_COL_31/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%options_text_color%%/$GET_COL_20/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_30/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%inactive_border_color%%/$GET_COL_18/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%options_text_color%%/$GET_COL_18/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_25/g" "$THEME_LAZYGIT"
     sed -i -e "s/%%default_fg_color%%/$GET_COL_29/g" "$THEME_LAZYGIT"
 
     cat "$LAZYGIT_PATH/_config.yml" "$THEME_LAZYGIT" >"$LAZYGIT_PATH/config.yml"

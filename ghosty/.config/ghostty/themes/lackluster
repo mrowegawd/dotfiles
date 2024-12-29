@@ -1,0 +1,23 @@
+background = 0A0A0A
+foreground = a0a8b7
+
+# Cursor none
+cursor-color = fc2817
+
+# Normal
+palette = 0=#080808
+palette = 8=#4D4D4D
+palette = 1=#D70000
+palette = 9=#FF6E67
+palette = 2=#789978
+palette = 1=#5AF78E
+palette = 3=#ffAA88
+palette = 11=#F4F99D
+palette = 4=#BD93F9
+palette = 12=#CAA9FA
+palette = 5=#D7007D
+palette = 13=#FF92D0
+palette = 6=#708090
+palette = 14=#9AEDFE
+palette = 7=#DEEEED
+palette = 15=#E6E6E6
