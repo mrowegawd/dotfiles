@@ -140,7 +140,7 @@ return {
       Highlight.plugin("treesitter-context", {
         theme = {
           ["*"] = {
-            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
@@ -357,7 +357,7 @@ return {
           if #tbl_winsplits < 3 then
             -- check split or no split (`leaf`, `col` , `row`)
             local layout = vim.fn.winlayout()
-            if layout[1] == "col" then -- a split window
+            if layout[1] == "col" then -- split window
               local nwin = #layout[2]
               return nwin < 2
             end
