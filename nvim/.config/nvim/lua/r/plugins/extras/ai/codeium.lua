@@ -22,7 +22,7 @@ return {
   },
   -- codeium cmp source
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
     optional = true,
     dependencies = { "codeium.nvim" },
     opts = function(_, opts)

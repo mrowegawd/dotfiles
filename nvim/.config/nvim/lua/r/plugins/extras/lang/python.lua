@@ -119,7 +119,7 @@ return {
     },
   },
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
     optional = true,
     opts = function(_, opts)
       opts.auto_brackets = opts.auto_brackets or {}

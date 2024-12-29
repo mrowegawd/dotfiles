@@ -58,7 +58,8 @@ return {
     },
   },
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
+    optional = true,
     dependencies = {
       { "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
     },

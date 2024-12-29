@@ -204,7 +204,7 @@ return {
       require("lsp_signature").setup(opts)
     end,
   },
-  -- GLANCE
+  -- GLANCE (disabled)
   {
     "DNLHC/glance.nvim",
     event = "LspAttach",

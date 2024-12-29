@@ -2,7 +2,7 @@ vim.g.lazyvim_blink_main = true
 
 return {
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
     optional = true,
     enabled = false,
   },
