@@ -1698,6 +1698,7 @@ local function colorscheme_overrides()
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { CmpItemAbbr = { fg = { from = "Normal", attr = "bg", alter = -0.4 }, bg = "NONE" } },
       {
         Pmenu = {
@@ -2337,7 +2338,6 @@ local function colorscheme_overrides()
     },
     ["vscode_modern"] = {
       { CursorLine = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.88, Highlight.get("Keyword", "fg")) } },
-      -- { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },

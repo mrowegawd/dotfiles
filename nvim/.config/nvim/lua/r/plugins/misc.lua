@@ -36,6 +36,7 @@ return {
       "CBlrbox",
       "CBclbox",
       "CBccbox",
+      "CBccline",
       "CBcrbox",
       "CBrlbox",
       "CBrcbox",
@@ -107,7 +108,7 @@ return {
   -- HAWTKEYS
   { -- use only when necessary.
     "tris203/hawtkeys.nvim",
-    -- enabled = false,
+    enabled = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",

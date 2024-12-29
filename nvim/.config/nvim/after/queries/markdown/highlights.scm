@@ -62,39 +62,39 @@
 (list_item (task_list_marker_checked) (_) @comment.syntax)
 
 ; Tables
-(pipe_table_header ("|") @punctuation.special (#set! conceal "┃"))
-(pipe_table_delimiter_row ("|") @punctuation.special (#set! conceal "┃"))
-(pipe_table_delimiter_cell ("-") @punctuation.special (#set! conceal "━"))
-((pipe_table_align_left) @punctuation.special (#set! conceal "┣"))
-((pipe_table_align_right) @punctuation.special (#set! conceal "┫"))
-(pipe_table_row ("|") @punctuation.special (#set! conceal "┃"))
+; (pipe_table_header ("|") @punctuation.special (#set! conceal "┃"))
+; (pipe_table_delimiter_row ("|") @punctuation.special (#set! conceal "┃"))
+; (pipe_table_delimiter_cell ("-") @punctuation.special (#set! conceal "━"))
+; ((pipe_table_align_left) @punctuation.special (#set! conceal "┣"))
+; ((pipe_table_align_right) @punctuation.special (#set! conceal "┫"))
+; (pipe_table_row ("|") @punctuation.special (#set! conceal "┃"))
 
 ; Block quotes
-((block_quote_marker) @punctuation.special
-                      (#offset! @punctuation.special 0 0 0 -1)
-                      (#set! conceal "▐"))
-((block_continuation) @punctuation.special
-                      (#eq? @punctuation.special ">")
-                      (#set! conceal "▐"))
-((block_continuation) @punctuation.special
-                      (#eq? @punctuation.special "> ")
-                      (#offset! @punctuation.special 0 0 0 -1)
-                      (#set! conceal "▐"))
-((block_continuation) @punctuation.special
-                      ; for indented code blocks
-                      (#eq? @punctuation.special ">     ")
-                      (#offset! @punctuation.special 0 0 0 -5)
-                      (#set! conceal "▐"))
+; ((block_quote_marker) @punctuation.special
+;                       (#offset! @punctuation.special 0 0 0 -1)
+;                       (#set! conceal "▐"))
+; ((block_continuation) @punctuation.special
+;                       (#eq? @punctuation.special ">")
+;                       (#set! conceal "▐"))
+; ((block_continuation) @punctuation.special
+;                       (#eq? @punctuation.special "> ")
+;                       (#offset! @punctuation.special 0 0 0 -1)
+;                       (#set! conceal "▐"))
+; ((block_continuation) @punctuation.special
+;                       ; for indented code blocks
+;                       (#eq? @punctuation.special ">     ")
+;                       (#offset! @punctuation.special 0 0 0 -5)
+;                       (#set! conceal "▐"))
 
 ; Thematic breaks
-((thematic_break) @punctuation.special
-                  (#offset! @punctuation.special 0 2 0 0)
-                  (#set! conceal "━"))
-((thematic_break) @punctuation.special
-                  (#offset! @punctuation.special 0 1 0 0)
-                  (#set! conceal "━"))
-((thematic_break) @punctuation.special
-                  (#set! conceal "━"))
+; ((thematic_break) @punctuation.special
+;                   (#offset! @punctuation.special 0 2 0 0)
+;                   (#set! conceal "━"))
+; ((thematic_break) @punctuation.special
+;                   (#offset! @punctuation.special 0 1 0 0)
+;                   (#set! conceal "━"))
+; ((thematic_break) @punctuation.special
+;                   (#set! conceal "━"))
 
 
 ; Headings

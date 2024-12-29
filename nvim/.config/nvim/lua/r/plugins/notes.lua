@@ -37,22 +37,7 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "lukas-reineke/indent-blankline.nvim",
-      {
-        "akinsho/org-bullets.nvim",
-        config = function()
-          require("org-bullets").setup {
-            concealcursor = true, -- If false then when the cursor is on a line underlying characters are visible
-            symbols = {
-              headlines = { "◉", "○", "✸", "✿" },
-              checkboxes = {
-                half = { "", "OrgTSCheckboxHalfChecked" },
-                done = { "✓", "OrgDone" },
-                todo = { "˟", "OrgTODO" },
-              },
-            },
-          }
-        end,
-      },
+      "akinsho/org-bullets.nvim",
     },
     opts = function()
       local done_hi = Highlight.get("Comment", "fg")
@@ -261,6 +246,17 @@ return {
     config = function(_, opts)
       local orgmode = require "orgmode"
       orgmode.setup(opts)
+      require("org-bullets").setup {
+        concealcursor = true, -- If false then when the cursor is on a line underlying characters are visible
+        symbols = {
+          headlines = { "◉", "○", "✸", "✿" },
+          checkboxes = {
+            half = { "", "OrgTSCheckboxHalfChecked" },
+            done = { "✓", "OrgDone" },
+            todo = { "˟", "OrgTODO" },
+          },
+        },
+      }
     end,
   },
   -- IMAGE

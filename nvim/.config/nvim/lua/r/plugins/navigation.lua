@@ -879,7 +879,7 @@ return {
               EdgyIcon = {
                 bold = true,
                 bg = { from = "EdgyWinBar" },
-                fg = RUtils.colortbl.statuslinenc_fg,
+                -- fg = RUtils.colortbl.statuslinenc_fg,
               },
             },
             {
