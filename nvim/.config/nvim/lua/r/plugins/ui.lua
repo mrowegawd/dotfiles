@@ -394,6 +394,12 @@ return {
       },
     },
   },
+  -- BLOCK.NVIM
+  {
+    "HampusHauffman/block.nvim",
+    cmd = { "BlockOn", "BlockOff", "Block" },
+    opts = true,
+  },
   -- BEACON (disabled)
   {
     -- flash cursor when jumps or moves between windows.

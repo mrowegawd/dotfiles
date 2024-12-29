@@ -491,6 +491,11 @@ RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.nnoremap("<Leader>uf", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
+    blockon_toggle = function()
+      if not block_toggle then
+        vim.cmd [[Block]]
+      end
+    end,
     loadqf = function()
       cmd "LoadQf"
     end,
