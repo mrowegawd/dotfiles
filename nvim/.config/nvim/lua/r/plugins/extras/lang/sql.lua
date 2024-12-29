@@ -102,16 +102,18 @@ return {
   {
     "saghen/blink.cmp",
     optional = true,
+    dependencies = { "kristijanhusak/vim-dadbod-completion" },
     opts = {
       sources = {
         default = { "dadbod" },
         providers = {
-          dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+          dadbod = {
+            name = "Dadbod",
+            module = "vim_dadbod_completion.blink",
+            fallbacks = { "buffer" },
+          },
         },
       },
-    },
-    dependencies = {
-      "kristijanhusak/vim-dadbod-completion",
     },
   },
 

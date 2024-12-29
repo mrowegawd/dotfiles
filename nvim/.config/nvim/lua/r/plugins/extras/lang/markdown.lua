@@ -95,7 +95,7 @@ return {
       vim.cmd [[do FileType]]
     end,
   },
-  -- MARKDOWN.NVIM
+  -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
     opts = {
@@ -147,42 +147,13 @@ return {
           ["farout"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
-          ["PaperColor"] = {
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-            {
-              ["@markup.raw.markdown_inline"] = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-          },
           ["lackluster"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
-          ["selenized"] = {
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-            {
-              ["@markup.raw.markdown_inline"] = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
+          ["tokyonight-day"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
           },
-          ["melange"] = {
+          ["selenized"] = {
             {
               RenderMarkdownCodeInline = {
                 fg = { from = "Keyword", attr = "fg", alter = -0.05 },

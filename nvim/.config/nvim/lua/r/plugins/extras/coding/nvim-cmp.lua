@@ -245,7 +245,7 @@ return {
   },
   -- Add lazydev source for cmp
   {
-    "hrsh7th/nvim-cmp",
+    "iguanacucumber/magazine.nvim",
     optional = true,
     opts = function(_, opts)
       table.insert(opts.sources, { name = "lazydev", group_index = 0 })

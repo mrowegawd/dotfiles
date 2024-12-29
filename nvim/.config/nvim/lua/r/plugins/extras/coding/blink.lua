@@ -15,6 +15,7 @@ return {
       "sources.completion.enabled_providers",
       "sources.compat",
       "sources.default",
+      "disable_ft",
     },
     dependencies = {
       -- add blink.compat to dependencies
@@ -27,6 +28,8 @@ return {
     },
     event = "InsertEnter",
     opts = {
+      -- custom props to disable blink in certain filetypes
+      disable_ft = { "prompt", "TelescopePrompt" },
       snippets = {
         expand = function(snippet, _)
           return RUtils.cmp.expand(snippet)
@@ -42,6 +45,11 @@ return {
         nerd_font_variant = "mono",
       },
       completion = {
+        list = {
+          selection = function(ctx)
+            return ctx.mode == "cmdline" and "auto_insert" or "preselect"
+          end,
+        },
         accept = {
           -- experimental auto-brackets support
           auto_brackets = {
@@ -72,47 +80,60 @@ return {
         -- with blink.compat
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
+        -- NOTE: sementara di set 'none' dahulu
+        -- karena conflict dengan keybindings untuk `commandline` di general.lua
+        -- jika mau difix dan berhasil, hapus `cmdline = {}` ini
         cmdline = {},
       },
       keymap = {
         preset = "enter",
         ["<C-y>"] = { "select_and_accept" },
-        -- ["<C-r>"] = { "show" }, --
+        ["<C-r>"] = { "show", "hide", "fallback" }, -- trigger completion
+
+        ["<cr>"] = { "fallback" },
 
         ["<C-k>"] = { "select_prev", "fallback" },
-        ["<C-j>"] = { "select_next", "fallback" },
+        ["<C-j>"] = { "show", "select_next", "fallback" },
 
+        -- ["<C-t>"] = { "show_documentation", "hide_documentation", "fallback" },
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },
         ["<C-d>"] = { "scroll_documentation_down", "fallback" },
 
-        ["<c-p>"] = { "snippet_forward", "fallback" },
-        ["<c-n>"] = { "snippet_backward", "fallback" },
+        ["<C-p>"] = { "snippet_forward", "fallback" }, -- snippets
+        ["<C-n>"] = { "snippet_backward", "fallback" },
       },
     },
+
     config = function(_, opts)
       -- setup compat sources
-      local enabled = opts.sources.default
+      -- local enabled = opts.sources.default
       for _, source in ipairs(opts.sources.compat or {}) do
         opts.sources.providers[source] = vim.tbl_deep_extend(
           "force",
           { name = source, module = "blink.compat.source" },
           opts.sources.providers[source] or {}
         )
-        if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
-          table.insert(enabled, source)
+        if type(opts.sources.default) == "table" and not vim.tbl_contains(opts.sources.default, source) then
+          table.insert(opts.sources.default, source)
         end
+      end
+
+      local disabled_filetypes = opts.disable_ft or {}
+      opts.enabled = function()
+        -- will use to disable completions on certain filetypes
+        return not vim.tbl_contains(disabled_filetypes, vim.bo.filetype) and vim.b.completion ~= false
       end
 
       -- add ai_accept to <Tab> key
       if not opts.keymap["<Tab>"] then
         if opts.keymap.preset == "super-tab" then -- super-tab
-          opts.keymap["<Tab>"] = {
+          opts.keymap["<c-n>"] = {
             require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
             RUtils.cmp.map { "snippet_forward", "ai_accept" },
             "fallback",
           }
         else -- other presets
-          opts.keymap["<C-p>"] = {
+          opts.keymap["<C-n>"] = {
             RUtils.cmp.map { "snippet_forward", "ai_accept" },
             "fallback",
           }
@@ -132,6 +153,7 @@ return {
 
       -- Unset custom prop to pass blink.cmp validation
       opts.sources.compat = nil
+      opts.disable_ft = nil
 
       -- check if we need to override symbol kinds
       for _, provider in pairs(opts.sources.providers or {}) do

@@ -191,12 +191,10 @@ return {
   {
     "saghen/blink.cmp",
     optional = true,
-    dependencies = {
-      { "saghen/blink.compat", opts = { impersonate_nvim_cmp = true } },
-      { "saadparwaiz1/cmp_luasnip" },
-    },
     opts = {
-      sources = { compat = { "luasnip" } },
+      sources = {
+        default = { "luasnip" },
+      },
       snippets = {
         expand = function(snippet)
           require("luasnip").lsp_expand(snippet)
