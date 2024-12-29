@@ -1,6 +1,6 @@
 ! Download font: https://monaspace.githubnext.com/
-st.font:              Monaspace Neon ExtraLight:Regular:pixelsize=15
-st.boldFont:          JetBrainsMono NF:Bold:pixelsize=15
+st.font:              Maple Mono:Regular:pixelsize=15
+st.boldFont:          Maple Mono:Bold:pixelsize=15
 st.italicFont:        Maple Mono:Italic:pixelsize=15
 st.italicBoldFont:    Maple Mono:ItalicBold:pixelsize=15
 
