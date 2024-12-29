@@ -165,7 +165,7 @@ return {
     name = "catppuccin",
     priority = 1000,
     enabled = function()
-      local catppuccintheme = { "catppuccin-mocha", "catppuccin-latte" }
+      local catppuccintheme = { "catppuccin-mocha" }
       if vim.tbl_contains(catppuccintheme, colorscheme) then
         return true
       end

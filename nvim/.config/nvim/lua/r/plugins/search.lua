@@ -241,12 +241,12 @@ return {
           ["fg+"] = { "fg", "CmpItemAbbr" },
           ["bg+"] = { "bg", "FzfLuaSel" },
           ["hl+"] = { "fg", "CmpItemAbbrMatchFuzzy" },
-          ["info"] = { "fg", "PreProc" },
+          ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
           ["pointer"] = { "fg", "FzfLuaFzfPointer" },
           ["marker"] = { "fg", "Keyword" },
           ["spinner"] = { "fg", "Label" },
-          ["header"] = { "fg", "Comment" },
+          ["header"] = { "fg", "FzfLuaHeaderText" },
           ["gutter"] = { "bg", "FloatBorder" },
         },
         previewers = {
@@ -1473,11 +1473,11 @@ return {
         exclude = {}, -- list of file types to exclude highlighting
       },
       colors = {
-        error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-        warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
-        info = { "DiagnosticInfo", "#2563EB" },
-        hint = { "DiagnosticHint", "#10B981" },
-        default = { "Identifier", "#7C3AED" },
+        error = { "#DC2626" },
+        warning = { "#FBBF24" },
+        info = { "#2563EB" },
+        hint = { "#10B981" },
+        default = { "#7C3AED" },
       },
       search = {
         command = "rg",

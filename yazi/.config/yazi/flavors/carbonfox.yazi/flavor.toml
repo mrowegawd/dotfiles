@@ -5,10 +5,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#afaaa5" }
+cwd = { fg = "#2e5158" }
 
 # Hovered
-hovered = { bg = "#ebe5de" }
+hovered = { bg = "#232130" }
 preview_hovered = { underline = true }
 
 # Find
@@ -40,10 +40,10 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#363230" }
+separator_style = { fg = "#6b6461", bg = "#181818" }
 
 # Mode
-mode_normal = { fg = "#ffffff", bg = "#907aa9", bold = true }
+mode_normal = { fg = "#2a2a2f", bg = "#be95ff", bold = true }
 mode_select = { fg = "#ffffff", bg = "#223249", bold = true }
 mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 
@@ -140,8 +140,8 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#575279" },
-  { name = "*/", fg = "#907aa9" },
+  { name = "*", fg = "#e6eaea" },
+  { name = "*/", fg = "#be95ff" },
 ]
 
 # : }}}

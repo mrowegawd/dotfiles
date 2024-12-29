@@ -962,8 +962,7 @@ return {
           },
           ["tokyonight-day"] = {
             { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            -- { AerialLine = { bg = { from = "Normal", attr = "bg", alter = -0.1 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.54 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.8 } } },
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {
