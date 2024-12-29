@@ -3,8 +3,19 @@ return {
   {
     "Exafunction/codeium.nvim",
     cmd = "Codeium",
+    event = "InsertEnter",
     build = ":Codeium Auth",
-    opts = {},
+    opts = {
+      enable_cmp_source = vim.g.ai_cmp,
+      virtual_text = {
+        enabled = not vim.g.ai_cmp,
+        key_bindings = {
+          accept = false, -- handled by nvim-cmp / blink.cmp
+          next = "<a-]>",
+          prev = "<a-[>",
+        },
+      },
+    },
   },
 
   -- add ai_accept action
@@ -41,6 +52,11 @@ return {
         dependencies = { "codeium.nvim", "saghen/blink.compat" },
         opts = {
           sources = {
+            per_filetype = {
+              -- disable codeium for org
+              org = { "buffer", "path", "luasnip", "orgmode" },
+              DressingInput = {},
+            },
             compat = { "codeium" },
             providers = {
               codeium = {
