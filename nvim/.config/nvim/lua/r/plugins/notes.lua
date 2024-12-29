@@ -3,6 +3,8 @@ local uv = vim.uv
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
+local Highlight = require "r.settings.highlights"
+
 return {
   -- ORGMODE
   {
@@ -33,7 +35,6 @@ return {
       },
     },
     dependencies = {
-      "hrsh7th/nvim-cmp",
       "nvim-treesitter/nvim-treesitter",
       "lukas-reineke/indent-blankline.nvim",
       {
@@ -53,204 +54,210 @@ return {
         end,
       },
     },
-    opts = {
-      ui = {
-        menu = {
-          handler = function(data)
-            local items = vim
-              .iter(data.items)
-              :map(function(i)
-                return (i.key and not i.label:lower():match "quit") and i or nil
-              end)
-              :totable()
+    opts = function()
+      local done_hi = Highlight.get("Comment", "fg")
+      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Keyword", "fg"))
+      local todo_hi = Highlight.get("Error", "fg")
+      return {
+        ui = {
+          menu = {
+            handler = function(data)
+              local items = vim
+                .iter(data.items)
+                :map(function(i)
+                  return (i.key and not i.label:lower():match "quit") and i or nil
+                end)
+                :totable()
 
-            vim.ui.select(items, {
-              prompt = fmt(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
-              kind = "pojokan",
-              format_item = function(item)
-                return fmt("%s → %s", item.key, item.label)
-              end,
-            }, function(choice)
-              if not choice then
-                return
-              end
-              if choice.action then
-                choice.action()
-              end
-            end)
-          end,
+              vim.ui.select(items, {
+                prompt = fmt(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
+                kind = "pojokan",
+                format_item = function(item)
+                  return fmt("%s → %s", item.key, item.label)
+                end,
+              }, function(choice)
+                if not choice then
+                  return
+                end
+                if choice.action then
+                  choice.action()
+                end
+              end)
+            end,
+          },
         },
-      },
-      org_agenda_files = {
-        fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
-        fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
-        fmt("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
-        fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
-        fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
-        fmt("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
-      },
-      org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
-      org_todo_keywords = {
-        "TODO(t)",
-        "HOLD(h)", -- task yang ditangguhkan, no hint to continue
-        "PROGRESS(p)", -- task yang sedang dikerjakan
-        "CHECK(c)", -- task yang boleh dikerjakan saat free-time
-        "HBD(b)",
-        "|",
-        "DONE(d)",
-        "NEXT(n)",
-      },
-      org_todo_keyword_faces = {
-        CHECK = ":foreground royalblue :weight bold :slant",
-        TODO = ":foreground red :weight bold :slant",
-        PROGRESS = ":foreground green :background black :weight bold :slant italic",
-        UNTASK = ":foreground deeppink :weight bold",
-        HBD = ":foreground pink :weight bold :slant",
-        HOLD = ":foreground gray :weight bold :slant",
-        DONE = ":foreground darkgreen :weight bold :slant",
-        NEXT = ":foreground darkred :weight bold :slant",
-      },
-      org_agenda_skip_scheduled_if_done = true,
-      org_hide_emphasis_markers = true,
-      org_capture_templates = {
-        t = {
-          description = "Todo",
-          template = "* TODO %? \n  SCHEDULED: %T",
-          target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
+        org_agenda_files = {
+          fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+          fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
+          fmt("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
+          fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
+          fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
+          fmt("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
         },
-        i = {
-          description = "Inbox",
-          template = "* CHECK %? \n  SCHEDULED: %t",
-          target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+        org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
+        org_todo_keywords = {
+          "TODO(t)",
+          "HOLD(h)", -- task yang ditangguhkan, no hint to continue
+          "PROGRESS(p)", -- task yang sedang dikerjakan
+          "CHECK(c)", -- task yang boleh dikerjakan saat free-time
+          "HBD(b)",
+          "|",
+          "DONE(d)",
+          "NEXT(n)",
         },
-        l = {
-          description = "Link",
-          template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
-          target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+        org_todo_keyword_faces = {
+          CHECK = ":foreground royalblue :weight bold :slant",
+          TODO = ":foreground " .. todo_hi .. " :weight bold :slant",
+          PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
+          UNTASK = ":foreground deeppink :weight bold",
+          HBD = ":foreground pink :weight bold :slant",
+          HOLD = ":foreground gray :weight bold :slant",
+          DONE = ":foreground " .. done_hi .. " :weight bold :slant",
+          NEXT = ":foreground darkred :weight bold :slant",
         },
-        u = {
-          description = "URL bookmarks",
-          template = "* RAPIKAN: %? \n  SCHEDULED: %t",
-          target = RUtils.config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
+        org_agenda_skip_scheduled_if_done = true,
+        org_hide_emphasis_markers = true,
+        org_capture_templates = {
+          t = {
+            description = "Todo",
+            template = "* TODO %? \n  SCHEDULED: %T",
+            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
+          },
+          i = {
+            description = "Inbox",
+            template = "* CHECK %? \n  SCHEDULED: %t",
+            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+          },
+          l = {
+            description = "Link",
+            template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
+            target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
+          },
+          u = {
+            description = "URL bookmarks",
+            template = "* RAPIKAN: %? \n  SCHEDULED: %t",
+            target = RUtils.config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
+          },
+          j = {
+            description = "Journal",
+            template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
+            target = RUtils.config.path.wiki_path .. "/orgmode/journal/journal.org",
+          },
+          -- k = {
+          --     description = "Markdown",
+          --     template = "\n* TODO %? \n  SCHEDULED: %t",
+          --     target = RUtils.config.path.wiki_path .. "/orgmode/gtd/base.md",
+          --     filetype = "markdown",
+          -- },
         },
-        j = {
-          description = "Journal",
-          template = "\n** %<%Y-%m-%d> %<%A>\n*** %U\n\n%?",
-          target = RUtils.config.path.wiki_path .. "/orgmode/journal/journal.org",
+        win_split_mode = { "float", 0.6 },
+        mappings = {
+          disable_all = false,
+          prefix = "<Leader>g",
+          global = {
+            org_capture = "<Localleader>nc",
+            org_agenda = "<Localleader>na",
+          },
+          agenda = {
+            org_agenda_later = "f",
+            org_agenda_earlier = "b",
+            org_agenda_goto_today = "@",
+            org_agenda_day_view = "vd",
+            org_agenda_week_view = "vw",
+            org_agenda_month_view = "vm",
+            org_agenda_year_view = "vy",
+            org_agenda_quit = "q",
+            org_agenda_switch_to = "<TAB>",
+            org_agenda_goto = "<CR>",
+            org_agenda_goto_date = "<prefix>d",
+            org_agenda_redo = "r",
+            org_agenda_todo = "ct",
+            org_agenda_clock_goto = "<prefix>xj",
+            org_agenda_set_effort = "<prefix>e",
+            org_agenda_clock_in = "<prefix>i",
+            org_agenda_clock_out = "<prefix>o",
+            org_agenda_clock_cancel = "<prefix>C",
+            org_agenda_clockreport_mode = "<prefix>R",
+            org_agenda_priority = "<prefix>,",
+            org_agenda_priority_up = "<a-k>",
+            org_agenda_priority_down = "<a-j>",
+            org_agenda_archive = "<prefix>$",
+            org_agenda_toggle_archive_tag = "<leader>T",
+            org_agenda_set_tags = "<Leader>t",
+            org_agenda_deadline = "<Leader>d",
+            org_agenda_schedule = "<Leader>s",
+            org_agenda_filter = "/",
+            org_agenda_refile = "<prefix>r",
+            org_agenda_add_note = "<prefix>a",
+            org_agenda_show_help = "?",
+          },
+          capture = {
+            org_capture_finalize = "<C-c>",
+            org_capture_refile = "<Leader>or",
+            org_capture_kill = { "q", "<ESC>" },
+            org_capture_show_help = "?",
+          },
+          note = {
+            org_note_finalize = "<C-c>",
+            org_note_kill = "<prefix>k",
+          },
+          org = {
+            org_refile = "<prefix>r",
+            org_timestamp_up_day = "<S-UP>",
+            org_timestamp_down_day = "<S-DOWN>",
+            org_timestamp_up = "<C-a>",
+            org_timestamp_down = "<C-x>",
+            org_priority = "<prefix>,",
+            org_priority_up = "<a-k>",
+            org_priority_down = "<a-j>",
+            org_todo = "ct",
+            org_todo_prev = "ciT",
+            org_change_date = "<prefix>d",
+            org_toggle_checkbox = "<C-c>",
+            org_toggle_heading = "<prefix>*",
+            org_open_at_point = "<prefix>o",
+            org_edit_special = [[<prefix>']],
+            org_cycle = "<BS>",
+            org_global_cycle = "<S-TAB>",
+            org_archive_subtree = "<prefix>$",
+            org_set_tags_command = "<Leader>t",
+            org_toggle_archive_tag = "<Leader>T",
+            org_do_promote = "<<",
+            org_do_demote = ">>",
+            org_promote_subtree = "<left>",
+            org_demote_subtree = "<right>",
+            org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
+            org_return = "<F11>",
+            org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
+            org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
+            org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
+            org_move_subtree_up = "<S-UP>",
+            org_move_subtree_down = "<S-DOWN>",
+            org_export = "<Leader>a",
+            org_next_visible_heading = "<c-n>",
+            org_previous_visible_heading = "<c-p>",
+            org_forward_heading_same_level = "]]",
+            org_backward_heading_same_level = "[[",
+            outline_up_heading = "g{",
+            org_deadline = "<Leader>d",
+            org_schedule = "<Leader>s",
+            org_time_stamp = "<prefix>t",
+            org_time_stamp_inactive = "<prefix>T",
+            org_toggle_timestamp_type = "<prefix>d!",
+            org_insert_link = "<prefix>li",
+            org_store_link = "<prefix>ls",
+            org_clock_in = "<prefix>i",
+            org_clock_out = "<prefix>o",
+            org_clock_cancel = "<prefix>C",
+            org_clock_goto = "<prefix>xj",
+            org_set_effort = "<prefix>e",
+            org_show_help = "?",
+            org_babel_tangle = "<prefix>bt",
+          },
         },
-        -- k = {
-        --     description = "Markdown",
-        --     template = "\n* TODO %? \n  SCHEDULED: %t",
-        --     target = RUtils.config.path.wiki_path .. "/orgmode/gtd/base.md",
-        --     filetype = "markdown",
-        -- },
-      },
-      win_split_mode = { "float", 0.6 },
-      mappings = {
-        disable_all = false,
-        prefix = "<Leader>g",
-        global = {
-          org_capture = "<Localleader>nc",
-          org_agenda = "<Localleader>na",
-        },
-        agenda = {
-          org_agenda_later = "f",
-          org_agenda_earlier = "b",
-          org_agenda_goto_today = "@",
-          org_agenda_day_view = "vd",
-          org_agenda_week_view = "vw",
-          org_agenda_month_view = "vm",
-          org_agenda_year_view = "vy",
-          org_agenda_quit = "q",
-          org_agenda_switch_to = "<TAB>",
-          org_agenda_goto = "<CR>",
-          org_agenda_goto_date = "<prefix>d",
-          org_agenda_redo = "r",
-          org_agenda_todo = "ct",
-          org_agenda_clock_goto = "<prefix>xj",
-          org_agenda_set_effort = "<prefix>e",
-          org_agenda_clock_in = "<prefix>i",
-          org_agenda_clock_out = "<prefix>o",
-          org_agenda_clock_cancel = "<prefix>C",
-          org_agenda_clockreport_mode = "<prefix>R",
-          org_agenda_priority = "<prefix>,",
-          org_agenda_priority_up = "<a-k>",
-          org_agenda_priority_down = "<a-j>",
-          org_agenda_archive = "<prefix>$",
-          org_agenda_toggle_archive_tag = "<leader>T",
-          org_agenda_set_tags = "<Leader>t",
-          org_agenda_deadline = "<Leader>d",
-          org_agenda_schedule = "<Leader>s",
-          org_agenda_filter = "/",
-          org_agenda_refile = "<prefix>r",
-          org_agenda_add_note = "<prefix>a",
-          org_agenda_show_help = "?",
-        },
-        capture = {
-          org_capture_finalize = "<C-c>",
-          org_capture_refile = "<Leader>or",
-          org_capture_kill = { "q", "<ESC>" },
-          org_capture_show_help = "?",
-        },
-        note = {
-          org_note_finalize = "<C-c>",
-          org_note_kill = "<prefix>k",
-        },
-        org = {
-          org_refile = "<prefix>r",
-          org_timestamp_up_day = "<S-UP>",
-          org_timestamp_down_day = "<S-DOWN>",
-          org_timestamp_up = "<C-a>",
-          org_timestamp_down = "<C-x>",
-          org_priority = "<prefix>,",
-          org_priority_up = "<a-k>",
-          org_priority_down = "<a-j>",
-          org_todo = "ct",
-          org_todo_prev = "ciT",
-          org_change_date = "<prefix>d",
-          org_toggle_checkbox = "<C-c>",
-          org_toggle_heading = "<prefix>*",
-          org_open_at_point = "<prefix>o",
-          org_edit_special = [[<prefix>']],
-          org_cycle = "<BS>",
-          org_global_cycle = "<S-TAB>",
-          org_archive_subtree = "<prefix>$",
-          org_set_tags_command = "<Leader>t",
-          org_toggle_archive_tag = "<Leader>T",
-          org_do_promote = "<<",
-          org_do_demote = ">>",
-          org_promote_subtree = "<left>",
-          org_demote_subtree = "<right>",
-          org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
-          org_return = "<F11>",
-          org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
-          org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
-          org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
-          org_move_subtree_up = "<S-UP>",
-          org_move_subtree_down = "<S-DOWN>",
-          org_export = "<Leader>a",
-          org_next_visible_heading = "<c-n>",
-          org_previous_visible_heading = "<c-p>",
-          org_forward_heading_same_level = "]]",
-          org_backward_heading_same_level = "[[",
-          outline_up_heading = "g{",
-          org_deadline = "<Leader>d",
-          org_schedule = "<Leader>s",
-          org_time_stamp = "<prefix>t",
-          org_time_stamp_inactive = "<prefix>T",
-          org_toggle_timestamp_type = "<prefix>d!",
-          org_insert_link = "<prefix>li",
-          org_store_link = "<prefix>ls",
-          org_clock_in = "<prefix>i",
-          org_clock_out = "<prefix>o",
-          org_clock_cancel = "<prefix>C",
-          org_clock_goto = "<prefix>xj",
-          org_set_effort = "<prefix>e",
-          org_show_help = "?",
-          org_babel_tangle = "<prefix>bt",
-        },
-      },
-    },
+      }
+    end,
+
     config = function(_, opts)
       local orgmode = require "orgmode"
       orgmode.setup(opts)
