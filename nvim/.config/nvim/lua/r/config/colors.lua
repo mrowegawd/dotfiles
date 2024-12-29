@@ -34,7 +34,7 @@ local general_overrides = function()
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
-    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.4 }, bg = "NONE" } },
+    { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.7 }, bg = "NONE" } },
     { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
     { PmenuThumb = { bg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
@@ -223,8 +223,8 @@ local general_overrides = function()
     -- { diffNoEOL = { link = 'WarningMsg' } },
     -- { diffOnly = { link = 'WarningMsg' } },
 
-    { diffAdd = { bg = Highlight.darken(dark_green, 0.3, base), fg = "NONE", bold = true } },
-    { diffChange = { bg = Highlight.darken(dark_yellow, 0.4, base), fg = "NONE", bold = true } },
+    { diffAdd = { bg = Highlight.darken(dark_green, 0.2, base), fg = "NONE", bold = true } },
+    { diffChange = { bg = Highlight.darken(dark_yellow, 0.2, base), fg = "NONE", bold = true } },
     -- stylua: ignore
     { diffDelete = { bg = Highlight.darken(dark_red, 0.1, base), fg = Highlight.darken(dark_red, 0.2, base), bold = true, }, },
     { diffText = { bg = Highlight.darken(light_red, 0.3, base), fg = "NONE", bold = true } },
@@ -668,6 +668,8 @@ local general_overrides = function()
     -----------------------------------------------------------------------
     -- ORGMODE
     -----------------------------------------------------------------------
+    { ["@org.agenda.scheduled"] = { fg = Highlight.darken("#3f9f31", 0.8, base) } },
+
     { ["@org.headline.level1.org"] = { fg = "#4d85c3", bold = true, italic = true } },
     { ["@org.headline.level2.org"] = { fg = "#389674", bold = true, italic = true } },
     { ["@org.headline.level3.org"] = { fg = "#b0be1e", bold = true, italic = true } },
@@ -678,9 +680,9 @@ local general_overrides = function()
     { ["@org.timestamp.active"] = { inherit = "PreProc" } },
     { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
     { ["@org.bullet"] = { inherit = "Identifier" } },
-    { ["@org.checkbox"] = { inherit = "PreProc" } },
-    { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
-    { ["@org.checkbox.checked"] = { inherit = "PreProc" } },
+    -- { ["@org.checkbox"] = { inherit = "PreProc" } },
+    -- { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
+    -- { ["@org.checkbox.checked"] = { inherit = "PreProc" } },
     { ["@org.properties"] = { inherit = "Constant" } },
     { ["@org.drawer"] = { inherit = "Constant" } },
     { ["@org.tag"] = { inherit = "Function" } },
@@ -721,9 +723,9 @@ local general_overrides = function()
     { BqfSign = { bg = { from = "ColorColumn", attr = "bg" }, { fg = { from = "Boolean" } } } },
 
     -- TROUBLE ========================================================
-    { TodoSignWarn = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticWarn" } } },
-    { TodoSignFIX = { bg = { from = "Normal", attr = "bg" }, fg = { from = "DiagnosticSignError" } } },
-    { TodoSignTODO = { bg = { from = "Normal", attr = "bg" }, fg = { from = "OrgDONE" } } },
+    { TodoSignWarn = { bg = "NONE", fg = "#FBBF24" } },
+    { TodoSignFIX = { bg = "NONE", fg = "#DC2626" } }, -- for error
+    { TodoSignTODO = { bg = "NONE", fg = "#2563EB" } },
 
     -- GLANCE =============================================================
     { GlancePreviewNormal = { bg = "#111231" } },
@@ -818,7 +820,7 @@ end
 local function colorscheme_overrides()
   local overrides = {
     ["horizon"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.72 } } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.17, base) } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -826,7 +828,6 @@ local function colorscheme_overrides()
           bold = true,
         },
       },
-      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
 
@@ -844,9 +845,18 @@ local function colorscheme_overrides()
         },
       },
     },
+    ["gruvbox-material"] = {
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, base) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+    },
     ["kanagawa"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
-
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.17, base) } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -893,6 +903,14 @@ local function colorscheme_overrides()
         Keyword = {
           fg = { from = "Keyword", attr = "fg", alter = 0.8 },
           bg = "NONE",
+        },
+      },
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.85 } } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
         },
       },
       {
@@ -964,19 +982,11 @@ local function colorscheme_overrides()
         },
       },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.6 } } },
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.85 } } },
-      {
-        CursorLineNr = {
-          fg = { from = "Normal", attr = "fg" },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
-        },
-      },
 
       {
         MyCodeUsage = {
@@ -1254,210 +1264,6 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["rose-pine"] = {
-      { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
-      { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },
-
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
-
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.07 },
-          h,
-        },
-      },
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 } } },
-      { LineNrAbove = { link = "LineNr" } },
-      { LineNrBelow = { link = "LineNr" } },
-      { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.1 }, bg = "NONE" } },
-      { TreesitterContextSeparator = { fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
-      {
-        TreesitterContextSeparator = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
-          bg = { from = "ColorColumn", attr = "bg" },
-        },
-      },
-      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = -0.06 } } },
-      {
-        CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
-        },
-      },
-      {
-        QuickFixLine = {
-          bg = { from = "CursorLine", attr = "bg", alter = -0.05 },
-          fg = "NONE",
-          underline = false,
-        },
-      },
-      {
-        qfFileName = {
-          fg = { from = "Directory", attr = "fg", alter = -0.1 },
-          bg = "NONE",
-        },
-      },
-
-      {
-        CmpItemAbbr = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.3 },
-          bg = "NONE",
-        },
-      },
-      {
-        Pmenu = {
-          fg = { from = "Normal", attr = "fg", alter = -0.1 },
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-        },
-      },
-      {
-        PmenuSel = {
-          bg = { from = "Normal", attr = "bg", alter = -0.02 },
-          bold = true,
-          reverse = false,
-        },
-      },
-
-      {
-        PmenuThumb = {
-          bg = { from = "Pmenu", attr = "bg", alter = 0.1 },
-        },
-      },
-
-      { NormalFloat = { bg = { from = "Pmenu", attr = "bg" } } },
-      {
-        FloatBorder = {
-          fg = { from = "NormalFloat", attr = "bg", alter = -0.1 },
-          bg = { from = "NormalFloat", attr = "bg" },
-        },
-      },
-
-      { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
-
-      {
-        FzfLuaBorder = {
-          fg = { from = "FloatBorder", attr = "fg" },
-          bg = { from = "NormalFloat", attr = "bg" },
-        },
-      },
-
-      {
-        CmpItemIconWarningMsg = {
-          fg = { from = "WarningMsg", attr = "fg" },
-          bg = { from = "Pmenu", attr = "bg" },
-        },
-      },
-
-      {
-        CmpItemFloatBorder = {
-          fg = { from = "FloatBorder", attr = "fg" },
-          bg = { from = "Pmenu", attr = "bg" },
-        },
-      },
-
-      {
-        FzfLuaTitle = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "NormalFloat", attr = "bg" },
-        },
-      },
-
-      {
-        FzfLuaSel = {
-          fg = { from = "PmenuSel", attr = "bg", alter = 0.3 },
-          bg = { from = "PmenuSel", attr = "bg" },
-        },
-      },
-
-      { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.04 } } },
-
-      { FzfLuaDirPart = { fg = { from = "Normal", attr = "fg", alter = 0.5 } } },
-      { FzfLuaFilePart = { fg = { from = "Keyword", attr = "fg" }, reverse = false } },
-
-      { FzfLuaPreviewNormal = { bg = { from = "FzfLuaNormal", attr = "bg" } } },
-      {
-        FzfLuaPreviewBorder = {
-          fg = { from = "FzfLuaBorder", attr = "fg" },
-          bg = { from = "FzfluaBorder", attr = "bg" },
-        },
-      },
-
-      { TelescopeNormal = { inherit = "FzfLuaNormal" } },
-      { TelescopeBorder = { inherit = "FzfLuaBorder" } },
-      { TelescopeTitle = { inherit = "FzfLuaTitle" } },
-      -- prompt
-      { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
-      { TelescopePromptTitle = { inherit = "FzfLuaTitle" } },
-      { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
-      { TelescopePromptPrefix = { inherit = "FzfLuaBorder" } },
-      { TelescopePromptCounter = { inherit = "FzfLuaBorder" } },
-      -- Preview
-      { TelescopePreviewNormal = { inherit = "FzfLuaNormal" } },
-      { TelescopePreviewTitle = { inherit = "FzfLuaTitle" } },
-      { TelescopePreviewBorder = { inherit = "FzfLuaBorder" } },
-      -- Results
-      { TelescopeResultsNormal = { inherit = "FzfLuaNormal" } },
-      { TelescopeResultsTitle = { inherit = "FzfLuaTitle" } },
-      { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
-
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = -0.7 },
-          bg = { from = "Normal", attr = "bg", alter = -0.6 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
-        },
-      },
-
-      {
-        Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
-        },
-      },
-
-      {
-        TablineSel = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-        },
-      },
-    },
     ["everforest"] = {
       { ["@punctuation.bracket"] = { fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 } } },
       { ["@markup.quote.markdown"] = { bg = { from = "GitSignsChange", attr = "fg", alter = 1.5 } } },
@@ -1635,98 +1441,13 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["lavish"] = {
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, bg = "NONE", italic = true, reverse = false } },
-      { ["@lsp.type.comment"] = { inherit = "Comment" } },
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.7 } } },
-      {
-        CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
-        },
-      },
-
-      {
-        QuickFixLine = {
-          bg = { from = "CursorLine", attr = "bg", alter = 0.4 },
-          fg = { from = "CursorLine", attr = "bg", alter = 4 },
-          underline = false,
-        },
-      },
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.2 } } },
-
-      {
-        ["RenderMarkdownCodeInline"] = {
-          fg = { from = "Directory", attr = "fg", alter = 0.5 },
-          bg = { from = "Directory", attr = "fg", alter = 0.4 },
-          bold = true,
-        },
-      },
-
-      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
-
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = 1.2 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = 1.2 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.1 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-        },
-      },
-      {
-        Tabline = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
-        },
-      },
-
-      {
-        TablineSel = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
-        },
-      },
-    },
     ["evangelion"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, bg = "NONE", italic = true, reverse = false } },
       { ["@lsp.type.comment"] = { inherit = "Comment" } },
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, base) } },
       {
         CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.1 },
           bg = { from = "CursorLine", attr = "bg" },
           bold = true,
         },
@@ -1740,11 +1461,10 @@ local function colorscheme_overrides()
         },
       },
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+      { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
       -- { ["@markup.strong.markdown_inline"] = { fg = { from = "Visual", attr = "bg", alter = 1.4 } } },
-
-      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
 
       { CmpItemAbbrMatchFuzzy = { fg = { from = "ErrorMsg", attr = "fg" } } },
       { CmpItemAbbrMatch = { fg = { from = "ErrorMsg", attr = "fg" } } },
@@ -1766,84 +1486,7 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-
-      {
-        Tabline = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-        },
-      },
-
-      {
-        TablineSel = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-    },
-    ["sweetie"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.67 } } },
-      {
-        CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
-        },
-      },
-
-      {
-        LspReferenceText = {
-          bg = { from = "LspReferenceText", attr = "bg", alter = 0.8 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "LspReferenceWrite", attr = "bg", alter = 1 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        LspReferenceRead = {
-          bg = { from = "LspReferenceRead", attr = "bg", alter = 1 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
-
-      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
-
-      {
-        MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "Visual", attr = "bg", alter = 0.1 },
-          italic = true,
-        },
-      },
-
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 4.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -1863,7 +1506,7 @@ local function colorscheme_overrides()
       },
     },
     ["oxocarbon"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, base) } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -1898,60 +1541,6 @@ local function colorscheme_overrides()
       {
         TablineSel = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-    },
-    ["PaperColor"] = {
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = -0.1 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-
-      {
-        Tabline = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-        },
-      },
-
-      {
-        TablineSel = {
-          fg = { from = "StatusLine", attr = "fg" },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -2116,53 +1705,16 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["flow"] = {
-      {
-        QuickFixLine = {
-          bg = { from = "CursorLine", attr = "bg", alter = 0.4 },
-          fg = { from = "CursorLine", attr = "bg", alter = 4 },
-          underline = false,
-        },
-      },
-      { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
-
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.3 } } },
-      {
-        MyCodeUsage = {
-          fg = { from = "Directory", attr = "fg", alter = 0.2 },
-          bg = { from = "Directory", attr = "fg", alter = -0.5 },
-          italic = true,
-        },
-      },
-
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-        },
-      },
-      {
-        Tabline = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
-        },
-      },
-      {
-        TablineSel = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
-          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
-        },
-      },
-    },
     ["selenized"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1 }, italic = true } },
-      { CursorLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Visual", "bg"), 0.93, Highlight.get("Function", "fg")) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.3 } } },
 
@@ -2170,16 +1722,6 @@ local function colorscheme_overrides()
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1 },
           bg = { from = "Normal", attr = "bg", alter = 0.3 },
-        },
-      },
-
-      { ["@org.agenda.scheduled"] = { fg = "#3f9f31" } },
-
-      {
-        CursorLineNr = {
-          fg = { from = "Normal", attr = "fg" },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
         },
       },
 
@@ -2233,41 +1775,6 @@ local function colorscheme_overrides()
         StatusLineNC = {
           fg = { from = "StatusLine", attr = "bg", alter = 3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-        },
-      },
-    },
-    ["melange"] = {
-      {
-        Comment = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-        },
-      },
-      {
-        StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-
-      {
-        Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
-          bg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
-          reverse = false,
-        },
-      },
-
-      {
-        TablineSel = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
         },
       },
     },
@@ -2462,7 +1969,14 @@ local function colorscheme_overrides()
       },
     },
     ["neomodern"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), -0.1, base) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
 
       { Search = { bg = "red" } },
 
@@ -2481,7 +1995,7 @@ local function colorscheme_overrides()
       },
     },
     ["nightfox"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, base) } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -2526,7 +2040,7 @@ local function colorscheme_overrides()
       },
     },
     ["terafox"] = {
-      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.65 } } },
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.75 } } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -2552,6 +2066,51 @@ local function colorscheme_overrides()
         StatusLineNC = {
           fg = { from = "StatusLine", attr = "bg", alter = 3.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
+          bg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+          reverse = false,
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+        },
+      },
+    },
+    ["carbonfox"] = {
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), -0.07, base) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
+      {
+        Comment = {
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
+        },
+      },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 1 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
@@ -2838,6 +2397,14 @@ local function colorscheme_overrides()
       },
     },
     ["vscode_modern"] = {
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.88, Highlight.get("Keyword", "fg")) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
       { CmpItemAbbrMatchFuzzy = { fg = { from = "GitSignsDelete", attr = "fg" } } },
       { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg" } } },
 
@@ -2914,7 +2481,7 @@ local function colorscheme_overrides()
       },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.3 }, italic = true } },
-      { CursorLine = { bg = "#e3ddf8" } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Normal", "bg")) } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -2945,7 +2512,7 @@ local function colorscheme_overrides()
 
       { ["@punctuation.bracket"] = { fg = { from = "Keyword", attr = "fg", alter = -0.2 } } },
 
-      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = -0.3 } } },
+      { LineNr = { bg = "NONE", fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -3084,8 +2651,8 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
+          fg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
         },
       },
 
@@ -3104,6 +2671,7 @@ local function colorscheme_overrides()
       },
     },
     ["catppuccin-mocha"] = {
+      { CursorLine = { bg = { from = "Keyword", attr = "fg", alter = -0.8 } } },
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 3.5 },

@@ -1,22 +1,6 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
-  -- LAVISH
-  {
-    "ferdinandrau/lavish.nvim",
-    priority = 1000,
-    enabled = function()
-      local lavish_theme = { "lavish", "lavish-dark" }
-      if vim.tbl_contains(lavish_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      vim.opt.background = "dark"
-      require("lavish").apply()
-    end,
-  },
   -- EVANGELION
   {
     "xero/evangelion.nvim",
@@ -28,27 +12,6 @@ return {
         return true
       end
       return false
-    end,
-  },
-  -- FLOW
-  {
-    "0xstepit/flow.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local flow_theme = { "flow" }
-      if vim.tbl_contains(flow_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      require("flow").setup {
-        transparent = false, -- Set transparent background.
-        fluo_color = "pink", --  Fluo color: pink, yellow, orange, or green.
-        mode = "normal", -- Intensity of the palette: normal, dark, or bright. Notice that dark is ugly!
-        aggressive_spell = false, -- Display colors for spell check.
-      }
     end,
   },
   -- LACKLUSTER
@@ -63,14 +26,6 @@ return {
       end
       return false
     end,
-    config = function()
-      local lackluster = require "lackluster"
-      lackluster.setup {
-        disable_plugin = {
-          bufferline = true,
-        },
-      }
-    end,
   },
   -- NEOMODERN
   {
@@ -78,7 +33,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local neomodern_theme = { "iceclimber", "coffeecat", "darkforest", "roseprime", "daylight" }
+      local neomodern_theme = { "iceclimber", "coffeecat", "darkforest", "daylight" }
       if vim.tbl_contains(neomodern_theme, colorscheme) then
         return true
       end
@@ -99,57 +54,6 @@ return {
       return false
     end,
   },
-  -- SWEETIE
-  {
-    "NTBBloodbath/sweetie.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local sweetie_theme = { "sweetie" }
-      if vim.tbl_contains(sweetie_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    init = function()
-      --- Default configuration
-      vim.g.sweetie = {
-        -- Pop-up menu pseudo-transparency
-        -- It requires `pumblend` option to have a non-zero value
-        pumblend = {
-          enable = true,
-          transparency_amount = 20,
-        },
-        palette = {
-          dark = {},
-          light = {},
-        },
-        -- Override default highlighting groups options
-        -- overrides = {
-        --   Comment = { italic = false },
-        --   CommentBold = { italic = false },
-        --   Keyword = { italic = false },
-        --   Boolean = { italic = false },
-        --   Class = { italic = false },
-        --   -- Optional, just if you use Java and you do not want some extra italics
-        --   -- ["@type.java"] = { italic = false },
-        --   -- ["@type.qualifier.java"] = { italic = false },
-        -- },
-        -- Custom plugins highlighting groups
-        integrations = {
-          lazy = true,
-          neorg = true,
-          neogit = true,
-          neomake = true,
-          telescope = true,
-        },
-        -- Enable custom cursor coloring even in terminal Neovim sessions
-        cursor_color = true,
-        -- Use sweetie's palette in `:terminal` instead of your default terminal colorscheme
-        terminal_colors = true,
-      }
-    end,
-  },
   -- EVERFOREST
   {
     "neanias/everforest-nvim",
@@ -167,26 +71,13 @@ return {
       require("everforest").setup()
     end,
   },
-  -- MELANGE
-  {
-    "savq/melange-nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local melangetheme = { "melange" }
-      if vim.tbl_contains(melangetheme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- FAROUT
   {
     "thallada/farout.nvim",
     lazy = false,
     priority = 1000,
     enabled = function()
-      local farout_theme = { "farout", "farout-night", "farout-day", "farout-moon", "farout-storm" }
+      local farout_theme = { "farout-night", "farout-day" }
       if vim.tbl_contains(farout_theme, colorscheme) then
         return true
       end
@@ -287,23 +178,12 @@ return {
       },
     },
   },
-  -- PAPERCOLOR
-  {
-    "NLKNguyen/papercolor-theme",
-    priority = 1000,
-    enabled = function()
-      local papercolortheme = { "PaperColor" }
-      if vim.tbl_contains(papercolortheme, colorscheme) then
-        return true
-      end
-    end,
-  },
   -- NIGHTFOX
   {
     "EdenEast/nightfox.nvim",
     priority = 1000,
     enabled = function()
-      local nightfoxtheme = { "dawnfox", "duskfox", "nightfox", "dayfox", "nordfox", "terafox" }
+      local nightfoxtheme = { "duskfox", "nightfox", "dayfox", "nordfox", "terafox", "carbonfox" }
       if vim.tbl_contains(nightfoxtheme, colorscheme) then
         return true
       end
@@ -353,20 +233,6 @@ return {
         specs = {},
         groups = {},
       }
-    end,
-  },
-  -- ROSE-PINE
-  {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local material_theme = { "rose-pine-moon", "rose-pine-main", "rose-pine-dawn" }
-      if vim.tbl_contains(material_theme, colorscheme) then
-        return true
-      end
-      return false
     end,
   },
   -- TOKYONIGHT

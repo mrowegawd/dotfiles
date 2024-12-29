@@ -8,7 +8,7 @@
 cwd = { fg = "#626053" }
 
 # Hovered
-hovered = { bg = "#373045" }
+hovered = { bg = "#30303f" }
 preview_hovered = { underline = true }
 
 # Find
@@ -40,10 +40,10 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#363230" }
+separator_style = { fg = "#6b6461", bg = "#21212b" }
 
 # Mode
-mode_normal = { fg = "#2a2a2f", bg = "#957fb8", bold = true }
+mode_normal = { fg = "#2a2a2f", bg = "#8992a7", bold = true }
 mode_select = { fg = "#ffffff", bg = "#223249", bold = true }
 mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 
@@ -141,7 +141,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#bbbac1" },
-  { name = "*/", fg = "#957fb8" },
+  { name = "*/", fg = "#8992a7" },
 ]
 
 # : }}}

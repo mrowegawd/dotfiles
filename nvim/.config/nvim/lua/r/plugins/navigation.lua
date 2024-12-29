@@ -913,6 +913,9 @@ return {
           ["selenized"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.8 } } },
           },
+          ["evangelion"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
+          },
           ["vscode_modern"] = {
             { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
           },

@@ -329,43 +329,32 @@ y = 0
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
 
-# COFFEECAT Alacritty Colors
-# Default colors
 [colors.primary]
-background = '#1f1e1d'
-foreground = '#bbbac1'
+background = "#1f1f1f"
+foreground = "#cccccc"
 
-#[colors.cursor]
-#cursor = '#bbbac1'
-#text = '#1f1e1d'
+[colors.cursor]
+text = "#1f1f1f"
+cursor = "#FF0000"
 
-# Normal colors
 [colors.normal]
-black = '#191818'
-red = '#d47b7d'
-green = '#8fc490'
-yellow = '#e8cea0'
-blue = '#96b1fa'
-magenta = '#9b9af5'
-cyan = '#b39581'
-white = '#bbbac1'
+black =   "#000000"
+red =     "#cd3131"
+green =   "#0dbc79"
+yellow =  "#e5e510"
+blue =    "#2472c8"
+magenta = "#bc3fbc"
+cyan =    "#11a8cd"
+white =   "#e5e5e5"
 
-# Bright colors
 [colors.bright]
-black = '#6a6a6a'
-red = '#d47b7d'
-green = '#8fc490'
-yellow = '#e8cea0'
-blue = '#96b1fa'
-magenta = '#e3afd1'
-cyan = '#b39581'
-white = '#bbbac1'
+black =   "#666666"
+red =     "#f14c4c"
+green =   "#23d18b"
+yellow =  "#f5f543"
+blue =    "#3b8eea"
+magenta = "#d670d6"
+cyan =    "#29b8db"
+white =   "#e5e5e5"
 
-# Indexed Colors
-[[colors.indexed_colors]]
-index = 16
-color = '#e3a968'
 
-[[colors.indexed_colors]]
-index = 17
-color = '#9b9af5'
