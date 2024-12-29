@@ -1,5 +1,3 @@
-local Highlight = require "r.settings.highlights"
-
 ---@param config {type?:string, args?:string[]|fun():string[]?}
 local function get_args(config)
   local args = type(config.args) == "function" and (config.args() or {}) or config.args or {} --[[@as string[] | string ]]
@@ -150,19 +148,6 @@ return {
         require("mason-nvim-dap").setup(RUtils.opts "mason-nvim-dap.nvim")
       end
 
-      local yellow = Highlight.get("GitSignsChange", "fg")
-      local yellowlow = Highlight.tint(yellow, -0.7)
-      local yellowhi = Highlight.tint(yellow, 0.7)
-      Highlight.plugin("dapHi", {
-        { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = "NONE" } },
-        { DapStopped = { bg = yellowlow, fg = "NONE" } },
-        { DapStoppedIcon = { bg = yellowlow, fg = yellowhi } },
-        { DapStoppedMod = { bg = yellowlow, fg = yellowhi } },
-        { DapUiPlayPause = { bg = RUtils.colortbl.statusline_bg } },
-        { DapUiStop = { bg = RUtils.colortbl.statusline_bg } },
-        { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
-      })
-
       vim.fn.sign_define {
         {
           name = "DapBreakpoint",
@@ -191,7 +176,7 @@ return {
     "rcarriga/nvim-dap-ui",
     -- stylua: ignore
     keys = {
-      { "<Leader>duu", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
+      { "<Leader>dt", function() require("dapui").toggle() end, desc = "Debug: toggle UI [dapui]" },
       { "<Leader>dr", function() return require("dapui").open { reset = true } end, desc = "Debug: reset UI [dapui]" },
       { "<Leader>dP", function() require("dap.ui.widgets").hover() end, desc = "Debug: hover [dapui]" },
     },

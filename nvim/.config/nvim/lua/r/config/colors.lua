@@ -781,6 +781,20 @@ local general_overrides = function()
 
     -- ──────────────────────────── SNACKS INDENT ────────────────────────────
     { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+
+    --  ────────────────────────────── DEBUG:DAP ─────────────────────────────
+    { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = "NONE" } },
+    { DapStopped = { bg = { from = "GitSignsChange", attr = "fg", alter = -0.6 }, fg = "NONE" } },
+    {
+      DapStoppedIcon = {
+        bg = { from = "GitSignsChange", attr = "fg", alter = -0.6 },
+        fg = { from = "GitSignsChange", attr = "fg", alter = 0.6 },
+      },
+    },
+    -- { DapStoppedMod = { bg = yellowlow, fg = yellowhi } },
+    -- { DapUiPlayPause = { bg = RUtils.colortbl.statusline_bg } },
+    -- { DapUiStop = { bg = RUtils.colortbl.statusline_bg } },
+    -- { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
   }
 end
 
