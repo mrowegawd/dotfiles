@@ -1268,7 +1268,7 @@ local function colorscheme_overrides()
     ["evangelion"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, bg = "NONE", italic = true, reverse = false } },
       { ["@lsp.type.comment"] = { inherit = "Comment" } },
-      { CursorLine = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.88, Highlight.get("Keyword", "fg")) } },
+      { CursorLine = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.86, Highlight.get("Keyword", "fg")) } },
       {
         CursorLineNr = {
           fg = { from = "Keyword", attr = "fg", alter = 0.1 },
@@ -1277,6 +1277,7 @@ local function colorscheme_overrides()
         },
       },
 
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
       { FzfLuaCursorLine = { bg = { from = "CursorLine", alter = 0.4, attr = "bg" } } },
       {
         QuickFixLine = {

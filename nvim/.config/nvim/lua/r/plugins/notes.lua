@@ -375,7 +375,6 @@ return {
               title = RUtils.fzflua.format_title(
                 "Obsidian > Grep",
                 RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3)
-                -- "GitSignsChange"
               ),
             },
           }
@@ -398,7 +397,6 @@ return {
                 title = RUtils.fzflua.format_title(
                   "Obsidian > Grep",
                   RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope3)
-                  -- "GitSignsChange"
                 ),
               },
             }
@@ -421,7 +419,6 @@ return {
               title = RUtils.fzflua.format_title(
                 "Obsidian > Note files",
                 RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.bookmark)
-                -- "GitSignsChange"
               ),
             },
           }

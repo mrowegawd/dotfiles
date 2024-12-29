@@ -315,11 +315,7 @@ local function format_prompt_strings()
     local tags = "[" .. table.concat(insert_tags, ", ") .. "]"
     title_fzf = string.format("%s > %s", title_fzf, tags)
   end
-  return RUtils.fzflua.format_title(
-    title_fzf,
-    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag)
-    -- "GitSignsChange"
-  )
+  return RUtils.fzflua.format_title(title_fzf, RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.tag))
 end
 
 local builtin = require "fzf-lua.previewer.builtin"
