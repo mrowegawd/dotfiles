@@ -61,6 +61,11 @@ build-install(){
     sudo apt install libsox-fmt-all
   fi
 
+  if ! command -v hub >/dev/null; then
+    echo "Installing: hub - an extensions to cmdline git"
+    sudo apt install hub
+  fi
+
   if ! asdf which bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
   	cargo install bat

@@ -44,11 +44,7 @@ return {
     priority = 1000,
     lazy = false,
     opts = function()
-      Highlight.plugin("NotifyCol", {
-        theme = {
-          ["*"] = {
-            { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-        -- INFO
+      Highlight.plugin("Snacks_highlights", {
         {
           SnacksNotifierInfo = {
             bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
@@ -113,8 +109,6 @@ return {
             bold = true,
           },
         },
-          },
-        },
       })
 
       return {
@@ -142,6 +136,9 @@ return {
         -- toggle = { map = LazyVim.safe_keymap_set },
         words = { enabled = true },
         dashboard = {
+          pane_gap = 4, -- empty columns between vertical panes
+          -- row = 4,
+          -- col = 4,
           preset = {
             keys = {
               { icon = " ", key = "f", desc = "Find File", action = ':lua require("fzf-lua").files()' },
@@ -161,10 +158,29 @@ return {
             header = require("r.utils").logo(),
           },
           sections = {
-            { section = "header", padding = 1, align = "center" },
-            { icon = " ", title = "Recent Files", section = "recent_files", limit = 4, padding = 1 },
-            { section = "keys", gap = 1, padding = 1 },
-            { section = "startup" },
+            {
+
+              { section = "header", align = "center" },
+              { section = "startup", align = "center", padding = 0 },
+            },
+            {
+              pane = 2,
+              {
+                { icon = " ", title = "Recent Files", section = "recent_files", limit = 4, padding = 1 },
+                { section = "keys", gap = 0, padding = 1 },
+                {
+                  section = "terminal",
+                  icon = " ",
+                  title = "Git Status",
+                  enabled = vim.fn.isdirectory ".git" == 1,
+                  cmd = "hub diff --stat -B -M -C",
+                  -- gap = 0,
+                  height = 8,
+                  -- padding = 1,
+                  indent = 2,
+                },
+              },
+            },
             -- { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
           },
         },
@@ -246,7 +262,7 @@ return {
       Highlight.plugin("notify", {
         theme = {
           ["*"] = {
-            { NoiceCmdlinePopupBorder = { fg = { from = "FloatBorder", bg = { from = "NormalFloat" } } } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
             { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
             { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
@@ -383,7 +399,7 @@ return {
     -- flash cursor when jumps or moves between windows.
     "rainbowhxch/beacon.nvim",
     event = "LazyFile",
-    enabled = false,
+    -- enabled = false,
     cond = vim.g.neovide == nil,
     opts = function()
       Highlight.plugin("beaconHiC", {
@@ -502,7 +518,7 @@ return {
   {
     "stevearc/dressing.nvim",
     -- enabled = false,
-    event = "VimEnter",
+    event = "UIEnter",
     opts = {
       input = { enabled = true },
       select = {
