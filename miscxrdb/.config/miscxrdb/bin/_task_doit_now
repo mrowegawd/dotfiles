@@ -1,34 +1,37 @@
 #!/usr/bin/bash
 
 # Usage example (crontab -e):
-# */40 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_task_doit_now >/dev/null 2>&1
+# */35 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u) DISPLAY=:0 bash ~/.config/miscxrdb/bin/_task_doit_now >/dev/null 2>&1
 
 NORG_PATH="$HOME/Dropbox/neorg/orgmode"
 ICON_PATH="$HOME/.config/miscxrdb/icons/checklist.png"
 
 # find 'inprogress' tasks
-TASK="$("/home/mr00x/.asdf/shims/rg" -i "\*\sinprogres" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* INPROGRESS " '{print $2}')"
+TASK="$("$HOME/.asdf/shims/rg" -i "\*\sPROGRES" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
 GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
 # RED="$(xrdb -query | grep 'color1:' | awk '{print $NF}' | head -1)"
 
-[[ -z $TASK ]] && /usr/local/bin/dunstify "No task:" "What are you doing??" && exit 1
+if [[ -z $TASK ]]; then
+  /usr/local/bin/dunstify -i "$ICON_PATH" "No 'PROGRESS' task running?" "<b><span foreground=\"$GREEN\">What are you doing??</span></b>"
+  sound_man="$HOME/.config/miscxrdb/mp3-wav/wrong-answer-129254.mp3"
+else
+  IFS=$'\n' read -r -d '' -a array <<<"$TASK"
 
-IFS=$'\n' read -r -d '' -a array <<<"$TASK"
+  # Array baru untuk menyimpan elemen yang dimodifikasi
+  new_array=()
+  for element in "${array[@]}"; do
+    new_array+=("<b><span foreground=\"$GREEN\">$element</span></b> ")
+  done
 
-# Array baru untuk menyimpan elemen yang dimodifikasi
-new_array=()
-for element in "${array[@]}"; do
-	new_array+=("<b><span foreground=\"$GREEN\">$element</span></b> ")
-done
+  concatenated_string=$(
+    IFS=$'\n'
+    echo "${new_array[*]}"
+  )
+  /usr/local/bin/dunstify -t 5000 -i "$ICON_PATH" "Reminder" "$concatenated_string"
 
-concatenated_string=$(
-	IFS=$'\n'
-	echo "${new_array[*]}"
-)
+  sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
+fi
 
-/usr/local/bin/dunstify -t 5000 -i "$ICON_PATH" "Reminder:" "$concatenated_string"
-
-sound_man="$HOME/.config/miscxrdb/mp3-wav/smile-ringtone.mp3"
 if [ -f "$sound_man" ]; then
-	/usr/bin/play "$sound_man" 2>/dev/null
+  /usr/bin/play "$sound_man" 2>/dev/null
 fi
