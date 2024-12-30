@@ -221,28 +221,28 @@ return {
         desc = "Noice: redirect cmdline",
       },
       {
-        "<Localleader>Nd",
+        "<Localleader>nd",
         function()
           require("noice").cmd "dismiss"
         end,
         desc = "Noice: dismiss all",
       },
       {
-        "<Localleader>Nl",
+        "<Localleader>nl",
         function()
           require("noice").cmd "last"
         end,
         desc = "Noice: last message",
       },
       {
-        "<Localleader>Nh",
+        "<Localleader>nh",
         function()
           require("noice").cmd "history"
         end,
         desc = "Noice: history",
       },
       {
-        "<Localleader>Nf",
+        "<Localleader>nf",
         function()
           require("noice").cmd "pick"
         end,

@@ -65,9 +65,9 @@ return {
 
           { "<Leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
-          { "<Localleader>N", group = "noice" },
+          { "<Localleader>n", group = "noice" },
           { "<Localleader>d", group = "database" },
-          { "<Localleader>n", group = "note" },
+          { "<Localleader>a", group = "note" },
           { "<Localleader>o", group = "open/misc" },
           { "<Localleader>r", group = "refactoring" },
           { "<Localleader>s", group = "snacks" },
