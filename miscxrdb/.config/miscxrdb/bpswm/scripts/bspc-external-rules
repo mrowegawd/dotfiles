@@ -198,6 +198,8 @@ case $instance.$class in
 *.[gG]nome-calendar) xcalc ;;
 *.Xmessage) xmessage ;;
 *.Chromium) browser ;;
+*.zen-beta) browser ;;
+*.Navigator) browser ;;
 *.Spotify) spotify ;;
 *.xdman-Main) xcalc ;;
 *.SimpleScreenRecorder) videos ;;
