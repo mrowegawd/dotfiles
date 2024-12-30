@@ -153,6 +153,9 @@ return {
           ["tokyonight-day"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
           },
+          ["carbonfox"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
           ["selenized"] = {
             {
               RenderMarkdownCodeInline = {
