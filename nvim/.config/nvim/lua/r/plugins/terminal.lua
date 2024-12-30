@@ -35,9 +35,8 @@ return {
       local width, height = win_width_term()
 
       local Terminal = require("toggleterm.terminal").Terminal
-      local zsh = Terminal:new {
+      local terminal_open = Terminal:new {
         cmd = "zsh",
-        -- dir = "git_dir",
         direction = "float",
         float_opts = {
           border = "single",
@@ -62,7 +61,7 @@ return {
         {
           "<a-f>",
           function()
-            zsh:toggle()
+            terminal_open:toggle()
           end,
           desc = "Terminal: toggle term float [toggleterm]",
         },
