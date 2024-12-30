@@ -105,7 +105,7 @@ return {
       vim.g.cheat_default_window_layout = "vertical_split"
     end,
   },
-  -- HAWTKEYS
+  -- HAWTKEYS (disabled)
   { -- use only when necessary.
     "tris203/hawtkeys.nvim",
     enabled = false,
@@ -114,5 +114,13 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     opts = true,
+  },
+  -- ORPHANS
+  {
+    "ZWindL/orphans.nvim",
+    cmd = "Orphans",
+    config = function()
+      require("orphans").setup {}
+    end,
   },
 }

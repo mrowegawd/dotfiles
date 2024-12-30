@@ -491,6 +491,9 @@ RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.nnoremap("<Leader>uf", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
+    oprhans_check_plugins_last_update = function()
+      vim.cmd [[Orphans]]
+    end,
     blockon_toggle = function()
       if not block_toggle then
         vim.cmd [[Block]]
