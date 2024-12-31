@@ -20,6 +20,9 @@ return {
         qf_sigil = RUtils.config.icons.misc.marks,
         qf_sign_hl = { fg = "red" },
       },
+      popup = {
+        title_higroup = "FzfLuaPreviewTitle",
+      },
       marks = {
         excluded = {
           buftypes = {},
