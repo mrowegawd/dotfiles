@@ -367,20 +367,19 @@ return {
         end,
       })
 
-      Highlight.plugin("NeoTree", {
+      Highlight.plugin("NeoTreeHi", {
         theme = {
           ["*"] = {
             { Directory = { link = "Keyword" } },
             { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
-            { NeoTreeRootName = { fg = { from = "Normal", attr = "fg" } } },
             { NeoTreeNormal = { link = "PanelBackground" } },
             { NeoTreeNormalNC = { link = "PanelBackground" } },
             { NeoTreeCursorLine = { link = "CursorLine" } },
-            { NeoTreeRootName = { underline = false } },
+            { NeoTreeRootName = { fg = { from = "Comment", attr = "fg" } } },
             { NeoTreeStatusLine = { link = "PanelStusLine" } },
             { NeoTreeWinSeparator = { link = "WinSeparator" } },
             { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 0.5 }, bold = false } },
+            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 1 }, bold = false } },
             { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
 
@@ -398,7 +397,6 @@ return {
           },
         },
       })
-
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
