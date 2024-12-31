@@ -8,7 +8,7 @@
 cwd = { fg = "#b4b4b8" }
 
 # Hovered
-hovered = { bg = "#d3d4d9" }
+hovered = { bg = "#d6dce3" }
 preview_hovered = { underline = true }
 
 # Find
@@ -40,7 +40,7 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#363230" }
+separator_style = { fg = "#6b6461", bg = "#707173" }
 
 # Mode
 mode_normal = { fg = "#87afd7", bg = "#007197", bold = true }

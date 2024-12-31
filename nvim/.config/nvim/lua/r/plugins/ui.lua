@@ -262,23 +262,47 @@ return {
       Highlight.plugin("notify", {
         theme = {
           ["*"] = {
-            { NoiceCmdlinePopupBorder = { fg = { from = "WinSeparator", attr = "fg", alter = 0.1 } } },
-            { NoiceCmdlinePopupTitle = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-            { NoiceCmdlinePopupTitleLua = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-            { NoiceCmdlinePopupTitleCmdline = { fg = { from = "FzfLuaTitle", attr = "fg" } } },
-            { NoiceCmdlinePopup = { bg = { from = "NormalFloat", attr = "bg", alter = -0.15 } } },
+            { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
+
+            { NoiceCmdlinePopupTitle = { inherit = "FzfLuaPreviewTitle" } },
+            { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaPreviewTitle" } },
+            { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaPreviewTitle" } },
+
             { NoiceCmdlineIcon = { bg = "NONE" } },
 
             { NotifyBackground = { bg = { from = "Normal", attr = "fg", alter = 1 } } },
-            { NoicePopupBorder = { inherit = "FloatBorder" } },
           },
           ["everforest"] = {
-            { NoiceCmdlineIcon = { bg = "NONE" } },
-            { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
+            {
+              NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = -0.2 } },
+            },
+          },
+          ["dayfox"] = {
+            { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = -0.15 } } },
+            { NoiceCmdlinePopupTitle = { inherit = "FzfLuaPreviewTitle" } },
+            { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaPreviewTitle" } },
+            { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaPreviewTitle" } },
+          },
+          ["tokyonight-day"] = {
+            { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            {
+              NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = -0.15 } },
+            },
+
+            { NoiceCmdlinePopupTitle = { inherit = "FzfLuaTitle" } },
+            { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaTitle" } },
+            { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaTitle" } },
+          },
+          ["farout"] = {
+            { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 1.8 } } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
           },
           ["lackluster"] = {
-            { NoiceCmdlineIcon = { bg = "NONE" } },
-            { NoicePopupBorder = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+            { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
           },
         },
       })

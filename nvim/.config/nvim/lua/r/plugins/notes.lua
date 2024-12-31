@@ -41,7 +41,7 @@ return {
     },
     opts = function()
       local done_hi = Highlight.get("Comment", "fg")
-      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Keyword", "fg"))
+      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("ErrorMsg", "fg"))
       local todo_hi = Highlight.get("Error", "fg")
       return {
         ui = {

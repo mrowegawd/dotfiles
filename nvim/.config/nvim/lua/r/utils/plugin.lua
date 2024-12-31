@@ -237,12 +237,17 @@ function M.change_colors()
   local gitlinenumber_change = Highlight.get("GitSignsChange", "fg")
   local gitlinenumber_delete = Highlight.get("GitSignsDelete", "fg")
 
+  local sugest_highlight =
+    Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.8, Highlight.get("Normal", "bg"))
+
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
 
     lazygit_default_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
     lazygit_default_bg = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
     lazygit_border_fg = Highlight.tint(Highlight.get("FzfLuaBorder", "fg"), 0.1) -- 31
+
+    sugest_highlight = Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.8, Highlight.get("Normal", "bg"))
   end
 
   local master_colors = fmt(
@@ -290,14 +295,17 @@ function M.change_colors()
 *color36: %s
 *color37: %s
 *color38: %s
+
+! zsh-autosuggestions: fg
+*color39: %s
 ]],
     -- State Mode Color
-    Highlight.tint(Highlight.get("Keyword", "fg"), -0.2), -- 16
+    Highlight.get("Keyword", "fg"), -- 16
     Highlight.get("WinSeparator", "fg"), -- 17
 
     -- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,
     statusline_fg, -- 18
-    Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1), -- 19
+    Highlight.get("WinSeparator", "fg"), -- 19
 
     -- TMUX: Bg_active, Bg_nc
     Highlight.get("Normal", "bg"), -- 20
@@ -328,7 +336,9 @@ function M.change_colors()
 
     gitlinenumber_add,
     gitlinenumber_change,
-    gitlinenumber_delete
+    gitlinenumber_delete,
+
+    sugest_highlight -- 39
   )
 
   local master_color_path = "/tmp/master-colors-themes"

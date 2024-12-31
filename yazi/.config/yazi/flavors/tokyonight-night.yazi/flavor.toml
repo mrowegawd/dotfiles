@@ -5,10 +5,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#545454" }
+cwd = { fg = "#565a6e" }
 
 # Hovered
-hovered = { bg = "#212230" }
+hovered = { bg = "#1f2431" }
 preview_hovered = { underline = true }
 
 # Find

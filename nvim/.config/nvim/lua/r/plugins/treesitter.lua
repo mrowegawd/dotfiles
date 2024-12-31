@@ -92,6 +92,7 @@ return {
       -- If treesitter is already loaded, we need to run config again for textobjects
       if RUtils.is_loaded "nvim-treesitter" then
         local opts = RUtils.opts "nvim-treesitter"
+        ---@diagnostic disable-next-line: missing-fields
         require("nvim-treesitter.configs").setup { textobjects = opts.textobjects }
       end
       -- When in diff mode, we want to use the default
@@ -140,11 +141,11 @@ return {
       Highlight.plugin("treesitter-context", {
         theme = {
           ["*"] = {
-            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.05 } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.3 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
               },
             },
             {
@@ -169,12 +170,105 @@ return {
               },
             },
           },
+          ["catppuccin-mocha"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.15 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+              },
+            },
+          },
+          ["kanagawa"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.15 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+              },
+            },
+          },
+          ["evangelion"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.15 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+              },
+            },
+          },
           ["farout"] = {
-            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.1 } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
                 fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["nightfox"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.15 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["tokyonight-storm"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.15 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["selenized"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.1 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
               },
             },
             {
@@ -196,7 +290,7 @@ return {
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = -0.02 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.02 },
               },
             },
             {
@@ -214,33 +308,11 @@ return {
             },
           },
           ["tokyonight-day"] = {
-            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.15 } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = -0.01 },
-              },
-            },
-            {
-              TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = -0.05 },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                underline = false,
-                undercurl = false,
-                sp = "NONE",
-              },
-            },
-          },
-          ["catppuccin-latte"] = {
-            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            {
-              TreesitterContextSeparator = {
-                bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.02 },
               },
             },
             {
@@ -324,11 +396,11 @@ return {
             },
           },
           ["lackluster"] = {
-            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.3 } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.3 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
               },
             },
             {

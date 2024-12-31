@@ -141,6 +141,7 @@ return {
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
             { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
           },
@@ -150,10 +151,13 @@ return {
           ["lackluster"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
-          ["tokyonight-day"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+          ["neomodern"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } },
           },
           ["carbonfox"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+          },
+          ["everforest"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
           },
           ["selenized"] = {

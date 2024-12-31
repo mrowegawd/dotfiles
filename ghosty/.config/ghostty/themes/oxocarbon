@@ -1,7 +1,7 @@
 background = 161616
 foreground = dde1e6
 # cursor none
-cursor-color = f2f4f8
+cursor-color = 9e0e06
 
 # normal
 palette = 0=#161616

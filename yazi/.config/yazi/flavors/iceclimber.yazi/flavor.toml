@@ -7,7 +7,7 @@
 [manager]
 cwd = { fg = "#545356" }
 
-hovered = { fg = "#559ba3", bg = "#222236" }
+hovered = { fg = "#559ba3", bg = "#1d1d23" }
 preview_hovered = { fg = "#559ba3", bg = "#1d1d22" }
 
 find_keyword = { fg = "#abbceb", italic = true }

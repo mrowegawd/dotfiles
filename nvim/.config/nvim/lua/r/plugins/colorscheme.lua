@@ -68,7 +68,9 @@ return {
     end,
     config = function()
       vim.cmd [[set background=light]]
-      require("everforest").setup()
+      require("everforest").setup {
+        background = "hard",
+      }
     end,
   },
   -- FAROUT
@@ -183,7 +185,7 @@ return {
     "EdenEast/nightfox.nvim",
     priority = 1000,
     enabled = function()
-      local nightfoxtheme = { "duskfox", "nightfox", "dayfox", "nordfox", "terafox", "carbonfox" }
+      local nightfoxtheme = { "duskfox", "nightfox", "dayfox", "nordfox", "carbonfox" }
       if vim.tbl_contains(nightfoxtheme, colorscheme) then
         return true
       end

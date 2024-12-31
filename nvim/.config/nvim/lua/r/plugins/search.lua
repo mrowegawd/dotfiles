@@ -244,7 +244,7 @@ return {
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
           ["pointer"] = { "fg", "FzfLuaFzfPointer" },
-          ["marker"] = { "fg", "Keyword" },
+          ["marker"] = { "fg", "ErrorMsg" },
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "FzfLuaHeaderText" },
           ["gutter"] = { "bg", "FloatBorder" },
@@ -1682,51 +1682,6 @@ return {
               },
             },
           },
-          ["catppuccin-latte"] = {
-            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-
-            -- Directory
-            {
-              TroubleDirectory = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleFsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg", alter = -0.1 },
-              },
-            },
-
-            -- Diagnostics
-            {
-              TroubleDiagnosticsBasename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- QF
-            {
-              TroubleQfFilename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.05 } } },
-            {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
-              },
-            },
-          },
           ["dayfox"] = {
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
@@ -1793,7 +1748,7 @@ return {
             -- Directory
             {
               TroubleDirectory = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+                bg = { from = "Pmenu", attr = "bg", alter = -0.05 },
               },
             },
             {
@@ -1819,7 +1774,7 @@ return {
             -- QF
             {
               TroubleQfFilename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+                bg = { from = "Pmenu", attr = "bg", alter = 0.05 },
               },
             },
             { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },

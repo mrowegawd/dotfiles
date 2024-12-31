@@ -81,6 +81,7 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_39=$(grep -i color39 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -395,6 +396,26 @@ set_fzf() {
   sed -i -e "s/%%color_pointer%%/$GET_RED/g" "$FZF_PATH_CONFIG/fzf.config"
 
 }
+
+set_zsh_p10k() {
+  ZSH_P10K_PATH_CONFIG="$HOME/.config/zsh/.p10k.zsh"
+
+  if [ ! -f "$ZSH_P10K_PATH_CONFIG" ]; then
+    dunstify "$ERROR_MSG" "Path $ZSH_P10K_PATH_CONFIG do not exists!" && exit 1
+  fi
+
+  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$GET_COL_17\"/g" "$ZSH_P10K_PATH_CONFIG"
+  # sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$GET_COL_17\"/g" "$ZSH_P10K_PATH_CONFIG"
+
+  ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
+
+  if [ ! -f "$ZSHRC_PATH" ]; then
+    dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
+  fi
+
+  sed -i -e "s/^COLORSUGGEST=.*/COLORSUGGEST=fg=\"$GET_COL_39\"/g" "$ZSHRC_PATH"
+}
+
 set_lazygit() {
   LAZYGIT_PATH="$HOME/.config/lazygit"
   THEME_LAZYGIT="$LAZYGIT_PATH/themes/_themes_cfg"
@@ -537,6 +558,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
   set_fzf
   set_yazi_theme "$_NAMETHEME"
   set_lazygit
+  set_zsh_p10k
   set_delta_theme
 
   # case "$DEKSTOP_SESSION" in

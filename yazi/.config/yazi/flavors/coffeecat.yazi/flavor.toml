@@ -8,7 +8,7 @@
 cwd = { fg = "#545356" }
 
 # Hovered
-hovered = { fg = "#e3afd1", bg = "#2c2520" }
+hovered = { fg = "#e3afd1", bg = "#252220" }
 preview_hovered = { fg = "#e3afd1", bg = "#262524" }
 
 find_keyword = { fg = "#9b9af5", italic = true }
@@ -40,7 +40,7 @@ border_style = { fg = "#6a6a6a" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#383737", bg = "#383737" }
+separator_style = { fg = "#383737", bg = "#31302e" }
 
 mode_normal = { fg = "#1f1e1d", bg = "#b39581", bold = true }
 mode_select = { fg = "#1f1e1d", bg = "#a7846c", bold = true }

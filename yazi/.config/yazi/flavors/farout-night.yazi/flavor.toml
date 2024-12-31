@@ -5,7 +5,7 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#645b4e" }
+cwd = { fg = "#432824" }
 
 # Hovered
 hovered = { bg = "#281815" }
@@ -40,7 +40,7 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#3c3836", bg = "#3c3836" }
+separator_style = { fg = "#3c3836", bg = "#2e1c19" }
 
 # Mode
 mode_normal = { fg = "#282828", bg = "#a67458", bold = true }

@@ -35,7 +35,6 @@ local base_options = {
       "farout-night",
       "everforest",
       "dayfox",
-      "catppuccin-latte",
       "tokyonight-day",
       "rose-pine-dawn",
       "dawnfox",

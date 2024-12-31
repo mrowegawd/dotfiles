@@ -5,10 +5,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#545454" }
+cwd = { fg = "#565a6e" }
 
 # Hovered
-hovered = { bg = "#2d3249" }
+hovered = { bg = "#2d394f" }
 preview_hovered = { underline = true }
 
 # Find
@@ -40,7 +40,7 @@ border_style = { fg = "#665c54" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#12151f" }
+separator_style = { fg = "#6b6461", bg = "#151825" }
 
 # Mode
 mode_normal = { fg = "#1a1a24", bg = "#7dcfff", bold = true }
