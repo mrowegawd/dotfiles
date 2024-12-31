@@ -5,13 +5,13 @@ local Highlight = require "r.settings.highlights"
 local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
-local light_red = Highlight.tint(UIPallette.palette.pale_red, 0.3)
+-- local light_red = Highlight.tint(UIPallette.palette.pale_red, 0.3)
 
 local alter_medium_theme = { "lackluster", "oxocarbon", "carbonfox" }
 local alter_soft_theme = { "coffeecat", "iceclimber", "tokyonight-night", "tokyonight-day" }
 local alter_bright_theme = { "farout-night" }
 local alter_special_theme = { "gruvbox-material", "horizon" }
-local alter_darkpmenu_theme = { "selenized", "nightfox", "kanagawa", "tokyonight-storm" }
+local alter_darkpmenu_theme = { "selenized", "nightfox", "kanagawa", "tokyonight-storm", "vscode_modern" }
 
 local pmenu_alter = 0.3
 local pmenusel_alter = 0.3
@@ -2145,14 +2145,13 @@ local function colorscheme_overrides()
       },
     },
     ["vscode_modern"] = {
-      { CursorLine = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.88, Highlight.get("Keyword", "fg")) } },
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
       {
-        CursorLineNr = {
-          fg = { from = "Normal", attr = "fg" },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
+        SnacksIndentScope = {
+          fg = Highlight.darken(Highlight.get("Special", "fg"), 0.2, Highlight.get("Normal", "bg")),
         },
       },
+
       { CmpItemAbbrMatchFuzzy = { fg = { from = "GitSignsDelete", attr = "fg" } } },
       { CmpItemAbbrMatch = { fg = { from = "GitSignsDelete", attr = "fg" } } },
 

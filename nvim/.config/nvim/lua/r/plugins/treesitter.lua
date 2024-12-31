@@ -241,6 +241,28 @@ return {
               },
             },
           },
+          ["vscode_modern"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.15 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["tokyonight-storm"] = {
             { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = 0.15 } } },
             {
