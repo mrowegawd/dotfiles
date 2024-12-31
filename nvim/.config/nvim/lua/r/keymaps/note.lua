@@ -5,12 +5,6 @@ local M = {}
 function M.neorg_mappings_ft(bufnr)
   local mappings = {
     ["n"] = {
-      ["ri"] = {
-        function()
-          return RUtils.maim.insert()
-        end,
-        desc = "Note: insert image",
-      },
       ["t<CR>"] = {
         function()
           RUtils.markdown.find_local_titles()
@@ -36,7 +30,7 @@ function M.neorg_mappings_ft(bufnr)
           RUtils.markdown.find_local_sitelink()
           vim.cmd "normal! zRzz"
         end,
-        "Note: find sitelink (curbuf)",
+        "Note: find and go to links (curbuf)",
       },
       ["<Leader>fT"] = {
         function()
@@ -55,27 +49,7 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: search todocomment local note [fzflua]",
       },
-      ["<Localleader>oa"] = {
-        function()
-          if vim.bo[0].filetype == "neorg" then
-            RUtils.tiling.force_win_close({ "OverseerList", "toggleterm", "termlist", "undotree", "aerial" }, true)
-            cmd "Neorg toc right"
-            local vim_width = vim.o.columns
-            vim_width = math.floor(vim_width / 2 - 10)
-            cmd(fmt("vertical resize %s", vim_width))
-          else
-            if RUtils.has "aerial.nvim" then
-              vim.cmd [[AerialToggle]]
-            end
-
-            if RUtils.has "outline.nvim" then
-              vim.cmd [[Outline]]
-            end
-          end
-        end,
-        "Note: open toc",
-      },
-      ["gD"] = {
+      ["<Leader>gD"] = {
         function()
           vim.cmd "vsplit | ObsidianFollowLink"
         end,
