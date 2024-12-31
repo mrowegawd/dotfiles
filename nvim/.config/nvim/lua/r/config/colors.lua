@@ -1297,6 +1297,35 @@ local function colorscheme_overrides()
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.4 } } },
 
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
+      { FzfLuaDirPart = { fg = { from = "Keyword", attr = "fg", alter = -0.55 } } },
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = -0.4 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "LspReferenceWrite", attr = "bg", alter = -0.2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "LspReferenceRead", attr = "bg", alter = -0.2 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
       {
         MyCodeUsage = {
           fg = { from = "Directory", attr = "fg", alter = 0.5 },
