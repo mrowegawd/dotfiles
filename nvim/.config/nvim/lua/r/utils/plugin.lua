@@ -224,23 +224,23 @@ end
 function M.change_colors()
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.8)
 
+  local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "fg")
+  local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
   local lazygit_active_border = Highlight.get("Keyword", "fg")
-  local lazygit_inactive_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.1)
   local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
 
   local gitadd = Highlight.get("diffAdd", "bg")
-  local gitchange = Highlight.get("diffChange", "bg")
-  local gitdelete = Highlight.get("diffDelete", "bg")
-  local gittext = Highlight.get("diffText", "bg")
+  local gitlinenumber_add = Highlight.darken(Highlight.get("GitSignsAdd", "fg"), 0.4, Highlight.get("Normal", "bg"))
 
-  local gitlinenumber_add = Highlight.get("GitSignsAdd", "fg")
-  local gitlinenumber_change = Highlight.get("GitSignsChange", "fg")
-  local gitlinenumber_delete = Highlight.get("GitSignsDelete", "fg")
+  local gitdelete = Highlight.get("diffDelete", "bg")
+  local gitlinenumber_delete =
+    Highlight.darken(Highlight.get("GitSignsDelete", "fg"), 0.6, Highlight.get("Normal", "bg"))
 
   local sugest_highlight =
     Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.8, Highlight.get("Normal", "bg"))
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
+    lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
     statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
 
     lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
@@ -280,24 +280,22 @@ function M.change_colors()
 ! FZF Border
 *color28: %s
 
-! Lazygit: fg, bg, border fg
+! Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
 *color29: %s
 *color30: %s
 *color31: %s
-
-! Git: git_add, git_change, git_delete, git_text
 *color32: %s
+
+! Delta: plus-style, plus-emph-style
 *color33: %s
 *color34: %s
-*color35: %s
 
-! Git: gitlinenumber_add, gitlinenumber_change, gitlinenumber_delete
+! Delta: minus-style, minus-emph-style
+*color35: %s
 *color36: %s
-*color37: %s
-*color38: %s
 
 ! zsh-autosuggestions: fg
-*color39: %s
+*color37: %s
 ]],
     -- State Mode Color
     Highlight.get("Keyword", "fg"), -- 16
@@ -324,21 +322,21 @@ function M.change_colors()
     -- FZF: border
     Highlight.get("FzfLuaBorder", "fg"), -- 28
 
-    -- Lazygit: fg, bg, border fg
+    -- Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
     lazygit_active_border, -- 29
     lazygit_inactive_border, -- 30
     lazygit_border_fg, -- 31
+    lazygit_selected_line_bg, -- 32
 
-    gitadd, -- 32
-    gitchange, -- 33
-    gitdelete, -- 34
-    gittext, -- 35
+    -- Delta: plus-style, plus-emph-style
+    gitadd, -- 33
+    gitlinenumber_add, -- 34
 
-    gitlinenumber_add,
-    gitlinenumber_change,
-    gitlinenumber_delete,
+    -- Delta: minus-style, minus-emph-style,
+    gitdelete, -- 36
+    gitlinenumber_delete, -- 35
 
-    sugest_highlight -- 39
+    sugest_highlight -- 37
   )
 
   local master_color_path = "/tmp/master-colors-themes"

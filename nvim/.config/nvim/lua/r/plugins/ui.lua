@@ -137,8 +137,15 @@ return {
         lazygit = {
           theme_path = os.getenv "HOME" .. "/.config/lazygit/theme/fla.yml",
           theme = {
+            [241] = { fg = "Special" },
             activeBorderColor = { fg = "Keyword", bold = true },
-            selectedLineBgColor = { bg = "StatusLine" }, -- set to `default` to have no background colour
+            cherryPickedCommitBgColor = { fg = "Identifier" },
+            cherryPickedCommitFgColor = { fg = "Function" },
+            defaultFgColor = { fg = "Normal" },
+            optionsTextColor = { fg = "Function" },
+            searchingActiveBorderColor = { fg = "MatchParen", bold = true },
+            selectedLineBgColor = { bg = "LazygitselectedLineBgColor" }, -- set to `default` to have no background colour
+            inactiveBorderColor = { fg = "LazygitInactiveBorderColor" },
             unstagedChangesColor = { fg = "DiagnosticError" },
           },
         },

@@ -98,6 +98,7 @@ local general_overrides = function()
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
     { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.6 }, bg = "NONE" } },
+
     { WinBar = { bg = { from = "ColorColumn" }, fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { WinBarNC = { bg = { from = "ColorColumn", attr = "bg" }, fg = { from = "WinBar", attr = "fg" } } },
     { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter }, underline = false } },
@@ -283,13 +284,19 @@ local general_overrides = function()
     -- { diffNoEOL = { link = 'WarningMsg' } },
     -- { diffOnly = { link = 'WarningMsg' } },
 
-    { diffAdd = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, dark_green), fg = "NONE", bold = true } },
+    { diffAdd = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.8, dark_green), fg = "NONE", bold = true } },
     {
-      diffChange = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.6, dark_yellow), fg = "NONE", bold = true },
+      diffChange = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.8, dark_yellow), fg = "NONE", bold = true },
     },
     -- stylua: ignore
-    { diffDelete = { bg = Highlight.darken(dark_red, 0.1, Highlight.get("Normal", "bg")), fg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")), bold = true, }, },
-    { diffText = { bg = Highlight.darken(light_red, 0.3, Highlight.get("Normal", "bg")), fg = "NONE", bold = true } },
+    { diffDelete = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.7, dark_red), fg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")), bold = true, }, },
+    {
+      diffText = {
+        bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.6, dark_yellow),
+        fg = "NONE",
+        bold = true,
+      },
+    },
 
     { diffAdded = { inherit = "DiffAdd" } },
     { diffChanged = { inherit = "DiffChange" } },
@@ -867,6 +874,10 @@ local general_overrides = function()
     -- { DapUiPlayPause = { bg = RUtils.colortbl.statusline_bg } },
     -- { DapUiStop = { bg = RUtils.colortbl.statusline_bg } },
     -- { DapUiRestart = { bg = RUtils.colortbl.statusline_bg } },
+
+    --  ─────────────────────────────── LAZYGIT ───────────────────────────────
+    { LazygitselectedLineBgColor = { bg = { from = "CursorLine", attr = "bg", alter = 0.5 } } },
+    { LazygitInactiveBorderColor = { fg = { from = "WinSeparator", attr = "fg", alter = 0.7 }, bg = "NONE" } },
   }
 end
 

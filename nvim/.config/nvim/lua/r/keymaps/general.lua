@@ -411,6 +411,7 @@ RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr 
 
 if vim.fn.executable "lazygit" == 1 then
   RUtils.map.nnoremap("<Leader>gg", function()
+    ---@diagnostic disable-next-line: missing-fields
     Snacks.lazygit { cwd = RUtils.root.git() }
   end, { desc = "Git: lazygit (root dir) [snacks]" })
   RUtils.map.nnoremap("<Leader>gG", function()
