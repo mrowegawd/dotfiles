@@ -224,8 +224,8 @@ end
 function M.change_colors()
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.8)
 
-  local lazygit_default_fg = Highlight.get("Normal", "fg")
-  local lazygit_default_bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.2)
+  local lazygit_active_border = Highlight.get("Keyword", "fg")
+  local lazygit_inactive_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.1)
   local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
 
   local gitadd = Highlight.get("diffAdd", "bg")
@@ -243,8 +243,8 @@ function M.change_colors()
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
 
-    lazygit_default_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
-    lazygit_default_bg = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
+    lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
+    lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
     lazygit_border_fg = Highlight.tint(Highlight.get("FzfLuaBorder", "fg"), 0.1) -- 31
 
     sugest_highlight = Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.8, Highlight.get("Normal", "bg"))
@@ -325,8 +325,8 @@ function M.change_colors()
     Highlight.get("FzfLuaBorder", "fg"), -- 28
 
     -- Lazygit: fg, bg, border fg
-    lazygit_default_fg, -- 29
-    lazygit_default_bg, -- 30
+    lazygit_active_border, -- 29
+    lazygit_inactive_border, -- 30
     lazygit_border_fg, -- 31
 
     gitadd, -- 32

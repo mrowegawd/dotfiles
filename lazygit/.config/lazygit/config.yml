@@ -177,17 +177,3 @@ gui:
   showRandomTip: true
   showCommandLog: true
   commandLogSize: 8
-  theme:
-    activeBorderColor:
-      - "#8f7767"
-      - bold
-    inactiveBorderColor:
-      - "#302e2c"
-    optionsTextColor:
-      - "#1d1c1b"
-    selectedLineBgColor:
-      - "#8f7767"
-    defaultFgColor:
-      - "#bbbac1"
-    searchingActiveBorderColor:
-      - "#eed49f"

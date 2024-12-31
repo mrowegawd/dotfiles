@@ -69,7 +69,7 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_28=$(grep -i color28 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  # GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
   # GIT, git_add, git_change, git_delete, git_text
   # GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
@@ -417,19 +417,21 @@ set_zsh_p10k() {
 }
 
 set_lazygit() {
-  LAZYGIT_PATH="$HOME/.config/lazygit"
-  THEME_LAZYGIT="$LAZYGIT_PATH/themes/_themes_cfg"
+  LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"
+
+  THEME_LAZYGIT="$LAZYGIT_THEME_PATH/_theme"
+  THEME_LAZYGIT_FLA="$LAZYGIT_THEME_PATH/fla.yml"
 
   if [ -f "$THEME_LAZYGIT" ]; then
-    cp "$LAZYGIT_PATH/themes/_themes" "$THEME_LAZYGIT"
+    rm "$THEME_LAZYGIT_FLA"
+    cp "$THEME_LAZYGIT" "$THEME_LAZYGIT_FLA"
 
-    sed -i -e "s/%%active_border_color%%/$GET_COL_16/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%inactive_border_color%%/$GET_COL_18/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%options_text_color%%/$GET_COL_18/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_25/g" "$THEME_LAZYGIT"
-    sed -i -e "s/%%default_fg_color%%/$GET_COL_29/g" "$THEME_LAZYGIT"
+    sed -i -e "s/%%active_border_color%%/$GET_COL_29/g" "$THEME_LAZYGIT_FLA"
+    sed -i -e "s/%%inactive_border_color%%/$GET_COL_30/g" "$THEME_LAZYGIT_FLA"
+    sed -i -e "s/%%options_text_color%%/$GET_COL_18/g" "$THEME_LAZYGIT_FLA"
+    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_25/g" "$THEME_LAZYGIT_FLA"
 
-    cat "$LAZYGIT_PATH/_config.yml" "$THEME_LAZYGIT" >"$LAZYGIT_PATH/config.yml"
+    sed -i -e "s/%%default_fg_color%%/$GET_COL_16/g" "$THEME_LAZYGIT_FLA"
   fi
 
 }

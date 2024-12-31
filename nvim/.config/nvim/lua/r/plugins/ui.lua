@@ -134,6 +134,14 @@ return {
         },
         -- statuscolumn = { enabled = false }, -- we set this in options.lua
         -- toggle = { map = LazyVim.safe_keymap_set },
+        lazygit = {
+          theme_path = os.getenv "HOME" .. "/.config/lazygit/theme/fla.yml",
+          theme = {
+            activeBorderColor = { fg = "Keyword", bold = true },
+            selectedLineBgColor = { bg = "StatusLine" }, -- set to `default` to have no background colour
+            unstagedChangesColor = { fg = "DiagnosticError" },
+          },
+        },
         words = { enabled = true },
         dashboard = {
           pane_gap = 4, -- empty columns between vertical panes
