@@ -21,7 +21,9 @@ return {
         qf_sign_hl = { fg = "red" },
       },
       popup = {
-        title_higroup = "FzfLuaPreviewTitle",
+        title_local = "TODO LIST",
+        title_global = "MESSAGE BOX",
+        higroup_title = "FzfLuaPreviewTitle",
       },
       marks = {
         excluded = {
