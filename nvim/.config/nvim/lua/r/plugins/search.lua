@@ -139,7 +139,7 @@ return {
       { "<Leader>sc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
       { "<Leader>sC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
       { "<Leader>sa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
-      { "<Leader>sh", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: history buffer" },
+      { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: recent files (history buffer)" },
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
       { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
@@ -624,7 +624,7 @@ return {
         },
         oldfiles = {
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("History", "") },
+          winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
