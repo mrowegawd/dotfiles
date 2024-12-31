@@ -4,6 +4,7 @@ end
 
 local function check_file_extension(filename)
 	local pattern_mp3 = "%.mp3$"
+	local pattern_wav = "%.wav$"
 	local pattern_mp4 = "%.mp4$"
 	local pattern_gif = "%.gif$"
 	local pattern_pdf = "%.pdf$"
@@ -15,6 +16,8 @@ local function check_file_extension(filename)
 	local pattern_avi = "%.avi$"
 
 	if string.match(filename, pattern_mp3) then
+		return "mp3"
+	elseif string.match(filename, pattern_wav) then
 		return "mp3"
 	elseif string.match(filename, pattern_mp4) then
 		return "mp4"

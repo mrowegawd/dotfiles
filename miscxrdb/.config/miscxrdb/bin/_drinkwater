@@ -5,8 +5,10 @@
 
 /usr/local/bin/dunstify --replace 31341 -i ~/.config/miscxrdb/icons/drinks.png "Jangan lupa minum"
 
-sound_man="$HOME/.config/miscxrdb/mp3-wav/occasion-gem-notification-google.mp3"
+sound_man="$HOME/.config/miscxrdb/mp3-wav/notif-drink.mp3"
 
 if [ -f "$sound_man" ]; then
-  /usr/bin/play "$sound_man" 2>/dev/null
+  for ((i = 0; i < 5; i++)); do
+    /usr/bin/play "$sound_man" 2>/dev/null
+  done
 fi
