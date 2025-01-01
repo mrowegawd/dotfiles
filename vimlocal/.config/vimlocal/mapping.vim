@@ -228,11 +228,6 @@ nnoremap <c-k>                  <C-W>k
 nnoremap <c-h>                  <C-W>h
 nnoremap <c-l>                  <C-W>l
 
-" set <A-k>=^[k
-" set <A-j>=^[j
-" set <A-h>=^[h
-" set <A-l>=^[l
-
 " Resize the window
 " nnoremap <silent> <S-Up>        :resize -2<CR>
 " nnoremap <silent> <S-Down>      :resize +2<CR>
@@ -371,10 +366,6 @@ nnoremap <silent> <leader>q   :call ToggleList("Quickfix List", 'c')<CR>
 
 " keymap: [locationlist][toggle] open
 nnoremap <silent> <leader>Q   :call ToggleList("Quickfix List", 'l')<CR>
-" keymap: [locationlist] next
-" nnoremap <silent> <a-j>       :lnext<cr>zz
-" keymap: [locationlist] prev
-" nnoremap <silent> <a-k>       :lprev<cr>zz
 
 " keymap: [browser] open browser from under cursor
 nmap <silent> <leader>ob :call <SID>handleURL(expand('<cword>'),0)<cr>gv
@@ -530,10 +521,6 @@ endif
 " tmap <c-t>x <c-a><CR>:split term://zsh<CR>i
 " tmap <c-t>] <c-a>:+tabmove<cr>
 " tmap <c-t>[ <c-a>:-tabmove<cr>
-" tmap <a-h> <c-t><CR><c-w>h
-" tmap <a-j> <c-t><CR><c-w>j
-" tmap <a-k> <c-t><CR><C-w>k
-" tmap <a-l> <c-t><CR><c-w>l
 " tmap <c-t>J <c-t><CR><c-w>J
 " tmap <c-t>K <c-t><CR><c-w>K
 " tmap <c-t>H <c-t><CR><c-w>H

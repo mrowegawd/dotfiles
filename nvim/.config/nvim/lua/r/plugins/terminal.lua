@@ -66,6 +66,20 @@ return {
           desc = "Terminal: toggle term float [toggleterm]",
         },
         {
+          "<a-j>",
+          function()
+            vim.cmd [[ToggleTerm direction=horizontal size=15]]
+          end,
+          desc = "Terminal: toggle split term horizontal [toggleterm]",
+        },
+        {
+          "<a-l>",
+          function()
+            vim.cmd [[ToggleTerm direction=vertical size=80]]
+          end,
+          desc = "Terminal: toggle split term vertical [toggleterm]",
+        },
+        {
           "<a-N>",
           function()
             -- vim.cmd(string.format("%sToggleTerm direction=vertical size=100", count))

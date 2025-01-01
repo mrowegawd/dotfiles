@@ -268,8 +268,6 @@ return {
             ["<C-l>"] = "",
             ["<C-j>"] = "",
             ["<C-k>"] = "",
-            ["<a-h>"] = actions.enter_win "preview",
-            ["<c-h>"] = actions.enter_win "preview",
             ["p"] = actions.enter_win "preview",
           },
           preview = {
@@ -277,8 +275,6 @@ return {
             ["p"] = actions.enter_win "list",
             ["<c-n>"] = actions.next_location,
             ["<c-p>"] = actions.previous_location,
-            ["<a-l>"] = actions.enter_win "list",
-            ["<c-l>"] = actions.enter_win "list",
             ["<C-h>"] = "",
             ["<C-j>"] = "",
             ["<C-k>"] = "",

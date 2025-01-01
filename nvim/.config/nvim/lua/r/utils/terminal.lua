@@ -218,6 +218,13 @@ local btop = Terminal:new {
   float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
 }
 
+local lazydocker = Terminal:new {
+  cmd = "lazydocker",
+  hidden = true,
+  direction = "float",
+  float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
+}
+
 local rkill = Terminal:new {
   -- to run alias, must have `source` the zshrc file
   cmd = "source ~/.config/zsh/.zshrc; r_kill",
@@ -241,6 +248,10 @@ end
 
 function M.float_rkill()
   return rkill:toggle()
+end
+
+function M.lazydocker()
+  return lazydocker:toggle()
 end
 
 return M

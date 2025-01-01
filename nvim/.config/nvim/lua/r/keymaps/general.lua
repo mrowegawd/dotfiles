@@ -30,6 +30,8 @@ RUtils.map.inoremap("hh", function()
   RUtils.cmp.actions.snippet_stop()
   return "<Esc>"
 end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
+
+-- NOTE: conflict with mapping tmux split vertial/horizontal
 -- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 -- RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 
@@ -57,7 +59,7 @@ RUtils.map.tnoremap("<a-x>", function()
   local buf = vim.api.nvim_get_current_buf()
   require("bufdelete").bufdelete(buf, true)
 end, { desc = "Terminal: close terminal" })
-RUtils.map.tnoremap("<a-w>", function()
+RUtils.map.tnoremap("<a-t>", function()
   RUtils.map.feedkey("<C-\\><C-n>", "t")
   require("fzf-lua").tabs()
 end, { desc = "Terminal: show tabs [fzflua]" })
@@ -100,11 +102,6 @@ RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
 -- RUtils.map.nnoremap("<a-w>l", "<C-w>l", { desc = "View: right window (mod)", silent = true })
 -- RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
 -- RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
-
--- RUtils.map.nnoremap("<a-h>", "<C-w>h", { desc = "View: left window (mod)", silent = true })
--- RUtils.map.nnoremap("<a-l>", "<C-w>l", { desc = "View: right window (mod)", silent = true })
--- RUtils.map.nnoremap("<a-j>", "<C-w>j", { desc = "View: down window (mod)", silent = true })
--- RUtils.map.nnoremap("<a-k>", "<C-w>k", { desc = "View: up window (mod)", silent = true })
 
 if not RUtils.has "smart-splits.nvim" then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
