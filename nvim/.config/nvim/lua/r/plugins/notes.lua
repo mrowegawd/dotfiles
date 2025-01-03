@@ -105,22 +105,22 @@ return {
         org_capture_templates = {
           t = {
             description = "Todo",
-            template = "* TODO %? \n  SCHEDULED: %T",
+            template = "* TODO %? \n  SCHEDULED: %T\n\n\tDescribe:\n\n\tCode Error:\n\n\tExpected:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/refile.org",
           },
           i = {
             description = "Inbox",
-            template = "* CHECK %? \n  SCHEDULED: %t",
+            template = "* CHECK %? \n  SCHEDULED: %t\n\n\tDescribe:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           l = {
             description = "Link",
-            template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n",
+            template = "* CHECK %?\n  SCHEDULED: %t\n  %a\n\n\tDescribe:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/gtd/inbox.org",
           },
           u = {
             description = "URL bookmarks",
-            template = "* RAPIKAN: %? \n  SCHEDULED: %t",
+            template = "* RAPIKAN: %? \n  SCHEDULED: %t\n\n\tWhat about this URL:\n\n\tURL:\n",
             target = RUtils.config.path.wiki_path .. "/orgmode/bookmarks/urls.org",
           },
           j = {
@@ -200,7 +200,7 @@ return {
             org_change_date = "<prefix>d",
             org_toggle_checkbox = "<C-c>",
             org_toggle_heading = "<prefix>*",
-            org_open_at_point = "<prefix>o",
+            org_open_at_point = "<Leader>oo",
             org_edit_special = [[<prefix>']],
             org_cycle = "<BS>",
             org_global_cycle = "<S-TAB>",
