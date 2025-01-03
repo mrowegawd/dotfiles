@@ -26,35 +26,35 @@ local function font_with_fallback(name, params)
 	return wezterm.font_with_fallback({ name }, params)
 end
 
-local color_schemes = {
-	["Pangkalpinang"] = {
-		background = Color.bg,
-		foreground = Color.fg,
-		cursor_bg = Color.magenta,
-		cursor_border = Color.blue,
-		split = Color.separator_fg,
-		ansi = {
-			Color.black,
-			Color.red,
-			Color.green,
-			Color.yellow,
-			Color.blue,
-			Color.cyan,
-			Color.magenta,
-			Color.white,
-		},
-		brights = {
-			Color.black_alt,
-			Color.red_alt,
-			Color.green_alt,
-			Color.yellow_alt,
-			Color.blue_alt,
-			Color.cyan_alt,
-			Color.magenta_alt,
-			Color.white_alt,
-		},
-	},
-}
+-- local color_schemes = {
+-- 	["Pangkalpinang"] = {
+-- 		background = Color.bg,
+-- 		foreground = Color.fg,
+-- 		cursor_bg = Color.magenta,
+-- 		cursor_border = Color.blue,
+-- 		split = Color.separator_fg,
+-- 		ansi = {
+-- 			Color.black,
+-- 			Color.red,
+-- 			Color.green,
+-- 			Color.yellow,
+-- 			Color.blue,
+-- 			Color.cyan,
+-- 			Color.magenta,
+-- 			Color.white,
+-- 		},
+-- 		brights = {
+-- 			Color.black_alt,
+-- 			Color.red_alt,
+-- 			Color.green_alt,
+-- 			Color.yellow_alt,
+-- 			Color.blue_alt,
+-- 			Color.cyan_alt,
+-- 			Color.magenta_alt,
+-- 			Color.white_alt,
+-- 		},
+-- 	},
+-- }
 
 local config = wezterm.config_builder()
 
@@ -115,7 +115,7 @@ if wezterm.target_triple:find("windows") then
 else
 	-- config.term = "wezterm"
 	config.window_decorations = "RESIZE"
-	config.font_size = 11 -- pengaturan font agar mudah dibaca
+	config.font_size = 11.5 -- pengaturan font agar mudah dibaca
 end
 
 -- [1.0] alpha channel value with oating point numbers in the range 0.0
@@ -176,8 +176,8 @@ config.window_frame = {
 -- config.background = {
 -- 	Background.get_wallpaper(),
 -- },
-config.color_schemes = color_schemes
-config.color_scheme = "Pangkalpinang"
+-- config.color_schemes = color_schemes
+-- config.color_scheme = "Pangkalpinang"
 config.colors = {
 	tab_bar = {
 		background = Color.bg,
@@ -188,34 +188,35 @@ config.colors = {
 config.hyperlink_rules = Hyperlinks
 
 -- ├┤ FONTS ├───────────────────────────────────────────────────────────┤
-config.line_height = 0.9 -- dan juga ini
+-- config.line_height = 1 -- (default is 1)
 -- font_shaper = "Harfbuzz",
 
 -- Download font: https://monaspace.githubnext.com/
 config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
-config.font_rules = {
-	{
-		-- Normal
-		intensity = "Normal",
-		font = font_with_fallback("Monaspace Neon ExtraLight", { weight = "Regular" }),
-	},
-	{
-		-- Bold
-		italic = false,
-		font = font_with_fallback("JetBrainsMono Nerd Font", { weight = "Bold" }),
-	},
-	-- {
-	-- 	-- italic = true
-	-- 	intensity = "Half",
-	-- 	font = font_with_fallback("JetBrains Mono", { bold = false, italic = true }),
-	-- },
-	-- {
-	-- italic = false,
-	-- intensity = "Bold",
-	-- font = font_with_fallback("Victor Mono"),
-	-- },
-}
+config.font = font_with_fallback("Maple Mono", { weight = "Regular" })
+-- config.font_rules = {
+-- 	{
+-- 		-- Normal
+-- 		intensity = "Normal",
+-- 		font = font_with_fallback("Maple Mono", { weight = "Regular" }),
+-- 	},
+-- 	{
+-- 		-- Bold
+-- 		italic = false,
+-- 		font = font_with_fallback("Maple Mono", { weight = "Bold" }),
+-- 	},
+-- 	-- {
+-- 	-- 	-- italic = true
+-- 	-- 	intensity = "Half",
+-- 	-- 	font = font_with_fallback("JetBrains Mono", { bold = false, italic = true }),
+-- 	-- },
+-- 	-- {
+-- 	-- italic = false,
+-- 	-- intensity = "Bold",
+-- 	-- font = font_with_fallback("Victor Mono"),
+-- 	-- },
+-- }
 
 -- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
 config.disable_default_key_bindings = true

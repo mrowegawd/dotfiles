@@ -219,7 +219,7 @@ return {
 	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action({ PasteFrom = "Clipboard" }) },
 	{ key = "=", mods = "CTRL", action = "IncreaseFontSize" },
 	{ key = "-", mods = "CTRL", action = "DecreaseFontSize" },
-	{ key = "Home", mods = "CTRL", action = "ResetFontSize" },
+	{ key = "0", mods = "CTRL", action = "ResetFontSize" },
 
 	{ mods = "ALT", key = "P", action = act.ActivateCommandPalette },
 
