@@ -237,7 +237,7 @@ function M.change_colors()
     Highlight.darken(Highlight.get("GitSignsDelete", "fg"), 0.6, Highlight.get("Normal", "bg"))
 
   local sugest_highlight =
-    Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.8, Highlight.get("Normal", "bg"))
+    Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.5, Highlight.get("Normal", "bg"))
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))

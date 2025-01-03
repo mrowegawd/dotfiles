@@ -17,15 +17,15 @@ return {
       Highlight.plugin("flash.nvim", {
         {
           FlashMatch = {
-            bg = "white",
-            fg = "red",
+            fg = "white",
+            bg = "red",
             bold = true,
           },
         },
         {
           FlashLabel = {
-            fg = "black",
-            bg = "yellow",
+            bg = "black",
+            fg = "yellow",
             bold = true,
             strikethrough = false,
           },
