@@ -130,15 +130,17 @@ end
 local hex_to_rgb = function(hex_str)
   local hex = "[abcdef0-9][abcdef0-9]"
   local pat = "^#(" .. hex .. ")(" .. hex .. ")(" .. hex .. ")$"
-  hex_str = string.lower(hex_str)
 
+  if hex_str == "NONE" then
+    hex_str = "#000000" -- create base hex
+  end
+
+  hex_str = string.lower(hex_str)
   assert(string.find(hex_str, pat) ~= nil, "hex_to_rgb: invalid hex_str: " .. tostring(hex_str))
 
   local red, green, blue = string.match(hex_str, pat)
   return { tonumber(red, 16), tonumber(green, 16), tonumber(blue, 16) }
 end
-
--- local bg = "#000000"
 
 ---@param fg string forecrust color
 ---@param bg string background color

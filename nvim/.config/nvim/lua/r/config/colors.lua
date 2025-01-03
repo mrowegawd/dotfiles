@@ -1472,14 +1472,14 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.2 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
@@ -1904,14 +1904,14 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          fg = { from = "Normal", attr = "bg", alter = 4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.15 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
@@ -2221,7 +2221,7 @@ local function colorscheme_overrides()
     ["tokyonight-night"] = {
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 4 },
+          fg = { from = "Normal", attr = "bg", alter = 5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
         },
       },
