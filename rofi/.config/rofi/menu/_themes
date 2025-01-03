@@ -208,6 +208,12 @@ set_tmux() {
     sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_19\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
 
+    SESSION_BG=$GET_WHITE
+    if [ "$1" == "dayfox" ] || [ "$1" == "everforest" ] || [ "$1" == "tokyonight-day" ]; then
+      SESSION_BG=$GET_COL_21
+    fi
+    sed -i -e "s/^SESSION_BG=.*$/SESSION_BG=\"$SESSION_BG\"/g" "$_PATH_TMUX_THEMES"
+
     TMUX_STATUSLINE_FG=$(darken_color "$GET_COL_21" 10)
     sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$TMUX_STATUSLINE_FG\"/g" "$_PATH_TMUX_THEMES"
 
@@ -390,15 +396,17 @@ set_fzf() {
 }
 set_zsh_p10k() {
   ZSH_P10K_PATH_CONFIG="$HOME/.config/zsh/.p10k.zsh"
-
   if [ ! -f "$ZSH_P10K_PATH_CONFIG" ]; then
     dunstify "$ERROR_MSG" "Path $ZSH_P10K_PATH_CONFIG do not exists!" && exit 1
   fi
 
-  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$GET_COL_18\"/g" "$ZSH_P10K_PATH_CONFIG"
+  POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_20" 25)
+  if [ "$1" == "dayfox" ] || [ "$1" == "everforest" ] || [ "$1" == "tokyonight-day" ]; then
+    POWERLEVEL9K_BACKGROUND_BG=$(darken_color "$GET_COL_20" 25)
+  fi
+  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
 
   ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
-
   if [ ! -f "$ZSHRC_PATH" ]; then
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
   fi
@@ -531,7 +539,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
   _NOTIF_ROFI="Rofi        ✅"
   set_dunst
   _NOTIF_DUNST="Dunst       ✅"
-  set_tmux
+  set_tmux "$_NAMETHEME"
   _NOTIF_TMUX="Tmux        ✅"
   set_btop
   _NOTIF_BTOP="Btop        ✅"
@@ -550,7 +558,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
   set_fzf
   set_yazi_theme "$_NAMETHEME"
   set_lazygit
-  set_zsh_p10k
+  set_zsh_p10k "$_NAMETHEME"
   set_delta_theme
 
   # case "$DEKSTOP_SESSION" in

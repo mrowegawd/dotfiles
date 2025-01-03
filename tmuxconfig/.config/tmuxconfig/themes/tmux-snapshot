@@ -50,10 +50,10 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 #  ║ LEFT
 #  ╙
 set-option -g status-left \
-"#{?client_prefix,#[fg=$WHITE]#[bg=$GREEN]#[bold] T \
-#[fg=$GREEN]#[bg=$WHITE]#[nobold]#[fg=$TMUX_BG]#[bg=$WHITE]#[bold],\
-#[fg=$TMUX_BG]#[bg=$WHITE]#[bold]} ❐ #S \
-#{?#{==:#I,1},#[fg=$WHITE]#[bg=$ACTIVE_BG],#[fg=$WHITE]#[bg=$TMUX_BG]}"
+"#{?client_prefix,#[fg=$SESSION_BG]#[bg=$GREEN]#[bold] T \
+#[fg=$GREEN]#[bg=$SESSION_BG]#[nobold]#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold],\
+#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold]} ❐ #S \
+#{?#{==:#I,1},#[fg=$SESSION_BG]#[bg=$ACTIVE_BG],#[fg=$SESSION_BG]#[bg=$TMUX_BG]}"
 
 #  ╓
 #  ║  RIGHT
@@ -88,6 +88,6 @@ set-option -g window-status-format \
 #[fg=$RED]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$RED]#[bg=$TMUX_BG]#[bold] #I:#{=30:#{b:pane_current_path}} \
 #[fg=$TMUX_BG]#[bg=$RED]#[nobold],\
-#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[nobold] #I:#{=30:#{b:pane_current_path}} }"
+#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold] #I:#{=30:#{b:pane_current_path}} }"
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux
