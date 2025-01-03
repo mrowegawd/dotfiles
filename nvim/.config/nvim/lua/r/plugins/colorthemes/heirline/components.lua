@@ -3,13 +3,6 @@ local Col = RUtils.colortbl
 
 local M = {}
 
-local is_show_start = function()
-  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    return "gray"
-  end
-  return "white"
-end
-
 local Spacer = { provider = " " }
 
 local function rpad(child)
@@ -28,7 +21,7 @@ end
 --   }
 -- end
 
-local setcond = {
+local set_conditions = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
   end,
@@ -80,6 +73,13 @@ local colors = {
   diagnostic_info = Col.diagnostic_info,
   diagnostic_hint = Col.diagnostic_hint,
 }
+
+local is_show_start = function()
+  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
+    return colors.diff_delete
+  end
+  return "white"
+end
 
 local exclude = {
   ["NvimTree"] = true,
@@ -248,7 +248,7 @@ M.Mode_inactive = {
 }
 M.Branch = {
   condition = function()
-    return Conditions.is_git_repo() and setcond.hide_in_width(100)
+    return Conditions.is_git_repo() and set_conditions.hide_in_width(100)
   end,
 
   init = function(self)
@@ -271,10 +271,10 @@ M.Git = {
     self.status_dict = vim.b.gitsigns_status_dict
     self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
   end,
-
-  condition = Conditions.is_git_repo,
+  condition = function()
+    return Conditions.is_git_repo() and set_conditions.hide_in_width(50)
+  end,
   provider = " ",
-
   {
     provider = function(self)
       local count = self.status_dict.added or 0
@@ -456,7 +456,7 @@ M.FilePathQF = {
 }
 M.FilePath = {
   condition = function()
-    return not vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype)
+    return not vim.tbl_contains({ "qf", "trouble", "dashboard" }, vim.bo[0].filetype)
   end,
   {
     provider = function()
@@ -473,12 +473,8 @@ M.FilePath = {
       local bufname = vim.api.nvim_buf_get_name(0)
       local filename = vim.fn.fnamemodify(bufname, ":.")
 
-      if vim.bo[0].filetype == "qf" then
-        return ""
-      end
-
-      if vim.bo[0].filetype == "dashboard" then
-        return ""
+      if #filename == 0 then
+        return "[Unknown Filename]"
       end
 
       local root = RUtils.root.get { normalize = true }
@@ -495,24 +491,20 @@ M.FilePath = {
       if #parts > 3 then
         -- parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
         parts = { parts[1], "…", parts[#parts - 2] } -- remove the last one, to modified highlight filename
-
-        if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
-          return " " .. table.concat(parts, sep) .. sep
-        end
       end
 
-      if #filename == 0 then
-        return "[Unknown Filename]"
+      if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
+        return " " .. table.concat(parts, sep) .. sep
       end
 
       if not Conditions.is_not_active() then
         parts = vim.split(filename, "[\\/]")
         table.remove(parts, #parts)
-        -- if #parts == 0 then
-        --   return " coy "
-        --   -- return " " .. table.concat(parts, sep)
-        -- end
         return " " .. table.concat(parts, sep) .. sep
+      end
+
+      if not Conditions.width_percent_below(#filename, 0.90) then
+        return " " .. table.concat(parts, sep) .. sep .. RUtils.file.basename(filename) .. " "
       end
 
       -- return statusline path untuk non active window
@@ -575,7 +567,6 @@ M.Dap = {
   end,
   hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
 }
-
 M.Clock = {
   condition = function()
     return (not vim.env.TMUX and not vim.tbl_contains({ "Outline", "aerial", "neo-tree" }, vim.bo[0].filetype))
@@ -647,7 +638,7 @@ M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
 
   condition = function()
-    return Conditions.lsp_attached and setcond.hide_in_width(150)
+    return Conditions.lsp_attached and set_conditions.hide_in_width(150)
   end,
 
   init = function(self)
@@ -850,10 +841,9 @@ M.Diagnostics = {
   },
 }
 M.Sessions = {
-  -- condition = function()
-  --   return vim.bo[0].filetype ~= "qf" and setcond.hide_in_width()
-  -- end,
-  -- provider = "",
+  condition = function()
+    return vim.bo[0].filetype ~= "qf" and set_conditions.hide_in_width(70)
+  end,
   {
     provider = function()
       local sess_icon = " 󰅟" -- "
@@ -880,6 +870,10 @@ M.Sessions = {
             sess_status = ses_resession_get_current
           end
         end
+      end
+
+      if not Conditions.width_percent_below(#sess_status, 0.30) then
+        return sess_icon .. "  "
       end
 
       return sess_icon .. " " .. sess_status .. " "
@@ -917,7 +911,7 @@ M.BufferCwd = {
     self.bufnr = self.bufnr or 0
   end,
   condition = function()
-    return not vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) and setcond.hide_in_width(80)
+    return not vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) and set_conditions.hide_in_width(80)
   end,
   provider = " ",
   {
@@ -940,7 +934,7 @@ M.BufferCwd = {
 }
 M.Ruler = {
   condition = function()
-    return setcond.hide_in_width(130)
+    return set_conditions.hide_in_width(130)
   end,
   provider = " ",
   {
