@@ -481,9 +481,12 @@ return {
       local theme = {
         fill = "Normal",
         -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
-        head = "TabLine",
-        separator = { fg = Highlight.get("TabLine", "bg"), bg = "NONE" },
-        current_tab = "TabLineSel",
+        head = "Normal",
+        separator = "Normal",
+        current_tab = {
+          bg = Highlight.get("KeywordNC", "bg"),
+          fg = Highlight.get("KeywordNC", "fg"),
+        },
         tab = "TabLine",
         win = "TabLine",
         tail = "TabLine",
@@ -499,12 +502,8 @@ return {
               local hl = tab.is_current() and theme.current_tab or theme.tab
               return {
                 line.sep("", hl, theme.separator),
-                -- " ",
                 tab.is_current() and "" or "󰆣",
                 tab.number(),
-                -- tab.name(),
-                -- " ",
-                -- -- tab.close_btn "",
                 line.sep("", hl, theme.separator),
                 hl = hl,
                 margin = " ",
@@ -528,7 +527,6 @@ return {
             hl = theme.fill,
           }
         end,
-        -- option = {}, -- setup modules' option,
       }
     end,
   },
