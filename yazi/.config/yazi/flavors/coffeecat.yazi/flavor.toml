@@ -8,7 +8,7 @@
 cwd = { fg = "#545356" }
 
 # Hovered
-hovered = { bg = "#252220" }
+hovered = { bg = "#28241f" }
 preview_hovered = { fg = "#e3afd1", bg = "#262524" }
 
 find_keyword = { fg = "#383737", bg = "#eba454", italic = true }
@@ -22,7 +22,7 @@ count_cut = { fg = "#d47b7d", bg = "#2e2d2c" }
 count_copied = { fg = "#8fc490", bg = "#2e2d2c" }
 count_selected = { fg = "#fe8019", bg = "#2e2d2c" }
 
-tab_active = { fg = "#a18674", bg = "#594a40" }
+tab_active = { fg = "#d09755", bg = "#74542f" }
 tab_inactive = { fg = "#494644", bg = "#2e2d2c" }
 tab_width = 1
 
@@ -35,8 +35,8 @@ border_style = { fg = "#2e2c2b" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#1d1c1b", bg = "#b39581", bold = true }
-normal_alt = { fg = "#b39581", bg = "#1d1c1b" }
+normal_main = { fg = "#1d1c1b", bg = "#e8a85f", bold = true }
+normal_alt = { fg = "#e8a85f", bg = "#1d1c1b" }
 
 select_main = { fg = "#ffffff", bg = "#223249", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
@@ -113,7 +113,7 @@ separator_style = { fg = "#9b99a3" }
 on = { fg = "#e3a968" }
 run = { fg = "#8fc490" }
 desc = { fg = "#6a6a6a" }
-hovered = { bg = "#252220", bold = true }
+hovered = { bg = "#28241f", bold = true }
 footer = { fg = "#6a6a6a", bg = "#262524" }
 
 # : }}}
