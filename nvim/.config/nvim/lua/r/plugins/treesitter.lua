@@ -145,7 +145,7 @@ return {
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
               },
             },
             {
@@ -170,7 +170,54 @@ return {
               },
             },
           },
+          ["ashen"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.06 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 0.9 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["citruszest"] = {
+            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.06 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.8 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 0.9 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["catppuccin-mocha"] = {
+
             { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.3 } } },
             {
               TreesitterContextSeparator = {

@@ -902,6 +902,10 @@ return {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.05 } } },
             { EdgyNormal = { bg = "NONE" } },
           },
+          ["citruszest"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.05 } } },
+            { EdgyNormal = { bg = "NONE" } },
+          },
           ["kanagawa"] = {
             { EdgyWinBar = { bg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
           },

@@ -13,6 +13,7 @@ local alter_bright_theme = { "farout-night" }
 local alter_brightnc_theme = { "dayfox" }
 local alter_everforest_theme = { "everforest" }
 local alter_tokyonightday_theme = { "tokyonight-day" }
+local alter_ashenc_theme = { "ashen", "citruszest" }
 
 local alter_special_theme = { "gruvbox-material" }
 local alter_darkpmenu_theme = { "selenized", "nightfox", "kanagawa", "tokyonight-storm", "vscode_modern", "horizon" }
@@ -93,6 +94,15 @@ if vim.tbl_contains(alter_tokyonightday_theme, vim.g.colorscheme) then
   pmenusel_alter = 0.6
   pmenuthumb_alter = 0.6
   fzfluasel_alter = 0.5
+  quickfixline_alter = 0.5
+end
+
+if vim.tbl_contains(alter_ashenc_theme, vim.g.colorscheme) then
+  cursorline_alter = 0.04
+  pmenu_alter = 1
+  pmenusel_alter = 0.8
+  pmenuthumb_alter = 0.6
+  fzfluasel_alter = 0.8
   quickfixline_alter = 0.5
 end
 
@@ -1569,14 +1579,14 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 4 },
+          fg = { from = "StatusLine", attr = "bg", alter = 4.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.3 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.05 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
@@ -1927,6 +1937,88 @@ local function colorscheme_overrides()
       {
         TablineSel = {
           fg = { from = "StatusLine", attr = "fg", alter = 0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+        },
+      },
+    },
+    ["ashen"] = {
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 1.2 } } },
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
+      {
+        ["@comment"] = {
+          fg = { from = "Normal", attr = "bg", alter = 2.7 },
+        },
+      },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 7.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          reverse = false,
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+        },
+      },
+    },
+    ["citruszest"] = {
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 1.2 } } },
+      { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.4 }, underline = false } },
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+        },
+      },
+      {
+        ["@comment"] = {
+          fg = { from = "Normal", attr = "bg", alter = 2.7 },
+        },
+      },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 7.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 1.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          reverse = false,
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
         },
       },

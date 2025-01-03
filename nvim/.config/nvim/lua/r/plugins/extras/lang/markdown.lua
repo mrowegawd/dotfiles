@@ -148,6 +148,12 @@ return {
           ["farout"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
           },
+          ["ashen"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
+          ["citruszest"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
+          },
           ["lackluster"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
           },

@@ -1,6 +1,19 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- CITRUSZEST
+  {
+    "zootedb0t/citruszest.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local citruszest_theme = { "citruszest" }
+      if vim.tbl_contains(citruszest_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- EVANGELION
   {
     "xero/evangelion.nvim",
@@ -9,6 +22,19 @@ return {
     enabled = function()
       local evangelion_theme = { "evangelion" }
       if vim.tbl_contains(evangelion_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- ASHEN.NVIM
+  {
+    "ficcdaf/ashen.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local mellifluous_theme = { "ashen" }
+      if vim.tbl_contains(mellifluous_theme, colorscheme) then
         return true
       end
       return false
