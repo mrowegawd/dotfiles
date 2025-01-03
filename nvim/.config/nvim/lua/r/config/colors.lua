@@ -5,13 +5,17 @@ local Highlight = require "r.settings.highlights"
 local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
--- local light_red = Highlight.tint(UIPallette.palette.pale_red, 0.3)
 
-local alter_medium_theme = { "lackluster", "oxocarbon", "carbonfox" }
-local alter_soft_theme = { "coffeecat", "iceclimber", "tokyonight-night", "tokyonight-day" }
+local alter_medium_theme = { "lackluster", "oxocarbon", "carbonfox", "catppuccin-mocha", "darkforest" }
+local alter_soft_theme = { "coffeecat", "iceclimber", "tokyonight-night" }
+
 local alter_bright_theme = { "farout-night" }
-local alter_special_theme = { "gruvbox-material", "horizon" }
-local alter_darkpmenu_theme = { "selenized", "nightfox", "kanagawa", "tokyonight-storm", "vscode_modern" }
+local alter_brightnc_theme = { "dayfox" }
+local alter_everforest_theme = { "everforest" }
+local alter_tokyonightday_theme = { "tokyonight-day" }
+
+local alter_special_theme = { "gruvbox-material" }
+local alter_darkpmenu_theme = { "selenized", "nightfox", "kanagawa", "tokyonight-storm", "vscode_modern", "horizon" }
 
 local pmenu_alter = 0.3
 local pmenusel_alter = 0.3
@@ -65,6 +69,33 @@ if vim.tbl_contains(alter_bright_theme, vim.g.colorscheme) then
   quickfixline_alter = 0.5
 end
 
+if vim.tbl_contains(alter_brightnc_theme, vim.g.colorscheme) then
+  cursorline_alter = -0.02
+  pmenu_alter = 1.8
+  pmenusel_alter = 0.6
+  pmenuthumb_alter = 0.6
+  fzfluasel_alter = 0.5
+  quickfixline_alter = 0.5
+end
+
+if vim.tbl_contains(alter_everforest_theme, vim.g.colorscheme) then
+  cursorline_alter = 0.07
+  pmenu_alter = 1.8
+  pmenusel_alter = 0.6
+  pmenuthumb_alter = 0.6
+  fzfluasel_alter = 0.5
+  quickfixline_alter = 0.5
+end
+
+if vim.tbl_contains(alter_tokyonightday_theme, vim.g.colorscheme) then
+  cursorline_alter = 0.01
+  pmenu_alter = 1.8
+  pmenusel_alter = 0.6
+  pmenuthumb_alter = 0.6
+  fzfluasel_alter = 0.5
+  quickfixline_alter = 0.5
+end
+
 local general_overrides = function()
   Highlight.all {
     -- ╔═════════════════════════════════════════════════════════╗
@@ -91,7 +122,7 @@ local general_overrides = function()
     {
       Folded = {
         fg = { from = "Normal", attr = "bg", alter = 1 },
-        bg = { from = "Normal", attr = "bg", alter = 0.4 },
+        bg = { from = "Normal", attr = "bg", alter = 0.5 },
       },
     },
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
@@ -415,6 +446,12 @@ local general_overrides = function()
     },
     { RenderMarkdownCode = { bg = { from = "Normal", alter = 0.3 } } },
     { CodeLine1 = { fg = { from = "ErrorMsg", attr = "fg" } } },
+    {
+      KeywordNC = {
+        bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.5),
+        fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.1),
+      },
+    },
 
     -- ╔═════════════════════════════════════════════════════════╗
     -- ║                      PLUGIN COLORS                      ║
@@ -928,14 +965,28 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.35 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
         },
       },
     },
@@ -952,38 +1003,66 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 0.8 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
-    },
-    ["kanagawa"] = {
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
+
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.05 },
         },
       },
+
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1.5 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+        },
+      },
+
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+        },
+      },
+    },
+    ["kanagawa"] = {
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        },
+      },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.35 },
         },
       },
       {
@@ -1054,22 +1133,22 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 8.5 },
+          fg = { from = "Normal", attr = "bg", alter = 7.5 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.3 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 2.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.05 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.03 },
         },
       },
 
@@ -1100,8 +1179,7 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.07 },
-          h,
+          bg = { from = "Normal", attr = "bg", alter = -0.08 },
         },
       },
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
@@ -1115,14 +1193,6 @@ local function colorscheme_overrides()
         TreesitterContextSeparator = {
           fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
           bg = { from = "ColorColumn", attr = "bg" },
-        },
-      },
-      { CursorLine = { bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.12, Highlight.get("Normal", "bg")) } },
-      {
-        CursorLineNr = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
-          bg = { from = "CursorLine", attr = "bg" },
-          bold = true,
         },
       },
       {
@@ -1268,22 +1338,22 @@ local function colorscheme_overrides()
       --  ──────────────────────────────── MISC ─────────────────────────────
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = -0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.45 },
+          fg = { from = "Normal", attr = "bg", alter = -0.55 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg" },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
+          bg = { from = "Normal", attr = "bg", alter = -0.08 },
         },
       },
 
@@ -1347,14 +1417,14 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.3 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
@@ -1409,15 +1479,15 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          fg = { from = "StatusLine", attr = "bg", alter = 2.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "bg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
 
@@ -1499,29 +1569,29 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 4 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2.3 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+        },
+      },
+
+      {
         Tabline = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 2 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
 
       {
         TablineSel = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
           fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
         },
       },
     },
@@ -1561,14 +1631,26 @@ local function colorscheme_overrides()
       { LineNrBelow = { link = "LineNr" } },
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         },
       },
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+        },
+      },
+      {
+        TablineSel = {
+          fg = { from = "StatusLine", attr = "fg", alter = 0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
         },
       },
     },
@@ -1753,22 +1835,22 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = -0.6 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.45 },
+          fg = { from = "StatusLine", attr = "bg", alter = -0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.4 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.15 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
 
@@ -1785,16 +1867,31 @@ local function colorscheme_overrides()
       { Search = { bg = "red" } },
 
       {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
+          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+        },
+      },
+
+      {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 6 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "bg", alter = 1.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
+        },
+      },
+
+      {
+        Tabline = {
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.6 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.04 },
+          reverse = false,
         },
       },
     },
@@ -1807,22 +1904,22 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
-          bg = { from = "WinSeparator", attr = "fg", alter = -0.03 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.1 },
           reverse = false,
         },
       },
@@ -1837,6 +1934,12 @@ local function colorscheme_overrides()
     ["carbonfox"] = {
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+        },
+      },
+      {
         Comment = {
           fg = { from = "Normal", attr = "bg", alter = 1.4 },
         },
@@ -1845,21 +1948,21 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg", alter = 1.5 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.05 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.35 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
-          bg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
           reverse = false,
         },
       },
@@ -1874,22 +1977,22 @@ local function colorscheme_overrides()
     ["tokyonight-storm"] = {
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
@@ -2096,15 +2199,15 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 0.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
+          fg = { from = "StatusLine", attr = "fg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.7 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = -0.2 },
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          fg = { from = "WinSeparator", attr = "fg", alter = -0.18 },
+          bg = { from = "Normal", attr = "bg", alter = 0.06 },
         },
       },
 
@@ -2118,22 +2221,22 @@ local function colorscheme_overrides()
     ["tokyonight-night"] = {
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.6 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
         },
       },
 
@@ -2145,6 +2248,20 @@ local function colorscheme_overrides()
       },
     },
     ["vscode_modern"] = {
+      {
+        Comment = {
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
+          bg = "NONE",
+          italic = true,
+          reverse = false,
+        },
+      },
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        },
+      },
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
       {
         SnacksIndentScope = {
@@ -2191,22 +2308,22 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "bg", alter = 6 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.8 },
+          fg = { from = "StatusLine", attr = "bg", alter = 7 },
+          bg = { from = "StatusLine", attr = "bg", alter = 1 },
         },
       },
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
         },
       },
 
       {
         Tabline = {
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.65 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.25 },
         },
       },
 
@@ -2253,21 +2370,21 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 3.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
-        },
-      },
-
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "bg", alter = 3.5 },
           bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
         },
       },
 
       {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "bg", alter = 2 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
         Tabline = {
-          fg = { from = "WinSeparator", attr = "fg", alter = 1 },
-          bg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
           reverse = false,
         },
       },

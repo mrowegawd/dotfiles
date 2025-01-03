@@ -8,21 +8,25 @@
 cwd = { fg = "#5b5b5b" }
 
 # Hovered
-hovered = { bg = "#191919" }
+hovered = { bg = "#1c1c1c" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#b8bb26", italic = true }
+find_keyword = { fg = "#191919", bg = "#fe8019", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#444444", bg = "#444444" }
+marker_selected = { fg = "#fe8019", bg = "#fe8019" }
 marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
-marker_cut = { fg = "#fb4934", bg = "#fb4934" }
+marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
+
+count_cut = { fg = "#f38ba8", bg = "#191919" }
+count_copied = { fg = "#b8bb26", bg = "#191919" }
+count_selected = { fg = "#fe8019", bg = "#191919" }
 
 # Tab
-tab_active = { fg = "#282828", bg = "#504945" }
-tab_inactive = { fg = "#a89984", bg = "#3c3836" }
+tab_active = { fg = "#5b5b5b", bg = "#333333" }
+tab_inactive = { fg = "#333333", bg = "#191919" }
 tab_width = 1
 
 # Border
@@ -34,18 +38,22 @@ border_style = { fg = "#665c54" }
 
 # : }}}
 
+[mode]
+normal_main = { fg = "#191919", bg = "#b7b7b7", bold = true }
+normal_alt = { fg = "#b7b7b7", bg = "#191919" }
+
+select_main = { fg = "#ffffff", bg = "#223249", bold = true }
+select_alt = { fg = "#223249", bg = "#ffffff" }
+
+unset_main = { fg = "#ffffff", bg = "#d3869b", bold = true }
+unset_alt = { fg = "#d3869b", bg = "#ffffff" }
 
 # : Status {{{
 
 [status]
-separator_open = ""
-separator_close = ""
+separator_open = ""
+separator_close = ""
 separator_style = { fg = "#6b6461", bg = "#363230" }
-
-# Mode
-mode_normal = { fg = "#1b1b1b", bg = "#b7b7b7", bold = true }
-mode_select = { fg = "#ffffff", bg = "#444444", bold = true }
-mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 
 # Progress
 progress_label = { fg = "#ebdbb2", bold = true }
@@ -96,7 +104,7 @@ hovered = { underline = true }
 # : Which {{{
 
 [which]
-mask = { bg = "#3c3836" }
+mask = { bg = "#191919" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -112,7 +120,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#504945", bold = true }
+hovered = { bg = "#191919", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}

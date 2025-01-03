@@ -12,40 +12,48 @@ hovered = { bg = "#282734" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#b8bb26", italic = true }
+find_keyword = { fg = "#282734", bg = "#d99145", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#223249", bg = "#223249" }
+marker_selected = { fg = "#fe8019", bg = "#fe8019" }
 marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
-marker_cut = { fg = "#fb4934", bg = "#fb4934" }
+marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
+
+count_cut = { fg = "#f38ba8", bg = "#301e49" }
+count_copied = { fg = "#b8bb26", bg = "#301e49" }
+count_selected = { fg = "#fe8019", bg = "#301e49" }
 
 # Tab
-tab_active = { fg = "#282828", bg = "#504945" }
-tab_inactive = { fg = "#a89984", bg = "#3c3836" }
+tab_active = { fg = "#79e555", bg = "#437f2f" }
+tab_inactive = { fg = "#583886", bg = "#301e49" }
 tab_width = 1
 
 # Border
 border_symbol = "│"
-border_style = { fg = "#665c54" }
+border_style = { fg = "#33204c" }
 
 # Highlighting
 # syntect_theme = "~/.config/yazi/Gruvbox-Dark.tmTheme"
 
 # : }}}
 
+[mode]
+normal_main = { fg = "#21212b", bg = "#87ff5f", bold = true }
+normal_alt = { fg = "#87ff5f", bg = "#21212b" }
+
+select_main = { fg = "#ffffff", bg = "#223249", bold = true }
+select_alt = { fg = "#223249", bg = "#ffffff" }
+
+unset_main = { fg = "#ffffff", bg = "#d3869b", bold = true }
+unset_alt = { fg = "#d3869b", bg = "#ffffff" }
 
 # : Status {{{
 
 [status]
-separator_open = ""
-separator_close = ""
+separator_open = ""
+separator_close = ""
 separator_style = { fg = "#6b6461", bg = "#282734" }
-
-# Mode
-mode_normal = { fg = "#2a2a2f", bg = "#87ff5f", bold = true }
-mode_select = { fg = "#ffffff", bg = "#223249", bold = true }
-mode_unset = { fg = "#ffffff", bg = "#d3869b", bold = true }
 
 # Progress
 progress_label = { fg = "#ebdbb2", bold = true }
@@ -53,11 +61,11 @@ progress_normal = { fg = "#504945", bg = "#3c3836" }
 progress_error = { fg = "#fb4934", bg = "#3c3836" }
 
 # Permissions
-permissions_t = { fg = "#504945" }
-permissions_r = { fg = "#b8bb26" }
-permissions_w = { fg = "#fb4934" }
-permissions_x = { fg = "#b8bb26" }
-permissions_s = { fg = "#665c54" }
+perm_type = { fg = "#8caaee" }
+perm_read = { fg = "#e5c890" }
+perm_write = { fg = "#e78284" }
+perm_exec = { fg = "#a6d189" }
+perm_sep = { fg = "#838ba7" }
 
 # : }}}
 
@@ -96,7 +104,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#3c3836" }
+mask = { bg = "#291a3e" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -112,7 +120,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#504945", bold = true }
+hovered = { bg = "#282734", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}

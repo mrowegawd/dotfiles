@@ -63,8 +63,8 @@ local get_hovered_item_path = ya.sync(function(_)
 end)
 
 return {
-	entry = function(_, args)
-		local action = args[1]
+	entry = function(_, job)
+		local action = job.args[1]
 
 		if hovered_item_is_dir() then
 			ya.manager_emit("enter" or "open", { hovered = true })

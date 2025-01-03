@@ -177,8 +177,7 @@ return {
           end,
 
           open_lazydocker = function()
-            RUtils.warn("not implemented yet!", { title = "Lazydocker" })
-            --   Snacks.lazydocker()
+            RUtils.terminal.lazydocker()
           end,
 
           open_terminal = function()

@@ -13,10 +13,10 @@ return {
 
 		local child, err = Command("fzf-tmux")
 			:args({
-				"--preview",
-				"'eza --long --all --git --color=always --group-directories-first --icons {1}'",
-				"--preview-window",
-				"right:50%:nohidden",
+				-- "--preview",
+				-- "'eza --tree --long --all --git --color=always --group-directories-first --icons {1}'",
+				-- "--preview-window",
+				-- "right:50%:nohidden",
 				"-xC",
 				"-w",
 				"60%",

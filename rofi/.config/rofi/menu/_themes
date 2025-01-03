@@ -67,21 +67,23 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_26=$(grep -i color26 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_27=$(grep -i color27 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_28=$(grep -i color28 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  # Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
   GET_COL_29=$(grep -i color29 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_30=$(grep -i color30 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_31=$(grep -i color31 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
-  # GIT, git_add, git_change, git_delete, git_text
-  # GET_COL_32=$(grep -i color32 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  #  Delta: plus-emph-style, plus-style
   GET_COL_33=$(grep -i color33 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_34=$(grep -i color34 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_35=$(grep -i color35 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 
-  # GIT, gitlinenumber: add, change, delete
+  # Delta: plus-emph-style, minus-emph-style
+  GET_COL_35=$(grep -i color35 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_36=$(grep -i color36 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  # GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
-  GET_COL_39=$(grep -i color39 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  # ZSH-AUTOSUGGESTIONS
+  GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -141,16 +143,6 @@ darken_color() {
   printf "#%02x%02x%02x\n" "$r" "$g" "$b"
 }
 
-# check_size_screen() {
-#   size=$(xrandr | grep "*" | xargs | cut -d" " -f1)
-#
-#   if [[ $size == '1024x768' ]]; then
-#     FONTSIZE="12"
-#   else
-#     FONTSIZE="16"
-#   fi
-# }
-
 set_rofi() {
   _ROFI_PATH="$DOTFILES_PATH/rofi/.config/rofi"
 
@@ -209,7 +201,7 @@ set_tmux() {
 
   if [ -f "$_PATH_TMUX_THEMES" ]; then
     sleep 1
-    sed -i -e "s/^STATUSLINE_FG_ACTIVE=.*$/STATUSLINE_FG_ACTIVE=\"$GET_COL_16\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$GET_COL_16\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^STATUSLINE_BG_ACTIVE=.*$/STATUSLINE_BG_ACTIVE=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^STATUSLINE_BG=.*$/STATUSLINE_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
@@ -241,19 +233,18 @@ set_delta_theme() {
   fi
 
   # For line number
-  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$GET_COL_38\" italic/g" "$_DELTA_PATH"
-  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$GET_COL_36\" italic/g" "$_DELTA_PATH"
+  sed -i -e "s/^line-numbers-minus-style.*/line-numbers-minus-style = \"$GET_COL_36\" italic/g" "$_DELTA_PATH"
+  sed -i -e "s/^line-numbers-plus-style.*/line-numbers-plus-style = \"$GET_COL_34\" italic/g" "$_DELTA_PATH"
 
   # For hunk minus
-  sed -i -e "s/^minus-emph-style.*/minus-emph-style = syntax bold \"$GET_COL_35\"/g" "$_DELTA_PATH"
-  sed -i -e "s/^minus-style.*/minus-style = syntax \"$GET_COL_34\"/g" "$_DELTA_PATH"
+  sed -i -e "s/^minus-style.*/minus-style = syntax \"$GET_COL_35\"/g" "$_DELTA_PATH"
+  sed -i -e "s/^minus-emph-style.*/minus-emph-style = syntax bold \"$GET_COL_36\"/g" "$_DELTA_PATH"
 
   # For hunk plus
-  sed -i -e "s/^plus-emph-style.*/plus-emph-style = syntax bold \"$GET_COL_35\"/g" "$_DELTA_PATH"
   sed -i -e "s/^plus-style.*/plus-style = syntax \"$GET_COL_33\"/g" "$_DELTA_PATH"
+  sed -i -e "s/^plus-emph-style.*/plus-emph-style = syntax bold \"$GET_COL_34\"/g" "$_DELTA_PATH"
 
 }
-
 set_zathura() {
   _ZATHURA_PATH="$DOTFILES_PATH/zathura/.config/zathura"
 
@@ -372,7 +363,8 @@ set_yazi_theme() {
     NAME_THEME="vscode-modern"
   fi
 
-  sed -i -e "s/^use.*/use = \"$NAME_THEME\"/g" "$YAZI_FILE_THEME"
+  sed -i -e "s/^dark.*/dark = \"$NAME_THEME\"/g" "$YAZI_FILE_THEME"
+  sed -i -e "s/^light.*/light = \"$NAME_THEME\"/g" "$YAZI_FILE_THEME"
 }
 set_fzf() {
   FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
@@ -396,7 +388,6 @@ set_fzf() {
   sed -i -e "s/%%color_pointer%%/$GET_RED/g" "$FZF_PATH_CONFIG/fzf.config"
 
 }
-
 set_zsh_p10k() {
   ZSH_P10K_PATH_CONFIG="$HOME/.config/zsh/.p10k.zsh"
 
@@ -413,9 +404,8 @@ set_zsh_p10k() {
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
   fi
 
-  sed -i -e "s/^COLORSUGGEST=.*/COLORSUGGEST=fg=\"$GET_COL_39\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^COLORSUGGEST=.*/COLORSUGGEST=fg=\"$GET_COL_37\"/g" "$ZSHRC_PATH"
 }
-
 set_lazygit() {
   LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"
 
@@ -428,8 +418,9 @@ set_lazygit() {
 
     sed -i -e "s/%%active_border_color%%/$GET_COL_29/g" "$THEME_LAZYGIT_FLA"
     sed -i -e "s/%%inactive_border_color%%/$GET_COL_30/g" "$THEME_LAZYGIT_FLA"
-    sed -i -e "s/%%options_text_color%%/$GET_COL_18/g" "$THEME_LAZYGIT_FLA"
-    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_25/g" "$THEME_LAZYGIT_FLA"
+    sed -i -e "s/%%options_text_color%%/$GET_COL_31/g" "$THEME_LAZYGIT_FLA"
+
+    sed -i -e "s/%%selected_line_bg_color%%/$GET_COL_32/g" "$THEME_LAZYGIT_FLA"
 
     sed -i -e "s/%%default_fg_color%%/$GET_COL_16/g" "$THEME_LAZYGIT_FLA"
   fi

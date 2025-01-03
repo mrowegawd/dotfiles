@@ -7,8 +7,8 @@ local function fail(s, ...)
 end
 
 return {
-	entry = function(_, args)
-		local action = args[1]
+	entry = function(_, job)
+		local action = job.args[1]
 
 		local cwd = tostring(state())
 
@@ -16,6 +16,11 @@ return {
 			local termopen = os.getenv("TERMINAL")
 			os.execute([[bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && ]] .. termopen)
 			return
+		end
+
+		if action == "lazygit" then
+			action = action
+				.. ' --use-config-file="$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"'
 		end
 
 		local child, err = Command("tmux")

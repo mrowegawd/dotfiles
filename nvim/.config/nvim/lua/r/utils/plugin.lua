@@ -226,7 +226,7 @@ function M.change_colors()
 
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "fg")
   local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
-  local lazygit_active_border = Highlight.get("Keyword", "fg")
+  local lazygit_active_border = Highlight.get("KeywordNC", "fg")
   local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
 
   local gitadd = Highlight.get("diffAdd", "bg")
@@ -298,7 +298,7 @@ function M.change_colors()
 *color37: %s
 ]],
     -- State Mode Color
-    Highlight.get("Keyword", "fg"), -- 16
+    Highlight.get("KeywordNC", "bg"), -- 16
     Highlight.get("WinSeparator", "fg"), -- 17
 
     -- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,

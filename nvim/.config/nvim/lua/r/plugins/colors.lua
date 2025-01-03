@@ -34,7 +34,7 @@ return {
   -- CCCPICK
   {
     "uga-rosa/ccc.nvim",
-    cmd = { "CccPick" },
+    cmd = { "CccPick", "CccHighlighterToggle" },
     ft = ccc_filetypes,
     opts = {},
   },
