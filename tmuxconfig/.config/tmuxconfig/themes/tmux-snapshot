@@ -1,109 +1,93 @@
-STATUSLINE_FG_ACTIVE="#8f7767"
-STATUSLINE_BG_ACTIVE="#282725"
-STATUSLINE_FG="#484642"
-STATUSLINE_BG="#1f1e1d"
+ACTIVE_FG="#b695de"
+ACTIVE_BG="#65537b"
 
-STATUSLINE_BG_MESSAGE="#e8cea0"
+STATUSLINE_BG_MESSAGE="#F9E2AF"
+STATUSLINE_FG="#3e3e63"
 
-BORDER_FG="#282725"
-BORDER_BG="#1f1e1d"
-BORDER_FG_NC="#242321"
+TMUX_BG="#1e1e2e"
+TMUX_FG="#48486d"
 
-SEPARATOR_FG="#2a231e"
-SEPARATOR_ACTIVE_BG="#ebc686"
+BORDER_FG="#51517c"
+BORDER_BG="#1e1e2e"
+BORDER_FG_NC="#303049"
 
-WINDOW_BG_ACTIVE="#1d1c1b"
-WINDOW_BG="#1d1c1b"
+RED="#F38BA8"
+BLUE="#89B4FA"
+WHITE="#BAC2DE"
+GREEN="#A6E3A1"
 
-RED="#d47b7d"
-BLUE="#96b1fa"
+setw -g window-style bg=$TMUX_BG
+setw -g window-active-style bg=$TMUX_BG
 
-left_separator=''
-left_separator_black=''
-right_separator=''
-right_separator_black=''
-
-left_slant_separator=''
-right_slant_separator=''
-
-setw -g window-style bg=$WINDOW_BG_ACTIVE
-setw -g window-active-style bg=$WINDOW_BG_ACTIVE
-
-# setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
-# setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
-# setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
-
-# setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
-# setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$RED
-
-setw -g pane-active-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG
-setw -g pane-border-style bg=$WINDOW_BG_ACTIVE,fg=$BORDER_FG_NC
+setw -g pane-active-border-style bg=$TMUX_BG,fg=$BORDER_FG
+setw -g pane-border-style bg=$TMUX_BG,fg=$BORDER_FG_NC
 
 setw -g pane-border-status top # bottom, top
 
-# setw -g pane-border-format "#{?window_zoomed_flag,#[fg=white]#[bg=$RED],}[ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
-# #{?window_zoomed_flag,#[fg=white]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}]"
-
-# setw -g pane-border-format " [ #{?pane_active,#[fg=red] ,}#{pane_index}.[#{pane_id}] \
-# #{?window_zoomed_flag,#[fg=$RED]ZOOM ,}#[fg=$BORDER_FG]#{?pane_active,#[fg=$RED]#{pane_current_command} ,}] "
-
 # setw -g pane-border-format "\
-# #{?pane_active,#[fg=$RED] $left_slant_separator,}#{?pane_active,#[bg=$RED],}\
-#   #[fg=$RED,bold]#{?pane_active,#[fg=white],}#{pane_index}.#{pane_id} \
-# #[fg=black#{?window_zoomed_flag,#[fg=$BLUE]ZOOM ,}\
-# #{?pane_active,#[fg=$blue]#{pane_current_command} ,}\
-# #[fg=black,bold]#{?pane_active,#[fg=$blue]$left_slant_separator ,}#[bg=black,bold] "
+# #{?pane_active,#[fg=$ACTIVE_FG]$left_slant_separator,}\
+# #[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$ACTIVE_FG],} #{?pane_active,#[fg=red] ,}#{?pane_active,#[fg=$BLUE],}#{pane_index}.#{pane_id} \
+# #{?pane_active,#{pane_current_command} ,}\
+# #{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
 
-setw -g pane-border-format "\
-#{?pane_active,#[fg=$STATUSLINE_FG_ACTIVE]$left_slant_separator,}\
-#[fg=$BORDER_FG,bold]#{?pane_active,#[bg=$STATUSLINE_FG_ACTIVE],} #{?pane_active,#[fg=red] ,}#{?pane_active,#[fg=$STATUSLINE_BG],}#{pane_index}.#{pane_id} \
-#{?pane_active,#{pane_current_command} ,}\
-#{?pane_active,#[fg=$WINDOW_BG_ACTIVE]$left_slant_separator,}"
-
-# set-option -g status-format '#[fg=colour0] #{session_name} #[fg=colour1]
-# (#{window_id}) #[fg=colour2] #{pane_id}: #[fg=colour3] #{current_window_stack}
-# #[fg=colour4] #{session_time} #[fg=colour5]  #[fg=colour6] #{host_name}'
-
-# set -g pane-border-format '#[bold]#{?#{&&:#{pane_active},#{client_prefix}},#[underscore],}\
-#   #{?pane_active,❐ #S:#I/#{session_windows} ,}#{?window_zoomed_flag,⬢,❄} #P ⇒ #{pane_tty} #{pane_current_command}'
+setw -g pane-border-format ""
 
 #  +----------------------------------------------------------+
 #  |                      STATUS THEMES                       |
 #  +----------------------------------------------------------+
-set -g status-fg $STATUSLINE_BG_ACTIVE
-set -g status-bg $STATUSLINE_BG
+set -g status-fg $TMUX_FG
+set -g status-bg $TMUX_BG
 set -g status on
 set -g status-interval 5
 set -g status-position top
 set -g status-justify left # left,centre, absolute-centre
 set -g status-left ""
 
-set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
-set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$STATUSLINE_BG,bold"
+set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
+set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 
 #  ╓
 #  ║ LEFT
 #  ╙
-set -g status-left " #[fg=$STATUSLINE_FG,bold] ❐ #S "
-
-set -g window-status-format "#[fg=$STATUSLINE_BG]\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_FG] [ZOOM], }#{?pane_synchronized,#[bg=yellow] [SYNC],}#[fg=$STATUSLINE_FG,bold] #I: #{=30:#{b:pane_current_path}} #[fg=$STATUSLINE_BG]\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] ,}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator#[fg=$STATUSLINE_BG]\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] ,}#{?pane_synchronized,#[bg=yellow],}$left_slant_separator"
-
-set -g window-status-current-format "#[fg=$STATUSLINE_BG_ACTIVE] \
-#{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=$STATUSLINE_FG_ACTIVE,bg=$STATUSLINE_BG_ACTIVE,bold]\
-#{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}\
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG] [ZOOM],} #I: #{=30:#{b:pane_current_path}} \
-#{?window_zoomed_flag,#[bg=$STATUSLINE_FG],}#[bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG_ACTIVE]#{?pane_synchronized,#[bg=yellow],}\
-#{?window_zoomed_flag,#[bg=$RED],}$left_slant_separator#[bg=$STATUSLINE_BG_ACTIVE,fg=$STATUSLINE_BG]$left_slant_separator"
+set-option -g status-left \
+"#{?client_prefix,#[fg=$WHITE]#[bg=$GREEN]#[bold] T \
+#[fg=$GREEN]#[bg=$WHITE]#[nobold]#[fg=$TMUX_BG]#[bg=$WHITE]#[bold],\
+#[fg=$TMUX_BG]#[bg=$WHITE]#[bold]} ❐ #S \
+#{?#{==:#I,1},#[fg=$WHITE]#[bg=$ACTIVE_BG],#[fg=$WHITE]#[bg=$TMUX_BG]}"
 
 #  ╓
 #  ║  RIGHT
 #  ╙
 set -g status-right-length 80
-set -g status-right "#[fg=$STATUSLINE_BG_ACTIVE,bold]#{pomodoro_status}\
- #[fg=$RED,bold]  #(date +"%H:%M") #[fg=$STATUSLINE_FG,bg=$STATUSLINE_BG,bold] #{prefix} 👨#(whoami) "
+set -g status-right \
+"#[fg=$GREEN,bold]#{pomodoro_status} \
+#[fg=$RED,bold]  #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) "
+
+# +----------------------------------------------------------+
+# |                      STATUS FORMAT                       |
+# +----------------------------------------------------------+
+# set -g window-status-format "#[bg=$BORDER_BG]\
+# #{?window_zoomed_flag,#[fg=$TMUX_FG] [ZOOM], }#{?pane_synchronized,#[bg=yellow] [SYNC],}\
+# #[fg=$TMUX_FG,bold] #I: #{=30:#{b:pane_current_path}} #[fg=$TMUX_FG]  "
+
+# set -g window-status-current-format "#[fg=$ACTIVE_FG] \
+# #{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=BORDER_BG,bg=$ACTIVE_FG,bold]\
+# #{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}\
+# #{?window_zoomed_flag,#[fg=$TMUX_FG] [ZOOM],} #I: #{=30:#{b:pane_current_path}} \
+# #{?window_zoomed_flag,#[bg=$TMUX_FG],}#[bg=$ACTIVE_FG,fg=$BORDER_BG]#{?pane_synchronized,#[bg=yellow],}"
+
+# '' '' '' '' '' ''
+
+set-option -g window-status-current-format \
+"#{?#{==:#I,1},,#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}} \
+#{?window_zoomed_flag,#[fg=$RED]#[bold] ,}#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
+
+set-option -g window-status-format \
+"#{?window_bell_flag,\
+#[fg=$RED]#[bg=$TMUX_BG]#[nobold]\
+#[fg=$RED]#[bg=$TMUX_BG]#[bold] #I:#{=30:#{b:pane_current_path}} \
+#[fg=$TMUX_BG]#[bg=$RED]#[nobold],\
+#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[nobold] #I:#{=30:#{b:pane_current_path}} }"
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux

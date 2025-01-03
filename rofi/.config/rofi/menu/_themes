@@ -33,7 +33,7 @@ GET_MAGENTA=$(xrdb -query | grep -i .color5 | cut -d':' -f2 | head -1 | xargs)
 GET_CYAN=$(xrdb -query | grep -i .color6 | cut -d':' -f2 | head -1 | xargs)
 # GET_CYAN_ALT=$(xrdb -query | grep -i .color14 | cut -d':' -f2 | head -1 | xargs)
 
-# GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+GET_WHITE=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
 # GET_WHITE_ALT=$(xrdb -query | grep -i .color15 | cut -d':' -f2 | head -1 | xargs)
 
 GET_COL_16="#6c8cac"
@@ -201,23 +201,23 @@ set_tmux() {
 
   if [ -f "$_PATH_TMUX_THEMES" ]; then
     sleep 1
-    sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$GET_COL_16\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^STATUSLINE_BG_ACTIVE=.*$/STATUSLINE_BG_ACTIVE=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^STATUSLINE_BG=.*$/STATUSLINE_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$GET_COL_16\"/g" "$_PATH_TMUX_THEMES"
 
-    sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_19\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_COL_20\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_19\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
 
-    sed -i -e "s/^SEPARATOR_FG=.*$/SEPARATOR_FG=\"$GET_COL_25\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^SEPARATOR_ACTIVE_BG=.*$/SEPARATOR_ACTIVE_BG=\"$GET_COL_27\"/g" "$_PATH_TMUX_THEMES"
+    TMUX_STATUSLINE_FG=$(darken_color "$GET_COL_21" 10)
+    sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$TMUX_STATUSLINE_FG\"/g" "$_PATH_TMUX_THEMES"
 
-    sed -i -e "s/^WINDOW_BG_ACTIVE=.*$/WINDOW_BG_ACTIVE=\"$GET_COL_20\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^WINDOW_BG=.*$/WINDOW_BG=\"$GET_COL_21\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^TMUX_BG=.*$/TMUX_BG=\"$GET_COL_20\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^TMUX_FG=.*$/TMUX_FG=\"$GET_COL_21\"/g" "$_PATH_TMUX_THEMES"
 
     sed -i -e "s/^RED=.*$/RED=\"$GET_RED\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BLUE=.*$/BLUE=\"$GET_BLUE\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^WHITE=.*$/WHITE=\"$GET_WHITE\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^GREEN=.*$/GREEN=\"$GET_GREEN\"/g" "$_PATH_TMUX_THEMES"
 
     sed -i -e "s/^STATUSLINE_BG_MESSAGE=.*$/STATUSLINE_BG_MESSAGE=\"$GET_YELLOW\"/g" "$_PATH_TMUX_THEMES"
   else
@@ -395,8 +395,7 @@ set_zsh_p10k() {
     dunstify "$ERROR_MSG" "Path $ZSH_P10K_PATH_CONFIG do not exists!" && exit 1
   fi
 
-  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$GET_COL_17\"/g" "$ZSH_P10K_PATH_CONFIG"
-  # sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$GET_COL_17\"/g" "$ZSH_P10K_PATH_CONFIG"
+  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$GET_COL_18\"/g" "$ZSH_P10K_PATH_CONFIG"
 
   ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
 
@@ -433,7 +432,7 @@ set_eww() {
     dunstify "$ERROR_MSG" "Path $EWW_PATH do not exists!" && exit 1
   fi
 
-  BG_DARKEN_1=$(darken_color "$GET_COL_17" 10) # Misalnya, mengurangi 50 untuk menggelapkan
+  BG_DARKEN_1=$(darken_color "$GET_BG" 5) # Misalnya, mengurangi 50 untuk menggelapkan
 
   sed -i -e "s/^\$bg: .*/\$bg: $GET_BG;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$black: .*/\$black: $BG_DARKEN_1;/g" "$EWW_PATH/eww.scss"

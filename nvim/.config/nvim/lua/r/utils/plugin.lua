@@ -222,9 +222,9 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
-  local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.8)
+  local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 
-  local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "fg")
+  local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
   local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
   local lazygit_active_border = Highlight.get("KeywordNC", "fg")
   local lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
@@ -252,90 +252,93 @@ function M.change_colors()
 
   local master_colors = fmt(
     [[
-! -----------------------------
+%s
 ! -----------------------------
 
-! State Mode color: fg, bg
+%s
 *color16: %s
 *color17: %s
 
--- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,
+%s
 *color18: %s
 *color19: %s
 
-! TMUX: Bg active, Bg_nc
+%s
 *color20: %s
 *color21: %s
 
-! FZF: bg, fg and match
+%s
 *color22: %s
 *color23: %s
 *color24: %s
 
-! FZF selection: bg, fg, match
+%s
 *color25: %s
 *color26: %s
 *color27: %s
 
-! FZF Border
+%s
 *color28: %s
 
-! Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
+%s
 *color29: %s
 *color30: %s
 *color31: %s
 *color32: %s
 
-! Delta: plus-style, plus-emph-style
+%s
 *color33: %s
 *color34: %s
 
-! Delta: minus-style, minus-emph-style
+%s
 *color35: %s
 *color36: %s
 
-! zsh-autosuggestions: fg
+%s
 *color37: %s
 ]],
-    -- State Mode Color
+    fmt "! vim: foldmethod=marker foldlevel=0 ft=xdefaults",
+
+    fmt "! State color: bg, fg",
     Highlight.get("KeywordNC", "bg"), -- 16
-    Highlight.get("WinSeparator", "fg"), -- 17
+    Highlight.get("KeywordNC", "fg"), -- 17
 
-    -- BORDER/SEPARATOR/STATUSLINE: statusline fg, fg_nc,
-    statusline_fg, -- 18
+    fmt "! TMUX: border_fg_nc, border_fg",
     Highlight.get("WinSeparator", "fg"), -- 19
+    statusline_fg, -- 18
 
-    -- TMUX: Bg_active, Bg_nc
+    fmt "! TMUX: tmux_bg, tmux_fg",
     Highlight.get("Normal", "bg"), -- 20
-    Highlight.get("Normal", "bg"), -- 21
+    Highlight.get("Tabline", "fg"), -- 21
 
-    -- FZF: bg, fg dan match
+    fmt "! FZF-NORMAL: bg, fg, match",
     Highlight.get("NormalFloat", "bg"), -- 22
     Highlight.get("CmpItemAbbr", "fg"), -- 23
     Highlight.get("CmpItemAbbrMatch", "fg"), --24
 
-    -- FZF selection: bg, fg
+    fmt "! FZF-SELECTION: bg, fg, match",
     Highlight.get("FzfLuaSel", "bg"), -- 25
     Highlight.get("CmpItemAbbr", "fg"), -- 26
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"), --27
 
-    -- FZF: border
+    fmt "! FZF: border",
     Highlight.get("FzfLuaBorder", "fg"), -- 28
 
-    -- Lazygit: lazygit_active_border, lazygit_inactive_border, lazygit_border_fg, selected_line_fg
+    fmt "! LAZYGIT: active_border_color, inactive_border_color, options_text_color, selected_line_bg_color",
     lazygit_active_border, -- 29
     lazygit_inactive_border, -- 30
     lazygit_border_fg, -- 31
     lazygit_selected_line_bg, -- 32
 
-    -- Delta: plus-style, plus-emph-style
+    fmt "! DELTA: plus-style, plus-emph-style",
     gitadd, -- 33
     gitlinenumber_add, -- 34
 
-    -- Delta: minus-style, minus-emph-style,
+    fmt "! DELTA: minus-style, minus-emph-style",
     gitdelete, -- 36
     gitlinenumber_delete, -- 35
 
+    fmt "! zsh-autosuggestions: fg",
     sugest_highlight -- 37
   )
 
