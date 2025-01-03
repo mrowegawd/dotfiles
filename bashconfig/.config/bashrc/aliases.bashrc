@@ -41,6 +41,7 @@ ll() {
 }
 
 alias nnn='nnn -e -H -r'
+alias lazygit='lazygit --use-config-file="$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"'
 
 # if command -v eza >/dev/null; then
 # 	alias ll="eza --long --all --git --color=always --group-directories-first --icons"
