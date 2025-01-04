@@ -12,7 +12,7 @@ hovered = { bg = "#ebe3eb" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#ebe3eb", bg = "#396847", italic = true }
+find_keyword = { fg = "#371967", bg = "#ffff0f", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
@@ -20,13 +20,13 @@ marker_selected = { fg = "#fe8019", bg = "#fe8019" }
 marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
 marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
 
-count_cut = { fg = "#f38ba8", bg = "#f1ede9" }
-count_copied = { fg = "#b8bb26", bg = "#f1ede9" }
-count_selected = { fg = "#fe8019", bg = "#f1ede9" }
+count_cut = { fg = "#f38ba8", bg = "#eee7de" }
+count_copied = { fg = "#b8bb26", bg = "#eee7de" }
+count_selected = { fg = "#fe8019", bg = "#eee7de" }
 
 # Tab
 tab_active = { fg = "#632db9", bg = "#371967" }
-tab_inactive = { fg = "#bbb8b5", bg = "#f1ede9" }
+tab_inactive = { fg = "#bbb8b5", bg = "#eee7de" }
 tab_width = 1
 
 # Border

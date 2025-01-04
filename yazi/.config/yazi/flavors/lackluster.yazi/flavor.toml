@@ -12,7 +12,7 @@ hovered = { bg = "#1c1c1c" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#191919", bg = "#fe8019", italic = true }
+find_keyword = { fg = "#1c1c1c", bg = "#fe8019", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
@@ -149,7 +149,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#cccccc" },
-  { name = "*/", fg = "#b7b7b7" },
+  { name = "*/", fg = "#BD93F9" },
 ]
 
 # : }}}

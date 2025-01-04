@@ -14,6 +14,22 @@ return {
       return false
     end,
   },
+  -- SONOKAI
+  {
+    "sainnhe/sonokai",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local sonokai_theme = { "sonokai" }
+      if vim.tbl_contains(sonokai_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      vim.g.sonokai_style = "shusia" -- default, atlantis, shusia, maia, ekspresso, andromeda
+    end,
+  },
   -- EVANGELION
   {
     "xero/evangelion.nvim",

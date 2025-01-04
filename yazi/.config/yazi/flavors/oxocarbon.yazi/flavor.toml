@@ -39,8 +39,8 @@ border_style = { fg = "#232323" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#1c1c1c", bg = "#78a9ff", bold = true }
-normal_alt = { fg = "#78a9ff", bg = "#1c1c1c" }
+normal_main = { fg = "#212121", bg = "#78a9ff", bold = true }
+normal_alt = { fg = "#78a9ff", bg = "#212121" }
 
 select_main = { fg = "#ffffff", bg = "#223249", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }

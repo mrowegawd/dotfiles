@@ -20,13 +20,13 @@ marker_selected = { fg = "#fe8019", bg = "#fe8019" }
 marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
 marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
 
-count_cut = { fg = "#f38ba8", bg = "#211312" }
-count_copied = { fg = "#b8bb26", bg = "#211312" }
-count_selected = { fg = "#fe8019", bg = "#211312" }
+count_cut = { fg = "#f38ba8", bg = "#231413" }
+count_copied = { fg = "#b8bb26", bg = "#231413" }
+count_selected = { fg = "#fe8019", bg = "#231413" }
 
 # Tab
 tab_active = { fg = "#95684f", bg = "#533a2c" }
-tab_inactive = { fg = "#4d2d27", bg = "#211312" }
+tab_inactive = { fg = "#4d2d27", bg = "#231413" }
 tab_width = 1
 
 # Border
@@ -150,7 +150,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#e0ccae" },
-  { name = "*/", fg = "#a67458" },
+  { name = "*/", fg = "#d47d49" },
 ]
 
 # : }}}

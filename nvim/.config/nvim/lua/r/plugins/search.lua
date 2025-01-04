@@ -281,6 +281,7 @@ return {
             ["ctrl-u"] = "preview-page-up",
           },
         },
+        fzf_opts = { ["--no-separator"] = "" }, -- remove separator line
         files = {
           -- debug = true,
           prompt = RUtils.fzflua.default_title_prompt(),

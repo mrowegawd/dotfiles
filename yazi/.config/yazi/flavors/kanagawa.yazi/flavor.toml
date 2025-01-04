@@ -26,7 +26,7 @@ count_selected = { fg = "#fe8019", bg = "#2a2a37" }
 
 # Tab
 tab_active = { fg = "#8672a5", bg = "#4a3f5c" }
-tab_inactive = { fg = "#494960", bg = "#2f2f3e" }
+tab_inactive = { fg = "#4e4e66", bg = "#2f2f3e" }
 tab_width = 1
 
 # Border
@@ -147,7 +147,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#bbbac1" },
-  { name = "*/", fg = "#8992a7" },
+  { name = "*/", fg = "#7aa89f" },
 ]
 
 # : }}}

@@ -149,7 +149,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#e6eaea" },
-  { name = "*/", fg = "#be95ff" },
+  { name = "*/", fg = "#8cb6ff" },
 ]
 
 # : }}}
