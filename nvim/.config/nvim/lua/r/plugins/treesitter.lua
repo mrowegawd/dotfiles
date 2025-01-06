@@ -141,11 +141,11 @@ return {
       Highlight.plugin("treesitter-context", {
         theme = {
           ["*"] = {
-            { TreesitterContext = { bg = { from = "Pmenu", attr = "bg", alter = -0.05 } } },
+            { TreesitterContext = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.3 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
               },
             },
             {
@@ -163,7 +163,7 @@ return {
             },
             {
               TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 0.7 },
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 0.8 },
                 underline = false,
                 undercurl = false,
                 sp = "NONE",

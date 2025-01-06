@@ -6,125 +6,144 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local alter_medium_theme = { "lackluster", "oxocarbon", "carbonfox", "catppuccin-mocha", "darkforest" }
-local alter_soft_theme = { "coffeecat", "iceclimber", "tokyonight-night" }
+local pmenu_alter, pmenusel_alter, pmenuthumb_alter, fzfluasel_alter, quickfixline_alter, cursorline_alter
 
-local alter_bright_theme = { "farout-night" }
-local alter_brightnc_theme = { "dayfox" }
-local alter_everforest_theme = { "everforest" }
-local alter_tokyonightday_theme = { "tokyonight-day" }
-local alter_ashenc_theme = { "ashen", "citruszest" }
+local base_cl = {
+  pmenu_alter = 0.3,
+  pmenusel_alter = 0.3,
+  pmenuthumb_alter = 0.3,
+  fzfluasel_alter = 0.3,
+  quickfixline_alter = 0.3,
+  cursorline_alter = 0.08,
+}
 
-local alter_special_theme = { "gruvbox-material", "horizon" }
-local alter_specialnc_theme = { "kanagawa" }
-local alter_sonokai_theme = { "" }
-local alter_darkpmenu_theme = { "selenized", "nightfox", "tokyonight-storm", "vscode_modern" }
+local function reset_base_alter(themes, alter_base)
+  for _, theme in pairs(themes) do
+    if theme == RUtils.config.colorscheme then
+      for key_alter, val_alter in pairs(alter_base) do
+        for key, _ in pairs(base_cl) do
+          if key == key_alter then
+            base_cl[key] = val_alter
+          end
+        end
+      end
+    end
+  end
 
-local pmenu_alter = 0.3
-local pmenusel_alter = 0.3
-local pmenuthumb_alter = 0.3
-local fzfluasel_alter = 0.3
-local quickfixline_alter = 0.3
-local cursorline_alter = 0.08
-
-if vim.tbl_contains(alter_special_theme, RUtils.config.colorscheme) then
-  cursorline_alter = 0.07
-  pmenu_alter = 0.3
-  pmenusel_alter = 0.4
-  pmenuthumb_alter = 0.4
-  fzfluasel_alter = 0.2
-  quickfixline_alter = 0.4
+  for i, x in pairs(base_cl) do
+    if i == "pmenu_alter" then
+      pmenu_alter = x
+    end
+    if i == "pmenusel_alter" then
+      pmenusel_alter = x
+    end
+    if i == "pmenuthumb_alter" then
+      pmenuthumb_alter = x
+    end
+    if i == "pmenuthumb_alter" then
+      pmenuthumb_alter = x
+    end
+    if i == "fzfluasel_alter" then
+      fzfluasel_alter = x
+    end
+    if i == "quickfixline_alter" then
+      quickfixline_alter = x
+    end
+    if i == "cursorline_alter" then
+      cursorline_alter = x
+    end
+  end
 end
 
-if vim.tbl_contains(alter_specialnc_theme, RUtils.config.colorscheme) then
-  cursorline_alter = 0.1
-  pmenu_alter = -0.2
-  pmenusel_alter = -0.1
-  pmenuthumb_alter = 0.4
-  fzfluasel_alter = 0.2
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "coffeecat", "iceclimber", "tokyonight-night" }, {
+  cursorline_alter = 0.05,
+  pmenu_alter = 0.5,
+  pmenusel_alter = 0.5,
+  pmenuthumb_alter = 0.4,
+  fzfluasel_alter = 0.5,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_darkpmenu_theme, RUtils.config.colorscheme) then
-  cursorline_alter = 0.1
-  pmenu_alter = -0.05
-  pmenusel_alter = 0.2
-  pmenuthumb_alter = 0.15
-  fzfluasel_alter = -0.05
-  quickfixline_alter = 0.3
-end
+reset_base_alter({ "lackluster", "oxocarbon", "carbonfox", "catppuccin-mocha", "darkforest" }, {
+  cursorline_alter = 0.08,
+  pmenu_alter = 0.6,
+  pmenusel_alter = 0.4,
+  pmenuthumb_alter = 0.3,
+  fzfluasel_alter = 0.3,
+  quickfixline_alter = 0.3,
+})
 
-if vim.tbl_contains(alter_sonokai_theme, RUtils.config.colorscheme) then
-  cursorline_alter = 0.04
-  pmenu_alter = -0.2
-  pmenusel_alter = 0.25
-  pmenuthumb_alter = 0.15
-  fzfluasel_alter = -0.05
-  quickfixline_alter = 0.3
-end
+reset_base_alter({ "farout-night" }, {
+  cursorline_alter = 0.13,
+  pmenu_alter = 1.8,
+  pmenusel_alter = 0.6,
+  pmenuthumb_alter = 0.6,
+  fzfluasel_alter = 0.5,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_medium_theme, RUtils.config.colorscheme) then
-  cursorline_alter = 0.08
-  pmenu_alter = 0.6
-  pmenusel_alter = 0.4
-  pmenuthumb_alter = 0.3
-  fzfluasel_alter = 0.3
-  quickfixline_alter = 0.3
-end
+reset_base_alter({ "dayfox" }, {
+  cursorline_alter = -0.02,
+  pmenu_alter = 1.8,
+  pmenusel_alter = 0.6,
+  pmenuthumb_alter = 0.6,
+  fzfluasel_alter = 0.5,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_soft_theme, vim.g.colorscheme) then
-  cursorline_alter = 0.05
-  pmenu_alter = 0.3
-  pmenusel_alter = 0.5
-  pmenuthumb_alter = 0.5
-  fzfluasel_alter = 0.5
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "everforest" }, {
+  cursorline_alter = 0.07,
+  pmenu_alter = 1.8,
+  pmenusel_alter = 0.6,
+  pmenuthumb_alter = 0.6,
+  fzfluasel_alter = 0.5,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_bright_theme, vim.g.colorscheme) then
-  cursorline_alter = 0.13
-  pmenu_alter = 1.8
-  pmenusel_alter = 0.6
-  pmenuthumb_alter = 0.6
-  fzfluasel_alter = 0.5
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "tokyonight-day" }, {
+  cursorline_alter = 0.01,
+  pmenu_alter = 1.8,
+  pmenusel_alter = 0.6,
+  pmenuthumb_alter = 0.6,
+  fzfluasel_alter = 0.5,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_brightnc_theme, vim.g.colorscheme) then
-  cursorline_alter = -0.02
-  pmenu_alter = 1.8
-  pmenusel_alter = 0.6
-  pmenuthumb_alter = 0.6
-  fzfluasel_alter = 0.5
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "ashen", "citruszest" }, {
+  cursorline_alter = 0.04,
+  pmenu_alter = 1,
+  pmenusel_alter = 0.8,
+  pmenuthumb_alter = 0.6,
+  fzfluasel_alter = 0.8,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_everforest_theme, vim.g.colorscheme) then
-  cursorline_alter = 0.07
-  pmenu_alter = 1.8
-  pmenusel_alter = 0.6
-  pmenuthumb_alter = 0.6
-  fzfluasel_alter = 0.5
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "gruvbox-material", "horizon" }, {
+  cursorline_alter = 0.07,
+  pmenu_alter = 0.3,
+  pmenusel_alter = 0.4,
+  pmenuthumb_alter = 0.4,
+  fzfluasel_alter = 0.2,
+  quickfixline_alter = 0.4,
+})
 
-if vim.tbl_contains(alter_tokyonightday_theme, vim.g.colorscheme) then
-  cursorline_alter = 0.01
-  pmenu_alter = 1.8
-  pmenusel_alter = 0.6
-  pmenuthumb_alter = 0.6
-  fzfluasel_alter = 0.5
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "kanagawa" }, {
+  cursorline_alter = 0.1,
+  pmenu_alter = -0.2,
+  pmenusel_alter = -0.1,
+  pmenuthumb_alter = 0.4,
+  fzfluasel_alter = 0.2,
+  quickfixline_alter = 0.5,
+})
 
-if vim.tbl_contains(alter_ashenc_theme, vim.g.colorscheme) then
-  cursorline_alter = 0.04
-  pmenu_alter = 1
-  pmenusel_alter = 0.8
-  pmenuthumb_alter = 0.6
-  fzfluasel_alter = 0.8
-  quickfixline_alter = 0.5
-end
+reset_base_alter({ "selenized", "nightfox", "tokyonight-storm", "vscode_modern" }, {
+  cursorline_alter = 0.1,
+  pmenu_alter = -0.05,
+  pmenusel_alter = 0.2,
+  pmenuthumb_alter = 0.15,
+  fzfluasel_alter = -0.05,
+  quickfixline_alter = 0.3,
+})
 
 local general_overrides = function()
   Highlight.all {
@@ -410,7 +429,7 @@ local general_overrides = function()
     {
       DiagnosticError = {
         fg = { from = "DiagnosticSignError", attr = "fg" },
-        bg = { from = "DiagnosticSignError", attr = "fg", alter = -0.7 },
+        bg = "NONE",
         italic = true,
       },
     },
@@ -423,7 +442,7 @@ local general_overrides = function()
     {
       DiagnosticWarn = {
         fg = { from = "DiagnosticSignWarn", attr = "fg" },
-        bg = { from = "DiagnosticSignWarn", attr = "fg", alter = -0.7 },
+        bg = "NONE",
         italic = true,
       },
     },
@@ -436,7 +455,7 @@ local general_overrides = function()
     {
       DiagnosticHint = {
         fg = { from = "DiagnosticSignHint", attr = "fg" },
-        bg = { from = "DiagnosticSignHint", attr = "fg", alter = -0.7 },
+        bg = "NONE",
         italic = true,
       },
     },
@@ -449,7 +468,7 @@ local general_overrides = function()
     {
       DiagnosticInfo = {
         fg = { from = "DiagnosticSignInfo", attr = "fg" },
-        bg = { from = "DiagnosticSignInfo", attr = "fg", alter = -0.7 },
+        bg = "NONE",
         italic = true,
       },
     },
@@ -1994,8 +2013,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+          fg = { from = "Normal", attr = "bg", alter = 1.3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.34 },
         },
       },
 
@@ -2503,6 +2522,7 @@ local function colorscheme_overrides()
       },
     },
     ["tokyonight-night"] = {
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
