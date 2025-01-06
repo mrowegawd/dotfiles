@@ -72,33 +72,33 @@ return {
           },
         },
         org_agenda_files = {
+          -- Mobilephone
+          -- fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
+          -- fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
+
+          -- PC / Laptop
           fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
-          fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
           fmt("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
-          fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
           fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
           fmt("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
         },
         org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
         org_todo_keywords = {
           "TODO(t)",
-          "HOLD(h)", -- task yang ditangguhkan, no hint to continue
+          "LEARNING(l)", -- task yang ditangguhkan, no hint to continue
           "PROGRESS(p)", -- task yang sedang dikerjakan
           "CHECK(c)", -- task yang boleh dikerjakan saat free-time
           "HBD(b)",
           "|",
           "DONE(d)",
-          "NEXT(n)",
         },
         org_todo_keyword_faces = {
           CHECK = ":foreground royalblue :weight bold :slant",
           TODO = ":foreground " .. todo_hi .. " :weight bold :slant",
           PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
-          UNTASK = ":foreground deeppink :weight bold",
           HBD = ":foreground pink :weight bold :slant",
-          HOLD = ":foreground gray :weight bold :slant",
+          LEARNING = ":foreground yellow :weight bold :slant",
           DONE = ":foreground " .. done_hi .. " :weight bold :slant",
-          NEXT = ":foreground darkred :weight bold :slant",
         },
         org_agenda_skip_scheduled_if_done = true,
         org_hide_emphasis_markers = true,
@@ -447,10 +447,11 @@ return {
     },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here
-
       workspaces = {
         {
           name = "obsidian",
+          date_format = "%d-%m-%Y %A",
+          time_format = "%H:%M",
           path = "~/Dropbox/neorg",
         },
 
@@ -459,7 +460,6 @@ return {
           path = "~/Dropbox/neorg/work",
         },
       },
-
       daily_notes = {
         folder = "Drafts",
         -- Optional, if you want to change the date format for the ID of daily notes.
@@ -468,7 +468,6 @@ return {
         -- Optional, if you want to change the date format of the default alias of daily notes.
         -- alias_format = "%B %-d, %Y",
       },
-
       note_id_func = function(title)
         -- Create note IDs in a Zettelkasten format with a timestamp and a suffix.
         -- In this case a note with the title 'My new note' will be given an ID that looks
@@ -486,7 +485,6 @@ return {
         local time = os.date("%Y-%m-%d", os.time() - 86400)
         return tostring(time) .. "_" .. suffix
       end,
-
       picker = {
         name = "fzf-lua",
         mappings = {
@@ -494,32 +492,65 @@ return {
           insert_link = "<C-l>",
         },
       },
-
       preferred_link_style = "markdown",
-
       note_frontmatter_func = function(note)
-        local out = { id = note.id, aliases = note.aliases, tags = note.tags }
-        -- if out.date == nil then
-        --   out.date = os.date "%Y-%m-%d %H:%M"
+        -- Add the title of the note as an alias.
+        if note.title then
+          note:add_alias(note.title)
+        end
+
+        local out = {
+          id = note.id,
+          aliases = note.aliases,
+          tags = note.tags,
+        }
+
+        -- add date only on init
+        local getDate = function(metadata)
+          local date = os.date "%Y-%m-%d"
+          if metadata == nil then
+            return date
+          end
+
+          return metadata.create_at
+        end
+
+        -- local getHubs = function(metadata)
+        --   local hubs = "[[]]"
+        --   if metadata == nil then
+        --     return hubs
+        --   end
+        --   return metadata.hubs
         -- end
-        if note.metadata ~= nil and vim.tbl_isempty(note.metadata) then
+        --
+        -- local getRefs = function(metadata)
+        --   local refs = "[[]]"
+        --   if metadata == nil then
+        --     return refs
+        --   end
+        --   return metadata.refs
+        -- end
+
+        note.metadata = {
+          create_at = getDate(note.metadata),
+          last_edited = os.date "%Y-%m-%d %H:%M",
+          -- hubs = getHubs(note.metadata),
+          -- refs = getRefs(note.metadata),
+        }
+        if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
           for k, v in pairs(note.metadata) do
-            print(k, v)
             out[k] = v
           end
         end
         return out
       end,
-
       completion = {
         nvim_cmp = false,
         min_chars = 2,
       },
-
       ui = {
         enable = false, -- set to false to disable all additional syntax features
       },
-
       mappings = {
         ["<c-c>"] = {
           action = function()
@@ -533,14 +564,13 @@ return {
           end,
           opts = { noremap = false, expr = true, buffer = true },
         },
-        ["<cr>"] = {
-          action = function()
-            return require("obsidian").util.smart_action()
-          end,
-          opts = { buffer = true, expr = true },
-        },
+        -- ["<cr>"] = {
+        --   action = function()
+        --     return require("obsidian").util.smart_action()
+        --   end,
+        --   opts = { buffer = true, expr = true },
+        -- },
       },
-
       follow_url_func = function(url)
         vim.fn.jobstart { "open", url }
       end,
