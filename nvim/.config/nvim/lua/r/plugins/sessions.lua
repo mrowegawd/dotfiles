@@ -17,6 +17,19 @@ return {
         return true
       end,
       extensions = { quickfix = {} },
+      options = { -- remove `cmdheight` from this
+        "binary",
+        "bufhidden",
+        "buflisted",
+        "diff",
+        "filetype",
+        "modifiable",
+        "previewwindow",
+        "readonly",
+        "scrollbind",
+        "winfixheight",
+        "winfixwidth",
+      },
     },
     config = function(_, opts)
       local resession = require "resession"

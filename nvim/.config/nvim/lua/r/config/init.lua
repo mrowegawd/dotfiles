@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "coffeecat"
+local colorscheme = "everforest"
 
 _G.base = {}
 
@@ -171,10 +171,10 @@ local defaults = {
 
     dap = {
       -- Stopped             = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-      -- Breakpoint          = " ",
+      Breakpoint = " ",
       -- BreakpointCondition = " ",
       -- BreakpointRejected  = { " ", "DiagnosticError" },
-      Breakpoint = " ",
+      -- Breakpoint = " ",
       -- Breakpoint           = " ",  -- " "
       BreakpointCondition = " ",
       BreakpointRejected = " ",
@@ -265,7 +265,7 @@ local defaults = {
       Package = " ",
       Property = " ", -- " "
       Reference = " ",
-      Snippet = "󱄽 ", -- " ",
+      Snippet = " ", --"󱄽 "
       String = " ", -- " " "﬌ "
       Struct = " ", -- " " "󰆼 "
       TabNine = "󰏚 ",

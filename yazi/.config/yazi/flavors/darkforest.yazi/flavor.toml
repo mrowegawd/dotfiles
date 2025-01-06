@@ -17,13 +17,13 @@ marker_copied = { fg = "#dbbc7f", bg = "#dbbc7f" }
 marker_cut = { fg = "#e67e80", bg = "#e67e80" }
 marker_selected = { fg = "#fe8019", bg = "#fe8019" }
 
-tab_active = { fg = "#709671", bg = "#3e533f" }
-tab_inactive = { fg = "#394040", bg = "#222727" }
-tab_width = 1
+count_cut = { fg = "#d6a56f", bg = "#252b2b" }
+count_copied = { fg = "#e67e80", bg = "#252b2b" }
+count_selected = { fg = "#fe8019", bg = "#252b2b" }
 
-count_cut = { fg = "#d6a56f", bg = "#222727" }
-count_copied = { fg = "#e67e80", bg = "#222727" }
-count_selected = { fg = "#fe8019", bg = "#222727" }
+tab_active = { fg = "#709671", bg = "#3e533f" }
+tab_inactive = { fg = "#404949", bg = "#252b2b" }
+tab_width = 1
 
 border_symbol = "│"
 border_style = { fg = "#262b2b" }
@@ -132,7 +132,7 @@ rules = [
 
   # Fallback
   { name = "*", fg = "#cccccc" },
-  { name = "*/", fg = "#7da77e" },
+  { name = "*/", fg = "#a7c080" },
 ]
 
 # : }}}

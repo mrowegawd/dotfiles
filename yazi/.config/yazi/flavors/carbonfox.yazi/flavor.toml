@@ -26,7 +26,7 @@ count_selected = { fg = "#fe8019", bg = "#272727" }
 
 # Tab
 tab_active = { fg = "#ab86e5", bg = "#5f4a7f" }
-tab_inactive = { fg = "#424242", bg = "#272727" }
+tab_inactive = { fg = "#464646", bg = "#272727" }
 tab_width = 1
 
 # Border

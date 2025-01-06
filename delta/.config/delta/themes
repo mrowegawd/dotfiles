@@ -13,17 +13,17 @@ hunk-header-decoration-style = none
 hunk-header-style = syntax bold italic 237
 line-numbers = true
 line-numbers-left-format = "{nm:>1}┊"
-line-numbers-left-style = pink
-line-numbers-minus-style = "#f7685b" italic
-line-numbers-plus-style = "#c5fd9d" italic
+line-numbers-left-style = red
+line-numbers-minus-style = "#FAA396" italic
+line-numbers-plus-style = "#E8FCCE" italic
 line-numbers-right-format = "{np:>1}┊"
 line-numbers-right-style = green
 line-numbers-zero-style = "#545474" italic
 
-minus-emph-style = syntax bold "#5b3941"
-minus-style = syntax "#2b1e21"
-plus-emph-style = syntax bold "#5b3941"
-plus-style = syntax "#726813"
+minus-emph-style = syntax bold "#FAA396"
+minus-style = syntax "#fdcfc3"
+plus-emph-style = syntax bold "#E8FCCE"
+plus-style = syntax "#f3fbdf"
 syntax-theme = TwoDark
 whitespace-error-style = "#280050" reverse
 

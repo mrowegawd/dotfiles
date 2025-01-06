@@ -2,19 +2,20 @@
 
 *.foreground: #a0a8b7
 *.background: #0A0A0A
-*.color0:     #080808
-*.color8:     #4D4D4D
-*.color1:     #D70000
-*.color9:     #FF6E67
-*.color2:     #789978
-*.color10:    #5AF78E
-*.color3:     #ffAA88
-*.color11:    #F4F99D
-*.color4:     #BD93F9
-*.color12:    #CAA9FA
-*.color5:     #D7007D
-*.color13:    #FF92D0
-*.color6:     #708090
-*.color14:    #9AEDFE
-*.color7:     #DEEEED
-*.color15:    #E6E6E6
+
+*.color0:#080808
+*.color1:#d70000
+*.color2:#789978
+*.color3:#ffaa88
+*.color4:#7788aa
+*.color5:#d7007d
+*.color6:#708090
+*.color7:#deeeed
+*.color8:#444444
+*.color9:#d70000
+*.color10:#789978
+*.color11:#ffaa88
+*.color12:#7788aa
+*.color13:#d7007d
+*.color14:#708090
+*.color15:#deeeed

@@ -8,7 +8,7 @@
 cwd = { fg = "#aca9a6" }
 
 # Hovered
-hovered = { bg = "#ebe3eb" }
+hovered = { bg = "#f3eeed" }
 preview_hovered = { underline = true }
 
 # Find
@@ -39,8 +39,8 @@ border_style = { fg = "#ddd9d6" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#f6f2ee", bg = "#6e33ce", bold = true }
-normal_alt = { fg = "#6e33ce", bg = "#f6f2ee" }
+normal_main = { fg = "#88847f", bg = "#6e33ce", bold = true }
+normal_alt = { fg = "#6e33ce", bg = "#88847f" }
 
 select_main = { fg = "#ffffff", bg = "#223249", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }

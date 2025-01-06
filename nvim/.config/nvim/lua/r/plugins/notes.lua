@@ -507,7 +507,7 @@ return {
 
         -- add date only on init
         local getDate = function(metadata)
-          local date = os.date "%Y-%m-%d"
+          local date = os.date "%Y-%m-%d %H:%M"
           if metadata == nil then
             return date
           end

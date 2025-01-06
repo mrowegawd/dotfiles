@@ -1,20 +1,23 @@
-ACTIVE_FG="#b695de"
-ACTIVE_BG="#65537b"
+ACTIVE_FG="#df4c49"
+ACTIVE_BG="#7c2a29"
 
-STATUSLINE_BG_MESSAGE="#F9E2AF"
-STATUSLINE_FG="#3e3e63"
+STATUSLINE_BG_MESSAGE="#dfa000"
+STATUSLINE_FG="#a9a69e"
 
-TMUX_BG="#1e1e2e"
-TMUX_FG="#48486d"
+SESSION_BG="#b3b0a8"
+SESSION_FG="#c9c6bd"
 
-BORDER_FG="#51517c"
-BORDER_BG="#1e1e2e"
-BORDER_FG_NC="#303049"
+TMUX_BG="#fffbef"
+TMUX_FG="#b3b0a8"
 
-RED="#F38BA8"
-BLUE="#89B4FA"
-WHITE="#BAC2DE"
-GREEN="#A6E3A1"
+BORDER_FG="#c9c6bd"
+BORDER_BG="#fffbef"
+BORDER_FG_NC="#e0dcd2"
+
+RED="#f85552"
+BLUE="#3a94c5"
+WHITE="#dfddc8"
+GREEN="#8da101"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
