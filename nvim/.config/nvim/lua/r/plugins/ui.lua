@@ -593,20 +593,22 @@ return {
             return {
               backend = "fzf_lua",
               fzf_lua = RUtils.fzflua.cursor_dropdown {
+                prompt = "   ",
                 winopts = {
                   title = opts.prompt,
                   relative = "editor",
                   col = col,
                   row = row,
+                  width = math.floor(math.min(60, vim.o.columns / 2)),
+                  height = 15,
                 },
-                prompt = "  ",
               },
             }
           end
           return {
             backend = "fzf_lua",
             fzf_lua = RUtils.fzflua.dropdown {
-              winopts = { title = opts.prompt, height = 0.33, row = 0.5 },
+              winopts = { title = opts.prompt },
             },
           }
         end,

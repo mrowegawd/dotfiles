@@ -387,6 +387,18 @@ local function picker(contents, actions)
         end
       end,
 
+      ["ctrl-t"] = function(selected, _)
+        local sel = selected[1]
+        sel = vim.split(sel, "|")
+        for _, x in pairs(data_tags_table) do
+          if x.title == sel[2] then
+            vim.cmd("tabe " .. x.path)
+            vim.api.nvim_win_set_cursor(0, { tonumber(x.line_number), 1 })
+            break
+          end
+        end
+      end,
+
       ["ctrl-y"] = function(selected, _)
         local sel = selected[1]
         sel = vim.split(sel, " ")
@@ -398,7 +410,7 @@ local function picker(contents, actions)
         require("fzf-lua").actions.resume()
       end,
 
-      ["ctrl-t"] = function()
+      ["ctrl-x"] = function()
         if #insert_tags == 0 then
           RUtils.warn("you need add your spesific tag first!", { title = "Markdown Tag Filter" })
           require("fzf-lua").actions.resume()
@@ -523,7 +535,7 @@ local function picker(contents, actions)
     winopts = {
       title = format_prompt_strings(),
     },
-    fzf_opts = { ["--header"] = [[ctrl-t: filter by tag | ctrl-y: add tag | ctrl-r: reload | ctrl-g: grep filter]] },
+    fzf_opts = { ["--header"] = [[ctrl-x: filter by tag | ctrl-y: add tag | ctrl-r: reload | ctrl-g: grep filter]] },
     actions = actions,
   })
 end
@@ -768,6 +780,14 @@ function M.find_local_titles()
         if sel then
           sel = vim.split(sel, ":")
           vim.cmd("split " .. fullname)
+          vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
+        end
+      end,
+      ["ctrl-t"] = function(selected, _)
+        local sel = RUtils.fzflua.__strip_str(selected[1])
+        if sel then
+          sel = vim.split(sel, ":")
+          vim.cmd("tabe " .. fullname)
           vim.api.nvim_win_set_cursor(0, { tonumber(sel[1]), 1 })
         end
       end,
