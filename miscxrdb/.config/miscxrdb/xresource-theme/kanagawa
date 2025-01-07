@@ -4,7 +4,7 @@
 *.background:   #1f1f28
 *.cursorColor:  #dcd7ba
 
-# normal
+! normal
 *.color0: #0d0c0c
 *.color1: #c4746e
 *.color2: #8a9a7b
@@ -14,7 +14,7 @@
 *.color6: #8ea4a2
 *.color7: #C8C093
 
-# bright
+! bright
 *.color8: #a6a69c
 *.color9: #E46876
 *.color10:#87a987

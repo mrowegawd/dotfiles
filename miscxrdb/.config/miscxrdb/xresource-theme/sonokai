@@ -16,7 +16,7 @@
 ! inactive_tab_foreground #e1e3e4
 ! inactive_tab_font_style normal
 
-# Black
+! Black
 *color0:#1a181a
 *color8:#848089
 
@@ -45,5 +45,5 @@
 *color7:#ef9062
 
 ! White
-*color7:#e3e1e4
+*color14:#e3e1e4
 *color15:#e3e1e4
