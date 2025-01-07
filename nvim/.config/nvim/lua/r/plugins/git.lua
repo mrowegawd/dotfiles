@@ -343,6 +343,8 @@ return {
           map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
           map("n", "<Leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
 
+          map("n", "<Leader>gp", gs.toggle_deleted, "Git: show deleted [gitsigns]")
+
           map("n", "<Leader>gb", function() gs.blame() end, "Git: blame [gitsigns]")
           -- map("n", "<Leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
 
