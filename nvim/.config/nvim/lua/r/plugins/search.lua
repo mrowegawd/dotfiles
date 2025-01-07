@@ -110,8 +110,7 @@ return {
       { "<a-t>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
       { "fb", function()
         require("fzf-lua").buffers({
-          winopts = { preview = { hidden = "hidden" } },
-          winopts_fn = function()
+          winopts = function()
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
             local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
@@ -120,6 +119,8 @@ return {
             local col = math.ceil((win_width / 2))
             local row = math.ceil((win_height / 2))
             return {
+              title = RUtils.fzflua.format_title("Buffers", "󰈙"),
+              title_pos = "center",
               width = win_width,
               height = win_height,
               row = row,
@@ -127,6 +128,7 @@ return {
               preview = {
                 vertical = "down:55%", -- up|down:size
                 horizontal = "right:45%", -- right|left:size
+                hidden = "hidden"
               },
             }
           end,
@@ -211,10 +213,7 @@ return {
         or nil
 
       return {
-        winopts = {
-          backdrop = 100,
-        },
-        winopts_fn = function()
+        winopts = function()
           local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
           local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
@@ -223,17 +222,18 @@ return {
           local col = math.ceil((columns - win_width) * 1)
           local row = math.ceil((lines - win_height) * 1 - 3)
           return {
+            title_pos = "center",
             width = win_width,
             height = win_height,
             row = row,
             col = col,
+            backdrop = 100,
             preview = {
               vertical = "down:55%", -- up|down:size
               horizontal = "right:45%", -- right|left:size
             },
           }
         end,
-        -- fzf_colors = true,
         fzf_colors = {
           ["fg"] = { "fg", "CmpItemAbbr" },
           ["bg"] = { "bg", "NormalFloat" },
@@ -342,7 +342,10 @@ return {
         git = {
           files = {
             prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = { title = RUtils.fzflua.format_title("Git Files", "") },
+            winopts = {
+              title = RUtils.fzflua.format_title("Git Files", ""),
+              title_pos = "left",
+            },
             cmd = "git ls-files --exclude-standard",
             multiprocess = true, -- run command in a separate process
             git_icons = true, -- show git icons?
@@ -351,7 +354,10 @@ return {
           },
           status = {
             prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = { title = RUtils.fzflua.format_title("Git Status", "") },
+            winopts = {
+              title = RUtils.fzflua.format_title("Git Status", ""),
+              title_pos = "left",
+            },
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             actions = {
               -- actions inherit from 'actions.files' and merge
@@ -374,7 +380,7 @@ return {
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset'",
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
-            winopts = { title = RUtils.fzflua.format_title("Commits", "") },
+            winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
             fzf_opts = {
               ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | alt-d: compare commit | alt-h: history commit]],
             },
@@ -441,7 +447,10 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             cmd = "git log --color --pretty=format:'%C(blue)%h%Creset "
               .. "%Cred(%><(12)%cr%><|(12))%Creset %s %C(blue)<%an>%Creset' {file}",
-            winopts = { title = RUtils.fzflua.format_title("BCommits", "") },
+            winopts = {
+              title = RUtils.fzflua.format_title("BCommits", ""),
+              title_pos = "left",
+            },
             fzf_opts = {
               ["--header"] = [[ctrl-o: browser | ctrl-y: hcopy | alt-d: compare commit | alt-h: history commit]],
             },
@@ -511,6 +520,7 @@ return {
             preview = "git log --graph --pretty=oneline --abbrev-commit --color {1}",
             winopts = {
               title = RUtils.fzflua.format_title("Branches", ""),
+              title_pos = "left",
               height = 0.3,
               row = 0.4,
             },
@@ -525,6 +535,7 @@ return {
             --     preview = "git --no-pager stash show --patch --color {1}",
             winopts = {
               title = RUtils.fzflua.format_title("Stash", ""),
+              title_pos = "left",
             },
             --     actions = {
             --         ["default"] = actions.git_stash_apply,
@@ -560,18 +571,12 @@ return {
           fzf_opts = {
             ["--header"] = [[ctrl-r: rgflow | ctrl-g: grep_lgrep | alt-g: toggle ignore | alt-h: toggle hidden]],
           },
-          winopts = {
-            title = RUtils.fzflua.format_title(
-              "Grep",
-              RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
-            ),
-          },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
           -- multiline = 2, -- Display as: PATH:LINE:COL\nTEXT\n
           formatter = "path.filename_first",
           multiprocess = true,
-          winopts_fn = function()
+          winopts = function()
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
             local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
@@ -580,6 +585,10 @@ return {
             local col = math.ceil((columns - win_width) * 1)
             local row = math.ceil((lines - win_height) * 1 - 3)
             return {
+              title = RUtils.fzflua.format_title(
+                "Grep",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+              ),
               width = win_width,
               height = win_height,
               row = row,
@@ -849,21 +858,17 @@ return {
           },
           finder = {
             prompt = RUtils.fzflua.default_title_prompt(),
-            winopts = {
-              title = RUtils.fzflua.format_title("Finder", ""),
-              -- relative = "cursor",
-            },
-            winopts_fn = function()
+            winopts = function()
               local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
               local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
               local win_height = math.ceil(lines * 0.65)
               local win_width = math.ceil(columns * 2)
               return {
+                title = RUtils.fzflua.format_title("Finder", ""),
                 width = win_width,
                 height = win_height,
                 row = 13,
-                -- col = 14,
                 preview = {
                   vertical = "down:45%", -- up|down:size
                   horizontal = "left:55%", -- right|left:size

@@ -231,17 +231,14 @@ function M.get()
           jump_to_single_result = true,
           jump_to_single_result_action = require("fzf-lua.actions").file_vsplit,
           prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = {
-            title = RUtils.fzflua.format_title("Definitions", ""),
-            -- relative = "cursor",
-          },
-          winopts_fn = function()
+          winopts = function()
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
             local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
             local win_height = math.ceil(lines * 0.65)
             local win_width = math.ceil(columns * 2)
             return {
+              title = RUtils.fzflua.format_title("Definitions", ""),
               width = win_width,
               height = win_height,
               row = 13,

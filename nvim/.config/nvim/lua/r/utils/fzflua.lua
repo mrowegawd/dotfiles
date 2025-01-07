@@ -30,13 +30,13 @@ function M.dropdown(opts)
     opts.winopts.title = M.format_title(title)
   end
   return vim.tbl_deep_extend("force", {
-    prompt = RUtils.config.icons.misc.dots,
+    prompt = M.default_title_prompt(),
     fzf_opts = { ["--layout"] = "reverse" },
     winopts = {
       title_pos = opts.winopts.title and "center" or nil,
-      height = 0.70,
-      width = 0.60,
-      row = 0.1,
+      height = 20,
+      width = math.floor(vim.o.columns / 2 + 8),
+      col = 0.50,
       preview = {
         hidden = "hidden",
         layout = "vertical",
@@ -52,22 +52,12 @@ function M.cursor_dropdown(opts)
     height = height - 1
   end
 
-  local vim_width = vim.o.columns
-  local vim_height = height
-
-  local widthc = math.floor(vim_width / 2 + 8)
-  local heightc = math.floor(vim_height / 2 - 5)
-
   return M.dropdown(vim.tbl_deep_extend("force", {
-    winopts_fn = {
-      width = widthc,
-      height = heightc,
-    },
     winopts = {
+      width = math.floor(vim.o.columns / 2 + 8),
+      height = math.floor(height / 2 - 5),
       row = 2,
       relative = "cursor",
-      height = 0.33,
-      width = widthc / (widthc + vim_width - 10),
     },
   }, opts))
 end
@@ -75,23 +65,13 @@ end
 function M.cursor_random(opts)
   local height = vim.o.lines - vim.o.cmdheight
   if vim.o.laststatus ~= 0 then
-    height = height - 1
+    height = math.floor(math.min(99, height / 3))
   end
 
-  local vim_width = vim.o.columns
-  local vim_height = height
-
-  local widthc = math.floor(vim_width / 2 + 8)
-  local heightc = math.floor(vim_height / 2 - 5)
-
   return M.dropdown(vim.tbl_deep_extend("force", {
-    winopts_fn = {
-      width = widthc,
-      height = heightc,
-    },
     winopts = {
-      height = 0.33,
-      width = widthc / (widthc + vim_width - 10),
+      width = math.floor(math.min(60, vim.o.columns / 2)),
+      height = height,
     },
   }, opts))
 end
@@ -106,7 +86,7 @@ function M.send_cmds(opts, opts_cmds)
     cmds,
     M.cursor_random(vim.tbl_deep_extend("force", {
       prompt = "  ",
-      -- winopts = { title = opts_cmds.title },
+      winopts = { title = opts_cmds.title and opts_cmds.title or "" },
       actions = {
         ["default"] = function(selected, _)
           local sel = selected[1]
@@ -239,12 +219,6 @@ function M.cmd_filter_kind_lsp(opts)
     actions = { opts.actions, "table" },
   }
 
-  local win_height = math.ceil(RUtils.cmd.get_option "lines" - 150)
-  local win_width = math.ceil(RUtils.cmd.get_option "columns" - 100)
-
-  local col = math.ceil((win_width / 2) * 1 + 20)
-  local row = math.ceil(((RUtils.cmd.get_option "lines" - win_height) / 100) + 15)
-
   local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
   local selected_lsp = M.select_lsp()
 
@@ -252,17 +226,13 @@ function M.cmd_filter_kind_lsp(opts)
     prompt = "   ",
     no_esc = true,
     fzf_opts = { ["--layout"] = "reverse" },
-    winopts_fn = {
-      width = win_height,
-      height = win_width,
-    },
     winopts = {
       title = M.format_title(string.format("%s Cmd Filter LSP", opts.title), "󰈙"),
-      -- relative = "cursor",
-      row = row,
-      col = col,
+      relative = "cursor",
+      row = 1,
+      col = 0,
       height = 20,
-      width = 50,
+      width = math.floor(math.min(40, vim.o.columns / 2)),
     },
     actions = opts.actions,
   })

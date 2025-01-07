@@ -11,10 +11,7 @@ local function opts_fzf(title, maps)
   }
   return {
     prompt = "   ",
-    winopts = {
-      title = RUtils.fzflua.format_title(title, "󰈙"),
-    },
-    winopts_fn = function()
+    winopts = function()
       local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
       local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
 
@@ -26,6 +23,7 @@ local function opts_fzf(title, maps)
       local col = math.ceil((columns - lines) - 10)
       local row = math.ceil(lines - win_height)
       return {
+        title = RUtils.fzflua.format_title(title, "󰈙"),
         width = win_width,
         height = win_height - 10,
         row = row,
