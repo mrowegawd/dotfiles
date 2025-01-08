@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+git.yazi
+
 helix/.config/helix/runtime
 
 .session.vim

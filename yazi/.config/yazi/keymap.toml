@@ -17,6 +17,9 @@ prepend_keymap = [
     "<c-s>",
   ], run = "plugin smart-enter --args=split", desc = "Open split the selected item" },
   { on = [
+    "<c-t>",
+  ], run = "plugin smart-enter --args=tab", desc = "Open tab the selected item" },
+  { on = [
     "<c-o>",
   ], run = "plugin fzmark", desc = "Open fzmark" },
   { on = [

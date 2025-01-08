@@ -51,16 +51,16 @@ local home = os.getenv("HOME")
 
 local save_alternate = function()
 	local cwd = tostring(state())
-	local path_alternate = home .. "/.cache/yazi"
 	local alternate_forward = home .. alt_forward
 	local alternate_backward = home .. alt_backward
-
-	local echocwd = Command("ls"):arg(path_alternate):stdout(Command.PIPED):spawn()
 
 	local shell_value = os.getenv("SHELL"):match(".*/(.*)")
 
 	local fzf_args =
 		"fzf-tmux --preview 'bat $HOME/.cache/yazi/{}' --preview-window down:20%:nohidden -xC -w 60% -h 50%  --prompt='Save alternate> ' "
+
+	local path_alternate = home .. "/.cache/yazi"
+	local echocwd = Command("ls"):arg(path_alternate):stdout(Command.PIPED):spawn()
 
 	local child, err = Command(shell_value)
 		:args({
@@ -81,7 +81,7 @@ local save_alternate = function()
 		return fail("No output! %s", errc)
 	end
 	if not output.status.success and output.status.code ~= 130 then
-		return fail("`something went wrong %s", output.status.code)
+		return fail("something went wrong %s", output.status.code)
 	end
 
 	local target = output.stdout:gsub("\n$", "")

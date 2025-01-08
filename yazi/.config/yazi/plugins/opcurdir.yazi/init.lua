@@ -33,7 +33,7 @@ return {
 		if not output then
 			return fail("No output! %s", err)
 		elseif not output.status.success and output.status.code ~= 130 then
-			return fail("`something went wrong %s", output.status.code)
+			return fail("something went wrong %s", output.status.code)
 		end
 
 		local pane_current_cmd = tostring(output.stdout:gsub("'", ""))

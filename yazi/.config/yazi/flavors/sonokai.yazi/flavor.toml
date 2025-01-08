@@ -39,8 +39,8 @@ border_style = { fg = "#484349" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#38353b", bg = "#fc5d7c", bold = true }
-normal_alt = { fg = "#fc5d7c", bg = "#38353b" }
+normal_main = { fg = "#343238", bg = "#fc5d7c", bold = true }
+normal_alt = { fg = "#fc5d7c", bg = "#343238" }
 
 select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
@@ -104,7 +104,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#2a272b" }
+mask = { bg = "#242124" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }

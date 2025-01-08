@@ -62,6 +62,123 @@ local get_hovered_item_path = ya.sync(function(_)
 	end
 end)
 
+local function is_in_tmux()
+	if os.getenv("TMUX") then
+		return true
+	end
+	return false
+end
+
+local function open_with_tmux(action, fpath)
+	os.execute([[tmux select-pane -R]])
+
+	local child, err = Command("tmux")
+		:args({
+			"display-message",
+			"-p",
+			"'#{pane_current_command}'",
+		})
+		:stdin(Command.INHERIT)
+		:stdout(Command.PIPED)
+		:stderr(Command.INHERIT)
+		:spawn()
+
+	if not child then
+		return fail("check pane_current_command went wrong", err)
+	end
+
+	local output, _ = child:wait_with_output()
+	if not output then
+		return fail("No output! %s", err)
+	elseif not output.status.success and output.status.code ~= 130 then
+		return fail("something went wrong %s", output.status.code)
+	end
+
+	local pane_current_cmd = tostring(output.stdout:gsub("'", ""))
+	pane_current_cmd = pane_current_cmd:gsub("\n$", "")
+
+	if pane_current_cmd ~= "nvim" then
+		fail(pane_current_cmd)
+		local commandquit = [[tmux send-keys "nvim ]] .. fpath .. [[" Enter]]
+		os.execute(commandquit)
+	else
+		local open_mode = ":e "
+		if action == "vsplit" then
+			open_mode = ":vsplit "
+		elseif action == "split" then
+			open_mode = ":sp "
+		end
+		local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
+		os.execute(command)
+	end
+end
+
+local function open_with_wezterm(action, fpath)
+	local child, err = Command("wezterm")
+		:args({
+			"cli",
+			"get-pane-direction",
+			"right",
+		})
+		:stdin(Command.INHERIT)
+		:stdout(Command.PIPED)
+		:stderr(Command.INHERIT)
+		:output()
+
+	if not child then
+		return fail("check pane_current_command went wrong", err)
+	end
+
+	local current_pane_id = child.stdout:gsub("\n$", "")
+
+	-- original command: wezterm cli list | awk -v pane_id=79 '$3==pane_id { print $6 }'
+	local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
+
+	child, err = Command("awk")
+		:args({
+			"-v",
+			"pane_id=" .. current_pane_id,
+			"$3==pane_id { print $6 }",
+		})
+		:stdin(wezterm_list:take_stdout())
+		:stdout(Command.PIPED)
+		:stderr(Command.INHERIT)
+		:output()
+
+	local current_program_name = child.stdout:gsub("\n$", "")
+
+	if current_program_name ~= "nvim" then
+		fail("not implemented yet")
+		--  --  "$pane_id" --no-paste $'\r'
+		--  local commandquit = [[tmux send-keys "nvim ]] .. fpath .. [[" Enter]]
+		--  os.execute(commandquit)
+	else
+		local open_mode = ":e "
+		if action == "vsplit" then
+			open_mode = ":vsplit "
+		elseif action == "split" then
+			open_mode = ":sp "
+		elseif action == "tab" then
+			open_mode = ":tabe "
+		end
+
+		local command = [[echo "]]
+			.. open_mode
+			.. " "
+			.. fpath
+			.. [[\r" | wezterm cli send-text --pane-id ]]
+			.. tostring(current_pane_id)
+			.. [[ --no-paste]]
+
+		local move_cursor_to_target_pane = [[wezterm cli activate-pane-direction --pane-id ]]
+			.. current_pane_id
+			.. [[ right]]
+
+		os.execute(command)
+		os.execute(move_cursor_to_target_pane)
+	end
+end
+
 return {
 	entry = function(_, job)
 		local action = job.args[1]
@@ -91,45 +208,10 @@ return {
 			end
 
 			if fpath_ext == "none" then
-				os.execute([[tmux select-pane -R]])
-
-				local child, err = Command("tmux")
-					:args({
-						"display-message",
-						"-p",
-						"'#{pane_current_command}'",
-					})
-					:stdin(Command.INHERIT)
-					:stdout(Command.PIPED)
-					:stderr(Command.INHERIT)
-					:spawn()
-
-				if not child then
-					return fail("check pane_current_command went wrong", err)
-				end
-
-				local output, _ = child:wait_with_output()
-				if not output then
-					return fail("No output! %s", err)
-				elseif not output.status.success and output.status.code ~= 130 then
-					return fail("`something went wrong %s", output.status.code)
-				end
-
-				local pane_current_cmd = tostring(output.stdout:gsub("'", ""))
-				pane_current_cmd = pane_current_cmd:gsub("\n$", "")
-
-				if pane_current_cmd ~= "nvim" then
-					local commandquit = [[tmux send-keys "nvim ]] .. fpath .. [[" Enter]]
-					os.execute(commandquit)
+				if is_in_tmux() then
+					open_with_tmux(action, fpath)
 				else
-					local open_mode = ":e "
-					if action == "vsplit" then
-						open_mode = ":vsplit "
-					elseif action == "split" then
-						open_mode = ":sp "
-					end
-					local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
-					os.execute(command)
+					open_with_wezterm(action, fpath)
 				end
 			end
 		end
