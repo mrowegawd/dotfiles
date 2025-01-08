@@ -1,4 +1,5 @@
 local M = {}
+
 function M.cmd_call(params)
 	local handle = io.popen(params)
 	if handle == nil then

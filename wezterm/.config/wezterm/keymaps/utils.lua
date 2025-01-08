@@ -21,6 +21,7 @@ function M.split_nav(resize_or_move, mods, key, dir)
 				if resize_or_move == "resize" then
 					win:perform_action({ AdjustPaneSize = { dir, 5 } }, pane)
 				else
+					win:toast_notification("wezterm", pane:get_foreground_process_name(), nil, 4000)
 					local panes = pane:tab():panes_with_info()
 					local is_zoomed = false
 					for _, p in ipairs(panes) do
@@ -76,12 +77,14 @@ end
 -- 	return clean_text
 -- end
 
-function M.spawn_toggle_pane(window, pane)
+function M.spawn_toggle_pane(window, pane, direction)
+	direction = direction or "Right"
+
 	window:perform_action(
 		act.SplitPane({
-			direction = "Right", -- Down
+			direction = direction, -- Down
 			-- command = { args = { "top" } },
-			size = { Percent = 25 },
+			size = { Percent = 45 },
 		}),
 		pane
 	)
@@ -117,7 +120,7 @@ function M.spawn_file_manager(window, pane, percent_size)
 					os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
 					-- "lfrun",
 					"-c",
-					"nnn",
+					"yazi",
 				},
 			},
 			size = { Percent = 15 },

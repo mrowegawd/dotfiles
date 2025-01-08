@@ -3,8 +3,8 @@ local Color = require("colors")
 local Hyperlinks = require("hyperlinks")
 
 local Key = require("keymaps.keys")
-local KeyTbl = require("keymaps.keys-table")
-local KeyMouse = require("keymaps.mouse")
+-- local KeyTbl = require("keymaps.keys-table")
+-- local KeyMouse = require("keymaps.mouse")
 
 local wezterm = require("wezterm")
 
@@ -21,40 +21,8 @@ require("statusline")
 -- https://github.com/wez/wezterm/discussions/628
 
 local function font_with_fallback(name, params)
-	-- local names = { name, "FiraCode Nerd Font" }
-
-	return wezterm.font_with_fallback({ name }, params)
+	return wezterm.font_with_fallback({ name, "FiraCode Nerd Font" }, params)
 end
-
--- local color_schemes = {
--- 	["Pangkalpinang"] = {
--- 		background = Color.bg,
--- 		foreground = Color.fg,
--- 		cursor_bg = Color.magenta,
--- 		cursor_border = Color.blue,
--- 		split = Color.separator_fg,
--- 		ansi = {
--- 			Color.black,
--- 			Color.red,
--- 			Color.green,
--- 			Color.yellow,
--- 			Color.blue,
--- 			Color.cyan,
--- 			Color.magenta,
--- 			Color.white,
--- 		},
--- 		brights = {
--- 			Color.black_alt,
--- 			Color.red_alt,
--- 			Color.green_alt,
--- 			Color.yellow_alt,
--- 			Color.blue_alt,
--- 			Color.cyan_alt,
--- 			Color.magenta_alt,
--- 			Color.white_alt,
--- 		},
--- 	},
--- }
 
 local config = wezterm.config_builder()
 
@@ -175,12 +143,32 @@ config.window_frame = {
 -- ├┤ COLORS ├──────────────────────────────────────────────────────────┤
 -- config.background = {
 -- 	Background.get_wallpaper(),
--- },
--- config.color_schemes = color_schemes
--- config.color_scheme = "Pangkalpinang"
+-- }
 config.colors = {
-	tab_bar = {
-		background = Color.bg,
+	background = Color.bg,
+	foreground = Color.fg,
+	-- cursor_bg = Color.magenta,
+	cursor_border = Color.blue,
+	split = Color.separator_fg,
+	ansi = {
+		Color.black,
+		Color.red,
+		Color.green,
+		Color.yellow,
+		Color.blue,
+		Color.cyan,
+		Color.magenta,
+		Color.white,
+	},
+	brights = {
+		Color.black_alt,
+		Color.red_alt,
+		Color.green_alt,
+		Color.yellow_alt,
+		Color.blue_alt,
+		Color.cyan_alt,
+		Color.magenta_alt,
+		Color.white_alt,
 	},
 }
 
@@ -194,7 +182,7 @@ config.hyperlink_rules = Hyperlinks
 -- Download font: https://monaspace.githubnext.com/
 config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
-config.font = font_with_fallback("Maple Mono", { weight = "Regular" })
+config.font = font_with_fallback("SF Mono", { weight = "Regular" })
 -- config.font_rules = {
 -- 	{
 -- 		-- Normal
@@ -220,10 +208,9 @@ config.font = font_with_fallback("Maple Mono", { weight = "Regular" })
 
 -- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
 config.disable_default_key_bindings = true
--- front_end = "OpenGL",
--- config.leader = { key = "`", mods = "CTRL" }
+-- config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
 config.keys = Key
-config.mouse_bindings = KeyMouse
-config.key_tables = KeyTbl
+-- config.mouse_bindings = KeyMouse
+-- config.key_tables = KeyTbl
 
 return config
