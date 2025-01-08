@@ -21,7 +21,7 @@ function M.split_nav(resize_or_move, mods, key, dir)
 				if resize_or_move == "resize" then
 					win:perform_action({ AdjustPaneSize = { dir, 5 } }, pane)
 				else
-					win:toast_notification("wezterm", pane:get_foreground_process_name(), nil, 4000)
+					-- win:toast_notification("wezterm", pane:get_foreground_process_name(), nil, 4000)
 					local panes = pane:tab():panes_with_info()
 					local is_zoomed = false
 					for _, p in ipairs(panes) do
@@ -97,21 +97,6 @@ end
 function M.spawn_file_manager(window, pane, percent_size)
 	percent_size = percent_size or 15
 
-	-- window:perform_action(
-	-- 	act.SplitPane({
-	-- 		direction = "Left",
-	-- 		command = {
-	-- 			args = {
-	-- 				os.getenv("SHELL"), -- tanpa add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
-	-- 				"-c",
-	-- 				"nnn",
-	-- 			},
-	-- 		},
-	-- 		size = { Percent = 15 },
-	-- 	}),
-	-- 	pane
-	-- )
-
 	window:perform_action(
 		act.SplitPane({
 			direction = "Left",
@@ -134,20 +119,28 @@ function M.spawn_file_manager(window, pane, percent_size)
 	-- })
 end
 
+function M.get_back_to_filemanager(pane)
+	local pane_id = pane:tab():get_pane_direction("Left")
+	if pane_id == nil then
+		return false
+	end
+	return true
+end
+
 function M.is_in_nvim(pane)
-	return string.match(pane:get_foreground_process_name(), "nvim")
+	return Util.get_foreground_process_name(pane, "nvim")
 end
 
 function M.is_in_nnn(pane)
-	return string.match(pane:get_foreground_process_name(), "nnn")
+	return Util.get_foreground_process_name(pane, "nnn")
 end
 
 function M.is_in_lf(pane)
-	return string.match(pane:get_foreground_process_name(), "dash")
+	return Util.get_foreground_process_name(pane, "dash")
 end
 
 function M.is_in_yazi(pane)
-	return string.match(pane:get_foreground_process_name(), "yazi")
+	return Util.get_foreground_process_name(pane, "yazi")
 end
 
 return M

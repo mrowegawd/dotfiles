@@ -129,15 +129,21 @@ if not wezterm.target_triple:find("windows") then
 	-- 	config.set_environment_variables = {}
 end
 
+-- Dim window
 config.inactive_pane_hsb = {
 	saturation = 1,
-	brightness = 1,
+	brightness = 0.7,
 }
 
 -- ├┤ FRAME ├───────────────────────────────────────────────────────────┤
 config.window_frame = {
+	-- active_titlebar_bg = Color.bg,
+	-- font_size = 12.0,
+	-- inactive_titlebar_bg = Color.bg,
 	active_titlebar_bg = Color.bg,
+	active_titlebar_fg = Color.bg,
 	inactive_titlebar_bg = Color.bg,
+	inactive_titlebar_fg = Color.bg,
 }
 
 -- ├┤ COLORS ├──────────────────────────────────────────────────────────┤
@@ -147,7 +153,7 @@ config.window_frame = {
 config.colors = {
 	background = Color.bg,
 	foreground = Color.fg,
-	-- cursor_bg = Color.magenta,
+	cursor_bg = Color.red,
 	cursor_border = Color.blue,
 	split = Color.separator_fg,
 	ansi = {
@@ -169,6 +175,9 @@ config.colors = {
 		Color.cyan_alt,
 		Color.magenta_alt,
 		Color.white_alt,
+	},
+	tab_bar = {
+		background = Color.bg,
 	},
 }
 

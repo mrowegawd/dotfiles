@@ -172,6 +172,17 @@ return {
 			end
 		end),
 	},
+	{ -- select list tabs
+		mods = mod_key,
+		key = "t",
+		action = wezterm.action_callback(function(window, pane)
+			if Util.is_tmux(pane) or KeymapUtil.is_in_yazi(pane) then
+				window:perform_action({ SendKey = { key = "t", mods = mod_key } }, pane)
+			else
+				window:perform_action(act.ShowTabNavigator, pane)
+			end
+		end),
+	},
 
 	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ REMOVE                                                  │
@@ -273,39 +284,28 @@ return {
 		key = "e",
 		action = wezterm.action_callback(function(window, pane)
 			-- window:toast_notification("wezterm", nil, 4000)
-
 			if Util.is_tmux(pane) then
 				window:perform_action({ SendKey = { key = "e", mods = mod_key } }, pane)
 			else
-				local panes = pane:tab():panes_with_info()
-
-				if #panes == 1 then
-					KeymapUtil.spawn_file_manager(window, pane)
-				else
-					if KeymapUtil.is_in_nnn(pane) then
-						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-						return
-					end
-
-					if KeymapUtil.is_in_lf(pane) then
-						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
-						return
-					end
-
-					if KeymapUtil.is_in_nvim(pane) then
-						window:perform_action({ ActivatePaneDirection = "Left" }, pane)
-						KeymapUtil.spawn_file_manager(window, pane)
-						return
-					end
-
-					if KeymapUtil.is_in_yazi(pane) then
-						window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-						KeymapUtil.spawn_file_manager(window, pane)
-						return
-					end
+				if KeymapUtil.is_in_nnn(pane) or KeymapUtil.is_in_lf(pane) or KeymapUtil.is_in_yazi(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
 				end
+
+				-- if KeymapUtil.is_in_nvim(pane) then
+				-- 	if KeymapUtil.get_back_to_filemanager(pane) then
+				-- 		if KeymapUtil.is_in_yazi(pane) then
+				-- 			window:toast_notification("wezterm", "fasdf", nil, 4000)
+				-- 			-- window:perform_action({ ActivatePaneDirection = "Right" }, pane)
+				-- 			-- KeymapUtil.spawn_file_manager(window, pane)
+				-- 			return
+				-- 		else
+				-- 			window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+				-- 		end
+				-- 		return
+				-- 	end
+				-- end
+
+				KeymapUtil.spawn_file_manager(window, pane)
 			end
 		end),
 	},

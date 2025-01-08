@@ -1,4 +1,10 @@
+local wezterm = require("wezterm")
+
 local M = {}
+
+function M.get_foreground_process_name(pane, name)
+	return string.match(pane:get_foreground_process_name(), name)
+end
 
 function M.cmd_call(params)
 	local handle = io.popen(params)
@@ -23,14 +29,24 @@ function M.get_random_entry(tbl)
 	return tbl[randomKey]
 end
 
-function M.is_nvim(pane)
-	return pane:get_user_vars().IS_NVIM == "true" or pane:get_foreground_process_name():find("n?vim")
+function M.is_file_exists(name)
+	local f = io.open(name, "r")
+	if f ~= nil then
+		io.close(f)
+		return true
+	else
+		return false
+	end
 end
-
--- TAKEN FROM: https://wezfurlong.org/wezterm/recipes/passing-data.html#user-vars
--- check file: aliases.basrc
-
+function M.is_nvim(pane)
+	return pane:get_user_vars().IS_NVIM == "true" or M.get_foreground_process_name(pane, "nvim")
+end
+function M.is_os_windows()
+	return string.find(wezterm.target_triple, "windows")
+end
 function M.is_tmux(pane)
+	-- TAKEN FROM: https://wezfurlong.org/wezterm/recipes/passing-data.html#user-vars
+	-- following file: aliases.basrc
 	local isTmux = pane:get_user_vars().PROG
 
 	if isTmux and isTmux == "tmux" or isTmux == "tm" then
@@ -87,11 +103,5 @@ function M.tint(color, percent)
 	end
 	return string.format("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
-
--- M.home = (os.getenv("USERPROFILE") or os.getenv("HOME") or wez.home_dir or ""):gsub("\\", "/")
-
--- function M.is_windows()
--- 	return false
--- end
 
 return M

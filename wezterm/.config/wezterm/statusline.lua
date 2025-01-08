@@ -3,11 +3,10 @@ local Color = require("colors")
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("update-right-status", function(window, pane)
-	local edge_background = Color.cyan
-	local edge_bg = Color.bg
+	local statusline_fg = Color.statusline_fg
 
-	local clock_bg = Color.red
-	local clock_fg = Color.black
+	local clock_fg = Color.red
+	local bg = Color.bg
 
 	-- local date = wezterm.strftime("%Y-%m-%d %H:%M")
 	local date = wezterm.strftime("%H:%M")
@@ -16,12 +15,11 @@ wezterm.on("update-right-status", function(window, pane)
 	window:set_right_status(wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
 		{ Foreground = { Color = clock_fg } },
-		{ Background = { Color = clock_bg } },
+		{ Background = { Color = bg } },
 		{ Text = "  " .. date .. " " },
-		{ Foreground = { Color = edge_background } },
-		{ Background = { Color = edge_bg } },
+		{ Foreground = { Color = statusline_fg } },
 		{ Text = " Alt " },
-		{ Text = "👨" .. username .. " " },
+		{ Text = " 👨 " .. username .. " " },
 	}))
 end)
 
@@ -66,16 +64,16 @@ local SUB_IDX = { "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉",
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-	local edge_background = Color.separator_second_fg
+	local edge_background = Color.bg
 	local background = Color.bg
-	local foreground = Color.cyan
+	local foreground = Color.separator_fg
 	local dim_foreground = Color.red_alt
 
 	if tab.is_active then
-		background = Color.mode
-		foreground = Color.bg
+		background = Color.active_bg
+		foreground = Color.active_fg
 	elseif hover then
-		background = Color.magenta
+		background = Color.active_fg
 		foreground = Color.bg
 	end
 

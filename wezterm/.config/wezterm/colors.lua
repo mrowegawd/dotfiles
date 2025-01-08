@@ -1,9 +1,20 @@
 local Util = require("utils")
-local wezterm = require("wezterm")
 
--- if not string.find(wezterm.target_triple, "darwins") then --> mac
+local active_fg = "#e82424"
+local active_bg = "#e82424"
+local separator_fg = "#e82424"
+local statusline_fg = "#e82424"
 
-if not string.find(wezterm.target_triple, "windows") then
+if not Util.is_os_windows() then
+	local MASTER_THEME_FILE = "/tmp/master-colors-themes"
+
+	if Util.is_file_exists(MASTER_THEME_FILE) then
+		active_fg = Util.cmd_call("grep -i color17 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+		active_bg = Util.cmd_call("grep -i color16 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+		separator_fg = Util.cmd_call("grep -i color18 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+		statusline_fg = Util.cmd_call("grep -i color21 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+	end
+
 	return {
 		fg = Util.cmd_call("xrdb -query | grep -i foreground | cut -d':' -f2 | xargs"),
 		bg = Util.cmd_call("xrdb -query | grep -i background | cut -d':' -f2 | xargs"),
@@ -25,8 +36,14 @@ if not string.find(wezterm.target_triple, "windows") then
 		white = Util.cmd_call("xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs"),
 		white_alt = Util.cmd_call("xrdb -query | grep -i .color15 | cut -d':' -f2 | head -1 | xargs"),
 
-		mode = Util.cmd_call("xrdb -query | grep -i .color14 | cut -d':' -f2 | head -1 | xargs"),
-		separator_fg = Util.cmd_call("xrdb -query | grep -i .color12 | cut -d':' -f2 | head -1 | xargs"),
+		active_fg = active_fg,
+		active_bg = active_bg,
+
+		statusline_bg_message = "#e5c463",
+		statusline_fg = statusline_fg,
+
+		selection_tab = active_bg,
+		separator_fg = separator_fg,
 		separator_second_fg = Util.cmd_call("xrdb -query | grep -i .color13 | cut -d':' -f2 | head -1 | xargs"),
 	}
 else
@@ -51,8 +68,14 @@ else
 		white = "#c8c093",
 		white_alt = "#dcd7ba",
 
-		mode = "#dcd7ba",
-		separator_fg = "#dcd7ba",
-		separator_second_fg = "#dcd7ba",
+		active_fg = active_fg,
+		active_bg = active_bg,
+
+		statusline_bg_message = "#e5c463",
+		statusline_fg = statusline_fg,
+
+		selection_tab = active_bg,
+		separator_fg = separator_fg,
+		separator_second_fg = Util.cmd_call("xrdb -query | grep -i .color13 | cut -d':' -f2 | head -1 | xargs"),
 	}
 end
