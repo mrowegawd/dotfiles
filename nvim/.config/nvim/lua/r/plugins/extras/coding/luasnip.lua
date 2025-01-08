@@ -78,13 +78,12 @@ return {
       end
     end,
   },
-  -- Luasnip cmp integration
+
+  -- nvim-cmp integration
   {
     "iguanacucumber/nvim-cmp",
     optional = true,
-    dependencies = {
-      "saadparwaiz1/cmp_luasnip",
-    },
+    dependencies = { "saadparwaiz1/cmp_luasnip" },
     opts = function(_, opts)
       local function get_cmp()
         local ok_cmp, cmp = pcall(require, "cmp")
@@ -133,7 +132,7 @@ return {
           "i",
           "s",
         }),
-        ["<C-j>"] = cmp.mapping(function()
+        ["<C-n>"] = cmp.mapping(function()
           local cmps = get_cmp()
           local types = require "cmp.types"
 
@@ -149,7 +148,7 @@ return {
             cmps.complete {}
           end
         end, { "i" }),
-        ["<C-k>"] = cmp.mapping(function()
+        ["<C-p>"] = cmp.mapping(function()
           local cmps = get_cmp()
           if cmps.visible() then
             cmps.select_prev_item { behavior = "Select" }
@@ -161,7 +160,7 @@ return {
             winopts = { preview = { hidden = "nohidden" } },
           }
         end, { "i" }),
-        ["<c-p>"] = cmp.mapping {
+        ["<Tab>"] = cmp.mapping {
           i = function()
             if require("luasnip").expand_or_jumpable() then
               require("luasnip").jump(1)
@@ -173,41 +172,22 @@ return {
             end
           end,
         },
-        ["<c-n>"] = cmp.mapping(function()
+        ["<S-Tab>"] = cmp.mapping(function()
           if require("luasnip").jumpable(-1) then
             require("luasnip").jump(-1)
           end
         end, { "i", "s" }),
       })
-      table.insert(opts.sources, {
-        name = "luasnip",
-        priority = 50,
-        group_index = 1,
-        option = { show_autosnippets = true, use_show_condition = false },
-      })
+      table.insert(opts.sources, { name = "luasnip" })
     end,
   },
-  -- Luasnip blink.cmp integration
+  -- blink.cmp integration
   {
     "saghen/blink.cmp",
     optional = true,
     opts = {
-      sources = {
-        default = { "luasnip" },
-      },
       snippets = {
-        expand = function(snippet)
-          require("luasnip").lsp_expand(snippet)
-        end,
-        active = function(filter)
-          if filter and filter.direction then
-            return require("luasnip").jumpable(filter.direction)
-          end
-          return require("luasnip").in_snippet()
-        end,
-        jump = function(direction)
-          require("luasnip").jump(direction)
-        end,
+        preset = "luasnip",
       },
     },
   },
