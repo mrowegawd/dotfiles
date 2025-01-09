@@ -11,7 +11,7 @@ local statusline_fg = Highlight.get("StatusLine", "fg")
 local statuslinenc_bg = Highlight.get("StatusLineNC", "bg")
 local statuslinenc_fg = Highlight.get("StatusLineNC", "fg")
 
-local pmenusel_fg = Highlight.get("PmenuSel", "bg")
+local terminal_fg = Highlight.tint(Highlight.get("Keyword", "fg"), 0.5)
 
 local branch_fg = Highlight.tint(normal_fg, 4)
 
@@ -47,7 +47,7 @@ local M = {
   statuslinenc_fg = statuslinenc_fg,
 
   branch_fg = branch_fg,
-  terminal_fg = pmenusel_fg,
+  terminal_fg = terminal_fg,
   keyword = keyword,
 
   filename_fg = Highlight.tint(statusline_bg, 6),

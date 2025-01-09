@@ -151,7 +151,16 @@ reset_base_alter({ "kanagawa" }, {
   quickfixline_alter = 0.5,
 })
 
-reset_base_alter({ "selenized", "nightfox", "tokyonight-storm", "vscode_modern", "horizon", "sonokai" }, {
+reset_base_alter({ "sonokai" }, {
+  cursorline_alter = 0.08,
+  pmenu_alter = -0.2,
+  pmenusel_alter = -0.1,
+  pmenuthumb_alter = 0.4,
+  fzfluasel_alter = -0.1,
+  quickfixline_alter = 0.5,
+})
+
+reset_base_alter({ "selenized", "nightfox", "tokyonight-storm", "vscode_modern", "horizon" }, {
   cursorline_alter = 0.1,
   pmenu_alter = -0.05,
   pmenusel_alter = 0.2,
@@ -2190,8 +2199,8 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.2 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.05 },
+          bg = { from = "StatusLine", attr = "bg", alter = 0.3 },
         },
       },
       {

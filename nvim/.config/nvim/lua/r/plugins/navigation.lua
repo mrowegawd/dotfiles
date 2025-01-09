@@ -369,7 +369,7 @@ return {
       Highlight.plugin("NeoTreeHi", {
         theme = {
           ["*"] = {
-            { Directory = { link = "Keyword" } },
+            { Directory = { link = "Directory" } },
             { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
             { NeoTreeNormal = { link = "PanelBackground" } },
             { NeoTreeNormalNC = { link = "PanelBackground" } },
@@ -867,7 +867,7 @@ return {
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {
-                fg = { from = "Directory", attr = "fg" },
+                fg = { from = "Directory", attr = "fg", alter = 0.85 },
                 bold = true,
                 bg = { from = "EdgyWinBar" },
               },

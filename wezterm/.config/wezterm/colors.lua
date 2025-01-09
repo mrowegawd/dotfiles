@@ -1,9 +1,9 @@
 local Util = require("utils")
 
-local active_fg = "#e82424"
-local active_bg = "#e82424"
-local separator_fg = "#e82424"
-local statusline_fg = "#e82424"
+local active_fg = "#df5476"
+local active_bg = "#7c2f42"
+local separator_fg = "#484349"
+local statusline_fg = "#645d66"
 
 if not Util.is_os_windows() then
 	local MASTER_THEME_FILE = "/tmp/master-colors-themes"
@@ -44,7 +44,6 @@ if not Util.is_os_windows() then
 
 		selection_tab = active_bg,
 		separator_fg = separator_fg,
-		separator_second_fg = Util.cmd_call("xrdb -query | grep -i .color13 | cut -d':' -f2 | head -1 | xargs"),
 	}
 else
 	return {
@@ -76,6 +75,5 @@ else
 
 		selection_tab = active_bg,
 		separator_fg = separator_fg,
-		separator_second_fg = Util.cmd_call("xrdb -query | grep -i .color13 | cut -d':' -f2 | head -1 | xargs"),
 	}
 end
