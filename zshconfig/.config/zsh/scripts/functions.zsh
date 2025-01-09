@@ -148,6 +148,8 @@ build-install(){
     echo "Installing: yazi - file manager"
     cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
     asdf reshim rust
+    # yazi git integration
+    # ya pack -a yazi-rs/plugins:git
   fi
 
   if ! asdf which rust-analyzer >/dev/null; then
