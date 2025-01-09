@@ -69,7 +69,7 @@ super + R
 super + {shift+h,shift+l}
 	      bspc desktop -f {prev,next}.local
 
-super + {shift+k,shift+j}
+super + {shift+p,shift+n}
 	      bspc desktop -f {prev,next}.local
 
 # workspace: select workspace by number 1-9
@@ -121,7 +121,7 @@ super + shift + minus
         amixer -q sset Master 3%-
 
 # media: toggle mute audio
-super + shift + m
+super + m
         amixer -q sset Master toggle
 
 # media: play next
@@ -156,8 +156,8 @@ super + End
 super + shift + t
         zsh -c "$HOME/.config/rofi/menu/_tools"
 
-# misc: open ncmpcpp
-super + shift + n
+# misc: open ncmpcpp (music)
+super + shift + m
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat ncmpcpp
 
 # misc: open note inbox (capture notes)
@@ -165,7 +165,7 @@ super + shift + e
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
 
 # misc: open bookrmark and pass
-super + shift + p
+super + shift + b
         $HOME/.config/miscxrdb/bpswm/scripts/bookrmark-pass
 
 # misc: reload/restart sxhkd config
