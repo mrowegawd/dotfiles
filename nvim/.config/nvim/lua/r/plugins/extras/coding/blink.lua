@@ -45,11 +45,14 @@ return {
         nerd_font_variant = "mono",
       },
       completion = {
-        list = {
-          selection = function(ctx)
-            return ctx.mode == "cmdline" and "auto_insert" or "preselect"
-          end,
-        },
+        -- list = {
+        --   selection = {
+        --     preselect = function(ctx)
+        --       return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+        --     end,
+        --     auto_insert = true,
+        --   },
+        -- },
         accept = {
           -- experimental auto-brackets support
           auto_brackets = {
@@ -61,6 +64,7 @@ return {
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
+            -- columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
           },
         },
         documentation = {
@@ -81,8 +85,10 @@ return {
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
         -- NOTE: sementara di set 'none' dahulu
-        -- karena conflict dengan keybindings untuk `commandline` di general.lua
-        -- jika mau difix dan berhasil, hapus `cmdline = {}` ini
+        -- karena terdapat masalah,
+        -- jika mau difix dan berhasil, hapus `cmdline = {}` ini:
+        -- 1. conflict keybindings untuk `commandline` di general.lua
+        -- 2. after cmdline, buffer completion sepertinya ga jalan lagi?
         cmdline = {},
       },
       keymap = {
@@ -92,15 +98,15 @@ return {
 
         ["<cr>"] = { "fallback" },
 
-        ["<C-k>"] = { "select_prev", "fallback" },
-        ["<C-j>"] = { "show", "select_next", "fallback" },
+        ["<C-n>"] = { "show", "select_next", "fallback" },
+        ["<C-p>"] = { "select_prev", "fallback" },
 
         -- ["<C-t>"] = { "show_documentation", "hide_documentation", "fallback" },
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },
         ["<C-d>"] = { "scroll_documentation_down", "fallback" },
 
-        ["<C-p>"] = { "snippet_forward", "fallback" }, -- snippets
-        ["<C-n>"] = { "snippet_backward", "fallback" },
+        -- ["<C-p>"] = { "snippet_forward", "fallback" }, -- snippets
+        -- ["<C-n>"] = { "snippet_backward", "fallback" },
       },
     },
 
@@ -120,20 +126,26 @@ return {
 
       local disabled_filetypes = opts.disable_ft or {}
       opts.enabled = function()
+        -- NOTE: ketika menggunakan `hawtkeys` terjadi error pada completion
+        -- codemium, cara dibawah ini untuk mengatasi masalah tersebut
+        if vim.bo.buftype == "nofile" and vim.bo.filetype == "" then
+          return false
+        end
+
         -- will use to disable completions on certain filetypes
-        return not vim.tbl_contains(disabled_filetypes, vim.bo.filetype) and vim.b.completion ~= false
+        return not vim.tbl_contains(disabled_filetypes, vim.bo.filetype)
       end
 
       -- add ai_accept to <Tab> key
       if not opts.keymap["<Tab>"] then
         if opts.keymap.preset == "super-tab" then -- super-tab
-          opts.keymap["<c-n>"] = {
+          opts.keymap["<Tab>"] = {
             require("blink.cmp.keymap.presets")["super-tab"]["<Tab>"][1],
             RUtils.cmp.map { "snippet_forward", "ai_accept" },
             "fallback",
           }
         else -- other presets
-          opts.keymap["<C-n>"] = {
+          opts.keymap["<Tab>"] = {
             RUtils.cmp.map { "snippet_forward", "ai_accept" },
             "fallback",
           }

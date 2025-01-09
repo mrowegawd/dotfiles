@@ -324,22 +324,6 @@ return {
 
       return {
         -- debug = true,
-        lsp = {
-          documentation = {
-            opts = {
-              border = { style = "rounded" },
-              position = { row = 2 },
-            },
-          },
-          progress = { enabled = true },
-          hover = { enabled = true },
-          override = {
-            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-            ["vim.lsp.util.stylize_markdown"] = true,
-            ["cmp.entry.get_documentation"] = true,
-          },
-        },
-        redirect = { view = "popup", filter = { event = "msg_show" } },
         views = {
           cmdline_popup = {
             position = {
@@ -366,19 +350,13 @@ return {
             },
             win_options = {
               winblend = 0,
-              winhighlight = {
-                Normal = "Normal",
-                FloatBorder = "DiagnosticInfo",
-              },
             },
           },
         },
         routes = {
           { filter = { event = "lsp", find = "overly long loop" }, opts = { skip = true } },
           { filter = { event = "notify", find = "position_encoding" }, opts = { skip = true } },
-
           {
-            opts = { skip = true },
             filter = {
               any = {
                 -- { find = "%d+L, %d+B" },
@@ -398,16 +376,12 @@ return {
 
                 -- { event = "msg_show", find = "error list" },
               },
+              opts = { skip = true },
             },
           },
           {
             view = "mini",
-            filter = {
-              any = {
-                { event = "msg_show", find = "^E486:" },
-                -- { event = "notify", max_height = 1 },
-              },
-            }, -- minimise pattern not found messages
+            filter = { any = { { event = "msg_show", find = "^E486:" } } }, -- minimise pattern not found messages
           },
         },
         presets = {
