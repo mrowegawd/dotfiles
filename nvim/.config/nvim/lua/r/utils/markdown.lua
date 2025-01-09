@@ -268,14 +268,14 @@ local function collect_all_tags_async(data, cb)
 
                       -- hanya butuh tag yang berada pada line frontmatter
                       if string.match(line_text, "%s*- ") then
-                        if match_data.line_number < 20 then
+                        if match_data.line_number < 23 then
                           data_tags_out[#data_tags_out + 1] = format_tag_text(match_data)
                           coroutine.resume(co, 0)
                         end
                       end
 
                       if string.match(line_text, "^# ") then
-                        if match_data.line_number < 25 then
+                        if match_data.line_number < 28 then
                           data_title_out[#data_title_out + 1] = format_title_tag(match_data)
                           coroutine.resume(co, 0)
                         end
