@@ -350,14 +350,7 @@ return {
   -- OBSIDIAN.NVIM
   {
     "epwalsh/obsidian.nvim",
-    -- enabled = false,
     version = "*", -- recommended, use latest release instead of latest commit
-    -- event = {
-    --   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
-    --   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
-    --   fmt("BufReadPre %s", RUtils.config.path.wiki_path),
-    --   fmt("BufNewFile %s", RUtils.config.path.wiki_path),
-    -- },
     cmd = { "ObsidianDailies" },
     keys = {
       {
@@ -579,10 +572,10 @@ return {
     config = function(_, opts)
       require("obsidian").setup(opts)
 
-      -- local cmp = require "cmp"
-      -- cmp.register_source("obsidian", require("cmp_obsidian").new())
-      -- cmp.register_source("obsidian_new", require("cmp_obsidian_new").new())
-      -- cmp.register_source("obsidian_tags", require("cmp_obsidian_tags").new())
+      local cmp = require "cmp"
+      cmp.register_source("obsidian", require("cmp_obsidian").new())
+      cmp.register_source("obsidian_new", require("cmp_obsidian_new").new())
+      cmp.register_source("obsidian_tags", require("cmp_obsidian_tags").new())
 
       RUtils.cmd.augroup("ManageNoteMappingMarkdown", {
         event = { "FileType" },
@@ -675,22 +668,7 @@ return {
     dependencies = { "epwalsh/obsidian.nvim", "saghen/blink.compat" },
     opts = {
       sources = {
-        -- compat = { "obsidian", "obsidian_new", "obsidian_tags" },
         compat = { "obsidian", "obsidian_new", "obsidian_tags" },
-        providers = {
-          obsidian = {
-            kind = "Obsidian",
-            async = true,
-          },
-          obsidian_new = {
-            kind = "Obsidian",
-            async = true,
-          },
-          obsidian_tags = {
-            kind = "Obsidian",
-            async = true,
-          },
-        },
       },
     },
   },

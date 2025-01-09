@@ -45,14 +45,14 @@ return {
         nerd_font_variant = "mono",
       },
       completion = {
-        -- list = {
-        --   selection = {
-        --     preselect = function(ctx)
-        --       return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
-        --     end,
-        --     auto_insert = true,
-        --   },
-        -- },
+        list = {
+          selection = {
+            preselect = function(ctx)
+              return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+            end,
+            auto_insert = true,
+          },
+        },
         accept = {
           -- experimental auto-brackets support
           auto_brackets = {
