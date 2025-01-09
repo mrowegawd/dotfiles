@@ -94,7 +94,12 @@ misc() {
 
 misc_floating() {
   state=floating
-  # desktop=$desktop_misc
+}
+
+misc_yazi_floating() {
+  state=floating
+  rectangle=1500x900+0+0 # set default size window
+  center=true
 }
 
 spotify() {
@@ -219,6 +224,7 @@ Code.*) code2 ;;
 *.Emacs) code ;;
 *.Postman) code ;;
 *.java-lang-Thread) misc_floating ;;
+*.if-select) misc_yazi_floating ;;
 weechatw.*) chatting ;;
 pomotroid.*) stack ;;
 [lL]ibre[oO]ffice*) pdfile ;;

@@ -266,7 +266,7 @@ return {
             ["<F3>"] = "toggle-fullscreen",
             ["<F4>"] = "toggle-preview-cw",
 
-            ["<a-p>"] = "toggle-preview",
+            ["<F5>"] = "toggle-preview",
 
             ["<PageDown>"] = "preview-page-down",
             ["<PageUp>"] = "preview-page-up",
@@ -1216,8 +1216,8 @@ return {
               ["<C-down>"] = actions.cycle_history_next,
               ["<C-up>"] = actions.cycle_history_prev,
 
-              ["<C-n>"] = actions.results_scrolling_down,
-              ["<C-p>"] = actions.results_scrolling_up,
+              ["<a-n>"] = actions.results_scrolling_up,
+              ["<a-p>"] = actions.results_scrolling_down,
 
               ["<PageUp>"] = actions.preview_scrolling_up,
               ["<PageDown>"] = actions.preview_scrolling_down,
@@ -1231,10 +1231,10 @@ return {
               ["<C-t>"] = stopinsert(actions.select_tab),
 
               ["<C-r>"] = actions.to_fuzzy_refine,
+
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
-
               ["<F4>"] = layout_actions.cycle_layout_next,
-
+              ["<F5>"] = layout_actions.toggle_preview,
               ["<F3>"] = function(prompt_bufnr)
                 local action_state = require "telescope.actions.state"
                 local picker = action_state.get_current_picker(prompt_bufnr)
@@ -1255,11 +1255,6 @@ return {
 
                 picker:full_layout_update()
               end,
-
-              ["<C-j>"] = actions.move_selection_next,
-              ["<C-k>"] = actions.move_selection_previous,
-
-              ["<A-p>"] = layout_actions.toggle_preview,
             },
             n = {
               ["<ESC>"] = actions.close,
@@ -1271,12 +1266,13 @@ return {
               ["<PageUp>"] = actions.preview_scrolling_up,
               ["<PageDown>"] = actions.preview_scrolling_down,
 
-              ["<C-j>"] = actions.move_selection_next,
-              ["<C-k>"] = actions.move_selection_previous,
+              ["<C-n>"] = actions.move_selection_next,
+              ["<C-p>"] = actions.move_selection_previous,
 
-              ["<C-n>"] = actions.results_scrolling_up,
-              ["<C-p>"] = actions.results_scrolling_down,
+              ["<a-n>"] = actions.results_scrolling_up,
+              ["<a-p>"] = actions.results_scrolling_down,
 
+              ["<F5>"] = layout_actions.toggle_preview,
               ["<F1>"] = actions.which_key, -- keys from pressing <C-/>
             },
           },
