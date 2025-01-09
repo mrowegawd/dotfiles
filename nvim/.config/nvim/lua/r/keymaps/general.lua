@@ -698,25 +698,28 @@ RUtils.map.nnoremap("<a-E>", function()
   local dirname = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()), ":h:p")
 
   local TMUX = os.getenv "TMUX"
+  local TERMINAL = os.getenv "TERMINAL"
+
   if not TMUX then
-    if RUtils.has "neo-tree.nvim" then
-      vim.cmd "Neotree focus reveal"
-    else
-      local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-      if pane_left_id then
-        vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+    if TERMINAL ~= "wezterm" then
+      if RUtils.has "neo-tree.nvim" then
+        vim.cmd "Neotree focus reveal"
       end
-
-      vim.fn.system "wezterm cli split-pane --left --percent 15"
-      vim.fn.system "wezterm cli activate-pane-direction Right"
-
-      local pane_left_id2 = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-      vim.fn.system(
-        string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_left_id2)
-      )
-
-      vim.fn.system "wezterm cli activate-pane-direction Left"
     end
+    local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+    if pane_left_id then
+      vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+    end
+
+    vim.fn.system "wezterm cli split-pane --left --percent 20"
+    vim.fn.system "wezterm cli activate-pane-direction Right"
+
+    local pane_left_id2 = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+    vim.fn.system(
+      string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_left_id2)
+    )
+
+    vim.fn.system "wezterm cli activate-pane-direction Left"
   else
     -- local get_total_active_panes = normalize_return(vim.fn.system [[ tmux display-message -p '#{window_panes}']])
     local main_pane_id = get_current_pane_id()
