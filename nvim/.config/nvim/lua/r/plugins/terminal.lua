@@ -18,49 +18,49 @@ return {
       }
     end,
     keys = function()
-      local function win_width_term()
-        local win_height = vim.o.columns - 2
-        local win_width = vim.o.lines - 2
-
-        local width = math.floor(0.6 * win_height)
-        local height = math.floor(1 * win_width)
-
-        if width < 80 then
-          width = 90
-        end
-
-        return width, height
-      end
-
-      local width, height = win_width_term()
-
-      local Terminal = require("toggleterm.terminal").Terminal
-      local terminal_open = Terminal:new {
-        cmd = "zsh",
-        direction = "float",
-        float_opts = {
-          border = "single",
-          width = width,
-          height = height,
-          col = 100,
-          row = 100,
-        },
-        -- function to run on opening the terminal
-        on_open = function(term)
-          local ol = vim.opt_local
-          ol.signcolumn = "no"
-          vim.cmd "startinsert!"
-          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
-        end,
-        -- function to run on closing the terminal
-        on_close = function()
-          vim.cmd "startinsert!"
-        end,
-      }
       return {
         {
           "<a-f>",
           function()
+            local function win_width_term()
+              local win_height = vim.o.columns - 2
+              local win_width = vim.o.lines - 2
+
+              local width = math.floor(0.6 * win_height)
+              local height = math.floor(1 * win_width)
+
+              if width < 80 then
+                width = 90
+              end
+
+              return width, height
+            end
+
+            local width, height = win_width_term()
+
+            local Terminal = require("toggleterm.terminal").Terminal
+            local terminal_open = Terminal:new {
+              cmd = "zsh",
+              direction = "float",
+              float_opts = {
+                border = "single",
+                width = width,
+                height = height,
+                col = 100,
+                row = 100,
+              },
+              -- function to run on opening the terminal
+              on_open = function(term)
+                local ol = vim.opt_local
+                ol.signcolumn = "no"
+                vim.cmd "startinsert!"
+                vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+              end,
+              -- function to run on closing the terminal
+              on_close = function()
+                vim.cmd "startinsert!"
+              end,
+            }
             terminal_open:toggle()
           end,
           desc = "Terminal: toggle term float [toggleterm]",
