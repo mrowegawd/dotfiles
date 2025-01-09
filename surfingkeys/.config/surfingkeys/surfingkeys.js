@@ -77,6 +77,7 @@ mapkey("j", "#2Scroll down of line", () => {
 mapkey("K", "#2Scroll up of line", () => {
   scrollBySmooth(window.innerHeight / 10, -3);
 });
+// NOTE: conflict dengan mapping fast forward di youtube video
 // mapkey("J", "#2Scroll down of line", () => {
 //   scrollBySmooth(window.innerHeight / 10, 3);
 // });
@@ -92,17 +93,20 @@ mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
 // │ EDITING                                                 │
 // ╰─────────────────────────────────────────────────────────╯
 
+unmap("/"); // should do the trick, using it myself.
+// unmap("<ctrl-f>"); // should do the trick, using it myself.
 // WARN: niatnya ingin run search, tapi ini salah
-// mapkey("<c-g>", "Search", function () {
-//   RUNTIME("search");
+// mapkey("<Ctrl-g>", "Search", function () {
+//   RUNTIME("openFinder");
 // });
 
-mapkey("n", "Next search result", function () {
-  Visual.next(false);
-});
-mapkey("N", "Previous search result", function () {
-  Visual.next(true);
-});
+map("<Ctrl-g>", "/");
+// mapkey("n", "Next search result", function () {
+//   Visual.next(false);
+// });
+// mapkey("N", "Previous search result", function () {
+//   Visual.next(true);
+// });
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ OPEN LINKS                                              │
@@ -164,7 +168,7 @@ mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
   });
 });
 
-mapkey("<Alt-w>", "Choose a tab with omnibar", function () {
+mapkey("<Alt-t>", "Choose a tab with omnibar", function () {
   Front.openOmnibar({ type: "Tabs" });
 });
 
@@ -175,17 +179,19 @@ mapkey("M", "Mute/unmute current tab", function () {
 // map("<Alt-h>", "E");
 // map("<Alt-H>", "E");
 
-map("gh", "E");
-map("gl", "R");
+// map("gh", "E");
+// map("gl", "R");
 
 map("<Space>ff", "T");
 
 map("<Ctrl-Alt-l>", "R");
 map("<Ctrl-Alt-h>", "E");
+map("<Ctrl-Alt-n>", "R");
+map("<Ctrl-Alt-p>", "E");
 
 // Side tabbar zen-browser is left side sometimes make confuse
-map("<Ctrl-Alt-j>", "R");
-map("<Ctrl-Alt-k>", "E");
+// map("<Ctrl-Alt-j>", "R");
+// map("<Ctrl-Alt-k>", "E");
 
 mapkey("<Ctrl-o>", "backward", function () {
   history.go(-1);
@@ -210,11 +216,11 @@ mapkey("<Space><Tab>", "#3Close current tab", () => {
 // ╰─────────────────────────────────────────────────────────╯
 
 // open current history tab
-mapkey("<Space>fs", "#8Open RecentlyClosed", () => {
+mapkey("<Space>fo", "#8Open RecentlyClosed", () => {
   Front.openOmnibar({ type: "RecentlyClosed" });
 });
 // open global history tab
-mapkey("<Space>fS", "#8Open History", () => {
+mapkey("<Space>fO", "#8Open History", () => {
   Front.openOmnibar({ type: "History" });
 });
 
@@ -226,7 +232,7 @@ mapkey("<Space>fS", "#8Open History", () => {
 mapkey("b", "#8Open a bookmark", function () {
   Front.openOmnibar({ type: "Bookmarks" });
 });
-mapkey("<Alt-b>", "#8Open a bookmark", function () {
+mapkey("B", "#8Open a bookmark", function () {
   Front.openOmnibar({ type: "Bookmarks" });
 });
 
@@ -234,7 +240,7 @@ mapkey("<Alt-b>", "#8Open a bookmark", function () {
 // │ ZOOM                                                    │
 // ╰─────────────────────────────────────────────────────────╯
 
-mapkey("<Ctrl-Home>", "#3zoom reset", function () {
+mapkey("<Ctrl-0>", "#3zoom reset", function () {
   RUNTIME("setZoom", {
     zoomFactor: 0,
   });
