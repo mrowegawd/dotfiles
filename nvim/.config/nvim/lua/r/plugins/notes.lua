@@ -650,7 +650,10 @@ return {
     dependencies = { "nvim-orgmode/orgmode", "saghen/blink.compat" },
     opts = {
       sources = {
-        compat = { "orgmode" },
+        per_filetype = {
+          -- disable codeium for org
+          org = { "buffer", "path", "orgmode", "snippets" },
+        },
         providers = {
           orgmode = {
             name = "Orgmode",

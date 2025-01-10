@@ -54,7 +54,6 @@ return {
           sources = {
             per_filetype = {
               -- disable codeium for org
-              org = { "buffer", "path", "orgmode" },
               DressingInput = {},
             },
             compat = { "codeium" },

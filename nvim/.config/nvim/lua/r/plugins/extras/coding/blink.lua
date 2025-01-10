@@ -47,9 +47,10 @@ return {
       completion = {
         list = {
           selection = {
-            preselect = function(ctx)
-              return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
-            end,
+            -- preselect = function(ctx)
+            --   return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+            -- end,
+            preselect = false,
             auto_insert = true,
           },
         },
@@ -64,7 +65,17 @@ return {
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
-            -- columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+            columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
+            components = {
+              kind = {
+                highlight = "BlinkCmpSource",
+              },
+              source_name = {
+                text = function(ctx)
+                  return table.concat({ "[", ctx.source_name, "]" }, "")
+                end,
+              },
+            },
           },
         },
         documentation = {
