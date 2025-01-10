@@ -58,8 +58,9 @@ local colors = {
   separator_fg_alt = Col.separator_fg_alt,
   separator_fg_inactive = Col.separator_fg_inactive,
 
-  mod_norm = Col.error_fg,
-  mod_norm_bg = Col.norm_bg,
+  qf_bg_not_active = Col.qf_bg_not_active,
+  qf_fg_not_active = Col.qf_fg_not_active,
+
   mod_ins = Col.mod_ins,
   mod_vis = Col.mod_vis,
   mod_term = Col.mod_term,
@@ -179,7 +180,7 @@ M.Mode = {
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      return { bg = self.mode_colors[mode], fg = colors.mod_norm_bg, bold = true }
+      return { bg = self.mode_colors[mode], fg = colors.base_bg, bold = true }
     end,
   },
   {
@@ -357,8 +358,8 @@ M.FilePathQF = {
       local bg = colors.diff_add
 
       if Conditions.is_not_active() then
-        fg = colors.basenc_fg
-        bg = colors.mode_bg
+        fg = colors.qf_fg_not_active
+        bg = colors.qf_bg_not_active
       end
 
       return { fg = fg, bg = bg, bold = true }
@@ -371,7 +372,7 @@ M.FilePathQF = {
       local bg = colors.mode_bg
 
       if Conditions.is_not_active() then
-        fg = colors.mode_bg
+        fg = colors.qf_bg_not_active
         bg = colors.separator_fg_alt
       end
 
@@ -401,7 +402,7 @@ M.FilePathQF = {
 
       if Conditions.is_not_active() then
         fg = colors.basenc_bg
-        bg = colors.mode_bg
+        bg = colors.qf_bg_not_active
       end
       return { fg = fg, bg = bg }
     end,
@@ -421,8 +422,8 @@ M.FilePathQF = {
       local bg = colors.diff_change
 
       if Conditions.is_not_active() then
-        bg = colors.mode_bg
-        fg = colors.basenc_fg
+        bg = colors.qf_bg_not_active
+        fg = colors.qf_fg_not_active
       end
       return { fg = fg, bg = bg, bold = true }
     end,
@@ -434,7 +435,7 @@ M.FilePathQF = {
       local fg = colors.diff_change
 
       if Conditions.is_not_active() then
-        fg = colors.mode_bg
+        fg = colors.qf_bg_not_active
         bg = colors.separator_fg_alt
       end
       return { fg = fg, bg = bg }

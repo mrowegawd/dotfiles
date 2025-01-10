@@ -26,7 +26,7 @@ count_selected = { fg = "#fe8019", bg = "#272736" }
 
 # Tab
 tab_active = { fg = "#70bae5", bg = "#3e677f" }
-tab_inactive = { fg = "#494d6c", bg = "#272736" }
+tab_inactive = { fg = "#4e5172", bg = "#272736" }
 tab_width = 1
 
 # Border
@@ -39,8 +39,8 @@ border_style = { fg = "#292b3c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#21212d", bg = "#7dcfff", bold = true }
-normal_alt = { fg = "#7dcfff", bg = "#21212d" }
+normal_main = { fg = "#343448", bg = "#7dcfff", bold = true }
+normal_alt = { fg = "#7dcfff", bg = "#343448" }
 
 select_main = { fg = "#ffffff", bg = "#223249", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }

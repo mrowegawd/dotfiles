@@ -20,13 +20,13 @@ marker_selected = { fg = "#fe8019", bg = "#fe8019" }
 marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
 marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
 
-count_cut = { fg = "#f38ba8", bg = "#f1f2f8" }
-count_copied = { fg = "#b8bb26", bg = "#f1f2f8" }
-count_selected = { fg = "#fe8019", bg = "#f1f2f8" }
+count_cut = { fg = "#f38ba8", bg = "#dae0e0" }
+count_copied = { fg = "#b8bb26", bg = "#dae0e0" }
+count_selected = { fg = "#fe8019", bg = "#dae0e0" }
 
 # Tab
 tab_active = { fg = "#006587", bg = "#00384b" }
-tab_inactive = { fg = "#b7b7b7", bg = "#f1f2f8" }
+tab_inactive = { fg = "#b3b3b3", bg = "#dae0e0" }
 tab_width = 1
 
 # Border
@@ -39,8 +39,8 @@ border_style = { fg = "#665c54" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#707173", bg = "#007197", bold = true }
-normal_alt = { fg = "#007197", bg = "#707173" }
+normal_main = { fg = "#e1e2e7", bg = "#007197", bold = true }
+normal_alt = { fg = "#007197", bg = "#e1e2e7" }
 
 select_main = { fg = "#ffffff", bg = "#223249", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
