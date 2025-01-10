@@ -40,9 +40,8 @@ return {
   },
   -- SNACKS
   {
-    "folke/snacks.nvim",
-    priority = 1000,
-    lazy = false,
+    "snacks.nvim",
+    optional = true,
     opts = function()
       Highlight.plugin("Snacks_highlights", {
         {
@@ -228,7 +227,6 @@ return {
     keys = {
       {
         "<S-CR>",
-        ---@diagnostic disable-next-line: param-type-mismatch
         function()
           require("noice").redirect(fn.getcmdline())
         end,
@@ -264,15 +262,6 @@ return {
         desc = "Noice: picker (telescope/fzflua)",
       },
     },
-    config = function(_, opts)
-      -- HACK: noice shows messages from before it was enabled,
-      -- but this is not ideal when Lazy is installing plugins,
-      -- so clear the messages in this case.
-      if vim.o.filetype == "lazy" then
-        vim.cmd [[messages clear]]
-      end
-      require("noice").setup(opts)
-    end,
     opts = function()
       Highlight.plugin("notify", {
         theme = {
@@ -324,6 +313,16 @@ return {
 
       return {
         -- debug = true,
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
+        cmdline = {
+          view = "cmdline",
+        },
         views = {
           cmdline_popup = {
             position = {
@@ -350,38 +349,32 @@ return {
             },
             win_options = {
               winblend = 0,
+              winhighlight = {
+                Normal = "Normal",
+                FloatBorder = "DiagnosticInfo",
+              },
             },
           },
         },
         routes = {
-          { filter = { event = "lsp", find = "overly long loop" }, opts = { skip = true } },
-          { filter = { event = "notify", find = "position_encoding" }, opts = { skip = true } },
           {
             filter = {
+              event = "msg_show",
               any = {
-                -- { find = "%d+L, %d+B" },
-                -- { find = "; after #%d+" },
-                -- { find = "; before #%d+" },
-                { event = "msg_show", find = "written" },
-                { event = "msg_show", find = "%d+ lines, %d+ bytes" },
-                { event = "msg_show", kind = "search_count" },
-                { event = "msg_show", find = "%d+L, %d+B" },
-                { event = "msg_show", find = "^Hunk %d+ of %d" },
-                { event = "msg_show", find = "%d+ change" },
-                { event = "msg_show", find = "%d+ line" },
-                { event = "msg_show", find = "%d+ more line" },
-
-                -- Avoid show message from lsp_signature
-                { event = "msg_show", find = "lsp_signatur" },
-
-                -- { event = "msg_show", find = "error list" },
+                { find = "%d+ change" },
+                { find = "%d+ line" },
+                { find = "%d+ lines, %d+ bytes" },
+                { find = "%d+ more line" },
+                { find = "%d+L, %d+B" },
+                { find = "%d+L, %d+B" },
+                { find = "; after #%d+" },
+                { find = "; before #%d+" },
+                { find = "^Hunk %d+ of %d" },
+                { find = "written" },
+                { kind = "search_count" },
               },
-              opts = { skip = true },
             },
-          },
-          {
             view = "mini",
-            filter = { any = { { event = "msg_show", find = "^E486:" } } }, -- minimise pattern not found messages
           },
         },
         presets = {
@@ -390,6 +383,15 @@ return {
           long_message_to_split = true,
         },
       }
+    end,
+    config = function(_, opts)
+      -- HACK: noice shows messages from before it was enabled,
+      -- but this is not ideal when Lazy is installing plugins,
+      -- so clear the messages in this case.
+      if vim.o.filetype == "lazy" then
+        vim.cmd [[messages clear]]
+      end
+      require("noice").setup(opts)
     end,
   },
   -- FOLD CYCLE
