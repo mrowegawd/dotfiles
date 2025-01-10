@@ -371,7 +371,7 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged" },
+    cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
     dependencies = {
       "tpope/vim-rhubarb",
     },
