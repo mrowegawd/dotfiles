@@ -1192,7 +1192,7 @@ local function colorscheme_overrides()
 
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.15 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
         },
       },

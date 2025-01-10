@@ -33,7 +33,7 @@ source "$HOME/.asdf/asdf.sh"
 [[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
   && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-COLORSUGGEST=fg="#47476C"
+COLORSUGGEST=fg="#434343"
 zle -N autosuggest-accept
 [[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
   && export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$COLORSUGGEST \

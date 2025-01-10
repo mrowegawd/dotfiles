@@ -23,7 +23,7 @@ font-thicken   = true
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           THEME                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-theme = sonokai
+theme = gruvbox-material
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                          WINDOW                           ╎
@@ -73,31 +73,31 @@ gtk-titlebar           = false
 # ┗╍╍╍╍╍╍┛
 # keybind = unconsumed:alt+ctrl+c=copy_to_clipboard
 # keybind = unconsumed:alt+ctrl+v=paste_from_clipboard
-keybind = alt+m=toggle_split_zoom
+# keybind = alt+m=toggle_split_zoom
 # keybind = ctrl+shift+comma=reload_config
 # keybind = global:alt+f=toggle_quick_terminal # (Mac only)
 
 # ┏╍╍╍╍╍┓
 # ╏ TAB ╏
 # ┗╍╍╍╍╍┛
-keybind = shift+alt+n=new_tab
-keybind = ctrl+alt+l=next_tab
-keybind = ctrl+alt+h=previous_tab
-keybind = ctrl+alt+h=previous_tab
+# keybind = shift+alt+n=new_tab
+# keybind = ctrl+alt+l=next_tab
+# keybind = ctrl+alt+h=previous_tab
+# keybind = ctrl+alt+h=previous_tab
 
 # ┏╍╍╍╍╍╍┓
 # ╏ PANE ╏
 # ┗╍╍╍╍╍╍┛
-keybind = unconsumed:ctrl+h=goto_split:left
-keybind = unconsumed:ctrl+j=goto_split:bottom
-keybind = unconsumed:ctrl+k=goto_split:top
-keybind = unconsumed:ctrl+l=goto_split:right
+# keybind = unconsumed:ctrl+h=goto_split:left
+# keybind = unconsumed:ctrl+j=goto_split:bottom
+# keybind = unconsumed:ctrl+k=goto_split:top
+# keybind = unconsumed:ctrl+l=goto_split:right
 
 # keybind = unconsumed:alt+enter=new_split:right
-keybind = alt+l=new_split:right
-keybind = alt+j=new_split:down
+# keybind = alt+l=new_split:right
+# keybind = alt+j=new_split:down
 
-keybind = alt+shift+k=resize_split:up,15
-keybind = alt+shift+h=resize_split:left,15
-keybind = alt+shift+j=resize_split:down,15
-keybind = alt+shift+l=resize_split:right,15
+# keybind = alt+shift+k=resize_split:up,15
+# keybind = alt+shift+h=resize_split:left,15
+# keybind = alt+shift+j=resize_split:down,15
+# keybind = alt+shift+l=resize_split:right,15

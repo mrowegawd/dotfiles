@@ -1,25 +1,25 @@
+os:
+  editPreset: "nvim-remote"
 gui:
   theme:
-    activeBorderColor:
-      - "#87ff5f"
-      - "bold"
+    unstagedChangesColor:
+      - "#ea6962"
+    inactiveBorderColor:
+      - "#6c6c6c"
+    selectedLineBgColor:
+      - "#5e4846"
     searchingActiveBorderColor:
       - "#ffffff"
       - "bold"
     optionsTextColor:
-      - "#9cda7c"
-    inactiveBorderColor:
-      - "#52347c"
+      - "#a9b665"
     defaultFgColor:
-      - "#e1d6f8"
+      - "#d4be98"
     cherryPickedCommitFgColor:
-      - "#9cda7c"
+      - "#a9b665"
     cherryPickedCommitBgColor:
-      - "#b968fc"
-    unstagedChangesColor:
-      - "#db6088"
-    selectedLineBgColor:
-      - "#2f2f2f"
+      - "#7daea3"
+    activeBorderColor:
+      - "#ea6962"
+      - "bold"
   nerdFontsVersion: "3"
-os:
-  editPreset: "nvim-remote"

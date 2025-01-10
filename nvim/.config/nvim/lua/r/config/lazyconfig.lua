@@ -18,7 +18,7 @@ require("lazy").setup {
   lockfile = vim.fn.stdpath "data" .. "/lazy-lock.json",
   concurrency = 20,
   spec = {
-    { import = "r.plugins.extras.coding.nvim-cmp" },
+    -- { import = "r.plugins.extras.coding.nvim-cmp" },
     { import = "r.plugins" },
     { import = "r.plugins.extras.ai" },
     { import = "r.plugins.extras.dab" },

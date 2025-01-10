@@ -332,7 +332,7 @@ return {
           },
           cmdline_popupmenu = {
             position = {
-              row = -5,
+              row = -2,
               col = "1%",
             },
           },
