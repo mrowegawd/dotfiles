@@ -186,12 +186,6 @@ function M.setup(opts)
 
   local cmd_mapping = {
     ["<C-e>"] = { c = cmp.mapping.abort() },
-    ["<TAB>"] = {
-      c = cmp.mapping.confirm {
-        behavior = cmp.ConfirmBehavior.Insert,
-        select = true,
-      },
-    },
     ["<C-y>"] = {
       c = cmp.mapping.confirm {
         behavior = cmp.ConfirmBehavior.Insert,
@@ -199,7 +193,7 @@ function M.setup(opts)
       },
     },
 
-    ["<C-j>"] = {
+    ["<C-n>"] = {
       c = function()
         if cmp.visible() then
           cmp.select_next_item(behavior_insert)
@@ -208,7 +202,7 @@ function M.setup(opts)
         end
       end,
     },
-    ["<C-k>"] = {
+    ["<C-p>"] = {
       c = function()
         if cmp.visible() then
           cmp.select_prev_item(behavior_insert)
