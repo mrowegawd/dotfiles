@@ -3,19 +3,6 @@
 *background:#2d2a2e
 *foreground:#e3e1e4
 
-! selection_background #3a3e4e
-! selection_foreground #e1e3e4
-
-! cursor #e1e3e4
-! cursor_text_color background
-
-! active_tab_background #2b2d37
-! active_tab_foreground #e1e3e4
-! active_tab_font_style bold
-! inactive_tab_background #2b2d37
-! inactive_tab_foreground #e1e3e4
-! inactive_tab_font_style normal
-
 ! Black
 *color0:#1a181a
 *color8:#848089
