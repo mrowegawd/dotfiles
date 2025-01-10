@@ -64,11 +64,9 @@ return {
         window = {
           completion = cmp.config.window.bordered {
             winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
-            -- col_offset = -5, -- To fit `lspkind` icon
-            -- side_padding = 1, -- One character margin
+            col_offset = -4, -- To fit `lspkind` icon
+            side_padding = 1, -- One character margin
             scrolloff = 0,
-            col_offset = 0,
-            side_padding = 1,
             scrollbar = true,
             border = {
               { "󱐋", "CmpItemIconWarningMsg" },
@@ -171,7 +169,7 @@ return {
         },
         view = {
           entries = {
-            follow_cursor = true,
+            follow_cursor = false,
           },
         },
         sorting = defaults.sorting,

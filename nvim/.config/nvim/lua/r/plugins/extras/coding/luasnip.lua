@@ -160,18 +160,9 @@ return {
             winopts = { preview = { hidden = "nohidden" } },
           }
         end, { "i" }),
-        ["<Tab>"] = cmp.mapping {
-          i = function()
-            if require("luasnip").expand_or_jumpable() then
-              require("luasnip").jump(1)
-            end
-          end,
-          s = function()
-            if require("luasnip").expand_or_jumpable() then
-              require("luasnip").jump(1)
-            end
-          end,
-        },
+        ["<Tab>"] = cmp.mapping(function(fallback)
+          return RUtils.cmp.map({ "snippet_forward", "ai_accept" }, fallback)()
+        end, { "i", "s" }),
         ["<S-Tab>"] = cmp.mapping(function()
           if require("luasnip").jumpable(-1) then
             require("luasnip").jump(-1)
