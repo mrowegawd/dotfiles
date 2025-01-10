@@ -18,6 +18,7 @@ return {
       "disable_ft",
     },
     dependencies = {
+      "mikavilpas/blink-ripgrep.nvim",
       -- add blink.compat to dependencies
       {
         "saghen/blink.compat",
@@ -43,6 +44,7 @@ return {
         -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
         -- adjusts spacing to ensure icons are aligned
         nerd_font_variant = "mono",
+        kind_icons = RUtils.config.icons.kinds,
       },
       completion = {
         list = {
@@ -68,11 +70,14 @@ return {
             columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
             components = {
               kind = {
-                highlight = "BlinkCmpSource",
-              },
-              source_name = {
+                ellipsis = false,
+                width = { fill = true },
                 text = function(ctx)
-                  return table.concat({ "[", ctx.source_name, "]" }, "")
+                  return ("(%s)"):format(ctx.kind)
+                end,
+                highlight = function(ctx)
+                  return (require("blink.cmp.completion.windows.render.tailwind").get_hl(ctx) or "BlinkCmpKind")
+                    .. ctx.kind
                 end,
               },
             },
@@ -94,13 +99,63 @@ return {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+        providers = {
+          ripgrep = {
+            module = "blink-ripgrep",
+            name = "Ripgrep",
+            -- the options below are optional, some default values are shown
+            ---@module "blink-ripgrep"
+            ---@type blink-ripgrep.Options
+            opts = {
+              prefix_min_len = 2,
+              context_size = 5,
+              max_filesize = "1M",
+              -- Examples:
+              -- - ".git" (default)
+              -- - { ".git", "package.json", ".root" }
+              project_root_marker = ".git",
+              search_casing = "--ignore-case",
+              fallback_to_regex_highlighting = true,
+              debug = false,
+              future_features = {
+                kill_previous_searches = false,
+              },
+            },
+            -- (optional) customize how the results are displayed. Many options
+            -- are available - make sure your lua LSP is set up so you get
+            -- autocompletion help
+            transform_items = function(_, items)
+              for _, item in ipairs(items) do
+                -- example: append a description to easily distinguish rg results
+                item.labelDetails = {
+                  description = "(rg)",
+                }
+              end
+              return items
+            end,
+          },
+        },
         -- NOTE: sementara di set 'none' dahulu
         -- karena terdapat masalah,
         -- jika mau difix dan berhasil, hapus `cmdline = {}` ini:
         -- 1. conflict keybindings untuk `commandline` di general.lua
         -- 2. after cmdline, buffer completion sepertinya ga jalan lagi?
         cmdline = {},
+        -- cmdline = function()
+        --   local type = vim.fn.getcmdtype()
+        --   -- Search forward and backward
+        --   if type == "/" or type == "?" then
+        --     return {}
+        --     -- This shows buffer completions in search but i hate it
+        --     -- return {"Buffer"}
+        --   end
+        --   -- Commands
+        --   if type == ":" then
+        --     return { "cmdline" }
+        --   end
+        --   return {}
+        -- end,
       },
       keymap = {
         preset = "enter",
@@ -115,9 +170,6 @@ return {
         -- ["<C-t>"] = { "show_documentation", "hide_documentation", "fallback" },
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },
         ["<C-d>"] = { "scroll_documentation_down", "fallback" },
-
-        -- ["<C-p>"] = { "snippet_forward", "fallback" }, -- snippets
-        -- ["<C-n>"] = { "snippet_backward", "fallback" },
       },
     },
 

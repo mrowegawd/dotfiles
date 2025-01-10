@@ -180,6 +180,27 @@ return {
       snippets = {
         preset = "luasnip",
       },
+      keymap = {
+        ["<C-r>"] = {
+          function(cmp)
+            if callme == 0 then
+              callme = 1
+              cmp.show { providers = { "lsp" } }
+            elseif callme == 1 then
+              callme = 2
+              cmp.show { providers = { "snippets" } }
+            elseif callme == 2 then
+              callme = 3
+              cmp.show { providers = { "buffer" } }
+            elseif callme == 3 then
+              callme = 0
+              if not vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
+                cmp.show { providers = { "codeium" } }
+              end
+            end
+          end,
+        },
+      },
     },
   },
 }
