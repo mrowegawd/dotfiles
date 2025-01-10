@@ -3,7 +3,8 @@ local Highlight = require "r.settings.highlights"
 local have_make = vim.fn.executable "make" == 1
 local have_cmake = vim.fn.executable "cmake" == 1
 
-local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
+local rg_opts =
+  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 
 local telescope_toggle_fullscreen = true
@@ -565,7 +566,7 @@ return {
         },
         grep = {
           -- debug = true,
-          prompt = RUtils.fzflua.default_title_prompt(),
+          prompt = "  ",
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {

@@ -19,8 +19,8 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
-    -- { "gk", vim.lsp.buf.hover, desc = "LSP: show hover [noice]" },
+    -- { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
+    { "gk", vim.lsp.buf.hover, desc = "LSP: show hover [noice]" },
     { "gK", vim.lsp.buf.signature_help, desc = "LSP: signature help", has = "signatureHelp" },
     { "gD", vim.lsp.buf.declaration, desc = "LSP: declaration" },
     {

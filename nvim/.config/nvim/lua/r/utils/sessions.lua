@@ -97,7 +97,10 @@ function M.load_ses_dashboard()
       end,
     })
   else
-    RUtils.warn("Cannot load sessions, plugin " .. ses_plugin .. " error?", { title = "Sessions" })
+    RUtils.warn(
+      "Cannot load session. Plugin " .. ses_plugin .. " not installed or maybe something went wrong..",
+      { title = "Sessions" }
+    )
   end
 end
 

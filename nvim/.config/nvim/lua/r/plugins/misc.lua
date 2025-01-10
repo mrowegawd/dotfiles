@@ -117,6 +117,7 @@ return {
   },
   -- ORPHANS
   {
+    -- Easily identify abandoned neovim plugins
     "ZWindL/orphans.nvim",
     cmd = "Orphans",
     config = function()
