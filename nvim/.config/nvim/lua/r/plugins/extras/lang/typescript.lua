@@ -66,18 +66,18 @@ return {
             },
           },
           keys = {
-            {
-              "gD",
-              function()
-                local params = vim.lsp.util.make_position_params()
-                RUtils.lsp.execute {
-                  command = "typescript.goToSourceDefinition",
-                  arguments = { params.textDocument.uri, params.position },
-                  open = true,
-                }
-              end,
-              desc = "LSP: goto source definition [vtsls]",
-            },
+            -- {
+            --   "gD",
+            --   function()
+            --     local params = vim.lsp.util.make_position_params()
+            --     RUtils.lsp.execute {
+            --       command = "typescript.goToSourceDefinition",
+            --       arguments = { params.textDocument.uri, params.position },
+            --       open = true,
+            --     }
+            --   end,
+            --   desc = "LSP: goto source definition [vtsls]",
+            -- },
             -- {
             --   "gR",
             --   function()

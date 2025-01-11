@@ -22,7 +22,15 @@ function M.get()
     -- { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
     { "gk", vim.lsp.buf.hover, desc = "LSP: show hover [noice]" },
     { "gK", vim.lsp.buf.signature_help, desc = "LSP: signature help", has = "signatureHelp" },
-    { "gD", vim.lsp.buf.declaration, desc = "LSP: declaration" },
+    {
+      "gD",
+      function()
+        require("fzf-lua").lsp_definitions {}
+      end,
+      has = "definition",
+      desc = "LSP: definitions [fzflua]",
+    },
+
     {
       "<a-q>",
       function()
@@ -227,28 +235,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "gd",
       function()
-        require("fzf-lua").lsp_definitions {
-          jump_to_single_result = true,
-          jump_to_single_result_action = require("fzf-lua.actions").file_vsplit,
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = function()
-            local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-            local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
-
-            local win_height = math.ceil(lines * 0.65)
-            local win_width = math.ceil(columns * 2)
-            return {
-              title = RUtils.fzflua.format_title("Definitions", ""),
-              width = win_width,
-              height = win_height,
-              row = 13,
-              preview = {
-                vertical = "down:45%", -- up|down:size
-                horizontal = "left:55%", -- right|left:size
-              },
-            }
-          end,
-        }
+        require("fzf-lua").lsp_definitions { jump_to_single_result = true }
       end,
       desc = "LSP: definitions [fzflua]",
       has = "definition",
