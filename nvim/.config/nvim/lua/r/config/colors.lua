@@ -6,10 +6,11 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_alter, pmenusel_alter, pmenuthumb_alter, fzfluasel_alter, quickfixline_alter, cursorline_alter, search_alter
+local pmenu_bg_alter, pmenu_fg_alter, pmenusel_alter, pmenuthumb_alter, fzfluasel_alter, quickfixline_alter, cursorline_alter, search_alter
 
 local base_cl = {
-  pmenu_alter = 0.3,
+  pmenu_bg_alter = 0.3,
+  pmenu_fg_alter = -0.1,
   pmenusel_alter = 0.3,
   pmenuthumb_alter = 0.3,
   fzfluasel_alter = 0.3,
@@ -32,8 +33,11 @@ local function reset_base_alter(themes, alter_base)
   end
 
   for i, x in pairs(base_cl) do
-    if i == "pmenu_alter" then
-      pmenu_alter = x
+    if i == "pmenu_bg_alter" then
+      pmenu_bg_alter = x
+    end
+    if i == "pmenu_fg_alter" then
+      pmenu_fg_alter = x
     end
     if i == "pmenusel_alter" then
       pmenusel_alter = x
@@ -61,7 +65,7 @@ end
 
 reset_base_alter({ "coffeecat", "iceclimber", "tokyonight-night" }, {
   cursorline_alter = 0.05,
-  pmenu_alter = 0.5,
+  pmenu_bg_alter = 0.5,
   pmenusel_alter = 0.5,
   pmenuthumb_alter = 0.4,
   fzfluasel_alter = 0.5,
@@ -70,7 +74,7 @@ reset_base_alter({ "coffeecat", "iceclimber", "tokyonight-night" }, {
 
 reset_base_alter({ "oxocarbon", "carbonfox", "catppuccin-mocha", "darkforest" }, {
   cursorline_alter = 0.08,
-  pmenu_alter = 0.6,
+  pmenu_bg_alter = 0.6,
   pmenusel_alter = 0.4,
   pmenuthumb_alter = 0.3,
   fzfluasel_alter = 0.3,
@@ -80,7 +84,7 @@ reset_base_alter({ "oxocarbon", "carbonfox", "catppuccin-mocha", "darkforest" },
 
 reset_base_alter({ "lackluster" }, {
   cursorline_alter = 0.08,
-  pmenu_alter = 1,
+  pmenu_bg_alter = 1,
   pmenusel_alter = 0.8,
   pmenuthumb_alter = 0.3,
   fzfluasel_alter = 0.1,
@@ -89,7 +93,7 @@ reset_base_alter({ "lackluster" }, {
 
 reset_base_alter({ "farout-night" }, {
   cursorline_alter = 0.13,
-  pmenu_alter = 1.8,
+  pmenu_bg_alter = 1.8,
   pmenusel_alter = 0.6,
   pmenuthumb_alter = 0.6,
   fzfluasel_alter = 0.5,
@@ -98,7 +102,7 @@ reset_base_alter({ "farout-night" }, {
 
 reset_base_alter({ "dayfox" }, {
   cursorline_alter = -0.02,
-  pmenu_alter = 1.8,
+  pmenu_bg_alter = 1.8,
   pmenusel_alter = 0.6,
   pmenuthumb_alter = 0.6,
   fzfluasel_alter = 0.5,
@@ -107,7 +111,7 @@ reset_base_alter({ "dayfox" }, {
 
 reset_base_alter({ "everforest" }, {
   cursorline_alter = 0.07,
-  pmenu_alter = 1.8,
+  pmenu_bg_alter = 1.8,
   pmenusel_alter = 0.6,
   pmenuthumb_alter = 0.6,
   fzfluasel_alter = 0.5,
@@ -116,7 +120,7 @@ reset_base_alter({ "everforest" }, {
 
 reset_base_alter({ "tokyonight-day" }, {
   cursorline_alter = -0.01,
-  pmenu_alter = 1.8,
+  pmenu_bg_alter = 1.8,
   pmenusel_alter = 0.6,
   pmenuthumb_alter = 0.6,
   fzfluasel_alter = 0.5,
@@ -125,7 +129,7 @@ reset_base_alter({ "tokyonight-day" }, {
 
 reset_base_alter({ "ashen" }, {
   cursorline_alter = 0.04,
-  pmenu_alter = 1,
+  pmenu_bg_alter = 1,
   pmenusel_alter = 0.8,
   pmenuthumb_alter = 0.6,
   fzfluasel_alter = 0.8,
@@ -134,7 +138,7 @@ reset_base_alter({ "ashen" }, {
 
 reset_base_alter({ "citruszest" }, {
   cursorline_alter = 0.06,
-  pmenu_alter = 1,
+  pmenu_bg_alter = 1,
   pmenusel_alter = 0.8,
   pmenuthumb_alter = 0.6,
   fzfluasel_alter = 0.8,
@@ -143,8 +147,9 @@ reset_base_alter({ "citruszest" }, {
 
 reset_base_alter({ "gruvbox-material" }, {
   cursorline_alter = 0.12,
-  pmenu_alter = -0.05,
-  pmenusel_alter = 0.4,
+  pmenu_bg_alter = -0.05,
+  pmenu_fg_alter = -0.3,
+  pmenusel_alter = 0.1,
   pmenuthumb_alter = 0.4,
   fzfluasel_alter = 0.05,
   quickfixline_alter = 0.2,
@@ -153,7 +158,7 @@ reset_base_alter({ "gruvbox-material" }, {
 
 reset_base_alter({ "kanagawa" }, {
   cursorline_alter = 0.1,
-  pmenu_alter = -0.1,
+  pmenu_bg_alter = -0.1,
   pmenusel_alter = -0.05,
   pmenuthumb_alter = 0.3,
   fzfluasel_alter = -0.05,
@@ -162,7 +167,7 @@ reset_base_alter({ "kanagawa" }, {
 
 reset_base_alter({ "sonokai" }, {
   cursorline_alter = 0.08,
-  pmenu_alter = -0.1,
+  pmenu_bg_alter = -0.1,
   pmenusel_alter = -0.1,
   pmenuthumb_alter = 0.4,
   fzfluasel_alter = -0.1,
@@ -171,7 +176,7 @@ reset_base_alter({ "sonokai" }, {
 
 reset_base_alter({ "tokyonight-storm" }, {
   cursorline_alter = 0.07,
-  pmenu_alter = -0.1,
+  pmenu_bg_alter = -0.1,
   pmenusel_alter = -0.1,
   pmenuthumb_alter = 0.4,
   fzfluasel_alter = -0.1,
@@ -180,7 +185,7 @@ reset_base_alter({ "tokyonight-storm" }, {
 
 reset_base_alter({ "selenized", "nightfox", "vscode_modern", "horizon" }, {
   cursorline_alter = 0.1,
-  pmenu_alter = -0.05,
+  pmenu_bg_alter = -0.05,
   pmenusel_alter = 0.2,
   pmenuthumb_alter = 0.15,
   fzfluasel_alter = -0.05,
@@ -253,8 +258,8 @@ local general_overrides = function()
     },
     {
       Pmenu = {
-        fg = { from = "Normal", attr = "fg", alter = -0.1 },
-        bg = { from = "Normal", attr = "bg", alter = pmenu_alter },
+        fg = { from = "Normal", attr = "fg", alter = pmenu_fg_alter },
+        bg = { from = "Normal", attr = "bg", alter = pmenu_bg_alter },
       },
     },
     {
@@ -294,7 +299,7 @@ local general_overrides = function()
     { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = quickfixline_alter }, underline = false } },
 
     -- ╔═════════════════════════════════════════════════════════╗
-    -- ║                          SPELL                          ║
+    -- ║                          SPELL                          ║t
     -- ╚═════════════════════════════════════════════════════════╝
     { SpellBad = { undercurl = true, bg = "NONE", fg = "NONE", sp = "green" } },
     { SpellRare = { undercurl = true } },
@@ -1176,6 +1181,8 @@ local function colorscheme_overrides()
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
+
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
 
       {
         StatusLine = {

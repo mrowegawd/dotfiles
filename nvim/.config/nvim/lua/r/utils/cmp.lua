@@ -220,6 +220,7 @@ function M.setup(opts)
       { name = "emoji" },
       { name = "path" },
       { name = "luasnip" },
+      { name = "orgmode" },
     }, {
       { name = "cmdline" },
       { name = "buffer" },

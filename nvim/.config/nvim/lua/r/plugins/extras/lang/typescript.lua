@@ -263,12 +263,6 @@ return {
   -- ╭─────────────────────────────────────────────────────────╮
   -- │ MISC                                                    │
   -- ╰─────────────────────────────────────────────────────────╯
-  -- BETTER-TS-ERRORS
-  {
-    "dmmulroy/ts-error-translator.nvim",
-    ft = { "typescript", "vue", "typescriptreact" },
-    opts = {},
-  },
   -- TSC.NVIM
   {
     "dmmulroy/tsc.nvim",
