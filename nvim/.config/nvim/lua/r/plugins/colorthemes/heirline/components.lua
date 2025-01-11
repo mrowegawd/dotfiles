@@ -501,7 +501,11 @@ M.FilePath = {
       if not Conditions.is_not_active() then
         parts = vim.split(filename, "[\\/]")
         table.remove(parts, #parts)
-        return " " .. table.concat(parts, sep) .. sep
+        local tbl_concat = table.concat(parts, sep)
+        if #tbl_concat > 0 then
+          return " " .. tbl_concat .. sep
+        end
+        return " "
       end
 
       if not Conditions.width_percent_below(#filename, 0.90) then
