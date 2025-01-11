@@ -50,6 +50,10 @@ window-theme       = ghostty
 # adjust-cell-width = 0
 # adjust-cell-height = 20%
 
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
 gtk-titlebar           = false
 confirm-close-surface  = false
 
