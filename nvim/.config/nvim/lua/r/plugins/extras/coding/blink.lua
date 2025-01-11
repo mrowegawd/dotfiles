@@ -18,7 +18,6 @@ return {
       "disable_ft",
     },
     dependencies = {
-      "mikavilpas/blink-ripgrep.nvim",
       -- add blink.compat to dependencies
       {
         "saghen/blink.compat",
@@ -53,7 +52,7 @@ return {
             --   return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
             -- end,
             preselect = false,
-            auto_insert = true,
+            auto_insert = false,
           },
         },
         accept = {
@@ -99,48 +98,8 @@ return {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
-        providers = {
-          ripgrep = {
-            module = "blink-ripgrep",
-            name = "Ripgrep",
-            -- the options below are optional, some default values are shown
-            ---@module "blink-ripgrep"
-            ---@type blink-ripgrep.Options
-            opts = {
-              prefix_min_len = 2,
-              context_size = 5,
-              max_filesize = "1M",
-              -- Examples:
-              -- - ".git" (default)
-              -- - { ".git", "package.json", ".root" }
-              project_root_marker = ".git",
-              search_casing = "--ignore-case",
-              fallback_to_regex_highlighting = true,
-              debug = false,
-              future_features = {
-                kill_previous_searches = false,
-              },
-            },
-            -- (optional) customize how the results are displayed. Many options
-            -- are available - make sure your lua LSP is set up so you get
-            -- autocompletion help
-            transform_items = function(_, items)
-              for _, item in ipairs(items) do
-                -- example: append a description to easily distinguish rg results
-                item.labelDetails = {
-                  description = "(rg)",
-                }
-              end
-              return items
-            end,
-          },
-        },
-        -- NOTE: sementara di set 'none' dahulu
-        -- karena terdapat masalah,
-        -- jika mau difix dan berhasil, hapus `cmdline = {}` ini:
-        -- 1. conflict keybindings untuk `commandline` di general.lua
-        -- 2. after cmdline, buffer completion sepertinya ga jalan lagi?
+        default = { "lsp", "path", "snippets", "buffer" },
+        -- NOTE: sementara di disable dahulu dengan set empty table
         cmdline = {},
         -- cmdline = function()
         --   local type = vim.fn.getcmdtype()
