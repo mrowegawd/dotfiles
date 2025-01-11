@@ -899,7 +899,7 @@ return {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["gruvbox-material"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.05 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["citruszest"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.4 } } },

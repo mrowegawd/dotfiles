@@ -147,7 +147,7 @@ reset_base_alter({ "gruvbox-material" }, {
   pmenusel_alter = 0.4,
   pmenuthumb_alter = 0.4,
   fzfluasel_alter = 0.05,
-  quickfixline_alter = 0.4,
+  quickfixline_alter = 0.2,
   search_alter = 0.25,
 })
 
@@ -1147,13 +1147,7 @@ local function colorscheme_overrides()
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          bg = { from = "CursorLine", attr = "bg", alter = -0.05 },
-          fg = "NONE",
-          underline = false,
-        },
-      },
+      { QuickFixLine = { fg = "NONE", underline = false } },
 
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
       {
