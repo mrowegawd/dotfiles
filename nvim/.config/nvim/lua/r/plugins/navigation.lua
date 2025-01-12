@@ -923,7 +923,7 @@ return {
             { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
           },
           ["tokyonight-storm"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["farout"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.05 } } },
@@ -953,7 +953,7 @@ return {
           },
           ["tokyonight-day"] = {
             { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 1 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.25 } } },
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {

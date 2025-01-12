@@ -223,27 +223,30 @@ M.Mode_inactive = {
   {
     provider = function()
       if vim.bo[0].filetype == "qf" then
-        return string.format "    QF"
+        return string.format ""
       end
       return string.format "      "
     end,
     hl = function()
+      return { bg = colors.base_bg, fg = colors.base_fg }
+    end,
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      return { bg = colors.base_bg, fg = colors.base_bg }
+    end,
+  },
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      local fg = colors.base_bg
+      local bg = colors.basenc_bg
       if vim.bo[0].filetype == "qf" then
-        return { bg = colors.separator_fg_inactive, fg = colors.coldisorent }
+        fg = colors.base_bg
+        bg = colors.qf_bg_not_active
       end
-      return { bg = colors.separator_fg_inactive, fg = colors.base_bg }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { bg = colors.separator_fg_inactive, fg = colors.separator_fg_inactive }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { fg = colors.separator_fg_inactive }
+      return { fg = fg, bg = bg }
     end,
   },
 }
@@ -1020,7 +1023,7 @@ M.status_active_left = {
 
 M.status_not_active = {
   condition = Conditions.is_not_active,
-  -- M.Mode_inactive,
+  M.Mode_inactive,
   -- M.Branch,
   M.FilePath,
   -- M.FileIcon,

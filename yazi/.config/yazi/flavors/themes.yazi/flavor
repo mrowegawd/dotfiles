@@ -1,37 +1,34 @@
-# vim:fileencoding=utf-8:foldmethod=marker
-
 # Taken from: https://github.com/yazi-rs/flavors?tab=readme-ov-file
 
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#ccc8bf" }
+cwd = { fg = "%%col_cwd%%" }
 
 # Hovered
-hovered = { bg = "#fee7dc" }
+hovered = { bg = "%%col_hovered%%" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#fee7dc", bg = "#f85552", italic = true }
+find_keyword = { fg = "#1b1b1b", bg = "#3ddbd9", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#fe8019", bg = "#fe8019" }
-marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
-marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
+marker_selected = { fg = "%%col_selected%%", bg = "%%col_selected%%" }
+marker_copied = { fg = "%%col_copied%%", bg = "%%col_copied%%" }
+marker_cut = { fg = "%%col_cut%%", bg = "%%col_cut%%" }
 
-count_cut = { fg = "#f38ba8", bg = "#e0e0e0" }
-count_copied = { fg = "#b8bb26", bg = "#e0e0e0" }
-count_selected = { fg = "#fe8019", bg = "#e0e0e0" }
+count_selected = { fg = "%%col_selected%%", bg = "%%col_tab_inactive_bg%%" }
+count_copied = { fg = "%%col_copied%%", bg = "%%col_tab_inactive_bg%%" }
+count_cut = { fg = "%%col_cut%%", bg = "%%col_tab_inactive_bg%%" }
 
 # Tab
-tab_active = { fg = "#df4c49", bg = "#7c2a29" }
-tab_inactive = { fg = "#b3b0a8", bg = "#e0e0e0" }
-tab_width = 1
+tab_active = { fg = "%%col_tab_active_fg%%", bg = "%%col_tab_active_bg%%" }
+tab_inactive = { fg = "%%col_tab_inactive_fg%%", bg = "%%col_tab_inactive_bg%%" }
 
 # Border
 border_symbol = "│"
-border_style = { fg = "#e0dcd2" }
+border_style = { fg = "#1c1c1c" }
 
 # Highlighting
 # syntect_theme = "~/.config/yazi/Gruvbox-Dark.tmTheme"
@@ -39,10 +36,10 @@ border_style = { fg = "#e0dcd2" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#cccccc", bg = "#f85552", bold = true }
-normal_alt = { fg = "#f85552", bg = "#cccccc" }
+normal_main = { fg = "%%col_statusline_active_bg%%", bg = "%%col_statusline_active_mode_bg%%", bold = true }
+normal_alt = { fg = "%%col_statusline_active_mode_bg%%", bg = "%%col_statusline_active_bg%%" }
 
-select_main = { fg = "#ffffff", bg = "#223249", bold = true }
+select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
 
 unset_main = { fg = "#ffffff", bg = "#d3869b", bold = true }
@@ -53,7 +50,7 @@ unset_alt = { fg = "#d3869b", bg = "#ffffff" }
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#8c8a83" }
+separator_style = { fg = "#6b6461", bg = "#181818" }
 
 # Progress
 progress_label = { fg = "#ebdbb2", bold = true }
@@ -101,10 +98,10 @@ hovered = { underline = true }
 # : }}}
 
 
-# : Which {{{
+# :  {{{
 
 [which]
-mask = { bg = "#e5e1d7" }
+mask = { bg = "%%col_which_bg%%" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -120,7 +117,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#fee7dc", bold = true }
+hovered = { bg = "%%col_cwd%%", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
@@ -148,8 +145,8 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#5c6a72" },
-  { name = "*/", fg = "#3a94c5" },
+  { name = "*", fg = "%%col_filename_fg%%" },
+  { name = "*/", fg = "%%col_directory%%" },
 ]
 
 # : }}}

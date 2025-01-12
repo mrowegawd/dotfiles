@@ -239,6 +239,18 @@ function M.change_colors()
   local sugest_highlight =
     Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.5, Highlight.get("Normal", "bg"))
 
+  local yazi_cwd = Highlight.get("Comment", "fg")
+  local yazi_hovered = Highlight.get("CursorLine", "bg")
+  local yazi_tab_active_fg = Highlight.get("KeywordNC", "fg")
+  local yazi_tab_active_bg = Highlight.get("KeywordNC", "bg")
+  local yazi_tab_inactive_fg = Highlight.get("TabLine", "fg")
+  local yazi_tab_inactive_bg = Highlight.get("TabLine", "bg")
+  local yazi_statusline_active_mode_bg = Highlight.get("Keyword", "fg")
+  local yazi_statusline_active_bg = Highlight.get("StatusLine", "bg")
+  local yazi_directory = Highlight.get("Directory", "fg")
+  local yazi_filename_fg = Highlight.get("StatusLine", "fg")
+  local yazi_which_bg = Highlight.get("Pmenu", "bg")
+
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
     statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
@@ -296,6 +308,21 @@ function M.change_colors()
 
 %s
 *color37: %s
+
+%s
+*color38: %s
+*color39: %s
+*color40: %s
+*color41: %s
+*color42: %s
+*color43: %s
+
+%s
+*color44: %s
+*color45: %s
+*color46: %s
+*color47: %s
+*color48: %s
 ]],
     fmt "! vim: foldmethod=marker foldlevel=0 ft=xdefaults",
 
@@ -339,7 +366,22 @@ function M.change_colors()
     gitlinenumber_delete, -- 35
 
     fmt "! zsh-autosuggestions: fg",
-    sugest_highlight -- 37
+    sugest_highlight, -- 37
+
+    fmt "! yazi: cwd, hovered, tab_active_fg, tab_active_bg, tab_inactive_bg, tab_inactive_fg",
+    yazi_cwd, -- 38
+    yazi_hovered, -- 39
+    yazi_tab_active_fg, -- 40
+    yazi_tab_active_bg, -- 41
+    yazi_tab_inactive_fg, -- 42
+    yazi_tab_inactive_bg, -- 43
+
+    fmt "! yazi: statusline_mode_active_bg, statusline_active_bg, directory, which_bg, filename_fg",
+    yazi_statusline_active_mode_bg, -- 44
+    yazi_statusline_active_bg, -- 45
+    yazi_directory, -- 46
+    yazi_which_bg, -- 47
+    yazi_filename_fg
   )
 
   local master_color_path = "/tmp/master-colors-themes"

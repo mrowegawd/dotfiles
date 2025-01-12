@@ -1,37 +1,34 @@
-# vim:fileencoding=utf-8:foldmethod=marker
-
 # Taken from: https://github.com/yazi-rs/flavors?tab=readme-ov-file
 
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#626053" }
+cwd = { fg = "#444444" }
 
 # Hovered
-hovered = { bg = "#2b2936" }
+hovered = { bg = "#252c31" }
 preview_hovered = { underline = true }
 
 # Find
-find_keyword = { fg = "#313140", bg = "#ff9e3b", italic = true }
+find_keyword = { fg = "#1b1b1b", bg = "#3ddbd9", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#fe8019", bg = "#fe8019" }
-marker_copied = { fg = "#b8bb26", bg = "#b8bb26" }
-marker_cut = { fg = "#f38ba8", bg = "#f38ba8" }
+marker_selected = { fg = "#dcdcaa", bg = "#dcdcaa" }
+marker_copied = { fg = "#c678dd", bg = "#c678dd" }
+marker_cut = { fg = "#f44747", bg = "#f44747" }
 
-count_cut = { fg = "#f38ba8", bg = "#30303e" }
-count_copied = { fg = "#b8bb26", bg = "#30303e" }
-count_selected = { fg = "#fe8019", bg = "#30303e" }
+count_selected = { fg = "#dcdcaa", bg = "#2a2a2a" }
+count_copied = { fg = "#c678dd", bg = "#2a2a2a" }
+count_cut = { fg = "#f44747", bg = "#2a2a2a" }
 
 # Tab
-tab_active = { fg = "#8672a5", bg = "#4a3f5c" }
-tab_inactive = { fg = "#55556e", bg = "#30303e" }
-tab_width = 1
+tab_active = { fg = "#4d8cc0", bg = "#2b4e6b" }
+tab_inactive = { fg = "#464646", bg = "#2a2a2a" }
 
 # Border
 border_symbol = "│"
-border_style = { fg = "#313140" }
+border_style = { fg = "#1c1c1c" }
 
 # Highlighting
 # syntect_theme = "~/.config/yazi/Gruvbox-Dark.tmTheme"
@@ -39,26 +36,28 @@ border_style = { fg = "#313140" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#39394a", bg = "#957fb8", bold = true }
-normal_alt = { fg = "#957fb8", bg = "#39394a" }
+normal_main = { fg = "#3d3d3d", bg = "#569cd6", bold = true }
+normal_alt = { fg = "#569cd6", bg = "#3d3d3d" }
 
-select_main = { fg = "#ffffff", bg = "#223249", bold = true }
+select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
 
 unset_main = { fg = "#ffffff", bg = "#d3869b", bold = true }
 unset_alt = { fg = "#d3869b", bg = "#ffffff" }
 
 # : Status {{{
-#
+
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#6b6461", bg = "#21212b" }
+separator_style = { fg = "#6b6461", bg = "#181818" }
 
+# Progress
 progress_label = { fg = "#ebdbb2", bold = true }
-progress_normal = { fg = "#504945", bg = "#51576d" }
-progress_error = { fg = "#fb4934", bg = "#51576d" }
+progress_normal = { fg = "#504945", bg = "#3c3836" }
+progress_error = { fg = "#fb4934", bg = "#3c3836" }
 
+# Permissions
 perm_type = { fg = "#8caaee" }
 perm_read = { fg = "#e5c890" }
 perm_write = { fg = "#e78284" }
@@ -102,7 +101,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#1d1d26" }
+mask = { bg = "#1d1d1d" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -118,7 +117,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#2b2936", bold = true }
+hovered = { bg = "#444444", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
@@ -146,8 +145,8 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#bbbac1" },
-  { name = "*/", fg = "#7aa89f" },
+  { name = "*", fg = "#a8a8a8" },
+  { name = "*/", fg = "#569cd6" },
 ]
 
 # : }}}
