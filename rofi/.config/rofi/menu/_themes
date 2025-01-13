@@ -16,7 +16,7 @@ GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 GET_BLACK_ALT=$(xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs)
 
 GET_RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
-GET_RED_ALT=$(xrdb -query | grep -i .color9 | cut -d':' -f2 | head -1 | xargs)
+# GET_RED_ALT=$(xrdb -query | grep -i .color9 | cut -d':' -f2 | head -1 | xargs)
 
 GET_GREEN=$(xrdb -query | grep -i .color2 | cut -d':' -f2 | head -1 | xargs)
 GET_GREEN_ALT=$(xrdb -query | grep -i .color10 | cut -d':' -f2 | head -1 | xargs)
@@ -84,6 +84,20 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
 
   # ZSH-AUTOSUGGESTIONS
   GET_COL_37=$(grep -i color37 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  # YAZI
+  GET_COL_38=$(grep -i color38 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_39=$(grep -i color39 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_40=$(grep -i color40 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_41=$(grep -i color41 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_42=$(grep -i color42 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_43=$(grep -i color43 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  GET_COL_44=$(grep -i color44 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_45=$(grep -i color45 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_46=$(grep -i color46 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -342,7 +356,7 @@ set_btop() {
   sed -i -e "s/%%background%%/$GET_BG/g" "$_BTOP_PATH/themes/guard_theme.theme"
   sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_PATH/themes/guard_theme.theme"
   sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%red_alt%%/$GET_RED_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
+  sed -i -e "s/%%red_alt%%/$GET_YELLOW_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
   sed -i -e "s/%%cyan%%/$GET_CYAN/g" "$_BTOP_PATH/themes/guard_theme.theme"
 
@@ -358,19 +372,42 @@ set_btop() {
 
 }
 set_yazi_theme() {
-  YAZI_FILE_THEME="$HOME/.config/yazi/theme.toml"
+  YAZI_FLAVORS_THEME_FOLDER="$HOME/.config/yazi/flavors"
+  YAZI_FLAVORS_THEMES_PATH="$YAZI_FLAVORS_THEME_FOLDER/themes.yazi"
 
-  if [ ! -f "$YAZI_FILE_THEME" ]; then
-    dunstify "$ERROR_MSG" "Path $YAZI_FILE_THEME do not exists!" && exit 1
+  if [ ! -d "$YAZI_FLAVORS_THEME_FOLDER" ]; then
+    dunstify "$ERROR_MSG" "Path $YAZI_FLAVORS_THEME_FOLDER do not exists!" && exit 1
   fi
 
-  NAME_THEME=$1
-  if [ "$1" = "vscode_modern" ]; then
-    NAME_THEME="vscode-modern"
-  fi
+  TARGET_YAZI_THEME="$YAZI_FLAVORS_THEMES_PATH/flavor.toml"
 
-  sed -i -e "s/^dark.*/dark = \"$NAME_THEME\"/g" "$YAZI_FILE_THEME"
-  sed -i -e "s/^light.*/light = \"$NAME_THEME\"/g" "$YAZI_FILE_THEME"
+  cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
+
+  HOVERED_BG=$GET_COL_39
+  # if [ "$1" == "dayfox" ] || [ "$1" == "everforest" ] || [ "$1" == "tokyonight-day" ]; then
+  if [ "$1" == "lackluster" ]; then
+    HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
+  fi
+  sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
+
+  sed -i -e "s/%%col_selected%%/$GET_YELLOW/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_copied%%/$GET_MAGENTA/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_cut%%/$GET_RED/g" "$TARGET_YAZI_THEME"
+
+  sed -i -e "s/%%col_tab_active_fg%%/$GET_COL_40/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_tab_active_bg%%/$GET_COL_41/g" "$TARGET_YAZI_THEME"
+
+  sed -i -e "s/%%col_tab_inactive_fg%%/$GET_COL_42/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_tab_inactive_bg%%/$GET_COL_43/g" "$TARGET_YAZI_THEME"
+
+  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_mode_bg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
+
+  sed -i -e "s/%%col_directory%%/$GET_COL_46/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_which_bg%%/$GET_COL_47/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_filename_fg%%/$GET_COL_48/g" "$TARGET_YAZI_THEME"
+
 }
 set_fzf() {
   FZF_PATH_CONFIG="$HOME/moxconf/development/dotfiles/miscxrdb/.config/miscxrdb/fzf"
@@ -480,6 +517,17 @@ set_firefox() {
     sed -i -e "s/background-color:.*/background-color: $GET_BG !important;/g" "$FIREFOX_DEFAULT_PATH/ogx_tricks.css"
   else
     dunstify "$ERROR_MSG" "Path $FIREFOX_DEFAULT_PATH do not exists!"
+  fi
+
+}
+set_ncmpcpp() {
+  NCMPCPP_PATH="$HOME/.ncmpcpp/config"
+
+  if [ -f "$NCMPCPP_PATH" ]; then
+    dunstify "not implemented yet"
+
+  else
+    dunstify "$ERROR_MSG" "File $NCMPCPP_PATH do not exists!"
   fi
 
 }
