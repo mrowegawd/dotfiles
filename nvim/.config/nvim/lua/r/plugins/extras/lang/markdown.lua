@@ -166,6 +166,9 @@ return {
           ["everforest"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
           },
+          ["catppuccin-mocha"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+          },
           ["selenized"] = {
             {
               RenderMarkdownCodeInline = {

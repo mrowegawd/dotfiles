@@ -3,13 +3,14 @@ local Highlight = require "r.settings.highlights"
 local normal_fg = Highlight.get("Normal", "fg")
 local normal_bg = Highlight.get("Normal", "bg")
 
-local error_fg = Highlight.get("ErrorMsg", "fg")
-local keyword = Highlight.get("Keyword", "fg")
-
 local statusline_fg = Highlight.get("StatusLine", "fg")
 local statusline_bg = Highlight.get("StatusLine", "bg")
 local statuslinenc_fg = Highlight.get("StatusLineNC", "fg")
 local statuslinenc_bg = Highlight.get("StatusLineNC", "bg")
+
+local error_fg = Highlight.get("ErrorMsg", "fg")
+local keyword = Highlight.get("Keyword", "fg")
+local keywordnc = Highlight.tint(statusline_bg, 0.2)
 
 local qf_bg_not_active = Highlight.tint(statuslinenc_bg, 0.4)
 local qf_fg_not_active = Highlight.tint(qf_bg_not_active, -0.3)
@@ -27,6 +28,7 @@ local mode_bg = Highlight.tint(statusline_bg, 1)
 if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(separator_fg_alt, 0.7)
 
+  keywordnc = Highlight.tint(statusline_bg, -0.04)
   separator_trouble = Highlight.tint(normal_bg, -0.1)
   separator = Highlight.tint(normal_bg, -0.1)
   mode_bg = Highlight.tint(statusline_bg, 0.48)
@@ -50,6 +52,7 @@ local M = {
   branch_fg = branch_fg,
   terminal_fg = terminal_fg,
   keyword = keyword,
+  keywordnc = keywordnc,
 
   filename_fg = Highlight.tint(statusline_bg, 6),
   modified_fg = Highlight.tint(error_fg, 0.3),

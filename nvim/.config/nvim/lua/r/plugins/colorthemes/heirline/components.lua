@@ -46,6 +46,7 @@ local colors = {
   branch_fg = Col.branch_fg,
   terminal_fg = Col.terminal_fg,
   keyword = Col.keyword,
+  keywordnc = Col.keywordnc,
 
   mode_bg = Col.mode_bg,
   filename_fg = Col.mode_bg,
@@ -228,13 +229,13 @@ M.Mode_inactive = {
       return string.format "      "
     end,
     hl = function()
-      return { bg = colors.base_bg, fg = colors.base_fg }
+      return { bg = colors.keywordnc, fg = colors.base_fg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { bg = colors.base_bg, fg = colors.base_bg }
+      return { bg = colors.base_bg, fg = colors.keywordnc }
     end,
   },
   {

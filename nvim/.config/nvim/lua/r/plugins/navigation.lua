@@ -917,16 +917,16 @@ return {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["evangelion"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.2 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.25 } } },
           },
           ["vscode_modern"] = {
-            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["tokyonight-storm"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["farout"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.05 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.45 } } },
           },
           ["lackluster"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.6 } } },
@@ -966,7 +966,7 @@ return {
           },
           ["everforest"] = {
             { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.75 } } },
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {

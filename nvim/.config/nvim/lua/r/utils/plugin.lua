@@ -340,12 +340,12 @@ function M.change_colors()
 
     fmt "! FZF-NORMAL: bg, fg, match",
     Highlight.get("NormalFloat", "bg"), -- 22
-    Highlight.get("CmpItemAbbr", "fg"), -- 23
+    Highlight.get("FzfLuaFilePart", "fg"), -- 23
     Highlight.get("CmpItemAbbrMatch", "fg"), --24
 
     fmt "! FZF-SELECTION: bg, fg, match",
     Highlight.get("FzfLuaSel", "bg"), -- 25
-    Highlight.get("CmpItemAbbr", "fg"), -- 26
+    Highlight.get("FzfLuaSel", "fg"), -- 26
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"), --27
 
     fmt "! FZF: border",
