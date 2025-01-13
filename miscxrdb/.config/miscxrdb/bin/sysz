@@ -421,6 +421,10 @@ while :; do
       --history="$SYSZ_HISTORY" \
       --prompt="Units: " \
       --header '? for keybindings' \
+      --bind 'alt-n:page-down+refresh-preview' \
+      --bind 'alt-p:page-up+refresh-preview' \
+      --bind 'ctrl-p:up' \
+      --bind 'ctrl-n:down' \
       --bind "?:preview(echo '$(_sysz_keys)')" \
       --bind "ctrl-v:preview('${BASH_SOURCE[0]}' _fzf_cat {})" \
       --preview="'${BASH_SOURCE[0]}' _fzf_preview {}" \

@@ -6,6 +6,9 @@ set -uo pipefail
 # │                          utils                           │
 # ╰──────────────────────────────────────────────────────────╯
 
+GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
+GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+
 not_in_tmux() {
   [ -z "$TMUX" ]
 }
@@ -78,7 +81,10 @@ show_apt_search() {
 
 open_calc() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
-  tmux display-popup -E python -ic "from __future__ import division; from math import *; from random import *"
+  tmux display-popup \
+    -S bg="$GET_BG",fg="$GET_FG" \
+    -b rounded \
+    -E python -ic "from __future__ import division; from math import *; from random import *"
 }
 
 open_mutlilog() {
@@ -105,6 +111,8 @@ open_newsboat() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
       -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
       -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
@@ -112,6 +120,8 @@ open_newsboat() {
     else
       tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
         -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
         -E "tmux attach -t $session"
     fi
   fi
@@ -133,8 +143,11 @@ open_calcure() {
   session="tmp_calcure"
 
   if ! session_exists "$session"; then
+    set -gF status off
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
       -E -d "#{pane_current_path}" \
       -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session calcure;'"
   else
@@ -142,6 +155,8 @@ open_calcure() {
       tmux detach-client
     else
       tmux display-popup -d '#{pane_current_path}' -w '80%' -h '80%' \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
         -E -d "#{pane_current_path}" \
         -E "tmux attach -t $session"
     fi
@@ -157,12 +172,16 @@ open_ps_btop() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
       -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
       -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session btop;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
     else
       tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
         -E -d "#{pane_current_path}" \
         -E "tmux attach -t $session"
     fi
@@ -213,6 +232,8 @@ open_ps_lsof() {
     set -gF '@last_session_name' '#S'
     tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
       -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -b rounded \
       -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
@@ -220,6 +241,8 @@ open_ps_lsof() {
     else
       tmux display-popup -d '#{pane_current_path}' -w '90%' -h '50%' -x '80%' -y '80%' \
         -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -b rounded \
         -E "tmux attach -t $session"
       # -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
     fi
@@ -230,6 +253,8 @@ open_systemctl_ui() {
   session="tmp_szy"
 
   tmux display-popup -d '#{pane_current_path}' -w '80%' -h '90%' -y '80%' \
+    -S bg="$GET_BG",fg="$GET_FG" \
+    -b rounded \
     -E -d "#{pane_current_path}" \
     -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
 }
