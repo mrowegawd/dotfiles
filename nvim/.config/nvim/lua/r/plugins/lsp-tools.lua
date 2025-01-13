@@ -15,6 +15,7 @@ return {
   -- OUTPUTPANEL
   {
     "mhanberg/output-panel.nvim",
+    version = "*",
     event = "VeryLazy",
     keys = {
       {
@@ -24,7 +25,7 @@ return {
       },
     },
     config = function()
-      require("output_panel").setup()
+      require("output_panel").setup {}
     end,
   },
   -- GOTOPREVIEW
