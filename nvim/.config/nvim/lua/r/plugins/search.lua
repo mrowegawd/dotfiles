@@ -135,10 +135,10 @@ return {
           end,
       }) end, desc = "Fzflua: select buffers" },
       { "<Leader>s", "", desc = "+fzfcustom" },
-      { "<Leader>bs", function() require("fzf-lua").blines() end, desc = "Buffer: live grep on curbuf [fzflua", mode = { "n" } },
-      { "<Leader>bs", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>" } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
-      { "<Leader>bS", function() require("fzf-lua").lines() end, desc = "Buffer: live grep on buffers [fzflua]" },
-      { "<Leader>bS", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>" } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>bs", function() require("fzf-lua").blines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on curbuf [fzflua", mode = { "n" } },
+      { "<Leader>bs", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>bS", function() require("fzf-lua").lines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on buffers [fzflua]" },
+      { "<Leader>bS", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
       { "<Leader>sc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
       { "<Leader>sC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
       { "<Leader>sa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
@@ -236,22 +236,25 @@ return {
           }
         end,
         fzf_colors = {
-          ["fg"] = { "fg", "CmpItemAbbr" },
+          ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "NormalFloat" },
           ["hl"] = { "fg", "CmpItemAbbrMatch" },
-          ["fg+"] = { "fg", "CmpItemAbbr" },
+          ["fg+"] = { "fg", "FzfLuaSel" },
           ["bg+"] = { "bg", "FzfLuaSel" },
           ["hl+"] = { "fg", "CmpItemAbbrMatchFuzzy" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
-          ["pointer"] = { "fg", "FzfLuaFzfPointer" },
-          ["marker"] = { "fg", "ErrorMsg" },
+          ["pointer"] = { "fg", "Error" },
+          ["marker"] = { "fg", "Error" },
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "FzfLuaHeaderText" },
           ["gutter"] = { "bg", "FloatBorder" },
         },
         previewers = {
           builtin = {
+            treesitter = {
+              context = false, -- disable treesitter-context
+            },
             extensions = {
               ["html"] = html_preview_command,
               ["jpg"] = img_preview_command,
