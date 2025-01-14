@@ -1,30 +1,24 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
-! FarOut-Night colors for Xresources
+! FarOut colors for Xresources
 
-*.background: #0f0908
-*.foreground: #E0CCAE
+*background: #0f0908
+*foreground: #E0CCAE
+*cursorColor:  #E0CCAE
 
-*.color0: #0c0706
-*.color8: #392D2B
+*color0: #0c0706
+*color1: #bf472c
+*color2: #a4896f
+*color3: #f2a766
+*color4: #d47d49
+*color5: #8a4b53
+*color6: #a67458
+*color7: #F2A766
 
-*.color1: #bf472c
-*.color9: #bf472c
-
-
-*.color2: #a4896f
-*.color10: #a4896f
-
-*.color3: #f2a766
-*.color11: #f2a766
-
-*.color4: #d47d49
-*.color12: #d47d49
-
-*.color5: #8a4b53
-*.color13: #8a4b53
-
-*.color6: #a67458
-*.color14: #a67458
-
-*.color7: #F2A766
-*.color15: #E0CCAE
+*color8: #392D2B
+*color9: #bf472c
+*color10: #a4896f
+*color11: #f2a766
+*color12: #d47d49
+*color13: #8a4b53
+*color14: #a67458
+*color15: #E0CCAE

@@ -1,6 +1,7 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 *foreground: #adbcbc
 *background: #103c48
+*cursorColor:  #ee5396
 
 *color0: #174956
 *color8: #325b66

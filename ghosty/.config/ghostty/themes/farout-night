@@ -2,7 +2,7 @@ background = 0f0908
 foreground = E0CCAE
 
 # Cursor none
-cursor-color = a5222f
+cursor-color = E0CCAE
 
 # Normal
 palette = 0=#0c0706

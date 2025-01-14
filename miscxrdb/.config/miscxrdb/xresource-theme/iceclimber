@@ -2,6 +2,7 @@
 
 *background: #171718
 *foreground: #bbbac1
+*cursorColor: #bbbac1
 
 *color0:#2d2d2f
 *color1:#e67e80

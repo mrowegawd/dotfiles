@@ -15,7 +15,7 @@
 
 *.foreground:   #8edf5f
 *.background:   #201430
-*.cursorColor:  #5f875f
+*.cursorColor:  #18b530
 ! black
 *.color0:       #201430
 *.color8:       #3b3847

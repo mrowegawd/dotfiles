@@ -2,6 +2,7 @@
 
 *.foreground: #BABABA
 *.background: #1C1E26
+*.cursorColor:  #b3276f
 
 ! black
 *.color0:  #131419

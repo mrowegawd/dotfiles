@@ -1,7 +1,9 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+! sonokai
 
 *background:#2d2a2e
 *foreground:#e3e1e4
+*cursorColor:#9e0e06
 
 ! Black
 *color0:#1a181a

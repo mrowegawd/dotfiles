@@ -1,8 +1,8 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! TokyoNight colors for Xresources
-
 *background: #24283b
 *foreground: #c0caf5
+*cursorColor:  #b3276f
 
 *color0: #1d202f
 *color1: #f7768e

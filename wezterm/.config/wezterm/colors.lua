@@ -19,6 +19,8 @@ if not Util.is_os_windows() then
 		fg = Util.cmd_call("xrdb -query | grep -i foreground | cut -d':' -f2 | xargs"),
 		bg = Util.cmd_call("xrdb -query | grep -i background | cut -d':' -f2 | xargs"),
 
+		cursor = Util.cmd_call("xrdb -query | grep -i cursor | cut -d':' -f2 | xargs"),
+
 		black = Util.cmd_call("xrdb -query | grep -i .color0 | cut -d':' -f2 | head -1 | xargs"),
 		black_alt = Util.cmd_call("xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs"),
 		red = Util.cmd_call("xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs"),

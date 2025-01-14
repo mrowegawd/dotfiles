@@ -4,6 +4,7 @@
 ! Upstream: https://github.com/edeneast/nightfox.nvim/raw/main/extra/carbonfox/carbonfox.Xresources
 *background: #161616
 *foreground: #f2f4f8
+*.cursorColor: #6d32c9
 *color0:  #282828
 *color1:  #ee5396
 *color2:  #25be6a

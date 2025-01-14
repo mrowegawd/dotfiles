@@ -265,7 +265,7 @@ local general_overrides = function()
     {
       StatusLine = {
         fg = { from = "Normal", attr = "bg", alter = 6 },
-        bg = { from = "Normal", attr = "bg", alter = 1.4 },
+        bg = { from = "Normal", attr = "bg", alter = 1.3 },
         reverse = false,
       },
     },
@@ -279,7 +279,7 @@ local general_overrides = function()
     {
       Tabline = {
         fg = { from = "Normal", attr = "bg", alter = 2.9 },
-        bg = { from = "StatusLine", attr = "bg", alter = -0.20 },
+        bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         reverse = false,
       },
     },
@@ -1167,13 +1167,25 @@ local function colorscheme_overrides()
           undercurl = false,
         },
       },
-    },
-    ["neomodern"] = {
-      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 6 },
+          bg = { from = "Normal", attr = "bg", alter = 1.2 },
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          reverse = false,
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "Normal", attr = "bg", alter = 2.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.23 },
+          reverse = false,
         },
       },
     },
@@ -1196,6 +1208,57 @@ local function colorscheme_overrides()
       {
         SnacksIndentScope = {
           fg = Highlight.darken(Highlight.get("Special", "fg"), 0.3, Highlight.get("Normal", "bg")),
+        },
+      },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 6 },
+          bg = { from = "Normal", attr = "bg", alter = 1.3 },
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 4.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          reverse = false,
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "Normal", attr = "bg", alter = 2.9 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          reverse = false,
+        },
+      },
+    },
+    ["neomodern"] = {
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+        },
+      },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 6 },
+          bg = { from = "Normal", attr = "bg", alter = 1.3 },
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 4.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          reverse = false,
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "Normal", attr = "bg", alter = 2.7 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          reverse = false,
         },
       },
     },
@@ -1490,13 +1553,13 @@ local function colorscheme_overrides()
       {
         StatusLineNC = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
     },
@@ -1727,8 +1790,8 @@ local function colorscheme_overrides()
 
       {
         MyCodeUsage = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "Visual", attr = "bg", alter = 2 },
+          fg = { from = "Visual", attr = "bg", alter = 1 },
+          bg = { from = "Visual", attr = "bg", alter = -0.45 },
           italic = true,
         },
       },
@@ -1803,7 +1866,7 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.5 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.6 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
@@ -1864,25 +1927,32 @@ local function colorscheme_overrides()
           bold = true,
         },
       },
+      {
+        MyCodeUsage = {
+          fg = { from = "Visual", attr = "bg", alter = 1 },
+          bg = { from = "Visual", attr = "bg", alter = -0.1 },
+          italic = true,
+        },
+      },
 
       {
         StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
           bg = { from = "Normal", attr = "bg", alter = 0.65 },
           reverse = false,
         },
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2.3 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
           reverse = false,
         },
       },
       {
         Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 1.52 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          fg = { from = "Normal", attr = "bg", alter = 1.8 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
           reverse = false,
         },
       },
@@ -2018,14 +2088,14 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.28 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
         },
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.45 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.17 },
         },
       },
     },
@@ -2107,8 +2177,8 @@ local function colorscheme_overrides()
 
       {
         MyCodeUsage = {
-          fg = { from = "LineNr", attr = "fg", alter = 1 },
-          bg = { from = "Visual", attr = "bg", alter = 2 },
+          fg = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, dark_yellow),
+          bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.9, dark_yellow),
           italic = true,
         },
       },
@@ -2310,6 +2380,14 @@ local function colorscheme_overrides()
       },
 
       {
+        MyCodeUsage = {
+          fg = Highlight.darken(Highlight.get("Normal", "bg"), 0.2, dark_yellow),
+          bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.75, dark_yellow),
+          italic = true,
+        },
+      },
+
+      {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1 },
           bg = { from = "Normal", attr = "bg", alter = 0.3 },
@@ -2452,8 +2530,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.5 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.21 },
         },
       },
     },
@@ -2693,6 +2771,14 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        MyCodeUsage = {
+          fg = Highlight.darken(Highlight.get("Visual", "bg"), 4, Highlight.get("Normal", "bg")),
+          bg = Highlight.darken(Highlight.get("Visual", "bg"), 0.8, Highlight.get("Normal", "bg")),
+          italic = true,
+        },
+      },
+
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       {
         Folded = {
@@ -2715,7 +2801,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
     },
@@ -2737,6 +2823,15 @@ local function colorscheme_overrides()
           bold = true,
         },
       },
+
+      {
+        MyCodeUsage = {
+          fg = Highlight.darken(Highlight.get("Visual", "bg"), 0.1, dark_yellow),
+          bg = Highlight.darken(Highlight.get("Visual", "bg"), 0.8, dark_yellow),
+          italic = true,
+        },
+      },
+
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
@@ -2758,7 +2853,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
         },
       },
     },
@@ -2777,6 +2872,14 @@ local function colorscheme_overrides()
           bg = { from = "PmenuSel", attr = "bg" },
         },
       },
+
+      {
+        Search = {
+          fg = { from = "CurSearch", attr = "bg", alter = 1 },
+          -- bg = Highlight.darken(Highlight.get("Error", "fg"), 0.5, Highlight.get("Normal", "bg")),
+        },
+      },
+
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
@@ -2867,7 +2970,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
     },
