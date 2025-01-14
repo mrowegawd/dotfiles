@@ -1,4 +1,3 @@
-# vim: foldmethod=marker foldlevel=0 ft=conf
 
 MISC---------------------------------------------------------------------------
 "query:Favorite [watch/read later]:flags #\"s\""
@@ -70,7 +69,7 @@ https://www.reddit.com/r/orgmode.rss "~REDDIT: Orgmode" orgmode editor
 https://www.reddit.com/r/HelixEditor.rss "~REDDIT: Helix" helix editor
 
 https://www.reddit.com/r/docker.rss "~REDDIT: Docker" docker webdev tool security
-https://www.reddit.com/r/security.rss "~REDDIT: Security" security
+https://www.reddit.com/r/webscrapping.rss "~REDDIT: webscrapping" webdev webscrapping
 
 https://www.reddit.com/r/privacytoolsIO.rss "~REDDIT: PrivacytoolsIO" privacy security
 https://www.reddit.com/r/selenium.rss "~REDDIT: Selenium" browser tool
