@@ -139,4 +139,17 @@ return {
     cmd = "KeyAnalyzer",
     opts = {},
   },
+  -- FEED
+  {
+    "neo451/feed.nvim",
+    cmd = "Feed",
+    config = function()
+      require("feed").setup {
+        feeds = {
+          "neo451/feed.nvim/releases",
+          "folke/snacks.nvim", -- defaults to subscribing to commits
+        },
+      }
+    end,
+  },
 }
