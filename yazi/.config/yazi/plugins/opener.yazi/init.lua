@@ -1,3 +1,5 @@
+local WIN = ya.target_family() == "windows"
+
 local state = ya.sync(function()
 	return cx.active.current.cwd
 end)
@@ -13,23 +15,52 @@ local function is_in_tmux()
 	return false
 end
 
+local function get_actions(action)
+	local actions = {}
+	if action == "lazygit" then
+		if not WIN then
+			local user = os.getenv("HOME")
+			actions = {
+				"lazygit",
+				"--use-config-file",
+				user .. "/.config/lazygit/config.yml," .. user .. "/.config/lazygit/theme/fla.yml",
+			}
+		else
+			actions = { "lazygit" }
+		end
+	end
+
+	if action == "lazydocker" then
+		actions = { "lazydocker" }
+	end
+	return actions
+end
+
 local function open_with_tmux(action, cwd)
-	local child, err = Command("tmux")
-		:args({
-			"popup",
-			"-d",
-			cwd,
-			"-h",
-			"80%",
-			"-w",
-			"90%",
-			"-E",
-			action,
-		})
-		:stdin(Command.INHERIT)
-		:stdout(Command.PIPED)
-		:stderr(Command.INHERIT)
-		:spawn()
+	local actions = get_actions(action)
+	local args = {
+		"popup",
+		"-S",
+		"bg=#1f1f1f,fg=#cccccc",
+		"-s",
+		"bg=#1f1f1f",
+		"-b",
+		"rounded",
+		"-d",
+		cwd,
+		"-h",
+		"80%",
+		"-w",
+		"90%",
+		"-E",
+	}
+
+	for _, v in pairs(actions) do
+		table.insert(args, v)
+	end
+
+	local child, err =
+		Command("tmux"):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	if not child then
 		return fail(tostring(action) .. " not  open?", err)
@@ -44,7 +75,8 @@ local function open_with_tmux(action, cwd)
 end
 
 local function open_with_wezterm(action, cwd)
-	local tbl_args = {
+	local actions = get_actions(action)
+	local args = {
 		"start",
 		"--always-new-process",
 		"--cwd",
@@ -53,29 +85,12 @@ local function open_with_wezterm(action, cwd)
 		"if-select",
 	}
 
-	local _tblargs = {}
-
-	if action == "lazygit" then
-		local user = os.getenv("HOME")
-		_tblargs = {
-			"lazygit",
-			"--use-config-file",
-			user .. "/.config/lazygit/config.yml," .. user .. "/.config/lazygit/theme/fla.yml",
-		}
-	end
-
-	if action == "lazydocker" then
-		_tblargs = { "lazydocker" }
-	end
-
-	if #_tblargs > 0 then
-		for _, v in ipairs(_tblargs) do
-			table.insert(tbl_args, v)
-		end
+	for _, v in pairs(actions) do
+		table.insert(args, v)
 	end
 
 	local child, err =
-		Command("wezterm"):args(tbl_args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
+		Command("wezterm"):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
 	if not child then
 		return fail(tostring(action) .. " not  open?", err)
@@ -102,10 +117,10 @@ return {
 			return
 		end
 
-		if action == "lazygit" and is_in_tmux() then
-			action = action
-				.. ' --use-config-file="$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"'
-		end
+		-- if action == "lazygit" and is_in_tmux() then
+		-- 	action = action
+		-- 		.. ' --use-config-file="$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"'
+		-- end
 
 		if is_in_tmux() then
 			open_with_tmux(action, cwd)
