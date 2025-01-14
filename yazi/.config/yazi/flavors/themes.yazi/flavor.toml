@@ -18,13 +18,13 @@ marker_selected = { fg = "#dcdcaa", bg = "#dcdcaa" }
 marker_copied = { fg = "#c678dd", bg = "#c678dd" }
 marker_cut = { fg = "#f44747", bg = "#f44747" }
 
-count_selected = { fg = "#dcdcaa", bg = "#2a2a2a" }
-count_copied = { fg = "#c678dd", bg = "#2a2a2a" }
-count_cut = { fg = "#f44747", bg = "#2a2a2a" }
+count_selected = { fg = "#dcdcaa", bg = "#292929" }
+count_copied = { fg = "#c678dd", bg = "#292929" }
+count_cut = { fg = "#f44747", bg = "#292929" }
 
 # Tab
 tab_active = { fg = "#4d8cc0", bg = "#2b4e6b" }
-tab_inactive = { fg = "#464646", bg = "#2a2a2a" }
+tab_inactive = { fg = "#5d5d5d", bg = "#292929" }
 
 # Border
 border_symbol = "│"
@@ -36,8 +36,8 @@ border_style = { fg = "#1c1c1c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#3d3d3d", bg = "#569cd6", bold = true }
-normal_alt = { fg = "#569cd6", bg = "#3d3d3d" }
+normal_main = { fg = "#373737", bg = "#569cd6", bold = true }
+normal_alt = { fg = "#569cd6", bg = "#373737" }
 
 select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
@@ -101,7 +101,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#1d1d1d" }
+mask = { bg = "#1e1e1e" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -145,7 +145,7 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#a8a8a8" },
+  { name = "*", fg = "#9b9b9b" },
   { name = "*/", fg = "#569cd6" },
 ]
 

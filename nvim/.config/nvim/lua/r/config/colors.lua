@@ -71,9 +71,18 @@ reset_base_alter({ "coffeecat", "iceclimber", "tokyonight-night" }, {
   quickfixline_alter = 0.5,
 })
 
-reset_base_alter({ "oxocarbon", "darkforest" }, {
+reset_base_alter({ "darkforest" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = 0.35,
+  fzfluasel_alter = 0.3,
+  pmenu_bg_alter = 0.6,
+  pmenuthumb_alter = 0.3,
+  quickfixline_alter = 0.3,
+})
+
+reset_base_alter({ "oxocarbon" }, {
+  cursorline_alter = 0.08,
+  fzflua_bg_cursorline_alter = 0.1,
   fzfluasel_alter = 0.3,
   pmenu_bg_alter = 0.6,
   pmenuthumb_alter = 0.3,
@@ -90,6 +99,7 @@ reset_base_alter({ "lackluster" }, {
   fzflua_bg_cursorline_alter = 0.55,
   fzfluasel_alter = 0.8,
   pmenu_bg_alter = 1,
+  pmenusel_fg_alter = -0.05,
   pmenuthumb_alter = 0.3,
   quickfixline_alter = 0.3,
 })
@@ -156,7 +166,7 @@ reset_base_alter({ "citruszest" }, {
 })
 
 reset_base_alter({ "gruvbox-material" }, {
-  cursorline_alter = 0.12,
+  cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_alter = 0.05,
   pmenu_bg_alter = -0.05,
@@ -169,7 +179,8 @@ reset_base_alter({ "kanagawa" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.02,
   fzfluasel_alter = -0.05,
-  pmenu_bg_alter = -0.05,
+  pmenu_bg_alter = -0.02,
+  pmenusel_fg_alter = -0.5,
   pmenuthumb_alter = 0.3,
   quickfixline_alter = 0.4,
 })
@@ -268,7 +279,7 @@ local general_overrides = function()
     {
       Tabline = {
         fg = { from = "Normal", attr = "bg", alter = 2.9 },
-        bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+        bg = { from = "StatusLine", attr = "bg", alter = -0.20 },
         reverse = false,
       },
     },
@@ -1395,7 +1406,7 @@ local function colorscheme_overrides()
       { Directory = { fg = "#b968fc", bg = "NONE" } },
       {
         PmenuSel = {
-          fg = { from = "Directory", attr = "fg", alter = pmenusel_fg_alter },
+          fg = { from = "Directory", attr = "fg", alter = -0.5 },
           bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
           bold = true,
         },
@@ -1467,6 +1478,25 @@ local function colorscheme_overrides()
           fg = { from = "Directory", attr = "fg", alter = 0.5 },
           bg = { from = "Visual", attr = "bg", alter = -0.8 },
           italic = true,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         },
       },
     },
@@ -1780,6 +1810,19 @@ local function colorscheme_overrides()
     },
     ["gruvbox-material"] = {
       { Directory = { fg = { from = "Identifier", attr = "fg" }, bg = "NONE" } },
+      {
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = pmenu_fg_alter },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -1838,14 +1881,27 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0 - 0.1 },
+          fg = { from = "Normal", attr = "bg", alter = 1.52 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
           reverse = false,
         },
       },
     },
     ["horizon"] = {
       { Directory = { fg = { from = "@annotation", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+      {
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = -0.5 },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -1910,6 +1966,19 @@ local function colorscheme_overrides()
     },
     ["kanagawa"] = {
       { Directory = { fg = { from = "Type", attr = "fg" }, bg = "NONE" } },
+      {
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = pmenusel_fg_alter },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.2 }, italic = true } },
       { VGitComment = { bg = "NONE", fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
@@ -1956,7 +2025,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
         },
       },
     },
@@ -1968,6 +2037,20 @@ local function colorscheme_overrides()
         },
       },
       { Directory = { fg = "#7788aa", bg = "NONE" } },
+      {
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = pmenusel_fg_alter },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
+
       { CurSearch = { bg = { from = "Error", attr = "fg", alter = 0.2 }, fg = "white" } },
       {
         Search = {
@@ -2118,6 +2201,19 @@ local function colorscheme_overrides()
     },
     ["oxocarbon"] = {
       { Directory = { fg = "#78a9ff", bg = "NONE" } },
+      {
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = -0.5 },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -2138,6 +2234,13 @@ local function colorscheme_overrides()
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaDirPart", attr = "fg" },
           bg = { from = "FzfLuaNormal", attr = "bg" },
+        },
+      },
+      {
+        TelescopeSelection = {
+          fg = { from = "FzfLuaDirPart", attr = "fg" },
+          bg = { from = "FzfLuaSel", attr = "bg" },
+          bold = true,
         },
       },
 
@@ -2174,7 +2277,6 @@ local function colorscheme_overrides()
       },
     },
     ["selenized"] = {
-      { Directory = { fg = "#4695f7", bg = "NONE" } },
       { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.25) } },
       {
         CursorLineNr = {
@@ -2228,6 +2330,7 @@ local function colorscheme_overrides()
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
+      { Directory = { fg = "#4695f7", bg = "NONE" } },
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
@@ -2279,6 +2382,19 @@ local function colorscheme_overrides()
     },
     ["sonokai"] = {
       { Directory = { fg = { from = "Type", attr = "fg" }, bg = "NONE" } },
+      {
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = -0.5 },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
+        },
+      },
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -2325,7 +2441,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         },
       },
       {
@@ -2337,7 +2453,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
         },
       },
     },
@@ -2648,17 +2764,19 @@ local function colorscheme_overrides()
     },
     ["vscode_modern"] = {
       { Directory = { fg = "#569cd6", bg = "NONE" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
       {
-        QuickFixLine = {
-          bg = { from = "CursorLine", attr = "bg", alter = 0.35 },
-          fg = "NONE",
-          underline = false,
+        PmenuSel = {
+          fg = { from = "Directory", attr = "fg", alter = -0.5 },
+          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
+          bold = true,
         },
       },
-
+      {
+        FzfLuaSel = {
+          fg = { from = "PmenuSel", attr = "fg" },
+          bg = { from = "PmenuSel", attr = "bg" },
+        },
+      },
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },

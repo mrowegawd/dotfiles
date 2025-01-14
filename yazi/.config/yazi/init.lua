@@ -1,5 +1,5 @@
 THEME.git = THEME.git or {}
--- Same icon with `nvim-neo-tree/neo-tree.nvim`
+-- Use same icon with `nvim-neo-tree/neo-tree.nvim`
 THEME.git.modified_sign = ""
 THEME.git.added_sign = "✚"
 THEME.git.untracked_sign = ""

@@ -18,12 +18,13 @@ font-thicken   = true
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           MOUSE                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-# mouse-hide-while-typing = false
+mouse-hide-while-typing = true
+adw-toolbar-style = flat
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           THEME                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-theme = gruvbox-material
+theme = vscode_modern
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                          WINDOW                           ╎
@@ -79,7 +80,7 @@ gtk-titlebar           = false
 # keybind = unconsumed:alt+ctrl+v=paste_from_clipboard
 # keybind = alt+m=toggle_split_zoom
 # keybind = ctrl+shift+comma=reload_config
-# keybind = global:alt+f=toggle_quick_terminal # (Mac only)
+# # keybind = global:alt+f=toggle_quick_terminal # (Mac only)
 
 # ┏╍╍╍╍╍┓
 # ╏ TAB ╏

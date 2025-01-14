@@ -99,17 +99,14 @@ return {
         -- with blink.compat
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
-        -- NOTE: sementara di disable dahulu dengan set empty table
+        -- NOTE: kenapa completion di cmdline bikin abbrv ga jalan?
         cmdline = {},
         -- cmdline = function()
         --   local type = vim.fn.getcmdtype()
-        --   -- Search forward and backward
         --   if type == "/" or type == "?" then
         --     return {}
-        --     -- This shows buffer completions in search but i hate it
         --     -- return {"Buffer"}
         --   end
-        --   -- Commands
         --   if type == ":" then
         --     return { "cmdline" }
         --   end
