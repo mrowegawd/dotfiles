@@ -261,14 +261,18 @@ RUtils.cmd.augroup("WindowDim", {
   end,
 })
 
-RUtils.cmd.augroup("CheckOutsideTime", {
-  -- automatically check for changed files outside vim
-  event = { "FocusGained", "TermClose", "TermLeave" },
-  command = function()
-    if vim.o.buftype ~= "nofile" then
-      vim.cmd "checktime"
-    end
-  end,
+local aug = vim.api.nvim_create_augroup("CheckOutsideTime", {})
+vim.api.nvim_create_autocmd("FocusGained", {
+  desc = "Reload files from disk when we focus vim",
+  pattern = "*",
+  command = "if getcmdwintype() == '' | checktime | endif",
+  group = aug,
+})
+vim.api.nvim_create_autocmd("BufEnter", {
+  desc = "Every time we enter an unmodified buffer, check if it changed on disk",
+  pattern = "*",
+  command = "if &buftype == '' && !&modified && expand('%') != '' | exec 'checktime ' . expand('<abuf>') | endif",
+  group = aug,
 })
 
 -- Copy/Paste when using ssh on a remote server
