@@ -91,7 +91,11 @@ return {
           },
         },
         ghost_text = {
-          enabled = vim.g.ai_cmp,
+          -- NOTE: codeium terkadang spam message error
+          -- relate issue https://github.com/Exafunction/codeium.nvim/pull/264#issuecomment-2583615777
+          -- jadi disable sementara `ghost_text`, untuk sementara
+          -- enabled = vim.g.ai_cmp,
+          enabled = false,
         },
       },
       sources = {
