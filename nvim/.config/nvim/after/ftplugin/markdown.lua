@@ -19,10 +19,10 @@ function _G.Mardownfoldtext()
 end
 
 -- opt.foldtext = "v:lua.Mardownfoldtext()"
-opt.foldtext = ""
-opt.foldexpr = "nvim_treesitter#foldexpr()"
-opt.foldmethod = "expr"
-opt.foldlevel = 1
+-- opt.foldtext = ""
+-- opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- opt.foldmethod = "expr"
+-- opt.foldlevel = 99
 
 -- local function markdown_sugar()
 --   local augroup = vim.api.nvim_create_augroup("markdown", {})

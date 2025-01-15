@@ -2,9 +2,9 @@ local keymap = vim.keymap
 
 keymap.set(
   "n",
-  "<Leader>lv",
+  "<Leader>cv",
   "<cmd>:VenvSelect<cr>",
-  { buffer = true, desc = "Lang(vinv-selsctor): select virtualEnv" }
+  { buffer = true, desc = "Action: select virtualenv [venv-selector]" }
 )
 
 keymap.set("n", "<Leader>dam", function()

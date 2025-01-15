@@ -1,5 +1,3 @@
-local ran_once = false
-
 vim.g.lazyvim_rust_diagnostics = "rust-analyzer"
 local diagnostics = vim.g.lazyvim_rust_diagnostics or "rust-analyzer"
 
@@ -40,39 +38,45 @@ return {
   {
     "williamboman/mason.nvim",
     optional = true,
-    opts = { ensure_installed = { "codelldb" } },
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
+      vim.list_extend(opts.ensure_installed, { "codelldb" })
+      if diagnostics == "bacon-ls" then
+        vim.list_extend(opts.ensure_installed, { "bacon", "bacon-ls" })
+      end
+    end,
   },
 
   {
     "mrcjkb/rustaceanvim",
     version = vim.fn.has "nvim-0.10.0" == 0 and "^4" or false,
     ft = { "rust" },
-    keys = {
-      {
-        "<Leader>fH",
-        function()
-          vim.cmd.RustLsp "openDocs"
-        end,
-        desc = "LPS: open rust docs [rustaceanvim]",
-        ft = "rust",
-      },
-      --   {
-      --     "<Leader>ca",
-      --     function()
-      --       vim.cmd.RustLsp "codeAction"
-      --     end,
-      --     desc = "Action: code action [rustaceanvim]",
-      --     ft = "rust",
-      --   },
-      {
-        "<F5>",
-        function()
-          vim.cmd.RustLsp "debuggables"
-        end,
-        desc = "Debug: debuggables [rustaceanvim]",
-        ft = "rust",
-      },
-    },
+    -- keys = {
+    --   {
+    --     "<Leader>fH",
+    --     function()
+    --       vim.cmd.RustLsp "openDocs"
+    --     end,
+    --     desc = "LPS: open rust docs [rustaceanvim]",
+    --     ft = "rust",
+    --   },
+    --   --   {
+    --   --     "<Leader>ca",
+    --   --     function()
+    --   --       vim.cmd.RustLsp "codeAction"
+    --   --     end,
+    --   --     desc = "Action: code action [rustaceanvim]",
+    --   --     ft = "rust",
+    --   --   },
+    --   {
+    --     "<F5>",
+    --     function()
+    --       vim.cmd.RustLsp "debuggables"
+    --     end,
+    --     desc = "Debug: debuggables [rustaceanvim]",
+    --     ft = "rust",
+    --   },
+    -- },
     opts = {
       tools = {
         float_win_config = {
@@ -80,14 +84,14 @@ return {
         },
       },
       server = {
-        -- on_attach = function(_, bufnr)
-        -- vim.keymap.set("n", "<leader>cR", function()
-        --   vim.cmd.RustLsp "codeAction"
-        -- end, { desc = "Action: code action", buffer = bufnr })
-        -- vim.keymap.set("n", "<leader>dr", function()
-        --   vim.cmd.RustLsp "debuggables"
-        -- end, { desc = "Rust Debuggables", buffer = bufnr })
-        -- end,
+        on_attach = function(_, bufnr)
+          vim.keymap.set("n", "<leader>cR", function()
+            vim.cmd.RustLsp "codeAction"
+          end, { desc = "Action: code action", buffer = bufnr })
+          vim.keymap.set("n", "<leader>dr", function()
+            vim.cmd.RustLsp "debuggables"
+          end, { desc = "Rust Debuggables", buffer = bufnr })
+        end,
         default_settings = {
           -- rust-analyzer language server configuration
           ["rust-analyzer"] = {
@@ -160,21 +164,6 @@ return {
       servers = {
         bacon_ls = {
           enabled = diagnostics == "bacon-ls",
-        },
-        taplo = {
-          keys = {
-            {
-              "gk",
-              function()
-                if vim.fn.expand "%:t" == "Cargo.toml" and require("crates").popup_available() then
-                  require("crates").show_popup()
-                else
-                  vim.lsp.buf.hover()
-                end
-              end,
-              desc = "Show Crate Documentation",
-            },
-          },
         },
         rust_analyzer = { enabled = false },
       },
