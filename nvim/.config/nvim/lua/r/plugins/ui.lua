@@ -115,6 +115,9 @@ return {
         bigfile = { enabled = true },
         notifier = { enabled = true },
         quickfile = { enabled = true },
+        -- NOTE: jika di enable maka vim.input akan terdampak behaviour nya.
+        -- Seperti open task orgagenda, window nya jadi di tengah
+        -- picker = {},
         indent = {
           enabled = true,
           -- priority = 1,
@@ -206,7 +209,7 @@ return {
       -- { "<Localleader>s.", function() Snacks.scratch() end, desc = "Snacks: toggle scratch buffer" },
       -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
       -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
-
+      -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
       { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snacks: notification history" },
       { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snacks: dismiss all notifications" },
     },

@@ -53,14 +53,13 @@ return {
         opts = {
           sources = {
             per_filetype = {
-              -- disable codeium for org
               DressingInput = {},
             },
             compat = { "codeium" },
             providers = {
               codeium = {
                 kind = "Codeium",
-                score_offset = 100,
+                score_offset = 800,
                 async = true,
               },
             },
