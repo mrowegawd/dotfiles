@@ -36,7 +36,6 @@ return {
     },
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
-      "lukas-reineke/indent-blankline.nvim",
       "akinsho/org-bullets.nvim",
     },
     opts = function()
