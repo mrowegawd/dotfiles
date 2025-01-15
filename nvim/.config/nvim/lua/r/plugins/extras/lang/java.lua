@@ -94,7 +94,7 @@ return {
       return {
         -- How to find the root dir for a given filename. The default comes from
         -- lspconfig which provides a function specifically for java projects.
-        root_dir = require("lspconfig.server_configurations.jdtls").default_config.root_dir,
+        root_dir = RUtils.lsp.get_raw_config("jdtls").default_config.root_dir,
 
         -- How to find the project name for a given root dir.
         project_name = function(root_dir)
@@ -111,7 +111,7 @@ return {
 
         -- How to run jdtls. This can be overridden to a full java command-line
         -- if the Python wrapper script doesn't suffice.
-        cmd = { vim.fn.exepath "jdtls" },
+        cmd = cmd,
         full_cmd = function(opts)
           local fname = vim.api.nvim_buf_get_name(0)
           local root_dir = opts.root_dir(fname)
@@ -147,9 +147,9 @@ return {
       -- Find the extra bundles that should be passed on the jdtls command-line
       -- if nvim-dap is enabled with java debug/test.
       local bundles = {} ---@type string[]
-      if LazyVim.has "mason.nvim" then
+      if RUtils.has "mason.nvim" then
         local mason_registry = require "mason-registry"
-        if opts.dap and LazyVim.has "nvim-dap" and mason_registry.is_installed "java-debug-adapter" then
+        if opts.dap and RUtils.has "nvim-dap" and mason_registry.is_installed "java-debug-adapter" then
           local java_dbg_pkg = mason_registry.get_package "java-debug-adapter"
           local java_dbg_path = java_dbg_pkg:get_install_path()
           local jar_patterns = {

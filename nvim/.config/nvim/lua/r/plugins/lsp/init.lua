@@ -7,12 +7,9 @@ return {
       "mason.nvim",
       { "williamboman/mason-lspconfig.nvim", config = function() end },
     },
-    ---@class PluginLspOpts
     opts = function()
-      local max_width = math.min(math.floor(vim.o.columns * 0.7), 100)
-      local max_height = math.min(math.floor(vim.o.lines * 0.3), 30)
-
-      return {
+      ---@class PluginLspOpts
+      local ret = {
         -- options for vim.diagnostic.config()
         ---@type vim.diagnostic.Opts
         diagnostics = {
@@ -40,8 +37,8 @@ return {
             },
           },
           float = {
-            max_width = max_width,
-            max_height = max_height,
+            max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
+            max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
             title = {
               { "  ", "DiagnosticFloatTitleIcon" },
               { "Problems  ", "DiagnosticFloatTitle" },
@@ -66,7 +63,9 @@ return {
           enabled = false,
           exclude = { "vue" }, -- filetypes for which you don't want to enable inlay hints
         },
-        codelens = { enabled = false },
+        codelens = {
+          enabled = false,
+        },
         -- add any global capabilities here
         capabilities = {
           workspace = {
@@ -76,7 +75,10 @@ return {
             },
           },
         },
-        format = { formatting_options = nil, timeout_ms = nil },
+        format = {
+          formatting_options = nil,
+          timeout_ms = nil,
+        },
         -- LSP Server Settings
         ---@type lspconfig.options
         servers = {
@@ -122,9 +124,11 @@ return {
           -- ["*"] = function(server, opts) end,
         },
       }
+      return ret
     end,
     ---@param opts PluginLspOpts
     config = function(_, opts)
+      -- setup autoformat
       RUtils.format.register(RUtils.lsp.formatter())
 
       -- setup keymaps
@@ -135,6 +139,7 @@ return {
       RUtils.lsp.setup()
       RUtils.lsp.on_dynamic_capability(require("r.keymaps.lsp").on_attach)
 
+      -- diagnostics signs
       if vim.fn.has "nvim-0.10.0" == 0 then
         if type(opts.diagnostics.signs) ~= "boolean" then
           for severity, icon in pairs(opts.diagnostics.signs.text) do
@@ -154,7 +159,7 @@ return {
               and vim.bo[buffer].buftype == ""
               and not vim.tbl_contains(opts.inlay_hints.exclude, vim.bo[buffer].filetype)
             then
-              RUtils.toggle.inlay_hints(buffer, true)
+              vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
             end
           end)
         end
@@ -174,7 +179,7 @@ return {
       if type(opts.diagnostics.virtual_text) == "table" and opts.diagnostics.virtual_text.prefix == "icons" then
         opts.diagnostics.virtual_text.prefix = vim.fn.has "nvim-0.10.0" == 0 and "●"
           or function(diagnostic)
-            local icons = require("r.config").icons.diagnostics
+            local icons = RUtils.config.icons.diagnostics
             for d, icon in pairs(icons) do
               if diagnostic.severity == vim.diagnostic.severity[d:upper()] then
                 return icon
@@ -182,6 +187,10 @@ return {
             end
           end
       end
+
+      --   vim.lsp.handlers["textDocument/signatureHelp"] =
+      --     vim.lsp.with(require "noice.lsp.signature_help", { border = "rounded" })
+      -- vim.lsp.buf.signature_help{}
 
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
@@ -201,6 +210,9 @@ return {
         local server_opts = vim.tbl_deep_extend("force", {
           capabilities = vim.deepcopy(capabilities),
         }, servers[server] or {})
+        if server_opts.enabled == false then
+          return
+        end
 
         if opts.setup[server] then
           if opts.setup[server](server, server_opts) then
@@ -225,11 +237,13 @@ return {
       for server, server_opts in pairs(servers) do
         if server_opts then
           server_opts = server_opts == true and {} or server_opts
-          -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-          if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
-            setup(server)
-          elseif server_opts.enabled ~= false then
-            ensure_installed[#ensure_installed + 1] = server
+          if server_opts.enabled ~= false then
+            -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
+            if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
+              setup(server)
+            else
+              ensure_installed[#ensure_installed + 1] = server
+            end
           end
         end
       end
@@ -265,7 +279,6 @@ return {
     opts_extend = { "ensure_installed" },
     opts = {
       ensure_installed = {
-        -- lua
         "stylua",
         "shfmt",
       },
@@ -285,12 +298,14 @@ return {
         end, 100)
       end)
 
-      for _, tool in ipairs(opts.ensure_installed) do
-        if not mr.is_installed(tool) then
+      mr.refresh(function()
+        for _, tool in ipairs(opts.ensure_installed) do
           local p = mr.get_package(tool)
-          p:install()
+          if not p:is_installed() then
+            p:install()
+          end
         end
-      end
+      end)
     end,
   },
   --  ╭──────────────────────────────────────────────────────────╮
