@@ -29,6 +29,7 @@ local LazyUtil = require "lazy.core.util"
 ---@field cmd r.utils.cmd
 ---@field map r.utils.map
 ---@field cmp r.utils.cmp
+---@field pick r.utils.pick
 ---@field todocomments r.utils.todocomments
 local M = {}
 
