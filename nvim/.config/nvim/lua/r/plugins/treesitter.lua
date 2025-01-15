@@ -462,6 +462,10 @@ return {
         opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(buf)
+          if vim.wo.diff then
+            return false
+          end
+
           local tbl_winsplits = RUtils.cmd.get_total_wins()
           if #tbl_winsplits < 3 then
             -- check split or no split (`leaf`, `col` , `row`)
