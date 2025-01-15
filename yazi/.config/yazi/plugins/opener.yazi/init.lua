@@ -113,14 +113,15 @@ return {
 		-- dengan command ini: ya.target_family() == "windows"
 		if action == "terminal" then
 			local termopen = os.getenv("TERMINAL")
+
+			if termopen == "ghostty" then
+				termopen = "st"
+			end
+
 			os.execute([[bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 && ]] .. termopen)
+
 			return
 		end
-
-		-- if action == "lazygit" and is_in_tmux() then
-		-- 	action = action
-		-- 		.. ' --use-config-file="$HOME/.config/lazygit/config.yml,$HOME/.config/lazygit/theme/fla.yml"'
-		-- end
 
 		if is_in_tmux() then
 			open_with_tmux(action, cwd)
