@@ -69,10 +69,14 @@ function M.magic_quit()
       vim.cmd "OutlineClose"
     end,
     ["DiffviewFileHistory"] = function()
-      vim.cmd "DiffviewClose"
+      if vim.t.diffview_view_initialized then
+        vim.cmd "DiffviewClose"
+      end
     end,
     ["DiffviewFiles"] = function()
-      vim.cmd "DiffviewClose"
+      if vim.t.diffview_view_initialized then
+        vim.cmd "DiffviewClose"
+      end
     end,
   }
 
