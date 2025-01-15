@@ -4,12 +4,19 @@ return {
     "stevearc/stickybuf.nvim",
     event = "VeryLazy",
     cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
-    opts = {
-      -- NOTE: stickybuf conflict with toggleterm when closing with <c-x>,
-      -- stickybuf sepertinya secara default menganggap toggleterm adalah bufpinned (checked)
-      should_auto_pin = nil,
-      get_auto_pin = nil,
-    },
+    config = function()
+      require("stickybuf").setup {
+        get_auto_pin = function(buf)
+          if vim.bo[buf].filetype == "toggleterm" then
+            return nil
+          end
+          if vim.bo[buf].filetype == "Outline" then
+            return "filetype"
+          end
+          return require("stickybuf").should_auto_pin(buf)
+        end,
+      }
+    end,
     keys = {
       {
         "<Leader>bp",
