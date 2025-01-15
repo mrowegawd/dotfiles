@@ -786,23 +786,27 @@ M.Sessions = {
 
       if RUtils.has "persistence.nvim" then
         local ok, ses_persistent = pcall(require, "persistence")
-        if not ok then
-          sess_status = "Off"
-        else
-          local ses_persistent_get_current = ses_persistent.get_current()
-          local sess = vim.fn.filereadable(ses_persistent_get_current) == 1
+        if ok then
+          local get_current_ses = ses_persistent.current()
+          local sess = vim.fn.filereadable(get_current_ses) == 1
           if sess ~= nil then
             sess_status = "On"
           end
         end
       elseif RUtils.has "resession.nvim" then
-        local ok, ses_resession = pcall(require, "resession")
-        if not ok then
-          sess_status = "Off"
-        else
-          local ses_resession_get_current = ses_resession.get_current()
-          if ses_resession_get_current ~= nil then
-            sess_status = ses_resession_get_current
+        local ok, res_resession = pcall(require, "resession")
+        if ok then
+          local get_current_ses = res_resession.get_current()
+          if get_current_ses ~= nil then
+            sess_status = get_current_ses
+          end
+        end
+      elseif RUtils.has "auto-session" then
+        local ok, _ = pcall(require, "auto-session")
+        if ok then
+          local get_current_ses = require("auto-session.lib").current_session_name(true)
+          if #get_current_ses > 0 then
+            sess_status = get_current_ses
           end
         end
       end

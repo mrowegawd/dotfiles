@@ -42,63 +42,71 @@ function M.load_ses()
 end
 
 function M.load_ses_dashboard()
-  local uv = vim.loop
+  -- local uv = vim.loop
 
-  local ses_plugin = "resession.nvim"
+  if RUtils.has "persistence.nvim" then
+    vim.schedule(function()
+      require("persistence").load()
+      require("qfsilet.note").get_todo()
+      vim.cmd "silent! :e"
+    end)
+  elseif RUtils.has "auto-session" then
+    vim.cmd "SessionSearch"
+    -- require("qfsilet.note").get_todo()
 
-  if RUtils.has(ses_plugin) then
-    local resession = require "resession"
-    resession.load()
-
-    vim.api.nvim_create_autocmd("BufWinEnter", {
-      group = vim.api.nvim_create_augroup("ResessionLoadTest", { clear = true }),
-      pattern = "*",
-      once = true,
-      callback = function()
-        local ft = vim.bo[0].filetype
-        vim.cmd [[set cmdheight=0]]
-        if ft and ft ~= "fzf" then
-          local async
-          async = uv.new_async(vim.schedule_wrap(function()
-            if async ~= nil then
-              -- NOTE: terkadang error kalau item list session tidak kita select
-              -- seharunya diperbaiki itu
-              if #vim.fn.getqflist() > 0 then
-                vim.cmd [[copen]]
-                vim.cmd [[wincmd p]]
-              end
-
-              if vim.bo[0].filetype ~= "dashboard" then
-                if vim.bo[0].filetype == "" then
-                  return
-                end
-                vim.cmd [[edit!]]
-              end
-
-              require("qfsilet.note").get_todo()
-
-              vim.cmd [[set cmdheight=0]]
-              async:close()
-            end
-          end))
-
-          if async ~= nil then
-            async:send()
-          end
-
-          -- ensure treesitter loaded
-          if vim.bo[0].filetype ~= "dashboard" then
-            if vim.bo[0].filetype == "" then
-              return
-            end
-            vim.cmd [[edit!]]
-          end
-        end
-      end,
-    })
+    -- vim.api.nvim_create_autocmd("BufWinEnter", {
+    --   group = vim.api.nvim_create_augroup("ResessionLoadTest", { clear = true }),
+    --   pattern = "*",
+    --   once = true,
+    --   callback = function()
+    --     local ft = vim.bo[0].filetype
+    --
+    --     if ft and ft ~= "fzf" then
+    --       local async
+    --       async = uv.new_async(vim.schedule_wrap(function()
+    --         if async ~= nil then
+    --           -- NOTE: terkadang error kalau item list session tidak kita select
+    --           -- seharunya diperbaiki itu
+    --           if #vim.fn.getqflist() > 0 then
+    --             vim.cmd [[copen]]
+    --             vim.cmd [[wincmd p]]
+    --           end
+    --
+    --           if vim.bo[0].filetype ~= "dashboard" then
+    --             if vim.bo[0].filetype == "" then
+    --               return
+    --             end
+    --             vim.cmd [[edit!]]
+    --           end
+    --
+    --           require("qfsilet.note").get_todo()
+    --
+    --           vim.cmd "silent! :e"
+    --           vim.cmd [[set cmdheight=0]]
+    --           async:close()
+    --         end
+    --       end))
+    --
+    --       vim.cmd "silent! :bufdo update!"
+    --
+    --       if async ~= nil then
+    --         async:send()
+    --       end
+    --
+    --       -- ensure treesitter loaded
+    --       if vim.bo[0].filetype ~= "dashboard" then
+    --         if vim.bo[0].filetype == "" then
+    --           return
+    --         end
+    --         --
+    --         vim.cmd "silent! :e"
+    --       end
+    --     end
+    --   end,
+    -- })
   else
     RUtils.warn(
-      "Cannot load session. Plugin " .. ses_plugin .. " not installed or maybe something went wrong..",
+      "Cannot load session. Maybe the plugins are not installed or something went wrong..",
       { title = "Sessions" }
     )
   end
