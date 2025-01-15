@@ -149,11 +149,8 @@ function M.magic_nextprev_list_qf_or_buf(is_next)
       end)
 
       if err and (string.match(err, "E380") or string.match(err, "E381")) then
-        local msg = "cnewer UDAH mentok"
-        if is_next then
-          msg = "colder UDAH mentok"
-        end
-        RUtils.info(msg, { title = "Quickfix" })
+        local msg = "stack qf list dah mentok"
+        RUtils.warn(msg, { title = "Quickfix" })
         return
       end
     end)
