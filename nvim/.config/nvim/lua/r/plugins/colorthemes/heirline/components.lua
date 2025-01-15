@@ -844,6 +844,41 @@ M.PinnedBuffer = {
     hl = { fg = "green" },
   },
 }
+local actived_venv = function()
+  local python_logo = "  "
+
+  local dc = RUtils.extras.wants {
+    ft = "python",
+    root = {
+      "pyproject.toml",
+      "pyrightconfig.json",
+    },
+  }
+  if RUtils.has "venv-selector.nvim" and dc then
+    local venv_name = require("venv-selector").get_active_venv()
+    if venv_name ~= nil then
+      return python_logo .. string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
+    else
+      return python_logo .. "venv"
+    end
+  else
+    return ""
+  end
+end
+
+M.virtualenv = {
+  condition = function()
+    return set_conditions.hide_in_width(130)
+  end,
+  {
+    provider = function()
+      return actived_venv()
+    end,
+  },
+  {
+    provider = " ",
+  },
+}
 M.BufferCwd = {
   init = function(self)
     self.bufnr = self.bufnr or 0
@@ -932,6 +967,7 @@ M.status_active_left = {
   M.Gap,
   M.Runfile,
   M.Dap,
+  M.virtualenv,
   M.LSPActive,
   M.Diagnostics,
   -- M.SearchCount, -- this func make nvim slow!
