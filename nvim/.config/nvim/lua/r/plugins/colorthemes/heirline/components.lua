@@ -105,9 +105,9 @@ local exclude = {
 } -- Ignore float windows and exclude filetype
 
 M.Mode = {
-  condition = function()
-    return not (vim.bo[0].filetype == "qf")
-  end,
+  -- condition = function()
+  --   return not (vim.bo[0].filetype == "qf")
+  -- end,
   init = function(self)
     self.mode = vim.fn.mode(1) -- :h mode()
 
@@ -171,13 +171,16 @@ M.Mode = {
       R = "purple",
       r = "purple",
       ["!"] = "green",
-      -- t = colors.mod_term,
       t = colors.terminal_fg,
     },
   },
   {
     provider = function(self)
-      return string.format("    %s ", self.mode_icons[self.mode])
+      local icon = self.mode_icons[self.mode]
+      if vim.bo[0].filetype == "qf" then
+        icon = ""
+      end
+      return string.format("    %s ", icon)
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
@@ -187,35 +190,20 @@ M.Mode = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
-      local cs = colors.separator_fg_al
-
-      if Conditions.is_not_active() then
-        cs = colors.separator_fg_al
-      end
-
-      if vim.bo[0].filetype == "qf" then
-        cs = colors.base_bg
-      end
-
+      local cs = colors.separator_fg_alt
       local mode = self.mode:sub(1, 1)
       return { fg = self.mode_colors[mode], bg = cs }
     end,
   },
   {
     provider = function()
-      if vim.bo[0].filetype == "qf" then
-        return RUtils.config.icons.misc.separator_up
-      end
+      return RUtils.config.icons.misc.separator_up
     end,
-    -- RUtils.config.icons.misc.separator_up,
     hl = function()
-      local bg = colors.separator_fg
+      local bg = colors.base_bg
+      local fg = colors.separator_fg_alt
 
-      if Conditions.is_not_active() then
-        bg = colors.separator_fg
-      end
-
-      return { fg = colors.separator_fg_alt, bg = bg }
+      return { fg = fg, bg = bg }
     end,
   },
 }
@@ -223,13 +211,10 @@ M.Mode = {
 M.Mode_inactive = {
   {
     provider = function()
-      if vim.bo[0].filetype == "qf" then
-        return string.format ""
-      end
       return string.format "      "
     end,
     hl = function()
-      return { bg = colors.keywordnc, fg = colors.base_fg }
+      return { bg = colors.keywordnc, fg = colors.red }
     end,
   },
   {
@@ -242,11 +227,6 @@ M.Mode_inactive = {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
       local fg = colors.base_bg
-      local bg = colors.basenc_bg
-      if vim.bo[0].filetype == "qf" then
-        fg = colors.base_bg
-        bg = colors.qf_bg_not_active
-      end
       return { fg = fg, bg = bg }
     end,
   },
@@ -263,7 +243,7 @@ M.Branch = {
 
   {
     provider = function(self)
-      return "   " .. self.status_dict.head .. " "
+      return "   " .. self.status_dict.head
     end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
@@ -338,77 +318,48 @@ M.Mixindent = {
     end,
   },
 }
-M.FilePathQF = {
+
+M.QuickfixStatus = {
   condition = function()
     return vim.bo[0].filetype == "qf"
   end,
   init = function(self)
     self.bufname = vim.api.nvim_buf_get_name(0)
+    -- self.qflists = function()
+    --   -- Taken from fzflua internal
+    --   local qflists = {}
+    --   for i = 1, 10 do -- (n)vim keeps at most 10 quickfix lists in full
+    --     -- qf weirdness: id = 0 gets id of quickfix list nr
+    --     local qflist = vim.fn.getqflist { nr = i, id = 0, title = true, items = true }
+    --     if not vim.tbl_isempty(qflist.items) then
+    --       table.insert(qflists, qflist)
+    --     end
+    --   end
+    --
+    --   return qflists
+    -- end
   end,
-
   {
     provider = function()
       local msg
       if RUtils.qf.is_loclist() then
         msg = vim.fn.getloclist(0, { title = 0 }).title
       else
-        msg = string.format("  %s/total?", vim.fn.getqflist({ id = 0 }).id)
+        -- msg = string.format("%s/%s", vim.fn.getqflist({ id = 0 }).id, #self.qflists())
+        msg = string.format("[%s]", vim.fn.getqflist({ id = 0 }).id)
       end
-
       return " " .. msg .. " "
     end,
     hl = function()
-      local fg = colors.mode_bg
-      local bg = colors.diff_add
+      local fg = colors.base_fg
+      local bold = true
 
       if Conditions.is_not_active() then
         fg = colors.qf_fg_not_active
-        bg = colors.qf_bg_not_active
+        bold = false
       end
 
-      return { fg = fg, bg = bg, bold = true }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.diff_add
-      local bg = colors.mode_bg
-
-      if Conditions.is_not_active() then
-        fg = colors.qf_bg_not_active
-        bg = colors.separator_fg_alt
-      end
-
-      return { fg = fg, bg = bg, bold = true }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.mode_bg
-      local bg = colors.base_bg
-
-      if Conditions.is_not_active() then
-        bg = colors.basenc_bg
-        fg = colors.separator_fg_alt
-      end
-      return { fg = fg, bg = bg }
-    end,
-  },
-
-  --  ------------------
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.base_bg
-      local bg = colors.diff_change
-
-      if Conditions.is_not_active() then
-        fg = colors.basenc_bg
-        bg = colors.qf_bg_not_active
-      end
-      return { fg = fg, bg = bg }
+      return { fg = fg, bold = bold }
     end,
   },
   {
@@ -417,45 +368,20 @@ M.FilePathQF = {
       if RUtils.qf.is_loclist() then
         msg = vim.fn.getloclist(0, { title = 0 }).title
       else
-        msg = string.format(' Title -> "%s"', vim.fn.getqflist({ title = 0 }).title)
+        msg = string.format("- %s", vim.fn.getqflist({ title = 0 }).title)
       end
       return msg .. " "
     end,
     hl = function()
-      local fg = colors.basenc_bg
-      local bg = colors.diff_change
+      local fg = colors.base_fg
+      -- local bg = colors.diff_change
+      local bold = true
 
       if Conditions.is_not_active() then
-        bg = colors.qf_bg_not_active
         fg = colors.qf_fg_not_active
+        bold = false
       end
-      return { fg = fg, bg = bg, bold = true }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local bg = colors.mode_bg
-      local fg = colors.diff_change
-
-      if Conditions.is_not_active() then
-        fg = colors.qf_bg_not_active
-        bg = colors.separator_fg_alt
-      end
-      return { fg = fg, bg = bg }
-    end,
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      local fg = colors.mode_bg
-      local bg = colors.base_bg
-
-      if Conditions.is_not_active() then
-        fg = colors.separator_fg_alt
-        bg = colors.basenc_bg
-      end
-      return { fg = fg, bg = bg }
+      return { fg = fg, bold = bold }
     end,
   },
 }
@@ -499,7 +425,7 @@ M.FilePath = {
       end
 
       if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
-        return " " .. table.concat(parts, sep) .. sep
+        return "  " .. table.concat(parts, sep) .. sep
       end
 
       if not Conditions.is_not_active() then
@@ -507,17 +433,17 @@ M.FilePath = {
         table.remove(parts, #parts)
         local tbl_concat = table.concat(parts, sep)
         if #tbl_concat > 0 then
-          return " " .. tbl_concat .. sep
+          return "  " .. tbl_concat .. sep
         end
-        return " "
+        return "  "
       end
 
       if not Conditions.width_percent_below(#filename, 0.90) then
-        return " " .. table.concat(parts, sep) .. sep .. RUtils.file.basename(filename) .. " "
+        return "  " .. table.concat(parts, sep) .. sep .. RUtils.file.basename(filename) .. " "
       end
 
       -- return statusline path untuk non active window
-      return " " .. filename
+      return "  " .. filename
     end,
     hl = function()
       if Conditions.is_not_active() then
@@ -907,12 +833,11 @@ M.PinnedBuffer = {
       if RUtils.has "stickybuf.nvim" then
         local is_pinned = require("stickybuf").is_pinned()
         if is_pinned then
-          -- return " " .. RUtils.config.icons.misc.marks .. " "
-          return " [BufPinned] "
+          return " " .. RUtils.config.icons.misc.dashboard .. " "
         end
       end
     end,
-    hl = { fg = colors.diagnostic_warn },
+    hl = { fg = "green" },
   },
 }
 M.BufferCwd = {
@@ -998,7 +923,7 @@ M.status_active_left = {
   M.FilePath,
   M.FileIcon,
   M.Git,
-  M.FilePathQF,
+  M.QuickfixStatus,
   M.FileFlags,
   M.Gap,
   M.Runfile,
@@ -1029,7 +954,7 @@ M.status_not_active = {
   M.FilePath,
   -- M.FileIcon,
   -- M.Git,
-  M.FilePathQF,
+  M.QuickfixStatus,
   M.FileFlags,
   M.Gap,
   M.Ruler,

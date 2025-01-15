@@ -13,11 +13,12 @@ local keyword = Highlight.get("Keyword", "fg")
 local keywordnc = Highlight.tint(statusline_bg, 0.2)
 
 local qf_bg_not_active = Highlight.tint(statuslinenc_bg, 0.4)
-local qf_fg_not_active = Highlight.tint(qf_bg_not_active, -0.3)
+local qf_fg_not_active = statuslinenc_fg
 
 local terminal_fg = Highlight.tint(Highlight.get("Keyword", "fg"), 0.5)
 
-local branch_fg = Highlight.tint(normal_fg, 4)
+-- local branch_fg = Highlight.tint(normal_fg, 4)
+local branch_fg = Highlight.tint(Highlight.get("GitSignsAdd", "fg"), 0.3)
 
 local separator = Highlight.tint(normal_bg, 0.3)
 local separator_fg_alt = Highlight.tint(statusline_bg, 0.6)
@@ -27,6 +28,8 @@ local mode_bg = Highlight.tint(statusline_bg, 1)
 
 if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(separator_fg_alt, 0.7)
+
+  branch_fg = Highlight.tint(normal_fg, -2)
 
   keywordnc = Highlight.tint(statusline_bg, -0.04)
   separator_trouble = Highlight.tint(normal_bg, -0.1)
@@ -63,8 +66,8 @@ local M = {
 
   error_fg = error_fg,
 
-  qf_bg_not_active = qf_bg_not_active,
   qf_fg_not_active = qf_fg_not_active,
+  qf_bg_not_active = qf_bg_not_active,
   norm_bg = statusline_bg,
 
   mod_ins = error_fg,

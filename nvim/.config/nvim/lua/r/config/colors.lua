@@ -2950,11 +2950,12 @@ local function colorscheme_overrides()
 
       {
         MyCodeUsage = {
-          fg = { from = "Visual", attr = "bg", alter = 1 },
-          bg = { from = "Visual", attr = "bg", alter = -0.5 },
+          fg = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, dark_yellow),
+          bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.9, dark_yellow),
           italic = true,
         },
       },
+
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
