@@ -71,6 +71,9 @@ gtk-titlebar           = false
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                         MAPPINGS                          ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
+# for now atm clear all set keybindings
+# keybind = clear
+
 # NOTE: keybind dibawah ini hanya digunakan ketika di luar tmux-only (commented jika perlu)
 
 # ┏╍╍╍╍╍╍┓
