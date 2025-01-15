@@ -113,7 +113,7 @@ open_newsboat() {
       -E -d "#{pane_current_path}" \
       -S bg="$GET_BG",fg="$GET_FG" \
       -b rounded \
-      -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session proxychains -q newsboat;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
@@ -149,7 +149,7 @@ open_calcure() {
       -S bg="$GET_BG",fg="$GET_FG" \
       -b rounded \
       -E -d "#{pane_current_path}" \
-      -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session calcure;'"
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session calcure;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
@@ -174,7 +174,7 @@ open_ps_btop() {
       -E -d "#{pane_current_path}" \
       -S bg="$GET_BG",fg="$GET_FG" \
       -b rounded \
-      -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session btop;'"
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session btop;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
@@ -234,7 +234,7 @@ open_ps_lsof() {
       -E -d "#{pane_current_path}" \
       -S bg="$GET_BG",fg="$GET_FG" \
       -b rounded \
-      -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session htop -p $output;'"
   else
     if [[ $(tmux display-message -p '#S') == "$session" ]]; then
       tmux detach-client
@@ -256,7 +256,7 @@ open_systemctl_ui() {
     -S bg="$GET_BG",fg="$GET_FG" \
     -b rounded \
     -E -d "#{pane_current_path}" \
-    -E "tmux new -A -s $session 'tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
+    -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session $HOME/.config/miscxrdb/bin/sysz;'"
 }
 
 #  +----------------------------------------------------------+
@@ -349,28 +349,29 @@ tmux_create_sess() {
 #  +----------------------------------------------------------+
 
 callme() {
-  MENULIST="SHOW: apt search\nOPEN: calc\nOPEN: calcure\nOPEN: ps_lsof\nOPEN: systemctlUI\nOPEN: btop"
-  MENULIST="$MENULIST\nTMUX: toggle status\nTMUX: toggle synchronize panes\nTMUX: clock mode\nTMUX: create session\nTMUX: select session"
-  MENULIST="$MENULIST\nRUN: rkill\nRUN: multilog\nRUN: newsboat"
+  MENULIST=" calc\n calcure\n ps-lsof\n systemctlUI\n btop"
+  MENULIST="$MENULIST\n toggle-status\n toggle-synchronize-panes\n clock-mode\n select-session"
+  MENULIST="$MENULIST\n rkill\n multilog\n newsboat\n apt-search"
 
-  selected=$(echo -e "$MENULIST" | sort | fzf-tmux -xC -w '60%' -h '50%' --prompt="fz-ctrlo> ")
+  selected=$(echo -e "$MENULIST" | fzf-tmux -xC -w '60%' -h '50%' --prompt="⚡ " --border-label ' ALT-O ')
   [[ -z $selected ]] && exit
 
-  case $selected in
-  "OPEN: calc") open_calc ;;
-  "OPEN: calcure") open_calcure ;;
-  "OPEN: ps_lsof") open_ps_lsof ;;
-  "OPEN: btop") open_ps_btop ;;
-  "OPEN: systemctlUI") open_systemctl_ui ;;
-  "SHOW: apt search") show_apt_search ;;
-  "TMUX: clock mode") tmux_clock_mode ;;
-  "TMUX: create session") tmux_create_sess ;;
-  "TMUX: select session") tmux_select_sess ;;
-  "TMUX: toggle status") tmux_toggle_status ;;
-  "TMUX: toggle synchronize panes") tmux_toggle_synchronize_panes ;;
-  "RUN: rkill") open_rkill ;;
-  "RUN: multilog") open_mutlilog ;;
-  "RUN: newsboat") open_newsboat ;;
+  select=$(echo "$selected" | cut -d " " -f 2)
+
+  case $select in
+  "calc") open_calc ;;
+  "calcure") open_calcure ;;
+  "ps-lsof") open_ps_lsof ;;
+  "btop") open_ps_btop ;;
+  "systemctlUI") open_systemctl_ui ;;
+  "clock-mode") tmux_clock_mode ;;
+  "select-session") tmux_select_sess ;;
+  "toggle-status") tmux_toggle_status ;;
+  "toggle-synchronize-panes") tmux_toggle_synchronize_panes ;;
+  "apt-nsearch") show_apt_search ;;
+  "rkill") open_rkill ;;
+  "multilog") open_mutlilog ;;
+  "newsboat") open_newsboat ;;
   *) exit ;;
   esac
 }

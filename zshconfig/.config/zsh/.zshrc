@@ -24,25 +24,9 @@ source "$HOME/.asdf/asdf.sh"
 
 [[ -f "$HOME/.config/miscxrdb/fzf/fzf.config" ]] && source "$HOME/.config/miscxrdb/fzf/fzf.config"
 
-[[ -f $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh ]] \
-  && source $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh
-
-[[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]] \
-  && source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
-
-[[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
-  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-COLORSUGGEST=fg="#4D4D4D"
-zle -N autosuggest-accept
-[[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
-  && export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$COLORSUGGEST \
-  && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
-
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ OPTIONS                                                  ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
 # Keep a ton of history.
 HISTSIZE=100000
 SAVEHIST=$HISTSIZE
@@ -83,12 +67,12 @@ fpath=(${ASDF_DIR}/completions $fpath)
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
 # Check this link to find out how to make completion in zsh
 # https://thevaluable.dev/zsh-completion-guide-examples/
 zmodload zsh/complist
 autoload -Uz $ZDOTDIR/funcs/*(.:t)
-autoload -U compinit ; compinit
+autoload -U compinit
+compinit
 _comp_options+=(globdots) # Include hidden files, when do 'cd ..<tab>'
 
 # ─< config completion >────────────────────────────────────────────────
@@ -152,57 +136,6 @@ zstyle ':completion:*:*:*:*:processes' command 'ps -u $LOGNAME -o pid,user,comma
 # zstyle ':completion:*' recent-dirs-insert always
 # zstyle ':chpwd:*' recent-dirs-default yes
 
-# ── FZF-TAB ───────────────────────────────────────────────────────────
-
-# FZF_DEFAULT_OPTS="-e \
-#    --color 16,fg:10,bg:9,hl:1,hl+:1,bg+:7,fg+:-1:underline \
-#    --color prompt:4,pointer:13,marker:13,spinner:3,info:3"
-# zstyle ':fzf-tab:*' fzf-flags $(echo $FZF_DEFAULT_OPTS)
-# zstyle ':fzf-tab:*' fzf-flags '--height='
-zstyle ':fzf-tab:*' continuous-trigger '/'
-zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-# zstyle ":fzf-tab:*" fzf-flags '--height=' \
-# --no-separator --border "none" \
-# --preview-window 'right:50%:nohidden:cycle'
-
-# zstyle ':fzf-tab:*' fzf-min-height 30
-zstyle ':fzf-tab:*' popup-min-size 70 8
-# zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
-# zstyle ':fzf-tab:*' popup-pad 80 80 # Not actually needed to elicit the bug, but it makes it easier to see
-zstyle ':fzf-tab:complete:*' fzf-bindings \
-	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
-    'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
-
-# ─< preview cd >───────────────────────────────────────────────────────
-# preview directory's content with eza when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -a --tree --level=2 --icons --color=always $realpath'
-zstyle ':fzf-tab:complete:cd:*' fzf-bindings 'ctrl-l:preview({_FTB_INIT_} eza -a --tree --level=2 --icons --color=always $realpath)'
-
-# To disable `fzf-tab` when completing cd
-# taken from: https://github.com/Aloxaf/fzf-tab/pull/293)
-# use:
-# zstyle ':fzf-tab:complete:cd:*' disabled-on any
-
-# ─< show systemd unit status >─────────────────────────────────────────
-zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
-
-# zstyle ':fzf-tab:complete:doc_im_ls:*' disabled-on any
-# zstyle ':completion:*:doc_im_ls:*' command "show_alias"
-# zstyle ':fzf-tab:complete:doc_im_ls:*' fzf-preview 'echo "mantap"'
-
-# zstyle ':completion:*:*:*:doc_im_ls:*' fzf-preview "show_alias"
-# zstyle ':fzf-tab:complete:doc_im_ls:argument-rest' command 'show_alias'
-# zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
-#   [[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
-
-# ─< preview for kill/ps >──────────────────────────────────────────────
-zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
-  --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='down:15%:wrap'
-# https://github.com/Aloxaf/fzf-tab/wiki/Preview#killps-preview-of-full-commandline-arguments
-# zstyle ':completion:*:*:(kill|ps):*' complete-options false
-zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview $'[[ $group == "[process ID]" ]] && ps -f -p $word'  # only show items in group 'process ID'
-# zstyle ':fzf-tab:complete:(kill|ps):*' fzf-flags --no-sort --height=60% --color=16,hl:green --preview-window=down:18%:wrap
-
 
 # Completion for kitty
 if [[ "$TERM" == "xterm-kitty" ]]; then
@@ -228,7 +161,6 @@ export MANPAGER="/bin/sh -c \"col -b | \
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ KEYBINDINGS                                              ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
-
 # @see: https://thevaluable.dev/zsh-install-configure-mouseless/
 bindkey -v # enables vi mode, using -e = emacs
 
@@ -266,24 +198,67 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey '^[[Z' reverse-menu-complete
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 
-# NOTE: we use powerlevel10k, so commented
-# Change cursor shape for different vi modes.
-# function zle-keymap-select {
-#   if [[ ${KEYMAP} == vicmd ]] ||
-#      [[ $1 = 'block' ]]; then
-#     echo -ne '\e[1 q'
-#   elif [[ ${KEYMAP} == main ]] ||
-#        [[ ${KEYMAP} == viins ]] ||
-#        [[ ${KEYMAP} = '' ]] ||
-#        [[ $1 = 'beam' ]]; then
-#     echo -ne '\e[5 q'
-#   fi
-# }
-# zle -N zle-keymap-select
-
 # ╒══════════════════════════════════════════════════════════╕
 # │ SOURCE MISC (PLUGINS, ASDF, ETC)                         │
 # ╘══════════════════════════════════════════════════════════╛
+[[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
+  && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+COLORSUGGEST=fg="#4D4D4D"
+zle -N autosuggest-accept
+[[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
+  && export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$COLORSUGGEST \
+  && source $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+[[ -f $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh ]] \
+  && source $ZSH_PLUGINS/autoenv/autoenv.plugin.zsh
+
+# ── FZF-TAB ───────────────────────────────────────────────────────────
+if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]] ; then
+  source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
+
+  zstyle ':fzf-tab:*' use-fzf-default-opts yes
+  zstyle ':fzf-tab:*' default-color ""
+
+  zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+  zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%"
+  zstyle ':fzf-tab:*' popup-pad 80 10
+
+  zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
+  # zstyle ':fzf-tab:*' popup-pad 80 80 # Not actually needed to elicit the bug, but it makes it easier to see
+  zstyle ':fzf-tab:complete:*' fzf-bindings \
+  	'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
+      'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
+
+  # ─< preview cd >───────────────────────────────────────────────────────
+  # preview directory's content with eza when completing cd
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -a --tree --level=2 --icons --color=always $realpath'
+
+  # To disable `fzf-tab` when completing cd
+  # taken from: https://github.com/Aloxaf/fzf-tab/pull/293)
+  # use:
+  # zstyle ':fzf-tab:complete:cd:*' disabled-on any
+
+  # ─< show systemd unit status >─────────────────────────────────────────
+  zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+
+  # zstyle ':fzf-tab:complete:doc_im_ls:*' disabled-on any
+  # zstyle ':completion:*:doc_im_ls:*' command "show_alias"
+  # zstyle ':fzf-tab:complete:doc_im_ls:*' fzf-preview 'echo "mantap"'
+
+  # zstyle ':completion:*:*:*:doc_im_ls:*' fzf-preview "show_alias"
+  # zstyle ':fzf-tab:complete:doc_im_ls:argument-rest' command 'show_alias'
+  # zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  #   [[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+
+  # ─< preview for kill/ps >──────────────────────────────────────────────
+  zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
+    --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='down:15%:wrap'
+  # https://github.com/Aloxaf/fzf-tab/wiki/Preview#killps-preview-of-full-commandline-arguments
+  # zstyle ':completion:*:*:(kill|ps):*' complete-options false
+  zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview $'[[ $group == "[process ID]" ]] && ps -f -p $word'  # only show items in group 'process ID'
+  # zstyle ':fzf-tab:complete:(kill|ps):*' fzf-flags --no-sort --height=60% --color=16,hl:green --preview-window=down:18%:wrap
+fi
 
 # +----------------------------------------------------------+
 # | LOCAL SCRIPTS                                            |

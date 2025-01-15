@@ -9,22 +9,22 @@ build-nvim() {
   git pull --rebase --prune
   git fetch --tags -f
   git checkout nightly
-  [ -d "$neovim_dir/build/" ] && rm -r ./build/  # clear the CMake cache
+  [ -d "$neovim_dir/build/" ] && rm -r ./build/ # clear the CMake cache
   rm -rf $HOME/neovim/*
   make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
   make install
   popd
 }
 
-build-install(){
+build-install() {
   if ! command -v xinput >/dev/null; then
     echo "Installing: xinput - fixing mouse lagging..?"
-  	sudo apt install xinput
+    sudo apt install xinput
   fi
 
   if ! command -v urlview >/dev/null; then
     echo "Installing: urlview"
-  	sudo apt install urlview
+    sudo apt install urlview
   fi
 
   if ! command -v betterlockscreen >/dev/null; then
@@ -68,22 +68,22 @@ build-install(){
 
   if ! asdf which bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
-  	cargo install bat
+    cargo install bat
     asdf reshim rust
   fi
 
   if ! asdf which gifski >/dev/null; then
-  # Install: gifski
-  # gihtub: https://github.com/sindresorhus/Gifski
-  # install binary langsung dari link https://gif.ski/
+    # Install: gifski
+    # gihtub: https://github.com/sindresorhus/Gifski
+    # install binary langsung dari link https://gif.ski/
     echo "Installing: gifski - Gif encoder"
-  	cargo install gifski
+    cargo install gifski
     asdf reshim rust
   fi
 
   if ! asdf which tree-sitter >/dev/null; then
     echo "Installing: tree-sitter-cli - tree-sitter-cli for nvim"
-  	cargo install tree-sitter-cli
+    cargo install tree-sitter-cli
     asdf reshim rust
   fi
 
@@ -109,7 +109,7 @@ build-install(){
 
   if ! asdf which eza >/dev/null; then
     echo "Installing: eza - ls colors"
-  	cargo install eza
+    cargo install eza
     asdf reshim rust
   fi
 
@@ -121,7 +121,7 @@ build-install(){
 
   if ! asdf which delta >/dev/null; then
     echo "Installing: delta - color hunk"
-  	cargo install git-delta
+    cargo install git-delta
     asdf reshim rust
   fi
 
@@ -171,6 +171,12 @@ build-install(){
     asdf reshim golang
   fi
 
+  if ! asdf which sesh >/dev/null; then
+    echo "Installing: sesh - handle tmux session"
+    go install github.com/joshmedeski/sesh@latest
+    asdf reshim golang
+  fi
+
   if ! asdf which lazydocker >/dev/null; then
     echo "Installing: lazydocker - docker GUI"
     go install github.com/jesseduffield/lazydocker@latest
@@ -201,8 +207,8 @@ build-install(){
   fi
 }
 
-Green=$(tput setaf 2)        # Green
-Color_Off=$(tput sgr0)       # Text Reset
+Green=$(tput setaf 2)  # Green
+Color_Off=$(tput sgr0) # Text Reset
 
 build-python() {
   if [[ $1 == "" ]]; then
@@ -212,7 +218,6 @@ build-python() {
     cd "$1"
   fi
 }
-
 
 build-react() {
   if [[ $1 == "" ]]; then
@@ -238,7 +243,7 @@ run-mark() {
     cwd="/mnt/c/Users/moxli/Dropbox/data.programming.forprivate/marked-pwd"
   fi
 
-  if [[ ! -f $cwd  ]]; then
+  if [[ ! -f $cwd ]]; then
     echo -ne "[warn] path not found: $cwd\n"
   else
     select=$(cat $cwd | fzf --preview 'eza --long --all --git --color=always --group-directories-first --icons {1}' \
@@ -256,25 +261,37 @@ run-mark() {
 
   zle accept-line
 }
-
 zle -N run-mark
 bindkey '^o' run-mark
 
-function fg-bg(){
+function fg-bg() {
   if [[ $#BUFFER -eq 0 ]]; then
     fg
   else
     zle push-input
   fi
 }
-
 zle -N fg-bg
 bindkey '^z' fg-bg
 
+function tmc() {
+  LBUFFER+="tm "
+  zle accept-line
+}
+zle -N tmc
+bindkey '^[y' tmc
+
+function exitme() {
+  LBUFFER+="exit "
+  zle accept-line
+}
+zle -N exitme
+bindkey '^[x' exitme
+
 find-in-file() {
-  local _file="$(rg --color=always --line-number --no-heading --smart-case "${@:-^[^\n]}" \
+  local _file="$(rg --color=always --line-number --hidden --no-heading --smart-case "${@:-^[^\n]}" \
     | fzf --ansi -d ':' --preview 'bat --style=numbers --color=always $(cut -d: -f1 <<< {1}) --highlight-line {2}  --line-range={2}:+20' \
-    --preview-window='50%' --prompt='Grep text current cwd> ' --height='50%' --with-nth 1,3.. --exact)"
+    --preview-window='50%' --prompt='Grep> ' --height='50%' --with-nth 1,3.. --exact)"
 
   _file="${_file%%:*}"
   if [[ -n $_file ]]; then
@@ -315,7 +332,7 @@ show_alias() {
 
   local select
   local myargs=(${(z)$(_t_expand_alias_f $LBUFFER)})
-  
+
 
   local doc_con="doc_con_"
   local doc_im="doc_im_"
@@ -363,7 +380,6 @@ show_alias() {
       zle reset-prompt
       return
     fi
-
   elif [[ $myargs[-1] == "vim" ]]; then
     local select="**"
     if [[ -n $select ]]; then
@@ -435,6 +451,5 @@ show_alias() {
     fzf-tab-complete
   fi
 }
-
 zle -N show_alias
 bindkey '\t' show_alias

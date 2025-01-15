@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SELECT=$(sesh list --icons | fzf-tmux -p 80%,70% \
+  --no-sort --ansi --border-label ' SELECT|START SESS|TMUX ' --prompt '⚡ ' \
+  --header ' ^a all ^t tmux ^g configs ^z zoxide ^x tmux kill ^f find' \
+  --bind 'tab:down,btab:up' \
+  --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
+  --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
+  --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
+  --bind 'ctrl-z:change-prompt(📁  )+reload(sesh list -z --icons)' \
+  --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+  --bind 'ctrl-x:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
+  --preview-window 'right:nohidden:55%' \
+  --preview 'sesh preview {}')
+
+[[ -z $SELECT ]] && exit
+
+SESSION_NAME=$(echo "${SELECT}" | cut -d " " -f 2)
+
+tmux switch-client -t "$SESSION_NAME" || sesh connect "$SESSION_NAME"
+# tmux display-message "Switched to $SESSION_NAME"

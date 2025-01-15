@@ -1,0 +1,12 @@
+# NOTE: define nama session harus sesuai dengan nama paling ujung dari path?
+
+[[session]]
+name = "Dotfiles"
+path = "~/moxconf/development/dotfiles"
+startup_command = "tmux neww -c ~/Downloads/dotfilesxc && tmux selectw -t 1 && v"
+
+[[session]]
+name = "Downloads 📥"
+path = "~/Downloads"
+startup_command = "ls"
+preview_command = "bat --color=always ~/.config/zsh/.zshrc"
