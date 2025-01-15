@@ -902,7 +902,12 @@ local general_overrides = function()
     { MiniAnimateCursor = { fg = "red", bg = "red" } },
 
     -- ──────────────────────────────── NOICE ────────────────────────────────
-    { NoicePopupBorder = { fg = { from = "FloatBorder" }, bg = "NONE" } },
+    {
+      NoicePopupBorder = {
+        fg = { from = "Pmenu", attr = "bg" },
+        bg = { from = "Pmenu", attr = "bg" },
+      },
+    },
     { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
     { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
@@ -2898,13 +2903,11 @@ local function colorscheme_overrides()
       },
 
       {
-        Comment = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = "NONE",
-          italic = true,
-          reverse = false,
-        },
+        Comment = { fg = { from = "Normal", attr = "bg", alter = 1.5 }, bg = "NONE", italic = true, reverse = false },
       },
+      { VGitComment = { bg = "NONE", fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
+      { BlinkCmpGhostText = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
+
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 1.7 },

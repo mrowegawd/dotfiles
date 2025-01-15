@@ -12,10 +12,15 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 return {
-  -- OUTPUTPANEL
+  -- OUTPUTPANEL (disabled)
   {
+    -- NOTE: Something went wrong when using this plugin right now, at the moment -> disabled it
+    -- relate issue:
+    -- https://github.com/mhanberg/output-panel.nvim/issues/5 (error dead coroutine)
+    -- https://github.com/mhanberg/output-panel.nvim/issues/3 (error nui)
     "mhanberg/output-panel.nvim",
     version = "*",
+    enabled = false,
     event = "VeryLazy",
     keys = {
       {
@@ -185,24 +190,6 @@ return {
           end
         end,
       })
-    end,
-  },
-  -- LSP-SIGNATURE (disabled)
-  {
-    "ray-x/lsp_signature.nvim",
-    enabled = false,
-    event = "VeryLazy", -- "InsertEnter",
-    opts = {
-      bind = true,
-      handler_opts = {
-        border = "rounded",
-      },
-    },
-    config = function(_, opts)
-      Highlight.plugin("lspSignatureUIcol", {
-        { LspSignatureActiveParameter = { fg = "white", bg = "NONE", bold = true, underline = true } },
-      })
-      require("lsp_signature").setup(opts)
     end,
   },
   -- GLANCE (disabled)

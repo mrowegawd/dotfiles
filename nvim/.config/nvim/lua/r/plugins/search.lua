@@ -810,7 +810,7 @@ return {
               fullscreen = false,
             },
             fzf_opts = {
-              ["--header"] = [[ctrl-x: filter LSP  | ctrl-r: workspace symbols]],
+              ["--header"] = [[ ctrl-x: filter LSP  | ctrl-r: workspace symbols]],
               ["--reverse"] = false,
             },
             actions = {
