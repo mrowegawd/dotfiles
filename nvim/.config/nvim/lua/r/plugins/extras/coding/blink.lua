@@ -29,7 +29,7 @@ return {
     event = "InsertEnter",
     opts = {
       -- custom props to disable blink in certain filetypes
-      disable_ft = { "prompt", "TelescopePrompt" },
+      disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input" },
       snippets = {
         expand = function(snippet, _)
           return RUtils.cmp.expand(snippet)
