@@ -13,6 +13,7 @@ alias .....="cd ../../../.."
 #alias rg="rg --hidden"
 
 alias v="nvim"
+alias vp="poetry run nvim"
 # alias vv="vv"
 alias vvg="vv --multigrid"
 alias svi="sudo nvim"
