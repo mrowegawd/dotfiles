@@ -300,7 +300,24 @@ opt.diffopt = opt.diffopt
     "indent-heuristic",
   }
 
-opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds", "terminal" }
+-- NOTE: remove "folds" dari sessionoptions tampak nya menghilangkan error "no fold found error"
+-- ketika session di restore, relate issue: https://github.com/jedrzejboczar/possession.nvim/issues/19#issuecomment-1323804180
+opt.sessionoptions = {
+  "blank",
+  "buffers",
+  "curdir",
+  "folds",
+  "globals",
+  "help",
+  "localoptions",
+  "skiprtp",
+  "tabpages",
+  "tabpages",
+  "terminal",
+  "winpos",
+  "winsize",
+}
+-- vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 opt.foldmethod = "expr"
 opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
