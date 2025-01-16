@@ -289,6 +289,7 @@ return {
 			else
 				if KeymapUtil.is_in_nnn(pane) or KeymapUtil.is_in_lf(pane) or KeymapUtil.is_in_yazi(pane) then
 					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
 				end
 
 				-- if KeymapUtil.is_in_nvim(pane) then
