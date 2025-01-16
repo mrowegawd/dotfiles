@@ -233,6 +233,7 @@ function M.cmd_filter_kind_lsp(opts)
       col = 0,
       height = 20,
       width = math.floor(math.min(40, vim.o.columns / 2)),
+      backdrop = 60,
     },
     actions = opts.actions,
   })
@@ -253,7 +254,7 @@ function M.extend_title_fzf(opts, extend_title)
   end
 
   local title = RUtils.fzflua.format_title(
-    string.format("[Mod] %s%s", extend_title, opts.cwd),
+    string.format("%s%s", extend_title, opts.cwd),
     RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.gear)
   )
 

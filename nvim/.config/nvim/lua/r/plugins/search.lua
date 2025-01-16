@@ -126,6 +126,7 @@ return {
               height = win_height,
               row = row,
               col = col,
+              backdrop = 60,
               preview = {
                 vertical = "down:55%", -- up|down:size
                 horizontal = "right:45%", -- right|left:size
@@ -808,6 +809,11 @@ return {
             winopts = {
               title = extend_title.title,
               fullscreen = false,
+              height = 0.85,
+              width = 0.90,
+              row = 0.50,
+              col = 0.50,
+              backdrop = 60,
             },
             fzf_opts = {
               ["--header"] = [[ ctrl-x: filter LSP  | ctrl-r: workspace symbols]],
@@ -825,13 +831,12 @@ return {
                       if type(selected) == "table" then
                         for _, x in pairs(selected) do
                           for word in x:gmatch "%w+" do
-                            contents[#contents + 1] = word
+                            contents[#contents + 1] = string.lower(word)
                           end
-                          contents[#contents + 1] = word
                         end
                       else
                         for word in selected[1]:gmatch "%w+" do
-                          contents[#contents + 1] = word
+                          contents[#contents + 1] = string.lower(word)
                         end
                       end
 
