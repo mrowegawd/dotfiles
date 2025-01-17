@@ -594,45 +594,9 @@ return {
     },
     keys = {
       {
-        "<Leader>rf",
-        "<Plug>SnipRun",
-        ft = { "markdown", "neorg" },
-        mode = "v",
-        desc = "Misc: run visually selected lines [sniprun]",
-      },
-      {
-        "<Leader>rf",
-        function()
-          local lang_conf = {}
-          lang_conf["markdown"] = { "```", "```" }
-          lang_conf["vimwiki"] = { "{{{", "}}}" }
-          lang_conf["norg"] = { "@code", "@end" }
-          lang_conf["org"] = { "#+BEGIN_SRC", "#+END_SRC" }
-          lang_conf["markdown.pandoc"] = { "```", "```" }
-
-          local function code_block_start()
-            return lang_conf[vim.bo.filetype][1]
-          end
-
-          local function code_block_end()
-            return lang_conf[vim.bo.filetype][2]
-          end
-
-          local linenr_from = vim.fn.search(code_block_start() .. ".\\+$", "bnW")
-          local linenr_until = vim.fn.search(code_block_end() .. ".*$", "nW")
-
-          vim.cmd("normal! " .. linenr_from + 1 .. "G")
-          vim.cmd "normal! V"
-          vim.cmd("normal! " .. linenr_until - 1 .. "G")
-          RUtils.map.feedkey("<Leader>rf", "v")
-        end,
-        ft = { "markdown", "neorg" },
-        desc = "Misc: run code block [sniprun]",
-      },
-      {
         "<Leader>rr",
         "<Plug>SnipClose",
-        ft = { "markdown", "neorg" },
+        ft = { "markdown", "neorg", "org" },
         desc = "Misc: close [sniprun]",
       },
     },

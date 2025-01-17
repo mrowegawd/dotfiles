@@ -1,4 +1,4 @@
-local fmt, cmd = string.format, vim.cmd
+-- local fmt, cmd = string.format, vim.cmd
 
 local M = {}
 

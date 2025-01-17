@@ -17,6 +17,8 @@ vim.g.lazyvim_cmp = "auto"
 -- use that instead of inline suggestions
 vim.g.ai_cmp = true
 
+vim.g.is_preview_markdown_off = true
+
 vim.g.open_command = g.os == "Darwin" and "open" or "xdg-open"
 vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
 vim.g.work_dir = g.projects_dir .. "/work"

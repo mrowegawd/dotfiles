@@ -221,6 +221,43 @@ return {
       }
     end,
   },
+  -- NVIM-COVERAGE
+  {
+    "andythigpen/nvim-coverage", -- Display test coverage information
+    dependencies = "nvim-lua/plenary.nvim",
+    cmd = {
+      "Coverage",
+      "CoverageSummary",
+      "CoverageLoad",
+      "CoverageShow",
+      "CoverageHide",
+      "CoverageToggle",
+      "CoverageClear",
+    },
+    -- stylua: ignore
+    keys = {
+      { "<Leader>tcr", "<CMD>Coverage<CR>", desc = "Coverage: run" },
+      { "<Leader>tcC", "<CMD>CoverageClear<CR>", desc = "Coverage: clear" },
+      { "<Leader>tcc", "<CMD>CoverageToggle<CR>", desc = "Coverage: toggle" },
+      { "<Leader>tcl", "<CMD>CoverageLoad<CR>", desc = "Coverage: load" },
+      { "<Leader>tcs", "<CMD>CoverageSummary<CR>", desc = "Coverage: summary" },
+    },
+    config = function()
+      require("coverage").setup {
+        highlights = {
+          covered = { fg = "green" },
+          uncovered = { fg = "red" },
+        },
+      }
+
+      Highlight.plugin("coverage_hi", {
+        { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
+        { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
+      })
+    end,
+  },
   -- OVERSEER.NVIM
   {
     "stevearc/overseer.nvim", -- Task runner and job management
@@ -239,29 +276,15 @@ return {
       "OverseerTaskAction",
       "OverseerDebugParser",
     },
-    keys = {
-      {
-        "<Leader>rr",
-        function()
-          return vim.cmd "OverseerToggle!"
-        end,
-        desc = "Tasks: open toggle [overseer]",
-      },
-      {
-        "<Leader>rf",
-        function()
-          return vim.cmd "OverseerRun"
-        end,
-        desc = "Tasks: run [overseer]",
-      },
-      {
-        "<Leader>rd",
-        function()
-          return vim.cmd "OverseerDebugParser"
-        end,
-        desc = "Tasks: run debug parser [overseer]",
-      },
-    },
+    -- keys = {
+    --   {
+    --     "<Leader>rr",
+    --     function()
+    --       return vim.cmd "OverseerToggle!"
+    --     end,
+    --     desc = "Tasks: open toggle [overseer]",
+    --   },
+    -- },
 
     opts = {
       templates = { "builtin", "user" },
@@ -363,43 +386,6 @@ return {
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
-  -- NVIM-COVERAGE
-  {
-    "andythigpen/nvim-coverage", -- Display test coverage information
-    dependencies = "nvim-lua/plenary.nvim",
-    cmd = {
-      "Coverage",
-      "CoverageSummary",
-      "CoverageLoad",
-      "CoverageShow",
-      "CoverageHide",
-      "CoverageToggle",
-      "CoverageClear",
-    },
-    -- stylua: ignore
-    keys = {
-      { "<Leader>tcr", "<CMD>Coverage<CR>", desc = "Coverage: run" },
-      { "<Leader>tcC", "<CMD>CoverageClear<CR>", desc = "Coverage: clear" },
-      { "<Leader>tcc", "<CMD>CoverageToggle<CR>", desc = "Coverage: toggle" },
-      { "<Leader>tcl", "<CMD>CoverageLoad<CR>", desc = "Coverage: load" },
-      { "<Leader>tcs", "<CMD>CoverageSummary<CR>", desc = "Coverage: summary" },
-    },
-    config = function()
-      require("coverage").setup {
-        highlights = {
-          covered = { fg = "green" },
-          uncovered = { fg = "red" },
-        },
-      }
-
-      Highlight.plugin("coverage_hi", {
-        { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
-      })
-    end,
-  },
   -- RUNMUX
   {
     -- "mrowegawd/runmux",
@@ -409,12 +395,12 @@ return {
       "stevearc/overseer.nvim",
     },
     keys = {
-      { "<Leader>rF", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
+      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
 
       { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
       { "<Leader>rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
 
-      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
+      { "<Leader>rr", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
       { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
 
       { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },
