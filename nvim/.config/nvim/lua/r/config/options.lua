@@ -453,3 +453,13 @@ if vim.env.PROF then
     },
   }
 end
+
+if vim.fn.has "nvim-0.10" == 1 then
+  opt.smoothscroll = true
+  opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
+  opt.foldmethod = "expr"
+  opt.foldtext = ""
+else
+  opt.foldmethod = "indent"
+  opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
+end
