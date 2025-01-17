@@ -80,11 +80,11 @@ set -g status-right \
 # #{?window_zoomed_flag,#[bg=$TMUX_FG],}#[bg=$ACTIVE_FG,fg=$BORDER_BG]#{?pane_synchronized,#[bg=yellow],}"
 
 # '' '' '' '' '' ''
-
+# 
 set-option -g window-status-current-format \
 "#{?#{==:#I,1},,#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}} \
-#{?window_zoomed_flag,#[fg=$RED]#[bold] ,}#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
+#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold]󰁌 ,}#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
 
 set-option -g window-status-format \
 "#{?window_bell_flag,\
