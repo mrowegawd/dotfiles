@@ -234,6 +234,12 @@ local general_overrides = function()
     { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+    -- {
+    --   LineNr = {
+    --     bg = { from = "Normal", attr = "bg", alter = 0.4 },
+    --     fg = { from = "Normal", attr = "bg", alter = 1 },
+    --   },
+    -- },
     {
       CursorLine = {
         bg = Highlight.darken(Highlight.get("Keyword", "fg"), cursorline_alter, Highlight.get("Normal", "bg")),
@@ -2910,10 +2916,17 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.48 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
+      -- { -- original
+      --   Folded = {
+      --     fg = { from = "Normal", attr = "bg", alter = 1.7 },
+      --     bg = { from = "Normal", attr = "bg", alter = 0.48 },
+      --   },
+      -- },
+
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
       {
         SnacksIndentScope = {
@@ -2962,13 +2975,13 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
         },
       },
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.22 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
       {

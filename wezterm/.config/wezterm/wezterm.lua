@@ -98,10 +98,9 @@ config.warn_about_missing_glyphs = false
 -- default_prog = { "zsh", "-l" },
 
 -- ├┤ BAR ├─────────────────────────────────────────────────────────────┤
--- tab_bar_at_bottom = true,
 config.show_new_tab_button_in_tab_bar = true
-config.show_tab_index_in_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true
+config.show_tab_index_in_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = false
 config.show_tabs_in_tab_bar = true
 config.switch_to_last_active_tab_when_closing_tab = false
 config.tab_and_split_indices_are_zero_based = false

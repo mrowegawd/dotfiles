@@ -12,6 +12,11 @@ wezterm.on("update-right-status", function(window, pane)
 	local date = wezterm.strftime("%H:%M")
 	local username = os.getenv("USER") or os.getenv("LOGNAME") or os.getenv("USERNAME")
 
+	local session = window:active_workspace()
+
+	local SOLID_RIGHT_ARROW = utf8.char(0xe0bc)
+	local right_arrow = SOLID_RIGHT_ARROW
+
 	window:set_right_status(wezterm.format({
 		{ Attribute = { Intensity = "Bold" } },
 		{ Foreground = { Color = clock_fg } },
@@ -20,6 +25,10 @@ wezterm.on("update-right-status", function(window, pane)
 		{ Foreground = { Color = statusline_fg } },
 		{ Text = " Alt " },
 		{ Text = " 👨 " .. username .. " " },
+		{ Foreground = { Color = Color.bg } },
+		{ Background = { Color = Color.white } },
+		{ Text = right_arrow },
+		{ Text = " ❐ " .. session .. " " },
 	}))
 end)
 

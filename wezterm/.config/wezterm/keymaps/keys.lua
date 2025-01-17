@@ -8,6 +8,9 @@ local act = wezterm.action
 
 local mod_key = wezterm.target_triple:find("windows") and "SHIFT|CTRL" or "ALT"
 
+-- Load the plugin
+local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+
 return {
 	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ PANE                                                    │
@@ -39,7 +42,7 @@ return {
 			end
 		end),
 	},
-	{ -- scroll pane Down
+	{ -- scroll pane down
 		mods = mod_key,
 		key = "PageDown",
 		action = wezterm.action_callback(function(window, pane)
@@ -50,7 +53,7 @@ return {
 			end
 		end),
 	},
-	{ -- scroll pane Up
+	{ -- scroll pane up
 		mods = mod_key,
 		key = "PageUp",
 		action = wezterm.action_callback(function(window, pane)
@@ -94,10 +97,6 @@ return {
 	KeymapUtil.split_nav("move", "CTRL", "j", "Down"),
 	KeymapUtil.split_nav("move", "CTRL", "k", "Up"),
 	KeymapUtil.split_nav("move", "CTRL", "l", "Right"),
-	-- { key = "h", mods = "CTRL", action = wezterm.action({ ActivatePaneDirection = "Left" }) },
-	-- { key = "j", mods = "CTRL", action = wezterm.action({ ActivatePaneDirection = "Down" }) },
-	-- { key = "k", mods = "CTRL", action = wezterm.action({ ActivatePaneDirection = "Up" }) },
-	-- { key = "l", mods = "CTRL", action = wezterm.action({ ActivatePaneDirection = "Right" }) },
 
 	KeymapUtil.split_nav("resize", mod_key, "L", "Right"),
 	KeymapUtil.split_nav("resize", mod_key, "H", "Left"),
@@ -114,10 +113,10 @@ return {
 	{ key = "8", mods = mod_key, action = act({ ActivateTab = 7 }) },
 	{ key = "9", mods = mod_key, action = act({ ActivateTab = 8 }) },
 
-	-- ┌─────────────────────────────────────────────────────────┐
-	-- │ TAB                                                     │
-	-- └─────────────────────────────────────────────────────────┘
-	{ -- open new tab
+	-- ╭─────────────────────────────────────────────────────────╮
+	-- │ WINDOW                                                  │
+	-- ╰─────────────────────────────────────────────────────────╯
+	{ -- new window
 		mods = mod_key,
 		key = "N",
 		action = wezterm.action_callback(function(window, pane)
@@ -128,7 +127,7 @@ return {
 			end
 		end),
 	},
-	{ -- next tab
+	{ -- next window
 		mods = "ALT|CTRL",
 		key = "l",
 		action = wezterm.action_callback(function(window, pane)
@@ -139,7 +138,7 @@ return {
 			end
 		end),
 	},
-	{ -- prev tab
+	{ -- prev window
 		mods = "ALT|CTRL",
 		key = "h",
 		action = wezterm.action_callback(function(window, pane)
@@ -150,7 +149,7 @@ return {
 			end
 		end),
 	},
-	{ -- move tab to the next
+	{ -- move the window to the next
 		mods = mod_key,
 		key = "RightArrow",
 		action = wezterm.action_callback(function(window, pane)
@@ -161,7 +160,7 @@ return {
 			end
 		end),
 	},
-	{ -- move tab to the prev
+	{ -- move the window to the prev
 		mods = mod_key,
 		key = "LeftArrow",
 		action = wezterm.action_callback(function(window, pane)
@@ -172,7 +171,7 @@ return {
 			end
 		end),
 	},
-	{ -- select list tabs
+	{ -- select lists window
 		mods = mod_key,
 		key = "t",
 		action = wezterm.action_callback(function(window, pane)
@@ -307,6 +306,21 @@ return {
 				-- end
 
 				KeymapUtil.spawn_file_manager(window, pane)
+			end
+		end),
+	},
+
+	-- ╭─────────────────────────────────────────────────────────╮
+	-- │ SESSION                                                 │
+	-- ╰─────────────────────────────────────────────────────────╯
+	{ -- select session
+		mods = mod_key,
+		key = "y",
+		action = wezterm.action_callback(function(window, pane)
+			if Util.is_tmux(pane) then
+				window:perform_action({ SendKey = { key = "y", mods = mod_key } }, pane)
+			else
+				window:perform_action(workspace_switcher.switch_workspace(), pane)
 			end
 		end),
 	},
