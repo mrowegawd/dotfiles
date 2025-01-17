@@ -143,4 +143,31 @@ function M.is_in_yazi(pane)
 	return Util.get_foreground_process_name(pane, "yazi")
 end
 
+-- Taken from: https://github.com/tjex/wezterm-conf/blob/90bd2219e314633c688102b3803a5299b70df68d/functions/funcs.lua
+function M.switch_workspace(window, pane, workspace)
+	local current_workspace = window:active_workspace()
+	if current_workspace == workspace then
+		return
+	end
+
+	window:perform_action(
+		act.SwitchToWorkspace({
+			name = workspace,
+		}),
+		pane
+	)
+	wezterm.GLOBAL.previous_workspace = current_workspace
+end
+
+function M.switch_to_previous_workspace(window, pane)
+	local current_workspace = window:active_workspace()
+	local workspace = wezterm.GLOBAL.previous_workspace
+
+	if current_workspace == workspace or wezterm.GLOBAL.previous_workspace == nil then
+		return
+	end
+
+	M.switch_workspace(window, pane, workspace)
+end
+
 return M

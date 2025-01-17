@@ -324,6 +324,17 @@ return {
 			end
 		end),
 	},
+	{ -- last session
+		mods = mod_key,
+		key = "b",
+		action = wezterm.action_callback(function(window, pane)
+			if Util.is_tmux(pane) then
+				window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
+			else
+				KeymapUtil.switch_to_previous_workspace(window, pane)
+			end
+		end),
+	},
 
 	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ TERMINAL                                                │
