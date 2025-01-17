@@ -170,7 +170,7 @@ opt.shiftround = true -- Always indent/outdent to nearest tabstop
 opt.expandtab = true -- Convert all tabs that are typed into spaces
 opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 
-opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.statuscolumn()]]
+opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]]
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
 
 opt.formatoptions = "jcroqlnt" -- tcqj
@@ -319,11 +319,6 @@ opt.sessionoptions = {
   "winpos",
   "winsize",
 }
--- vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-
-opt.foldmethod = "expr"
-opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
-opt.foldtext = ""
 
 -- Disable providers we do not care a about
 vim.g.loaded_ruby_provider = 0
