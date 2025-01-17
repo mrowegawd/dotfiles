@@ -388,6 +388,9 @@ set_yazi_theme() {
   if [ "$1" == "lackluster" ]; then
     HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
   fi
+  if [ "$1" == "vscode_modern" ]; then
+    HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
+  fi
   sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
 
