@@ -507,6 +507,7 @@ return {
   -- VGIT
   {
     "tanvirtin/vgit.nvim",
+    cmd = "VGit",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -525,19 +526,26 @@ return {
         end,
         desc = "Git: blame preview [vgit]",
       },
+      {
+        "<Leader>gq",
+        function()
+          vim.cmd [[VGit project_hunks_qf]]
+        end,
+        desc = "Git: open hunk lists on qf [vgit]",
+      },
     },
     opts = {
       settings = {
         hls = {
           GitBackground = "NormalFloat",
-          GitHeader = "Visual",
-          GitFooter = "Visual",
+          GitHeader = "StatusLine",
+          GitFooter = "StatusLine",
           GitBorder = "LineNr",
-          GitLineNr = "VGitLineNr",
+          GitLineNr = "LineNr",
           GitComment = "VGitComment",
-          GitSignsAdd = "GitSignsAdd",
-          GitSignsChange = "GitSignsChange",
-          GitSignsDelete = "GitSignsDelete",
+          GitSignsAdd = "diffAdded",
+          GitSignsChange = "diffChanged",
+          GitSignsDelete = "diffRemoved",
           GitWordAdd = {
             gui = nil,
             fg = nil,
@@ -550,35 +558,35 @@ return {
           priority = 10,
           definitions = {
             GitSignsAddLn = {
-              linehl = "GitSignsAdd",
+              linehl = "diffAdded",
               texthl = "GitSignsAdd",
               numhl = nil,
               icon = nil,
               text = "",
             },
             GitSignsDeleteLn = {
-              linehl = "GitSignsDelete",
+              linehl = "diffRemoved",
               texthl = "GitSignsDelete",
               numhl = nil,
               icon = nil,
               text = "",
             },
             GitSignsAdd = {
-              texthl = "GitSignsAdd",
+              texthl = "diffAdded",
               linehl = "GitSignsAdd",
               numhl = nil,
               icon = nil,
               text = "┃",
             },
             GitSignsDelete = {
-              texthl = "GitSignsDelete",
+              texthl = "diffRemoved",
               linehl = "GitSignsDelete",
               numhl = nil,
               icon = nil,
               text = "┃",
             },
             GitSignsChange = {
-              texthl = "GitSignsChange",
+              texthl = "diffChanged",
               linehl = "GitSignsChange",
               numhl = nil,
               icon = nil,
