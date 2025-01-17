@@ -39,8 +39,19 @@ return {
     event = "VeryLazy",
     config = function()
       require("goto-preview").setup {
+        resizing_mappings = true, -- Binds arrow keys to resizing the floating window.
+
+        ---@diagnostic disable-next-line: unused-local
+        post_close_hook = function(_, win)
+          require("treesitter-context").enable()
+        end, -- A function taking two arguments, a buffer and a window to be ran as a hook.
         post_open_hook = function(_, win)
-          vim.api.nvim_set_option_value("winhighlight", "Normal:NormalFloat,FloatBorder:FloatBorder", { win = win })
+          require("treesitter-context").disable()
+          vim.api.nvim_set_option_value(
+            "winhighlight",
+            "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:CursorLine,Search:None",
+            { win = win }
+          )
         end,
       }
     end,
