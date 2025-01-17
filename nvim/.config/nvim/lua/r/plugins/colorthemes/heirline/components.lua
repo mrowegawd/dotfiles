@@ -3,7 +3,7 @@ local Col = RUtils.colortbl
 
 local M = {}
 
-local Spacer = { provider = " " }
+local Spacer = { provider = "   " }
 
 local function rpad(child)
   return {
@@ -546,9 +546,9 @@ local function OverseerTasksForStatus(status)
     end,
   }
 end
-M.Runfile = {
+M.Tasks = {
   condition = function()
-    return package.loaded.overseer
+    return package.loaded.overseer and set_conditions.hide_in_width(100)
   end,
   init = function(self)
     local tasks = require("overseer.task_list").list_tasks { unique = true }
@@ -965,7 +965,7 @@ M.status_active_left = {
   M.QuickfixStatus,
   M.FileFlags,
   M.Gap,
-  M.Runfile,
+  M.Tasks,
   M.Dap,
   M.virtualenv,
   M.LSPActive,

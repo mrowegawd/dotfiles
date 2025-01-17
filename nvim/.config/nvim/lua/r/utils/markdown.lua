@@ -535,7 +535,7 @@ local function picker(contents, actions)
     winopts = {
       title = format_prompt_strings(),
     },
-    fzf_opts = { ["--header"] = [[ctrl-x: filter by tag | ctrl-y: add tag | ctrl-r: reload | ctrl-g: grep filter]] },
+    fzf_opts = { ["--header"] = [[ CTRL-X:filter-by-tag CTRL-Y:add-tag CTRL-R:reload CTRL-G:grep-filter]] },
     actions = actions,
   })
 end

@@ -276,22 +276,12 @@ return {
       "OverseerTaskAction",
       "OverseerDebugParser",
     },
-    -- keys = {
-    --   {
-    --     "<Leader>rr",
-    --     function()
-    --       return vim.cmd "OverseerToggle!"
-    --     end,
-    --     desc = "Tasks: open toggle [overseer]",
-    --   },
-    -- },
-
     opts = {
       templates = { "builtin", "user" },
       actions = {
         -- How to stop horizontal scroll??
         -- relate issue https://github.com/stevearc/overseer.nvim/issues/207
-        ["open tab"] = {
+        ["open the output in tab"] = {
           desc = "Open this task in a new tab",
           run = function(task)
             local overseer_util = require "overseer.util"
@@ -333,6 +323,9 @@ return {
           ["<C-l>"] = false,
           ["dd"] = "Dispose",
           ["q"] = function()
+            vim.cmd "OverseerClose"
+          end,
+          ["<Leader><TAB>"] = function()
             vim.cmd "OverseerClose"
           end,
           ["R"] = function()

@@ -432,16 +432,16 @@ return {
             },
           },
           ["vscode_modern"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.02 } } },
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.08 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
                 bg = { from = "TreesitterContext" },
               },
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.4 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.3 },
                 bg = { from = "TreesitterContext" },
               },
             },

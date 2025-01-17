@@ -380,6 +380,7 @@ return {
                 { find = "^Hunk %d+ of %d" },
                 { find = "written" },
                 { kind = "search_count" },
+                { kind = "line %d+ of %d+" },
               },
             },
             view = "mini",
