@@ -295,7 +295,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
             -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[ ctrl-r: rgflow | ctrl-y: copy/yank path | alt-g: toggle ignore | alt-h: toggle hidden]],
+            ["--header"] = [[ CTRL-R:rgflow  CTRL-Y:copy/yank-path ALT-G:toggle-ignore ALT-H:toggle-hidden]],
           },
           fd_opts = fd_opts,
           git_icons = false,
@@ -387,7 +387,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
             fzf_opts = {
-              ["--header"] = [[ ctrl-o: browser | ctrl-y: hcopy | alt-d: compare commit | alt-h: history commit]],
+              ["--header"] = [[ CTRL-O:browser CTRL-Y:copy-hash ALT-D:compare-commit ALT-H:history-commit]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -457,7 +457,7 @@ return {
               title_pos = "left",
             },
             fzf_opts = {
-              ["--header"] = [[ ctrl-o: browser | ctrl-y: hcopy | alt-d: compare commit | alt-h: history commit]],
+              ["--header"] = [[ CTRL-O:browser CTRL-Y:copy-hash ALT-D:compare-commit ALT-H:history-commit]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -574,7 +574,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[ ctrl-r: rgflow | ctrl-g: grep_lgrep | alt-g: toggle ignore | alt-h: toggle hidden]],
+            ["--header"] = [[ CTRL-R:rgflow CTRL-G:lgrep ALT-G:toggle-ignore ALT-H:toggle-hidden]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -816,7 +816,7 @@ return {
               backdrop = 60,
             },
             fzf_opts = {
-              ["--header"] = [[ ctrl-x: filter LSP  | ctrl-r: workspace symbols]],
+              ["--header"] = [[ CTRL-X:filter LSP  CTRL-R:workspace-symbols]],
               ["--reverse"] = false,
             },
             actions = {
