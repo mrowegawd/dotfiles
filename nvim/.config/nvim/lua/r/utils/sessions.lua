@@ -100,7 +100,11 @@ function M.load_ses_dashboard(last)
       end,
     })
   elseif RUtils.has "resession.nvim" then
-    require("resession").load()
+    if last then
+      require("resession").load "last"
+    else
+      require("resession").load()
+    end
   else
     RUtils.warn(
       "Cannot load session. Maybe the plugins are not installed or something went wrong..",
