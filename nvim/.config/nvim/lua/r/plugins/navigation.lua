@@ -863,7 +863,7 @@ return {
         theme = {
           ["*"] = {
             { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.25 } } },
+            { EdgyWinBar = { bg = { from = "Normal", attr = "bg" } } },
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {
@@ -885,39 +885,6 @@ return {
                 bg = { from = "EdgyWinBar" },
               },
             },
-          },
-          ["apprentice"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.1 } } },
-          },
-          ["rose-pine"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 1 } } },
-          },
-          ["carbonfox"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.25 } } },
-          },
-          ["gruvbox-material"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
-          },
-          ["kanagawa"] = {
-            { EdgyWinBar = { bg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
-          },
-          ["sweetie"] = {
-            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-          },
-          ["tender"] = {
-            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-          },
-          ["selenized"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
-          },
-          ["evangelion"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.25 } } },
-          },
-          ["vscode_modern"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
-          },
-          ["tokyonight-storm"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
           },
           ["lackluster"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.6 } } },
