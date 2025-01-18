@@ -416,7 +416,7 @@ return {
   -- REFACTORING
   {
     "ThePrimeagen/refactoring.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "LazyFile",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
