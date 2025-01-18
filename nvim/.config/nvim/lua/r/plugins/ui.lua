@@ -273,47 +273,43 @@ return {
       },
     },
     opts = function()
-      -- Highlight.plugin("notify", {
-      --   theme = {
-      --     ["*"] = {
-      --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-      --       { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
-      --
-      --       { NoiceCmdlinePopupTitle = { inherit = "FzfLuaPreviewTitle" } },
-      --       { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaPreviewTitle" } },
-      --       { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaPreviewTitle" } },
-      --
-      --       { NoiceCmdlineIcon = { bg = "NONE" } },
-      --     },
-      --     ["everforest"] = {
-      --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
-      --       {
-      --         NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = -0.2 } },
-      --       },
-      --     },
-      --     ["dayfox"] = {
-      --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-      --       { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = -0.15 } } },
-      --       { NoiceCmdlinePopupTitle = { inherit = "FzfLuaPreviewTitle" } },
-      --       { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaPreviewTitle" } },
-      --       { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaPreviewTitle" } },
-      --     },
-      --     ["tokyonight-day"] = {
-      --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-      --       {
-      --         NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = -0.15 } },
-      --       },
-      --
-      --       { NoiceCmdlinePopupTitle = { inherit = "FzfLuaTitle" } },
-      --       { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaTitle" } },
-      --       { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaTitle" } },
-      --     },
-      --     ["lackluster"] = {
-      --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-      --       { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
-      --     },
-      --   },
-      -- })
+      Highlight.plugin("noicehi", {
+        { NoiceMini = { inherit = "MsgArea", bg = { from = "Normal" } } },
+        { NoicePopupBaseGroup = { inherit = "Pmenu", fg = { from = "DiagnosticSignInfo" } } },
+        { NoicePopupWarnBaseGroup = { inherit = "Pmenu", fg = { from = "Float" } } },
+        { NoicePopupInfoBaseGroup = { inherit = "Pmenu", fg = { from = "Conditional" } } },
+        { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
+        { NoiceCmdlinePopupBorder = { link = "FloatBorder" } },
+        { NoiceCmdlinePopupTitleCmdline = { inherit = "NoicePopupBaseGroup", reverse = true } },
+        { NoiceCmdlinePopupBorderCmdline = { link = "NoicePopupBaseGroup" } },
+        { NoiceCmdlinePopupBorderSearch = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlinePopupTitleSearch = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+        { NoiceCmdlinePopupBorderFilter = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlinePopupTitleFilter = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+        { NoiceCmdlinePopupBorderHelp = { link = "NoicePopupInfoBaseGroup" } },
+        { NoiceCmdlinePopupTitleHelp = { inherit = "NoicePopupInfoBaseGroup", reverse = true } },
+        { NoiceCmdlinePopupBorderSubstitute = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlinePopupTitleSubstitute = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+        { NoiceCmdlinePopupBorderIncRename = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlinePopupTitleIncRename = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+        { NoiceCmdlinePopupBorderInput = { link = "NoicePopupBaseGroup" } },
+        { NoiceCmdlinePopupBorderLua = { link = "NoicePopupBaseGroup" } },
+        {
+          NoiceCmdlineIconCmdline = {
+            fg = { from = "NoicePopupBaseGroup", attr = "fg" },
+            bg = { from = "NoiceCmdline", attr = "bg" },
+          },
+        },
+        { NoiceCmdlineIconSearch = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlineIconFilter = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlineIconHelp = { link = "NoicePopupInfoBaseGroup" } },
+        { NoiceCmdlineIconIncRename = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlineIconSubstitute = { link = "NoicePopupWarnBaseGroup" } },
+        { NoiceCmdlineIconInput = { link = "NoicePopupBaseGroup" } },
+        { NoiceCmdlineIconLua = { link = "NoicePopupBaseGroup" } },
+        { NoiceConfirm = { bg = { from = "Pmenu" } } },
+        { NoiceConfirmBorder = { link = "NoicePopupBaseGroup" } },
+      })
 
       return {
         -- debug = true,
@@ -324,39 +320,22 @@ return {
             ["cmp.entry.get_documentation"] = true,
           },
         },
-        cmdline = {
-          view = "cmdline",
-        },
+        cmdline = { view = "cmdline" },
         views = {
-          cmdline_popup = {
-            position = {
-              row = -2,
-              col = "1%",
-            },
-          },
+          cmdline_popup = { position = { row = -2, col = "1%" } },
           cmdline_popupmenu = {
-            position = {
-              row = -2,
-              col = "1%",
-            },
+            position = { row = -2, col = "1%" },
+            size = { width = "auto", height = "auto" },
+            win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "CmpItemFloatBorder" } },
           },
           popupmenu = {
             border = {},
             relative = "editor",
-            position = {
-              row = "55%",
-              col = "50%",
-            },
-            size = {
-              width = 60,
-              height = 12, --you can set this to any height, even "auto", depending on your preference
-            },
+            position = { row = "55%", col = "50%" },
+            size = { width = 60, height = 12 },
             win_options = {
               winblend = 0,
-              winhighlight = {
-                Normal = "Normal",
-                FloatBorder = "DiagnosticInfo",
-              },
+              winhighlight = { Normal = "FloatNormal", FloatBorder = "DiagnosticInfo" },
             },
           },
         },

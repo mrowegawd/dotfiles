@@ -180,12 +180,6 @@ local general_overrides = function()
     { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
     { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
-    -- {
-    --   LineNr = {
-    --     bg = { from = "Normal", attr = "bg", alter = 0.4 },
-    --     fg = { from = "Normal", attr = "bg", alter = 1 },
-    --   },
-    -- },
     {
       CursorLine = {
         bg = Highlight.darken(Highlight.get("Keyword", "fg"), cursorline_alter, Highlight.get("Normal", "bg")),
@@ -865,14 +859,17 @@ local general_overrides = function()
     { MiniAnimateCursor = { fg = "red", bg = "red" } },
 
     -- ──────────────────────────────── NOICE ────────────────────────────────
+    -- {
+    --   NoicePopup = { fg = { from = "Pmenu", attr = "fg" },
+    --     bg = { from = "Pmenu", attr = "bg" },
+    --   },
+    -- },
     {
-      NoicePopupBorder = {
-        fg = { from = "Pmenu", attr = "bg" },
-        bg = { from = "Pmenu", attr = "bg" },
+      NoiceCmdline = {
+        fg = { from = "Pmenu", attr = "fg", alter = 5 },
+        bg = { from = "Pmenu", attr = "bg", alter = -0.5 },
       },
     },
-    { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
-    { NoiceCmdlinePopupBorder = { fg = { from = "Pmenu", attr = "fg", alter = -0.7 } } },
 
     -- ─────────────────────────────── ORGMODE ───────────────────────────────
     { ["@org.agenda.scheduled"] = { fg = Highlight.darken("#3f9f31", 0.8, Highlight.get("Normal", "bg")) } },
