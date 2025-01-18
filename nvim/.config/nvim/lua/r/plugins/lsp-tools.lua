@@ -171,7 +171,15 @@ return {
       {
         "<Leader>uD",
         function()
-          require("lsp_lines").toggle()
+          local new_value = not vim.diagnostic.config().virtual_lines
+          if not vim.g.is_lsplines_off then
+            RUtils.warn("Disabled lsp_lines", { title = "Option" })
+            vim.g.is_lsplines_off = true
+          else
+            RUtils.warn("Enabled lsp_lines", { title = "Option" })
+            vim.g.is_lsplines_off = false
+          end
+          vim.diagnostic.config { virtual_lines = new_value }
         end,
         desc = "Misc: toggle lsp_lines [lsp_lines]",
       },
@@ -186,9 +194,11 @@ return {
       vim.api.nvim_create_autocmd("InsertEnter", {
         group = group,
         callback = function()
-          previously = not require("lsp_lines").toggle()
-          if not previously then
-            require("lsp_lines").toggle()
+          if vim.g.is_lsplines_off then
+            previously = not require("lsp_lines").toggle()
+            if not previously then
+              require("lsp_lines").toggle()
+            end
           end
         end,
       })
@@ -196,8 +206,10 @@ return {
       vim.api.nvim_create_autocmd("InsertLeave", {
         group = group,
         callback = function()
-          if require("lsp_lines").toggle() ~= previously then
-            require("lsp_lines").toggle()
+          if vim.g.is_lsplines_off then
+            if require("lsp_lines").toggle() ~= previously then
+              require("lsp_lines").toggle()
+            end
           end
         end,
       })

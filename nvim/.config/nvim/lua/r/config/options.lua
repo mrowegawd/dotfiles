@@ -18,6 +18,7 @@ vim.g.lazyvim_cmp = "auto"
 vim.g.ai_cmp = true
 
 vim.g.is_preview_markdown_off = true
+vim.g.is_lsplines_off = false
 
 vim.g.open_command = g.os == "Darwin" and "open" or "xdg-open"
 vim.g.vim_dir = g.dotfiles .. "/.config/nvim"
