@@ -145,15 +145,6 @@ return {
             { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
           },
-          ["farout"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["ashen"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["citruszest"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
           ["lackluster"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
           },

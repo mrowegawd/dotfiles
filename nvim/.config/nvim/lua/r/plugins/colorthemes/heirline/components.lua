@@ -190,7 +190,7 @@ M.Mode = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
-      local cs = colors.separator_fg_alt
+      local cs = colors.keywordnc
       local mode = self.mode:sub(1, 1)
       return { fg = self.mode_colors[mode], bg = cs }
     end,
@@ -201,7 +201,7 @@ M.Mode = {
     end,
     hl = function()
       local bg = colors.base_bg
-      local fg = colors.separator_fg_alt
+      local fg = colors.keywordnc
 
       return { fg = fg, bg = bg }
     end,

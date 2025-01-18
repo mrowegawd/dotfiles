@@ -32,7 +32,6 @@ local base_options = {
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
     lightthemes = {
-      "farout-night",
       "everforest",
       "dayfox",
       "tokyonight-day",

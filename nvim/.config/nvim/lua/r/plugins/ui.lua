@@ -308,10 +308,6 @@ return {
       --       { NoiceCmdlinePopupTitleLua = { inherit = "FzfLuaTitle" } },
       --       { NoiceCmdlinePopupTitleCmdline = { inherit = "FzfLuaTitle" } },
       --     },
-      --     ["farout"] = {
-      --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 1.8 } } },
-      --       { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
-      --     },
       --     ["lackluster"] = {
       --       { NoiceCmdlinePopup = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
       --       { NoiceCmdlinePopupBorder = { fg = { from = "NoiceCmdlinePopup", attr = "bg", alter = 0.5 } } },
@@ -438,23 +434,14 @@ return {
           ["*"] = {
             { ["BeaconDefault"] = { bg = "red" } },
           },
-          ["ashen"] = {
-            { ["BeaconDefault"] = { bg = "#ffce1b" } },
-          },
           ["carbonfox"] = {
             { ["BeaconDefault"] = { bg = "#6d32c9" } },
-          },
-          ["citruszest"] = {
-            { ["BeaconDefault"] = { bg = "#b4b4b4" } },
           },
           ["neomodern"] = {
             { ["BeaconDefault"] = { bg = "#bbbac1" } },
           },
           ["evangelion"] = {
             { ["BeaconDefault"] = { bg = "#18b530" } },
-          },
-          ["farout"] = {
-            { ["BeaconDefault"] = { bg = "#E0CCAE" } },
           },
           ["horizon"] = {
             { ["BeaconDefault"] = { bg = "#b3276f" } },

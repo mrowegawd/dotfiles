@@ -538,8 +538,8 @@ return {
       settings = {
         hls = {
           GitBackground = "NormalFloat",
-          GitHeader = "StatusLine",
-          GitFooter = "StatusLine",
+          GitHeader = "NormalFloat",
+          GitFooter = "NormalFloat",
           GitBorder = "LineNr",
           GitLineNr = "LineNr",
           GitComment = "VGitComment",

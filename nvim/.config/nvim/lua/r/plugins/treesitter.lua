@@ -145,7 +145,7 @@ return {
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext", attr = "bg" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.25 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
               },
             },
             {
@@ -163,23 +163,46 @@ return {
               },
             },
           },
-          ["catppuccin-mocha"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
+          ["carbonfox"] = {
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.08 },
               },
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.6 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.34 },
                 bg = { from = "TreesitterContext" },
               },
             },
             {
               TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.2 },
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
+          ["catppuccin-mocha"] = {
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.3 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
                 underline = false,
                 undercurl = false,
                 sp = "NONE",
@@ -219,7 +242,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.4 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -265,7 +288,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.3 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -363,16 +386,16 @@ return {
             },
           },
           ["selenized"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.02 } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.01 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.02 },
                 bg = { from = "TreesitterContext" },
               },
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.23 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -386,16 +409,16 @@ return {
             },
           },
           ["tokyonight-night"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.01 } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.08 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.04 },
                 bg = { from = "TreesitterContext" },
               },
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.4 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -409,10 +432,10 @@ return {
             },
           },
           ["tokyonight-storm"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.02 } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.08 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.02 },
                 bg = { from = "TreesitterContext" },
               },
             },

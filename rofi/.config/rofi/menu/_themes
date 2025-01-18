@@ -383,14 +383,14 @@ set_yazi_theme() {
 
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
-  HOVERED_BG=$GET_COL_39
-  # if [ "$1" == "dayfox" ] || [ "$1" == "everforest" ] || [ "$1" == "tokyonight-day" ]; then
+  # HOVERED_BG=$GET_COL_39
+  HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
   if [ "$1" == "lackluster" ]; then
     HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
   fi
-  if [ "$1" == "vscode_modern" ]; then
-    HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
-  fi
+  # if [ "$1" == "vscode_modern" ] || [ "$1" == "carbonfox" ]; then
+  #   HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
+  # fi
   sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
 

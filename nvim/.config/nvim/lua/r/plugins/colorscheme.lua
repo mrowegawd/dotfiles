@@ -1,19 +1,6 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
-  -- CITRUSZEST
-  {
-    "zootedb0t/citruszest.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local citruszest_theme = { "citruszest" }
-      if vim.tbl_contains(citruszest_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- SONOKAI
   {
     "sainnhe/sonokai",
@@ -43,19 +30,6 @@ return {
       return false
     end,
   },
-  -- ASHEN.NVIM
-  {
-    "ficcdaf/ashen.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local mellifluous_theme = { "ashen" }
-      if vim.tbl_contains(mellifluous_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- LACKLUSTER
   {
     "slugbyte/lackluster.nvim",
@@ -75,7 +49,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local neomodern_theme = { "iceclimber", "coffeecat", "darkforest", "daylight" }
+      local neomodern_theme = { "darkforest", "daylight" }
       if vim.tbl_contains(neomodern_theme, colorscheme) then
         return true
       end
@@ -115,19 +89,6 @@ return {
       }
     end,
   },
-  -- FAROUT
-  {
-    "thallada/farout.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local farout_theme = { "farout-night", "farout-day" }
-      if vim.tbl_contains(farout_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- VSCODE-MODERN-THEME
   {
     "gmr458/vscode_modern_theme.nvim",
@@ -146,19 +107,6 @@ return {
         transparent_background = false,
         nvim_tree_darker = true,
       }
-    end,
-  },
-  -- OXOCARBON
-  {
-    "nyoom-engineering/oxocarbon.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local oxocarbontheme = { "oxocarbon" }
-      if vim.tbl_contains(oxocarbontheme, colorscheme) then
-        return true
-      end
-      return false
     end,
   },
   -- KANAGAWA

@@ -863,7 +863,7 @@ return {
         theme = {
           ["*"] = {
             { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.4 } } },
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.25 } } },
             { EdgyNormal = { bg = "NONE" } },
             {
               EdgyTitle = {
@@ -892,17 +892,11 @@ return {
           ["rose-pine"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 1 } } },
           },
-          ["ashen"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.5 } } },
-          },
-          ["oxocarbon"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
+          ["carbonfox"] = {
+            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.25 } } },
           },
           ["gruvbox-material"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
-          },
-          ["citruszest"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.4 } } },
           },
           ["kanagawa"] = {
             { EdgyWinBar = { bg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
@@ -924,9 +918,6 @@ return {
           },
           ["tokyonight-storm"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.3 } } },
-          },
-          ["farout"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.45 } } },
           },
           ["lackluster"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.6 } } },

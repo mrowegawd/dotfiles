@@ -3,10 +3,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#444444" }
+cwd = { fg = "#4d4d4d" }
 
 # Hovered
-hovered = { bg = "#252c31" }
+hovered = { bg = "#2d3439" }
 preview_hovered = { underline = true }
 
 # Find
@@ -18,13 +18,13 @@ marker_selected = { fg = "#dcdcaa", bg = "#dcdcaa" }
 marker_copied = { fg = "#c678dd", bg = "#c678dd" }
 marker_cut = { fg = "#f44747", bg = "#f44747" }
 
-count_selected = { fg = "#dcdcaa", bg = "#292929" }
-count_copied = { fg = "#c678dd", bg = "#292929" }
-count_cut = { fg = "#f44747", bg = "#292929" }
+count_selected = { fg = "#dcdcaa", bg = "#313131" }
+count_copied = { fg = "#c678dd", bg = "#313131" }
+count_cut = { fg = "#f44747", bg = "#313131" }
 
 # Tab
 tab_active = { fg = "#4d8cc0", bg = "#2b4e6b" }
-tab_inactive = { fg = "#5d5d5d", bg = "#292929" }
+tab_inactive = { fg = "#5d5d5d", bg = "#313131" }
 
 # Border
 border_symbol = "│"
@@ -36,8 +36,8 @@ border_style = { fg = "#1c1c1c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#373737", bg = "#569cd6", bold = true }
-normal_alt = { fg = "#569cd6", bg = "#373737" }
+normal_main = { fg = "#383838", bg = "#569cd6", bold = true }
+normal_alt = { fg = "#569cd6", bg = "#383838" }
 
 select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
@@ -101,7 +101,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#1e1e1e" }
+mask = { bg = "#373737" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -117,7 +117,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#444444", bold = true }
+hovered = { bg = "#4d4d4d", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}

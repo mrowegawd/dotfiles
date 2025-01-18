@@ -295,7 +295,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
             -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[ CTRL-R:rgflow  CTRL-Y:copy/yank-path ALT-G:toggle-ignore ALT-H:toggle-hidden]],
+            ["--header"] = [[ CTRL-R:rgflow  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
           },
           fd_opts = fd_opts,
           git_icons = false,
@@ -574,7 +574,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[ CTRL-R:rgflow CTRL-G:lgrep ALT-G:toggle-ignore ALT-H:toggle-hidden]],
+            ["--header"] = [[ CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -2010,72 +2010,6 @@ return {
               TroubleQfCount = {
                 bg = { from = "Normal", attr = "bg", alter = 1.5 },
                 fg = { from = "WinSeparator", attr = "fg", alter = 3 },
-              },
-            },
-          },
-          ["farout"] = {
-            { TroubleLocation = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 1 } } },
-            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 1.5 } } },
-
-            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 4 } } },
-            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 4 } } },
-            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 5 } } },
-
-            -- Directory
-            {
-              TroubleDirectory = {
-                bg = { from = "Normal", attr = "bg", alter = 2 },
-              },
-            },
-            {
-              TroubleFsCount = {
-                bg = { from = "Normal", attr = "bg", alter = 2.5 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- LSP
-            {
-              TroubleLspFilename = {
-                bg = { from = "Normal", attr = "bg", alter = 2 },
-              },
-            },
-            {
-              TroubleLspCount = {
-                bg = { from = "Normal", attr = "bg", alter = 2.5 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- Diagnostics
-            {
-              TroubleDiagnosticsBasename = {
-                bg = { from = "Normal", attr = "bg", alter = 2 },
-              },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "Normal", attr = "bg", alter = 2.5 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- QF
-            {
-              TroubleQfFilename = {
-                bg = { from = "Normal", attr = "bg", alter = 2 },
-              },
-            },
-            {
-              TroubleQfPos = {
-                bg = "NONE",
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.4 },
-              },
-            },
-            {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = 2.5 },
-                fg = { from = "Normal", attr = "fg", alter = -0.1 },
               },
             },
           },

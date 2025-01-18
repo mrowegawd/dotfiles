@@ -39,7 +39,7 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- │ FOLDS                                                    │
 -- ╰──────────────────────────────────────────────────────────╯
 
-RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
+-- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
 RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()

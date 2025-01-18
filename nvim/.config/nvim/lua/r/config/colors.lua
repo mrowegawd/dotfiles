@@ -6,15 +6,18 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_bg_alter, pmenu_fg_alter, pmenusel_bg_alter, pmenusel_fg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter
+local pmenu_bg_alter, pmenu_fg_alter, pmenusel_bg_alter, pmenusel_fg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter
+
 local base_cl = {
   cursorline_alter = 0.08,
-  fzflua_bg_cursorline_alter = 0.5,
-  pmenu_bg_alter = 0.3,
+  fzflua_bg_cursorline_alter = 0.05,
+  normalfloat_bg_alter = -0.05,
+  normalfloat_fg_alter = -0.01,
+  pmenu_bg_alter = 0.8,
   pmenu_fg_alter = -0.1,
   pmenusel_bg_alter = 1.2,
-  pmenusel_fg_alter = -0.8,
-  pmenuthumb_alter = 0.3,
+  pmenusel_fg_alter = -0.6,
+  pmenuthumb_alter = 0.4,
   quickfixline_alter = 0.3,
 }
 
@@ -59,32 +62,23 @@ local function reset_base_alter(themes, alter_base)
     if i == "cursorline_alter" then
       cursorline_alter = x
     end
+    if i == "normalfloat_fg_alter" then
+      normalfloat_fg_alter = x
+    end
+    if i == "normalfloat_bg_alter" then
+      normalfloat_bg_alter = x
+    end
   end
 end
 
-reset_base_alter({ "coffeecat", "iceclimber", "tokyonight-night" }, {
+reset_base_alter({ "tokyonight-night" }, {
   cursorline_alter = 0.05,
-  fzfluasel_alter = 0.5,
-  pmenu_bg_alter = 0.5,
-  pmenusel_bg_alter = 2,
-  pmenuthumb_alter = 0.4,
-  quickfixline_alter = 0.5,
 })
 
 reset_base_alter({ "darkforest" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = 0.35,
-  fzfluasel_alter = 0.3,
-  pmenu_bg_alter = 0.6,
-  pmenuthumb_alter = 0.3,
-  quickfixline_alter = 0.3,
-})
-
-reset_base_alter({ "oxocarbon" }, {
-  cursorline_alter = 0.08,
-  fzflua_bg_cursorline_alter = 0.1,
-  fzfluasel_alter = 0.3,
-  pmenu_bg_alter = 0.6,
+  pmenu_bg_alter = 0.8,
   pmenuthumb_alter = 0.3,
   quickfixline_alter = 0.3,
 })
@@ -97,28 +91,16 @@ reset_base_alter({ "evangelion" }, {
 reset_base_alter({ "lackluster" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.55,
-  fzfluasel_alter = 0.8,
-  pmenu_bg_alter = 1,
-  pmenusel_fg_alter = -0.05,
-  pmenuthumb_alter = 0.3,
-  quickfixline_alter = 0.3,
-})
-
-reset_base_alter({ "farout-night" }, {
-  cursorline_alter = 0.13,
-  fzflua_bg_cursorline_alter = 0.4,
-  fzfluasel_alter = 0.5,
-  pmenu_bg_alter = 1.8,
-  pmenusel_bg_alter = -0.8,
-  pmenusel_fg_alter = -0.5,
-  pmenuthumb_alter = 0.6,
-  quickfixline_alter = 0.5,
+  pmenu_bg_alter = 1.2,
+  pmenu_fg_alter = 0.3,
+  pmenuthumb_alter = 0.4,
+  normalfloat_bg_alter = 0.6,
+  normalfloat_fg_alter = -0.01,
 })
 
 reset_base_alter({ "dayfox" }, {
   cursorline_alter = -0.03,
   fzflua_bg_cursorline_alter = -0.05,
-  fzfluasel_alter = 0.5,
   pmenu_bg_alter = 1.8,
   pmenuthumb_alter = 0.6,
   quickfixline_alter = 0.5,
@@ -127,7 +109,6 @@ reset_base_alter({ "dayfox" }, {
 reset_base_alter({ "everforest" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.11,
-  fzfluasel_alter = 0.5,
   pmenu_bg_alter = 1.8,
   pmenusel_bg_alter = -0.2,
   pmenusel_fg_alter = -0.1,
@@ -138,7 +119,6 @@ reset_base_alter({ "everforest" }, {
 reset_base_alter({ "tokyonight-day" }, {
   cursorline_alter = -0.01,
   fzflua_bg_cursorline_alter = -0.03,
-  fzfluasel_alter = 0.5,
   pmenu_bg_alter = -0.1,
   pmenu_fg_alter = 0.5,
   pmenusel_fg_alter = -0.05,
@@ -147,82 +127,48 @@ reset_base_alter({ "tokyonight-day" }, {
   quickfixline_alter = 0.5,
 })
 
-reset_base_alter({ "ashen" }, {
-  cursorline_alter = 0.04,
-  fzflua_bg_cursorline_alter = 0.8,
-  fzfluasel_alter = 0.8,
-  pmenu_bg_alter = 1,
-  pmenuthumb_alter = 0.6,
-  quickfixline_alter = 0.4,
-})
-
-reset_base_alter({ "citruszest" }, {
-  cursorline_alter = 0.06,
-  fzflua_bg_cursorline_alter = 0.5,
-  fzfluasel_alter = 0.8,
-  pmenu_bg_alter = 1,
-  pmenuthumb_alter = 0.6,
-  quickfixline_alter = 0.5,
-})
-
 reset_base_alter({ "gruvbox-material" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluasel_alter = 0.05,
-  pmenu_bg_alter = -0.05,
+  pmenu_bg_alter = 0.6,
+  pmenuthumb_alter = 0.2,
   pmenu_fg_alter = -0.3,
-  pmenuthumb_alter = 0.4,
-  quickfixline_alter = 0.2,
 })
 
 reset_base_alter({ "kanagawa" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.02,
-  fzfluasel_alter = -0.05,
-  pmenu_bg_alter = -0.02,
-  pmenusel_fg_alter = -0.5,
-  pmenuthumb_alter = 0.3,
-  quickfixline_alter = 0.4,
 })
 
 reset_base_alter({ "catppuccin-mocha" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluasel_alter = -0.05,
-  pmenu_bg_alter = -0.05,
-  pmenuthumb_alter = 0.3,
-  quickfixline_alter = 0.4,
+  pmenu_bg_alter = 0.8,
+  pmenuthumb_alter = 0.4,
 })
 
 reset_base_alter({ "sonokai", "carbonfox" }, {
   cursorline_alter = 0.08,
-  fzflua_bg_cursorline_alter = 0.1,
-  fzfluasel_alter = -0.1,
-  pmenu_bg_alter = -0.05,
-  pmenusel_bg_alter = 1,
-  pmenusel_fg_alter = -0.6,
+  pmenu_bg_alter = 0.8,
   pmenuthumb_alter = 0.4,
-  quickfixline_alter = 0.5,
 })
 
 reset_base_alter({ "tokyonight-storm" }, {
   cursorline_alter = 0.07,
-  fzflua_bg_cursorline_alter = -0.15,
-  fzfluasel_alter = -0.05,
-  pmenu_bg_alter = -0.1,
-  pmenusel_bg_alter = 1,
-  pmenuthumb_alter = 0.4,
-  quickfixline_alter = 0.5,
+  fzflua_bg_cursorline_alter = -0.12,
 })
 
-reset_base_alter({ "selenized", "nightfox", "vscode_modern", "horizon" }, {
+reset_base_alter({ "nightfox", "vscode_modern", "horizon" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.02,
-  fzfluasel_alter = 0.5,
+})
+
+reset_base_alter({ "selenized" }, {
+  cursorline_alter = 0.1,
+  fzflua_bg_cursorline_alter = 0.02,
   pmenu_bg_alter = -0.02,
-  pmenusel_bg_alter = 1,
-  pmenuthumb_alter = 0.15,
-  quickfixline_alter = 0.3,
+  normalfloat_bg_alter = -0.15,
+  normalfloat_fg_alter = -0.05,
 })
 
 local general_overrides = function()
@@ -303,10 +249,15 @@ local general_overrides = function()
       },
     },
     { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = pmenuthumb_alter } } },
-    { NormalFloat = { bg = { from = "Pmenu" } } },
+    {
+      NormalFloat = {
+        fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
+        bg = { from = "Normal", attr = "bg", alter = normalfloat_bg_alter },
+      },
+    },
     {
       FloatBorder = {
-        fg = { from = "NormalFloat", attr = "bg", alter = 1 },
+        fg = { from = "NormalFloat", attr = "bg" },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -608,6 +559,12 @@ local general_overrides = function()
     -- ╚═════════════════════════════════════════════════════════╝
     --  ──────────────────────────────── BLINK ───────────────────────────
     { BlinkCmpGhostText = { fg = { from = "BlinkCmpGhostText", attr = "fg", alter = 0.45 } } },
+    {
+      BlinkCmpDocSeparator = {
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
+        bg = { from = "Pmenu", attr = "bg" },
+      },
+    },
 
     -- ───────────────────────────────── CMP ─────────────────────────────
     { CmpGhostText = { link = "BlinkCmpGhostText" } },
@@ -825,7 +782,7 @@ local general_overrides = function()
     -- │ PRPOMPT │
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
-    { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
+    { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
     {
       FzfLuaBorder = {
         fg = { from = "NormalFloat", attr = "bg" },
@@ -1113,43 +1070,68 @@ end
 
 local function colorscheme_overrides()
   local overrides = {
-    ["ashen"] = {
+    ["carbonfox"] = {
+      { WinSeparator = { fg = { from = "Normal", attr = "bg", alter = 0.75 }, bg = "NONE" } },
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.9 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
       {
-        KeywordNC = {
-          fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.45),
-          bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.68),
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          bg = { from = "Normal", attr = "bg", alter = -0.08 },
         },
       },
 
       {
-        ["@comment"] = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
-        },
-      },
-    },
-    ["carbonfox"] = {
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+        MyCodeUsage = {
+          fg = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, dark_yellow),
+          bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.9, dark_yellow),
+          italic = true,
         },
       },
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.6 } } },
       { VGitComment = { bg = "NONE", fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
       { BlinkCmpGhostText = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
+
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.55 } } },
+      {
+        SnacksIndentScope = {
+          fg = Highlight.darken(Highlight.get("Special", "fg"), 0.2, Highlight.get("Normal", "bg")),
+        },
+      },
+
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      {
+        StatusLine = {
+          fg = { from = "Normal", attr = "bg", alter = 4 },
+          bg = { from = "Normal", attr = "bg", alter = 1 },
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
+        },
+      },
+      {
+        Tabline = {
+          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
+        },
+      },
     },
     ["catppuccin-mocha"] = {
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.4 }, italic = true } },
 
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.85 } } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.7 },
-          bg = { from = "Normal", attr = "bg", alter = 0.6 },
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = -0.01 },
         },
       },
 
@@ -1181,74 +1163,31 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 6 },
-          bg = { from = "Normal", attr = "bg", alter = 1.2 },
+          bg = { from = "Normal", attr = "bg", alter = 1 },
           reverse = false,
         },
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          fg = { from = "Normal", attr = "bg", alter = 3.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
           reverse = false,
         },
       },
       {
         Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2.2 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.23 },
           reverse = false,
         },
       },
     },
-    ["citruszest"] = {
-      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 1.8 } } },
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.2 } } },
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.72 },
-        },
-      },
-      { ["@comment"] = { fg = { from = "Normal", attr = "bg", alter = 2.7 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
-      {
-        SnacksIndentScope = {
-          fg = Highlight.darken(Highlight.get("Special", "fg"), 0.1, Highlight.get("Normal", "bg")),
-        },
-      },
-      {
-        SnacksIndentScope = {
-          fg = Highlight.darken(Highlight.get("Special", "fg"), 0.3, Highlight.get("Normal", "bg")),
-        },
-      },
-      {
-        StatusLine = {
-          fg = { from = "Normal", attr = "bg", alter = 6 },
-          bg = { from = "Normal", attr = "bg", alter = 1.3 },
-          reverse = false,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 4.1 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
-          reverse = false,
-        },
-      },
-      {
-        Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 2.9 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
-          reverse = false,
-        },
-      },
-    },
     ["neomodern"] = {
-      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.43 } } },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          bg = { from = "Normal", attr = "bg", alter = -0.03 },
         },
       },
       {
@@ -1260,14 +1199,14 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 4.1 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
           reverse = false,
         },
       },
       {
         Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 2.7 },
+          fg = { from = "Normal", attr = "bg", alter = 2 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
           reverse = false,
         },
@@ -1510,8 +1449,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = -0.04 },
         },
       },
 
@@ -1779,110 +1718,16 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["farout"] = {
-      {
-        KeywordNC = {
-          fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.45),
-          bg = Highlight.tint(Highlight.get("Keyword", "fg"), 0.1),
-        },
-      },
-      { Comment = { fg = { from = "Normal", attr = "bg", alter = 3.5 }, bg = "NONE", italic = true, reverse = false } },
-      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 1.5 } } },
-      { qfFileName = { fg = { from = "qfFileName", attr = "fg", alter = 0.3 } } },
-
-      { WinSeparator = { fg = { from = "LineNr", attr = "fg", alter = 0.6 }, bg = "NONE" } },
-
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 3.5 },
-          bg = { from = "Normal", attr = "bg", alter = 1.6 },
-        },
-      },
-
-      {
-        MyCodeUsage = {
-          fg = { from = "Visual", attr = "bg", alter = 1 },
-          bg = { from = "Visual", attr = "bg", alter = -0.45 },
-          italic = true,
-        },
-      },
-      {
-        FoldColumn = {
-          bg = "NONE",
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-        },
-      },
-
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 1.2 } } },
-      { LineNrAbove = { link = "LineNr" } },
-      { LineNrBelow = { link = "LineNr" } },
-
-      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
-
-      { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
-      { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.55 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
-      {
-        TelescopeResultsNormal = {
-          fg = { from = "FzfLuaDirPart", attr = "fg" },
-          bg = { from = "FzfLuaNormal", attr = "bg" },
-        },
-      },
-
-      {
-        MyParentHint = {
-          bg = { from = "CursorLine", attr = "bg" },
-          fg = { from = "MyCodeUsage", attr = "fg", alter = 0.7 },
-        },
-      },
-
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = 1.2 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = 2 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = 2 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 1.8 },
-          bg = { from = "StatusLine", attr = "bg", alter = 0.5 },
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
-        },
-      },
-      {
-        Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.6 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
-        },
-      },
-    },
     ["gruvbox-material"] = {
+      { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.35) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
+
       { Directory = { fg = { from = "Identifier", attr = "fg" }, bg = "NONE" } },
       {
         PmenuSel = {
@@ -1913,12 +1758,12 @@ local function colorscheme_overrides()
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.38 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.005 },
         },
       },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.04 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -1955,20 +1800,28 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.3 },
+          fg = { from = "Normal", attr = "bg", alter = 2.1 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
           reverse = false,
         },
       },
       {
         Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 1.8 },
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
           reverse = false,
         },
       },
     },
     ["horizon"] = {
+      { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.5) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
       { Directory = { fg = { from = "@annotation", attr = "fg", alter = 0.2 }, bg = "NONE" } },
       {
         PmenuSel = {
@@ -1996,8 +1849,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
 
@@ -2087,8 +1940,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
       {
@@ -2231,6 +2084,14 @@ local function colorscheme_overrides()
       },
     },
     ["nightfox"] = {
+      { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.38) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.2 } } },
       { VGitComment = { bg = "NONE", fg = { from = "Comment", attr = "fg", alter = 0.5 } } },
       { BlinkCmpGhostText = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
@@ -2256,8 +2117,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
 
@@ -2280,85 +2141,8 @@ local function colorscheme_overrides()
         },
       },
     },
-    ["oxocarbon"] = {
-      { Directory = { fg = "#78a9ff", bg = "NONE" } },
-      {
-        PmenuSel = {
-          fg = { from = "Directory", attr = "fg", alter = -0.5 },
-          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
-          bold = true,
-        },
-      },
-      {
-        FzfLuaSel = {
-          fg = { from = "PmenuSel", attr = "fg" },
-          bg = { from = "PmenuSel", attr = "bg" },
-        },
-      },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-      {
-        QuickFixLine = {
-          bg = { from = "CursorLine", attr = "bg", alter = 0.35 },
-          fg = "NONE",
-          underline = false,
-        },
-      },
-
-      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
-
-      { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
-      { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
-      {
-        TelescopeResultsNormal = {
-          fg = { from = "FzfLuaDirPart", attr = "fg" },
-          bg = { from = "FzfLuaNormal", attr = "bg" },
-        },
-      },
-      {
-        TelescopeSelection = {
-          fg = { from = "FzfLuaDirPart", attr = "fg" },
-          bg = { from = "FzfLuaSel", attr = "bg" },
-          bold = true,
-        },
-      },
-
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.6 },
-        },
-      },
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = 0.8 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = 0.8 },
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-    },
     ["selenized"] = {
-      { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.25) } },
+      { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.22) } },
       {
         CursorLineNr = {
           fg = { from = "Normal", attr = "fg" },
@@ -2400,8 +2184,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 0.4 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
         },
       },
 
@@ -2415,14 +2199,14 @@ local function colorscheme_overrides()
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.2 }, underline = false, reverse = false } },
       { ErrorMsg = { fg = "red" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.18 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
       { Directory = { fg = "#4695f7", bg = "NONE" } },
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = -0.1 } } },
       {
         FzfLuaCursorLineNr = {
@@ -2453,23 +2237,31 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.3 },
         },
       },
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.22 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.16 },
         },
       },
     },
     ["sonokai"] = {
+      { CursorLine = { bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.36) } },
+      {
+        CursorLineNr = {
+          fg = { from = "Normal", attr = "fg" },
+          bg = { from = "CursorLine", attr = "bg" },
+          bold = true,
+        },
+      },
       { Directory = { fg = { from = "Type", attr = "fg" }, bg = "NONE" } },
       {
         PmenuSel = {
@@ -2496,7 +2288,7 @@ local function colorscheme_overrides()
       },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.2 }, italic = true } },
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
@@ -2522,8 +2314,8 @@ local function colorscheme_overrides()
       },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.35 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.01 },
         },
       },
 
@@ -2793,8 +2585,8 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
       {
@@ -2805,8 +2597,8 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.22 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.08 },
         },
       },
       {
@@ -2845,26 +2637,26 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.03 },
         },
       },
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          bg = { from = "Normal", attr = "bg", alter = 0.6 },
         },
       },
       {
         StatusLineNC = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.25 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.15 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.43 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
     },
@@ -2917,7 +2709,7 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          bg = { from = "Normal", attr = "bg", alter = -0.03 },
         },
       },
       -- { -- original
