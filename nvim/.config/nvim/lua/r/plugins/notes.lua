@@ -84,10 +84,11 @@ return {
         org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
         org_todo_keywords = {
           "TODO(t)",
-          "LEARNING(l)", -- task yang ditangguhkan, no hint to continue
+          "LEARNING(l)", -- task untuk jadwal learning
           "PROGRESS(p)", -- task yang sedang dikerjakan
           "CHECK(c)", -- task yang boleh dikerjakan saat free-time
           "HBD(b)",
+          "STATUS(s)", -- task yang dikerjakan tapi bukan project, seperti belajar, baca buku, dsb
           "|",
           "DONE(d)",
         },
@@ -96,6 +97,7 @@ return {
           TODO = ":foreground " .. todo_hi .. " :weight bold :slant",
           PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
           HBD = ":foreground pink :weight bold :slant",
+          STATUS = ":foreground black :background magenta :weight bold :slant",
           LEARNING = ":foreground yellow :weight bold :slant",
           DONE = ":foreground " .. done_hi .. " :weight bold :slant",
         },

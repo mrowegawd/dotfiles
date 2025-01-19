@@ -399,10 +399,9 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- AERIAL (disabled)
+  -- AERIAL
   {
     "stevearc/aerial.nvim",
-    enabled = false,
     event = "VeryLazy",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -420,6 +419,32 @@ return {
           last_item = "└╴",
           nested_top = "│ ",
           whitespace = "  ",
+        },
+
+        nav = {
+          border = "rounded",
+          max_height = 0.9,
+          min_height = { 10, 0.1 },
+          max_width = 0.5,
+          min_width = { 0.2, 20 },
+          win_opts = {
+            cursorline = true,
+            winblend = 10,
+          },
+          -- Jump to symbol in source window when the cursor moves
+          autojump = false,
+          -- Show a preview of the code in the right column, when there are no child symbols
+          preview = true,
+          -- Keymaps in the nav window
+          keymaps = {
+            ["<CR>"] = "actions.jump",
+            ["<2-LeftMouse>"] = "actions.jump",
+            ["<C-v>"] = "actions.jump_vsplit",
+            ["<C-s>"] = "actions.jump_split",
+            ["h"] = "actions.left",
+            ["l"] = "actions.right",
+            ["<C-c>"] = "actions.close",
+          },
         },
         -- highlight_mode = "full_width",
         manage_folds = false,
@@ -441,9 +466,10 @@ return {
       }
     end,
   },
-  -- OUTLINE.NVIM
+  -- OUTLINE.NVIM (disabled)
   {
     "mrowegawd/outline.nvim",
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
@@ -698,16 +724,6 @@ return {
         height = height - 1
       end
 
-      -- local function get_aerial()
-      --   local ok_aerial, aerial = pcall(require, "aerial")
-      --   return ok_aerial and aerial or {}
-      -- end
-
-      local function get_outline()
-        local ok_aerial, aerial = pcall(require, "outline")
-        return ok_aerial and aerial or {}
-      end
-
       return {
         {
           "<a-e>",
@@ -724,17 +740,6 @@ return {
           end,
           desc = "Misc: open file wikis explore [neotree]",
         },
-        -- {
-        --   "<Leader>ge",
-        --   function()
-        --     if RUtils.has "neo-tree.nvim" then
-        --       return vim.cmd "Neotree git_status"
-        --     else
-        --       return require("fzf-lua").git_status()
-        --     end
-        --   end,
-        --   desc = "Git: explore git status (callback fzflua) [neotree]",
-        -- },
         {
           "ro",
           function()
@@ -751,67 +756,21 @@ return {
               end
             end
           end,
-          desc = "Misc: move cursor to outline window [outline]",
+          desc = "Misc: move cursor to outline window [edgy]",
         },
-        -- {
-        --   "<Localleader>oa",
-        --   function()
-        --     vim.cmd [[AerialToggle right]]
-        --   end,
-        --   desc = "Misc: toggle aerial [aerial]",
-        -- },
         {
           "<Leader>oa",
           function()
-            vim.cmd.Outline()
+            if RUtils.has "aerial.nvim" then
+              vim.cmd [[AerialToggle right]]
+              vim.cmd [[wincmd p]]
+            end
+            if RUtils.has "outline.nvim" then
+              vim.cmd.Outline()
+            end
           end,
-          desc = "Open: outline window [outline]",
+          desc = "Open: outline window [edgy]",
         },
-        -- {
-        --   "<Localleader>oA",
-        --   function()
-        --     if vim.bo[0].filetype == "norg" then
-        --       return
-        --     end
-        --
-        --     local opts = {
-        --       title = "[Aerial]",
-        --       actions = {
-        --         ["default"] = function(selected, _)
-        --           local sel = {}
-        --           for word in selected[1]:gmatch "%w+" do
-        --             table.insert(sel, word)
-        --           end
-        --           local selection = sel[1]
-        --
-        --           if selection ~= nil and type(selection) == "string" then
-        --             local opts_aerial = RUtils.opts "aerial.nvim"
-        --             local aerial = get_aerial()
-        --             local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
-        --             if outline_win.found then
-        --               vim.cmd [[AerialToggle]]
-        --               -- outline.close_outline()
-        --             end
-        --
-        --             -- must reload
-        --             vim.cmd "e "
-        --             if selection == "all" then
-        --               opts_aerial.filter_kind = false
-        --             else
-        --               opts_aerial.filter_kind = { selection }
-        --             end
-        --             aerial.setup(opts_aerial)
-        --             vim.schedule(function()
-        --               aerial.open()
-        --             end)
-        --           end
-        --         end,
-        --       },
-        --     }
-        --     RUtils.fzflua.cmd_filter_kind_lsp(opts)
-        --   end,
-        --   desc = "Misc: change filter kind aerial [aerial]",
-        -- },
         {
           "<Leader>oA",
           function()
@@ -820,7 +779,7 @@ return {
             end
 
             local opts = {
-              title = "[Outline]",
+              title = RUtils.has "aerial.nvim" and "Aerial" or "Outline",
               actions = {
                 ["default"] = function(selected, _)
                   local sel = {}
@@ -830,24 +789,58 @@ return {
                   local selection = sel[1]
 
                   if selection ~= nil and type(selection) == "string" then
-                    local opts_outline = RUtils.opts "outline.nvim"
-                    local outline = get_outline()
-                    local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
-                    if outline_win.found then
-                      vim.cmd.Outline()
+                    if RUtils.has "aerial.nvim" then
+                      local function get_aerial()
+                        local ok_aerial, aerial = pcall(require, "aerial")
+                        return ok_aerial and aerial or {}
+                      end
+
+                      local opts_aerial = RUtils.opts "aerial.nvim"
+                      local aerial = get_aerial()
+                      local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
+                      if outline_win.found then
+                        vim.cmd [[AerialToggle]]
+                        -- outline.close_outline()
+                      end
+
+                      -- must reload
+                      vim.cmd "e "
+                      if selection == "all" then
+                        opts_aerial.filter_kind = false
+                      else
+                        opts_aerial.filter_kind = { selection }
+                      end
+                      aerial.setup(opts_aerial)
+                      vim.schedule(function()
+                        aerial.open()
+                      end)
                     end
 
-                    -- must reload
-                    vim.cmd "e "
-                    if selection == "all" then
-                      opts_outline.symbols.filter = nil
-                    else
-                      opts_outline.symbols.filter = { selection }
+                    if RUtils.has "outline.nvim" then
+                      local function get_outline()
+                        local ok_aerial, aerial = pcall(require, "outline")
+                        return ok_aerial and aerial or {}
+                      end
+
+                      local opts_outline = RUtils.opts "outline.nvim"
+                      local outline = get_outline()
+                      local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
+                      if outline_win.found then
+                        vim.cmd.Outline()
+                      end
+
+                      -- must reload
+                      vim.cmd "e "
+                      if selection == "all" then
+                        opts_outline.symbols.filter = nil
+                      else
+                        opts_outline.symbols.filter = { selection }
+                      end
+                      outline.setup(opts_outline)
+                      vim.schedule(function()
+                        outline.open_outline()
+                      end)
                     end
-                    outline.setup(opts_outline)
-                    vim.schedule(function()
-                      outline.open_outline()
-                    end)
                   end
                 end,
               },
