@@ -92,7 +92,7 @@ return {
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = function()
-      Highlight.plugin("octo_hijackcol", {
+      Highlight.plugin("octo_hi", {
         {
           OctoBubble = {
             bg = { from = "Keyword", attr = "fg", alter = -0.3 },
@@ -534,91 +534,102 @@ return {
         desc = "Git: open hunk lists on qf [vgit]",
       },
     },
-    opts = {
-      settings = {
-        hls = {
-          GitBackground = "NormalFloat",
-          GitHeader = "NormalFloat",
-          GitFooter = "NormalFloat",
-          GitBorder = "LineNr",
-          GitLineNr = "LineNr",
-          GitComment = "VGitComment",
-          GitSignsAdd = "diffAdded",
-          GitSignsChange = "diffChanged",
-          GitSignsDelete = "diffRemoved",
-          GitWordAdd = {
-            gui = nil,
-            fg = nil,
-            bg = "#5d7a22",
-            sp = nil,
-            override = false,
+    opts = function()
+      Highlight.plugin("vgit_hi", {
+        {
+          VgitSeparator = {
+            bg = { from = "TabLine", attr = "bg", alter = 0.5 },
+            fg = { from = "TabLine", attr = "bg", alter = 2 },
+            bold = true,
           },
         },
-        signs = {
-          priority = 10,
-          definitions = {
-            GitSignsAddLn = {
-              linehl = "diffAdded",
-              texthl = "GitSignsAdd",
-              numhl = nil,
-              icon = nil,
-              text = "",
-            },
-            GitSignsDeleteLn = {
-              linehl = "diffRemoved",
-              texthl = "GitSignsDelete",
-              numhl = nil,
-              icon = nil,
-              text = "",
-            },
-            GitSignsAdd = {
-              texthl = "diffAdded",
-              linehl = "GitSignsAdd",
-              numhl = nil,
-              icon = nil,
-              text = "┃",
-            },
-            GitSignsDelete = {
-              texthl = "diffRemoved",
-              linehl = "GitSignsDelete",
-              numhl = nil,
-              icon = nil,
-              text = "┃",
-            },
-            GitSignsChange = {
-              texthl = "diffChanged",
-              linehl = "GitSignsChange",
-              numhl = nil,
-              icon = nil,
-              text = "┃",
+      })
+      return {
+        settings = {
+          hls = {
+            GitBackground = "NormalFloat",
+            GitHeader = "VgitSeparator",
+            GitFooter = "VgitSeparator",
+            GitBorder = "LineNr",
+            GitLineNr = "LineNr",
+            GitComment = "VGitComment",
+            GitSignsAdd = "diffAdded",
+            GitSignsChange = "diffChanged",
+            GitSignsDelete = "diffRemoved",
+            GitWordAdd = {
+              gui = nil,
+              fg = nil,
+              bg = "#5d7a22",
+              sp = nil,
+              override = false,
             },
           },
-          usage = {
-            screen = {
-              add = "GitSignsAddLn",
-              remove = "GitSignsDeleteLn",
+          signs = {
+            priority = 10,
+            definitions = {
+              GitSignsAddLn = {
+                linehl = "diffAdded",
+                texthl = "GitSignsAdd",
+                numhl = nil,
+                icon = nil,
+                text = "",
+              },
+              GitSignsDeleteLn = {
+                linehl = "diffRemoved",
+                texthl = "GitSignsDelete",
+                numhl = nil,
+                icon = nil,
+                text = "",
+              },
+              GitSignsAdd = {
+                texthl = "diffAdded",
+                linehl = "GitSignsAdd",
+                numhl = nil,
+                icon = nil,
+                text = "┃",
+              },
+              GitSignsDelete = {
+                texthl = "diffRemoved",
+                linehl = "GitSignsDelete",
+                numhl = nil,
+                icon = nil,
+                text = "┃",
+              },
+              GitSignsChange = {
+                texthl = "diffChanged",
+                linehl = "GitSignsChange",
+                numhl = nil,
+                icon = nil,
+                text = "┃",
+              },
             },
-            main = {
-              add = "GitSignsAdd",
-              remove = "GitSignsDelete",
-              change = "GitSignsChange",
+            usage = {
+              screen = {
+                add = "GitSignsAddLn",
+                remove = "GitSignsDeleteLn",
+              },
+              main = {
+                add = "GitSignsAdd",
+                remove = "GitSignsDelete",
+                change = "GitSignsChange",
+              },
             },
           },
+          live_blame = {
+            enabled = false,
+          },
+          live_gutter = {
+            enabled = false,
+          },
+          authorship_code_lens = {
+            enabled = false,
+          },
+          scene = {
+            diff_preference = "split",
+          },
         },
-        live_blame = {
-          enabled = false,
-        },
-        live_gutter = {
-          enabled = false,
-        },
-        authorship_code_lens = {
-          enabled = false,
-        },
-        scene = {
-          diff_preference = "split",
-        },
-      },
-    },
+      }
+    end,
   },
   -- DIFFVIEW
   {

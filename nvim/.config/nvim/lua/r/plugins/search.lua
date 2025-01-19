@@ -1127,8 +1127,6 @@ return {
       -- end
 
       ---@param opts table
-      ---@return table
-      ---@diagnostic disable-next-line: redefined-local
       local function dropdown(opts)
         return require("telescope.themes").get_dropdown(vim.tbl_extend("keep", opts or {}, {
           borderchars = {

@@ -1112,7 +1112,7 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.35 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.18 },
         },
       },
@@ -2775,7 +2775,7 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.35 },
           bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
         },
       },
