@@ -300,10 +300,30 @@ return {
             bg = { from = "NoiceCmdline", attr = "bg" },
           },
         },
-        { NoiceCmdlineIconSearch = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlineIconFilter = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlineIconHelp = { link = "NoicePopupInfoBaseGroup" } },
-        { NoiceCmdlineIconIncRename = { link = "NoicePopupWarnBaseGroup" } },
+        {
+          NoiceCmdlineIconSearch = {
+            inherit = "NoicePopupWarnBaseGroup",
+            bg = { from = "NoiceCmdline", attr = "bg" },
+          },
+        },
+        {
+          NoiceCmdlineIconFilter = {
+            inherit = "NoicePopupWarnBaseGroup",
+            bg = { from = "NoiceCmdline", attr = "bg" },
+          },
+        },
+        {
+          NoiceCmdlineIconHelp = {
+            inherit = "NoicePopupInfoBaseGroup",
+            bg = { from = "NoiceCmdline", attr = "bg" },
+          },
+        },
+        {
+          NoiceCmdlineIconIncRename = {
+            inherit = "NoicePopupWarnBaseGroup",
+            bg = { from = "NoiceCmdline", attr = "bg" },
+          },
+        },
         { NoiceCmdlineIconSubstitute = { link = "NoicePopupWarnBaseGroup" } },
         { NoiceCmdlineIconInput = { link = "NoicePopupBaseGroup" } },
         { NoiceCmdlineIconLua = { link = "NoicePopupBaseGroup" } },
@@ -324,7 +344,7 @@ return {
         views = {
           cmdline_popup = { position = { row = -2, col = "1%" } },
           cmdline_popupmenu = {
-            position = { row = -2, col = "1%" },
+            position = { row = -2.1, col = "1%" },
             size = { width = "auto", height = "auto" },
             win_options = { winhighlight = { Normal = "Pmenu", FloatBorder = "CmpItemFloatBorder" } },
           },
@@ -335,8 +355,11 @@ return {
             size = { width = 60, height = 12 },
             win_options = {
               winblend = 0,
-              winhighlight = { Normal = "FloatNormal", FloatBorder = "DiagnosticInfo" },
+              winhighlight = { Normal = "Pmenu", FloatBorder = "DiagnosticInfo" },
             },
+          },
+          hover = {
+            win_options = { winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpItemFloatBorder" } },
           },
         },
         routes = {
@@ -392,6 +415,17 @@ return {
         desc = "Fold: cycle fold [fold-cycle]",
         mode = { "v", "n" },
       },
+    },
+  },
+  -- SMEAR-CURSOR (disabled)
+  {
+    "sphamba/smear-cursor.nvim",
+    event = "LazyFile",
+    enabled = false,
+    cond = vim.g.neovide == nil,
+    opts = {
+      cursor_color = "#fa1919",
+      smear_between_neighbor_lines = false,
     },
   },
   -- BLOCK.NVIM
@@ -476,12 +510,20 @@ return {
         head = "Normal",
         separator = "Normal",
         current_tab = {
-          bg = Highlight.get("KeywordNC", "bg"),
-          fg = Highlight.get("KeywordNC", "fg"),
+          fg = Highlight.get("TabLine", "fg"),
+          bg = Highlight.get("TabLine", "bg"),
         },
-        tab = "TabLine",
-        win = "TabLine",
+        tab = {
+          fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.15),
+          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.15),
+        },
+        win = {
+          fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.2),
+          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.1),
+        },
         tail = "TabLine",
+        -- win = "Normal",
+        -- tail = "TabLine",
       }
       require("tabby").setup {
         line = function(line)

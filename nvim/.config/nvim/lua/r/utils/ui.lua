@@ -143,7 +143,7 @@ function M.line_signs(win, buf, lnum)
   -- Get fold signs
   vim.api.nvim_win_call(win, function()
     if vim.fn.foldclosed(lnum) >= 0 then
-      signs[#signs + 1] = { text = fold_icon, texthl = "Folded", type = "fold" }
+      signs[#signs + 1] = { text = fold_icon, texthl = "FoldedSign", type = "fold" }
     elseif config.folds.open and tostring(vim.treesitter.foldexpr(vim.v.lnum)):sub(1, 1) == ">" then
       signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
     end
@@ -227,7 +227,10 @@ end
 function M.get()
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
-  local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum and 1 or 0)
+  -- local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum and 1 or 0)
+  -- Dont draw sign for virtual lines
+  -- https://github.com/folke/snacks.nvim/pull/511#issue-2790796444
+  local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum)
   if cache[key] then
     return cache[key]
   end

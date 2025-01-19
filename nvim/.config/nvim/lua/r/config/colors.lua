@@ -86,6 +86,7 @@ reset_base_alter({ "darkforest" }, {
 reset_base_alter({ "evangelion" }, {
   fzflua_bg_cursorline_alter = 0.1,
   pmenusel_fg_alter = -0.2,
+  pmenusel_bg_alter = 1,
 })
 
 reset_base_alter({ "lackluster" }, {
@@ -130,14 +131,17 @@ reset_base_alter({ "tokyonight-day" }, {
 reset_base_alter({ "gruvbox-material" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.1,
-  pmenu_bg_alter = 0.6,
+  pmenu_bg_alter = 0.8,
+  pmenu_fg_alter = 0.5,
   pmenuthumb_alter = 0.2,
-  pmenu_fg_alter = -0.3,
+  pmenusel_bg_alter = 1,
+  pmenusel_fg_alter = -0.7,
 })
 
 reset_base_alter({ "kanagawa" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = -0.02,
+  pmenusel_bg_alter = 0.9,
 })
 
 reset_base_alter({ "catppuccin-mocha" }, {
@@ -167,7 +171,7 @@ reset_base_alter({ "selenized" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.02,
   pmenu_bg_alter = -0.02,
-  normalfloat_bg_alter = -0.15,
+  normalfloat_bg_alter = -0.05,
   normalfloat_fg_alter = -0.05,
 })
 
@@ -200,6 +204,7 @@ local general_overrides = function()
         bg = { from = "Normal", attr = "bg", alter = 0.7 },
       },
     },
+    { FoldedSign = { inherit = "Folded", bg = "NONE" } },
     { EndOfBuffer = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SignColumn = { bg = "NONE" } },
     { NonText = { fg = { from = "Normal", attr = "fg", alter = -0.4 } } },
@@ -597,7 +602,7 @@ local general_overrides = function()
     -- ╰────────╯
     {
       CmpDocNormal = {
-        fg = { from = "Keyword", attr = "fg", alter = -0.15 },
+        fg = { from = "Keyword", attr = "fg", alter = 1.2 },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
@@ -1075,9 +1080,10 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 0.8 },
-          bg = { from = "Normal", attr = "bg", alter = -0.08 },
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.14 }, bg = "NONE" } },
 
       {
         MyCodeUsage = {
@@ -1127,10 +1133,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
-          bg = { from = "Normal", attr = "bg", alter = -0.01 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.15 }, bg = "NONE" } },
 
       {
         LspReferenceText = {
@@ -1174,7 +1181,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "Normal", attr = "bg", alter = 2.2 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.23 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
           reverse = false,
         },
       },
@@ -1183,10 +1190,11 @@ local function colorscheme_overrides()
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.43 } } },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
-          bg = { from = "Normal", attr = "bg", alter = -0.03 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.1 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 6 },
@@ -1204,7 +1212,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "Normal", attr = "bg", alter = 2 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.25 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
           reverse = false,
         },
       },
@@ -1228,6 +1236,8 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = -0.05 },
         },
       },
+      { FoldedSign = { inherit = "Folded", bg = "NONE" } },
+
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = -0.1 }, underline = false } },
 
       { ["@punctuation.bracket"] = { fg = { from = "Keyword", attr = "fg", alter = -0.2 } } },
@@ -1446,10 +1456,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
-          bg = { from = "Normal", attr = "bg", alter = -0.04 },
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          bg = { from = "Normal", attr = "bg", alter = -0.07 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, bg = "NONE", italic = true, reverse = false } },
       { ["@lsp.type.comment"] = { inherit = "Comment" } },
@@ -1506,7 +1517,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.07 },
         },
       },
     },
@@ -1551,6 +1562,8 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = -0.06 },
         },
       },
+      { FoldedSign = { inherit = "Folded", bg = "NONE" } },
+
       { LineNr = { fg = { from = "Normal", attr = "bg", alter = -0.2 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
@@ -1726,19 +1739,6 @@ local function colorscheme_overrides()
       },
 
       { Directory = { fg = { from = "Identifier", attr = "fg" }, bg = "NONE" } },
-      {
-        PmenuSel = {
-          fg = { from = "Directory", attr = "fg", alter = pmenu_fg_alter },
-          bg = Highlight.darken(Highlight.get("Normal", "fg"), pmenusel_bg_alter, Highlight.get("Normal", "bg")),
-          bold = true,
-        },
-      },
-      {
-        FzfLuaSel = {
-          fg = { from = "PmenuSel", attr = "fg" },
-          bg = { from = "PmenuSel", attr = "bg" },
-        },
-      },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -1755,12 +1755,13 @@ local function colorscheme_overrides()
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.005 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.04 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -1805,7 +1806,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.05 },
           reverse = false,
         },
       },
@@ -1846,10 +1847,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          fg = { from = "Normal", attr = "bg", alter = 0.7 },
+          bg = { from = "Normal", attr = "bg", alter = -0.08 },
         },
       },
+      { FoldedSign = { inherit = "Folded", bg = "NONE" } },
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.55 } } },
@@ -1937,10 +1939,12 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.6 },
-          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.01 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.15 }, bg = "NONE" } },
+
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
@@ -1955,8 +1959,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.45 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.17 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.42 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
     },
@@ -2048,10 +2052,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 2 },
+          fg = { from = "Normal", attr = "bg", alter = 1.8 },
           bg = { from = "Normal", attr = "bg", alter = 0.7 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.1 }, bg = "NONE" } },
 
       {
         LspReferenceText = {
@@ -2114,10 +2119,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.6 },
-          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.03 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       {
         StatusLine = {
@@ -2134,7 +2140,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.2 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
     },
@@ -2182,9 +2188,10 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 0.4 },
-          bg = { from = "Normal", attr = "bg", alter = -0.05 },
+          bg = { from = "Normal", attr = "bg", alter = -0.03 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       {
         qfFileName = {
@@ -2196,7 +2203,7 @@ local function colorscheme_overrides()
       { QuickFixLine = { bg = { from = "CursorLine", attr = "bg", alter = 0.2 }, underline = false, reverse = false } },
       { ErrorMsg = { fg = "red" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.18 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.12 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -2224,6 +2231,14 @@ local function colorscheme_overrides()
           bg = { from = "FzfLuaNormal", attr = "bg" },
         },
       },
+
+      {
+        NoiceCmdline = {
+          fg = { from = "Pmenu", attr = "fg", alter = 5 },
+          bg = { from = "Pmenu", attr = "bg", alter = -0.08 },
+        },
+      },
+
       {
         TelescopeSelection = {
           fg = "NONE",
@@ -2245,8 +2260,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.16 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
     },
@@ -2311,8 +2326,17 @@ local function colorscheme_overrides()
       },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.01 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+
+      {
+        MyCodeUsage = {
+          fg = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, dark_yellow),
+          bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.9, dark_yellow),
+          italic = true,
         },
       },
 
@@ -2330,8 +2354,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.5 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.21 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
         },
       },
     },
@@ -2582,10 +2606,12 @@ local function colorscheme_overrides()
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
-          bg = { from = "Normal", attr = "bg", alter = -0.02 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
@@ -2600,8 +2626,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.12 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.35 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.03 },
         },
       },
     },
@@ -2634,10 +2660,12 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.03 },
+          fg = { from = "Normal", attr = "bg", alter = 0.55 },
+          bg = { from = "Normal", attr = "bg", alter = -0.05 },
         },
       },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 4 },
@@ -2705,16 +2733,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.03 },
+          fg = { from = "Normal", attr = "bg", alter = 0.6 },
+          bg = { from = "Normal", attr = "bg", alter = -0.06 },
         },
       },
-      -- { -- original
-      --   Folded = {
-      --     fg = { from = "Normal", attr = "bg", alter = 1.7 },
-      --     bg = { from = "Normal", attr = "bg", alter = 0.48 },
-      --   },
-      -- },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
       {
