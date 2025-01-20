@@ -1,5 +1,5 @@
 # Main background, empty for terminal default, need to be empty if you want transparent background
-theme[main_bg]="#24283b"
+theme[main_bg]="#1a1b26"
 
 # Main text color
 theme[main_fg]="#c0caf5"
@@ -14,7 +14,7 @@ theme[hi_fg]="#f7768e"
 theme[selected_bg]="#e0af68"
 
 # Foreground color of selected item in processes box
-theme[selected_fg]="#24283b"
+theme[selected_fg]="#1a1b26"
 
 # Color of inactive/disabled text
 theme[inactive_fg]="#5c6691"

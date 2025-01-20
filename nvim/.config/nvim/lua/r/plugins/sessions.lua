@@ -81,6 +81,7 @@ return {
       RUtils.cmd.augroup("ResessionLeave", {
         event = { "VimLeavePre" },
         command = function()
+          vim.cmd [[set cmdheight=0]]
           resession.save "last"
         end,
       })

@@ -504,6 +504,9 @@ return {
     "nanozuki/tabby.nvim",
     event = "VeryLazy",
     config = function()
+      local tab_bg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.2 or -0.15
+      local tab_fg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.2 or -0.15
+
       local theme = {
         fill = "Normal",
         -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
@@ -514,12 +517,12 @@ return {
           bg = Highlight.get("TabLine", "bg"),
         },
         tab = {
-          fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.15),
-          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.12),
+          fg = Highlight.tint(Highlight.get("TabLine", "fg"), tab_fg_tint),
+          bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
         },
         win = {
           fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.2),
-          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.1),
+          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.08),
         },
         tail = "TabLine",
       }

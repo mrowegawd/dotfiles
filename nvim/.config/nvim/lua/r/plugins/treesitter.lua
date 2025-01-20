@@ -302,7 +302,7 @@ return {
             },
           },
           ["horizon"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.05 } } },
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.03 } } },
             {
               TreesitterContextSeparator = {
                 fg = { from = "WinSeparator", attr = "fg", alter = 0.08 },
@@ -311,7 +311,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.3 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -328,13 +328,13 @@ return {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.03 } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.1 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.12 },
                 bg = { from = "TreesitterContext" },
               },
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.26 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.3 },
                 bg = { from = "TreesitterContext" },
               },
             },

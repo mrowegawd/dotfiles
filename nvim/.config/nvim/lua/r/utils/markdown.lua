@@ -122,7 +122,7 @@ function M.follow_link(is_selection)
       -- local search = require "obsidian.search"
       -- search.find_notes_async(".", title .. ".md")
       local rg_opts =
-        [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]]
+        [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]]
 
       local fzflua = require "fzf-lua"
       fzflua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }

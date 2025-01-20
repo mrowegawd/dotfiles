@@ -300,7 +300,7 @@ timeout = 10
 icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_normal]
-background = "#24283b"
+background = "#1a1b26"
 foreground = "#7dcfff"
 frame_color = "#7aa2f7"
 timeout = 8
@@ -308,7 +308,7 @@ icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_critical]
 background = "#f7768e"
-foreground = "#24283b"
+foreground = "#1a1b26"
 frame_color = "#f7768e"
 timeout = 10
 icon = ~/.config/miscxrdb/icons/critical-danger.png

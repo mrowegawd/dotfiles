@@ -204,7 +204,7 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 [[ -f $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
   && source $ZSH_PLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-COLORSUGGEST=fg="#414869"
+COLORSUGGEST=fg="#303246"
 zle -N autosuggest-accept
 [[ -f $ZSH_PLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
   && export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$COLORSUGGEST \
