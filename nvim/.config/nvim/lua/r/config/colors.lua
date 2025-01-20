@@ -6,9 +6,10 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_bg_alter, pmenu_fg_alter, pmenusel_bg_alter, pmenusel_fg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter
+local pmenu_bg_alter, pmenu_fg_alter, pmenusel_bg_alter, pmenusel_fg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter
 
 local base_cl = {
+  cmpdocnormal_fg_alter = 0.3,
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = 0.05,
   normalfloat_bg_alter = -0.05,
@@ -35,6 +36,9 @@ local function reset_base_alter(themes, alter_base)
   end
 
   for i, x in pairs(base_cl) do
+    if i == "cmpdocnormal_fg" then
+      cmpdocnormal_fg_alter = x
+    end
     if i == "pmenu_bg_alter" then
       pmenu_bg_alter = x
     end
@@ -160,6 +164,8 @@ reset_base_alter({ "sonokai", "carbonfox" }, {
 reset_base_alter({ "tokyonight-storm" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.12,
+  pmenu_fg_alter = 0.1,
+  cmpdocnormal_fg_alter = 0.1,
 })
 
 reset_base_alter({ "nightfox", "vscode_modern", "horizon" }, {
@@ -602,7 +608,7 @@ local general_overrides = function()
     -- ╰────────╯
     {
       CmpDocNormal = {
-        fg = { from = "Keyword", attr = "fg", alter = 1.2 },
+        fg = { from = "Keyword", attr = "fg", alter = cmpdocnormal_fg_alter },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
@@ -1033,6 +1039,11 @@ local general_overrides = function()
     --  ─────────────────────────────── LAZYGIT ───────────────────────────────
     { LazygitselectedLineBgColor = { bg = { from = "CursorLine", attr = "bg", alter = 0.5 } } },
     { LazygitInactiveBorderColor = { fg = { from = "WinSeparator", attr = "fg", alter = 0.7 }, bg = "NONE" } },
+
+    --  ─────────────────────────────── WHICH-KEY ─────────────────────────────
+    { WhichKeyTitle = { inherit = "KeywordNC" } },
+    { WhichKeyNormal = { inherit = "NormalFloat" } },
+    { WhichKeyBorder = { inherit = "FloatBorder" } },
   }
 end
 
@@ -2680,8 +2691,8 @@ local function colorscheme_overrides()
       },
       {
         Tabline = {
-          fg = { from = "StatusLine", attr = "fg", alter = -0.43 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.1 },
+          fg = { from = "StatusLine", attr = "fg", alter = -0.4 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.08 },
         },
       },
     },

@@ -75,10 +75,6 @@ return {
       },
     },
     confi = function(_, opts)
-      Highlight.plugin("whichkey_hijackcol", {
-        { WhichKeyBorder = { bg = { from = "FzfLuaBorder", attr = "fg" } } },
-        { WhichKeyTitle = { bg = { from = "FzfLuaBorder", attr = "fg" } } },
-      })
       local wk = require "which-key"
       wk.setup(opts)
     end,

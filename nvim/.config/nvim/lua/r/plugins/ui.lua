@@ -515,15 +515,13 @@ return {
         },
         tab = {
           fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.15),
-          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.15),
+          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.12),
         },
         win = {
           fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.2),
           bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.1),
         },
         tail = "TabLine",
-        -- win = "Normal",
-        -- tail = "TabLine",
       }
       require("tabby").setup {
         line = function(line)

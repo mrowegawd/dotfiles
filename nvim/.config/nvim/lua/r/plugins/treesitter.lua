@@ -443,7 +443,7 @@ return {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg", alter = -0.02 } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = -0.02 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.02 },
                 bg = { from = "TreesitterContext" },
               },
             },
