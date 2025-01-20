@@ -774,7 +774,7 @@ return {
         {
           "<Leader>oA",
           function()
-            if vim.tbl_contains({ "norg", "org", "markdown", "orgagenda" }, vim.bo[0].filetype) then
+            if vim.tbl_contains({ "norg", "org", "orgagenda" }, vim.bo[0].filetype) then
               return
             end
 
