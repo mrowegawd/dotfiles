@@ -20,7 +20,7 @@ return {
       vim.api.nvim_create_autocmd("FileType", {
         pattern = sql_ft,
         callback = function()
-          if RUtils.has "nvim-cmp" then
+          if RUtils.cmp_engine() == "nvim-cmp" then
             local cmp = require "cmp"
 
             -- global sources
