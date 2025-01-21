@@ -6,7 +6,7 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_bg_alter, pmenu_fg_alter, pmenusel_bg_alter, pmenusel_fg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter
+local pmenu_fg_alter, pmenusel_bg_alter, pmenusel_fg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter
 
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
@@ -14,11 +14,10 @@ local base_cl = {
   fzflua_bg_cursorline_alter = 0.05,
   normalfloat_bg_alter = -0.05,
   normalfloat_fg_alter = -0.01,
-  pmenu_bg_alter = 0.8,
   pmenu_fg_alter = -0.1,
   pmenusel_bg_alter = 1.2,
   pmenusel_fg_alter = -0.6,
-  pmenuthumb_alter = 0.4,
+  pmenuthumb_alter = 1,
   quickfixline_alter = 0.3,
 }
 
@@ -38,9 +37,6 @@ local function reset_base_alter(themes, alter_base)
   for i, x in pairs(base_cl) do
     if i == "cmpdocnormal_fg" then
       cmpdocnormal_fg_alter = x
-    end
-    if i == "pmenu_bg_alter" then
-      pmenu_bg_alter = x
     end
     if i == "pmenu_fg_alter" then
       pmenu_fg_alter = x
@@ -82,7 +78,6 @@ reset_base_alter({ "tokyonight-night" }, {
 reset_base_alter({ "darkforest" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = 0.35,
-  pmenu_bg_alter = 0.8,
   pmenuthumb_alter = 0.3,
   quickfixline_alter = 0.3,
 })
@@ -96,7 +91,6 @@ reset_base_alter({ "evangelion" }, {
 reset_base_alter({ "lackluster" }, {
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.55,
-  pmenu_bg_alter = 1.2,
   pmenu_fg_alter = 0.3,
   pmenuthumb_alter = 0.4,
   normalfloat_bg_alter = 0.6,
@@ -106,7 +100,6 @@ reset_base_alter({ "lackluster" }, {
 reset_base_alter({ "dayfox" }, {
   cursorline_alter = -0.03,
   fzflua_bg_cursorline_alter = -0.05,
-  pmenu_bg_alter = 1.8,
   pmenuthumb_alter = 0.6,
   quickfixline_alter = 0.5,
 })
@@ -114,7 +107,6 @@ reset_base_alter({ "dayfox" }, {
 reset_base_alter({ "everforest" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.11,
-  pmenu_bg_alter = 1.8,
   pmenusel_bg_alter = -0.2,
   pmenusel_fg_alter = -0.1,
   pmenuthumb_alter = 0.6,
@@ -124,7 +116,6 @@ reset_base_alter({ "everforest" }, {
 reset_base_alter({ "tokyonight-day" }, {
   cursorline_alter = -0.01,
   fzflua_bg_cursorline_alter = -0.03,
-  pmenu_bg_alter = -0.1,
   pmenu_fg_alter = 0.5,
   pmenusel_fg_alter = -0.05,
   pmenusel_bg_alter = -0.04,
@@ -135,7 +126,6 @@ reset_base_alter({ "tokyonight-day" }, {
 reset_base_alter({ "gruvbox-material" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.1,
-  pmenu_bg_alter = 0.8,
   pmenu_fg_alter = 0.5,
   pmenuthumb_alter = 0.2,
   pmenusel_bg_alter = 1,
@@ -151,13 +141,11 @@ reset_base_alter({ "kanagawa" }, {
 reset_base_alter({ "catppuccin-mocha" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.1,
-  pmenu_bg_alter = 0.8,
   pmenuthumb_alter = 0.4,
 })
 
 reset_base_alter({ "sonokai", "carbonfox" }, {
   cursorline_alter = 0.08,
-  pmenu_bg_alter = 0.8,
   pmenuthumb_alter = 0.4,
 })
 
@@ -176,7 +164,6 @@ reset_base_alter({ "nightfox", "vscode_modern", "horizon" }, {
 reset_base_alter({ "selenized" }, {
   cursorline_alter = 0.25,
   fzflua_bg_cursorline_alter = 0.02,
-  pmenu_bg_alter = -0.02,
   normalfloat_bg_alter = -0.05,
   normalfloat_fg_alter = -0.05,
 })
@@ -243,7 +230,7 @@ local general_overrides = function()
     {
       Pmenu = {
         fg = { from = "Normal", attr = "fg", alter = pmenu_fg_alter },
-        bg = { from = "Normal", attr = "bg", alter = pmenu_bg_alter },
+        bg = { from = "Normal", attr = "bg" },
       },
     },
     {
@@ -462,7 +449,6 @@ local general_overrides = function()
     { DiagnosticSignInfo = { bg = "NONE" } },
     { DiagnosticSignHint = { bg = "NONE" } },
 
-    -- Floating windows
     { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
     { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
     { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
@@ -475,73 +461,43 @@ local general_overrides = function()
     { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
     { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
 
-    {
-      DiagnosticError = {
-        fg = { from = "DiagnosticSignError", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticsErrorNumHl = {
-        fg = { from = "DiagnosticError", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticWarn = {
-        fg = { from = "DiagnosticSignWarn", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticsWarnNumHl = {
-        fg = { from = "DiagnosticSignWarn", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticHint = {
-        fg = { from = "DiagnosticSignHint", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticsHintNumHl = {
-        fg = { from = "DiagnosticHint", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticInfo = {
-        fg = { from = "DiagnosticSignInfo", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
-    {
-      DiagnosticsInfoNumHl = {
-        fg = { from = "DiagnosticInfo", attr = "fg" },
-        bg = "NONE",
-        italic = true,
-      },
-    },
+    { DiagnosticError = { fg = { from = "DiagnosticSignError", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsErrorNumHl = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticWarn = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsWarnNumHl = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticHint = { fg = { from = "DiagnosticSignHint", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsHintNumHl = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE" } },
+    { DiagnosticInfo = { fg = { from = "DiagnosticSignInfo", attr = "fg" }, bg = "NONE", italic = true } },
+    { DiagnosticsInfoNumHl = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE" } },
 
     {
-      DiagnosticUnderlineWarn = { underline = true, undercurl = false, sp = { from = "DiagnosticWarn", attr = "fg" } },
+      DiagnosticUnderlineWarn = {
+        sp = { from = "DiagnosticWarn", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
     },
     {
-      DiagnosticUnderlineHint = { underline = true, undercurl = false, sp = { from = "DiagnosticHint", attr = "fg" } },
+      DiagnosticUnderlineHint = {
+        sp = { from = "DiagnosticHint", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
     },
     {
-      DiagnosticUnderlineError = { underline = true, undercurl = false, sp = { from = "DiagnosticError", attr = "fg" } },
+      DiagnosticUnderlineError = {
+        sp = { from = "DiagnosticError", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
     },
-    { DiagnosticUnderlineInfo = { underline = true, undercurl = false, sp = { from = "DiagnosticInfo", attr = "fg" } } },
+    {
+      DiagnosticUnderlineInfo = {
+        sp = { from = "DiagnosticInfo", attr = "fg" },
+        underline = true,
+        undercurl = false,
+      },
+    },
 
     -- ╒═════════════════════════════════════════════════════════╕
     -- │                   CREATED HIGHLIGHTS                    │
@@ -596,8 +552,8 @@ local general_overrides = function()
     { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
     {
       CmpItemFloatBorder = {
-        fg = { from = "Pmenu", attr = "bg" },
-        bg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "Pmenu", attr = "bg", alter = 1.8 },
+        bg = "NONE",
       },
     },
 
@@ -619,13 +575,13 @@ local general_overrides = function()
     {
       CmpDocNormal = {
         fg = { from = "Keyword", attr = "fg", alter = cmpdocnormal_fg_alter },
-        bg = { from = "Pmenu", attr = "bg" },
+        bg = "NONE",
       },
     },
     {
       CmpDocFloatBorder = {
-        fg = { from = "Pmenu", attr = "bg" },
-        bg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "CmpItemFloatBorder", attr = "fg" },
+        bg = "NONE",
       },
     },
 
@@ -2633,6 +2589,14 @@ local function colorscheme_overrides()
       },
 
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+
+      {
+        NoiceCmdline = {
+          fg = { from = "Pmenu", attr = "fg", alter = 5 },
+          bg = { from = "Pmenu", attr = "bg", alter = -0.1 },
+        },
+      },
+
       {
         Folded = {
           fg = { from = "Normal", attr = "bg", alter = 0.6 },
