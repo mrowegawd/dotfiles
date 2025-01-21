@@ -486,6 +486,7 @@ local general_overrides = function()
       DiagnosticsErrorNumHl = {
         fg = { from = "DiagnosticError", attr = "fg" },
         bg = "NONE",
+        italic = true,
       },
     },
     {
@@ -499,6 +500,7 @@ local general_overrides = function()
       DiagnosticsWarnNumHl = {
         fg = { from = "DiagnosticSignWarn", attr = "fg" },
         bg = "NONE",
+        italic = true,
       },
     },
     {
@@ -512,6 +514,7 @@ local general_overrides = function()
       DiagnosticsHintNumHl = {
         fg = { from = "DiagnosticHint", attr = "fg" },
         bg = "NONE",
+        italic = true,
       },
     },
     {
@@ -525,13 +528,20 @@ local general_overrides = function()
       DiagnosticsInfoNumHl = {
         fg = { from = "DiagnosticInfo", attr = "fg" },
         bg = "NONE",
+        italic = true,
       },
     },
 
-    { DiagnosticUnderlineWarn = { undercurl = true, sp = { from = "DiagnosticWarn", attr = "fg" } } },
-    { DiagnosticUnderlineHint = { undercurl = true, sp = { from = "DiagnosticHint", attr = "fg" } } },
-    { DiagnosticUnderlineError = { undercurl = true, sp = { from = "DiagnosticError", attr = "fg" } } },
-    { DiagnosticUnderlineInfo = { undercurl = true, sp = { from = "DiagnosticInfo", attr = "fg" } } },
+    {
+      DiagnosticUnderlineWarn = { underline = true, undercurl = false, sp = { from = "DiagnosticWarn", attr = "fg" } },
+    },
+    {
+      DiagnosticUnderlineHint = { underline = true, undercurl = false, sp = { from = "DiagnosticHint", attr = "fg" } },
+    },
+    {
+      DiagnosticUnderlineError = { underline = true, undercurl = false, sp = { from = "DiagnosticError", attr = "fg" } },
+    },
+    { DiagnosticUnderlineInfo = { underline = true, undercurl = false, sp = { from = "DiagnosticInfo", attr = "fg" } } },
 
     -- ╒═════════════════════════════════════════════════════════╕
     -- │                   CREATED HIGHLIGHTS                    │
@@ -2646,7 +2656,7 @@ local function colorscheme_overrides()
       {
         Tabline = {
           fg = { from = "StatusLine", attr = "fg", alter = -0.35 },
-          bg = { from = "StatusLine", attr = "bg", alter = -0.03 },
+          bg = { from = "StatusLine", attr = "bg", alter = -0.04 },
         },
       },
     },
