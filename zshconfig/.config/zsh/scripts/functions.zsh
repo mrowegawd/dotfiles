@@ -205,6 +205,12 @@ build-install() {
     pipx install yt-dlp
     asdf reshim python
   fi
+
+  if ! command -v mmdc >/dev/null; then
+    echo "Installing: mmdc -  command line tool for the Mermaid library "
+    npm install -g @mermaid-js/mermaid-cli
+    asdf reshim nodejs
+  fi
 }
 
 Green=$(tput setaf 2)  # Green
