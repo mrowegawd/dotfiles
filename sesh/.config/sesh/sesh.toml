@@ -10,3 +10,39 @@ name = "Downloads 📥"
 path = "~/Downloads"
 startup_command = "ls"
 preview_command = "bat --color=always ~/.config/zsh/.zshrc"
+
+[[session]]
+name = "Typescript 🕸 "
+path = "~/moxconf/development/project/typescript"
+
+[[session]]
+name = "Rust 󱘗 "
+path = "~/moxconf/development/project/rust"
+
+[[session]]
+name = "Golang 󰟓 "
+path = "~/moxconf/development/project/golang"
+
+[[session]]
+name = "Python 󰌠 "
+path = "~/moxconf/development/project/python"
+
+[[session]]
+name = "Bot 🤖 "
+path = "~/moxconf/development/project/misc"
+
+[[session]]
+name = "Mobile 📱"
+path = "~/moxconf/development/project/mobile"
+
+[[session]]
+name = "Log Sentric 󰍛 "
+path = "~/moxconf/development/project/misc"
+
+[[session]]
+name = "News 📰 "
+path = "~/moxconf/development/project/misc"
+
+[[session]]
+name = "Bench 📠 "
+path = "~/moxconf/development/project/misc"
