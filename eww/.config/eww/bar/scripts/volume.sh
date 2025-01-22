@@ -32,8 +32,18 @@
 
 #!/bin/bash
 
-amixer --get-volume-human | tr -d '%'
+# amixer --get-volume-human | tr -d '%'
+
+# pactl subscribe | rg --line-buffered "on sink" | while read -r _; do
+# 	pamixer --get-volume-human | tr -d '%'
+# done
+# pamixer --get-volume
+
+# volume=$(pamixer --get-volume)
+# echo "$volume asdfsaf"
+
+pamixer --get-volume-human | tr -d '%'
 
 pactl subscribe | rg --line-buffered "on sink" | while read -r _; do
-	pamixer --get-volume-human | tr -d '%'
+  pamixer --get-volume-human | tr -d '%'
 done
