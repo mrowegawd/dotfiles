@@ -1,3 +1,5 @@
+-- vim: foldmethod=marker foldlevel=0
+
 local silent = { silent = true }
 local nosilent = { silent = false }
 
@@ -10,10 +12,7 @@ end
 vim.cmd.highlight "Overnesting guibg=#E06C75"
 vim.fn.matchadd("Overnesting", ("\t"):rep(5) .. "\t*")
 
--- ╭──────────────────────────────────────────────────────────╮
--- │ EDITING TEXT                                             │
--- ╰──────────────────────────────────────────────────────────╯
-
+-- {{{ EDITING TEXT
 -- Insert mode
 RUtils.map.inoremap("<C-a>", "<C-O>^", silent)
 RUtils.map.inoremap("<C-e>", "<C-O>$", silent)
@@ -35,23 +34,23 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- RUtils.map.inoremap("<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
 -- RUtils.map.inoremap("<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
 
--- ╭──────────────────────────────────────────────────────────╮
--- │ FOLDS                                                    │
--- ╰──────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ FOLDS
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
+RUtils.map.nnoremap("zv", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+
+RUtils.map.nnoremap("zj", "zcjzOzz", { desc = "Fold: close current fold when open. Always open next fold." })
+RUtils.map.nnoremap("zk", "zckzOzz", { desc = "Fold: close current fold when open. Always open previous fold." })
+
 RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
 end, { desc = "Fold: magic next closed" })
 RUtils.map.nnoremap("<c-p>", function()
   return RUtils.fold.magic_jump_qf_or_fold(true)
 end, { desc = "Fold: magic prev closed" })
-
--- ╭─────────────────────────────────────────────────────────╮
--- │ TERMINAL                                                │
--- ╰─────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ TERMINAL
 RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
 RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
 RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
@@ -79,11 +78,8 @@ end, { desc = "Terminal: new tabterm" })
 RUtils.map.tnoremap("<a-CR>", function()
   RUtils.terminal.smart_split()
 end, { desc = "Terminal: new term" })
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ WINDOWS, VIEW AND NAV                                    │
--- ╰──────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ WINDOWS, VIEW AND NAV
 -- Edit window state
 RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
 RUtils.map.nnoremap("ss", "<CMD>split<CR>", { desc = "View: horizontal split", silent = true })
@@ -126,10 +122,31 @@ RUtils.map.nnoremap("th", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab", sile
 RUtils.map.nnoremap("<C-a-l>", "<CMD>tabnext<CR>", { desc = "Tab: next tab (mod)", silent = true })
 RUtils.map.nnoremap("<C-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab (mod)", silent = true })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │ BUFFER                                                  │
--- ╰─────────────────────────────────────────────────────────╯
+-- }}}
+-- {{{ WINDOW SCROLL
+RUtils.map.nnoremap(
+  "zz",
+  [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
+  { expr = true, desc = "View: center cursor window" }
+)
 
+-- Scroll step sideways
+RUtils.map.nnoremap("zl", "z4l")
+RUtils.map.nnoremap("zh", "z4h")
+RUtils.map.nnoremap("zL", "z60l")
+RUtils.map.nnoremap("zH", "z60h")
+
+-- Scroll Up/Down
+RUtils.map.nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
+RUtils.map.nnoremap(
+  "<C-f>",
+  [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
+  { expr = true }
+)
+RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
+RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
+-- }}}
+-- {{{ BUFFERS
 RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer split into tab window" })
 RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate file" })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete buffer" })
@@ -144,10 +161,8 @@ end, { desc = "Buffer/Qf: magic gl" })
 RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
 
--- ╭──────────────────────────────────────────────────────────╮
--- │ COMMANDLINE                                              │
--- ╰──────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ COMMANDLINE
 RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: go to first line" })
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: go to the last line" })
@@ -157,11 +172,8 @@ RUtils.map.cnoremap("<C-l>", "<Right>", { desc = "Commandline: next word" })
 RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: prev word" })
 RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: forward word" })
 RUtils.map.cnoremap("<C-b>", "<S-Left>", { desc = "Commandline: backward word" })
-
--- ╭──────────────────────────────────────────────────────────╮
--- │ CABBREV                                                  │
--- ╰──────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ CABBREV
 RUtils.map.cabbrev("BD", "bd!")
 RUtils.map.cabbrev("Bd", "bd!")
 RUtils.map.cabbrev("Bd", "bd!")
@@ -185,37 +197,8 @@ RUtils.map.cabbrev("w;", "update!")
 
 RUtils.map.vmap("K", "<Nop>")
 RUtils.map.nmap("q", "<Nop>")
-
--- ╭─────────────────────────────────────────────────────────╮
--- │ SCROLL                                                  │
--- ╰─────────────────────────────────────────────────────────╯
-
-RUtils.map.nnoremap(
-  "zz",
-  [[(winline() == (winheight (0) + 1)/ 2) ?  'zt' : (winline() == 1)? 'zb' : 'zz']],
-  { expr = true, desc = "View: center cursor window" }
-)
-
--- Scroll step sideways
-RUtils.map.nnoremap("zl", "z4l")
-RUtils.map.nnoremap("zh", "z4h")
-RUtils.map.nnoremap("zL", "z60l")
-RUtils.map.nnoremap("zH", "z60h")
-
--- Scroll Up/Down
-RUtils.map.nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
-RUtils.map.nnoremap(
-  "<C-f>",
-  [[max([winheight(0) - 2, 1]) ."<C-d>".(line('w$') >= line('$') ? "L" : "M")]],
-  { expr = true }
-)
-RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { expr = true })
-RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
-
--- ╭─────────────────────────────────────────────────────────╮
--- │ TOGGLE                                                  │
--- ╰─────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ TOGGLE
 Snacks.toggle.zoom():map "sm"
 Snacks.toggle.zen():map "<Leader>uz"
 Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map "<Leader>ub"
@@ -239,11 +222,8 @@ Snacks.toggle.profiler_highlights():map "<Localleader>sph"
 if vim.lsp.inlay_hint then
   Snacks.toggle.inlay_hints():map "<Leader>uh"
 end
-
--- ╭─────────────────────────────────────────────────────────╮
--- │ DIFF                                                    │
--- ╰─────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ DIFF
 -- Create a new scratch buffer
 vim.api.nvim_create_user_command("Ns", function()
   vim.cmd [[
@@ -291,10 +271,8 @@ RUtils.map.vnoremap(
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
 
--- ╭──────────────────────────────────────────────────────────╮
--- │ MISC                                                     │
--- ╰──────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ MISC
 RUtils.map.nnoremap("<Esc>", function()
   vim.cmd "noh"
   RUtils.cmp.actions.snippet_stop()
@@ -424,11 +402,8 @@ if vim.fn.executable "lazygit" == 1 then
   --   Snacks.lazygit.log()
   -- end, { desc = "Git: lazygit log (cwd)" })
 end
-
--- ╭─────────────────────────────────────────────────────────╮
--- │ COMMANDS                                                │
--- ╰─────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ COMMANDS
 RUtils.cmd.create_command("Snippets", RUtils.plugin.EditSnippet, { desc = "Misc: edit snippet file" })
 RUtils.cmd.create_command("ChangeMasterTheme", RUtils.plugin.change_colors, { desc = "Misc: set theme bspwm" })
 RUtils.cmd.create_command("InfoOption", RUtils.plugin.infoFoldPreview, { desc = "Misc: echo options" })
@@ -436,11 +411,8 @@ RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo 
 RUtils.cmd.create_command("E", function()
   return cmd [[ vnew ]]
 end, { desc = "Misc: vnew" })
-
--- ╭─────────────────────────────────────────────────────────╮
--- │ BULK COMMANDS                                           │
--- ╰─────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ BULK COMMANDS
 -- These commands run outside tmux
 local func_cmds = function()
   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
@@ -639,10 +611,8 @@ RUtils.map.nnoremap("<Leader>gf", function()
   )
 end, { desc = "Git: list commands of git" })
 
--- ╭─────────────────────────────────────────────────────────╮
--- │ TMUX INTEGRATE                                          │
--- ╰─────────────────────────────────────────────────────────╯
-
+-- }}}
+-- {{{ TMUX INTEGRATION
 local function normalize_return(str)
   ---@diagnostic disable-next-line: redefined-local
   local str_slice = string.gsub(str, "\n", "")
@@ -753,3 +723,4 @@ RUtils.map.nnoremap("<a-E>", function()
     vim.fn.system(cmd_open_filemanager)
   end
 end)
+-- }}}
