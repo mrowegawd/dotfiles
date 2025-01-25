@@ -379,6 +379,12 @@ return {
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
+  -- LUA-CONSOLE
+  {
+    "yarospace/lua-console.nvim",
+    keys = { "`", "<Leader>`" },
+    opts = {},
+  },
   -- RUNMUX
   {
     -- "mrowegawd/runmux",

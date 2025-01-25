@@ -322,4 +322,17 @@ return {
       },
     },
   },
+  -- NEOVIMCRAFT
+  {
+    "janwvjaarsveld/neovimcraft.nvim",
+    cmd = { "NeovimcraftPlugins", "NeovimcraftTags" },
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+    opts = {},
+    -- Calling setup is not required if you are happy with the default configuration
+    -- config = function()
+    --   require("neovimcraft").setup {
+    --     -- Add your custom configuration here
+    --   }
+    -- end,
+  },
 }
