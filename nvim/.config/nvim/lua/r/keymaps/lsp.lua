@@ -104,11 +104,20 @@ function M.get()
       desc = "Diagnostic: prev item",
     },
     {
+      "<Leader>uD",
+      function()
+        local new_value = not vim.diagnostic.config().virtual_lines
+        vim.diagnostic.config { virtual_lines = new_value }
+        return new_value
+      end,
+      desc = "Diagnostic: toggle virtual_lines",
+    },
+    {
       "dP",
       function()
         vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
       end,
-      desc = "Diagnostic: preview",
+      desc = "Diagnostic: peek preview",
     },
     --  +----------------------------------------------------------+
     --  LSP commands

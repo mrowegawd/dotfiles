@@ -22,6 +22,7 @@ return {
           -- },
           virtual_text = false,
           severity_sort = true,
+          virtual_lines = true,
           signs = {
             text = {
               [vim.diagnostic.severity.ERROR] = RUtils.config.icons.diagnostics.Error,
@@ -37,16 +38,11 @@ return {
             },
           },
           float = {
-            max_width = math.min(math.floor(vim.o.columns * 0.7), 100),
-            max_height = math.min(math.floor(vim.o.lines * 0.3), 30),
             title = {
               { "  ", "DiagnosticFloatTitleIcon" },
-              { "Problems  ", "DiagnosticFloatTitle" },
+              { "Problems ", "DiagnosticFloatTitle" },
             },
-            focusable = false,
-            style = "minimal",
-            -- border = RUtils.config.icons.border.line,
-            header = "",
+            border = "rounded",
             prefix = function(diag)
               local level = vim.diagnostic.severity[diag.severity]
               local prefix = string.format(

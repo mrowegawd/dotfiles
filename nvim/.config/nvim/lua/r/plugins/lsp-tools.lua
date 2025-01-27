@@ -163,58 +163,6 @@ return {
       }
     end,
   },
-  -- LSP-LINES
-  {
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    event = "LspAttach",
-    keys = {
-      {
-        "<Leader>uD",
-        function()
-          local new_value = not vim.diagnostic.config().virtual_lines
-          if not vim.g.is_lsplines_off then
-            RUtils.warn("Disabled lsp_lines", { title = "Option" })
-            vim.g.is_lsplines_off = true
-          else
-            RUtils.warn("Enabled lsp_lines", { title = "Option" })
-            vim.g.is_lsplines_off = false
-          end
-          vim.diagnostic.config { virtual_lines = new_value }
-        end,
-        desc = "Misc: toggle lsp_lines [lsp_lines]",
-      },
-    },
-    config = function()
-      require("lsp_lines").setup()
-
-      require("lsp_lines").toggle() -- Comment to disable on startup
-      local previously = not require("lsp_lines").toggle()
-
-      local group = vim.api.nvim_create_augroup("LspLinesToggleInsert", { clear = false })
-      vim.api.nvim_create_autocmd("InsertEnter", {
-        group = group,
-        callback = function()
-          if vim.g.is_lsplines_off then
-            previously = not require("lsp_lines").toggle()
-            if not previously then
-              require("lsp_lines").toggle()
-            end
-          end
-        end,
-      })
-
-      vim.api.nvim_create_autocmd("InsertLeave", {
-        group = group,
-        callback = function()
-          if vim.g.is_lsplines_off then
-            if require("lsp_lines").toggle() ~= previously then
-              require("lsp_lines").toggle()
-            end
-          end
-        end,
-      })
-    end,
-  },
   -- GLANCE (disabled)
   {
     "DNLHC/glance.nvim",
