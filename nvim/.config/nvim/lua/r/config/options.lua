@@ -1,3 +1,4 @@
+-- vim: foldmethod=marker foldlevel=0
 local opt, fn, g, env, loop = vim.opt, vim.fn, vim.g, vim.env, vim.uv
 
 g.projects_dir = env.PROJECTS_DIR or fn.expand "~/projects"
@@ -27,6 +28,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.loaded_matchparen = 1
 
+-- {{{ Generals
 opt.termguicolors = true -- tmux need this!
 opt.secure = true
 opt.modelines = 1 -- read a modeline at EOF
@@ -105,9 +107,11 @@ opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.breakindent = true -- start wrapped lines indented
 opt.linebreak = true -- do not break words on line wrap
 opt.showbreak = "↪ "
------------------------------------------------------------------------------//
--- List chars {{{
------------------------------------------------------------------------------//
+-- NOTE: (not inside tmux) toggleterm:term 'r_kill' tidak bisa jalan, kalau tidak di set '-ic'
+-- tapi jika di set maka akan masalah juga pada tmux allow-passthrough untuk plugin `image.nvim`
+-- opt.shellcmdflag = "-ic"
+-- }}}
+-- {{{ List chars
 opt.list = true -- invisible chars
 -- Characters to display on ':set list',explore glyphs using:
 -- `xfd -fa "InputMonoNerdFont:style:Regular"` or
@@ -120,15 +124,11 @@ opt.listchars = {
   precedes = "░", -- Alternatives: … « ‹
   trail = "•", -- BULLET (U+2022, UTF-8: E2 80 A2)
 }
-
------------------------------------------------------------------------------//
--- Message output on vim actions {{{1
------------------------------------------------------------------------------//
+-- }}}
+-- {{{ Message output on vim actions
 opt.shortmess = opt.shortmess:append { W = true, I = true, c = true, C = true } -- copied default and removed `t` (long paths were being truncated) while adding `c`
-
------------------------------------------------------------------------------//
--- Wild and file globbing stuff in command mode {{{1
------------------------------------------------------------------------------//
+-- }}}
+-- {{{ Wild and file globbing stuff in command mode
 opt.wildmode = "longest:full,full"
 opt.wildignore = {
   "*.aux",
@@ -179,9 +179,8 @@ opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
 opt.splitright = true -- ':vnew' ':vsplit' right of current
 opt.equalalways = false -- New vim windows created won't make everything back to same sizes
------------------------------------------------------------------------------//
--- folds {{{1
------------------------------------------------------------------------------//
+-- }}}
+-- {{{ Folds
 opt.fillchars = {
   eob = " ", -- suppress ~ at endofbuffer
   diff = "╱", -- alternatives = ⣿ ░ ╱
@@ -211,10 +210,8 @@ opt.smartcase = true -- case sensitive when search includes uppercase
 opt.showmatch = true -- highlight matching [{()}]
 opt.wrapscan = true -- begin search from top of the file when nothing is found
 opt.hidden = true -- do not unload buffer when abandoned
-
------------------------------------------------------------------------------//
--- timings {{{1
------------------------------------------------------------------------------//
+-- }}}
+-- {{{ Timings
 opt.updatetime = 400
 opt.timeout = true
 opt.ttimeoutlen = 5
@@ -279,18 +276,14 @@ opt.scrolloff = 5 -- Number of lines to leave before/after the cursor when scrol
 opt.sidescrolloff = 3 -- Same but for side scrolling.
 opt.sidescroll = 1
 opt.selection = "old" -- Don't select the newline symbol when using <End> on visual mode
-
------------------------------------------------------------------------------//
--- emoji {{{1
------------------------------------------------------------------------------//
+-- }}}
+-- {{{ Emoji
 -- emoji is true by default but makes (n)vim treat all emoji as double width
 -- which breaks rendering so we turn this off.
 -- credit: https://www.youtube.com/watch?v=f91vwoelfne
 opt.emoji = false
-
------------------------------------------------------------------------------//
--- diff {{{1
------------------------------------------------------------------------------//
+-- }}}
+-- {{{ Diff
 -- use in vertical diff mode, blank lines to keep sides aligned, ignore whitespace changes
 opt.diffopt = opt.diffopt
   + {
@@ -302,7 +295,8 @@ opt.diffopt = opt.diffopt
     "algorithm:histogram", -- "algorithm:patience"
     "indent-heuristic",
   }
-
+-- }}}
+-- {{{ Sessions
 -- NOTE: remove "folds" dari sessionoptions tampak nya menghilangkan error "no fold found error"
 -- ketika session di restore, relate issue: https://github.com/jedrzejboczar/possession.nvim/issues/19#issuecomment-1323804180
 opt.sessionoptions = {
@@ -320,7 +314,8 @@ opt.sessionoptions = {
   "winpos",
   "winsize",
 }
-
+-- }}}
+-- {{{ Providers
 -- Disable providers we do not care a about
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
@@ -340,7 +335,8 @@ for _, plugin in pairs(enable_providers) do
   vim.g["loaded_" .. plugin] = nil
   vim.cmd("runtime " .. plugin)
 end
-
+-- }}}
+-- {{{ Neovide stuff
 if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.15
   vim.g.neovide_cursor_animation_length = 0.1
@@ -376,8 +372,8 @@ if vim.g.neovide then
   -- g:neovide_transparency should be 0 if you want to unify transparency of content and title bar.
   -- vim.g.neovide_background_color = "#0f1117" .. alpha()
 end
-
--- Filetype detection
+-- }}}
+-- {{{ Filetype detection
 vim.filetype.add {
   filename = {
     Brewfile = "ruby",
@@ -409,7 +405,8 @@ vim.filetype.add {
     [".*/inventory/.*%.ini"] = "ansible_hosts",
   },
 }
-
+-- }}}
+-- {{{ Plugin var globals
 -- Config ini diperlukan untuk plugin image.nvim
 -- check: https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
 package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
@@ -450,6 +447,8 @@ if vim.env.PROF then
   }
 end
 
+-- }}}
+-- {{{ Foldexpr, foldtext, smoothscroll
 if vim.fn.has "nvim-0.10" == 1 then
   opt.smoothscroll = true
   opt.foldexpr = "v:lua.require'r.utils'.ui.foldexpr()"
@@ -459,3 +458,4 @@ else
   opt.foldmethod = "indent"
   opt.foldtext = "v:lua.require'r.utils'.ui.foldtext()"
 end
+-- }}}
