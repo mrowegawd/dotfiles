@@ -1,3 +1,5 @@
+---@class r.utils.cmd
+
 -- Taken from Snacks plugins
 local Snacks = require "snacks"
 ---@overload fun(): string

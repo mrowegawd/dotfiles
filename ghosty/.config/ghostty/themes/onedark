@@ -1,0 +1,21 @@
+background = 1f2329
+foreground = a0a8b7
+
+cursor-color = 5C6370
+
+palette = 0=#1E2127
+palette = 8=#5C6370
+palette = 1=#E06C75
+palette = 9=#E06C75
+palette = 2=#98C379
+palette = 10=#98C379
+palette = 3=#D19A66
+palette = 11=#D19A66
+palette = 4=#61AFEF
+palette = 12=#61AFEF
+palette = 5=#C678DD
+palette = 13=#C678DD
+palette = 6=#56B6C2
+palette = 14=#56B6C2
+palette = 7=#ABB2BF
+palette = 15=#FFFFFF

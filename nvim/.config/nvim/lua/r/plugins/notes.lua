@@ -37,37 +37,42 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter",
       "akinsho/org-bullets.nvim",
+      "danilshvalov/org-modern.nvim",
     },
     opts = function()
+      local Menu = require "org-modern.menu"
       local done_hi = Highlight.get("Comment", "fg")
-      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("ErrorMsg", "fg"))
-      local todo_hi = Highlight.get("Error", "fg")
+      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Boolean", "fg"))
+      local todo_hi = Highlight.get("@org.agenda.scheduled", "fg")
       return {
         ui = {
           menu = {
             handler = function(data)
-              local items = vim
-                .iter(data.items)
-                :map(function(i)
-                  return (i.key and not i.label:lower():match "quit") and i or nil
-                end)
-                :totable()
-
-              vim.ui.select(items, {
-                prompt = fmt(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
-                kind = "pojokan",
-                format_item = function(item)
-                  return fmt("%s → %s", item.key, item.label)
-                end,
-              }, function(choice)
-                if not choice then
-                  return
-                end
-                if choice.action then
-                  choice.action()
-                end
-              end)
+              Menu:new():open(data)
             end,
+            -- handler = function(data)
+            --   local items = vim
+            --     .iter(data.items)
+            --     :map(function(i)
+            --       return (i.key and not i.label:lower():match "quit") and i or nil
+            --     end)
+            --     :totable()
+            --
+            --   vim.ui.select(items, {
+            --     prompt = fmt(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
+            --     kind = "pojokan",
+            --     format_item = function(item)
+            --       return fmt("%s → %s", item.key, item.label)
+            --     end,
+            --   }, function(choice)
+            --     if not choice then
+            --       return
+            --     end
+            --     if choice.action then
+            --       choice.action()
+            --     end
+            --   end)
+            -- end,
           },
         },
         org_agenda_files = {

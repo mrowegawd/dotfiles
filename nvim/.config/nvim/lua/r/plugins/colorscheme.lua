@@ -1,6 +1,68 @@
 local colorscheme = RUtils.config.colorscheme
 
 return {
+  -- ONEDARK
+  {
+    "navarasu/onedark.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local onedark_theme = { "onedark" }
+      if vim.tbl_contains(onedark_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      style = "darker",
+    },
+  },
+  -- SUNBURN
+  {
+    "loganswartz/sunburn.nvim",
+    lazy = false,
+    priority = 1000,
+    dependencies = { "loganswartz/polychrome.nvim" },
+    enabled = function()
+      local sunburn_theme = { "sunburn" }
+      if vim.tbl_contains(sunburn_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- JELLYBEANS
+  {
+    "wtfox/jellybeans.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local jellybeans_theme = { "jellybeans" }
+      if vim.tbl_contains(jellybeans_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      plugins = {
+        all = true,
+        auto = false, -- will read lazy.nvim and apply the colors for plugins that are installed
+      },
+    },
+  },
+  -- ONE-MONOKAI
+  {
+    "cpea2506/one_monokai.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local onemonokai_theme = { "one_monokai" }
+      if vim.tbl_contains(onemonokai_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- SONOKAI
   {
     "sainnhe/sonokai",

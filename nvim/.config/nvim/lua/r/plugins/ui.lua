@@ -46,21 +46,21 @@ return {
       Highlight.plugin("Snacks_highlights", {
         {
           SnacksNotifierInfo = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticInfo", attr = "fg", alter = 5 },
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
             bold = true,
           },
         },
         {
           SnacksNotifierBorderInfo = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
-            fg = { from = "SnacksNotifierInfo", attr = "bg" },
+            fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.5 },
+            bg = { from = "SnacksNotifierInfo", attr = "bg" },
           },
         },
         {
           SnacksNotifierTitleInfo = {
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticInfo", attr = "fg", alter = 0.5 },
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
             bold = true,
           },
         },
@@ -68,15 +68,15 @@ return {
         -- ERROR
         {
           SnacksNotifierError = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticError", attr = "fg", alter = 5 },
+            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
             bold = true,
           },
         },
         {
           SnacksNotifierBorderError = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
-            fg = { from = "SnacksNotifierError", attr = "bg" },
+            fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.5 },
+            bg = { from = "SnacksNotifierError", attr = "bg" },
           },
         },
         {
@@ -90,22 +90,21 @@ return {
         -- WARN
         {
           SnacksNotifierWarn = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticWarn", attr = "fg", alter = 5 },
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
             bold = true,
           },
         },
         {
           SnacksNotifierBorderWarn = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
-            -- fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.4 },
-            fg = { from = "SnacksNotifierWarn", attr = "bg" },
+            fg = { from = "SnacksNotifierWarn", attr = "bg", alter = 0.5 },
+            bg = { from = "SnacksNotifierWarn", attr = "bg" },
           },
         },
         {
           SnacksNotifierTitleWarn = {
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticWarn", attr = "fg", alter = 0.5 },
+            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
             bold = true,
           },
         },
@@ -218,6 +217,8 @@ return {
       -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
       { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snacks: notification history" },
       { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snacks: dismiss all notifications" },
+      ---@diagnostic disable-next-line: missing-fields
+      { "fB", function() Snacks.picker.buffers({ hidden = true, nofile = true }) end, desc = "Buffer: select all buffers [snacks]" },
     },
     config = function(_, opts)
       local notify = vim.notify
@@ -278,7 +279,7 @@ return {
         { NoicePopupBaseGroup = { inherit = "Pmenu", fg = { from = "DiagnosticSignInfo" } } },
         { NoicePopupWarnBaseGroup = { inherit = "Pmenu", fg = { from = "Float" } } },
         { NoicePopupInfoBaseGroup = { inherit = "Pmenu", fg = { from = "Conditional" } } },
-        { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
+        -- { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
         { NoiceCmdlinePopupBorder = { link = "FloatBorder" } },
         { NoiceCmdlinePopupTitleCmdline = { inherit = "NoicePopupBaseGroup", reverse = true } },
         { NoiceCmdlinePopupBorderCmdline = { link = "NoicePopupBaseGroup" } },
@@ -359,7 +360,7 @@ return {
             },
           },
           hover = {
-            win_options = { winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpItemFloatBorder" } },
+            win_options = { winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpDocFloatBorder" } },
           },
         },
         routes = {
@@ -471,6 +472,9 @@ return {
           ["sonokai"] = {
             { ["BeaconDefault"] = { bg = "#9e0e06" } },
           },
+          ["one_monokai"] = {
+            { ["BeaconDefault"] = { bg = "#1589d1" } },
+          },
           ["tokyonight-storm"] = {
             { ["BeaconDefault"] = { bg = "#b3276f" } },
           },
@@ -504,8 +508,8 @@ return {
     "nanozuki/tabby.nvim",
     event = "VeryLazy",
     config = function()
-      local tab_bg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.2 or -0.15
-      local tab_fg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.2 or -0.15
+      local tab_fg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.22 or -0.16
+      local tab_bg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.22 or -0.17
 
       local theme = {
         fill = "Normal",
@@ -522,7 +526,7 @@ return {
         },
         win = {
           fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.2),
-          bg = Highlight.tint(Highlight.get("TabLine", "bg"), -0.08),
+          bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
         },
         tail = "TabLine",
       }
