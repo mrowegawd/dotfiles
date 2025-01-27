@@ -845,7 +845,7 @@ M.PinnedBuffer = {
   },
 }
 local actived_venv = function()
-  local python_logo = "  "
+  local python_logo = "   "
 
   local dc = RUtils.extras.wants {
     ft = "python",

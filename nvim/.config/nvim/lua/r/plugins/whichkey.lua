@@ -1,4 +1,3 @@
-local Highlight = require "r.settings.highlights"
 return {
   -- WHICH-KEY
   {

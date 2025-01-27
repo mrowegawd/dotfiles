@@ -160,6 +160,7 @@ return {
       { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
       { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
       { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
+      { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Git: man pages [fzflua]" },
 
       { "<Leader>fh", function() local j = vim.fn.expand "<cword>" require("fzf-lua").help_tags { query = j } end, desc = "Fzflua: help tags" },
       {
@@ -987,7 +988,7 @@ return {
       -- { "<Leader>bo", "<CMD>Telescope oldfiles<CR>", desc = "Telescope: oldfiles" },
       -- { "<Leader>fh", "<CMD>Telescope help_tags<CR>", desc = "Telescope: help tags" },
       -- { "<Leader>fC", "<CMD>Telescope commands<CR>", desc = "Telescope: commands" },
-      { "<Leader>fL", "<CMD>Telescope resume<CR>", desc = "Telescope: resume (last search)" },
+      { "<Localleader>fl", "<CMD>Telescope resume<CR>", desc = "Telescope: resume (last search)" },
       -- { "<Leader>f=", "<CMD>Telescope spell_suggest theme=get_cursor<CR>", desc = "Telescope: spell suggest" },
       -- { "<Leader>fF", "<CMD>Telescope lazy theme=ivy<CR>", desc = "Telescope: plugins files" },
       -- {

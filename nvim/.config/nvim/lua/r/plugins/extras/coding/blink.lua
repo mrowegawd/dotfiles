@@ -90,10 +90,9 @@ return {
           },
         },
         ghost_text = {
-          -- NOTE: codeium terkadang spam message error
+          -- NOTE: spam error from codeium completion
           -- relate issue https://github.com/Exafunction/codeium.nvim/pull/264#issuecomment-2583615777
-          -- jadi disable sementara `ghost_text`, untuk sementara
-          -- enabled = vim.g.ai_cmp,
+          -- jadi disable sementara dahulu
           enabled = false,
         },
       },
