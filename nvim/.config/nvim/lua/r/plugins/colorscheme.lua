@@ -1,6 +1,68 @@
 local colorscheme = RUtils.config.colorscheme
+-- https://nvchad.com/themes
 
 return {
+  -- CHOCOLATIER
+  {
+    "qaptoR-nvim/chocolatier.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local chocolatier_theme = { "chocolatier" }
+      if vim.tbl_contains(chocolatier_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- OXOCARBON
+  {
+    -- https://github.com/mbadolato/iTerm2-Color-Schemes
+    "nyoom-engineering/oxocarbon.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local oxocarbon_theme = { "oxocarbon" }
+      if vim.tbl_contains(oxocarbon_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- BASE16.NVIM
+  {
+    -- https://github.com/tinted-theming/tinted-xresources
+    "RRethy/base16-nvim",
+    lazy = false,
+    priority = 1000,
+    version = false,
+    enabled = function()
+      local base16_theme = {
+        "base16-atelier-estuary",
+        "base16-ayu-dark",
+        "base16-ayu-dark",
+        "base16-gotham",
+        "base16-icy",
+      }
+      if vim.tbl_contains(base16_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- MIDNIGHT
+  {
+    "dasupradyumna/midnight.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local midnight_theme = { "midnight" }
+      if vim.tbl_contains(midnight_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- ONEDARK
   {
     "navarasu/onedark.nvim",
@@ -33,7 +95,8 @@ return {
   },
   -- JELLYBEANS
   {
-    "wtfox/jellybeans.nvim",
+    "kabouzeid/nvim-jellybeans",
+    dependencies = "rktjmp/lush.nvim",
     lazy = false,
     priority = 1000,
     enabled = function()
@@ -43,12 +106,12 @@ return {
       end
       return false
     end,
-    opts = {
-      plugins = {
-        all = true,
-        auto = false, -- will read lazy.nvim and apply the colors for plugins that are installed
-      },
-    },
+    -- opts = {
+    --   plugins = {
+    --     all = true,
+    --     auto = false, -- will read lazy.nvim and apply the colors for plugins that are installed
+    --   },
+    -- },
   },
   -- ONE-MONOKAI
   {
@@ -61,22 +124,6 @@ return {
         return true
       end
       return false
-    end,
-  },
-  -- SONOKAI
-  {
-    "sainnhe/sonokai",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local sonokai_theme = { "sonokai" }
-      if vim.tbl_contains(sonokai_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      vim.g.sonokai_style = "shusia" -- default, atlantis, shusia, maia, ekspresso, andromeda
     end,
   },
   -- EVANGELION
@@ -111,7 +158,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local neomodern_theme = { "darkforest", "daylight" }
+      local neomodern_theme = { "darkforest", "daylight", "coffeecat" }
       if vim.tbl_contains(neomodern_theme, colorscheme) then
         return true
       end
@@ -169,19 +216,6 @@ return {
         transparent_background = false,
         nvim_tree_darker = true,
       }
-    end,
-  },
-  -- KANAGAWA
-  {
-    "rebelot/kanagawa.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local kanagawa_theme = { "kanagawa" }
-      if vim.tbl_contains(kanagawa_theme, colorscheme) then
-        return true
-      end
-      return false
     end,
   },
   -- SELENIZED

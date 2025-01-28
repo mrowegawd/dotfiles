@@ -1,3 +1,5 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+
 ! Custom
 ! Original theme https://github.com/nathanbuchar/atom-one-dark-terminal
 *.foreground:    #a0a8b7

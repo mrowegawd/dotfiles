@@ -3,10 +3,10 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#4d4d4d" }
+cwd = { fg = "#393939" }
 
 # Hovered
-hovered = { bg = "#2d3439" }
+hovered = { bg = "#23252a" }
 preview_hovered = { underline = true }
 
 # Find
@@ -14,17 +14,17 @@ find_keyword = { fg = "#1b1b1b", bg = "#3ddbd9", italic = true }
 find_position = { fg = "#fe8019", bg = "reset", italic = true }
 
 # Marker
-marker_selected = { fg = "#dcdcaa", bg = "#dcdcaa" }
-marker_copied = { fg = "#c678dd", bg = "#c678dd" }
-marker_cut = { fg = "#f44747", bg = "#f44747" }
+marker_selected = { fg = "#ee5396", bg = "#ee5396" }
+marker_copied = { fg = "#be95ff", bg = "#be95ff" }
+marker_cut = { fg = "#3ddbd9", bg = "#3ddbd9" }
 
-count_selected = { fg = "#dcdcaa", bg = "#313131" }
-count_copied = { fg = "#c678dd", bg = "#313131" }
-count_cut = { fg = "#f44747", bg = "#313131" }
+count_selected = { fg = "#ee5396", bg = "#212121" }
+count_copied = { fg = "#be95ff", bg = "#212121" }
+count_cut = { fg = "#3ddbd9", bg = "#212121" }
 
 # Tab
-tab_active = { fg = "#4d8cc0", bg = "#2b4e6b" }
-tab_inactive = { fg = "#646464", bg = "#313131" }
+tab_active = { fg = "#6c98e5", bg = "#3c547f" }
+tab_inactive = { fg = "#5c5c5c", bg = "#212121" }
 
 # Border
 border_symbol = "│"
@@ -36,8 +36,8 @@ border_style = { fg = "#1c1c1c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "#383838", bg = "#569cd6", bold = true }
-normal_alt = { fg = "#569cd6", bg = "#383838" }
+normal_main = { fg = "#232323", bg = "#78a9ff", bold = true }
+normal_alt = { fg = "#78a9ff", bg = "#232323" }
 
 select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }
@@ -101,7 +101,7 @@ hovered = { underline = true }
 # :  {{{
 
 [which]
-mask = { bg = "#222222" }
+mask = { bg = "#212121" }
 cand = { fg = "#83a598" }
 rest = { fg = "#928374" }
 desc = { fg = "#fe8019" }
@@ -117,7 +117,7 @@ separator_style = { fg = "#504945" }
 on = { fg = "#fe8019" }
 exec = { fg = "#83a598" }
 desc = { fg = "#928374" }
-hovered = { bg = "#4d4d4d", bold = true }
+hovered = { bg = "#393939", bold = true }
 footer = { fg = "#3c3836", bg = "#a89984" }
 
 # : }}}
@@ -145,8 +145,8 @@ rules = [
   { mime = "application/x-rar", fg = "#fe8019" },
 
   # Fallback
-  { name = "*", fg = "#9b9b9b" },
-  { name = "*/", fg = "#569cd6" },
+  { name = "*", fg = "#7b7b7b" },
+  { name = "*/", fg = "#3ddbd9" },
 ]
 
 # : }}}

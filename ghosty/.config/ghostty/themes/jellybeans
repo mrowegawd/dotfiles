@@ -1,31 +1,22 @@
-# name = "jellybeans-dark"
-# author = "A. Fox"
-
-palette = 0=#151515
-palette = 1=#cf6a4c
-palette = 2=#99ad6a
-palette = 3=#fad07a
-palette = 4=#dad085
-palette = 5=#c6b6ee
-palette = 6=#668799
-palette = 7=#e8e8d3
-palette = 8=#888888
-palette = 9=#902020
-palette = 10=#70b950
-palette = 11=#ffb964
-palette = 12=#8fbfdc
-palette = 13=#700089
-palette = 14=#8fbfdc
-palette = 15=#f0f0f0
-palette = 16=#cf6a4c
-palette = 17=#d8ad4c
-palette = 18=#1c1c1c
-palette = 19=#303030
-palette = 20=#636363
-palette = 21=#c7c7c7
-
-background = 151515
-foreground = e8e8d3
-cursor-color = 9e0e06
-selection-background = 404040
-selection-foreground = e8e8d3
+palette = 0=#929292
+palette = 1=#e27373
+palette = 2=#94b979
+palette = 3=#ffba7b
+palette = 4=#dad086
+palette = 5=#e1c0fa
+palette = 6=#00988e
+palette = 7=#dedede
+palette = 8=#bdbdbd
+palette = 9=#ffa1a1
+palette = 10=#bddeab
+palette = 11=#ffdca0
+palette = 12=#b1d8f6
+palette = 13=#fbdaff
+palette = 14=#1ab2a8
+palette = 15=#ffffff
+background = #121212
+foreground = #dedede
+cursor-color = #ffa560
+cursor-text = #ffffff
+selection-background = #474e91
+selection-foreground = #f4f4f4

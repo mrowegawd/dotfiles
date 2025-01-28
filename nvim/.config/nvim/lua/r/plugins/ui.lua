@@ -460,17 +460,23 @@ return {
           ["horizon"] = {
             { ["BeaconDefault"] = { bg = "#b3276f" } },
           },
-          ["kanagawa"] = {
-            { ["BeaconDefault"] = { bg = "#c8c093" } },
+          ["midnight"] = {
+            { ["BeaconDefault"] = { bg = "#d4bbff" } },
+          },
+          ["jellybeans"] = {
+            { ["BeaconDefault"] = { bg = "#ffa560" } },
+          },
+          ["base16-icy"] = {
+            { ["BeaconDefault"] = { bg = "#095b67" } },
+          },
+          ["oxocarbon"] = {
+            { ["BeaconDefault"] = { bg = "#ffffff" } },
           },
           ["lackluster"] = {
             { ["BeaconDefault"] = { bg = "#deeeed" } },
           },
           ["selenized"] = {
             { ["BeaconDefault"] = { bg = "#ee5396" } },
-          },
-          ["sonokai"] = {
-            { ["BeaconDefault"] = { bg = "#9e0e06" } },
           },
           ["one_monokai"] = {
             { ["BeaconDefault"] = { bg = "#1589d1" } },
@@ -508,8 +514,53 @@ return {
     "nanozuki/tabby.nvim",
     event = "VeryLazy",
     config = function()
-      local tab_fg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.22 or -0.16
-      local tab_bg_tint = vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) and -0.22 or -0.17
+      local tab_fg_tint = -0.16
+      local tab_bg_tint = -0.17
+
+      if vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.22
+        tab_bg_tint = -0.22
+      end
+
+      if vim.tbl_contains({ "evangelion", "onedark" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.15
+        tab_bg_tint = -0.08
+      end
+
+      if vim.tbl_contains({ "carbonfox", "midnight", "gruvbox-material" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.25
+        tab_bg_tint = -0.1
+      end
+
+      if
+        vim.tbl_contains(
+          { "horizon", "base16-atelier-estuary", "coffeecat", "jellybeans", "catppuccin-mocha" },
+          RUtils.config.colorscheme
+        )
+      then
+        tab_fg_tint = -0.3
+        tab_bg_tint = -0.04
+      end
+
+      if vim.tbl_contains({ "nightfox", "vscode_modern", "tokyonight-storm" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.25
+        tab_bg_tint = -0.09
+      end
+
+      if
+        vim.tbl_contains(
+          { "one_monokai", "selenized", "sunburn", "tokyonight-night", "oxocarbon", "chocolatier" },
+          RUtils.config.colorscheme
+        )
+      then
+        tab_fg_tint = -0.22
+        tab_bg_tint = -0.05
+      end
+
+      if vim.tbl_contains({ "base16-gotham" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.4
+        tab_bg_tint = -0.15
+      end
 
       local theme = {
         fill = "Normal",
@@ -525,7 +576,7 @@ return {
           bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
         },
         win = {
-          fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.2),
+          fg = Highlight.tint(Highlight.get("TabLine", "fg"), tab_fg_tint),
           bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
         },
         tail = "TabLine",

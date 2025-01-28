@@ -342,8 +342,7 @@ return {
           map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
           map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
           map("n", "<Leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
-
-          map("n", "<Leader>gp", gs.toggle_deleted, "Git: show deleted [gitsigns]")
+          map("n", "<Leader>ghP", gs.toggle_deleted, "Git: preview toggle deleted [gitsigns]")
 
           map("n", "<Leader>gb", function() gs.blame() end, "Git: blame [gitsigns]")
           -- map("n", "<Leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
@@ -504,133 +503,6 @@ return {
       },
     },
   },
-  -- VGIT
-  {
-    "tanvirtin/vgit.nvim",
-    cmd = "VGit",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    keys = {
-      {
-        "<Leader>gP",
-        function()
-          return require("vgit").buffer_hunk_preview()
-        end,
-        desc = "Git: preview hunk [vgit]",
-      },
-      {
-        "<Leader>gB",
-        function()
-          return require("vgit").buffer_blame_preview()
-        end,
-        desc = "Git: blame preview [vgit]",
-      },
-      {
-        "<Leader>gq",
-        function()
-          vim.cmd [[VGit project_hunks_qf]]
-        end,
-        desc = "Git: open hunk lists on qf [vgit]",
-      },
-    },
-    opts = function()
-      Highlight.plugin("vgit_hi", {
-        {
-          VgitSeparator = {
-            bg = { from = "TabLine", attr = "bg", alter = 0.5 },
-            fg = { from = "TabLine", attr = "bg", alter = 2 },
-            bold = true,
-          },
-        },
-      })
-      return {
-        settings = {
-          hls = {
-            GitBackground = "NormalFloat",
-            GitHeader = "VgitSeparator",
-            GitFooter = "VgitSeparator",
-            GitBorder = "LineNr",
-            GitLineNr = "LineNr",
-            GitComment = "VGitComment",
-            GitSignsAdd = "diffAdded",
-            GitSignsChange = "diffChanged",
-            GitSignsDelete = "diffRemoved",
-            GitWordAdd = {
-              gui = nil,
-              fg = nil,
-              bg = "#5d7a22",
-              sp = nil,
-              override = false,
-            },
-          },
-          signs = {
-            priority = 10,
-            definitions = {
-              GitSignsAddLn = {
-                linehl = "diffAdded",
-                texthl = "GitSignsAdd",
-                numhl = nil,
-                icon = nil,
-                text = "",
-              },
-              GitSignsDeleteLn = {
-                linehl = "diffRemoved",
-                texthl = "GitSignsDelete",
-                numhl = nil,
-                icon = nil,
-                text = "",
-              },
-              GitSignsAdd = {
-                texthl = "diffAdded",
-                linehl = "GitSignsAdd",
-                numhl = nil,
-                icon = nil,
-                text = "┃",
-              },
-              GitSignsDelete = {
-                texthl = "diffRemoved",
-                linehl = "GitSignsDelete",
-                numhl = nil,
-                icon = nil,
-                text = "┃",
-              },
-              GitSignsChange = {
-                texthl = "diffChanged",
-                linehl = "GitSignsChange",
-                numhl = nil,
-                icon = nil,
-                text = "┃",
-              },
-            },
-            usage = {
-              screen = {
-                add = "GitSignsAddLn",
-                remove = "GitSignsDeleteLn",
-              },
-              main = {
-                add = "GitSignsAdd",
-                remove = "GitSignsDelete",
-                change = "GitSignsChange",
-              },
-            },
-          },
-          live_blame = {
-            enabled = false,
-          },
-          live_gutter = {
-            enabled = false,
-          },
-          authorship_code_lens = {
-            enabled = false,
-          },
-          scene = {
-            diff_preference = "split",
-          },
-        },
-      }
-    end,
-  },
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
@@ -687,12 +559,13 @@ return {
       },
     },
     opts = function()
-      RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
+      local actions = require "diffview.actions"
 
+      RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
       Highlight.plugin("diffview", {
-        { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.3 } } },
-        { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.3 } } },
-        { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.3 } } },
+        { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
+        { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.1 } } },
+        { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 } } },
         { DiffviewStatusAdded = { link = "DiffAddedChar" } },
         { DiffviewStatusModified = { link = "DiffChangedChar" } },
         { DiffviewStatusRenamed = { link = "DiffChangedChar" } },
@@ -700,10 +573,14 @@ return {
         { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
         { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
 
-        { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
+        { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
+
+        { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
         { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
+        { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
+        { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg" } } },
+        { DiffviewFilePanelSelected = { fg = { from = "DiffChangedChar", attr = "fg" } } },
       })
-      local actions = require "diffview.actions"
 
       return {
         enhanced_diff_hl = true,

@@ -15,32 +15,32 @@ return {
     opts = {
       preset = "helix",
       defaults = {},
-      icons = {
-        breadcrumb = " ", -- symbol used in the command line area that shows your active key combo
-        separator = " ", -- symbol used between a key and it's label
-        mappings = false,
-      },
-      keys = {
-        scroll_down = "<c-d>", -- binding to scroll down inside the popup
-        scroll_up = "<c-u>", -- binding to scroll up inside the popup
-      },
-      plugins = {
-        marks = true,
-        registers = true,
-        spelling = {
-          enabled = true,
-          suggestions = 20,
-        },
-        presets = {
-          operators = false,
-          motions = false,
-          text_objects = false,
-          windows = false,
-          nav = false,
-          z = false,
-          g = false,
-        },
-      },
+      -- icons = {
+      --   breadcrumb = " ", -- symbol used in the command line area that shows your active key combo
+      --   separator = " ", -- symbol used between a key and it's label
+      --   mappings = false,
+      -- },
+      -- keys = {
+      --   scroll_down = "<c-d>", -- binding to scroll down inside the popup
+      --   scroll_up = "<c-u>", -- binding to scroll up inside the popup
+      -- },
+      -- plugins = {
+      --   marks = true,
+      --   registers = true,
+      --   spelling = {
+      --     enabled = true,
+      --     suggestions = 20,
+      --   },
+      --   presets = {
+      --     operators = false,
+      --     motions = false,
+      --     text_objects = false,
+      --     windows = false,
+      --     nav = false,
+      --     z = false,
+      --     g = false,
+      --   },
+      -- },
       spec = {
         {
           mode = { "n", "v" },

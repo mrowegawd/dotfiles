@@ -1,0 +1,25 @@
+background = 080c10
+foreground = b5bdc5
+
+# Cursor none
+cursor-color = d4bbff
+
+# default version
+palette = 0=#181818
+palette = 1=#fa4d56
+palette = 2=#42be65
+palette = 3=#c8b670
+palette = 4=#5080ff
+palette = 5=#a665d0
+palette = 6=#50b0e0
+palette = 7=#b5bdc5
+
+# bright version
+palette = 8=#525252
+palette = 9=#ff7279
+palette = 10=#7ac098
+palette = 11=#f8e6a0
+palette = 12=#78a9ff
+palette = 13=#a3a0d8
+palette = 14=#9ac6e0
+palette = 15=#e0e0e0

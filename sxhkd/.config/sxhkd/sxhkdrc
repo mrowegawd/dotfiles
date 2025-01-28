@@ -200,9 +200,9 @@ super + shift + q
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
-# misc: opne youtube playlist with mpv
+# misc: open link video with proxychains
 super + y
-        dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
+        dunstify "Running vid with proxychains" "$(xclip -o -sel clip)" && tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
 
 # misc: open neovide
 super + shift + Return

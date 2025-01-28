@@ -200,36 +200,62 @@ local Terminal = require("toggleterm.terminal").Terminal
 local calcure = Terminal:new {
   cmd = "calcure",
   hidden = true,
+  display_name = ("calcure"):upper(),
   direction = "float",
+  on_open = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.cmd [[startinsert]]
+  end,
   float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
 }
 
 local newsboat = Terminal:new {
   cmd = "proxychains -q newsboat",
+  display_name = ("proxychains"):upper(),
   hidden = true,
   direction = "float",
+  on_open = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.cmd [[startinsert]]
+  end,
   float_opts = { width = vim.o.columns - 5, height = vim.o.lines - 5 },
 }
 
 local btop = Terminal:new {
   cmd = "btop",
   hidden = true,
+  display_name = ("btop"):upper(),
   direction = "float",
+  start_in_insert = true,
+  on_open = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.cmd [[startinsert]]
+  end,
   float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
 }
 
 local lazydocker = Terminal:new {
   cmd = "lazydocker",
   hidden = true,
+  display_name = ("lazydocker"):upper(),
   direction = "float",
+  on_open = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.cmd [[startinsert]]
+  end,
   float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
 }
 
 local rkill = Terminal:new {
   -- to run alias, must have `source` the zshrc file
-  cmd = "source ~/.config/zsh/.zshrc; r_kill",
+  cmd = "r_kill",
   hidden = true,
+  display_name = ("r_kill"):upper(),
   direction = "float",
+  on_open = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+    vim.cmd [[startinsert]]
+  end,
   float_opts = { width = vim.o.columns - 10, height = vim.o.lines - 10 },
   close_on_exit = false,
 }

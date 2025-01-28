@@ -42,8 +42,8 @@ return {
     opts = function()
       local Menu = require "org-modern.menu"
       local done_hi = Highlight.get("Comment", "fg")
-      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Boolean", "fg"))
-      local todo_hi = Highlight.get("@org.agenda.scheduled", "fg")
+      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Error", "fg"))
+      local todo_fg = Highlight.get("@org.agenda.scheduled", "fg")
       return {
         ui = {
           menu = {
@@ -99,7 +99,7 @@ return {
         },
         org_todo_keyword_faces = {
           CHECK = ":foreground royalblue :weight bold :slant",
-          TODO = ":foreground " .. todo_hi .. " :weight bold :slant",
+          TODO = ":foreground " .. todo_fg .. " :weight bold :slant",
           PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
           HBD = ":foreground pink :weight bold :slant",
           STATUS = ":foreground black :background magenta :weight bold :slant",
