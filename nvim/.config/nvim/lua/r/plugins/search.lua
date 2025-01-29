@@ -237,6 +237,7 @@ return {
             },
           }
         end,
+        hls = { cursor = "CurSearch" },
         fzf_colors = {
           ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "NormalFloat" },
@@ -251,6 +252,7 @@ return {
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "FzfLuaHeaderText" },
           ["gutter"] = { "bg", "FloatBorder" },
+          ["border"] = { "fg", "FzfLuaBorder" },
         },
         previewers = {
           builtin = {
@@ -571,7 +573,7 @@ return {
         },
         grep = {
           -- debug = true,
-          prompt = "  ",
+          prompt = "   ",
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
@@ -1692,109 +1694,6 @@ return {
               },
             },
           },
-          ["dayfox"] = {
-            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-
-            -- Directory
-            {
-              TroubleDirectory = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleFsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg", alter = -0.1 },
-              },
-            },
-
-            -- Diagnostics
-            {
-              TroubleDiagnosticsBasename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- LSP
-            {
-              TroubleLspFilename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleLspCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
-              },
-            },
-
-            -- QF
-            {
-              TroubleQfFilename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.05 } } },
-            {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
-              },
-            },
-          },
-          ["tokyonight-day"] = {
-            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-
-            -- Directory
-            {
-              TroubleDirectory = {
-                bg = { from = "Pmenu", attr = "bg", alter = -0.05 },
-              },
-            },
-            {
-              TroubleFsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg", alter = -0.1 },
-              },
-            },
-
-            -- Diagnostics
-            {
-              TroubleDiagnosticsBasename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- QF
-            {
-              TroubleQfFilename = {
-                bg = { from = "Pmenu", attr = "bg", alter = 0.05 },
-              },
-            },
-            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
-            {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
-              },
-            },
-          },
           ["rose-pine-dawn"] = {
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
@@ -1841,51 +1740,6 @@ return {
             },
           },
           ["dawnfox"] = {
-            { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-
-            -- Directory
-            {
-              TroubleDirectory = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleFsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg", alter = -0.1 },
-              },
-            },
-
-            -- Diagnostics
-            {
-              TroubleDiagnosticsBasename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            {
-              TroubleDiagnosticsCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "Normal", attr = "fg" },
-              },
-            },
-
-            -- QF
-            {
-              TroubleQfFilename = {
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-              },
-            },
-            { TroubleQfPos = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = -0.1 } } },
-            {
-              TroubleQfCount = {
-                bg = { from = "Normal", attr = "bg", alter = -0.2 },
-                fg = { from = "WinSeparator", attr = "fg", alter = 5 },
-              },
-            },
-          },
-          ["everforest"] = {
             { TroubleIndent = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             { TroubleIndentLast = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             { TroubleFoldIcon = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = -0.1 } } },

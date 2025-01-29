@@ -301,6 +301,30 @@ function M.get()
   if RUtils.has "goto-preview" then
     M._keys[#M._keys + 1] =
       { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek preview definitions [goto-preview]" }
+  else
+    M._keys[#M._keys + 1] = {
+      "gP",
+      function()
+        require("fzf-lua").lsp_definitions {
+          prompt = "   ",
+          winopts = {
+            title = RUtils.fzflua.format_title("LSP: Peek", RUtils.config.icons.misc.lsp),
+            relative = "editor",
+            backdrop = 60,
+            height = 0.80,
+            width = 0.60,
+            row = 0.50,
+            col = 0.50,
+            preview = {
+              vertical = "up:80%", -- up|down:size
+              layout = "vertical", -- horizontal|vertical|flex
+            },
+          },
+        }
+      end,
+      has = "signatureHelp",
+      desc = "LSP: peek preview [fzf-lua]",
+    }
   end
 
   return M._keys

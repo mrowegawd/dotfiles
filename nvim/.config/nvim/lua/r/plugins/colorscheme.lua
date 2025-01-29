@@ -1,7 +1,39 @@
 local colorscheme = RUtils.config.colorscheme
 -- https://nvchad.com/themes
+-- https://github.com/mbadolato/iTerm2-Color-Schemes
+-- https://github.com/tinted-theming
 
 return {
+  -- OLDWORLD
+  {
+    "dgox16/oldworld.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local oldworld_theme = { "oldworld" }
+      if vim.tbl_contains(oldworld_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- ROSE PINE
+  {
+    "rose-pine/neovim",
+    lazy = false,
+    priority = 1000,
+    name = "rose-pine",
+    enabled = function()
+      local rosepine_theme = { "rose-pine" }
+      if vim.tbl_contains(rosepine_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      variant = "main", -- auto, main, moon, or dawn
+    },
+  },
   -- CHOCOLATIER
   {
     "qaptoR-nvim/chocolatier.nvim",
@@ -17,7 +49,6 @@ return {
   },
   -- OXOCARBON
   {
-    -- https://github.com/mbadolato/iTerm2-Color-Schemes
     "nyoom-engineering/oxocarbon.nvim",
     lazy = false,
     priority = 1000,
@@ -31,7 +62,6 @@ return {
   },
   -- BASE16.NVIM
   {
-    -- https://github.com/tinted-theming/tinted-xresources
     "RRethy/base16-nvim",
     lazy = false,
     priority = 1000,
@@ -106,12 +136,6 @@ return {
       end
       return false
     end,
-    -- opts = {
-    --   plugins = {
-    --     all = true,
-    --     auto = false, -- will read lazy.nvim and apply the colors for plugins that are installed
-    --   },
-    -- },
   },
   -- ONE-MONOKAI
   {
@@ -121,19 +145,6 @@ return {
     enabled = function()
       local onemonokai_theme = { "one_monokai" }
       if vim.tbl_contains(onemonokai_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- EVANGELION
-  {
-    "xero/evangelion.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local evangelion_theme = { "evangelion" }
-      if vim.tbl_contains(evangelion_theme, colorscheme) then
         return true
       end
       return false
@@ -177,25 +188,6 @@ return {
         return true
       end
       return false
-    end,
-  },
-  -- EVERFOREST
-  {
-    "neanias/everforest-nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local everforest_theme = { "everforest" }
-      if vim.tbl_contains(everforest_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      vim.cmd [[set background=light]]
-      require("everforest").setup {
-        background = "hard",
-      }
     end,
   },
   -- VSCODE-MODERN-THEME
@@ -266,63 +258,6 @@ return {
       },
     },
   },
-  -- NIGHTFOX
-  {
-    "EdenEast/nightfox.nvim",
-    priority = 1000,
-    enabled = function()
-      local nightfoxtheme = { "duskfox", "nightfox", "dayfox", "nordfox", "carbonfox" }
-      if vim.tbl_contains(nightfoxtheme, colorscheme) then
-        return true
-      end
-    end,
-    config = function()
-      if vim.g.colorscheme == "dawnfox" then
-        vim.cmd [[set background=light]]
-      end
-
-      require("nightfox").setup {
-        options = {
-          -- Compiled file's destination location
-          compile_path = vim.fn.stdpath "cache" .. "/nightfox",
-          compile_file_suffix = "_compiled", -- Compiled file suffix
-          transparent = false, -- Disable setting background
-          terminal_colors = true, -- Set terminal colors (vim.g.terminal_color_*) used in `:terminal`
-          dim_inactive = false, -- Non focused panes set to alternative background
-          module_default = true, -- Default enable value for modules
-          colorblind = {
-            enable = false, -- Enable colorblind support
-            simulate_only = false, -- Only show simulated colorblind colors and not diff shifted
-            severity = {
-              protan = 0, -- Severity [0,1] for protan (red)
-              deutan = 0, -- Severity [0,1] for deutan (green)
-              tritan = 0, -- Severity [0,1] for tritan (blue)
-            },
-          },
-          styles = { -- Style to be applied to different syntax groups
-            comments = "italic", -- Value is any valid attr-list value `:help attr-list`
-            conditionals = "NONE",
-            constants = "NONE",
-            functions = "NONE",
-            keywords = "NONE",
-            numbers = "NONE",
-            operators = "NONE",
-            strings = "NONE",
-            types = "NONE",
-            variables = "NONE",
-          },
-          inverse = { -- Inverse highlight for different types
-            match_paren = false,
-            visual = false,
-            search = false,
-          },
-        },
-        palettes = {},
-        specs = {},
-        groups = {},
-      }
-    end,
-  },
   -- TOKYONIGHT
   {
     "folke/tokyonight.nvim",
@@ -330,7 +265,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local colorstokyonight = { "tokyonight-night", "tokyonight-storm", "tokyonight-day" }
+      local colorstokyonight = { "tokyonight-night", "tokyonight-storm" }
       if vim.tbl_contains(colorstokyonight, colorscheme) then
         return true
       end

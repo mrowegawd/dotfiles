@@ -243,7 +243,7 @@ M.Branch = {
 
   {
     provider = function(self)
-      return "   " .. self.status_dict.head
+      return "  " .. self.status_dict.head
     end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
@@ -615,7 +615,7 @@ M.LSPActive = {
       if vim.tbl_isempty(self.names) then
         return ""
       else
-        return " [" .. table.concat(self.names, " ") .. "] "
+        return RUtils.config.icons.misc.lsp .. "[" .. table.concat(self.names, " ") .. "] "
       end
     end,
     hl = { fg = colors.base_fg, bg = colors.base_bg },

@@ -24,7 +24,7 @@ adw-toolbar-style = flat
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           THEME                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-theme = oxocarbon
+theme = vscode_modern
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                          WINDOW                           ╎
@@ -32,6 +32,7 @@ theme = oxocarbon
 window-decoration  = true
 window-padding-x   = 0
 window-padding-y   = 0
+gtk-adwaita = false
 
 window-padding-balance = false
 # window-padding-color = extend-always
@@ -63,8 +64,6 @@ background-opacity     = 0.85
 # background-blur-radius = 20
 #
 unfocused-split-opacity = 0.5
-
-gtk-titlebar           = false
 
 # macos-titlebar-style = tabs
 

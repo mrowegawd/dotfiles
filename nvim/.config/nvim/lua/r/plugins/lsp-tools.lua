@@ -22,9 +22,10 @@ return {
       require("output_panel").setup {}
     end,
   },
-  -- GOTOPREVIEW
+  -- GOTOPREVIEW (disabled)
   {
     "rmagatti/goto-preview",
+    enabled = false,
     event = "VeryLazy",
     config = function()
       require("goto-preview").setup {

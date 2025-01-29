@@ -391,9 +391,6 @@ return {
               },
             },
           },
-          ["everforest"] = {
-            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = -0.1 }, bold = false } },
-          },
         },
       })
       vim.g.neo_tree_remove_legacy_commands = 1
@@ -523,84 +520,6 @@ return {
               OutlineCurrent = {
                 fg = { from = "Error", attr = "fg", alter = -0.1 },
                 bg = "NONE",
-              },
-            },
-          },
-          ["tokyonight-day"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "Normal", attr = "bg", alter = -0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineFoldMarker = {
-                fg = { from = "Normal", attr = "bg", alter = -0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-                bold = true,
-              },
-            },
-          },
-          ["everforest"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "Normal", attr = "bg", alter = -0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineFoldMarker = {
-                fg = { from = "Normal", attr = "bg", alter = -0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-                bold = true,
-              },
-            },
-          },
-          ["dayfox"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "Normal", attr = "bg", alter = -0.05 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineFoldMarker = {
-                fg = { from = "Normal", attr = "bg", alter = -0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-                bold = true,
               },
             },
           },
@@ -885,45 +804,6 @@ return {
               EdgyTitle = {
                 fg = { from = "Directory", attr = "fg", alter = 1 },
                 bg = { from = "EdgyWinBar" },
-                bold = true,
-              },
-            },
-          },
-          ["dayfox"] = {
-            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.8 } } },
-            { EdgyNormal = { bg = "NONE" } },
-            {
-              EdgyTitle = {
-                fg = { from = "Keyword", attr = "fg" },
-                bg = { from = "EdgyWinBar" },
-                alter = 0.1,
-                bold = true,
-              },
-            },
-          },
-          ["tokyonight-day"] = {
-            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = 0.25 } } },
-            { EdgyNormal = { bg = "NONE" } },
-            {
-              EdgyTitle = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.7 },
-                bg = { from = "EdgyWinBar" },
-                alter = 0.1,
-                bold = true,
-              },
-            },
-          },
-          ["everforest"] = {
-            { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-            { EdgyWinBar = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-            { EdgyNormal = { bg = "NONE" } },
-            {
-              EdgyTitle = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.7 },
-                bg = { from = "EdgyWinBar" },
-                alter = 0.1,
                 bold = true,
               },
             },

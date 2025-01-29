@@ -145,38 +145,11 @@ return {
             { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
           },
-          ["lackluster"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } },
-          },
-          ["neomodern"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } },
-          },
-          ["carbonfox"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-          },
-          ["everforest"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-          },
-          ["catppuccin-mocha"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-          },
+          ["lackluster"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } } },
+          ["neomodern"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } } },
+          ["base16-icy"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } } },
+          ["catppuccin-mocha"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
           ["selenized"] = {
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-            {
-              ["@markup.raw.markdown_inline"] = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-          },
-          ["evangelion"] = {
             {
               RenderMarkdownCodeInline = {
                 fg = { from = "Keyword", attr = "fg", alter = -0.05 },

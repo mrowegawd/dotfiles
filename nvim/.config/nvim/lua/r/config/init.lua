@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "oxocarbon"
+local colorscheme = "vscode_modern"
 
 _G.base = {}
 
@@ -32,9 +32,6 @@ local base_options = {
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
     lightthemes = {
-      "everforest",
-      "dayfox",
-      "tokyonight-day",
       "rose-pine-dawn",
       "dawnfox",
     },
@@ -147,9 +144,10 @@ local defaults = {
       terminal2 = " ",
       tools = " ",
       up = "⇡ ",
+      lsp = " ",
 
-      Neovim = "",
-      Vim = "",
+      Neovim = " ",
+      Vim = " ",
 
       tag = " ",
       watch = " ",

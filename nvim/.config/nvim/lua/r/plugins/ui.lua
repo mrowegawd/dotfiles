@@ -445,45 +445,21 @@ return {
       Highlight.plugin("beaconHiC", {
         -- Sama kan dengan terminal cursor color
         theme = {
-          ["*"] = {
-            { ["BeaconDefault"] = { bg = "red" } },
-          },
-          ["carbonfox"] = {
-            { ["BeaconDefault"] = { bg = "#6d32c9" } },
-          },
-          ["neomodern"] = {
-            { ["BeaconDefault"] = { bg = "#bbbac1" } },
-          },
-          ["evangelion"] = {
-            { ["BeaconDefault"] = { bg = "#18b530" } },
-          },
-          ["horizon"] = {
-            { ["BeaconDefault"] = { bg = "#b3276f" } },
-          },
-          ["midnight"] = {
-            { ["BeaconDefault"] = { bg = "#d4bbff" } },
-          },
-          ["jellybeans"] = {
-            { ["BeaconDefault"] = { bg = "#ffa560" } },
-          },
-          ["base16-icy"] = {
-            { ["BeaconDefault"] = { bg = "#095b67" } },
-          },
-          ["oxocarbon"] = {
-            { ["BeaconDefault"] = { bg = "#ffffff" } },
-          },
-          ["lackluster"] = {
-            { ["BeaconDefault"] = { bg = "#deeeed" } },
-          },
-          ["selenized"] = {
-            { ["BeaconDefault"] = { bg = "#ee5396" } },
-          },
-          ["one_monokai"] = {
-            { ["BeaconDefault"] = { bg = "#1589d1" } },
-          },
-          ["tokyonight-storm"] = {
-            { ["BeaconDefault"] = { bg = "#b3276f" } },
-          },
+          ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
+          ["base16-atelier-estuary"] = { { ["BeaconDefault"] = { bg = "#929181" } } },
+          ["base16-ayu-dark"] = { { ["BeaconDefault"] = { bg = "#e6e1cf" } } },
+          ["base16-icy"] = { { ["BeaconDefault"] = { bg = "#095b67" } } },
+          ["base16-gotham"] = { { ["BeaconDefault"] = { bg = "#599cab" } } },
+          ["neomodern"] = { { ["BeaconDefault"] = { bg = "#bbbac1" } } },
+          ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
+          ["midnight"] = { { ["BeaconDefault"] = { bg = "#d4bbff" } } },
+          ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
+          ["oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
+          ["rose-pine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
+          ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
+          ["selenized"] = { { ["BeaconDefault"] = { bg = "#ee5396" } } },
+          ["one_monokai"] = { { ["BeaconDefault"] = { bg = "#1589d1" } } },
+          ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
         },
       })
 
@@ -522,36 +498,52 @@ return {
         tab_bg_tint = -0.22
       end
 
-      if vim.tbl_contains({ "evangelion", "onedark" }, RUtils.config.colorscheme) then
+      if vim.tbl_contains({ "onedark" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.15
         tab_bg_tint = -0.08
       end
 
-      if vim.tbl_contains({ "carbonfox", "midnight", "gruvbox-material" }, RUtils.config.colorscheme) then
+      if vim.tbl_contains({ "midnight", "gruvbox-material" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.25
         tab_bg_tint = -0.1
       end
 
       if
-        vim.tbl_contains(
-          { "horizon", "base16-atelier-estuary", "coffeecat", "jellybeans", "catppuccin-mocha" },
-          RUtils.config.colorscheme
-        )
+        vim.tbl_contains({
+          "horizon",
+          "base16-atelier-estuary",
+          "coffeecat",
+          "jellybeans",
+          "catppuccin-mocha",
+          "rose-pine",
+        }, RUtils.config.colorscheme)
       then
         tab_fg_tint = -0.3
         tab_bg_tint = -0.04
       end
 
-      if vim.tbl_contains({ "nightfox", "vscode_modern", "tokyonight-storm" }, RUtils.config.colorscheme) then
+      if vim.tbl_contains({ "vscode_modern", "tokyonight-storm" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.25
         tab_bg_tint = -0.09
       end
 
+      if vim.tbl_contains({ "midnight" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.4
+        tab_bg_tint = -0.02
+      end
+
       if
-        vim.tbl_contains(
-          { "one_monokai", "selenized", "sunburn", "tokyonight-night", "oxocarbon", "chocolatier" },
-          RUtils.config.colorscheme
-        )
+        vim.tbl_contains({
+          "one_monokai",
+          "selenized",
+          "sunburn",
+          "tokyonight-night",
+          "oxocarbon",
+          "chocolatier",
+          "rose-pine",
+          "base16-ayu-dark",
+          "oldworld",
+        }, RUtils.config.colorscheme)
       then
         tab_fg_tint = -0.22
         tab_bg_tint = -0.05
@@ -559,7 +551,7 @@ return {
 
       if vim.tbl_contains({ "base16-gotham" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.4
-        tab_bg_tint = -0.15
+        tab_bg_tint = -0.1
       end
 
       local theme = {

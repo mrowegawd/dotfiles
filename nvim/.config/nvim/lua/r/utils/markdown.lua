@@ -660,8 +660,7 @@ local function list_tags_async(all_tags, is_set)
   return picker(contents)
 end
 
-local regex_title = [[^#{1,}\s[\w<`].*$]]
--- [[^#{1,}\s\w.*$]]
+local regex_title = [[^#{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
 
 function M.find_note_by_tag(data, is_set)
   is_set = is_set or false
