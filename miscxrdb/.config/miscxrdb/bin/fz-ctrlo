@@ -8,6 +8,10 @@ set -uo pipefail
 
 GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+MASTER_THEME_FILE=/tmp/master-colors-themes
+if [ -f "$MASTER_THEME_FILE" ]; then
+  GET_FG=$(grep -i color21 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+fi
 
 not_in_tmux() {
   [ -z "$TMUX" ]
