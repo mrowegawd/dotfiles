@@ -587,6 +587,14 @@ return {
       return {
         enhanced_diff_hl = true,
         diff_binaries = false, -- Show diffs for binaries
+        hooks = {
+          ---@diagnostic disable-next-line: unused-local
+          diff_buf_win_enter = function(bufnr, winid, ctx)
+            -- Turn off cursor line for diffview windows because of bg conflict
+            -- https://github.com/neovim/neovim/issues/9800
+            vim.wo[winid].culopt = "number"
+          end,
+        },
         key_bindings = {
           disable_defaults = true, -- Disable the default key bindings
           --stylua: ignore
