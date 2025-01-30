@@ -4,6 +4,38 @@ local colorscheme = RUtils.config.colorscheme
 -- https://github.com/tinted-theming
 
 return {
+  {
+    "ficcdaf/ashen.nvim",
+    -- optional but recommended,
+    -- pin to the latest stable release:
+    tag = "*",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local zenbones_theme = { "ashen" }
+      if vim.tbl_contains(zenbones_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = {
+      -- your settings here
+    },
+  },
+  -- ZENBURN
+  {
+    "zenbones-theme/zenbones.nvim",
+    dependencies = "rktjmp/lush.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local zenbones_theme = { "zenburned", "rosebones", "vimbones", "vimbones" }
+      if vim.tbl_contains(zenbones_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- OLDWORLD
   {
     "dgox16/oldworld.nvim",

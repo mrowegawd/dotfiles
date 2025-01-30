@@ -163,11 +163,34 @@ return {
               },
             },
           },
+          ["ashen"] = {
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.85 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["base16-atelier-estuary"] = {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.02 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.04 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -646,6 +669,29 @@ return {
               },
             },
           },
+          ["vimbones"] = {
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.02 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = -0.2 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = -0.55 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["vscode_modern"] = {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
@@ -669,6 +715,29 @@ return {
               },
             },
           },
+          ["zenburned"] = {
+            { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                bg = { from = "TreesitterContext" },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.04 },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.36 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
         },
       })
       return {
@@ -677,12 +746,12 @@ return {
         opts = { mode = "cursor", max_lines = 8 },
         ---@diagnostic disable-next-line: unused-local
         on_attach = function(buf)
-          if vim.wo.diff then
+          if vim.wo.diff or vim.fn.winheight(0) < 20 then
             return false
           end
 
           local tbl_winsplits = RUtils.cmd.get_total_wins()
-          if #tbl_winsplits < 3 then
+          if #tbl_winsplits < 4 then
             -- check split or no split (`leaf`, `col` , `row`)
             local layout = vim.fn.winlayout()
             if layout[1] == "col" then -- split window

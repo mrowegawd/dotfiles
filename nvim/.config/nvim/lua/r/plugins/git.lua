@@ -573,12 +573,14 @@ return {
         { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
         { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
 
+        { DiffviewReference = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.2 } } },
+
         { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
 
         { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
         { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
         { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
-        { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg" } } },
+        { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.4 } } },
         { DiffviewFilePanelSelected = { fg = { from = "DiffChangedChar", attr = "fg" } } },
       })
 

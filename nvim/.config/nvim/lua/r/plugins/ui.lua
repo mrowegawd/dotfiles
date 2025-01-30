@@ -452,12 +452,14 @@ return {
           ["base16-gotham"] = { { ["BeaconDefault"] = { bg = "#599cab" } } },
           ["neomodern"] = { { ["BeaconDefault"] = { bg = "#bbbac1" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
+          ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
           ["midnight"] = { { ["BeaconDefault"] = { bg = "#d4bbff" } } },
           ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
           ["oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["rose-pine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
           ["selenized"] = { { ["BeaconDefault"] = { bg = "#ee5396" } } },
+          ["zenburned"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
           ["one_monokai"] = { { ["BeaconDefault"] = { bg = "#1589d1" } } },
           ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
         },
@@ -503,6 +505,11 @@ return {
         tab_bg_tint = -0.08
       end
 
+      if vim.tbl_contains({ "zenburned" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.15
+        tab_bg_tint = -0.05
+      end
+
       if vim.tbl_contains({ "midnight", "gruvbox-material" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.25
         tab_bg_tint = -0.1
@@ -516,6 +523,7 @@ return {
           "jellybeans",
           "catppuccin-mocha",
           "rose-pine",
+          "ashen",
         }, RUtils.config.colorscheme)
       then
         tab_fg_tint = -0.3
@@ -552,6 +560,11 @@ return {
       if vim.tbl_contains({ "base16-gotham" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.4
         tab_bg_tint = -0.1
+      end
+
+      if vim.tbl_contains({ "vimbones" }, RUtils.config.colorscheme) then
+        tab_fg_tint = 0.15
+        tab_bg_tint = 0.03
       end
 
       local theme = {
