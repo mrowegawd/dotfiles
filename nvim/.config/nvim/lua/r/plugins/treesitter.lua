@@ -236,7 +236,7 @@ return {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -443,7 +443,7 @@ return {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -490,7 +490,7 @@ return {
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.02 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.02 },
               },
             },
             {
@@ -536,7 +536,7 @@ return {
             {
               TreesitterContextSeparator = {
                 bg = { from = "TreesitterContext" },
-                fg = { from = "WinSeparator", attr = "fg", alter = 0.06 },
+                fg = { from = "WinSeparator", attr = "fg", alter = 0.05 },
               },
             },
             {
@@ -581,7 +581,7 @@ return {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
                 bg = { from = "TreesitterContext" },
               },
             },
@@ -650,7 +650,7 @@ return {
             { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
             {
               TreesitterContextSeparator = {
-                fg = { from = "WinSeparator", attr = "fg", alter = -0.04 },
+                fg = { from = "WinSeparator", attr = "fg", alter = -0.05 },
                 bg = { from = "TreesitterContext" },
               },
             },

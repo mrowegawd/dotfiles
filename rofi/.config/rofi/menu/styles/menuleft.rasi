@@ -42,12 +42,12 @@ window {
 prompt {
     enabled: 						            true;
     padding: 						            0.30% 0.6% 0% -0.5%;
-    background-color: 				      @border;
+    background-color: 				      @background-alt;
     text-color: 					          @foreground;
 }
 
 entry {
-    background-color:               @border;
+    background-color:               @background-alt;
     text-color:                     @foreground;
     placeholder-color:              @foreground;
     expand:                         true;
@@ -59,7 +59,7 @@ entry {
 
 inputbar {
 	  children: 						          [ prompt, entry ];
-    background-color:               @border;
+    background-color:               @background-alt;
     text-color:                     @foreground;
     expand:                         false;
 	  border:							            0% 0% 0% 0%;
@@ -90,9 +90,9 @@ mainbox {
 }
 
 element {
-    background-color:               @background;
-    text-color:                     @urgent;
-    orientation:                    horizontal;
+    // background-color:               @red;
+    // text-color:                     @red;
+    // orientation:                    horizontal;
     border-radius:                  0%;
     padding:                        1% 0.5% 1% 0.5%;
 }
@@ -101,9 +101,6 @@ element-icon {
     size:                           12px;
     background-color:               @background;
     border:                         0px;
-
-}
-element-icon {
 }
 
 element-text {
@@ -131,43 +128,43 @@ element-text {
 
 element normal.normal {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element normal.urgent {
     background-color: 		          @urgent;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element normal.active {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element selected.normal {
     background-color: 		          @selected-alt;
-    text-color:       		          @border;
+    text-color:       		          @red;
 }
 element selected.urgent {
     background-color: 		          @red;
-    text-color:       		          @foreground;
+    text-color:       		          @background;
 }
 element selected.active {
     background-color: 		          @background;
-    text-color:       		          @urgent;
+    text-color:       		          @background;
 }
 
 element alternate.normal {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element alternate.urgent {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element alternate.active {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }

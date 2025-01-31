@@ -2,11 +2,11 @@
 
     background:                     %%background%%;
     foreground:                     %%foreground%%;
-    background-alt:                 %%normal-foreground%%;
+    background-alt:                 %%background_alt%%;
     border:               			    %%border%%;
     border-alt:               		  %%border_alt%%;
-    selected:               		    %%selected-normal-background%%;
-    selected-alt:               		%%selected-alt%%;
+    selected:               		    %%selected%%;
+    selected-alt:               		%%selected_alt%%;
     urgent:                         %%urgent%%;
 
     green:                          %%green%%;
