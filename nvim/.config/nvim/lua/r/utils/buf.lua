@@ -65,6 +65,9 @@ function M.magic_quit()
     ["help"] = "bd",
     ["octo"] = "bd",
     ["log"] = "bd",
+    ["git"] = function()
+      vim.cmd "close"
+    end,
     ["Outline"] = function()
       vim.cmd "OutlineClose"
     end,
