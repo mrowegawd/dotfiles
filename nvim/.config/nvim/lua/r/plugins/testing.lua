@@ -174,7 +174,7 @@ return {
             winopts = { title = RUtils.config.icons.misc.dashboard .. " Testing", row = row, col = col },
           })
         end,
-        desc = "Testing: list commands of testing",
+        desc = "Testing: list command of testing",
       },
     },
   },

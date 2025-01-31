@@ -609,7 +609,7 @@ RUtils.map.nnoremap("<Leader>gf", function()
     }, {}),
     { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
   )
-end, { desc = "Git: list commands of git" })
+end, { desc = "Git: command of git" })
 
 -- }}}
 -- {{{ Tmux integration
