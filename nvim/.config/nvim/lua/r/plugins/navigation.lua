@@ -644,6 +644,7 @@ return {
       end
 
       return {
+        -- sidebar left (neotree)
         {
           "<a-e>",
           function()
@@ -659,6 +660,7 @@ return {
           end,
           desc = "Misc: open file wikis explore [neotree]",
         },
+        -- sidebar right
         {
           "ro",
           function()
@@ -767,6 +769,21 @@ return {
             RUtils.fzflua.cmd_filter_kind_lsp(opts)
           end,
           desc = "Open: filter kind for outline [outline]",
+        },
+        -- edgy
+        {
+          "<Leader>ue",
+          function()
+            require("edgy").toggle()
+          end,
+          desc = "Misc: edgy toggle [edgy]",
+        },
+        {
+          "<Leader>uE",
+          function()
+            require("edgy").select()
+          end,
+          desc = "Misc: edgy select window [edgy]",
         },
       }
     end,
@@ -913,22 +930,41 @@ return {
           ["<a-J>"] = function(win)
             win:resize("height", -5)
           end,
-          -- ["<c-q>"] = function(win)
-          --   if vim.bo.filetype == "trouble" then
-          --     local items = require("trouble").get_items {}
-          --
-          --     -- print(vim.inspect(items))
-          --     for _, x in pairs(items) do
-          --       print("filename: " .. x.filename)
-          --       print("buf: " .. x.buf)
-          --       print("end_post: " .. vim.inspect(x.end_pos))
-          --       print("post: " .. vim.inspect(x.pos))
-          --     end
-          --
-          --     return
-          --   end
-          --   win:hide()
-          -- end,
+          ["<c-q>"] = function(win)
+            local tbl_items = {}
+            local prefix_title
+            if vim.bo.filetype == "trouble" then
+              local items = require("trouble").get_items()
+
+              for _, x in pairs(items) do
+                table.insert(tbl_items, {
+                  bufnr = x.buf,
+                  text = x.text,
+                  lnum = x.pos[1],
+                  col = x.pos[2],
+                  filename = x.filename,
+                })
+
+                if prefix_title == nil then
+                  prefix_title = x.source
+                end
+              end
+            end
+
+            if #tbl_items > 0 then
+              vim.fn.setqflist({}, "r", { title = "Trouble-" .. prefix_title, items = tbl_items })
+
+              win:hide()
+
+              local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
+              if not is_qf_opened.found then
+                vim.cmd "copen"
+              end
+            end
+          end,
+          ["<a-q>"] = function(win)
+            win:hide()
+          end,
         },
       }
 
@@ -998,6 +1034,7 @@ return {
         end
       end
 
+      -- trouble
       for _, pos in ipairs { "top", "bottom", "left", "right" } do
         opts[pos] = opts[pos] or {}
         table.insert(opts[pos], {
