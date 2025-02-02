@@ -85,9 +85,10 @@ return {
     "sbulav/nredir.nvim",
     cmd = { "Nredir" },
   },
-  -- SG.NVIM
+  -- SG.NVIM (disabled)
   {
     "sourcegraph/sg.nvim",
+    enabled = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     cmd = { "SourcegraphSearch", "SourcegraphLogin" },
     -- You must do this first before using it:

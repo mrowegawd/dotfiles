@@ -42,50 +42,7 @@ opt.cursorline = true
 opt.inccommand = "split"
 opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
 opt.fileformats = { "unix", "mac", "dos" }
--- only set clipboard if not in ssh, to make sure the OSC 52
--- integration works automatically. Requires Neovim >= 0.10.0
 opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
-
--- local plat = require "r.utils.platform"
--- if plat.is_mac then
---
---   vim.g.clipboard = {
---     name = "macOS-clipboard",
---     copy = {
---       ["+"] = "pbcopy",
---       ["*"] = "pbcopy",
---     },
---     paste = {
---       ["+"] = "pbpaste",
---       ["*"] = "pbpaste",
---     },
---     cache_enabled = 0,
---   }
--- elseif plat.is_wsl then
--- NOTE: Remember to `ln -s /path/in/windows/win32yank.exe /usr/local/bin/win32yank.exe`
--- NOTE: and `chmod +x /usr/local/bin/win32yank.exe`
---   vim.g.clipboard = {
---     -- name = "win32yank-wsl",
---     -- copy = {
---     --   ["+"] = "win32yank.exe -i --crlf",
---     --   ["*"] = "win32yank.exe -i --crlf",
---     -- },
---     -- paste = {
---     --   ["+"] = "win32yank.exe -o --lf",
---     --   ["*"] = "win32yank.exe -o --lf",
---     -- },
---     -- cache_enabled = 0,
---     --
---     name = "wsl clipboard",
---     copy = { ["+"] = { "clip.exe" }, ["*"] = { "clip.exe" } },
---     paste = { ["+"] = { "nvim_paste" }, ["*"] = { "nvim_paste" } },
---     cache_enabled = true,
---   }
--- end
--- Exclude usetab as we do not want to jump to buffers in already open tabs
--- do not use split or vsplit to ensure we don't open any new windows
--- opt.switchbuf = "useopen,uselast"
---
 opt.encoding = "utf-8"
 opt.conceallevel = 2
 opt.infercase = true -- Infer cases in keyword completion
@@ -112,11 +69,7 @@ opt.showbreak = "↪ "
 -- opt.shellcmdflag = "-ic"
 -- }}}
 -- {{{ List chars
-opt.list = true -- invisible chars
--- Characters to display on ':set list',explore glyphs using:
--- `xfd -fa "InputMonoNerdFont:style:Regular"` or
--- `xfd -fn "-misc-fixed-medium-r-semicondensed-*-13-*-*-*-*-*-iso10646-1"`
--- input special chars with the sequence <C-v-u> followed by the hex code
+opt.list = true -- Show some invisible characters (tabs...
 opt.listchars = {
   eol = nil,
   tab = "→ ", -- Alternatives: '▷▷',
@@ -126,7 +79,7 @@ opt.listchars = {
 }
 -- }}}
 -- {{{ Message output on vim actions
-opt.shortmess = opt.shortmess:append { W = true, I = true, c = true, C = true } -- copied default and removed `t` (long paths were being truncated) while adding `c`
+opt.shortmess:append { W = true, I = true, c = true, C = true }
 -- }}}
 -- {{{ Wild and file globbing stuff in command mode
 opt.wildmode = "longest:full,full"
@@ -163,17 +116,14 @@ opt.joinspaces = true -- insert spaces after '.?!' when joining lines
 opt.autoindent = true -- copy indent from current line on newline
 opt.smartindent = false -- add <tab> depending on syntax (C/C++)
 opt.startofline = false -- keep cursor column on navigation
-
 opt.tabstop = 2 -- Tab indentation levels every two columns
 opt.softtabstop = 2 -- Tab indentation when mixing tabs & spaces
 opt.shiftwidth = 2 -- Indent/outdent by two columns
 opt.shiftround = true -- Always indent/outdent to nearest tabstop
 opt.expandtab = true -- Convert all tabs that are typed into spaces
 opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
-
-opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]]
+opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
-
 opt.formatoptions = "jcroqlnt" -- tcqj
 opt.splitkeep = "cursor" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
@@ -193,15 +143,9 @@ opt.fillchars = {
   foldclose = "", -- '▶'
   foldsep = " ",
 }
-
 opt.foldcolumn = vim.fn.has "nvim-0.9" == 1 and "1" or nil -- show foldcolumn in nvim 0.9
 opt.foldlevelstart = 99 -- start with all code unfolded
--- unfortunately folding in (n)vim is a mess, if you set the fold level to start
--- at x then it will auto fold anything at that level, all good so far. if you then
--- try to edit the content of your fold and the foldmethod=manual then it will
--- recompute the fold which when using nvim-ufo means it will be closed again...
 opt.foldlevel = 99 -- using ufo provider need a large value, feel free to decrease the value
-
 opt.magic = true --  use 'magic' chars in search patterns
 opt.hlsearch = true -- highlight all text matching current search pattern
 opt.incsearch = true -- show search matches as you type
@@ -212,65 +156,15 @@ opt.wrapscan = true -- begin search from top of the file when nothing is found
 opt.hidden = true -- do not unload buffer when abandoned
 -- }}}
 -- {{{ Timings
-opt.updatetime = 400
-opt.timeout = true
-opt.ttimeoutlen = 5
-if not vim.g.vscode then
-  opt.timeoutlen = 500 -- Lower than default (1000) to quickly trigger which-key
-end
-
---[[
-     shda (info for vim): session data history
-     --------------------------------------------
-     ! - save and restore global variables (their names should be without lowercase letter).
-     ' - specify the maximum number of marked files remembered. it also saves the jump list and the change list.
-     < - maximum of lines saved for each register. all the lines are saved if this is not included, <0 to disable pessistent registers.
-     % - save and restore the buffer list. you can specify the maximum number of buffer stored with a number.
-     / or : - number of search patterns and entries from the command-line history saved. opt.history is used if it’s not specified.
-     f - store file (uppercase) marks, use 'f0' to disable.
-     s - specify the maximum size of an item’s content in kib (kilobyte).
-         for the info file, it only applies to register.
-         for the shada file, it applies to all items except for the buffer list and header.
-     h - disable the effect of 'hlsearch' when loading the shada file.
-
-     :oldfiles - all files with a mark in the shada file
-     :rshada   - read the shada file (:rinfo for vim)
-     :wshada   - write the shada file (:wrinfo for vim)
-    -- ]]
--- shada = [[!,'100,<0,s100,h]],
-
--- Aditions
+opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
 opt.undodir = vim.fn.stdpath "data" .. "/undodir" -- Chooses where to store the undodir
 opt.history = 1000 -- Number of commands to remember in a history table (per buffer).
 opt.swapfile = false -- Ask what state to recover when opening a file that was not saved.
 opt.backup = false -- no backup file
 opt.writebackup = false -- do not backup file before write
 opt.undofile = true -- don't create root-owned files
--- if root then
---     opt.undofile = false -- don't create root-owned files
---     opt.shada = ""
---     opt.shadafile = "none"
--- else
---     opt.undofile = true -- actually use undo files
---     opt.undodir = opt.undodir + "." -- fallback
---     opt.shada = {
---         "!",
---         "'10",
---         "/100",
---         ":100",
---         "<0",
---         "@1",
---         "f1",
---         "h",
---         "s1",
---     }
--- end
 opt.wrap = false -- Disable wrapping of lines longer than the width of window.
 opt.mouse = "a" -- Enable mouse support.
-opt.smoothscroll = true
-opt.mousescroll = { "hor:1", "ver:1" } -- "ver:1,hor:0", -- Disables hozirontal scroll in neovim.
--- opt.guicursor = "n:blinkon200,i-ci-ve:ver25" -- Enable cursor blink.
-opt.guicursor = "" -- disable cursor type switching, I noticed that the cursor changed to a vertical bar when switching into insert mode
 opt.autochdir = false -- Use current file dir as working dir (See project.nvim)
 opt.scrolloff = 5 -- Number of lines to leave before/after the cursor when scrolling. Setting a high value keep the cursor centered.
 opt.sidescrolloff = 3 -- Same but for side scrolling.

@@ -13,6 +13,8 @@ end
 
 function M.get_total_wins()
   local tbl_winsplits = {}
+
+  local exclude_ft = { "notify", "snacks_notif", "noice", "trouble" }
   local win_amount = vim.api.nvim_tabpage_list_wins(0)
   for _, winnr in ipairs(win_amount) do
     if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then
@@ -20,7 +22,7 @@ function M.get_total_wins()
 
       if winbufnr > 0 then
         local winft = vim.api.nvim_get_option_value("filetype", { buf = winbufnr })
-        if not vim.tbl_contains({ "notify", "snacks_notif", "noice" }, winft) and #winft > 0 then
+        if not vim.tbl_contains(exclude_ft, winft) and #winft > 0 then
           table.insert(tbl_winsplits, winft)
         end
       end
