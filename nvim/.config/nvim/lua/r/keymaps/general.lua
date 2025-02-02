@@ -83,10 +83,6 @@ end, { desc = "Terminal: new term" })
 -- Edit window state
 RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
 RUtils.map.nnoremap("ss", "<CMD>split<CR>", { desc = "View: horizontal split", silent = true })
-RUtils.map.nnoremap("sw", "<CMD>wincmd =<CR>", { desc = "View: reset size window to =", silent = true })
-RUtils.map.nnoremap("sJ", "<C-W>t <C-W>K", { desc = "View: force view to horizontal split", silent = true })
-RUtils.map.nnoremap("sL", "<C-W>t <C-W>H", { desc = "View: force view to vertical split", silent = true })
-RUtils.map.nnoremap("sc", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
 
 -- Navigate window
 RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true })
@@ -150,7 +146,11 @@ RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = t
 RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer split into tab window" })
 RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate file" })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete buffer" })
-RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
+RUtils.map.nnoremap("<Leader>bc", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
+RUtils.map.nnoremap("<Leader>bL", "<C-W>t <C-W>H", { desc = "Buffer: force buffers to vertical split" })
+RUtils.map.nnoremap("<Leader>bJ", "<C-W>t <C-W>K", { desc = "Buffer: force buffers to horizontal split" })
+RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: reset size window to =", silent = true })
+RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: single command=close buffer" })
 RUtils.map.nnoremap("<Leader>bn", "<CMD>vnew<CR>", { desc = "Buffer: open split new buffer" })
 RUtils.map.nnoremap("gh", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf(true)
@@ -553,7 +553,7 @@ RUtils.map.nnoremap("<Leader>uf", function()
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
 end, { desc = "Misc: list commands of misc" })
-RUtils.map.nnoremap("<Leader>gf", function()
+RUtils.map.nnoremap("<Leader>gff", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds(
     vim.tbl_deep_extend("force", {
@@ -609,7 +609,7 @@ RUtils.map.nnoremap("<Leader>gf", function()
     }, {}),
     { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
   )
-end, { desc = "Git: command of git" })
+end, { desc = "Git: commands of git" })
 
 -- }}}
 -- {{{ Tmux integration
