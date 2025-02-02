@@ -4,11 +4,25 @@ local colorscheme = RUtils.config.colorscheme
 -- https://github.com/tinted-theming
 
 return {
+  -- BASE2TONE
+  {
+    "atelierbram/Base2Tone-nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local zenbones_theme =
+        { "base2tone_field_dark", "base2tone_cave_dark", "base2tone_lavender_dark", "base2tone_suburb_dark" }
+      if vim.tbl_contains(zenbones_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- ashen
   {
     "ficcdaf/ashen.nvim",
     -- optional but recommended,
     -- pin to the latest stable release:
-    tag = "*",
     lazy = false,
     priority = 1000,
     enabled = function()
@@ -18,9 +32,6 @@ return {
       end
       return false
     end,
-    opts = {
-      -- your settings here
-    },
   },
   -- ZENBURN
   {
@@ -29,7 +40,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local zenbones_theme = { "zenburned", "rosebones", "vimbones", "vimbones" }
+      local zenbones_theme = { "zenburned", "rosebones" }
       if vim.tbl_contains(zenbones_theme, colorscheme) then
         return true
       end
@@ -66,19 +77,6 @@ return {
       variant = "main", -- auto, main, moon, or dawn
     },
   },
-  -- CHOCOLATIER
-  {
-    "qaptoR-nvim/chocolatier.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local chocolatier_theme = { "chocolatier" }
-      if vim.tbl_contains(chocolatier_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
   -- OXOCARBON
   {
     "nyoom-engineering/oxocarbon.nvim",
@@ -91,55 +89,6 @@ return {
       end
       return false
     end,
-  },
-  -- BASE16.NVIM
-  {
-    "RRethy/base16-nvim",
-    lazy = false,
-    priority = 1000,
-    version = false,
-    enabled = function()
-      local base16_theme = {
-        "base16-atelier-estuary",
-        "base16-ayu-dark",
-        "base16-ayu-dark",
-        "base16-gotham",
-        "base16-icy",
-      }
-      if vim.tbl_contains(base16_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- MIDNIGHT
-  {
-    "dasupradyumna/midnight.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local midnight_theme = { "midnight" }
-      if vim.tbl_contains(midnight_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- ONEDARK
-  {
-    "navarasu/onedark.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local onedark_theme = { "onedark" }
-      if vim.tbl_contains(onedark_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = {
-      style = "darker",
-    },
   },
   -- SUNBURN
   {
@@ -240,19 +189,6 @@ return {
         transparent_background = false,
         nvim_tree_darker = true,
       }
-    end,
-  },
-  -- SELENIZED
-  {
-    "calind/selenized.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local selenizedtheme = { "selenized" }
-      if vim.tbl_contains(selenizedtheme, colorscheme) then
-        return true
-      end
-      return false
     end,
   },
   -- GRUVBOX-MATERIAL

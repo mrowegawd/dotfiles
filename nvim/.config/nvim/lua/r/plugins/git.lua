@@ -563,25 +563,31 @@ return {
 
       RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
       Highlight.plugin("diffview", {
-        { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
-        { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.1 } } },
-        { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 } } },
-        { DiffviewStatusAdded = { link = "DiffAddedChar" } },
-        { DiffviewStatusModified = { link = "DiffChangedChar" } },
-        { DiffviewStatusRenamed = { link = "DiffChangedChar" } },
-        { DiffviewStatusUnmerged = { link = "DiffChangedChar" } },
-        { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
-        { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
+        theme = {
+          ["*"] = {
+            { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
+            { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.1 } } },
+            { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 } } },
+            { DiffviewStatusAdded = { link = "DiffAddedChar" } },
+            { DiffviewStatusModified = { link = "DiffChangedChar" } },
+            { DiffviewStatusRenamed = { link = "DiffChangedChar" } },
+            { DiffviewStatusUnmerged = { link = "DiffChangedChar" } },
+            { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
+            { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
 
-        { DiffviewReference = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.2 } } },
+            { DiffviewReference = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.2 } } },
 
-        { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
+            -- { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
+            { DiffviewHash = { fg = "lightmagenta" } },
 
-        { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-        { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
-        { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
-        { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.4 } } },
-        { DiffviewFilePanelSelected = { fg = { from = "DiffChangedChar", attr = "fg" } } },
+            { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
+            { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
+            { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
+            { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.4 } } },
+            { DiffviewFilePanelSelected = { fg = { from = "DiffChangedChar", attr = "fg" } } },
+          },
+          ["zenburned"] = { { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = 0.5 } } } },
+        },
       })
 
       return {

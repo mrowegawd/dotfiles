@@ -147,24 +147,8 @@ return {
           },
           ["lackluster"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } } },
           ["neomodern"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } } },
-          ["base16-icy"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } } },
+          ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } } },
           ["catppuccin-mocha"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
-          ["selenized"] = {
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-            {
-              ["@markup.raw.markdown_inline"] = {
-                fg = { from = "Keyword", attr = "fg", alter = -0.05 },
-                bg = { from = "Normal", attr = "bg", alter = 0.3 },
-                bold = true,
-              },
-            },
-          },
         },
       })
       require("render-markdown").setup(opts)

@@ -473,80 +473,18 @@ return {
       Highlight.plugin("OutlineAuHi", {
         theme = {
           ["*"] = {
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineJumpHighlight = {
-                bg = "red",
-                fg = "NONE",
-              },
-            },
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineFoldMarker = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineLineno = {
-                bg = "NONE",
-              },
-            },
-          },
-          ["selenized"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = 0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "Error", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-              },
-            },
+            { OutlineCurrent = { fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+            { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+            { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+            { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+            { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
+            { OutlineLineno = { bg = "NONE" } },
           },
           ["lackluster"] = {
-            {
-              OutlineDetails = {
-                fg = { from = "Comment", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineGuides = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineFoldMarker = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.2 },
-                bg = "NONE",
-              },
-            },
-            {
-              OutlineCurrent = {
-                fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 },
-              },
-            },
+            { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+            { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+            { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+            { OutlineCurrent = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 } } },
           },
         },
       })
@@ -791,39 +729,16 @@ return {
       Highlight.plugin("NeoEdgyHi", {
         theme = {
           ["*"] = {
-            { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = { from = "Normal", attr = "bg" } } },
+            { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.4 }, fg = "NONE" } },
+            { EdgyWinBar = { bg = "NONE" } },
             { EdgyNormal = { bg = "NONE" } },
-            {
-              EdgyTitle = {
-                fg = { from = "Directory", attr = "fg", alter = 0.85 },
-                bold = true,
-                bg = { from = "EdgyWinBar" },
-              },
-            },
-            {
-              EdgyIcon = {
-                bold = true,
-                bg = { from = "EdgyWinBar" },
-                -- fg = RUtils.colortbl.statuslinenc_fg,
-              },
-            },
-            {
-              EdgyIconActive = {
-                bold = true,
-                bg = { from = "EdgyWinBar" },
-              },
-            },
+            { EdgyTitle = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
+            { EdgyIcon = { bold = true } },
+            { EdgyIconActive = { bold = true } },
           },
           ["lackluster"] = {
             { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.6 } } },
-            {
-              EdgyTitle = {
-                fg = { from = "Directory", attr = "fg", alter = 1 },
-                bg = { from = "EdgyWinBar" },
-                bold = true,
-              },
-            },
+            { EdgyTitle = { fg = { from = "Directory", attr = "fg", alter = 1 }, bold = true } },
           },
         },
       })
