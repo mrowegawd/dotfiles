@@ -24,7 +24,7 @@ end, {
 
 keymap.set("n", "<Leader>fq", function()
   require("fzf-lua").quickfix {
-    prompt = "  ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("[QF] Select item list", "󰈙"),
     },
@@ -48,7 +48,7 @@ keymap.set("n", "<Leader>fg", function()
     .. " -e "
 
   return require("fzf-lua").live_grep_glob {
-    prompt = "  ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = { title = RUtils.fzflua.format_title("[QF] Grep item lists", " ") },
     cmd = pcmd,
   }

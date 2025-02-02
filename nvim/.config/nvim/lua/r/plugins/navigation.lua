@@ -147,7 +147,7 @@ return {
             end
 
             return fzf_lua.fzf_exec(reverse, {
-              prompt = "   ",
+              prompt = RUtils.fzflua.default_title_prompt(),
               winopts = {
                 title = RUtils.fzflua.format_title("FzMark", "󰈙"),
               },

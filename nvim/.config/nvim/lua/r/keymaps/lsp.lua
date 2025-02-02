@@ -308,7 +308,7 @@ function M.get()
       "gP",
       function()
         require("fzf-lua").lsp_definitions {
-          prompt = "   ",
+          prompt = RUtils.fzflua.default_title_prompt(),
           winopts = {
             title = RUtils.fzflua.format_title("LSP: Peek", RUtils.config.icons.misc.lsp),
             relative = "editor",

@@ -139,7 +139,7 @@ return {
             end,
           }, { winopts = { title = RUtils.config.icons.misc.bug .. " Debug", row = row, col = col } })
         end,
-        desc = "Debug: list commands of debug",
+        desc = "Debug: list command of debug",
       },
     },
     config = function()

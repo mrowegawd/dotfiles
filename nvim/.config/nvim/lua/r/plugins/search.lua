@@ -184,7 +184,7 @@ return {
         "<Leader>fo",
         function()
           return require("fzf-lua").files {
-            prompt = "   ",
+          prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
@@ -196,7 +196,7 @@ return {
         function()
           local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
           return require("fzf-lua").files {
-            prompt = "  ",
+          prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Plugin Files", "󰈙") },
             cwd = plugins_directory,
           }
@@ -297,7 +297,7 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
             -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[ CTRL-R:rgflow  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
           },
           fd_opts = fd_opts,
           git_icons = false,
@@ -389,7 +389,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
             fzf_opts = {
-              ["--header"] = [[ CTRL-O:browser CTRL-Y:copy-hash ALT-D:compare-commit ALT-H:history-commit]],
+              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -459,7 +459,7 @@ return {
               title_pos = "left",
             },
             fzf_opts = {
-              ["--header"] = [[ CTRL-O:browser CTRL-Y:copy-hash ALT-D:compare-commit ALT-H:history-commit]],
+              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -572,11 +572,11 @@ return {
         },
         grep = {
           -- debug = true,
-          prompt = "   ",
+          prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[ CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -818,7 +818,7 @@ return {
               backdrop = 60,
             },
             fzf_opts = {
-              ["--header"] = [[ CTRL-X:filter LSP  CTRL-R:workspace-symbols]],
+              ["--header"] = [[CTRL-X:filter LSP  CTRL-R:workspace-symbols]],
               ["--reverse"] = false,
             },
             actions = {

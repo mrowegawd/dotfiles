@@ -2,7 +2,7 @@
 local M = {}
 
 function M.default_title_prompt()
-  return "   "
+  return "  "
 end
 
 function M.rectangle_win_pojokan()
@@ -85,7 +85,7 @@ function M.send_cmds(opts, opts_cmds)
   require("fzf-lua").fzf_exec(
     cmds,
     M.cursor_random(vim.tbl_deep_extend("force", {
-      prompt = "  ",
+      prompt = "   ",
       winopts = { title = opts_cmds.title and opts_cmds.title or "" },
       actions = {
         ["default"] = function(selected, _)
