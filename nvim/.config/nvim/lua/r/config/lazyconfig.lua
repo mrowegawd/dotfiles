@@ -28,19 +28,9 @@ require("lazy").setup {
     -- { import = "r.plugins.extras.text" },
   },
   change_detection = { notify = false },
-  install = {
-    missing = true,
-  },
-  ui = {
-    border = "rounded",
-    size = { width = 0.8, height = 0.8 },
-    backdrop = 100,
-    wrap = false,
-  },
-  checker = { enabled = false }, --   automatically check for plugin updates
-  defaults = {
-    version = false, -- always use the latest git commit
-  },
+  ui = { border = "rounded", size = { width = 0.8, height = 0.8 }, backdrop = 100, wrap = false },
+  checker = { enabled = true, notify = false }, --   automatically check for plugin updates
+  defaults = { version = false },
   performance = {
     reset_packpath = true, -- Reset the package path to improve startup time
     rtp = {

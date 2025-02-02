@@ -20,8 +20,8 @@ require("statusline")
 -- Example wezterm lua configurations:
 -- https://github.com/wez/wezterm/discussions/628
 
-local function font_with_fallback(name, params)
-	return wezterm.font_with_fallback({ name, "FiraCode Nerd Font" }, params)
+local function font_with_fallback(name)
+	return wezterm.font_with_fallback({ name, "Fira Code Nerd Font" })
 end
 
 local config = wezterm.config_builder()
@@ -190,7 +190,7 @@ config.hyperlink_rules = Hyperlinks
 -- Download font: https://monaspace.githubnext.com/
 config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
-config.font = font_with_fallback("SF Mono", { weight = "Regular" })
+config.font = font_with_fallback("SF Mono")
 -- config.font_rules = {
 -- 	{
 -- 		-- Normal

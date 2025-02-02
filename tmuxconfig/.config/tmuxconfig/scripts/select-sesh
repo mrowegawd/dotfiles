@@ -4,8 +4,9 @@
 
 set -- 'tmux capture-pane -pe -S' \
   '$(start=$(( $(tmux display-message -t {1} -p "#{pane_height}")' \
-  '- $FZF_PREVIEW_LINES ));' \
-  '(( start>0 )) && echo $start || echo 0) -t {2} || echo "no preview"'
+  '- 10 ));' \
+  '(( start>0 )) && echo $start || echo 0) -t {2} || echo -e "\n" && toilet -f pagga "Session not active"'
+
 preview_cmd=$*
 
 SELECT=$(sesh list --icons | fzf-tmux -p 80%,70% \

@@ -635,17 +635,19 @@ return {
             return false
           end
 
+          local min_window_popup = 4
+
           local tbl_winsplits = RUtils.cmd.get_total_wins()
-          if #tbl_winsplits < 4 then
+          if min_window_popup > #tbl_winsplits then
+            return true
             -- check split or no split (`leaf`, `col` , `row`)
-            local layout = vim.fn.winlayout()
-            if layout[1] == "col" then -- split window
-              local nwin = #layout[2]
-              return nwin < 2
-            end
-          else
-            return false
+            -- local layout = vim.fn.winlayout()
+            -- if layout[1] == "col" then -- split window
+            --   local nwin = #layout[2]
+            --   return nwin < 2
+            -- end
           end
+          return false
         end,
       }
     end,

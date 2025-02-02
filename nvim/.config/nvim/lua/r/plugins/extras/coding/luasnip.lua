@@ -177,9 +177,7 @@ return {
     "saghen/blink.cmp",
     optional = true,
     opts = {
-      snippets = {
-        preset = "luasnip",
-      },
+      snippets = { preset = "luasnip" },
       keymap = {
         ["<C-r>"] = {
           function(cmp)

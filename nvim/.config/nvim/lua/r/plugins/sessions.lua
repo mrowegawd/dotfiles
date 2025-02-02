@@ -15,6 +15,11 @@ return {
         if not require("resession").default_buf_filter(bufnr) then
           return false
         end
+
+        if vim.bo.filetype == "trouble" then
+          return false
+        end
+
         return true
       end,
       -- extensions = { quickfix = {} },
@@ -23,6 +28,7 @@ return {
         "binary",
         "bufhidden",
         "buflisted",
+        "cmdheight",
         "diff",
         "filetype",
         "modifiable",

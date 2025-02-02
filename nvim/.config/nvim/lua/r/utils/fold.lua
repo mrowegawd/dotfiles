@@ -19,7 +19,7 @@ local ft_disabled = { "neo-tree", "aerial" }
 ---@param winid number
 ---@param lnum number
 ---@return number
-local function foldClosed(winid, lnum)
+local function fold_closed(winid, lnum)
   return winCall(winid, function()
     return vim.fn.foldclosed(lnum)
   end)
@@ -78,13 +78,13 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
     end
   end
 
+  local count = vim.v.count1
+  local cnt = 0
+  local lnum
   if is_jump_prev then
-    local count = vim.v.count1
     local curLnum = api.nvim_win_get_cursor(0)[1]
-    local cnt = 0
-    local lnum
     for i = curLnum - 1, 1, -1 do
-      if foldClosed(0, i) == i then
+      if fold_closed(0, i) == i then
         cnt = cnt + 1
         lnum = i
         if cnt == count then
@@ -100,13 +100,10 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
       cmd "norm! zk"
     end
   else
-    local count = vim.v.count1
     local curLnum = api.nvim_win_get_cursor(0)[1]
     local lineCount = api.nvim_buf_line_count(0)
-    local cnt = 0
-    local lnum
     for i = curLnum + 1, lineCount do
-      if foldClosed(0, i) == i then
+      if fold_closed(0, i) == i then
         cnt = cnt + 1
         lnum = i
         if cnt == count then

@@ -117,17 +117,7 @@ M.tnoremap = function(...)
 end
 
 M.cabbrev = function(short, long)
-  local cmdpos = #short + 1
-  vim.api.nvim_set_keymap("ca", short, "", {
-    expr = true,
-    callback = function()
-      if vim.fn.getcmdtype() == ":" and vim.fn.getcmdpos() == cmdpos then
-        return long
-      else
-        return short
-      end
-    end,
-  })
+  vim.cmd.cnoreabbrev(short, long)
 end
 
 ---@param method string|string[]
