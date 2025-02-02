@@ -712,6 +712,9 @@ return {
         {
           "<Leader>ue",
           function()
+            if vim.bo[0].filetype == "trouble" then
+              vim.cmd [[wincmd p]]
+            end
             require("edgy").toggle()
           end,
           desc = "Misc: edgy toggle [edgy]",
@@ -882,48 +885,6 @@ return {
           end,
         },
       }
-
-      -- -- only add neo-tree sources if they are enabled in config
-      -- local neotree_opts = RUtils.opts "neo-tree.nvim"
-      -- local neotree_sources = { buffers = "top", git_status = "right" }
-      --
-      -- for source, pos in pairs(neotree_sources) do
-      --   if vim.list_contains(neotree_opts.sources, source) then
-      --     table.insert(opts.left, 3, {
-      --       title = "Neo-Tree " .. source:gsub("_", " "),
-      --       ft = "neo-tree",
-      --       filter = function(buf)
-      --         return vim.b[buf].neo_tree_source == source
-      --       end,
-      --       pinned = true,
-      --       open = "Neotree position=" .. pos .. " " .. source,
-      --     })
-      --   end
-      -- end
-
-      -- if RUtils.has "neo-tree.nvim" then
-      --   local pos = {
-      --     filesystem = "left",
-      --     git_status = "top",
-      --     -- buffers = "top",
-      --     -- document_symbols = "bottom",
-      --     -- diagnostics = "bottom",
-      --   }
-      --   local sources = RUtils.opts("neo-tree.nvim").sources or {}
-      --   for i, v in ipairs(sources) do
-      --     table.insert(opts.left, i, {
-      --       title = "Neo-Tree " .. v:gsub("_", " "):gsub("^%l", string.upper),
-      --       ft = "neo-tree",
-      --       filter = function(buf)
-      --         return vim.b[buf].neo_tree_source == v
-      --       end,
-      --       pinned = true,
-      --       open = function()
-      --         vim.cmd(("Neotree show position=%s %s dir=%s"):format(pos[v] or "bottom", v, RUtils.root()))
-      --       end,
-      --     })
-      --   end
-      -- end
 
       if RUtils.has "neo-tree.nvim" then
         local pos = {
