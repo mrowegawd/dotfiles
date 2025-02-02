@@ -510,6 +510,16 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       {
+        "<Leader>gfo",
+        "<CMD>DiffviewOpen<CR>",
+        desc = "Git: diffview open [diffview]",
+      },
+      {
+        "<Leader>gfh",
+        "<CMD>DiffviewFileHistory<CR>",
+        desc = "Git: diffview file history [diffview]",
+      },
+      {
         "<Leader>gv",
         function()
           local current_line = vim.fn.line "."
@@ -648,10 +658,17 @@ return {
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
 
             { "n", "-", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
-            { "n", "<Leader>ghs", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
-            { "n", "<Leader>ghS", actions.stage_all, { desc = "Git: stage all entries [diffview]" } },
-            { "n", "<Leader>ghR", actions.unstage_all, { desc = "Git: unstage all entries [diffview]" } },
-            { "n", "<Leader>ghr", actions.restore_entry, { desc = "Git: restore entry to the state on the left side [diffview]" }, },
+            { "n", "s", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
+
+
+            -- Git: stage, unstage, restore, commit
+            -- { "n", "<Leader>ghs", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
+            -- { "n", "<Leader>ghS", actions.stage_all, { desc = "Git: stage all entries [diffview]" } },
+            -- { "n", "<Leader>ghR", actions.unstage_all, { desc = "Git: unstage all entries [diffview]" } },
+            -- { "n", "<Leader>ghr", actions.restore_entry, { desc = "Git: restore entry to the state on the left side [diffview]" }, },
+            { "n", "cc", "<Cmd>Git commit <bar> wincmd J<CR>", { desc = "Git: commit staged changes with fugitive [diffview]" }, },
+            { "n", "ca", "<Cmd>Git commit --amend <bar> wincmd J<CR>", { desc = "Git: amend the last commit with fugitive [diffview]" }, },
+
             { "n", "L", actions.open_commit_log, { desc = "Git: open the commit log panel [diffivew]" } },
 
             { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview]" } },
