@@ -1,4 +1,5 @@
 local Conditions = require "heirline.conditions"
+
 local Col = RUtils.colortbl
 
 local M = {}
@@ -21,6 +22,9 @@ end
 --   }
 -- end
 
+local ft_right_exclude = { "qf", "trouble", "Outline", "aerial", "neo-tree", "DiffviewFiles" }
+local ft_left_exclude = { "qf", "neo-tree", "trouble", "Outline", "dashboard" }
+
 local set_conditions = {
   buffer_not_empty = function()
     return vim.fn.empty(vim.fn.expand "%:t") ~= 1
@@ -37,16 +41,19 @@ local set_conditions = {
 }
 
 local colors = {
-  base_bg = Col.statusline_bg,
   base_fg = Col.statusline_fg,
+  base_bg = Col.statusline_bg,
 
-  basenc_bg = Col.statuslinenc_bg,
   basenc_fg = Col.statuslinenc_fg,
+  basenc_bg = Col.statuslinenc_bg,
 
   branch_fg = Col.branch_fg,
-  terminal_fg = Col.terminal_fg,
+
   keyword = Col.keyword,
+  keyword_blur = Col.keyword_blur,
+
   keywordnc = Col.keywordnc,
+  keywordnc_blur = Col.keywordnc_blur,
 
   mode_bg = Col.mode_bg,
   filename_fg = Col.mode_bg,
@@ -59,12 +66,11 @@ local colors = {
   separator_fg_alt = Col.separator_fg_alt,
   separator_fg_inactive = Col.separator_fg_inactive,
 
-  qf_bg_not_active = Col.qf_bg_not_active,
-  qf_fg_not_active = Col.qf_fg_not_active,
-
-  mod_ins = Col.mod_ins,
-  mod_vis = Col.mod_vis,
-  mod_term = Col.mod_term,
+  vim_mode_insert = Col.mod_ins,
+  vim_mode_insert_bar = Col.mode_ins_bar,
+  vim_mode_insertnc = Col.mod_insnc,
+  vim_mode_visual = Col.mod_vis,
+  vim_mode_term = Col.mod_term,
 
   diff_add = Col.diff_add,
   diff_delete = Col.diff_delete,
@@ -104,10 +110,60 @@ local exclude = {
   ["TelescopePrompt"] = true,
 } -- Ignore float windows and exclude filetype
 
+local mode_icons = {
+  n = "",
+  no = "",
+  nov = "",
+  noV = "",
+  ["no\22"] = "",
+  niI = "",
+  niR = "",
+  niV = "",
+  nt = "",
+  v = "",
+  vs = "",
+  V = "",
+  Vs = "",
+  ["\22"] = "",
+  ["\22s"] = "",
+  s = "󱐁",
+  S = "󱐁",
+  ["\19"] = "󱐁",
+  i = "",
+  ic = "",
+  ix = "",
+  R = "",
+  Rc = "",
+  Rx = "",
+  Rv = "",
+  Rvc = "",
+  Rvx = "",
+  c = "",
+  cv = "",
+  r = "",
+  rm = "",
+  ["r?"] = "",
+  ["!"] = "",
+  t = "",
+}
+
+local mode_colors = {
+  n = colors.keyword,
+  i = colors.vim_mode_insert,
+  v = colors.vim_mode_visual,
+  V = colors.vim_mode_visual,
+  ["\22"] = "cyan",
+  c = colors.vim_mode_term,
+  s = "yellow",
+  S = "yellow",
+  ["\19"] = "orange",
+  R = "purple",
+  r = "purple",
+  ["!"] = "green",
+  t = colors.vim_mode_term,
+}
+
 M.Mode = {
-  -- condition = function()
-  --   return not (vim.bo[0].filetype == "qf")
-  -- end,
   init = function(self)
     self.mode = vim.fn.mode(1) -- :h mode()
 
@@ -121,59 +177,7 @@ M.Mode = {
       self.once = true
     end
   end,
-  static = {
-    mode_icons = {
-      n = "",
-      no = "",
-      nov = "",
-      noV = "",
-      ["no\22"] = "",
-      niI = "",
-      niR = "",
-      niV = "",
-      nt = "",
-      v = "",
-      vs = "",
-      V = "",
-      Vs = "",
-      ["\22"] = "",
-      ["\22s"] = "",
-      s = "󱐁",
-      S = "󱐁",
-      ["\19"] = "󱐁",
-      i = "",
-      ic = "",
-      ix = "",
-      R = "",
-      Rc = "",
-      Rx = "",
-      Rv = "",
-      Rvc = "",
-      Rvx = "",
-      c = "",
-      cv = "",
-      r = "",
-      rm = "",
-      ["r?"] = "",
-      ["!"] = "",
-      t = "",
-    },
-    mode_colors = {
-      n = colors.keyword,
-      i = colors.mod_ins,
-      v = colors.mod_vis,
-      V = colors.mod_vis,
-      ["\22"] = "cyan",
-      c = colors.mod_term,
-      s = "yellow",
-      S = "yellow",
-      ["\19"] = "orange",
-      R = "purple",
-      r = "purple",
-      ["!"] = "green",
-      t = colors.terminal_fg,
-    },
-  },
+  static = { mode_icons = mode_icons, mode_colors = mode_colors },
   {
     provider = function(self)
       local icon = self.mode_icons[self.mode]
@@ -184,52 +188,61 @@ M.Mode = {
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      return { bg = self.mode_colors[mode], fg = colors.base_bg, bold = true }
+      local fg = colors.base_bg
+      if not (mode == "n") and not (mode == "i") then
+        fg = self.mode_colors["n"]
+      end
+      return { bg = self.mode_colors[mode], fg = fg, bold = true }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
-      local cs = colors.keywordnc
       local mode = self.mode:sub(1, 1)
-      return { fg = self.mode_colors[mode], bg = cs }
+      local bg = colors.keyword_blur
+      if not (mode == "n") and not (mode == "V") then
+        bg = colors.vim_mode_insert_bar
+      end
+      return { fg = self.mode_colors[mode], bg = bg }
     end,
   },
   {
     provider = function()
       return RUtils.config.icons.misc.separator_up
     end,
-    hl = function()
-      local bg = colors.base_bg
-      local fg = colors.keywordnc
-
-      return { fg = fg, bg = bg }
+    hl = function(self)
+      local fg = colors.keyword_blur
+      local mode = self.mode:sub(1, 1)
+      if not (mode == "n") and not (mode == "V") then
+        fg = colors.vim_mode_insert_bar
+      end
+      return { fg = fg }
     end,
   },
+  { provider = " " },
 }
-
 M.Mode_inactive = {
   {
     provider = function()
       return string.format "      "
     end,
     hl = function()
-      return { bg = colors.keywordnc, fg = colors.red }
+      return { bg = colors.keywordnc }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { bg = colors.base_bg, fg = colors.keywordnc }
+      return { fg = colors.keywordnc, bg = colors.keywordnc_blur }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      local fg = colors.base_bg
-      return { fg = fg, bg = bg }
+      return { fg = colors.keywordnc_blur }
     end,
   },
+  { provider = " " },
 }
 M.Branch = {
   condition = function()
@@ -240,15 +253,146 @@ M.Branch = {
     self.status_dict = vim.b.gitsigns_status_dict
     self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
   end,
-
   {
     provider = function(self)
-      return "  " .. self.status_dict.head
+      return " " .. self.status_dict.head
     end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
     end,
     hl = { fg = colors.branch_fg, bold = true },
+  },
+  {
+    provider = function(self)
+      if #self.status_dict.head > 0 then
+        return " "
+      end
+    end,
+  },
+}
+M.FilePath = {
+  condition = function()
+    return not vim.tbl_contains(ft_left_exclude, vim.bo.filetype)
+  end,
+  {
+    provider = function()
+      local opts = {
+        relative = "cwd",
+        length = 3,
+      }
+
+      local path = vim.fn.expand "%:p" --[[@as string]]
+      if path == "" then
+        return ""
+      end
+
+      local bufname = vim.api.nvim_buf_get_name(0)
+      local filename = vim.fn.fnamemodify(bufname, ":.")
+
+      if #filename == 0 then
+        return "[Unknown Filename]"
+      end
+
+      local root = RUtils.root.get { normalize = true }
+      local cwd = RUtils.root.cwd()
+
+      if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
+        path = path:sub(#cwd + 2)
+      elseif path:find(root, 1, true) == 1 then
+        path = path:sub(#root + 2)
+      end
+
+      local sep = package.config:sub(1, 1)
+      local parts = vim.split(path, "[\\/]")
+
+      if opts.length == 0 then
+        parts = parts
+      elseif #parts > opts.length and opts.relative == "cwd" then
+        -- remove the last one to modified hl filename
+        parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
+      else
+        -- remove the last one too
+        parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
+      end
+
+      if not Conditions.width_percent_below(#filename, 0.47) and Conditions.is_active() then
+        path = table.concat(parts, sep)
+        if #path > 0 then
+          return path .. sep
+        end
+      end
+
+      if Conditions.is_active() then
+        parts = vim.split(filename, "[\\/]")
+        table.remove(parts, #parts)
+        local tbl_concat = table.concat(parts, sep)
+        if #tbl_concat > 0 then
+          return tbl_concat .. sep
+        end
+        return ""
+      end
+
+      if not Conditions.width_percent_below(#filename, 0.90) then
+        path = table.concat(parts, sep)
+        if #path > 0 then
+          return path .. sep .. RUtils.file.basename(filename) .. "  "
+        end
+        return RUtils.file.basename(filename) .. " "
+      end
+
+      -- return statusline path untuk non active window
+      return filename .. "  "
+    end,
+    hl = function()
+      if Conditions.is_not_active() then
+        return { fg = colors.basenc_fg }
+      end
+      return { fg = colors.base_fg }
+    end,
+  },
+  {
+    provider = function()
+      local bufname = vim.api.nvim_buf_get_name(0)
+      local filename = vim.fn.fnamemodify(bufname, ":.")
+
+      if Conditions.is_active() then
+        return RUtils.file.basename(filename)
+      end
+    end,
+    hl = function()
+      return { fg = is_show_start(), bold = true, italic = true }
+    end,
+  },
+}
+M.FileIcon = {
+  condition = function()
+    return not vim.tbl_contains(ft_right_exclude, vim.bo.filetype)
+  end,
+
+  init = function(self)
+    local filename = vim.api.nvim_buf_get_name(0)
+    local extension = vim.fn.fnamemodify(filename, ":e")
+    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+  end,
+  provider = function(self)
+    return self.icon and (" " .. self.icon .. "  ")
+  end,
+  hl = function(self)
+    return { fg = self.icon_color }
+  end,
+}
+M.Filetype = {
+  condition = function()
+    return (vim.bo.filetype ~= "fzf")
+      and (vim.bo.filetype ~= "qf")
+      and (not vim.bo.modifiable or vim.bo.readonly)
+      and not (vim.bo.filetype == "DiffviewFiles")
+  end,
+  {
+    provider = function()
+      return vim.bo.filetype .. "  "
+    end,
+    hl = { fg = colors.coldisorent },
   },
 }
 M.Git = {
@@ -259,7 +403,6 @@ M.Git = {
   condition = function()
     return Conditions.is_git_repo() and set_conditions.hide_in_width(50)
   end,
-  provider = " ",
   {
     provider = function(self)
       local count = self.status_dict.added or 0
@@ -281,44 +424,17 @@ M.Git = {
     end,
     hl = { fg = colors.diff_change },
   },
-}
-M.Mixindent = {
   {
-    provider = function()
-      if not vim.o.modifiable or exclude[vim.bo.filetype] then
-        return ""
-      end
-
-      local space_pat = [[\v^ +]]
-      local tab_pat = [[\v^\t+]]
-      local space_indent = vim.fn.search(space_pat, "nwc")
-      local tab_indent = vim.fn.search(tab_pat, "nwc")
-      local mixed = (space_indent > 0 and tab_indent > 0)
-      local mixed_same_line
-      if not mixed then
-        mixed_same_line = vim.fn.search([[\v^(\t+ | +\t)]], "nwc")
-        mixed = mixed_same_line > 0
-      end
-      if not mixed then
-        return ""
-      end
-      if mixed_same_line ~= nil and mixed_same_line > 0 then
-        return "MI:" .. mixed_same_line
-      end
-      local space_indent_cnt = vim.fn.searchcount({
-        pattern = space_pat,
-        max_count = 1e3,
-      }).total
-      local tab_indent_cnt = vim.fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
-      if space_indent_cnt > tab_indent_cnt then
-        return "MI:" .. tab_indent
-      else
-        return "MI:" .. space_indent
+    provider = function(self)
+      local count_add = self.status_dict.added or 0
+      local count_changed = self.status_dict.changed or 0
+      local count_removed = self.status_dict.removed or 0
+      if count_add > 0 or count_changed > 0 or count_removed > 0 then
+        return " "
       end
     end,
   },
 }
-
 M.QuickfixStatus = {
   condition = function()
     return vim.bo[0].filetype == "qf"
@@ -348,7 +464,7 @@ M.QuickfixStatus = {
         -- msg = string.format("%s/%s", vim.fn.getqflist({ id = 0 }).id, #self.qflists())
         msg = string.format("[%s]", vim.fn.getqflist({ id = 0 }).id)
       end
-      return " " .. msg .. " "
+      return msg .. " "
     end,
     hl = function()
       local fg = colors.base_fg
@@ -385,141 +501,34 @@ M.QuickfixStatus = {
     end,
   },
 }
-M.FilePath = {
-  condition = function()
-    return not vim.tbl_contains({ "qf", "trouble", "dashboard" }, vim.bo[0].filetype)
-  end,
-  {
-    provider = function()
-      local opts = {
-        relative = "cwd",
-        modified_hl = "Constant",
-      }
-
-      local path = vim.fn.expand "%:p" --[[@as string]]
-      if path == "" then
-        return ""
-      end
-
-      local bufname = vim.api.nvim_buf_get_name(0)
-      local filename = vim.fn.fnamemodify(bufname, ":.")
-
-      if #filename == 0 then
-        return "[Unknown Filename]"
-      end
-
-      local root = RUtils.root.get { normalize = true }
-      local cwd = RUtils.root.cwd()
-
-      if opts.relative == "cwd" and path:find(cwd, 1, true) == 1 then
-        path = path:sub(#cwd + 2)
-      else
-        path = path:sub(#root + 2)
-      end
-
-      local sep = package.config:sub(1, 1)
-      local parts = vim.split(path, "[\\/]")
-      if #parts > 3 then
-        -- parts = { parts[1], "…", parts[#parts - 1], parts[#parts] }
-        parts = { parts[1], "…", parts[#parts - 2] } -- remove the last one, to modified highlight filename
-      end
-
-      if not Conditions.width_percent_below(#filename, 0.50) and not Conditions.is_not_active() then
-        return "  " .. table.concat(parts, sep) .. sep
-      end
-
-      if not Conditions.is_not_active() then
-        parts = vim.split(filename, "[\\/]")
-        table.remove(parts, #parts)
-        local tbl_concat = table.concat(parts, sep)
-        if #tbl_concat > 0 then
-          return "  " .. tbl_concat .. sep
-        end
-        return "  "
-      end
-
-      if not Conditions.width_percent_below(#filename, 0.90) then
-        return "  " .. table.concat(parts, sep) .. sep .. RUtils.file.basename(filename) .. " "
-      end
-
-      -- return statusline path untuk non active window
-      return "  " .. filename
-    end,
-    hl = function()
-      if Conditions.is_not_active() then
-        return { fg = colors.basenc_fg }
-      end
-      return { fg = colors.base_fg }
-    end,
-  },
-  {
-    provider = function()
-      local bufname = vim.api.nvim_buf_get_name(0)
-      local filename = vim.fn.fnamemodify(bufname, ":.")
-
-      if not Conditions.is_not_active() then
-        return RUtils.file.basename(filename) .. " "
-      end
-
-      return ""
-    end,
-    hl = function()
-      return { fg = is_show_start(), bold = true, italic = true }
-    end,
-  },
-}
 M.FileFlags = {
   {
     condition = function()
-      return vim.bo.modified or not vim.bo[0].filetype == "trouble"
+      return vim.bo.modified
     end,
-    provider = " " .. RUtils.config.icons.misc.boldclose,
+    provider = RUtils.config.icons.misc.boldclose .. " ",
     hl = { fg = colors.diagnostic_err },
   },
   {
     condition = function()
-      return (vim.bo.filetype ~= "fzf") and (vim.bo.filetype ~= "qf") and (not vim.bo.modifiable or vim.bo.readonly)
+      return (vim.bo.filetype ~= "fzf")
+        and (vim.bo.filetype ~= "qf")
+        and (not vim.bo.modifiable or vim.bo.readonly)
+        and not (vim.bo.filetype == "DiffviewFiles")
     end,
-    provider = " ",
-    hl = { fg = colors.diagnostic_err },
-  },
-}
-M.Dap = {
-  condition = function()
-    local ft_exclude = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
-    if package.loaded.dap == nil then
-      return false
-    end
-    if vim.tbl_contains(ft_exclude, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
-      return false
-    end
-    local session = require("dap").session()
-
-    return session ~= nil
-  end,
-  provider = function()
-    return " " .. require("dap").status() .. " "
-  end,
-  hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
-}
-M.Clock = {
-  condition = function()
-    return (not vim.env.TMUX and not vim.tbl_contains({ "Outline", "aerial", "neo-tree" }, vim.bo[0].filetype))
-      and not (vim.env.TERM_PROGRAM == "WezTerm")
-  end,
-  {
-    provider = RUtils.config.icons.misc.separator_up,
+    provider = RUtils.config.icons.misc.readonly,
     hl = function()
-      return { bg = colors.diagnostic_err, fg = colors.base_bg }
+      local fg = colors.diagnostic_err
+      if Conditions.is_not_active() then
+        fg = colors.coldisorent
+      end
+
+      return { fg = fg }
     end,
-  },
-  {
-    provider = function()
-      return "  " .. os.date "%H:%M "
-    end,
-    hl = { bg = colors.diagnostic_err, fg = "black", bold = true },
   },
 }
+
+M.Gap = { { provider = "%=" } }
 
 local function OverseerTasksForStatus(status)
   return {
@@ -569,6 +578,58 @@ M.Tasks = {
   rpad(OverseerTasksForStatus "SUCCESS"),
   rpad(OverseerTasksForStatus "FAILURE"),
 }
+M.Dap = {
+  condition = function()
+    local ft_exclude = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
+    if package.loaded.dap == nil then
+      return false
+    end
+    if vim.tbl_contains(ft_exclude, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
+      return false
+    end
+    local session = require("dap").session()
+
+    return session ~= nil
+  end,
+  provider = function()
+    return " " .. require("dap").status() .. " "
+  end,
+  hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
+}
+local actived_venv = function()
+  local python_logo = "   "
+
+  local dc = RUtils.extras.wants {
+    ft = "python",
+    root = {
+      "pyproject.toml",
+      "pyrightconfig.json",
+    },
+  }
+  if RUtils.has "venv-selector.nvim" and dc then
+    local venv_name = require("venv-selector").get_active_venv()
+    if venv_name ~= nil then
+      return python_logo .. string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
+    else
+      return python_logo .. "venv"
+    end
+  else
+    return ""
+  end
+end
+M.virtualenv = {
+  condition = function()
+    return set_conditions.hide_in_width(130)
+  end,
+  {
+    provider = function()
+      return actived_venv()
+    end,
+  },
+  {
+    provider = " ",
+  },
+}
 M.LSPActive = {
   update = { "LspAttach", "LspDetach", "VimResized", "FileType", "BufEnter", "BufWritePost" },
 
@@ -603,39 +664,22 @@ M.LSPActive = {
     end
     self.names = names
   end,
-  provider = function(self)
-    if #self.names > 1 then
-      return " "
-    end
-    return ""
-  end,
-  flexible = 1,
   {
     provider = function(self)
-      if vim.tbl_isempty(self.names) then
-        return ""
-      else
+      if #self.names > 1 then
         return RUtils.config.icons.misc.lsp .. "[" .. table.concat(self.names, " ") .. "] "
       end
     end,
     hl = { fg = colors.base_fg, bg = colors.base_bg },
   },
-}
-M.FileIcon = {
-  condition = function()
-    return not vim.tbl_contains({ "qf", "trouble", "Outline", "aerial" }, vim.bo[0].filetype)
-  end,
-  init = function(self)
-    local filename = vim.api.nvim_buf_get_name(0)
-    local extension = vim.fn.fnamemodify(filename, ":e")
-    self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
-  end,
-  provider = function(self)
-    return self.icon and (self.icon .. " ")
-  end,
-  hl = function(self)
-    return { fg = self.icon_color }
-  end,
+  {
+    provider = function(self)
+      if #self.names > 1 then
+        return " "
+      end
+      return ""
+    end,
+  },
 }
 M.SearchCount = {
   init = function(self)
@@ -699,13 +743,6 @@ M.Diagnostics = {
     self.info = count "INFO"
   end,
   update = { "DiagnosticChanged", "BufEnter" },
-
-  provider = function(self)
-    if self.errors > 0 or self.warnings > 0 or self.hints > 0 or self.info > 0 then
-      return " "
-    end
-    return ""
-  end,
   {
     condition = function(self)
       return self.errors > 0
@@ -714,13 +751,13 @@ M.Diagnostics = {
       provider = function(self)
         return self.error_icon
       end,
-      hl = { fg = colors.diagnostic_err, bg = colors.base_bg },
+      hl = { fg = colors.diagnostic_err },
     },
     {
       provider = function(self)
         return self.errors .. " "
       end,
-      hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
+      hl = { fg = colors.diagnostic_err, bold = true },
     },
   },
   {
@@ -731,13 +768,13 @@ M.Diagnostics = {
       provider = function(self)
         return self.warn_icon
       end,
-      hl = { fg = colors.diagnostic_warn, bg = colors.base_bg },
+      hl = { fg = colors.diagnostic_warn },
     },
     {
       provider = function(self)
         return self.warnings .. " "
       end,
-      hl = { fg = colors.diagnostic_warn, bg = colors.base_bg, bold = true },
+      hl = { fg = colors.diagnostic_warn, bold = true },
     },
   },
   {
@@ -748,13 +785,13 @@ M.Diagnostics = {
       provider = function(self)
         return self.info_icon
       end,
-      hl = { fg = colors.diagnostic_info, bg = colors.base_bg },
+      hl = { fg = colors.diagnostic_info },
     },
     {
       provider = function(self)
         return self.info .. " "
       end,
-      hl = { fg = colors.diagnostic_info, bg = colors.base_bg, bold = true },
+      hl = { fg = colors.diagnostic_info, bold = true },
     },
   },
   {
@@ -765,70 +802,85 @@ M.Diagnostics = {
       provider = function(self)
         return self.hint_icon
       end,
-      hl = { fg = colors.diagnostic_hint, bg = colors.base_bg },
+      hl = { fg = colors.diagnostic_hint },
     },
     {
       provider = function(self)
         return self.hints .. " "
       end,
-      hl = { fg = colors.diagnostic_hint, bg = colors.base_bg, bold = true },
+      hl = { fg = colors.diagnostic_hint, bold = true },
     },
+  },
+  {
+    provider = function(self)
+      if self.errors > 0 or self.warnings > 0 or self.hints > 0 or self.info > 0 then
+        return " "
+      end
+      return ""
+    end,
+  },
+}
+M.LazyStatus = {
+  condition = function()
+    return set_conditions.hide_in_width(100) and require("lazy.status").has_updates()
+  end,
+  {
+    provider = function()
+      local status_lazy = require("lazy.status").updates()
+      if #status_lazy then
+        return status_lazy .. "  "
+      end
+    end,
+    hl = { fg = colors.keyword, bold = true },
   },
 }
 M.Sessions = {
   condition = function()
-    return vim.bo[0].filetype ~= "qf" and set_conditions.hide_in_width(70)
+    return not vim.tbl_contains(ft_right_exclude, vim.bo.filetype) and set_conditions.hide_in_width(70)
+  end,
+  init = function(self)
+    local sess_status
+
+    if RUtils.has "persistence.nvim" then
+      local ok, ses_persistent = pcall(require, "persistence")
+      if ok then
+        local get_current_ses = ses_persistent.current()
+        local sess = vim.fn.filereadable(get_current_ses) == 1
+        if sess ~= nil then
+          sess_status = "On"
+        end
+      end
+    elseif RUtils.has "resession.nvim" then
+      local ok, res_resession = pcall(require, "resession")
+      if ok then
+        local get_current_ses = res_resession.get_current()
+        if get_current_ses ~= nil then
+          sess_status = get_current_ses
+        end
+      end
+    elseif RUtils.has "auto-session" then
+      local ok, _ = pcall(require, "auto-session")
+      if ok then
+        local get_current_ses = require("auto-session.lib").current_session_name(true)
+        if #get_current_ses > 0 then
+          sess_status = get_current_ses
+        end
+      end
+    end
+
+    self.ses_status = sess_status
   end,
   {
-    provider = function()
-      local sess_icon = " 󰅟" -- "
-      local sess_status = "Off"
-
-      if RUtils.has "persistence.nvim" then
-        local ok, ses_persistent = pcall(require, "persistence")
-        if ok then
-          local get_current_ses = ses_persistent.current()
-          local sess = vim.fn.filereadable(get_current_ses) == 1
-          if sess ~= nil then
-            sess_status = "On"
-          end
-        end
-      elseif RUtils.has "resession.nvim" then
-        local ok, res_resession = pcall(require, "resession")
-        if ok then
-          local get_current_ses = res_resession.get_current()
-          if get_current_ses ~= nil then
-            sess_status = get_current_ses
-          end
-        end
-      elseif RUtils.has "auto-session" then
-        local ok, _ = pcall(require, "auto-session")
-        if ok then
-          local get_current_ses = require("auto-session.lib").current_session_name(true)
-          if #get_current_ses > 0 then
-            sess_status = get_current_ses
-          end
-        end
+    provider = function(self)
+      local icon_ses = "󰅟 "
+      local ses_status = self.ses_status
+      if self.ses_status == nil then
+        return
       end
 
-      if not Conditions.width_percent_below(#sess_status, 0.30) then
-        return sess_icon .. "  "
-      end
-
-      return sess_icon .. " " .. sess_status .. " "
+      return icon_ses .. ses_status .. "  "
     end,
     hl = { fg = colors.diagnostic_warn },
-  },
-}
-M.Marks = {
-  {
-    provider = function()
-      local cur_mark = require("qfsilet.marks").get_current_status_buf()
-      if cur_mark > 0 then
-        return " " .. RUtils.config.icons.misc.marks .. " "
-      end
-    end,
-    hl = { fg = "red" },
   },
 }
 M.PinnedBuffer = {
@@ -837,46 +889,25 @@ M.PinnedBuffer = {
       if RUtils.has "stickybuf.nvim" then
         local is_pinned = require("stickybuf").is_pinned()
         if is_pinned then
-          return " " .. RUtils.config.icons.misc.dashboard .. " "
+          return RUtils.config.icons.misc.dashboard .. " "
         end
       end
     end,
-    hl = { fg = "green" },
+    hl = { fg = colors.diagnostic_err },
   },
 }
-local actived_venv = function()
-  local python_logo = "   "
-
-  local dc = RUtils.extras.wants {
-    ft = "python",
-    root = {
-      "pyproject.toml",
-      "pyrightconfig.json",
-    },
-  }
-  if RUtils.has "venv-selector.nvim" and dc then
-    local venv_name = require("venv-selector").get_active_venv()
-    if venv_name ~= nil then
-      return python_logo .. string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
-    else
-      return python_logo .. "venv"
-    end
-  else
-    return ""
-  end
-end
-
-M.virtualenv = {
+M.Marks = {
   condition = function()
-    return set_conditions.hide_in_width(130)
+    return set_conditions.hide_in_width(70)
   end,
   {
     provider = function()
-      return actived_venv()
+      local cur_mark = require("qfsilet.marks").get_current_status_buf()
+      if cur_mark > 0 then
+        return RUtils.config.icons.misc.marks .. "  "
+      end
     end,
-  },
-  {
-    provider = " ",
+    hl = { fg = "red" },
   },
 }
 M.BufferCwd = {
@@ -886,7 +917,6 @@ M.BufferCwd = {
   condition = function()
     return not vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) and set_conditions.hide_in_width(80)
   end,
-  provider = " ",
   {
     provider = function()
       local patc = vim.uv.cwd()
@@ -899,17 +929,16 @@ M.BufferCwd = {
         return " " .. cwd .. "%*"
       end
     end,
-    hl = { fg = colors.directory, bg = colors.base_bg },
+    hl = { fg = colors.directory },
   },
   {
-    provider = " ",
+    provider = "  ",
   },
 }
 M.Ruler = {
   condition = function()
     return set_conditions.hide_in_width(130)
   end,
-  provider = " ",
   {
     provider = function()
       local rhs = ""
@@ -951,8 +980,77 @@ M.Ruler = {
     hl = { fg = colors.base_fg },
   },
 }
-M.Gap = {
-  { provider = "%=" },
+M.Clock = {
+  condition = function()
+    return not vim.env.TMUX
+      and not (vim.env.TERM_PROGRAM == "WezTerm")
+      and not vim.tbl_contains(ft_right_exclude, vim.bo.filetype)
+      and set_conditions.hide_in_width(70)
+  end,
+  {
+    provider = RUtils.config.icons.misc.separator_up,
+    hl = function()
+      return { bg = colors.diagnostic_err, fg = colors.base_bg }
+    end,
+  },
+  {
+    provider = function()
+      return "  " .. os.date "%H:%M "
+    end,
+    hl = { bg = colors.diagnostic_err, fg = colors.base_bg, bold = true },
+  },
+}
+
+-- Not longer used..
+M.Mixindent = {
+  {
+    provider = function()
+      if not vim.o.modifiable or exclude[vim.bo.filetype] then
+        return ""
+      end
+
+      local space_pat = [[\v^ +]]
+      local tab_pat = [[\v^\t+]]
+      local space_indent = vim.fn.search(space_pat, "nwc")
+      local tab_indent = vim.fn.search(tab_pat, "nwc")
+      local mixed = (space_indent > 0 and tab_indent > 0)
+      local mixed_same_line
+      if not mixed then
+        mixed_same_line = vim.fn.search([[\v^(\t+ | +\t)]], "nwc")
+        mixed = mixed_same_line > 0
+      end
+      if not mixed then
+        return ""
+      end
+      if mixed_same_line ~= nil and mixed_same_line > 0 then
+        return "MI:" .. mixed_same_line
+      end
+      local space_indent_cnt = vim.fn.searchcount({
+        pattern = space_pat,
+        max_count = 1e3,
+      }).total
+      local tab_indent_cnt = vim.fn.searchcount({ pattern = tab_pat, max_count = 1e3 }).total
+      if space_indent_cnt > tab_indent_cnt then
+        return "MI:" .. tab_indent
+      else
+        return "MI:" .. space_indent
+      end
+    end,
+  },
+}
+M.SnacksProfile = {
+  condition = function()
+    return set_conditions.hide_in_width(100)
+  end,
+  {
+    provider = function()
+      return Snacks.profiler.status()[1]() .. " "
+    end,
+    hl = { fg = colors.base_fg, bold = true },
+  },
+  {
+    provider = " ",
+  },
 }
 
 M.status_active_left = {
@@ -964,26 +1062,41 @@ M.status_active_left = {
   M.Git,
   M.QuickfixStatus,
   M.FileFlags,
+
   M.Gap,
+
   M.Tasks,
   M.Dap,
   M.virtualenv,
   M.LSPActive,
   M.Diagnostics,
+  M.LazyStatus,
+  -- M.SnacksProfile,
   -- M.SearchCount, -- this func make nvim slow!
   M.Sessions,
-  M.PinnedBuffer,
   M.Marks,
+  M.Filetype,
+  M.PinnedBuffer,
   M.BufferCwd,
   M.Ruler,
   M.Clock,
 
   hl = function()
+    local bg = colors.base_bg
+
     if vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) then
       return { fg = colors.base_fg, bg = colors.base_bg }
     end
 
-    return { fg = colors.base_fg, bg = colors.base_bg }
+    if Conditions.is_active() then
+      local mode = vim.fn.mode(1)
+      local mode_text = mode:sub(1, 1)
+      if mode_text == "i" then
+        bg = colors.vim_mode_insertnc
+      end
+    end
+
+    return { fg = colors.base_fg, bg = bg }
   end,
 }
 
@@ -997,6 +1110,8 @@ M.status_not_active = {
   M.QuickfixStatus,
   M.FileFlags,
   M.Gap,
+  M.Filetype,
+  M.PinnedBuffer,
   M.Ruler,
 
   hl = { bg = colors.basenc_bg, fg = colors.basenc_fg },

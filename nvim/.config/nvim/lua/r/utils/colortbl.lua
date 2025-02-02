@@ -68,6 +68,7 @@ local M = {
   norm_bg = statusline_bg,
 
   mod_ins = error_fg,
+  mode_ins_bar = Highlight.tint(error_fg, -0.4),
   mod_insnc = error_fgnc,
   mod_vis = Highlight.get("visual", "bg"),
   mod_term = Highlight.get("Boolean", "fg"),
