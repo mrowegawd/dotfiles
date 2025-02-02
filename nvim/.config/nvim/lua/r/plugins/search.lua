@@ -109,7 +109,7 @@ return {
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
       { "<a-t>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
-      { "fb", function()
+      { "<Leader>bf", function()
         require("fzf-lua").buffers({
           winopts = function()
             local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
@@ -136,13 +136,13 @@ return {
           end,
       }) end, desc = "Fzflua: select buffers" },
       { "<Leader>s", "", desc = "+fzfcustom" },
-      { "<Leader>bs", function() require("fzf-lua").blines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on curbuf [fzflua", mode = { "n" } },
-      { "<Leader>bs", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
-      { "<Leader>bS", function() require("fzf-lua").lines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on buffers [fzflua]" },
-      { "<Leader>bS", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
-      { "<Leader>sc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
-      { "<Leader>sC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
-      { "<Leader>sa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
+      { "<Leader>bg", function() require("fzf-lua").blines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on curbuf [fzflua", mode = { "n" } },
+      { "<Leader>bg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>bG", function() require("fzf-lua").lines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on buffers [fzflua]" },
+      { "<Leader>bG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
+      { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
+      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
+      { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
       { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: recent files (history buffer)" },
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
       { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
@@ -151,10 +151,9 @@ return {
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
       { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
-      { "<Leader>fc", function() require("fzf-lua").changes() end, desc = "Fzflua: changes" },
       { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Fzflua: jumps" },
       { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
-      { "<Leader>fs", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
+      { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
 
       { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
       { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
@@ -162,9 +161,9 @@ return {
       { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
       { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Git: man pages [fzflua]" },
 
-      { "<Leader>fh", function() local j = vim.fn.expand "<cword>" require("fzf-lua").help_tags { query = j } end, desc = "Fzflua: help tags" },
+      { "<Leader>fH", function() local j = vim.fn.expand "<cword>" require("fzf-lua").help_tags { query = j } end, desc = "Fzflua: help tags" },
       {
-        "<Leader>fh",
+        "<Leader>fH",
         function()
           local sel = RUtils.cmd.get_visual_selection { strict = true }
           if sel then
