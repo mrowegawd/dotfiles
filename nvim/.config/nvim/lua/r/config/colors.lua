@@ -131,7 +131,7 @@ reset_base_alter({ "chocolatier" }, {
 })
 
 reset_base_alter({ "coffeecat" }, {
-  cursorline_alter = 0.06,
+  cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.08,
   pmenu_bg_alter = -0.1,
   pmenu_fg_border_alter = 0.6,
@@ -917,7 +917,7 @@ local general_overrides = function()
     },
 
     -- ─────────────────────────────── ORGMODE ───────────────────────────────
-    { ["@org.agenda.scheduled"] = { fg = "white" } },
+    { ["@org.agenda.scheduled"] = { fg = Highlight.darken("#3f9f31", 0.8, Highlight.get("Normal", "bg")) } },
     {
       ["@org.agenda.scheduled_past"] = {
         fg = Highlight.darken(dark_yellow, -0.6, Highlight.get("Normal", "bg")),
@@ -1144,6 +1144,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.3 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
@@ -1325,6 +1326,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.23 } } },
 
@@ -1567,6 +1569,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.15 } } },
 
@@ -1617,6 +1620,10 @@ local function colorscheme_overrides()
     },
     ["catppuccin-mocha"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.4 }, italic = true } },
+      { ["@comment"] = { inherit = "Comment" } },
+      { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.25 } } },
 
       { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.85 } } },
@@ -1698,6 +1705,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.48 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       {
         Folded = {
@@ -1756,11 +1764,12 @@ local function colorscheme_overrides()
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
-      { Visual = { fg = "NONE" } },
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.15 }, fg = "NONE" } },
 
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.48 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.05 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
@@ -1808,14 +1817,14 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.4 },
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 3.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.75 },
           reverse = false,
         },
       },
       {
         Tabline = {
-          fg = { from = "Normal", attr = "bg", alter = 2.8 },
+          fg = { from = "Normal", attr = "bg", alter = 3 },
           bg = { from = "Normal", attr = "bg", alter = 0.47 },
           reverse = false,
         },
@@ -1848,6 +1857,7 @@ local function colorscheme_overrides()
       },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
@@ -1956,6 +1966,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.2 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.1 } } },
       { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
@@ -2097,7 +2108,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.15 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
-      { ["@lsp.type.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.02 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -2245,7 +2256,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
-      { ["@lsp.type.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       {
         LspReferenceText = {
@@ -2317,6 +2328,7 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.2 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.48 } } },

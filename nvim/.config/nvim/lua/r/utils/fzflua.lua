@@ -5,6 +5,8 @@ function M.default_title_prompt()
   return "  "
 end
 
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+
 function M.rectangle_win_pojokan()
   local win_height = math.ceil(RUtils.cmd.get_option "lines" * 0.5)
   local win_width = math.ceil(RUtils.cmd.get_option "columns" * 1)
@@ -82,10 +84,10 @@ function M.send_cmds(opts, opts_cmds)
     table.insert(cmds, idx)
   end
 
-  require("fzf-lua").fzf_exec(
+  fzf_lua.fzf_exec(
     cmds,
     M.cursor_random(vim.tbl_deep_extend("force", {
-      prompt = "   ",
+      prompt = RUtils.fzflua.default_title_prompt(),
       winopts = { title = opts_cmds.title and opts_cmds.title or "" },
       actions = {
         ["default"] = function(selected, _)
@@ -141,7 +143,7 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
             for _, file in ipairs(data) do
               if #file > 0 then
                 -- print(file)
-                cb(require("fzf-lua").make_entry.file(file, {}), function()
+                cb(fzf_lua.make_entry.file(file, {}), function()
                   coroutine.resume(co, 0)
                 end)
               end
@@ -176,7 +178,7 @@ function M.exec_fzf_cmd_async(str_cmds, fzf_opts)
       end)()
     end
 
-    require("fzf-lua").fzf_exec(contents, fzf_opts)
+    fzf_lua.fzf_exec(contents, fzf_opts)
   end
 end
 
@@ -219,11 +221,10 @@ function M.cmd_filter_kind_lsp(opts)
     actions = { opts.actions, "table" },
   }
 
-  local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
   local selected_lsp = M.select_lsp()
 
   fzf_lua.fzf_exec(selected_lsp, {
-    prompt = "   ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     no_esc = true,
     fzf_opts = { ["--layout"] = "reverse" },
     winopts = {

@@ -43,7 +43,7 @@ return {
       local Menu = require "org-modern.menu"
       local done_hi = Highlight.get("Comment", "fg")
       local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Error", "fg"))
-      local todo_fg = Highlight.get("ErrorMsg", "fg")
+      local todo_fg = Highlight.get("Error", "fg")
       return {
         ui = {
           menu = {

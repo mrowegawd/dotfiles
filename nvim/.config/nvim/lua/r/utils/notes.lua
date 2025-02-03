@@ -10,7 +10,7 @@ local function opts_fzf(title, maps)
     tilte = { title, "string" },
   }
   return {
-    prompt = "   ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = function()
       local lines = vim.api.nvim_get_option_value("lines", { scope = "global" })
       local columns = vim.api.nvim_get_option_value("columns", { scope = "global" })
@@ -76,7 +76,7 @@ function M.open_agenda_file_lists()
   local opts = {
     title = RUtils.config.icons.misc.pencil .. " Orgtodo Files",
     fzf_opts = {
-      ["--header"] = [[ Ctrl-x: delete and clean up]],
+      ["--header"] = [[Ctrl-x: delete and clean up]],
     },
     actions = {
 

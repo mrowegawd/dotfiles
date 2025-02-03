@@ -222,7 +222,7 @@ return {
               if choice == cmds[1] then
                 vim.cmd "wincmd l"
                 vim.schedule(function()
-                  require("fzf-lua").live_grep_glob {
+                  fzf_lua.live_grep_glob {
                     winopts = {
                       title = RUtils.fzflua.format_title(choice, "󰈙"),
                     },
@@ -252,7 +252,7 @@ return {
 
               if choice == cmds[2] then
                 vim.cmd "wincmd l"
-                require("fzf-lua").files {
+                fzf_lua.files {
                   winopts = {
                     title = RUtils.fzflua.format_title(choice, "󰈙"),
                   },

@@ -49,16 +49,16 @@ return {
             resession.save(selected, {})
           end
         end)
-      end, { desc = "Misc: save with session name [resession.nvim]" })
+      end, { desc = "Session: save with session name [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>ss", function() resession.save() end, { desc = "Misc: save session with current name [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>ss", function() resession.save() end, { desc = "Session: save session with current name [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>st", function() resession.save_tab() end, { desc = "Misc: save session tab [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>st", function() resession.save_tab() end, { desc = "Session: save session tab [resession.nvim]" })
       --stylua: ignore
-      vim.keymap.set("n", "<Leader>sl", function() resession.load() end, { desc = "Misc: load from list sessions [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sl", function() resession.load() end, { desc = "Session: load from list sessions [resession.nvim]" })
       --stylua: ignore
       -- vim.keymap.set("n", "<Leader>sl", function() resession.load "last" end, { desc = "Misc: load last session [resession.nvim]" })
-      vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Misc: session delete [resession.nvim]" })
+      vim.keymap.set("n", "<Leader>sd", resession.delete, { desc = "Session: session delete [resession.nvim]" })
 
       vim.api.nvim_create_user_command("SessionDetach", function()
         resession.detach()

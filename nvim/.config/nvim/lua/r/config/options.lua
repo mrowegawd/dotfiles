@@ -14,6 +14,12 @@ vim.g.deprecation_warnings = false
 -- enabled with `:LazyExtras`
 vim.g.lazyvim_cmp = "auto"
 
+-- LazyVim picker to use.
+-- Can be one of: telescope, fzf
+-- Leave it to "auto" to automatically use the picker
+-- enabled with `:LazyExtras`
+vim.g.lazyvim_picker = "fzf"
+
 -- if the completion engine supports the AI source,
 -- use that instead of inline suggestions
 vim.g.ai_cmp = true

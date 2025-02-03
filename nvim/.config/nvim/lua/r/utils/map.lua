@@ -47,7 +47,7 @@ M.show_help_buf_keymap = function()
   end
 
   local opts = {
-    prompt = "  ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = "Show Keymap Help [" .. ft .. "]",
     },

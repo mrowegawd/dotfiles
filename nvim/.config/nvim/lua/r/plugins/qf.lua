@@ -61,6 +61,10 @@ return {
         todo = {
           add_todo = "mt",
         },
+        marks = {
+          next_mark = "<Leader>wn",
+          prev_mark = "<Leader>wp",
+        },
       },
     },
   },

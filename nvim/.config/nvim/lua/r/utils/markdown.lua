@@ -531,11 +531,11 @@ local function picker(contents, actions)
         return Tagpreviewer
       end,
     },
-    prompt = "   ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = format_prompt_strings(),
     },
-    fzf_opts = { ["--header"] = [[ CTRL-X:filter-by-tag  CTRL-Y:add-tag  CTRL-R:reload  CTRL-G:grep-filter]] },
+    fzf_opts = { ["--header"] = [[CTRL-X:filter-by-tag  CTRL-Y:add-tag  CTRL-R:reload  CTRL-G:grep-filter]] },
     actions = actions,
   })
 end
@@ -701,7 +701,7 @@ end
 
 function M.find_global_titles()
   require("fzf-lua").grep {
-    prompt = "   ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     cwd = RUtils.config.path.wiki_path,
     search = regex_title,
     rg_glob = false,
@@ -741,7 +741,7 @@ function M.find_local_titles()
   end
 
   return require("fzf-lua").grep {
-    prompt = "   ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
@@ -796,7 +796,7 @@ end
 
 function M.find_local_sitelink()
   require("fzf-lua").lgrep_curbuf {
-    prompt = "  ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title curbuf", ""),
     },
@@ -873,7 +873,7 @@ end
 
 function M.insert_local_titles()
   require("fzf-lua").lgrep_curbuf {
-    prompt = "  ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title curbuf", ""),
     },
@@ -901,7 +901,7 @@ end
 
 function M.insert_global_titles()
   require("fzf-lua").grep {
-    prompt = "  ",
+    prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title global", ""),
     },
