@@ -16,7 +16,6 @@ fi
 not_in_tmux() {
   [ -z "$TMUX" ]
 }
-
 not_in_tmux_2() {
   tmux_ls=$(tmux ls 2>&1)
 
@@ -28,7 +27,6 @@ not_in_tmux_2() {
     return 0
   fi
 }
-
 notifme_to_run_in_tmux() {
   if not_in_tmux; then
     echo "$1"
@@ -39,11 +37,9 @@ notifme_to_run_in_tmux() {
 _go_left() {
   tmux select-pane -L
 }
-
 _go_right() {
   tmux select-pane -R
 }
-
 _go_up() {
   tmux select-pane -U
 }
@@ -51,11 +47,9 @@ _go_up() {
 _check_pane_is_zsh() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
 }
-
 _check_pane_is_nvim() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
-
 _check_pane_is_nnn() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
 }
@@ -90,7 +84,6 @@ open_calc() {
     -b rounded \
     -E python -ic "from __future__ import division; from math import *; from random import *"
 }
-
 open_mutlilog() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
@@ -105,7 +98,6 @@ open_mutlilog() {
     sudo multitail -cS alf_log -s 2 /var/log/syslog /var/log/auth.log /var/log/kern.log
   fi
 }
-
 open_newsboat() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
@@ -130,7 +122,6 @@ open_newsboat() {
     fi
   fi
 }
-
 open_rkill() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   local pid
@@ -140,7 +131,6 @@ open_rkill() {
     echo "$pid" | xargs kill -9
   fi
 }
-
 open_calcure() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
@@ -167,7 +157,6 @@ open_calcure() {
   fi
 
 }
-
 open_ps_btop() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
   session="tmp_btop"
@@ -191,7 +180,6 @@ open_ps_btop() {
     fi
   fi
 }
-
 open_ps_lsof() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
 
@@ -304,17 +292,14 @@ tmux_clock_mode() {
     fi
   fi
 }
-
 tmux_toggle_status() {
   tmux set-option -g status
 }
-
 tmux_toggle_synchronize_panes() {
   file_sync="/tmp/.tmux_toggle_synchronize_panes"
   [[ ! -f $file_sync ]] && touch "$file_sync" && tmux set-window-option synchronize-panes on \; display 'Synchronize Begin Now!' && exit
   [[ -f $file_sync ]] && rm "$file_sync" && tmux set-window-option synchronize-panes off \; display 'Synchronize End!' && exit
 }
-
 tmux_select_sess() {
   # session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf-tmux -xC -w '50%' -h '40%' --exit-0)
   # [[ -z $session ]] && exit
@@ -324,7 +309,6 @@ tmux_select_sess() {
 
   tmux switch-client -t "$SELECT_SESS"
 }
-
 tmux_create_sess() {
   DROPBOX_PATH="$HOME/Dropbox/data.programming.forprivate"
   MARKED_PWD="$DROPBOX_PATH/marked-pwd"

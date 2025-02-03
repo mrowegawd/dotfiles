@@ -98,7 +98,7 @@ open_tree_cwd() {
 }
 
 open_tree_wiki() {
-  if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
+  if ! _check_pane_is_yazi; then
     _open_wiki_file_manager_window
   else
     clean_tree
