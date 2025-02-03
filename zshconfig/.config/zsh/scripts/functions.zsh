@@ -22,6 +22,11 @@ build-install() {
     sudo apt install xinput
   fi
 
+  if ! command -v pass >/dev/null; then
+    echo "Installing: pass - The standard unix password manager"
+    sudo apt install pass ydotool ydotoold -y
+  fi
+
   if ! command -v urlview >/dev/null; then
     echo "Installing: urlview"
     sudo apt install urlview
@@ -135,6 +140,12 @@ build-install() {
   if ! asdf which tclock >/dev/null; then
     echo "Installing: tclock - clock tui"
     cargo install clock-tui
+    asdf reshim rust
+  fi
+
+  if ! asdf which tree-sitter >/dev/null; then
+    echo "Installing: tree-sitter-cli -- treesitter parser"
+    cargo install tree-sitter-cli
     asdf reshim rust
   fi
 
