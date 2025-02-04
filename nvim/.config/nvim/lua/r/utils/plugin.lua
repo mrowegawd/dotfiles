@@ -236,8 +236,7 @@ function M.change_colors()
   local gitlinenumber_delete =
     Highlight.darken(Highlight.get("GitSignsDelete", "fg"), 0.6, Highlight.get("Normal", "bg"))
 
-  local sugest_highlight =
-    Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.5, Highlight.get("Normal", "bg"))
+  local sugest_highlight = Highlight.tint(Highlight.get("StatusLineNC", "fg"), -0.49)
 
   local yazi_cwd = Highlight.get("Comment", "fg")
   local yazi_hovered = Highlight.get("CursorLine", "bg")
@@ -245,11 +244,13 @@ function M.change_colors()
   local yazi_tab_active_bg = Highlight.get("KeywordNC", "bg")
   local yazi_tab_inactive_fg = Highlight.get("TabLine", "fg")
   local yazi_tab_inactive_bg = Highlight.get("TabLine", "bg")
-  local yazi_statusline_active_mode_bg = Highlight.get("Keyword", "fg")
-  local yazi_statusline_active_bg = Highlight.get("StatusLine", "bg")
+  local yazi_statusline_active_bg = Highlight.get("KeywordBlur", "bg")
+  local yazi_statusline_active_fg = Highlight.get("StatusLineNC", "bg")
   local yazi_directory = Highlight.get("Directory", "fg")
   local yazi_filename_fg = Highlight.get("StatusLine", "fg")
   local yazi_which_bg = Highlight.get("Pmenu", "bg")
+
+  local zsh_background_bg = Highlight.get("StatusLineNC", "bg")
 
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
@@ -323,6 +324,9 @@ function M.change_colors()
 *color46: %s
 *color47: %s
 *color48: %s
+
+%s
+*color49: %s
 ]],
     fmt "! vim: foldmethod=marker foldlevel=0 ft=xdefaults",
 
@@ -377,11 +381,14 @@ function M.change_colors()
     yazi_tab_inactive_bg, -- 43
 
     fmt "! yazi: statusline_mode_active_bg, statusline_active_bg, directory, which_bg, filename_fg",
-    yazi_statusline_active_mode_bg, -- 44
-    yazi_statusline_active_bg, -- 45
+    yazi_statusline_active_bg, -- 44
+    yazi_statusline_active_fg, -- 45
     yazi_directory, -- 46
     yazi_which_bg, -- 47
-    yazi_filename_fg
+    yazi_filename_fg, -- 48
+
+    fmt "! zsh: zsh_background_bg",
+    zsh_background_bg -- 49
   )
 
   local master_color_path = "/tmp/master-colors-themes"

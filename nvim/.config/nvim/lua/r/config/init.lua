@@ -130,6 +130,7 @@ local defaults = {
       question = " ",
       robot = "ﮧ ",
       search = " ",
+      readonly = "󰌾 ",
       shaded_lock = " ",
       sign_in = " ",
       sign_out = " ",

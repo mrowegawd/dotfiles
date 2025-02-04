@@ -127,6 +127,7 @@ return {
             ["vim.lsp.util.stylize_markdown"] = true,
             ["cmp.entry.get_documentation"] = true,
           },
+          signature = { enabled = false },
         },
         cmdline = { view = "cmdline" },
         views = {
@@ -141,14 +142,9 @@ return {
             relative = "editor",
             position = { row = "55%", col = "50%" },
             size = { width = 60, height = 12 },
-            win_options = {
-              winblend = 0,
-              winhighlight = { Normal = "Pmenu", FloatBorder = "DiagnosticInfo" },
-            },
+            win_options = { winblend = 0, winhighlight = { Normal = "Pmenu", FloatBorder = "DiagnosticInfo" } },
           },
-          hover = {
-            win_options = { winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpDocFloatBorder" } },
-          },
+          hover = { win_options = { winhighlight = { Normal = "CmpDocNormal", FloatBorder = "CmpDocFloatBorder" } } },
         },
         routes = {
           {
@@ -159,17 +155,31 @@ return {
                 { find = "%d+ line" },
                 { find = "%d+ lines, %d+ bytes" },
                 { find = "%d+ more line" },
-                { find = "%d+L, %d+B" },
-                { find = "%d+L, %d+B" },
+                -- { find = "%d+L, %d+B" },
                 { find = "; after #%d+" },
                 { find = "; before #%d+" },
                 { find = "^Hunk %d+ of %d" },
                 { find = "written" },
-                { kind = "search_count" },
                 { kind = "line %d+ of %d+" },
+                { kind = "search_count" },
               },
             },
             view = "mini",
+          },
+          {
+            opts = { skip = true },
+            filter = {
+              any = {
+                { event = "msg_show", find = "written" },
+                { event = "msg_show", find = "%d+ lines, %d+ bytes" },
+                { event = "msg_show", kind = "search_count" },
+                { event = "msg_show", find = "%d+L, %d+B" },
+                { event = "msg_show", find = "^Hunk %d+ of %d" },
+                { event = "msg_show", find = "%d+ change" },
+                { event = "msg_show", find = "%d+ line" },
+                { event = "msg_show", find = "%d+ more line" },
+              },
+            },
           },
         },
         presets = {
@@ -233,21 +243,19 @@ return {
         -- Sama kan dengan terminal cursor color
         theme = {
           ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
-          ["base16-atelier-estuary"] = { { ["BeaconDefault"] = { bg = "#929181" } } },
-          ["base16-ayu-dark"] = { { ["BeaconDefault"] = { bg = "#e6e1cf" } } },
-          ["base16-icy"] = { { ["BeaconDefault"] = { bg = "#095b67" } } },
-          ["base16-gotham"] = { { ["BeaconDefault"] = { bg = "#599cab" } } },
+          ["base2tone_cave_dark"] = { { ["BeaconDefault"] = { bg = "#996e00" } } },
+          ["base2tone_lavender_dark"] = { { ["BeaconDefault"] = { bg = "#b042ff" } } },
+          ["base2tone_field_dark"] = { { ["BeaconDefault"] = { bg = "#00943e" } } },
           ["neomodern"] = { { ["BeaconDefault"] = { bg = "#bbbac1" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
-          ["midnight"] = { { ["BeaconDefault"] = { bg = "#d4bbff" } } },
           ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
           ["oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["rose-pine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
-          ["selenized"] = { { ["BeaconDefault"] = { bg = "#ee5396" } } },
           ["zenburned"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
           ["one_monokai"] = { { ["BeaconDefault"] = { bg = "#1589d1" } } },
+          ["sunburn"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
         },
       })
@@ -287,30 +295,31 @@ return {
         tab_bg_tint = -0.22
       end
 
-      if vim.tbl_contains({ "onedark" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.15
-        tab_bg_tint = -0.08
-      end
-
       if vim.tbl_contains({ "zenburned" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.15
+        tab_fg_tint = -0.12
         tab_bg_tint = -0.05
       end
 
-      if vim.tbl_contains({ "midnight", "gruvbox-material" }, RUtils.config.colorscheme) then
+      if vim.tbl_contains({ "gruvbox-material" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.25
-        tab_bg_tint = -0.1
+        tab_bg_tint = -0.08
+      end
+
+      if vim.tbl_contains({ "catppuccin-mocha", "chocolatier", "lackluster" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.25
+        tab_bg_tint = -0.05
       end
 
       if
         vim.tbl_contains({
-          "horizon",
-          "base16-atelier-estuary",
-          "coffeecat",
-          "jellybeans",
-          "catppuccin-mocha",
-          "rose-pine",
           "ashen",
+          "coffeecat",
+          "horizon",
+          "jellybeans",
+          "rose-pine",
+          "base2tone_lavender_dark",
+          "base2tone_field_dark",
+          "base2tone_cave_dark",
         }, RUtils.config.colorscheme)
       then
         tab_fg_tint = -0.3
@@ -319,24 +328,16 @@ return {
 
       if vim.tbl_contains({ "vscode_modern", "tokyonight-storm" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.25
-        tab_bg_tint = -0.09
-      end
-
-      if vim.tbl_contains({ "midnight" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.4
-        tab_bg_tint = -0.02
+        tab_bg_tint = -0.04
       end
 
       if
         vim.tbl_contains({
           "one_monokai",
-          "selenized",
           "sunburn",
           "tokyonight-night",
           "oxocarbon",
-          "chocolatier",
           "rose-pine",
-          "base16-ayu-dark",
           "oldworld",
         }, RUtils.config.colorscheme)
       then
@@ -344,25 +345,12 @@ return {
         tab_bg_tint = -0.05
       end
 
-      if vim.tbl_contains({ "base16-gotham" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.4
-        tab_bg_tint = -0.1
-      end
-
-      if vim.tbl_contains({ "vimbones" }, RUtils.config.colorscheme) then
-        tab_fg_tint = 0.15
-        tab_bg_tint = 0.03
-      end
-
       local theme = {
         fill = "Normal",
         -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
         head = "Normal",
         separator = "Normal",
-        current_tab = {
-          fg = Highlight.get("TabLine", "fg"),
-          bg = Highlight.get("TabLine", "bg"),
-        },
+        current_tab = { fg = Highlight.get("KeywordNC", "fg"), bg = Highlight.get("TabLine", "bg") },
         tab = {
           fg = Highlight.tint(Highlight.get("TabLine", "fg"), tab_fg_tint),
           bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
@@ -455,7 +443,7 @@ return {
             return {
               backend = "fzf_lua",
               fzf_lua = RUtils.fzflua.cursor_dropdown {
-                prompt = "  ",
+                prompt = RUtils.fzflua.default_title_prompt(),
                 winopts = { title = opts.prompt, relative = "cursor" },
               },
             }
@@ -475,7 +463,7 @@ return {
             return {
               backend = "fzf_lua",
               fzf_lua = RUtils.fzflua.cursor_dropdown {
-                prompt = "   ",
+                prompt = RUtils.fzflua.default_title_prompt(),
                 winopts = {
                   title = opts.prompt,
                   relative = "editor",

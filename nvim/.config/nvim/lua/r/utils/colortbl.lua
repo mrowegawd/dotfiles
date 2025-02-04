@@ -16,14 +16,19 @@ local error_fgnc = Highlight.darken(error_fg, 0.4, Highlight.get("Normal", "bg")
 local keyword = Highlight.get("Keyword", "fg")
 local keyword_blur = Highlight.tint(statusline_bg, 0.15)
 
-local keywordnc = Highlight.tint(statuslinenc_bg, 0.37)
-local keywordnc_blur = Highlight.tint(keywordnc, -0.09)
+local keywordnc = Highlight.get("KeywordBlur", "bg")
+local keywordnc_blur = Highlight.tint(keywordnc, -0.2)
 
 local separator = Highlight.tint(normal_bg, 0.3)
 local separator_fg_alt = Highlight.tint(statusline_bg, 0.6)
 
 local mode_bg = Highlight.tint(statusline_bg, 1)
 local disorent = Highlight.tint(statusline_bg, 1)
+
+if vim.tbl_contains({ "zenburned" }, vim.g.colorscheme) then
+  keywordnc = Highlight.get("KeywordBlur", "bg")
+  keywordnc_blur = Highlight.tint(keywordnc, -0.05)
+end
 
 if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
   separator_fg_alt = Highlight.tint(separator_fg_alt, 0.7)
