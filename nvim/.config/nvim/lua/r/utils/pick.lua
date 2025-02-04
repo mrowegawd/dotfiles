@@ -1,4 +1,4 @@
----@class r.utils.pick
+---@class RUtils.util.pick
 ---@overload fun(command:string, opts?:r.utils.pick.Opts): fun()
 local M = setmetatable({}, {
   __call = function(m, ...)
@@ -18,24 +18,8 @@ local M = setmetatable({}, {
 ---@field commands table<string, string>
 
 ---@type LazyPicker?
-M.picker = {
-  name = "snacks",
-  commands = {
-    files = "files",
-    live_grep = "grep",
-    oldfiles = "recent",
-  },
-  open = function(source, opts)
-    return Snacks.picker.pick(source, opts)
-  end,
-}
---
---   ---@param source string
---   ---@param opts? snacks.picker.Config
---   open = function(source, opts)
---     return Snacks.picker.pick(source, opts)
---   end,
--- }
+M.picker = nil
+
 ---@param picker LazyPicker
 function M.register(picker)
   -- this only happens when using :LazyExtras
