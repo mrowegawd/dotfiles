@@ -7,20 +7,27 @@ ROFI_DIR="$HOME/.config/rofi/menu"
 ROFI_THEME="styles/snippets"
 ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME"
 
-# MENU_FONT="SF Mono 24"
-# TERMC="st"
-
 [ ! -f "$FILE_BOOKMARKED" ] && dunstify "file $FILE_BOOKMARKED not found" && exit
 
 OPTIONS="Open:Bookmarked\nOpen:Pass\nEdit:Bookmarked"
 
-# OBJ_LENGTH=$(echo "$OPTIONS" | jq length)
-# OBJ_MENU=$(echo "$OPTIONS" | jq -r ".[][0]" | $ROFI_COMMAND -dmenu -i -p " WebSearch:" -fn "$MENU_FONT")
 OBJ_MENU=$(echo -e "$OPTIONS" | $ROFI_COMMAND -dmenu -sorting-method fzf -p " WebSearch:")
-
 OBJ_SELECTED=$(echo "$OBJ_MENU" | xargs)
 
-open_bookmarked() {
+# Dibutuhkan pengecekan session desktop seperti ini
+# terkadang session desktop dengan variable $XDG_SESSION_DESKTOP teroutput kosong
+# -----------------------
+WM_WINDOW="bspwm" # set default wm window
+if [[ $XDG_SESSION_DESKTOP == "" ]]; then
+  WM_WINDOW=$DESKTOP_SESSION
+fi
+
+if [[ $DESKTOP_SESSION == "" ]]; then
+  WM_WINDOW="i3"
+fi
+# -----------------------
+
+open_bookmark() {
   SELECTIONOPS=$(
     awk -F'*||\\[\\[' 'NF > 1 { printf "%-40s%s\n", $2, $4 }' "$FILE_BOOKMARKED" | awk ' {
     name=$0;
@@ -31,15 +38,11 @@ open_bookmarked() {
 }' | $ROFI_COMMAND -dmenu -i -p "  " | awk -F"+" '{print $2}'
   )
   [ -z "$SELECTIONOPS" ] && exit
-  firefox "$SELECTIONOPS" 2>/dev/null
+  $NUBROWSER "$SELECTIONOPS" 2>/dev/null
   exit
 }
-
-edit_bookmarked() {
-  workspace="$XDG_SESSION_DESKTOP"
-  [[ -z $workspace ]] && workspace="$DESKTOP_SESSION"
-
-  case $workspace in
+edit_bookmark() {
+  case $WM_WINDOW in
   "bspwm")
     bspc rule -a \* -o state=floating center=true rectangle=1200x800+0+0 &&
       st -e bash -c "nvim $FILE_BOOKMARKED"
@@ -75,7 +78,6 @@ bspwm_open_float() {
 
   fi
 }
-
 open_pass() {
   tmp_mypass="/tmp/mypass"
   dir="${PASSWORD_STORE_DIR:-$HOME/.password-store/}"
@@ -159,7 +161,7 @@ Categories=GNOME;GTK;System;
     "url")
       url=$(pass "$path_pass" | grep '^url: ' | cut -b 6-)
       if [[ -n $url ]]; then
-        firefox "$url"
+        $NUBROWSER "$url"
       else
         dunstify "[url] no url? something went wrong"
       fi
@@ -231,18 +233,19 @@ Categories=GNOME;GTK;System;
     [[ -z $dir_selection ]] && exit
     [[ ! -d $HOME/.password-store/$dir_selection ]] && exit
 
-    case "$XDG_SESSION_DESKTOP" in
+    case "$WM_WINDOW" in
     "bspwm")
       if [[ "$TERMINAL" == "wezterm" ]]; then
         dunstify -t 10000 "ex: 'pass insert $dir_selection/<pass_baru>'"
         bspc rule -a \* -o state=floating st && st -e zsh -c "cd $HOME/.password-store/$dir_selection; exec zsh"
       else
         bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -c "cd $HOME/.password-store/$dir_selection"
-
       fi
 
       ;;
-    *) dunstify "OS $XDG_SESSION_DESKTOP not implemented yet?" ;;
+    *)
+      dunstify "Insert new pass: failed to define WM_WINDOW"
+      ;;
     esac
     ;;
 
@@ -250,14 +253,14 @@ Categories=GNOME;GTK;System;
     edit_selection="$(__select_password "$1")"
     [[ -z "$edit_selection" ]] && exit
     touch $tmp_mypass
-    echo "$edit_selection" >/tmp/mypass
+    echo "$edit_selection" >$tmp_mypass
 
-    case "$XDG_SESSION_DESKTOP" in
+    case "$WM_WINDOW" in
     "bspwm")
       bspc rule -a \* -o state=floating "$TERMINAL" && "$TERMINAL" -e zsh -c "export VISUAL=nvim; pass edit $edit_selection"
       ;;
     *)
-      dunstify "OS $XDG_SESSION_DESKTOP not implemented yet?"
+      dunstify "Edit pass: failed to define WM_WINDOW"
       ;;
     esac
     ;;
@@ -266,10 +269,9 @@ Categories=GNOME;GTK;System;
   [[ -f $tmp_mypass ]] && rm $tmp_mypass
   exit
 }
-
 main() {
   if [ "$OBJ_SELECTED" = "Open:Bookmarked" ]; then
-    open_bookmarked
+    open_bookmark
   fi
 
   # if [ "$OBJ_SELECTED" = "Delete:Query" ]; then
@@ -281,7 +283,7 @@ main() {
   # fi
 
   if [ "$OBJ_SELECTED" = "Edit:Bookmarked" ]; then
-    edit_bookmarked
+    edit_bookmark
   fi
 
   if [ "$OBJ_SELECTED" = "Open:Pass" ]; then
