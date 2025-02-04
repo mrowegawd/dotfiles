@@ -164,9 +164,9 @@ super + shift + m
 super + shift + e
         $HOME/.config/miscxrdb/bpswm/scripts/bspwmfloat inbox
 
-# misc: open bookrmark and pass
+# misc: open bookmark and pass
 super + shift + b
-        $HOME/.config/miscxrdb/bpswm/scripts/bookrmark-pass
+        $HOME/.config/miscxrdb/bpswm/scripts/bookmark-pass
 
 # misc: reload/restart sxhkd config
 super + shift + F8

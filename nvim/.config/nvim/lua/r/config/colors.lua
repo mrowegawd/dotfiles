@@ -2378,7 +2378,7 @@ local function colorscheme_overrides()
       { NormalNC = { bg = "NONE" } },
       -- { Normal = { bg = "NONE" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.08 } } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -2390,8 +2390,8 @@ local function colorscheme_overrides()
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
 
-      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.48 } } },
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.58 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.45 } } },
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.6 } } },

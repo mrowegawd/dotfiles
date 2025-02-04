@@ -46,10 +46,7 @@ return {
           mode = { "n", "v" },
           { "<Leader>a", group = "add/qf/ql" },
 
-          { "<Leader>b", group = "buffer" },
-          { "<Leader>ba", group = "projectionist" },
-
-          { "<Leader>c", group = "code" },
+          { "<Leader>c", group = "code/action" },
           { "<Leader>d", group = "debug" },
           { "<Leader>f", group = "fzflua" },
 
@@ -61,10 +58,29 @@ return {
           { "<Leader>r", group = "run/tasks" },
           { "<Leader>t", group = "testing" },
           { "<Leader>u", group = "toggle" },
+          { "<Leader>s", "", group = "session" },
 
           { "<Leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
+          {
+            "<leader>w",
+            group = "windows",
+            proxy = "<c-w>",
+            expand = function()
+              return require("which-key.extras").expand.win()
+            end,
+          },
+          {
+            "<leader>b",
+            group = "buffer",
+            expand = function()
+              return require("which-key.extras").expand.buf()
+            end,
+          },
+          { "<Leader>ba", group = "projectionist" },
+
           { "<Localleader>n", group = "noice" },
+          { "<Localleader>f", group = "telescope" },
           { "<Localleader>d", group = "database" },
           { "<Localleader>a", group = "note" },
           { "<Localleader>o", group = "open/misc" },

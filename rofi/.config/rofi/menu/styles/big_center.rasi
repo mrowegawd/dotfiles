@@ -108,7 +108,7 @@ mainbox {
 listview {
     fixed-height:                       0;
     border:                             0px;
-    border-color:                       @ac;
+    border-color:                       @border;
     spacing:                            4px;
     scrollbar:                          false;
 }

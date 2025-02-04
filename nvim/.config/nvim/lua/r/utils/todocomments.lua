@@ -4,6 +4,11 @@ local M = {}
 local tbl_dat = {}
 local tbl_dat_note = {}
 
+if not RUtils.has "fzf-lua" then
+  RUtils.warn("[markdown] fzf-lua not found", { Title = "Navigations" })
+  return
+end
+
 local builtin = require "fzf-lua.previewer.builtin"
 local Todopreviewer = builtin.buffer_or_file:extend()
 
