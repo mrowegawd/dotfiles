@@ -1,5 +1,7 @@
 local M = {}
 
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+
 M._keys = nil
 
 local diagnostic_goto = function(next, severity)
@@ -25,7 +27,7 @@ function M.get()
     {
       "gD",
       function()
-        require("fzf-lua").lsp_definitions {}
+        fzf_lua.lsp_definitions {}
       end,
       has = "definition",
       desc = "LSP: definitions [fzflua]",
@@ -65,14 +67,14 @@ function M.get()
     {
       "gI",
       function()
-        require("fzf-lua").lsp_incoming_calls()
+        fzf_lua.lsp_incoming_calls()
       end,
       desc = "LSP: incoming calls [fzflua]",
     },
     {
       "gO",
       function()
-        require("fzf-lua").lsp_outgoing_calls()
+        fzf_lua.lsp_outgoing_calls()
       end,
       desc = "LSP: outgoing calls [fzflua]",
     },
@@ -228,7 +230,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "grr",
       function()
-        require("fzf-lua").lsp_finder()
+        fzf_lua.lsp_finder()
       end,
       has = "references",
       desc = "LSP: references [fzflua]",
@@ -246,7 +248,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "gd",
       function()
-        require("fzf-lua").lsp_definitions { jump_to_single_result = true }
+        fzf_lua.lsp_definitions { jump_to_single_result = true }
       end,
       desc = "LSP: definitions [fzflua]",
       has = "definition",
@@ -307,7 +309,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "gP",
       function()
-        require("fzf-lua").lsp_definitions {
+        fzf_lua.lsp_definitions {
           prompt = RUtils.fzflua.default_title_prompt(),
           winopts = {
             title = RUtils.fzflua.format_title("LSP: Peek", RUtils.config.icons.misc.lsp),
@@ -325,7 +327,7 @@ function M.get()
         }
       end,
       has = "signatureHelp",
-      desc = "LSP: peek preview [fzf-lua]",
+      desc = "LSP: peek preview [fzflua]",
     }
   end
 

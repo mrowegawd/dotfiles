@@ -1,5 +1,7 @@
 local keymap, opt = vim.keymap, vim.opt_local
 
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+
 keymap.set("n", "<Leader>ri", "<CMD>ImgInsert<CR>", { buffer = true, desc = "Markdown: insert image" })
 -- vim.cmd [[:%s/^#\+/\=repeat('*', len(submatch(0)))/]]
 
@@ -61,7 +63,7 @@ keymap.set("n", "<Leader>rf", function()
     end,
   }, {})
 
-  require("fzf-lua").fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert" }, opts)
+  fzf_lua.fzf_exec({ "MarkdownPreviewToggle", "Sniprun", "ImgInsert" }, opts)
 end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false

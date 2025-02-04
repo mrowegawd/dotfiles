@@ -461,6 +461,10 @@ function M.reqcall(require_path)
   return setmetatable({}, {
     __index = function(_, k)
       return function(...)
+        if not RUtils.has(require_path) then
+          RUtils.warn(string.format("module %s not found", require_path), { Title = "reqcall" })
+          return
+        end
         return require(require_path)[k](...)
       end
     end,
