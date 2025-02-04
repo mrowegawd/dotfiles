@@ -47,13 +47,6 @@ RUtils.cmd.augroup("WrapFt", {
   end,
 }, {
   event = { "FileType" },
-  pattern = { "undotree" },
-  command = function()
-    vim.keymap.set("n", "<c-n>", "<Plug>UndotreePreviousState", { buffer = true })
-    vim.keymap.set("n", "<c-p>", "<Plug>UndotreeNextState", { buffer = true })
-  end,
-}, {
-  event = { "FileType" },
   pattern = { "lazy" },
   command = function()
     local new_value = not vim.diagnostic.config().virtual_lines
