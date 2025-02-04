@@ -38,7 +38,7 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("zv", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 
 RUtils.map.nnoremap("zj", "zcjzOzz", { desc = "Fold: close current fold when open. Always open next fold." })
 RUtils.map.nnoremap("zk", "zckzOzz", { desc = "Fold: close current fold when open. Always open previous fold." })
@@ -51,7 +51,7 @@ RUtils.map.nnoremap("<c-p>", function()
 end, { desc = "Fold: magic prev closed" })
 -- }}}
 -- {{{ Terminal
-RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
+-- RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
 RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
 RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
 RUtils.map.tnoremap("<a-x>", function()
@@ -81,19 +81,10 @@ end, { desc = "Terminal: new term" })
 -- }}}
 -- {{{ Windows, view and nav
 -- Edit window state
-RUtils.map.nnoremap("sv", "<CMD>vsplit<CR>", { desc = "View: vertical split", silent = true })
-RUtils.map.nnoremap("ss", "<CMD>split<CR>", { desc = "View: horizontal split", silent = true })
-
--- Navigate window
-RUtils.map.nnoremap("sh", "<C-w>h", { desc = "View: left window", silent = true })
-RUtils.map.nnoremap("sl", "<C-w>l", { desc = "View: right window", silent = true })
-RUtils.map.nnoremap("sj", "<C-w>j", { desc = "View: down window", silent = true })
-RUtils.map.nnoremap("sk", "<C-w>k", { desc = "View: up window", silent = true })
-
--- RUtils.map.nnoremap("<a-w>h", "<C-w>h", { desc = "View: left window (mod)", silent = true })
--- RUtils.map.nnoremap("<a-w>l", "<C-w>l", { desc = "View: right window (mod)", silent = true })
--- RUtils.map.nnoremap("<a-w>j", "<C-w>j", { desc = "View: down window (mod)", silent = true })
--- RUtils.map.nnoremap("<a-w>k", "<C-w>k", { desc = "View: up window (mod)", silent = true })
+RUtils.map.nnoremap("<Leader>wL", "<C-W>t <C-W>H", { desc = "Window: force buffers to vertical split" })
+RUtils.map.nnoremap("<Leader>wJ", "<C-W>t <C-W>K", { desc = "Window: force buffers to horizontal split" })
+Snacks.toggle.zoom():map "<Leader>wm"
+Snacks.toggle.zen():map "<Leader>uz"
 
 if not RUtils.has "smart-splits.nvim" then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
@@ -104,17 +95,13 @@ end
 
 -- Tab
 RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab", silent = true })
-RUtils.map.nnoremap("st", "<CMD>tabedit %<CR>", { desc = "Tab: view buffer in new tab", silent = true })
-
 RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close tab", silent = true })
-
 RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab", silent = true })
 RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last tab", silent = true })
-
 RUtils.map.nnoremap("tl", "<CMD>tabnext<CR>", { desc = "Tab: next tab", silent = true })
 RUtils.map.nnoremap("th", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab", silent = true })
 
--- These mappings works only outside tmux
+-- Only works outside tmux
 RUtils.map.nnoremap("<C-a-l>", "<CMD>tabnext<CR>", { desc = "Tab: next tab (mod)", silent = true })
 RUtils.map.nnoremap("<C-a-h>", "<CMD>tabprevious<CR>", { desc = "Tab: prev tab (mod)", silent = true })
 
@@ -147,11 +134,8 @@ RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer 
 RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate file" })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete buffer" })
 RUtils.map.nnoremap("<Leader>bc", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
-RUtils.map.nnoremap("<Leader>bL", "<C-W>t <C-W>H", { desc = "Buffer: force buffers to vertical split" })
-RUtils.map.nnoremap("<Leader>bJ", "<C-W>t <C-W>K", { desc = "Buffer: force buffers to horizontal split" })
 RUtils.map.nnoremap("<Leader>bw", "<CMD>wincmd =<CR>", { desc = "Buffer: reset size window to =", silent = true })
 RUtils.map.nnoremap("<a-x>", "<CMD>q!<CR>", { desc = "Buffer: single command=close buffer" })
-RUtils.map.nnoremap("<Leader>bn", "<CMD>vnew<CR>", { desc = "Buffer: open split new buffer" })
 RUtils.map.nnoremap("gh", function()
   return RUtils.fold.magic_nextprev_list_qf_or_buf(true)
 end, { desc = "Buffer/Qf: magic gh" })
@@ -166,8 +150,9 @@ RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: ma
 RUtils.map.cnoremap("hh", "<C-c>", { desc = "Commandline: exit" })
 RUtils.map.cnoremap("<C-a>", "<Home>", { desc = "Commandline: go to first line" })
 RUtils.map.cnoremap("<C-e>", "<End>", { desc = "Commandline: go to the last line" })
-RUtils.map.cnoremap("<C-n>", "<Down>", { desc = "Commandline: next hist" })
-RUtils.map.cnoremap("<C-p>", "<Up>", { desc = "Commandline: prev hist" })
+-- These mapping C-n/p have been disabled because conflict with mapping blink cmdline
+-- RUtils.map.cnoremap("<C-n>", "<Down>", { desc = "Commandline: next hist" })
+-- RUtils.map.cnoremap("<C-p>", "<Up>", { desc = "Commandline: prev hist" })
 RUtils.map.cnoremap("<C-l>", "<Right>", { desc = "Commandline: next word" })
 RUtils.map.cnoremap("<C-h>", "<Left>", { desc = "Commandline: prev word" })
 RUtils.map.cnoremap("<C-f>", "<S-Right>", { desc = "Commandline: forward word" })
