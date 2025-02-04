@@ -16,7 +16,7 @@ GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 GET_BLACK_ALT=$(xrdb -query | grep -i .color8 | cut -d':' -f2 | head -1 | xargs)
 
 GET_RED=$(xrdb -query | grep -i .color1 | cut -d':' -f2 | head -1 | xargs)
-# GET_RED_ALT=$(xrdb -query | grep -i .color9 | cut -d':' -f2 | head -1 | xargs)
+GET_RED_ALT=$(xrdb -query | grep -i .color9 | cut -d':' -f2 | head -1 | xargs)
 
 GET_GREEN=$(xrdb -query | grep -i .color2 | cut -d':' -f2 | head -1 | xargs)
 GET_GREEN_ALT=$(xrdb -query | grep -i .color10 | cut -d':' -f2 | head -1 | xargs)
@@ -98,6 +98,7 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_46=$(grep -i color46 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -168,15 +169,17 @@ set_rofi() {
 
   sed -i -e "s/%%background%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%normal-foreground%%/$GET_BG/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%selected-normal-background%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%selected-alt%%/$GET_COL_16/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+  sed -i -e "s/%%background_alt%%/$GET_COL_19/g" "$_ROFI_PATH/colors/nightly.rasi"
+
+  sed -i -e "s/%%selected%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%selected_alt%%/$GET_COL_16/g" "$_ROFI_PATH/colors/nightly.rasi"
 
   sed -i -e "s/%%border_alt%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%urgent%%/$GET_MAGENTA/g" "$_ROFI_PATH/colors/nightly.rasi"
 
   sed -i -e "s/%%green%%/$GET_GREEN/g" "$_ROFI_PATH/colors/nightly.rasi"
-  sed -i -e "s/%%red%%/$GET_RED/g" "$_ROFI_PATH/colors/nightly.rasi"
+  sed -i -e "s/%%red%%/$GET_COL_17/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%blue%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%yellow%%/$GET_YELLOW/g" "$_ROFI_PATH/colors/nightly.rasi"
   sed -i -e "s/%%border%%/$GET_BLUE/g" "$_ROFI_PATH/colors/nightly.rasi"
@@ -404,8 +407,8 @@ set_yazi_theme() {
   sed -i -e "s/%%col_tab_inactive_fg%%/$GET_COL_42/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_tab_inactive_bg%%/$GET_COL_43/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_statusline_active_mode_bg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_fg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
 
   sed -i -e "s/%%col_directory%%/$GET_COL_46/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_which_bg%%/$GET_COL_47/g" "$TARGET_YAZI_THEME"
@@ -440,15 +443,20 @@ set_zsh_p10k() {
     dunstify "$ERROR_MSG" "Path $ZSH_P10K_PATH_CONFIG do not exists!" && exit 1
   fi
 
-  POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_20" 25)
-  if [ "$1" == "tokyonight-day" ]; then
-    POWERLEVEL9K_BACKGROUND_BG=$(darken_color "$GET_COL_20" 25)
-  fi
-  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
+  # Color yang harus dirubah bisa check di link github:
+  # https://github.com/romkatv/powerlevel10k/issues/805#issuecomment-640145313
+
+  POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_49" 1)
+  POWERLEVEL9K_DIR_ANCHOR_FG=$(darken_color "$GET_COL_23" 5)
+  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND=.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
+  sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
+  sed -i -e "s/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
+  sed -i -e "s/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
 
   ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
   if [ ! -f "$ZSHRC_PATH" ]; then
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
+    exit
   fi
 
   sed -i -e "s/^COLORSUGGEST=.*/COLORSUGGEST=fg=\"$GET_COL_37\"/g" "$ZSHRC_PATH"
@@ -491,13 +499,14 @@ set_eww() {
   sed -i -e "s/^\$gray: .*/\$gray: $GET_COL_20;/g" "$EWW_PATH/eww.scss"
 
   sed -i -e "s/^\$red: .*/\$red: $GET_RED;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$altred: .*/\$altred: $GET_RED_ALT;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$green: .*/\$green: $GET_GREEN;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$altgreen: .*/\$altgreen: $GET_GREEN_ALT;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$yellow: .*/\$yellow: $GET_YELLOW;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$altyellow: .*/\$altyellow: $GET_YELLOW_ALT;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$blue: .*/\$blue: $GET_BLUE;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$altblue: .*/\$altblue: $GET_BLUE_ALT;/g" "$EWW_PATH/eww.scss"
-  sed -i -e "s/^\$magenta: .*/\$magenta: $GET_MAGENTA;/g" "$EWW_PATH/eww.scss"
+  sed -i -e "s/^\$magenta: .*/\$magenta: $GET_COL_19;/g" "$EWW_PATH/eww.scss"
   sed -i -e "s/^\$cyan: .*/\$cyan: $GET_CYAN;/g" "$EWW_PATH/eww.scss"
 
 }
@@ -544,11 +553,59 @@ wm_awesome() {
   echo "awesome.restart()" | awesome-client
 }
 
-dir="$HOME/.config/rofi/menu"
-theme="styles/big_center"
-rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
+setup() {
+  # set new Xresources theme
+  sed -i -e \
+    "s/^#include \\([^ ]*xresource-theme[^ ]*\\)/#include \"\\.config\\/miscxrdb\\/xresource-theme\\/$1\"/g" \
+    "$DOTFILES_PATH/home/.Xresources"
+  xrdb ~/.Xresources
+  xrdb -merge ~/.Xresources
 
-(
+  #shellcheck source=/dev/null
+
+  sleep 1
+
+  set_rofi
+  _NOTIF_ROFI="Rofi        ✅"
+  set_dunst
+  _NOTIF_DUNST="Dunst       ✅"
+  set_tmux "$1"
+  _NOTIF_TMUX="Tmux        ✅"
+  set_btop
+  _NOTIF_BTOP="Btop        ✅"
+  set_eww
+  _NOTIF_EWW="Eww        ✅"
+  set_zathura
+  _NOTIF_ZATHURA="Zathura     ✅"
+  set_vim "$1"
+  _NOTIF_VIM="Vim         ✅"
+  set_terminal "$1"
+  _NOTIF_TERMINAL="Terminal    ✅"
+  set_firefox "$1"
+  _NOTIF_FIREFOX="Firefox     ✅"
+
+  sleep 1
+
+  set_fzf
+  set_yazi_theme "$1"
+  set_lazygit
+  set_zsh_p10k "$1"
+  set_delta_theme
+
+  # case "$DEKSTOP_SESSION" in
+  # # "bspwm") wm_bspwm ;;
+  # "awesome") wm_awesome ;;
+  # esac
+
+  dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
+    "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
+}
+
+main() {
+  dir="$HOME/.config/rofi/menu"
+  theme="styles/big_center"
+  rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
+
   [[ ! -d $MISCXRDB_PATH ]] && dunstify "Warn " "Path: $MISCXRDB_PATH not found!" && exit 1
   _NAMETHEME=$(find "$MISCXRDB_PATH/xresource-theme" -type f -exec basename {} \; | sort | $rofi_command -dmenu -p "  ")
   [[ -z $_NAMETHEME ]] && exit 1
@@ -572,51 +629,7 @@ rofi_command="rofi -modi drun -theme $dir/$theme -show drun"
     exit 1
   fi
 
-  # set new Xresources theme
-  if [ -n "$_NAMETHEME" ]; then
-    sed -i -e \
-      "s/^#include \\([^ ]*xresource-theme[^ ]*\\)/#include \"\\.config\\/miscxrdb\\/xresource-theme\\/$_NAMETHEME\"/g" \
-      "$DOTFILES_PATH/home/.Xresources"
-    xrdb ~/.Xresources
-    xrdb -merge ~/.Xresources
-    sleep 1
-  fi
+  setup "$_NAMETHEME"
+}
 
-  xrdb -merge ~/.Xresources
-  #shellcheck source=/dev/null
-
-  sleep 1
-  set_rofi
-  _NOTIF_ROFI="Rofi        ✅"
-  set_dunst
-  _NOTIF_DUNST="Dunst       ✅"
-  set_tmux "$_NAMETHEME"
-  _NOTIF_TMUX="Tmux        ✅"
-  set_btop
-  _NOTIF_BTOP="Btop        ✅"
-  set_eww
-  _NOTIF_EWW="Eww        ✅"
-  set_zathura
-  _NOTIF_ZATHURA="Zathura     ✅"
-  set_vim "$_NAMETHEME"
-  _NOTIF_VIM="Vim         ✅"
-  set_terminal "$_NAMETHEME"
-  _NOTIF_TERMINAL="Terminal    ✅"
-  set_firefox "$_NAMETHEME"
-  _NOTIF_FIREFOX="Firefox     ✅"
-
-  sleep 1
-  set_fzf
-  set_yazi_theme "$_NAMETHEME"
-  set_lazygit
-  set_zsh_p10k "$_NAMETHEME"
-  set_delta_theme
-
-  # case "$DEKSTOP_SESSION" in
-  # # "bspwm") wm_bspwm ;;
-  # "awesome") wm_awesome ;;
-  # esac
-
-  dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
-    "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
-)
+"$@"

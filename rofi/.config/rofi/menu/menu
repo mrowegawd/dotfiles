@@ -11,19 +11,19 @@ options="@\nEmojis\nEarnings\nGames\nGhosted\nSnippet\nThemes\nTools\nRasp-on"
 chosen="$(echo -e "$options" | $rofi_command -p "  " -dmenu -i)"
 
 (
-	[[ -z $chosen ]] && exit
+  [[ -z $chosen ]] && exit
 
-	MYBIN_PATH="$HOME/.config/miscxrdb/exbin"
+  MYBIN_PATH="$HOME/.config/miscxrdb/exbin"
 
-	[[ ! -d $MYBIN_PATH ]] && dunstify "Path not found:" "$MYBIN_PATH"
+  [[ ! -d $MYBIN_PATH ]] && dunstify "Path not found:" "$MYBIN_PATH"
 
-	case "$chosen" in
-	"@")
-		rofi -modi drun -theme "$dir/$theme" -show drun
-		;;
-	"Emojis") "$dir/_emoji" ;;
-	"Snippet") "$dir/_snippet" ;;
-	"Themes") "$dir/_themes" ;;
-	"Tools") "$dir/_tools" ;;
-	esac
+  case "$chosen" in
+  "@")
+    rofi -modi drun -theme "$dir/$theme" -show drun
+    ;;
+  "Emojis") "$dir/_emoji" ;;
+  "Snippet") "$dir/_snippet" ;;
+  "Themes") "$dir/_themes" "main" ;;
+  "Tools") "$dir/_tools" ;;
+  esac
 )
