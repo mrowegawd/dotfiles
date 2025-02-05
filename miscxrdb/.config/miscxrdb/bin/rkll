@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Script ini dibutuhkan untuk menangani pemanggilan alias bashrscript
+# oleh wezterm terminal
+
+shopt -s expand_aliases
+source "$HOME/.config/bashrc/aliases.bashrc"
+
+[[ -f "$HOME/.config/miscxrdb/fzf/fzf.config" ]] && source "$HOME/.config/miscxrdb/fzf/fzf.config"
+
+r_kill

@@ -1,5 +1,18 @@
 local wezterm = require("wezterm")
 local Color = require("colors")
+local Util = require("utils")
+
+local function turn_off_tab_bar(window, pane, process_names)
+	local overrides = window:get_config_overrides() or {}
+	process_names = process_names or {}
+	for _, name in pairs(process_names) do
+		if Util.get_foreground_process_name(pane, name) then
+			overrides.enable_tab_bar = false
+			window:set_config_overrides(overrides)
+			return
+		end
+	end
+end
 
 ---@diagnostic disable-next-line: unused-local
 wezterm.on("update-right-status", function(window, pane)
@@ -7,6 +20,8 @@ wezterm.on("update-right-status", function(window, pane)
 
 	local clock_fg = Color.red
 	local bg = Color.bg
+
+	turn_off_tab_bar(window, pane, { "ncmpcpp", "lazygit", "lazydocker" })
 
 	-- local date = wezterm.strftime("%Y-%m-%d %H:%M")
 	local date = wezterm.strftime("%H:%M")
@@ -75,7 +90,7 @@ local SUB_IDX = { "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉",
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
 	local edge_background = Color.bg
 	local background = Color.bg
-	local foreground = Color.separator_fg
+	local foreground = Color.statusline_inactive_fg
 	local dim_foreground = Color.red_alt
 
 	if tab.is_active then
@@ -135,12 +150,12 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 
 	local zoomed = ""
 	if tab.active_pane.is_zoomed then
-		zoomed = "[ZOOM] "
+		zoomed = "󰁌 "
 	end
 
 	local id = SUB_IDX[tab.tab_index + 1]
 	local pid = SUP_IDX[tab.active_pane.pane_index + 1]
-	local title = " " .. zoomed .. wezterm.truncate_right(title_with_icon, max_width - 6) .. " "
+	local title = " " .. wezterm.truncate_right(title_with_icon, max_width - 6) .. " "
 
 	return {
 		{ Attribute = { Intensity = "Bold" } },
@@ -151,6 +166,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 		{ Foreground = { Color = foreground } },
 		{ Text = id },
 		{ Text = title },
+		{ Text = zoomed },
 		{ Foreground = { Color = dim_foreground } },
 		{ Text = pid },
 		{ Background = { Color = edge_background } },

@@ -5,7 +5,6 @@ local M = {}
 function M.get_foreground_process_name(pane, name)
 	return string.match(pane:get_foreground_process_name(), name)
 end
-
 function M.cmd_call(params)
 	local handle = io.popen(params)
 	if handle == nil then
@@ -15,7 +14,6 @@ function M.cmd_call(params)
 	handle:close()
 	return result:gsub("\n", "")
 end
-
 function M.get_random_entry(tbl)
 	if tbl ~= "table" then
 		return tbl
@@ -38,22 +36,23 @@ function M.is_file_exists(name)
 		return false
 	end
 end
-function M.is_nvim(pane)
-	return pane:get_user_vars().IS_NVIM == "true" or M.get_foreground_process_name(pane, "nvim")
-end
 function M.is_os_windows()
 	return string.find(wezterm.target_triple, "windows")
 end
-function M.is_tmux(pane)
-	-- TAKEN FROM: https://wezfurlong.org/wezterm/recipes/passing-data.html#user-vars
-	-- following file: aliases.basrc
-	local isTmux = pane:get_user_vars().PROG
 
-	if isTmux and isTmux == "tmux" or isTmux == "tm" then
-		return true
+function M.tint(color, percent)
+	assert(color and percent, "cannot alter a color without specifying a color and percentage")
+	local r = tonumber(color:sub(2, 3), 16)
+	local g = tonumber(color:sub(4, 5), 16)
+	local b = tonumber(color:sub(6), 16)
+	if not r or not g or not b then
+		return "NONE"
 	end
-
-	return false
+	local blend = function(component)
+		component = math.floor(component * (1 + percent))
+		return math.min(math.max(component, 0), 255)
+	end
+	return string.format("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
 
 ---Merges two tables
@@ -87,21 +86,6 @@ M.removebyKey = function(tab, val)
 			tab[i] = nil
 		end
 	end
-end
-
-function M.tint(color, percent)
-	assert(color and percent, "cannot alter a color without specifying a color and percentage")
-	local r = tonumber(color:sub(2, 3), 16)
-	local g = tonumber(color:sub(4, 5), 16)
-	local b = tonumber(color:sub(6), 16)
-	if not r or not g or not b then
-		return "NONE"
-	end
-	local blend = function(component)
-		component = math.floor(component * (1 + percent))
-		return math.min(math.max(component, 0), 255)
-	end
-	return string.format("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
 
 return M

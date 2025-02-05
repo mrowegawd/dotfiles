@@ -1,11 +1,7 @@
 local Color = require("colors")
--- local Background = require("background")
 local Hyperlinks = require("hyperlinks")
 
 local Key = require("keymaps.keys")
--- local KeyTbl = require("keymaps.keys-table")
--- local KeyMouse = require("keymaps.mouse")
-
 local wezterm = require("wezterm")
 
 require("event")
@@ -116,9 +112,10 @@ config.window_padding = {
 }
 
 -- For Mac
--- set_environment_variables = {
--- 	PATH = "/Users/quantong/.cargo/bin:" .. "/opt/homebrew/bin:" .. os.getenv("PATH"),
--- },
+config.set_environment_variables = {
+	-- PATH = "/Users/quantong/.cargo/bin:" .. "/opt/homebrew/bin:" .. os.getenv("PATH"),
+	PATH = os.getenv("PATH"),
+}
 
 if not wezterm.target_triple:find("windows") then
 	config.set_environment_variables = {
@@ -165,6 +162,9 @@ config.colors = {
 		Color.magenta,
 		Color.white,
 	},
+
+	copy_mode_active_highlight_bg = { Color = Color.red },
+	compose_cursor = "orange",
 	brights = {
 		Color.black_alt,
 		Color.red_alt,
@@ -175,8 +175,14 @@ config.colors = {
 		Color.magenta_alt,
 		Color.white_alt,
 	},
+	copy_mode_inactive_highlight_bg = { Color = "#52ad70" },
 	tab_bar = {
 		background = Color.bg,
+		new_tab = { -- color tanda "+" pada tab bar
+			bg_color = Color.bg,
+			fg_color = Color.statusline_inactive_fg,
+			intensity = "Half",
+		},
 	},
 }
 
@@ -216,7 +222,9 @@ config.font = font_with_fallback("SF Mono")
 
 -- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
 config.disable_default_key_bindings = true
--- config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1000 }
+
+-- Use same prefix with tmux: <c-space>
+config.leader = { key = " ", mods = "CTRL", timeout_milliseconds = 1000 }
 config.keys = Key
 -- config.mouse_bindings = KeyMouse
 -- config.key_tables = KeyTbl
