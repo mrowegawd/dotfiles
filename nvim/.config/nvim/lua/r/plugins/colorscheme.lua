@@ -10,9 +10,9 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local zenbones_theme =
+      local base2tone_theme =
         { "base2tone_field_dark", "base2tone_cave_dark", "base2tone_lavender_dark", "base2tone_suburb_dark" }
-      if vim.tbl_contains(zenbones_theme, colorscheme) then
+      if vim.tbl_contains(base2tone_theme, colorscheme) then
         return true
       end
       return false
@@ -26,8 +26,8 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local zenbones_theme = { "ashen" }
-      if vim.tbl_contains(zenbones_theme, colorscheme) then
+      local ashen_theme = { "ashen" }
+      if vim.tbl_contains(ashen_theme, colorscheme) then
         return true
       end
       return false

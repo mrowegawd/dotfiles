@@ -14,7 +14,7 @@ end
 function M.get_total_wins()
   local tbl_winsplits = {}
 
-  local exclude_ft = { "notify", "snacks_notif", "noice", "trouble" }
+  local exclude_ft = { "notify", "snacks_notif", "noice", "trouble", "qf" }
   local win_amount = vim.api.nvim_tabpage_list_wins(0)
   for _, winnr in ipairs(win_amount) do
     if not vim.tbl_contains({ "incline" }, vim.fn.getwinvar(winnr, "&syntax")) then

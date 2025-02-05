@@ -343,7 +343,7 @@ function M.change_colors()
     Highlight.get("Tabline", "fg"), -- 21
 
     fmt "! FZF-NORMAL: bg, fg, match",
-    Highlight.get("NormalFloat", "bg"), -- 22
+    Highlight.get("FzfLuaNormal", "bg"), -- 22
     Highlight.get("FzfLuaFilePart", "fg"), -- 23
     Highlight.get("CmpItemAbbrMatch", "fg"), --24
 

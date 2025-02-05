@@ -439,27 +439,27 @@ set_fzf() {
 }
 set_zsh_p10k() {
   ZSH_P10K_PATH_CONFIG="$HOME/.config/zsh/.p10k.zsh"
-  if [ ! -f "$ZSH_P10K_PATH_CONFIG" ]; then
-    dunstify "$ERROR_MSG" "Path $ZSH_P10K_PATH_CONFIG do not exists!" && exit 1
+  if [ -f "$ZSH_P10K_PATH_CONFIG" ]; then
+    # Color yang harus dirubah bisa check di link github:
+    # https://github.com/romkatv/powerlevel10k/issues/805#issuecomment-640145313
+
+    POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_49" 1)
+    POWERLEVEL9K_DIR_ANCHOR_FG=$(darken_color "$GET_COL_23" 5)
+    sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND=.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
+    sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
+    sed -i -e "s/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
+    sed -i -e "s/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
   fi
 
-  # Color yang harus dirubah bisa check di link github:
-  # https://github.com/romkatv/powerlevel10k/issues/805#issuecomment-640145313
-
-  POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_49" 1)
-  POWERLEVEL9K_DIR_ANCHOR_FG=$(darken_color "$GET_COL_23" 5)
-  sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND=.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
-  sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
-  sed -i -e "s/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
-  sed -i -e "s/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
-
+}
+set_zshrc() {
   ZSHRC_PATH="$HOME/.config/zsh/.zshrc"
   if [ ! -f "$ZSHRC_PATH" ]; then
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
-    exit
   fi
 
-  sed -i -e "s/^COLORSUGGEST=.*/COLORSUGGEST=fg=\"$GET_COL_37\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$GET_COL_37\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorline=.*/colorline=\"$GET_COL_19\"/g" "$ZSHRC_PATH"
 }
 set_lazygit() {
   LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"
@@ -591,6 +591,7 @@ setup() {
   set_lazygit
   set_zsh_p10k "$1"
   set_delta_theme
+  set_zshrc
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;

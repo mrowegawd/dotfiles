@@ -977,7 +977,13 @@ M.Ruler = {
 
       return rhs
     end,
-    hl = { fg = colors.base_fg },
+    hl = function()
+      local fg = colors.coldisorent
+      if Conditions.is_not_active() then
+        fg = colors.basenc_fg
+      end
+      return { fg = fg }
+    end,
   },
 }
 M.Clock = {

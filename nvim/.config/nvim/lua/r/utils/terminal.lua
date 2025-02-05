@@ -248,7 +248,7 @@ local lazydocker = Terminal:new {
 
 local rkill = Terminal:new {
   -- to run alias, must have `source` the zshrc file
-  cmd = "r_kill",
+  cmd = "rkll",
   hidden = true,
   display_name = ("r_kill"):upper(),
   direction = "float",

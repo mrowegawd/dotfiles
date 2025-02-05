@@ -1,8 +1,9 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
 ! Fulminated - Sunburn
-
 
 *.foreground:   #fe7000
 *.background:   #181818
+*.cursorColor: #b3276f
 
 ! black
 *.color0:       #181818

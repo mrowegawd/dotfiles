@@ -141,7 +141,7 @@ return {
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
             { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
           },
