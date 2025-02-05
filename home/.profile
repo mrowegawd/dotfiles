@@ -31,6 +31,7 @@ fi
 if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/etc/profile.d/nix.sh"; fi # added by Nix installer
 
 export TERMINAL="ghostty"
+export NUBROWSER="zen-browser"
 
 # Set PATH ditaruh disini karena alasan nya biar 'ensure` PATH terakses ketika
 # membuka neovide

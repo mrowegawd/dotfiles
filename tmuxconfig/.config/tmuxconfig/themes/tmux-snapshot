@@ -1,23 +1,23 @@
-ACTIVE_FG="#4d8cc0"
-ACTIVE_BG="#2b4e6b"
+ACTIVE_FG="#2c6880"
+ACTIVE_BG="#183a47"
 
-STATUSLINE_BG_MESSAGE="#dcdcaa"
-STATUSLINE_FG="#626262"
+STATUSLINE_BG_MESSAGE="#f6c177"
+STATUSLINE_FG="#645b94"
 
-SESSION_BG="#d4d4d4"
+SESSION_BG="#e0def4"
 SESSION_FG="#c9c6bd"
 
-TMUX_BG="#1f1f1f"
-TMUX_FG="#6c6c6c"
+TMUX_BG="#191724"
+TMUX_FG="#6e659e"
 
-BORDER_FG="#535353"
-BORDER_BG="#1f1f1f"
-BORDER_FG_NC="#313131"
+BORDER_FG="#443d60"
+BORDER_BG="#191724"
+BORDER_FG_NC="#282439"
 
-RED="#f44747"
-BLUE="#569cd6"
-WHITE="#d4d4d4"
-GREEN="#608b4e"
+RED="#eb6f92"
+BLUE="#9ccfd8"
+WHITE="#e0def4"
+GREEN="#31748f"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
@@ -53,8 +53,8 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 #  ║ LEFT
 #  ╙
 set-option -g status-left \
-"#{?client_prefix,#[fg=$SESSION_BG]#[bg=$GREEN]#[bold] T \
-#[fg=$GREEN]#[bg=$SESSION_BG]#[nobold]#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold],\
+"#{?client_prefix,#[fg=$ACTIVE_BG]#[bg=$RED]#[bold] T \
+#[fg=$RED]#[bg=$SESSION_BG]#[nobold]#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold],\
 #[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold]} ❐ #S \
 #{?#{==:#I,1},#[fg=$SESSION_BG]#[bg=$ACTIVE_BG],#[fg=$SESSION_BG]#[bg=$TMUX_BG]}"
 

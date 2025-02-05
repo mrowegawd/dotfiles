@@ -35,15 +35,7 @@ return {
           return RUtils.cmp.expand(snippet)
         end,
       },
-      appearance = {
-        -- sets the fallback highlight groups to nvim-cmp's highlight groups
-        -- useful for when your theme doesn't support blink.cmp
-        -- will be removed in a future release, assuming themes add support
-        use_nvim_cmp_as_default = false,
-        -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- adjusts spacing to ensure icons are aligned
-        nerd_font_variant = "mono",
-      },
+      appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
       completion = {
         list = {
           selection = {
@@ -51,15 +43,10 @@ return {
             --   return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
             -- end,
             preselect = false,
-            auto_insert = false,
+            auto_insert = true,
           },
         },
-        accept = {
-          -- experimental auto-brackets support
-          auto_brackets = {
-            enabled = true,
-          },
-        },
+        accept = { auto_brackets = { enabled = true } },
         menu = {
           border = "single",
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
@@ -101,26 +88,26 @@ return {
         -- with blink.compat
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
-        -- NOTE: kenapa completion di cmdline bikin abbrv ga jalan?
-        cmdline = {},
-        -- cmdline = function()
-        --   local type = vim.fn.getcmdtype()
-        --   if type == "/" or type == "?" then
-        --     return {}
-        --     -- return {"Buffer"}
-        --   end
-        --   if type == ":" then
-        --     return { "cmdline" }
-        --   end
-        --   return {}
-        -- end,
+        cmdline = function()
+          local type = vim.fn.getcmdtype()
+          if type == "/" or type == "?" then
+            return { "buffer" }
+          end
+          if type == ":" then
+            return { "cmdline" }
+          end
+          return {}
+        end,
+      },
+      signature = {
+        enabled = true,
+        window = { border = "rounded", winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder" },
       },
       keymap = {
         preset = "enter",
+        -- how to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
-        ["<C-r>"] = { "show", "hide", "fallback" }, -- trigger completion
-
-        ["<cr>"] = { "fallback" },
+        ["<CR>"] = { "fallback" },
 
         ["<C-n>"] = { "show", "select_next", "fallback" },
         ["<C-p>"] = { "select_prev", "fallback" },
@@ -128,6 +115,51 @@ return {
         -- ["<C-t>"] = { "show_documentation", "hide_documentation", "fallback" },
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },
         ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+
+        cmdline = {
+          ["<C-y>"] = { "select_and_accept" },
+          ["<C-n>"] = {
+            function(cmp)
+              if cmp.is_visible() then
+                cmp.select_next { auto_insert = false }
+              else
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+              end
+            end,
+          },
+          ["<C-p>"] = {
+            function(cmp)
+              if cmp.is_visible() then
+                cmp.select_prev { auto_insert = false }
+              else
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+              end
+            end,
+          },
+          -- ["<C-p>"] = { "select_prev", "fallback" },
+          ["<C-c>"] = {
+            "hide",
+            "cancel",
+            function()
+              if vim.fn.getcmdtype() ~= "" then
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+              end
+            end,
+          },
+          ["<CR>"] = {
+            function(_)
+              if vim.api.nvim_get_mode().mode == "c" then
+                local type = vim.fn.getcmdtype()
+                if type == "/" or type == "?" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "n", true)
+                  return
+                end
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Space>", true, false, true), "i", true)
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", true)
+              end
+            end,
+          },
+        },
       },
     },
 

@@ -103,7 +103,8 @@ return {
         lazygit = {
           theme_path = os.getenv "HOME" .. "/.config/lazygit/theme/fla.yml",
           theme = {
-            [241] = { fg = "Special" },
+            [241] = { fg = "LineNr" },
+            background = { fg = "Function" },
             activeBorderColor = { fg = "Keyword", bold = true },
             cherryPickedCommitBgColor = { fg = "Identifier" },
             cherryPickedCommitFgColor = { fg = "Function" },

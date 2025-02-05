@@ -463,7 +463,7 @@ return {
           vim.opt_local.winfixheight = true
           vim.opt_local.winfixbuf = true
           -- Mappings
-          vim.keymap.set("n", "q", RUtils.cmd.quit_return, { buffer = e.buf })
+          -- vim.keymap.set("n", "q", RUtils.cmd.quit_return, { buffer = e.buf })
           vim.keymap.set("n", "<c-n>", "j", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<c-p>", "k", { buffer = e.buf, remap = true })
           vim.keymap.set("n", "<tab>", "=", { buffer = e.buf, remap = true })
@@ -654,7 +654,7 @@ return {
             { "n", "<up>", actions.prev_entry, { desc = "Git: bring the cursor to the previous file entry [diffview]" }, },
             { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
-            { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            -- { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
 
             { "n", "-", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
@@ -723,7 +723,8 @@ return {
             { "n", "<up>", actions.prev_entry, { desc = "Git: bring the cursor to the previous file entry [diffview]" }, },
             { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
-            { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            -- { "n", "h", false, {}},
+            -- { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
 
             { "n", "g!", actions.options, { desc = "Git: open the option panel [diffview]" } },

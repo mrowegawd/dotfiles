@@ -337,7 +337,6 @@ return {
           "sunburn",
           "tokyonight-night",
           "oxocarbon",
-          "rose-pine",
           "oldworld",
         }, RUtils.config.colorscheme)
       then

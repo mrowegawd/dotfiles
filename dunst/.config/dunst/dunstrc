@@ -91,7 +91,7 @@ frame_width = 2
 
 # Defines color of the frame around the notification window.
 
-frame_color = "#569cd6"
+frame_color = "#9ccfd8"
 
 # Define a color for the separator.
 # possible values are:
@@ -295,20 +295,20 @@ per_monitor_dpi = false
 [urgency_low]
 background = "#222222"
 foreground = "#888888"
-frame_color = "#569cd6"
+frame_color = "#9ccfd8"
 timeout = 10
 icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_normal]
-background = "#1f1f1f"
-foreground = "#56b6c2"
-frame_color = "#569cd6"
+background = "#191724"
+foreground = "#ebbcba"
+frame_color = "#9ccfd8"
 timeout = 8
 icon = ~/.config/miscxrdb/icons/bell-notification.png
 
 [urgency_critical]
-background = "#f44747"
-foreground = "#1f1f1f"
-frame_color = "#f44747"
+background = "#eb6f92"
+foreground = "#191724"
+frame_color = "#eb6f92"
 timeout = 10
 icon = ~/.config/miscxrdb/icons/critical-danger.png
