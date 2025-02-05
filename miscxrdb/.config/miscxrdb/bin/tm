@@ -18,7 +18,8 @@ not_in_tmux() {
 
 create_if_needed_and_attach() {
   if [[ $TERMINAL == "wezterm" ]]; then
-    dunstify "use wezterm pane"
+    dunstify "WARN: wezterm tidak punya spesific cli command untuk akses api switch workspace"
+    dunstify "WARN: keymap -> alt+y"
     exit
   fi
 
