@@ -98,7 +98,8 @@ open_tree_cwd() {
 }
 
 open_tree_wiki() {
-  if ! _check_pane_is_yazi; then
+  is_pane_is_left=$(tmux display -p '#{pane_at_left}')
+  if ! _check_pane_is_yazi && [[ $is_pane_is_left == "0" ]]; then
     _open_wiki_file_manager_window
   else
     clean_tree
