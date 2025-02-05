@@ -130,7 +130,7 @@ RUtils.map.nnoremap("<C-e>", [[(line("w$") >= line('$') ? "2j" : "4<C-e>")]], { 
 RUtils.map.nnoremap("<C-y>", [[(line("w0") <= 1 ? "2k" : "4<C-y>")]], { expr = true })
 -- }}}
 -- {{{ Buffers
-RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer split into tab window" })
+RUtils.map.nnoremap("<Leader>bT", "<C-w><S-t>", { desc = "Buffer: change buffer into tab window" })
 RUtils.map.nnoremap("<Leader>bb", "<C-^>", { desc = "Buffer: alternate file" })
 RUtils.map.nnoremap("<Leader>bd", RUtils.buf.bufremove, { desc = "Buffer: delete buffer" })
 RUtils.map.nnoremap("<Leader>bc", "<CMD>q!<CR>", { desc = "Buffer: close buffer" })
@@ -184,8 +184,6 @@ RUtils.map.vmap("K", "<Nop>")
 RUtils.map.nmap("q", "<Nop>")
 -- }}}
 -- {{{ Toggle
-Snacks.toggle.zoom():map "sm"
-Snacks.toggle.zen():map "<Leader>uz"
 Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map "<Leader>ub"
 Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
@@ -334,8 +332,8 @@ local function replace_keymap(confirmation, visual)
     RUtils.map.type_escape(move_text)
   end
 end
-RUtils.map.nnoremap("sr", replace_keymap, { desc = "Misc: find and replace under cursor" })
-RUtils.map.vnoremap("sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace (visual)" })
+RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: find and replace under cursor" })
+RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace (visual)" })
 RUtils.map.nnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(false)
 end, { desc = "Open: browse under cursor/follow linke note" })
