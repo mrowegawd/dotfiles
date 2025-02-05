@@ -107,6 +107,7 @@ local defaults = {
       clock = " ",
       close = " ",
       boldclose = " ",
+      modified = "✘ ",
       largeclose = " ",
       code = " ",
       comment = " ",

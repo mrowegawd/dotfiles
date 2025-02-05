@@ -506,7 +506,7 @@ M.FileFlags = {
     condition = function()
       return vim.bo.modified
     end,
-    provider = RUtils.config.icons.misc.boldclose .. " ",
+    provider = RUtils.config.icons.misc.modified .. " ",
     hl = { fg = colors.diagnostic_err },
   },
   {
