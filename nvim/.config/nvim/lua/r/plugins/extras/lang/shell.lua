@@ -19,7 +19,7 @@ RUtils.on_very_lazy(function()
     },
     filename = {
       ["vifmrc"] = "vim",
-      [".zshrc"] = "sh",
+      [".zshrc"] = "zsh",
       [".zshenv"] = "sh",
     },
     pattern = {
