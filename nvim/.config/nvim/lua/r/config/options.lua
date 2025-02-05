@@ -185,16 +185,7 @@ opt.emoji = false
 -- }}}
 -- {{{ Diff
 -- use in vertical diff mode, blank lines to keep sides aligned, ignore whitespace changes
-opt.diffopt = opt.diffopt
-  + {
-    "vertical",
-    "iwhite",
-    "hiddenoff",
-    "foldcolumn:0",
-    "context:1000000",
-    "algorithm:histogram", -- "algorithm:patience"
-    "indent-heuristic",
-  }
+vim.opt.diffopt = "filler,internal,closeoff,algorithm:histogram,context:5,linematch:60"
 -- }}}
 -- {{{ Sessions
 -- NOTE: remove "folds" dari sessionoptions tampak nya menghilangkan error "no fold found error"
