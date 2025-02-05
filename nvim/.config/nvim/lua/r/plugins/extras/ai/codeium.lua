@@ -59,7 +59,7 @@ return {
             providers = {
               codeium = {
                 kind = "Codeium",
-                score_offset = 800,
+                score_offset = 100,
                 async = true,
               },
             },
