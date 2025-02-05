@@ -2,7 +2,6 @@
 # ╎                           FONTS                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 font-family    = "SF Mono"
-
 # font-family-bold = "Mapple Mono"
 # font-family-italic = "JetBrainsMono NF Italic"
 # font-family-bold-italic =  "JetBrainsMono NF Bold Italic"
@@ -18,31 +17,26 @@ font-thicken   = true
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           MOUSE                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-mouse-hide-while-typing = true
-adw-toolbar-style = flat
+mouse-hide-while-typing         = true
+adw-toolbar-style               = flat
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           THEME                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-theme = vscode_modern
+theme = rose-pine
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                          WINDOW                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-window-decoration  = true
-window-padding-x   = 0
-window-padding-y   = 0
-gtk-adwaita = false
+window-decoration               = none
+window-padding-x                = 0
+window-padding-y                = 0
+window-colorspace               = display-p3
+window-padding-balance          = false
+window-step-resize              = false
+window-theme                    = ghostty
 
-window-padding-balance = false
-# window-padding-color = extend-always
-window-step-resize = false
-
-
-# Oh, this combined with adjust-cell-width = -1 actually feels like Kitty
-# adjust-cell-width = -1
-
-window-theme       = ghostty
+gtk-adwaita                     = false
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           MISC                            ╎
@@ -52,20 +46,24 @@ window-theme       = ghostty
 # adjust-cell-width = 0
 # adjust-cell-height = 20%
 
-cursor-style = block
-cursor-style-blink = false
-shell-integration-features = no-cursor
+cursor-style                    = block
+cursor-style-blink              = false
+shell-integration-features      = no-cursor
 
-gtk-titlebar           = false
-confirm-close-surface  = false
+gtk-titlebar                    = false
+confirm-close-surface           = false
 
-background-opacity     = 0.85
+unfocused-split-opacity         = 0.5
+
+# NOTE: jika background-opacity ini active dan picom juga active
+# maka akam mempengaruhi color background, menjadikan color background terminal
+# ghostty ini tidak sama dengan color terminal lain (wezterm, kitty),
+# recommended: gunakan picom untuk transparant nya, disable `background-opacity`
+# background-opacity            = 0.85
+
 # blur radis only works for Mac
-# background-blur-radius = 20
-#
-unfocused-split-opacity = 0.5
-
-# macos-titlebar-style = tabs
+# background-blur-radius        = 20
+# macos-titlebar-style          = tabs
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                         MAPPINGS                          ╎
