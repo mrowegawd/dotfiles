@@ -15,6 +15,13 @@ return {
       return RUtils.cmp_engine() == "blink.cmp"
     end,
   },
+  -- Auto complete Torch
+  {
+    import = "r.plugins.extras.coding.torch",
+    enabled = function()
+      return RUtils.cmp_engine() == "torch"
+    end,
+  },
   -- LUASNIP
   {
     import = "r.plugins.extras.coding.luasnip",
