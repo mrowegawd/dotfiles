@@ -308,6 +308,9 @@ mylan() {
 
 # check: version of OS
 c_os() {
+  NC='\033[0m'     # No Color
+  RED='\033[0;31m' # Red
+
   vendor=$(lscpu | awk '/Vendor ID/{print $3}')
   if [[ "$vendor" == "GenuineIntel" ]]; then
     VENDOCCPU="Intel cpu"
@@ -345,29 +348,30 @@ c_os() {
     OS=$(uname -s)
     VER=$(uname -r)
   fi
+  echo -e "${RED}Version OS:${NC}"
   echo "OS           : $OS"
   echo "version      : $VER"
   echo "CPU Vendor   : $VENDOCCPU"
   echo "ARM          : $(dpkg --print-architecture)"
 
   # Informasi OS
-  echo -e "\n\n\nInformasi OS:"
+  echo -e "\n${RED}Informasi OS:${NC}"
   cat /etc/*release | uniq
 
   # Versi kernel
-  echo -e "\nVersi Kernel:"
+  echo -e "\n${RED}Versi Kernel:${NC}"
   uname -r
 
   # Informasi CPU
-  echo -e "\nInformasi CPU:"
+  echo -e "\n${RED}Informasi CPU:${NC}"
   lscpu
 
   # Informasi RAM
-  echo -e "\nInformasi RAM:"
+  echo -e "\n${RED}Informasi RAM:${NC}"
   free -h
 
   # Informasi VGA
-  echo -e "\nInformasi VGA:"
+  echo -e "\n${RED}Informasi VGA:${NC}"
   lspci | grep -i vga
 
 }
