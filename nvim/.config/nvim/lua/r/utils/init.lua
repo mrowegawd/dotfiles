@@ -330,7 +330,7 @@ function M.memoize(fn)
   end
 end
 
----@return "nvim-cmp" | "blink.cmp"
+---@return "nvim-cmp" | "blink.cmp" | "torch"
 function M.cmp_engine()
   vim.g.lazyvim_cmp = vim.g.lazyvim_cmp or "auto"
   if vim.g.lazyvim_cmp == "auto" then

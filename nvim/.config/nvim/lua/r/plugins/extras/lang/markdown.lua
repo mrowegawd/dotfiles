@@ -75,14 +75,7 @@ return {
       },
     },
   },
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        marksman = {},
-      },
-    },
-  },
+  -- { "neovim/nvim-lspconfig", opts = { servers = { marksman = {} } } },
   -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
@@ -138,15 +131,53 @@ return {
     },
     ft = { "markdown", "norg", "rmd", "org" },
     config = function(_, opts)
+      local rose_pine = {
+        ["rose-pine-main"] = {
+          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
+          { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+          {
+            RenderMarkdownCodeInline = {
+              fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
+              bg = "NONE",
+              bold = true,
+            },
+          },
+        },
+        ["rose-pine-dawn"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } } },
+      }
+
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
             { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
-            { ["@markup.raw.markdown_inline"] = { bg = { from = "Normal", attr = "bg", alter = -0.05 }, bold = true } },
+            { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
           },
           ["lackluster"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } } },
+          ["gruvbox-material"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+          },
+          ["jellybeans"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+          },
+          ["sunburn"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+          },
+          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["neomodern"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } } },
+          ["oldworld"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
+          ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
+          ["one_monokai"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+          },
+          ["zenburned"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+          },
           ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } } },
           ["catppuccin-mocha"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
         },

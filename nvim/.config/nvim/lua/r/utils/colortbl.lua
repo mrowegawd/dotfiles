@@ -27,7 +27,11 @@ local disorent = Highlight.tint(statusline_bg, 1)
 
 if vim.tbl_contains({ "zenburned" }, vim.g.colorscheme) then
   keywordnc = Highlight.get("KeywordBlur", "bg")
-  keywordnc_blur = Highlight.tint(keywordnc, -0.05)
+end
+
+if vim.g.colorscheme == "rose-pine-dawn" then
+  keywordnc = Highlight.tint(keywordnc, 0.01)
+  keywordnc_blur = Highlight.tint(keywordnc, 0.03)
 end
 
 if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then

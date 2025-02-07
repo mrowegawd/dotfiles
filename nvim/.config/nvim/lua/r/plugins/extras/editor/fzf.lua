@@ -237,7 +237,7 @@ return {
         hls = { cursor = "CurSearch" },
         fzf_colors = {
           ["fg"] = { "fg", "FzfLuaFilePart" },
-          ["bg"] = { "bg", "NormalFloat" },
+          ["bg"] = { "bg", "FzfLuaNormal" },
           ["hl"] = { "fg", "CmpItemAbbrMatch" },
           ["fg+"] = { "fg", "FzfLuaSel" },
           ["bg+"] = { "bg", "FzfLuaSel" },
@@ -248,7 +248,7 @@ return {
           ["marker"] = { "fg", "Error" },
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "FzfLuaHeaderText" },
-          ["gutter"] = { "bg", "FloatBorder" },
+          ["gutter"] = { "bg", "FzfLuaBorder" },
           ["border"] = { "fg", "FzfLuaBorder" },
         },
         previewers = {

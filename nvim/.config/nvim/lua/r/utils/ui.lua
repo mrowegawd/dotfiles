@@ -1,4 +1,4 @@
----@class r.utils.cmd
+---@class r.utils.ui
 
 -- Taken from Snacks plugins
 local Snacks = require "snacks"

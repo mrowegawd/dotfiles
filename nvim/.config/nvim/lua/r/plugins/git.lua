@@ -307,7 +307,7 @@ return {
           delete = { text = "▎" },
           topdelete = { text = "▎" },
           changedelete = { text = "▎" },
-          -- untracked = { text = "▎" },
+          -- untracked = { text = "▎", '▐', "┆"},
           untracked = { text = "┆" },
         },
         preview_config = {

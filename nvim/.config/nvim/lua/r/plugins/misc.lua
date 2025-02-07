@@ -29,22 +29,6 @@ return {
   -- COMMENT-BOX
   {
     "LudoPinelli/comment-box.nvim",
-    cmd = {
-      "CBlcbox",
-      "CBllbox",
-      "CBlcbox",
-      "CBlrbox",
-      "CBclbox",
-      "CBccbox",
-      "CBccline",
-      "CBcrbox",
-      "CBrlbox",
-      "CBrcbox",
-      "CBalbox",
-      "CBacbox",
-      "CBarbox",
-      "CBcatalog",
-    },
   },
   -- VIM-HIGHLIGHTER
   {

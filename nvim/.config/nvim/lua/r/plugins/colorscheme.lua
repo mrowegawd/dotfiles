@@ -18,11 +18,9 @@ return {
       return false
     end,
   },
-  -- ashen
+  -- ASHEN
   {
     "ficcdaf/ashen.nvim",
-    -- optional but recommended,
-    -- pin to the latest stable release:
     lazy = false,
     priority = 1000,
     enabled = function()
@@ -65,17 +63,18 @@ return {
     "rose-pine/neovim",
     lazy = false,
     priority = 1000,
+    -- name = "rose-pine",
     name = "rose-pine",
     enabled = function()
-      local rosepine_theme = { "rose-pine" }
+      local rosepine_theme = { "rose-pine-dawn", "rose-pine-main", "rose-pine" }
       if vim.tbl_contains(rosepine_theme, colorscheme) then
         return true
       end
       return false
     end,
-    opts = {
-      variant = "main", -- auto, main, moon, or dawn
-    },
+    -- opts = {
+    --   variant = "dawn", -- auto, main, moon, or dawn
+    -- },
   },
   -- OXOCARBON
   {

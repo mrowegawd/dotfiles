@@ -310,13 +310,17 @@ return {
         tab_bg_tint = -0.05
       end
 
+      if vim.tbl_contains({ "rose-pine-dawn" }, RUtils.config.colorscheme) then
+        tab_bg_tint = 0.03
+      end
+
       if
         vim.tbl_contains({
           "ashen",
           "coffeecat",
           "horizon",
           "jellybeans",
-          "rose-pine",
+          "rose-pine-main",
           "base2tone_lavender_dark",
           "base2tone_field_dark",
           "base2tone_cave_dark",
