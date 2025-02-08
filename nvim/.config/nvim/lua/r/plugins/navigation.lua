@@ -396,9 +396,10 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
-  -- AERIAL
+  -- AERIAL (disabled)
   {
     "stevearc/aerial.nvim",
+    enabled = false,
     event = "VeryLazy",
     opts = function()
       RUtils.disable_ctrl_i_and_o("NoAerial", { "aerial" })
@@ -463,12 +464,25 @@ return {
       }
     end,
   },
-  -- OUTLINE.NVIM (disabled)
+  -- OUTLINE.NVIM
   {
     "mrowegawd/outline.nvim",
-    enabled = false,
+    -- enabled = false,
     event = "VeryLazy",
     opts = function()
+      local rose_pine = {
+        ["rose-pine-dawn"] = {
+          { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = 0.05 }, bg = "NONE" } },
+          { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bg = "NONE" } },
+          { OutlineGuides = { fg = { from = "OutlineFoldMarker", attr = "fg", alter = 0.04 }, bg = "NONE" } },
+        },
+        ["rose-pine-main"] = {
+          { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.05 }, bg = "NONE" } },
+          { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bg = "NONE" } },
+          { OutlineGuides = { fg = { from = "OutlineFoldMarker", attr = "fg", alter = 0.04 }, bg = "NONE" } },
+        },
+      }
+
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
       Highlight.plugin("OutlineAuHi", {
         theme = {
@@ -480,6 +494,7 @@ return {
             { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
             { OutlineLineno = { bg = "NONE" } },
           },
+          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["lackluster"] = {
             { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
             { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
