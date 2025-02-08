@@ -66,9 +66,7 @@ return {
       "nvim-treesitter/nvim-treesitter",
     },
     opts = true,
-    keys = {
-      { "<Leader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc: open devdocs [devdocs]" },
-    },
+    keys = { { "<Leader>fd", "<CMD>DevdocsOpen<CR>", desc = "Misc: open devdocs [devdocs]" } },
     cmd = {
       "DevdocsFetch",
       "DevdocsInstall",

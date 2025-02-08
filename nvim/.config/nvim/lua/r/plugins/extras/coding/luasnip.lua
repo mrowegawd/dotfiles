@@ -1,4 +1,6 @@
+local providers = { "lsp", "snippets", "buffer", "codeium" }
 local callme = 0
+local idx = 1
 
 return {
   -- disable builtin snippet support
@@ -10,14 +12,7 @@ return {
     build = (not RUtils.is_win())
         and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
       or nil,
-    dependencies = {
-      {
-        "chrisgrieser/nvim-scissors",
-        opts = {
-          snippetDir = RUtils.config.path.snippet_path,
-        },
-      },
-    },
+    dependencies = { { "chrisgrieser/nvim-scissors", opts = { snippetDir = RUtils.config.path.snippet_path } } },
     keys = {
       {
         "<Leader>fn",
@@ -40,23 +35,24 @@ return {
       delete_check_events = "TextChanged",
     },
     config = function()
-      local luasnip = require "luasnip"
+      -- local luasnip = require "luasnip"
 
+      require("luasnip.loaders.from_vscode").lazy_load()
       require("luasnip.loaders.from_vscode").lazy_load {
         paths = RUtils.config.path.snippet_path,
       }
 
-      luasnip.filetype_extend("python", { "django" })
-      luasnip.filetype_extend("django-html", { "html" })
-      luasnip.filetype_extend("htmldjango", { "html" })
-
-      luasnip.filetype_extend("javascript", { "html" })
-      luasnip.filetype_extend("javascript", { "javascriptreact" })
-      luasnip.filetype_extend("javascriptreact", { "html" })
-      luasnip.filetype_extend("typescript", { "html" })
-      luasnip.filetype_extend("typescriptreact", { "html", "react" })
-
-      luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
+      -- luasnip.filetype_extend("python", { "django" })
+      -- luasnip.filetype_extend("django-html", { "html" })
+      -- luasnip.filetype_extend("htmldjango", { "html" })
+      --
+      -- luasnip.filetype_extend("javascript", { "html" })
+      -- luasnip.filetype_extend("javascript", { "javascriptreact" })
+      -- luasnip.filetype_extend("javascriptreact", { "html" })
+      -- luasnip.filetype_extend("typescript", { "html" })
+      -- luasnip.filetype_extend("typescriptreact", { "html", "react" })
+      --
+      -- luasnip.filetype_extend("NeogitCommitMessage", { "gitcommit" })
     end,
   },
   -- add snippet_forward action
@@ -181,21 +177,18 @@ return {
       keymap = {
         ["<C-r>"] = {
           function(cmp)
-            if callme == 0 then
-              callme = 1
-              cmp.show { providers = { "lsp" } }
-            elseif callme == 1 then
-              callme = 2
-              cmp.show { providers = { "snippets" } }
-            elseif callme == 2 then
-              callme = 3
-              cmp.show { providers = { "buffer" } }
-            elseif callme == 3 then
-              callme = 0
-              if not vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
-                cmp.show { providers = { "codeium" } }
-              end
+            local current_provider = providers[idx]
+
+            if current_provider == "codeium" and vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
+              -- Jika filetype adalah 'org' atau 'rgflow', lewati 'codeium'
+              idx = idx + 1
+              current_provider = providers[idx]
             end
+
+            cmp.show { providers = { current_provider } }
+
+            -- Mengupdate idx untuk siklus berikutnya
+            idx = (idx % #providers) + 1
           end,
         },
       },
