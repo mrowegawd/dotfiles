@@ -1,4 +1,13 @@
-vim.g.lazyvim_blink_main = true
+vim.g.lazyvim_blink_main = false
+
+-- local source_priority = {
+--   lsp = 4,
+--   snippets = 3,
+--   path = 2,
+--   buffer = 5,
+--   cmdline = 1,
+--   codeium = 1,
+-- }
 
 return {
   {
@@ -37,35 +46,35 @@ return {
       },
       appearance = { use_nvim_cmp_as_default = false, nerd_font_variant = "mono" },
       completion = {
+        keyword = { range = "full" },
+        accept = { auto_brackets = { enabled = true } },
         list = {
           selection = {
-            -- preselect = function(ctx)
-            --   return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
-            -- end,
-            preselect = false,
+            preselect = function(ctx)
+              return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+            end,
             auto_insert = true,
           },
         },
-        accept = { auto_brackets = { enabled = true } },
         menu = {
           border = "single",
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
-            columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
-            components = {
-              kind = {
-                ellipsis = false,
-                width = { fill = true },
-                text = function(ctx)
-                  return ("(%s)"):format(ctx.kind)
-                end,
-                highlight = function(ctx)
-                  return (require("blink.cmp.completion.windows.render.tailwind").get_hl(ctx) or "BlinkCmpKind")
-                    .. ctx.kind
-                end,
-              },
-            },
+            --   columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
+            --   components = {
+            --     kind = {
+            --       ellipsis = false,
+            --       width = { fill = true },
+            --       text = function(ctx)
+            --         return ("(%s)"):format(ctx.kind)
+            --       end,
+            --       highlight = function(ctx)
+            --         return (require("blink.cmp.completion.windows.render.tailwind").get_hl(ctx) or "BlinkCmpKind")
+            --           .. ctx.kind
+            --       end,
+            --     },
+            --   },
           },
         },
         documentation = {
@@ -83,6 +92,19 @@ return {
           enabled = false,
         },
       },
+      -- fuzzy = {
+      --   -- NOTE: source priority?
+      --   -- https://github.com/Saghen/blink.cmp/issues/1098#issuecomment-2619750942
+      --   sorts = {
+      --     function(a, b)
+      --       print()
+      --       return source_priority[a.source_id] > source_priority[b.source_id]
+      --     end,
+      --     -- defaults
+      --     "score",
+      --     "sort_text",
+      --   },
+      -- },
       sources = {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
@@ -93,11 +115,70 @@ return {
           if type == "/" or type == "?" then
             return { "buffer" }
           end
-          if type == ":" then
+          if type == ":" or type == "@" then
             return { "cmdline" }
           end
-          return {}
         end,
+        -- providers = {
+        --   -- lsp = {
+        --   --   ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[])
+        --   --   transform_items = function(ctx, items)
+        --   --     ---@diagnostic disable-next-line: redundant-return-value
+        --   --     return vim.tbl_filter(function(item)
+        --   --       local c = ctx.get_cursor()
+        --   --       local cursor_line = ctx.line
+        --   --       local cursor = {
+        --   --         row = c[1],
+        --   --         col = c[2] + 1,
+        --   --         line = c[1] - 1,
+        --   --       }
+        --   --
+        --   --       RUtils.vlog.log.info(vim.inspect(item))
+        --   --       print "hasdf"
+        --   --
+        --   --       local cursor_before_line = string.sub(cursor_line, 1, cursor.col - 1)
+        --   --       -- remove text
+        --   --       if item.kind == vim.lsp.protocol.CompletionItemKind.Text then
+        --   --         return false
+        --   --       end
+        --   --
+        --   --       if vim.bo.filetype == "vue" then
+        --   --         -- For events
+        --   --         if cursor_before_line:match "(@[%w]*)%s*$" ~= nil then
+        --   --           return item.label:match "^@" ~= nil
+        --   --         -- For props also exclude events with `:on-` prefix
+        --   --         elseif cursor_before_line:match "(:[%w]*)%s*$" ~= nil then
+        --   --           return item.label:match "^:" ~= nil and not item.label:match "^:on%-" ~= nil
+        --   --         -- For slot
+        --   --         elseif cursor_before_line:match "(#[%w]*)%s*$" ~= nil then
+        --   --           return item.kind == vim.lsp.protocol.CompletionItemKind.Method
+        --   --         end
+        --   --       end
+        --   --
+        --   --       return true
+        --   --     end, items)
+        --   --   end,
+        --   -- },
+        --   -- snippets = {
+        --   --   min_keyword_length = 1,
+        --   --   score_offset = 4,
+        --   -- },
+        --   -- -- lsp = {
+        --   -- --   min_keyword_length = 0,
+        --   -- --   score_offset = 3,
+        --   -- --   name = "LSP",
+        --   -- --   module = "blink.cmp.sources.lsp",
+        --   -- --   fallbacks = {},
+        --   -- -- },
+        --   -- path = {
+        --   --   min_keyword_length = 0,
+        --   --   score_offset = 2,
+        --   -- },
+        --   -- buffer = {
+        --   --   min_keyword_length = 1,
+        --   --   score_offset = 1,
+        --   -- },
+        -- },
       },
       signature = {
         enabled = true,
@@ -107,55 +188,169 @@ return {
         preset = "enter",
         -- how to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
-        ["<CR>"] = { "fallback" },
+        ["<CR>"] = { "accept", "fallback" },
 
-        ["<C-n>"] = { "show", "select_next", "fallback" },
-        ["<C-p>"] = { "select_prev", "fallback" },
+        ["<C-n>"] = {
+          function(cmp)
+            if not cmp.is_visible() then
+              cmp.show()
+            else
+              cmp.select_next()
+            end
+          end,
+        },
+        ["<C-p>"] = {
+          function(cmp)
+            if cmp.is_visible() then
+              cmp.select_prev()
+            end
+          end,
+        },
 
-        -- ["<C-t>"] = { "show_documentation", "hide_documentation", "fallback" },
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },
         ["<C-d>"] = { "scroll_documentation_down", "fallback" },
 
         cmdline = {
-          ["<C-y>"] = { "select_and_accept" },
+          --   -- NOTE: issue terkait
+          --   -- https://github.com/Saghen/blink.cmp/issues/1092
+          --   -- https://github.com/Saghen/blink.cmp/issues/1117
+          --   -- ["<C-y>"] = {
+          --   --   function(cmp)
+          --   --     --     -- local type = vim.fn.getcmdtype()
+          --   --     --     -- print(type)
+          --   --     --     -- local mode = vim.fn.mode(1):sub(1, 1)
+          --   --     --     -- print(mode)
+          --   --     --
+          --   --     -- local function get_cursor()
+          --   --     --   return { 1, vim.fn.getcmdpos() - 1 } or vim.api.nvim_win_get_cursor(0)
+          --   --     -- end
+          --   --     -- local p = get_cursor()
+          --   --     -- print(vim.inspect(p))
+          --   --
+          --   --     local get_mode = function()
+          --   --       local mode = vim.api.nvim_get_mode().mode:sub(1, 1)
+          --   --       if mode == "i" then
+          --   --         return "i" -- insert
+          --   --       elseif mode == "v" or mode == "V" or mode == CTRL_V then
+          --   --         return "x" -- visual
+          --   --       elseif mode == "s" or mode == "S" or mode == CTRL_S then
+          --   --         return "s" -- select
+          --   --       elseif mode == "c" and vim.fn.getcmdtype() ~= "=" then
+          --   --         return "c" -- cmdline
+          --   --       end
+          --   --     end
+          --   --
+          --   --     local is_cmdline_mode = function()
+          --   --       return get_mode() == "c"
+          --   --     end
+          --   --
+          --   --     local get_cursor = function()
+          --   --       if is_cmdline_mode() then
+          --   --         return {
+          --   --           math.min(vim.o.lines, vim.o.lines - (vim.api.nvim_get_option_value("cmdheight", {}) - 1)),
+          --   --           vim.fn.getcmdpos() - 1,
+          --   --         }
+          --   --       end
+          --   --       return vim.api.nvim_win_get_cursor(0)
+          --   --     end
+          --   --
+          --   --     local j = get_cursor()[2]
+          --   --
+          --   --     if j > 1 then
+          --   --       print(j)
+          --   --       cmp.accept()
+          --   --       --   --       -- print(vim.fn.setcmdpos(cursor[2]))
+          --   --       --   print "mantap"
+          --   --       --
+          --   --       --       -- if cmp.is_visible() then
+          --   --       --       --
+          --   --       --
+          --   --       --       -- local completion_list = require "blink.cmp.completion.list"
+          --   --       --       -- local item = opts.index ~= nil and completion_list.items[opts.index]
+          --   --       --       --   or completion_list.get_selected_item()
+          --   --       --       -- if item == nil then
+          --   --       --       --   return
+          --   --       --       -- end
+          --   --       --       --
+          --   --       --       -- vim.schedule(function()
+          --   --       --       --   completion_list.accept(opts)
+          --   --       --       -- end)
+          --   --       --
+          --   --       --       -- cmp.accept()
+          --   --       --       vim.schedule(function()
+          --   --       --         local completion_list = require "blink.cmp.completion.list"
+          --   --       --         completion_list.accept {
+          --   --       --           index = 1,
+          --   --       --           callback = function()
+          --   --       --             vim.fn.setcmdpos(p[2])
+          --   --       --           end,
+          --   --       --         }
+          --   --       --       end)
+          --   --       --       return true
+          --   --       --       -- end
+          --   --     end
+          --   --   end,
+          --   -- },
+          --
+          ["<C-y>"] = {
+            "select_and_accept",
+            -- function(cmp)
+            --   if cmp.is_visible() then
+            --     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "n", true)
+            --   end
+            -- end,
+          },
           ["<C-n>"] = {
-            function(cmp)
-              if cmp.is_visible() then
-                cmp.select_next { auto_insert = false }
-              else
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
-              end
-            end,
+            "select_next",
+            "fallback",
+            --   function(cmp)
+            --     if cmp.is_visible() then
+            --       local type = vim.fn.getcmdtype()
+            --       if type == "/" or type == "?" then
+            --         return cmp.select_next { auto_insert = true }
+            --       end
+            --       return cmp.select_next { auto_insert = true }
+            --     else
+            --       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+            --     end
+            --   end,
           },
           ["<C-p>"] = {
-            function(cmp)
-              if cmp.is_visible() then
-                cmp.select_prev { auto_insert = false }
-              else
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
-              end
-            end,
+            "select_prev",
+            "fallback",
+            --   function(cmp)
+            --     if cmp.is_visible() then
+            --       local type = vim.fn.getcmdtype()
+            --       if type == "/" or type == "?" then
+            --         return cmp.select_prev { auto_insert = true }
+            --       end
+            --       return cmp.select_prev { auto_insert = true }
+            --     else
+            --       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+            --     end
+            --   end,
           },
           -- ["<C-p>"] = { "select_prev", "fallback" },
-          ["<C-c>"] = {
-            "hide",
-            "cancel",
-            function()
-              if vim.fn.getcmdtype() ~= "" then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
-              end
-            end,
-          },
+          --   ["<C-c>"] = {
+          --     "hide",
+          --     "cancel",
+          --     function()
+          --       if vim.fn.getcmdtype() ~= "" then
+          --         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+          --       end
+          --     end,
+          --   },
           ["<CR>"] = {
-            function(_)
+            function()
               if vim.api.nvim_get_mode().mode == "c" then
                 local type = vim.fn.getcmdtype()
-                if type == "/" or type == "?" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "n", true)
+                -- if type == "/" or type == "?" then
+                if type == ":" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Space>", true, false, true), "i", true)
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", true)
                   return
                 end
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Space>", true, false, true), "i", true)
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", true)
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "n", true)
               end
             end,
           },
@@ -165,22 +360,22 @@ return {
 
     config = function(_, opts)
       -- setup compat sources
-      -- local enabled = opts.sources.default
+      local enabled = opts.sources.default
       for _, source in ipairs(opts.sources.compat or {}) do
         opts.sources.providers[source] = vim.tbl_deep_extend(
           "force",
           { name = source, module = "blink.compat.source" },
           opts.sources.providers[source] or {}
         )
-        if type(opts.sources.default) == "table" and not vim.tbl_contains(opts.sources.default, source) then
-          table.insert(opts.sources.default, source)
+        if type(enabled) == "table" and not vim.tbl_contains(enabled, source) then
+          table.insert(enabled, source)
         end
       end
 
       local disabled_filetypes = opts.disable_ft or {}
       opts.enabled = function()
-        -- NOTE: ketika menggunakan `hawtkeys` terjadi error pada completion
-        -- codemium, cara dibawah ini untuk mengatasi masalah tersebut
+        -- NOTE: when using `hawtkeys`, there is an error with codeium completion
+        -- and the method below is used to address this issue
         if vim.bo.buftype == "nofile" and vim.bo.filetype == "" then
           return false
         end
@@ -202,17 +397,6 @@ return {
             RUtils.cmp.map { "snippet_forward", "ai_accept" },
             "fallback",
           }
-        end
-      end
-
-      ---  NOTE: compat with latest version. Currenlty 0.7.6
-      if not vim.g.lazyvim_blink_main then
-        ---@diagnostic disable-next-line: inject-field
-        opts.sources.completion = opts.sources.completion or {}
-        opts.sources.completion.enabled_providers = enabled
-        if vim.tbl_get(opts, "completion", "menu", "draw", "treesitter") then
-          ---@diagnostic disable-next-line: assign-type-mismatch
-          opts.completion.menu.draw.treesitter = true
         end
       end
 
