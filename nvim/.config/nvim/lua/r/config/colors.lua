@@ -1421,7 +1421,7 @@ local function colorscheme_overrides()
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
       { QuickFixLine = { fg = "NONE", underline = false, bg = { from = "QuickFixLine", attr = "bg", alter = 0.2 } } },
 
-      { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = 0.1 } } },
+      { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = 0.02 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.4 } } },
 
       { FzfLuaSel = { bg = { from = "PmenuSel", attr = "bg" } } },
@@ -3345,7 +3345,7 @@ local function colorscheme_overrides()
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
 
       { FzfLuaCursorLine = { fg = "NONE" } },
       {
