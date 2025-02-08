@@ -133,7 +133,16 @@ return {
     ft = { "markdown", "norg", "rmd", "org" },
     config = function(_, opts)
       local rose_pine = {
-        ["rose-pine-dawn"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } } },
+        ["rose-pine-dawn"] = {
+          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
+          {
+            RenderMarkdownCodeInline = {
+              fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
+              bg = "NONE",
+              bold = true,
+            },
+          },
+        },
         ["rose-pine-main"] = {
           { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
           { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },

@@ -195,7 +195,7 @@ reset_base_alter({ "rose-pine-dawn" }, {
   pmenusel_fg_alter = -0.3,
   pmenuthumb_alter = -0.1,
   quickfixline_alter = 0.5,
-  winseparator_alter = -0.08,
+  winseparator_alter = -0.06,
 })
 reset_base_alter({ "rose-pine-main" }, {
   cursorline_alter = 0.09,
@@ -1183,7 +1183,7 @@ local rose_pine = {
 
     { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.05 } } },
 
-    { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 } } },
+    { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.18 } } },
     { LineNrAbove = { link = "LineNr" } },
     { LineNrBelow = { link = "LineNr" } },
     { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -1205,6 +1205,19 @@ local rose_pine = {
     {
       ["@markup.raw.markdown_inline"] = {
         bg = "NONE",
+      },
+    },
+    {
+      ["@markup.link.label.markdown_inline"] = {
+        fg = { from = "@markup.link.label.markdown_inline", attr = "fg", alter = -0.2 },
+        bg = { from = "@markup.link.label.markdown_inline", attr = "fg", alter = 0.9 },
+      },
+    },
+    {
+      ["@markup.strong.markdown_inline"] = {
+        fg = "magenta",
+        bg = "NONE",
+        bold = true,
       },
     },
 
