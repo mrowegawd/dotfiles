@@ -1,4 +1,4 @@
----@class RUtils.util.pick
+---@class r.utils.pick
 ---@overload fun(command:string, opts?:r.utils.pick.Opts): fun()
 local M = setmetatable({}, {
   __call = function(m, ...)

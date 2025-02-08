@@ -117,6 +117,10 @@ return {
         { NoiceCmdlineIconLua = { link = "NoicePopupBaseGroup" } },
         { NoiceConfirm = { bg = { from = "Pmenu" } } },
         { NoiceConfirmBorder = { link = "NoicePopupBaseGroup" } },
+
+        -- NOTE: this line contains color markup modified by Noice,
+        -- so it needs to be manually re-colored
+        { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
       })
 
       return {
@@ -310,7 +314,7 @@ return {
         tab_bg_tint = -0.05
       end
 
-      if vim.tbl_contains({ "rose-pine-dawn" }, RUtils.config.colorscheme) then
+      if vim.tbl_contains({ "rose-pine-dawn", "base2tone_lavender_dark" }, RUtils.config.colorscheme) then
         tab_bg_tint = 0.03
       end
 
@@ -321,7 +325,6 @@ return {
           "horizon",
           "jellybeans",
           "rose-pine-main",
-          "base2tone_lavender_dark",
           "base2tone_field_dark",
           "base2tone_cave_dark",
         }, RUtils.config.colorscheme)

@@ -48,7 +48,7 @@ if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
   disorent = Highlight.tint(statusline_bg, -0.3)
 end
 
-local directory = Highlight.get("Keyword", "fg")
+local directory = Highlight.tint(Highlight.get("StatusLine", "bg"), 0.8)
 
 ---@class r.utils.colortbl
 local M = {

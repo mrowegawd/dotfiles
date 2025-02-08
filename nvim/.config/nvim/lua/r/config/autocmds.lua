@@ -39,6 +39,20 @@ RUtils.cmd.augroup("WrapSpell", {
   end,
 })
 
+-- Taken from: https://github.com/L3MON4D3/LuaSnip/issues/258#issuecomment-1429989436
+-- vim.api.nvim_create_autocmd("ModeChanged", {
+--   pattern = "*",
+--   callback = function()
+--     if
+--       ((vim.v.event.old_mode == "s" and vim.v.event.new_mode == "n") or vim.v.event.old_mode == "i")
+--       and require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+--       and not require("luasnip").session.jump_active
+--     then
+--       require("luasnip").unlink_current()
+--     end
+--   end,
+-- })
+
 RUtils.cmd.augroup("WrapFt", {
   event = { "FileType" },
   pattern = { "typescriptreact", "typescript" },
@@ -235,30 +249,45 @@ RUtils.cmd.augroup("WindowDim", {
   event = { "BufRead" },
   pattern = { "*" },
   command = function()
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+      return
+    end
     RUtils.windowdim.buf_enter()
   end,
 }, {
   event = { "BufEnter" },
   pattern = { "*" },
   command = function()
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+      return
+    end
     RUtils.windowdim.buf_enter()
   end,
 }, {
   event = { "VimEnter", "FocusGained", "WinEnter" },
   pattern = "*",
   command = function()
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+      return
+    end
     RUtils.windowdim.focus_gained()
   end,
 }, {
   event = { "VimLeave", "FocusLost" },
   pattern = "*",
   command = function()
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+      return
+    end
     RUtils.windowdim.focus_lost()
   end,
 }, {
   event = { "WinLeave" },
   pattern = "*",
   command = function()
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+      return
+    end
     RUtils.windowdim.win_leave()
   end,
 })

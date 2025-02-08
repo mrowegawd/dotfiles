@@ -36,8 +36,8 @@ border_style = { fg = "#1c1c1c" }
 # : }}}
 
 [mode]
-normal_main = { fg = "%%col_statusline_active_fg%%", bg = "%%col_statusline_active_bg%%", bold = true }
-normal_alt = { fg = "%%col_statusline_active_bg%%", bg = "%%col_statusline_active_fg%%" }
+normal_main = { fg = "%%col_statusline_active_fg%%", bg = "%%col_statusline_active_blur_bg%%", bold = true }
+normal_alt = { fg = "%%col_statusline_active_fg%%", bg = "%%col_statusline_active_bg%%" }
 
 select_main = { fg = "#ffffff", bg = "#2a2a2a", bold = true }
 select_alt = { fg = "#223249", bg = "#ffffff" }

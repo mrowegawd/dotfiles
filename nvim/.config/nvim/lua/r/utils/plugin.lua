@@ -222,6 +222,12 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
+  local KeywordNC_fg = Highlight.get("KeywordNC", "fg") -- 17
+  local KeywordNC_bg = Highlight.get("KeywordNC", "bg") -- 16
+
+  local tmux_bg = Highlight.get("Normal", "bg")
+  local tmux_fg = Highlight.tint(Highlight.get("Tabline", "fg"), -0.2)
+
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
@@ -244,24 +250,31 @@ function M.change_colors()
   local yazi_tab_active_bg = Highlight.get("KeywordNC", "bg")
   local yazi_tab_inactive_fg = Highlight.get("TabLine", "fg")
   local yazi_tab_inactive_bg = Highlight.get("TabLine", "bg")
-  local yazi_statusline_active_bg = Highlight.get("KeywordBlur", "bg")
-  local yazi_statusline_active_fg = Highlight.get("StatusLineNC", "bg")
+  local yazi_statusline_blur_bg = Highlight.get("KeywordBlur", "bg")
+  local yazi_statusline_active_fg = Highlight.get("StatusLineNC", "fg")
+  local yazi_statusline_active_bg = Highlight.get("StatusLineNC", "bg")
   local yazi_directory = Highlight.get("Directory", "fg")
   local yazi_filename_fg = Highlight.get("StatusLine", "fg")
   local yazi_which_bg = Highlight.get("Pmenu", "bg")
 
   local zsh_background_bg = Highlight.get("StatusLineNC", "bg")
 
-  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
+  if vim.tbl_contains({ "rose-pine-dawn" }, vim.g.colorscheme) then
     statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
 
     lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
-    lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
     lazygit_border_fg = Highlight.tint(Highlight.get("FzfLuaBorder", "fg"), 0.1) -- 31
+    lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
+    lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
 
-    sugest_highlight = Highlight.darken(Highlight.get("BlinkCmpGhostText", "fg"), 0.8, Highlight.get("Normal", "bg"))
+    yazi_statusline_blur_bg = Highlight.get("KeywordBlur", "bg")
+    yazi_statusline_active_bg = Highlight.tint(Highlight.get("StatusLineNC", "bg"), -0.08) -- get("KeywordBlur", "bg")
+    yazi_statusline_active_fg = Highlight.tint(Highlight.get("StatusLineNC", "fg"), 0.2) -- get("KeywordBlur", "bg")
+
+    sugest_highlight = Highlight.tint(Highlight.get("Tabline", "bg"), -0.2)
   end
+
+  print(yazi_statusline_active_fg)
 
   local master_colors = fmt(
     [[
@@ -324,23 +337,24 @@ function M.change_colors()
 *color46: %s
 *color47: %s
 *color48: %s
+*color49: %s
 
 %s
-*color49: %s
+*color50: %s
 ]],
     fmt "! vim: foldmethod=marker foldlevel=0 ft=xdefaults",
 
     fmt "! State color: bg, fg",
-    Highlight.get("KeywordNC", "bg"), -- 16
-    Highlight.get("KeywordNC", "fg"), -- 17
+    KeywordNC_bg, -- 16
+    KeywordNC_fg, -- 17
 
     fmt "! TMUX: border_fg_nc, border_fg",
     Highlight.get("WinSeparator", "fg"), -- 19
     statusline_fg, -- 18
 
     fmt "! TMUX: tmux_bg, tmux_fg",
-    Highlight.get("Normal", "bg"), -- 20
-    Highlight.get("Tabline", "fg"), -- 21
+    tmux_bg, -- 20
+    tmux_fg, -- 21
 
     fmt "! FZF-NORMAL: bg, fg, match",
     Highlight.get("FzfLuaNormal", "bg"), -- 22
@@ -380,15 +394,16 @@ function M.change_colors()
     yazi_tab_inactive_fg, -- 42
     yazi_tab_inactive_bg, -- 43
 
-    fmt "! yazi: statusline_mode_active_bg, statusline_active_bg, directory, which_bg, filename_fg",
-    yazi_statusline_active_bg, -- 44
+    fmt "! yazi: col_statusline_fg, col_statusline_main_bg, col_statusline_main_alt_bg, directory, which_bg, filename_fg",
+    yazi_statusline_blur_bg, -- 44
     yazi_statusline_active_fg, -- 45
-    yazi_directory, -- 46
-    yazi_which_bg, -- 47
-    yazi_filename_fg, -- 48
+    yazi_statusline_active_bg, -- 46
+    yazi_directory, -- 47
+    yazi_which_bg, -- 48
+    yazi_filename_fg, -- 49
 
     fmt "! zsh: zsh_background_bg",
-    zsh_background_bg -- 49
+    zsh_background_bg -- 50
   )
 
   local master_color_path = "/tmp/master-colors-themes"

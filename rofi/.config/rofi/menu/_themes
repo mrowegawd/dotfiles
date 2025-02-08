@@ -99,6 +99,7 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_47=$(grep -i color47 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+  GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -254,7 +255,7 @@ set_tmux() {
   fi
 
 }
-set_delta_theme() {
+set_delta() {
   _DELTA_PATH="$HOME/.config/delta/themes"
 
   if [ ! -f "$_DELTA_PATH" ]; then
@@ -413,12 +414,13 @@ set_yazi() {
   sed -i -e "s/%%col_tab_inactive_fg%%/$GET_COL_42/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_tab_inactive_bg%%/$GET_COL_43/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_statusline_active_fg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_blur_bg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_fg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_46/g" "$TARGET_YAZI_THEME"
 
-  sed -i -e "s/%%col_directory%%/$GET_COL_46/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_which_bg%%/$GET_COL_47/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_filename_fg%%/$GET_COL_48/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_directory%%/$GET_COL_47/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_which_bg%%/$GET_COL_48/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_filename_fg%%/$GET_COL_49/g" "$TARGET_YAZI_THEME"
 
 }
 set_fzf() {
@@ -449,7 +451,7 @@ set_zsh_p10k() {
     # Color yang harus dirubah bisa check di link github:
     # https://github.com/romkatv/powerlevel10k/issues/805#issuecomment-640145313
 
-    POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_49" 1)
+    POWERLEVEL9K_BACKGROUND_BG=$(lighten_color "$GET_COL_50" 1)
     POWERLEVEL9K_DIR_ANCHOR_FG=$(darken_color "$GET_COL_23" 5)
     sed -i -e "s/typeset -g POWERLEVEL9K_BACKGROUND=.*/typeset -g POWERLEVEL9K_BACKGROUND=\"$POWERLEVEL9K_BACKGROUND_BG\"/g" "$ZSH_P10K_PATH_CONFIG"
     sed -i -e "s/typeset -g POWERLEVEL9K_DIR_FOREGROUND=.*/typeset -g POWERLEVEL9K_DIR_FOREGROUND=\"$POWERLEVEL9K_DIR_ANCHOR_FG\"/g" "$ZSH_P10K_PATH_CONFIG"
@@ -596,7 +598,7 @@ setup() {
   set_yazi "$1"
   set_lazygit
   set_zsh_p10k "$1"
-  set_delta_theme
+  set_delta
   set_zshrc
 
   # case "$DEKSTOP_SESSION" in

@@ -75,6 +75,7 @@ return {
       },
     },
   },
+  -- NOTE: disable marksman, it makes the file markdown ft too slow
   -- { "neovim/nvim-lspconfig", opts = { servers = { marksman = {} } } },
   -- MARKDOWN-PREVIEW
   {
@@ -132,8 +133,9 @@ return {
     ft = { "markdown", "norg", "rmd", "org" },
     config = function(_, opts)
       local rose_pine = {
+        ["rose-pine-dawn"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } } },
         ["rose-pine-main"] = {
-          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.5 } } },
+          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
           { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
           {
             RenderMarkdownCodeInline = {
@@ -143,13 +145,12 @@ return {
             },
           },
         },
-        ["rose-pine-dawn"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.9 } } } },
       }
 
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.3 } } },
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
             { RenderMarkdownCodeInline = { bg = { from = "Normal", attr = "bg", alter = 0.2 }, bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
           },
@@ -160,7 +161,7 @@ return {
           },
           ["jellybeans"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            { RenderMarkdownCodeInline = { bg = "NONE" } },
+            { RenderMarkdownCodeInline = { bg = "NONE", fg = { from = "Error", attr = "fg", alter = 0.08 } } },
           },
           ["sunburn"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
@@ -170,6 +171,20 @@ return {
           ["neomodern"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } } },
           ["oldworld"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
           ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
+          ["tokyonight-night"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+          },
+          ["tokyonight-storm"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+            { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+          },
+          ["vscode_modern"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
+            { RenderMarkdownCodeInline = { bg = "NONE" } },
+            { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+          },
           ["one_monokai"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
             { RenderMarkdownCodeInline = { bg = "NONE" } },
