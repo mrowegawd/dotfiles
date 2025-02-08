@@ -200,9 +200,10 @@ M.Mode = {
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       local bg = colors.keyword_blur
-      if not (mode == "n") and not (mode == "V") then
+      if mode == "i" then
         bg = colors.vim_mode_insert_bar
       end
+
       return { fg = self.mode_colors[mode], bg = bg }
     end,
   },
@@ -213,7 +214,8 @@ M.Mode = {
     hl = function(self)
       local fg = colors.keyword_blur
       local mode = self.mode:sub(1, 1)
-      if not (mode == "n") and not (mode == "V") then
+      -- if not (mode == "n") and not (mode == "V") and not (mode == "c") then
+      if mode == "i" then
         fg = colors.vim_mode_insert_bar
       end
       return { fg = fg }
