@@ -2,9 +2,9 @@ local function fail(s, ...)
 	ya.notify({ title = "Fzf", content = string.format(s, ...), timeout = 5, level = "error" })
 end
 
-local state = ya.sync(function()
-	return cx.active.current.cwd
-end)
+-- local state = ya.sync(function()
+-- 	return cx.active.current.cwd
+-- end)
 
 local function is_in_tmux()
 	if os.getenv("TMUX") then

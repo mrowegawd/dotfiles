@@ -126,7 +126,7 @@ local function open_with_wezterm(action, fpath)
 		:output()
 
 	if not child then
-		return fail("check pane_current_command went wrong", err)
+		return fail("OPEN_WITH_WEZTERM: Get pane_id went wrong", err)
 	end
 
 	local current_pane_id = child.stdout:gsub("\n$", "")
