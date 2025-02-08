@@ -51,9 +51,11 @@ return {
         list = {
           selection = {
             preselect = function(ctx)
-              return ctx.mode ~= "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+              return ctx.mode == "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
             end,
-            auto_insert = true,
+            auto_insert = function(ctx)
+              return ctx.mode == "cmdline" and not require("blink.cmp").snippet_active { direction = 1 }
+            end,
           },
         },
         menu = {
@@ -61,20 +63,34 @@ return {
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
-            --   columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
-            --   components = {
-            --     kind = {
-            --       ellipsis = false,
-            --       width = { fill = true },
-            --       text = function(ctx)
-            --         return ("(%s)"):format(ctx.kind)
-            --       end,
-            --       highlight = function(ctx)
-            --         return (require("blink.cmp.completion.windows.render.tailwind").get_hl(ctx) or "BlinkCmpKind")
-            --           .. ctx.kind
-            --       end,
-            --     },
-            --   },
+            columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
+            components = {
+              kind_icon = {
+                text = function(item)
+                  return RUtils.config.icons.kinds[item.kind] or ""
+                end,
+                highlight = function(item)
+                  return "CmpItemKind" .. item.kind
+                end,
+              },
+              label = {
+                text = function(item)
+                  return item.label
+                end,
+                highlight = "CmpItemAbbr",
+              },
+              kind = {
+                ellipsis = false,
+                width = { fill = true },
+                text = function(item)
+                  return ("(%s)"):format(item.kind)
+                end,
+                highlight = function(item)
+                  return (require("blink.cmp.completion.windows.render.tailwind").get_hl(item) or "BlinkCmpKind")
+                    .. item.kind
+                end,
+              },
+            },
           },
         },
         documentation = {

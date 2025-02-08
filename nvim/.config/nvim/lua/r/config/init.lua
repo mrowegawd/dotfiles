@@ -31,9 +31,7 @@ local base_options = {
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
-    lightthemes = {
-      "dawnfox",
-    },
+    lightthemes = { "dawnfox" },
   },
 }
 
@@ -238,13 +236,12 @@ local defaults = {
       Event = " ",
       Field = " ", -- " "
 
-      Method = " ",
-      Function = " ",
-      Constructor = " ",
-
-      -- Constructor = " ",
-      -- Function = "󰊕 ",
-      -- Method = " ",
+      -- Method = " ",
+      -- Function = " ",
+      -- Constructor = " ",
+      Method = "󰆧 ", -- taken from "lspkind" plugin
+      Function = "󰊕 ",
+      Constructor = " ",
 
       File = " ",
       Folder = " ",
