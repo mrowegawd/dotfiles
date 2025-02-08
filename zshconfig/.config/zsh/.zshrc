@@ -428,8 +428,8 @@ function __prompt_eval() {
   local dots_prompt_icon="%F{${colorline}}╰─%f %F{${colorline}} %f "
   local dots_prompt_failure_icon="%F{${colorline}}╰─%f %F{red}✘ %f "
   local placeholder="(%F{gray}%{$__DOTS[ITALIC_ON]%}…%{$__DOTS[ITALIC_OFF]%}%f) "
-  local top="%F{${colorline}}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}%F{${colorline}}]%f"
-  local character="%(1j.%F{cyan}%j✦%f .)%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
+  local top="%F{${colorline}}┌───[ %B%F{magenta}%1~%f%b${_git_status_prompt:-$placeholder}%F{${colorline}}]%f %(1j.%F{cyan}job:%j✦%f .)"
+  local character="%(?.${dots_prompt_icon}.${dots_prompt_failure_icon})"
   local bottom=$([[ -n "$vim_mode" ]] && echo "$vim_mode" || echo "$character")
   echo $top$'\n'$bottom
 }
