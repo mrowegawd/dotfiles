@@ -121,7 +121,7 @@ function M.get()
       function()
         vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
       end,
-      desc = "Diagnostic: peek preview",
+      desc = "Diagnostic: peek",
     },
     --  +----------------------------------------------------------+
     --  LSP commands
@@ -303,8 +303,7 @@ function M.get()
   -- end
 
   if RUtils.has "goto-preview" then
-    M._keys[#M._keys + 1] =
-      { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek preview definitions [goto-preview]" }
+    M._keys[#M._keys + 1] = { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek [goto-preview]" }
   else
     M._keys[#M._keys + 1] = {
       "gP",
@@ -327,7 +326,7 @@ function M.get()
         }
       end,
       has = "signatureHelp",
-      desc = "LSP: peek preview [fzflua]",
+      desc = "LSP: peek [fzflua]",
     }
   end
 
