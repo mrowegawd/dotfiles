@@ -118,14 +118,23 @@ return {
         },
         words = { enabled = true },
         dashboard = {
-          pane_gap = 4, -- empty columns between vertical panes
-          -- row = 4,
-          -- col = 4,
+          pane_gap = 5, -- empty columns between vertical panes
+          row = nil,
           preset = {
             keys = {
-              { icon = " ", key = "f", desc = "Find File", action = ':lua require("fzf-lua").files()' },
-              { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-              { icon = " ", key = "r", desc = "Recent Files", action = ':lua require("fzf-lua").oldfiles()' },
+              {
+                icon = " ",
+                key = "f",
+                desc = "Find File",
+                action = ':lua require("fzf-lua").files()',
+              },
+              { icon = " ", hidden = true, key = "n", desc = "New File", action = ":ene | startinsert" },
+              {
+                icon = " ",
+                key = "r",
+                desc = "Recent Files",
+                action = ':lua require("fzf-lua").oldfiles()',
+              },
               {
                 icon = " ",
                 key = "L",
@@ -138,38 +147,72 @@ return {
                 desc = "Restore Last Session",
                 action = ':lua require("r.utils.sessions").load_ses_dashboard(true)',
               },
-              -- { icon = "󱞁 ", key = "w", desc = "Obsidian Notes", action = ":ObsidianQuickSwitch" },
-              -- { icon = " ", key = "x", desc = "Lazy Extras", action = ":LazyExtras" },
               { icon = "󰒲 ", key = "y", desc = "Lazy", action = ":Lazy" },
               { icon = " ", key = "q", desc = "Quit", action = ":qa" },
             },
-            header = require("r.utils").logo(),
+          },
+          formats = {
+            -- key = function(item)
+            --   if item.autokey then
+            --     return { "" }
+            --   end
+            --   -- return { "" }
+            --   -- print(vim.inspect(item))
+            --   return {
+            --     { item.key, hl = "Keyword" },
+            --     { " " },
+            --     -- { item.desc, hl = "NonText" },
+            --     -- { item.file },
+            --   }
+            -- end,
+            key = { "" },
+            file = function(item)
+              return {
+                { item.key, hl = "Keyword" },
+                { " " },
+                { item.file:sub(2):match "^(.*[/])", hl = "NonText" },
+                { item.file:match "([^/]+)$", hl = "Normal" },
+              }
+            end,
+            icon = { "" },
           },
           sections = {
             {
-
-              { section = "header", align = "center" },
-              { section = "startup", align = "center", padding = 0 },
+              {
+                -- { section = "header", align = "center" },
+                pane = 1,
+                section = "terminal",
+                -- cmd = 'img2art ~/moxconf/media_and_tuts/walli3/wallhaven-headgirl.jpg --scale 0.04 --with-color --threshold 40  --alpha --mapping " ^*@%"',
+                cmd = [[img2art ~/Downloads/nvim-dashboard/batman-mad-removebg-preview.png --threshold 80 --scale 0.23 --with-color --alpha --with-color]],
+                height = 28,
+                align = "center",
+              },
             },
             {
               pane = 2,
               {
-                { icon = " ", title = "Recent Files", section = "recent_files", limit = 4, padding = 1 },
-                { section = "keys", gap = 0, padding = 1 },
+                { title = "", padding = 1 },
+                { section = "keys", gap = 0, padding = 2, align = "left" },
+                {
+                  icon = " ",
+                  title = "RECENT FILES",
+                  section = "recent_files",
+                  limit = 4,
+                  padding = 2,
+                  hl = "Normal",
+                },
                 {
                   section = "terminal",
                   icon = " ",
-                  title = "Git Status",
+                  title = "GIT STATUS",
                   enabled = vim.fn.isdirectory ".git" == 1,
                   cmd = "hub diff --stat -B -M -C",
-                  -- gap = 0,
+                  -- cmd = "git status --short --branch --renames",
                   height = 8,
-                  -- padding = 1,
-                  indent = 2,
                 },
               },
             },
-            -- { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+            { section = "startup", align = "center", indent = 60 },
           },
         },
       }

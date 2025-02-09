@@ -1115,11 +1115,41 @@ local general_overrides = function()
     { WhichKeyDesc = { inherit = "NormalFloat", fg = { from = "Boolean", attr = "fg", alter = 0.1 } } },
     { WhichKeyBorder = { inherit = "FloatBorder" } },
 
-    --  ─────────────────────────────── AVANTE ────────────────────────────
+    --  ─────────────────────────────── AVANTE ────────────────────────────────
     {
       AvanteNormal = {
         fg = { from = "Normal", attr = "bg", alter = 4 },
         bg = { from = "Normal", attr = "bg", alter = -0.5 },
+      },
+    },
+    --  ─────────────────────────────── DASHBOARD ─────────────────────────────
+    {
+      SnacksDashboardTitle = {
+        fg = { from = "Keyword", attr = "fg" },
+        bg = "NONE",
+        bold = true,
+      },
+    },
+    {
+      SnacksDashboardDesc = {
+        fg = { from = "Keyword", attr = "fg" },
+        bg = "NONE",
+        bold = true,
+      },
+    },
+
+    {
+      SnacksDashboardTerminal = {
+        fg = { from = "NonText", attr = "fg" },
+        bg = "NONE",
+        bold = false,
+      },
+    },
+    {
+      SnacksDashboardFooter = {
+        fg = { from = "NonText", attr = "fg" },
+        bg = "NONE",
+        bold = bold,
       },
     },
   }
