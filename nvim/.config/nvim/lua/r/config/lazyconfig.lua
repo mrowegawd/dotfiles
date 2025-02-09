@@ -25,6 +25,7 @@ require("lazy").setup {
     { import = "r.plugins.extras.linting" },
     { import = "r.plugins.extras.formatter" },
     { import = "r.plugins.extras.lang" },
+    { import = "r.plugins.extras.editor.telescope" },
     -- { import = "r.plugins.extras.text" },
   },
   change_detection = { notify = false },
