@@ -531,13 +531,14 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
   end
 
   return {
-    prompt = title,
+    prompt = RUtils.fzflua.default_title_prompt(),
     exec_empty_query = true,
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
       ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Alt-x: commit hash history]],
     },
+    winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     -- fn_transform = function(x)
     --   return fzf_picker_utils.make_entry(x)
     -- end,

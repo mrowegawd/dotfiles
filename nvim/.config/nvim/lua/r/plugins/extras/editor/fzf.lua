@@ -125,6 +125,10 @@ return {
       { "gS", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
+      { "<Leader>fG", function() require("fzf-lua").live_grep_glob({
+        cwd = vim.fn.expand "%:p:h",
+        winopts = { title = RUtils.fzflua.format_title("Grep current cwd: ".. vim.fn.expand "%:p:h", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)) },
+      }) end, desc = "Fzflua: live grep on current cwd" },
       { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Fzflua: jumps" },
       { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
@@ -148,11 +152,8 @@ return {
             ["default"] = function(selected)
               local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
               local pth = selected[1]:sub(slice_num_str)
-              -- print(pth)
-
               local script_path = vim.fn.expand "$HOME" .. "/.config/rofi/menu/_themes setup " .. pth
               vim.cmd[[ChangeMasterTheme]]
-              -- print(script_path)
               vim.cmd([[!bash ]] .. script_path)
             end
           }
@@ -387,7 +388,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
             fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit]],
+              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit  CTRL-G:grep-string]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -395,6 +396,11 @@ return {
               ["ctrl-s"] = actions.git_buf_split,
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-t"] = actions.git_buf_tabedit,
+              ["ctrl-g"] = function()
+                require("fzf-lua").fzf_live(function(query)
+                  return RUtils.fzf_diffview.git_log_content_finder(query, nil)
+                end, RUtils.fzf_diffview.opts_diffview_log("repo", "Grep text in log commits repo"))
+              end,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
@@ -418,11 +424,6 @@ return {
                 vim.cmd(cmdmsg)
 
                 RUtils.info("Diffopen: HEAD~1.." .. commit_hash .. "~1", { title = "FZFGit" })
-              end,
-              ["ctrl-g"] = function()
-                require("fzf-lua").fzf_live(function(query)
-                  return RUtils.fzf_diffview.git_log_content_finder(query, nil)
-                end, RUtils.fzf_diffview.opts_diffview_log("repo", "Search Repo Log Content> "))
               end,
               ["alt-d"] = function(selected, _)
                 local selection = selected[1]
@@ -457,7 +458,7 @@ return {
               title_pos = "left",
             },
             fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit]],
+              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit  CTRL-G:grep-string]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -465,6 +466,12 @@ return {
               ["ctrl-v"] = actions.git_buf_vsplit,
               ["ctrl-q"] = actions.file_sel_to_qf,
               ["ctrl-t"] = actions.git_buf_tabedit,
+              ["ctrl-g"] = function()
+                local bufnr = vim.fn.bufnr()
+                require("fzf-lua").fzf_live(function(query)
+                  return RUtils.fzf_diffview.git_log_content_finder(query, bufnr)
+                end, RUtils.fzf_diffview.opts_diffview_log("curbuf", "Grep text in log Bcommits", bufnr))
+              end,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
@@ -488,16 +495,6 @@ return {
                 local cmdmsg = ":DiffviewOpen -uno " .. commit_hash .. " -- " .. filename
                 vim.cmd(cmdmsg)
                 RUtils.info("Diffopen: " .. commit_hash .. " -- ", { title = "FZFGit" })
-              end,
-              ["ctrl-g"] = function()
-                local bufnr = vim.fn.bufnr()
-                require("fzf-lua").fzf_live(function(query)
-                  return RUtils.fzf_diffview.git_log_content_finder(query, bufnr)
-                end, RUtils.fzf_diffview.opts_diffview_log(
-                  "curbuf",
-                  "Search Curbuf Log Content> ",
-                  bufnr
-                ))
               end,
               ["alt-d"] = function(selected, _)
                 local selection = selected[1]
@@ -574,7 +571,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden  ALT-G:grep-on-cwd]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -607,6 +604,33 @@ return {
           actions = {
             ["alt-g"] = actions.toggle_ignore,
             ["alt-h"] = actions.toggle_hidden,
+            ["alt-j"] = function()
+              require("fzf-lua").files {
+                fd_opts = [[--color=never --type d --type l --exclude .git]],
+                winopts = {
+                  title = RUtils.fzflua.format_title(
+                    "Select folder for grep",
+                    RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                  ),
+                },
+                formatter = false, -- disable setting "path first"
+                actions = {
+                  ["default"] = function(selected, _)
+                    local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
+                    local path = selected[1]:sub(slice_num_str)
+                    return require("fzf-lua").live_grep_glob {
+                      cwd = path,
+                      winopts = {
+                        title = RUtils.fzflua.format_title(
+                          "Grep: " .. path,
+                          RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                        ),
+                      },
+                    }
+                  end,
+                },
+              }
+            end,
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["ctrl-r"] = function(_, args)
               require("rgflow").open(require("fzf-lua").config.__resume_data.last_query, args.rg_opts, args.cwd, {
