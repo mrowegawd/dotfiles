@@ -1,13 +1,4 @@
-vim.g.lazyvim_blink_main = false
-
--- local source_priority = {
---   lsp = 4,
---   snippets = 3,
---   path = 2,
---   buffer = 5,
---   cmdline = 1,
---   codeium = 1,
--- }
+vim.g.lazyvim_blink_main = true
 
 return {
   {
@@ -102,25 +93,9 @@ return {
           },
         },
         ghost_text = {
-          -- NOTE: spam error from codeium completion
-          -- relate issue https://github.com/Exafunction/codeium.nvim/pull/264#issuecomment-2583615777
-          -- jadi disable sementara dahulu
           enabled = false,
         },
       },
-      -- fuzzy = {
-      --   -- NOTE: source priority?
-      --   -- https://github.com/Saghen/blink.cmp/issues/1098#issuecomment-2619750942
-      --   sorts = {
-      --     function(a, b)
-      --       print()
-      --       return source_priority[a.source_id] > source_priority[b.source_id]
-      --     end,
-      --     -- defaults
-      --     "score",
-      --     "sort_text",
-      --   },
-      -- },
       sources = {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
@@ -135,66 +110,6 @@ return {
             return { "cmdline" }
           end
         end,
-        -- providers = {
-        --   -- lsp = {
-        --   --   ---@type fun(ctx: blink.cmp.Context, items: blink.cmp.CompletionItem[])
-        --   --   transform_items = function(ctx, items)
-        --   --     ---@diagnostic disable-next-line: redundant-return-value
-        --   --     return vim.tbl_filter(function(item)
-        --   --       local c = ctx.get_cursor()
-        --   --       local cursor_line = ctx.line
-        --   --       local cursor = {
-        --   --         row = c[1],
-        --   --         col = c[2] + 1,
-        --   --         line = c[1] - 1,
-        --   --       }
-        --   --
-        --   --       RUtils.vlog.log.info(vim.inspect(item))
-        --   --       print "hasdf"
-        --   --
-        --   --       local cursor_before_line = string.sub(cursor_line, 1, cursor.col - 1)
-        --   --       -- remove text
-        --   --       if item.kind == vim.lsp.protocol.CompletionItemKind.Text then
-        --   --         return false
-        --   --       end
-        --   --
-        --   --       if vim.bo.filetype == "vue" then
-        --   --         -- For events
-        --   --         if cursor_before_line:match "(@[%w]*)%s*$" ~= nil then
-        --   --           return item.label:match "^@" ~= nil
-        --   --         -- For props also exclude events with `:on-` prefix
-        --   --         elseif cursor_before_line:match "(:[%w]*)%s*$" ~= nil then
-        --   --           return item.label:match "^:" ~= nil and not item.label:match "^:on%-" ~= nil
-        --   --         -- For slot
-        --   --         elseif cursor_before_line:match "(#[%w]*)%s*$" ~= nil then
-        --   --           return item.kind == vim.lsp.protocol.CompletionItemKind.Method
-        --   --         end
-        --   --       end
-        --   --
-        --   --       return true
-        --   --     end, items)
-        --   --   end,
-        --   -- },
-        --   -- snippets = {
-        --   --   min_keyword_length = 1,
-        --   --   score_offset = 4,
-        --   -- },
-        --   -- -- lsp = {
-        --   -- --   min_keyword_length = 0,
-        --   -- --   score_offset = 3,
-        --   -- --   name = "LSP",
-        --   -- --   module = "blink.cmp.sources.lsp",
-        --   -- --   fallbacks = {},
-        --   -- -- },
-        --   -- path = {
-        --   --   min_keyword_length = 0,
-        --   --   score_offset = 2,
-        --   -- },
-        --   -- buffer = {
-        --   --   min_keyword_length = 1,
-        --   --   score_offset = 1,
-        --   -- },
-        -- },
       },
       signature = {
         enabled = true,
@@ -204,7 +119,7 @@ return {
         preset = "enter",
         -- how to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
-        ["<CR>"] = { "accept", "fallback" },
+        ["<CR>"] = {},
 
         ["<C-n>"] = {
           function(cmp)
@@ -222,29 +137,18 @@ return {
             end
           end,
         },
+        ["<C-c>"] = {
+          "hide",
+          "cancel",
+          function()
+            if vim.fn.getcmdtype() ~= "" then
+              vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+            end
+          end,
+        },
 
         ["<C-u>"] = { "scroll_documentation_up", "fallback" },
         ["<C-d>"] = { "scroll_documentation_down", "fallback" },
-
-        cmdline = {
-          ["<C-y>"] = { "select_and_accept" },
-          ["<C-n>"] = { "select_next", "fallback" },
-          ["<C-p>"] = { "select_prev", "fallback" },
-          ["<CR>"] = {
-            function()
-              if vim.api.nvim_get_mode().mode == "c" then
-                local type = vim.fn.getcmdtype()
-                -- if type == "/" or type == "?" then
-                if type == ":" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Space>", true, false, true), "i", true)
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, false, true), "n", true)
-                  return
-                end
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<CR>", true, true, true), "n", true)
-              end
-            end,
-          },
-        },
       },
     },
 
