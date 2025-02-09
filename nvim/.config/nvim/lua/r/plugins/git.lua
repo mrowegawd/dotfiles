@@ -335,32 +335,76 @@ return {
           --   end
           -- end
 
-          -- stylua: ignore start
-          map({ "n", "v" }, "<Leader>ghs", ":Gitsigns stage_hunk<CR>", "Git: stage hunk [gitsigns]")
-          map({ "n", "v" }, "<Leader>ghr", ":Gitsigns reset_hunk<CR>", "Git: reset hunk [gitsigns]")
+          -- Hunk
+          map("n", "<Leader>ghs", gs.stage_hunk, "Git: stage hunk [gitsigns]")
+          map("v", "<Leader>ghs", function()
+            gs.stage_hunk { vim.fn.line ".", vim.fn.line "v" }
+          end)
+          map("n", "<Leader>ghr", gs.reset_hunk, "Git: reset hunk [gitsigns]")
+          map("v", "<Leader>ghr", function()
+            gs.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
+          end)
           map("n", "<Leader>ghu", gs.undo_stage_hunk, "Git: undo hunk [gitsigns]")
           map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
           map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
-          map("n", "<Leader>ghp", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
-          map("n", "<Leader>ghP", gs.toggle_deleted, "Git: preview toggle deleted [gitsigns]")
+          map("n", "<Leader>ghi", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
 
-          map("n", "<Leader>gb", function() gs.blame() end, "Git: blame [gitsigns]")
-          -- map("n", "<Leader>ghb", function() gs.blame_line { full = true } end, "Blame Line") -- use vgit
+          -- Hunk preview
+          map("n", "<Leader>ghp", gs.preview_hunk, "Git: preview hunk [gitsigns]")
+          map("n", "<Leader>ghP", gs.preview_hunk, "Git: preview hunk [gitsigns]")
 
-          map("n", "<Leader>xg", gs.setqflist, "Git: hunks quickfix [gitsigns] [trouble]")
+          -- Toggle
+          map("n", "<Leader>gub", function()
+            gs.blame()
+          end, "Git: toggle blame [gitsigns]")
+          map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle deleted [gitsigns]")
+          map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
 
+          -- Sending to qf
+          map("n", "<Leader>xG", function()
+            gs.setqflist "all"
+            local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
+            vim.schedule(function()
+              if is_qf_trouble.found then
+                vim.api.nvim_set_current_win(is_qf_trouble.winid)
+              end
+            end)
+          end, "Git: hunks all quickfix [gitsigns] [trouble]")
+          map("n", "<Leader>xg", function()
+            gs.setqflist()
+            vim.schedule(function()
+              local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
+              if is_qf_trouble.found then
+                vim.api.nvim_set_current_win(is_qf_trouble.winid)
+              end
+            end)
+          end, "Git: hunks quickfix [gitsigns] [trouble]")
+
+          -- Jump next/prev between hunks
           map("n", "gn", function()
             if vim.wo.diff then
               vim.cmd.normal { "]c", bang = true }
             else
-              gs.nav_hunk "next"
+              vim.schedule(function()
+                gs.nav_hunk(
+                  "next",
+                  { navigation_message = false, foldopen = true }
+                  -- function() vim.fn.feedkeys("zz", "n") end
+                )
+              end)
             end
           end, "Git: next hunk [gitsigns]")
           map("n", "gp", function()
             if vim.wo.diff then
               vim.cmd.normal { "[c", bang = true }
             else
-              gs.nav_hunk "prev"
+              vim.schedule(function()
+                gs.nav_hunk(
+                  "prev",
+                  { navigation_message = false, foldopen = true }
+                  -- function() vim.fn.feedkeys("zz", "n") end
+                )
+              end)
             end
           end, "Git: last hunk [gitsigns]")
         end,

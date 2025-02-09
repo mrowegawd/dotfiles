@@ -52,7 +52,8 @@ return {
 
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
-          { "<Leader>gu", group = "git-toggle" },
+          { "<Leader>gu", group = "toggle" },
+          { "<Leader>gf", group = "commands" },
 
           { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },
