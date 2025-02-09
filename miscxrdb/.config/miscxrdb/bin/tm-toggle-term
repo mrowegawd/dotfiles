@@ -128,34 +128,31 @@ __adjust_pane_height() {
   pane_height=$(tmux display-message -p '#{pane_height}')
   main_pane_height=$(echo "$pane_height" | sed 's/%//g')
 
-  # dunstify "$main_pane_height > $(($EXTRA_SIZE))"
-  if [[ $(($main_pane_height)) -gt $(($EXTRA_SIZE)) ]]; then
-    tmux resize-pane -y +$EXTRA_SIZE
-  fi
+  # I don't want every pane opened with toggle-pane to have its height size set,
+  # so if there is 1 row pane below the main pane (nvim) then it's okay to set
+  # the size, but if there is more than 1 row it's not necessary
+  _is_pane_is_nvim=$(tmux select-pane -U | tmux display-message -p "#{pane_id} #{pane_current_command}")
+  # After getting the data value for `is_pane_is_nvim`, go back to the last pane
+  tmux last-pane
+  # If the pane above the toggle pane is nvim, then set the height if necessary
+  pane_current_command=$(echo "$_is_pane_is_nvim" | cut -d" " -f2)
+  if [ "$pane_current_command" == "nvim" ]; then
+    # dunstify "$main_pane_height > $(($EXTRA_SIZE))"
+    if [[ $(($main_pane_height)) -gt $(($EXTRA_SIZE)) ]]; then
+      tmux resize-pane -y +$EXTRA_SIZE
+    fi
 
-  if [[ $(($main_pane_height)) -lt $(($EXTRA_SIZE)) ]]; then
-    tmux resize-pane -y +$EXTRA_SIZE
+    if [[ $(($main_pane_height)) -lt $(($EXTRA_SIZE)) ]]; then
+      tmux resize-pane -y +$EXTRA_SIZE
+    fi
   fi
 
 }
 
-# Guna mengecheck pane jika toggle pane terminal sudah terbuka lalu jika cursor
-# masih berada pada main pane maka pindahkan ke toggle pane (pindah cursor
-# kebawah)
-__checked_pane() {
-  # main_pane=$(jq "select(.pane_id=0).pane_id" $PATH_MAIN_PANE)
-  # main_pane_id=$(echo "$main_pane" | sed 's/"//g')
-
-  # current_pane=$(tmux display-message -p '#{pane_id}')
-
-  # if [[ "$current_pane" == "$main_pane_id" ]]; then
-  #   tmux select-pane -D
-  #   # exit
-  # fi
-
+__set_cursor_at_bottom_pane() {
+  # Check the pane, if the pane is not at the bottom level
+  # then move the cursor down
   is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
-  # Check asalkan pane tidak berada di level 'bottom'
-  # maka pindahkan cursor ke bawah
   if [[ $is_pane_at_bottom == "0" ]]; then
     tmux select-pane -D
     exit
@@ -180,12 +177,12 @@ split_term() {
 
     __set_main_workspace
 
-    __checked_pane
+    __set_cursor_at_bottom_pane
 
     zoom_status=$(tmux list-panes -F '#F' | grep Z)
     if [[ -n $zoom_status ]]; then
       tmux resize-pane -Z
-      tmux select-pane -D
+      tmux last-pane
       __adjust_pane_height
 
     else
@@ -200,8 +197,6 @@ split_term() {
     fi
 
   else
-    # __checked_pane
-
     __jump_to_main_workspace
     tmux resize-pane -Z
   fi
