@@ -14,35 +14,44 @@ preview_command = "bat --color=always ~/.config/zsh/.zshrc"
 [[session]]
 name = "Typescript 🕸 "
 path = "~/moxconf/development/project/typescript"
+startup_command = ""
 
 [[session]]
 name = "Rust 󱘗 "
 path = "~/moxconf/development/project/rust"
+disable_startup_command = true
 
 [[session]]
 name = "Golang 󰟓 "
 path = "~/moxconf/development/project/golang"
+disable_startup_command = true
 
 [[session]]
 name = "Python 󰌠 "
 path = "~/moxconf/development/project/python"
+disable_startup_command = true
 
 [[session]]
 name = "Bot 🤖 "
 path = "~/moxconf/development/project/misc"
+startup_command = ""
 
 [[session]]
 name = "Mobile 📱"
 path = "~/moxconf/development/project/mobile"
+startup_command = ""
 
 [[session]]
 name = "Log Sentric 󰍛 "
 path = "~/moxconf/development/project/misc"
+startup_command = ""
 
 [[session]]
 name = "News 📰 "
 path = "~/moxconf/development/project/misc"
+startup_command = ""
 
 [[session]]
 name = "Bench 📠 "
 path = "~/moxconf/development/project/misc"
+startup_command = ""
