@@ -15,10 +15,11 @@ build-nvim() {
   make install
   popd
 }
-
 build-install() {
+  # ──────────────────────────────────────────────────────────────────────
+  # APT
   if ! command -v xinput >/dev/null; then
-    echo "Installing: xinput - fixing mouse lagging..?"
+    echo "Installing: xinput - Fixing mouse lagging..?"
     sudo apt install xinput
   fi
 
@@ -44,12 +45,12 @@ build-install() {
   fi
 
   if ! command -v fd >/dev/null; then
-    echo "Installing: fd - blazingly fast"
+    echo "Installing: fd - Blazingly fast for search folder name"
     sudo apt install fd-find
   fi
 
   if ! command -v proxychains >/dev/null; then
-    echo "Installing: proxychains - wrapper for tor"
+    echo "Installing: proxychains - Wrapper for tor"
     sudo apt install proxychains4
   fi
 
@@ -61,16 +62,18 @@ build-install() {
   # sudo apt install timer
 
   if ! command -v play >/dev/null; then
-    echo "Installing: play - play sound from the terminal"
+    echo "Installing: play - Play sound from the terminal"
     sudo apt install sox
     sudo apt install libsox-fmt-all
   fi
 
   if ! command -v hub >/dev/null; then
-    echo "Installing: hub - an extensions to cmdline git"
+    echo "Installing: hub - An extensions to cmdline git"
     sudo apt install hub
   fi
 
+  # ──────────────────────────────────────────────────────────────────────
+  # RUST, cargo
   if ! asdf which bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     cargo install bat
@@ -86,31 +89,19 @@ build-install() {
     asdf reshim rust
   fi
 
-  if ! asdf which tree-sitter >/dev/null; then
-    echo "Installing: tree-sitter-cli - tree-sitter-cli for nvim"
-    cargo install tree-sitter-cli
-    asdf reshim rust
-  fi
 
   if ! asdf which dua >/dev/null; then
-    echo "Installing: dua-cli - similiar with 'du', to check disk usage"
+    echo "Installing: dua-cli - Similiar with tool 'du' to check disk usage"
     cargo install dua-cli
     asdf reshim rust
   fi
 
   if ! asdf which procs >/dev/null; then
-    echo "Installing: procs - better than 'ps' command"
+    echo "Installing: procs - Better than use 'ps' command"
     cargo install procs
     asdf reshim rust
   fi
 
-  # WARN: terjadi error ketika di install,
-  # idk source code nya mungkin ada yang error
-  # if ! asdf which openapi-tui >/dev/null; then
-  #   echo "Installing: openapi-tui - Terminal UI to list, browse and run APIs"
-  #   cargo install openapi-tui
-  #   asdf reshim rust
-  # fi
 
   if ! asdf which eza >/dev/null; then
     echo "Installing: eza - ls colors"
@@ -125,77 +116,67 @@ build-install() {
   fi
 
   if ! asdf which delta >/dev/null; then
-    echo "Installing: delta - color hunk"
+    echo "Installing: delta - Color for git hunk/chommits"
     cargo install git-delta
     asdf reshim rust
   fi
 
   if ! asdf which rg >/dev/null; then
-    echo "Installing: rg - grep drugs"
+    echo "Installing: rg - Grep drugs"
     cargo install ripgrep
     asdf reshim rust
   fi
 
   # https://github.com/race604/clock-tui
   if ! asdf which tclock >/dev/null; then
-    echo "Installing: tclock - clock tui"
+    echo "Installing: tclock - Clock tui"
     cargo install clock-tui
     asdf reshim rust
   fi
 
   if ! asdf which tree-sitter >/dev/null; then
-    echo "Installing: tree-sitter-cli -- treesitter parser"
+    echo "Installing: tree-sitter-cli - Treesitter passer cli for nvim"
     cargo install tree-sitter-cli
     asdf reshim rust
   fi
 
-  # if ! asdf which joshuto >/dev/null; then
-  #   echo "Installing: joshuto - file manager"
-  #   cargo install --git https://github.com/kamiyaa/joshuto.git --force
-  #   asdf reshim rust
-  # fi
-
   if ! asdf which yazi >/dev/null; then
-    echo "Installing: yazi - file manager"
+    echo "Installing: yazi - File manager tui"
     cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
     asdf reshim rust
     # yazi git integration
     # ya pack -a yazi-rs/plugins:git
   fi
 
+
   if ! asdf which rust-analyzer >/dev/null; then
-    echo "Installing: rust-analyzer - manual install for LSP rust"
+    echo "Installing: rust-analyzer - Manual install for LSP analyzer rust"
     rustup component add rust-analyzer
     asdf reshim rust
   fi
 
-  if ! asdf which lf >/dev/null; then
-    echo "Installing: lf - file manager"
-    env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
-    asdf reshim golang
-  fi
-
-  # Explore docker layer
+  # ──────────────────────────────────────────────────────────────────────
+  # GO install
   if ! asdf which dive >/dev/null; then
-    echo "Installing: dive - docker layer"
+    echo "Installing: dive - Explore docker layer"
     go install github.com/wagoodman/dive@latest
     asdf reshim golang
   fi
 
   if ! asdf which sesh >/dev/null; then
-    echo "Installing: sesh - handle tmux session"
+    echo "Installing: sesh - Handle tmux session"
     go install github.com/joshmedeski/sesh@latest
     asdf reshim golang
   fi
 
   if ! asdf which lazydocker >/dev/null; then
-    echo "Installing: lazydocker - docker GUI"
+    echo "Installing: lazydocker - Docker TUI"
     go install github.com/jesseduffield/lazydocker@latest
     asdf reshim golang
   fi
 
   if ! command -v lazygit >/dev/null; then
-    # echo "Installing: lazygit - git GUI"
+    echo "Installing: lazygit - Git TUI"
     # go install github.com/jesseduffield/lazygit@latest
     # asdf reshim golang
     LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
@@ -205,20 +186,31 @@ build-install() {
     rm -rf lazygit.tar.gz lazygit
   fi
 
+  # ──────────────────────────────────────────────────────────────────────
+  # Pip, pipx
   if ! command -v calcure >/dev/null; then
-    echo "Installing: calcure - calendar TUI and task manager"
+    echo "Installing: calcure - Calendar TUI"
     pipx install calcure
     asdf reshim python
   fi
 
+  if ! command -v img2art >/dev/null; then
+    # https://github.com/Asthestarsfalll/img2art
+    echo "Installing: img2art - Convert image/gif/video to ascii art (use for snacks.nvim dashboard)"
+    pipx install img2art 
+    asdf reshim python
+  fi
+
   if ! command -v yt-dlp >/dev/null; then
-    echo "Installing: yt-dlp - download youtube video"
+    echo "Installing: yt-dlp - A tool for download youtube video"
     pipx install yt-dlp
     asdf reshim python
   fi
 
+  # ──────────────────────────────────────────────────────────────────────
+  # NPM
   if ! command -v mmdc >/dev/null; then
-    echo "Installing: mmdc -  command line tool for the Mermaid library "
+    echo "Installing: mmdc - A tool for the mermaid library nvim"
     npm install -g @mermaid-js/mermaid-cli
     asdf reshim nodejs
   fi
