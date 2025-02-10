@@ -3,6 +3,8 @@ local M = {}
 
 local title, kind
 
+local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+
 local function remove_alias(link)
   local split_index = string.find(link, "%s*|")
   if split_index ~= nil and type(split_index) == "number" then
@@ -124,8 +126,7 @@ function M.follow_link(is_selection)
       local rg_opts =
         [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]]
 
-      local fzflua = require "fzf-lua"
-      fzflua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
+      fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
     else
       if require("obsidian").util.cursor_on_markdown_link(nil, nil, true) then
         vim.cmd "ObsidianFollowLink"
@@ -459,7 +460,7 @@ local function picker(contents, actions)
             .. table.concat(cmdscs, " ")
             .. " -e "
 
-          require("fzf-lua").live_grep {
+          fzf_lua.live_grep {
             -- debug = true,
             rg_glob = false,
             no_esc = true,
@@ -525,7 +526,7 @@ local function picker(contents, actions)
       end,
     }
 
-  return require("fzf-lua").fzf_exec(contents, {
+  return fzf_lua.fzf_exec(contents, {
     previewer = {
       _ctor = function()
         return Tagpreviewer
@@ -700,7 +701,7 @@ function M.find_note_by_tag(data, is_set)
 end
 
 function M.find_global_titles()
-  require("fzf-lua").grep {
+  fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
     cwd = RUtils.config.path.wiki_path,
     search = regex_title,
@@ -710,10 +711,7 @@ function M.find_global_titles()
     -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
     winopts = {
       fullscreen = true,
-      title = RUtils.fzflua.format_title(
-        "Obsidian > Search Global Note Titles",
-        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)
-      ),
+      title = RUtils.fzflua.format_title("Global titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
     },
   }
 end
@@ -740,21 +738,18 @@ function M.find_local_titles()
     end
   end
 
-  return require("fzf-lua").grep {
+  return fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
     search = regex_title,
-    rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+    rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. fullname
       .. " -e ",
     winopts = {
       fullscreen = true,
-      title = RUtils.fzflua.format_title(
-        "Obsidian > Search Local Note Titles",
-        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)
-      ),
+      title = RUtils.fzflua.format_title("Local titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
     },
     actions = {
       ["enter"] = function(selected, _)
@@ -795,7 +790,7 @@ function M.find_local_titles()
 end
 
 function M.find_local_sitelink()
-  require("fzf-lua").lgrep_curbuf {
+  fzf_lua.lgrep_curbuf {
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title curbuf", ""),
@@ -822,39 +817,40 @@ function M.find_local_sitelink()
 end
 
 local function get_sel_text()
-  vim.cmd "normal yi]"
-  title = vim.fn.getreg '"0'
-
+  title = vim.fn.expand "<cWORD>"
   local stitle = title
 
   if string.find(title, "%[") or string.find(title, "%]") then
+    vim.cmd "normal yi]"
+    title = vim.fn.getreg '"0'
     stitle = string.gsub(stitle, "%[", "")
     stitle = string.gsub(stitle, "%]", "")
+    return true, stitle
   end
 
-  return stitle
+  return false, stitle
 end
 
 function M.find_backlinks()
-  local curr_line = vim.fn.getline "."
-  local stitle = ""
-  if curr_line == "" then
-    local filename = vim.api.nvim_buf_get_name(0)
-    local base_fn = RUtils.file.basename(filename)
-    if string.find(base_fn, "%.md") then
-      stitle = string.gsub(base_fn, "%.md", "")
-    end
-  else
-    stitle = get_sel_text()
+  local is_str, curr_line_func = get_sel_text()
+  local stitle = curr_line_func
+
+  if not is_str then
+    local char_under_cursor = vim.fn.expand "<cWORD>"
+    RUtils.warn("'" .. char_under_cursor .. "' is not the link, this is the link --> [[ ... ]]", { title = "Markdown" })
+    return
   end
 
-  require("fzf-lua").grep {
+  fzf_lua.grep {
     cwd = RUtils.config.path.wiki_path,
-    search = "[[" .. stitle,
+    search = "[[" .. stitle .. "]]",
     no_header = true,
     no_header_i = true,
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     fzf_opts = { ["--header"] = false }, -- do not display our custom header
+    winopts = {
+      title = RUtils.fzflua.format_title("Find Backlinks: [[" .. stitle .. "]]", ""),
+    },
   }
 end
 
@@ -872,7 +868,7 @@ function M.insert_by_categories()
 end
 
 function M.insert_local_titles()
-  require("fzf-lua").lgrep_curbuf {
+  fzf_lua.lgrep_curbuf {
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title curbuf", ""),
@@ -900,7 +896,7 @@ function M.insert_local_titles()
 end
 
 function M.insert_global_titles()
-  require("fzf-lua").grep {
+  fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
     winopts = {
       title = RUtils.fzflua.format_title("Note: title global", ""),

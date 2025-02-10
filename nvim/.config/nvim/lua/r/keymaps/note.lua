@@ -5,19 +5,19 @@ local M = {}
 function M.neorg_mappings_ft(bufnr)
   local mappings = {
     ["n"] = {
-      ["t<CR>"] = {
+      ["gs"] = {
         function()
           RUtils.markdown.find_local_titles()
           vim.cmd "normal! zRzz" -- open all closed fold (but it doesnt work)
         end,
-        desc = "Note: search local titles [obsidian]",
+        desc = "Note: search local titles [markdown]",
       },
-      ["T<CR>"] = {
+      ["gS"] = {
         function()
           RUtils.markdown.find_global_titles()
           vim.cmd "normal! zRzz"
         end,
-        desc = "Note: search global titles [obsidian]",
+        desc = "Note: search global titles [markdown]",
       },
       ["grr"] = {
         function()
