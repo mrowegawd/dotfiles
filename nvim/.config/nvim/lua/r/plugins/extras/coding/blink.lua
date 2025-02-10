@@ -119,7 +119,11 @@ return {
         preset = "enter",
         -- how to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
+
         ["<CR>"] = {},
+        ["<C-f>"] = {},
+        ["<C-e>"] = {},
+        ["<C-b>"] = {},
 
         ["<C-n>"] = {
           function(cmp)
