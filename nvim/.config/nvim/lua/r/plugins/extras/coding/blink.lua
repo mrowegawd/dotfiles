@@ -117,9 +117,10 @@ return {
       },
       keymap = {
         preset = "enter",
-        -- how to disable keymap? -> ["<C-e>"] = {},
+        -- How to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
 
+        -- I have to disable these mappings because they cause conflict errors
         ["<CR>"] = {},
         ["<C-f>"] = {},
         ["<C-e>"] = {},
