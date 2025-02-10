@@ -54,7 +54,8 @@ return {
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
-            columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
+            -- columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
+            columns = { { "kind_icon" }, { "label", "kind", gap = 1 } },
             components = {
               kind_icon = {
                 text = function(item)
@@ -68,7 +69,9 @@ return {
                 text = function(item)
                   return item.label
                 end,
-                highlight = "CmpItemAbbr",
+                highlight = function(item)
+                  return "CmpItemKind" .. item.kind
+                end,
               },
               kind = {
                 ellipsis = false,
@@ -77,7 +80,7 @@ return {
                   return ("(%s)"):format(item.kind)
                 end,
                 highlight = function(item)
-                  return (require("blink.cmp.completion.windows.render.tailwind").get_hl(item) or "BlinkCmpKind")
+                  return (require("blink.cmp.completion.windows.render.tailwind").get_hl(item) or "CmpItemKind")
                     .. item.kind
                 end,
               },
