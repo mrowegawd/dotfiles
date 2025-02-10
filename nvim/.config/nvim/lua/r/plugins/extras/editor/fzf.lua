@@ -239,10 +239,10 @@ return {
         fzf_colors = {
           ["fg"] = { "fg", "FzfLuaFilePart" },
           ["bg"] = { "bg", "FzfLuaNormal" },
-          ["hl"] = { "fg", "CmpItemAbbrMatch" },
-          ["fg+"] = { "fg", "FzfLuaSel" },
+          ["hl"] = { "fg", "FzfLuaFzfMatchFuzzy" },
+          ["fg+"] = { "fg", "FzfLuaFilePart" },
           ["bg+"] = { "bg", "FzfLuaSel" },
-          ["hl+"] = { "fg", "CmpItemAbbrMatchFuzzy" },
+          ["hl+"] = { "fg", "FzfLuaFzfMatch" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
           ["pointer"] = { "fg", "Error" },
@@ -571,7 +571,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden  ALT-G:grep-on-cwd]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden  ALT-J:grep-on-cwd]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -909,6 +909,17 @@ return {
           },
           finder = {
             prompt = RUtils.fzflua.default_title_prompt(),
+            async = true,
+            silent = true,
+            providers = {
+              { "references", prefix = require("fzf-lua").utils.ansi_codes.blue "ref " },
+              { "definitions", prefix = require("fzf-lua").utils.ansi_codes.green "def " },
+              { "declarations", prefix = require("fzf-lua").utils.ansi_codes.magenta "decl" },
+              { "typedefs", prefix = require("fzf-lua").utils.ansi_codes.red "tdef" },
+              { "implementations", prefix = require("fzf-lua").utils.ansi_codes.green "impl" },
+              { "incoming_calls", prefix = require("fzf-lua").utils.ansi_codes.cyan "in  " },
+              { "outgoing_calls", prefix = require("fzf-lua").utils.ansi_codes.yellow "out " },
+            },
             winopts = function()
               local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
               local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
@@ -919,7 +930,7 @@ return {
                 title = RUtils.fzflua.format_title("Finder", ""),
                 width = win_width,
                 height = win_height,
-                row = 13,
+                row = 0.50,
                 preview = {
                   vertical = "down:45%", -- up|down:size
                   horizontal = "left:55%", -- right|left:size
