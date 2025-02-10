@@ -185,6 +185,7 @@ return {
       --         },
     },
     dependencies = {
+      { "jmacadie/telescope-hierarchy.nvim" },
       { "trevarj/telescope-tmux.nvim" },
       {
         "nvim-telescope/telescope-fzf-native.nvim",
@@ -469,6 +470,9 @@ return {
       telescope.load_extension "live_grep_args"
 
       telescope.load_extension "tmux"
+
+      telescope.load_extension "hierarchy"
+
       -----@diagnostic disable-next-line: undefined-field
       --telescope.load_extension "luasnip"
 

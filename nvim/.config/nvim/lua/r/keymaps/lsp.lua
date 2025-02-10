@@ -67,14 +67,22 @@ function M.get()
     {
       "gI",
       function()
-        fzf_lua.lsp_incoming_calls()
+        if RUtils.has "telescope.nvim" then
+          vim.cmd [[Telescope hierarchy incoming_calls]]
+        else
+          fzf_lua.lsp_incoming_calls()
+        end
       end,
       desc = "LSP: incoming calls [fzflua]",
     },
     {
       "gO",
       function()
-        fzf_lua.lsp_outgoing_calls()
+        if RUtils.has "telescope.nvim" then
+          vim.cmd [[Telescope hierarchy outgoing_calls]]
+        else
+          fzf_lua.lsp_outgoing_calls()
+        end
       end,
       desc = "LSP: outgoing calls [fzflua]",
     },
@@ -255,21 +263,21 @@ function M.get()
     }
   end
 
-  if RUtils.has "glance.nvim" then
-    M._keys[#M._keys + 1] = {
-      "gi",
-      "<CMD>Glance implementations<CR>",
-      desc = "LSP: implementations [glance]",
-    }
-  else
-    M._keys[#M._keys + 1] = {
-      "gi",
-      function()
-        require("telescope.builtin").lsp_implementations { reuse_win = true }
-      end,
-      desc = "LSP: implementations",
-    }
-  end
+  -- if RUtils.has "glance.nvim" then
+  --   M._keys[#M._keys + 1] = {
+  --     "gi",
+  --     "<CMD>Glance implementations<CR>",
+  --     desc = "LSP: implementations [glance]",
+  --   }
+  -- else
+  --   M._keys[#M._keys + 1] = {
+  --     "gi",
+  --     function()
+  --       require("telescope.builtin").lsp_implementations { reuse_win = true }
+  --     end,
+  --     desc = "LSP: implementations",
+  --   }
+  -- end
 
   if RUtils.has "glance.nvim" then
     M._keys[#M._keys + 1] = {
