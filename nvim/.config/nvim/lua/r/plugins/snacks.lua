@@ -72,7 +72,7 @@ return {
           },
         },
 
-        { SnacksNotifierHistory = { inherit = "NormalFloat" } },
+        { SnacksNotifierHistory = { link = "NormalFloat" } },
       })
 
       return {

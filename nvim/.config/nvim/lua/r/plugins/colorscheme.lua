@@ -10,9 +10,21 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local base2tone_theme =
-        { "base2tone_field_dark", "base2tone_cave_dark", "base2tone_lavender_dark", "base2tone_suburb_dark" }
+      local base2tone_theme = { "base2tone_field_dark", "base2tone_cave_dark", "base2tone_suburb_dark" }
       if vim.tbl_contains(base2tone_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
+  -- EF-THEMES
+  {
+    "oonamo/ef-themes.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local ef_theme = { "ef-dream" }
+      if vim.tbl_contains(ef_theme, colorscheme) then
         return true
       end
       return false
@@ -112,19 +124,6 @@ return {
     enabled = function()
       local jellybeans_theme = { "jellybeans" }
       if vim.tbl_contains(jellybeans_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- ONE-MONOKAI
-  {
-    "cpea2506/one_monokai.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local onemonokai_theme = { "one_monokai" }
-      if vim.tbl_contains(onemonokai_theme, colorscheme) then
         return true
       end
       return false

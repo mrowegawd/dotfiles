@@ -274,7 +274,7 @@ function M.change_colors()
     sugest_highlight = Highlight.tint(Highlight.get("Tabline", "bg"), -0.2)
   end
 
-  print(yazi_statusline_active_fg)
+  -- print(yazi_statusline_active_fg)
 
   local master_colors = fmt(
     [[
@@ -363,7 +363,7 @@ function M.change_colors()
 
     fmt "! FZF-SELECTION: bg, fg, match",
     Highlight.get("FzfLuaSel", "bg"), -- 25
-    Highlight.get("FzfLuaSel", "fg"), -- 26
+    Highlight.get("FzfLuaFilePart", "fg"), -- 26
     Highlight.get("CmpItemAbbrMatchFuzzy", "fg"), --27
 
     fmt "! FZF: border",
