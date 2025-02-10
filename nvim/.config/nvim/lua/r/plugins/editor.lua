@@ -187,6 +187,19 @@ return {
         "<cmd>Trouble lsp_references toggle focus=true auto_refresh=false<cr>",
         desc = "LSP: references [trouble]",
       },
+      {
+        "<c-q>",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+
+          vim.cmd "Trouble quickfix toggle focus=true"
+        end,
+        ft = "qf",
+        desc = "QF: open in trouble [trouble]",
+      },
       -- {
       --   "gi",
       --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
