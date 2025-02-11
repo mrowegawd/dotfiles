@@ -41,53 +41,42 @@ local set_conditions = {
 }
 
 local colors = {
-  base_fg = Col.statusline_fg,
-  base_bg = Col.statusline_bg,
-
-  basenc_fg = Col.statuslinenc_fg,
-  basenc_bg = Col.statuslinenc_bg,
-
-  branch_fg = Col.branch_fg,
-
-  keyword = Col.keyword,
-  keyword_blur = Col.keyword_blur,
-
-  keywordnc = Col.keywordnc,
-  keywordnc_blur = Col.keywordnc_blur,
+  statusline_bg = Col.statusline_bg,
+  statusline_fg = Col.statusline_fg,
+  statuslinenc_bg = Col.statuslinenc_bg,
+  statuslinenc_fg = Col.statuslinenc_fg,
 
   mode_bg = Col.mode_bg,
-  filename_fg = Col.mode_bg,
+  mode_bg_blur = Col.mode_bg_blur,
+  modenc_bg = Col.modenc_bg,
+  modenc_bg_blur = Col.modenc_bg_blur,
+
+  branch_fg = Col.branch_fg,
+  path_name = Col.path_name,
+  filename = Col.filename,
+
   modified_fg = Col.modified_fg,
-  directory = Col.directory,
 
   coldisorent = Col.disorent,
-
-  separator_fg = Col.separator_fg,
-  separator_fg_alt = Col.separator_fg_alt,
-  separator_fg_inactive = Col.separator_fg_inactive,
+  directory = Col.directory,
+  notif = Col.notif,
+  session = Col.session,
 
   vim_mode_insert = Col.mod_ins,
   vim_mode_insert_bar = Col.mode_ins_bar,
   vim_mode_insertnc = Col.mod_insnc,
-  vim_mode_visual = Col.mod_vis,
   vim_mode_term = Col.mod_term,
+  vim_mode_visual = Col.mod_vis,
 
   diff_add = Col.diff_add,
-  diff_delete = Col.diff_delete,
   diff_change = Col.diff_change,
+  diff_delete = Col.diff_delete,
 
-  diagnostic_warn = Col.diagnostic_warn,
   diagnostic_err = Col.diagnostic_err,
-  diagnostic_info = Col.diagnostic_info,
   diagnostic_hint = Col.diagnostic_hint,
+  diagnostic_info = Col.diagnostic_info,
+  diagnostic_warn = Col.diagnostic_warn,
 }
-
-local is_show_start = function()
-  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
-    return colors.diff_delete
-  end
-  return "white"
-end
 
 local exclude = {
   ["NvimTree"] = true,
@@ -148,7 +137,7 @@ local mode_icons = {
 }
 
 local mode_colors = {
-  n = colors.keyword,
+  n = colors.mode_bg,
   i = colors.vim_mode_insert,
   v = colors.vim_mode_visual,
   V = colors.vim_mode_visual,
@@ -188,7 +177,7 @@ M.Mode = {
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      local fg = colors.base_bg
+      local fg = colors.statusline_bg
       if not (mode == "n") and not (mode == "i") then
         fg = self.mode_colors["n"]
       end
@@ -199,7 +188,7 @@ M.Mode = {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      local bg = colors.keyword_blur
+      local bg = colors.mode_bg_blur
       if mode == "i" then
         bg = colors.vim_mode_insert_bar
       end
@@ -212,7 +201,7 @@ M.Mode = {
       return RUtils.config.icons.misc.separator_up
     end,
     hl = function(self)
-      local fg = colors.keyword_blur
+      local fg = colors.mode_bg_blur
       local mode = self.mode:sub(1, 1)
       -- if not (mode == "n") and not (mode == "V") and not (mode == "c") then
       if mode == "i" then
@@ -229,19 +218,19 @@ M.Mode_inactive = {
       return string.format "      "
     end,
     hl = function()
-      return { bg = colors.keywordnc }
+      return { bg = colors.modenc_bg }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { fg = colors.keywordnc, bg = colors.keywordnc_blur }
+      return { fg = colors.modenc_bg, bg = colors.modenc_bg_blur }
     end,
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { fg = colors.keywordnc_blur }
+      return { fg = colors.modenc_bg_blur }
     end,
   },
   { provider = " " },
@@ -347,9 +336,9 @@ M.FilePath = {
     end,
     hl = function()
       if Conditions.is_not_active() then
-        return { fg = colors.basenc_fg }
+        return { fg = colors.statuslinenc_fg }
       end
-      return { fg = colors.base_fg }
+      return { fg = colors.path_name }
     end,
   },
   {
@@ -362,7 +351,7 @@ M.FilePath = {
       end
     end,
     hl = function()
-      return { fg = is_show_start(), bold = true, italic = true }
+      return { fg = Col.filename, bold = true, italic = true }
     end,
   },
 }
@@ -374,9 +363,13 @@ M.FileIcon = {
   init = function(self)
     local filename = vim.api.nvim_buf_get_name(0)
     local extension = vim.fn.fnamemodify(filename, ":e")
+    self.path = vim.fn.expand "%:p" --[[@as string]]
     self.icon, self.icon_color = require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
   end,
   provider = function(self)
+    if self.path == "" then
+      return ""
+    end
     return self.icon and (" " .. self.icon .. "  ")
   end,
   hl = function(self)
@@ -469,7 +462,7 @@ M.QuickfixStatus = {
       return msg .. " "
     end,
     hl = function()
-      local fg = colors.base_fg
+      local fg = colors.statusline_fg
       local bold = true
 
       if Conditions.is_not_active() then
@@ -491,7 +484,7 @@ M.QuickfixStatus = {
       return msg .. " "
     end,
     hl = function()
-      local fg = colors.base_fg
+      local fg = colors.statusline_fg
       -- local bg = colors.diff_change
       local bold = true
 
@@ -551,7 +544,7 @@ local function OverseerTasksForStatus(status)
       end
       return {
         fg = fg,
-        bg = colors.base_bg,
+        bg = colors.statusline_bg,
         bold = true,
       }
     end,
@@ -596,7 +589,7 @@ M.Dap = {
   provider = function()
     return " " .. require("dap").status() .. " "
   end,
-  hl = { fg = colors.diagnostic_err, bg = colors.base_bg, bold = true },
+  hl = { fg = colors.diagnostic_err, bg = colors.statusline_bg, bold = true },
 }
 local actived_venv = function()
   local python_logo = "   "
@@ -672,7 +665,7 @@ M.LSPActive = {
         return RUtils.config.icons.misc.lsp .. "[" .. table.concat(self.names, " ") .. "] "
       end
     end,
-    hl = { fg = colors.base_fg, bg = colors.base_bg },
+    hl = { fg = colors.statusline_fg },
   },
   {
     provider = function(self)
@@ -833,7 +826,7 @@ M.LazyStatus = {
         return status_lazy .. "  "
       end
     end,
-    hl = { fg = colors.keyword, bold = true },
+    hl = { fg = colors.notif, bold = true },
   },
 }
 M.Sessions = {
@@ -882,7 +875,7 @@ M.Sessions = {
 
       return icon_ses .. ses_status .. "  "
     end,
-    hl = { fg = colors.diagnostic_warn },
+    hl = { fg = colors.session },
   },
 }
 M.PinnedBuffer = {
@@ -980,9 +973,9 @@ M.Ruler = {
       return rhs
     end,
     hl = function()
-      local fg = colors.coldisorent
+      local fg = colors.statusline_fg
       if Conditions.is_not_active() then
-        fg = colors.basenc_fg
+        fg = colors.statuslinenc_fg
       end
       return { fg = fg }
     end,
@@ -998,14 +991,14 @@ M.Clock = {
   {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function()
-      return { bg = colors.diagnostic_err, fg = colors.base_bg }
+      return { bg = colors.diagnostic_err, fg = colors.statusline_bg }
     end,
   },
   {
     provider = function()
       return "  " .. os.date "%H:%M "
     end,
-    hl = { bg = colors.diagnostic_err, fg = colors.base_bg, bold = true },
+    hl = { bg = colors.diagnostic_err, fg = colors.statusline_bg, bold = true },
   },
 }
 
@@ -1054,7 +1047,7 @@ M.SnacksProfile = {
     provider = function()
       return Snacks.profiler.status()[1]() .. " "
     end,
-    hl = { fg = colors.base_fg, bold = true },
+    hl = { fg = colors.statusline_fg, bold = true },
   },
   {
     provider = " ",
@@ -1090,10 +1083,10 @@ M.status_active_left = {
   M.Clock,
 
   hl = function()
-    local bg = colors.base_bg
+    local bg = colors.statusline_bg
 
     if vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) then
-      return { fg = colors.base_fg, bg = colors.base_bg }
+      return { fg = colors.statusline_fg, bg = colors.statusline_bg }
     end
 
     if Conditions.is_active() then
@@ -1104,7 +1097,7 @@ M.status_active_left = {
       end
     end
 
-    return { fg = colors.base_fg, bg = bg }
+    return { fg = colors.statusline_fg, bg = bg }
   end,
 }
 
@@ -1122,7 +1115,7 @@ M.status_not_active = {
   M.PinnedBuffer,
   M.Ruler,
 
-  hl = { bg = colors.basenc_bg, fg = colors.basenc_fg },
+  hl = { bg = colors.statuslinenc_bg, fg = colors.statuslinenc_fg },
 }
 
 return M

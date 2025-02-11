@@ -173,6 +173,7 @@ reset_base_alter({ "nord" }, {
   pmenusel_bg_alter = 0.4,
   pmenuthumb_alter = 1,
   winseparator_alter = 0.3,
+  quickfixline_alter = -0.15,
 })
 reset_base_alter({ "oxocarbon" }, {
   cursorline_alter = 0.07,
@@ -256,13 +257,13 @@ reset_base_alter({ "vscode_modern" }, {
 reset_base_alter({ "zenburned" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.08,
-  fzfluasel_bg_alter = 0.2,
+  fzfluasel_bg_alter = -0.02,
   normalfloat_border_fg_alter = 0.6,
   pmenu_bg_alter = -0.2,
   pmenu_fg_border_alter = 0.5,
-  pmenusel_bg_alter = 0,
+  pmenusel_bg_alter = 0.1,
   pmenuthumb_alter = 1,
-  winseparator_alter = 0.18,
+  winseparator_alter = 0.3,
 })
 
 local general_overrides = function()
@@ -1228,6 +1229,8 @@ local rose_pine = {
     { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.25 }, italic = true } },
     { ["@comment"] = { inherit = "Comment" } },
     { ["@org.comment"] = { inherit = "Comment" } },
+    { ["@org.directive"] = { inherit = "Comment" } },
+    { ["@org.directive.org"] = { inherit = "Comment" } },
 
     --- BLINK
     { BlinkCmpLabelMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 } } },
@@ -1378,6 +1381,8 @@ local rose_pine = {
     { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.2 }, italic = true } },
     { ["@comment"] = { inherit = "Comment" } },
     { ["@org.comment"] = { inherit = "Comment" } },
+    { ["@org.directive"] = { inherit = "Comment" } },
+    { ["@org.directive.org"] = { inherit = "Comment" } },
 
     { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
     { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.6 } } },
@@ -1418,7 +1423,7 @@ local rose_pine = {
     },
     {
       StatusLine = {
-        fg = { from = "Keyword", attr = "fg", alter = 0.6 },
+        fg = { from = "Keyword", attr = "fg", alter = 0.9 },
         bg = { from = "Keyword", attr = "fg", alter = -0.4 },
       },
     },
@@ -1475,6 +1480,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
@@ -1561,7 +1567,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = -0.05 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.5, Highlight.get("StatusLine_esse", "fg")),
             -0.4
@@ -1665,6 +1671,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.23 } } },
 
@@ -1699,7 +1706,7 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.5 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.1 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.6, Highlight.get("StatusLine_esse", "fg")),
             -0.3
@@ -1802,6 +1809,8 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.18 } } },
 
@@ -1837,7 +1846,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.15 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.3 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.5, Highlight.get("StatusLine_esse", "fg")),
             -0.2
@@ -1863,110 +1872,12 @@ local function colorscheme_overrides()
       },
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
     },
-    ["nord"] = {
-      { ["Comment"] = { link = "@comment", italic = true } },
-      { ["@org.comment"] = { link = "Comment" } },
-      { ["@org.directive"] = { link = "Comment" } },
-      { ["@org.directive.org"] = { link = "Comment" } },
-
-      { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
-      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },
-
-      { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
-      { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.35 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
-      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
-
-      {
-        Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
-          bg = { from = "Normal", attr = "bg", alter = -0.18 },
-        },
-      },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.15 }, bg = "NONE" } },
-
-      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.15 } } },
-      { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-
-      {
-        NoiceCmdline = {
-          fg = { from = "Pmenu", attr = "fg", alter = 5 },
-          bg = { from = "Pmenu", attr = "bg", alter = -0.05 },
-        },
-      },
-
-      {
-        LspReferenceText = {
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = 0.5 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-      {
-        LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-          fg = "NONE",
-          underline = false,
-          reverse = false,
-          undercurl = false,
-        },
-      },
-
-      {
-        StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.4 },
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.5, Highlight.get("StatusLine_esse", "bg")),
-            -0.05
-          ),
-        },
-      },
-      {
-        QuickFixLine = {
-          fg = "NONE",
-          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
-          underline = false,
-          reverse = false,
-        },
-      },
-      {
-        StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.1 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
-        },
-      },
-
-      {
-        KeywordBlur = {
-          bg = { from = "StatusLineNC", attr = "bg", alter = 0.1 },
-        },
-      },
-      {
-        TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 2.3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.15 },
-        },
-      },
-      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
-    },
     ["catppuccin-mocha"] = {
       { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.4 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.27 } } },
 
@@ -2022,7 +1933,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.4 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.5, Highlight.get("StatusLine_esse", "bg")),
             -0.2
@@ -2063,6 +1974,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.2 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.4 } } },
@@ -2100,7 +2012,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.3 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.6, Highlight.get("StatusLine_esse", "bg")),
             -0.5
@@ -2178,6 +2090,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.2 } } },
       { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
@@ -2236,7 +2149,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.35 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.6, Highlight.get("StatusLine_esse", "bg")),
             -0.5
@@ -2344,6 +2257,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -2373,7 +2287,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.1 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.27 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.6, Highlight.get("StatusLine_esse", "bg")),
             -0.4
@@ -2491,6 +2405,8 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked.org"] = { inherit = "Comment" } },
 
       {
         LspReferenceText = {
@@ -2522,11 +2438,9 @@ local function colorscheme_overrides()
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = 0.08 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.4 } } },
 
-      { ["@org.checkbox.checked.org"] = { inherit = "Comment" } },
-
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.02 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.25 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.4, Highlight.get("StatusLine_esse", "bg")),
             0.4
@@ -2558,6 +2472,106 @@ local function colorscheme_overrides()
         },
       },
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
+    },
+    ["nord"] = {
+      { ["Comment"] = { link = "@comment", italic = true } },
+      { ["@comment"] = { inherit = "Comment" } },
+      { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
+
+      { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
+      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
+      { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
+      { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
+
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.35 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
+
+      {
+        Folded = {
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          bg = { from = "Normal", attr = "bg", alter = -0.18 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.15 }, bg = "NONE" } },
+
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.15 } } },
+      { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+
+      {
+        NoiceCmdline = {
+          fg = { from = "Pmenu", attr = "fg", alter = 5 },
+          bg = { from = "Pmenu", attr = "bg", alter = -0.05 },
+        },
+      },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.45 },
+          bg = Highlight.tint(
+            Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.5, Highlight.get("StatusLine_esse", "bg")),
+            -0.05
+          ),
+        },
+      },
+      {
+        QuickFixLine = {
+          fg = "NONE",
+          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
+          underline = false,
+          reverse = false,
+        },
+      },
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 2.1 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+        },
+      },
+
+      {
+        KeywordBlur = {
+          bg = { from = "StatusLineNC", attr = "bg", alter = 0.1 },
+        },
+      },
+      {
+        TabLine = {
+          fg = { from = "Normal", attr = "bg", alter = 2.3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.15 },
+        },
+      },
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
     },
     ["oxocarbon"] = {
       { DiagnosticSignError = { bg = "NONE", fg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")) } },
@@ -2630,6 +2644,8 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.6 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.35 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.6 } } },
@@ -2664,7 +2680,7 @@ local function colorscheme_overrides()
       },
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.24 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.6, Highlight.get("StatusLine_esse", "fg")),
             -0.3
@@ -2705,6 +2721,8 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.75 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.02 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -2740,7 +2758,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.4 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.28 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.6, Highlight.get("StatusLine_esse", "bg")),
             -0.5
@@ -2779,6 +2797,8 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.8 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
@@ -2818,7 +2838,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.18 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.4, Highlight.get("StatusLine_esse", "fg")),
             -0.5
@@ -2861,6 +2881,8 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.22 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.35 } } },
@@ -3012,6 +3034,8 @@ local function colorscheme_overrides()
       },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
       { BlinkCmpGhostText = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
 
       {
@@ -3189,6 +3213,8 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.directive.org"] = { inherit = "Comment" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
@@ -3199,7 +3225,7 @@ local function colorscheme_overrides()
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
 
       { FzfLuaCursorLine = { fg = "NONE" } },
       {
@@ -3274,7 +3300,7 @@ local function colorscheme_overrides()
 
       {
         StatusLine = {
-          fg = { from = "StatusLine", attr = "fg", alter = 0.02 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.6 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.6, Highlight.get("StatusLine_esse", "fg")),
             0.1
