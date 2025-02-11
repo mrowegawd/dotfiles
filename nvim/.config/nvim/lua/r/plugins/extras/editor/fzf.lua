@@ -653,7 +653,6 @@ return {
 
                     opts.rg_glob = false
                     opts.no_esc = true
-                    opts.debug = true
 
                     return require("fzf-lua").live_grep(opts)
                   end,
