@@ -615,18 +615,56 @@ return {
                 },
                 formatter = false, -- disable setting "path first"
                 actions = {
-                  ["default"] = function(selected, _)
-                    local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
-                    local path = selected[1]:sub(slice_num_str)
-                    return require("fzf-lua").live_grep_glob {
-                      cwd = path,
-                      winopts = {
-                        title = RUtils.fzflua.format_title(
-                          "Grep: " .. path,
-                          RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
-                        ),
+                  ["default"] = function(selected)
+                    local paths = {}
+                    local path_str = ""
+                    if #selected > 1 then
+                      for _, sel in pairs(selected) do
+                        if #sel > 0 then
+                          local slice_num_str = sel:match ".*\xe2\x80\x82()"
+                          local path = sel:sub(slice_num_str)
+                          table.insert(paths, path)
+                        end
+                      end
+                    else
+                      local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
+                      path_str = selected[1]:sub(slice_num_str)
+                    end
+
+                    local opts = {}
+
+                    local title_path
+                    if #paths > 1 then
+                      title_path = "[ " .. table.concat(paths, ", ") .. " ]"
+                      opts.rg_opts = "--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
+                        .. table.concat(paths, " ")
+                        .. " -e "
+                      print(opts.rg_opts)
+                    else
+                      opts.cwd = path_str
+                      title_path = path_str
+                    end
+
+                    opts.winopts = {
+                      title = RUtils.fzflua.format_title(
+                        "Grep: " .. title_path,
+                        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                      ),
+                      width = 0.80,
+                      height = 0.80,
+                      row = 0.50,
+                      col = 0.50,
+                      preview = {
+                        vertical = "down:55%", -- up|down:size
+                        horizontal = "up:45%", -- right|left:size
                       },
                     }
+
+                    opts.rg_glob = false
+                    opts.no_esc = true
+                    opts.debug = true
+
+                    return require("fzf-lua").live_grep(opts)
                   end,
                 },
               }
