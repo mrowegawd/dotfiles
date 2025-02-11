@@ -623,15 +623,16 @@ return {
       },
     },
   },
-  -- obsidian blink source
-  {
-    "saghen/blink.cmp",
-    optional = true,
-    dependencies = { "epwalsh/obsidian.nvim", "saghen/blink.compat" },
-    opts = {
-      sources = {
-        compat = { "obsidian", "obsidian_new", "obsidian_tags" },
-      },
-    },
-  },
+  -- WARN: ini kenapa pula erorr ketika diaktifkan,
+  -- error compat blink source
+  -- {
+  --   "saghen/blink.cmp",
+  --   optional = true,
+  --   dependencies = { "epwalsh/obsidian.nvim", "saghen/blink.compat" },
+  --   opts = {
+  --     sources = {
+  --       compat = { "obsidian", "obsidian_new", "obsidian_tags" },
+  --     },
+  --   },
+  -- },
 }
