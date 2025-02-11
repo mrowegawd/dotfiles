@@ -34,16 +34,16 @@ return {
             },
           },
         },
-        actions = {
-          ---@param p snacks.Picker
-          -- toggle_cwd = function(p)
-          --   local root = LazyVim.root { buf = p.input.filter.current_buf, normalize = true }
-          --   local cwd = vim.fs.normalize((vim.uv or vim.loop).cwd() or ".")
-          --   local current = p:cwd()
-          --   p:set_cwd(current == root and cwd or root)
-          --   p:find()
-          -- end,
-        },
+        -- actions = {
+        --   ---@param p snacks.Picker
+        --   toggle_cwd = function(p)
+        --     local root = LazyVim.root { buf = p.input.filter.current_buf, normalize = true }
+        --     local cwd = vim.fs.normalize((vim.uv or vim.loop).cwd() or ".")
+        --     local current = p:cwd()
+        --     p:set_cwd(current == root and cwd or root)
+        --     p:find()
+        --   end,
+        -- },
         sources = {
           -- { "git_files", "git_files", "Git Files (Root Dir)" },
           files = {
@@ -56,66 +56,104 @@ return {
             supports_live = true,
           },
           command_history = { layout = { preset = "ivy" } },
-          smart = { layout = { preset = "ivy" } },
-          grep = { layout = { preset = "ivy_split" } },
+          smart = {
+            layout = {
+              preset = "ivy",
+              -- layout = {
+              --   box = "vertical",
+              --   width = 0.50,
+              --   min_width = 0.9,
+              --   height = 0.50,
+              --   -- border = "rounded",
+              --   { win = "preview", title = "{preview}", border = "rounded" },
+              --   {
+              --     { win = "input", height = 1, border = "bottom" },
+              --     box = "vertical",
+              --     border = "rounded",
+              --     title = "{title} {live} {flags}",
+              --     { win = "list", border = "none" },
+              --   },
+              -- },
+            },
+          },
+          grep = {
+            layout = {
+              layout = {
+                box = "vertical",
+                width = 0.50,
+                min_width = 0.9,
+                height = 0.50,
+                -- border = "rounded",
+                { win = "preview", title = "{preview}", border = "rounded" },
+                {
+                  { win = "input", height = 1, border = "bottom" },
+                  box = "vertical",
+                  border = "rounded",
+                  title = "{title} {live} {flags}",
+                  { win = "list", border = "none" },
+                },
+              },
+            },
+          },
+          --   preset = "ivy",
+          --   layout = {
+          --     width = 0.50,
+          --     height = 0.50,
+          --     position = "bottom",
+          --     -- box = "horizontal",
+          -- },
+          -- },
+          -- },
         },
       },
     },
-    -- stylua: ignore
+    --stylua: ignore
     keys = {
-      { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers", },
-      { "<leader>ff", function() Snacks.picker.smart() end, desc = "Files", },
-      { "<leader>fF", RUtils.pick("files"), desc = "Find Files (Root Dir)" },
+      -- { "<Leader>ff", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
+      -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
+      { "<Localleader>fs", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
+      { "<Leader>fF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
 
-      -- { "<leader>/", LazyVim.pick("grep"), desc = "Grep (Root Dir)" },
-      -- { "<leader><space>", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
-      -- { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
       -- Buffers
-      { "<leader>bg", function() Snacks.picker.lines() end, desc = "Buffer Lines", },
-      { "<leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers", },
-      { "<leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Buffers", },
-      { "<leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffers (all)", },
-      { "<leader>fO", RUtils.pick.config_files(), desc = "Find Config File" },
-      -- { "<leader>ff", LazyVim.pick("files"), desc = "Find Files (Root Dir)" },
-      -- { "<leader>fF", LazyVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
-      -- { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Files (git-files)", },
-      -- { "<leader>fr", RUtils.pick("oldfiles"), desc = "Recent" },
-      { "<leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Recent (cwd)", },
-      { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects", },
+      { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Snackspicker: buffer lines", },
+      { "<Leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Snackspicker: grep open buffers", },
+      { "<Leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Snackspicker: buffers", },
+      { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Snackspicker: Buffers (all)", },
+      { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
+      { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
+      { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Snackspicker: projects", },
       -- git
-      { "<leader>gc", function() Snacks.picker.git_log() end, desc = "Git Log", },
-      { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (hunks)", },
-      { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status", },
+      { "<Leader>gc", function() Snacks.picker.git_log() end, desc = "Git: git log [snackspicker]", },
+      { "<Leader>gd", function() Snacks.picker.git_diff() end, desc = "Git: git diff (hunks) [snackspicker]", },
+      { "<Leader>gs", function() Snacks.picker.git_status() end, desc = "Git: git status [snackspicker]", },
       -- Grep
-      -- { "<leader>fg", function() Snacks.picker.grep { hidden = true, layout = "ivy" } end, desc = "Grep Open Buffers", }, -- { "<leader>sg", LazyVim.pick("live_grep"), desc = "Grep (Root Dir)" },
-      { "<leader>fg", RUtils.pick("grep"), desc = "Grep (Root Dir)" },
-      -- { "<leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Grep Open Buffers", }, -- { "<leader>sg", LazyVim.pick("live_grep"), desc = "Grep (Root Dir)" },
-      -- { "<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec", },
-      -- { "<leader>sw", LazyVim.pick("grep_word"), desc = "Visual selection or word (Root Dir)", mode = { "n", "x" } },
-      -- { "<leader>sW", LazyVim.pick("grep_word", { root = false }), desc = "Visual selection or word (cwd)", mode = { "n", "x" } },
+      -- { "<Leader>fg", function() Snacks.picker.grep { hidden = true, layout = "ivy" } end, desc = "Snackspicker: grep open buffers", },
+      { "<leader>fg", RUtils.pick "grep", desc = "Snackspicker: grep (root dir)" },
+      -- { "<Leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Snackspicker: grep open buffers", },
+      { "<Leader>fw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
+      { "<Leader>fW", RUtils.pick("grep_word", { root = false }), desc = "Snackspicker: visual selection or word (cwd)", mode = { "n", "x" }, },
       -- search
-      -- { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers", },
-      -- { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds", },
-      { "<leader>fc", function() Snacks.picker.command_history() end, desc = "Command History", },
-      -- { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands", },
-      -- { "<leader>fd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics", },
-      { "<leader>fH", function() Snacks.picker.help() end, desc = "Help Pages", },
-      -- { "<leader>sH", function() Snacks.picker.highlights() end, desc = "Highlights", },
-      -- { "<leader>si", function() Snacks.picker.icons() end, desc = "Icons", },
-      -- { "<leader>sj", function() Snacks.picker.jumps() end, desc = "Jumps", },
+      -- { '<Leader>s"', function() Snacks.picker.registers() end, desc = "Snackspicker: registers", },
+      -- { "<Leader>sa", function() Snacks.picker.autocmds() end, desc = "Snackspicker: autocmds", },
+      { "<Leader>fc", function() Snacks.picker.command_history() end, desc = "Snackspicker: command history", },
+      -- { "<Leader><space>", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
+      -- { "<Leader>n", function() Snacks.picker.notifications() end, desc = "Snackspicker: notification history" },
+      -- { "<Leader>sp", function() Snacks.picker.lazy() end, desc = "Snackspicker: search for plugin spec", },
+      -- { "<Leader>sC", function() Snacks.picker.commands() end, desc = "Snackspicker: commands", },
+      -- { "<Leader>fd", function() Snacks.picker.diagnostics() end, desc = "Snackspicker: diagnostics", },
+      { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
+      -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
+      { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Snackspicker: icons", },
+      -- { "<Leader>sj", function() Snacks.picker.jumps() end, desc = "Snackspicker: jumps", },
       {
-        "<leader>fk",
+        "<Leader>fk",
         function()
           Snacks.picker.keymaps {
             layout = {
-              preview = "main",
               layout = {
-                backdrop = false,
-                width = 20,
-                min_width = 0,
-                height = 0,
-                position = "bottom",
-                border = "none",
+                width = 0.80,
+                height = 0.80,
+                -- position = "bottom",
                 box = "vertical",
                 {
                   win = "input",
@@ -125,21 +163,21 @@ return {
                   title_pos = "center",
                 },
                 { win = "list", border = "none" },
-                { win = "preview", title = "{preview}", height = 0.20, border = "top" },
+                { win = "preview", title = "{preview}", height = 0.50, border = "top" },
               },
             },
           }
         end,
-        desc = "Keymaps",
+        desc = "Snackspicker: keymaps",
       },
-      -- { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Location List", },
-      -- { "<leader>sM", function() Snacks.picker.man() end, desc = "Man Pages", },
-      -- { "<leader>sm", function() Snacks.picker.marks() end, desc = "Marks", },
-      -- { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume", },
-      -- { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List", },
-      -- { "<leader>su", function() Snacks.picker.undo() end, desc = "Undotree", },
+      -- { "<Leader>sl", function() Snacks.picker.loclist() end, desc = "Snackspicker: location list", },
+      -- { "<Leader>sM", function() Snacks.picker.man() end, desc = "Snackspicker: man pages", },
+      -- { "<Leader>sm", function() Snacks.picker.marks() end, desc = "Snackspicker: marks", },
+      -- { "<Leader>sR", function() Snacks.picker.resume() end, desc = "Snackspicker: resume", },
+      -- { "<Leader>sq", function() Snacks.picker.qflist() end, desc = "Snackspicker: Quickfix List", },
+      { "<Leader>uu", function() Snacks.picker.undo() end, desc = "Snackspicker: undotree", },
       -- ui
-      { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes", },
+      { "<Leader>uC", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes", },
     },
   },
 }

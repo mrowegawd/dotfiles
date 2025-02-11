@@ -1,22 +1,22 @@
-local picker = {
-  name = "fzf",
-  commands = {
-    files = "files",
-  },
-
-  ---@param command string
-  ---@param opts? FzfLuaOpts
-  open = function(command, opts)
-    opts = opts or {}
-    if opts.cmd == nil and command == "git_files" and opts.show_untracked then
-      opts.cmd = "git ls-files --exclude-standard --cached --others"
-    end
-    return require("fzf-lua")[command](opts)
-  end,
-}
-if not RUtils.pick.register(picker) then
-  return {}
-end
+-- local picker = {
+--   name = "fzf",
+--   commands = {
+--     files = "files",
+--   },
+--
+--   ---@param command string
+--   ---@param opts? FzfLuaOpts
+--   open = function(command, opts)
+--     opts = opts or {}
+--     if opts.cmd == nil and command == "git_files" and opts.show_untracked then
+--       opts.cmd = "git ls-files --exclude-standard --cached --others"
+--     end
+--     return require("fzf-lua")[command](opts)
+--   end,
+-- }
+-- if not RUtils.pick.register(picker) then
+--   return {}
+-- end
 
 -- local function symbols_filter(entry, ctx)
 --   if ctx.symbols_filter == nil then
@@ -85,80 +85,162 @@ return {
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
       { "<a-t>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
-      { "<Leader>bf", function()
-        require("fzf-lua").buffers({
-          winopts = function()
-            local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
-            local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
 
-            local win_height = math.ceil(lines / 2)
-            local win_width = math.ceil(columns / 2)
-            local col = math.ceil((win_width / 2))
-            local row = math.ceil((win_height / 2))
-            return {
-              title = RUtils.fzflua.format_title("Buffers", "󰈙"),
-              title_pos = "center",
-              width = win_width,
-              height = win_height,
-              row = row,
-              col = col,
-              backdrop = 60,
-              preview = {
-                vertical = "down:55%", -- up|down:size
-                horizontal = "right:45%", -- right|left:size
-                hidden = "hidden"
-              },
-            }
-          end,
-      }) end, desc = "Buffer: select buffers [fzflua]" },
-      { "<Leader>bg", function() require("fzf-lua").blines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on curbuf [fzflua]", mode = { "n" } },
+      -- Buffers
+      {
+        "<Leader>bf",
+        function()
+          require("fzf-lua").buffers {
+            winopts = function()
+              local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+              local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+              local win_height = math.ceil(lines / 2)
+              local win_width = math.ceil(columns / 2)
+              local col = math.ceil((win_width / 2))
+              local row = math.ceil((win_height / 2))
+              return {
+                title = RUtils.fzflua.format_title("Buffers", "󰈙"),
+                title_pos = "center",
+                width = win_width,
+                height = win_height,
+                row = row,
+                col = col,
+                backdrop = 60,
+                preview = {
+                  vertical = "down:55%", -- up|down:size
+                  horizontal = "right:45%", -- right|left:size
+                  hidden = "hidden",
+                },
+              }
+            end,
+          }
+        end,
+        desc = "Buffer: select buffers [fzflua]",
+      },
+
+      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
+
+      { "<Leader>bg", function() require("fzf-lua").blines { fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf [fzflua]" },
       { "<Leader>bg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
-      { "<Leader>bG", function() require("fzf-lua").lines({ fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } }) end, desc = "Buffer: live grep on buffers [fzflua]" },
+      { "<Leader>bG", function() require("fzf-lua").lines { fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers [fzflua]" },
       { "<Leader>bG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
       { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
-      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands", mode = "n" },
+      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands" },
       { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
       { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: recent files (history buffer)" },
-      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
-      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
-      { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
-      { "gS", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
       { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
-      { "<Leader>fG", function() require("fzf-lua").live_grep_glob({
-        cwd = vim.fn.expand "%:p:h",
-        winopts = { title = RUtils.fzflua.format_title("Grep current cwd: ".. vim.fn.expand "%:p:h", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)) },
-      }) end, desc = "Fzflua: live grep on current cwd" },
-      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Fzflua: jumps" },
       { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
       { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Fzflua: man pages" },
       { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
       { "<Leader>fH", function() require("fzf-lua").help_tags() end, desc = "Fzflua: help" },
-      { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Fzflua: keymaps" },
+      -- { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Fzflua: keymaps" },
 
-      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]" },
-      { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]" },
-      { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]" },
-      { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]" },
+      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
 
-      { "<Leader>fz", function() require("fzf-lua").files({
-          prompt = RUtils.fzflua.default_title_prompt(),
-          winopts = { title = RUtils.fzflua.format_title("Main Themes", "󰈙") },
-          cwd_prompt = false,
-          no_header = false, -- disable default header
-          cwd = "~/.config/miscxrdb/xresource-theme",
-          actions = {
-            ["default"] = function(selected)
-              local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
-              local pth = selected[1]:sub(slice_num_str)
-              local script_path = vim.fn.expand "$HOME" .. "/.config/rofi/menu/_themes setup " .. pth
-              vim.cmd[[ChangeMasterTheme]]
-              vim.cmd([[!bash ]] .. script_path)
-            end
+      -- LSP
+      { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
+      { "gS", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
+
+      -- Grep
+      { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
+      { "<Leader>fG",
+        function()
+          require("fzf-lua").live_grep_glob {
+            cwd = vim.fn.expand "%:p:h",
+            winopts = {
+              title = RUtils.fzflua.format_title(
+                "Grep current cwd: " .. vim.fn.expand "%:p:h",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+              ),
+              width = 0.90,
+              height = 0.90,
+              row = 0.50,
+              col = 0.50,
+              preview = {
+                vertical = "down:40%", -- up|down:size
+                horizontal = "up:60%", -- right|left:size
+              },
+            },
           }
-        })
-        end, desc = "FzfLua: select main themes"
+        end,
+        desc = "Fzflua: live grep on current cwd",
+      },
+      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
+      {
+        "<Leader>fw",
+        function()
+          require("fzf-lua").grep_cword {
+            winopts = {
+              title = RUtils.fzflua.format_title(
+                "Grep word",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+              ),
+              width = 0.90,
+              height = 0.90,
+              row = 0.50,
+              col = 0.50,
+              preview = {
+                vertical = "down:40%", -- up|down:size
+                horizontal = "up:60%", -- right|left:size
+              },
+            },
+          }
+        end,
+        desc = "Fzflua: grep word",
+      },
+      {
+        "<Leader>fw",
+        function()
+          require("fzf-lua").grep_visual {
+            winopts = {
+              title = RUtils.fzflua.format_title(
+                "Grep word visual",
+                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+              ),
+              width = 0.95,
+              height = 0.90,
+              row = 0.50,
+              col = 0.50,
+              preview = {
+                vertical = "down:40%", -- up|down:size
+                horizontal = "up:60%", -- right|left:size
+              },
+            },
+          }
+        end,
+        desc = "Fzflua: grep word visual",
+        mode = { "v" },
+      },
+
+      -- Git
+      { "<Leader>gs", function() require("fzf-lua").git_status() end, desc = "Git: status [fzflua]", },
+      { "<Leader>gS", function() require("fzf-lua").git_stash() end, desc = "Git: stash [fzflua]", },
+      { "<Leader>gc", function() require("fzf-lua").git_bcommits() end, desc = "Git: buffer commits [fzflua]", },
+      { "<Leader>gC", function() require("fzf-lua").git_commits() end, desc = "Git: repo commits [fzflua]", },
+
+      {
+        "<Leader>fz",
+        function()
+          require("fzf-lua").files {
+            prompt = RUtils.fzflua.default_title_prompt(),
+            winopts = { title = RUtils.fzflua.format_title("Main Themes", "󰈙") },
+            cwd_prompt = false,
+            no_header = false, -- disable default header
+            cwd = "~/.config/miscxrdb/xresource-theme",
+            actions = {
+              ["default"] = function(selected)
+                local slice_num_str = selected[1]:match ".*\xe2\x80\x82()"
+                local pth = selected[1]:sub(slice_num_str)
+                local script_path = vim.fn.expand "$HOME" .. "/.config/rofi/menu/_themes setup " .. pth
+                vim.cmd [[ChangeMasterTheme]]
+                vim.cmd([[!bash ]] .. script_path)
+              end,
+            },
+          }
+        end,
+        desc = "FzfLua: select main themes",
       },
 
       {
@@ -183,7 +265,7 @@ return {
         "<Leader>fo",
         function()
           return require("fzf-lua").files {
-          prompt = RUtils.fzflua.default_title_prompt(),
+            prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Dotfiles", "󰈙") },
             cwd = "~/moxconf/development/dotfiles",
           }
@@ -195,7 +277,7 @@ return {
         function()
           local plugins_directory = vim.fn.stdpath "data" .. "/lazy"
           return require("fzf-lua").files {
-          prompt = RUtils.fzflua.default_title_prompt(),
+            prompt = RUtils.fzflua.default_title_prompt(),
             winopts = { title = RUtils.fzflua.format_title("Plugin Files", "󰈙") },
             cwd = plugins_directory,
           }
@@ -748,6 +830,7 @@ return {
           winopts = {
             title = RUtils.fzflua.format_title("Lines", ""),
             height = 0.90,
+            width = 0.90,
             col = 0.50,
             row = 0.50,
             preview = { vertical = "down:40%", horizontal = "up:50%" },
@@ -781,6 +864,7 @@ return {
           winopts = {
             title = RUtils.fzflua.format_title("Blines", ""),
             height = 0.90,
+            width = 0.90,
             col = 0.50,
             row = 0.50,
             preview = { vertical = "down:40%", horizontal = "up:50%" },
