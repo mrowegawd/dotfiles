@@ -132,10 +132,10 @@ reset_base_alter({ "coffeecat" }, {
   cursorline_alter = 0.04,
   fzflua_bg_cursorline_alter = -0.04,
   fzfluasel_bg_alter = -0.1,
-  pmenu_bg_alter = 0.5,
+  pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 1,
   pmenusel_bg_alter = 1.2,
-  pmenuthumb_alter = 1,
+  pmenuthumb_alter = 2,
 })
 reset_base_alter({ "horizon" }, {
   pmenusel_bg_alter = 0.1,
@@ -929,6 +929,14 @@ local general_overrides = function()
     { TelescopeResultsBorder = { inherit = "FzfLuaBorder" } },
     { MiniAnimateCursor = { fg = "red", bg = "red" } },
 
+    -- ──────────────────────────── SNACKS PICKER ────────────────────────────
+    { SnacksPickerFile = { link = "FzfLuaFilePart" } },
+    { SnacksPickerDir = { link = "FzfLuaDirPart" } },
+    { SnacksPickerMatch = { link = "FzfLuaFzfMatch" } },
+    { SnacksPickerManSection = { link = "FzfLuaFzfMatchFuzzy" } },
+    { SnacksPickerCursorLine = { link = "FzfLuaCursorLine" } },
+    { SnacksPickerPreviewCursorLine = { link = "FzfLuaCursorLine" } },
+
     -- ──────────────────────────────── NOICE ────────────────────────────────
     {
       NoiceCmdline = {
@@ -1056,7 +1064,7 @@ local general_overrides = function()
       },
     },
 
-    -- ─────────────────────────────── RGFLOW ────────────────────────────
+    -- ─────────────────────────────── RGFLOW ──────────────────────────────
     {
       RgFlowHeadLine = {
         bg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")),
@@ -1126,7 +1134,7 @@ local general_overrides = function()
         bg = { from = "Normal", attr = "bg", alter = -0.5 },
       },
     },
-    --  ─────────────────────────────── DASHBOARD ─────────────────────────────
+    --  ─────────────────────────── SNACKS DASHBOARD ──────────────────────────
     {
       SnacksDashboardTitle = {
         fg = { from = "Keyword", attr = "fg" },
