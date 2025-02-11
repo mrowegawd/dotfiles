@@ -435,7 +435,6 @@ return {
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
       "nvim-treesitter/nvim-treesitter",
       "3rd/image.nvim",
     },

@@ -4,10 +4,7 @@ return {
     "jackMort/ChatGPT.nvim",
     enabled = false,
     cmd = { "ChatGPT", "ChatGPTActAs" },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
-    },
+    dependencies = { "nvim-lua/plenary.nvim" },
     config = true,
   },
 }

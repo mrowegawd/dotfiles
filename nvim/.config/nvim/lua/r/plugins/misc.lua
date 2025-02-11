@@ -18,14 +18,6 @@ return {
     "godlygeek/tabular", -- tabularize lines of code
     cmd = "Tabularize",
   },
-  -- UNDOTREE
-  {
-    "mbbill/undotree",
-    cmd = "UndotreeToggle",
-    keys = {
-      { "<Leader>uu", ":UndotreeToggle<cr>", desc = "Toggle: undotree [undotree]" },
-    },
-  },
   -- COMMENT-BOX
   {
     "LudoPinelli/comment-box.nvim",
