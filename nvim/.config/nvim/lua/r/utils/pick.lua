@@ -28,10 +28,6 @@ function M.register(picker)
     return true
   end
 
-  if M.picker and M.picker.name ~= M.want() then
-    M.picker = nil
-  end
-
   if M.picker and M.picker.name ~= picker.name then
     RUtils.warn(
       "`RUtils.pick`: picker already set to `" .. M.picker.name .. "`,\nignoring new picker `" .. picker.name .. "`"
@@ -40,17 +36,6 @@ function M.register(picker)
   end
   M.picker = picker
   return true
-end
-
----@return "telescope" | "fzf" | "snacks"
-function M.want()
-  vim.g.lazyvim_picker = vim.g.lazyvim_picker or "auto"
-  if vim.g.lazyvim_picker == "auto" then
-    return RUtils.has_extra "editor.snacks_picker" and "snacks"
-      or RUtils.has_extra "editor.telescope" and "telescope"
-      or "fzf"
-  end
-  return vim.g.lazyvim_picker
 end
 
 ---@param command? string

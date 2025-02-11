@@ -424,25 +424,4 @@ return {
       }
     end,
   },
-  -- SELECT-PICKER: Telescope
-  {
-    import = "r.plugins.extras.editor.telescope",
-    enabled = function()
-      return RUtils.pick.want() == "telescope"
-    end,
-  },
-  -- SELECT-PICKER: Fzflua
-  {
-    import = "r.plugins.extras.editor.fzf",
-    enabled = function()
-      return RUtils.pick.want() == "fzf"
-    end,
-  },
-  -- SELECT-PICKER: Snacks_picker
-  {
-    import = "r.plugins.extras.editor.snacks_picker",
-    enabled = function()
-      return RUtils.pick.want() == "snacks"
-    end,
-  },
 }

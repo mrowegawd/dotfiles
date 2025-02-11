@@ -2,30 +2,30 @@ local Highlight = require "r.settings.highlights"
 
 return {
   -- Auto complete cmp
-  {
-    import = "r.plugins.extras.coding.nvim-cmp",
-    enabled = function()
-      return RUtils.cmp_engine() == "nvim-cmp"
-    end,
-  },
+  -- {
+  --   import = "r.plugins.extras.coding.nvim-cmp",
+  --   enabled = function()
+  --     return RUtils.cmp_engine() == "nvim-cmp"
+  --   end,
+  -- },
   -- Auto complete Blink
-  {
-    import = "r.plugins.extras.coding.blink",
-    enabled = function()
-      return RUtils.cmp_engine() == "blink.cmp"
-    end,
-  },
-  -- Auto complete Torch
-  {
-    import = "r.plugins.extras.coding.torch",
-    enabled = function()
-      return RUtils.cmp_engine() == "torch"
-    end,
-  },
+  -- {
+  --   import = "r.plugins.extras.coding.blink",
+  --   enabled = function()
+  --     return RUtils.cmp_engine() == "blink.cmp"
+  --   end,
+  -- },
+  -- -- Auto complete Torch
+  -- {
+  --   import = "r.plugins.extras.coding.torch",
+  --   enabled = function()
+  --     return RUtils.cmp_engine() == "torch"
+  --   end,
+  -- },
   -- LUASNIP
-  {
-    import = "r.plugins.extras.coding.luasnip",
-  },
+  -- {
+  --   import = "r.plugins.extras.coding.luasnip",
+  -- },
   -- MINI.PAIRS
   {
     "echasnovski/mini.pairs",
@@ -386,12 +386,6 @@ return {
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
-  -- LUA-CONSOLE
-  {
-    "yarospace/lua-console.nvim",
-    keys = { "`", "<Leader>`" },
-    opts = {},
-  },
   -- RUNMUX
   {
     -- "mrowegawd/runmux",
@@ -401,17 +395,18 @@ return {
       "stevearc/overseer.nvim",
     },
     keys = {
-      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Tasks: run task" },
+      { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
 
-      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Tasks: send line" },
-      { "<Leader>rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Tasks: send range line (visual)", mode = { "v" } },
+      { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
+      { "<Leader>rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Task: send selection", mode = { "v" } },
 
-      { "<Leader>rr", "<Cmd> RmuxKillAllPanes <CR>", desc = "Tasks: kill all panes" },
-      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Tasks: grep problem from targeted pane" },
+      { "<Leader>rr", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
+      { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
+      { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
-      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Tasks: edit rmuxrc.json" },
-      { "<Leader>rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Tasks: load global rmuxrc.json" },
-      { "<Leader>rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Tasks: show setup config" },
+      { "<Leader>re", "<Cmd> RmuxEDITConfig <CR>", desc = "Task: edit config" },
+      { "<Leader>rE", "<Cmd> RmuxREDITConfig <CR>", desc = "Task: load global config" },
+      { "<Leader>rS", "<Cmd> RmuxSHOWConfig <CR>", desc = "Task: show config" },
     },
     opts = {
       base = {

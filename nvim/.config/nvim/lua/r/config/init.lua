@@ -304,6 +304,7 @@ local defaults = {
       "Method",
       "Module",
       "Namespace",
+      -- "Package", -- remove package since luals uses it for control flow structures
       "Property",
       "Struct",
       "Trait",
@@ -313,15 +314,39 @@ local defaults = {
 
 M.json = {
   version = 2,
+  loaded = false,
+  path = vim.g.lazyvim_json or vim.fn.stdpath "config" .. "/lazyvim.json",
   data = {
     version = nil, ---@type string?
+    install_version = nil, ---@type number?
     news = {}, ---@type table<string, string>
     extras = {}, ---@type string[]
   },
 }
 
-local options
+function M.json.load()
+  M.json.loaded = true
+  local f = io.open(M.json.path, "r")
+  if f then
+    local data = f:read "*a"
+    f:close()
+    local ok, json = pcall(vim.json.decode, data, { luanil = { object = true, array = true } })
+    if ok then
+      M.json.data = vim.tbl_deep_extend("force", M.json.data, json or {})
+      if M.json.data.version ~= M.json.version then
+        RUtils.json.migrate()
+      end
+    end
+  else
+    M.json.data.install_version = M.json.version
+  end
+end
 
+---@type LazyVimOptions
+local options
+local lazy_clipboard
+
+---@param opts? LazyVimOptions
 function M.setup(opts)
   options = vim.tbl_deep_extend("force", defaults, opts or {}) or {}
 
@@ -339,11 +364,18 @@ function M.setup(opts)
       if lazy_autocmds then
         M.load "autocmds"
       end
-      require "r.keymaps.general"
+      M.load "keymaps"
+      if lazy_clipboard ~= nil then
+        vim.opt.clipboard = lazy_clipboard
+      end
 
       RUtils.format.setup()
-      -- Util.news.setup()
+      -- R.news.setup()
       RUtils.root.setup()
+
+      vim.api.nvim_create_user_command("LazyExtras", function()
+        RUtils.extras.show()
+      end, { desc = "Manage LazyVim extras" })
 
       vim.api.nvim_create_user_command("LazyHealth", function()
         vim.cmd [[Lazy! load all]]
@@ -353,9 +385,39 @@ function M.setup(opts)
       local health = require "lazy.health"
       vim.list_extend(health.valid, {
         "recommended",
-        -- "desc",
-        -- "vscode",
+        "desc",
+        "vscode",
       })
+      if vim.g.lazyvim_check_order == false then
+        return
+      end
+
+      -- Check lazy.nvim import order
+      local imports = require("lazy.core.config").spec.modules
+      local function find(pat, last)
+        for i = last and #imports or 1, last and 1 or #imports, last and -1 or 1 do
+          if imports[i]:find(pat) then
+            return i
+          end
+        end
+      end
+      local lazyvim_plugins = find "^r%.plugins$"
+      local extras = find("^r%.plugins%.extras%.", true) or lazyvim_plugins
+      local plugins = find "^plugins$" or math.huge
+      if lazyvim_plugins ~= 1 or extras > plugins then
+        local msg = {
+          "The order of your `lazy.nvim` imports is incorrect:",
+          "- `lazyvim.plugins` should be first",
+          "- followed by any `lazyvim.plugins.extras`",
+          "- and finally your own `plugins`",
+          "",
+          "If you think you know what you're doing, you can disable this check with:",
+          "```lua",
+          "vim.g.lazyvim_check_order = false",
+          "```",
+        }
+        vim.notify(table.concat(msg, "\n"), "warn", { title = "LazyVim" })
+      end
     end,
   })
 
@@ -418,7 +480,6 @@ function M.load(name)
 end
 
 M.did_init = false
-
 function M.init()
   if M.did_init then
     return
@@ -441,10 +502,85 @@ function M.init()
   -- this is needed to make sure options will be correctly applied
   -- after installing missing plugins
   M.load "options"
+  -- defer built-in clipboard handling: "xsel" and "pbcopy" can be slow
+  lazy_clipboard = vim.opt.clipboard
+  vim.opt.clipboard = ""
+
+  if vim.g.deprecation_warnings == false then
+    vim.deprecate = function() end
+  end
 
   RUtils.plugin.setup()
+  M.json.load()
 
   require "r.config.colors"
+end
+
+---@alias LazyVimDefault {name: string, extra: string, enabled?: boolean, origin?: "global" | "default" | "extra" }
+
+local default_extras ---@type table<string, LazyVimDefault>
+function M.get_defaults()
+  if default_extras then
+    return default_extras
+  end
+  ---@type table<string, LazyVimDefault[]>
+  local checks = {
+    picker = {
+      { name = "snacks", extra = "editor.snacks_picker" },
+      { name = "fzf", extra = "editor.fzf" },
+      { name = "telescope", extra = "editor.telescope" },
+    },
+    cmp = {
+      -- { name = "blink.cmp", extra = "coding.blink", enabled = vim.fn.has "nvim-0.10" == 1 },
+      { name = "blink.cmp", extra = "coding.blink" },
+      { name = "nvim-cmp", extra = "coding.nvim-cmp" },
+    },
+    explorer = {
+      { name = "snacks", extra = "editor.snacks_explorer" },
+      { name = "neo-tree", extra = "editor.neo-tree" },
+    },
+  }
+
+  -- existing installs keep their defaults
+  if (RUtils.config.json.data.install_version or 7) < 8 then
+    table.insert(checks.picker, 1, table.remove(checks.picker, 2))
+    table.insert(checks.explorer, 1, table.remove(checks.explorer, 2))
+  end
+
+  default_extras = {}
+  for name, check in pairs(checks) do
+    local valid = {} ---@type string[]
+    for _, extra in ipairs(check) do
+      if type(extra) == "table" and extra.enabled ~= false then
+        valid[#valid + 1] = extra.name
+      end
+    end
+    local origin = "default"
+    local use = vim.g["lazyvim_" .. name]
+    use = vim.tbl_contains(valid, use or "auto") and use or nil
+    origin = use and "global" or origin
+    for _, extra in ipairs(use and {} or check) do
+      -- print(extra.extra .. " :" .. tostring(RUtils.has_extra(extra.extra)))
+      if type(extra) == "table" and extra.enabled ~= false and RUtils.has_extra(extra.extra) then
+        use = extra.name
+        break
+      end
+    end
+    origin = use and "extra" or origin
+    use = use or valid[1]
+    for _, extra in ipairs(check) do
+      if type(extra) == "table" then
+        local import = "r.plugins.extras." .. extra.extra
+        extra = vim.deepcopy(extra)
+        extra.enabled = extra.name == use
+        if extra.enabled then
+          extra.origin = origin
+        end
+        default_extras[import] = extra
+      end
+    end
+  end
+  return default_extras
 end
 
 setmetatable(M, {

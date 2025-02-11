@@ -387,9 +387,9 @@ if vim.fn.executable "lazygit" == 1 then
 end
 -- }}}
 -- {{{ Commands
-RUtils.cmd.create_command("Snippets", RUtils.plugin.EditSnippet, { desc = "Misc: edit snippet file" })
-RUtils.cmd.create_command("ChangeMasterTheme", RUtils.plugin.change_colors, { desc = "Misc: set theme bspwm" })
-RUtils.cmd.create_command("InfoOption", RUtils.plugin.infoFoldPreview, { desc = "Misc: echo options" })
+RUtils.cmd.create_command("Snippets", RUtils.cmd.EditSnippet, { desc = "Misc: edit snippet file" })
+RUtils.cmd.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
+RUtils.cmd.create_command("InfoOption", RUtils.cmd.infoFoldPreview, { desc = "Misc: echo options" })
 RUtils.cmd.create_command("ImgInsert", RUtils.maim.insert, { desc = "Misc: echo options" })
 RUtils.cmd.create_command("E", function()
   return cmd [[ vnew ]]
