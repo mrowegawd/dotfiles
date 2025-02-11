@@ -162,9 +162,6 @@ return {
             { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
           },
           ["lackluster"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } } },
-          ["gruvbox-material"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-          },
           ["jellybeans"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             { RenderMarkdownCodeInline = { fg = { from = "Error", attr = "fg", alter = 0.08 } } },

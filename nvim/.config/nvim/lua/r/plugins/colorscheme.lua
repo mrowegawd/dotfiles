@@ -19,11 +19,11 @@ return {
   },
   -- EF-THEMES
   {
-    "oonamo/ef-themes.nvim",
+    "shaunsingh/nord.nvim",
     lazy = false,
     priority = 1000,
     enabled = function()
-      local ef_theme = { "ef-dream" }
+      local ef_theme = { "nord" }
       if vim.tbl_contains(ef_theme, colorscheme) then
         return true
       end
@@ -52,19 +52,6 @@ return {
     enabled = function()
       local zenbones_theme = { "zenburned", "rosebones" }
       if vim.tbl_contains(zenbones_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- OLDWORLD
-  {
-    "dgox16/oldworld.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local oldworld_theme = { "oldworld" }
-      if vim.tbl_contains(oldworld_theme, colorscheme) then
         return true
       end
       return false
@@ -187,22 +174,6 @@ return {
         transparent_background = false,
         nvim_tree_darker = true,
       }
-    end,
-  },
-  -- GRUVBOX-MATERIAL
-  {
-    "sainnhe/gruvbox-material",
-    lazy = false,
-    priority = 1000,
-    init = function()
-      vim.g.gruvbox_material_better_performance = 1
-    end,
-    enabled = function()
-      local gruvboxtheme = { "gruvbox-material" }
-      if vim.tbl_contains(gruvboxtheme, colorscheme) then
-        return true
-      end
-      return false
     end,
   },
   -- CATPPUCCIN

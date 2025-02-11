@@ -248,7 +248,6 @@ return {
         theme = {
           ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
           ["base2tone_cave_dark"] = { { ["BeaconDefault"] = { bg = "#996e00" } } },
-          ["base2tone_lavender_dark"] = { { ["BeaconDefault"] = { bg = "#b042ff" } } },
           ["base2tone_field_dark"] = { { ["BeaconDefault"] = { bg = "#00943e" } } },
           ["neomodern"] = { { ["BeaconDefault"] = { bg = "#bbbac1" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
@@ -256,9 +255,9 @@ return {
           ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
           ["oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["rose-pine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
+          ["nord"] = { { ["BeaconDefault"] = { bg = "#eceff4" } } },
           ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
           ["zenburned"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
-          ["one_monokai"] = { { ["BeaconDefault"] = { bg = "#1589d1" } } },
           ["sunburn"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
         },
@@ -304,23 +303,19 @@ return {
         tab_bg_tint = -0.05
       end
 
-      if vim.tbl_contains({ "gruvbox-material" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.25
-        tab_bg_tint = -0.08
-      end
-
       if vim.tbl_contains({ "catppuccin-mocha", "chocolatier", "lackluster" }, RUtils.config.colorscheme) then
         tab_fg_tint = -0.25
         tab_bg_tint = -0.05
       end
 
-      if vim.tbl_contains({ "rose-pine-dawn", "base2tone_lavender_dark" }, RUtils.config.colorscheme) then
+      if vim.tbl_contains({ "rose-pine-dawn" }, RUtils.config.colorscheme) then
         tab_bg_tint = 0.03
       end
 
       if
         vim.tbl_contains({
           "ashen",
+          "nord",
           "coffeecat",
           "horizon",
           "jellybeans",
@@ -340,11 +335,9 @@ return {
 
       if
         vim.tbl_contains({
-          "one_monokai",
           "sunburn",
           "tokyonight-night",
           "oxocarbon",
-          "oldworld",
         }, RUtils.config.colorscheme)
       then
         tab_fg_tint = -0.22
