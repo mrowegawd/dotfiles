@@ -99,7 +99,7 @@ open_tree_cwd() {
 
 open_tree_wiki() {
   is_pane_is_left=$(tmux display -p '#{pane_at_left}')
-  if ! _check_pane_is_yazi && [[ $is_pane_is_left == "0" ]]; then
+  if ! _check_pane_is_yazi && [[ $is_pane_is_left == "1" ]]; then
     _open_wiki_file_manager_window
   else
     clean_tree
@@ -109,7 +109,6 @@ open_tree_wiki() {
 
 main() {
   if [[ $1 == "wiki" ]]; then
-    # dunstify "open wiki"
     open_tree_wiki
   else
     open_tree_cwd
