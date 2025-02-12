@@ -139,42 +139,51 @@ return {
         win_split_mode = { "float", 0.6 },
         mappings = {
           disable_all = false,
-          prefix = "<Leader>g",
+          prefix = "<Leader>c",
           global = {
             org_capture = "<Localleader>ac",
             org_agenda = "<Localleader>an",
           },
           agenda = {
-            org_agenda_later = "f",
-            org_agenda_earlier = "b",
-            org_agenda_goto_today = "@",
             org_agenda_day_view = "vd",
             org_agenda_week_view = "vw",
             org_agenda_month_view = "vm",
             org_agenda_year_view = "vy",
-            org_agenda_quit = "q",
+
             org_agenda_switch_to = "<TAB>",
+            org_agenda_goto_today = "@",
             org_agenda_goto = "<CR>",
-            org_agenda_goto_date = "<prefix>d",
+            org_agenda_goto_date = "<prefix>D",
+
+            org_agenda_later = "f",
+            org_agenda_earlier = "b",
             org_agenda_redo = "r",
             org_agenda_todo = "ct",
-            org_agenda_clock_goto = "<prefix>xj",
+
             org_agenda_set_effort = "<prefix>e",
-            org_agenda_clock_in = "<prefix>i",
-            org_agenda_clock_out = "<prefix>o",
-            org_agenda_clock_cancel = "<prefix>C",
-            org_agenda_clockreport_mode = "<prefix>R",
-            org_agenda_priority = "<prefix>,",
-            org_agenda_priority_up = "<S-UP>",
-            org_agenda_priority_down = "<S-DOWN>",
-            org_agenda_archive = "<prefix>$",
-            org_agenda_toggle_archive_tag = "<leader>T",
-            org_agenda_set_tags = "<Leader>t",
-            org_agenda_deadline = "<Leader>d",
-            org_agenda_schedule = "<Leader>s",
+
+            org_agenda_clock_cancel = "<prefix>cc",
+            org_agenda_clock_goto = "<prefix>cG",
+            org_agenda_clock_in = "<prefix>ci",
+            org_agenda_clock_out = "<prefix>co",
+            org_agenda_clockreport_mode = "<prefix>cP",
+
+            org_agenda_priority = "<prefix>P",
+            org_agenda_priority_up = ">",
+            org_agenda_priority_down = "<",
+
+            org_agenda_archive = "<prefix>A",
+            org_agenda_toggle_archive_tag = "<prefix>T",
+
+            org_agenda_deadline = "<prefix>d",
+            org_agenda_schedule = "<prefix>s",
+            org_agenda_set_tags = "<prefix>t",
+
             org_agenda_filter = "/",
             org_agenda_refile = "<prefix>r",
             org_agenda_add_note = "<prefix>a",
+
+            org_agenda_quit = "q",
             org_agenda_show_help = "?",
           },
           capture = {
@@ -185,58 +194,77 @@ return {
           },
           note = {
             org_note_finalize = "<C-c>",
-            org_note_kill = "<prefix>k",
+            org_note_kill = { "q", "<ESC>" },
           },
           org = {
-            org_refile = "<prefix>r",
             org_timestamp_up_day = "<UP>",
             org_timestamp_down_day = "<DOWN>",
             org_timestamp_up = "<C-a>",
             org_timestamp_down = "<C-x>",
-            org_priority = "<prefix>,",
-            org_priority_up = "<S-UP>",
-            org_priority_down = "<S-DOWN>",
+
             org_todo = "ct",
-            org_todo_prev = "ciT",
-            org_change_date = "<prefix>d",
+            org_todo_prev = "cT",
+
             org_toggle_checkbox = "<C-c>",
             org_toggle_heading = "<prefix>*",
+
             org_open_at_point = "<Leader>oo",
             org_edit_special = [[<prefix>']],
-            org_cycle = "<BS>",
+
+            org_cycle = "<TAB>",
+
             org_global_cycle = "<S-TAB>",
+
             org_archive_subtree = "<prefix>$",
-            org_set_tags_command = "<Leader>t",
             org_toggle_archive_tag = "<Leader>T",
-            org_do_promote = "<<",
-            org_do_demote = ">>",
-            org_promote_subtree = "<left>",
-            org_demote_subtree = "<right>",
+
             org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
+
             org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
             org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
             org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
-            org_move_subtree_up = "<S-UP>",
-            org_move_subtree_down = "<S-DOWN>",
-            org_export = "<Leader>a",
+
             org_next_visible_heading = "<c-n>",
             org_previous_visible_heading = "<c-p>",
             org_forward_heading_same_level = "]]",
             org_backward_heading_same_level = "[[",
+
             outline_up_heading = "g{",
-            org_deadline = "<Leader>d",
-            org_schedule = "<Leader>s",
-            org_time_stamp = "<prefix>t",
-            org_time_stamp_inactive = "<prefix>T",
-            org_toggle_timestamp_type = "<prefix>d!",
-            org_insert_link = "<prefix>li",
-            org_store_link = "<prefix>ls",
-            org_clock_in = "<prefix>i",
-            org_clock_out = "<prefix>o",
-            org_clock_cancel = "<prefix>C",
-            org_clock_goto = "<prefix>xj",
+
+            org_deadline = "<prefix>d",
+            org_schedule = "<prefix>s",
+            org_set_tags_command = "<prefix>t",
+
+            org_time_stamp = "<Leader>it",
+            org_time_stamp_inactive = "<Leader>ii",
+            org_toggle_timestamp_type = "<Leader>iT",
+            org_export = "<Leader>ue",
+
+            org_insert_link = "<Leader>il",
+            org_store_link = "<Leader>iL",
+
             org_set_effort = "<prefix>e",
+
+            org_clock_cancel = "<prefix>cc",
+            org_clock_goto = "<prefix>cG",
+            org_clock_in = "<prefix>ci",
+            org_clock_out = "<prefix>co",
+
+            org_priority = "<prefix>P",
+            org_priority_up = ">",
+            org_priority_down = "<",
+
+            org_do_promote = "<c-Left>",
+            org_do_demote = "<c-Right>",
+            org_promote_subtree = "<Left>",
+            org_demote_subtree = "<Right>",
+            org_move_subtree_up = "<s-Up>",
+            org_move_subtree_down = "<s-Down>",
+
+            org_refile = "<prefix>r",
+            org_add_note = "<prefix>a",
+
             org_show_help = "?",
             org_babel_tangle = "<prefix>bt",
           },
