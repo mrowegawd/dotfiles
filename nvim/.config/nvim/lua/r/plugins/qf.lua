@@ -1,6 +1,6 @@
 return {
   -- QUICKER
-  {
+  { -- bisa delete range, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
     event = "FileType qf",
     ---@module "quicker"

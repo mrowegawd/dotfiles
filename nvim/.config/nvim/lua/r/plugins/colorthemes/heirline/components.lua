@@ -46,6 +46,9 @@ local colors = {
   statuslinenc_bg = Col.statuslinenc_bg,
   statuslinenc_fg = Col.statuslinenc_fg,
 
+  normal_bg = Col.normal_bg,
+  normal_fg = Col.normal_fg,
+
   mode_bg = Col.mode_bg,
   mode_bg_blur = Col.mode_bg_blur,
   modenc_bg = Col.modenc_bg,
@@ -62,11 +65,11 @@ local colors = {
   notif = Col.notif,
   session = Col.session,
 
-  vim_mode_insert = Col.mod_ins,
-  vim_mode_insert_bar = Col.mode_ins_bar,
-  vim_mode_insertnc = Col.mod_insnc,
-  vim_mode_term = Col.mod_term,
-  vim_mode_visual = Col.mod_vis,
+  mode_insert_bg = Col.mode_insert_bg,
+  mode_insert_bg_blur = Col.mode_insert_bg_blur,
+  mode_insert_bar = Col.mode_insert_bar,
+  mode_term_bg = Col.mode_term_bg,
+  mode_visual_bg = Col.mode_visual_bg,
 
   diff_add = Col.diff_add,
   diff_change = Col.diff_change,
@@ -138,18 +141,18 @@ local mode_icons = {
 
 local mode_colors = {
   n = colors.mode_bg,
-  i = colors.vim_mode_insert,
-  v = colors.vim_mode_visual,
-  V = colors.vim_mode_visual,
+  i = colors.mode_insert_bg,
+  v = colors.mode_visual_bg,
+  V = colors.mode_visual_bg,
   ["\22"] = "cyan",
-  c = colors.vim_mode_term,
+  c = colors.mode_term_bg,
   s = "yellow",
   S = "yellow",
   ["\19"] = "orange",
   R = "purple",
   r = "purple",
   ["!"] = "green",
-  t = colors.vim_mode_term,
+  t = colors.mode_term_bg,
 }
 
 M.Mode = {
@@ -177,9 +180,9 @@ M.Mode = {
     end,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      local fg = colors.statusline_bg
+      local fg = colors.normal_bg
       if not (mode == "n") and not (mode == "i") then
-        fg = self.mode_colors["n"]
+        fg = colors.normal_fg
       end
       return { bg = self.mode_colors[mode], fg = fg, bold = true }
     end,
@@ -190,7 +193,7 @@ M.Mode = {
       local mode = self.mode:sub(1, 1)
       local bg = colors.mode_bg_blur
       if mode == "i" then
-        bg = colors.vim_mode_insert_bar
+        bg = colors.mode_insert_bg_blur
       end
 
       return { fg = self.mode_colors[mode], bg = bg }
@@ -205,7 +208,7 @@ M.Mode = {
       local mode = self.mode:sub(1, 1)
       -- if not (mode == "n") and not (mode == "V") and not (mode == "c") then
       if mode == "i" then
-        fg = colors.vim_mode_insert_bar
+        fg = colors.mode_insert_bg_blur
       end
       return { fg = fg }
     end,
@@ -497,12 +500,24 @@ M.QuickfixStatus = {
   },
 }
 M.FileFlags = {
+  init = function(self)
+    self.mode = vim.fn.mode(1) -- :h mode()
+  end,
   {
     condition = function()
       return vim.bo.modified
     end,
     provider = RUtils.config.icons.misc.modified .. " ",
-    hl = { fg = colors.diagnostic_err },
+    hl = function(self)
+      local mode = self.mode:sub(1, 1)
+      local fg = colors.modified_fg
+      if Conditions.is_not_active() then
+        fg = colors.diagnostic_err
+      elseif mode == "i" then
+        fg = colors.coldisorent
+      end
+      return { fg = fg }
+    end,
   },
   {
     condition = function()
@@ -815,6 +830,18 @@ M.Diagnostics = {
     end,
   },
 }
+M.RmuxTargetPane = {
+  condition = function()
+    return set_conditions.hide_in_width(100)
+  end,
+  {
+    provider = function()
+      local panes = require("rmux").status_panes_targeted()
+      return panes .. "  "
+    end,
+    hl = { fg = colors.modified_fg, bold = true },
+  },
+}
 M.LazyStatus = {
   condition = function()
     return set_conditions.hide_in_width(100) and require("lazy.status").has_updates()
@@ -1069,6 +1096,7 @@ M.status_active_left = {
   M.Tasks,
   M.Dap,
   M.virtualenv,
+  M.RmuxTargetPane,
   M.LSPActive,
   M.Diagnostics,
   M.LazyStatus,
@@ -1093,7 +1121,7 @@ M.status_active_left = {
       local mode = vim.fn.mode(1)
       local mode_text = mode:sub(1, 1)
       if mode_text == "i" then
-        bg = colors.vim_mode_insertnc
+        bg = colors.mode_insert_bar
       end
     end
 
