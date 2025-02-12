@@ -210,7 +210,7 @@ return {
     opts = true,
     keys = {
       {
-        "`",
+        "<S-TAB>",
         function()
           require("fold-cycle").open()
         end,

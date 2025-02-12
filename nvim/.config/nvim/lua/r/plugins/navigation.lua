@@ -306,8 +306,6 @@ return {
           mappings = {
             ["<c-o>"] = "fzmark",
             ["<a-t>"] = "open_terminal",
-            ["<a-g>"] = "open_lazygit",
-            ["<a-d>"] = "open_lazydocker",
             ["<2-LeftMouse>"] = "open",
             ["<a-q>"] = "open_search_cd_and_grep",
             ["l"] = "child_or_open",
@@ -323,6 +321,8 @@ return {
             ["t"] = "", -- disabled open tab
             ["P"] = "",
             ["z"] = "",
+            ["<Tab>"] = "toggle_node",
+            ["<S-Tab>"] = "close_all_nodes",
             ["<c-s>"] = "open_split",
             ["<c-v>"] = "open_vsplit",
             -- ["<c-t>"] = "open_tabnew",

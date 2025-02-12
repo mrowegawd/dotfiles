@@ -750,6 +750,9 @@ return {
             { "n", "<Leader>gp", actions.prev_conflict, { desc = "Git: go to the previous conflict [diffview]" } },
             { "n", "<Leader>gn", actions.next_conflict, { desc = "Git: go to the next conflict [diffview]" } },
 
+            { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold [diffview]" } },
+            { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" }, },
+
             { "n", "<Leader>cO", actions.conflict_choose_all "ours", { desc = "Git: choose the OURS version of a conflict for the whole file [diffview]" }, },
             { "n", "<Leader>cT", actions.conflict_choose_all "theirs", { desc = "Git: choose the THEIRS version of a conflict for the whole file [diffview]" }, },
             { "n", "<Leader>cB", actions.conflict_choose_all "base", { desc = "Git: choose the BASE version of a conflict for the whole file [diffview]" }, },
@@ -790,8 +793,10 @@ return {
             { "n", "<c-f>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
             { "n", "<PageUp>", actions.scroll_view(-0.25), { desc = "Git: scroll the view up [diffview]" } },
             { "n", "<PageDown>", actions.scroll_view(0.25), { desc = "Git: scroll the view down [diffview]" } },
-            { "n", "<tab>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
-            { "n", "<s-tab>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
+
+            { "n", "<tab>", actions.toggle_fold, { desc = "Git: toggle fold [diffview]" } },
+            { "n", "<s-tab>", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" }, },
+
             { "n", "<c-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" } },
             { "n", "<c-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous file [diffview]" }, },
 
