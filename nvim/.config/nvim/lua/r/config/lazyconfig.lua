@@ -27,7 +27,7 @@ require("lazy").setup {
 
     { import = "r.plugins.extras.editor" },
     { import = "r.plugins.extras.coding.blink" },
-    { import = "r.plugins.extras.coding.luasnip" },
+    -- { import = "r.plugins.extras.coding.luasnip" },
     -- { import = "r.plugins.extras.editor.fzf" },
     -- { import = "r.plugins.extras.editor.telescope" },
     -- { import = "r.plugins.extras.text" },

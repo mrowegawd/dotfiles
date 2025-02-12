@@ -1,4 +1,5 @@
-local providers = { "lsp", "snippets", "buffer", "codeium" }
+-- local providers = { "lsp", "snippets", "buffer", "codeium" }
+local providers = { "lsp", "snippets", "buffer" } -- remove codeium
 local callme = 0
 local idx = 1
 
@@ -187,7 +188,7 @@ return {
 
             cmp.show { providers = { current_provider } }
 
-            -- Mengupdate idx untuk siklus berikutnya
+            -- Mengupdate idx untuk siklus nya
             idx = (idx % #providers) + 1
           end,
         },

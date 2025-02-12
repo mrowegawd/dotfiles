@@ -1,5 +1,8 @@
 vim.g.lazyvim_blink_main = true
 
+local providers = { "lsp", "snippets", "buffer" } -- remove codeium
+local idx = 1
+
 return {
   {
     "iguanacucumber/magazine.nvim",
@@ -113,22 +116,47 @@ return {
             return { "cmdline" }
           end
         end,
+
+        providers = {
+          snippets = {
+            opts = {
+              search_paths = { os.getenv "HOME" .. "/Dropbox/snippets-for-all" },
+            },
+          },
+        },
       },
       signature = {
         enabled = true,
         window = { border = "rounded", winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder" },
       },
       keymap = {
-        preset = "enter",
+        preset = "none", -- 'enter', 'none' -> (disable all mappings)
+
         -- How to disable keymap? -> ["<C-e>"] = {},
         ["<C-y>"] = { "select_and_accept" },
 
         -- I have to disable these mappings because they cause conflict errors
-        ["<CR>"] = {},
+        -- ["<CR>"] = {},
         ["<C-f>"] = {},
         ["<C-e>"] = {},
         ["<C-b>"] = {},
 
+        ["<C-r>"] = {
+          function(cmp)
+            local current_provider = providers[idx]
+
+            if current_provider == "codeium" and vim.tbl_contains({ "org", "rgflow" }, vim.bo[0].filetype) then
+              -- Jika filetype adalah 'org' atau 'rgflow', lewati 'codeium'
+              idx = idx + 1
+              current_provider = providers[idx]
+            end
+
+            cmp.show { providers = { current_provider } }
+
+            -- Mengupdate idx untuk siklus nya
+            idx = (idx % #providers) + 1
+          end,
+        },
         ["<C-n>"] = {
           function(cmp)
             if not cmp.is_visible() then
