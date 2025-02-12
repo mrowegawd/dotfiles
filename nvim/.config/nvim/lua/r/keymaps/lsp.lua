@@ -256,7 +256,7 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "gd",
       function()
-        fzf_lua.lsp_definitions { jump_to_single_result = true }
+        fzf_lua.lsp_definitions { jump1 = true }
       end,
       desc = "LSP: definitions [fzflua]",
       has = "definition",
