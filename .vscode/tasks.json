@@ -33,6 +33,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Tail journalctl",
+      "type": "shell",
+      "command": "journalctl",
+      "problemMatcher": []
+    },
+    {
       "label": "Tail noice.log",
       "type": "shell",
       "command": "tail",
