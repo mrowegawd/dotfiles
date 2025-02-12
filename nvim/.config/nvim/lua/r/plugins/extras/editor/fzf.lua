@@ -145,28 +145,29 @@ return {
 
       -- Grep
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
-      { "<Leader>fG",
-        function()
-          require("fzf-lua").live_grep_glob {
-            cwd = vim.fn.expand "%:p:h",
-            winopts = {
-              title = RUtils.fzflua.format_title(
-                "Grep current cwd: " .. vim.fn.expand "%:p:h",
-                RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
-              ),
-              width = 0.90,
-              height = 0.90,
-              row = 0.50,
-              col = 0.50,
-              preview = {
-                vertical = "down:40%", -- up|down:size
-                horizontal = "up:60%", -- right|left:size
-              },
-            },
-          }
-        end,
-        desc = "Fzflua: live grep on current cwd",
-      },
+      { "<Leader>fG", function() require("fzf-lua").grep() end, desc = "Fzflua: grep" },
+      -- { "<Leader>fG",
+      --   function()
+      --     require("fzf-lua").live_grep_glob {
+      --       cwd = vim.fn.expand "%:p:h",
+      --       winopts = {
+      --         title = RUtils.fzflua.format_title(
+      --           "Grep current cwd: " .. vim.fn.expand "%:p:h",
+      --           RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+      --         ),
+      --         width = 0.90,
+      --         height = 0.90,
+      --         row = 0.50,
+      --         col = 0.50,
+      --         preview = {
+      --           vertical = "down:40%", -- up|down:size
+      --           horizontal = "up:60%", -- right|left:size
+      --         },
+      --       },
+      --     }
+      --   end,
+      --   desc = "Fzflua: live grep on current cwd",
+      -- },
       { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
       {
         "<Leader>fw",
