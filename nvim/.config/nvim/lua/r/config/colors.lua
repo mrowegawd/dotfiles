@@ -1230,7 +1230,6 @@ local rose_pine = {
     { ["@comment"] = { inherit = "Comment" } },
     { ["@org.comment"] = { inherit = "Comment" } },
     { ["@org.directive"] = { inherit = "Comment" } },
-    { ["@org.directive.org"] = { inherit = "Comment" } },
 
     --- BLINK
     { BlinkCmpLabelMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 } } },
@@ -1382,7 +1381,6 @@ local rose_pine = {
     { ["@comment"] = { inherit = "Comment" } },
     { ["@org.comment"] = { inherit = "Comment" } },
     { ["@org.directive"] = { inherit = "Comment" } },
-    { ["@org.directive.org"] = { inherit = "Comment" } },
 
     { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.3 } } },
     { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.6 } } },
@@ -1480,7 +1478,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
@@ -1671,7 +1669,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.23 } } },
 
@@ -1810,7 +1808,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.18 } } },
 
@@ -1877,7 +1875,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.27 } } },
 
@@ -1974,7 +1972,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.2 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.4 } } },
@@ -2090,7 +2088,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.2 } } },
       { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
@@ -2257,7 +2255,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -2405,8 +2403,8 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
       { ["@org.checkbox.checked.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       {
         LspReferenceText = {
@@ -2478,7 +2476,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
       { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2645,7 +2643,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.35 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.6 } } },
@@ -2722,7 +2720,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.02 } } },
       { LineNrAbove = { link = "LineNr" } },
@@ -2798,7 +2796,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
       { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
@@ -2882,7 +2880,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.22 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.35 } } },
@@ -3035,7 +3033,8 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
+
       { BlinkCmpGhostText = { fg = { from = "Comment", attr = "fg", alter = 0.3 } } },
 
       {
@@ -3214,7 +3213,7 @@ local function colorscheme_overrides()
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.directive.org"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
