@@ -1,0 +1,211 @@
+#!/bin/bash
+
+EXTRA_SIZE=19
+
+session_exists() {
+  tmux has-session -t "=$1"
+}
+_check_pane_is_nvim() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
+}
+
+PATH_PANE_DATA="/tmp/tmux-tm-toggle-term.json"
+PATH_MAIN_PANE="/tmp/tmux-tm-main-toggle-term.json"
+
+TEMP_FILES=$(mktemp)
+
+GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
+GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+
+float_term() {
+  session="tmp_float_term"
+
+  pane_width="$(tmux display -p '#{window_width}')"
+  width_pane2="$(("$pane_width" / 2))"
+  width_pane="$(("$width_pane2" / 2 + "$EXTRA_SIZE"))"
+
+  if ! session_exists "$session"; then
+    set -gF '@last_session_name' '#S'
+    tmux display-popup -d '#{pane_current_path}' -w "$width_pane%" -h '100%' -x '100%' -y '100%' \
+      -E -d "#{pane_current_path}" \
+      -S bg="$GET_BG",fg="$GET_FG" \
+      -E "tmux new -A -s $session 'tmux setw status off; tmux set -w pane-border-status off; tmux set -w detach-on-destroy on; TMUX_SESSION=$session zsh;'"
+  else
+    if [[ $(tmux display-message -p '#S') == "$session" ]]; then
+      tmux detach-client
+    else
+      tmux display-popup -d '#{pane_current_path}' -w "$width_pane%" -h '100%' -x '100%' -y '100%' \
+        -E -d "#{pane_current_path}" \
+        -S bg="$GET_BG",fg="$GET_FG" \
+        -E "tmux attach -t $session"
+    fi
+  fi
+}
+
+split_normal_l() {
+  pane_count=$(tmux list-panes | wc -l)
+
+  if [[ $pane_count -gt 1 ]]; then
+    tmux split-window -h -c '#{pane_current_path}'
+    exit
+  fi
+
+  # open split pane dengan size
+  tmux split-window -hl 65 -c '#{pane_current_path}'
+}
+split_normal_v() {
+  pane_count=$(tmux list-panes | wc -l)
+
+  if [[ $pane_count -gt 1 ]]; then
+    tmux split-window -v -c '#{pane_current_path}'
+    exit
+  fi
+
+  # open split pane dengan size
+  tmux split-window -vl 20 -c '#{pane_current_path}'
+}
+
+__split_term_init() {
+  [[ ! -f $PATH_PANE_DATA ]] && touch "$PATH_PANE_DATA"
+  if [[ ! -s $PATH_PANE_DATA ]]; then
+    json_output=$(
+      cat <<EOF
+[
+  {
+    "window_id": "$window_id",
+    "pane_id": "$pane_id",
+    "cwd": "$current_cwd",
+    "session": "$current_session"
+  }
+]
+EOF
+    )
+    echo "$json_output" >$PATH_PANE_DATA
+  fi
+
+}
+__split_term_update_data_json() {
+  # Update data pane json
+  if ! jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_DATA" >/dev/null; then
+    jq --arg pid "$pane_id" --arg cwd "$current_cwd" --arg session "$current_session" --arg window_id "$window_id" \
+      '. += [{"pane_id": $pid, "cwd": $cwd, "session": $session, "window_id": $window_id}]' \
+      "$PATH_PANE_DATA" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_DATA"
+  fi
+}
+__split_term_cleanup_update_and_remove_data_json() {
+  # Mendapatkan daftar session dan pane yang ada di tmux
+  tmux_sessions=$(tmux list-sessions -F '#{session_name}')
+  tmux_panes=$(tmux list-panes -a -F '#{session_name}:#{pane_id}')
+
+  # Memfilter data JSON dan menghapus yang tidak ada dalam tmux session dan pane
+  jq --argjson tmux_sessions "$(echo "$tmux_sessions" | jq -R . | jq -s .)" \
+    --argjson tmux_panes "$(echo "$tmux_panes" | jq -R . | jq -s .)" '
+   map(select(
+     .session as $session |
+     .pane_id as $pane_id |
+     ($tmux_sessions | index($session)) and
+     ($tmux_panes | index("\($session):\($pane_id)"))
+   ))' "$PATH_PANE_DATA" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_DATA"
+}
+
+__set_main_workspace() {
+  if _check_pane_is_nvim; then
+    # if ! jq -e --arg window_id "$window_id" --arg pane_id "$pane_id" '.[] | select(.window_id == $window_id and .pane_id == $pane_id)' "$PATH_PANE_DATA" >/dev/null; then
+    jq --arg window_id "$window_id" --arg pane_id "$pane_id" \
+      '.[] | select(.window_id == $window_id and .pane_id == $pane_id)' \
+      "$PATH_PANE_DATA" >$PATH_MAIN_PANE
+  fi
+
+}
+
+__jump_to_main_workspace() {
+  main_pane=$(jq "select(.pane_id=0).pane_id" $PATH_MAIN_PANE)
+  main_pane_id=$(echo "$main_pane" | sed 's/"//g')
+  tmux select-pane -t "$main_pane_id"
+}
+
+__adjust_pane_height() {
+  pane_height=$(tmux display-message -p '#{pane_height}')
+  main_pane_height=$(echo "$pane_height" | sed 's/%//g')
+
+  # I don't want every pane opened with toggle-pane to have its height size set,
+  # so if there is 1 row pane below the main pane (nvim) then it's okay to set
+  # the size, but if there is more than 1 row it's not necessary
+  _is_pane_is_nvim=$(tmux select-pane -U | tmux display-message -p "#{pane_id} #{pane_current_command}")
+  # After getting the data value for `is_pane_is_nvim`, go back to the last pane
+  tmux last-pane
+  # If the pane above the toggle pane is nvim, then set the height if necessary
+  pane_current_command=$(echo "$_is_pane_is_nvim" | cut -d" " -f2)
+  if [ "$pane_current_command" == "nvim" ]; then
+    # dunstify "$main_pane_height > $(($EXTRA_SIZE))"
+    if [[ $(($main_pane_height)) -gt $(($EXTRA_SIZE)) ]]; then
+      tmux resize-pane -y +$EXTRA_SIZE
+    fi
+
+    if [[ $(($main_pane_height)) -lt $(($EXTRA_SIZE)) ]]; then
+      tmux resize-pane -y +$EXTRA_SIZE
+    fi
+  fi
+
+}
+
+__set_cursor_at_bottom_pane() {
+  # Check the pane, if the pane is not at the bottom level
+  # then move the cursor down
+  is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
+  if [[ $is_pane_at_bottom == "0" ]]; then
+    tmux select-pane -D
+    exit
+  fi
+
+}
+
+split_term() {
+  pane_id=$(tmux display-message -p '#{pane_id}')
+  current_session=$(tmux list-sessions -F '#{session_name}')
+  window_id=$(tmux display-message -p '#I')
+  current_cwd=$(pwd)
+  current_session=$(tmux display-message -p '#S')
+
+  if _check_pane_is_nvim; then
+
+    # Check apakah file `tmux-tm-toggle-term.json` sudah siap dan lakukan pengisian minimal content
+    __split_term_init
+
+    # Update json jika dibutuhkan
+    __split_term_update_data_json
+
+    __set_main_workspace
+
+    __set_cursor_at_bottom_pane
+
+    zoom_status=$(tmux list-panes -F '#F' | grep Z)
+    if [[ -n $zoom_status ]]; then
+      tmux resize-pane -Z
+      tmux last-pane
+      __adjust_pane_height
+
+    else
+      pane_count=$(tmux list-panes | wc -l)
+      if [[ $pane_count -eq 1 ]]; then
+        tmux split-window -vl $EXTRA_SIZE -c '#{pane_current_path}'
+        exit
+      fi
+
+      tmux split-window -v -c '#{pane_current_path}'
+      __adjust_pane_height
+    fi
+
+  else
+    __jump_to_main_workspace
+    tmux resize-pane -Z
+  fi
+
+  # Melakukan pembersihan config terhadap non active session pada file `tmux-tm-toggle-term.json`
+  __split_term_cleanup_update_and_remove_data_json
+
+  rm -rf "$TEMP_FILES"
+
+}
+
+"$@"
