@@ -37,6 +37,11 @@ if vim.g.colorscheme == "lackluster" then
   modenc_bg = Highlight.get("KeywordBlur", "bg")
 end
 
+if vim.g.colorscheme == "base2tone_field_dark" then
+  mode_bg_blur = Highlight.tint(mode_bg, -0.45)
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
+end
+
 if vim.g.colorscheme == "ashen" then
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.2)
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), -0.05)
@@ -45,14 +50,15 @@ end
 if vim.g.colorscheme == "nord" then
   mode_bg_blur = Highlight.tint(mode_bg, -0.25)
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.15)
-  modenc_bg = Highlight.tint(Highlight.get("KeywordBlur", "bg"), 0.05)
-  modenc_bg_blur = Highlight.tint(modenc_bg, -0.05)
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.1)
+  modenc_bg = Highlight.tint(Highlight.get("KeywordBlur", "bg"), 0.1)
+  modenc_bg_blur = Highlight.tint(modenc_bg, -0.1)
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end
 
 if vim.g.colorscheme == "horizon" then
   mode_bg_blur = Highlight.tint(mode_bg, -0.5)
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.3)
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.1)
 end
 
 -- if vim.g.colorscheme == "rose-pine-dawn" then
