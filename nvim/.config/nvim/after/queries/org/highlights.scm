@@ -11,5 +11,19 @@
 
 ; @org.checkbox.checked
 ; (checkbox (_) @comment.syntax)
-((listitem (checkbox status: (expr "str"))) @comment.syntax)
+; ((listitem (checkbox status: (expr "str"))) @comment.syntax)
 
+; ((list (listitem (checkbox status: (expr "str")))) @comment.syntax)
+
+; ((listitem (checkbox status: (expr "str"))) @comment.syntax)
+; (listitem (checkbox status: (expr "str")) @comment.syntax)
+
+(listitem
+  (checkbox status: (expr "str"))
+  (paragraph)
+  @comment.syntax)
+; ((listitem (checkbox status: (expr "str"))) @Function.syntax)
+
+; ((listitem (checkbox status: (expr "str") @value (#eq? @value "x"))) @comment.syntax)
+; ((listitem (checkbox status: (expr "str"))) @comment.syntax)
+; ((listitem (checkbox status: (expr "str") @type-key (#eq? @type-key "x"))) @function.syntax)
