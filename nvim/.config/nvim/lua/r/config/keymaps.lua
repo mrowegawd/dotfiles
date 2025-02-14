@@ -281,7 +281,6 @@ RUtils.map.nnoremap("<C-g>", "/", nosilent)
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
 RUtils.map.nnoremap("g;", "g;zvzz", silent) -- go prev edit
-RUtils.map.vnoremap("p", "pgvy")
 RUtils.map.nnoremap("<Leader>cd", function()
   local filepath = fn.expand "%:p:h" -- code
   vim.cmd(fmt("cd %s", filepath))
