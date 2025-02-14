@@ -158,7 +158,7 @@ return {
             org_agenda_later = "f",
             org_agenda_earlier = "b",
             org_agenda_redo = "r",
-            org_agenda_todo = "ct",
+            org_agenda_todo = "<prefix>t",
 
             org_agenda_set_effort = "<prefix>e",
 
@@ -177,7 +177,7 @@ return {
 
             org_agenda_deadline = "<prefix>d",
             org_agenda_schedule = "<prefix>s",
-            org_agenda_set_tags = "<prefix>t",
+            org_agenda_set_tags = "<prefix>g",
 
             org_agenda_filter = "/",
             org_agenda_refile = "<prefix>r",
@@ -202,8 +202,8 @@ return {
             org_timestamp_up = "<C-a>",
             org_timestamp_down = "<C-x>",
 
-            org_todo = "ct",
-            org_todo_prev = "cT",
+            org_todo = "<prefix>t",
+            org_todo_prev = "<prefix>T",
 
             org_toggle_checkbox = "<C-c>",
             org_toggle_heading = "<prefix>*",
@@ -234,7 +234,7 @@ return {
 
             org_deadline = "<prefix>d",
             org_schedule = "<prefix>s",
-            org_set_tags_command = "<prefix>t",
+            org_set_tags_command = "<prefix>g",
 
             org_time_stamp = "<Leader>it",
             org_time_stamp_inactive = "<Leader>ii",
