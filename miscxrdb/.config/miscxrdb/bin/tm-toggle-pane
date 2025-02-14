@@ -8,9 +8,9 @@ session_exists() {
 _check_pane_is_nvim() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
-
-PATH_PANE_DATA="/tmp/tmux-tm-toggle-term.json"
-PATH_MAIN_PANE="/tmp/tmux-tm-main-toggle-term.json"
+current_session=$(tmux display-message -p '#S')
+PATH_PANE_COLLECT_JSON="/tmp/tmux-toggle-pane-$current_session.json"
+PATH_MAIN_WORKSPACE="/tmp/tmux-toggle-pane-main-workspace.json"
 
 TEMP_FILES=$(mktemp)
 
@@ -66,8 +66,8 @@ split_normal_v() {
 }
 
 __split_term_init() {
-  [[ ! -f $PATH_PANE_DATA ]] && touch "$PATH_PANE_DATA"
-  if [[ ! -s $PATH_PANE_DATA ]]; then
+  [[ ! -f $PATH_PANE_COLLECT_JSON ]] && touch "$PATH_PANE_COLLECT_JSON"
+  if [[ ! -s $PATH_PANE_COLLECT_JSON ]]; then
     json_output=$(
       cat <<EOF
 [
@@ -80,17 +80,46 @@ __split_term_init() {
 ]
 EOF
     )
-    echo "$json_output" >$PATH_PANE_DATA
+    echo "$json_output" >$PATH_PANE_COLLECT_JSON
   fi
 
 }
 __split_term_update_data_json() {
-  # Update data pane json
-  if ! jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_DATA" >/dev/null; then
+
+  __insert_json() {
     jq --arg pid "$pane_id" --arg cwd "$current_cwd" --arg session "$current_session" --arg window_id "$window_id" \
       '. += [{"pane_id": $pid, "cwd": $cwd, "session": $session, "window_id": $window_id}]' \
-      "$PATH_PANE_DATA" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_DATA"
+      "$PATH_PANE_COLLECT_JSON" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_COLLECT_JSON"
+  }
+
+  # example data json:
+  # [
+  #   {
+  #     "window_id": "1",
+  #     "pane_id": "%97",
+  #     "cwd": "/home/mr00x/moxconf/development/dotfiles",
+  #     "session": "Dotfiles"
+  #   }
+  # ]
+
+  session_id_exists=$(jq -e --arg cur_session "$current_session" '.[] | select(.session == $cur_session)' "$PATH_PANE_COLLECT_JSON")
+  window_id_exists=$(jq -e --arg wid "$window_id" '.[] | select(.window_id == $wid)' "$PATH_PANE_COLLECT_JSON")
+  pane_id_exists=$(jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_COLLECT_JSON")
+
+  # Update workspace json. jika belum ada isi data json sama sekali
+  if [ -z "$session_id_exists" ] && [ -z "$window_id_exists" ] && [ -z "$pane_id_exists" ]; then
+    __insert_json
   fi
+
+  # Update workspace json. Setiap session pada satu window, setidaknya harus
+  # punya satu main pane sebagai main workspace
+  if [ -n "$session_id_exists" ]; then
+    if [ -z "$window_id_exists" ] && [ -z "$pane_id_exists" ]; then
+      # dunstify "$window_id_exists"
+      __insert_json
+    fi
+  fi
+
 }
 __split_term_cleanup_update_and_remove_data_json() {
   # Mendapatkan daftar session dan pane yang ada di tmux
@@ -105,21 +134,26 @@ __split_term_cleanup_update_and_remove_data_json() {
      .pane_id as $pane_id |
      ($tmux_sessions | index($session)) and
      ($tmux_panes | index("\($session):\($pane_id)"))
-   ))' "$PATH_PANE_DATA" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_DATA"
+   ))' "$PATH_PANE_COLLECT_JSON" >"$TEMP_FILES" && mv "$TEMP_FILES" "$PATH_PANE_COLLECT_JSON"
 }
 
 __set_main_workspace() {
   if _check_pane_is_nvim; then
-    # if ! jq -e --arg window_id "$window_id" --arg pane_id "$pane_id" '.[] | select(.window_id == $window_id and .pane_id == $pane_id)' "$PATH_PANE_DATA" >/dev/null; then
-    jq --arg window_id "$window_id" --arg pane_id "$pane_id" \
-      '.[] | select(.window_id == $window_id and .pane_id == $pane_id)' \
-      "$PATH_PANE_DATA" >$PATH_MAIN_PANE
+    session_id_exists=$(jq -e --arg cur_session "$current_session" '.[] | select(.session == $cur_session)' "$PATH_PANE_COLLECT_JSON")
+    window_id_exists=$(jq -e --arg wid "$window_id" '.[] | select(.window_id == $wid)' "$PATH_PANE_COLLECT_JSON")
+    pane_id_exists=$(jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_COLLECT_JSON")
+
+    if [ -n "$session_id_exists" ] && [ -n "$window_id_exists" ] && [ -n "$pane_id_exists" ]; then
+      jq --arg window_id "$window_id" --arg pane_id "$pane_id" \
+        '.[] | select(.window_id == $window_id and .pane_id == $pane_id)' \
+        "$PATH_PANE_COLLECT_JSON" >$PATH_MAIN_WORKSPACE
+    fi
   fi
 
 }
 
 __jump_to_main_workspace() {
-  main_pane=$(jq "select(.pane_id=0).pane_id" $PATH_MAIN_PANE)
+  main_pane=$(jq "select(.pane_id=0).pane_id" $PATH_MAIN_WORKSPACE)
   main_pane_id=$(echo "$main_pane" | sed 's/"//g')
   tmux select-pane -t "$main_pane_id"
 }
@@ -162,7 +196,7 @@ __set_cursor_at_bottom_pane() {
 
 split_term() {
   pane_id=$(tmux display-message -p '#{pane_id}')
-  current_session=$(tmux list-sessions -F '#{session_name}')
+  # list_sessions=$(tmux list-sessions -F '#{session_name}')
   window_id=$(tmux display-message -p '#I')
   current_cwd=$(pwd)
   current_session=$(tmux display-message -p '#S')
@@ -192,8 +226,8 @@ split_term() {
         exit
       fi
 
-      tmux split-window -v -c '#{pane_current_path}'
-      __adjust_pane_height
+      __jump_to_main_workspace
+      tmux resize-pane -Z
     fi
 
   else
