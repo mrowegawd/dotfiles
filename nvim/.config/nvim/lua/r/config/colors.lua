@@ -142,7 +142,7 @@ reset_base_alter({ "coffeecat" }, {
   fzflua_bg_cursorline_alter = -0.04,
   fzfluasel_bg_alter = -0.1,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 1,
+  pmenu_fg_border_alter = 2.5,
   pmenusel_bg_alter = 1.2,
   pmenuthumb_alter = 2,
 })

@@ -249,7 +249,7 @@ return {
           ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
           ["base2tone_cave_dark"] = { { ["BeaconDefault"] = { bg = "#996e00" } } },
           ["base2tone_field_dark"] = { { ["BeaconDefault"] = { bg = "#00943e" } } },
-          ["neomodern"] = { { ["BeaconDefault"] = { bg = "#bbbac1" } } },
+          ["neomodern"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
           ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },

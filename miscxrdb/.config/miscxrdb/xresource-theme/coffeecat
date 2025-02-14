@@ -2,7 +2,7 @@
 ! special
 *.foreground:   #bbbac1
 *.background:   #1e1d1c
-*.cursorColor:  #bbbac1
+*.cursorColor:  #990000
 
 *.color0:#121110
 *.color1:#d67287

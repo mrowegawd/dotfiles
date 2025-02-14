@@ -2,7 +2,7 @@ background = 1e1d1c
 foreground = bbbac1
 
 # Cursor none
-cursor-color = bbbac1
+cursor-color = 990000
 
 palette = 0=#121110
 palette = 1=#d67287
