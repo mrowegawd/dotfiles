@@ -141,6 +141,26 @@ return {
           return true
         end
 
+        local function is_pane_zoomed()
+          local result = vim.system({ "wezterm", "cli", "list", "--format", "json" }, { text = true }):wait()
+          if result.code ~= 0 then
+            vim.notify(
+              "Failed to get WezTerm pane list\n" .. result.stderr,
+              vim.log.levels.ERROR,
+              { title = "Wezterm" }
+            )
+            return false
+          end
+
+          local panes = vim.fn.json_decode(result.stdout)
+          for _, pane in ipairs(panes) do
+            if pane.is_zoomed then
+              return true
+            end
+          end
+          return false
+        end
+
         local function navigate(dir, is_resize)
           is_resize = is_resize or false
           return function()
@@ -148,7 +168,6 @@ return {
 
             if not is_resize then
               vim.cmd.wincmd(navVim[dir])
-              -- return
             end
 
             local pane_dir2 = nav2[dir]
@@ -156,7 +175,7 @@ return {
 
             local pane = vim.env.WEZTERM_PANE
             if pane and winn == vim.api.nvim_get_current_win() then
-              if not is_resize then
+              if not is_resize and not is_pane_zoomed() then
                 vim.system({ "wezterm", "cli", "activate-pane-direction", pane_dir }, { text = true }, function(p)
                   if p.code ~= 0 then
                     vim.notify(
