@@ -6,6 +6,7 @@ M.config = {
 	ctrl_f_pane_id = {},
 	set_last_pane = true,
 	total_panes = {},
+	workspaces = {},
 }
 
 function M.update_ctrl_f_panes(tbl_pane)
@@ -18,6 +19,16 @@ function M.update_ctrl_f_panes(tbl_pane)
 	end
 
 	table.insert(M.config.ctrl_f_pane_id, tbl_pane)
+end
+
+function M.set_main_workspaces(opts)
+	if #M.config.workspaces == 0 then
+		M.config.workspaces = opts
+	end
+end
+
+function M.get_main_workspaces()
+	return M.config.workspaces
 end
 
 function M.get_tbl_ctrl_f_panes()

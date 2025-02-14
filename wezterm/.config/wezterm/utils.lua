@@ -88,4 +88,32 @@ M.removebyKey = function(tab, val)
 	end
 end
 
+local separator = function()
+	return "/"
+end
+
+local function remove_trailing(path)
+	local p, _ = path:gsub(separator() .. "$", "")
+	return p
+end
+
+function M.get_current_directory()
+	local current_path
+	if M.is_os_windows() then
+		current_path = os.getenv("PWD")
+	else
+		current_path = io.popen("cd"):read()
+	end
+	return M.basename(current_path)
+end
+
+function M.basename(path)
+	path = remove_trailing(path)
+	local i = path:match("^.*()" .. separator())
+	if not i then
+		return path
+	end
+	return path:sub(i + 1, #path)
+end
+
 return M

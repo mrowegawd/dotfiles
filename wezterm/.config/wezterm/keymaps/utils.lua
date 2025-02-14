@@ -12,18 +12,6 @@ function M.split_nav(resize_or_move, mods, key, dir)
 			-- window:toast_notification("wezterm", mods .. " keys " .. key, nil, 4000)
 			window:perform_action({ SendKey = { key = key, mods = mods } }, pane)
 		else
-			if M.is_in_nvim(pane) then
-				window:perform_action({ SendKey = { key = key, mods = mods } }, pane)
-				return
-			end
-
-			-- window:toast_notification("wezterm", "hello bro", nil, 4000)
-
-			if resize_or_move == "resize" then
-				window:perform_action({ AdjustPaneSize = { dir, 5 } }, pane)
-				return
-			end
-
 			local panes = pane:tab():panes_with_info()
 			local is_zoomed = false
 			for _, p in ipairs(panes) do
@@ -31,12 +19,28 @@ function M.split_nav(resize_or_move, mods, key, dir)
 					is_zoomed = true
 				end
 			end
-			if is_zoomed then
-				dir = dir == "Up" or dir == "Right" and "Next" or "Prev"
-				-- wezterm.log_info("dir: " .. dir)
+
+			if M.is_in_nvim(pane) then
+				window:perform_action({ SendKey = { key = key, mods = mods } }, pane)
+				return
 			end
-			window:perform_action({ ActivatePaneDirection = dir }, pane)
-			window:perform_action({ SetPaneZoomState = is_zoomed }, pane)
+
+			if resize_or_move == "resize" then
+				window:perform_action({ AdjustPaneSize = { dir, 5 } }, pane)
+				return
+			end
+
+			-- window:toast_notification("wezterm", "pane is zoom " .. tostring(is_zoomed), nil, 4000)
+
+			if not is_zoomed then
+				-- dir = dir == "Up" or dir == "Right" and "Next" or "Prev"
+				window:perform_action({ ActivatePaneDirection = dir }, pane)
+				-- 	return
+			end
+			--
+			-- window:toast_notification("wezterm", dir, nil, 4000)
+			-- window:perform_action({ ActivatePaneDirection = dir }, pane)
+			-- window:perform_action({ SetPaneZoomState = is_zoomed }, pane)
 		end
 	end)
 	return {
@@ -69,13 +73,14 @@ function M.nav_numbers(key)
 	}
 end
 
-function M.spawn_toggle_pane(window, pane, direction)
+function M.spawn_toggle_pane(window, pane, direction, percent_size)
+	percent_size = percent_size or 35
 	direction = direction or "Right"
 
 	window:perform_action(
 		act.SplitPane({
 			direction = direction, -- Down
-			size = { Percent = 35 },
+			size = { Percent = percent_size },
 		}),
 		pane
 	)

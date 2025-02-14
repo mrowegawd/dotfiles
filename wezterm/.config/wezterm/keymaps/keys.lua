@@ -1,5 +1,5 @@
 local KeymapUtil = require("keymaps.utils")
--- local Constant = require("constant")
+local Constant = require("constant")
 
 local wezterm = require("wezterm")
 local act = wezterm.action
@@ -112,6 +112,72 @@ return {
 	{ key = "8", mods = mod_key, action = act({ ActivateTab = 7 }) },
 	{ key = "9", mods = mod_key, action = act({ ActivateTab = 8 }) },
 
+	-- show pane ids (sama sepert tmux <bind-Q>)
+	{ key = "Q", mods = "LEADER", action = wezterm.action.PaneSelect({ show_pane_ids = true }) },
+	{ -- close the pane
+		key = "q",
+		mods = "LEADER",
+		action = wezterm.action_callback(function(window, pane)
+			window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+		end),
+	},
+	{ -- shortcut mapping `alt-x` to close the pane
+		key = "x",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "x", mods = mod_key } }, pane)
+			else
+				if KeymapUtil.is_in_nvim(pane) then
+					window:perform_action({ SendKey = { key = "x", mods = mod_key } }, pane)
+					return
+				end
+				window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+			end
+		end),
+	},
+	{ -- close the file manager pane
+		key = "q",
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
+			else
+				if KeymapUtil.is_in_nnn(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
+				end
+
+				if KeymapUtil.is_in_lf(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
+				end
+
+				if KeymapUtil.is_in_yazi(pane) then
+					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
+					return
+				end
+
+				window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
+			end
+		end),
+	},
+
+	-- { https://github.com/wezterm/wezterm/issues/4038#issuecomment-2425142613
+	-- 	mods = "SHIFT|CTRL",
+	-- 	key = "t",
+	-- 	action = wezterm.action_callback(function(win, pane)
+	-- 		local panes = pane:tab():panes_with_info()
+	-- 		panes[#panes].pane:activate()
+	-- 		panes[#panes].pane:split({ direction = "Bottom" })
+	-- 		for i = 1, #panes + 1 do
+	-- 			local p = pane:tab():panes_with_info()[i]
+	-- 			win:perform_action({ AdjustPaneSize = { "Up", 3 } }, p.pane)
+	-- 			p.pane:send_text(string.format("%d:%d ", i, p.height))
+	-- 		end
+	-- 		panes[1].pane:activate()
+	-- 	end),
+	-- },
+
 	-- ╭─────────────────────────────────────────────────────────╮
 	-- │ WINDOW                                                  │
 	-- ╰─────────────────────────────────────────────────────────╯
@@ -183,52 +249,9 @@ return {
 	},
 
 	-- ┌─────────────────────────────────────────────────────────┐
-	-- │ REMOVE                                                  │
-	-- └─────────────────────────────────────────────────────────┘
-	{
-		key = "x",
-		mods = mod_key,
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "x", mods = mod_key } }, pane)
-			else
-				if KeymapUtil.is_in_nvim(pane) then
-					window:perform_action({ SendKey = { key = "x", mods = mod_key } }, pane)
-					return
-				end
-				window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-			end
-		end),
-	},
-	{
-		key = "q",
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
-			else
-				if KeymapUtil.is_in_nnn(pane) then
-					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-					return
-				end
-
-				if KeymapUtil.is_in_lf(pane) then
-					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-					return
-				end
-
-				if KeymapUtil.is_in_yazi(pane) then
-					window:perform_action({ CloseCurrentPane = { confirm = false } }, pane)
-					return
-				end
-
-				window:perform_action({ SendKey = { key = "q", mods = "NONE" } }, pane)
-			end
-		end),
-	},
-
-	-- ┌─────────────────────────────────────────────────────────┐
 	-- │ MISC                                                    │
 	-- └─────────────────────────────────────────────────────────┘
+	{ key = "L", mods = "CTRL", action = wezterm.action.ShowDebugOverlay }, -- show debug relay
 	{ key = "c", mods = "CTRL|SHIFT", action = wezterm.action({ CopyTo = "Clipboard" }) },
 	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action({ PasteFrom = "Clipboard" }) },
 	{ key = "=", mods = "CTRL", action = "IncreaseFontSize" },
@@ -467,17 +490,122 @@ return {
 			if KeymapUtil.is_in_tmux(pane) then
 				window:perform_action({ SendKey = { key = "f", mods = mod_key } }, pane)
 			else
+				local session = window:active_workspace()
+
 				if KeymapUtil.is_in_nvim(pane) then
-					local pane_id = pane:tab():get_pane_direction("Down")
-					if pane_id == nil then
-						KeymapUtil.spawn_toggle_pane(window, pane, "Down")
+					local workspaces = Constant.get_main_workspaces()
+					local pane_id = pane:tab():active_pane():pane_id()
+					local window_id = window:window_id()
+
+					local main_workspace = workspaces[session]
+					if main_workspace == nil then
+						-- Save the main workspace configuration before moving the cursor down
+						local opts = {
+							[session] = {
+								{
+									pane_id = pane_id,
+									window_id = window_id,
+									session = session,
+									cwd = "",
+								},
+							},
+						}
+						Constant.set_main_workspaces(opts)
 					else
-						window:perform_action({ ActivatePaneDirection = "Down" }, pane)
-						if KeymapUtil.is_zoomed(pane) then
-							window:perform_action({ SetPaneZoomState = not is_zoomed }, pane)
+						local pane_down_id = pane:tab():get_pane_direction("Down")
+						if pane_down_id == nil then
+							KeymapUtil.spawn_toggle_pane(window, pane, "Down")
 						end
+
+						local panes = pane:tab():panes_with_info()
+						local is_zoomed = false
+						for _, p in ipairs(panes) do
+							if p.is_zoomed then
+								is_zoomed = true
+							end
+						end
+
+						if is_zoomed then
+							-- window:perform_action({ SetPaneZoomState = not is_zoomed }, pane)
+							window:perform_action({ ActivatePaneDirection = "Down" }, pane)
+
+							-- Set size pane
+							local dim = pane:get_dimensions()
+							local desired_height = 665
+							local adjust_pane_direction = "Up"
+							local add_size = 0
+							if dim.pixel_height < desired_height then
+								local lines_to_add = 10
+								add_size = lines_to_add
+								adjust_pane_direction = "Down"
+							elseif dim.pixel_height > desired_height then
+								local lines_to_remove = 5
+								add_size = lines_to_remove
+								adjust_pane_direction = "Up"
+							end
+							if add_size > 0 then
+								window:perform_action(
+									wezterm.action.AdjustPaneSize({ adjust_pane_direction, add_size }),
+									pane
+								)
+							end
+						else
+							window:toast_notification("wezterm", "horee bro", nil, 4000)
+							window:perform_action({ ActivatePaneDirection = "Down" }, pane)
+							-- window:toast_notification("wezterm", "tolog", nil, 4000)
+							-- window:perform_action({ SetPaneZoomState = true }, pane)
+						end
+
+						-- window:toast_notification("wezterm", "its open", nil, 4000)
 					end
+					-- session = window:active_workspace()
+
+					-- window:toast_notification("wezterm", tostring(pane_main), nil, 4000)
+
+					-- window:toast_notification("wezterm", tostring(), nil, 4000)
+
+					-- local pane_down = pane:tab():get_pane_direction("Down")
+					-- if pane_down == nil then
+					-- 	KeymapUtil.spawn_toggle_pane(window, pane, "Down")
+					-- else
+					-- 	wezterm.log_info(current_main)
+					--
+					-- 	--
+					-- 	local tab = window:active_tab()
+					-- 	for _, p in ipairs(tab:panes()) do
+					-- 		if p:pane_id() == current_main.pane_id then
+					-- 			window:perform_action({ ActivatePaneDirection = "Down" }, pane)
+					-- 			return
+					-- 		else
+					-- 			window:perform_action(wezterm.action({ ActivatePaneByIndex = current_main.pane_id }), p)
+					-- 			return
+					-- 		end
+					-- 	end
+					--
+					-- 	-- window:perform_action(wezterm.action({ ActivatePane = current_main.pane_id }), pane)
+					-- 	-- if KeymapUtil.is_pane_zoomed(pane) then
+					-- 	-- 	window:perform_action({ SetPaneZoomState = not is_zoomed }, pane)
+					-- 	-- end
+					-- end
 				else
+					-- local workspaces = Constant.get_main_workspaces()
+					-- -- wezterm.log_info(workspaces[session])
+					-- local current_main = workspaces[session][1]
+					--
+					-- window:toast_notification("wezterm", "horee bro", nil, 4000)
+					--
+					-- -- TODO: sekarang workspaces main sudah ada, tapi cara menyematkan
+					-- -- data id ke wezterm belum ngerti di wezterm..
+					-- local tab = window:active_tab()
+					-- for _, p in ipairs(tab:panes()) do
+					-- 	if p:pane_id() == current_main.pane_id then
+					-- 		window:toast_notification("wezterm", tostring(current_main.pane_id), nil, 4000)
+					-- 		-- window:perform_action({ ActivatePaneDirection = "Down" }, pane)
+					-- 		window:perform_action(wezterm.action({ ActivatePaneByIndex = current_main.pane_id }), p)
+					-- 		-- window:perform_action(wezterm.action({ ActivatePane = p }), pane)
+					-- 		return
+					-- 	end
+					-- end
 					if KeymapUtil.is_in_yazi(pane) then
 						window:perform_action({ ActivatePaneDirection = "Right" }, pane)
 					end
