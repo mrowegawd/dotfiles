@@ -1,3 +1,22 @@
+local function is_pane_zoomed()
+  local result = vim.system({ "wezterm", "cli", "list", "--format", "json" }, { text = true }):wait()
+  if result.code ~= 0 then
+    vim.notify("Failed to get WezTerm pane list\n" .. result.stderr, vim.log.levels.ERROR, { title = "Wezterm" })
+    return false
+  end
+
+  local current_pane = vim.env.WEZTERM_PANE
+  local panes = vim.fn.json_decode(result.stdout)
+  for _, pane in ipairs(panes) do
+    if pane.pane_id == tonumber(current_pane) then
+      if pane.is_zoomed then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 return {
   -- STICKYBUF.NVIM
   {
@@ -139,26 +158,6 @@ return {
             return false
           end
           return true
-        end
-
-        local function is_pane_zoomed()
-          local result = vim.system({ "wezterm", "cli", "list", "--format", "json" }, { text = true }):wait()
-          if result.code ~= 0 then
-            vim.notify(
-              "Failed to get WezTerm pane list\n" .. result.stderr,
-              vim.log.levels.ERROR,
-              { title = "Wezterm" }
-            )
-            return false
-          end
-
-          local panes = vim.fn.json_decode(result.stdout)
-          for _, pane in ipairs(panes) do
-            if pane.is_zoomed then
-              return true
-            end
-          end
-          return false
         end
 
         local function navigate(dir, is_resize)
