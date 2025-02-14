@@ -80,10 +80,12 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	local background = Color.bg
 	local foreground = Color.statusline_inactive_fg
 	local dim_foreground = Color.red_alt
+	local zoom_foreground = Color.statusline_inactive_fg
 
 	if tab.is_active then
 		background = Color.active_bg
 		foreground = Color.active_fg
+		zoom_foreground = Color.yellow
 	elseif hover then
 		background = Color.active_fg
 		foreground = Color.bg
@@ -123,6 +125,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 		{ Foreground = { Color = foreground } },
 		{ Text = id .. " " },
 		{ Text = pwd }, -- title
+		{ Foreground = { Color = zoom_foreground } },
 		{ Text = " " .. zoomed },
 		{ Foreground = { Color = dim_foreground } },
 		{ Text = pid },
