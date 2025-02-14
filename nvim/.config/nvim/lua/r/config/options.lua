@@ -122,6 +122,7 @@ opt.joinspaces = true -- insert spaces after '.?!' when joining lines
 opt.autoindent = true -- copy indent from current line on newline
 opt.smartindent = false -- add <tab> depending on syntax (C/C++)
 opt.startofline = false -- keep cursor column on navigation
+opt.guicursor = "" -- disable cursor shape modes nvim,
 opt.tabstop = 2 -- Tab indentation levels every two columns
 opt.softtabstop = 2 -- Tab indentation when mixing tabs & spaces
 opt.shiftwidth = 2 -- Indent/outdent by two columns
