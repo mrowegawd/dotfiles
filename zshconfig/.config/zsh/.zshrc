@@ -98,8 +98,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors # Enable colors in prompt
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#443d60"
-colorsuggest="fg=#35304d"
+colorline="#47476c"
+colorsuggest="fg=#444469"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -277,35 +277,35 @@ function TRAPINT() {
   return $(( 128 + $1 ))
 }
 
-cursor_mode() {
-  # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
-  cursor_block='\e[2 q'
-  cursor_beam='\e[6 q'
-
-  function zle-keymap-select {
-    vim_mode="${${KEYMAP/vicmd/${vim_normal_mode}}/(main|viins)/${vim_insert_mode}}"
-    zle && zle reset-prompt
-
-    if [[ ${KEYMAP} == vicmd ]] ||
-        [[ $1 = 'block' ]]; then
-        echo -ne $cursor_block
-    elif [[ ${KEYMAP} == main ]] ||
-        [[ ${KEYMAP} == viins ]] ||
-        [[ ${KEYMAP} = '' ]] ||
-        [[ $1 = 'beam' ]]; then
-        echo -ne $cursor_beam
-    fi
-  }
-
-  zle-line-init() {
-    echo -ne $cursor_beam
-  }
-
-  zle -N zle-keymap-select
-  zle -N zle-line-init
-}
-
-cursor_mode
+# cursor_mode() {
+#   # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
+#   cursor_block='\e[2 q'
+#   cursor_beam='\e[6 q'
+#
+#   function zle-keymap-select {
+#     vim_mode="${${KEYMAP/vicmd/${vim_normal_mode}}/(main|viins)/${vim_insert_mode}}"
+#     zle && zle reset-prompt
+#
+#     if [[ ${KEYMAP} == vicmd ]] ||
+#         [[ $1 = 'block' ]]; then
+#         echo -ne $cursor_block
+#     elif [[ ${KEYMAP} == main ]] ||
+#         [[ ${KEYMAP} == viins ]] ||
+#         [[ ${KEYMAP} = '' ]] ||
+#         [[ $1 = 'beam' ]]; then
+#         echo -ne $cursor_beam
+#     fi
+#   }
+#
+#   zle-line-init() {
+#     echo -ne $cursor_beam
+#   }
+#
+#   zle -N zle-keymap-select
+#   zle -N zle-line-init
+# }
+#
+# cursor_mode
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ VERSION CONTROL (VCS)                                    ╏

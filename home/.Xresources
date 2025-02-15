@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/rose-pine"
+#include ".config/miscxrdb/xresource-theme/catppuccin-mocha"
 
 ! --------------
 ! XFT SETTINGS

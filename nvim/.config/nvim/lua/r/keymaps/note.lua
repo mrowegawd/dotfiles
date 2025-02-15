@@ -49,11 +49,17 @@ function M.neorg_mappings_ft(bufnr)
         end,
         "Note: search todocomment local note [fzflua]",
       },
-      ["<Leader>gD"] = {
+      ["gD"] = {
         function()
           vim.cmd "vsplit | ObsidianFollowLink"
         end,
         "Note: followlink vertical split",
+      },
+      ["gd"] = {
+        function()
+          vim.cmd "ObsidianFollowLink"
+        end,
+        "Note: followlink",
       },
     },
     ["i"] = {

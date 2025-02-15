@@ -124,7 +124,7 @@ function M.follow_link(is_selection)
       -- local search = require "obsidian.search"
       -- search.find_notes_async(".", title .. ".md")
       local rg_opts =
-        [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]]
+        [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 -g "*.md" ]]
 
       fzf_lua.grep { cwd = RUtils.config.path.wiki_path, search = title, rg_opts = rg_opts }
     else
@@ -171,7 +171,8 @@ end
 -- local TagCharsOptional = "[A-Za-z0-9_/-]*"
 local TagCharsRequired = "[A-Za-z]+[A-Za-z0-9_/-]*[A-Za-z0-9]+" -- assumes tag is at least 2 chars
 
-local rg_opts = "--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 "
+local rg_opts =
+  "--column --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 "
 rg_opts = rg_opts .. " ~/Dropbox/neorg -e status"
 
 -- local function cursor_tag(line, col)
@@ -744,7 +745,7 @@ function M.find_local_titles()
     no_esc = true,
     rg_glob = false,
     search = regex_title,
-    rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+    rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 ]]
       .. fullname
       .. " -e ",
     winopts = {

@@ -29,7 +29,7 @@
 -- end
 
 local rg_opts =
-  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -e "
+  "--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 --colors match:fg:178 -e "
 local fd_opts = [[--color never --type f --hidden --follow --exclude .git --exclude '*.pyc']]
 
 return {
@@ -653,6 +653,7 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
+          -- rg_opts = vim.env.FZF_DEFAULT_COMMAND,
           fzf_opts = {
             ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden  ALT-J:grep-on-cwd]],
           },

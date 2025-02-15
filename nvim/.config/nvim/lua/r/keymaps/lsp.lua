@@ -27,7 +27,8 @@ function M.get()
     {
       "gD",
       function()
-        fzf_lua.lsp_definitions {}
+        vim.cmd [[vsplit]]
+        fzf_lua.lsp_definitions { jump1 = true, ignore_current_line = true }
       end,
       has = "definition",
       desc = "LSP: definitions [fzflua]",

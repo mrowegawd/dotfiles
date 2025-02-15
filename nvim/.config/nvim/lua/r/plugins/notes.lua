@@ -388,7 +388,7 @@ return {
           return fzf_lua.live_grep_glob {
             prompt = RUtils.fzflua.default_title_prompt(),
             cwd = RUtils.config.path.wiki_path,
-            rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 -g "*.md" ]],
+            rg_opts = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --colors 'match:fg:178' --max-columns=4096 -g "*.md" ]],
             winopts = {
               title = RUtils.fzflua.format_title(
                 "Obsidian > Grep",
@@ -410,7 +410,7 @@ return {
               -- no_esc = true,
               rg_glob = true,
               cwd = RUtils.config.path.wiki_path,
-              rg_opts = [[--column --line-number --hidden --ignore-case --smart-case -g "*.md" ]],
+              rg_opts = [[--column --line-number --hidden --ignore-case --color=always --colors 'match:fg:178' --smart-case -g "*.md" ]],
               winopts = {
                 title = RUtils.fzflua.format_title(
                   "Obsidian > Grep",
@@ -430,7 +430,7 @@ return {
             prompt = RUtils.fzflua.default_title_prompt(),
             cwd = RUtils.config.path.wiki_path,
             file_ignore_patterns = { "%.norg$", "%.json$", "%.org$", "%.png$" },
-            rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]],
+            rg_opts = [[--column --type=md --hidden --no-heading --ignore-case --smart-case --color=always  --max-columns=4096 --colors 'match:fg:178' ]],
 
             winopts = {
               -- fullscreen = true,

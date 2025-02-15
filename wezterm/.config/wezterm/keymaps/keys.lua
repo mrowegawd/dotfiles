@@ -511,50 +511,51 @@ return {
 							},
 						}
 						Constant.set_main_workspaces(opts)
+					end
+
+					local pane_down_id = pane:tab():get_pane_direction("Down")
+					if pane_down_id == nil then
+						KeymapUtil.spawn_toggle_pane(window, pane, "Down")
+					end
+
+					local panes = pane:tab():panes_with_info()
+					local is_zoomed = false
+					for _, p in ipairs(panes) do
+						if p.is_zoomed then
+							is_zoomed = true
+						end
+					end
+
+					if is_zoomed then
+						-- window:perform_action({ SetPaneZoomState = not is_zoomed }, pane)
+						window:perform_action({ ActivatePaneDirection = "Down" }, pane)
+
+						-- Set size pane
+						local dim = pane:get_dimensions()
+						local desired_height = 665
+						local adjust_pane_direction = "Up"
+						local add_size = 0
+						if dim.pixel_height < desired_height then
+							local lines_to_add = 10
+							add_size = lines_to_add
+							adjust_pane_direction = "Down"
+						elseif dim.pixel_height > desired_height then
+							local lines_to_remove = 5
+							add_size = lines_to_remove
+							adjust_pane_direction = "Up"
+						end
+						if add_size > 0 then
+							window:perform_action(
+								wezterm.action.AdjustPaneSize({ adjust_pane_direction, add_size }),
+								pane
+							)
+						end
 					else
-						local pane_down_id = pane:tab():get_pane_direction("Down")
-						if pane_down_id == nil then
-							KeymapUtil.spawn_toggle_pane(window, pane, "Down")
-						end
-
-						local panes = pane:tab():panes_with_info()
-						local is_zoomed = false
-						for _, p in ipairs(panes) do
-							if p.is_zoomed then
-								is_zoomed = true
-							end
-						end
-
-						if is_zoomed then
-							-- window:perform_action({ SetPaneZoomState = not is_zoomed }, pane)
-							window:perform_action({ ActivatePaneDirection = "Down" }, pane)
-
-							-- Set size pane
-							local dim = pane:get_dimensions()
-							local desired_height = 665
-							local adjust_pane_direction = "Up"
-							local add_size = 0
-							if dim.pixel_height < desired_height then
-								local lines_to_add = 10
-								add_size = lines_to_add
-								adjust_pane_direction = "Down"
-							elseif dim.pixel_height > desired_height then
-								local lines_to_remove = 5
-								add_size = lines_to_remove
-								adjust_pane_direction = "Up"
-							end
-							if add_size > 0 then
-								window:perform_action(
-									wezterm.action.AdjustPaneSize({ adjust_pane_direction, add_size }),
-									pane
-								)
-							end
-						else
-							window:toast_notification("wezterm", "horee bro", nil, 4000)
-							window:perform_action({ ActivatePaneDirection = "Down" }, pane)
-							-- window:toast_notification("wezterm", "tolog", nil, 4000)
-							-- window:perform_action({ SetPaneZoomState = true }, pane)
-						end
+						-- window:toast_notification("wezterm", "horee bro", nil, 4000)
+						window:perform_action({ ActivatePaneDirection = "Down" }, pane)
+						-- window:toast_notification("wezterm", "tolog", nil, 4000)
+						-- window:perform_action({ SetPaneZoomState = true }, pane)
+						-- end
 
 						-- window:toast_notification("wezterm", "its open", nil, 4000)
 					end

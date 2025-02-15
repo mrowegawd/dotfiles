@@ -6,7 +6,7 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_fg_alter, pmenu_bg_alter, pmenu_fg_border_alter, pmenusel_bg_alter, pmenuthumb_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, normalfloat_border_fg_alter, fzfluasel_bg_alter, cursor_fg
+local pmenu_fg_alter, pmenu_bg_alter, pmenu_fg_border_alter, pmenusel_bg_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, normalfloat_border_fg_alter, fzfluasel_bg_alter, cursor_fg
 
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
@@ -23,7 +23,6 @@ local base_cl = {
   pmenu_fg_border_alter = 1.5,
 
   pmenusel_bg_alter = 0.15,
-  pmenuthumb_alter = 1,
 
   fzfluasel_bg_alter = 0.05,
 
@@ -60,14 +59,8 @@ local function reset_base_alter(themes, alter_base)
     if i == "pmenusel_bg_alter" then
       pmenusel_bg_alter = x
     end
-    if i == "pmenuthumb_alter" then
-      pmenuthumb_alter = x
-    end
     if i == "fzflua_bg_cursorline_alter" then
       fzflua_bg_cursorline_alter = x
-    end
-    if i == "pmenuthumb_alter" then
-      pmenuthumb_alter = x
     end
     if i == "cursor_fg" then
       cursor_fg = x
@@ -104,7 +97,6 @@ reset_base_alter({ "ashen" }, {
   pmenu_bg_alter = 0.5,
   pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 2,
-  pmenuthumb_alter = 1.8,
   quickfixline_alter = 0.4,
   winseparator_alter = 0.8,
 })
@@ -115,7 +107,6 @@ reset_base_alter({ "base2tone_cave_dark" }, {
   pmenu_bg_alter = -0.1,
   pmenu_fg_border_alter = 0.7,
   pmenusel_bg_alter = 0.5,
-  pmenuthumb_alter = 0.5,
 })
 reset_base_alter({ "base2tone_field_dark" }, {
   cursor_fg = "#00943e",
@@ -124,16 +115,14 @@ reset_base_alter({ "base2tone_field_dark" }, {
   pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 0.9,
   pmenusel_bg_alter = 0.5,
-  pmenuthumb_alter = 0.5,
 })
 reset_base_alter({ "catppuccin-mocha" }, {
   cursor_fg = "#c7063c",
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_bg_alter = 0.09,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 0.8,
+  pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 0.6,
-  pmenuthumb_alter = 0.7,
   winseparator_alter = 0.4,
 })
 reset_base_alter({ "coffeecat" }, {
@@ -144,7 +133,6 @@ reset_base_alter({ "coffeecat" }, {
   pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 2.5,
   pmenusel_bg_alter = 1.2,
-  pmenuthumb_alter = 2,
 })
 reset_base_alter({ "horizon" }, {
   cursor_fg = "#b3276f",
@@ -161,7 +149,6 @@ reset_base_alter({ "jellybeans" }, {
   pmenu_bg_alter = 0.8,
   pmenu_fg_border_alter = 0.9,
   pmenusel_bg_alter = 1.8,
-  pmenuthumb_alter = 0.8,
 })
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
@@ -173,7 +160,6 @@ reset_base_alter({ "lackluster" }, {
   pmenu_bg_alter = 0.5,
   pmenu_fg_alter = 0.3,
   pmenu_fg_border_alter = 1,
-  pmenuthumb_alter = 1,
 })
 reset_base_alter({ "nord" }, {
   cursor_fg = "#eceff4",
@@ -184,7 +170,6 @@ reset_base_alter({ "nord" }, {
   pmenu_bg_alter = -0.1,
   pmenu_fg_border_alter = 0.5,
   pmenusel_bg_alter = 0.4,
-  pmenuthumb_alter = 1,
   quickfixline_alter = -0.15,
   winseparator_alter = 0.3,
 })
@@ -196,7 +181,6 @@ reset_base_alter({ "oxocarbon" }, {
   pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 0.6,
-  pmenuthumb_alter = 1.5,
   winseparator_alter = 0.4,
 })
 reset_base_alter({ "rose-pine-dawn" }, {
@@ -207,7 +191,6 @@ reset_base_alter({ "rose-pine-dawn" }, {
   pmenu_fg_alter = -0.4,
   pmenu_fg_border_alter = 0,
   pmenusel_bg_alter = 0.05,
-  pmenuthumb_alter = -0.1,
   quickfixline_alter = 0.5,
   winseparator_alter = -0.06,
 })
@@ -219,7 +202,6 @@ reset_base_alter({ "rose-pine-main" }, {
   pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 0.6,
-  pmenuthumb_alter = 1.5,
 })
 reset_base_alter({ "sunburn" }, {
   cursor_fg = "#b3276f",
@@ -229,7 +211,6 @@ reset_base_alter({ "sunburn" }, {
   pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 1.8,
   pmenusel_bg_alter = 0.6,
-  pmenuthumb_alter = 1.5,
   quickfixline_alter = -0.15,
 })
 reset_base_alter({ "tokyonight-night" }, {
@@ -240,7 +221,6 @@ reset_base_alter({ "tokyonight-night" }, {
   pmenu_bg_alter = -0.15,
   pmenu_fg_border_alter = 1.8,
   pmenusel_bg_alter = 0.6,
-  pmenuthumb_alter = 1.5,
   quickfixline_alter = -0.15,
 })
 reset_base_alter({ "tokyonight-storm" }, {
@@ -254,7 +234,6 @@ reset_base_alter({ "tokyonight-storm" }, {
   pmenu_fg_alter = 0.1,
   pmenu_fg_border_alter = 0.7,
   pmenusel_bg_alter = 0.6,
-  pmenuthumb_alter = 1.5,
   quickfixline_alter = -0.2,
   winseparator_alter = 0.3,
 })
@@ -269,7 +248,6 @@ reset_base_alter({ "vscode_modern" }, {
   pmenu_fg_alter = 0.1,
   pmenu_fg_border_alter = 1,
   pmenusel_bg_alter = 0.06,
-  pmenuthumb_alter = 0.8,
   quickfixline_alter = -0.25,
   winseparator_alter = 0.4,
 })
@@ -282,7 +260,6 @@ reset_base_alter({ "zenburned" }, {
   pmenu_bg_alter = -0.2,
   pmenu_fg_border_alter = 0.5,
   pmenusel_bg_alter = 0.1,
-  pmenuthumb_alter = 1,
   winseparator_alter = 0.3,
 })
 
@@ -359,7 +336,7 @@ local general_overrides = function()
         bold = true,
       },
     },
-    { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = pmenuthumb_alter } } },
+    { PmenuThumb = { bg = { from = "Pmenu", attr = "fg", alter = 0.1 } } },
     {
       NormalFloat = {
         fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
@@ -913,7 +890,7 @@ local general_overrides = function()
     { FzfLuaPreviewNormal = { inherit = "NormalFloat" } },
     { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder" } },
     { FzfLuaPreviewTitle = { inherit = "FloatTitle" } },
-    { FzfLuaScrollBorderFull = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
+    { FzfLuaScrollBorderFull = { inherit = "PmenuThumb" } },
 
     -- ────────────────────────────── TELESCOPE ──────────────────────────────
     { TelescopeNormal = { inherit = "FzfLuaNormal" } },
@@ -1725,6 +1702,13 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.3 }, bg = "NONE" } },
 
+      -- { IncSearch = { bg = "blue" } },
+      -- { Search = { bg = "blue" } },
+      -- { CurSearch = { bg = "blue" } },
+      -- { FzfLuaCursor = { bg = "blue" } },
+      -- { FzfLuaSearch = { bg = "blue" } },
+      -- { Visual = { bg = "blue" } },
+
       {
         NoiceCmdline = {
           fg = { from = "Pmenu", attr = "fg", alter = 5 },
@@ -1874,7 +1858,7 @@ local function colorscheme_overrides()
       {
         ["@markup.link.label.markdown_inline"] = {
           fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.3),
-          bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.8),
+          bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.75),
         },
       },
 
