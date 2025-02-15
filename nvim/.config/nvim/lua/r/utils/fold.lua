@@ -70,13 +70,13 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
     return
   end
 
-  if vim.bo[0].filetype == "markdown" then
-    if is_jump_prev then
-      return RUtils.markdown.go_to_heading(nil, {})
-    else
-      return RUtils.markdown.go_to_heading(nil)
-    end
-  end
+  -- if vim.bo[0].filetype == "markdown" then
+  --   if is_jump_prev then
+  --     return RUtils.markdown.go_to_heading(nil, {})
+  --   else
+  --     return RUtils.markdown.go_to_heading(nil)
+  --   end
+  -- end
 
   local count = vim.v.count1
   local cnt = 0
