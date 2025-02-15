@@ -6,7 +6,7 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_fg_alter, pmenu_bg_alter, pmenu_fg_border_alter, pmenusel_bg_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, normalfloat_border_fg_alter, fzfluasel_bg_alter, cursor_fg
+local pmenu_fg_alter, pmenu_bg_alter, pmenusel_bg_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, normalfloat_border_fg_alter, fzfluasel_bg_alter, cursor_fg
 
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
@@ -20,7 +20,6 @@ local base_cl = {
 
   pmenu_bg_alter = 0.1,
   pmenu_fg_alter = -0.1,
-  pmenu_fg_border_alter = 1.5,
 
   pmenusel_bg_alter = 0.15,
 
@@ -52,9 +51,6 @@ local function reset_base_alter(themes, alter_base)
     end
     if i == "pmenu_bg_alter" then
       pmenu_bg_alter = x
-    end
-    if i == "pmenu_fg_border_alter" then
-      pmenu_fg_border_alter = x
     end
     if i == "pmenusel_bg_alter" then
       pmenusel_bg_alter = x
@@ -93,9 +89,8 @@ reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.05,
   fzfluasel_bg_alter = 0.02,
-  normalfloat_border_fg_alter = 2,
+  normalfloat_border_fg_alter = 3.5,
   pmenu_bg_alter = 0.5,
-  pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 2,
   quickfixline_alter = 0.4,
   winseparator_alter = 0.8,
@@ -104,24 +99,24 @@ reset_base_alter({ "base2tone_cave_dark" }, {
   cursor_fg = "#996e00",
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.5,
   pmenu_bg_alter = -0.1,
-  pmenu_fg_border_alter = 0.7,
   pmenusel_bg_alter = 0.5,
 })
 reset_base_alter({ "base2tone_field_dark" }, {
   cursor_fg = "#00943e",
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.2,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 0.9,
   pmenusel_bg_alter = 0.5,
 })
 reset_base_alter({ "catppuccin-mocha" }, {
   cursor_fg = "#c7063c",
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.2,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 0.6,
   winseparator_alter = 0.4,
 })
@@ -130,24 +125,24 @@ reset_base_alter({ "coffeecat" }, {
   cursorline_alter = 0.04,
   fzflua_bg_cursorline_alter = -0.04,
   fzfluasel_bg_alter = -0.1,
+  normalfloat_border_fg_alter = 2.7,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 2.5,
   pmenusel_bg_alter = 1.2,
 })
 reset_base_alter({ "horizon" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.24,
   fzflua_bg_cursorline_alter = -0.3,
+  normalfloat_border_fg_alter = 1.5,
   pmenu_bg_alter = -0.1,
-  pmenu_fg_border_alter = 0.9,
   pmenusel_bg_alter = 0.1,
 })
 reset_base_alter({ "jellybeans" }, {
   cursor_fg = "#ffa560",
   cursorline_alter = 0.04,
   fzfluasel_bg_alter = -0.1,
+  normalfloat_border_fg_alter = 3.5,
   pmenu_bg_alter = 0.8,
-  pmenu_fg_border_alter = 0.9,
   pmenusel_bg_alter = 1.8,
 })
 reset_base_alter({ "lackluster" }, {
@@ -156,19 +151,18 @@ reset_base_alter({ "lackluster" }, {
   fzflua_bg_cursorline_alter = 0.3,
   fzfluasel_bg_alter = 0.08,
   normalfloat_bg_alter = 0.5,
+  normalfloat_border_fg_alter = 2,
   normalfloat_fg_alter = -0.01,
   pmenu_bg_alter = 0.5,
   pmenu_fg_alter = 0.3,
-  pmenu_fg_border_alter = 1,
 })
 reset_base_alter({ "nord" }, {
   cursor_fg = "#eceff4",
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.12,
   fzfluasel_bg_alter = -0.1,
-  normalfloat_border_fg_alter = 0.5,
+  normalfloat_border_fg_alter = 1,
   pmenu_bg_alter = -0.1,
-  pmenu_fg_border_alter = 0.5,
   pmenusel_bg_alter = 0.4,
   quickfixline_alter = -0.15,
   winseparator_alter = 0.3,
@@ -178,8 +172,8 @@ reset_base_alter({ "oxocarbon" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.5,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 0.6,
   winseparator_alter = 0.4,
 })
@@ -189,7 +183,6 @@ reset_base_alter({ "rose-pine-dawn" }, {
   normalfloat_bg_alter = -0.08,
   pmenu_bg_alter = -0.1,
   pmenu_fg_alter = -0.4,
-  pmenu_fg_border_alter = 0,
   pmenusel_bg_alter = 0.05,
   quickfixline_alter = 0.5,
   winseparator_alter = -0.06,
@@ -199,8 +192,8 @@ reset_base_alter({ "rose-pine-main" }, {
   cursorline_alter = 0.09,
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.2,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 1.5,
   pmenusel_bg_alter = 0.6,
 })
 reset_base_alter({ "sunburn" }, {
@@ -208,8 +201,8 @@ reset_base_alter({ "sunburn" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.5,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 1.8,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = -0.15,
 })
@@ -218,8 +211,8 @@ reset_base_alter({ "tokyonight-night" }, {
   cursorline_alter = 0.03,
   fzflua_bg_cursorline_alter = -0.01,
   fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.5,
   pmenu_bg_alter = -0.15,
-  pmenu_fg_border_alter = 1.8,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = -0.15,
 })
@@ -229,24 +222,22 @@ reset_base_alter({ "tokyonight-storm" }, {
   cursorline_alter = 0.05,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.12,
-  normalfloat_border_fg_alter = 0.9,
+  normalfloat_border_fg_alter = 2,
   pmenu_bg_alter = -0.15,
   pmenu_fg_alter = 0.1,
-  pmenu_fg_border_alter = 0.7,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = -0.2,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "vscode_modern" }, {
-  cursor_fg = "#fa1919",
   cmpdocnormal_fg_alter = 0.1,
+  cursor_fg = "#fa1919",
   cursorline_alter = 0.05,
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = 0.05,
-  normalfloat_border_fg_alter = 0.9,
+  normalfloat_border_fg_alter = 1.5,
   pmenu_bg_alter = -0.15,
   pmenu_fg_alter = 0.1,
-  pmenu_fg_border_alter = 1,
   pmenusel_bg_alter = 0.06,
   quickfixline_alter = -0.25,
   winseparator_alter = 0.4,
@@ -256,9 +247,8 @@ reset_base_alter({ "zenburned" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.02,
-  normalfloat_border_fg_alter = 0.6,
+  normalfloat_border_fg_alter = 1,
   pmenu_bg_alter = -0.2,
-  pmenu_fg_border_alter = 0.5,
   pmenusel_bg_alter = 0.1,
   winseparator_alter = 0.3,
 })
@@ -336,7 +326,6 @@ local general_overrides = function()
         bold = true,
       },
     },
-    { PmenuThumb = { bg = { from = "Pmenu", attr = "fg", alter = 0.1 } } },
     {
       NormalFloat = {
         fg = { from = "Normal", attr = "fg", alter = normalfloat_fg_alter },
@@ -350,6 +339,7 @@ local general_overrides = function()
       },
     },
 
+    { PmenuThumb = { bg = { from = "FloatBorder", attr = "fg", alter = 0.1 } } },
     {
       FloatTitle = {
         bg = { from = "Keyword", attr = "fg", alter = -0.1 },
@@ -680,7 +670,7 @@ local general_overrides = function()
     { CmpItemAbbrDefault = { fg = { from = "CmpItemAbbr", attr = "fg" } } },
     {
       CmpItemFloatBorder = {
-        fg = { from = "Pmenu", attr = "bg", alter = pmenu_fg_border_alter },
+        fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
@@ -1021,15 +1011,8 @@ local general_overrides = function()
     { ["@markup.heading.4.markdown"] = { fg = "#8594c8", bold = true, italic = true } },
     { ["@markup.heading.5.markdown"] = { fg = "#f76328", bold = true, italic = true } },
     { ["@markup.heading.6.markdown"] = { fg = "#fccf3e", bold = true, italic = true } },
-    {
-      ["@markup.quote.markdown"] = {
-        fg = { from = "Boolean", attr = "fg", alter = -0.2 },
-        bg = { from = "Boolean", attr = "fg", alter = -0.8 },
-        bold = true,
-        italic = true,
-      },
-    },
     { ["@markup.raw.block.markdown"] = { bg = "NONE" } },
+    { ["@markup.list.markdown"] = { bg = "NONE" } },
 
     {
       ["@markup.italic.markdown_inline"] = {
@@ -1038,10 +1021,25 @@ local general_overrides = function()
         underline = false,
       },
     },
+
     {
       ["@markup.link.label.markdown_inline"] = {
-        fg = { from = "@markup.link.label.markdown_inline", attr = "fg", alter = -0.2 },
-        bg = { from = "@markup.link.label.markdown_inline", attr = "fg", alter = -0.8 },
+        fg = Highlight.tint(dark_yellow, -0.21),
+        bg = Highlight.tint(dark_yellow, -0.7),
+        underline = false,
+      },
+    },
+    {
+      ["@markup.quote.markdown"] = {
+        fg = { from = "Boolean", attr = "fg", alter = -0.35 },
+        bg = { from = "Boolean", attr = "fg", alter = -0.75 },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      ["@punctuation.special.markdown"] = {
+        fg = { from = "@markup.quote.markdown", attr = "fg" },
       },
     },
     {
@@ -1433,6 +1431,25 @@ local rose_pine = {
       },
     },
     {
+      AvanteInlineHint = {
+        fg = { from = "Keyword", attr = "fg", alter = -0.4 },
+        bg = "NONE",
+      },
+    },
+    {
+      ["@markup.quote.markdown"] = {
+        fg = { from = "Boolean", attr = "fg", alter = -0.35 },
+        bg = { from = "Boolean", attr = "fg", alter = -0.75 },
+        bold = true,
+        italic = true,
+      },
+    },
+    {
+      ["@punctuation.special.markdown"] = {
+        fg = { from = "@markup.quote.markdown", attr = "fg" },
+      },
+    },
+    {
       StatusLine = {
         fg = { from = "Keyword", attr = "fg", alter = 0.9 },
         bg = { from = "Keyword", attr = "fg", alter = -0.4 },
@@ -1536,11 +1553,11 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.7 },
+          fg = { from = "Keyword", attr = "fg", alter = -0.72 },
           bg = { from = "Keyword", attr = "fg", alter = -0.85 },
         },
       },
-      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.55 }, bg = "NONE" } },
+      { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.51 }, bg = "NONE" } },
 
       {
         NoiceCmdline = {
@@ -1702,13 +1719,6 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.3 }, bg = "NONE" } },
 
-      -- { IncSearch = { bg = "blue" } },
-      -- { Search = { bg = "blue" } },
-      -- { CurSearch = { bg = "blue" } },
-      -- { FzfLuaCursor = { bg = "blue" } },
-      -- { FzfLuaSearch = { bg = "blue" } },
-      -- { Visual = { bg = "blue" } },
-
       {
         NoiceCmdline = {
           fg = { from = "Pmenu", attr = "fg", alter = 5 },
@@ -1716,12 +1726,6 @@ local function colorscheme_overrides()
         },
       },
 
-      {
-        ["@markup.link.label.markdown_inline"] = {
-          fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.3),
-          bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.8),
-        },
-      },
       {
         StatusLine = {
           fg = { from = "Keyword", attr = "fg", alter = 0.1 },
@@ -1856,13 +1860,6 @@ local function colorscheme_overrides()
       },
 
       {
-        ["@markup.link.label.markdown_inline"] = {
-          fg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.3),
-          bg = Highlight.tint(Highlight.get("Keyword", "fg"), -0.75),
-        },
-      },
-
-      {
         StatusLine = {
           fg = { from = "Keyword", attr = "fg", alter = 0.3 },
           bg = Highlight.tint(
@@ -1905,13 +1902,6 @@ local function colorscheme_overrides()
       { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
-
-      -- {
-      --   Folded = {
-      --     fg = { from = "Normal", attr = "bg", alter = 0.5 },
-      --     bg = { from = "Normal", attr = "bg", alter = -0.23 },
-      --   },
-      -- },
       {
         Folded = {
           fg = { from = "Keyword", attr = "fg", alter = -0.6 },
@@ -2129,7 +2119,7 @@ local function colorscheme_overrides()
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.2 } } },
-      { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.7 } } },
+      { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.55 } } },
 
       {
         Folded = {
@@ -2179,13 +2169,6 @@ local function colorscheme_overrides()
         AvanteInlineHint = {
           fg = { from = "Keyword", attr = "fg", alter = -0.4 },
           bg = "NONE",
-        },
-      },
-      {
-        ["@markup.link.label.markdown_inline"] = {
-          fg = Highlight.tint(dark_yellow, -0.2),
-          bg = Highlight.tint(dark_yellow, -0.8),
-          underline = false,
         },
       },
 
@@ -2318,14 +2301,6 @@ local function colorscheme_overrides()
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.5 }, bg = "NONE" } },
-
-      {
-        ["@markup.link.label.markdown_inline"] = {
-          fg = Highlight.tint(dark_yellow, -0.2),
-          bg = Highlight.tint(dark_yellow, -0.8),
-          underline = false,
-        },
-      },
 
       {
         StatusLine = {
@@ -2568,6 +2543,20 @@ local function colorscheme_overrides()
       },
 
       {
+        ["@markup.quote.markdown"] = {
+          fg = { from = "Number", attr = "fg", alter = 0.02 },
+          bg = { from = "Number", attr = "fg", alter = -0.6 },
+          bold = true,
+          italic = true,
+        },
+      },
+      {
+        ["@punctuation.special.markdown"] = {
+          fg = { from = "@markup.quote.markdown", attr = "fg" },
+        },
+      },
+
+      {
         LspReferenceText = {
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
           fg = "NONE",
@@ -2726,8 +2715,8 @@ local function colorscheme_overrides()
 
       {
         ["@markup.link.label.markdown_inline"] = {
-          fg = Highlight.tint(dark_yellow, -0.2),
-          bg = Highlight.tint(dark_yellow, -0.8),
+          fg = { from = "Function", attr = "fg", alter = -0.3 },
+          bg = { from = "Function", attr = "fg", alter = -0.7 },
         },
       },
 
@@ -2802,7 +2791,7 @@ local function colorscheme_overrides()
       {
         Folded = {
           fg = { from = "Keyword", attr = "fg", alter = -0.58 },
-          bg = { from = "Keyword", attr = "fg", alter = -0.76 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.75 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.35 }, bg = "NONE" } },
@@ -2819,20 +2808,13 @@ local function colorscheme_overrides()
           bg = "NONE",
         },
       },
-      {
-        ["@markup.link.label.markdown_inline"] = {
-          fg = Highlight.tint(dark_yellow, -0.2),
-          bg = Highlight.tint(dark_yellow, -0.8),
-          underline = false,
-        },
-      },
 
       {
         StatusLine = {
-          fg = { from = "Keyword", attr = "fg", alter = 0.28 },
+          fg = { from = "Keyword", attr = "fg", alter = 0.25 },
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("StatusLine_esse", "fg"), 0.6, Highlight.get("StatusLine_esse", "bg")),
-            -0.5
+            -0.4
           ),
         },
       },
@@ -3119,7 +3101,7 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.22 }, bg = "NONE" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.5 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.54 } } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -3346,6 +3328,15 @@ local function colorscheme_overrides()
         NoiceCmdline = {
           fg = { from = "Pmenu", attr = "fg", alter = 5 },
           bg = { from = "Pmenu", attr = "bg", alter = 0.01 },
+        },
+      },
+
+      {
+        ["@markup.quote.markdown"] = {
+          fg = { from = "Boolean", attr = "fg", alter = -0.28 },
+          bg = { from = "Boolean", attr = "fg", alter = -0.6 },
+          bold = true,
+          italic = true,
         },
       },
 

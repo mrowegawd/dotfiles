@@ -268,7 +268,7 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "TabLine", attr = "bg", alter = 1 },
+                fg = { from = "TabLine", attr = "bg", alter = 0.9 },
                 bg = { from = "TreesitterContext" },
               },
             },

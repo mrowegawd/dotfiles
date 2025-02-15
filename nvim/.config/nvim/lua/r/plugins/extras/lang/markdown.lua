@@ -138,6 +138,7 @@ return {
           {
             RenderMarkdownCodeInline = {
               fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
+              bg = "NONE",
               bold = true,
             },
           },
@@ -148,6 +149,7 @@ return {
           {
             RenderMarkdownCodeInline = {
               fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
+              bg = "NONE",
               bold = true,
             },
           },
@@ -160,11 +162,10 @@ return {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
             { RenderMarkdownCodeInline = { bg = "NONE", bold = true } },
             { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
-            -- @markup.link.label.markdown_inline
           },
           ["jellybeans"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            { RenderMarkdownCodeInline = { fg = { from = "Error", attr = "fg", alter = 0.08 } } },
+            { RenderMarkdownCodeInline = { fg = { from = "Error", attr = "fg", alter = 0.08 }, bg = "NONE" } },
           },
           ["lackluster"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } } },
           ["sunburn"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } } },
@@ -174,6 +175,15 @@ return {
           ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
           ["one_monokai"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
           ["zenburned"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } } },
+          ["nord"] = {
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Error", attr = "fg", alter = 0.05 },
+                bg = "NONE",
+              },
+            },
+          },
+
           ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } } },
           ["catppuccin-mocha"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
           ["tokyonight-night"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },

@@ -711,8 +711,11 @@ function M.find_global_titles()
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
     winopts = {
-      fullscreen = true,
       title = RUtils.fzflua.format_title("Global titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
+      preview = {
+        vertical = "down:55%", -- up|down:size
+        horizontal = "right:45%", -- right|left:size
+      },
     },
   }
 end
@@ -745,7 +748,7 @@ function M.find_local_titles()
     no_esc = true,
     rg_glob = false,
     search = regex_title,
-    rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --colors match:fg:178 --max-columns=4096 ]]
+    rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. fullname
       .. " -e ",
     winopts = {
