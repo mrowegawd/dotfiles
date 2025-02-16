@@ -204,6 +204,8 @@ case $instance.$class in
 *.Xmessage) xmessage ;;
 *.Chromium) browser ;;
 *.zen-beta) browser ;;
+*.zen) browser ;;
+*.Zen.Browser) browser ;;
 *.Navigator) browser ;;
 *.Spotify) spotify ;;
 *.xdman-Main) xcalc ;;
