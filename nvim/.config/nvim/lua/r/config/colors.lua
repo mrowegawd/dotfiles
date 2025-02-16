@@ -2501,6 +2501,62 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
     },
     ["nord"] = {
+      { DiagnosticSignError = { bg = "NONE", fg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")) } },
+      { DiagnosticSignWarn = { bg = "NONE", fg = Highlight.darken(dark_yellow, 0.8, Highlight.get("Normal", "bg")) } },
+      { DiagnosticSignInfo = { bg = "NONE", fg = "grey" } },
+      { DiagnosticSignHint = { bg = "NONE", fg = "darkgrey" } },
+
+      { DiagnosticError = { fg = { from = "DiagnosticSignError", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsErrorNumHl = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE" } },
+      { DiagnosticWarn = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsWarnNumHl = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE" } },
+      { DiagnosticHint = { fg = { from = "DiagnosticSignHint", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsHintNumHl = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE" } },
+      { DiagnosticInfo = { fg = { from = "DiagnosticSignInfo", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsInfoNumHl = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE" } },
+
+      { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatingError = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatTitle = { bg = { from = "NormalFloat", attr = "bg" }, bold = true } },
+      { DiagnosticFloatTitleIcon = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "@character" } } },
+
+      { DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" } },
+      { DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" } },
+      { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
+      { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
+      {
+        DiagnosticUnderlineWarn = {
+          sp = { from = "DiagnosticWarn", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+      {
+        DiagnosticUnderlineHint = {
+          sp = { from = "DiagnosticHint", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+      {
+        DiagnosticUnderlineError = {
+          sp = { from = "DiagnosticError", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+      {
+        DiagnosticUnderlineInfo = {
+          sp = { from = "DiagnosticInfo", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+
+      ---
+
       { ["Comment"] = { link = "@comment", italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
