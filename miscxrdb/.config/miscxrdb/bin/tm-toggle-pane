@@ -8,6 +8,10 @@ session_exists() {
 _check_pane_is_nvim() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
+_check_pane_is_yazi() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
+}
+
 current_session=$(tmux display-message -p '#S')
 PATH_PANE_COLLECT_JSON="/tmp/tmux-toggle-pane-$current_session.json"
 PATH_MAIN_WORKSPACE="/tmp/tmux-toggle-pane-main-workspace.json"
@@ -80,7 +84,7 @@ __split_term_init() {
 ]
 EOF
     )
-    echo "$json_output" >$PATH_PANE_COLLECT_JSON
+    echo "$json_output" >"$PATH_PANE_COLLECT_JSON"
   fi
 
 }
@@ -183,15 +187,19 @@ __adjust_pane_height() {
 
 }
 
-__set_cursor_at_bottom_pane() {
-  # Check the pane, if the pane is not at the bottom level
-  # then move the cursor down
-  is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
-  if [[ $is_pane_at_bottom == "0" ]]; then
-    tmux select-pane -D
-    exit
+__avoid_yazi_pane() {
+  is_pane_at_left=$(tmux display -p '#{pane_at_left}')
+  if [[ $is_pane_at_left == 1 ]]; then
+    if _check_pane_is_yazi; then
+      is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
+      if [[ $is_pane_at_bottom == 1 ]]; then
+        tmux select-pane -L
+        tmux split-window -vl 20 -c '#{pane_current_path}'
+      else
+        tmux select-pane -U
+      fi
+    fi
   fi
-
 }
 
 split_term() {
@@ -211,12 +219,14 @@ split_term() {
 
     __set_main_workspace
 
-    __set_cursor_at_bottom_pane
-
-    zoom_status=$(tmux list-panes -F '#F' | grep Z)
-    if [[ -n $zoom_status ]]; then
+    is_zoomed=$(tmux list-panes -F '#F' | grep Z)
+    if [[ -n $is_zoomed ]]; then
       tmux resize-pane -Z
       tmux last-pane
+
+      # To avoid the 'last-pane' being the yazi pane
+      __avoid_yazi_pane
+
       __adjust_pane_height
 
     else
