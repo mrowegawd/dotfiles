@@ -73,11 +73,7 @@ local function open_with_tmux(action, fpath)
 	os.execute([[tmux select-pane -R]])
 
 	local child, err = Command("tmux")
-		:args({
-			"display-message",
-			"-p",
-			"'#{pane_current_command}'",
-		})
+		:args({ "display-message", "-p", "'#{pane_current_command}'" })
 		:stdin(Command.INHERIT)
 		:stdout(Command.PIPED)
 		:stderr(Command.INHERIT)
@@ -98,7 +94,6 @@ local function open_with_tmux(action, fpath)
 	pane_current_cmd = pane_current_cmd:gsub("\n$", "")
 
 	if pane_current_cmd ~= "nvim" then
-		fail(pane_current_cmd)
 		local commandquit = [[tmux send-keys "nvim ]] .. fpath .. [[" Enter]]
 		os.execute(commandquit)
 	else
@@ -107,6 +102,8 @@ local function open_with_tmux(action, fpath)
 			open_mode = ":vsplit "
 		elseif action == "split" then
 			open_mode = ":sp "
+		elseif action == "tab" then
+			open_mode = ":tabe "
 		end
 		local command = [[tmux send-keys "]] .. open_mode .. fpath .. [[" Enter]]
 		os.execute(command)
@@ -204,7 +201,8 @@ return {
 			end
 
 			if fpath_ext == "jpg" then
-				os.execute("sxiv '" .. fpath .. "' >/dev/null 2>&1 &")
+				-- os.execute("sxiv '" .. fpath .. "' >/dev/null 2>&1 &")
+				os.execute("feh --bg-scale " .. fpath)
 			end
 
 			if fpath_ext == "none" then
