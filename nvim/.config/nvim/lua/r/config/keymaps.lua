@@ -181,6 +181,7 @@ RUtils.map.cabbrev("qla", "qal!")
 RUtils.map.cabbrev("w;", "update!")
 
 RUtils.map.vmap("K", "<Nop>")
+RUtils.map.nmap("K", "<Nop>")
 RUtils.map.nmap("q", "<Nop>")
 -- }}}
 -- {{{ Toggle
