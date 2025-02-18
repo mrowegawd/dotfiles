@@ -331,12 +331,12 @@ end
 
 vim.cmd [[
   " :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
-  :autocmd BufEnter *.png,*.jpg,*gif exec "!bspc rule -a \\* -o state=tiled focus=true && sxiv -a ///".expand("%") | :bw
+  :autocmd BufEnter *.png,*.jpg,*gif :silent exec "!bspc rule -a \\* -o state=tiled focus=true && sxiv -a ///".expand("%") | :bw
 ]]
 
 vim.cmd [[
   " :autocmd BufEnter *.png,*.jpg,*gif exec "!sxiv -a ".expand("%") | :bw
-  :autocmd BufEnter *.mp4 exec "!bspc rule -a \\* -o state=tiled focus=true && mpv ///".expand("%") | :bw
+  :autocmd BufEnter *.mp4 :silent exec "!bspc rule -a \\* -o state=tiled focus=true && mpv ///".expand("%") | :bw
 ]]
 
 -- To check error when quit from nvim
