@@ -51,10 +51,81 @@ return {
       },
     },
   },
+  -- KITTY NAVIGATOR
+  {
+    "MunsMan/kitty-navigator.nvim",
+    enabled = os.getenv "TERMINAL" == "kitty",
+    build = {
+      "cp navigate_kitty.py ~/.config/kitty",
+      "cp pass_keys.py ~/.config/kitty",
+    },
+    keys = {
+      {
+        "<C-h>",
+        function()
+          require("kitty-navigator").navigateLeft()
+        end,
+        desc = "Kitty-navigator: move right a split",
+      },
+      {
+        "<C-j>",
+        function()
+          require("kitty-navigator").navigateDown()
+        end,
+        desc = "Kitty-navigator: move down a split",
+      },
+      {
+        "<C-k>",
+        function()
+          require("kitty-navigator").navigateUp()
+        end,
+        desc = "Kitty-navigator: move up a split",
+      },
+      {
+        "<C-l>",
+        function()
+          require("kitty-navigator").navigateRight()
+        end,
+        desc = "Kitty-navigator: move left a split",
+      },
+      {
+        "<a-H>",
+        function()
+          local resizer_h = "+5"
+          local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
+          if exclude_win.found then
+            if vim.api.nvim_win_get_number(0) == 1 then
+              resizer_h = "-5"
+            end
+          end
+          return vim.cmd("vertical resize " .. resizer_h)
+        end,
+        desc = "Kitty-navigator: resize right",
+      },
+      {
+        "<a-L>",
+        function()
+          local resizer_l = "-5"
+          local exclude_win = RUtils.cmd.windows_is_opened { "aerial", "Outline" }
+          if exclude_win.found then
+            if vim.api.nvim_win_get_number(0) == 1 then
+              resizer_l = "+5"
+            end
+          end
+          return vim.cmd("vertical resize " .. resizer_l)
+        end,
+        desc = "Kitty-navigator: resize left",
+      },
+    },
+    opts = {
+      keybindings = {},
+    },
+  },
   -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
     event = "VimEnter",
+    enabled = os.getenv "TERMINAL" == "ghostty",
     opts = {
       ignored_filetypes = { "nofile", "quickfix", "prompt" },
       ignored_buftypes = { "NvimTree" },
