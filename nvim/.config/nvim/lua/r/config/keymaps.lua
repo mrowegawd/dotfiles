@@ -85,7 +85,7 @@ RUtils.map.nnoremap("<Leader>wJ", "<C-W>t <C-W>K", { desc = "Window: force buffe
 Snacks.toggle.zoom():map "<Leader>wm"
 Snacks.toggle.zen():map "<Leader>uz"
 
-if not RUtils.has "smart-splits.nvim" then
+if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
   RUtils.map.nnoremap("<a-J>", "<cmd>resize -4<cr>", { desc = "View: increase window height" })
   RUtils.map.nnoremap("<a-H>", "<cmd>vertical resize -4<cr>", { desc = "View: decrease window width" })
