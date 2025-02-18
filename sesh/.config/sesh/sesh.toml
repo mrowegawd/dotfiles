@@ -12,6 +12,11 @@ startup_command = "ls"
 preview_command = "bat --color=always ~/.config/zsh/.zshrc"
 
 [[session]]
+name = "Linux void  "
+path = "~/moxconf/development/linux-void"
+disable_startup_command = true
+
+[[session]]
 name = "Typescript 🕸 "
 path = "~/moxconf/development/project/typescript"
 startup_command = ""
