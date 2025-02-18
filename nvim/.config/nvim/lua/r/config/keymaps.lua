@@ -52,7 +52,6 @@ end, { desc = "Fold: magic prev closed" })
 -- }}}
 -- {{{ Terminal
 -- RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
-RUtils.map.tnoremap("qq", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
 RUtils.map.tnoremap("<esc><esc>", "<C-\\><C-n>", { desc = "Terminal: normal mode" })
 RUtils.map.tnoremap("<a-x>", function()
   local buf = vim.api.nvim_get_current_buf()
