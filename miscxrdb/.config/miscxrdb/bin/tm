@@ -35,13 +35,20 @@ create_if_needed_and_attach() {
     session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
     [[ -z "$session" ]] && return
     sesh connect "$session"
+  else
+    dir_name=$(basename "$PWD")
+    if ! tmux has-session -t "$dir_name" 2>/dev/null; then
+      tmux new-session -d -s "$dir_name"
+    fi
 
-  # else
-  #   RED='\033[0;31m'
-  #   YELLOW='\033[1;33m'
-  #   NC='\033[0m' # No Color
-  #
-  #   echo -e "\n${YELLOW}Warning:${NC} ${RED}You are already inside a tmux session. Use 'Alt+t' to select or create a new tmux session.${NC}\n"
+    # Save the current window ID
+    current_window=$(tmux display-message -p '#{window_id}')
+
+    # Switch to the new session
+    tmux switch-client -t "$dir_name"
+
+    # Kill the current pane in the previous window
+    tmux kill-pane -t "$current_window"
   fi
 }
 
