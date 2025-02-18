@@ -41,7 +41,7 @@ return {
             local Terminal = require("toggleterm.terminal").Terminal
             local terminal_open = Terminal:new {
               cmd = "zsh",
-              direction = "float",
+              direction = "horizontal", -- horizontal, vertical
               float_opts = {
                 border = "single",
                 width = width,
