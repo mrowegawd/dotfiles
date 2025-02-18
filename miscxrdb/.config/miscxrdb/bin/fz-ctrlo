@@ -356,7 +356,7 @@ callme() {
   "select-session") tmux_select_sess ;;
   "toggle-status") tmux_toggle_status ;;
   "toggle-synchronize-panes") tmux_toggle_synchronize_panes ;;
-  "apt-nsearch") show_apt_search ;;
+  "apt-search") show_apt_search ;;
   "rkill") open_rkill ;;
   "multilog") open_mutlilog ;;
   "newsboat") open_newsboat ;;
