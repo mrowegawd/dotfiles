@@ -53,7 +53,7 @@ return {
           },
         },
         menu = {
-          border = "single",
+          border = RUtils.config.icons.border.line,
           winhighlight = "Normal:Pmenu,FloatBorder:CmpItemFloatBorder,CursorLine:PmenuSel,Search:None",
           draw = {
             treesitter = { "lsp" },
@@ -94,7 +94,7 @@ return {
           auto_show = true,
           auto_show_delay_ms = 200,
           window = {
-            border = "single",
+            border = RUtils.config.icons.border.line,
             winhighlight = "Normal:CmpDocNormal,FloatBorder:CmpDocFloatBorder,CursorLine:PmenuSel,Search:None",
           },
         },
@@ -102,12 +102,8 @@ return {
           enabled = false,
         },
       },
-      sources = {
-        -- adding any nvim-cmp sources here will enable them
-        -- with blink.compat
-        compat = {},
-        default = { "lsp", "path", "snippets", "buffer" },
-        cmdline = function()
+      cmdline = {
+        sources = function()
           local type = vim.fn.getcmdtype()
           if type == "/" or type == "?" then
             return { "buffer" }
@@ -116,11 +112,25 @@ return {
             return { "cmdline" }
           end
         end,
+      },
+      sources = {
+        compat = {},
+        default = { "lsp", "path", "snippets", "buffer" },
 
         providers = {
-          snippets = {
+          snippets = { opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } } },
+          buffer = {
             opts = {
-              search_paths = { os.getenv "HOME" .. "/Dropbox/snippets-for-all" },
+              get_bufnrs = function()
+                -- local type = vim.fn.getcmdtype()
+                -- if type == "/" or type == "?" or type == ":" or type == "@" then
+                if vim.tbl_contains({ "/", "?", ":", "@" }, vim.fn.getcmdtype()) then
+                  return vim.tbl_filter(function(bufnr)
+                    return bufnr == vim.api.nvim_get_current_buf()
+                  end, vim.api.nvim_list_bufs())
+                end
+                return vim.api.nvim_list_bufs()
+              end,
             },
           },
         },
