@@ -125,7 +125,9 @@ return {
         feeds = {
           "neo451/feed.nvim/releases",
           "folke/snacks.nvim", -- defaults to subscribing to commits
+          "https://dev.to/feed/tag/git",
         },
+        search = { backend = { "fzf-lua" } },
       }
     end,
   },
