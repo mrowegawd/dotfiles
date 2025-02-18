@@ -1986,7 +1986,7 @@ local function colorscheme_overrides()
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
-      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.15 }, fg = "NONE" } },
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.5 }, fg = "NONE" } },
 
       { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
       { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },

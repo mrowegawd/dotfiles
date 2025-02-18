@@ -394,7 +394,7 @@ set_yazi() {
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
   # HOVERED_BG=$GET_COL_39
-  HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
+  HOVERED_BG=$(lighten_color "$GET_COL_39" 12)
   if [ "$1" == "lackluster" ]; then
     HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
   fi
