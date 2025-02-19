@@ -69,6 +69,23 @@ local function is_in_tmux()
 	return false
 end
 
+local function is_in_wezterm()
+	if os.getenv("TERMINAL") == "wezterm" then
+		return true
+	end
+	return false
+end
+
+local function get_output_string_cmd(cmd, args)
+	local child, _ =
+		Command(cmd):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):output()
+
+	if not child then
+		return fail("OPEN_WITH_WEZTERM: Get pane_id went wrong", err)
+	end
+	return child.stdout:gsub("\n$", "")
+end
+
 local function open_with_tmux(action, fpath)
 	os.execute([[tmux select-pane -R]])
 
@@ -110,28 +127,44 @@ local function open_with_tmux(action, fpath)
 	end
 end
 
-local function open_with_wezterm(action, fpath)
-	local child, err = Command("wezterm")
-		:args({
-			"cli",
-			"get-pane-direction",
-			"right",
-		})
-		:stdin(Command.INHERIT)
-		:stdout(Command.PIPED)
-		:stderr(Command.INHERIT)
-		:output()
+local function open_with_wezterm(action, fpath, fpath_ext)
+	if fpath_ext == "pdf" then
+		local get_pane_id_right = get_output_string_cmd("wezterm", { "cli", "get-pane-direction", "right" })
+		local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
+		local child, _ = Command("awk")
+			:args({
+				"-v",
+				"pane_id=" .. get_pane_id_right,
+				"$3==pane_id { print $6 }",
+			})
+			:stdin(wezterm_list:take_stdout())
+			:stdout(Command.PIPED)
+			:stderr(Command.INHERIT)
+			:output()
 
-	if not child then
-		return fail("OPEN_WITH_WEZTERM: Get pane_id went wrong", err)
+		local current_program_name = child.stdout:gsub("\n$", "")
+
+		if current_program_name == "nvim" or current_program_name == "zsh" then
+			get_output_string_cmd("wezterm", { "cli", "activate-pane-direction", "right" })
+			local jd = get_output_string_cmd(
+				"wezterm",
+				{ "cli", "split-pane", "--horizontal", "--pane-id", get_pane_id_right }
+			)
+
+			get_output_string_cmd(
+				"wezterm",
+				{ "cli", "send-text", "--no-paste", 'fancy-cat "' .. fpath .. '"\r', "--pane-id", jd }
+			)
+		end
+
+		return
 	end
 
-	local current_pane_id = child.stdout:gsub("\n$", "")
+	local current_pane_id = get_output_string_cmd("wezterm", { "cli", "get-pane-direction", "right" })
 
 	-- original command: wezterm cli list | awk -v pane_id=79 '$3==pane_id { print $6 }'
 	local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
-
-	child, err = Command("awk")
+	local child, _ = Command("awk")
 		:args({
 			"-v",
 			"pane_id=" .. current_pane_id,
@@ -186,31 +219,42 @@ return {
 			local fpath = tostring(get_hovered_item_path())
 			local fpath_ext = check_file_extension(fpath)
 
-			if fpath_ext == "mp3" then
-				os.execute("mpv --really-quiet '" .. fpath .. "'  >/dev/null 2>&1 &")
+			if action == "open" and fpath_ext == "jpg" then
+				os.execute("feh --bg-scale " .. fpath)
+				return
 			end
 
-			if fpath_ext == "pdf" then
+			if fpath_ext == "jpg" then
+				os.execute("sxiv '" .. fpath .. "' >/dev/null 2>&1 &")
+				return
+			end
+
+			if fpath_ext == "mp3" then
+				os.execute("mpv --really-quiet '" .. fpath .. "'  >/dev/null 2>&1 &")
+				return
+			end
+
+			if fpath_ext == "mp3" then
+				os.execute('mpv --really-quiet "' .. fpath .. '"')
+				return
+			end
+
+			if action == "open" and fpath_ext == "pdf" then
 				os.execute("zathura '" .. fpath .. "' >/dev/null 2>&1 &")
+				return
 			end
 
 			if fpath_ext == "mp4" then
 				os.execute(
 					"mpv --really-quiet --autofit=1000x900 --geometry=-15-60 '" .. fpath .. "' >/dev/null 2>&1 &"
 				)
+				return
 			end
 
-			if fpath_ext == "jpg" then
-				-- os.execute("sxiv '" .. fpath .. "' >/dev/null 2>&1 &")
-				os.execute("feh --bg-scale " .. fpath)
-			end
-
-			if fpath_ext == "none" then
-				if is_in_tmux() then
-					open_with_tmux(action, fpath)
-				else
-					open_with_wezterm(action, fpath)
-				end
+			if is_in_tmux() then
+				open_with_tmux(action, fpath)
+			elseif is_in_wezterm() then
+				open_with_wezterm(action, fpath, fpath_ext)
 			end
 		end
 	end,

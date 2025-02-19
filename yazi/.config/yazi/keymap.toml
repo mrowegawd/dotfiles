@@ -8,8 +8,8 @@ prepend_keymap = [
     "l",
   ], run = "plugin smart-enter", desc = "Enter child or file" },
   { on = [
-    "o",
-  ], run = "plugin smart-enter", desc = "Open the selected files" },
+    "L",
+  ], run = "plugin smart-enter --args=open", desc = "Open the selected files" },
   { on = [
     "<c-v>",
   ], run = "plugin smart-enter --args=vsplit", desc = "Open vsplit the selected item" },

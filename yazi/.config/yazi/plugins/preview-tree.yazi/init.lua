@@ -11,6 +11,13 @@ local function is_in_tmux()
 	return false
 end
 
+local function is_in_wezterm()
+	if os.getenv("TERMINAL") == "wezterm" then
+		return true
+	end
+	return false
+end
+
 -- Function to get file extension
 local get_file_extension = function(filename)
 	local pattern_mp3 = "%.mp3$"
@@ -65,13 +72,17 @@ end)
 local exec_os_cmd = function(pane_id, cmds)
 	local term_cmd
 	if is_in_tmux() then
-		term_cmd = "tmux send-keys -t " .. pane_id
+		term_cmd = "tmux send-keys -t " .. pane_id .. " "
 		term_cmd = term_cmd .. " '" .. cmds .. "' C-m "
+	elseif is_in_wezterm() then
+		term_cmd = "wezterm cli send-text --no-paste "
+		term_cmd = term_cmd .. '"' .. cmds .. '"\r ' .. " --pane-id " .. pane_id
 	end
+
 	os.execute(term_cmd)
 end
 
-local gen_cmd_ext = function(fpath_ext, fpath)
+local gen_cmd_ext = function(pane_id, fpath_ext, fpath)
 	if fpath_ext == "mp3" then
 		os.execute("mpv --really-quiet '" .. fpath .. "'  >/dev/null 2>&1 &")
 	end
@@ -81,14 +92,13 @@ local gen_cmd_ext = function(fpath_ext, fpath)
 	end
 
 	if fpath_ext == "mp4" then
-		fail("adf")
 		os.execute("mpv --really-quiet --autofit=1000x900 --geometry=-15-60 '" .. fpath .. "' >/dev/null 2>&1 &")
 	end
 
 	if fpath_ext == "jpg" then
-		exec_os_cmd(3, "clear")
+		exec_os_cmd(pane_id, "clear")
 		exec_os_cmd(
-			3,
+			pane_id,
 			[[kitty +kitten icat --silent --scale-up --transfer-mode=memory --align left --stdin=no ]] .. fpath
 		)
 	end
@@ -113,7 +123,7 @@ local function get_output_string_cmd(cmd, args)
 	return tostring(output.stdout:gsub("'", ""))
 end
 
-local function cad(cmd, args)
+local function send_text_cmds(cmd, args)
 	local child, _ =
 		Command(cmd):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()
 
@@ -132,16 +142,29 @@ end
 
 local function open_with_tmux(fpath_ext, fpath)
 	local is_pane_at_bottom = get_output_string_cmd("tmux", { "display", "-p", "'#{pane_at_bottom}'" })
+	local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
 
 	if tonumber(is_pane_at_bottom) == 1 and (fpath_ext == "jpg") then
-		-- fail("Please try to create a split pane manually.")
-		-- fail("No pane available for preview! Aborting operation!")
-		cad("tmux", { "split-window", "-vl", "20", "-c", "'#{pane_current_path}'" })
-		cad("tmux", { "splitw", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
-		cad("tmux", { "last-pane" })
+		if tonumber(list_panes) < 3 then
+			send_text_cmds("tmux", { "split-window", "-vl", "20", "-c", "'#{pane_current_path}'" })
+			send_text_cmds("tmux", { "splitw", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
+			send_text_cmds("tmux", { "resize-pane", "-D", "10" })
+			send_text_cmds("tmux", { "last-pane" })
+		end
 	end
 
-	gen_cmd_ext(fpath_ext, fpath)
+	gen_cmd_ext(3, fpath_ext, fpath)
+end
+
+local function open_with_wezterm(fpath_ext, fpath)
+	local pane_id = get_output_string_cmd("wezterm", { "cli", "get-pane-direction", "down" })
+
+	if #pane_id == 0 and (fpath_ext == "jpg") then
+		pane_id = get_output_string_cmd("wezterm", { "cli", "split-pane", "--bottom" })
+		fail(pane_id)
+	end
+
+	gen_cmd_ext(pane_id, fpath_ext, fpath)
 end
 
 -- function M:setup()
@@ -159,80 +182,9 @@ function M:entry(_)
 
 	if is_in_tmux() then
 		open_with_tmux(fpath_ext, fpath)
+	elseif is_in_wezterm() then
+		open_with_wezterm(fpath_ext, fpath)
 	end
 end
-
--- function M:peek()
--- 	local args = {
--- 		"-a",
--- 		"--oneline",
--- 		"--color=always",
--- 		"--icons=always",
--- 		"--group-directories-first",
--- 		"--no-quotes",
--- 		tostring(self.file.url),
--- 	}
---
--- 	if is_tree_view_mode() then
--- 		table.insert(args, "-T")
--- 	end
---
--- 	local child = Command("eza"):args(args):stdout(Command.PIPED):stderr(Command.PIPED):spawn()
---
--- 	local limit = self.area.h
--- 	local lines = ""
--- 	local num_lines = 1
--- 	local num_skip = 0
--- 	local empty_output = false
---
--- 	repeat
--- 		local line, event = child:read_line()
--- 		if event == 1 then
--- 			fail(tostring(event))
--- 		elseif event ~= 0 then
--- 			break
--- 		end
---
--- 		if num_skip >= self.skip then
--- 			lines = lines .. line
--- 			num_lines = num_lines + 1
--- 		else
--- 			num_skip = num_skip + 1
--- 		end
--- 	until num_lines >= limit
---
--- 	if num_lines == 1 and not is_tree_view_mode() then
--- 		empty_output = true
--- 	elseif num_lines == 2 and is_tree_view_mode() then
--- 		empty_output = true
--- 	end
---
--- 	child:start_kill()
--- 	if self.skip > 0 and num_lines < limit then
--- 		ya.manager_emit("peek", {
--- 			tostring(math.max(0, self.skip - (limit - num_lines))),
--- 			only_if = tostring(self.file.url),
--- 			upper_bound = "",
--- 		})
--- 	elseif empty_output then
--- 		ya.preview_widgets(self, {
--- 			ui.Paragraph(self.area, { ui.Line("No items") }):align(ui.Paragraph.CENTER),
--- 		})
--- 	else
--- 		ya.preview_widgets(self, { ui.Paragraph.parse(self.area, lines) })
--- 	end
--- end
---
--- function M:seek(units)
--- 	local h = cx.active.current.hovered
--- 	if h and h.url == self.file.url then
--- 		local step = math.floor(units * self.area.h / 10)
--- 		ya.manager_emit("peek", {
--- 			math.max(0, cx.active.preview.skip + step),
--- 			only_if = tostring(self.file.url),
--- 			force = true,
--- 		})
--- 	end
--- end
 
 return M
