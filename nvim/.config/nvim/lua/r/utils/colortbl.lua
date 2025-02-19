@@ -37,12 +37,16 @@ if vim.g.colorscheme == "lackluster" then
   modenc_bg = Highlight.get("KeywordBlur", "bg")
 end
 
-if vim.g.colorscheme == "base2tone_field_dark" then
+if vim.g.colorscheme == "base2tone_suburb_dark" then
   mode_bg_blur = Highlight.tint(mode_bg, -0.45)
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end
 
 if vim.g.colorscheme == "sunburn" then
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
+end
+
+if vim.g.colorscheme == "jellybeans" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end
 

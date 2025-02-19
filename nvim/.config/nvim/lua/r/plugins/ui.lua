@@ -248,7 +248,7 @@ return {
         theme = {
           ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
           ["base2tone_cave_dark"] = { { ["BeaconDefault"] = { bg = "#996e00" } } },
-          ["base2tone_field_dark"] = { { ["BeaconDefault"] = { bg = "#00943e" } } },
+          ["base2tone_suburb_dark"] = { { ["BeaconDefault"] = { bg = "#d14781" } } },
           ["neomodern"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
@@ -320,7 +320,7 @@ return {
           "horizon",
           "jellybeans",
           "rose-pine-main",
-          "base2tone_field_dark",
+          "base2tone_suburb_dark",
           "base2tone_cave_dark",
         }, RUtils.config.colorscheme)
       then

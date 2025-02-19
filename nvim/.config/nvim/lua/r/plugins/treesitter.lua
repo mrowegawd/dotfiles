@@ -258,7 +258,7 @@ return {
               },
             },
           },
-          ["base2tone_field_dark"] = {
+          ["base2tone_suburb_dark"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {
               TreesitterContextSeparator = {

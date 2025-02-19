@@ -2,6 +2,7 @@ local colorscheme = RUtils.config.colorscheme
 -- https://nvchad.com/themes
 -- https://github.com/mbadolato/iTerm2-Color-Schemes
 -- https://github.com/tinted-theming
+-- https://base2t.one
 
 return {
   -- BASE2TONE
