@@ -46,7 +46,7 @@ float_term() {
   fi
 }
 
-split_normal_l() {
+split_normal_v() {
   pane_count=$(tmux list-panes | wc -l)
 
   if [[ $pane_count -gt 1 ]]; then
@@ -55,13 +55,13 @@ split_normal_l() {
   fi
 
   # open split pane dengan size
-  tmux split-window -hl 65 -c '#{pane_current_path}'
+  tmux split-window -hl 80 -c '#{pane_current_path}'
 }
-split_normal_v() {
+split_normal_h() {
   pane_count=$(tmux list-panes | wc -l)
 
   if [[ $pane_count -gt 1 ]]; then
-    tmux split-window -v -c '#{pane_current_path}'
+    tmux split-window -vl 20 -c '#{pane_current_path}'
     exit
   fi
 
