@@ -34,6 +34,13 @@ def main():
     pass
 
 
+def send_notification(title, message):
+    import subprocess  # Import subprocess untuk menjalankan perintah sistem
+
+    """Send a notification using dunstify."""
+    subprocess.run(["dunstify", title, message])
+
+
 @result_handler(no_ui=True)
 def handle_result(args, result, target_window_id, boss):
     window = boss.window_id_map.get(target_window_id)
@@ -47,4 +54,13 @@ def handle_result(args, result, target_window_id, boss):
             encoded = encode_key_mapping(window, keymap)
             window.write_to_child(encoded)
     else:
-        boss.active_tab.neighboring_window(direction)
+        # send_notification("handle_result", direction)
+        if (
+            direction == "narrower"
+            or direction == "wider"
+            or direction == "taller"
+            or direction == "shorter"
+        ):
+            boss.active_tab.resize_window(direction, 3)
+        else:
+            boss.active_tab.neighboring_window(direction)
