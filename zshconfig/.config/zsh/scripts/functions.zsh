@@ -54,6 +54,14 @@ build-install() {
     sudo apt install proxychains4
   fi
 
+  if ! command -v ueberzugpp >/dev/null; then
+    echo "Installing: ueberzugpp - Drop in replacement for ueberzug written in C++"
+    echo 'deb http://download.opensuse.org/repositories/home:/justkidding/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:justkidding.list
+    curl -fsSL https://download.opensuse.org/repositories/home:justkidding/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_justkidding.gpg > /dev/null
+    sudo apt update
+    sudo apt install ueberzugpp
+  fi
+
   # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y
   # https://github.com/caarlos0/timer
   # cara install `timer`:
