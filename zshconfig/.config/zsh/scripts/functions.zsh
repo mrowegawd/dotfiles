@@ -47,6 +47,7 @@ build-install() {
   if ! command -v fd >/dev/null; then
     echo "Installing: fd - Blazingly fast for search folder name"
     sudo apt install fd-find
+    sudo ln -s /usr/bin/fdfind $HOME/.local/bin/fd
   fi
 
   if ! command -v proxychains >/dev/null; then
