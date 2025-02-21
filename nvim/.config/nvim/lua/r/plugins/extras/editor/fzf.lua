@@ -745,7 +745,7 @@ return {
                     opts.rg_glob = false
                     opts.no_esc = true
 
-                    return require("fzf-lua").live_grep(opts)
+                    return require("fzf-lua").live_grep_glob(opts)
                   end,
                 },
               }
@@ -966,7 +966,6 @@ return {
             child_prefix = false,
             symbol_style = 1,
             symbol_icons = RUtils.config.icons.kinds,
-            -- child_prefix = false, -- remove spaces
             async_or_timeout = true,
             exec_empty_query = true,
             winopts = {

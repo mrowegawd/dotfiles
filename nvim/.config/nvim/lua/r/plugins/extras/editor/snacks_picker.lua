@@ -95,15 +95,6 @@ return {
               },
             },
           },
-          --   preset = "ivy",
-          --   layout = {
-          --     width = 0.50,
-          --     height = 0.50,
-          --     position = "bottom",
-          --     -- box = "horizontal",
-          -- },
-          -- },
-          -- },
         },
       },
     },
@@ -178,6 +169,10 @@ return {
       { "<Leader>uu", function() Snacks.picker.undo() end, desc = "Snackspicker: undotree", },
       -- ui
       { "<Leader>uC", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes", },
+
+      -- LSP
+      { "gs", function() Snacks.picker.lsp_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Symbols" },
+      { "gS", function() Snacks.picker.lsp_workspace_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Workspace Symbols" },
     },
   },
 }
