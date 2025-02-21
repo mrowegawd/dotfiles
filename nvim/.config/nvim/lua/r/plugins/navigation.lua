@@ -168,6 +168,29 @@ return {
                 require("neo-tree.ui.renderer").focus_node(state, node:get_child_ids()[1])
               end
             else -- if not a directory just open it
+              -- print(vim.inspect(node:get_id()))
+              -- local filepath = node:get_id()
+              local filename = node.name
+              local modify = vim.fn.fnamemodify
+
+              local file_extension = modify(filename, ":e")
+
+              -- local results = {
+              --   filepath,
+              --   modify(filepath, ":."),
+              --   modify(filepath, ":~"),
+              --   filename,
+              --   modify(filename, ":r"),
+              --   modify(filename, ":e"),
+              -- }
+
+              if file_extension == "pdf" then
+                if os.getenv "TERMINAL" == "kitty" then
+                  print(filename)
+                end
+                return
+              end
+
               state.commands.open(state)
             end
           end,

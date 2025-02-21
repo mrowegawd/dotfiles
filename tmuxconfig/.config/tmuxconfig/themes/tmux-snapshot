@@ -1,23 +1,23 @@
-ACTIVE_FG="#b695de"
-ACTIVE_BG="#65537b"
+ACTIVE_FG="#d09755"
+ACTIVE_BG="#74542f"
 
-STATUSLINE_BG_MESSAGE="#F9E2AF"
-STATUSLINE_FG="#4c4c7a"
+STATUSLINE_BG_MESSAGE="#ebc686"
+STATUSLINE_FG="#56524f"
 
-SESSION_BG="#BAC2DE"
+SESSION_BG="#bbbac1"
 SESSION_FG="#beb9b3"
 
-TMUX_BG="#1e1e2e"
-TMUX_FG="#565684"
+TMUX_BG="#1e1d1c"
+TMUX_FG="#605c59"
 
-BORDER_FG="#47476c"
-BORDER_BG="#1e1e2e"
-BORDER_FG_NC="#2a2a40"
+BORDER_FG="#514e4a"
+BORDER_BG="#1e1d1c"
+BORDER_FG_NC="#302e2c"
 
-RED="#F38BA8"
-BLUE="#89B4FA"
-WHITE="#BAC2DE"
-GREEN="#A6E3A1"
+RED="#d67287"
+BLUE="#a2bafa"
+WHITE="#bbbac1"
+GREEN="#8ab56d"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
@@ -52,11 +52,11 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 #  ╓
 #  ║ LEFT
 #  ╙
-set-option -g status-left \
-"#{?client_prefix,#[fg=$ACTIVE_BG]#[bg=$RED]#[bold] T \
-#[fg=$RED]#[bg=$SESSION_BG]#[nobold]#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold],\
-#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold]} ❐ #S \
-#{?#{==:#I,1},#[fg=$SESSION_BG]#[bg=$ACTIVE_BG],#[fg=$SESSION_BG]#[bg=$TMUX_BG]}"
+# set-option -g status-left \
+# "#{?client_prefix,#[fg=$ACTIVE_BG]#[bg=$RED]#[bold] T \
+# #[fg=$RED]#[bg=$SESSION_BG]#[nobold]#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold],\
+# #[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold]} ❐ #S \
+# #{?#{==:#I,1},#[fg=$SESSION_BG]#[bg=$ACTIVE_BG],#[fg=$SESSION_BG]#[bg=$TMUX_BG]}"
 
 #  ╓
 #  ║  RIGHT
@@ -64,7 +64,9 @@ set-option -g status-left \
 set -g status-right-length 80
 set -g status-right \
 "#[fg=$GREEN,bold]#{pomodoro_status} \
-#[fg=$RED,bold]  #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) "
+#[fg=$RED,bold]  #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+#[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
+#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold] ❐ #S "
 
 # +----------------------------------------------------------+
 # |                      STATUS FORMAT                       |
@@ -84,18 +86,27 @@ set -g status-right \
 # #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}} \
 # #{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold]󰁌 ,}#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
 
-set-option -g window-status-current-format "#{?#{==:#I,1},,#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
-#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}} \
-#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold]󰁌 ,}#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
+# setw -g window-status-current-format "#[fg=$_tmux_white,bg=$_tmux_grey_d,bold] [#I] #{=30:#{b:pane_current_path}} #{?#{!=:#{window_panes},1},(#{window_panes}) ,}#[fg=$_tmux_grey_l,bg=$_tmux_black]"
+# setw -g window-status-format "#[fg=$TMUXG,bg=$_tmux_black] #{?window_last_flag,:, }#I#{?window_last_flag,:, }#[fg=$AC,bg=$_tmux_black] #{=30:#{b:pane_current_path}} #{?#{!=:#{window_panes},1},(#{window_panes}) ,}"
+# setw -g window-status-separator "┃"
+
+# #{?#{==:#I,1},#[fg=$TMUX_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
+# [fg=$TMUX_BG,bg=$ACTIVE_BG,nobold]\
+#
+set-option -g window-status-current-format "\
+#{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold] 󰁌,} \
+#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
 
 # set-option -g window-status-format "#{?window_bell_flag, [fg=$RED]#[bg=$TMUX_BG]#[nobold]\
 # #[fg=$RED]#[bg=$RED]#[bold] #I:#{=30:#{b:pane_current_path}} \
 # #[fg=$TMUX_BG]#[bg=$RED]#[nobold],\
 # #[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold] #I:#{=30:#{b:pane_current_path}}}"
 
-set-option -g window-status-format "#{?window_bell_flag,#[fg=$RED]#[bg=$TMUX_BG]#[nobold]\
-#[fg=$RED]#[bg=$RED]#[bold]#I:#{=30:#{b:pane_current_path}}#[fg=$TMUX_BG]#[bg=$RED]#[nobold],\
-#[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold] #I:#{=30:#{b:pane_current_path}}}"
+set-option -g window-status-format "\
+#[fg=$TMUX_BG]#[bg=$TMUX_BG] \
+#[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
+#[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
 
 # set-option -g window-status-format "#{?window_bell_flag,#[fg=$RED]#[bg=$TMUX_BG]#[nobold]\
 # #[fg=$RED]#[bg=$RED]#[bold]#I:#{=30:#{b:pane_current_path}}#[fg=$GREEN]#[bg=$GREEN]#[nobold],\

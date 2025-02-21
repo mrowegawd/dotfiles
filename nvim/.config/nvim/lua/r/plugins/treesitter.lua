@@ -37,6 +37,8 @@ return {
         "javascript",
         "jsdoc",
         "json",
+        "norg",
+        "typst",
         "jsonc",
         "lua",
         "luadoc",

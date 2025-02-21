@@ -154,7 +154,8 @@
 
   # Hard reset and clean (unrecoverable)
   reset-hard = reset --hard
-  reset-fuck = !"git reset --hard && git clean -fdx"
+  # reset-fuck = !"git reset --hard && git clean -fdx"
+  reset-fuck = !"git reset --hard origin/$(git rev-parse --abbrev-ref HEAD) && git clean -fdx"
 
   # From https://gist.github.com/492227
   # head = log -n1

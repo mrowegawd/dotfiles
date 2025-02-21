@@ -14,8 +14,7 @@
       "dependsOn": [
         "Tail lsp.log",
         "Tail nvim log",
-        "Tail noice.log",
-        "Tail conform log"
+        "Tail journalctl"
       ]
     },
     {

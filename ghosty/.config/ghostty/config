@@ -2,6 +2,10 @@
 # ╎                           FONTS                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
 font-family    = "SF Mono"
+# font-family-bold = "SF Mono"
+font-family-italic = "Mapple Mono Italic"
+# font-family-bold-italic = "Mapple Mono Bold Italic"
+
 # font-family-bold = "Mapple Mono"
 # font-family-italic = "JetBrainsMono NF Italic"
 # font-family-bold-italic =  "JetBrainsMono NF Bold Italic"
@@ -23,7 +27,7 @@ adw-toolbar-style               = flat
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                           THEME                           ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-theme = catppuccin-mocha
+theme = coffeecat
 
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                          WINDOW                           ╎
@@ -68,7 +72,7 @@ unfocused-split-opacity         = 0.5
 # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
 # ╎                         MAPPINGS                          ╎
 # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
-# for now atm clear all set keybindings
+# clear all default mappings
 # keybind = clear
 
 # NOTE: keybind dibawah ini hanya digunakan ketika di luar tmux-only (commented jika perlu)
@@ -80,7 +84,7 @@ unfocused-split-opacity         = 0.5
 # keybind = unconsumed:alt+ctrl+v=paste_from_clipboard
 # keybind = alt+m=toggle_split_zoom
 # keybind = ctrl+shift+comma=reload_config
-# # keybind = global:alt+f=toggle_quick_terminal # (Mac only)
+# keybind = global:alt+f=toggle_quick_terminal # (Mac only)
 
 # ┏╍╍╍╍╍┓
 # ╏ TAB ╏
@@ -93,14 +97,14 @@ unfocused-split-opacity         = 0.5
 # ┏╍╍╍╍╍╍┓
 # ╏ PANE ╏
 # ┗╍╍╍╍╍╍┛
-# keybind = unconsumed:ctrl+h=goto_split:left
-# keybind = unconsumed:ctrl+j=goto_split:bottom
-# keybind = unconsumed:ctrl+k=goto_split:top
-# keybind = unconsumed:ctrl+l=goto_split:right
+# keybind = ctrl+h=goto_split:left
+# keybind = ctrl+j=goto_split:bottom
+# keybind = ctrl+k=goto_split:top
+# keybind = ctrl+l=goto_split:right
 
 # keybind = unconsumed:alt+enter=new_split:right
 # keybind = alt+l=new_split:right
-# keybind = alt+j=new_split:down
+# keybind = ctrl+space,j=new_split:down
 
 # keybind = alt+shift+k=resize_split:up,15
 # keybind = alt+shift+h=resize_split:left,15

@@ -963,7 +963,8 @@ return {
             symbol_fmt = function(s)
               return s:lower() .. "\t"
             end,
-            child_prefix = false,
+            -- Disabled atm, warn: symbols_to_items must be called with valid position encoding
+            -- child_prefix = false, -- remove spaces
             symbol_style = 1,
             symbol_icons = RUtils.config.icons.kinds,
             async_or_timeout = true,
