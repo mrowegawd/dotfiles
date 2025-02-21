@@ -86,7 +86,12 @@ local function get_output_string_cmd(cmd, args)
 	return child.stdout:gsub("\n$", "")
 end
 
-local function open_with_tmux(action, fpath)
+local function open_with_tmux(action, fpath, fpath_ext)
+	if fpath_ext == "pdf" then
+		os.execute('nohup zathura "' .. fpath .. '" >/dev/null 2>&1 &')
+		return
+	end
+
 	os.execute([[tmux select-pane -R]])
 
 	local child, err = Command("tmux")
@@ -156,12 +161,10 @@ local function open_with_wezterm(action, fpath, fpath_ext)
 				{ "cli", "send-text", "--no-paste", 'fancy-cat "' .. fpath .. '"\r', "--pane-id", jd }
 			)
 		end
-
 		return
 	end
 
 	local current_pane_id = get_output_string_cmd("wezterm", { "cli", "get-pane-direction", "right" })
-
 	-- original command: wezterm cli list | awk -v pane_id=79 '$3==pane_id { print $6 }'
 	local wezterm_list = Command("wezterm"):args({ "cli", "list" }):stdout(Command.PIPED):spawn()
 	local child, _ = Command("awk")
@@ -225,34 +228,31 @@ return {
 			end
 
 			if fpath_ext == "jpg" then
-				os.execute("sxiv '" .. fpath .. "' >/dev/null 2>&1 &")
+				os.execute('nohup sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
 				return
 			end
 
 			if fpath_ext == "mp3" then
-				os.execute("mpv --really-quiet '" .. fpath .. "'  >/dev/null 2>&1 &")
-				return
-			end
-
-			if fpath_ext == "mp3" then
-				os.execute('mpv --really-quiet "' .. fpath .. '"')
+				os.execute('mpv --profile=pseudo-gui --really-quiet "' .. fpath .. '"  >/dev/null 2>&1 &')
 				return
 			end
 
 			if action == "open" and fpath_ext == "pdf" then
-				os.execute("zathura '" .. fpath .. "' >/dev/null 2>&1 &")
+				os.execute('nohup zathura "' .. fpath .. '" >/dev/null 2>&1 &')
 				return
 			end
 
 			if fpath_ext == "mp4" then
 				os.execute(
-					"mpv --really-quiet --autofit=1000x900 --geometry=-15-60 '" .. fpath .. "' >/dev/null 2>&1 &"
+					'nohup mpv --profile=pseudo-gui --really-quiet --autofit=1000x900 --geometry=-15-60 "'
+						.. fpath
+						.. '" >/dev/null 2>&1 &'
 				)
 				return
 			end
 
 			if is_in_tmux() then
-				open_with_tmux(action, fpath)
+				open_with_tmux(action, fpath, fpath_ext)
 			elseif is_in_wezterm() then
 				open_with_wezterm(action, fpath, fpath_ext)
 			end
