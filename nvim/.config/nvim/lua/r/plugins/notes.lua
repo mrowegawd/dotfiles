@@ -215,7 +215,7 @@ return {
 
             org_global_cycle = "<S-TAB>",
 
-            org_archive_subtree = "<prefix>$",
+            org_archive_subtree = "<prefix>S",
             org_toggle_archive_tag = "<Leader>T",
 
             org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
