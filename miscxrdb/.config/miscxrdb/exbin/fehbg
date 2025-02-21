@@ -8,13 +8,7 @@
 
 # set -u -e
 
-# NOTE: Path ini adalah dir path untuk wallpaper desktop,
-#       jika path wallpaper berbeda atau baru,
-#       ganti path WALLI3IMG ini dengan yang baru tersebut
-
-# WALLI3IMG="$HOME/moxconf/media_and_tuts/wallOldIndoPejuang"
 WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
-# WALLI3IMG="$HOME/Downloads/wezterm-walli3"
 
 #####################################
 
@@ -27,17 +21,19 @@ WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
 numberPath="$HOME/.cache/wallpaper"
 numberFile="imgWall"
 
+[[ ! -d $WALLI3IMG ]] && dunstify "Fehbg: path walli3=$WALLI3IMG not found!" && exit 1
+
 pathNumber="$numberPath/$numberFile"
 
 [[ ! -f "$pathNumber" ]] &&
-	mkdir -p "$numberPath" &&
-	touch "$pathNumber" &&
-	echo "0" >"$pathNumber"
+  mkdir -p "$numberPath" &&
+  touch "$pathNumber" &&
+  echo "0" >"$pathNumber"
 
 # 1. Get all files inside path and then convert all them to array
 array=()
 while IFS= read -r -d $'\0'; do
-	array+=("$REPLY")
+  array+=("$REPLY")
 done < <(find "$WALLI3IMG" -type f -name "*" -print0)
 
 # 2. And now starting decrement sum of array
@@ -45,17 +41,17 @@ totalNumImg=$((${#array[@]})) # get total length of array
 numImg="$(cat "$pathNumber")"
 
 if [ "$(cat "$pathNumber")" == 0 ]; then
-	echo "$totalNumImg" >"$pathNumber"
+  echo "$totalNumImg" >"$pathNumber"
 else
-	((totalNumImg = numImg - 1))
-	echo "$totalNumImg" >"$pathNumber"
+  ((totalNumImg = numImg - 1))
+  echo "$totalNumImg" >"$pathNumber"
 fi
 
 nextImg="$((${#array[@]} - $(cat "$pathNumber")))"
 
 for i in "${!array[@]}"; do
-	if [ "$i" == "$nextImg" ]; then
-		feh --bg-scale "${array[$i]}"
-		echo "${array[$i]}" >/tmp/bg-windows
-	fi
+  if [ "$i" == "$nextImg" ]; then
+    feh --bg-scale "${array[$i]}"
+    echo "${array[$i]}" >/tmp/bg-windows
+  fi
 done
