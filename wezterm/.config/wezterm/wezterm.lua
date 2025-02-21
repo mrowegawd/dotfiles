@@ -128,7 +128,7 @@ end
 -- Dim window
 config.inactive_pane_hsb = {
 	saturation = 1,
-	brightness = 0.7,
+	brightness = 0.4,
 }
 
 -- ├┤ FRAME ├───────────────────────────────────────────────────────────┤
@@ -186,6 +186,10 @@ config.colors = {
 	},
 }
 
+-- Make wezterm more fast
+-- https://www.youtube.com/watch?v=VMdSJ8d5Aos
+config.max_fps = 120
+
 -- ├┤ HYPERLINKS-RULES ├────────────────────────────────────────────────┤
 config.hyperlink_rules = Hyperlinks
 
@@ -197,34 +201,19 @@ config.hyperlink_rules = Hyperlinks
 config.harfbuzz_features = { "calt=0" }
 config.adjust_window_size_when_changing_font_size = false
 config.font = font_with_fallback("SF Mono")
--- config.font_rules = {
--- 	{
--- 		-- Normal
--- 		intensity = "Normal",
--- 		font = font_with_fallback("Maple Mono", { weight = "Regular" }),
--- 	},
--- 	{
--- 		-- Bold
--- 		italic = false,
--- 		font = font_with_fallback("Maple Mono", { weight = "Bold" }),
--- 	},
--- 	-- {
--- 	-- 	-- italic = true
--- 	-- 	intensity = "Half",
--- 	-- 	font = font_with_fallback("JetBrains Mono", { bold = false, italic = true }),
--- 	-- },
--- 	-- {
--- 	-- italic = false,
--- 	-- intensity = "Bold",
--- 	-- font = font_with_fallback("Victor Mono"),
--- 	-- },
--- }
+config.font_rules = {
+	{
+		intensity = "Normal",
+		italic = true,
+		font = wezterm.font("Maple Mono", { style = "Italic" }),
+	},
+}
 
 -- ├┤ MAPPINGS ├────────────────────────────────────────────────────────┤
 config.disable_default_key_bindings = true
 
 -- Use same prefix with tmux: <c-space>
-config.leader = { key = " ", mods = "CTRL", timeout_milliseconds = 1000 }
+config.leader = { key = " ", mods = "CTRL", timeout_milliseconds = 2000 }
 config.keys = Key
 -- config.mouse_bindings = KeyMouse
 -- config.key_tables = KeyTbl

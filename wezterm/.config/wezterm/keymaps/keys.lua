@@ -30,6 +30,9 @@ return {
 	-- 		end
 	-- 	end),
 	-- },
+	-- { key = "L", mods = "LEADER", action = "ShowLauncher" },
+	-- { key = "v", mods = "LEADER", action = wezterm.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
+	-- { key = "R", mods = "ALT", action = wezterm.action({ ActivatePaneDirection = "Next" }) },
 	{ -- rotate pane
 		key = "R",
 		mods = mod_key,
@@ -70,10 +73,7 @@ return {
 			if KeymapUtil.is_in_tmux(pane) then
 				window:perform_action({ SendKey = { key = "l", mods = "LEADER" } }, pane)
 			else
-				local pane_id = pane:tab():get_pane_direction("Right")
-				if pane_id == nil then
-					KeymapUtil.spawn_toggle_pane(window, pane)
-				end
+				KeymapUtil.spawn_toggle_pane(window, pane)
 			end
 		end),
 	},
@@ -84,10 +84,7 @@ return {
 			if KeymapUtil.is_in_tmux(pane) then
 				window:perform_action({ SendKey = { key = "j", mods = "LEADER" } }, pane)
 			else
-				local pane_id = pane:tab():get_pane_direction("Down")
-				if pane_id == nil then
-					KeymapUtil.spawn_toggle_pane(window, pane, "Down")
-				end
+				KeymapUtil.spawn_toggle_pane(window, pane, "Down")
 			end
 		end),
 	},
@@ -162,21 +159,69 @@ return {
 		end),
 	},
 
-	-- { https://github.com/wezterm/wezterm/issues/4038#issuecomment-2425142613
-	-- 	mods = "SHIFT|CTRL",
-	-- 	key = "t",
-	-- 	action = wezterm.action_callback(function(win, pane)
-	-- 		local panes = pane:tab():panes_with_info()
-	-- 		panes[#panes].pane:activate()
-	-- 		panes[#panes].pane:split({ direction = "Bottom" })
-	-- 		for i = 1, #panes + 1 do
-	-- 			local p = pane:tab():panes_with_info()[i]
-	-- 			win:perform_action({ AdjustPaneSize = { "Up", 3 } }, p.pane)
-	-- 			p.pane:send_text(string.format("%d:%d ", i, p.height))
+	-- { -- Swap pane to the left
+	-- 	key = "H",
+	-- 	mods = "LEADER",
+	-- 	action = wezterm.action({
+	-- 		SplitHorizontal = { domain = "CurrentPaneDomain" },
+	-- 	}),
+	-- },
+	-- { -- Swap pane to the right
+	-- 	key = "R",
+	-- 	jmods = "ALT",
+	-- 	action = wezterm.action_callback(function(window, pane)
+	-- 		if KeymapUtil.is_in_tmux(pane) then
+	-- 			window:perform_action({ SendKey = { key = "L", mods = "LEADER" } }, pane)
+	-- 		else
+	-- 			-- Swap the current pane with the one on the right
+	-- 			window:perform_action(act.RotatePanes("Clockwise"), pane)
 	-- 		end
-	-- 		panes[1].pane:activate()
 	-- 	end),
 	-- },
+
+	{ -- pane zoom
+		key = "m",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "m", mods = mod_key } }, pane)
+			else
+				window:perform_action(act.TogglePaneZoomState, pane)
+			end
+		end),
+	},
+	{ -- capture pane
+		key = "c",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "c", mods = mod_key } }, pane)
+			else
+				window:perform_action(act.EmitEvent("trigger-nvim-with-scrollback"), pane)
+			end
+		end),
+	},
+	{ -- reset pane size
+		key = "w",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			if KeymapUtil.is_in_tmux(pane) then
+				window:perform_action({ SendKey = { key = "w", mods = mod_key } }, pane)
+			else
+				window:toast_notification("wezterm", "Reset pane size: this feature is not implemented yet", nil, 4000)
+				-- window:perform_action(act.ShowTabNavigator, pane)
+				-- local panes = pane:tab():panes_with_info()
+				-- panes[#panes].pane:activate()
+				-- panes[#panes].pane:split({ direction = "Bottom" })
+				-- for i = 1, #panes + 1 do
+				-- 	local p = pane:tab():panes_with_info()[i]
+				-- 	win:perform_action({ AdjustPaneSize = { "Up", 3 } }, p.pane)
+				-- 	p.pane:send_text(string.format("%d:%d ", i, p.height))
+				-- end
+				-- panes[1].pane:activate()
+			end
+		end),
+	},
 
 	-- ╭─────────────────────────────────────────────────────────╮
 	-- │ WINDOW                                                  │
@@ -265,40 +310,6 @@ return {
 			act.CopyMode("ClearSelectionMode"),
 			act.ActivateCopyMode,
 		}),
-	},
-	{ -- toggle zoom
-		key = "m",
-		mods = mod_key,
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "m", mods = mod_key } }, pane)
-			else
-				window:perform_action(act.TogglePaneZoomState, pane)
-			end
-		end),
-	},
-	{ -- capture pane
-		key = "c",
-		mods = mod_key,
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "c", mods = mod_key } }, pane)
-			else
-				window:perform_action(act.EmitEvent("trigger-nvim-with-scrollback"), pane)
-			end
-		end),
-	},
-	{ -- reset size pane
-		key = "w",
-		mods = mod_key,
-		action = wezterm.action_callback(function(window, pane)
-			if KeymapUtil.is_in_tmux(pane) then
-				window:perform_action({ SendKey = { key = "w", mods = mod_key } }, pane)
-			else
-				window:toast_notification("wezterm", "Reset pane size: not implemented yet", nil, 4000)
-				-- window:perform_action(act.ShowTabNavigator, pane)
-			end
-		end),
 	},
 	{ -- open file tree manager
 		key = "e",
