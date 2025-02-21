@@ -176,18 +176,13 @@ mapkey("M", "Mute/unmute current tab", function () {
   RUNTIME("muteTab");
 });
 
-// map("<Alt-h>", "E");
-// map("<Alt-H>", "E");
-
-// map("gh", "E");
-// map("gl", "R");
-
 map("<Space>ff", "T");
 
-map("<Ctrl-Alt-l>", "R");
-map("<Ctrl-Alt-h>", "E");
-map("<Ctrl-Alt-n>", "R");
-map("<Ctrl-Alt-p>", "E");
+map("<Alt-L>", "R");
+map("<Alt-H>", "E");
+
+map("<Alt-N>", "R");
+map("<Alt-P>", "E");
 
 // Side tabbar zen-browser is left side sometimes make confuse
 // map("<Ctrl-Alt-j>", "R");

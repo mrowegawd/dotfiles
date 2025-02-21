@@ -81,32 +81,32 @@ unbind-key ^E
 unbind-key o
 
 # -- navigation
-bind-key   j    down
-bind-key   ^D   pagedown
-bind-key   ^E   pagedown
-bind-key   k    up
-bind-key   ^U   pageup
-bind-key   ^Y   pageup
-bind-key   d    delete-article
-bind-key   ^g   open-search
-bind-key   g    home
-bind-key   G    end
-bind-key   F    edit-flags
+bind-key   j            down
+bind-key   ^D           pagedown
+bind-key   ^E           pagedown
+bind-key   k            up
+bind-key   ^U           pageup
+bind-key   ^Y           pageup
+bind-key   d            delete-article
+bind-key   ^g           open-search
+bind-key   g            home
+bind-key   G            end
+bind-key   ^s           edit-flags
 
 # -- articlelist
-bind-key   J   next-feed   articlelist
-bind-key   K   prev-feed   articlelist
+bind-key   J            next-feed   articlelist
+bind-key   K            prev-feed   articlelist
 
-bind-key   l   open
-bind-key   o   open-in-browser-and-mark-read
-bind-key   E   edit-urls
-bind-key   r   reload
-bind-key   R   reload-all
-bind-key   U   show-urls
-bind-key   D   pb-download
-bind-key   x   pb-delete
-bind-key   w   toggle-source-view
-bind-key   v   toggle-article-read
+bind-key   l            open
+bind-key   o            open-in-browser-and-mark-read
+bind-key   E            edit-urls
+bind-key   r            reload
+bind-key   R            reload-all
+bind-key   U            show-urls
+bind-key   D            pb-download
+bind-key   x            pb-delete
+bind-key   w            toggle-source-view
+bind-key   v            toggle-article-read
 
 # MACRO -----------------------------------------------------------------------
 

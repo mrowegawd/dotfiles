@@ -20,35 +20,29 @@ super + {p,b}
 ########################################
 # WINDOW
 ########################################
-
 # window: select (backward/below)/z-index
 super + i
 	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
 
 # window: navigate hjkl
-super + {h,l,k,j}
+super + {Left,Right,Up,Down}
         dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
 
 # window: swap window
-super + ctrl + {_,shift + }{h,j,k,l}
-        bspc node -{f,s} {west,south,north,east}
+# super + ctrl + {_,shift + }{h,j,k,l}
+#         bspc node -{f,s} {west,south,north,east}
 
-# window: move window (float)
-super + {Left,Down,Up,Right}
-        xdotool getwindowfocus windowmove --relative %1 {-20 0, 0 +20, 0 -20, +20 0}
+# window: move window to the left,right,up,down (float)
+super + {h,j,k,l}
+        xdotool getwindowfocus windowmove --relative %1 {-25 0, 0 +25, 0 -25, +25 0}
 
-# window: rotate the parent of current focused
+# window: rotate the windows
 super + R
 	      bspc node @parent -R 90
-
-# window: rotate
-# super + R
-#         bspc node @/ -R {90,270}
 
 ########################################
 # WORKSPACE
 ########################################
-
 # workspace: focus next/prev workspace
 # super + {Tab,shift+Tab}
 # 	      bspc node -d {next,prev} -f
@@ -66,9 +60,6 @@ super + R
 # 	      bspc desktop -f {prev,next}.local
 
 # workspace: focus next/prev workspace
-super + {shift+h,shift+l}
-	      bspc desktop -f {prev,next}.local
-
 super + {shift+p,shift+n}
 	      bspc desktop -f {prev,next}.local
 
@@ -79,27 +70,25 @@ super + {_,shift + }{1-9,0}
 ########################################
 # RESIZE, FLOATING
 ########################################
-
 # resize: expand vertically
-super + shift + Up
+super + shift + k
 	      bspc node -z top 0 -20; bspc node -z bottom 0 20
 
 # resize: shrink vertically
-super + shift + Down
+super + shift + j
 	      bspc node -z top 0 20; bspc node -z bottom 0 -20
 
 # resize: expand horizontally
-super + shift + Left
+super + shift + h
 	      bspc node -z left 20 0; bspc node -z right -20 0
 
 # resize: shrink horizontally
-super + shift + Right
+super + shift + l
 	      bspc node -z left -20 0; bspc node -z right 20 0
 
 ########################################
 # BRIGHTNESS
 ########################################
-
 # misc: increase brightness
 # XF86MonBrightnessUp
 #         xbacklight -inc 5
@@ -111,7 +100,6 @@ super + shift + Right
 ########################################
 # MULTIMEDIA
 ########################################
-
 # media: increase volume audio
 super + shift + equal
         amixer -q sset Master 3%+
@@ -139,7 +127,6 @@ super + shift + ctrl + p
 ########################################
 # APPS
 ########################################
-
 # misc: open terminal
 super + Return
         $TERMINAL

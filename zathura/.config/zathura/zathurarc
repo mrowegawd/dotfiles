@@ -16,115 +16,90 @@ set selection-clipboard   clipboard
 set statusbar-home-tilde true
 set adjust-open "best-fit"
 
-# disable default mapping for zoom in/out
-
+# ┌──────────────────────────────────────────────────────────┐
+# │ MISC                                                     │
+# └──────────────────────────────────────────────────────────┘
+# Disable default mapping
 unmap +
 unmap -
-
 # unmap f
 
-# base: zoom in
-map <C-=> zoom in
+# zoom-in/out/reset
+map <C-=>               zoom in
+map <C-->               zoom out
+map <C-0>               zoom reset
 
-# base: zoom out
-map <C--> zoom out
+map [index] q           quit
+map <C-g>               feedkeys "?"
 
-map <c-f> search forward
+map [normal] n          search forward
+map [normal] N          search backward
 
-# base: quit (q)
-map [index] q quit
+# map <c-f>             search forward
+# map f                 toggle_fullscreen
+# map b                 toggle_statusbar
+# map D set             "first-page-column 1:1"
+# map <C-d> set         "first-page-column 1:2"
 
-# toggle: statusbar
-# map b toggle_statusbar
+# NOTE: To create 2 coloumn, press d
 
-# toggle: fullscreen toggle
+map i                   recolor
 
-# map <c-f> toggle_fullscreen
+# ┌──────────────────────────────────────────────────────────┐
+# │ BOOKMARKS                                                │
+# └──────────────────────────────────────────────────────────┘
+map <C-s>               focus_inputbar ":bmark "
+map b                   focus_inputbar ":blist "
+map B                   focus_inputbar ":bdelete "
 
-# map D set "first-page-column 1:1"
-# map <C-d> set "first-page-column 1:2"
-
-# untuk 2 coloum, press d
-
-# toggle: recolor black/white bg
-map i recolor
-
+# ┌──────────────────────────────────────────────────────────┐
+# │ SCROLL                                                   │
+# └──────────────────────────────────────────────────────────┘
 unmap y
-map <C-y> scroll up
-
-map <C-g> feedkeys "?"
-
 unmap e
-map <C-e> scroll down 2
+map <C-e>               scroll down 2
+map <C-y>               scroll up
 
-# scroll: up
-map k scroll up
+map k                   scroll up
+map j                   scroll down
+map h                   scroll left
+map l                   scroll right
 
-# scroll: down
-map j scroll down
+map K                   scroll half-up
+map J                   scroll half-down
 
-# scroll: left
-map h scroll left
+map <C-n>               scroll full-down
+map <C-p>               scroll full-up
 
-# scroll: right
-map l scroll right
+map [fullscreen] f      toggle_fullscreen
+map [fullscreen] =      zoom in
+map [fullscreen] k      scroll up
+map [fullscreen] j      scroll down
+map [fullscreen] h      scroll left
+map [fullscreen] l      scroll right
+map [fullscreen] K      scroll half-up
+map [fullscreen] J      scroll half-down
 
-# scroll: half up
-map K scroll half-up
-
-# scroll: half down
-map J scroll half-down
-
-# normal: search next (n)
-map [normal] n search forward
-
-# normal: search prev (N)
-map [normal] N search backward
-
-
-# fullscreen: fullscreen (f)
-map [fullscreen] f toggle_fullscreen
-
-# fullscreen: zoom (=)
-map [fullscreen] = zoom in
-
-# fullscreen: up (k)
-map [fullscreen] k scroll up
-
-# fullscreen: left (j)
-map [fullscreen] j scroll down
-
-# fullscreen: right (h)
-map [fullscreen] h scroll left
-
-# fullscreen: right (l)
-map [fullscreen] l scroll right
-
-# fullscreen: half up (K)
-map [fullscreen] K scroll half-up
-
-# fullscreen: half down (J)
-map [fullscreen] J scroll half-down
-
-### THEME ###
-
-set default-bg "#1E1E2E"
-set default-fg "#CDD6F4"
+# ┌──────────────────────────────────────────────────────────┐
+# │ THEMES                                                   │
+# └──────────────────────────────────────────────────────────┘
+set default-bg "#1f1f1f"
+set default-fg "#cccccc"
 
 set statusbar-bg "#202020"
 set statusbar-fg "#eee4e5"
 
-set inputbar-bg "#A6E3A1"
+set inputbar-bg "#608b4e"
 set inputbar-fg "#202020"
 
-set highlight-color "#F38BA8"
+set highlight-color "#f44747"
 set highlight-active-color "#6A9FB5"
 
 set completion-highlight-fg "#151515"
 set completion-highlight-bg "#90A959"
 
-set notification-bg "#1E1E2E"
-set notification-fg "#CDD6F4"
+set notification-bg "#1f1f1f"
+set notification-fg "#cccccc"
 
 set notification-error-bg "#AC4142"
 set notification-error-fg "#151515"
@@ -132,7 +107,7 @@ set notification-error-fg "#151515"
 set notification-warning-bg "#AC4142"
 set notification-warning-fg "#151515"
 
-set recolor-lightcolor "#1E1E2E"
+set recolor-lightcolor "#1f1f1f"
 set recolor-darkcolor "#E0E0E0"
 set recolor-reverse-video "true"
 set recolor-keephue "false"
