@@ -290,11 +290,19 @@ return {
       local actions = require "fzf-lua.actions"
       local extend_title = RUtils.fzflua.extend_title_fzf { cwd = "" }
 
-      local img_preview_command = vim.fn.executable "ueberzug" == 1 and { "ueberzug" } or nil
-      local html_preview_command = vim.fn.executable "w3m" == 1 and { "w3m", "-dump" } or nil
-      local pdf_preview_command = vim.fn.executable "pdftotext" == 1
-          and { "pdftotext", "-l", "10", "-nopgbrk", "-nodiag", "-q", "<file>", "-" }
-        or nil
+      local img_previewer ---@type string[]?
+      for _, v in ipairs {
+        { cmd = "chafa", args = { "{file}", "--format=symbols" } },
+        { cmd = "ueberzug", args = {} },
+        { cmd = "viu", args = { "-b" } },
+        -- local pdf_preview_command = vim.fn.executable "pdftotext" == 1
+        --     and { "pdftotext", "-l", "10", "-nopgbrk", "-nodiag", "-q", "<file>", "-" }
+      } do
+        if vim.fn.executable(v.cmd) == 1 then
+          img_previewer = vim.list_extend({ v.cmd }, v.args)
+          break
+        end
+      end
 
       return {
         winopts = function()
@@ -337,16 +345,15 @@ return {
         },
         previewers = {
           builtin = {
-            treesitter = {
-              context = false, -- disable treesitter-context
-            },
+            treesitter = { context = false }, -- disable treesitter-context
             extensions = {
-              ["html"] = html_preview_command,
-              ["jpg"] = img_preview_command,
-              ["png"] = img_preview_command,
-              ["svg"] = img_preview_command,
-              ["pdf"] = pdf_preview_command,
+              ["png"] = img_previewer,
+              ["jpg"] = img_previewer,
+              ["jpeg"] = img_previewer,
+              ["gif"] = img_previewer,
+              ["webp"] = img_previewer,
             },
+            ueberzug_scaler = "fit_contain",
           },
         },
         keymap = {
