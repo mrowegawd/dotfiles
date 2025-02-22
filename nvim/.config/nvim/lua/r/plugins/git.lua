@@ -256,7 +256,9 @@ return {
   {
     "pwntester/octo.nvim",
     opts = function(_, opts)
-      if RUtils.has "telescope.nvim" then
+      if RUtils.has_extra "editor.snacks_picker" then
+        opts.picker = "snacks"
+      elseif RUtils.has "telescope.nvim" then
         opts.picker = "telescope"
       elseif RUtils.has "fzf-lua" then
         opts.picker = "fzf-lua"

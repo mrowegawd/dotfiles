@@ -386,7 +386,10 @@ if vim.fn.executable "lazygit" == 1 then
 end
 -- }}}
 -- {{{ Commands
-RUtils.map.nnoremap("<Leader>uI", "<cmd>InspectTree<cr>", { desc = "Misc: inspect tree" })
+RUtils.map.nnoremap("<Leader>uI", function()
+  vim.treesitter.inspect_tree()
+  vim.api.nvim_input "I"
+end, { desc = "Misc: inspect tree" })
 RUtils.cmd.create_command("Snippets", RUtils.cmd.EditSnippet, { desc = "Misc: edit snippet file" })
 RUtils.cmd.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
 RUtils.cmd.create_command("InfoOption", RUtils.cmd.infoFoldPreview, { desc = "Misc: echo options" })
