@@ -1,27 +1,6 @@
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- OUTPUTPANEL (disabled)
-  {
-    -- NOTE: Something went wrong when using this plugin right now, at the moment -> disabled it
-    -- relate issue:
-    -- https://github.com/mhanberg/output-panel.nvim/issues/5 (error dead coroutine)
-    -- https://github.com/mhanberg/output-panel.nvim/issues/3 (error nui)
-    "mhanberg/output-panel.nvim",
-    version = "*",
-    enabled = false,
-    event = "VeryLazy",
-    keys = {
-      {
-        "<Leader>oP",
-        "<CMD>OutputPanel<CR>",
-        desc = "Open: output panel [output-panel]",
-      },
-    },
-    config = function()
-      require("output_panel").setup {}
-    end,
-  },
   -- GOTOPREVIEW (disabled)
   {
     "rmagatti/goto-preview",
