@@ -172,8 +172,8 @@ return {
             org_agenda_priority_up = ">",
             org_agenda_priority_down = "<",
 
-            org_agenda_archive = "<prefix>A",
-            org_agenda_toggle_archive_tag = "<prefix>T",
+            org_agenda_archive = "<F9>",
+            org_agenda_toggle_archive_tag = "<prefix><F9>",
 
             org_agenda_deadline = "<prefix>d",
             org_agenda_schedule = "<prefix>s",
@@ -215,8 +215,8 @@ return {
 
             org_global_cycle = "<S-TAB>",
 
-            org_archive_subtree = "<prefix>S",
-            org_toggle_archive_tag = "<Leader>T",
+            org_archive_subtree = "<F9>",
+            org_toggle_archive_tag = "<Leader><F9>",
 
             org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
