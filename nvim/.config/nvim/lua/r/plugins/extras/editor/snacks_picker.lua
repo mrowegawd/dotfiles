@@ -109,7 +109,7 @@ return {
       { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Snackspicker: buffer lines", },
       { "<Leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Snackspicker: grep open buffers", },
       { "<Leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Snackspicker: buffers", },
-      { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Snackspicker: Buffers (all)", },
+      { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Snackspicker: buffers (all)", },
       { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
       { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
       { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Snackspicker: projects", },

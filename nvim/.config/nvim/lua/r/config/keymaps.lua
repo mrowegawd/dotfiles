@@ -335,10 +335,10 @@ RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: find and repla
 RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace (visual)" })
 RUtils.map.nnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(false)
-end, { desc = "Open: browse under cursor/follow linke note" })
+end, { desc = "Open: browse under cursor/follow link note" })
 RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(true)
-end, { desc = "Open: browse under cursor/follow linke note (visual)" })
+end, { desc = "Open: browse under cursor/follow link note (visual)" })
 RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
   desc = "Misc: show keymaps curbuf",
   silent = true,

@@ -135,7 +135,7 @@ return {
       { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Fzflua: man pages" },
       { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
       { "<Leader>fH", function() require("fzf-lua").help_tags() end, desc = "Fzflua: help" },
-      -- { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Fzflua: keymaps" },
+      { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Fzflua: keymaps" },
 
       { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
 
