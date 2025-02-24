@@ -22,9 +22,15 @@ function M.get()
     --  LSP Stuff
     --  +----------------------------------------------------------+
     -- { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
-    { "gk", vim.lsp.buf.hover, desc = "LSP: show hover [noice]" },
-    { "gK", vim.lsp.buf.signature_help, desc = "LSP: signature help", has = "signatureHelp" },
-    { "K", vim.lsp.buf.hover, desc = "LSP: hover" },
+    {
+      "gk",
+      function()
+        vim.lsp.buf.signature_help { border = RUtils.config.icons.border.line }
+      end,
+      has = "signatureHelp",
+      desc = "LSP: signature help",
+    },
+    { "K", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
     {
       "gD",
       function()
