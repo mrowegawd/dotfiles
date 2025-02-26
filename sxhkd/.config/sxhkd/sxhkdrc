@@ -25,7 +25,7 @@ super + i
 	      $HOME/.config/miscxrdb/bpswm/scripts/bspwm-zindex-layer
 
 # window: navigate hjkl
-super + {Left,Right,Up,Down}
+super + ctrl + {h,l,k,j}
         dir={west,east,north,south}; bspc node "$dir" -f || bspc monitor "$dir" -f
 
 # window: swap window

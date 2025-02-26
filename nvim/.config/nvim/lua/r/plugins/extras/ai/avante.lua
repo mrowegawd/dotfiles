@@ -1,10 +1,4 @@
 return {
-  -- COPILOT
-  {
-    "zbirenbaum/copilot.lua",
-    event = "VeryLazy",
-    config = true,
-  },
   -- AVANTE
   {
     -- To make it work, run: Copilot Auth
@@ -28,6 +22,7 @@ return {
       },
     },
     dependencies = {
+      { "zbirenbaum/copilot.lua", config = true },
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "echasnovski/mini.pick",
