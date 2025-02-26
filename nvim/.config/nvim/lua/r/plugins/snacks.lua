@@ -83,10 +83,11 @@ return {
         -- scroll = { enabled = false },
         indent = {
           enabled = true,
-          -- priority = 1,
           char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
-          only_scope = false,
+          only_scope = true,
           only_current = false,
+          scope = { enabled = false },
+          chunk = { enabled = false, hl = "SnacksIndentChunk" },
           hl = {
             "SnacksIndent1",
             "SnacksIndent2",

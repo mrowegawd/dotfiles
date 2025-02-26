@@ -636,7 +636,7 @@ local general_overrides = function()
     { BlinkCmpGhostText = { fg = { from = "BlinkCmpGhostText", attr = "fg", alter = 0.45 } } },
     {
       BlinkCmpDocSeparator = {
-        fg = { from = "WinSeparator", attr = "fg", alter = 0.8 },
+        fg = { from = "FloatBorder", attr = "fg" },
         bg = { from = "Pmenu", attr = "bg" },
       },
     },
@@ -2000,6 +2000,7 @@ local function colorscheme_overrides()
 
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.2 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.4 } } },
+      { SnacksIndentChunk = { fg = { from = "SnacksIndentScope", attr = "fg", alter = 0.1 } } },
 
       {
         Folded = {

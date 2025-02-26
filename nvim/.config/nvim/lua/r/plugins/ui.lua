@@ -2,6 +2,21 @@ local fn = vim.fn
 local Highlight = require "r.settings.highlights"
 
 return {
+  -- HLCHUNK.nvim
+  {
+    "shellRaining/hlchunk.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = function()
+      Highlight.plugin("hlchunkhi", {
+        { HLChunk1 = { fg = { from = "SnacksIndentScope", attr = "fg", alter = 0.5 } } },
+      })
+      return {
+        chunk = {
+          enable = true,
+        },
+      }
+    end,
+  },
   -- HELPVIEW.NVIM
   {
     "OXY2DEV/helpview.nvim",
