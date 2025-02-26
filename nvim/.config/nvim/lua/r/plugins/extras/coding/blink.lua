@@ -80,11 +80,13 @@ return {
                 ellipsis = false,
                 width = { fill = true },
                 text = function(item)
+                  if item.kind == "Color" then
+                    return "██"
+                  end
                   return ("(%s)"):format(item.kind)
                 end,
                 highlight = function(item)
-                  return (require("blink.cmp.completion.windows.render.tailwind").get_hl(item) or "CmpItemKind")
-                    .. item.kind
+                  return item.kind_hl
                 end,
               },
             },
