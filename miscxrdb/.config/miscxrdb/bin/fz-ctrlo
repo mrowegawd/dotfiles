@@ -61,7 +61,6 @@ session_exists() {
 #  +----------------------------------------------------------+
 #  |                       APT AND DKPG                       |
 #  +----------------------------------------------------------+
-
 show_apt_search() {
   select=$(apt-cache search '' | sort | cut --delimiter ' ' --fields 1 | fzf-tmux -xC -w '80%' -h '50%' --prompt="Apt Search> " \
     --multi \
@@ -76,6 +75,54 @@ show_apt_search() {
 #  +----------------------------------------------------------+
 #  |                           OPEN                           |
 #  +----------------------------------------------------------+
+open_url() {
+  get_fzf_options() {
+    local fzf_options
+    local fzf_default_options='-w 100% -h 50% --multi -0 --no-preview --bind ctrl-a:toggle-all'
+    fzf_options="$(tmux show -gqv '@fzf-url-fzf-options')"
+    [ -n "$fzf_options" ] && echo "$fzf_options" || echo "$fzf_default_options"
+  }
+
+  fzf_filter() {
+    eval "fzf-tmux $(get_fzf_options)"
+  }
+
+  limit='screen'
+  [[ $# -ge 2 ]] && limit=$2
+
+  if [[ $limit == 'screen' ]]; then
+    content="$(tmux capture-pane -J -p -e | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
+  else
+    content="$(tmux capture-pane -J -p -e -S -"$limit" | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
+  fi
+
+  # Taken from https://github.com/wfxr/tmux-fzf-url/blob/16381dce1c30fedd75fc775f887be7ea6c7cbf55/fzf-url.sh
+  urls=$(echo "$content" | grep -oE '(https?|ftp|file):/?//[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]')
+  wwws=$(echo "$content" | grep -oE '(http?s://)?www\.[a-zA-Z](-?[a-zA-Z0-9])+\.[a-zA-Z]{2,}(/\S+)*' | grep -vE '^https?://' | sed 's/^\(.*\)$/http:\/\/\1/')
+  ips=$(echo "$content" | grep -oE '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(:[0-9]{1,5})?(/\S+)*' | sed 's/^\(.*\)$/http:\/\/\1/')
+  gits=$(echo "$content" | grep -oE '(ssh://)?git@\S*' | sed 's/:/\//g' | sed 's/^\(ssh\/\/\/\)\{0,1\}git@\(.*\)$/https:\/\/\2/')
+  gh=$(echo "$content" | grep -oE "['\"]([_A-Za-z0-9-]*/[_.A-Za-z0-9-]*)['\"]" | sed "s/['\"]//g" | sed 's#.#https://github.com/&#')
+
+  if [[ $# -ge 1 && "$1" != '' ]]; then
+    extras=$(echo "$content" | eval "$1")
+  fi
+
+  items=$(
+    printf '%s\n' "${urls[@]}" "${wwws[@]}" "${gh[@]}" "${ips[@]}" "${gits[@]}" "${extras[@]}" |
+      grep -v '^$' |
+      sort -u |
+      nl -w3 -s '  '
+  )
+
+  if [[ -n $items ]]; then
+    chosen=$(fzf_filter <<<"$items" | awk '{print $2}')
+    if [[ -n $chosen ]]; then
+      while read -r url; do
+        open "$url" &>"/tmp/tmux-$(id -u)-fzf-url.log"
+      done <<<"$chosen"
+    fi
+  fi
+}
 
 open_calc() {
   notifme_to_run_in_tmux "[+] can not run, you are not in tmux mode"
