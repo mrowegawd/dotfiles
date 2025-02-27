@@ -331,8 +331,8 @@ local function replace_keymap(confirmation, visual)
     RUtils.map.type_escape(move_text)
   end
 end
-RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: find and replace under cursor" })
-RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: find and replace (visual)" })
+RUtils.map.nnoremap("<Leader>sr", replace_keymap, { desc = "Misc: Search and replace under cursor" })
+RUtils.map.vnoremap("<Leader>sr", [["zy:%s/<C-r><C-o>"/]], { desc = "Misc: Search and replace under cursor (visual)" })
 RUtils.map.nnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(false)
 end, { desc = "Open: browse under cursor/follow link note" })

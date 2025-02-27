@@ -105,6 +105,9 @@ return {
         },
       },
       cmdline = {
+        completion = {
+          menu = { auto_show = true },
+        },
         sources = function()
           local type = vim.fn.getcmdtype()
           if type == "/" or type == "?" then
@@ -114,6 +117,50 @@ return {
             return { "cmdline" }
           end
         end,
+        keymap = {
+          preset = "none",
+          ["<C-y>"] = { "select_and_accept" },
+
+          ["<C-n>"] = {
+            function(cmp)
+              if not cmp.is_visible() then
+                local type = vim.fn.getcmdtype()
+                if type == "/" or type == "?" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                end
+                if type == ":" or type == "@" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                end
+              else
+                cmp.select_next()
+              end
+            end,
+          },
+          ["<C-p>"] = {
+            function(cmp)
+              if cmp.is_visible() then
+                cmp.select_prev()
+              else
+                local type = vim.fn.getcmdtype()
+                if type == "/" or type == "?" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+                end
+                if type == ":" or type == "@" then
+                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
+                end
+              end
+            end,
+          },
+          ["<C-c>"] = {
+            "hide",
+            "cancel",
+            function()
+              if vim.fn.getcmdtype() ~= "" then
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, true, true), "n", true)
+              end
+            end,
+          },
+        },
       },
       sources = {
         compat = {},
@@ -165,7 +212,7 @@ return {
 
             cmp.show { providers = { current_provider } }
 
-            -- Mengupdate idx untuk siklus nya
+            -- Update idx untuk siklus nya
             idx = (idx % #providers) + 1
           end,
         },
