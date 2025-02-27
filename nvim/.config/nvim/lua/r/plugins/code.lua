@@ -1,31 +1,6 @@
 local Highlight = require "r.settings.highlights"
 
 return {
-  -- Auto complete cmp
-  -- {
-  --   import = "r.plugins.extras.coding.nvim-cmp",
-  --   enabled = function()
-  --     return RUtils.cmp_engine() == "nvim-cmp"
-  --   end,
-  -- },
-  -- Auto complete Blink
-  -- {
-  --   import = "r.plugins.extras.coding.blink",
-  --   enabled = function()
-  --     return RUtils.cmp_engine() == "blink.cmp"
-  --   end,
-  -- },
-  -- -- Auto complete Torch
-  -- {
-  --   import = "r.plugins.extras.coding.torch",
-  --   enabled = function()
-  --     return RUtils.cmp_engine() == "torch"
-  --   end,
-  -- },
-  -- LUASNIP
-  -- {
-  --   import = "r.plugins.extras.coding.luasnip",
-  -- },
   -- MINI.PAIRS
   {
     "echasnovski/mini.pairs",

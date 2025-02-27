@@ -778,7 +778,6 @@ return {
             { EdgyIconActive = { bold = true } },
           },
           ["lackluster"] = {
-            { EdgyWinBar = { bg = { from = "StatusLine", attr = "bg", alter = -0.6 } } },
             { EdgyTitle = { fg = { from = "Directory", attr = "fg", alter = 1 }, bold = true } },
           },
         },

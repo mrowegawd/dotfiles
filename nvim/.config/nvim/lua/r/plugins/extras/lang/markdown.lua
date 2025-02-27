@@ -134,7 +134,6 @@ return {
     config = function(_, opts)
       local rose_pine = {
         ["rose-pine-dawn"] = {
-          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.1 } } },
           {
             RenderMarkdownCodeInline = {
               fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
@@ -144,12 +143,11 @@ return {
           },
         },
         ["rose-pine-main"] = {
-          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
           { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
           {
             RenderMarkdownCodeInline = {
-              fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
-              bg = "NONE",
+              fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+              bg = { from = "Keyword", attr = "fg", alter = -0.6 },
               bold = true,
             },
           },
@@ -159,42 +157,29 @@ return {
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
-            { RenderMarkdownCodeInline = { bg = "NONE", bold = true } },
-            { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
-          },
-          ["jellybeans"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            { RenderMarkdownCodeInline = { fg = { from = "Error", attr = "fg", alter = 0.08 }, bg = "NONE" } },
-          },
-          ["lackluster"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 1 } } } },
-          ["sunburn"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } } },
-          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-          ["neomodern"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.25 } } } },
-          ["oldworld"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
-          ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
-          ["one_monokai"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
-          ["zenburned"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } } },
-          ["nord"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
             {
               RenderMarkdownCodeInline = {
-                fg = { from = "Error", attr = "fg", alter = 0.05 },
-                bg = "NONE",
+                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+                bg = { from = "Keyword", attr = "fg", alter = -0.7 },
               },
             },
           },
-
-          ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.8 } } } },
-          ["catppuccin-mocha"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
-          ["tokyonight-night"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } } },
-          ["tokyonight-storm"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-            { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+          ["jellybeans"] = {
+            { RenderMarkdownCodeInline = { fg = { from = "Error", attr = "fg", alter = 0.08 }, bg = "NONE" } },
           },
-          ["vscode_modern"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
-            { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
+          ["nord"] = {
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+                bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+              },
+            },
           },
+          ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } } },
+          ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
+          ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
         },
       })
       require("render-markdown").setup(opts)

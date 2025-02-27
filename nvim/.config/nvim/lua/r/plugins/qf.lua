@@ -1,3 +1,5 @@
+local Highlight = require "r.settings.highlights"
+
 return {
   -- QUICKER
   { -- bisa delete range, jangan lupa di 'write' setelah delete range
@@ -5,7 +7,16 @@ return {
     event = "FileType qf",
     ---@module "quicker"
     ---@type quicker.SetupOptions
-    opts = {},
+    opts = function()
+      Highlight.plugin("Quickerui", {
+        { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      })
+      return {
+        borders = {
+          vert = "│",
+        },
+      }
+    end,
   },
   -- QFSILET
   {
