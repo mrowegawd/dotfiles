@@ -86,7 +86,10 @@ return {
                   return ("(%s)"):format(item.kind)
                 end,
                 highlight = function(item)
-                  return item.kind_hl
+                  if item.kind == "Color" then
+                    return item.kind_hl
+                  end
+                  return "CmpItemKind" .. item.kind
                 end,
               },
             },
@@ -326,6 +329,7 @@ return {
             items = transform_items and transform_items(ctx, items) or items
             for _, item in ipairs(items) do
               item.kind = kind_idx or item.kind
+              -- item.kind_icon = RUtils.config.icons.kinds[item.kind_name] or item.kind_icon or nil
             end
             return items
           end
