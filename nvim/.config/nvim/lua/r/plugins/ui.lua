@@ -265,6 +265,7 @@ return {
           ["base2tone_cave_dark"] = { { ["BeaconDefault"] = { bg = "#996e00" } } },
           ["base2tone_suburb_dark"] = { { ["BeaconDefault"] = { bg = "#d14781" } } },
           ["neomodern"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
+          ["onedark"] = { { ["BeaconDefault"] = { bg = "#c678dd" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
           ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
@@ -330,13 +331,15 @@ return {
       if
         vim.tbl_contains({
           "ashen",
-          "nord",
+          "base2tone_cave_dark",
+          "base2tone_suburb_dark",
           "coffeecat",
           "horizon",
           "jellybeans",
+          "material",
+          "nord",
+          "onedark",
           "rose-pine-main",
-          "base2tone_suburb_dark",
-          "base2tone_cave_dark",
         }, RUtils.config.colorscheme)
       then
         tab_fg_tint = -0.3

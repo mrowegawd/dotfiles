@@ -5,6 +5,36 @@ local colorscheme = RUtils.config.colorscheme
 -- https://base2t.one
 
 return {
+  -- MATERIAL
+  {
+    "marko-cerovac/material.nvim",
+    priority = 1000,
+    lazy = false,
+    enabled = function()
+      local material_theme = { "material" }
+      if vim.tbl_contains(material_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    opts = function()
+      vim.g.material_style = "darker"
+      return {}
+    end,
+  },
+  -- ONEDARK
+  {
+    "olimorris/onedarkpro.nvim",
+    priority = 1000,
+    lazy = false,
+    enabled = function()
+      local onedark_theme = { "onedark", "onedark_dark", "onedark_vivid" }
+      if vim.tbl_contains(onedark_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- BASE2TONE
   {
     "atelierbram/Base2Tone-nvim",
@@ -63,7 +93,6 @@ return {
     "rose-pine/neovim",
     lazy = false,
     priority = 1000,
-    -- name = "rose-pine",
     name = "rose-pine",
     enabled = function()
       local rosepine_theme = { "rose-pine-dawn", "rose-pine-main", "rose-pine" }
@@ -72,9 +101,6 @@ return {
       end
       return false
     end,
-    -- opts = {
-    --   variant = "dawn", -- auto, main, moon, or dawn
-    -- },
   },
   -- OXOCARBON
   {

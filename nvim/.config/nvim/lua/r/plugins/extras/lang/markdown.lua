@@ -166,7 +166,7 @@ return {
             },
           },
           ["jellybeans"] = {
-            { RenderMarkdownCodeInline = { fg = { from = "Error", attr = "fg", alter = 0.08 }, bg = "NONE" } },
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
           },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["nord"] = {
@@ -180,6 +180,14 @@ return {
           ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } } },
           ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
           ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
+          ["zenburned"] = {
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+                bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+              },
+            },
+          },
         },
       })
       require("render-markdown").setup(opts)
