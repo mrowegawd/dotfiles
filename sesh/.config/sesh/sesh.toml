@@ -19,7 +19,7 @@ disable_startup_command = true
 [[session]]
 name = "Typescript 🕸 "
 path = "~/moxconf/development/project/typescript"
-startup_command = ""
+disable_startup_command = true
 
 [[session]]
 name = "Rust 󱘗 "

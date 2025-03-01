@@ -166,7 +166,7 @@ reset_base_alter({ "onedark" }, {
   normalfloat_border_fg_alter = 1,
   pmenu_bg_alter = -0.1,
   pmenusel_bg_alter = 0.4,
-  quickfixline_alter = -0.15,
+  quickfixline_alter = -0.6,
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "material" }, {

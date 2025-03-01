@@ -110,6 +110,8 @@ __split_term_update_data_json() {
   window_id_exists=$(jq -e --arg wid "$window_id" '.[] | select(.window_id == $wid)' "$PATH_PANE_COLLECT_JSON")
   pane_id_exists=$(jq -e --arg pid "$pane_id" '.[] | select(.pane_id == $pid)' "$PATH_PANE_COLLECT_JSON")
 
+  # dunstify $pane_id_exists
+
   # Update workspace json. jika belum ada isi data json sama sekali
   if [ -z "$session_id_exists" ] && [ -z "$window_id_exists" ] && [ -z "$pane_id_exists" ]; then
     __insert_json
@@ -129,6 +131,8 @@ __split_term_cleanup_update_and_remove_data_json() {
   # Mendapatkan daftar session dan pane yang ada di tmux
   tmux_sessions=$(tmux list-sessions -F '#{session_name}')
   tmux_panes=$(tmux list-panes -a -F '#{session_name}:#{pane_id}')
+
+  # dunstify "$tmux_panes"
 
   # Memfilter data JSON dan menghapus yang tidak ada dalam tmux session dan pane
   jq --argjson tmux_sessions "$(echo "$tmux_sessions" | jq -R . | jq -s .)" \
@@ -160,6 +164,7 @@ __jump_to_main_workspace() {
   main_pane=$(jq "select(.pane_id=0).pane_id" $PATH_MAIN_WORKSPACE)
   main_pane_id=$(echo "$main_pane" | sed 's/"//g')
   tmux select-pane -t "$main_pane_id"
+  # dunstify "tmux select-pane -t $main_pane_id"
 }
 
 __adjust_pane_height() {
