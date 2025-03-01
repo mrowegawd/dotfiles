@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/coffeecat"
+#include ".config/miscxrdb/xresource-theme/onedark"
 
 ! --------------
 ! XFT SETTINGS

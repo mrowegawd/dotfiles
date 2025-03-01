@@ -63,6 +63,10 @@ if vim.g.colorscheme == "nord" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.3)
 end
 
+if vim.g.colorscheme == "oxocarbon" then
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.3)
+end
+
 if vim.g.colorscheme == "horizon" then
   mode_bg_blur = Highlight.tint(mode_bg, -0.5)
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.3)

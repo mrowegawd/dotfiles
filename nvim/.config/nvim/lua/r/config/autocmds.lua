@@ -291,6 +291,19 @@ RUtils.cmd.augroup("WindowDim", {
     RUtils.windowdim.win_leave()
   end,
 })
+-- {
+--   event = { "FocusLost" },
+--   pattern = "*",
+--   command = function()
+--     vim.cmd [[set statusline=]]
+--   end,
+-- }, {
+--   event = { "FocusGained" },
+--   pattern = "*",
+--   command = function()
+--     vim.cmd [[set statusline=%{%v:lua.require'heirline'.eval_statusline()%}]]
+--   end,
+-- }
 
 local aug = vim.api.nvim_create_augroup("CheckOutsideTime", {})
 vim.api.nvim_create_autocmd("FocusGained", {

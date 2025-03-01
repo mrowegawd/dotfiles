@@ -3,7 +3,7 @@ return {
   {
     -- To make it work, run: Copilot Auth
     "yetone/avante.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     version = false,
     opts = {
       provider = "copilot",
@@ -19,6 +19,40 @@ return {
         "<CMD>AvanteClear<CR>", -- or /clear
         ft = "Avante",
         desc = "Avante: clear history",
+      },
+      -- {
+      --   "<Leader>aa",
+      --   function()
+      --     require("avante.api").ask { ask = false }
+      --   end,
+      --   desc = "Avante: chat",
+      -- },
+      {
+        "<Leader>aa",
+        function()
+          local args = { question = nil, win = {} }
+          local q_parts = {}
+          local q_ask = nil
+          for _, arg in ipairs(opts.fargs) do
+            local value = arg:match "position=(%w+)"
+            local ask = arg:match "ask=(%w+)"
+            if ask ~= nil then
+              q_ask = ask == "true"
+            elseif value then
+              args.win.position = value
+            else
+              table.insert(q_parts, arg)
+            end
+          end
+          require("avante.api").ask(
+            vim.tbl_deep_extend(
+              "force",
+              args,
+              { ask = q_ask, question = #q_parts > 0 and table.concat(q_parts, " ") or nil }
+            )
+          )
+        end,
+        desc = "Avante: toggle",
       },
     },
     dependencies = {

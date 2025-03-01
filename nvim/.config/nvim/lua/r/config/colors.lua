@@ -2782,7 +2782,7 @@ local function colorscheme_overrides()
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
       { FzfLuaSearch = { inherit = "CurSearch" } },
 
       {
@@ -2811,7 +2811,7 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 2.6 },
+          fg = { from = "Normal", attr = "bg", alter = 2.4 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
@@ -2959,7 +2959,7 @@ local function colorscheme_overrides()
       },
       {
         StatusLineNC = {
-          fg = { from = "Normal", attr = "bg", alter = 3 },
+          fg = { from = "Normal", attr = "bg", alter = 3.3 },
           bg = { from = "Normal", attr = "bg", alter = 0.65 },
         },
       },

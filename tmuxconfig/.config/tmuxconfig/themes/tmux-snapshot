@@ -1,23 +1,23 @@
-ACTIVE_FG="#d09755"
-ACTIVE_BG="#74542f"
+ACTIVE_FG="#b26cc6"
+ACTIVE_BG="#633c6e"
 
-STATUSLINE_BG_MESSAGE="#ebc686"
-STATUSLINE_FG="#56524f"
+STATUSLINE_BG_MESSAGE="#e5c07b"
+STATUSLINE_FG="#6f7b93"
 
-SESSION_BG="#bbbac1"
+SESSION_BG="#abb2bf"
 SESSION_FG="#beb9b3"
 
-TMUX_BG="#1e1d1c"
-TMUX_FG="#605c59"
+TMUX_BG="#282c34"
+TMUX_FG="#79859d"
 
-BORDER_FG="#514e4a"
-BORDER_BG="#1e1d1c"
-BORDER_FG_NC="#302e2c"
+BORDER_FG="#586071"
+BORDER_BG="#282c34"
+BORDER_FG_NC="#343943"
 
-RED="#d67287"
-BLUE="#a2bafa"
-WHITE="#bbbac1"
-GREEN="#8ab56d"
+RED="#e06c75"
+BLUE="#61afef"
+WHITE="#abb2bf"
+GREEN="#98c379"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
@@ -64,7 +64,7 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 set -g status-right-length 80
 set -g status-right \
 "#[fg=$GREEN,bold]#{pomodoro_status} \
-#[fg=$RED,bold]  #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+#[fg=$RED,bold] %A, %d %b   #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
 #[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold] ❐ #S "
 
