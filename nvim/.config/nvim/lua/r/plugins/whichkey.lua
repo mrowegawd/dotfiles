@@ -44,7 +44,7 @@ return {
       spec = {
         {
           mode = { "n", "v" },
-          { "<Leader>a", group = "avante" },
+          { "<Leader>a", group = "ai" },
 
           { "<Leader>c", group = "code/action" },
           { "<Leader>d", group = "debug" },

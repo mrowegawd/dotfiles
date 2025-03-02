@@ -4,6 +4,7 @@ return {
     -- To make it work, run: Copilot Auth
     "yetone/avante.nvim",
     -- event = "VeryLazy",
+    enabled = false,
     version = false,
     opts = {
       provider = "copilot",
