@@ -30,11 +30,11 @@ super + i
 
 # window: navigate h,l
 super + ctrl + {h, l}
-    bspc node -f {next,prev}.local.!hidden.window
+        bspc node -f {next,prev}.local.!hidden.window
 
 # window: swap window
-# super + ctrl + {_,shift + }{h,j,k,l}
-#         bspc node -{f,s} {west,south,north,east}
+super + shift + {Left,Down,Up,Right}
+        bspc node -s {west,south,north,east}
 
 # window: move window to the left,right,up,down (float)
 super + {h,j,k,l}
@@ -169,7 +169,7 @@ super + shift + F9
 
 # misc: reload/restart bspwm config
 super + shift + F12
-        bspc wm -r && SLEEP=2 dunstify "Reload BSPWM"  "Reload config.."
+        bspc wm -r && SLEEP=2 && dunstify "Reload BSPWM"  "Reload config.."
 
 # misc: change wallpaper
 super + shift + Home
