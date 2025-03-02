@@ -606,6 +606,8 @@ setup() {
   # "awesome") wm_awesome ;;
   # esac
 
+  bspc wm -r && sleep 2 && dunstify "Reload BSPWM" "Reload config.."
+
   dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
     "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
 }
