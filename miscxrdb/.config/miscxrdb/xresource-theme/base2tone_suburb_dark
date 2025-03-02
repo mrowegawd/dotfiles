@@ -20,3 +20,6 @@
 *.color13:#d2d8fe
 *.color14:#f764a1
 *.color15:#ebedff
+
+! Keyword color
+*.color16:#ffb3d2

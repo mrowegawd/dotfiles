@@ -35,3 +35,6 @@
 ! white
 *.color7:   #C7C7C7
 *.color15:  #FEFFFF
+
+! Keyword color
+*.color16:#a86ec9

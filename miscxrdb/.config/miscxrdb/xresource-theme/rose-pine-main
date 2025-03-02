@@ -42,3 +42,6 @@
 *.colorBD:     #e0def4
 !*.colorIT:
 !*.colorUL:
+
+! Keyword color
+*.color16:     #31748f

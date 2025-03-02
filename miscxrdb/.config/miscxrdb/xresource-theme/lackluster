@@ -19,3 +19,6 @@
 *.color13:#d7007d
 *.color14:#708090
 *.color15:#deeeed
+
+! Keyword color
+*.color16:#b7b7b7
