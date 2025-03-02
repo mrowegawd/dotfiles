@@ -50,68 +50,54 @@ set -g message-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 
 #  ╓
-#  ║ LEFT
-#  ╙
-# set-option -g status-left \
-# "#{?client_prefix,#[fg=$ACTIVE_BG]#[bg=$RED]#[bold] T \
-# #[fg=$RED]#[bg=$SESSION_BG]#[nobold]#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold],\
-# #[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold]} ❐ #S \
-# #{?#{==:#I,1},#[fg=$SESSION_BG]#[bg=$ACTIVE_BG],#[fg=$SESSION_BG]#[bg=$TMUX_BG]}"
-
-#  ╓
 #  ║  RIGHT
 #  ╙
 set -g status-right-length 80
-set -g status-right \
-"#[fg=$GREEN,bold]#{pomodoro_status} \
-#[fg=$RED,bold] %A, %d %b   #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
-#[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
-#[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold] ❐ #S "
+# set -g status-right \
+# "#[fg=$GREEN,bold]#{pomodoro_status} \
+# #[fg=$RED,bold] %A, %d %b   #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+# #[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
+# #[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold] ❐ #S "
+
+# if-shell '[ "$(tput cols)" -lt 100 ]' 'set -g status-right "zero"' 'set -g status-right "\
+# #[fg=$GREEN,bold]#{pomodoro_status} \
+# #[fg=$RED,bold] %A, %d %b   #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+# #[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
+# #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S "'
+
+# set -g status-right "#{?#{>:#{window_width},90},\
+# #[fg=$GREEN]#{pomodoro_status} \
+# #[fg=$RED,bold] %A, %d %b   #(date +\"%H:%M\") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+# #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
+# #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
+
+# set -g status-right "#{?#{>:#{window_width},80},\
+# #[fg=$GREEN]#{pomodoro_status} , \
+# #[fg=$GREEN]#{pomodoro_status} \
+# #[fg=$RED,bold] %A, %d %b   #(date +\"%H:%M\") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+# #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
+# #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
+
+set -g status-right "#{?#{>=:#{window_width},80},\
+#[fg=$GREEN]#{pomodoro_status} ,\
+#[fg=$GREEN]#{pomodoro_status} \
+#[fg=$RED] %A, %d %b   #(date +\"%H:%M\") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+#[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
+#[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
 # +----------------------------------------------------------+
 # |                      STATUS FORMAT                       |
 # +----------------------------------------------------------+
-# set -g window-status-format "#[bg=$BORDER_BG]\
-# #{?window_zoomed_flag,#[fg=$TMUX_FG] [ZOOM], }#{?pane_synchronized,#[bg=yellow] [SYNC],}\
-# #[fg=$TMUX_FG,bold] #I: #{=30:#{b:pane_current_path}} #[fg=$TMUX_FG]  "
-
-# set -g window-status-current-format "#[fg=$ACTIVE_FG] \
-# #{?window_zoomed_flag,#[fg=$RED],}#{?pane_synchronized,#[fg=yellow],}$left_slant_separator#[fg=BORDER_BG,bg=$ACTIVE_FG,bold]\
-# #{?window_zoomed_flag,#[bg=$RED],}#{?pane_synchronized,#[bg=yellow] [SYNC],}\
-# #{?window_zoomed_flag,#[fg=$TMUX_FG] [ZOOM],} #I: #{=30:#{b:pane_current_path}} \
-# #{?window_zoomed_flag,#[bg=$TMUX_FG],}#[bg=$ACTIVE_FG,fg=$BORDER_BG]#{?pane_synchronized,#[bg=yellow],}"
-
 # '' '' '' '' '' '' 
-# set-option -g window-status-current-format "#{?#{==:#I,1},,#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
-# #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}} \
-# #{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold]󰁌 ,}#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
-
-# setw -g window-status-current-format "#[fg=$_tmux_white,bg=$_tmux_grey_d,bold] [#I] #{=30:#{b:pane_current_path}} #{?#{!=:#{window_panes},1},(#{window_panes}) ,}#[fg=$_tmux_grey_l,bg=$_tmux_black]"
-# setw -g window-status-format "#[fg=$TMUXG,bg=$_tmux_black] #{?window_last_flag,:, }#I#{?window_last_flag,:, }#[fg=$AC,bg=$_tmux_black] #{=30:#{b:pane_current_path}} #{?#{!=:#{window_panes},1},(#{window_panes}) ,}"
-# setw -g window-status-separator "┃"
-
-# #{?#{==:#I,1},#[fg=$TMUX_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
-# [fg=$TMUX_BG,bg=$ACTIVE_BG,nobold]\
 #
 set-option -g window-status-current-format "\
 #{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold] 󰁌,} \
 #[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
 
-# set-option -g window-status-format "#{?window_bell_flag, [fg=$RED]#[bg=$TMUX_BG]#[nobold]\
-# #[fg=$RED]#[bg=$RED]#[bold] #I:#{=30:#{b:pane_current_path}} \
-# #[fg=$TMUX_BG]#[bg=$RED]#[nobold],\
-# #[fg=$STATUSLINE_FG]#[bg=$TMUX_BG]#[bold] #I:#{=30:#{b:pane_current_path}}}"
-
 set-option -g window-status-format "\
 #[fg=$TMUX_BG]#[bg=$TMUX_BG] \
 #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
 #[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
-
-# set-option -g window-status-format "#{?window_bell_flag,#[fg=$RED]#[bg=$TMUX_BG]#[nobold]\
-# #[fg=$RED]#[bg=$RED]#[bold]#I:#{=30:#{b:pane_current_path}}#[fg=$GREEN]#[bg=$GREEN]#[nobold],\
-# #[fg=$STATUSLINE_FG]#[bg=$GREEN]#[bold] #I:#{=30:#{b:pane_current_path}}} "
-
-# set-option -g window-status-current-format "#[bg=cyan,fg=black]⮀#[bg=cyan,fg=black] #I #[bg=blue,fg=cyan]⮀ #{pane_current_command} #[bg=black,fg=blue]⮀"
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux
