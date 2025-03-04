@@ -1,0 +1,3 @@
+#!/bin/bash
+
+kitty @ focus-window --match title:"v" 2>/dev/null | kitty @ launch --cwd=current --location=hsplit
