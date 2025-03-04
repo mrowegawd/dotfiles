@@ -10,7 +10,7 @@ return {
   {
     "nvim-orgmode/orgmode",
     event = "VeryLazy",
-    ft = { "org", "orgagenda" },
+    ft = { "org" },
     keys = {
       {
         "<Localleader>aN",

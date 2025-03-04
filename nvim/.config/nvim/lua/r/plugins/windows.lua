@@ -153,7 +153,7 @@ return {
     config = function(_, opts)
       require("smart-splits").setup(opts)
 
-      if vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL") then
+      if vim.tbl_contains({ "ghostty", "wezterm", "st" }, os.getenv "TERMINAL") then
         local TMUX = os.getenv "TMUX"
         if TMUX then
           local nav = {

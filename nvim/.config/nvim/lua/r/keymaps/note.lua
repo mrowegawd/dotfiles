@@ -1,5 +1,3 @@
--- local fmt, cmd = string.format, vim.cmd
-
 local M = {}
 
 function M.neorg_mappings_ft(bufnr)

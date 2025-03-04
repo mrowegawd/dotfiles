@@ -568,8 +568,8 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
-  local KeywordNC_fg = Highlight.get("KeywordNC", "fg") -- 17
   local KeywordNC_bg = Highlight.get("KeywordNC", "bg") -- 16
+  local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
 
   local tmux_bg = Highlight.get("Normal", "bg")
   local tmux_fg = Highlight.tint(Highlight.get("Tabline", "fg"), -0.2)

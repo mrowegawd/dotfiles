@@ -102,7 +102,7 @@ return {
     keys = {
       -- { "<Leader>ff", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
       -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
-      { "<Localleader>fs", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
+      { "<Localleader>sf", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
       { "<Leader>fF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
 
       -- Buffers
