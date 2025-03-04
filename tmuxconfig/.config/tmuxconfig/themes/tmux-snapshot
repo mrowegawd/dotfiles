@@ -53,27 +53,12 @@ set -g mode-style "bg=$STATUSLINE_BG_MESSAGE,fg=$TMUX_BG,bold"
 #  ║  RIGHT
 #  ╙
 set -g status-right-length 80
-# set -g status-right \
-# "#[fg=$GREEN,bold]#{pomodoro_status} \
-# #[fg=$RED,bold] %A, %d %b   #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
-# #[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
-# #[fg=$TMUX_BG]#[bg=$SESSION_BG]#[bold] ❐ #S "
-
-# if-shell '[ "$((tput cols))" -lt 50 ]' 'set -g status-right "#{pomodoro_status}"' 'set -g status-right "yay?"'
-
-# NOTE: Why does it have to be below 50? even though window_width can be more than 100?
-set -g status-right "#{?#{>=:#{window_width},45},\
-#[fg=$GREEN]#{pomodoro_status} ,\
+set -g status-right "#{?#{e|<:#{window_width},130},\
+#[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$RED] %A, %d %b   #(date +\"%H:%M\") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+#[fg=$BLUE] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
-
-# if-shell '[ "$((tmux display -p #{window_width}))" -gt 50 ]' 'set -g status-right "#{pomodoro_status}"' 'set -g status-right "#{pomodoro_status} \
-# #[fg=$RED,bold] %A, %d %b   #(date +"%H:%M") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
-# #[fg=$SESSION_BG]#[bg=$TMUX]#[nobold]\
-# #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S "'
-
 
 # +----------------------------------------------------------+
 # |                      STATUS FORMAT                       |
