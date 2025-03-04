@@ -378,9 +378,9 @@ return {
   },
   -- OBSIDIAN.NVIM
   {
-    "epwalsh/obsidian.nvim",
+    "obsidian-nvim/obsidian.nvim",
     version = "*", -- recommended, use latest release instead of latest commit
-    cmd = { "ObsidianDailies" },
+    ft = "markdown",
     keys = {
       {
         "<Localleader>ag",
@@ -566,7 +566,8 @@ return {
         return out
       end,
       completion = {
-        nvim_cmp = true,
+        nvim_cmp = false,
+        blink = true,
         min_chars = 2,
       },
       ui = {
@@ -651,16 +652,4 @@ return {
       },
     },
   },
-  -- WARN: ini kenapa pula erorr ketika diaktifkan,
-  -- error compat blink source
-  -- {
-  --   "saghen/blink.cmp",
-  --   optional = true,
-  --   dependencies = { "epwalsh/obsidian.nvim", "saghen/blink.compat" },
-  --   opts = {
-  --     sources = {
-  --       compat = { "obsidian", "obsidian_new", "obsidian_tags" },
-  --     },
-  --   },
-  -- },
 }
