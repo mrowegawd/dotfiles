@@ -530,19 +530,25 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
     end
   end
 
+  local actions = require "fzf-lua.actions"
+
   return {
     prompt = RUtils.fzflua.default_title_prompt(),
     exec_empty_query = true,
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[Ctrl-o: open browser | Alt-y: hash copy | Alt-x: commit hash history]],
+      ["--header"] = [[Ctrl-O: open browser | Ctrl-Y: hash copy | Alt-X: commit hash history]],
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
     -- fn_transform = function(x)
     --   return fzf_picker_utils.make_entry(x)
     -- end,
     actions = {
+      ["ctrl-q"] = actions.file_sel_to_qf,
+      ["ctrl-s"] = actions.git_buf_split,
+      ["ctrl-v"] = actions.git_buf_vsplit,
+      ["ctrl-t"] = actions.git_buf_tabedit,
       ["default"] = function(selected, _)
         local selection = selected[1]
         local commit_hash = M.split_string(selection, " ")[1]
@@ -561,7 +567,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
 
         M.open_commit(commit_hash)
       end,
-      ["alt-y"] = function(selected, _)
+      ["ctrl-y"] = function(selected, _)
         local selection = selected[1]
         local commit_hash = M.split_string(selection, " ")[1]
 
