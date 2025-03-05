@@ -22,7 +22,7 @@ prepend_keymap = [
   { on = [
     "<c-o>",
   ], run = "plugin fzmark", desc = "Open fzmark" },
-  { on = [ #  NOTE: biarkan tmux/wezterm yang handle untuk open lazygit, lazydocker, terminal
+  { on = [
     "<c-e>",
   ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
   { on = [

@@ -121,7 +121,7 @@ reset_base_alter({ "catppuccin-mocha" }, {
   winseparator_alter = 0.4,
 })
 reset_base_alter({ "coffeecat" }, {
-  cursor_fg = "#bbbac1",
+  cursor_fg = "#990000",
   cursorline_alter = 0.04,
   fzflua_bg_cursorline_alter = -0.04,
   fzfluasel_bg_alter = -0.1,
@@ -376,7 +376,7 @@ local general_overrides = function()
     },
     { StatusLine_esse = { fg = { from = "Keyword", attr = "fg" }, bg = { from = "Normal", attr = "bg" } } },
 
-    { Cursor = { bg = cursor_fg } },
+    { Cursor = { bg = cursor_fg, reverse = false } },
     { TermCursor = { inherit = "Cursor" } },
     { Substitute = { inherit = "Search" } },
 
@@ -542,7 +542,7 @@ local general_overrides = function()
     { diffDelete = { bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.7, dark_red), fg = Highlight.darken(dark_red, 0.2, Highlight.get("Normal", "bg")), bold = true, }, },
     {
       diffText = {
-        bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.4, dark_yellow),
+        bg = Highlight.darken(Highlight.get("Normal", "bg"), 0.6, dark_yellow),
         fg = "NONE",
         bold = true,
       },

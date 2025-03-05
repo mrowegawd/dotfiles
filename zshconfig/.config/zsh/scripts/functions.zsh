@@ -8,7 +8,8 @@ build-nvim() {
   # git pull upstream master
   git pull --rebase --prune
   git fetch --tags -f
-  git checkout nightly
+  # git checkout nightly
+  git checkout stable
   [ -d "$neovim_dir/build/" ] && rm -r ./build/ # clear the CMake cache
   rm -rf $HOME/neovim/*
   make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
