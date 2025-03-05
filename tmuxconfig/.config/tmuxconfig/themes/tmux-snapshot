@@ -56,7 +56,7 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$BLUE] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\") #[fg=$TMUX_FG,bg=$TMUX_BG,bold] #{prefix} 👨 #(whoami) \
+#[fg=$BLUE] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
@@ -64,15 +64,29 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 # |                      STATUS FORMAT                       |
 # +----------------------------------------------------------+
 # '' '' '' '' '' '' 
-#
+
 set-option -g window-status-current-format "\
 #{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold] 󰁌,} \
-#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]"
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
+#[bg=$ACTIVE_FG]#[fg=$ACTIVE_BG] COPY \
+#{?#{e|>:#{search_count},0},#[bg=$RED]#[fg=$ACTIVE_FG] #[fg=$TMUX_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\
+#[bg=$WHITE]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
+#[fg=$WHITE]#[bg=$TMUX_BG],#[fg=$ACTIVE_BG,bg=$TMUX_BG,nobold]}"
+
+# set-option -g window-status-format "\
+# #[fg=$TMUX_BG]#[bg=$TMUX_BG] \
+# #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
+# #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},>> COPY << ℓ #{e|-|:#{history_size},#{scroll_position}}/#{history_size} #[default],}\
+# #[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
 
 set-option -g window-status-format "\
 #[fg=$TMUX_BG]#[bg=$TMUX_BG] \
 #[fg=$TMUX_FG,bg=$TMUX_BG,noreverse,bold]#I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_FG]#[bold] 󰁌,} \
-#[fg=$TMUX_BG,bg=$TMUX_BG,nobold]"
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
+#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]COPY \
+#{?#{e|>:#{search_count},0},#[bg=$TMUX_BG]#[fg=$TMUX_BG] #[fg=$TMUX_FG]Found #{search_count} #[bg=$TMUX_BG]#[fg=$TMUX_BG],#[fg=$TMUX_BG]#[bg=$TMUX_BG]}\
+#[bg=$TMUX_BG]#[fg=$TMUX_FG] ℓ #{e|-|:#{history_size}, #{scroll_position}}/#{history_size} \
+#[fg=$TMUX_BG]#[bg=$TMUX_BG],#[fg=$TMUX_BG,bg=$TMUX_BG,nobold]}"
 
 # vim: foldmethod=marker foldlevel=0 ft=tmux
