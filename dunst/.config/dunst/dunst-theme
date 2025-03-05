@@ -1,7 +1,7 @@
 
 
 [urgency_low]
-background = "#222222"
+background = "%%normal_bg%%"
 foreground = "%%normal_fg%%"
 frame_color = "%%normal_frame_fg%%"
 timeout = 10

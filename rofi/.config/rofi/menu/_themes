@@ -199,12 +199,12 @@ set_dunst() {
   sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%normal_bg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_fg%%/$GET_CYAN/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_frame_fg%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_fg%%/$GET_WHITE/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_frame_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%critical_fg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%critical_bg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%critical_frame_fg%%/$GET_RED/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%critical_frame_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%background%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%foreground%%/$GET_FG/g" "$_DUNST_PATH/dunstrc"
