@@ -11,8 +11,12 @@ return {
         auto_insert_mode = true,
         question_header = "  " .. user .. " ",
         answer_header = "  Copilot ",
-        window = {
-          width = 0.4,
+        window = { width = 0.4 },
+        mappings = {
+          reset = {
+            normal = "C",
+            insert = "",
+          },
         },
       }
     end,
