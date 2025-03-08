@@ -1,9 +1,5 @@
--- if lazyvim_docs then
--- LSP Server to use for Python.
--- Set to "basedpyright" to use basedpyright instead of pyright.
 vim.g.lazyvim_python_lsp = "pyright"
 vim.g.lazyvim_python_ruff = "ruff"
--- end
 
 local lsp = vim.g.lazyvim_python_lsp or "pyright"
 local ruff = vim.g.lazyvim_python_ruff or "ruff"
@@ -103,22 +99,23 @@ return {
   },
   {
     "linux-cultist/venv-selector.nvim",
-    -- branch = "regexp", -- Use this branch for the new version
+    branch = "regexp", -- Use this branch for the new version
     cmd = "VenvSelect",
     enabled = function()
       return RUtils.has "telescope.nvim"
     end,
     opts = {
-      -- settings = {
-      --   options = {
-      --     notify_user_on_venv_activation = true,
-      --   },
-      -- },
-      stay_on_this_version = true,
+      settings = {
+        options = {
+          notify_user_on_venv_activation = true,
+        },
+      },
     },
     --  Call config for python files and load the cached venv automatically
     ft = "python",
-    -- keys = {} define keymaps in ftplugin/python.lua
+    keys = {
+      { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Action: select virtualenv [venv-selector]", ft = "python" },
+    },
   },
   {
     "iguanacucumber/magazine.nvim",
