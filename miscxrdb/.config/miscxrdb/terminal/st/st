@@ -1,8 +1,8 @@
 ! Download font: https://monaspace.githubnext.com/
 st.font:              SF Mono:Regular:pixelsize=15
 st.boldFont:          SF Mono:Bold:pixelsize=15
-st.italicFont:        SF Mono:Italic:pixelsize=15
-st.italicBoldFont:    SF Mono:ItalicBold:pixelsize=15
+st.italicFont:        Maple Mono:Italic:pixelsize=15
+st.italicBoldFont:    Maple Mono:ItalicBold:pixelsize=15
 
 ! st.borderperc:              100
 ! st.cursorshape:               2
