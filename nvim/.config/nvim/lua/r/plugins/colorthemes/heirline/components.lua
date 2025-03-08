@@ -639,11 +639,10 @@ M.Dap = {
     if package.loaded.dap == nil then
       return false
     end
-    if vim.tbl_contains(ft_exclude, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
+    if vim.tbl_contains(dap_ft_include, vim.api.nvim_get_option_value("filetype", { buf = 0 })) then
       return false
     end
     local session = require("dap").session()
-
     return session ~= nil
   end,
   provider = function()
