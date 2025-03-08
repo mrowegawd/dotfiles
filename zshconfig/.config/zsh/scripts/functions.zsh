@@ -5,9 +5,10 @@ build-nvim() {
   [ ! -d $neovim_dir ] && git clone https://github.com/neovim/neovim.git $neovim_dir
   pushd $neovim_dir
   git checkout master
+  git reset --hard origin/$(git rev-parse --abbrev-ref HEAD) && git clean -fdx
   # git pull upstream master
-  git pull --rebase --prune
   git fetch --tags -f
+  git pull --rebase --prune
   # git checkout nightly
   git checkout stable
   [ -d "$neovim_dir/build/" ] && rm -r ./build/ # clear the CMake cache
@@ -207,7 +208,7 @@ build-install() {
   if ! command -v img2art >/dev/null; then
     # https://github.com/Asthestarsfalll/img2art
     echo "Installing: img2art - Convert image/gif/video to ascii art (use for snacks.nvim dashboard)"
-    pipx install img2art 
+    pipx install img2art
     asdf reshim python
   fi
 
