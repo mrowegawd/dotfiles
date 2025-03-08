@@ -969,15 +969,13 @@ M.Sessions = {
   end,
   {
     provider = function(self)
-      -- local icon_ses = "󰅟 "
-      -- local icon_ses = "  "
+      local icon_ses = "󰅟 " -- "  "
       local ses_status = self.ses_status
       if self.ses_status == nil then
         return
       end
 
-      -- return icon_ses .. ses_status .. "  "
-      return ses_status .. "  "
+      return icon_ses .. ses_status .. "  "
     end,
     hl = { fg = colors.normal_fg_blur },
   },
