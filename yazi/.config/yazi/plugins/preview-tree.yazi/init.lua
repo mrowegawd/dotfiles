@@ -96,11 +96,15 @@ local gen_cmd_ext = function(pane_id, fpath_ext, fpath)
 	end
 
 	if fpath_ext == "jpg" then
-		exec_os_cmd(pane_id, "clear")
-		exec_os_cmd(
-			pane_id,
-			[[kitty +kitten icat --silent --scale-up --transfer-mode=memory --align left --stdin=no ]] .. fpath
-		)
+		if os.getenv("TERMINAL") == "st" then
+			os.execute('sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
+		else
+			exec_os_cmd(pane_id, "clear")
+			exec_os_cmd(
+				pane_id,
+				[[kitty +kitten icat --silent --scale-up --transfer-mode=memory --align left --stdin=no ]] .. fpath
+			)
+		end
 	end
 end
 
@@ -141,6 +145,11 @@ local function send_text_cmds(cmd, args)
 end
 
 local function open_with_tmux(fpath_ext, fpath)
+	if fpath_ext == "jpg" and os.getenv("TERMINAL") == "st" then
+		gen_cmd_ext(3, fpath_ext, fpath)
+		return
+	end
+
 	local is_pane_at_bottom = get_output_string_cmd("tmux", { "display", "-p", "'#{pane_at_bottom}'" })
 	local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
 
