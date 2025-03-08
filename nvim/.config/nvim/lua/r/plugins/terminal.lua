@@ -14,7 +14,7 @@ return {
         start_in_insert = true,
         persist_size = true,
         -- open_mapping = [[<a-f>]],
-        direction = "vertical",
+        direction = "horizontal",
       }
     end,
     keys = function()
