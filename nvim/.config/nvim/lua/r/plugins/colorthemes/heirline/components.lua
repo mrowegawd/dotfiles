@@ -299,11 +299,16 @@ M.Branch = {
   },
 }
 M.FilePath = {
-  -- condition = function()
-  --   return not vim.tbl_contains(ft_left_exclude, vim.bo.filetype)
-  -- end,
+  init = function(self)
+    self.bufname = vim.api.nvim_buf_get_name(0)
+    self.filename = vim.fn.fnamemodify(self.bufname, ":.")
+    self.exclude_ft = vim.tbl_contains(
+      { "neo-tree", "Outline", "trouble", "qf" },
+      vim.api.nvim_get_option_value("filetype", { buf = 0 })
+    )
+  end,
   {
-    provider = function()
+    provider = function(self)
       local opts = {
         relative = "cwd",
         length = 3,
@@ -314,10 +319,7 @@ M.FilePath = {
         return ""
       end
 
-      local bufname = vim.api.nvim_buf_get_name(0)
-      local filename = vim.fn.fnamemodify(bufname, ":.")
-
-      if #filename == 0 then
+      if #self.filename == 0 then
         return "[Unknown Filename]"
       end
 
@@ -336,14 +338,14 @@ M.FilePath = {
       if opts.length == 0 then
         parts = parts
       elseif #parts > opts.length and opts.relative == "cwd" then
-        -- remove the last one to modified hl filename
+        -- remove the last one to modified hl self.filename
         parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
       else
         -- remove the last one too
         parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
       end
 
-      if not Conditions.width_percent_below(#filename, 0.47) and Conditions.is_active() then
+      if not Conditions.width_percent_below(#self.filename, 0.47) and set_conditions.hide_in_col_width(30) then
         path = table.concat(parts, sep)
         if #path > 0 then
           return path .. sep
@@ -351,7 +353,7 @@ M.FilePath = {
       end
 
       if Conditions.is_active() then
-        parts = vim.split(filename, "[\\/]")
+        parts = vim.split(self.filename, "[\\/]")
         table.remove(parts, #parts)
         local tbl_concat = table.concat(parts, sep)
         if #tbl_concat > 0 then
@@ -360,16 +362,16 @@ M.FilePath = {
         return ""
       end
 
-      if not Conditions.width_percent_below(#filename, 0.90) then
+      if not Conditions.width_percent_below(#self.filename, 0.90) then
         path = table.concat(parts, sep)
         if #path > 0 then
-          return path .. sep .. RUtils.file.basename(filename) .. "  "
+          return path .. sep .. RUtils.file.basename(self.filename) .. "  "
         end
-        return RUtils.file.basename(filename) .. " "
+        return RUtils.file.basename(self.filename) .. " "
       end
 
       -- return statusline path untuk non active window
-      return filename .. "  "
+      return self.filename .. "  "
     end,
     hl = function()
       if Conditions.is_not_active() then
@@ -379,16 +381,18 @@ M.FilePath = {
     end,
   },
   {
-    provider = function()
-      local bufname = vim.api.nvim_buf_get_name(0)
-      local filename = vim.fn.fnamemodify(bufname, ":.")
-
-      if Conditions.is_active() then
-        return RUtils.file.basename(filename)
+    provider = function(self)
+      if #self.filename == 0 then
+        return vim.api.nvim_get_option_value("filetype", { buf = 0 }) .. " "
       end
+      return RUtils.file.basename(self.filename)
     end,
-    hl = function()
-      return { fg = Col.normal_fg_white, bold = true, italic = true }
+    hl = function(self)
+      local fg = colors.normal_fg_white
+      if self.exclude_ft then
+        fg = colors.normal_fg_blur
+      end
+      return { fg = fg, bold = true, italic = true }
     end,
   },
 }
@@ -911,7 +915,7 @@ M.RmuxTargetPane = {
 }
 M.LazyStatus = {
   condition = function()
-    return require("lazy.status").has_updates() and set_conditions.hide_in_col_width(120)
+    return require("lazy.status").has_updates() and set_conditions.hide_in_col_width(150)
   end,
   {
     provider = "Updates ",
@@ -984,7 +988,7 @@ M.PinnedBuffer = {
       if RUtils.has "stickybuf.nvim" then
         local is_pinned = require("stickybuf").is_pinned()
         if is_pinned then
-          return RUtils.config.icons.misc.dashboard .. "  "
+          return RUtils.config.icons.misc.dashboard .. " "
         end
       end
     end,
@@ -1010,7 +1014,7 @@ M.BufferCwd = {
     self.bufnr = self.bufnr or 0
   end,
   condition = function()
-    return set_conditions.hide_in_col_width(120)
+    return set_conditions.hide_in_col_width(150)
   end,
   {
     provider = function()
@@ -1030,7 +1034,7 @@ M.BufferCwd = {
 }
 M.Ruler = {
   condition = function()
-    return set_conditions.hide_in_col_width(120)
+    return set_conditions.hide_in_col_width(150)
   end,
   init = function(self)
     self.column = vim.fn.virtcol "."
