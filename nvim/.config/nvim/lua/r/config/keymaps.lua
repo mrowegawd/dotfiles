@@ -371,6 +371,10 @@ if vim.fn.executable "lazygit" == 1 then
     ---@diagnostic disable-next-line: missing-fields
     Snacks.lazygit { cwd = RUtils.root.git() }
   end, { desc = "Git: lazygit (root dir) [snacks]" })
+  RUtils.map.nnoremap("<c-space>g", function()
+    ---@diagnostic disable-next-line: missing-fields
+    Snacks.lazygit { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit (root dir) without tmux [snacks]" })
   RUtils.map.nnoremap("<Leader>gG", function()
     Snacks.lazygit()
   end, { desc = "Git: lazygit (cwd) [snacks]" })
