@@ -37,7 +37,7 @@ function M.neorg_mappings_ft(bufnr)
           }
           vim.cmd "normal! zRzz"
         end,
-        "Note: search todocomment global note [fzflua]",
+        "TODOCOMMENTS: search global TODO comments in notes [fzflua]",
       },
       ["<Leader>ft"] = {
         function()
@@ -45,7 +45,7 @@ function M.neorg_mappings_ft(bufnr)
             title = "Todo Note Curbuf",
           }
         end,
-        "Note: search todocomment local note [fzflua]",
+        "TODOCOMMENTS: search local TODO comments in notes [fzflua]",
       },
       ["gD"] = {
         function()

@@ -110,7 +110,7 @@ return {
           }
           vim.cmd "normal! zz"
         end,
-        desc = "Misc: todo global dir (fzflua) [todo-comments]",
+        desc = "TODOCOMMENTS: todo global dir (fzflua)",
       },
       {
         "<Leader>ft",
@@ -120,7 +120,7 @@ return {
           }
           vim.cmd "normal! zz"
         end,
-        desc = "Misc: todo local dir (fzflua) [todo-comments]",
+        desc = "TODOCOMMENTS: todo local dir (fzflua)",
       },
       -- { "<Leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
     },
