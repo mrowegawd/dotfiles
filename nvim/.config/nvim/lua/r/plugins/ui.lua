@@ -225,11 +225,11 @@ return {
     opts = true,
     keys = {
       {
-        "<S-TAB>",
+        "<Leader>zz",
         function()
           require("fold-cycle").open()
         end,
-        desc = "Fold: cycle fold [fold-cycle]",
+        desc = "Fold: cycle fold [fold-cycle.nvim]",
         mode = { "v", "n" },
       },
     },
