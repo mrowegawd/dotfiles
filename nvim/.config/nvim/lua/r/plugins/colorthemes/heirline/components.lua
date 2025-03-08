@@ -4,13 +4,12 @@ local Col = RUtils.colortbl
 
 local M = {}
 
-local Spacer = { provider = "   " }
-
+-- local Spacer = { provider = "   " }
 local function rpad(child)
   return {
     condition = child.condition,
     child,
-    Spacer,
+    -- Spacer,
   }
 end
 
@@ -585,7 +584,7 @@ local function OverseerTasksForStatus(status)
       end
       return {
         fg = fg,
-        bg = colors.statusline_bg,
+        bg = colors.normal_bg_darker,
         bold = true,
       }
     end,
@@ -608,15 +607,35 @@ M.Tasks = {
       ["RUNNING"] = "󰑮 ",
     },
   },
-
+  {
+    provider = function(self)
+      for i, _ in pairs(self.symbols) do
+        if self.tasks[i] then
+          return "Overseer: "
+        end
+      end
+    end,
+    hl = function()
+      return { fg = colors.normal_fg_blur }
+    end,
+  },
   rpad(OverseerTasksForStatus "CANCELED"),
   rpad(OverseerTasksForStatus "RUNNING"),
   rpad(OverseerTasksForStatus "SUCCESS"),
   rpad(OverseerTasksForStatus "FAILURE"),
+  {
+    provider = function(self)
+      for i, _ in pairs(self.symbols) do
+        if self.tasks[i] then
+          return "  "
+        end
+      end
+    end,
+  },
 }
+local dap_ft_include = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
 M.Dap = {
   condition = function()
-    local ft_exclude = { "dapui_scopes", "dapui_stacks", "dapui_watches", "dapui_breakpoints", "dap-repl" }
     if package.loaded.dap == nil then
       return false
     end
@@ -1224,7 +1243,7 @@ M.status_active_left = {
   M.Gap,
 
   M.LazyStatus,
-  -- M.Tasks,
+  M.Tasks,
   -- M.Dap,
   -- M.virtualenv,
   M.RmuxTargetPane,
