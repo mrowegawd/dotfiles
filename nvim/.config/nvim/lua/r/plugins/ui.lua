@@ -397,21 +397,21 @@ return {
                 margin = " ",
               }
             end),
-            line.spacer(),
-            line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
-              return {
-                line.sep("", theme.win, theme.separator),
-                win.is_current() and "" or "",
-                win.buf_name(),
-                line.sep("", theme.win, theme.separator),
-                hl = theme.win,
-                margin = " ",
-              }
-            end),
-            {
-              line.sep("", theme.tail, theme.fill),
-              { "  ", hl = theme.tail },
-            },
+            -- line.spacer(),
+            -- line.wins_in_tab(line.api.get_current_tab()).foreach(function(win)
+            --   return {
+            --     line.sep("", theme.win, theme.separator),
+            --     win.is_current() and "" or "",
+            --     win.buf_name(),
+            --     line.sep("", theme.win, theme.separator),
+            --     hl = theme.win,
+            --     margin = " ",
+            --   }
+            -- end),
+            -- {
+            --   line.sep("", theme.tail, theme.fill),
+            --   { "  ", hl = theme.tail },
+            -- },
             hl = theme.fill,
           }
         end,
