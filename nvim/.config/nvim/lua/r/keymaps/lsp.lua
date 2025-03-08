@@ -134,7 +134,7 @@ function M.get()
     {
       "dP",
       function()
-        vim.diagnostic.open_float { scope = "line", border = "rounded", focusable = true }
+        vim.diagnostic.open_float { scope = "line", border = "rounded" }
       end,
       desc = "Diagnostic: peek",
     },

@@ -576,6 +576,8 @@ function M.change_colors()
 
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 
+  local winseparator = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
+
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
   local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")
   local lazygit_active_border = Highlight.get("KeywordNC", "fg")
@@ -695,7 +697,8 @@ function M.change_colors()
     KeywordNC_fg, -- 17
 
     string.format "! TMUX: border_fg_nc, border_fg",
-    Highlight.get("WinSeparator", "fg"), -- 19
+    -- Highlight.get("WinSeparator", "fg"), -- 19
+    winseparator, -- 19
     statusline_fg, -- 18
 
     string.format "! TMUX: tmux_bg, tmux_fg",

@@ -21,6 +21,7 @@ return {
   -- COMMENT-BOX
   {
     "LudoPinelli/comment-box.nvim",
+    event = "BufRead",
   },
   -- VIM-HIGHLIGHTER
   {
