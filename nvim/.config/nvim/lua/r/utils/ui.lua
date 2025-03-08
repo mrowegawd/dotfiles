@@ -16,15 +16,9 @@ M.meta = {
 
 -- Numbers in Neovim are weird
 -- They show when either number or relativenumber is true
-local LINE_NR = "%=%{%(&number || &relativenumber) && v:virtnum == 0 ? ("
-  .. (vim.fn.has "nvim-0.11" == 1 and '"%l"' or 'v:relnum == 0 ? (&number ? "%l" : "%r") : (&relativenumber ? "%r" : "%l")')
-  .. ') : ""%} '
-
----@type (fun(buf:number, lnum:number, vnum:number, win:number):Sign[]?)[]
-M.virtual = {}
-
----@alias Sign {name:string, text:string, texthl:string, priority:number}
----
+-- local LINE_NR = "%=%{%(&number || &relativenumber) && v:virtnum == 0 ? ("
+--   .. (vim.fn.has "nvim-0.11" == 1 and '"%l"' or 'v:relnum == 0 ? (&number ? "%l" : "%r") : (&relativenumber ? "%r" : "%l")')
+--   .. ') : ""%} '
 
 local config = {
   left = { "mark", "sign" }, -- priority of signs on the left (high to low)
@@ -44,10 +38,6 @@ local config = {
 local sign_cache = {}
 local cache = {} ---@type table<string,string>
 local icon_cache = {} ---@type table<string,string>
-
-local fold_icon = vim.opt.fillchars:get().foldclose or ""
--- local fold_icon = "⚡"
-local text_strchars = 2
 
 local did_setup = false
 
@@ -145,8 +135,8 @@ function M.line_signs(win, buf, lnum)
   -- Get fold signs
   vim.api.nvim_win_call(win, function()
     if vim.fn.foldclosed(lnum) >= 0 then
-      signs[#signs + 1] = { text = fold_icon, texthl = "FoldedSign", type = "fold" }
-    elseif config.folds.open and tostring(vim.treesitter.foldexpr(vim.v.lnum)):sub(1, 1) == ">" then
+      signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldedSign", type = "fold" }
+    elseif config.folds.open and vim.fn.foldlevel(lnum) > vim.fn.foldlevel(lnum - 1) then
       signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
     end
   end)
@@ -168,7 +158,7 @@ function M.icon(sign)
     return icon_cache[key]
   end
   local text = vim.fn.strcharpart(sign.text or "", 0, 2) ---@type string
-  text = text .. string.rep(" ", text_strchars - vim.fn.strchars(text))
+  text = text .. string.rep(" ", 2 - vim.fn.strchars(text))
   icon_cache[key] = sign.texthl and ("%#" .. sign.texthl .. "#" .. text .. "%*") or text
   return icon_cache[key]
 end
@@ -179,10 +169,24 @@ function M._get()
     M.setup()
   end
   local win = vim.g.statusline_winid
+  local nu = vim.wo[win].number
+  local rnu = vim.wo[win].relativenumber
   local show_signs = vim.v.virtnum == 0 and vim.wo[win].signcolumn ~= "no"
-  local components = { "", LINE_NR, "" } -- left, middle, right
-  if not show_signs and not (vim.wo[win].number or vim.wo[win].relativenumber) then
+  local components = { "", "", "" } -- left, middle, right
+  if not (show_signs or nu or rnu) then
     return ""
+  end
+
+  if (nu or rnu) and vim.v.virtnum == 0 then
+    local num ---@type number
+    if rnu and nu and vim.v.relnum == 0 then
+      num = vim.v.lnum
+    elseif rnu then
+      num = vim.v.relnum
+    else
+      num = vim.v.lnum
+    end
+    components[2] = "%=" .. num .. " "
   end
 
   if show_signs then
@@ -226,16 +230,18 @@ function M._get()
     end
   end
 
-  return table.concat(components, "")
+  local ret = table.concat(components, "")
+  return "%@v:lua.require'r.utils.ui'.click_fold@" .. ret .. "%T"
 end
 
 function M.get()
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
   -- local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum and 1 or 0)
+  local key = ("%d:%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum ~= 0 and 1 or 0, vim.v.relnum)
   -- Dont draw sign for virtual lines
   -- https://github.com/folke/snacks.nvim/pull/511#issue-2790796444
-  local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum)
+  -- local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum)
   if cache[key] then
     return cache[key]
   end
@@ -262,6 +268,16 @@ function M.foldexpr()
     end
   end
   return vim.b[buf].ts_folds and vim.treesitter.foldexpr() or "0"
+end
+
+function M.click_fold()
+  local pos = vim.fn.getmousepos()
+  vim.api.nvim_win_set_cursor(pos.winid, { pos.line, 1 })
+  vim.api.nvim_win_call(pos.winid, function()
+    if vim.fn.foldlevel(pos.line) > 0 then
+      vim.cmd "normal! za"
+    end
+  end)
 end
 
 function M.foldtext()
