@@ -6,7 +6,7 @@ local normal_bg = Highlight.get("Normal", "bg")
 local normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 4.5)
 
 -- Color property statusline designed to draw attention when viewed
-local normal_fg_white = Highlight.get("Normal", "fg")
+local normal_fg_white = "white"
 -- Color property statusline designed to be ignored when viewed
 local normal_fg_blur = Highlight.get("Comment", "fg")
 
@@ -40,6 +40,7 @@ local mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.2)
 local mode_insert_bar = Highlight.darken(mode_insert_bg, 0.45, normal_bg)
 
 if vim.g.colorscheme == "lackluster" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 7)
   directory = Highlight.tint(Highlight.get("Directory", "fg"), 0.2)
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.3)
   modenc_bg = Highlight.get("KeywordBlur", "bg")
@@ -48,6 +49,10 @@ end
 if vim.g.colorscheme == "base2tone_suburb_dark" then
   mode_bg_blur = Highlight.tint(mode_bg, -0.45)
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
+end
+
+if vim.g.colorscheme == "onedark" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 3)
 end
 
 if vim.g.colorscheme == "sunburn" then
@@ -64,6 +69,7 @@ if vim.g.colorscheme == "ashen" then
 end
 
 if vim.g.colorscheme == "nord" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 3)
   mode_bg_blur = Highlight.tint(mode_bg, -0.25)
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.15)
   modenc_bg = Highlight.tint(Highlight.get("KeywordBlur", "bg"), 0.1)
@@ -81,10 +87,9 @@ if vim.g.colorscheme == "horizon" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.1)
 end
 
--- if vim.g.colorscheme == "rose-pine-dawn" then
---   modenc_bg = Highlight.tint(modenc_bg, 0.01)
---   modenc_bg_blur = Highlight.tint(modenc_bg, 0.03)
--- end
+if vim.g.colorscheme == "material" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 3.6)
+end
 
 if vim.g.colorscheme == "rose-pine-main" then
   mode_bg_blur = Highlight.tint(mode_bg, -0.25)
@@ -107,6 +112,7 @@ if vim.g.colorscheme == "tokyonight-storm" then
 end
 
 if vim.g.colorscheme == "vscode_modern" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 4)
   directory = Highlight.tint(Highlight.get("Directory", "fg"), 0.2)
   mode_bg_blur = Highlight.tint(mode_bg, -0.3)
   modenc_bg = Highlight.get("KeywordBlur", "bg")
@@ -120,6 +126,7 @@ if vim.g.colorscheme == "catppuccin-mocha" then
 end
 
 if vim.g.colorscheme == "zenburned" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 2)
   mode_bg_blur = Highlight.tint(mode_bg, -0.2)
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.12)
   directory = Highlight.tint(Highlight.get("Directory", "fg"), 0.5)

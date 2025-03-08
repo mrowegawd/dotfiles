@@ -170,7 +170,7 @@ reset_base_alter({ "onedark" }, {
   winseparator_alter = 0.3,
 })
 reset_base_alter({ "material" }, {
-  cursor_fg = "#16afca",
+  cursor_fg = "#ffffff",
   cursorline_alter = 0.06,
   fzflua_bg_cursorline_alter = -0.12,
   fzfluasel_bg_alter = -0.1,
@@ -288,7 +288,7 @@ local general_overrides = function()
     { FoldColumn = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.4 } } },
     { FoldColumn1 = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 1 } } },
     { ColorColumn = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
-    { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.8 } } },
+    { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.8 }, bold = true } },
     {
       CursorLine = {
         bg = Highlight.darken(Highlight.get("Keyword", "fg"), cursorline_alter, Highlight.get("Normal", "bg")),
@@ -1260,7 +1260,7 @@ local rose_pine = {
 
     { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.05 } } },
 
-    { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.18 } } },
+    { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.18 }, bold = true } },
     { LineNrAbove = { link = "LineNr" } },
     { LineNrBelow = { link = "LineNr" } },
     { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -1410,9 +1410,9 @@ local rose_pine = {
     { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = -0.07 } } },
   },
   ["rose-pine-main"] = {
-    { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.05 } } },
+    { Visual = { bg = { from = "Visual", attr = "bg", alter = 0.05 } } },
 
-    { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.01 } } },
+    { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.01 }, bold = true } },
     { LineNrAbove = { link = "LineNr" } },
     { LineNrBelow = { link = "LineNr" } },
     { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -1519,7 +1519,7 @@ local function colorscheme_overrides()
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.15 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.15 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.15 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -1713,7 +1713,7 @@ local function colorscheme_overrides()
       { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
       { CmpItemAbbrMatch = { fg = { from = "CmpItemAbbrMatchFuzzy", attr = "fg", alter = 0.2 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -1846,7 +1846,7 @@ local function colorscheme_overrides()
       { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
       { CmpItemAbbrMatch = { fg = { from = "CmpItemAbbrMatchFuzzy", attr = "fg", alter = 0.2 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -1922,7 +1922,7 @@ local function colorscheme_overrides()
       { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
       { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.6 } } },
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.6 }, bold = true } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
       {
@@ -2004,7 +2004,7 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
     },
     ["neomodern"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -2106,7 +2106,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -2134,7 +2134,7 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Keyword", attr = "fg", alter = -0.48 },
+          fg = { from = "Keyword", attr = "fg", alter = -0.5 },
           bg = { from = "Keyword", attr = "fg", alter = -0.75 },
         },
       },
@@ -2290,13 +2290,13 @@ local function colorscheme_overrides()
       { TelescopeMatching = { link = "CmpItemAbbrMatchFuzzy" } },
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.2 } } },
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.3 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.2 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -2410,7 +2410,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -2514,12 +2514,12 @@ local function colorscheme_overrides()
       { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
       { CmpItemAbbrMatch = { fg = { from = "CmpItemAbbrMatchFuzzy", attr = "fg", alter = 0.2 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.2 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
@@ -2532,7 +2532,7 @@ local function colorscheme_overrides()
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
       { FzfLuaSearch = { inherit = "CurSearch" } },
 
       {
@@ -2648,7 +2648,7 @@ local function colorscheme_overrides()
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
 
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.35 } } },
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.35 }, bold = true } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
@@ -2661,7 +2661,7 @@ local function colorscheme_overrides()
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.34 }, bg = "NONE" } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.15 } } },
-      { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+      { SnacksIndentScope = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
       {
         NoiceCmdline = {
@@ -2764,12 +2764,12 @@ local function colorscheme_overrides()
       { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
       { CmpItemAbbrMatch = { fg = { from = "CmpItemAbbrMatchFuzzy", attr = "fg", alter = 0.2 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.8 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
@@ -2889,7 +2889,7 @@ local function colorscheme_overrides()
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.2 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.02 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.02 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -2986,7 +2986,7 @@ local function colorscheme_overrides()
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.02 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.02 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -3051,7 +3051,7 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
     },
     ["tokyonight-night"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -3135,7 +3135,7 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
     },
     ["tokyonight-storm"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.15 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -3151,7 +3151,7 @@ local function colorscheme_overrides()
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3249,7 +3249,7 @@ local function colorscheme_overrides()
 
       { Search = { fg = { from = "CurSearch", attr = "bg", alter = 1 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
@@ -3473,7 +3473,7 @@ local function colorscheme_overrides()
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.12 } } },
 
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 } } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },

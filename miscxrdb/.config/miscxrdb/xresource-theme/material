@@ -1,25 +1,46 @@
 ! vim: foldmethod=marker foldlevel=0 ft=xdefaults
-
-*.foreground:   #e5e5e5
-*.background:   #232322
-*.cursorColor: #16afca
-
-*.color0:#212121
-*.color1:#b7141f
-*.color2:#457b24
-*.color3:#f6981e
-*.color4:#134eb2
-*.color5:#560088
-*.color6:#0e717c
-*.color7:#efefef
-*.color8:#424242
-*.color9:#e83b3f
-*.color10:#7aba3a
-*.color11:#ffea2e
-*.color12:#54a4f3
-*.color13:#aa4dbc
-*.color14:#26bbd1
-*.color15:#d9d9d9
+! MaterialDarker
+!
+*.foreground:  #eeffff
+*.background:  #212121
+*.cursorColor: #ffffff
+!
+! Black
+*.color0:      #000000
+*.color8:      #545454
+!
+! Red
+*.color1:      #ff5370
+*.color9:      #ff5370
+!
+! Green
+*.color2:      #c3e88d
+*.color10:     #c3e88d
+!
+! Yellow
+*.color3:      #ffcb6b
+*.color11:     #ffcb6b
+!
+! Blue
+*.color4:      #82aaff
+*.color12:     #82aaff
+!
+! Magenta
+*.color5:      #c792ea
+*.color13:     #c792ea
+!
+! Cyan
+*.color6:      #89ddff
+*.color14:     #89ddff
+!
+! White
+*.color7:      #ffffff
+*.color15:     #ffffff
+!
+! Bold, Italic, Underline
+*.colorBD:     #ffffff
+!*.colorIT:
+*.colorUL:     #596181
 
 ! Keyword color
 *.color16:#c792ea
