@@ -1242,19 +1242,17 @@ M.WinbarSeparator = {
   { provider = " " },
 }
 M.WinbarFilePath = {
-  condition = function()
-    local disabled = false
-    -- disabled = disabled or (vim.tbl_contains(ft_left_exclude, vim.bo.filetype))
-    disabled = disabled or (RUtils.cmd.get_option "buftype" == "prompt")
-    disabled = disabled or (RUtils.cmd.get_option "buftype" == "terminal")
-    disabled = disabled or (RUtils.cmd.get_option "filetype" == "")
-    disabled = disabled or (vim.fn.reg_recording() ~= "")
-    disabled = disabled or (vim.fn.reg_executing() ~= "")
-    return not disabled
+  init = function(self)
+    self.bufname = vim.api.nvim_buf_get_name(0)
+    self.filename = vim.fn.fnamemodify(self.bufname, ":.")
+    self.exclude_ft = vim.tbl_contains(
+      { "neo-tree", "Outline", "trouble", "qf" },
+      vim.api.nvim_get_option_value("filetype", { buf = 0 })
+    )
   end,
 
   {
-    provider = function()
+    provider = function(self)
       local opts = {
         relative = "cwd",
         length = 3,
@@ -1265,10 +1263,7 @@ M.WinbarFilePath = {
         return ""
       end
 
-      local bufname = vim.api.nvim_buf_get_name(0)
-      local filename = vim.fn.fnamemodify(bufname, ":.")
-
-      if #filename == 0 then
+      if #self.filename == 0 then
         return "[Unknown Filename]"
       end
 
@@ -1287,61 +1282,46 @@ M.WinbarFilePath = {
       if opts.length == 0 then
         parts = parts
       elseif #parts > opts.length and opts.relative == "cwd" then
-        -- remove the last one to modified hl filename
+        -- remove the last one to modified hl self.filename
         parts = { parts[1], "…", unpack(parts, #parts - opts.length + 2, #parts - 1) }
       else
         -- remove the last one too
         parts = { parts[1], "…", unpack(parts, #parts - opts.length + 1, #parts - 2) }
       end
 
-      if not Conditions.width_percent_below(#filename, 0.47) then
+      if not Conditions.width_percent_below(#self.filename, 0.2) and not set_conditions.hide_in_width(80) then
         path = table.concat(parts, sep)
         if #path > 0 then
           return path .. sep
         end
       end
 
-      if Conditions.is_active() then
-        parts = vim.split(filename, "[\\/]")
-        table.remove(parts, #parts)
-        local tbl_concat = table.concat(parts, sep)
-        if #tbl_concat > 0 then
-          return tbl_concat .. sep
-        end
-        return ""
-      end
-
-      if not Conditions.width_percent_below(#filename, 0.90) then
-        path = table.concat(parts, sep)
-        if #path > 0 then
-          return path .. sep .. RUtils.file.basename(filename)
-        end
-        return RUtils.file.basename(filename)
+      parts = vim.split(self.filename, "[\\/]")
+      table.remove(parts, #parts)
+      local tbl_concat = table.concat(parts, sep)
+      if #tbl_concat > 0 then
+        return tbl_concat .. sep
       end
 
       -- return statusline path untuk non active window
-      return filename
+      return self.filename
     end,
     hl = function()
-      -- if Conditions.is_not_active() then
-      --   return { fg = colors.statuslinenc_fg }
-      -- end
-      -- print("okeee " .. colors.normal_winbar_fg)
-      -- #272727
       return { fg = colors.normal_winbar_fg, bold = true, italic = true }
     end,
   },
   {
-    provider = function()
-      local bufname = vim.api.nvim_buf_get_name(0)
-      local filename = vim.fn.fnamemodify(bufname, ":.")
-
-      if Conditions.is_active() then
-        return RUtils.file.basename(filename)
-      end
+    provider = function(self)
+      return RUtils.file.basename(self.filename)
     end,
     hl = function()
-      return { fg = colors.normal_fg_white, bold = true, italic = true }
+      local fg = colors.normal_winbar_fg
+      local italic = true
+      if Conditions.is_active() then
+        fg = colors.normal_fg_white
+        italic = true
+      end
+      return { fg = fg, bold = true, italic = italic }
     end,
   },
 }
