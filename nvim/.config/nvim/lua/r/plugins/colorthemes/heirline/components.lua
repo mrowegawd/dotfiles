@@ -233,9 +233,6 @@ M.Mode = {
     hl = function(self)
       local mode = self.mode:sub(1, 1)
       local fg = colors.normal_bg
-      if not (mode == "n") and not (mode == "i") then
-        fg = colors.normal_fg
-      end
       return { bg = self.mode_colors[mode], fg = fg, bold = true }
     end,
   },
@@ -1283,6 +1280,10 @@ M.WinbarFilePath = {
       end
 
       parts = vim.split(self.filename, "[\\/]")
+      if #parts == 1 then
+        return ""
+      end
+
       table.remove(parts, #parts)
       local tbl_concat = table.concat(parts, sep)
       if #tbl_concat > 0 then
