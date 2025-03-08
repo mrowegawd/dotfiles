@@ -648,35 +648,37 @@ M.Dap = {
 }
 M.virtualenv = {
   condition = function()
-    return set_conditions.hide_in_width(130)
+    return set_conditions.hide_in_col_width(130) and RUtils.has "venv-selector.nvim"
   end,
-  init = function()
-    local python_logo = "  "
+  init = function(self)
+    local python_logo = " "
     local msg = ""
 
-    local dc = RUtils.extras.wants {
+    local venv_root = RUtils.extras.wants {
       ft = "python",
       root = {
         "pyproject.toml",
-        -- "pyrightconfig.json",
+        "pyrightconfig.json",
       },
     }
-    if RUtils.has "venv-selector.nvim" and dc then
-      local venv_name = require("venv-selector").get_active_venv()
-      print(venv_name)
-      if venv_name ~= nil then
-        msg = python_logo .. string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
+    local venv_name = require("venv-selector").venv()
+    if venv_name ~= nil and venv_root then
+      -- msg = python_logo .. string.gsub(venv_name, ".*/pypoetry/virtualenvs/", "(poetry) ")
+      if venv_name:find "%.venv" then
+        msg = python_logo .. ".venv"
       else
-        msg = python_logo .. " venv"
+        msg = python_logo .. venv_name
       end
     end
-
     self.venv = msg
   end,
   {
     provider = function(self)
-      return self.venv .. " "
+      if #self.venv > 0 then
+        return self.venv .. "  "
+      end
     end,
+    hl = { fg = colors.normal_fg_blur, bold = true },
   },
 }
 M.LSPActive = {
@@ -1186,10 +1188,10 @@ M.status_active_left = {
   M.LazyStatus,
   M.Tasks,
   -- M.Dap,
-  -- M.virtualenv,
   M.RmuxTargetPane,
   M.LSPActive,
   M.Diagnostics,
+  M.virtualenv,
   -- M.SnacksProfile,
   -- M.SearchCount, -- this func make nvim slow!
   M.PinnedBuffer,
