@@ -539,20 +539,12 @@ M.FileFlags = {
     end,
     provider = RUtils.config.icons.misc.modified .. " ",
     hl = function()
-      -- local mode = self.mode:sub(1, 1)
       local fg = colors.modified_fg
-      -- if Conditions.is_not_active() then
-      --   fg = colors.diagnostic_err
-      -- elseif mode == "i" then
-      --   fg = colors.coldisorent
-      -- end
       return { fg = fg }
     end,
   },
   {
     condition = function()
-      -- return (vim.bo.filetype ~= "fzf")
-      --   and (vim.bo.filetype ~= "qf")
       return (not vim.bo.modifiable or vim.bo.readonly) and not (vim.bo.filetype == "DiffviewFiles")
     end,
     provider = RUtils.config.icons.misc.readonly,
@@ -683,9 +675,7 @@ M.virtualenv = {
   end,
   {
     provider = function(self)
-      -- if #self.venv > 0 then
       return self.venv .. " "
-      -- end
     end,
   },
 }
@@ -712,8 +702,7 @@ M.LSPActive = {
   },
   {
     provider = function(self)
-      -- local lsp_clients_str = table.concat(self.names, "  ")
-      local lsp_clients_str = table.concat(self.names, ", ")
+      local lsp_clients_str = table.concat(self.names, ", ") -- "  "
       return lsp_clients_str
     end,
     hl = { fg = colors.normal_fg_white, bold = true },
@@ -1058,7 +1047,7 @@ M.Ruler = {
   {
     provider = function(self)
       local rhs = self.rhs
-      rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
+      rhs = rhs .. "ℓ: " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
     hl = { fg = colors.normal_fg_blur, bold = true },
@@ -1075,68 +1064,30 @@ M.Ruler = {
     provider = function(self)
       -- Add padding to stop RHS from changing too much as we move the cursor.
       local rhs = self.rhs
-
       rhs = rhs .. "/"
       rhs = rhs .. self.height
-
-      -- Add padding to stop rhs from changing too much as we move the cursor.
-      -- if #tostring(self.column) < 2 then
-      --   rhs = rhs .. " "
-      -- end
-      -- if #tostring(self.width) < 2 then
-      --   rhs = rhs .. " "
-      -- end
-
       return rhs
     end,
     hl = { fg = colors.normal_fg_blur },
   },
-
-  -- {
-  --   provider = function(self)
-  --     local rhs = self.rhs
-  --
-  --     -- Add padding to stop RHS from changing too much as we move the cursor.
-  --     -- local padding = #tostring(self.line) - #tostring(self.column)
-  --     -- print(padding)
-  --     -- if padding > 0 then
-  --     rhs = rhs .. (" "):rep(3)
-  --     -- end
-  --     return rhs
-  --   end,
-  -- },
   {
     provider = function(self)
       local rhs = self.rhs
-      rhs = rhs .. " Col " -- (Literal, \ℓ "SCRIPT SMALL L").
+      rhs = rhs .. " Col: " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
     hl = { fg = colors.normal_fg_blur, bold = true },
   },
-
   {
     provider = function(self)
       -- Add padding to stop RHS from changing too much as we move the cursor.
       local rhs = self.rhs
-
-      -- rhs = rhs .. "ℓ " -- (Literal, \ℓ "SCRIPT SMALL L").
-      -- rhs = rhs .. self.line
-      -- rhs = rhs .. "/"
-      -- rhs = rhs .. self.height
-      -- rhs = rhs .. " Col " -- (Literal, \ᵨc "MATHEMATICAL MONOSPACE SMALL C").
       rhs = rhs .. self.column
-      -- rhs = rhs .. "/"
-      -- rhs = rhs .. self.width
-      -- rhs = rhs .. " "
 
       -- Add padding to stop rhs from changing too much as we move the cursor.
       if #tostring(self.column) < 2 then
         rhs = rhs .. " "
       end
-      -- if #tostring(self.width) < 2 then
-      --   rhs = rhs .. " "
-      -- end
-
       return rhs
     end,
     hl = { fg = colors.normal_fg_white },
@@ -1144,17 +1095,6 @@ M.Ruler = {
   {
     provider = " ",
   },
-  -- {
-  --   provider = function(self)
-  --     local rhs = self.rhs
-  --     if #tostring(self.column) < 3 then
-  --       print "fasdf"
-  --       rhs = rhs .. " "
-  --     end
-  --
-  --     return rhs
-  --   end,
-  -- },
 }
 M.Clock = {
   condition = function()
@@ -1301,7 +1241,7 @@ M.status_not_active = {
 M.WinbarSeparator = {
   { provider = " " },
 }
-M.WinbarFiletype = {
+M.WinbarFilePath = {
   condition = function()
     local disabled = false
     -- disabled = disabled or (vim.tbl_contains(ft_left_exclude, vim.bo.filetype))
@@ -1401,7 +1341,7 @@ M.WinbarFiletype = {
       end
     end,
     hl = function()
-      return { fg = Col.filename, bold = true, italic = true }
+      return { fg = colors.normal_fg_white, bold = true, italic = true }
     end,
   },
 }
@@ -1431,7 +1371,7 @@ M.status_winbar_active_left = {
   -- condition = Conditions.is_active,
   M.WinbarSeparator,
   M.WinbarIcons,
-  M.WinbarFiletype,
+  M.WinbarFilePath,
 
   hl = function()
     local bg = colors.normal_bg
