@@ -1,6 +1,17 @@
 local Highlight = require "r.settings.highlights"
 
-local normal_fg = Highlight.get("Normal", "fg")
+local normal_bg_darker = Highlight.get("WinSeparator", "fg")
+local normal_bg = Highlight.get("Normal", "bg")
+
+local normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 4.5)
+
+-- Color property statusline designed to draw attention when viewed
+local normal_fg_white = Highlight.get("Normal", "fg")
+-- Color property statusline designed to be ignored when viewed
+local normal_fg_blur = Highlight.get("Comment", "fg")
+
+local normal_winbar_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.2)
+
 local error_fg = Highlight.get("Error", "fg")
 
 -- Statusline
@@ -8,9 +19,6 @@ local fg = Highlight.tint(Highlight.get("StatusLine", "fg"), -0.25)
 local bg = Highlight.get("StatusLine", "bg")
 local nc_fg = Highlight.get("StatusLineNC", "fg")
 local nc_bg = Highlight.get("StatusLineNC", "bg")
-
-local normal_bg = Highlight.tint(Highlight.get("Normal", "bg"), 0.4)
-local normal_white_fg = Highlight.tint(Highlight.get("Normal", "fg"), -0.4)
 
 local mode_bg = Highlight.get("Keyword", "fg")
 local mode_bg_blur = Highlight.tint(mode_bg, -0.55)
@@ -29,7 +37,7 @@ local modified_fg = Highlight.tint(error_fg, 0.3)
 
 local mode_insert_bg = Highlight.tint(error_fg, -0.1)
 local mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.2)
-local mode_insert_bar = Highlight.darken(mode_insert_bg, 0.45, Highlight.get("Normal", "bg"))
+local mode_insert_bar = Highlight.darken(mode_insert_bg, 0.45, normal_bg)
 
 if vim.g.colorscheme == "lackluster" then
   directory = Highlight.tint(Highlight.get("Directory", "fg"), 0.2)
@@ -139,7 +147,12 @@ local M = {
   statuslinenc_bg = nc_bg,
 
   normal_bg = normal_bg,
-  normal_fg = normal_white_fg,
+  normal_bg_darker = normal_bg_darker,
+  normal_fg = normal_fg,
+  normal_fg_blur = normal_fg_blur,
+  normal_fg_white = normal_fg_white,
+
+  normal_winbar_fg = normal_winbar_fg,
 
   branch_fg = branch_fg,
   path_name = path_name,
