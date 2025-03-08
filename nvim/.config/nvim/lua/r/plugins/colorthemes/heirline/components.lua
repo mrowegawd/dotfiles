@@ -1195,31 +1195,15 @@ M.status_active_left = {
   -- M.SnacksProfile,
   -- M.SearchCount, -- this func make nvim slow!
   M.PinnedBuffer,
-  -- M.Separator,
   M.Marks,
   M.Sessions,
-  -- M.Separator,
   -- M.Filetype,
   M.BufferCwd,
-  -- M.Separator,
   M.Ruler,
   M.Clock,
 
   hl = function()
     local bg = colors.normal_bg_darker
-
-    -- if vim.tbl_contains({ "qf", "trouble" }, vim.bo[0].filetype) then
-    --   return { fg = colors.statusline_fg, bg = colors.statusline_bg }
-    -- end
-
-    -- if Conditions.is_active() then
-    --   local mode = vim.fn.mode(1)
-    --   local mode_text = mode:sub(1, 1)
-    --   if mode_text == "i" then
-    --     bg = colors.mode_insert_bar
-    --   end
-    -- end
-
     return { fg = colors.statusline_fg, bg = bg }
   end,
 }
