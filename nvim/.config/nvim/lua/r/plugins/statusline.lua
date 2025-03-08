@@ -22,7 +22,7 @@ return {
   -- HEIRLINE
   {
     "rebelot/heirline.nvim",
-    event = "LazyFile",
+    event = "VimEnter",
     opts = function()
       local comp = require "r.plugins.colorthemes.heirline.components"
       return {
@@ -30,21 +30,38 @@ return {
           comp.status_active_left,
           comp.status_not_active,
         },
+        winbar = {
+          comp.status_winbar_active_left,
+        },
+        opts = {
+          disable_winbar_cb = function(args)
+            local buf = args.buf
+            if not vim.api.nvim_buf_is_valid(buf) then
+              return true
+            end
+            local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
+            local filetype = vim.tbl_contains(
+              {
+                "gitcommit",
+                "fugitive",
+                "Trouble",
+                "packer",
+                "dashboard",
+                "fzf",
+                "Outline",
+                "snacks_dashboard",
+                "toggleterm",
+              },
+              vim.bo[buf].filetype
+            )
+            local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
+            return buftype or filetype or is_float
+          end,
+        },
       }
     end,
     config = function(_, opts)
       require("heirline").setup(opts)
-
-      -- opts = {
-      --   disable_winbar_cb = function(args)
-      --     return not require("astronvim.utils.buffer").is_valid(args.buf)
-      --       or status.condition.buffer_matches({
-      --         buftype = { "terminal", "prompt", "nofile", "help", "quickfix" },
-      --         filetype = { "NvimTree", "neo%-tree", "dashboard", "Outline", "aerial" },
-      --       }, args.buf)
-      --   end,
-      -- },
-      -- }
 
       local group = vim.api.nvim_create_augroup("Heirline", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {
