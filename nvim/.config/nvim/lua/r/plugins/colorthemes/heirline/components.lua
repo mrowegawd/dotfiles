@@ -430,7 +430,6 @@ M.Git = {
     self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
   end,
   condition = function()
-    -- return Conditions.is_git_repo() and set_conditions.hide_in_width(50)
     return Conditions.is_git_repo()
   end,
   {
@@ -844,15 +843,52 @@ M.Diagnostics = {
   },
 }
 M.RmuxTargetPane = {
-  -- condition = function()
-  --   return set_conditions.hide_in_width(100)
-  -- end,
+  condition = function()
+    return set_conditions.hide_in_col_width(120)
+  end,
+  init = function(self)
+    self.watch = ""
+    self.run_with = ""
+
+    local rmux = require("rmux").status_panes_targeted()
+    if type(rmux) == "table" and (rmux.watch and #rmux.watch > 0) then
+      self.watch = table.concat(rmux.watch, " ")
+    end
+    if type(rmux) == "table" and (rmux.run_with and #rmux.run_with > 0) then
+      self.run_with = rmux.run_with
+    end
+  end,
   {
-    provider = function()
-      local panes = require("rmux").status_panes_targeted()
-      return panes .. " "
+    provider = function(self)
+      if #self.watch > 0 then
+        return self.run_with
+      end
+    end,
+    hl = { fg = colors.normal_fg_blur, bold = true },
+  },
+
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return " Watch: "
+      end
+    end,
+    hl = { fg = colors.normal_fg_blur, italic = true },
+  },
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return self.watch
+      end
     end,
     hl = { fg = colors.modified_fg, bold = true },
+  },
+  {
+    provider = function(self)
+      if #self.watch > 0 then
+        return "  "
+      end
+    end,
   },
 }
 M.LazyStatus = {
