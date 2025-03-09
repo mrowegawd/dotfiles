@@ -357,6 +357,7 @@ show_alias() {
   local doc_con="doc_con_"
   local doc_im="doc_im_"
 
+
   if [[ $myargs[-1] == "-p" ]]; then
     select=$(myflag="," _fps)
     LBUFFER="${LBUFFER}$select "
@@ -412,7 +413,7 @@ show_alias() {
       return
     fi
 
-  elif [[ $myargs[-1] == *"$doc_con"* ]]; then
+  elif echo "${myargs[-1]}" | grep -q "^doc_con_[a-zA-Z0-9_]\+\S" ; then
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
     #
@@ -430,7 +431,7 @@ show_alias() {
       return
     fi
 
-  elif [[ $myargs[-1] == *"$doc_im"* ]]; then
+  elif echo "${myargs[-1]}" | grep -q "^doc_im_[a-zA-Z0-9_]\+\S" ; then
     #
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
     #
