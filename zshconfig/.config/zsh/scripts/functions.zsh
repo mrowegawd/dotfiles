@@ -20,6 +20,7 @@ build-nvim() {
 build-install() {
   # ──────────────────────────────────────────────────────────────────────
   # APT
+  # ──────────────────────────────────────────────────────────────────────
   if ! command -v xinput >/dev/null; then
     echo "Installing: xinput - Fixing mouse lagging..?"
     sudo apt install xinput
@@ -85,6 +86,7 @@ build-install() {
 
   # ──────────────────────────────────────────────────────────────────────
   # RUST, cargo
+  # ──────────────────────────────────────────────────────────────────────
   if ! asdf which bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     cargo install bat
@@ -168,6 +170,7 @@ build-install() {
 
   # ──────────────────────────────────────────────────────────────────────
   # GO install
+  # ──────────────────────────────────────────────────────────────────────
   if ! asdf which dive >/dev/null; then
     echo "Installing: dive - Explore docker layer"
     go install github.com/wagoodman/dive@latest
@@ -199,6 +202,7 @@ build-install() {
 
   # ──────────────────────────────────────────────────────────────────────
   # Pip, pipx
+  # ──────────────────────────────────────────────────────────────────────
   if ! command -v calcure >/dev/null; then
     echo "Installing: calcure - Calendar TUI"
     pipx install calcure
@@ -220,6 +224,7 @@ build-install() {
 
   # ──────────────────────────────────────────────────────────────────────
   # NPM
+  # ──────────────────────────────────────────────────────────────────────
   if ! command -v mmdc >/dev/null; then
     echo "Installing: mmdc - A tool for the mermaid library nvim"
     npm install -g @mermaid-js/mermaid-cli
@@ -420,7 +425,7 @@ show_alias() {
     FZF_DOCKER_PS_START_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}"
     FZF_DOCKER_PS_FORMAT="table {{.ID}}\t{{.Names}}\t{{.Image}}\t{{.Ports}}"
     local select=$(docker ps -a --format "${FZF_DOCKER_PS_START_FORMAT}" \
-      | fzf --multi --header-lines=1 | awk '{print $1}' )
+      | fzf --multi --height=40% --header-lines=1 | awk '{print $1}' )
     if [[ -n $select ]]; then
       LBUFFER="${LBUFFER}$select "
       zle reset-prompt
@@ -436,7 +441,7 @@ show_alias() {
     # Taken from: https://github.com/pierpo/fzf-docker/blob/913bc66e79d863b324065c1e840860fc79f900cb/fzf-docker.plugin.zsh
     #
     local select=$(docker images --format "table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.ID}}\t{{.CreatedSince}}" \
-      | fzf --multi --header-lines=1 | awk '{print $3}' )
+      | fzf --multi --height=40% --header-lines=1 | awk '{print $3}' )
 
     if [[ -n $select ]]; then
       LBUFFER="${LBUFFER}$select "
