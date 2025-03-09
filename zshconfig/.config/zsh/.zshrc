@@ -191,47 +191,79 @@ fi
 if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   source $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh
 
-  zstyle ':fzf-tab:*' use-fzf-default-opts yes
+  zstyle ':fzf-tab:*' fzf-flags ${(z)FZF_DEFAULT_OPTS}
   zstyle ':fzf-tab:*' default-color ""
 
+  # Guide for adding size popup window (outside tmux):
+  # https://github.com/Aloxaf/fzf-tab/issues/429#issuecomment-2189228770
+  if [[ -n "$TMUX" ]]; then
+    zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%" --no-border
+  else
+    zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%" --border
+  fi
+
+  # Guide for adding size popup window (only works inside tmux):
+  # https://github.com/Aloxaf/fzf-tab/wiki/Configuration#ftb-tmux-popup
   zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-  zstyle ':fzf-tab:*' fzf-flags --preview-window "right:nohidden:50%"
-  zstyle ':fzf-tab:*' popup-pad 80 10
+  zstyle ':fzf-tab:*' popup-min-size 80 20  # atur tinggi dan lebar
+  zstyle ':fzf-tab:*' popup-pad 0 0         # atur padding vertical dan horizontal
+  zstyle ':fzf-tab:*' popup-fit-preview yes
 
   zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
-  # zstyle ':fzf-tab:*' popup-pad 80 80 # Not actually needed to elicit the bug, but it makes it easier to see
-  zstyle ':fzf-tab:complete:*' fzf-bindings \
-    'ctrl-v:execute-silent({_FTB_INIT_}code "$realpath")' \
-    'ctrl-e:execute-silent({_FTB_INIT_}kwrite "$realpath")'
+
+  # ─< keybinding >───────────────────────────────────────────────────────
+  # Guide for adding continuous-trigger
+  # https://github.com/Aloxaf/fzf-tab/wiki/Configuration#continuous-trigger
+  zstyle ':fzf-tab:*' continuous-trigger 'ctrl-y' # default "/"
 
   # ─< preview cd >───────────────────────────────────────────────────────
   # preview directory's content with eza when completing cd
-  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -a --tree --level=2 --icons --color=always $realpath'
+  if command -v eza >/dev/null; then
+    fzf_dir_preview='eza -a --tree --level=2 --icons --color=always $realpath'
+    zstyle ':fzf-tab:complete:eza:*' fzf-preview "$fzf_dir_preview"
+  else
+    fzf_dir_preview='ls -1 --color=always $realpath'
+  fi
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview "$fzf_dir_preview"
+  zstyle ':fzf-tab:complete:ls:*' fzf-preview "$fzf_dir_preview"
 
-  # To disable `fzf-tab` when completing cd
-  # taken from: https://github.com/Aloxaf/fzf-tab/pull/293)
-  # use:
+  # Guide for disable `fzf-tab` when completing cd
+  # https://github.com/Aloxaf/fzf-tab/pull/293
   # zstyle ':fzf-tab:complete:cd:*' disabled-on any
 
   # ─< show systemd unit status >─────────────────────────────────────────
   zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
-  # zstyle ':fzf-tab:complete:doc_im_ls:*' disabled-on any
+  # ─< show alias cmds >──────────────────────────────────────────────────
+  # zstyle ':fzf-tab:complete:doc_*:*' disabled-on any
   # zstyle ':completion:*:doc_im_ls:*' command "show_alias"
   # zstyle ':fzf-tab:complete:doc_im_ls:*' fzf-preview 'echo "mantap"'
-
-  # zstyle ':completion:*:*:*:doc_im_ls:*' fzf-preview "show_alias"
+  # zstyle ':completion:*:*:*:doc_comp_ls:*' fzf-preview "show_alias"
   # zstyle ':fzf-tab:complete:doc_im_ls:argument-rest' command 'show_alias'
-  # zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
-  #   [[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
 
   # ─< preview for kill/ps >──────────────────────────────────────────────
-  zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
-    --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='down:15%:wrap'
-  # https://github.com/Aloxaf/fzf-tab/wiki/Preview#killps-preview-of-full-commandline-arguments
-  # zstyle ':completion:*:*:(kill|ps):*' complete-options false
-  zstyle ':fzf-tab:complete:(kill|ps):*' fzf-preview $'[[ $group == "[process ID]" ]] && ps -f -p $word' # only show items in group 'process ID'
-  # zstyle ':fzf-tab:complete:(kill|ps):*' fzf-flags --no-sort --height=60% --color=16,hl:green --preview-window=down:18%:wrap
+  # zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+  # zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  #   '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+  # zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+  # zstyle ':completion:*:*:*:*:processes' command 'ps -ef --no-headers -w -w'
+  zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
+  zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+    '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+  zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+  # zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
+  #   --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='up:15%:wr
+
+  # ─< preview image with icat & sxiv >───────────────────────────────────
+  # zstyle ':fzf-tab:complete:icat:*' disabled-on any
+  # zstyle ':fzf-tab:complete:sxiv:*' disabled-on any
+
+  # (only works outside tmux popup)
+  icat() {
+      kitten icat $@
+  }
+  zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=30x30@0x0 $realpath'
+  zstyle ':fzf-tab:complete:sxiv:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=30x30@0x0 $realpath'
 fi
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
