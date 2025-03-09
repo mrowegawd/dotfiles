@@ -133,13 +133,13 @@ function M.line_signs(win, buf, lnum)
   local signs = buf_signs[lnum] or {}
 
   -- Get fold signs
-  vim.api.nvim_win_call(win, function()
-    if vim.fn.foldclosed(lnum) >= 0 then
-      signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldedSign", type = "fold" }
-    elseif config.folds.open and vim.fn.foldlevel(lnum) > vim.fn.foldlevel(lnum - 1) then
-      signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
-    end
-  end)
+  -- vim.api.nvim_win_call(win, function()
+  --   if vim.fn.foldclosed(lnum) >= 0 then
+  --     signs[#signs + 1] = { text = vim.opt.fillchars:get().foldclose or "", texthl = "FoldedSign", type = "fold" }
+  --   elseif config.folds.open and vim.fn.foldlevel(lnum) > vim.fn.foldlevel(lnum - 1) then
+  --     signs[#signs + 1] = { text = vim.opt.fillchars:get().foldopen or "", type = "fold" }
+  --   end
+  -- end)
 
   -- Sort by priority
   table.sort(signs, function(a, b)
@@ -186,7 +186,9 @@ function M._get()
     else
       num = vim.v.lnum
     end
-    components[2] = "%=" .. num .. " "
+
+    -- components[2] = "%=" .. num .. " "
+    components[2] = "%=" .. num
   end
 
   if show_signs then
@@ -222,11 +224,18 @@ function M._get()
           right.texthl = git.texthl
         end
       end
-      components[1] = left and M.icon(left) or "  " -- left
-      components[3] = is_file and (right and M.icon(right) or "  ") or "" -- right
+
+      -- components[1] = left and M.icon(left) or "  " -- left
+      -- components[3] = is_file and (right and M.icon(right) or "  ") or "" -- right
+
+      components[1] = left and M.icon(left) or (right and M.icon(right) or " ") or " " -- left
+      components[3] = " " -- right
     else
-      components[1] = "  "
-      components[3] = is_file and "  " or ""
+      -- components[1] = "  "
+      -- components[3] = is_file and "  " or ""
+
+      components[1] = ""
+      components[3] = is_file and " " or " "
     end
   end
 
