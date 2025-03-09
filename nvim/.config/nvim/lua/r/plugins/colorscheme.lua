@@ -1,5 +1,6 @@
 local colorscheme = RUtils.config.colorscheme
 -- https://nvchad.com/themes
+-- https://base46.vercel.app/
 -- https://github.com/mbadolato/iTerm2-Color-Schemes
 -- https://github.com/tinted-theming
 -- https://base2t.one
@@ -20,6 +21,22 @@ return {
     opts = function()
       vim.g.material_style = "darker"
       return {}
+    end,
+  },
+  -- SEOUL256
+  {
+    "junegunn/seoul256.vim",
+    priority = 1000,
+    lazy = false,
+    enabled = function()
+      local seoul256_theme = { "seoul256", "seoul256-light" }
+      if vim.tbl_contains(seoul256_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+    config = function()
+      vim.g.seoul256_background = 234
     end,
   },
   -- ONEDARK

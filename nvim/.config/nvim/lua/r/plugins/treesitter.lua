@@ -445,6 +445,29 @@ return {
             },
           },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
+          ["seoul256"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TabLine", attr = "bg", alter = 0.25 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TabLine", attr = "bg", alter = 0.8 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["sunburn"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {

@@ -576,7 +576,8 @@ function M.change_colors()
 
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 
-  local winseparator = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.2)
+  -- local winseparator = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.1)
+  local winseparator = Highlight.get("WinSeparator", "fg")
 
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
   local lazygit_inactive_border = Highlight.get("LazygitInactiveBorderColor", "fg")

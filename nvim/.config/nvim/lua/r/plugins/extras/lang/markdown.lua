@@ -164,6 +164,12 @@ return {
                 bg = { from = "Keyword", attr = "fg", alter = -0.7 },
               },
             },
+
+            -- { RenderMarkdownH1Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            -- { RenderMarkdownH2Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            -- { RenderMarkdownH3Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            -- { RenderMarkdownH4Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            -- { RenderMarkdownH5Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
           },
           ["jellybeans"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },

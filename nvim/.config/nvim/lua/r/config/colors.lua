@@ -222,6 +222,16 @@ reset_base_alter({ "rose-pine-main" }, {
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = -0.55,
 })
+reset_base_alter({ "seoul256" }, {
+  cursor_fg = "#d8d8d8",
+  cursorline_alter = 0.07,
+  fzflua_bg_cursorline_alter = -0.1,
+  fzfluasel_bg_alter = 0.09,
+  normalfloat_border_fg_alter = 2.2,
+  pmenu_bg_alter = -0.15,
+  pmenusel_bg_alter = 0.6,
+  quickfixline_alter = 0.2,
+})
 reset_base_alter({ "sunburn" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.07,
@@ -2977,6 +2987,188 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
     },
     ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
+    ["seoul256"] = {
+      { DiagnosticSignError = { bg = "NONE", fg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")) } },
+      {
+        DiagnosticSignWarn = { bg = "NONE", fg = Highlight.darken(dark_yellow, 0.8, Highlight.get("Normal", "bg")) },
+      },
+      { DiagnosticSignInfo = { bg = "NONE", fg = "grey" } },
+      { DiagnosticSignHint = { bg = "NONE", fg = "darkgrey" } },
+
+      { DiagnosticError = { fg = { from = "DiagnosticSignError", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsErrorNumHl = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE" } },
+      { DiagnosticWarn = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsWarnNumHl = { fg = { from = "DiagnosticSignWarn", attr = "fg" }, bg = "NONE" } },
+      { DiagnosticHint = { fg = { from = "DiagnosticSignHint", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsHintNumHl = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE" } },
+      { DiagnosticInfo = { fg = { from = "DiagnosticSignInfo", attr = "fg" }, bg = "NONE", italic = true } },
+      { DiagnosticsInfoNumHl = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE" } },
+
+      { DiagnosticFloatingWarn = { fg = { from = "DiagnosticWarn", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatingInfo = { fg = { from = "DiagnosticInfo", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatingHint = { fg = { from = "DiagnosticHint", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatingError = { fg = { from = "DiagnosticError", attr = "fg" }, bg = "NONE", bold = true } },
+      { DiagnosticFloatTitle = { bg = { from = "NormalFloat", attr = "bg" }, bold = true } },
+      { DiagnosticFloatTitleIcon = { bg = { from = "NormalFloat", attr = "bg" }, fg = { from = "@character" } } },
+
+      { DiagnosticVirtualTextWarn = { link = "DiagnosticWarn" } },
+      { DiagnosticVirtualTextInfo = { link = "DiagnosticInfo" } },
+      { DiagnosticVirtualTextHint = { link = "DiagnosticHint" } },
+      { DiagnosticVirtualTextError = { link = "DiagnosticError" } },
+      {
+        DiagnosticUnderlineWarn = {
+          sp = { from = "DiagnosticWarn", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+      {
+        DiagnosticUnderlineHint = {
+          sp = { from = "DiagnosticHint", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+      {
+        DiagnosticUnderlineError = {
+          sp = { from = "DiagnosticError", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+      {
+        DiagnosticUnderlineInfo = {
+          sp = { from = "DiagnosticInfo", attr = "fg" },
+          underline = true,
+          undercurl = false,
+        },
+      },
+
+      ---
+      { ErrorMsg = { bg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")), fg = "white" } },
+      { Error = { fg = { from = "ErrorMsg", attr = "bg" }, bg = "NONE" } },
+
+      { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+
+      { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.2 } } },
+
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.07 }, bold = true } },
+      { LineNrAbove = { link = "LineNr" } },
+      { LineNrBelow = { link = "LineNr" } },
+      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
+
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+
+      { Comment = { fg = { from = "Normal", attr = "bg", alter = 1.7 }, italic = true } },
+      { ["@comment"] = { inherit = "Comment" } },
+      { ["@org.comment"] = { inherit = "Comment" } },
+      { ["@org.directive"] = { inherit = "Comment" } },
+      { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
+      { ["@org.plan"] = { inherit = "Error", bg = "NONE" } },
+
+      { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.18 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.6 } } },
+      {
+        Folded = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.68 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.81 },
+        },
+      },
+      { FoldedSign = { fg = { from = "Normal", attr = "bg", alter = 0.3 }, bg = "NONE" } },
+
+      {
+        MyCodeUsage = {
+          fg = { from = "MyCodeUsage", attr = "fg", alter = -0.1 },
+          bg = { from = "MyCodeUsage", attr = "bg", alter = -0.1 },
+          italic = true,
+        },
+      },
+
+      {
+        ["@markup.link.label.markdown_inline"] = {
+          fg = { from = "Function", attr = "fg", alter = -0.3 },
+          bg = { from = "Function", attr = "fg", alter = -0.7 },
+        },
+      },
+
+      {
+        NoiceCmdline = {
+          fg = { from = "Pmenu", attr = "fg", alter = 5 },
+          bg = { from = "Pmenu", attr = "bg", alter = 0.02 },
+        },
+      },
+      {
+        AvanteInlineHint = {
+          fg = { from = "Keyword", attr = "fg", alter = -0.25 },
+          bg = "NONE",
+        },
+      },
+
+      {
+        LspReferenceText = {
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Normal", attr = "bg", alter = 0.7 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Normal", attr = "bg", alter = 0.5 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        StatusLine = {
+          fg = { from = "Keyword", attr = "fg", alter = 0.24 },
+          bg = Highlight.tint(
+            Highlight.darken(Highlight.get("StatusLine_esse", "bg"), 0.6, Highlight.get("StatusLine_esse", "fg")),
+            -0.3
+          ),
+        },
+      },
+      {
+        QuickFixLine = {
+          fg = "NONE",
+          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
+          underline = false,
+          reverse = false,
+        },
+      },
+
+      {
+        StatusLineNC = {
+          fg = { from = "Normal", attr = "bg", alter = 3.3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.65 },
+        },
+      },
+      {
+        KeywordBlur = {
+          bg = { from = "StatusLineNC", attr = "bg", alter = 0.5 },
+        },
+      },
+      {
+        TabLine = {
+          fg = { from = "Normal", attr = "bg", alter = 3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+        },
+      },
+      { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
+    },
     ["sunburn"] = {
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.74 } } },
 

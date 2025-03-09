@@ -63,6 +63,11 @@ if vim.g.colorscheme == "jellybeans" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end
 
+if vim.g.colorscheme == "seoul256" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 3.5)
+  mode_bg_blur = Highlight.tint(mode_bg, -0.5)
+end
+
 if vim.g.colorscheme == "ashen" then
   mode_insert_bg_blur = Highlight.tint(mode_insert_bg, -0.2)
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), -0.05)
