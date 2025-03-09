@@ -70,9 +70,6 @@ opt.relativenumber = false -- otherwise, show relative numbers in the ruler
 opt.breakindent = true -- start wrapped lines indented
 opt.linebreak = true -- do not break words on line wrap
 opt.showbreak = "↪ "
--- NOTE: (not inside tmux) toggleterm:term 'r_kill' tidak bisa jalan, kalau tidak di set '-ic'
--- tapi jika di set maka akan masalah juga pada tmux allow-passthrough untuk plugin `image.nvim`
--- opt.shellcmdflag = "-ic"
 -- }}}
 -- {{{ List chars
 opt.list = true -- Show some invisible characters (tabs...
@@ -300,11 +297,6 @@ vim.filetype.add {
 }
 -- }}}
 -- {{{ Plugin var globals
--- Config ini diperlukan untuk plugin image.nvim
--- check: https://github.com/3rd/image.nvim?tab=readme-ov-file#requirements
-package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?/init.lua;"
-package.path = package.path .. ";" .. vim.fn.expand "$HOME" .. "/.luarocks/share/lua/5.1/?.lua;"
-
 -- Plugin: azabiong/vim-highlighter
 -- delete jika tidak dibutuhkan or commented
 vim.g.HiSet = ""

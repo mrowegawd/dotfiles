@@ -288,94 +288,6 @@ return {
       }
     end,
   },
-  -- IMAGE
-  {
-    "3rd/image.nvim",
-    ft = { "markdown", "norg", "oil", "octo" },
-    enabled = function()
-      if vim.g.neovide then
-        return false
-      end
-      return true
-    end,
-    build = function()
-      local has_magick = pcall(require, "magick")
-      if not has_magick and vim.fn.executable "luarocks" == 1 then
-        local is_mac = uv.os_uname().sysname == "Darwin"
-        if is_mac then
-          vim.fn.system "luarocks --lua-dir=$(brew --prefix)/opt/lua@5.1 --lua-version=5.1 install magick"
-        else
-          -- Requirements for linux:
-          -- sudo apt-get install libmagickwand-dev libgraphicsmagick1-dev
-          -- juga run command ini:
-          vim.fn.system "luarocks --local --lua-version=5.1 install magick"
-        end
-        if vim.v.shell_error ~= 0 then
-          vim.notify("Error installing magick with luarocks", vim.log.levels.WARN)
-        end
-      end
-    end,
-    opts = {
-      backend = "kitty",
-      integrations = {
-        markdown = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-        },
-        neorg = {
-          enabled = true,
-          clear_in_insert_mode = false,
-          download_remote_images = true,
-          only_render_image_at_cursor = false,
-          filetypes = { "norg" },
-        },
-        html = {
-          enabled = false,
-        },
-        css = {
-          enabled = false,
-        },
-      },
-      max_width = nil,
-      max_height = nil,
-      max_width_window_percentage = nil,
-      max_height_window_percentage = 50,
-      window_overlap_clear_enabled = false, -- toggles images when windows are overlapped
-      window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
-      editor_only_render_when_focused = false, -- auto show/hide images when the editor gains/looses focus
-      tmux_show_only_in_active_window = false, -- auto show/hide images in the correct Tmux window (needs visual-activity off)
-      hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.avif" }, -- render image files as images when opened
-      -- })
-
-      -- editor_only_render_when_focused = true, -- auto show/hide images when the editor gains/looses focus
-      -- tmux_show_only_in_active_window = true,
-      -- integrations = {
-      --   markdown = {
-      --     enabled = true,
-      --     clear_in_insert_mode = false,
-      --     download_remote_images = true,
-      --     only_render_image_at_cursor = false,
-      --     filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
-      --   },
-      --   neorg = {
-      --     enabled = true,
-      --     clear_in_insert_mode = false,
-      --     download_remote_images = true,
-      --     only_render_image_at_cursor = false,
-      --     filetypes = { "norg" },
-      --   },
-      -- },
-    },
-    config = function(_, opts)
-      local has_magick = pcall(require, "magick")
-      if has_magick then
-        require("image").setup(opts)
-      end
-    end,
-  },
   -- OBSIDIAN.NVIM
   {
     "obsidian-nvim/obsidian.nvim",
@@ -464,7 +376,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      "3rd/image.nvim",
     },
     opts = {
       dir = RUtils.config.path.wiki_path, -- no need to call 'vim.fn.expand' here

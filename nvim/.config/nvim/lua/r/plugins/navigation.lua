@@ -15,7 +15,6 @@ return {
     cond = vim.g.neovide ~= nil or not vim.env.TMUX,
     cmd = "Neotree",
     dependencies = {
-      "3rd/image.nvim",
       "MunifTanjim/nui.nvim",
       "mrbjarksen/neo-tree-diagnostics.nvim",
       "nvim-lua/plenary.nvim",

@@ -118,6 +118,7 @@ return {
           },
         },
         words = { enabled = true },
+        image = { enabled = true },
         dashboard = {
           pane_gap = 5, -- empty columns between vertical panes
           row = nil,
