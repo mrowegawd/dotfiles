@@ -14,13 +14,13 @@ RUtils.on_very_lazy(function()
       wofi = "rasi",
       http = "http",
       task = "json",
-      zsh = "sh",
-      sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+      -- zsh = "sh",
+      -- sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
     },
     filename = {
       ["vifmrc"] = "vim",
-      [".zshrc"] = "zsh",
-      [".zshenv"] = "sh",
+      -- [".zshrc"] = "zsh",
+      -- [".zshenv"] = "sh",
     },
     pattern = {
       [".*/waybar/config"] = "jsonc",
