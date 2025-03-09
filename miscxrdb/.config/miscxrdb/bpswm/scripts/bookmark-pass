@@ -35,9 +35,10 @@ open_bookmark() {
     sub(/[[:space:]]+$/, "", url);
     gsub(/\]\]$/, "", url)
     printf "%s+ %s\n", name, url;
-}' | $ROFI_COMMAND -dmenu -i -p "  " | awk -F"+" '{print $2}'
+}' | $ROFI_COMMAND -dmenu -i -p "  " | xargs | awk -F"+" '{print $2}' | sed 's/ //g'
   )
   [ -z "$SELECTIONOPS" ] && exit
+  dunstify "(BOOKMARK) Open URL:" "$SELECTIONOPS"
   $NUBROWSER "$SELECTIONOPS" 2>/dev/null
   exit
 }

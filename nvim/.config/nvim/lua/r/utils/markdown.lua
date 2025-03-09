@@ -163,8 +163,13 @@ function M.follow_link(is_selection)
         url = string.format("https://google.com/search?q=%s", url)
       end
     end
+    -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
 
-    vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
+    local browser = os.getenv "NUBROWSER"
+    vim.fn.jobstart({ browser, url }, { detach = true })
+
+    -- Notification
+    -- vim.fn.jobstart({ "dunstify", "(NVIM) Search on browser:", url }, { detach = true })
   end
 end
 
