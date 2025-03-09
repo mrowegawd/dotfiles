@@ -42,7 +42,7 @@ def send_notification(title, message):
 
 
 @result_handler(no_ui=True)
-def handle_result(args, result, target_window_id, boss):
+def handle_result(args, _, target_window_id, boss):
     window = boss.window_id_map.get(target_window_id)
     direction = args[2]
     key_mapping = args[3]
