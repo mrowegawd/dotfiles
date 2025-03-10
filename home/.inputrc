@@ -38,6 +38,7 @@ $if mode=emacs
 $endif
 
 # Avoid binding ^J, ^M,  ^C, ^?, ^S, ^Q, etc.
+# https://unix.stackexchange.com/questions/285208/how-to-remove-a-zsh-keybinding-if-i-dont-know-what-it-does
 $if mode=vi
     set keymap vi-command
     "gg": beginning-of-history

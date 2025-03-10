@@ -17,6 +17,9 @@
 
 [[ $- != *i* ]] && return
 
+# Disable XON/XOFF flow control because it collides with C-s
+[[ $- == *i* ]] && stty -ixon
+
 zmodload zsh/datetime
 
 
@@ -622,6 +625,7 @@ source "$HOME/.config/bashrc/aliases.bashrc" # alias for all [bash/zsh]
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ KEYBINDINGS                                              ╏
 # ┗╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┛
+# https://unix.stackexchange.com/questions/285208/how-to-remove-a-zsh-keybinding-if-i-dont-know-what-it-does
 # To check these commands run: `zle -al`
 bindkey '^y' autosuggest-accept # enter autosugest (c-y)
 bindkey '^?' backward-delete-char
@@ -631,6 +635,9 @@ bindkey '^a' beginning-of-line
 bindkey '^e' end-of-line
 bindkey '^l' forward-char
 bindkey '^h' backward-char
+
+# To disable bindkey: use "bindkey -r <name_key>"
+bindkey -r "^s"
 
 # Shortcut bind to edit line text
 autoload -U edit-command-line
