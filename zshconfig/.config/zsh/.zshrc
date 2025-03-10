@@ -98,8 +98,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors # Enable colors in prompt
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#586071"
-colorsuggest="fg=#49505f"
+colorline="#404040"
+colorsuggest="fg=#343434"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -254,16 +254,21 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   # zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
   #   --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='up:15%:wr
 
-  # ─< preview image with icat & sxiv >───────────────────────────────────
-  # zstyle ':fzf-tab:complete:icat:*' disabled-on any
-  # zstyle ':fzf-tab:complete:sxiv:*' disabled-on any
-
-  # (only works outside tmux popup)
+  # ─< preview for image with icat & sxiv >───────────────────────────────
+  # I disable `ftb-tmux-popup` for spesific command `icat`, `sxiv` and use `fzf` instead.
+  zstyle ':fzf-tab:complete:icat:*' fzf-command fzf
+  zstyle ':fzf-tab:complete:sxiv:*' fzf-command fzf
   icat() {
       kitten icat $@
   }
-  zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=30x30@0x0 $realpath'
-  zstyle ':fzf-tab:complete:sxiv:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=30x30@0x0 $realpath'
+  zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
+  zstyle ':fzf-tab:complete:sxiv:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
+
+
+  # ─< preview for pdf >──────────────────────────────────────────────────
+  zstyle ':fzf-tab:complete:zathura:*' fzf-preview 'pdftotext $realpath - | head -n 20'
+  zstyle ':fzf-tab:complete:tdf:*' fzf-preview 'pdftotext $realpath - | head -n 20'
+  zstyle ':fzf-tab:complete:fancy-cat:*' fzf-preview 'pdftotext $realpath - | head -n 20'
 fi
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
