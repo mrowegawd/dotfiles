@@ -91,7 +91,7 @@ bind-key   d            delete-article
 bind-key   ^g           open-search
 bind-key   g            home
 bind-key   G            end
-bind-key   ^s           edit-flags
+bind-key   ^f           edit-flags
 
 # -- articlelist
 bind-key   J            next-feed   articlelist
