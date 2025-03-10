@@ -32,7 +32,7 @@ return {
         {
           SnacksNotifierError = {
             fg = { from = "DiagnosticError", attr = "fg", alter = 5 },
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
+            bg = { from = "ErrorMsg", attr = "bg" },
             bold = true,
           },
         },
@@ -44,8 +44,8 @@ return {
         },
         {
           SnacksNotifierTitleError = {
-            bg = { from = "DiagnosticError", attr = "fg", alter = -0.7 },
             fg = { from = "DiagnosticError", attr = "fg", alter = 0.5 },
+            bg = { from = "SnacksNotifierError", attr = "bg", alter = -0.3 },
             bold = true,
           },
         },
