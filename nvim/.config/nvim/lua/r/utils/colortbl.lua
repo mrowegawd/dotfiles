@@ -10,7 +10,7 @@ local normal_fg_white = "white"
 -- Color property statusline designed to be ignored when viewed
 local normal_fg_blur = Highlight.get("Comment", "fg")
 
-local normal_winbar_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.2)
+local normal_winbar_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.3)
 
 local error_fg = Highlight.get("Error", "fg")
 
@@ -47,6 +47,12 @@ if vim.g.colorscheme == "lackluster" then
 end
 
 if vim.g.colorscheme == "base2tone_suburb_dark" then
+  mode_bg_blur = Highlight.tint(mode_bg, -0.45)
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
+end
+
+if vim.g.colorscheme == "base2tone_cave_dark" then
+  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 4)
   mode_bg_blur = Highlight.tint(mode_bg, -0.45)
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end

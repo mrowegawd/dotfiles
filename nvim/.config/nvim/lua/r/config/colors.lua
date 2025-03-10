@@ -1137,6 +1137,7 @@ local general_overrides = function()
 
     -- ─────────────────────────────── LAZYVIM ───────────────────────────────
     { LazyNormal = { inherit = "NormalFloat" } },
+    { LazyDimmed = { bg = "NONE" } },
 
     -- ──────────────────────────── SNACKS INDENT ────────────────────────────
     { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.5 } } },
@@ -1929,6 +1930,12 @@ local function colorscheme_overrides()
 
       { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.27 } } },
 
+      -- { ErrorMsg = { bg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")), fg = "white" } },
+      -- { Error = { fg = { from = "ErrorMsg", attr = "bg" }, bg = "NONE" } },
+      --
+      -- { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+      -- { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+
       { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
       { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },
 
@@ -2652,13 +2659,16 @@ local function colorscheme_overrides()
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
       { ["@org.plan"] = { inherit = "Error", bg = "NONE", underline = false } },
 
-      { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.05 }, bg = "NONE" } },
-      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+      { ErrorMsg = { bg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")), fg = "white" } },
+      { Error = { fg = { from = "ErrorMsg", attr = "bg" }, bg = "NONE" } },
+
+      { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.3 }, bg = "NONE" } },
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
 
-      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.35 }, bold = true } },
+      { LineNr = { bg = "NONE", fg = { from = "Normal", attr = "bg", alter = 0.4 }, bold = true } },
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
 
@@ -3170,6 +3180,12 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
     },
     ["sunburn"] = {
+      { ErrorMsg = { bg = Highlight.darken(dark_red, 0.8, Highlight.get("Normal", "bg")), fg = "white" } },
+      { Error = { fg = { from = "ErrorMsg", attr = "bg" }, bg = "NONE" } },
+
+      { FzfLuaFzfMatch = { fg = { from = "Error", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+      { FzfLuaFzfMatchFuzzy = { fg = { from = "FzfLuaFzfMatch", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+
       { Visual = { bg = { from = "@Boolean", attr = "fg", alter = -0.74 } } },
 
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.76 }, italic = true } },
@@ -3243,6 +3259,9 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.35 } } },
     },
     ["tokyonight-night"] = {
+      { ErrorMsg = { bg = { from = "ErrorMsg", attr = "fg" }, fg = "white" } },
+      { Error = { fg = { from = "ErrorMsg", attr = "bg" }, bg = "NONE" } },
+
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
