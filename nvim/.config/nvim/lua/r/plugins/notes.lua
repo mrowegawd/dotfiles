@@ -95,11 +95,12 @@ return {
         org_todo_keyword_faces = {
           CHECK = ":foreground royalblue :weight bold :slant",
           TODO = ":foreground " .. todo_fg .. " :weight bold :slant",
-          PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
           HBD = ":foreground pink :weight bold :slant",
           STATUS = ":foreground black :background magenta :weight bold :slant",
-          LEARNING = ":foreground yellow :weight bold :slant",
           DONE = ":foreground " .. done_hi .. " :weight bold :slant",
+
+          PROGRESS = ":foreground white :background " .. bg_hi .. " :weight bold :slant italic",
+          LEARNING = ":foreground black :background yellow :weight bold :slant",
         },
         org_agenda_skip_scheduled_if_done = true,
         org_hide_emphasis_markers = true,

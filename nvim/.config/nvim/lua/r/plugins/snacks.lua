@@ -1,4 +1,14 @@
 local Highlight = require "r.settings.highlights"
+local colorschemes = {
+  "ashen",
+  "base2tone_cave_dark",
+  "base2tone_suburb_dark",
+  "jellybeans",
+  "nord",
+  "seoul256",
+  "sunburn",
+  "tokyonight-night",
+}
 
 return {
   -- SNACKS
@@ -6,24 +16,31 @@ return {
     "snacks.nvim",
     optional = true,
     opts = function()
-      Highlight.plugin("Snacks_highlights", {
+      local notif_error_bg = { from = "Error", attr = "fg", alter = -0.5 }
+      local notif_error_title_fg = { from = "Error", attr = "fg", alter = -0.1 }
+      if vim.tbl_contains(colorschemes, vim.g.colorscheme) then
+        notif_error_bg = { from = "ErrorMsg", attr = "bg" }
+        notif_error_title_fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.5 }
+      end
+
+      Highlight.plugin("Snackshighlights", {
         {
           SnacksNotifierInfo = {
             fg = { from = "DiagnosticInfo", attr = "fg", alter = 5 },
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
+            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.3 },
             bold = true,
           },
         },
         {
           SnacksNotifierBorderInfo = {
-            fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.5 },
+            fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.3 },
             bg = { from = "SnacksNotifierInfo", attr = "bg" },
           },
         },
         {
           SnacksNotifierTitleInfo = {
-            fg = { from = "DiagnosticInfo", attr = "fg", alter = 0.5 },
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.7 },
+            fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.5 },
+            bg = { from = "SnacksNotifierBorderInfo", attr = "bg" },
             bold = true,
           },
         },
@@ -32,7 +49,7 @@ return {
         {
           SnacksNotifierError = {
             fg = { from = "DiagnosticError", attr = "fg", alter = 5 },
-            bg = { from = "ErrorMsg", attr = "bg" },
+            bg = notif_error_bg,
             bold = true,
           },
         },
@@ -44,7 +61,7 @@ return {
         },
         {
           SnacksNotifierTitleError = {
-            fg = { from = "DiagnosticError", attr = "fg", alter = 1.3 },
+            fg = notif_error_title_fg,
             bg = { from = "SnacksNotifierError", attr = "bg" },
             bold = true,
           },
@@ -66,15 +83,14 @@ return {
         },
         {
           SnacksNotifierTitleWarn = {
-            fg = { from = "DiagnosticWarn", attr = "fg", alter = 0.5 },
-            bg = { from = "DiagnosticWarn", attr = "fg", alter = -0.7 },
+            fg = { from = "SnacksNotifierBorderWarn", attr = "fg", alter = 0.5 },
+            bg = { from = "SnacksNotifierBorderWarn", attr = "bg" },
             bold = true,
           },
         },
 
         { SnacksNotifierHistory = { link = "NormalFloat" } },
       })
-
       return {
         bigfile = { enabled = true },
         notifier = { enabled = true },

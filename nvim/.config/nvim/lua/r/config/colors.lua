@@ -1432,6 +1432,7 @@ local rose_pine = {
     { ["@comment"] = { inherit = "Comment" } },
     { ["@org.comment"] = { inherit = "Comment" } },
     { ["@org.directive"] = { inherit = "Comment" } },
+    { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
     { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.2 } } },
     { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.6 } } },
@@ -3693,6 +3694,8 @@ local function colorscheme_overrides()
 
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.4 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },

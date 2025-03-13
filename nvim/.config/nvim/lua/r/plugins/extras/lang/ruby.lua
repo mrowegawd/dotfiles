@@ -1,13 +1,7 @@
--- if lazyvim_docs then
---   -- LSP Server to use for Ruby.
---   -- Set to "solargraph" to use solargraph instead of ruby_lsp.
 vim.g.lazyvim_ruby_lsp = "ruby_lsp"
---   vim.g.lazyvim_ruby_formatter = "rubocop"
--- end
 
 local lsp = vim.g.lazyvim_ruby_lsp or "ruby_lsp"
 if vim.fn.has "nvim-0.10" == 0 then
-  -- ruby_lsp does not work well with Neovim < 0.10
   lsp = vim.g.lazyvim_ruby_lsp or "solargraph"
 end
 local formatter = vim.g.lazyvim_ruby_formatter or "rubocop"
