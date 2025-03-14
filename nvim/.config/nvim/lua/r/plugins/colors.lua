@@ -6,6 +6,22 @@ return {
   {
     "brenoprata10/nvim-highlight-colors",
     event = "VeryLazy",
+    keys = {
+      {
+        "<Leader>uc",
+        function()
+          local is_active = require("nvim-highlight-colors").is_active()
+          if is_active then
+            require("nvim-highlight-colors").turnOff()
+            RUtils.info("Turn Off", { title = "nvim-highlight-colors" })
+          else
+            require("nvim-highlight-colors").turnOn()
+            RUtils.info("Turn On", { title = "nvim-highlight-colors" })
+          end
+        end,
+        desc = "Misc: toggle colors [nvim-highlight-colors]",
+      },
+    },
     opts = {
       ---Render style
       ---@usage 'background'|'foreground'|'virtual'
@@ -27,6 +43,9 @@ return {
         { label = "%-%-theme%-primary%-color", color = "#0f1219" },
         { label = "%-%-theme%-secondary%-color", color = "#5a5d64" },
       },
+      -- exclude_buffer = function(bufnr)
+      --   return vim.fn.getfsize(vim.api.nvim_buf_get_name(bufnr)) > 10000
+      -- end,
     },
   },
   -- NVIM-COLORIZER (disabled)

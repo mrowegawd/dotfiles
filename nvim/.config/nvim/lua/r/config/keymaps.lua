@@ -189,7 +189,7 @@ Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
 Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
 Snacks.toggle.line_number():map "<leader>ul"
 --stylua: ignore
-Snacks.toggle .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
+-- Snacks.toggle .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
 --stylua: ignore
 Snacks.toggle .option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
 
