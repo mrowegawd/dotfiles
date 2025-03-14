@@ -38,10 +38,10 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- {{{ Folds
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
-RUtils.map.nnoremap("<Leader>zf", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+RUtils.map.nnoremap("zk", "zMzvzz", { desc = "Fold: close all folds except the current one" })
 
-RUtils.map.nnoremap("zj", "zcjzOzz", { desc = "Fold: close current fold when open. Always open next fold." })
-RUtils.map.nnoremap("zk", "zckzOzz", { desc = "Fold: close current fold when open. Always open previous fold." })
+-- RUtils.map.nnoremap("zj", "zcjzOzz", { desc = "Fold: close current fold when open. Always open next fold." })
+-- RUtils.map.nnoremap("zk", "zckzOzz", { desc = "Fold: close current fold when open. Always open previous fold." })
 
 RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()

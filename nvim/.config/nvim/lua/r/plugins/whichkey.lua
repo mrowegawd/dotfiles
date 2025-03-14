@@ -60,7 +60,7 @@ return {
           { "<Leader>t", group = "testing" },
           { "<Leader>u", group = "toggle" },
           { "<Leader>s", group = "session" },
-          { "<Leader>z", group = "fold" },
+          -- { "<Leader>z", group = "fold" },
           { "<Leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
           {

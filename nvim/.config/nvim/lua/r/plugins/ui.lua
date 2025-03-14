@@ -225,7 +225,7 @@ return {
     opts = true,
     keys = {
       {
-        "<Leader>zz",
+        "zu",
         function()
           require("fold-cycle").open()
         end,
