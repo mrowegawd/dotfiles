@@ -13,10 +13,10 @@ alias .....="cd ../../../.."
 alias rg="rg --hidden"
 
 alias v="nvim"
-alias vp="poetry run nvim"
+alias pvim="poetry run nvim"
 # alias vv="vv"
 alias vvg="vv --multigrid"
-alias svi="sudo nvim"
+alias svim="sudo nvim"
 alias ttext='nvim /tmp/dump_text.txt'
 
 # misc: create and cd/go to folder <$NEW_NAMEFOLDER>
