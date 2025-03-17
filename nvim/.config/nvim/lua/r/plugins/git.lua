@@ -553,12 +553,12 @@ return {
       {
         "<Leader>gfo",
         "<CMD>DiffviewOpen<CR>",
-        desc = "Git: diffview open [diffview]",
+        desc = "Git: open [diffview]",
       },
       {
         "<Leader>gfh",
         "<CMD>DiffviewFileHistory<CR>",
-        desc = "Git: diffview file history [diffview]",
+        desc = "Git: file history [diffview]",
       },
       {
         "<Leader>gv",
@@ -700,7 +700,7 @@ return {
 
             { "n", "-", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
             { "n", "s", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
-
+            { "n", "u", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
 
             -- Git: stage, unstage, restore, commit
             -- { "n", "<Leader>ghs", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },

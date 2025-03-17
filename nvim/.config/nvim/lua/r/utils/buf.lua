@@ -58,6 +58,14 @@ function M.smart_quit()
   end
 end
 
+local function toggle_diffview(cmd)
+  if next(require("diffview.lib").views) == nil then
+    vim.cmd(cmd)
+  else
+    vim.cmd "DiffviewClose"
+  end
+end
+
 function M.magic_quit()
   local buf_fts = {
     ["fugitive"] = "bd",
@@ -73,12 +81,12 @@ function M.magic_quit()
     end,
     ["DiffviewFileHistory"] = function()
       if vim.t.diffview_view_initialized then
-        vim.cmd "DiffviewClose"
+        toggle_diffview "DiffviewClose"
       end
     end,
     ["DiffviewFiles"] = function()
       if vim.t.diffview_view_initialized then
-        vim.cmd "DiffviewClose"
+        toggle_diffview "DiffviewClose"
       end
     end,
   }
@@ -93,7 +101,7 @@ function M.magic_quit()
   else
     local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
     if bufname and bufname:match "diffview://" then
-      vim.cmd "DiffviewClose"
+      toggle_diffview "DiffviewClose"
       return
     end
 
