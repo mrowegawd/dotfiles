@@ -92,26 +92,7 @@ return {
   -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    opts = {
-      code = {
-        sign = false,
-        width = "block",
-        right_pad = 1,
-        position = "right",
-      },
-      acknowledge_conflicts = true,
-      latex = { enabled = false },
-      heading = {
-        enabled = false,
-        sign = false,
-        icons = {},
-        -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
-      },
-      quote = {
-        -- Turn on / off block quote & callout rendering
-        enabled = false,
-      },
-    },
+    ft = { "markdown", "norg", "rmd", "org" },
     keys = {
       {
         "<Localleader>nr",
@@ -130,7 +111,30 @@ return {
         desc = "Note: toggle render markdown [render-markdown]",
       },
     },
-    ft = { "markdown", "norg", "rmd", "org" },
+    opts = {
+      bullet = {
+        enabled = true,
+      },
+      code = {
+        sign = false,
+        width = "block",
+        right_pad = 1,
+        position = "right",
+      },
+      acknowledge_conflicts = true,
+      latex = { enabled = false },
+      heading = {
+        enabled = true,
+        sign = false,
+        -- icons = {},
+        icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },
+        -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+      },
+      quote = {
+        -- Turn on / off block quote & callout rendering
+        enabled = false,
+      },
+    },
     config = function(_, opts)
       local rose_pine = {
         ["rose-pine-dawn"] = {
@@ -161,18 +165,55 @@ return {
             {
               RenderMarkdownCodeInline = {
                 fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-                bg = { from = "Keyword", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
               },
             },
 
-            -- { RenderMarkdownH1Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            -- { RenderMarkdownH2Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            -- { RenderMarkdownH3Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            -- { RenderMarkdownH4Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
-            -- { RenderMarkdownH5Bg = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
+            {
+              RenderMarkdownH1Bg = {
+                fg = "NONE",
+                bg = { from = "@markup.heading.1.markdown", attr = "fg", alter = -0.7 },
+              },
+            },
+            {
+              RenderMarkdownH2Bg = {
+                fg = "NONE",
+                bg = { from = "@markup.heading.2.markdown", attr = "fg", alter = -0.7 },
+              },
+            },
+            {
+              RenderMarkdownH3Bg = {
+                fg = "NONE",
+                bg = { from = "@markup.heading.3.markdown", attr = "fg", alter = -0.7 },
+              },
+            },
+            {
+              RenderMarkdownH4Bg = {
+                fg = "NONE",
+                bg = { from = "@markup.heading.4.markdown", attr = "fg", alter = -0.7 },
+              },
+            },
+            {
+              RenderMarkdownH5Bg = {
+                fg = "NONE",
+                bg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.7 },
+              },
+            },
+            {
+              RenderMarkdownH6Bg = {
+                fg = "NONE",
+                bg = { from = "@markup.heading.6.markdown", attr = "fg", alter = -0.7 },
+              },
+            },
           },
           ["jellybeans"] = {
             { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "Boolean", attr = "fg", alter = 0.2 },
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+              },
+            },
           },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["nord"] = {
