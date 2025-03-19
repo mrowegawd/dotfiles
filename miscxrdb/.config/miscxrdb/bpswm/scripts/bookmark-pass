@@ -4,8 +4,9 @@
 FILE_BOOKMARKED="$HOME/Dropbox/neorg/orgmode/bookmarks/urls.org"
 
 ROFI_DIR="$HOME/.config/rofi/menu"
-ROFI_THEME="styles/snippets"
-ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME"
+ROFI_THEME_SNIPPETS="styles/snippets"
+ROFI_THEME_MENULEFT="styles/big_screen"
+ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME_SNIPPETS"
 
 [ ! -f "$FILE_BOOKMARKED" ] && dunstify "file $FILE_BOOKMARKED not found" && exit
 
@@ -28,6 +29,8 @@ fi
 # -----------------------
 
 open_bookmark() {
+  ROFI_COMMAND="rofi -theme $ROFI_DIR/$ROFI_THEME_MENULEFT"
+
   SELECTIONOPS=$(
     awk -F'*||\\[\\[' 'NF > 1 { printf "%-40s%s\n", $2, $4 }' "$FILE_BOOKMARKED" | awk ' {
     name=$0;
@@ -35,7 +38,7 @@ open_bookmark() {
     sub(/[[:space:]]+$/, "", url);
     gsub(/\]\]$/, "", url)
     printf "%s+ %s\n", name, url;
-}' | $ROFI_COMMAND -dmenu -i -p "  " | xargs | awk -F"+" '{print $2}' | sed 's/ //g'
+}' | $ROFI_COMMAND -dmenu -i -p " Bookmark" | xargs | awk -F"+" '{print $2}' | sed 's/ //g'
   )
   [ -z "$SELECTIONOPS" ] && exit
   dunstify "(BOOKMARK) Open URL:" "$SELECTIONOPS"

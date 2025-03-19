@@ -15,8 +15,26 @@ if [ -z "$is_pane_id_exists" ]; then
   exit 1
 fi
 
-send_message() {
+__send_message() {
   dunstify "TM-JUMP-TO-MAIN-PANE" "$1"
+}
+
+__open_nvim() {
+  if [ -n "$1" ]; then
+    message="Open "
+    line=""
+
+    tmux send-keys -t "$pane_id" ":e $1" Enter
+    tmux select-pane -t "$pane_id"
+
+    if [ -n "$2" ]; then
+      tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $2, 1 })" Enter
+      line=",line: $2"
+    fi
+
+    __send_message "$message$1$line"
+  fi
+
 }
 
 # TODO: seharusnya di filter lagi, ketika sending file_path ke nvim:
@@ -25,40 +43,32 @@ send_message() {
 # - [x] file_path dengan prefix             cth: file://lib/jpegli/decode_scan.cc
 # - [ ] apakah berupa hash commit?          cth#d9c36f57
 # - [ ] apakah file_path yg terpotong?      cth: ../path/../folder/file.txt
-# - [ ] ketika cursor jump ke nvim, last position cursor pada last pane ikut pindah juga??
+# - [x] ketika cursor jump ke nvim, last position cursor pada last pane ikut pindah juga??
 
 case "$file_path" in
 file://*)
   file_name="${file_path/file:\/\//}"
   file_name="$(echo "$file_name" | cut -d":" -f1)"
 
-  if [ -n "$file_name" ]; then
-    tmux send-keys -t "$pane_id" ":e $file_name" Enter
-    tmux select-pane -t "$pane_id"
-
-    send_message "Open $file_name"
-  fi
+  __open_nvim "$file_name"
   ;;
 
 *:[0-9]*)
   file_name=$(echo "$file_path" | cut -d':' -f1)
   line_number=$(echo "$file_path" | cut -d':' -f2)
 
-  if [ -n "$file_name" ]; then
-    # dunstify "$file_name"
+  __open_nvim "$file_name" "$line_number"
+  ;;
+*\",[[:space:]]line*) # for python
+  file_name=$(echo "$file_path" | cut -d'"' -f1)
+  # https://stackoverflow.com/questions/22727107/how-to-find-the-last-field-using-cut
+  line_number=$(echo "$file_path" | rev | cut -d' ' -f1 | rev)
 
-    tmux send-keys -t "$pane_id" ":e $file_name" Enter
-    tmux select-pane -t "$pane_id"
+  __open_nvim "$file_name" "$line_number"
 
-    if [ -n "$line_number" ]; then
-      tmux send-keys -t "$pane_id" ":lua vim.api.nvim_win_set_cursor(0, { $line_number, 1 })" Enter
-    fi
-
-    send_message "Open $file_name, line: $line_number"
-  fi
   ;;
 *)
-  send_message "No selection or pattern not found, abort it"
+  __send_message "No selection or pattern not found, abort it"
   ;;
 esac
 

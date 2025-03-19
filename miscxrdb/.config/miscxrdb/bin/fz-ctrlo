@@ -78,7 +78,7 @@ show_apt_search() {
 open_url() {
   get_fzf_options() {
     local fzf_options
-    local fzf_default_options='-w 100% -h 50% --multi -0 --no-preview --bind ctrl-a:toggle-all'
+    local fzf_default_options='-w 100% -h 50% --multi -0 --no-preview --bind ctrl-a:toggle-all --prompt="[FZ-CTRLO] OpenURL> "'
     fzf_options="$(tmux show -gqv '@fzf-url-fzf-options')"
     [ -n "$fzf_options" ] && echo "$fzf_options" || echo "$fzf_default_options"
   }
@@ -91,7 +91,7 @@ open_url() {
   [[ $# -ge 2 ]] && limit=$2
 
   if [[ $limit == 'screen' ]]; then
-    content="$(tmux capture-pane -J -p -e | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
+    content="$(tmux capture-pane -J -p -e -S -32768 | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
   else
     content="$(tmux capture-pane -J -p -e -S -"$limit" | sed -r 's/\x1B\[[0-9;]*[mK]//g'))"
   fi
