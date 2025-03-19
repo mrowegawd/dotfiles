@@ -54,6 +54,7 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
       local _, err = pcall(function()
         vim.cmd(cmd_msg_qf)
         vim.cmd "normal! zz"
+        vim.cmd "wincmd p"
       end)
 
       if err and string.match(err, "E553") then
