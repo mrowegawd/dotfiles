@@ -68,8 +68,8 @@ return {
       },
     },
     opts = function()
-      local normbg = Highlight.get("CurSearch", "bg")
-      local bg_match = Highlight.tint(normbg, -0.5)
+      local bg_cursearch = Highlight.get("CurSearch", "bg")
+      local bg_match = Highlight.tint(bg_cursearch, -0.5)
 
       local fg_directory = Highlight.get("Directory", "fg")
       local bg = Highlight.tint(fg_directory, -0.6)
