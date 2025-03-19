@@ -1,5 +1,4 @@
 local fmt, api = string.format, vim.api
-local uv = vim.uv
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 

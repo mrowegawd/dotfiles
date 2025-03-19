@@ -113,7 +113,7 @@ return {
       { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
       { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
       { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Snackspicker: projects", },
-      -- git
+      -- Git
       { "<Leader>gc", function() Snacks.picker.git_log() end, desc = "Git: git log [snackspicker]", },
       { "<Leader>gd", function() Snacks.picker.git_diff() end, desc = "Git: git diff (hunks) [snackspicker]", },
       { "<Leader>gs", function() Snacks.picker.git_status() end, desc = "Git: git status [snackspicker]", },
@@ -123,7 +123,7 @@ return {
       -- { "<Leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Snackspicker: grep open buffers", },
       { "<Leader>fw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
       { "<Leader>fW", RUtils.pick("grep_word", { root = false }), desc = "Snackspicker: visual selection or word (cwd)", mode = { "n", "x" }, },
-      -- search
+      -- Search
       -- { '<Leader>s"', function() Snacks.picker.registers() end, desc = "Snackspicker: registers", },
       -- { "<Leader>sa", function() Snacks.picker.autocmds() end, desc = "Snackspicker: autocmds", },
       { "<Leader>fc", function() Snacks.picker.command_history() end, desc = "Snackspicker: command history", },

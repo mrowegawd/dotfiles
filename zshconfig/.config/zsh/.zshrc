@@ -214,12 +214,12 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
 
   zstyle ':fzf-tab:complete:*' fzf-preview 'bat $realpath'
 
-  # ─< keybinding >───────────────────────────────────────────────────────
+  # ─< KEYBINDING >───────────────────────────────────────────────────────
   # Guide for adding continuous-trigger
   # https://github.com/Aloxaf/fzf-tab/wiki/Configuration#continuous-trigger
   zstyle ':fzf-tab:*' continuous-trigger 'ctrl-y' # default "/"
 
-  # ─< preview cd >───────────────────────────────────────────────────────
+  # ─< PREVIEW CD >───────────────────────────────────────────────────────
   # preview directory's content with eza when completing cd
   if command -v eza >/dev/null; then
     fzf_dir_preview='eza -a --tree --level=2 --icons --color=always $realpath'
@@ -234,17 +234,17 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   # https://github.com/Aloxaf/fzf-tab/pull/293
   # zstyle ':fzf-tab:complete:cd:*' disabled-on any
 
-  # ─< show systemd unit status >─────────────────────────────────────────
+  # ─< SHOW SYSTEMD UNIT STATUS >─────────────────────────────────────────
   zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
 
-  # ─< show alias cmds >──────────────────────────────────────────────────
+  # ─< SHOW ALIAS CMDS >──────────────────────────────────────────────────
   # zstyle ':fzf-tab:complete:doc_*:*' disabled-on any
   # zstyle ':completion:*:doc_im_ls:*' command "show_alias"
   # zstyle ':fzf-tab:complete:doc_im_ls:*' fzf-preview 'echo "mantap"'
   # zstyle ':completion:*:*:*:doc_comp_ls:*' fzf-preview "show_alias"
   # zstyle ':fzf-tab:complete:doc_im_ls:argument-rest' command 'show_alias'
 
-  # ─< preview for kill/ps >──────────────────────────────────────────────
+  # ─< PREVIEW FOR KILL/PS >──────────────────────────────────────────────
   # zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,comm -w -w"
   # zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
   #   '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
@@ -257,7 +257,7 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   # zstyle ':fzf-tab:complete:kill:argument-rest' extra-opts \
   #   --preview=$extract';ps --pid=$in[(w)2] uww' --preview-window='up:15%:wr
 
-  # ─< preview for image with icat & sxiv >───────────────────────────────
+  # ─< PREVIEW FOR IMAGE WITH ICAT & SXIV >───────────────────────────────
   # I disable `ftb-tmux-popup` for spesific command `icat`, `sxiv` and use `fzf` instead.
   zstyle ':fzf-tab:complete:icat:*' fzf-command fzf
   zstyle ':fzf-tab:complete:sxiv:*' fzf-command fzf
@@ -267,11 +267,13 @@ if [[ -f $ZSH_PLUGINS/fzf-tab/fzf-tab.zsh ]]; then
   zstyle ':fzf-tab:complete:icat:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
   zstyle ':fzf-tab:complete:sxiv:*' fzf-preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=50x50@0x0 $realpath'
 
-
-  # ─< preview for pdf >──────────────────────────────────────────────────
+  # ─< PREVIEW FOR PDF >──────────────────────────────────────────────────
   zstyle ':fzf-tab:complete:zathura:*' fzf-preview 'pdftotext $realpath - | head -n 20'
   zstyle ':fzf-tab:complete:tdf:*' fzf-preview 'pdftotext $realpath - | head -n 20'
   zstyle ':fzf-tab:complete:fancy-cat:*' fzf-preview 'pdftotext $realpath - | head -n 20'
+
+  # ─< PREVIEW FOR GIT >──────────────────────────────────────────────────
+  zstyle ':fzf-tab:complete:git:*' fzf-flags --preview-window "right:50%:hidden:cycle"
 fi
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓

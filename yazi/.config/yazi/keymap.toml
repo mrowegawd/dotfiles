@@ -57,10 +57,10 @@ nohup mpv --ontop --no-border --force-window \
 """, desc = "Play playlist on mpv" },
   { on = [
     "B",
-  ], run = "plugin bookmark-alternate --args=toggle", desc = "Toggle bookmark or alternate dir" },
+  ], run = "plugin bookmark-alternate --args=toggle", desc = "Bookmark toggle or alternate the file" },
   { on = [
     "<c-b>",
-  ], run = "plugin bookmark-alternate --args=save", desc = "Bookmark or save alternate dir" },
+  ], run = "plugin bookmark-alternate --args=save", desc = "Bookmark save" },
 ]
 
 keymap = [

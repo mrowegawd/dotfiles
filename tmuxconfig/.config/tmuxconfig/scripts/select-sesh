@@ -5,21 +5,21 @@
 set -- 'tmux capture-pane -pe -S' \
   '$(start=$(( $(tmux display-message -t {1} -p "#{pane_height}")' \
   '- 10 ));' \
-  '(( start>0 )) && echo $start || echo 0) -t {2} || echo -e "\n" && toilet -f pagga "Session not active"'
+  '(( start>0 )) && echo $start || echo 0) -t {2} || echo -e "\n" && toilet -f mono12 "Session inactive"'
 
 preview_cmd=$*
 
 SELECT=$(
-  sesh list --icons | fzf-tmux -p 80%,70% \
+  sesh list --icons -d | fzf-tmux -p 80%,70% \
     --no-sort --ansi --border-label ' SELECT|START SESS|TMUX ' --prompt '⚡ ' \
     --header ' ^a all ^t tmux ^g configs ^z zoxide ^x tmux kill ^f find' \
     --bind 'tab:down,btab:up' \
-    --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
-    --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
-    --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
-    --bind 'ctrl-z:change-prompt(📁  )+reload(sesh list -z --icons)' \
-    --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-    --bind 'ctrl-x:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
+    --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list --icons)' \
+    --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)' \
+    --bind 'ctrl-g:change-prompt(⚙️ )+reload(sesh list -c --icons)' \
+    --bind 'ctrl-z:change-prompt(📁 )+reload(sesh list -z --icons)' \
+    --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+    --bind 'ctrl-x:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list -d --icons)' \
     --preview-window 'right:nohidden:55%:border-none' \
     --preview "$preview_cmd"
   # --preview "sesh preview")

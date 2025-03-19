@@ -21,7 +21,8 @@ return {
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     keys = {
       { "<c-space>", desc = "Misc: increment selection [treesitter]", unique = true },
-      { "<bs>", desc = "Misc: iecrement selection (xmode) [treesitter]", mode = "x" },
+      { "<bs>", desc = "Misc: decrement selection (xmode) [treesitter]", mode = "x" },
+      { "<cr>", desc = "Misc: increment selection (xmode) [treesitter]", mode = "x" },
     },
     opts_extend = { "ensure_installed" },
     ---@type TSConfig
@@ -29,6 +30,9 @@ return {
     opts = {
       highlight = { enable = true },
       indent = { enable = true },
+      -- Ensure to ignore "org"
+      -- Recommend config from: https://github.com/nvim-orgmode/orgmode?tab=readme-ov-file#installation
+      ignore_install = { "org" },
       ensure_installed = {
         "bash",
         "c",
@@ -64,7 +68,7 @@ return {
         enable = true,
         keymaps = {
           init_selection = "<C-space>",
-          node_incremental = "<C-space>",
+          node_incremental = "<CR>",
           scope_incremental = false,
           node_decremental = "<bs>",
         },

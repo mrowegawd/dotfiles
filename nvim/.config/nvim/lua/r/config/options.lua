@@ -35,6 +35,7 @@ vim.g.maplocalleader = ","
 vim.g.loaded_matchparen = 1
 
 -- {{{ Generals
+opt.mousescroll = "ver:3,hor:6"
 opt.termguicolors = true -- tmux need this!
 opt.secure = true
 opt.modelines = 1 -- read a modeline at EOF

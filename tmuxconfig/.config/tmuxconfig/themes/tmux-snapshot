@@ -1,5 +1,5 @@
-ACTIVE_FG="#b26cc6"
-ACTIVE_BG="#633c6e"
+ACTIVE_BG="#c678dd"
+ACTIVE_FG="#633c6e"
 
 STATUSLINE_BG_MESSAGE="#e5c07b"
 STATUSLINE_FG="#6f7b93"
@@ -56,7 +56,7 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$BLUE] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
+#[fg=$TMUX_FG,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
