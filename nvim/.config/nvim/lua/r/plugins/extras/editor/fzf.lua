@@ -84,7 +84,7 @@ return {
       { "<c-h>", "<Left>", ft = "fzf", mode = "t", nowait = true },
       { "<c-c>", "<esc>", ft = "fzf", mode = "t", nowait = true },
 
-      { "<a-t>", function() require("fzf-lua").tabs() end, desc = "Fzflua: select tabs" },
+      { "tf", function() require("fzf-lua").tabs() end, desc = "Tab: select tabs [fzflua]" },
 
       -- Buffers
       {
@@ -789,9 +789,18 @@ return {
         oldfiles = {
           prompt = RUtils.fzflua.default_title_prompt(),
           winopts = { title = RUtils.fzflua.format_title("Recent Files", "") },
+          fzf_opts = { ["--header"] = [[CTRL-O:Oldfiles-all  CTRL-R:Oldfiles-current]] },
           cwd_only = true,
           stat_file = true, -- verify files exist on disk
           include_current_session = false, -- include bufs from current session
+          actions = {
+            ["ctrl-o"] = function()
+              require("fzf-lua").oldfiles { cwd_only = false }
+            end,
+            ["ctrl-r"] = function()
+              require("fzf-lua").oldfiles { cwd_only = true }
+            end,
+          },
         },
         buffers = {
           prompt = RUtils.fzflua.default_title_prompt(),
