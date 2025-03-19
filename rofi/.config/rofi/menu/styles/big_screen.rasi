@@ -35,7 +35,7 @@ window {
 	  border:							            0px;
 	  border-color:					          @urgent;
     border-radius:                  12px;
-    width: 						              90%;
+    width: 						              80%;
     height: 					              50%;
 }
 
@@ -43,16 +43,16 @@ prompt {
     enabled: 						            true;
     spacing: 					              0;
     border: 					              0;
-    text-color: 					          @foreground;
-    padding: 						            1.5% 1.5% 1.5% 0.5%;
-    background-color: 				      @border;
+    padding: 						            1.5% 0 1% 2%;
+    text-color: 					          @background;
+    background-color: 				      @background-alt;
 }
 
 
 entry {
     spacing:    				            0;
-    text-color: 				            @border;
-    background-color:               @border;
+    text-color: 				            @foreground;
+    background-color:              @background-alt;
     padding: 						            1.5% 1.5% 1.5% 0.5%;
     text-color:                     @foreground;
 }
@@ -66,6 +66,7 @@ inputbar {
     spacing:    				            0px;
     text-color: 				            @border;
     padding:    				            1px;
+    background-color:               @background-alt;
     children: 					            [ prompt, entry ];
 }
 
@@ -93,53 +94,57 @@ element {
     text-color:                     @urgent;
     orientation:                    horizontal;
     border-radius:                  0%;
-    padding:                        1% 0.5% 1% 1.5%;
+    padding:                        1.5% 0.5% 1% 0.2px;  // < ----
 }
 
 element-text {
+    expand:                         true;
+    horizontal-align:               0;
     background-color:               inherit;
     text-color:                     inherit;
+    vertical-align:                 0.5;
+    margin:                         0% 0.25% 0.25% 1.5%;
 }
+
 
 element normal.normal {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
-
 element normal.urgent {
     background-color: 		          @urgent;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element normal.active {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element selected.normal {
     background-color: 		          @selected-alt;
-    text-color:       		          @border;
+    text-color:       		          @red;
 }
 element selected.urgent {
     background-color: 		          @red;
-    text-color:       		          @foreground;
+    text-color:       		          @background;
 }
 element selected.active {
     background-color: 		          @background;
-    text-color:       		          @urgent;
+    text-color:       		          @background;
 }
 
 element alternate.normal {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element alternate.urgent {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }
 
 element alternate.active {
     background-color: 		          @background;
-    text-color:       		          @border;
+    text-color:       		          @background-alt;
 }

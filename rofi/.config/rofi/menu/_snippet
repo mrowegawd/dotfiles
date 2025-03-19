@@ -5,15 +5,15 @@ set -e -u
 SNIPPETS_MENU="aliases\ncalcurse\nncmpcpp\nnewsboat\nsurfingkeys\nsxhkdrc\ntmux\nvimium\nzathura"
 
 dir="$HOME/.config/rofi/menu"
-theme="styles/menuleft"
+theme="styles/snippets"
 rofi_command="rofi -theme $dir/$theme"
 
 SELECT="$(echo -e "$SNIPPETS_MENU" | $rofi_command -p "  " -dmenu -i)"
 
 (
-	[[ -z $SELECT ]] && exit
+  [[ -z $SELECT ]] && exit
 
-	"$HOME/.config/miscxrdb/exbin/showlinuxhelp" "$SELECT"
+  "$HOME/.config/miscxrdb/exbin/showlinuxhelp" "$SELECT"
 
-	exit
+  exit
 )
