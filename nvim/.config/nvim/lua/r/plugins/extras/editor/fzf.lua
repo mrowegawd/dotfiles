@@ -964,6 +964,29 @@ return {
         },
         lsp = {
           cwd_only = true,
+          winopts = function()
+            local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
+            local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })
+
+            local win_height = math.ceil(lines * 0.65)
+            local win_width = math.ceil(columns * 2)
+            return {
+              title = RUtils.fzflua.format_title("Finder", RUtils.config.icons.misc.lsp),
+              width = win_width,
+              height = win_height,
+              row = 0.50,
+              preview = {
+                vertical = "down:45%", -- up|down:size
+                horizontal = "left:55%", -- right|left:size
+              },
+            }
+          end,
+          actions = {
+            ["ctrl-q"] = actions.file_sel_to_qf,
+            ["ctrl-v"] = actions.file_vsplit,
+            ["ctrl-s"] = actions.file_split,
+            ["ctrl-t"] = actions.file_tabedit,
+          },
           symbols = {
             prompt = RUtils.fzflua.default_title_prompt(),
             symbol_hl = function(s)
@@ -1041,15 +1064,15 @@ return {
             prompt = RUtils.fzflua.default_title_prompt(),
             async = true,
             silent = true,
-            providers = {
-              { "references", prefix = require("fzf-lua").utils.ansi_codes.blue "ref " },
-              { "definitions", prefix = require("fzf-lua").utils.ansi_codes.green "def " },
-              { "declarations", prefix = require("fzf-lua").utils.ansi_codes.magenta "decl" },
-              { "typedefs", prefix = require("fzf-lua").utils.ansi_codes.red "tdef" },
-              { "implementations", prefix = require("fzf-lua").utils.ansi_codes.green "impl" },
-              { "incoming_calls", prefix = require("fzf-lua").utils.ansi_codes.cyan "in  " },
-              { "outgoing_calls", prefix = require("fzf-lua").utils.ansi_codes.yellow "out " },
-            },
+            -- providers = {
+            --   { "references", prefix = require("fzf-lua").utils.ansi_codes.blue "ref " },
+            --   { "definitions", prefix = require("fzf-lua").utils.ansi_codes.green "def " },
+            --   { "declarations", prefix = require("fzf-lua").utils.ansi_codes.magenta "decl" },
+            --   { "typedefs", prefix = require("fzf-lua").utils.ansi_codes.red "tdef" },
+            --   { "implementations", prefix = require("fzf-lua").utils.ansi_codes.green "impl" },
+            --   { "incoming_calls", prefix = require("fzf-lua").utils.ansi_codes.cyan "in  " },
+            --   { "outgoing_calls", prefix = require("fzf-lua").utils.ansi_codes.yellow "out " },
+            -- },
             winopts = function()
               local lines = vim.api.nvim_get_option_value("lines", { scope = "local" })
               local columns = vim.api.nvim_get_option_value("columns", { scope = "local" })

@@ -245,7 +245,8 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "grr",
       function()
-        fzf_lua.lsp_finder()
+        -- fzf_lua.lsp_finder() -- <-- ini error
+        fzf_lua.lsp_references()
       end,
       has = "references",
       desc = "LSP: references [fzflua]",
