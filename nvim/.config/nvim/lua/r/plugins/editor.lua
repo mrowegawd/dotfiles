@@ -44,7 +44,7 @@ return {
   -- GRUG-FAR.NVIM
   {
     "MagicDuck/grug-far.nvim",
-    cmd = { "GrugFar" },
+    cmd = { "GrugFar", "GrugFarWithin" },
     keys = {
       {
         "<Leader>uF",
@@ -68,14 +68,23 @@ return {
       },
     },
     opts = function()
-      local norm = Highlight.get("Directory", "fg")
-      local bg = Highlight.tint(norm, -0.6)
-      local fg = Highlight.tint(norm, 0.5)
+      local normbg = Highlight.get("CurSearch", "bg")
+      local bg_match = Highlight.tint(normbg, -0.5)
+
+      local fg_directory = Highlight.get("Directory", "fg")
+      local bg = Highlight.tint(fg_directory, -0.6)
+      local fg = Highlight.tint(fg_directory, 0.5)
       Highlight.plugin("grugfarHiCo", {
         {
           GrugFarResultsPath = {
             bg = bg,
             fg = fg,
+            bold = true,
+          },
+        },
+        {
+          GrugFarResultsMatch = {
+            bg = bg_match,
             bold = true,
           },
         },
