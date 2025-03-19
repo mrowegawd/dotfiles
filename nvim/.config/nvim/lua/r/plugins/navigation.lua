@@ -511,8 +511,8 @@ return {
           ["*"] = {
             { OutlineCurrent = { fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, bg = "NONE" } },
             { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-            { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
-            { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
+            { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bg = "NONE" } },
+            { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bg = "NONE" } },
             { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
             { OutlineLineno = { bg = "NONE" } },
           },

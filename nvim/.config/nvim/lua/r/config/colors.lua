@@ -1063,15 +1063,14 @@ local general_overrides = function()
     {
       ["@markup.link.label.markdown_inline"] = {
         fg = { from = "Keyword", attr = "fg", alter = 0.05 },
-        bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+        bg = { from = "Normal", attr = "bg", alter = 0.6 },
         underline = false,
       },
     },
     {
       ["@markup.quote.markdown"] = {
-        fg = { from = "Boolean", attr = "fg", alter = -0.35 },
-        bg = { from = "Boolean", attr = "fg", alter = -0.75 },
-        bold = true,
+        fg = { from = "Boolean", attr = "fg", alter = -0.1 },
+        bg = { from = "Normal", attr = "bg", alter = 0.6 },
         italic = true,
       },
     },
@@ -1089,7 +1088,7 @@ local general_overrides = function()
     },
     {
       ["@markup.raw.markdown_inline"] = {
-        fg = { from = "Keyword", attr = "fg" },
+        fg = { from = "Boolean", attr = "fg" },
         bg = { from = "Normal", attr = "bg" },
         reverse = false,
       },

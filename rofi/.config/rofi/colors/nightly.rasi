@@ -10,7 +10,7 @@
     urgent:                         #c678dd;
 
     green:                          #98c379;
-    red:                            #b26cc6;
+    red:                            #c678dd;
     blue:                           #61afef;
     yellow:                         #e5c07b;
 }

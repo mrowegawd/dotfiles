@@ -891,7 +891,7 @@ M.RmuxTargetPane = {
         return self.watch
       end
     end,
-    hl = { fg = colors.modified_fg, bold = true },
+    hl = { fg = colors.notif, bold = true },
   },
   {
     provider = function(self)
