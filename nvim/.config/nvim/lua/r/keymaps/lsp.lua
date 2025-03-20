@@ -5,10 +5,10 @@ local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 M._keys = nil
 
 local diagnostic_goto = function(next, severity)
-  local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
+  local go = next and 1 or -1
   severity = severity and vim.diagnostic.severity[severity] or nil
   return function()
-    go { severity = severity, float = false }
+    vim.diagnostic.jump { severity = severity, float = false, count = go }
   end
 end
 
@@ -136,7 +136,7 @@ function M.get()
       function()
         vim.diagnostic.open_float { scope = "line", border = "rounded" }
       end,
-      desc = "Diagnostic: peek",
+      desc = "Diagnostic: open float peek",
     },
     --  +----------------------------------------------------------+
     --  LSP commands

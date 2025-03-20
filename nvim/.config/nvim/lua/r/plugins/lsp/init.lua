@@ -44,21 +44,12 @@ return {
             },
           },
           float = {
-            title = {
-              { "  ", "DiagnosticFloatTitleIcon" },
-              { "Problems ", "DiagnosticFloatTitle" },
-            },
-            border = "rounded",
-            prefix = function(diag)
-              local level = vim.diagnostic.severity[diag.severity]
-              local prefix = string.format(
-                " %s ",
-                RUtils.config.icons.diagnostics[string.gsub(level:lower(), [[(%a)([%w_']*)]], function(first, rest)
-                  return first:upper() .. rest:lower()
-                end)]
-              )
-              return prefix, "DiagnosticFloating" .. level:gsub("^%l", string.upper)
-            end,
+            header = "",
+            title = "  Problems ",
+            -- title = {
+            --   { "  ", "DiagnosticFloatTitleIcon" },
+            --   { "Problems ", "DiagnosticFloatTitle" },
+            -- },
           },
         },
         inlay_hints = {
@@ -323,5 +314,11 @@ return {
   {
     "framallo/taskwarrior.vim",
     ft = "taskrc",
+  },
+  -- GARBAGE-DAY
+  {
+    "zeioth/garbage-day.nvim",
+    event = "LspAttach",
+    opts = {},
   },
 }
