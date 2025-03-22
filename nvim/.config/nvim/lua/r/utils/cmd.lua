@@ -308,10 +308,6 @@ function M.augroup(name, ...)
   return id
 end
 
-function M.feedkey(key, mode)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), mode, false)
-end
-
 function M.get_visual_selection(opts)
   opts = opts or {}
   -- Adapted from fzf-lua:
@@ -572,7 +568,7 @@ function M.change_colors()
   local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
 
   local tmux_bg = Highlight.get("Normal", "bg")
-  local tmux_fg = Highlight.tint(Highlight.get("Tabline", "fg"), -0.2)
+  local tmux_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.2)
 
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 

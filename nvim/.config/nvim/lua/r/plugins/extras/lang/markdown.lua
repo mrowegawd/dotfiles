@@ -138,23 +138,10 @@ return {
     config = function(_, opts)
       local rose_pine = {
         ["rose-pine-dawn"] = {
-          {
-            RenderMarkdownCodeInline = {
-              fg = { from = "@markup.raw.markdown_inline", attr = "fg", alter = 0.2 },
-              bg = "NONE",
-              bold = true,
-            },
-          },
+          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
         },
         ["rose-pine-main"] = {
-          { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
-          {
-            RenderMarkdownCodeInline = {
-              fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-              bg = { from = "Keyword", attr = "fg", alter = -0.6 },
-              bold = true,
-            },
-          },
+          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
         },
       }
 
@@ -166,52 +153,176 @@ return {
               RenderMarkdownCodeInline = {
                 fg = { from = "Keyword", attr = "fg", alter = 0.2 },
                 bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+                bg = { from = "Normal", attr = "bg", alter = 0.6 },
+                bold = true,
               },
             },
 
             {
               RenderMarkdownH1Bg = {
                 fg = "NONE",
-                bg = { from = "@markup.heading.1.markdown", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                reverse = false,
               },
             },
             {
               RenderMarkdownH2Bg = {
                 fg = "NONE",
-                bg = { from = "@markup.heading.2.markdown", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                reverse = false,
               },
             },
             {
               RenderMarkdownH3Bg = {
                 fg = "NONE",
-                bg = { from = "@markup.heading.3.markdown", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                reverse = false,
               },
             },
             {
               RenderMarkdownH4Bg = {
                 fg = "NONE",
-                bg = { from = "@markup.heading.4.markdown", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                reverse = false,
               },
             },
             {
               RenderMarkdownH5Bg = {
                 fg = "NONE",
-                bg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                reverse = false,
               },
             },
             {
               RenderMarkdownH6Bg = {
                 fg = "NONE",
-                bg = { from = "@markup.heading.6.markdown", attr = "fg", alter = -0.7 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+                reverse = false,
               },
             },
           },
           ["jellybeans"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.link.label.markdown_inline"] = {
+                fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.quote.markdown"] = {
+                fg = { from = "Boolean", attr = "fg", alter = 0.1 },
+                bg = { from = "Boolean", attr = "fg", alter = -0.8 },
+                italic = true,
+              },
+            },
+            {
+              ["@markup.strong.markdown_inline"] = {
+                fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+                bold = true,
+              },
+            },
+            {
+              ["@markup.italic.markdown_inline"] = {
+                fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+                bold = false,
+                italic = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "Boolean", attr = "fg" },
+                bg = { from = "Normal", attr = "bg" },
+                reverse = false,
+              },
+            },
+            {
+              ["@punctuation.special.markdown"] = {
+                fg = { from = "@markup.quote.markdown", attr = "fg" },
+              },
+            },
+
             {
               RenderMarkdownCodeInline = {
-                fg = { from = "Boolean", attr = "fg", alter = 0.2 },
-                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+          },
+          ["ashen"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "WarningMsg", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.link.label.markdown_inline"] = {
+                fg = { from = "WarningMsg", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.quote.markdown"] = {
+                fg = { from = "Boolean", attr = "fg", alter = 0.1 },
+                bg = { from = "Boolean", attr = "fg", alter = -0.8 },
+                italic = true,
+              },
+            },
+            {
+              ["@markup.strong.markdown_inline"] = {
+                fg = { from = "WarningMsg", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+                bold = true,
+              },
+            },
+            {
+              ["@markup.italic.markdown_inline"] = {
+                fg = { from = "WarningMsg", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+                bold = false,
+                italic = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "Boolean", attr = "fg" },
+                bg = { from = "Normal", attr = "bg" },
+                reverse = false,
+              },
+            },
+            {
+              ["@punctuation.special.markdown"] = {
+                fg = { from = "@markup.quote.markdown", attr = "fg" },
+              },
+            },
+
+            {
+              RenderMarkdownCodeInline = {
+                fg = { from = "WarningMsg", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
               },
             },
           },
@@ -227,6 +338,53 @@ return {
           ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } } },
           ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
           ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
+          ["lackluster"] = {
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.link.label.markdown_inline"] = {
+                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+              },
+            },
+            {
+              ["@markup.quote.markdown"] = {
+                fg = { from = "@markup.heading.1.markdown", attr = "fg", alter = 0.1 },
+                bg = { from = "@markup.heading.1.markdown", attr = "fg", alter = -0.8 },
+                italic = true,
+              },
+            },
+            {
+              ["@markup.strong.markdown_inline"] = {
+                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+                bold = true,
+              },
+            },
+            {
+              ["@markup.italic.markdown_inline"] = {
+                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+                bold = false,
+                italic = true,
+              },
+            },
+            {
+              ["@markup.raw.markdown_inline"] = {
+                fg = { from = "@markup.heading.1.markdown", attr = "fg" },
+                bg = { from = "Normal", attr = "bg" },
+                reverse = false,
+              },
+            },
+          },
           ["zenburned"] = {
             {
               RenderMarkdownCodeInline = {

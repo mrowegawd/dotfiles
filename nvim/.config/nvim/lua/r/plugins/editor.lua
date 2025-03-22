@@ -68,24 +68,152 @@ return {
       },
     },
     opts = function()
-      local bg_cursearch = Highlight.get("CurSearch", "bg")
-      local bg_match = Highlight.tint(bg_cursearch, -0.5)
-
-      local fg_directory = Highlight.get("Directory", "fg")
-      local bg = Highlight.tint(fg_directory, -0.6)
-      local fg = Highlight.tint(fg_directory, 0.5)
       Highlight.plugin("grugfarHiCo", {
-        {
-          GrugFarResultsPath = {
-            bg = bg,
-            fg = fg,
-            bold = true,
+        theme = {
+          ["*"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.25 },
+                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                bold = true,
+                underline = false,
+              },
+            },
+            {
+              GrugFarResultsLineNo = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "Normal", attr = "bg", alter = 0.2 },
+              },
+            },
+            { GrugFarResultsLineColumn = { link = "GrugFarResultsLineNo" } },
+
+            {
+              GrugFarResultsMatch = {
+                fg = { from = "CurSearch", attr = "bg", alter = 0.5 },
+                bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
+                bold = true,
+              },
+            },
+            {
+              GrugFarResultsNumberLabel = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
+              },
+            },
           },
-        },
-        {
-          GrugFarResultsMatch = {
-            bg = bg_match,
-            bold = true,
+          ["oxocarbon"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.3 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+                underline = false,
+              },
+            },
+            {
+              GrugFarResultsLineNo = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                bg = { from = "Normal", attr = "bg", alter = 0.4 },
+              },
+            },
+            { GrugFarResultsLineColumn = { link = "GrugFarResultsLineNo" } },
+            {
+              GrugFarResultsMatch = {
+                fg = { from = "CurSearch", attr = "bg", alter = 0.2 },
+                bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
+                bold = true,
+              },
+            },
+          },
+          ["jellybeans"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.5 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+                underline = false,
+              },
+            },
+          },
+          ["base2tone_cave_dark"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.3 },
+                bg = { from = "Normal", attr = "bg", alter = 0.8 },
+                bold = true,
+                underline = false,
+              },
+            },
+          },
+          ["ashen"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.5 },
+                bg = { from = "Normal", attr = "bg", alter = 0.9 },
+                bold = true,
+                underline = false,
+              },
+            },
+            {
+              GrugFarResultsLineNo = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+              },
+            },
+            {
+              GrugFarResultsMatch = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
+                bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
+                bold = true,
+              },
+            },
+          },
+          ["nord"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "Directory", attr = "fg", alter = -0.1 },
+                bg = { from = "Directory", attr = "fg", alter = -0.65 },
+                bold = true,
+                underline = false,
+              },
+            },
+            {
+              GrugFarResultsLineNo = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+              },
+            },
+            {
+              GrugFarResultsMatch = {
+                fg = { from = "CurSearch", attr = "bg", alter = 0.8 },
+                bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
+                bold = true,
+              },
+            },
+          },
+          ["lackluster"] = {
+            {
+              GrugFarResultsPath = {
+                fg = { from = "Directory", attr = "fg", alter = -0.1 },
+                bg = { from = "Directory", attr = "fg", alter = -0.65 },
+                bold = true,
+                underline = false,
+              },
+            },
+            {
+              GrugFarResultsLineNo = {
+                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+              },
+            },
+            {
+              GrugFarResultsMatch = {
+                fg = { from = "Directory", attr = "fg", alter = 0.8 },
+                bg = { from = "Directory", attr = "fg", alter = -0.5 },
+                bold = true,
+              },
+            },
+            {
+              GrugFarResultsNumberLabel = {
+                fg = { from = "Directory", attr = "fg" },
+              },
+            },
           },
         },
       })
@@ -232,6 +360,10 @@ return {
       {
         "<Leader>xt",
         function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
           vim.cmd [[TodoTrouble]]
         end,
         desc = "Trouble: todo trouble [trouble]",
@@ -290,65 +422,76 @@ return {
             { TroubleNormal = { inherit = "Normal" } },
             { TroubleNormalNC = { inherit = "Normal" } },
 
-            { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn" } } },
-            { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError" } } },
-            { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint" } } },
-            { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-            { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
-            { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo" } } },
+            { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn", alter = -0.1 } } },
+            { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError", alter = -0.1 } } },
+            { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint", alter = -0.1 } } },
+            { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
+            { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
+            { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
 
-            { TroubleIndent = { bg = "NONE", fg = { from = "WinSeparator", attr = "fg", alter = 0.25 } } },
+            { TroubleIndentFoldClosed = { link = "IndentGuidesFolded" } },
+            { TroubleIndent = { link = "IndentGuides" } },
 
-            -- Directory
+            -- ──────────────────────────────────────────────────────────────────────
+            -- DIRECTORY
+            -- ──────────────────────────────────────────────────────────────────────
             { TroubleDirectory = { bg = "NONE" } },
             {
               TroubleFsCount = {
-                fg = { from = "GitSignsChange", attr = "fg", alter = -0.1 },
-                bg = "NONE",
+                fg = { from = "Comment", attr = "fg" },
+                bg = { from = "Comment", attr = "fg", alter = -0.6 },
                 italic = true,
               },
             },
 
+            -- ──────────────────────────────────────────────────────────────────────
             -- LSP
+            -- ──────────────────────────────────────────────────────────────────────
             { TroubleLspFilename = { bg = "NONE" } },
             { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             {
               TroubleLspCount = {
-                fg = { from = "GitSignsChange", attr = "fg", alter = -0.1 },
-                bg = "NONE",
+                fg = { from = "Normal", attr = "fg" },
+                bg = { from = "Normal", attr = "fg", alter = -0.6 },
                 italic = true,
               },
             },
 
-            -- Diagnostics
+            -- ──────────────────────────────────────────────────────────────────────
+            -- DIAGNOSTICS
+            -- ──────────────────────────────────────────────────────────────────────
             { TroubleDiagnosticsBasename = { bg = "NONE" } },
             { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             {
               TroubleDiagnosticsCount = {
-                fg = { from = "GitSignsChange", attr = "fg", alter = -0.1 },
-                bg = "NONE",
+                fg = { from = "GitSignsChange", attr = "fg" },
+                bg = { from = "GitSignsChange", attr = "fg", alter = -0.6 },
                 italic = true,
               },
             },
 
-            -- Todo
+            -- ──────────────────────────────────────────────────────────────────────
+            -- TODO
+            -- ──────────────────────────────────────────────────────────────────────
             { TroubleTodoFilename = { bg = "NONE" } },
             { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             {
               TroubleTodoCount = {
-                fg = { from = "GitSignsChange", attr = "fg", alter = -0.1 },
-                bg = "NONE",
+                fg = { from = "TodoBgTODO", attr = "bg" },
+                bg = { from = "TodoBgTODO", attr = "bg", alter = -0.5 },
                 italic = true,
               },
             },
 
-            -- QF
+            -- ──────────────────────────────────────────────────────────────────────
+            -- QUICKFIX
+            -- ──────────────────────────────────────────────────────────────────────
             { TroubleQfFilename = { bg = "NONE" } },
             { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             {
               TroubleQfCount = {
-                fg = { from = "GitSignsChange", attr = "fg", alter = -0.1 },
-                bg = "NONE",
+                fg = { from = "Directory", attr = "fg" },
+                bg = { from = "Directory", attr = "fg", alter = -0.5 },
                 italic = true,
               },
             },
@@ -375,13 +518,13 @@ return {
             { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-          },
-          ["midnight"] = {
-            { TroubleIndent = { fg = { from = "WinSeparator", attr = "fg", alter = 0.5 } } },
-            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
+            {
+              TroubleTodoCount = {
+                fg = { from = "TodoFgTodo", attr = "fg", alter = 0.5 },
+                bg = { from = "TodoFgTodo", attr = "fg", alter = -0.2 },
+                italic = true,
+              },
+            },
           },
           ["ashen"] = {
             { TroubleIndent = { fg = { from = "WinSeparator", attr = "fg", alter = 0.8 } } },

@@ -500,8 +500,15 @@ return {
         },
         ["rose-pine-main"] = {
           { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.05 }, bg = "NONE" } },
-          { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bg = "NONE" } },
-          { OutlineGuides = { fg = { from = "OutlineFoldMarker", attr = "fg", alter = 0.04 }, bg = "NONE" } },
+          { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+          { OutlineGuides = { link = "IndentGuides" } },
+          {
+            OutlineCurrent = {
+              fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
+              bg = { from = "CurSearch", attr = "bg", alter = -0.75 },
+              bold = true,
+            },
+          },
         },
       }
 
@@ -509,19 +516,43 @@ return {
       Highlight.plugin("OutlineAuHi", {
         theme = {
           ["*"] = {
-            { OutlineCurrent = { fg = { from = "ErrorMsg", attr = "fg", alter = -0.3 }, bg = "NONE" } },
+            {
+              OutlineCurrent = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.1 },
+                bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
+                bold = true,
+              },
+            },
             { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-            { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bg = "NONE" } },
-            { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bg = "NONE" } },
             { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
             { OutlineLineno = { bg = "NONE" } },
+            { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+            { OutlineGuides = { link = "IndentGuides" } },
           },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-          ["lackluster"] = {
+          ["ashen"] = {
+            {
+              OutlineCurrent = {
+                fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
+                bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
+                bold = true,
+              },
+            },
             { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-            { OutlineGuides = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
-            { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
-            { OutlineCurrent = { fg = { from = "ErrorMsg", attr = "fg", alter = 0.5 } } },
+            { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+            { OutlineGuides = { link = "IndentGuides" } },
+          },
+          ["lackluster"] = {
+            {
+              OutlineCurrent = {
+                fg = { from = "Directory", attr = "fg", alter = 0.5 },
+                bg = { from = "Directory", attr = "fg", alter = -0.5 },
+                bold = true,
+              },
+            },
+            { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+            { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+            { OutlineGuides = { link = "IndentGuides" } },
           },
         },
       })
@@ -608,10 +639,11 @@ return {
     end,
   },
 
-  -- EDGY.NVIM
+  -- EDGY.NVIM (disabled)
   {
     "folke/edgy.nvim",
     event = "VeryLazy",
+    enabled = false,
     keys = function()
       local height = vim.o.lines - vim.o.cmdheight
       if vim.o.laststatus ~= 0 then

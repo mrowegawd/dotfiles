@@ -6,23 +6,6 @@ local colorscheme = RUtils.config.colorscheme
 -- https://base2t.one
 
 return {
-  -- MATERIAL
-  {
-    "marko-cerovac/material.nvim",
-    priority = 1000,
-    lazy = false,
-    enabled = function()
-      local material_theme = { "material" }
-      if vim.tbl_contains(material_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    opts = function()
-      vim.g.material_style = "darker"
-      return {}
-    end,
-  },
   -- SEOUL256
   {
     "junegunn/seoul256.vim",
@@ -58,7 +41,7 @@ return {
     lazy = false,
     priority = 1000,
     enabled = function()
-      local base2tone_theme = { "base2tone_field_dark", "base2tone_cave_dark", "base2tone_suburb_dark" }
+      local base2tone_theme = { "base2tone_field_dark", "base2tone_cave_dark" }
       if vim.tbl_contains(base2tone_theme, colorscheme) then
         return true
       end

@@ -251,21 +251,15 @@ M.Mode_inactive = {
     provider = function()
       return string.format "      "
     end,
-    hl = function()
-      return { bg = colors.modenc_bg }
-    end,
+    hl = { bg = colors.modenc_bg },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { fg = colors.modenc_bg, bg = colors.modenc_bg_blur }
-    end,
+    hl = { fg = colors.modenc_bg, bg = colors.modenc_bg_blur },
   },
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { fg = colors.modenc_bg_blur }
-    end,
+    hl = { fg = colors.modenc_bg_blur },
   },
   { provider = " " },
 }
@@ -371,10 +365,11 @@ M.FilePath = {
       return self.filename .. "  "
     end,
     hl = function()
+      local fg = colors.normal_fg
       if Conditions.is_not_active() then
-        return { fg = colors.statuslinenc_fg }
+        fg = tostring(colors.statuslinenc_fg)
       end
-      return { fg = colors.normal_fg }
+      return { fg = fg }
     end,
   },
   {
@@ -387,7 +382,7 @@ M.FilePath = {
     hl = function(self)
       local fg = colors.normal_fg_white
       if self.exclude_ft then
-        fg = colors.normal_fg_blur
+        fg = tostring(colors.normal_fg_blur)
       end
       return { fg = fg, bold = true, italic = true }
     end,
@@ -486,9 +481,7 @@ M.QuickfixStatus = {
   end,
   {
     provider = "Index: ",
-    hl = function()
-      return { fg = colors.normal_fg_blur }
-    end,
+    hl = { fg = colors.normal_fg_blur },
   },
   {
     provider = function(self)
@@ -500,17 +493,11 @@ M.QuickfixStatus = {
       end
       return msg .. " "
     end,
-    hl = function()
-      local fg = colors.statusline_fg
-      local bold = true
-      return { fg = fg, bold = bold }
-    end,
+    hl = { fg = colors.normal_fg_white },
   },
   {
     provider = "Title: ",
-    hl = function()
-      return { fg = colors.normal_fg_blur }
-    end,
+    hl = { fg = colors.normal_fg_blur },
   },
   {
     provider = function()
@@ -522,11 +509,7 @@ M.QuickfixStatus = {
       end
       return msg .. " "
     end,
-    hl = function()
-      local fg = colors.statusline_fg
-      local bold = true
-      return { fg = fg, bold = bold }
-    end,
+    hl = { fg = colors.normal_fg_white },
   },
 }
 M.FileFlags = {
@@ -535,10 +518,7 @@ M.FileFlags = {
       return vim.bo.modified
     end,
     provider = RUtils.config.icons.misc.modified .. " ",
-    hl = function()
-      local fg = colors.modified_fg
-      return { fg = fg }
-    end,
+    hl = { fg = colors.modified_fg },
   },
   {
     condition = function()
@@ -974,7 +954,7 @@ M.PinnedBuffer = {
       if RUtils.has "stickybuf.nvim" then
         local is_pinned = require("stickybuf").is_pinned()
         if is_pinned then
-          return RUtils.config.icons.misc.dashboard .. " "
+          return RUtils.config.icons.misc.dashboard .. "  "
         end
       end
     end,

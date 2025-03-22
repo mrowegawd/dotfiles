@@ -2,7 +2,6 @@ local Highlight = require "r.settings.highlights"
 local colorschemes = {
   "ashen",
   "base2tone_cave_dark",
-  "base2tone_suburb_dark",
   "jellybeans",
   "nord",
   "seoul256",
@@ -24,27 +23,6 @@ return {
       end
 
       Highlight.plugin("Snackshighlights", {
-        {
-          SnacksNotifierInfo = {
-            fg = { from = "DiagnosticInfo", attr = "fg", alter = 5 },
-            bg = { from = "DiagnosticInfo", attr = "fg", alter = -0.3 },
-            bold = true,
-          },
-        },
-        {
-          SnacksNotifierBorderInfo = {
-            fg = { from = "SnacksNotifierInfo", attr = "bg", alter = 0.3 },
-            bg = { from = "SnacksNotifierInfo", attr = "bg" },
-          },
-        },
-        {
-          SnacksNotifierTitleInfo = {
-            fg = { from = "SnacksNotifierBorderInfo", attr = "fg", alter = 0.5 },
-            bg = { from = "SnacksNotifierBorderInfo", attr = "bg" },
-            bold = true,
-          },
-        },
-
         -- ERROR
         {
           SnacksNotifierError = {
@@ -55,7 +33,7 @@ return {
         },
         {
           SnacksNotifierBorderError = {
-            fg = { from = "SnacksNotifierError", attr = "bg", alter = 0.5 },
+            fg = { from = "SnacksNotifierError", attr = "bg", alter = 1 },
             bg = { from = "SnacksNotifierError", attr = "bg" },
           },
         },
