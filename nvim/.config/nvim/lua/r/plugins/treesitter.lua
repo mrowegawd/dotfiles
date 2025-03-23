@@ -20,7 +20,7 @@ return {
     end,
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     keys = {
-      { "<c-space>", desc = "Misc: increment selection [treesitter]", unique = true },
+      { "<space><space>", desc = "Misc: increment selection [treesitter]", unique = true },
       { "<bs>", desc = "Misc: decrement selection (xmode) [treesitter]", mode = "x" },
       { "<cr>", desc = "Misc: increment selection (xmode) [treesitter]", mode = "x" },
     },
@@ -67,7 +67,7 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "<C-space>",
+          init_selection = "<space><space>",
           node_incremental = "<CR>",
           scope_incremental = false,
           node_decremental = "<bs>",
