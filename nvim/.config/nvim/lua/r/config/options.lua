@@ -33,9 +33,10 @@ vim.g.work_dir = g.projects_dir .. "/work"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.loaded_matchparen = 1
+vim.g.health = { style = "float" } -- make :checkhealth float window
 
 -- {{{ Generals
-opt.winborder = "rounded"
+opt.winborder = "none"
 opt.mousescroll = "ver:3,hor:6"
 opt.termguicolors = true -- tmux need this!
 opt.secure = true
