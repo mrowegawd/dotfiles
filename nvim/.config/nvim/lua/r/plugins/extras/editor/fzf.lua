@@ -143,6 +143,9 @@ return {
       { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
       { "gS", "<CMD>FzfLua lsp_live_workspace_symbols<CR>", desc = "LSP: workspaces symbols [fzflua]" },
 
+      -- Diagnostics
+      { "df", "<CMD>FzfLua diagnostics_document<CR>", desc = "Diagnostic: document [fzflua]" },
+
       -- Grep
       { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
       { "<Leader>fG", function() require("fzf-lua").grep() end, desc = "Fzflua: grep" },
@@ -971,7 +974,7 @@ return {
             local win_height = math.ceil(lines * 0.65)
             local win_width = math.ceil(columns * 2)
             return {
-              title = RUtils.fzflua.format_title("Finder", RUtils.config.icons.misc.lsp),
+              -- title = RUtils.fzflua.format_title("Finder", RUtils.config.icons.misc.lsp),
               width = win_width,
               height = win_height,
               row = 0.50,

@@ -89,6 +89,9 @@ function M.magic_quit()
         toggle_diffview "DiffviewClose"
       end
     end,
+    ["grug-far"] = function()
+      return RUtils.warn([[To close gruf-far, use "q"]], { title = "Gruf-far" })
+    end,
   }
 
   if buf_fts[vim.bo[0].filetype] then

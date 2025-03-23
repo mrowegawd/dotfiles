@@ -967,9 +967,12 @@ M.Marks = {
   end,
   {
     provider = function()
-      local cur_mark = require("qfsilet.marks").get_current_status_buf()
-      if cur_mark > 0 then
-        return RUtils.config.icons.misc.marks .. "  "
+      local ok, _ = pcall(require, "qfsilet")
+      if ok then
+        local cur_mark = require("qfsilet.marks").get_current_status_buf()
+        if cur_mark > 0 then
+          return RUtils.config.icons.misc.marks .. "  "
+        end
       end
     end,
     hl = { fg = colors.diagnostic_err },

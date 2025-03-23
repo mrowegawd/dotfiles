@@ -45,11 +45,10 @@ return {
           },
           float = {
             header = "",
-            title = "  Problems ",
-            -- title = {
-            --   { "  ", "DiagnosticFloatTitleIcon" },
-            --   { "Problems ", "DiagnosticFloatTitle" },
-            -- },
+            title = {
+              { "  ", "DiagnosticFloatTitleIcon" },
+              { "Problems ", "DiagnosticFloatTitle" },
+            },
           },
         },
         inlay_hints = {
