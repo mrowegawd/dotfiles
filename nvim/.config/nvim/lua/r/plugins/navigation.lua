@@ -491,6 +491,112 @@ return {
     "mrowegawd/outline.nvim",
     -- enabled = false,
     event = "VeryLazy",
+    keys = {
+      {
+        "<Leader>oa",
+        function()
+          vim.cmd.Outline()
+        end,
+        desc = "Open: outline window [outline]",
+      },
+      {
+        "ro",
+        function()
+          local right_win = { "trouble", "aerial", "Outline" }
+          for _, win in pairs(right_win) do
+            if vim.bo.filetype ~= win then
+              local win_checked = RUtils.cmd.windows_is_opened { win }
+              if win_checked.found then
+                vim.api.nvim_set_current_win(win_checked.winid)
+                break
+              end
+            elseif vim.tbl_contains(right_win, vim.bo.filetype) then
+              vim.cmd [[wincmd p]]
+            end
+          end
+        end,
+        desc = "Misc: move cursor to outline window [edgy]",
+      },
+
+      {
+        "<Leader>oA",
+        function()
+          if vim.tbl_contains({ "norg", "org", "orgagenda" }, vim.bo[0].filetype) then
+            return
+          end
+
+          local opts = {
+            title = RUtils.has "aerial.nvim" and "Aerial" or "Outline",
+            actions = {
+              ["default"] = function(selected, _)
+                local sel = {}
+                for word in selected[1]:gmatch "%w+" do
+                  table.insert(sel, word)
+                end
+                local selection = sel[1]
+
+                if selection ~= nil and type(selection) == "string" then
+                  if RUtils.has "aerial.nvim" then
+                    local function get_aerial()
+                      local ok_aerial, aerial = pcall(require, "aerial")
+                      return ok_aerial and aerial or {}
+                    end
+
+                    local opts_aerial = RUtils.opts "aerial.nvim"
+                    local aerial = get_aerial()
+                    local outline_win = RUtils.cmd.windows_is_opened { "aerial" }
+                    if outline_win.found then
+                      vim.cmd [[AerialToggle]]
+                      -- outline.close_outline()
+                    end
+
+                    -- must reload
+                    vim.cmd "e "
+                    if selection == "all" then
+                      opts_aerial.filter_kind = false
+                    else
+                      opts_aerial.filter_kind = { selection }
+                    end
+                    aerial.setup(opts_aerial)
+                    vim.schedule(function()
+                      aerial.open()
+                    end)
+                  end
+
+                  if RUtils.has "outline.nvim" then
+                    local function get_outline()
+                      local ok_aerial, aerial = pcall(require, "outline")
+                      return ok_aerial and aerial or {}
+                    end
+
+                    local opts_outline = RUtils.opts "outline.nvim"
+                    local outline = get_outline()
+                    local outline_win = RUtils.cmd.windows_is_opened { "Outline" }
+                    if outline_win.found then
+                      vim.cmd.Outline()
+                    end
+
+                    -- must reload
+                    vim.cmd "e "
+                    if selection == "all" then
+                      opts_outline.symbols.filter = nil
+                    else
+                      opts_outline.symbols.filter = { selection }
+                    end
+                    outline.setup(opts_outline)
+                    vim.schedule(function()
+                      outline.open_outline()
+                    end)
+                  end
+                end
+              end,
+            },
+          }
+          RUtils.fzflua.cmd_filter_kind_lsp(opts)
+        end,
+        desc = "Open: filter kind for outline [outline]",
+      },
+    },
     opts = function()
       local rose_pine = {
         ["rose-pine-dawn"] = {
