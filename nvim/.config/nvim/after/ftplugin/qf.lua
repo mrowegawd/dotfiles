@@ -16,15 +16,31 @@ keymap.set("n", "<c-o>", "<Nop>", {
 
 keymap.set("n", "o", function()
   RUtils.map.feedkey("<CR>", "n")
+  -- vim.cmd [[wincmd p]]
+  -- vim.cmd [[cc]]
+
+  vim.schedule(function()
+    local folded_line = vim.fn.foldclosed(vim.fn.line ".")
+    if folded_line ~= -1 then
+      vim.cmd [[normal! zO]] -- buka fold
+    end
+  end)
 end, {
   buffer = api.nvim_get_current_buf(),
   desc = "QF: open item",
 })
 
 keymap.set("n", "<Leader>ff", function()
+  local actions = require "fzf-lua.actions"
   fzf_lua.quickfix {
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = { title = RUtils.fzflua.format_title("Select Item QF List", "󰈙") },
+    winopts = { title = RUtils.fzflua.format_title("[QF] Select List", "󰈙") },
+    actions = {
+      ["ctrl-s"] = actions.git_buf_split,
+      ["ctrl-v"] = actions.git_buf_vsplit,
+      ["ctrl-q"] = actions.file_sel_to_qf,
+      ["ctrl-t"] = actions.git_buf_tabedit,
+    },
   }
 end, {
   buffer = api.nvim_get_current_buf(),
@@ -33,6 +49,7 @@ end, {
 
 keymap.set("n", "<Leader>fg", function()
   local path = require "fzf-lua.path"
+  local actions = require "fzf-lua.actions"
   local qf_items = vim.fn.getqflist()
 
   local qf_ntbl = {}
@@ -46,8 +63,14 @@ keymap.set("n", "<Leader>fg", function()
 
   return fzf_lua.live_grep_glob {
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = { title = RUtils.fzflua.format_title("Grep QF List", "") },
+    winopts = { title = RUtils.fzflua.format_title("[QF] Grep", "") },
     cmd = pcmd,
+    actions = {
+      ["ctrl-s"] = actions.git_buf_split,
+      ["ctrl-v"] = actions.git_buf_vsplit,
+      ["ctrl-q"] = actions.file_sel_to_qf,
+      ["ctrl-t"] = actions.git_buf_tabedit,
+    },
   }
 end, {
   buffer = api.nvim_get_current_buf(),

@@ -2,11 +2,9 @@ local Highlight = require "r.settings.highlights"
 
 return {
   -- QUICKER
-  { -- bisa delete range, jangan lupa di 'write' setelah delete range
+  { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
     event = "FileType qf",
-    ---@module "quicker"
-    ---@type quicker.SetupOptions
     opts = function()
       Highlight.plugin("Quickerui", {
         { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
@@ -37,6 +35,7 @@ return {
         title_global = "MESSAGE BOX",
         higroup_title = "FzfLuaPreviewTitle",
       },
+      theme_list = { enabled = false },
       marks = {
         excluded = {
           buftypes = {},
