@@ -12,7 +12,7 @@ startup_command = "ls"
 preview_command = "bat --color=always ~/.config/zsh/.zshrc"
 
 [[session]]
-name = "Linux void  "
+name = "Linux void "
 path = "~/moxconf/development/linux-void"
 disable_startup_command = true
 
@@ -22,22 +22,22 @@ path = "~/moxconf/development/project/typescript"
 disable_startup_command = true
 
 [[session]]
-name = "Rust 󱘗 "
+name = "Rust 󱘗"
 path = "~/moxconf/development/project/rust"
 disable_startup_command = true
 
 [[session]]
-name = "Golang 󰟓 "
+name = "Golang 󰟓"
 path = "~/moxconf/development/project/golang"
 disable_startup_command = true
 
 [[session]]
-name = "Python 󰌠 "
+name = "Python 󰌠"
 path = "~/moxconf/development/project/python"
 disable_startup_command = true
 
 [[session]]
-name = "Bot 🤖 "
+name = "Bot 🤖"
 path = "~/moxconf/development/project/misc"
 startup_command = ""
 
@@ -47,16 +47,16 @@ path = "~/moxconf/development/project/mobile"
 startup_command = ""
 
 [[session]]
-name = "Log Sentric 󰍛 "
+name = "Log Sentric 󰍛"
 path = "~/moxconf/development/project/misc"
 startup_command = ""
 
 [[session]]
-name = "News 📰 "
+name = "News 📰"
 path = "~/moxconf/development/project/misc"
 startup_command = ""
 
 [[session]]
-name = "Bench 📠 "
+name = "Bench 📠"
 path = "~/moxconf/development/project/misc"
 startup_command = ""

@@ -35,6 +35,7 @@
       "label": "Tail journalctl",
       "type": "shell",
       "command": "journalctl",
+      "args": ["-f", "-n", "50", "-q"],
       "problemMatcher": []
     },
     {
