@@ -29,14 +29,14 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
   is_jump_prev = is_jump_prev or false
 
   if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
-    return RUtils.cmd.feedkey("<c-p>", "n")
+    return RUtils.map.feedkey("<c-p>", "n")
   end
 
   if vim.wo.diff then
     if is_jump_prev then
-      return RUtils.cmd.feedkey("[c", "n")
+      return RUtils.map.feedkey("[c", "n")
     else
-      return RUtils.cmd.feedkey("]c", "n")
+      return RUtils.map.feedkey("]c", "n")
     end
   end
 
@@ -52,9 +52,21 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
 
     vim.schedule(function()
       local _, err = pcall(function()
+        if vim.bo.filetype == "qf" then
+          vim.cmd "wincmd p"
+        end
+
+        local winbufnr = vim.api.nvim_get_current_buf()
+
         vim.cmd(cmd_msg_qf)
+        -- vim.cmd "redraw!"
         vim.cmd "normal! zz"
-        vim.cmd "wincmd p"
+
+        if vim.bo[winbufnr].filetype ~= "qf" then
+          vim.cmd "copen"
+        else
+          vim.cmd "wincmd p"
+        end
       end)
 
       if err and string.match(err, "E553") then
