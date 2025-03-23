@@ -174,14 +174,20 @@ return {
           buffer = {
             opts = {
               get_bufnrs = function()
-                -- local type = vim.fn.getcmdtype()
-                -- if type == "/" or type == "?" or type == ":" or type == "@" then
                 if vim.tbl_contains({ "/", "?", ":", "@" }, vim.fn.getcmdtype()) then
                   return vim.tbl_filter(function(bufnr)
                     return bufnr == vim.api.nvim_get_current_buf()
                   end, vim.api.nvim_list_bufs())
                 end
-                return vim.api.nvim_list_bufs()
+                return vim
+                  .iter(vim.api.nvim_list_wins())
+                  :map(function(win)
+                    return vim.api.nvim_win_get_buf(win)
+                  end)
+                  :filter(function(buf)
+                    return vim.bo[buf].buftype ~= "nofile"
+                  end)
+                  :totable()
               end,
             },
           },
