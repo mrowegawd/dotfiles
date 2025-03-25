@@ -1,12 +1,13 @@
 # +-----------------------------------------------------------+
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
-# font-family    = "CommitMono"
-font-family = "SF Mono"
+font-family    = "CommitMono"
+# font-family = "SFMono"
 # font-family-bold = "SF Mono"
 # font-family-italic = "Maple Mono Italic"
 # font-family-bold-italic = "Maple Mono Bold Italic"
 font-size      = 11
+# font-feature = "-calt"
 font-thicken   = true
 
 # +-----------------------------------------------------------+
