@@ -150,20 +150,15 @@ RUtils.cmd.augroup("SmartClose", {
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
-
-    for _, win in ipairs(vim.fn.win_findbuf(event.buf)) do
-      if vim.api.nvim_win_is_valid(win) and (vim.api.nvim_win_get_buf(win) == event.buf) then
-        vim.schedule(function()
-          vim.keymap.set("n", "q", function()
-            vim.cmd "close"
-            pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
-          end, {
-            buffer = event.buf,
-            silent = true,
-            desc = "Quit buffer",
-          })
-        end)
-      end
+    if vim.api.nvim_buf_is_valid(event.buf) then
+      vim.keymap.set("n", "q", function()
+        vim.cmd "close"
+        pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+      end, {
+        buffer = event.buf,
+        silent = true,
+        desc = "Quit buffer",
+      })
     end
   end,
 })
