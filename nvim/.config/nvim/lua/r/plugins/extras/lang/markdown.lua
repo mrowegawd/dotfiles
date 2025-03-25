@@ -119,9 +119,18 @@ return {
         sign = false,
         width = "block",
         right_pad = 1,
+        language_pad = 5,
         position = "right",
       },
       acknowledge_conflicts = true,
+      render_modes = { "n", "c", "t", "i" },
+      anti_conceal = {
+        enabled = true,
+        ignore = {
+          code_background = false,
+          sign = true,
+        },
+      },
       latex = { enabled = false },
       heading = {
         enabled = true,
@@ -132,7 +141,7 @@ return {
       },
       quote = {
         -- Turn on / off block quote & callout rendering
-        enabled = false,
+        enabled = true,
       },
     },
     config = function(_, opts)
@@ -148,7 +157,7 @@ return {
       Highlight.plugin("rendermarkdownHi", {
         theme = {
           ["*"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } },
             {
               RenderMarkdownCodeInline = {
                 fg = { from = "Keyword", attr = "fg", alter = 0.2 },
