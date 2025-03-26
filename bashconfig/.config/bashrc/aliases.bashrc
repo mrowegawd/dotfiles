@@ -132,6 +132,11 @@ c_disk_du() {
   sudo du -a | sort -rn | head -30
 }
 
+# check: fonts
+c_fonts() {
+  fc-list | fzf
+}
+
 # check: size of disk currrent dir with dua
 c_disk_dua() {
   dua i .
