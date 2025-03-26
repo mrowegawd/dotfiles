@@ -263,7 +263,7 @@ reset_base_alter({ "zenburned" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.02,
-  normalfloat_border_fg_alter = 1,
+  normalfloat_border_fg_alter = 0.7,
   pmenu_bg_alter = -0.2,
   pmenusel_bg_alter = 0.1,
   quickfixline_alter = -0.5,
@@ -1057,6 +1057,7 @@ local general_overrides = function()
         fg = { from = "Boolean", attr = "fg", alter = 0.2 },
         bg = { from = "Boolean", attr = "fg", alter = -0.8 },
         italic = true,
+        bold = false,
       },
     },
     {
@@ -2278,6 +2279,33 @@ local function colorscheme_overrides()
         },
       },
 
+      {
+        LspReferenceText = {
+          bg = { from = "LspReferenceText", attr = "bg", alter = 0.1 },
+          fg = "NONE",
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+      {
+        LspReferenceWrite = {
+          bg = { from = "Function", attr = "fg", alter = -0.75 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
+      {
+        LspReferenceRead = {
+          bg = { from = "Function", attr = "fg", alter = -0.65 },
+          underline = false,
+          reverse = false,
+          undercurl = false,
+        },
+      },
+
       { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bg = "NONE" } },
 
       { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
@@ -2436,7 +2464,7 @@ local function colorscheme_overrides()
       },
       {
         LspReferenceWrite = {
-          bg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Function", attr = "fg", alter = -0.6 },
           underline = false,
           reverse = false,
           undercurl = false,
@@ -2445,7 +2473,7 @@ local function colorscheme_overrides()
 
       {
         LspReferenceRead = {
-          bg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Function", attr = "fg", alter = -0.6 },
           underline = false,
           reverse = false,
           undercurl = false,
@@ -3708,7 +3736,7 @@ local function colorscheme_overrides()
       { QuickFixLine = { fg = "NONE", underline = false } },
 
       { SnacksIndent = { fg = { from = "Normal", attr = "bg", alter = 0.12 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.35 } } },
+      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.5 } } },
 
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.3 } } },

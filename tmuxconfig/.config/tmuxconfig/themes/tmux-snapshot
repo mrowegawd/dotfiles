@@ -1,23 +1,23 @@
-ACTIVE_BG="#e8a85f"
-ACTIVE_FG="#74542f"
+ACTIVE_BG="#dca2a2"
+ACTIVE_FG="#6e5151"
 
-STATUSLINE_BG_MESSAGE="#ebc686"
-STATUSLINE_FG="#2f2d2c"
+STATUSLINE_BG_MESSAGE="#b77e64"
+STATUSLINE_FG="#5d5d5d"
 
-SESSION_BG="#bbbac1"
+SESSION_BG="#f0e4cf"
 SESSION_FG="#beb9b3"
 
-TMUX_BG="#1e1d1c"
-TMUX_FG="#393736"
+TMUX_BG="#404040"
+TMUX_FG="#676767"
 
-BORDER_FG="#514e4a"
-BORDER_BG="#1e1d1c"
-BORDER_FG_NC="#302e2c"
+BORDER_FG="#8d8d8d"
+BORDER_BG="#404040"
+BORDER_FG_NC="#535353"
 
-RED="#d67287"
-BLUE="#a2bafa"
-WHITE="#bbbac1"
-GREEN="#8ab56d"
+RED="#e3716e"
+BLUE="#6099c0"
+WHITE="#f0e4cf"
+GREEN="#819b69"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
@@ -56,7 +56,7 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$ACTIVE_FG,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
+#[fg=$ACTIVE_BG,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
@@ -67,7 +67,7 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 
 set-option -g window-status-current-format "\
 #{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
-#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold] 󰁌,} \
+#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$STATUSLINE_BG_MESSAGE]#[bold] 󰁌,} \
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
 #[bg=$ACTIVE_FG]#[fg=$ACTIVE_BG] COPY \
 #{?#{e|>:#{search_count},0},#[bg=$RED]#[fg=$ACTIVE_FG] #[fg=$TMUX_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\
