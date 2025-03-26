@@ -12,11 +12,15 @@ return {
         notify = false,
       },
       buf_filter = function(bufnr)
-        if not require("resession").default_buf_filter(bufnr) then
-          return false
+        if vim.bo.filetype == "help" then
+          return true
         end
 
         if vim.bo.filetype == "trouble" then
+          return false
+        end
+
+        if not require("resession").default_buf_filter(bufnr) then
           return false
         end
 

@@ -54,7 +54,8 @@ return {
   -- KITTY NAVIGATOR
   {
     "MunsMan/kitty-navigator.nvim",
-    enabled = os.getenv "TERMINAL" == "kitty",
+    -- enabled = os.getenv "TERMINAL" == "kitty",
+    enabled = false,
     dependencies = { "mrjones2014/smart-splits.nvim" },
     keys = {
       {
@@ -153,7 +154,7 @@ return {
     config = function(_, opts)
       require("smart-splits").setup(opts)
 
-      if vim.tbl_contains({ "ghostty", "wezterm", "st" }, os.getenv "TERMINAL") then
+      if vim.tbl_contains({ "ghostty", "wezterm", "st", "kitty" }, os.getenv "TERMINAL") then
         local TMUX = os.getenv "TMUX"
         if TMUX then
           local nav = {

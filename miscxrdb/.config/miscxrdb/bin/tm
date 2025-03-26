@@ -23,11 +23,11 @@ create_if_needed_and_attach() {
     exit
   fi
 
-  if [[ $TERMINAL == "kitty" ]]; then
-    dunstify "WARN: $TERMINAL mempunyai spesific keymap untuk create window, pane"
-    dunstify "WARN: check ~/.config/kitty/kitty.conf"
-    exit
-  fi
+  # if [[ $TERMINAL == "kitty" ]]; then
+  #   dunstify "WARN: $TERMINAL mempunyai spesific keymap untuk create window, pane"
+  #   dunstify "WARN: check ~/.config/kitty/kitty.conf"
+  #   exit
+  # fi
 
   # jika output 0, dalam tmux mode
   # jika output 1, tidak dalam tmux mode

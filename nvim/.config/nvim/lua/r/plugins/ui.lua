@@ -256,7 +256,7 @@ return {
     -- flash cursor when jumps or moves between windows.
     "rainbowhxch/beacon.nvim",
     event = "LazyFile",
-    cond = vim.g.neovide == nil,
+    cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = function()
       Highlight.plugin("beaconHiC", {
         theme = {
