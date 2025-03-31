@@ -101,8 +101,8 @@ autoload -Uz $ZDOTDIR/funcs/*(.:t)
 autoload -U colors && colors # Enable colors in prompt
 
 # ── DEFINE COLOR ──────────────────────────────────────────────────────
-colorline="#514e4a"
-colorsuggest="fg=#3a3836"
+colorline="#443d60"
+colorsuggest="fg=#35304d"
 
 # ┏╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍┓
 # ╏ COMPLETION                                               ╏
@@ -479,7 +479,7 @@ function __prompt_eval() {
 # NOTE: VERY IMPORTANT: the type of quotes used matters greatly. Single quotes MUST be used for these variables
 export PROMPT='$(__prompt_eval)'
 # Right prompt
-export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{240}%*%f'
+# export RPROMPT='%F{yellow}%{$__DOTS[ITALIC_ON]%}${cmd_exec_time}%{$__DOTS[ITALIC_OFF]%}%f %F{240}%*%f'
 # Correction prompt
 export SPROMPT="correct %F{red}'%R'%f to %F{red}'%r'%f [%B%Uy%u%bes, %B%Un%u%bo, %B%Ue%u%bdit, %B%Ua%u%bbort]? "
 
@@ -605,8 +605,8 @@ add-zsh-hook chpwd
 
 add-zsh-hook chpwd () {
   _git_status_prompt="" # clear current vcs_info
-  chpwd_last_working_dir
-  chpwd_recent_dirs
+  # chpwd_last_working_dir
+  # chpwd_recent_dirs
 }
 
 add-zsh-hook preexec () {
@@ -701,7 +701,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=$colorsuggest
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 bindkey '^y' autosuggest-accept
 
-last_working_dir
+# last_working_dir
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ -f "$HOME/.config/miscxrdb/fzf/fzf.config" ]] && source "$HOME/.config/miscxrdb/fzf/fzf.config"

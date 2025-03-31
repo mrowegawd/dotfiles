@@ -114,7 +114,7 @@ return {
 		if action == "terminal" then
 			local termopen = os.getenv("TERMINAL")
 
-			if termopen == "ghostty" then
+			if termopen == "ghostty" or termopen == "kitty" then
 				termopen = "st"
 			end
 

@@ -494,7 +494,7 @@ return {
               ["ctrl-g"] = function()
                 require("fzf-lua").fzf_live(function(query)
                   return RUtils.fzf_diffview.git_log_content_finder(query, nil)
-                end, RUtils.fzf_diffview.opts_diffview_log("repo", "Grep text in log commits repo"))
+                end, RUtils.fzf_diffview.opts_diffview_log("repo", "Grep log history"))
               end,
               ["ctrl-o"] = function(selected, _)
                 local selection = selected[1]

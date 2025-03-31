@@ -77,7 +77,7 @@ local function open_with_wezterm(cwd_bookmark)
 	-- 	"if-select",
 	-- 	"bash",
 	-- 	"-c",
-	-- 	"cat /home/mr00x/Dropbox/data.programming.forprivate/marked-pwd | fzf-tmux -xC -w 60% -h 50%",
+	-- 	"cat ~/Dropbox/data.programming.forprivate/marked-pwd | fzf-tmux -xC -w 60% -h 50%",
 	-- }
 	-- local child, err =
 	-- 	Command("wezterm"):args(args):stdin(Command.INHERIT):stdout(Command.PIPED):stderr(Command.INHERIT):spawn()

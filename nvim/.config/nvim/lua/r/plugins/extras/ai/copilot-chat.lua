@@ -3,7 +3,7 @@ return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     branch = "main",
-    enabled = false,
+    -- enabled = false,
     -- cmd = "CopilotChat",
     opts = function()
       local user = vim.env.USER or "User"
