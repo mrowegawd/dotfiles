@@ -67,13 +67,7 @@ return {
               },
             },
           },
-          colors = {
-            --   RgFlowInputPath = { link = "NormalFloat" },
-            --   -- RgFlowInputBg = { link = "NormalFloat" },
-            --   -- RgFlowHeadLine = { link = "NormalFloat" },
-            --   -- RgFlowInputFlags = { link = "NormalFloat" },
-            RgFlowInputPattern = { link = "GitSignsAdd", bold = true },
-          },
+          colors = { RgFlowInputPattern = { link = "GitSignsAdd", bold = true } },
         },
       },
     },
@@ -423,7 +417,15 @@ return {
                   args.rg_opts = flags
                   args.cmd = "fd" .. " " .. flags
                   args.query = pattern
-                  return require("fzf-lua").files(args)
+                  return require("fzf-lua").files {
+                    query = args.query,
+                    cwd = args.cwd,
+                    cmd = args.cmd,
+                    rg_opts = args.rg_opts,
+                    winopts = {
+                      title = RUtils.fzflua.format_title("Files: RgFlow", ""),
+                    },
+                  }
                 end,
               })
             end,
@@ -663,7 +665,6 @@ return {
           prompt = RUtils.fzflua.default_title_prompt(),
           no_header = true, -- disable default header
           rg_opts = rg_opts,
-          -- rg_opts = vim.env.FZF_DEFAULT_COMMAND,
           fzf_opts = {
             ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden  ALT-J:grep-on-cwd]],
           },
@@ -761,7 +762,18 @@ return {
                   args.rg_opts = flags
                   args.cmd = "rg" .. " " .. flags
                   args.query = pattern
-                  return require("fzf-lua").live_grep_glob(args)
+                  return require("fzf-lua").live_grep_glob {
+                    query = args.query,
+                    cwd = args.cwd,
+                    cmd = args.cmd,
+                    rg_opts = args.rg_opts,
+                    winopts = {
+                      title = RUtils.fzflua.format_title(
+                        "Live Grep: RgFlow",
+                        RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.telescope2)
+                      ),
+                    },
+                  }
                 end,
               })
             end,
