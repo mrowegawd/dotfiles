@@ -45,6 +45,10 @@ local focused_colorcolumn = RUtils.cmd.tryjoin(RUtils.cmd.tryrange(80, 256), ","
 --   "NormalFloat:ColorColumn",
 -- }, ",")
 
+local winhighlight_buffer = table.concat({
+  "Folded:FoldedMarkdown",
+}, ",")
+
 -- Jangan bikin ft ini effect windowdim
 autocmds.winhighlight_filetype_blacklist = {
   ["CommandTMatchListing"] = true,
@@ -124,6 +128,13 @@ autocmds.ignore_cursorline = {
   ["Outline"] = true,
 }
 
+autocmds.winhi_filetype = {
+  ["markdown"] = true,
+  ["md"] = true,
+  ["orgagenda"] = true,
+  ["org"] = true,
+}
+
 autocmds.cursorline_blacklist = {
   ["CommandTMatchListing"] = true,
   ["CommandTPrompt"] = true,
@@ -198,6 +209,13 @@ local focus_window = function()
   end
 end
 
+local winhl_window = function()
+  local filetype, _ = RUtils.buf.get_bo_buft()
+  if autocmds.winhi_filetype[filetype] and api.nvim_win_get_config(0).relative ~= "win" then
+    wo.winhighlight = winhighlight_buffer
+  end
+end
+
 -- local blur_window = function()
 --   local filetype, _ = RUtils.buf.get_bo_buft()
 --
@@ -256,10 +274,12 @@ end
 
 autocmds.buf_enter = function()
   focus_window()
+  winhl_window()
 end
 
 autocmds.focus_gained = function()
   set_cursorline(true)
+  winhl_window()
 end
 
 autocmds.focus_lost = function()
@@ -268,7 +288,7 @@ end
 
 autocmds.win_enter = function()
   set_cursorline(true)
-  -- focus_window()
+  winhl_window()
 end
 
 autocmds.win_leave = function()
