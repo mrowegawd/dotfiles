@@ -80,7 +80,17 @@ return {
           only_scope = true,
           only_current = false,
           scope = { enabled = false },
-          chunk = { enabled = false, hl = "SnacksIndentChunk" },
+          chunk = {
+            enabled = true,
+            hl = "SnacksIndentScope",
+            char = {
+              horizontal = "─", -- the icons is taken from hlchunks.nvim
+              vertical = "│",
+              corner_top = "╭",
+              corner_bottom = "╰",
+              arrow = ">",
+            },
+          },
           hl = {
             "SnacksIndent1",
             "SnacksIndent2",
@@ -91,6 +101,18 @@ return {
             "SnacksIndent7",
             "SnacksIndent8",
           },
+          -- https://github.com/folke/snacks.nvim/issues/1214#issuecomment-2661464801
+          filter = function(buf)
+            local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
+            if
+              (bufname and bufname:match "diffview://")
+              or vim.t.diffview_view_initialized
+              or (vim.bo[buf].filetype == "snacks_picker_preview")
+            then
+              return false
+            end
+            return vim.g.snacks_indent ~= false and vim.b[buf].snacks_indent ~= false and vim.bo[buf].buftype == ""
+          end,
         },
         -- statuscolumn = { enabled = false }, -- we set this in options.lua
         -- toggle = { map = LazyVim.safe_keymap_set },
