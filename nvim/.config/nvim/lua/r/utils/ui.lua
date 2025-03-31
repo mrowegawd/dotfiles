@@ -1,7 +1,7 @@
 ---@class r.utils.ui
 
 -- Taken from Snacks plugins
-local Snacks = require "snacks"
+
 ---@overload fun(): string
 local M = setmetatable({}, {
   __call = function(t)
@@ -47,9 +47,6 @@ function M.setup()
     return
   end
   did_setup = true
-  Snacks.util.set_hl({
-    Mark = "DiagnosticHint",
-  }, { prefix = "SnacksStatusColumn", default = true })
   local timer = assert((vim.uv or vim.loop).new_timer())
   timer:start(config.refresh, config.refresh, function()
     sign_cache = {}
@@ -73,7 +70,6 @@ end
 ---@param buf number
 function M.buf_signs(buf)
   -- Get regular signs
-  ---@type Sign[]
   local signs = {}
 
   if vim.fn.has "nvim-0.10" == 0 then
@@ -246,11 +242,7 @@ end
 function M.get()
   local win = vim.g.statusline_winid
   local buf = vim.api.nvim_win_get_buf(win)
-  -- local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum and 1 or 0)
   local key = ("%d:%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum ~= 0 and 1 or 0, vim.v.relnum)
-  -- Dont draw sign for virtual lines
-  -- https://github.com/folke/snacks.nvim/pull/511#issue-2790796444
-  -- local key = ("%d:%d:%d:%d"):format(win, buf, vim.v.lnum, vim.v.virtnum)
   if cache[key] then
     return cache[key]
   end
