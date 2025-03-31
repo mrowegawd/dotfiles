@@ -21,7 +21,6 @@ function M.get()
     --  +----------------------------------------------------------+
     --  LSP Stuff
     --  +----------------------------------------------------------+
-    -- { "gk", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
     {
       "gk",
       function()
@@ -30,7 +29,18 @@ function M.get()
       has = "signatureHelp",
       desc = "LSP: signature help",
     },
-    { "K", require("noice.lsp").hover, desc = "LSP: show hover [noice]" },
+    {
+      "K",
+      function()
+        vim.lsp.buf.hover {
+          border = "single",
+          title = {
+            { " Hover ", "DiagnosticFloatTitle" },
+          },
+        }
+      end,
+      desc = "LSP: show hover [noice]",
+    },
     {
       "gD",
       function()
@@ -271,22 +281,6 @@ function M.get()
     }
   end
 
-  -- if RUtils.has "glance.nvim" then
-  --   M._keys[#M._keys + 1] = {
-  --     "gi",
-  --     "<CMD>Glance implementations<CR>",
-  --     desc = "LSP: implementations [glance]",
-  --   }
-  -- else
-  --   M._keys[#M._keys + 1] = {
-  --     "gi",
-  --     function()
-  --       require("telescope.builtin").lsp_implementations { reuse_win = true }
-  --     end,
-  --     desc = "LSP: implementations",
-  --   }
-  -- end
-
   if RUtils.has "glance.nvim" then
     M._keys[#M._keys + 1] = {
       "gt",
@@ -302,21 +296,6 @@ function M.get()
       desc = "LSP: type definitions",
     }
   end
-
-  -- if RUtils.has "lsp_signature.nvim" then
-  --   M._keys[#M._keys + 1] = {
-  --     "<c-s>",
-  --     function()
-  --       require("lsp_signature").toggle_float_win()
-  --     end,
-  --     mode = "i",
-  --     has = "signatureHelp",
-  --     desc = "LSP: toggle signature help [lsp-signature]",
-  --   }
-  -- else
-  --   M._keys[#M._keys + 1] =
-  --     { "<c-s>", vim.lsp.buf.signature_help, mode = "i", has = "signatureHelp", desc = "LSP: signature help" }
-  -- end
 
   if RUtils.has "goto-preview" then
     M._keys[#M._keys + 1] = { "gP", require("goto-preview").goto_preview_definition, desc = "LSP: peek [goto-preview]" }

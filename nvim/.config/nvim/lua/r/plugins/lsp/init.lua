@@ -123,6 +123,11 @@ return {
       -- setup autoformat
       RUtils.format.register(RUtils.lsp.formatter())
 
+      -- disable default keybindings
+      for _, bind in ipairs { "grn", "gra", "gri", "grr", "gO" } do
+        vim.keymap.del("n", bind)
+      end
+
       -- setup keymaps
       RUtils.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)

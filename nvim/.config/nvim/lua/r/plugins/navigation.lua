@@ -14,6 +14,26 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cond = vim.g.neovide ~= nil or not vim.env.TMUX,
     cmd = "Neotree",
+    keys = {
+      -- sidebar left (neotree)
+      {
+        "<a-e>",
+        function()
+          vim.cmd "Neotree toggle"
+        end,
+        desc = "Misc: open file explore [neotree]",
+      },
+
+      {
+        "<a-W>",
+        function()
+          local wiki_path = RUtils.config.path.wiki_path
+          vim.cmd(string.format("Neotree dir=%s", wiki_path))
+        end,
+        desc = "Misc: open file wikis explore [neotree]",
+      },
+    },
+
     dependencies = {
       "MunifTanjim/nui.nvim",
       "mrbjarksen/neo-tree-diagnostics.nvim",
@@ -757,22 +777,6 @@ return {
       end
 
       return {
-        -- sidebar left (neotree)
-        {
-          "<a-e>",
-          function()
-            vim.cmd "Neotree toggle"
-          end,
-          desc = "Misc: open file explore [neotree]",
-        },
-        {
-          "<a-W>",
-          function()
-            local wiki_path = RUtils.config.path.wiki_path
-            vim.cmd(string.format("Neotree dir=%s", wiki_path))
-          end,
-          desc = "Misc: open file wikis explore [neotree]",
-        },
         -- sidebar right
         {
           "ro",
