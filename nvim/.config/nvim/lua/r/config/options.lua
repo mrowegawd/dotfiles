@@ -33,7 +33,7 @@ vim.g.work_dir = g.projects_dir .. "/work"
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.loaded_matchparen = 1
-vim.g.health = { style = "float" } -- make :checkhealth float window
+-- vim.g.health = { style = "float" } -- make :checkhealth float window
 
 -- {{{ Generals
 opt.winborder = "none"
@@ -42,7 +42,7 @@ opt.termguicolors = true -- tmux need this!
 opt.secure = true
 opt.modelines = 1 -- read a modeline at EOF
 opt.confirm = false -- Confirm to save changes before exiting modified buffer
-opt.completeopt = "menu,menuone,noinsert,noselect"
+opt.completeopt = "menuone,noinsert"
 opt.spelloptions:append "noplainbuffer"
 opt.errorbells = false -- disable error bells (no beep/flash)
 opt.visualbell = false
