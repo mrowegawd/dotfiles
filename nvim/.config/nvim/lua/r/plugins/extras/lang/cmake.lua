@@ -7,7 +7,7 @@ return {
   end,
   {
     "nvim-treesitter/nvim-treesitter",
-    opts = { ensure_installed = { "cmake" } },
+    opts = { ensure_installed = { "cmake", "make" } },
   },
   {
     "mfussenegger/nvim-lint",
