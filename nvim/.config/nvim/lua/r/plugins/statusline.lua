@@ -40,20 +40,17 @@ return {
               return true
             end
             local buftype = vim.tbl_contains({ "prompt", "nofile", "help", "quickfix" }, vim.bo[buf].buftype)
-            local filetype = vim.tbl_contains(
-              {
-                "gitcommit",
-                "fugitive",
-                "Trouble",
-                "packer",
-                "dashboard",
-                "fzf",
-                "Outline",
-                "snacks_dashboard",
-                "toggleterm",
-              },
-              vim.bo[buf].filetype
-            )
+            local filetype = vim.tbl_contains({
+              "gitcommit",
+              "fugitive",
+              "Trouble",
+              "packer",
+              "dashboard",
+              "fzf",
+              "Outline",
+              "snacks_dashboard",
+              "toggleterm",
+            }, vim.bo[buf].filetype)
             local is_float = vim.api.nvim_win_get_config(0).relative ~= ""
             return buftype or filetype or is_float
           end,

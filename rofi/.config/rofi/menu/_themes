@@ -522,7 +522,7 @@ set_firefox() {
   IGET_CUS="$(xrdb -query | grep 'color8:' | awk '{print $NF}' | head -1)"
 
   FIREFOX_DEFAULT_PATH="$HOME/.mozilla/firefox/oehc9lj6.default-esr/chrome/components"
-  # /home/mr00x/.mozilla/firefox/oehc9lj6.default-esr/chrome/components/ogx_root-personal.css
+  # $HOME/.mozilla/firefox/oehc9lj6.default-esr/chrome/components/ogx_root-personal.css
   #
   if [ -d "$FIREFOX_DEFAULT_PATH" ]; then
 
