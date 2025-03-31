@@ -134,16 +134,6 @@ return {
               },
             },
           },
-          ["base2tone_cave_dark"] = {
-            {
-              GrugFarResultsPath = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.3 },
-                bg = { from = "Normal", attr = "bg", alter = 0.8 },
-                bold = true,
-                underline = false,
-              },
-            },
-          },
           ["ashen"] = {
             {
               GrugFarResultsPath = {

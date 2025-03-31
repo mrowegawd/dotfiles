@@ -1,7 +1,6 @@
 local Highlight = require "r.settings.highlights"
 local colorschemes = {
   "ashen",
-  "base2tone_cave_dark",
   "jellybeans",
   "nord",
   "seoul256",

@@ -261,7 +261,6 @@ return {
       Highlight.plugin("beaconHiC", {
         theme = {
           ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
-          ["base2tone_cave_dark"] = { { ["BeaconDefault"] = { bg = "#996e00" } } },
           ["neomodern"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
           ["onedark"] = { { ["BeaconDefault"] = { bg = "#c678dd" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
@@ -330,7 +329,6 @@ return {
       if
         vim.tbl_contains({
           "ashen",
-          "base2tone_cave_dark",
           "coffeecat",
           "horizon",
           "jellybeans",

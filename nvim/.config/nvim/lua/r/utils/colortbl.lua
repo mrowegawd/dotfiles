@@ -46,12 +46,6 @@ if vim.g.colorscheme == "lackluster" then
   modenc_bg = Highlight.get("KeywordBlur", "bg")
 end
 
-if vim.g.colorscheme == "base2tone_cave_dark" then
-  normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 4)
-  mode_bg_blur = Highlight.tint(mode_bg, -0.45)
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
-end
-
 if vim.g.colorscheme == "onedark" then
   normal_fg = Highlight.tint(Highlight.get("Normal", "bg"), 3)
 end
