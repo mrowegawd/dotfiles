@@ -26,13 +26,8 @@ return {
     opts = function()
       local comp = require "r.plugins.colorthemes.heirline.components"
       return {
-        statusline = {
-          comp.status_active_left,
-          comp.status_not_active,
-        },
-        winbar = {
-          comp.status_winbar_active_left,
-        },
+        statusline = { comp.status_active_left },
+        winbar = { comp.status_winbar_active_left },
         opts = {
           disable_winbar_cb = function(args)
             local buf = args.buf

@@ -406,6 +406,70 @@ return {
     },
     opts = function()
       local icons_lsp = RUtils.config.icons.kinds
+
+      local rose_pine = {
+        ["rose-pine-dawn"] = {
+          {
+            TroubleIndentFoldClosed = {
+              fg = { from = "LineNr", attr = "fg", alter = -0.1 },
+              bg = "NONE",
+            },
+          },
+          { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
+          {
+            TroubleIndent = {
+              fg = { from = "IndentGuides", attr = "fg", alter = -0.08 },
+            },
+          },
+
+          { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+          {
+            TroubleQfCount = {
+              fg = { from = "Directory", attr = "fg", alter = 0.5 },
+              bg = { from = "Directory", attr = "fg" },
+              italic = true,
+            },
+          },
+
+          { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+          {
+            TroubleTodoCount = {
+              fg = { from = "TodoBgTODO", attr = "bg", alter = 1 },
+              bg = { from = "TodoBgTODO", attr = "bg" },
+              italic = true,
+            },
+          },
+
+          { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+          {
+            TroubleDiagnosticsCount = {
+              fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 },
+              bg = { from = "GitSignsChange", attr = "fg", alter = 0.5 },
+              italic = true,
+            },
+          },
+
+          { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+          {
+            TroubleLspCount = {
+              fg = { from = "Normal", attr = "fg", alter = -0.2 },
+              bg = { from = "Normal", attr = "fg", alter = 0.6 },
+              italic = true,
+            },
+          },
+
+          {
+            TroubleFsCount = {
+              fg = { from = "Comment", attr = "fg", alter = 0.5 },
+              bg = { from = "Comment", attr = "fg", alter = 0.05 },
+              italic = true,
+            },
+          },
+        },
+        -- ["rose-pine-main"] = {
+        --   { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
+        -- },
+      }
       Highlight.plugin("troubleColHi", {
         theme = {
           ["*"] = {
@@ -419,8 +483,18 @@ return {
             { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
             { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
 
-            { TroubleIndentFoldClosed = { link = "IndentGuidesFolded" } },
-            { TroubleIndent = { link = "IndentGuides" } },
+            {
+              TroubleIndentFoldClosed = {
+                fg = { from = "IndentGuidesFolded", attr = "fg", alter = 0.5 },
+                bg = "NONE",
+              },
+            },
+            { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
+            {
+              TroubleIndent = {
+                fg = { from = "IndentGuides", attr = "fg", alter = 0.5 },
+              },
+            },
 
             -- ──────────────────────────────────────────────────────────────────────
             -- DIRECTORY
@@ -522,6 +596,65 @@ return {
             { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
             { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
+          },
+          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
+          ["ef-eagle"] = {
+            {
+              TroubleIndentFoldClosed = {
+                fg = { from = "IndentGuidesFolded", attr = "fg", alter = -0.1 },
+                bg = "NONE",
+              },
+            },
+            { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
+            {
+              TroubleIndent = {
+                fg = { from = "IndentGuides", attr = "fg", alter = -0.08 },
+              },
+            },
+
+            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+            {
+              TroubleQfCount = {
+                fg = { from = "Directory", attr = "fg", alter = 5 },
+                bg = { from = "Directory", attr = "fg", alter = 1 },
+                italic = true,
+              },
+            },
+
+            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+            {
+              TroubleTodoCount = {
+                fg = { from = "TodoBgTODO", attr = "bg", alter = 1 },
+                bg = { from = "TodoBgTODO", attr = "bg", alter = 0.1 },
+                italic = true,
+              },
+            },
+
+            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+            {
+              TroubleDiagnosticsCount = {
+                fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 },
+                bg = { from = "GitSignsChange", attr = "fg", alter = 0.5 },
+                italic = true,
+              },
+            },
+
+            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
+            {
+              TroubleLspCount = {
+                fg = { from = "Normal", attr = "fg", alter = -0.2 },
+                bg = { from = "Normal", attr = "fg", alter = 0.6 },
+                italic = true,
+              },
+            },
+
+            {
+              TroubleFsCount = {
+                fg = { from = "Comment", attr = "fg", alter = 0.5 },
+                bg = { from = "Comment", attr = "fg", alter = 0.05 },
+                italic = true,
+              },
+            },
           },
         },
       })

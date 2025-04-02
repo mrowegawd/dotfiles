@@ -22,14 +22,14 @@ GREEN="#819b69"
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
 
-setw -g pane-active-border-style bg=$TMUX_BG,fg=$ACTIVE_FG
+setw -g pane-active-border-style bg=$TMUX_BG,fg=$BORDER_FG_ACTIVE
 setw -g pane-border-style bg=$TMUX_BG,fg=$BORDER_FG_NC
 
 setw -g pane-border-status top # bottom, top
 
 setw -g pane-border-format "\
 #{?pane_active,#[fg=$RED]$left_slant_separator,}\
-#[fg=$BORDER_FG_NC,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$ACTIVE_FG],}#{pane_index}.#{pane_id} \
+#[fg=$BORDER_FG_NC,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$BORDER_FG_ACTIVE],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
 
@@ -58,7 +58,7 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status} \
 #[fg=$ACTIVE_BG,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
-#[fg=$TMUX_BG]#[bg=$SESSION_BG,bold] ❐ #S }"
+#[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
 # +----------------------------------------------------------+
 # |                      STATUS FORMAT                       |

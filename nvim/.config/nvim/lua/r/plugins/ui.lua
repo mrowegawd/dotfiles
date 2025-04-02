@@ -255,6 +255,7 @@ return {
           ["oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["rose-pine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["seoul256"] = { { ["BeaconDefault"] = { bg = "#d8d8d8" } } },
+          ["ef-melissa-dark"] = { { ["BeaconDefault"] = { bg = "#e8e4b1" } } },
           ["nord"] = { { ["BeaconDefault"] = { bg = "#eceff4" } } },
           ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
           ["zenburned"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
@@ -298,9 +299,9 @@ return {
         tab_bg_tint = -0.22
       end
 
-      if vim.tbl_contains({ "zenburned" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.12
-        tab_bg_tint = -0.05
+      if vim.tbl_contains({ "zenburned", "ef-eagle" }, RUtils.config.colorscheme) then
+        tab_fg_tint = -0.3
+        tab_bg_tint = 0
       end
 
       if vim.tbl_contains({ "catppuccin-mocha", "chocolatier", "lackluster" }, RUtils.config.colorscheme) then
@@ -316,6 +317,7 @@ return {
         vim.tbl_contains({
           "ashen",
           "coffeecat",
+          "ef-melissa-dark",
           "horizon",
           "jellybeans",
           "seoul256",

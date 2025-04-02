@@ -568,11 +568,10 @@ function M.change_colors()
   local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
 
   local tmux_bg = Highlight.get("Normal", "bg")
-  local tmux_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.2)
+  local tmux_fg = Highlight.tint(Highlight.get("LineNr", "fg"), 0.5)
 
   local statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.7)
 
-  -- local winseparator = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0.1)
   local winseparator = Highlight.get("WinSeparator", "fg")
 
   local lazygit_selected_line_bg = Highlight.get("LazygitselectedLineBgColor", "bg")
@@ -595,31 +594,34 @@ function M.change_colors()
   local yazi_tab_active_bg = Highlight.get("KeywordNC", "bg")
   local yazi_tab_inactive_fg = Highlight.get("TabLine", "fg")
   local yazi_tab_inactive_bg = Highlight.get("TabLine", "bg")
-  local yazi_statusline_blur_bg = Highlight.get("KeywordBlur", "bg")
-  local yazi_statusline_active_fg = Highlight.get("StatusLineNC", "fg")
+  local yazi_statusline_bg = Highlight.get("StatusLine", "bg")
+  local yazi_statusline_active_fg = Highlight.get("StatusLine", "fg")
   local yazi_statusline_active_bg = Highlight.get("StatusLineNC", "bg")
   local yazi_directory = Highlight.get("Directory", "fg")
-  local yazi_filename_fg = Highlight.get("StatusLine", "fg")
+  local yazi_filename_fg = Highlight.tint(Highlight.get("StatusLine", "fg"), 1.4)
   local yazi_which_bg = Highlight.get("Pmenu", "bg")
 
   local zsh_background_bg = Highlight.get("StatusLineNC", "bg")
 
-  if vim.tbl_contains({ "rose-pine-dawn" }, vim.g.colorscheme) then
-    statusline_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.1)
+  if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
+    tmux_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
+    statusline_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
 
     lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
     lazygit_border_fg = Highlight.tint(Highlight.get("FzfLuaBorder", "fg"), 0.1) -- 31
     lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
     lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
 
-    yazi_statusline_blur_bg = Highlight.get("KeywordBlur", "bg")
-    yazi_statusline_active_bg = Highlight.tint(Highlight.get("StatusLineNC", "bg"), -0.08) -- get("KeywordBlur", "bg")
-    yazi_statusline_active_fg = Highlight.tint(Highlight.get("StatusLineNC", "fg"), 0.2) -- get("KeywordBlur", "bg")
+    yazi_hovered = Highlight.get("CursorLine", "bg")
+    yazi_statusline_active_bg = Highlight.tint(Highlight.get("StatusLine", "bg"), 0)
+    yazi_tab_inactive_fg = Highlight.tint(Highlight.get("TabLine", "fg"), -0.3)
 
     sugest_highlight = Highlight.tint(Highlight.get("Tabline", "bg"), -0.2)
   end
 
-  -- print(yazi_statusline_active_fg)
+  if vim.g.colorscheme == "rose-pine-dawn" then
+    yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -1)
+  end
 
   local master_colors = string.format(
     [[
@@ -694,7 +696,6 @@ function M.change_colors()
     KeywordNC_fg, -- 17
 
     string.format "! TMUX: border_fg_nc, border_fg",
-    -- Highlight.get("WinSeparator", "fg"), -- 19
     winseparator, -- 19
     statusline_fg, -- 18
 
@@ -741,7 +742,7 @@ function M.change_colors()
     yazi_tab_inactive_bg, -- 43
 
     string.format "! yazi: col_statusline_fg, col_statusline_main_bg, col_statusline_main_alt_bg, directory, which_bg, filename_fg",
-    yazi_statusline_blur_bg, -- 44
+    yazi_statusline_bg, -- 44
     yazi_statusline_active_fg, -- 45
     yazi_statusline_active_bg, -- 46
     yazi_directory, -- 47

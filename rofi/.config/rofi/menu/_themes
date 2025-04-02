@@ -199,7 +199,7 @@ set_dunst() {
   sed -i -e "s/%%frame_color%%/$GET_BLUE/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%normal_bg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
-  sed -i -e "s/%%normal_fg%%/$GET_WHITE/g" "$_DUNST_PATH/dunstrc"
+  sed -i -e "s/%%normal_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
   sed -i -e "s/%%normal_frame_fg%%/$GET_COL_17/g" "$_DUNST_PATH/dunstrc"
 
   sed -i -e "s/%%critical_fg%%/$GET_BG/g" "$_DUNST_PATH/dunstrc"
@@ -222,14 +222,13 @@ set_tmux() {
 
     ACTIVE_FG="$GET_COL_16"
     ACTIVE_BG="$GET_COL_17"
-    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
-      ACTIVE_FG=$(darken_color "$GET_COL_16" 40)
+    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ] || [ "$1" == "ef-eagle" ]; then
+      ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
     fi
     sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
 
-    sed -i -e "s/^BORDER_BG=.*$/BORDER_BG=\"$GET_COL_20\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^BORDER_FG=.*$/BORDER_FG=\"$GET_COL_19\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^BORDER_FG_ACTIVE=.*$/BORDER_FG_ACTIVE=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"
 
     SESSION_BG=$GET_WHITE
@@ -237,6 +236,7 @@ set_tmux() {
       SESSION_BG=$(darken_color "$GET_COL_21" 70)
     fi
     sed -i -e "s/^SESSION_BG=.*$/SESSION_BG=\"$SESSION_BG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^SESSION_FG=.*$/SESSION_FG=\"$GET_BG\"/g" "$_PATH_TMUX_THEMES"
 
     TMUX_STATUSLINE_FG=$(darken_color "$GET_COL_21" 10)
     sed -i -e "s/^STATUSLINE_FG=.*$/STATUSLINE_FG=\"$TMUX_STATUSLINE_FG\"/g" "$_PATH_TMUX_THEMES"
@@ -393,14 +393,10 @@ set_yazi() {
 
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
-  # HOVERED_BG=$GET_COL_39
   HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
-  if [ "$1" == "lackluster" ]; then
-    HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
+  if [ "$1" == "lackluster" ] || [ "$1" == "ef-eagle" ] || [ "$1" == "rose-pine-dawn" ]; then
+    HOVERED_BG=$(darken_color "$GET_COL_39" 4)
   fi
-  # if [ "$1" == "vscode_modern" ] || [ "$1" == "carbonfox" ]; then
-  #   HOVERED_BG=$(lighten_color "$GET_COL_39" 8)
-  # fi
   sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
 
@@ -416,7 +412,7 @@ set_yazi() {
 
   sed -i -e "s/%%col_statusline_active_blur_bg%%/$GET_COL_44/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_statusline_active_fg%%/$GET_COL_45/g" "$TARGET_YAZI_THEME"
-  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_46/g" "$TARGET_YAZI_THEME"
+  sed -i -e "s/%%col_statusline_active_bg%%/$GET_COL_43/g" "$TARGET_YAZI_THEME"
 
   sed -i -e "s/%%col_directory%%/$GET_COL_47/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_which_bg%%/$GET_COL_48/g" "$TARGET_YAZI_THEME"

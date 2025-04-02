@@ -4,8 +4,31 @@ local colorscheme = RUtils.config.colorscheme
 -- https://github.com/mbadolato/iTerm2-Color-Schemes
 -- https://github.com/tinted-theming
 -- https://base2t.one
-
 return {
+  -- EF-THEMES-EMACS
+  {
+    -- https://protesilaos.com/emacs/ef-themes-pictures
+    -- https://github.com/oonamo/ef-themes.nvim
+    "oonamo/ef-themes.nvim",
+    priority = 1000,
+    lazy = false,
+    enabled = function()
+      local ef_theme = {
+        "ef-theme",
+        "ef-cyprus",
+        "ef-owl",
+        "ef-arbutus",
+        "ef-day",
+        "ef-eagle",
+        "ef-melissa-light",
+        "ef-melissa-dark",
+      }
+      if vim.tbl_contains(ef_theme, colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- SEOUL256
   {
     "junegunn/seoul256.vim",
@@ -30,19 +53,6 @@ return {
     enabled = function()
       local onedark_theme = { "onedark", "onedark_dark", "onedark_vivid" }
       if vim.tbl_contains(onedark_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- BASE2TONE
-  {
-    "atelierbram/Base2Tone-nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local base2tone_theme = { "base2tone_field_dark", "base2tone_cave_dark" }
-      if vim.tbl_contains(base2tone_theme, colorscheme) then
         return true
       end
       return false

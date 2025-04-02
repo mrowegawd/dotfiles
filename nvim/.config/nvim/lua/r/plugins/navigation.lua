@@ -621,8 +621,15 @@ return {
       local rose_pine = {
         ["rose-pine-dawn"] = {
           { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = 0.05 }, bg = "NONE" } },
-          { OutlineFoldMarker = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bg = "NONE" } },
-          { OutlineGuides = { fg = { from = "OutlineFoldMarker", attr = "fg", alter = 0.04 }, bg = "NONE" } },
+          { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+          { OutlineGuides = { link = "IndentGuides" } },
+          {
+            OutlineCurrent = {
+              fg = { from = "Keyword", attr = "fg", alter = 5 },
+              bg = { from = "Keyword", attr = "fg", alter = 1 },
+              bold = true,
+            },
+          },
         },
         ["rose-pine-main"] = {
           { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.05 }, bg = "NONE" } },
@@ -630,8 +637,8 @@ return {
           { OutlineGuides = { link = "IndentGuides" } },
           {
             OutlineCurrent = {
-              fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
-              bg = { from = "CurSearch", attr = "bg", alter = -0.75 },
+              fg = { from = "Keyword", attr = "fg", alter = 0.5 },
+              bg = { from = "Keyword", attr = "fg", alter = -0.5 },
               bold = true,
             },
           },
@@ -644,8 +651,8 @@ return {
           ["*"] = {
             {
               OutlineCurrent = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.1 },
-                bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
+                fg = { from = "Keyword", attr = "fg", alter = 0.1 },
+                bg = { from = "Keyword", attr = "fg", alter = -0.5 },
                 bold = true,
               },
             },
@@ -657,16 +664,18 @@ return {
           },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["ashen"] = {
-            {
-              OutlineCurrent = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
-                bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
-                bold = true,
-              },
-            },
             { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
             { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
             { OutlineGuides = { link = "IndentGuides" } },
+          },
+          ["ef-eagle"] = {
+            {
+              OutlineCurrent = {
+                fg = { from = "Keyword", attr = "fg", alter = 1.5 },
+                bg = { from = "Keyword", attr = "fg", alter = 0.2 },
+                bold = true,
+              },
+            },
           },
           ["lackluster"] = {
             {

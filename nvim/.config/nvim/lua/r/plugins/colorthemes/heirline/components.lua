@@ -90,36 +90,30 @@ local set_conditions = {
 local colors = {
   statusline_bg = Col.statusline_bg,
   statusline_fg = Col.statusline_fg,
-  statuslinenc_bg = Col.statuslinenc_bg,
-  statuslinenc_fg = Col.statuslinenc_fg,
 
   normal_bg = Col.normal_bg,
-  normal_fg = Col.normal_fg,
-  normal_fg_blur = Col.normal_fg_blur,
   normal_fg_white = Col.normal_fg_white,
-  normal_bg_darker = Col.normal_bg_darker,
 
-  normal_winbar_fg = Col.normal_winbar_fg,
+  filepath = Col.filepath,
+
+  normal_winbar_fg = Col.normal_winbar_active_fg,
+  filepath_winbar_active_fg = Col.filepath_winbar_active_fg,
+  filepath_winbar_active_fg_filename = Col.filepath_winbar_active_fg_filename,
+  filepath_winbar_fg = Col.filepath_winbar_fg,
 
   mode_bg = Col.mode_bg,
-  mode_bg_blur = Col.mode_bg_blur,
   modenc_bg = Col.modenc_bg,
   modenc_bg_blur = Col.modenc_bg_blur,
 
   branch_fg = Col.branch_fg,
-  path_name = Col.path_name,
-  filename = Col.filename,
-
   modified_fg = Col.modified_fg,
-
   coldisorent = Col.disorent,
   directory = Col.directory,
   notif = Col.notif,
   session = Col.session,
 
   mode_insert_bg = Col.mode_insert_bg,
-  mode_insert_bg_blur = Col.mode_insert_bg_blur,
-  mode_insert_bar = Col.mode_insert_bar,
+
   mode_term_bg = Col.mode_term_bg,
   mode_visual_bg = Col.mode_visual_bg,
 
@@ -240,8 +234,7 @@ M.Mode = {
     provider = RUtils.config.icons.misc.separator_up,
     hl = function(self)
       local mode = self.mode:sub(1, 1)
-      local bg = colors.normal_bg_darker
-      return { fg = self.mode_colors[mode], bg = bg }
+      return { fg = self.mode_colors[mode], bg = colors.statusline_bg }
     end,
   },
   { provider = "  " },
@@ -263,31 +256,30 @@ M.Mode_inactive = {
   },
   { provider = " " },
 }
+
+local function git_branch()
+  return vim.tbl_get(vim.b.gitsigns_status_dict or {}, "head")
+end
 M.Branch = {
   condition = function()
-    return Conditions.is_git_repo()
-  end,
-
-  init = function(self)
-    self.status_dict = vim.b.gitsigns_status_dict
-    self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or self.status_dict.changed ~= 0
+    return Conditions.is_git_repo() and git_branch() ~= nil
   end,
   {
     provider = function(self)
-      return " " .. self.status_dict.head
+      return " " .. git_branch() .. " "
     end,
     condition = function()
       return vim.bo[0].filetype ~= "qf"
     end,
     hl = { fg = colors.branch_fg, bold = true },
   },
-  {
-    provider = function(self)
-      if #self.status_dict.head > 0 then
-        return "  "
-      end
-    end,
-  },
+  -- {
+  --   provider = function(self)
+  --     if #self.status_dict.head > 0 then
+  --       return "  "
+  --     end
+  --   end,
+  -- },
 }
 M.FilePath = {
   init = function(self)
@@ -364,13 +356,7 @@ M.FilePath = {
       -- return statusline path untuk non active window
       return self.filename .. "  "
     end,
-    hl = function()
-      local fg = colors.normal_fg
-      if Conditions.is_not_active() then
-        fg = tostring(colors.statuslinenc_fg)
-      end
-      return { fg = fg }
-    end,
+    hl = { fg = colors.filepath },
   },
   {
     provider = function(self)
@@ -382,7 +368,7 @@ M.FilePath = {
     hl = function(self)
       local fg = colors.normal_fg_white
       if self.exclude_ft then
-        fg = tostring(colors.normal_fg_blur)
+        fg = tostring(colors.statusline_fg)
       end
       return { fg = fg, bold = true, italic = true }
     end,
@@ -481,7 +467,7 @@ M.QuickfixStatus = {
   end,
   {
     provider = "Index: ",
-    hl = { fg = colors.normal_fg_blur },
+    hl = { fg = colors.statusline_fg },
   },
   {
     provider = function(self)
@@ -497,7 +483,7 @@ M.QuickfixStatus = {
   },
   {
     provider = "Title: ",
-    hl = { fg = colors.normal_fg_blur },
+    hl = { fg = colors.statusline_fg },
   },
   {
     provider = function()
@@ -555,11 +541,7 @@ local function OverseerTasksForStatus(status)
       else
         fg = colors.diagnostic_err
       end
-      return {
-        fg = fg,
-        bg = colors.normal_bg_darker,
-        bold = true,
-      }
+      return { fg = fg, bold = true }
     end,
   }
 end
@@ -589,7 +571,7 @@ M.Tasks = {
       end
     end,
     hl = function()
-      return { fg = colors.normal_fg_blur }
+      return { fg = colors.statusline_fg }
     end,
   },
   rpad(OverseerTasksForStatus "CANCELED"),
@@ -655,7 +637,7 @@ M.virtualenv = {
         return self.venv .. "  "
       end
     end,
-    hl = { fg = colors.normal_fg_blur, bold = true },
+    hl = { fg = colors.statusline_fg, bold = true },
   },
 }
 M.LSPActive = {
@@ -677,7 +659,7 @@ M.LSPActive = {
   end,
   {
     provider = " LSP(s): ",
-    hl = { fg = colors.normal_fg_blur, italic = true },
+    hl = { fg = colors.statusline_fg, italic = true },
   },
   {
     provider = function(self)
@@ -854,7 +836,7 @@ M.RmuxTargetPane = {
         return self.run_with
       end
     end,
-    hl = { fg = colors.normal_fg_blur, bold = true },
+    hl = { fg = colors.statusline_fg, bold = true },
   },
 
   {
@@ -863,7 +845,7 @@ M.RmuxTargetPane = {
         return " Watch: "
       end
     end,
-    hl = { fg = colors.normal_fg_blur, italic = true },
+    hl = { fg = colors.statusline_fg, italic = true },
   },
   {
     provider = function(self)
@@ -887,7 +869,7 @@ M.LazyStatus = {
   end,
   {
     provider = "Updates ",
-    hl = { fg = colors.normal_fg_blur, bold = true },
+    hl = { fg = colors.statusline_fg, bold = true },
   },
   {
     provider = function()
@@ -945,7 +927,7 @@ M.Sessions = {
 
       return icon_ses .. ses_status .. "  "
     end,
-    hl = { fg = colors.normal_fg_blur },
+    hl = { fg = colors.statusline_fg },
   },
 }
 M.PinnedBuffer = {
@@ -998,7 +980,7 @@ M.BufferCwd = {
         return cwd .. "  "
       end
     end,
-    hl = { fg = colors.normal_fg_blur },
+    hl = { fg = colors.statusline_fg },
   },
 }
 M.Ruler = {
@@ -1032,7 +1014,7 @@ M.Ruler = {
       rhs = rhs .. "ℓ: " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
-    hl = { fg = colors.normal_fg_blur, bold = true },
+    hl = { fg = colors.statusline_fg, bold = true },
   },
   {
     provider = function(self)
@@ -1050,7 +1032,7 @@ M.Ruler = {
       rhs = rhs .. self.height
       return rhs
     end,
-    hl = { fg = colors.normal_fg_blur },
+    hl = { fg = colors.statusline_fg },
   },
   {
     provider = function(self)
@@ -1058,7 +1040,7 @@ M.Ruler = {
       rhs = rhs .. " Col: " -- (Literal, \ℓ "SCRIPT SMALL L").
       return rhs
     end,
-    hl = { fg = colors.normal_fg_blur, bold = true },
+    hl = { fg = colors.statusline_fg, bold = true },
   },
   {
     provider = function(self)
@@ -1084,9 +1066,7 @@ M.Clock = {
   end,
   {
     provider = RUtils.config.icons.misc.separator_up,
-    hl = function()
-      return { bg = colors.diagnostic_err, fg = colors.normal_bg_darker }
-    end,
+    hl = { bg = colors.diagnostic_err, fg = colors.statusline_bg },
   },
   {
     provider = function()
@@ -1182,27 +1162,10 @@ M.status_active_left = {
   M.Ruler,
   M.Clock,
 
-  hl = function()
-    local bg = colors.normal_bg_darker
-    return { fg = colors.statusline_fg, bg = bg }
-  end,
+  hl = { fg = colors.statusline_fg, bg = colors.statusline_bg },
 }
-M.status_not_active = {
-  condition = Conditions.is_not_active,
-  M.Mode_inactive,
-  -- M.Branch,
-  M.FilePath,
-  -- M.FileIcon,
-  -- M.Git,
-  M.QuickfixStatus,
-  M.FileFlags,
-  M.Gap,
-  M.Filetype,
-  M.PinnedBuffer,
-  M.Ruler,
 
-  hl = { bg = colors.statuslinenc_bg, fg = colors.statuslinenc_fg },
-}
+--  ─────────────────────────────── winbar ────────────────────────────
 
 M.WinbarSeparator = {
   { provider = " " },
@@ -1277,7 +1240,11 @@ M.WinbarFilePath = {
       return self.filename
     end,
     hl = function()
-      return { fg = colors.normal_winbar_fg, bold = true, italic = true }
+      local fg = colors.filepath_winbar_fg
+      if Conditions.is_active() then
+        fg = colors.filepath_winbar_active_fg
+      end
+      return { fg = fg, bold = true }
     end,
   },
   {
@@ -1285,10 +1252,10 @@ M.WinbarFilePath = {
       return RUtils.file.basename(self.filename)
     end,
     hl = function()
-      local fg = colors.normal_winbar_fg
+      local fg = colors.filepath_winbar_fg
       local italic = true
       if Conditions.is_active() then
-        fg = colors.normal_fg_white
+        fg = colors.filepath_winbar_active_fg_filename
         italic = true
       end
       return { fg = fg, bold = true, italic = italic }
@@ -1327,7 +1294,7 @@ M.status_winbar_active_left = {
 
   hl = function()
     local bg = colors.normal_bg
-    return { fg = colors.statusline_fg, bg = bg }
+    return { fg = colors.normal_winbar_fg, bg = bg }
   end,
 }
 
