@@ -12,7 +12,9 @@ return {
       indent = {
         enabled = true,
         char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
-        only_scope = true,
+        -- char = "", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
+        only_scope = false,
+        indent = { enabled = false },
         only_current = false,
         scope = { enabled = false },
         chunk = {

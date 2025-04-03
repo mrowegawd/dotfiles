@@ -366,12 +366,18 @@ return {
 
             ["<c-u>"] = "preview-page-up",
             ["<c-d>"] = "preview-page-down",
+
+            ["<c-Up>"] = "preview-page-up",
+            ["<c-Down>"] = "preview-page-down",
           },
           fzf = {
             ["ctrl-a"] = "toggle-all",
 
             ["ctrl-d"] = "preview-page-down",
             ["ctrl-u"] = "preview-page-up",
+
+            -- ["ctrl-dp"] = "preview-page-up",
+            -- ["ctrl-down"] = "preview-page-down",
           },
         },
         fzf_opts = { ["--no-separator"] = "" }, -- remove separator line

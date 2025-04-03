@@ -63,8 +63,9 @@ if vim.g.colorscheme == "rose-pine-dawn" then
 end
 
 if vim.g.colorscheme == "sunburn" then
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
+  fg = Highlight.tint(Highlight.get("StatusLine", "fg"), 0.2)
   filepath = Highlight.tint(Highlight.get("StatusLine", "fg"), 0.8)
+  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end
 
 if vim.g.colorscheme == "jellybeans" then

@@ -117,8 +117,8 @@ return {
         sign = false,
         width = "block",
         position = "right",
-        inline_left = " ",
-        inline_right = " ",
+        inline_left = "",
+        inline_right = "",
         inline_pad = 1,
         right_pad = 1,
         left_pad = 1,
@@ -225,65 +225,7 @@ return {
               },
             },
           },
-          ["jellybeans"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-            -- {
-            --   ["@markup.raw.markdown_inline"] = {
-            --     fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
-            --     bg = { from = "Normal", attr = "bg", alter = 0.8 },
-            --     bold = true,
-            --   },
-            -- },
-            -- {
-            --   ["@markup.link.label.markdown_inline"] = {
-            --     fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
-            --     bg = { from = "Normal", attr = "bg", alter = 0.8 },
-            --     bold = true,
-            --   },
-            -- },
-            -- {
-            --   ["@markup.quote.markdown"] = {
-            --     fg = { from = "Boolean", attr = "fg", alter = 0.1 },
-            --     bg = { from = "Boolean", attr = "fg", alter = -0.8 },
-            --     italic = true,
-            --   },
-            -- },
-            -- {
-            --   ["@markup.strong.markdown_inline"] = {
-            --     fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
-            --     bg = "NONE",
-            --     bold = true,
-            --   },
-            -- },
-            -- {
-            --   ["@markup.italic.markdown_inline"] = {
-            --     fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
-            --     bg = "NONE",
-            --     bold = false,
-            --     italic = true,
-            --   },
-            -- },
-            -- {
-            --   ["@markup.raw.markdown_inline"] = {
-            --     fg = { from = "Boolean", attr = "fg" },
-            --     bg = { from = "Normal", attr = "bg" },
-            --     reverse = false,
-            --   },
-            -- },
-            -- {
-            --   ["@punctuation.special.markdown"] = {
-            --     fg = { from = "@markup.quote.markdown", attr = "fg" },
-            --   },
-            -- },
-            --
-            -- {
-            --   RenderMarkdownCodeInline = {
-            --     fg = { from = "@Boolean", attr = "fg", alter = -0.1 },
-            --     bg = { from = "Normal", attr = "bg", alter = 0.8 },
-            --     bold = true,
-            --   },
-            -- },
-          },
+          ["jellybeans"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } } },
           ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } } },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["nord"] = {
@@ -294,7 +236,7 @@ return {
               },
             },
           },
-          ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } } },
+          ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
           ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
           ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
           ["lackluster"] = {

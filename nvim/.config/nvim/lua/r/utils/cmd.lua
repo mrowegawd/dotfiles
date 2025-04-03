@@ -608,8 +608,8 @@ function M.change_colors()
     statusline_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
 
     lazygit_active_border = Highlight.tint(Highlight.get("WinSeparator", "fg"), -0.5) -- 29
-    lazygit_border_fg = Highlight.tint(Highlight.get("FzfLuaBorder", "fg"), 0.1) -- 31
-    lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 1.5) -- 30
+    lazygit_border_fg = Highlight.tint(Highlight.get("WinSeparator", "fg"), 0)
+    lazygit_inactive_border = Highlight.tint(Highlight.get("Keyword", "fg"), 0) -- 30
     lazygit_selected_line_bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.8, Highlight.get("Normal", "bg"))
 
     yazi_hovered = Highlight.get("CursorLine", "bg")
@@ -619,8 +619,12 @@ function M.change_colors()
     sugest_highlight = Highlight.tint(Highlight.get("Tabline", "bg"), -0.2)
   end
 
-  if vim.g.colorscheme == "rose-pine-dawn" then
+  if vim.g.colorscheme == "ef-eagle" then
     yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -1)
+  end
+
+  if vim.g.colorscheme == "rose-pine-dawn" then
+    yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -0.2)
   end
 
   local master_colors = string.format(

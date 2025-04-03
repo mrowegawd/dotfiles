@@ -73,8 +73,9 @@ return {
           ["*"] = {
             {
               GrugFarResultsPath = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.25 },
-                bg = { from = "Normal", attr = "bg", alter = 0.5 },
+                fg = { from = "GrugFarHelpHeaderKey", attr = "fg" },
+                bg = { from = "GrugFarHelpHeaderKey", attr = "fg", alter = -0.65 },
+                -- bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
                 bold = true,
                 underline = false,
               },
@@ -102,14 +103,6 @@ return {
           },
           ["oxocarbon"] = {
             {
-              GrugFarResultsPath = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.3 },
-                bg = { from = "Normal", attr = "bg", alter = 0.8 },
-                bold = true,
-                underline = false,
-              },
-            },
-            {
               GrugFarResultsLineNo = {
                 fg = { from = "LineNr", attr = "fg", alter = 0.5 },
                 bg = { from = "Normal", attr = "bg", alter = 0.4 },
@@ -124,25 +117,7 @@ return {
               },
             },
           },
-          ["jellybeans"] = {
-            {
-              GrugFarResultsPath = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.5 },
-                bg = { from = "Normal", attr = "bg", alter = 0.8 },
-                bold = true,
-                underline = false,
-              },
-            },
-          },
           ["ashen"] = {
-            {
-              GrugFarResultsPath = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.5 },
-                bg = { from = "Normal", attr = "bg", alter = 0.9 },
-                bold = true,
-                underline = false,
-              },
-            },
             {
               GrugFarResultsLineNo = {
                 fg = { from = "LineNr", attr = "fg", alter = 0.5 },
@@ -156,15 +131,18 @@ return {
               },
             },
           },
-          ["nord"] = {
+          ["ef-eagle"] = {
             {
               GrugFarResultsPath = {
-                fg = { from = "Directory", attr = "fg", alter = -0.1 },
-                bg = { from = "Directory", attr = "fg", alter = -0.65 },
+                fg = { from = "GrugFarHelpHeaderKey", attr = "fg" },
+                bg = { from = "Normal", attr = "bg", alter = -0.1 },
+                -- bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
                 bold = true,
                 underline = false,
               },
             },
+          },
+          ["nord"] = {
             {
               GrugFarResultsLineNo = {
                 fg = { from = "LineNr", attr = "fg", alter = 0.5 },
@@ -179,14 +157,6 @@ return {
             },
           },
           ["lackluster"] = {
-            {
-              GrugFarResultsPath = {
-                fg = { from = "Directory", attr = "fg", alter = -0.1 },
-                bg = { from = "Directory", attr = "fg", alter = -0.65 },
-                bold = true,
-                underline = false,
-              },
-            },
             {
               GrugFarResultsLineNo = {
                 fg = { from = "LineNr", attr = "fg", alter = 0.5 },
