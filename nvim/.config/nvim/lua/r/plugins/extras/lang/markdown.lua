@@ -116,8 +116,12 @@ return {
       code = {
         sign = false,
         width = "block",
-        right_pad = 1,
         position = "right",
+        inline_left = " ",
+        inline_right = " ",
+        inline_pad = 1,
+        right_pad = 1,
+        left_pad = 1,
       },
       acknowledge_conflicts = true,
       render_modes = { "n", "c", "t", "i" },
