@@ -254,8 +254,7 @@ if vim.g.neovide then
   vim.keymap.set("", "<C-0>", "<CMD>lua vim.g.neovide_scale_factor = 1<CR>", { noremap = true })
   -- vim.keymap.set("i", "<C-S-v>", "<C-r>+", { noremap = true })
 
-  vim.g.neovide_transparency = 0.94
-  -- vim.g.transparency = 0.8
+  vim.g.neovide_opacity = 0.94
 
   -- Helper function for transparency formatting
   -- local alpha = function()
