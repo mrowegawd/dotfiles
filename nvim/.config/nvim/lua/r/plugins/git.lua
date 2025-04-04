@@ -411,10 +411,9 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
-    dependencies = {
-      "tpope/vim-rhubarb",
-    },
+    -- cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
+    event = "VeryLazy",
+    dependencies = { "tpope/vim-rhubarb" },
     config = function()
       vim.cmd "command! GitHistory Git! log -- %"
 

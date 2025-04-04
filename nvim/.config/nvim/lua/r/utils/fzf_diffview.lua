@@ -530,7 +530,11 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
     end
   end
 
-  local actions = require "fzf-lua.actions"
+  -- TODO: cara load manual untuk fugitive ini gagal
+  -- solusi sementara: kita load dari sisi load plugin dengan event,
+  -- check config fugitive di plugins/git.lua
+  -- local _ = package.loaded["vim-fugitive"]
+  -- vim.cmd "packadd vim-fugitive"
 
   return {
     prompt = RUtils.fzflua.default_title_prompt(),
@@ -538,17 +542,66 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
     func_async_callback = false,
     fzf_opts = {
       ["--preview"] = preview_command(),
-      ["--header"] = [[Ctrl-O: open browser | Ctrl-Y: hash copy | Alt-X: commit hash history]],
+      ["--header"] = [[CTRL-O: open browser | CTRL-Y: hash copy | CTRL-X: open with diffview  | CTRL-S/V/T: open with fugitive]],
     },
     winopts = { title = RUtils.fzflua.format_title(title, "󰈙") },
-    -- fn_transform = function(x)
-    --   return fzf_picker_utils.make_entry(x)
-    -- end,
     actions = {
-      ["ctrl-q"] = actions.file_sel_to_qf,
-      ["ctrl-s"] = actions.git_buf_split,
-      ["ctrl-v"] = actions.git_buf_vsplit,
-      ["ctrl-t"] = actions.git_buf_tabedit,
+      -- TODO: open hash items qf -> open dengan gedit?
+      ["ctrl-q"] = function(selected, _)
+        local items = {}
+        for _, item in pairs(selected) do
+          local commit_hash = M.split_string(item, " ")[1]
+          local commit_msg = vim.split(item, "_ ")[2]
+
+          local function convert_hash_commit(short_hash)
+            local handle = io.popen("git rev-parse " .. short_hash)
+            if handle then
+              local full_hash = handle:read("*a"):gsub("%s+", "") -- Remove any trailing whitespace
+              handle:close()
+              local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
+              return path_commmit
+            end
+            return ""
+          end
+
+          local fugitive_commit_filename = convert_hash_commit(commit_hash)
+
+          items[#items + 1] = {
+            lnum = 1,
+            col = 1,
+            text = commit_msg,
+            module = commit_hash,
+            filename = fugitive_commit_filename,
+          }
+        end
+
+        local what = {
+          idx = "$",
+          items = items,
+          title = "Fzf_diffview",
+        }
+
+        vim.fn.setqflist({}, "r", what)
+        vim.cmd "copen"
+      end,
+      ["ctrl-s"] = function(selected, _)
+        local selection = selected[1]
+        local commit_hash = M.split_string(selection, " ")[1]
+
+        vim.cmd([[split | Gedit ]] .. commit_hash)
+      end,
+      ["ctrl-v"] = function(selected, _)
+        local selection = selected[1]
+        local commit_hash = M.split_string(selection, " ")[1]
+
+        vim.cmd([[vsplit | Gedit ]] .. commit_hash)
+      end,
+      ["ctrl-t"] = function(selected, _)
+        local selection = selected[1]
+        local commit_hash = M.split_string(selection, " ")[1]
+
+        vim.cmd([[tabe | Gedit ]] .. commit_hash)
+      end,
       ["default"] = function(selected, _)
         local selection = selected[1]
         local commit_hash = M.split_string(selection, " ")[1]
@@ -561,7 +614,7 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
 
         vim.api.nvim_command(":" .. get_browse_command(commit_hash))
       end,
-      ["alt-x"] = function(selected, _)
+      ["ctrl-x"] = function(selected, _)
         local selection = selected[1]
         local commit_hash = M.split_string(selection, " ")[1]
 
