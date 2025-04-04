@@ -73,7 +73,24 @@ return {
                   return item.label
                 end,
                 highlight = function(item)
-                  return "CmpItemKind" .. item.kind
+                  -- https://github.com/saghen/blink.cmp/blob/033fbcc7ec55546aa0c3889aa50b6e76915c3f62/doc/configuration/reference.md#completion-menu-draw
+                  local highlights = {
+                    {
+                      0,
+                      #item.label,
+                      group = item.deprecated and "BlinkCmpLabelDeprecated" or "CmpItemKind" .. item.kind,
+                    },
+                  }
+
+                  if item.label_detail then
+                    table.insert(highlights, { #item.label, #item.label + #item.label_detail, group = "Comment" })
+                  end
+
+                  for _, item_idx in ipairs(item.label_matched_indices) do
+                    table.insert(highlights, { item_idx, item_idx + 1, group = "BlinkCmpLabelMatch" })
+                  end
+
+                  return highlights
                 end,
               },
               kind = {
@@ -108,9 +125,7 @@ return {
         },
       },
       cmdline = {
-        completion = {
-          menu = { auto_show = true },
-        },
+        completion = { menu = { auto_show = true } },
         sources = function()
           local type = vim.fn.getcmdtype()
           if type == "/" or type == "?" then
@@ -171,6 +186,7 @@ return {
 
         providers = {
           snippets = { opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } } },
+          path = { opts = { show_hidden_files_by_default = true } },
           buffer = {
             opts = {
               get_bufnrs = function()
