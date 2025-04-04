@@ -3683,6 +3683,7 @@ local function colorscheme_overrides()
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.35 }, bg = "NONE" } },
 
+      { LazygitInactiveBorderColor = { fg = { from = "WinSeparator", attr = "fg", alter = 0.5 }, bg = "NONE" } },
       {
         AvanteInlineHint = {
           fg = { from = "Keyword", attr = "fg", alter = -0.4 },

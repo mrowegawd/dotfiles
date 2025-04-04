@@ -462,7 +462,7 @@ local function picker(contents, actions)
             cmdscs[#cmdscs + 1] = y.path
           end
 
-          local rg_optssc = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
+          local rg_optssc = [[--column --hidden --line-number --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
             .. table.concat(cmdscs, " ")
             .. " -e "
 
@@ -539,9 +539,7 @@ local function picker(contents, actions)
       end,
     },
     prompt = RUtils.fzflua.default_title_prompt(),
-    winopts = {
-      title = format_prompt_strings(),
-    },
+    winopts = { title = format_prompt_strings() },
     fzf_opts = { ["--header"] = [[CTRL-X:filter-by-tag  CTRL-Y:add-tag  CTRL-R:reload  CTRL-G:grep-filter]] },
     actions = actions,
   })
@@ -945,7 +943,7 @@ function M.insert_global_titles()
   }
 end
 
-local cursor_in_code_block = function(cursor_row, reverse)
+M.cursor_in_code_block = function(cursor_row, reverse)
   if reverse == nil or reverse == false then
     reverse = false
   else
@@ -965,12 +963,12 @@ local cursor_in_code_block = function(cursor_row, reverse)
 end
 
 -- Taken from and credit: https://github.com/jakewvincent/mkdnflow.nvim/blob/0fa1e682e35d46cd1a0102cedd05b0283e41d18d/lua/mkdnflow/cursor.lua#L138
-function M.go_to_heading(anchor_text, reverse)
+M.go_to_heading = function(anchor_text, reverse)
   -- Record which line we're on; chances are the link goes to something later,
   -- so we'll start looking from here onwards and then circle back to the beginning
   local position = vim.api.nvim_win_get_cursor(0)
   local starting_row, continue = position[1], true
-  local in_fenced_code_block = cursor_in_code_block(starting_row, reverse)
+  local in_fenced_code_block = M.cursor_in_code_block(starting_row, reverse)
   local row = (reverse and starting_row - 1) or starting_row + 1
   while continue do
     local line = (reverse and vim.api.nvim_buf_get_lines(0, row - 1, row, false))
@@ -1003,7 +1001,7 @@ function M.go_to_heading(anchor_text, reverse)
       end
       row = (reverse and row - 1) or row + 1
       if row == starting_row + 1 then
-        continue = false
+        continue = nil
         if anchor_text == nil then
           local message = "⬇️  Couldn't find a heading to go to!"
           if not silent then
@@ -1022,7 +1020,7 @@ function M.go_to_heading(anchor_text, reverse)
         row = (reverse and vim.api.nvim_buf_line_count(0)) or 1
         in_fenced_code_block = false
       else
-        continue = false
+        continue = nil
         local place = (reverse and "beginning") or "end"
         local preposition = (reverse and "after") or "before"
         local message = "⬇️  There are no more headings " .. preposition .. " the " .. place .. " of the document!"

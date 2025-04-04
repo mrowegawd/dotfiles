@@ -63,7 +63,7 @@ if vim.g.colorscheme == "rose-pine-dawn" then
 end
 
 if vim.g.colorscheme == "sunburn" then
-  fg = Highlight.tint(Highlight.get("StatusLine", "fg"), 0.2)
+  fg = Highlight.tint(Highlight.get("StatusLine", "fg"), 0.25)
   filepath = Highlight.tint(Highlight.get("StatusLine", "fg"), 0.8)
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
 end
