@@ -13,16 +13,9 @@ edit = [
   { run = 'code "%*"', orphan = true, for = "windows" },
 ]
 
-# Check yazi git: https://github.com/yazi-rs/plugins/tree/main/git.yazi
-# [[plugin.prepend_fetchers]]
-# id = "git"
-# name = "*"
-# run = "git"
-
-# [[plugin.prepend_fetchers]]
-# id = "git"
-# name = "*/"
-# run = "git"
-
-# [open]
-# rules = [{ mime = "video/*", use = ["play", "reveal"] }]
+[plugin]
+fetchers = [
+	# plugins - git.yazi
+	{ id = "git", name = "*", run = "git"},
+	{ id = "git", name = "*/", run = "git"},
+]
