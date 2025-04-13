@@ -150,16 +150,20 @@ local function open_with_tmux(fpath_ext, fpath)
 		return
 	end
 
+	if fpath_ext ~= "jpg" then
+		fail("Only image files can be previewed")
+		return
+	end
+
 	local is_pane_at_bottom = get_output_string_cmd("tmux", { "display", "-p", "'#{pane_at_bottom}'" })
 	local list_panes = get_output_string_cmd("sh", { "-c", "tmux list-panes | wc -l" })
+	-- local pane_id = get_output_string_cmd("tmux", { "display", "-p", "'#{pane_index}'" })
 
-	if tonumber(is_pane_at_bottom) == 1 and (fpath_ext == "jpg") then
-		if tonumber(list_panes) < 3 then
-			send_text_cmds("tmux", { "split-window", "-vl", "20", "-c", "'#{pane_current_path}'" })
-			send_text_cmds("tmux", { "splitw", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
-			send_text_cmds("tmux", { "resize-pane", "-D", "10" })
-			send_text_cmds("tmux", { "last-pane" })
-		end
+	if tonumber(list_panes) < 3 or (tonumber(list_panes) == 2) then
+		send_text_cmds("tmux", { "split-window", "-vl", "20", "-c", "'#{pane_current_path}'" })
+		send_text_cmds("tmux", { "splitw", "-fv", ";", "swapp", "-t", "!", ";", "killp", "-t", "!" })
+		send_text_cmds("tmux", { "resize-pane", "-D", "10" })
+		send_text_cmds("tmux", { "last-pane" })
 	end
 
 	gen_cmd_ext(3, fpath_ext, fpath)
@@ -174,6 +178,7 @@ local function open_with_wezterm(fpath_ext, fpath)
 	end
 
 	gen_cmd_ext(pane_id, fpath_ext, fpath)
+	send_text_cmds("tmux", { "last-pane" })
 end
 
 -- function M:setup()

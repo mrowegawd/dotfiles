@@ -4,36 +4,16 @@
 
 [manager]
 prepend_keymap = [
-  { on = [
-    "l",
-  ], run = "plugin smart-enter", desc = "Enter child or file" },
-  { on = [
-    "L",
-  ], run = "plugin smart-enter --args=open", desc = "Open the selected files" },
-  { on = [
-    "<c-v>",
-  ], run = "plugin smart-enter --args=vsplit", desc = "Open vsplit the selected item" },
-  { on = [
-    "<c-s>",
-  ], run = "plugin smart-enter --args=split", desc = "Open split the selected item" },
-  { on = [
-    "<c-t>",
-  ], run = "plugin smart-enter --args=tab", desc = "Open tab the selected item" },
-  { on = [
-    "<c-o>",
-  ], run = "plugin fzmark", desc = "Open fzmark" },
-  { on = [
-    "<c-e>",
-  ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
-  { on = [
-    "<a-t>",
-  ], run = "plugin opener --args=terminal", desc = "Open terminal on target dir yazi" },
-  { on = [
-    "P",
-  ], run = "plugin preview-tree", desc = "Open preview file or directory tree" },
-  { on = [
-    "O",
-  ], run = """ shell --block --confirm ' clear
+  { on = [ "l", ], run = "plugin smart-enter", desc = "Enter child or file" },
+  { on = [ "L", ], run = "plugin smart-enter -- open", desc = "Open the selected files" },
+  { on = [ "<c-v>", ], run = "plugin smart-enter -- vsplit", desc = "Open vsplit the selected item" },
+  { on = [ "<c-s>", ], run = "plugin smart-enter -- split", desc = "Open split the selected item" },
+  { on = [ "<c-t>", ], run = "plugin smart-enter -- tab", desc = "Open tab the selected item" },
+  { on = [ "<c-o>", ], run = "plugin fzmark", desc = "Open fzmark" },
+  { on = [ "<A-o>", ], run = "plugin opcurdir", desc = "Open editor on target dir yazi" },
+  { on = [ "<a-t>", ], run = "plugin opener -- terminal", desc = "Open terminal on target dir yazi" },
+  { on = [ "P", ], run = "plugin preview-tree", desc = "Open preview file or directory tree" },
+  { on = [ "O", ], run = """ shell --block --confirm ' clear
 playlist="playlist.m3u"
 
 if [ ! -f "$playlist" ]; then
@@ -57,10 +37,10 @@ nohup mpv --ontop --no-border --force-window \
 """, desc = "Play playlist on mpv" },
   { on = [
     "B",
-  ], run = "plugin bookmark-alternate --args=toggle", desc = "Bookmark toggle or alternate the file" },
+  ], run = "plugin bookmark-alternate -- toggle", desc = "Bookmark toggle or alternate the file" },
   { on = [
-    "<c-b>",
-  ], run = "plugin bookmark-alternate --args=save", desc = "Bookmark save" },
+    "<a-b>",
+  ], run = "plugin bookmark-alternate -- save", desc = "Bookmark save" },
 ]
 
 keymap = [
@@ -139,12 +119,12 @@ keymap = [
     "leave",
     "escape --visual --select",
   ], desc = "Go back to the parent directory" },
-  { on = [
-    "l",
-  ], run = [
-    "enter",
-    "escape --visual --select",
-  ], desc = "Enter the child directory" },
+  # { on = [
+  #   "l",
+  # ], run = [
+  #   "enter",
+  #   "escape --visual --select",
+  # ], desc = "Enter the child directory" },
 
   # { on = [
   #   "<A-a>",
@@ -342,7 +322,7 @@ keymap = [
   # └╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┘
   { on = [
     "f",
-  ], run = "filter --smart", desc = "Filter the files" },
+  ], run = "filter --smart --insensitive", desc = "Filter the files" },
 
   # ┌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┐
   # ╎ Find                                                     ╎

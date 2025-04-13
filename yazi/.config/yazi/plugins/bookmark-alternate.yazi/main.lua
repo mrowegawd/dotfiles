@@ -1,5 +1,5 @@
 local function fail(s, ...)
-	ya.notify({ title = "Alternate", content = string.format(s, ...), timeout = 5, level = "error" })
+	ya.notify({ title = "Bookmark Alternate", content = string.format(s, ...), timeout = 5, level = "error" })
 end
 
 local function fileExists(filename)
