@@ -1,0 +1,40 @@
+! vim: foldmethod=marker foldlevel=0 ft=xdefaults
+
+*.foreground: #d8d8d8
+*.background: #181818
+*.cursorColor:  #9e0e06
+
+! black
+*.color0:  #2d2d2d
+*.color8:  #343434
+
+! red
+*.color1:  #ab4642
+*.color9:  #a16946
+
+! green
+*.color2:   #a1b56c
+*.color10:  #abcb56
+
+! yellow
+*.color3:   #f7ca88
+*.color11:  #f8ce92
+
+! blue
+*.color4: #7cafc2
+*.color12: #609eb5
+
+! magenta
+*.color5:   #ba8baf
+*.color13:  #a86c9a
+
+! cyan
+*.color6:   #6cb598
+*.color14:  #86c1b9
+
+! white
+*.color7:   #C7C7C7
+*.color15:  #FEFFFF
+
+! Keyword color
+*.color16:#ba8baf

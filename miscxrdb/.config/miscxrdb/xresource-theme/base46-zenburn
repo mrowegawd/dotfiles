@@ -2,37 +2,37 @@
 !
 ! zenburned
 !
-*.foreground:  #f0e4cf
-*.background:  #404040
+*.foreground:  #dcdccc
+*.background:  #383838
 *.cursorColor: #f3eadb
 !
 ! Black
-*.color0:      #404040
-*.color8:      #625a5b
+*.color0:      #464646
+*.color8:      #4d4d4d
 !
 ! Red
 *.color1:      #e3716e
 *.color9:      #ec8685
 !
 ! Green
-*.color2:      #819b69
-*.color10:     #8bae68
+*.color2:      #5f7f5f
+*.color10:     #5f7f5f
 !
 ! Yellow
 *.color3:      #b77e64
 *.color11:     #d68c67
 !
 ! Blue
-*.color4:      #6099c0
-*.color12:     #61abda
+*.color4:      #7cb8bb
+*.color12:     #93e0e3
 !
 ! Magenta
 *.color5:      #b279a7
 *.color13:     #cf86c1
 !
 ! Cyan
-*.color6:      #66a5ad
-*.color14:     #65b8c1
+*.color6:      #93e0e3
+*.color14:     #93e0e3
 !
 ! White
 *.color7:      #f0e4cf

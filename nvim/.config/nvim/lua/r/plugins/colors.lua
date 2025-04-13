@@ -1,11 +1,7 @@
-local ccc_filetypes =
-  { "html", "css", "sass", "less", "javascript", "typescript", "javascriptreact", "typescriptreact", "lua" }
-
 return {
   -- NVIM-HIGHLIGHT-COLORS
   {
     "brenoprata10/nvim-highlight-colors",
-    event = "VeryLazy",
     keys = {
       {
         "<Leader>uc",
@@ -19,7 +15,7 @@ return {
             RUtils.info("Turn On", { title = "nvim-highlight-colors" })
           end
         end,
-        desc = "Misc: toggle colors [nvim-highlight-colors]",
+        desc = "Toggle: highlight colors [nvim-highlight-colors]",
       },
     },
     opts = {
@@ -58,9 +54,9 @@ return {
   -- CCCPICK (disabled)
   {
     "uga-rosa/ccc.nvim",
-    cmd = { "CccPick", "CccHighlighterToggle" },
     enabled = false,
-    ft = ccc_filetypes,
+    cmd = { "CccPick", "CccHighlighterToggle" },
+    ft = { "html", "css", "sass", "less", "javascript", "typescript", "javascriptreact", "typescriptreact", "lua" },
     opts = {},
   },
 }

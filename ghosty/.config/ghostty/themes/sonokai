@@ -1,7 +1,7 @@
-background = 2d2a2e
-foreground = e3e1e4
+background = #2d2a2e
+foreground = #e3e1e4
 
-cursor-color = 9e0e06
+cursor-color = #9e0e06
 
 palette = 0=#1a181a
 palette = 8=#848089

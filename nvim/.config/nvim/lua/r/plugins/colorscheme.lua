@@ -1,71 +1,45 @@
-local colorscheme = RUtils.config.colorscheme
--- https://nvchad.com/themes
 -- https://base46.vercel.app/
+-- https://vimcolorschemes.com/i/trending
+
+-- https://nvchad.com/themes
 -- https://github.com/mbadolato/iTerm2-Color-Schemes
 -- https://github.com/tinted-theming
 -- https://base2t.one
+
 return {
-  -- EF-THEMES-EMACS
+  -- NVIM-BASE46
   {
-    -- https://protesilaos.com/emacs/ef-themes-pictures
-    -- https://github.com/oonamo/ef-themes.nvim
-    "oonamo/ef-themes.nvim",
-    priority = 1000,
+    "yardnsm/nvim-base46",
     lazy = false,
+    priority = 1000,
     enabled = function()
-      local ef_theme = {
-        "ef-theme",
-        "ef-cyprus",
-        "ef-owl",
-        "ef-arbutus",
-        "ef-day",
-        "ef-eagle",
-        "ef-melissa-light",
-        "ef-melissa-dark",
+      local base46_theme = {
+        "base46-aylin",
+        "base46-ayu_dark",
+        "base46-chocolate",
+        "base46-doomchad",
+        "base46-jabuti",
+        "base46-kanagawa",
+        "base46-material-darker",
+        "base46-onenord",
+        "base46-seoul256_dark",
+        "base46-zenburn",
+        "base46-default-dark",
+        "base46-jellybeans",
       }
-      if vim.tbl_contains(ef_theme, colorscheme) then
+      if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
         return true
       end
       return false
     end,
   },
-  -- SEOUL256
+  -- DARKEARTH
   {
-    "junegunn/seoul256.vim",
-    priority = 1000,
-    lazy = false,
-    enabled = function()
-      local seoul256_theme = { "seoul256", "seoul256-light" }
-      if vim.tbl_contains(seoul256_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-    config = function()
-      vim.g.seoul256_background = 234
-    end,
-  },
-  -- ONEDARK
-  {
-    "olimorris/onedarkpro.nvim",
-    priority = 1000,
-    lazy = false,
-    enabled = function()
-      local onedark_theme = { "onedark", "onedark_dark", "onedark_vivid" }
-      if vim.tbl_contains(onedark_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- EF-THEMES
-  {
-    "shaunsingh/nord.nvim",
-    lazy = false,
+    "ptdewey/darkearth-nvim",
     priority = 1000,
     enabled = function()
-      local ef_theme = { "nord" }
-      if vim.tbl_contains(ef_theme, colorscheme) then
+      local darkearth_theme = { "darkearth" }
+      if vim.tbl_contains(darkearth_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -78,7 +52,7 @@ return {
     priority = 1000,
     enabled = function()
       local ashen_theme = { "ashen" }
-      if vim.tbl_contains(ashen_theme, colorscheme) then
+      if vim.tbl_contains(ashen_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -86,13 +60,13 @@ return {
   },
   -- ZENBURN
   {
-    "zenbones-theme/zenbones.nvim",
-    dependencies = "rktjmp/lush.nvim",
+    "phha/zenburn.nvim",
     lazy = false,
+    as = "zenburn",
     priority = 1000,
     enabled = function()
-      local zenbones_theme = { "zenburned", "rosebones" }
-      if vim.tbl_contains(zenbones_theme, colorscheme) then
+      local zenbones_theme = { "zenburn" }
+      if vim.tbl_contains(zenbones_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -106,7 +80,7 @@ return {
     name = "rose-pine",
     enabled = function()
       local rosepine_theme = { "rose-pine-dawn", "rose-pine-main", "rose-pine" }
-      if vim.tbl_contains(rosepine_theme, colorscheme) then
+      if vim.tbl_contains(rosepine_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -119,35 +93,7 @@ return {
     priority = 1000,
     enabled = function()
       local oxocarbon_theme = { "oxocarbon" }
-      if vim.tbl_contains(oxocarbon_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- SUNBURN
-  {
-    "loganswartz/sunburn.nvim",
-    lazy = false,
-    priority = 1000,
-    dependencies = { "loganswartz/polychrome.nvim" },
-    enabled = function()
-      local sunburn_theme = { "sunburn" }
-      if vim.tbl_contains(sunburn_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- JELLYBEANS
-  {
-    "kabouzeid/nvim-jellybeans",
-    dependencies = "rktjmp/lush.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local jellybeans_theme = { "jellybeans" }
-      if vim.tbl_contains(jellybeans_theme, colorscheme) then
+      if vim.tbl_contains(oxocarbon_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -160,20 +106,7 @@ return {
     priority = 1000,
     enabled = function()
       local lackluster_theme = { "lackluster", "lackluster-mint", "lackluster-hack", "lackluster-dark" }
-      if vim.tbl_contains(lackluster_theme, colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- NEOMODERN
-  {
-    "cdmill/neomodern.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local neomodern_theme = { "darkforest", "daylight", "coffeecat" }
-      if vim.tbl_contains(neomodern_theme, colorscheme) then
+      if vim.tbl_contains(lackluster_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -187,7 +120,7 @@ return {
     priority = 1000,
     enabled = function()
       local horizon_theme = { "horizon" }
-      if vim.tbl_contains(horizon_theme, colorscheme) then
+      if vim.tbl_contains(horizon_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -200,7 +133,7 @@ return {
     priority = 1000,
     enabled = function()
       local vscode_modern_theme = { "vscode_modern" }
-      if vim.tbl_contains(vscode_modern_theme, colorscheme) then
+      if vim.tbl_contains(vscode_modern_theme, vim.g.colorscheme) then
         return true
       end
       return false
@@ -220,7 +153,7 @@ return {
     priority = 1000,
     enabled = function()
       local catppuccintheme = { "catppuccin-mocha" }
-      if vim.tbl_contains(catppuccintheme, colorscheme) then
+      if vim.tbl_contains(catppuccintheme, vim.g.colorscheme) then
         return true
       end
     end,
@@ -240,7 +173,7 @@ return {
     priority = 1000,
     enabled = function()
       local colorstokyonight = { "tokyonight-night", "tokyonight-storm" }
-      if vim.tbl_contains(colorstokyonight, colorscheme) then
+      if vim.tbl_contains(colorstokyonight, vim.g.colorscheme) then
         return true
       end
     end,

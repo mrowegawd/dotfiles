@@ -1,9 +1,9 @@
 
-background = 24283b
-foreground = c0caf5
+background = #24283b
+foreground = #c0caf5
 
 # cursor none
-cursor-color = b3276f
+cursor-color = #b3276f
 
 palette = 0=#1d202f
 palette = 1=#f7768e

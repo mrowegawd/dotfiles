@@ -128,6 +128,8 @@ pidof -q picom || { picom --config "$HOME"/.config/bspwm/picom.conf & }
 # Launch eww (I HATE THIS BAR!)
 "$HOME/.config/eww/starteww.sh"
 
+# [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
+
 startup_lock_file=/tmp/bspwm-startup.lock
 if [ ! -f $startup_lock_file ]; then
   echo "dummy" >$startup_lock_file
@@ -138,7 +140,6 @@ if [ ! -f $startup_lock_file ]; then
   run_once zen-browser
 
   [ -f ~/.lesskey ] && run_once lesskey
-  # [ -f "$HOME/.config/polybar/runpolybar.sh" ] && run_once "$HOME/.config/polybar/runpolybar.sh"
   [ -f "$HOME/.config/dunst/rundust.sh" ] && run_once "$HOME/.config/dunst/rundust.sh"
   [ -f "$HOME/.config/miscxrdb/exbin/fehbg" ] && run_once "$HOME/.config/miscxrdb/exbin/fehbg"
   # [ -n "$(command -v dropbox)" ] && killall -q dropbox &&

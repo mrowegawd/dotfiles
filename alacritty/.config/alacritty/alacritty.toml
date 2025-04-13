@@ -328,19 +328,32 @@ y = 0
   # - { key: F11,      mods: Super,   chars: "\x1b[23;3~"                      }
   # - { key: F12,      mods: Super,   chars: "\x1b[24;3~"                      }
   # - { key: NumpadEnter,             chars: "\n"                              }
-# LACKLUSTER COLORS
 [colors.primary]
-background = '#0A0A0A'
+background = "#1f1f1f"
+foreground = "#cccccc"
+
+[colors.cursor]
+text = "#1f1f1f"
+cursor = "#FF0000"
 
 [colors.normal]
-# black is gray0
-black = '#080808'
-red = '#D70000'
-green = '#789978'
-yellow = '#ffAA88'
-blue = '#7788AA'
-magenta = '#D7007D'
-# cyan is set to lack
-cyan = '#708090'
-# white is set to luster
-white = '#DEEEED'
+black =   "#000000"
+red =     "#cd3131"
+green =   "#0dbc79"
+yellow =  "#e5e510"
+blue =    "#2472c8"
+magenta = "#bc3fbc"
+cyan =    "#11a8cd"
+white =   "#e5e5e5"
+
+[colors.bright]
+black =   "#666666"
+red =     "#f14c4c"
+green =   "#23d18b"
+yellow =  "#f5f543"
+blue =    "#3b8eea"
+magenta = "#d670d6"
+cyan =    "#29b8db"
+white =   "#e5e5e5"
+
+

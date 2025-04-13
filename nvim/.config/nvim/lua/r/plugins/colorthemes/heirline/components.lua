@@ -1,7 +1,5 @@
 local Conditions = require "heirline.conditions"
 
-local Col = RUtils.colortbl
-
 local M = {}
 
 -- local Spacer = { provider = "   " }
@@ -24,6 +22,19 @@ end
 -- local ft_right_exclude = { "qf", "trouble", "Outline", "aerial", "neo-tree", "DiffviewFiles" }
 -- local ft_left_exclude = { "qf", "neo-tree", "trouble", "Outline", "dashboard" }
 -- local ft_left_exclude = { "qf", "neo-tree", "dashboard" }
+
+local function get_hl_as_hex(opts, ns)
+  ns, opts = ns or 0, opts or {}
+  opts.link = opts.link ~= nil and opts.link or false
+  local hl = vim.api.nvim_get_hl(ns, opts)
+  hl.fg = hl.fg and ("#%06x"):format(hl.fg)
+  hl.bg = hl.bg and ("#%06x"):format(hl.bg)
+  return hl
+end
+
+local function h(name)
+  return get_hl_as_hex { name = name }
+end
 
 local state = { lsp_clients_visible = true }
 
@@ -88,43 +99,38 @@ local set_conditions = {
 }
 
 local colors = {
-  statusline_bg = Col.statusline_bg,
-  statusline_fg = Col.statusline_fg,
+  statusline_bg = h("StatusLine").bg,
+  statusline_fg = h("StatusLine").fg,
 
-  normal_bg = Col.normal_bg,
-  normal_fg_white = Col.normal_fg_white,
+  normal_bg = h("Normal").bg,
+  normal_fg_white = h("StatusLineFontWhite").fg,
 
-  filepath = Col.filepath,
+  filepath = h("StatusLineFilepath").fg,
 
-  normal_winbar_fg = Col.normal_winbar_active_fg,
-  filepath_winbar_active_fg = Col.filepath_winbar_active_fg,
-  filepath_winbar_active_fg_filename = Col.filepath_winbar_active_fg_filename,
-  filepath_winbar_fg = Col.filepath_winbar_fg,
+  winbar_filepath = h("WinbarFilepath").fg,
+  winbar_fontwhite = h("WinbarFontWhite").fg,
 
-  mode_bg = Col.mode_bg,
-  modenc_bg = Col.modenc_bg,
-  modenc_bg_blur = Col.modenc_bg_blur,
+  mode_bg = h("Keyword").fg,
 
-  branch_fg = Col.branch_fg,
-  modified_fg = Col.modified_fg,
-  coldisorent = Col.disorent,
-  directory = Col.directory,
-  notif = Col.notif,
-  session = Col.session,
+  branch_fg = h("StatusLineBranchName").fg,
+  modified_fg = h("KeywordMatch").fg,
+  coldisorent = h("LineNr").fg,
 
-  mode_insert_bg = Col.mode_insert_bg,
+  notif = h("StatusLineFontNotice").fg,
 
-  mode_term_bg = Col.mode_term_bg,
-  mode_visual_bg = Col.mode_visual_bg,
+  mode_insert_bg = h("KeywordMatch").fg,
 
-  diff_add = Col.diff_add,
-  diff_change = Col.diff_change,
-  diff_delete = Col.diff_delete,
+  mode_term_bg = h("Boolean").fg,
+  mode_visual_bg = h("Visual").bg,
 
-  diagnostic_err = Col.diagnostic_err,
-  diagnostic_hint = Col.diagnostic_hint,
-  diagnostic_info = Col.diagnostic_info,
-  diagnostic_warn = Col.diagnostic_warn,
+  diff_add = h("GitSignsAdd").fg,
+  diff_change = h("GitSignsChange").fg,
+  diff_delete = h("GitSignsDelete").fg,
+
+  diagnostic_err = h("DiagnosticSignError").fg,
+  diagnostic_hint = h("DiagnosticSignHint").fg,
+  diagnostic_info = h("DiagnosticSignInfo").fg,
+  diagnostic_warn = h("DiagnosticSignWarn").fg,
 }
 
 local exclude = {
@@ -239,23 +245,6 @@ M.Mode = {
   },
   { provider = "  " },
 }
-M.Mode_inactive = {
-  {
-    provider = function()
-      return string.format "      "
-    end,
-    hl = { bg = colors.modenc_bg },
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.modenc_bg, bg = colors.modenc_bg_blur },
-  },
-  {
-    provider = RUtils.config.icons.misc.separator_up,
-    hl = { fg = colors.modenc_bg_blur },
-  },
-  { provider = " " },
-}
 
 local function git_branch()
   return vim.tbl_get(vim.b.gitsigns_status_dict or {}, "head")
@@ -265,7 +254,7 @@ M.Branch = {
     return Conditions.is_git_repo() and git_branch() ~= nil
   end,
   {
-    provider = function(self)
+    provider = function()
       return " " .. git_branch() .. " "
     end,
     condition = function()
@@ -368,7 +357,7 @@ M.FilePath = {
     hl = function(self)
       local fg = colors.normal_fg_white
       if self.exclude_ft then
-        fg = tostring(colors.statusline_fg)
+        fg = colors.statusline_fg
       end
       return { fg = fg, bold = true, italic = true }
     end,
@@ -1239,23 +1228,17 @@ M.WinbarFilePath = {
       -- return statusline path untuk non active window
       return self.filename
     end,
-    hl = function()
-      local fg = colors.filepath_winbar_fg
-      if Conditions.is_active() then
-        fg = colors.filepath_winbar_active_fg
-      end
-      return { fg = fg, bold = true }
-    end,
+    hl = { fg = colors.winbar_filepath, bold = true },
   },
   {
     provider = function(self)
       return RUtils.file.basename(self.filename)
     end,
     hl = function()
-      local fg = colors.filepath_winbar_fg
+      local fg = colors.winbar_filepath
       local italic = true
       if Conditions.is_active() then
-        fg = colors.filepath_winbar_active_fg_filename
+        fg = colors.winbar_fontwhite
         italic = true
       end
       return { fg = fg, bold = true, italic = italic }
@@ -1292,10 +1275,7 @@ M.status_winbar_active_left = {
 
   M.Gap,
 
-  hl = function()
-    local bg = colors.normal_bg
-    return { fg = colors.normal_winbar_fg, bg = bg }
-  end,
+  hl = { fg = colors.statusline_fg, bg = colors.normal_bg },
 }
 
 return M
