@@ -149,27 +149,35 @@ function M.follow_link(is_selection)
         url = url
       end
     else
-      if is_selection then
-        vim.cmd "normal yy"
-        title = vim.fn.getreg '"0'
-        title = title:gsub("^(%[)(.+)(%])$", "%2")
-        title = remove_alias(title)
-
-        local parts = vim.split(title, "#")
-        if #parts > 0 then
-          url = string.format("https://google.com/search?q=%s", parts[1])
-        end
-      else
+      if not is_selection then
         url = string.format("https://google.com/search?q=%s", url)
       end
+
+      vim.cmd "normal yy"
+      title = vim.fn.getreg '"0'
+      title = title:gsub("^(%[)(.+)(%])$", "%2")
+      title = remove_alias(title)
+
+      local parts = vim.split(title, "#")
+      if #parts > 0 then
+        url = string.format("https://google.com/search?q=%s", parts[1])
+      end
     end
+
     -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
-
     local browser = os.getenv "NUBROWSER"
-    vim.fn.jobstart({ browser, url }, { detach = true })
+    local notif_msg = "Open with browser: "
+    local cmds = {}
+    if vim.bo.filetype == "octo" then
+      notif_msg = "Open with mpv: "
+      cmds =
+        { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
+    else
+      cmds = { browser, url }
+    end
 
-    -- Notification
-    -- vim.fn.jobstart({ "dunstify", "(NVIM) Search on browser:", url }, { detach = true })
+    vim.fn.jobstart(cmds, { detach = true })
+    RUtils.info(notif_msg .. url, { title = "Tasks" })
   end
 end
 

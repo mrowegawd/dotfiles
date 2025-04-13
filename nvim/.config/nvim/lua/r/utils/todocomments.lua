@@ -155,9 +155,7 @@ local function picker(contents, tbl_cts, fzf_opts)
 end
 
 local function todo(path)
-  vim.validate {
-    path = { path, "string" },
-  }
+  vim.validate { path = { path, "string" } }
 
   return function()
     local Search = require "todo-comments.search"
@@ -190,9 +188,7 @@ local function todo(path)
 end
 
 local function todo_note(path)
-  vim.validate {
-    path = { path, "string" },
-  }
+  vim.validate { path = { path, "string" } }
 
   return function()
     local Search = require "todo-comments.search"

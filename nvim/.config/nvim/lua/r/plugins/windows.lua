@@ -21,21 +21,8 @@ return {
   -- STICKYBUF.NVIM
   {
     "stevearc/stickybuf.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     cmd = { "PinBuffer", "PinBuftype", "PinFiletype" },
-    config = function()
-      require("stickybuf").setup {
-        get_auto_pin = function(buf)
-          if vim.bo[buf].filetype == "toggleterm" then
-            return nil
-          end
-          if vim.tbl_contains({ "Outline", "aerial", "trouble" }, vim.bo[buf].filetype) then
-            return "filetype"
-          end
-          return require("stickybuf").should_auto_pin(buf)
-        end,
-      }
-    end,
     keys = {
       {
         "<Leader>bp",
@@ -50,8 +37,21 @@ return {
         desc = "Buffer: pin buffer [stickybuf]",
       },
     },
+    config = function()
+      require("stickybuf").setup {
+        get_auto_pin = function(buf)
+          if vim.bo[buf].filetype == "toggleterm" then
+            return nil
+          end
+          if vim.tbl_contains({ "Outline", "aerial", "trouble", "git", "octo" }, vim.bo[buf].filetype) then
+            return "filetype"
+          end
+          return require("stickybuf").should_auto_pin(buf)
+        end,
+      }
+    end,
   },
-  -- KITTY NAVIGATOR
+  -- KITTY NAVIGATOR (disabled)
   {
     "MunsMan/kitty-navigator.nvim",
     -- enabled = os.getenv "TERMINAL" == "kitty",
@@ -139,7 +139,7 @@ return {
   -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
-    event = "VimEnter",
+    event = "BufReadPre",
     -- enabled = vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL"),
     opts = {
       ignored_filetypes = { "nofile", "quickfix", "prompt" },

@@ -2,6 +2,7 @@ return {
   -- MINI.ICONS
   {
     "echasnovski/mini.icons",
+    event = "BufReadPost",
     opts = {
       file = {
         [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
@@ -22,7 +23,7 @@ return {
   -- HEIRLINE
   {
     "rebelot/heirline.nvim",
-    event = "VimEnter",
+    event = "BufRead",
     opts = function()
       local comp = require "r.plugins.colorthemes.heirline.components"
       return {

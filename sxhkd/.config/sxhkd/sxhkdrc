@@ -30,7 +30,7 @@ super + i
 
 # window: navigate h,l
 super + ctrl + {h, l}
-        bspc node -f {next,prev}.local.!hidden.window
+        bspc node -f {prev,next}.local.!hidden.window
 
 # window: swap window
 super + shift + {Left,Down,Up,Right}

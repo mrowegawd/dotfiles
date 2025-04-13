@@ -1,5 +1,3 @@
-local Highlight = require "r.settings.highlights"
-
 local is_render_markdown = true
 return {
   recommended = function()
@@ -77,6 +75,7 @@ return {
   },
   -- NOTE: disable marksman, it makes the file markdown ft too slow
   -- { "neovim/nvim-lspconfig", opts = { servers = { marksman = {} } } },
+  --
   -- MARKDOWN-PREVIEW
   {
     "iamcco/markdown-preview.nvim",
@@ -88,6 +87,11 @@ return {
     config = function()
       vim.cmd [[do FileType]]
     end,
+  },
+  -- TABULARIZE
+  {
+    "godlygeek/tabular", -- tabularize lines of code
+    cmd = "Tabularize",
   },
   -- RENDER-MARKDOWN
   {
@@ -123,7 +127,6 @@ return {
         right_pad = 1,
         left_pad = 1,
       },
-      acknowledge_conflicts = true,
       render_modes = { "n", "c", "t", "i" },
       anti_conceal = {
         enabled = true,
@@ -146,158 +149,109 @@ return {
       },
     },
     config = function(_, opts)
-      local rose_pine = {
-        ["rose-pine-dawn"] = {
-          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
-          {
-            RenderMarkdownCodeInline = {
-              fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-              bg = { from = "Keyword", attr = "fg", alter = 4 },
-              bold = true,
-            },
-          },
-          { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
-        },
-        ["rose-pine-main"] = {
-          { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
-        },
-      }
-
+      local Highlight = require "r.settings.highlights"
       Highlight.plugin("rendermarkdownHi", {
-        theme = {
-          ["*"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-                bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
-                bold = true,
-              },
-            },
-            { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
-
-            {
-              RenderMarkdownH1Bg = {
-                fg = "NONE",
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
-                bg = "NONE",
-                reverse = false,
-              },
-            },
-            {
-              RenderMarkdownH2Bg = {
-                fg = "NONE",
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
-                bg = "NONE",
-                reverse = false,
-              },
-            },
-            {
-              RenderMarkdownH3Bg = {
-                fg = "NONE",
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
-                bg = "NONE",
-                reverse = false,
-              },
-            },
-            {
-              RenderMarkdownH4Bg = {
-                fg = "NONE",
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
-                bg = "NONE",
-                reverse = false,
-              },
-            },
-            {
-              RenderMarkdownH5Bg = {
-                fg = "NONE",
-                bg = "NONE",
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
-                reverse = false,
-              },
-            },
-            {
-              RenderMarkdownH6Bg = {
-                fg = "NONE",
-                bg = "NONE",
-                -- bg = { from = "Normal", attr = "bg", alter = 0.2 },
-                reverse = false,
-              },
-            },
-          },
-          ["jellybeans"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } } },
-          ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } } },
-          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-          ["nord"] = {
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-                bg = { from = "Keyword", attr = "fg", alter = -0.6 },
-              },
-            },
-          },
-          ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
-          ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
-          ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
-          ["lackluster"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
-
-            {
-              ["@markup.raw.markdown_inline"] = {
-                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
-                bg = { from = "Normal", attr = "bg", alter = 0.8 },
-                bold = true,
-              },
-            },
-            {
-              ["@markup.link.label.markdown_inline"] = {
-                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
-                bg = { from = "Normal", attr = "bg", alter = 0.8 },
-                bold = true,
-              },
-            },
-            {
-              ["@markup.quote.markdown"] = {
-                fg = { from = "@markup.heading.1.markdown", attr = "fg", alter = 0.1 },
-                bg = { from = "@markup.heading.1.markdown", attr = "fg", alter = -0.8 },
-                italic = true,
-              },
-            },
-            {
-              ["@markup.strong.markdown_inline"] = {
-                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-                bold = true,
-              },
-            },
-            {
-              ["@markup.italic.markdown_inline"] = {
-                fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-                bold = false,
-                italic = true,
-              },
-            },
-            {
-              ["@markup.raw.markdown_inline"] = {
-                fg = { from = "@markup.heading.1.markdown", attr = "fg" },
-                bg = { from = "Normal", attr = "bg" },
-                reverse = false,
-              },
-            },
-          },
-          ["zenburned"] = {
-            { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
-            {
-              RenderMarkdownCodeInline = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.2 },
-                bg = { from = "Keyword", attr = "fg", alter = -0.6 },
-              },
-            },
-          },
-        },
+        { RenderMarkdownH1Bg = { fg = "NONE", bg = "NONE", reverse = false } },
+        { RenderMarkdownH2Bg = { fg = "NONE", bg = "NONE", reverse = false } },
+        { RenderMarkdownH3Bg = { fg = "NONE", bg = "NONE", reverse = false } },
+        { RenderMarkdownH4Bg = { fg = "NONE", bg = "NONE", reverse = false } },
+        { RenderMarkdownH5Bg = { fg = "NONE", bg = "NONE", reverse = false } },
+        { RenderMarkdownH6Bg = { fg = "NONE", bg = "NONE", reverse = false } },
       })
+
       require("render-markdown").setup(opts)
     end,
+    --
+    -- local rose_pine = {
+    --   ["rose-pine-dawn"] = {
+    --     { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.05 } } },
+    --     {
+    --       RenderMarkdownCodeInline = {
+    --         fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+    --         bg = { from = "Keyword", attr = "fg", alter = 4 },
+    --         bold = true,
+    --       },
+    --     },
+    --     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
+    --   },
+    --   ["rose-pine-main"] = {
+    --     { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
+    --   },
+    -- }
+    --
+    -- Highlight.plugin("rendermarkdownHi", {
+    --   theme = {
+    --     ["jellybeans"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } } },
+    --     ["ashen"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.5 } } } },
+    --     ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
+    --     ["nord"] = {
+    --       {
+    --         RenderMarkdownCodeInline = {
+    --           fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+    --           bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+    --         },
+    --       },
+    --     },
+    --     ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
+    --     ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
+    --     ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
+    --     ["lackluster"] = {
+    --       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+    --
+    --       {
+    --         ["@markup.raw.markdown_inline"] = {
+    --           fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+    --           bg = { from = "Normal", attr = "bg", alter = 0.8 },
+    --           bold = true,
+    --         },
+    --       },
+    --       {
+    --         ["@markup.link.label.markdown_inline"] = {
+    --           fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+    --           bg = { from = "Normal", attr = "bg", alter = 0.8 },
+    --           bold = true,
+    --         },
+    --       },
+    --       {
+    --         ["@markup.quote.markdown"] = {
+    --           fg = { from = "@markup.heading.1.markdown", attr = "fg", alter = 0.1 },
+    --           bg = { from = "@markup.heading.1.markdown", attr = "fg", alter = -0.8 },
+    --           italic = true,
+    --         },
+    --       },
+    --       {
+    --         ["@markup.strong.markdown_inline"] = {
+    --           fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+    --           bg = "NONE",
+    --           bold = true,
+    --         },
+    --       },
+    --       {
+    --         ["@markup.italic.markdown_inline"] = {
+    --           fg = { from = "@markup.heading.5.markdown", attr = "fg", alter = -0.1 },
+    --           bg = "NONE",
+    --           bold = false,
+    --           italic = true,
+    --         },
+    --       },
+    --       {
+    --         ["@markup.raw.markdown_inline"] = {
+    --           fg = { from = "@markup.heading.1.markdown", attr = "fg" },
+    --           bg = { from = "Normal", attr = "bg" },
+    --           reverse = false,
+    --         },
+    --       },
+    --     },
+    --     ["zenburned"] = {
+    --       { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.15 } } },
+    --       {
+    --         RenderMarkdownCodeInline = {
+    --           fg = { from = "Keyword", attr = "fg", alter = 0.2 },
+    --           bg = { from = "Keyword", attr = "fg", alter = -0.6 },
+    --         },
+    --       },
+    --     },
+    --   },
+    -- })
   },
 }

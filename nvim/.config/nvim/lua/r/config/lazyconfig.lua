@@ -35,12 +35,8 @@ require("lazy").setup {
   change_detection = { notify = false },
   ui = { border = "rounded", size = { width = 0.8, height = 0.8 }, backdrop = 100, wrap = false },
   checker = { enabled = true, notify = false }, --   automatically check for plugin updates
-  defaults = { version = false },
   performance = {
-    reset_packpath = true, -- Reset the package path to improve startup time
     rtp = {
-      reset = true, -- Reset the runtime path to `$VIMRUNTIME` and your configuration directory
-
       -- To fix `:changes` showing invalid, remove `netrw*` from `disabled_plugins` field
       disabled_plugins = {
         "2html_plugin",
@@ -70,5 +66,9 @@ require("lazy").setup {
         "ftplugin",
       },
     },
+  },
+  rocks = {
+    hererocks = false,
+    enabled = false,
   },
 }

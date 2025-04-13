@@ -7,28 +7,15 @@ return {
       vim.g.startuptime_tries = 10
     end,
   },
-  -- NUMB-NVIM
-  {
-    "nacro90/numb.nvim",
-    event = "CmdlineEnter",
-    config = true,
-  },
-  -- TABULARIZE
-  {
-    "godlygeek/tabular", -- tabularize lines of code
-    cmd = "Tabularize",
-  },
   -- COMMENT-BOX
   {
     "LudoPinelli/comment-box.nvim",
-    event = "BufRead",
+    event = "InsertEnter",
   },
   -- VIM-HIGHLIGHTER
   {
     -- https://github.com/t9md/vim-quickhl (alternative)
     "azabiong/vim-highlighter",
-    event = "LazyFile",
-    cmd = { "Hi", "HI" },
     keys = {
       {
         "<c-Down>",
@@ -72,37 +59,35 @@ return {
     -- jika belum login, gunakan `:SourcegraphLogin`
     config = true,
   },
-  -- NVIM-CHEAT
+  -- NVIM-CHEAT (disabled)
   {
     "RishabhRD/nvim-cheat.sh",
+    enabled = false,
     cmd = { "Cheat", "CheatWithoutComments", "CheatList" },
-    dependencies = {
-      "RishabhRD/popfix",
-    },
+    dependencies = { "RishabhRD/popfix" },
     config = function()
       vim.g.cheat_default_window_layout = "vertical_split"
     end,
   },
   -- HAWTKEYS (disabled)
-  { -- use only when necessary.
-    "tris203/hawtkeys.nvim",
+  {
+    "tris203/hawtkeys.nvim", -- use only when necessary.
     enabled = false,
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
+    cmd = { "Hawtkeys", "HawtkeysDupes" },
+    dependencies = { "nvim-lua/plenary.nvim" },
     opts = true,
   },
-  -- ORPHANS
+  -- ORPHANS (disabled)
   {
     -- Easily identify abandoned neovim plugins
     "ZWindL/orphans.nvim",
+    enabled = false,
     cmd = "Orphans",
     config = function()
       require("orphans").setup {}
     end,
   },
-  -- KEYANALYZER
+  -- KEYANALYZER (disabled)
   {
     -- :KeyAnalyzer <prefix> [mode]
     -- example:
@@ -115,11 +100,13 @@ return {
     -- :KeyAnalyzer <C-M>x i 	  Show mappings starting with CTRL + M x in insert mode
     "meznaric/key-analyzer.nvim",
     cmd = "KeyAnalyzer",
+    enabled = false,
     opts = {},
   },
-  -- FEED
+  -- FEED (disabled)
   {
     "neo451/feed.nvim",
+    enabled = false,
     cmd = "Feed",
     config = function()
       require("feed").setup {

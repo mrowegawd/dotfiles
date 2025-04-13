@@ -132,7 +132,7 @@ opt.smarttab = true -- Use shiftwidths at left margin, tabstops everywhere else
 opt.statuscolumn = [[%!v:lua.require'r.utils'.ui.get()]] -- ex:"%=%{&nu ? v:relnum && mode() != 'i' ? v:relnum : v:lnum : ''} %s%C"
 opt.formatexpr = "v:lua.require'r.utils'.format.formatexpr()"
 opt.formatoptions = "jcroqlnt" -- tcqj
-opt.splitkeep = "cursor" -- cursor, screen
+opt.splitkeep = "screen" -- cursor, screen
 opt.splitbelow = true -- ':new' ':split' below current
 opt.splitright = true -- ':vnew' ':vsplit' right of current
 opt.equalalways = false -- New vim windows created won't make everything back to same sizes
@@ -320,19 +320,19 @@ vim.g.undotree_WindowLayout = 2
 vim.g.undotree_SetFocusWhenToggle = 1
 vim.g.undotree_DiffCommand = "diff -u"
 
-if vim.env.PROF then
-  -- example for lazy.nvim
-  -- change this to the correct path for your plugin manager
-  local snacks = vim.fn.stdpath "data" .. "/lazy/snacks.nvim"
-  vim.opt.rtp:append(snacks)
-  require("snacks.profiler").startup {
-    startup = {
-      event = "VimEnter", -- stop profiler on this event. Defaults to `VimEnter`
-      -- event = "UIEnter",
-      -- event = "VeryLazy",
-    },
-  }
-end
+-- if vim.env.PROF then
+--   -- example for lazy.nvim
+--   -- change this to the correct path for your plugin manager
+--   local snacks = vim.fn.stdpath "data" .. "/lazy/snacks.nvim"
+--   vim.opt.rtp:append(snacks)
+--   require("snacks.profiler").startup {
+--     startup = {
+--       event = "VimEnter", -- stop profiler on this event. Defaults to `VimEnter`
+--       -- event = "UIEnter",
+--       -- event = "VeryLazy",
+--     },
+--   }
+-- end
 
 -- }}}
 -- {{{ Foldexpr, foldtext, smoothscroll

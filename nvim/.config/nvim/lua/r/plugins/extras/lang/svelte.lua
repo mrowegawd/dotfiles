@@ -57,6 +57,7 @@ return {
 
   {
     "conform.nvim",
+    optional = true,
     opts = function(_, opts)
       if RUtils.has_extra "formatting.prettier" then
         opts.formatters_by_ft = opts.formatters_by_ft or {}

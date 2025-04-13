@@ -14,6 +14,7 @@ return {
     "saghen/blink.cmp",
     version = not vim.g.lazyvim_blink_main and "*",
     build = vim.g.lazyvim_blink_main and "cargo build --release",
+    event = "InsertEnter",
     opts_extend = {
       "sources.completion.enabled_providers",
       "sources.compat",
@@ -29,7 +30,6 @@ return {
         version = not vim.g.lazyvim_blink_main and "*",
       },
     },
-    event = "InsertEnter",
     opts = {
       -- custom props to disable blink in certain filetypes
       disable_ft = { "prompt", "TelescopePrompt", "snacks_picker_input" },

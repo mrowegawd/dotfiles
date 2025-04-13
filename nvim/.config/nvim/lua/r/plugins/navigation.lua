@@ -1,11 +1,3 @@
-local Highlight = require "r.settings.highlights"
-
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-
-local lazyterm = function()
-  RUtils.terminal { cwd = RUtils.root() }
-end
-
 local toggle_state = false
 
 return {
@@ -19,7 +11,7 @@ return {
       {
         "<a-e>",
         function()
-          vim.cmd "Neotree toggle"
+          vim.cmd "Neotree toggle right"
         end,
         desc = "Misc: open file explore [neotree]",
       },
@@ -28,7 +20,7 @@ return {
         "<a-W>",
         function()
           local wiki_path = RUtils.config.path.wiki_path
-          vim.cmd(string.format("Neotree dir=%s", wiki_path))
+          vim.cmd(string.format("Neotree dir=%s right", wiki_path))
         end,
         desc = "Misc: open file wikis explore [neotree]",
       },
@@ -58,6 +50,34 @@ return {
       local Preview = require "neo-tree.sources.common.preview"
       -- local events = require "neo-tree.events"
       local log = require "neo-tree.log"
+      local Highlight = require "r.settings.highlights"
+      Highlight.plugin("NeoTreeHi", {
+        theme = {
+          ["*"] = {
+            { Directory = { link = "Directory" } },
+            { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
+            { NeoTreeNormal = { link = "PanelBackground" } },
+            { NeoTreeNormalNC = { link = "PanelBackground" } },
+            { NeoTreeCursorLine = { link = "CursorLine" } },
+            { NeoTreeRootName = { fg = { from = "Comment", attr = "fg" } } },
+            { NeoTreeStatusLine = { link = "PanelStusLine" } },
+            { NeoTreeWinSeparator = { link = "WinSeparator" } },
+            { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
+            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 1 }, bold = false } },
+            { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
+            { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
+
+            { NeoTreeGitAdded = { link = "GitSignsAdd" } },
+            { NeoTreeGitModified = { link = "GitSignsChange" } },
+            {
+              NeoTreeTabSeparatorInactive = {
+                inherit = "NeoTreeTabInactive",
+                fg = { from = "PanelDarkBackground", attr = "bg" },
+              },
+            },
+          },
+        },
+      })
 
       return {
         sources = { "filesystem", "git_status" },
@@ -165,7 +185,7 @@ return {
               end
             end
 
-            return fzf_lua.fzf_exec(reverse, {
+            return require("fzf-lua").fzf_exec(reverse, {
               prompt = RUtils.fzflua.default_title_prompt(),
               winopts = {
                 title = RUtils.fzflua.format_title("FzMark", "󰈙"),
@@ -223,7 +243,7 @@ return {
           end,
 
           open_terminal = function()
-            lazyterm()
+            RUtils.terminal { cwd = RUtils.root() }
           end,
 
           toggle_open_preview = function(state)
@@ -264,7 +284,7 @@ return {
               if choice == cmds[1] then
                 vim.cmd "wincmd l"
                 vim.schedule(function()
-                  fzf_lua.live_grep_glob {
+                  require("fzf-lua").live_grep_glob {
                     winopts = {
                       title = RUtils.fzflua.format_title(choice, "󰈙"),
                     },
@@ -294,7 +314,7 @@ return {
 
               if choice == cmds[2] then
                 vim.cmd "wincmd l"
-                fzf_lua.files {
+                require("fzf-lua").files {
                   winopts = {
                     title = RUtils.fzflua.format_title(choice, "󰈙"),
                   },
@@ -334,9 +354,9 @@ return {
               ["<Leader>ghA"] = "git_add_all",
               ["<Leader>ghu"] = "git_unstage_file",
               ["<Leader>ghr"] = "git_revert_file",
-              ["gp"] = "noop",
               ["w"] = "noop",
-              ["gn"] = "noop",
+              ["gp"] = "prev_git_modified",
+              ["gn"] = "next_git_modified",
               ["gg"] = "noop",
               ["i"] = "show_file_details",
               ["e"] = "child_or_open",
@@ -375,6 +395,8 @@ return {
             ["zO"] = "expand_all_nodes",
             ["gh"] = "prev_source",
             ["gl"] = "next_source",
+            ["gp"] = "prev_git_modified",
+            ["gn"] = "next_git_modified",
             [",c"] = { "order_by_created", nowait = false },
             [",d"] = { "order_by_diagnostics", nowait = false },
             [",m"] = { "order_by_modified", nowait = false },
@@ -408,33 +430,6 @@ return {
         end,
       })
 
-      Highlight.plugin("NeoTreeHi", {
-        theme = {
-          ["*"] = {
-            { Directory = { link = "Directory" } },
-            { NeoTreeFileName = { fg = { from = "Normal", attr = "fg" } } },
-            { NeoTreeNormal = { link = "PanelBackground" } },
-            { NeoTreeNormalNC = { link = "PanelBackground" } },
-            { NeoTreeCursorLine = { link = "CursorLine" } },
-            { NeoTreeRootName = { fg = { from = "Comment", attr = "fg" } } },
-            { NeoTreeStatusLine = { link = "PanelStusLine" } },
-            { NeoTreeWinSeparator = { link = "WinSeparator" } },
-            { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
-            { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 1 }, bold = false } },
-            { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
-            { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
-
-            { NeoTreeGitAdded = { link = "GitSignsAdd" } },
-            { NeoTreeGitModified = { link = "GitSignsChange" } },
-            {
-              NeoTreeTabSeparatorInactive = {
-                inherit = "NeoTreeTabInactive",
-                fg = { from = "PanelDarkBackground", attr = "bg" },
-              },
-            },
-          },
-        },
-      })
       vim.g.neo_tree_remove_legacy_commands = 1
     end,
   },
@@ -509,8 +504,6 @@ return {
   -- OUTLINE.NVIM
   {
     "mrowegawd/outline.nvim",
-    -- enabled = false,
-    event = "VeryLazy",
     keys = {
       {
         "<Leader>oa",
@@ -646,51 +639,30 @@ return {
       }
 
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
-      Highlight.plugin("OutlineAuHi", {
-        theme = {
-          ["*"] = {
-            {
-              OutlineCurrent = {
-                fg = { from = "Keyword", attr = "fg", alter = 0.1 },
-                bg = { from = "Keyword", attr = "fg", alter = -0.5 },
-                bold = true,
-              },
-            },
-            { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-            { OutlineJumpHighlight = { bg = "red", fg = "NONE" } },
-            { OutlineLineno = { bg = "NONE" } },
-            { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-            { OutlineGuides = { link = "IndentGuides" } },
-          },
-          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-          ["ashen"] = {
-            { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-            { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-            { OutlineGuides = { link = "IndentGuides" } },
-          },
-          ["ef-eagle"] = {
-            {
-              OutlineCurrent = {
-                fg = { from = "Keyword", attr = "fg", alter = 1.5 },
-                bg = { from = "Keyword", attr = "fg", alter = 0.2 },
-                bold = true,
-              },
-            },
-          },
-          ["lackluster"] = {
-            {
-              OutlineCurrent = {
-                fg = { from = "Directory", attr = "fg", alter = 0.5 },
-                bg = { from = "Directory", attr = "fg", alter = -0.5 },
-                bold = true,
-              },
-            },
-            { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-            { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-            { OutlineGuides = { link = "IndentGuides" } },
-          },
-        },
-      })
+      -- Highlight.plugin("OutlineAuHi", {
+      --   theme = {
+      --     ["*"] = {
+      --     },
+      --     ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
+      --     ["ashen"] = {
+      --       { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+      --       { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+      --       { OutlineGuides = { link = "IndentGuides" } },
+      --     },
+      --     ["lackluster"] = {
+      --       {
+      --         OutlineCurrent = {
+      --           fg = { from = "Directory", attr = "fg", alter = 0.5 },
+      --           bg = { from = "Directory", attr = "fg", alter = -0.5 },
+      --           bold = true,
+      --         },
+      --       },
+      --       { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
+      --       { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
+      --       { OutlineGuides = { link = "IndentGuides" } },
+      --     },
+      --   },
+      -- })
 
       local kind = RUtils.config.icons.kinds
 
@@ -917,21 +889,21 @@ return {
       }
     end,
     opts = function()
-      Highlight.plugin("NeoEdgyHi", {
-        theme = {
-          ["*"] = {
-            { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.4 }, fg = "NONE" } },
-            { EdgyWinBar = { bg = "NONE" } },
-            { EdgyNormal = { bg = "NONE" } },
-            { EdgyTitle = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
-            { EdgyIcon = { bold = true } },
-            { EdgyIconActive = { bold = true } },
-          },
-          ["lackluster"] = {
-            { EdgyTitle = { fg = { from = "Directory", attr = "fg", alter = 1 }, bold = true } },
-          },
-        },
-      })
+      -- Highlight.plugin("NeoEdgyHi", {
+      --   theme = {
+      --     ["*"] = {
+      --       { AerialLine = { bg = { from = "Normal", attr = "bg", alter = 0.4 }, fg = "NONE" } },
+      --       { EdgyWinBar = { bg = "NONE" } },
+      --       { EdgyNormal = { bg = "NONE" } },
+      --       { EdgyTitle = { fg = { from = "Keyword", attr = "fg" }, bold = true } },
+      --       { EdgyIcon = { bold = true } },
+      --       { EdgyIconActive = { bold = true } },
+      --     },
+      --     ["lackluster"] = {
+      --       { EdgyTitle = { fg = { from = "Directory", attr = "fg", alter = 1 }, bold = true } },
+      --     },
+      --   },
+      -- })
 
       local opts = {
         animate = { enabled = false },

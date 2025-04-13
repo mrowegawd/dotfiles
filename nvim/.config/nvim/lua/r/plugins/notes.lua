@@ -1,14 +1,7 @@
-local fmt, api = string.format, vim.api
-
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-
-local Highlight = require "r.settings.highlights"
-
 return {
   -- ORGMODE
   {
     "nvim-orgmode/orgmode",
-    event = "VeryLazy",
     ft = { "org" },
     keys = {
       {
@@ -33,14 +26,12 @@ return {
         desc = "Note: open agenda orgmode [orgmode]",
       },
     },
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "akinsho/org-bullets.nvim",
-    },
+    dependencies = { "akinsho/org-bullets.nvim" },
     opts = function()
+      local Highlight = require "r.settings.highlights"
       local done_hi = Highlight.get("Comment", "fg")
-      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("Error", "fg"))
-      local todo_fg = Highlight.get("Error", "fg")
+      local bg_hi = Highlight.darken(Highlight.get("Normal", "bg"), 0.5, Highlight.get("KeywordMatch", "fg"))
+      local todo_fg = Highlight.get("KeywordMatch", "fg")
       return {
         ui = {
           menu = {
@@ -53,10 +44,10 @@ return {
                 :totable()
 
               vim.ui.select(items, {
-                prompt = fmt(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
+                prompt = string.format(RUtils.config.icons.misc.fire .. " %s ", data.prompt),
                 kind = "pojokan",
                 format_item = function(item)
-                  return fmt("%s → %s", item.key, item.label)
+                  return string.format("%s → %s", item.key, item.label)
                 end,
               }, function(choice)
                 if not choice then
@@ -75,12 +66,12 @@ return {
           -- fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
 
           -- PC / Laptop
-          fmt("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
-          fmt("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
-          fmt("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
-          fmt("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
+          string.format("%s/orgmode/project-todo/**/*", RUtils.config.path.wiki_path),
         },
-        org_default_notes_file = fmt("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
+        org_default_notes_file = string.format("%s/orgmode/gtd/refile.org", RUtils.config.path.wiki_path),
         org_todo_keywords = {
           "TODO(t)",
           "LEARNING(l)", -- task untuk jadwal learning
@@ -169,8 +160,8 @@ return {
             org_agenda_clockreport_mode = "<prefix>cP",
 
             org_agenda_priority = "<prefix>P",
-            org_agenda_priority_up = ">",
-            org_agenda_priority_down = "<",
+            org_agenda_priority_up = "<S-Up>",
+            org_agenda_priority_down = "<S-Down>",
 
             org_agenda_archive = "<F9>",
             org_agenda_toggle_archive_tag = "<prefix><F9>",
@@ -221,9 +212,9 @@ return {
             org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
 
-            org_insert_heading_respect_content = "<prefix>ih", -- Add new headling after current heading block with same level
+            org_insert_heading_respect_content = "<CR>", -- Add new headling after current heading block with same level
             org_insert_todo_heading = "<prefix>iT", -- Add new todo headling right after current heading with same level
-            org_insert_todo_heading_respect_content = "<prefix>it", -- Add new todo headling after current heading block on same level
+            org_insert_todo_heading_respect_content = "<c-t>", -- Add new todo headling after current heading block on same level
 
             org_next_visible_heading = "<c-n>",
             org_previous_visible_heading = "<c-p>",
@@ -252,15 +243,15 @@ return {
             org_clock_out = "<prefix>co",
 
             org_priority = "<prefix>P",
-            org_priority_up = ">",
-            org_priority_down = "<",
+            org_priority_up = "<S-Up>",
+            org_priority_down = "<S-Down>",
 
-            org_do_promote = "<c-Left>",
-            org_do_demote = "<c-Right>",
-            org_promote_subtree = "<Left>",
-            org_demote_subtree = "<Right>",
-            org_move_subtree_up = "<s-Up>",
-            org_move_subtree_down = "<s-Down>",
+            org_do_promote = "<",
+            org_do_demote = ">",
+            org_promote_subtree = "<a-<>",
+            org_demote_subtree = "<a->>",
+            org_move_subtree_up = "<a-k>",
+            org_move_subtree_down = "<a-j>",
 
             org_refile = "<prefix>r",
             org_add_note = "<prefix>a",
@@ -297,6 +288,7 @@ return {
       {
         "<Localleader>ag",
         function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.live_grep_glob {
             prompt = RUtils.fzflua.default_title_prompt(),
             cwd = RUtils.config.path.wiki_path,
@@ -314,6 +306,7 @@ return {
       {
         "<Localleader>ag",
         function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           local viz = RUtils.cmd.get_visual_selection { strict = true }
           if viz then
             return fzf_lua.grep {
@@ -338,6 +331,7 @@ return {
       {
         "<Localleader>af",
         function()
+          local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.files {
             prompt = RUtils.fzflua.default_title_prompt(),
             cwd = RUtils.config.path.wiki_path,
@@ -516,7 +510,7 @@ return {
         event = { "FileType" },
         pattern = { "markdown" },
         command = function()
-          require("r.keymaps.note").neorg_mappings_ft(api.nvim_get_current_buf())
+          require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
         end,
       })
     end,
@@ -524,7 +518,6 @@ return {
   -- SNIPRUN
   {
     "michaelb/sniprun", -- task runner for code blocks
-    event = "VeryLazy",
     build = "bash install.sh",
     cmd = { "SnipRun" },
     opts = {

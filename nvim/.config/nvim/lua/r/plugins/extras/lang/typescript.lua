@@ -267,18 +267,23 @@ return {
   {
     "dmmulroy/tsc.nvim",
     cmd = { "TSC" },
-    config = true,
+    config = function()
+      require("tsc").setup()
+    end,
   },
   -- PACKAGE-INFO.NVIM
   {
     "vuki656/package-info.nvim",
     event = "BufEnter package.json",
-    config = true,
+    config = function()
+      require("package-info").setup()
+    end,
   },
 
   -- Filetype icons
   {
     "echasnovski/mini.icons",
+    optional = true,
     opts = {
       file = {
         [".eslintrc.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },

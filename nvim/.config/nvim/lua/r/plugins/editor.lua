@@ -1,38 +1,11 @@
-local Highlight = require "r.settings.highlights"
-
 return {
   -- FLASH.NVIM
   {
     "folke/flash.nvim",
-    opts = function()
-      Highlight.plugin("flash.nvim", {
-        {
-          FlashMatch = {
-            fg = "white",
-            bg = "red",
-            bold = true,
-          },
-        },
-        {
-          FlashLabel = {
-            bg = "black",
-            fg = "yellow",
-            bold = true,
-            strikethrough = false,
-          },
-        },
-        { FlashCursor = { bg = { from = "ColorColumn", attr = "bg", alter = 5 }, bold = true } },
-      })
-      return {
-        modes = {
-          char = {
-            keys = { "F", "T", ";" }, -- remove "," from keys
-          },
-          search = { enabled = false },
-        },
-        jump = { nohlsearch = true },
-      }
-    end,
+    opts = {
+      modes = { char = { keys = { "F", "T", ";" } }, search = { enabled = false } },
+      jump = { nohlsearch = true },
+    },
     -- stylua: ignore
     keys = {
       { "s", function() require("flash").jump() end, mode = { "n", "x", "o" }, desc = "Flash: jump" },
@@ -45,14 +18,15 @@ return {
   {
     "MagicDuck/grug-far.nvim",
     cmd = { "GrugFar", "GrugFarWithin" },
+    dependencies = { "mrjones2014/smart-splits.nvim" },
     keys = {
       {
-        "<Leader>uF",
+        "<Leader>oF",
         "<CMD>GrugFar<CR>",
-        desc = "Misc: open grug [grugfar]",
+        desc = "Open: grug far [grugfar]",
       },
       {
-        "<Leader>uF",
+        "<Leader>oF",
         function()
           local grug = require "grug-far"
           local ext = vim.bo.buftype == "" and vim.fn.expand "%:e"
@@ -64,131 +38,181 @@ return {
           }
         end,
         mode = { "v" },
-        desc = "Misc: open grug (visual) [grugfar]",
+        desc = "Open: grug far (visual) [grugfar]",
+      },
+    },
+    opts = {
+      keymaps = {
+        replace = { n = "<c-c>" },
+        qflist = { n = "<c-q>" },
+        syncLocations = { n = "<Localleader>s" },
+        syncLine = { n = "<Localleader>l" },
+        close = { n = "q" },
+        historyOpen = { n = "<Leader>h" },
+        historyAdd = { n = "<Leader>A" },
+        refresh = { n = "R" },
+        gotoLocation = { n = "<enter>" },
+        pickHistoryEntry = { n = "<enter>" },
+      },
+    },
+  },
+  -- NUMB-NVIM
+  {
+    "nacro90/numb.nvim",
+    event = "BufReadPost",
+    config = true,
+  },
+  -- TROUBLE.NVIM
+  {
+    "folke/trouble.nvim",
+    cmd = "Trouble",
+    keys = {
+      {
+        "<Leader>xr",
+        "<cmd>Trouble lsp_references toggle focus=true auto_refresh=false<cr>",
+        desc = "Exec: references LSP [trouble]",
+      },
+      {
+        "<c-q>",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+
+          vim.cmd "Trouble quickfix toggle focus=true"
+        end,
+        ft = "qf",
+        desc = "Exec: open qf in trouble [trouble]",
+      },
+      -- {
+      --   "gi",
+      --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
+      --   desc = "LSP: implementations [trouble]",
+      -- },
+      -- {
+      --   "gO",
+      --   "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=right<cr>",
+      --   desc = "LSP: outgoing calls [trouble]",
+      -- },
+      -- {
+      --   "gI",
+      --   "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=right<cr>",
+      --   desc = "LSP: incomming calls [trouble]",
+      -- },
+      -- {
+      --   "gt",
+      --   "<cmd>Trouble lsp_type_definitions<CR>",
+      --   desc = "LSP: type definitions [trouble]",
+      -- },
+      {
+        "<Leader>xt",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd [[Trouble todo toggle filter.buf=0]]
+        end,
+        desc = "Exec: check TodoTrouble curbuf [trouble]",
+      },
+      {
+        "<Leader>xT",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd [[TodoTrouble]]
+        end,
+        desc = "Exec: check TodoTrouble global [trouble]",
+      },
+      {
+        "<Leader>xD",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+
+          vim.cmd [[Trouble diagnostics toggle]]
+        end,
+        desc = "Exec: workspaces diagnostics [trouble]",
+      },
+      {
+        "<Leader>xd",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
+        end,
+        desc = "Exec: document diagnostisc [trouble]",
+      },
+      {
+        "<Leader>xl",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd "Trouble loclist toggle"
+        end,
+        desc = "Exec: open location list with [trouble]",
+      },
+      {
+        "<Leader>xq",
+        function()
+          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
+          if qf_win.found then
+            vim.cmd [[cclose]]
+          end
+          vim.cmd "Trouble qflist toggle"
+        end,
+        desc = "Exec: open quickfix (qf) list with [trouble]",
       },
     },
     opts = function()
-      Highlight.plugin("grugfarHiCo", {
-        theme = {
-          ["*"] = {
-            {
-              GrugFarResultsPath = {
-                fg = { from = "GrugFarHelpHeaderKey", attr = "fg" },
-                bg = { from = "GrugFarHelpHeaderKey", attr = "fg", alter = -0.65 },
-                -- bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
-                bold = true,
-                underline = false,
-              },
-            },
-            {
-              GrugFarResultsLineNo = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-                bg = { from = "Normal", attr = "bg", alter = 0.2 },
-              },
-            },
-            { GrugFarResultsLineColumn = { link = "GrugFarResultsLineNo" } },
-
-            {
-              GrugFarResultsMatch = {
-                fg = { from = "CurSearch", attr = "bg", alter = 0.5 },
-                bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
-                bold = true,
-              },
-            },
-            {
-              GrugFarResultsNumberLabel = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
-              },
-            },
-          },
-          ["oxocarbon"] = {
-            {
-              GrugFarResultsLineNo = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-                bg = { from = "Normal", attr = "bg", alter = 0.4 },
-              },
-            },
-            { GrugFarResultsLineColumn = { link = "GrugFarResultsLineNo" } },
-            {
-              GrugFarResultsMatch = {
-                fg = { from = "CurSearch", attr = "bg", alter = 0.2 },
-                bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
-                bold = true,
-              },
-            },
-          },
-          ["ashen"] = {
-            {
-              GrugFarResultsLineNo = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-              },
-            },
-            {
-              GrugFarResultsMatch = {
-                fg = { from = "CurSearch", attr = "bg", alter = -0.2 },
-                bg = { from = "CurSearch", attr = "bg", alter = -0.7 },
-                bold = true,
-              },
-            },
-          },
-          ["ef-eagle"] = {
-            {
-              GrugFarResultsPath = {
-                fg = { from = "GrugFarHelpHeaderKey", attr = "fg" },
-                bg = { from = "Normal", attr = "bg", alter = -0.1 },
-                -- bg = Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
-                bold = true,
-                underline = false,
-              },
-            },
-          },
-          ["nord"] = {
-            {
-              GrugFarResultsLineNo = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-              },
-            },
-            {
-              GrugFarResultsMatch = {
-                fg = { from = "CurSearch", attr = "bg", alter = 0.8 },
-                bg = { from = "CurSearch", attr = "bg", alter = -0.6 },
-                bold = true,
-              },
-            },
-          },
-          ["lackluster"] = {
-            {
-              GrugFarResultsLineNo = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-              },
-            },
-            {
-              GrugFarResultsMatch = {
-                fg = { from = "Directory", attr = "fg", alter = 0.8 },
-                bg = { from = "Directory", attr = "fg", alter = -0.5 },
-                bold = true,
-              },
-            },
-            {
-              GrugFarResultsNumberLabel = {
-                fg = { from = "Directory", attr = "fg" },
-              },
-            },
+      local icons_lsp = RUtils.config.icons.kinds
+      return {
+        icons = {
+          kinds = {
+            Array = icons_lsp.Array,
+            Boolean = icons_lsp.Boolean,
+            Class = icons_lsp.Classs,
+            Constant = icons_lsp.Constant,
+            Constructor = icons_lsp.Constructor,
+            Enum = icons_lsp.Enum,
+            EnumMember = icons_lsp.EnumMember,
+            Event = icons_lsp.Event,
+            Field = icons_lsp.Field,
+            File = icons_lsp.File,
+            Function = icons_lsp.Function,
+            Interface = icons_lsp.Interface,
+            Key = icons_lsp.Interface,
+            Method = icons_lsp.Key,
+            Module = icons_lsp.Method,
+            Namespace = icons_lsp.Namespace,
+            Null = icons_lsp.Null,
+            Number = icons_lsp.Number,
+            Object = icons_lsp.Object,
+            Operator = icons_lsp.Operator,
+            Package = icons_lsp.Package,
+            Property = icons_lsp.Property,
+            String = icons_lsp.String,
+            Struct = icons_lsp.Struct,
+            TypeParameter = icons_lsp.TypeParameter,
+            Variable = icons_lsp.Variable,
           },
         },
-      })
-      return {
-        keymaps = {
-          replace = { n = "<c-c>" },
-          qflist = { n = "<c-q>" },
-          syncLocations = { n = "<Localleader>s" },
-          syncLine = { n = "<Localleader>l" },
-          close = { n = "q" },
-          historyOpen = { n = "<Leader>h" },
-          historyAdd = { n = "<Leader>A" },
-          refresh = { n = "R" },
-          gotoLocation = { n = "<enter>" },
-          pickHistoryEntry = { n = "<enter>" },
+        keys = {
+          ["<esc>"] = "cancel",
+          q = "close",
+          o = "jump",
+          zk = "fold_toggle",
+          ["<c-n>"] = "next",
+          ["<c-p>"] = "prev",
         },
       }
     end,
@@ -196,28 +220,23 @@ return {
   -- TODOCOMMENTS
   {
     "folke/todo-comments.nvim",
-    event = "LazyFile",
-    cmd = { "TodoTrouble", "TodoTelescope" },
+    event = "BufReadPost",
     keys = {
       {
         "<Leader>fT",
         function()
-          RUtils.todocomments.search_global {
-            title = "Global",
-          }
+          RUtils.todocomments.search_global { title = "Global" }
           vim.cmd "normal! zz"
         end,
-        desc = "TODOCOMMENTS: todo global dir (fzflua)",
+        desc = "Picker: todo global dir (fzflua) [todocomments]",
       },
       {
         "<Leader>ft",
         function()
-          RUtils.todocomments.search_local {
-            title = "Curbuf",
-          }
+          RUtils.todocomments.search_local { title = "Curbuf" }
           vim.cmd "normal! zz"
         end,
-        desc = "TODOCOMMENTS: todo local dir (fzflua)",
+        desc = "Picker: todo local dir (fzflua) [todocomments]",
       },
       -- { "<Leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>", desc = "Todo/Fix/Fixme" },
     },
@@ -273,400 +292,5 @@ return {
         },
       },
     },
-  },
-  -- TROUBLE.NVIM
-  {
-    "folke/trouble.nvim",
-    cmd = "Trouble",
-    keys = {
-      {
-        "<Leader>xr",
-        "<cmd>Trouble lsp_references toggle focus=true auto_refresh=false<cr>",
-        desc = "LSP: references [trouble]",
-      },
-      {
-        "<c-q>",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-
-          vim.cmd "Trouble quickfix toggle focus=true"
-        end,
-        ft = "qf",
-        desc = "QF: open in trouble [trouble]",
-      },
-      -- {
-      --   "gi",
-      --   "<cmd>Trouble lsp_implementations toggle focus=true win.position=right<cr>",
-      --   desc = "LSP: implementations [trouble]",
-      -- },
-      -- {
-      --   "gO",
-      --   "<cmd>Trouble lsp_outgoing_calls toggle focus=true win.position=right<cr>",
-      --   desc = "LSP: outgoing calls [trouble]",
-      -- },
-      -- {
-      --   "gI",
-      --   "<cmd>Trouble lsp_incoming_calls toggle focus=true win.position=right<cr>",
-      --   desc = "LSP: incomming calls [trouble]",
-      -- },
-      -- {
-      --   "gt",
-      --   "<cmd>Trouble lsp_type_definitions<CR>",
-      --   desc = "LSP: type definitions [trouble]",
-      -- },
-      {
-        "<Leader>xt",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-          vim.cmd [[TodoTrouble]]
-        end,
-        desc = "Trouble: todo trouble [trouble]",
-      },
-      {
-        "<Leader>xD",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-
-          vim.cmd [[Trouble diagnostics toggle]]
-        end,
-        desc = "Diagnostic: workspaces diagnostics [trouble]",
-      },
-      {
-        "<Leader>xd",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-          vim.cmd [[Trouble diagnostics toggle filter.buf=0]]
-        end,
-        desc = "Diagnostic: document diagnostisc [trouble]",
-      },
-      {
-        "<Leader>xl",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-          vim.cmd "Trouble loclist toggle"
-        end,
-        desc = "Qf: open location list with [trouble]",
-      },
-      {
-        "<Leader>xq",
-        function()
-          local qf_win = RUtils.cmd.windows_is_opened { "qf" }
-          if qf_win.found then
-            vim.cmd [[cclose]]
-          end
-          vim.cmd "Trouble qflist toggle"
-        end,
-        desc = "Qf: open quickfix list with [trouble]",
-      },
-    },
-    opts = function()
-      local icons_lsp = RUtils.config.icons.kinds
-
-      local rose_pine = {
-        ["rose-pine-dawn"] = {
-          {
-            TroubleIndentFoldClosed = {
-              fg = { from = "LineNr", attr = "fg", alter = -0.1 },
-              bg = "NONE",
-            },
-          },
-          { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-          {
-            TroubleIndent = {
-              fg = { from = "IndentGuides", attr = "fg", alter = -0.08 },
-            },
-          },
-
-          { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-          {
-            TroubleQfCount = {
-              fg = { from = "Directory", attr = "fg", alter = 0.5 },
-              bg = { from = "Directory", attr = "fg" },
-              italic = true,
-            },
-          },
-
-          { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-          {
-            TroubleTodoCount = {
-              fg = { from = "TodoBgTODO", attr = "bg", alter = 1 },
-              bg = { from = "TodoBgTODO", attr = "bg" },
-              italic = true,
-            },
-          },
-
-          { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-          {
-            TroubleDiagnosticsCount = {
-              fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 },
-              bg = { from = "GitSignsChange", attr = "fg", alter = 0.5 },
-              italic = true,
-            },
-          },
-
-          { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-          {
-            TroubleLspCount = {
-              fg = { from = "Normal", attr = "fg", alter = -0.2 },
-              bg = { from = "Normal", attr = "fg", alter = 0.6 },
-              italic = true,
-            },
-          },
-
-          {
-            TroubleFsCount = {
-              fg = { from = "Comment", attr = "fg", alter = 0.5 },
-              bg = { from = "Comment", attr = "fg", alter = 0.05 },
-              italic = true,
-            },
-          },
-        },
-        -- ["rose-pine-main"] = {
-        --   { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
-        -- },
-      }
-      Highlight.plugin("troubleColHi", {
-        theme = {
-          ["*"] = {
-            { TroubleNormal = { inherit = "Normal" } },
-            { TroubleNormalNC = { inherit = "Normal" } },
-
-            { TroubleSignWarning = { bg = "NONE", fg = { from = "DiagnosticSignWarn", alter = -0.1 } } },
-            { TroubleSignError = { bg = "NONE", fg = { from = "DiagnosticSignError", alter = -0.1 } } },
-            { TroubleSignHint = { bg = "NONE", fg = { from = "DiagnosticSignHint", alter = -0.1 } } },
-            { TroubleSignInfo = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
-            { TroubleSignOther = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
-            { TroubleSignInformation = { bg = "NONE", fg = { from = "DiagnosticSignInfo", alter = -0.1 } } },
-
-            {
-              TroubleIndentFoldClosed = {
-                fg = { from = "IndentGuidesFolded", attr = "fg", alter = 0.5 },
-                bg = "NONE",
-              },
-            },
-            { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-            {
-              TroubleIndent = {
-                fg = { from = "IndentGuides", attr = "fg", alter = 0.5 },
-              },
-            },
-
-            -- ──────────────────────────────────────────────────────────────────────
-            -- DIRECTORY
-            -- ──────────────────────────────────────────────────────────────────────
-            { TroubleDirectory = { bg = "NONE" } },
-            {
-              TroubleFsCount = {
-                fg = { from = "Comment", attr = "fg" },
-                bg = { from = "Comment", attr = "fg", alter = -0.6 },
-                italic = true,
-              },
-            },
-
-            -- ──────────────────────────────────────────────────────────────────────
-            -- LSP
-            -- ──────────────────────────────────────────────────────────────────────
-            { TroubleLspFilename = { bg = "NONE" } },
-            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            {
-              TroubleLspCount = {
-                fg = { from = "Normal", attr = "fg" },
-                bg = { from = "Normal", attr = "fg", alter = -0.6 },
-                italic = true,
-              },
-            },
-
-            -- ──────────────────────────────────────────────────────────────────────
-            -- DIAGNOSTICS
-            -- ──────────────────────────────────────────────────────────────────────
-            { TroubleDiagnosticsBasename = { bg = "NONE" } },
-            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            {
-              TroubleDiagnosticsCount = {
-                fg = { from = "GitSignsChange", attr = "fg" },
-                bg = { from = "GitSignsChange", attr = "fg", alter = -0.6 },
-                italic = true,
-              },
-            },
-
-            -- ──────────────────────────────────────────────────────────────────────
-            -- TODO
-            -- ──────────────────────────────────────────────────────────────────────
-            { TroubleTodoFilename = { bg = "NONE" } },
-            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            {
-              TroubleTodoCount = {
-                fg = { from = "TodoBgTODO", attr = "bg" },
-                bg = { from = "TodoBgTODO", attr = "bg", alter = -0.5 },
-                italic = true,
-              },
-            },
-
-            -- ──────────────────────────────────────────────────────────────────────
-            -- QUICKFIX
-            -- ──────────────────────────────────────────────────────────────────────
-            { TroubleQfFilename = { bg = "NONE" } },
-            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            {
-              TroubleQfCount = {
-                fg = { from = "Directory", attr = "fg" },
-                bg = { from = "Directory", attr = "fg", alter = -0.5 },
-                italic = true,
-              },
-            },
-
-            -- Dunno
-            {
-              TroubleCode = {
-                bg = "NONE",
-                fg = { from = "ErrorMsg", attr = "fg" },
-                underline = false,
-              },
-            },
-          },
-          ["jellybeans"] = {
-            { TroubleIndent = { fg = { from = "WinSeparator", attr = "fg", alter = 0.4 } } },
-            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-          },
-          ["lackluster"] = {
-            { TroubleIndent = { fg = { from = "WinSeparator", attr = "fg", alter = 0.5 } } },
-            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            {
-              TroubleTodoCount = {
-                fg = { from = "TodoFgTodo", attr = "fg", alter = 0.5 },
-                bg = { from = "TodoFgTodo", attr = "fg", alter = -0.2 },
-                italic = true,
-              },
-            },
-          },
-          ["ashen"] = {
-            { TroubleIndent = { fg = { from = "WinSeparator", attr = "fg", alter = 0.8 } } },
-            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = 0.07 } } },
-          },
-          ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-          ["ef-eagle"] = {
-            {
-              TroubleIndentFoldClosed = {
-                fg = { from = "IndentGuidesFolded", attr = "fg", alter = -0.1 },
-                bg = "NONE",
-              },
-            },
-            { TroubleIndentFoldOpen = { link = "TroubleIndentFoldClosed" } },
-            {
-              TroubleIndent = {
-                fg = { from = "IndentGuides", attr = "fg", alter = -0.08 },
-              },
-            },
-
-            { TroubleQfPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-            {
-              TroubleQfCount = {
-                fg = { from = "Directory", attr = "fg", alter = 5 },
-                bg = { from = "Directory", attr = "fg", alter = 1 },
-                italic = true,
-              },
-            },
-
-            { TroubleTodoPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-            {
-              TroubleTodoCount = {
-                fg = { from = "TodoBgTODO", attr = "bg", alter = 1 },
-                bg = { from = "TodoBgTODO", attr = "bg", alter = 0.1 },
-                italic = true,
-              },
-            },
-
-            { TroubleDiagnosticsPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-            {
-              TroubleDiagnosticsCount = {
-                fg = { from = "GitSignsChange", attr = "fg", alter = -0.2 },
-                bg = { from = "GitSignsChange", attr = "fg", alter = 0.5 },
-                italic = true,
-              },
-            },
-
-            { TroubleLspPos = { fg = { from = "TroubleIndent", attr = "fg", alter = -0.07 } } },
-            {
-              TroubleLspCount = {
-                fg = { from = "Normal", attr = "fg", alter = -0.2 },
-                bg = { from = "Normal", attr = "fg", alter = 0.6 },
-                italic = true,
-              },
-            },
-
-            {
-              TroubleFsCount = {
-                fg = { from = "Comment", attr = "fg", alter = 0.5 },
-                bg = { from = "Comment", attr = "fg", alter = 0.05 },
-                italic = true,
-              },
-            },
-          },
-        },
-      })
-      return {
-        icons = {
-          kinds = {
-            Array = icons_lsp.Array,
-            Boolean = icons_lsp.Boolean,
-            Class = icons_lsp.Classs,
-            Constant = icons_lsp.Constant,
-            Constructor = icons_lsp.Constructor,
-            Enum = icons_lsp.Enum,
-            EnumMember = icons_lsp.EnumMember,
-            Event = icons_lsp.Event,
-            Field = icons_lsp.Field,
-            File = icons_lsp.File,
-            Function = icons_lsp.Function,
-            Interface = icons_lsp.Interface,
-            Key = icons_lsp.Interface,
-            Method = icons_lsp.Key,
-            Module = icons_lsp.Method,
-            Namespace = icons_lsp.Namespace,
-            Null = icons_lsp.Null,
-            Number = icons_lsp.Number,
-            Object = icons_lsp.Object,
-            Operator = icons_lsp.Operator,
-            Package = icons_lsp.Package,
-            Property = icons_lsp.Property,
-            String = icons_lsp.String,
-            Struct = icons_lsp.Struct,
-            TypeParameter = icons_lsp.TypeParameter,
-            Variable = icons_lsp.Variable,
-          },
-        },
-        keys = {
-          ["<esc>"] = "cancel",
-          ["q"] = "close",
-          ["o"] = "jump",
-          ["<c-n>"] = "next",
-          ["<c-p>"] = "prev",
-        },
-      }
-    end,
   },
 }

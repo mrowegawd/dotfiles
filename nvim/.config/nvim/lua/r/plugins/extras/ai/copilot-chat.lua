@@ -1,9 +1,9 @@
 return {
-  -- COPILOTC-NVIM
+  -- COPILOTC-NVIM (disabled)
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     branch = "main",
-    -- enabled = false,
+    enabled = false,
     -- cmd = "CopilotChat",
     opts = function()
       local user = vim.env.USER or "User"
@@ -16,6 +16,14 @@ return {
         mappings = {
           reset = {
             normal = "C",
+            insert = "",
+          },
+          accept_diff = {
+            normal = "<space><CR>",
+            insert = "",
+          },
+          submit_prompt = {
+            normal = "<CR>",
             insert = "",
           },
         },

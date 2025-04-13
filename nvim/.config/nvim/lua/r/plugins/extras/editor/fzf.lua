@@ -39,7 +39,6 @@ return {
     version = false,
     cmd = "FzfLua",
     dependencies = {
-      "onsails/lspkind.nvim",
       {
         "mangelozzi/nvim-rgflow.lua",
         opts = {
@@ -113,25 +112,25 @@ return {
         desc = "Buffer: select buffers [fzflua]",
       },
 
-      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Fzflua: find files", mode = { "n", "v" } },
+      { "<Leader>ff", function() require("fzf-lua").files() end, desc = "Picker: find files [fzflua]", mode = { "n", "v" } },
 
       { "<Leader>bg", function() require("fzf-lua").blines { fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf [fzflua]" },
       { "<Leader>bg", function() require("fzf-lua").blines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on curbuf (visual) [fzflua]", mode = { "v" } },
       { "<Leader>bG", function() require("fzf-lua").lines { fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers [fzflua]" },
       { "<Leader>bG", function() require("fzf-lua").lines { query = vim.fn.expand "<cword>", fzf_colors = { ["bg+"] = { "bg", "CursorLine" } } } end, desc = "Buffer: live grep on buffers (visual) [fzflua]", mode = { "v" } },
-      { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Fzflua: command history" },
-      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Fzflua: commands" },
-      { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Fzflua: automcds" },
-      { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Fzflua: recent files (history buffer)" },
-      { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Fzflua: resume (last search)" },
-      { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Fzflua: jumps" },
-      { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Fzflua: marks" },
-      { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Fzflua: man pages" },
-      { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Fzflua: search history" },
-      { "<Leader>fH", function() require("fzf-lua").help_tags() end, desc = "Fzflua: help" },
-      { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Fzflua: keymaps" },
+      { "<Leader>fc", function() require("fzf-lua").command_history() end, desc = "Picker: command history [fzflua]" },
+      { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
+      { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
+      { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
+      { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
+      { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Picker: jumps [fzflua]" },
+      { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Picker: marks [fzflua]" },
+      { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Picker: man pages [fzflua]" },
+      { "<Leader>fh", function() require("fzf-lua").search_history() end, desc = "Picker: search history [fzflua]" },
+      { "<Leader>fH", function() require("fzf-lua").help_tags() end, desc = "Picker: help [fzflua]" },
+      { "<Leader>fk", function() require("fzf-lua").keymaps() end, desc = "Picker: keymaps [fzflua]" },
 
-      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Fzflua: spell suggest" },
+      { "z=", function() require("fzf-lua").spell_suggest() end, desc = "Picker: spell suggest [fzflua]" },
 
       -- LSP
       { "gs", "<CMD>FzfLua lsp_document_symbols<CR>", desc = "LSP: document symbols [fzflua]" },
@@ -141,8 +140,8 @@ return {
       { "df", "<CMD>FzfLua diagnostics_document<CR>", desc = "Diagnostic: document [fzflua]" },
 
       -- Grep
-      { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Fzflua: live grep" },
-      { "<Leader>fG", function() require("fzf-lua").grep() end, desc = "Fzflua: grep" },
+      { "<Leader>fg", function() require("fzf-lua").live_grep_glob() end, desc = "Picker: live grep [fzflua]" },
+      { "<Leader>fG", function() require("fzf-lua").grep() end, desc = "Picker: grep [fzflua]" },
       -- { "<Leader>fG",
       --   function()
       --     require("fzf-lua").live_grep_glob {
@@ -163,9 +162,9 @@ return {
       --       },
       --     }
       --   end,
-      --   desc = "Fzflua: live grep on current cwd",
+      --   desc = "Picker: live grep on current cwd [fzflua]",
       -- },
-      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Fzflua: live grep (visual)", mode = { "v" } },
+      { "<Leader>fg", function() require("fzf-lua").grep_visual() end, desc = "Picker: live grep (visual) [fzflua]", mode = { "v" } },
       {
         "<Leader>fw",
         function()
@@ -186,7 +185,7 @@ return {
             },
           }
         end,
-        desc = "Fzflua: grep word",
+        desc = "Picker: grep word [fzflua]",
       },
       {
         "<Leader>fw",
@@ -208,7 +207,7 @@ return {
             },
           }
         end,
-        desc = "Fzflua: grep word visual",
+        desc = "Picker: grep word visual [fzflua]",
         mode = { "v" },
       },
 
@@ -238,7 +237,7 @@ return {
             },
           }
         end,
-        desc = "FzfLua: select main themes",
+        desc = "Picker: select themes [fzflua]",
       },
 
       {
@@ -257,7 +256,7 @@ return {
           end
         end,
         mode = { "v" },
-        desc = "Fzflua: help (visual)",
+        desc = "Picker: help (visual) [fzflua]",
       },
       {
         "<Leader>fo",
@@ -268,7 +267,7 @@ return {
             cwd = "~/moxconf/development/dotfiles",
           }
         end,
-        desc = "Fzflua: dotfiles",
+        desc = "Picker: dotfiles [fzflua]",
       },
       {
         "<Leader>fF",
@@ -280,7 +279,7 @@ return {
             cwd = plugins_directory,
           }
         end,
-        desc = "Fzflua: plugin files",
+        desc = "Picker: plugin files [fzflua]",
       },
     },
     opts = function()
@@ -333,8 +332,8 @@ return {
           ["hl+"] = { "fg", "FzfLuaFzfMatch" },
           ["info"] = { "fg", "FzfLuaHeaderText" },
           ["prompt"] = { "fg", "Conditional" },
-          ["pointer"] = { "fg", "Error" },
-          ["marker"] = { "fg", "Error" },
+          ["pointer"] = { "fg", "Keyword" },
+          ["marker"] = { "fg", "KeywordMatch" },
           ["spinner"] = { "fg", "Label" },
           ["header"] = { "fg", "FzfLuaHeaderText" },
           ["gutter"] = { "bg", "FzfLuaBorder" },

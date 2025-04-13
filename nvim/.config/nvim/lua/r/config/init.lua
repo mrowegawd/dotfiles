@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "coffeecat"
+local colorscheme = "vscode_modern"
 
 _G.base = {}
 
@@ -31,7 +31,7 @@ local base_options = {
     url_effect_enabled = true, -- Highlight URLs with an underline effect.
     autoformat = true, -- Highlight URLs with an underline effect.
     colorscheme = colorscheme, -- Highlight URLs with an underline effect.
-    lightthemes = { "dawnfox", "ef-eagle", "rose-pine-dawn" },
+    lightthemes = { "dawnfox", "rose-pine-dawn" },
   },
 }
 

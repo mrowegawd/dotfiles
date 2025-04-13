@@ -553,18 +553,29 @@ M.opts_diffview_log = function(is_repo, title, bufnr)
           local commit_hash = M.split_string(item, " ")[1]
           local commit_msg = vim.split(item, "_ ")[2]
 
-          local function convert_hash_commit(short_hash)
+          local function convert_path_hash_commit(short_hash)
             local handle = io.popen("git rev-parse " .. short_hash)
-            if handle then
-              local full_hash = handle:read("*a"):gsub("%s+", "") -- Remove any trailing whitespace
-              handle:close()
-              local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
-              return path_commmit
+            if not handle then
+              return ""
             end
-            return ""
+
+            local full_hash = handle:read("*a"):gsub("%s+", "")
+            handle:close()
+
+            if full_hash == "" then
+              return ""
+            end
+
+            -- Fugitive
+            local path_commmit = "fugitive://" .. vim.fn.FugitiveGitDir() .. "//" .. full_hash
+
+            -- Neogit
+            -- local path_commmit = ??
+
+            return path_commmit
           end
 
-          local fugitive_commit_filename = convert_hash_commit(commit_hash)
+          local fugitive_commit_filename = convert_path_hash_commit(commit_hash)
 
           items[#items + 1] = {
             lnum = 1,

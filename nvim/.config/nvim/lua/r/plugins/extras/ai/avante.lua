@@ -3,8 +3,6 @@ return {
   {
     -- To make it work, run: Copilot Auth
     "yetone/avante.nvim",
-    -- event = "VeryLazy",
-    enabled = false,
     version = false,
     opts = {
       provider = "copilot",
@@ -57,7 +55,14 @@ return {
       },
     },
     dependencies = {
-      { "zbirenbaum/copilot.lua", config = true },
+      {
+        "zbirenbaum/copilot.lua",
+        opts = {
+          suggestion = {
+            enabled = false,
+          },
+        },
+      },
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       "echasnovski/mini.pick",
@@ -66,7 +71,6 @@ return {
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
         opts = {
           -- recommended settings
           default = {

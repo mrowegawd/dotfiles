@@ -13,7 +13,7 @@ LEARNING="$("$HOME/.asdf/shims/rg" -i "\*\sLEARNING" "$NORG_PATH" | awk -F ':' '
 GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
 
 if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then
-  /usr/local/bin/dunstify -i "$ICON_PATH" "No progress or learning task running?" "<b><span foreground=\"$GREEN\">What are you doing bro!??</span></b>"
+  /usr/local/bin/dunstify -i "$ICON_PATH" "No active task, progress or learning session detected" "<b><span foreground=\"$GREEN\">What are you doing bodoh?? FOCUS!!</span></b>"
   sound_man="$HOME/.config/miscxrdb/mp3-wav/wrong-answer-129254.mp3"
 else
   if [[ -n $TASK ]]; then

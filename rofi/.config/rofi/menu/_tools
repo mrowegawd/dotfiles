@@ -5,7 +5,7 @@ LC_TIME=id_ID.UTF-8
 dir="$HOME/.config/rofi/menu"
 theme="styles/menuleft"
 rofi_command="rofi -theme $dir/$theme"
-MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Fullscreen\nRecord Blur Rectangle\nRecord Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate\nNeovide"
+MENULIST_PATH="Calendar\nFile manager [UI]\nKeyboard\nPomodoro\nRecord Video Fullscreen\nRecord Video Rectangle Blur\nRecord Gif Rectangle\nRecord Video Rectangle\nRecord Gif\nStop Record Vid\nScreenshot\nDrawing\nSyncUpdate\nNeovide"
 
 # For record video
 PATH_VIDEOS="$HOME/Downloads/screenshot/videos"
@@ -106,7 +106,44 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
         rm -rf "$FILE_RECORDING_BAK"
         dunstify "Saving record:" "$FILE_NAME_RECORD"
       fi
+    fi
+  }
 
+  # getdim() { xrandr | grep -oP '(?<=current ).*(?=,)' | tr -d ' '; }
+
+  run_simplegif_with_rectangle() {
+    OUTPUT_MKV="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').mkv"
+    ICON="$HOME/.config/miscxrdb/icons/rec-button.png"
+
+    GEOMETRY=$(xwininfo -root | awk '/geometry/ {gsub("+.*",""); print $2}')
+    SLOP_INFO=$(slop -D -f "%wx%h+%x,%y")
+
+    GEOMETRY=$(echo "$SLOP_INFO" | awk -F "+" '{print $1}')
+    OFFSET=$(echo "$SLOP_INFO" | awk -F "+" '{print "+"$2}')
+
+    if [[ $GEOMETRY =~ ^[0-9]+\x[0-9]+$ ]]; then
+      dunstify -t 2800 "Recording GIF has started.." -i "$ICON"
+
+      # -s "$(getdim)" \
+      ffmpeg \
+        -f x11grab \
+        -framerate 30 \
+        -s "$GEOMETRY" \
+        -i "$DISPLAY""$OFFSET" \
+        -c:v libx264 -qp 0 -r 30 \
+        "$OUTPUT_MKV"
+
+      ffmpeg -i "$OUTPUT_MKV" -c:v libx264 -crf 23 -profile:v baseline -level 3.0 \
+        -movflags faststart -pix_fmt yuv420p -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -an \
+        "$OUTPUT_MKV.mp4"
+
+      OUTPUT_GIF="$PATH_VIDEOS/$(date '+%y%m%d-%H%M-%S').gif"
+      mv "$OUTPUT_MKV.mp4" "$OUTPUT_GIF"
+
+      if [ -f "$OUTPUT_MKV" ]; then
+        rm -rf "$OUTPUT_MKV" "$OUTPUT_MKV.mp4"
+        dunstify "Saving record GIF:" "$OUTPUT_GIF" -i "$ICON"
+      fi
     fi
   }
 
@@ -146,10 +183,8 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
       if [ -f "$FILE_RECORDING_BAK" ]; then
         rm -rf "$FILE_RECORDING_BAK"
         rm -rf "$FILE_RECORDING"
-
       fi
     fi
-
   }
 
   run_filemanager() {
@@ -186,10 +221,11 @@ FILE_RECORDING="$PATH_VIDEOS/$FILE_NAME_RECORD"
   "Keyboard") run_screenkey ;;
   "Neovide") run_neovide ;;
   "Pomodoro") run_pomodoro ;;
-  "Record Fullscreen") run_ffmpeg_record_fullscreen ;;
-  "Record Blur Rectangle") run_ffmpeg_record_with_rectangle_blurred ;;
+  "Record Video Fullscreen") run_ffmpeg_record_fullscreen ;;
+  "Record Video Rectangle Blur") run_ffmpeg_record_with_rectangle_blurred ;;
+  "Record Video Rectangle") run_ffmpeg_record_with_rectangle ;;
   "Record Gif") run_simplegif ;;
-  "Record Rectangle") run_ffmpeg_record_with_rectangle ;;
+  "Record Gif Rectangle") run_simplegif_with_rectangle ;;
   "Screenshot") "$HOME/.config/rofi/scripts/takescreenshot" ;;
   "Stop Record") run_ffmpeg_stop ;;
   "SyncUpdate") sync_update ;;

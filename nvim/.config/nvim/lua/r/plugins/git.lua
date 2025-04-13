@@ -1,5 +1,3 @@
-local Highlight = require "r.settings.highlights"
-
 return {
   -- GH.NVIM
   {
@@ -14,20 +12,6 @@ return {
       },
     },
     config = function()
-      Highlight.plugin("gh_hijackcol", {
-        {
-          GHThreadSep = {
-            fg = { from = "Normal", attr = "bg", alter = 9 },
-            bg = { from = "Normal", attr = "bg", alter = 1.5 },
-          },
-        },
-        {
-          GHThreadSepAlt = {
-            fg = { from = "Normal", attr = "bg", alter = 9 },
-            bg = { from = "Normal", attr = "bg", alter = 1 },
-          },
-        },
-      })
       require("litee.gh").setup {
         debug_logging = true,
       }
@@ -68,19 +52,19 @@ return {
     "ruifm/gitlinker.nvim", -- generate shareable file permalinks
     keys = {
       {
-        "<Leader>go",
+        "<Leader>goo",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "v" },
-        desc = "Git: open git link on browser [gitlinker]",
+        desc = "Open: git link on browser [gitlinker]",
       },
       {
-        "<Leader>gO",
+        "<Leader>goO",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        desc = "Git: open git link on browser [gitlinker]",
+        desc = "Open: git link on browser [gitlinker]",
       },
       {
         "<Leader>gy",
-        desc = "Git: copy git link [gitlinker]",
+        desc = "Git: copy hash link [gitlinker]",
       },
     },
     opts = { mappings = "<Leader>gy" },
@@ -92,16 +76,6 @@ return {
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = function()
-      Highlight.plugin("octo_hi", {
-        {
-          OctoBubble = {
-            bg = { from = "Keyword", attr = "fg", alter = -0.3 },
-            fg = { from = "Normal", attr = "bg" },
-            bold = true,
-          },
-        },
-      })
-
       vim.treesitter.language.register("markdown", "octo")
 
       return {
@@ -255,6 +229,7 @@ return {
   -- OCTO
   {
     "pwntester/octo.nvim",
+    optional = true,
     opts = function(_, opts)
       if RUtils.has_extra "editor.snacks_picker" then
         opts.picker = "snacks"
@@ -286,8 +261,7 @@ return {
   -- GITSIGNS
   {
     "lewis6991/gitsigns.nvim",
-    event = "VeryLazy",
-    dependencies = "nvim-lua/plenary.nvim",
+    event = "LazyFile",
     opts = function()
       return {
         signs_staged_enable = false,
@@ -333,29 +307,29 @@ return {
           -- end
 
           -- Hunk
-          map("n", "<Leader>ghs", gs.stage_hunk, "Git: stage hunk [gitsigns]")
+          map("n", "<Leader>ghs", gs.stage_hunk, "Hunk: stage [gitsigns]")
           map("v", "<Leader>ghs", function()
             gs.stage_hunk { vim.fn.line ".", vim.fn.line "v" }
-          end)
-          map("n", "<Leader>ghr", gs.reset_hunk, "Git: reset hunk [gitsigns]")
+          end, "Hunk: stage (visual) [gitsigns]")
+          map("n", "<Leader>ghr", gs.reset_hunk, "Hunk: reset [gitsigns]")
           map("v", "<Leader>ghr", function()
             gs.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
-          end)
-          map("n", "<Leader>ghu", gs.undo_stage_hunk, "Git: undo hunk [gitsigns]")
-          map("n", "<Leader>ghS", gs.stage_buffer, "Git: stage buffer [gitsigns]")
-          map("n", "<Leader>ghR", gs.reset_buffer, "Git: reset buffer [gitsigns]")
-          map("n", "<Leader>ghi", gs.preview_hunk_inline, "Git: preview hunk inline [gitsigns")
+          end, "Hunk: reset (visual) [gitsigns]")
+          map("n", "<Leader>ghu", gs.undo_stage_hunk, "Hunk: undo [gitsigns]")
+          map("n", "<Leader>ghS", gs.stage_buffer, "Hunk: stage buffer [gitsigns]")
+          map("n", "<Leader>ghR", gs.reset_buffer, "Hunk: reset buffer [gitsigns]")
+          map("n", "<Leader>ghi", gs.preview_hunk_inline, "Hunk: preview hunk inline [gitsigns]")
 
           -- Hunk preview
-          map("n", "<Leader>ghp", gs.preview_hunk, "Git: preview hunk [gitsigns]")
-          map("n", "<Leader>ghP", gs.preview_hunk, "Git: preview hunk [gitsigns]")
+          map("n", "<Leader>ghp", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
+          map("n", "<Leader>ghP", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
 
           -- Toggle
           map("n", "<Leader>gub", function()
             gs.blame()
-          end, "Git: toggle blame [gitsigns]")
-          map("n", "<Leader>gud", gs.toggle_deleted, "Git: toggle deleted [gitsigns]")
-          map("n", "<Leader>guw", gs.toggle_word_diff, "Git: toggle word diff [gitsigns]")
+          end, "Toggle: git blame [gitsigns]")
+          map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: git deleted [gitsigns]")
+          map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
 
           -- Sending to qf
           map("n", "<Leader>xG", function()
@@ -366,7 +340,7 @@ return {
                 vim.api.nvim_set_current_win(is_qf_trouble.winid)
               end
             end)
-          end, "Git: hunks all quickfix [gitsigns] [trouble]")
+          end, "Exec: git hunks all quickfix [gitsigns] [trouble]")
           map("n", "<Leader>xg", function()
             gs.setqflist()
             vim.schedule(function()
@@ -375,7 +349,7 @@ return {
                 vim.api.nvim_set_current_win(is_qf_trouble.winid)
               end
             end)
-          end, "Git: hunks quickfix [gitsigns] [trouble]")
+          end, "Exec: git hunks quickfix (qf) [gitsigns] [trouble]")
 
           -- Jump next/prev between hunks
           map("n", "gn", function()
@@ -411,8 +385,14 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    -- cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
-    event = "VeryLazy",
+    cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
+    keys = {
+      {
+        "<Leader>gN",
+        "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
+        desc = "Git: open fugitive [fugitive]",
+      },
+    },
     dependencies = { "tpope/vim-rhubarb" },
     config = function()
       vim.cmd "command! GitHistory Git! log -- %"
@@ -535,29 +515,21 @@ return {
         desc = "Edit files that differ from master",
       })
     end,
-    keys = {
-      {
-        "<Leader>gN",
-        "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
-        desc = "Git: open fugitive [fugitive]",
-      },
-    },
   },
   -- DIFFVIEW
   {
     "sindrets/diffview.nvim",
     event = "LazyFile",
-    dependencies = { "nvim-lua/plenary.nvim" },
     keys = {
       {
-        "<Leader>gfo",
+        "<Leader>god",
         "<CMD>DiffviewOpen<CR>",
-        desc = "Git: open [diffview]",
+        desc = "Open: diff view git [diffview]",
       },
       {
-        "<Leader>gfh",
+        "<Leader>goD",
         "<CMD>DiffviewFileHistory<CR>",
-        desc = "Git: file history [diffview]",
+        desc = "Open: diff view file history git [diffview]",
       },
       {
         "<Leader>gv",
@@ -610,35 +582,7 @@ return {
     },
     opts = function()
       local actions = require "diffview.actions"
-
       RUtils.disable_ctrl_i_and_o("NoDiffview", { "DiffviewFiles", "DiffviewFileHistory" })
-      Highlight.plugin("diffview", {
-        theme = {
-          ["*"] = {
-            { DiffAddedChar = { bg = "NONE", fg = { from = "GitSignsAdd", attr = "fg", alter = 0.1 } } },
-            { DiffChangedChar = { bg = "NONE", fg = { from = "GitSignsChange", attr = "fg", alter = 0.1 } } },
-            { DiffDeletedChar = { bg = "NONE", fg = { from = "GitSignsDelete", attr = "fg", alter = 0.1 } } },
-            { DiffviewStatusAdded = { link = "DiffAddedChar" } },
-            { DiffviewStatusModified = { link = "DiffChangedChar" } },
-            { DiffviewStatusRenamed = { link = "DiffChangedChar" } },
-            { DiffviewStatusUnmerged = { link = "DiffChangedChar" } },
-            { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
-            { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
-
-            { DiffviewReference = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.2 } } },
-
-            -- { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-            { DiffviewHash = { fg = "lightmagenta" } },
-
-            { DiffviewFilePanelCounter = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-            { DiffviewFilePanelDeletions = { link = "DiffDeletedChar" } },
-            { DiffviewFilePanelInsertions = { link = "DiffAddedChar" } },
-            { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.4 } } },
-            { DiffviewFilePanelSelected = { fg = { from = "DiffChangedChar", attr = "fg" } } },
-          },
-          ["zenburned"] = { { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = 0.5 } } } },
-        },
-      })
 
       return {
         enhanced_diff_hl = true,
@@ -660,6 +604,8 @@ return {
 
             { "n", "[F", actions.select_first_entry, { desc = "Git: open the diff for the first file [diffview]" } },
             { "n", "]F", actions.select_last_entry, { desc = "Git: open the diff for the last file [diffview]" } },
+
+            { "n", "h", false },
 
             { "n", "gf", actions.goto_file_edit, { desc = "Git: open the file in the previous tabpage [diffview]" } },
             { "n", "ss", actions.goto_file_split, { desc = "Git: open the file in a new split [diffview]" } },
@@ -695,11 +641,15 @@ return {
             { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             -- { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "h", false },
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
 
             { "n", "-", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
             { "n", "s", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
             { "n", "u", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
+
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview]" } },
 
             -- Git: stage, unstage, restore, commit
             -- { "n", "<Leader>ghs", actions.toggle_stage_entry, { desc = "Git: stage / unstage the selected entry [diffview]" }, },
@@ -713,7 +663,6 @@ return {
 
             { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview]" } },
             { "n", "zO", actions.open_all_folds, { desc = "Git: expand all folds [diffview]" } },
-            { "n", "h", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
             { "n", "zc", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
             { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview]" } },
             { "n", "zm", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
@@ -766,9 +715,11 @@ return {
             { "n", "<up>", actions.prev_entry, { desc = "Git: bring the cursor to the previous file entry [diffview]" }, },
             { "n", "<cr>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
             { "n", "o", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
-            -- { "n", "h", false, {}},
-            -- { "n", "l", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+            { "n", "h", false },
             { "n", "<2-LeftMouse>", actions.select_entry, { desc = "Git: open the diff for the selected entry [diffview]" }, },
+
+            { "n", "<a-n>", actions.select_next_entry, { desc = "Git: open the diff for the next file [diffview]" }, },
+            { "n", "<a-p>", actions.select_prev_entry, { desc = "Git: open the diff for the previous filet[diffview]" } },
 
             { "n", "g!", actions.options, { desc = "Git: open the option panel [diffview]" } },
             { "n", "<C-A-d>", actions.open_in_diffview, { desc = "Git: open the entry under the cursor in a diffview [diffview]" }, },
@@ -779,7 +730,6 @@ return {
             { "n", "zo", actions.open_fold, { desc = "Git: expand fold [diffview]" } },
             { "n", "zR", actions.open_all_folds, { desc = "Git: expand all folds [diffview]" } },
             { "n", "zc", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
-            { "n", "h", actions.close_fold, { desc = "Git: collapse fold [diffview]" } },
             { "n", "za", actions.toggle_fold, { desc = "Git: toggle fold [diffview]" } },
             { "n", "zm", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
             { "n", "zM", actions.close_all_folds, { desc = "Git: collapse all folds [diffview]" } },
@@ -821,34 +771,100 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "sindrets/diffview.nvim", -- optional - Diff integration
+    },
+    cmd = { "Neogit", "NeogitCommit" },
+    keys = {
+      {
+        "<Leader>gn",
+        function()
+          vim.cmd "Neogit"
+        end,
+        desc = "Git: open neogit [neogit]",
+      },
+    },
+    opts = function()
+      -- Highlight.plugin("neogit_hi", {
+      --   { NeogitDiffDeleteCursor = { bg = "NONE" } },
+      --   { NeogitDiffAddCursor = { bg = "NONE" } },
+      --   { NeogitDiffContextCursor { bg = "NONE" } },
+      -- })
+      return {
+        -- disable_signs = false,
+        -- disable_hint = true,
+        -- disable_commit_confirmation = true,
+        -- disable_builtin_notifications = true,
+        -- disable_insert_on_commit = false,
+        signs = {
+          section = { "", "" }, -- "󰁙", "󰁊"
+          item = { "▸", "▾" },
+          hunk = { "󰐕", "󰍴" },
+        },
+        mappings = {
+          -- commit_editor = {
+          --   ["q"] = false,
+          -- },
+          rebase_editor = {
+            ["q"] = false,
+          },
+          status = {
+            ["q"] = false,
+          },
+          finder = {
+            ["<c-c>"] = false,
+            ["<esc>"] = false,
+            h,
+          },
+          popup = {
+            --   -- mapping nya ini
+            ["t"] = false,
+            ["m"] = false,
 
-      -- Only one of these is needed, not both.
-      "ibhagwan/fzf-lua", -- optional
-    },
-    cmd = "Neogit",
-    -- keys = {
-    --   {
-    --     "<Leader>gN",
-    --     function()
-    --       vim.cmd "Neogit"
-    --     end,
-    --     desc = "Git(neogit): open split",
-    --   },
-    -- },
-    opts = {
-      -- disable_signs = false,
-      -- disable_hint = true,
-      -- disable_commit_confirmation = true,
-      -- disable_builtin_notifications = true,
-      -- disable_insert_on_commit = false,
-      signs = {
-        section = { "", "" }, -- "󰁙", "󰁊"
-        item = { "▸", "▾" },
-        hunk = { "󰐕", "󰍴" },
-      },
-      integrations = {
-        diffview = true,
-      },
-    },
+            ["M"] = "MergePopup",
+            --   ["v"] = false,
+            --
+            --   -- ["gO"] = "DiffPopup",
+            --
+            ["T"] = "TagPopup",
+            --   -- ["V"] = "RevertPopup",
+          },
+        },
+        integrations = {
+          -- diffview = true,
+          telescope = true,
+        },
+      }
+    end,
+  },
+  -- MINI.DIFF (disabled)
+  {
+    "echasnovski/mini.diff", -- Inline and better diff over the default
+    enabled = false,
+    event = "VeryLazy",
+    config = function()
+      local diff = require "mini.diff"
+      diff.setup {
+        -- Disabled by default
+        source = diff.gen_source.none(),
+
+        -- Module mappings. Use `''` (empty string) to disable one.
+        mappings = {
+          -- Apply hunks inside a visual/operator region
+          apply = "gL",
+
+          -- Reset hunks inside a visual/operator region
+          reset = "gH",
+
+          -- Hunk range textobject to be used inside operator
+          -- Works also in Visual mode if mapping differs from apply and reset
+          textobject = "gh",
+
+          -- Go to hunk range in corresponding direction
+          goto_first = "[H",
+          goto_prev = "[h",
+          goto_next = "]h",
+          goto_last = "]H",
+        },
+      }
+    end,
   },
 }

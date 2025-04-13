@@ -68,43 +68,63 @@ end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false
 opt.list = false
-function _G.Mardownfoldtext()
-  local line = vim.api.nvim_buf_get_lines(0, vim.v.foldstart - 1, vim.v.foldstart, true)[1]
-  local idx = vim.v.foldstart + 1
-  while string.find(line, "^%s*@") or string.find(line, "^%s*$") do
-    line = vim.api.nvim_buf_get_lines(0, idx - 1, idx, true)[1]
-    idx = idx + 1
+
+local function has_surrounding_fencemarks2(lnum)
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local inside_fence = false
+
+  -- local start_fence = [[\%```\|\n\zs```]]
+  -- local end_fence = [[```\n^$]]
+  -- -- local strip = [[- %s*]]
+  -- local fence_end_position = vim.fn.searchpairpos(start_fence, "", end_fence, "nW")
+
+  -- Lewat cara loop?
+  for i = 1, lnum - 1 do
+    if lines[i]:match "^```" then
+      inside_fence = not inside_fence
+    end
   end
-  local icon = " "
-  local padding = string.rep(" ", string.find(line, "[^%s]") - 1)
-  return string.format("%s%s %s   %d", padding, icon, line, vim.v.foldend - vim.v.foldstart + 1)
+
+  -- Lewat cara cursor?
+
+  return inside_fence
 end
 
--- opt.foldtext = "v:lua.Mardownfoldtext()"
--- opt.foldtext = ""
--- opt.foldexpr = "nvim_treesitter#foldexpr()"
--- opt.foldmethod = "expr"
--- opt.foldlevel = 99
+-- NOTE:
+-- Folded style, pada markdown bisa di set sebagai `vim.g.markdown_folding=1`
+-- tapi color hi nya conflict dengan plugin lain, cuman malas debug jadi
+-- `vim.g.markdown_folding` ini disabled.
+-- (https://github.com/nvim-treesitter/nvim-treesitter/issues/2145#issuecomment-997935467)
+-- Dengan alasan inilah `Markdown_fold()` ini dibuat:
+function _G.Markdown_fold()
+  local line = vim.fn.getline(vim.v.lnum)
+  -- local ts_utils = require "nvim-treesitter.ts_utils"
+  -- local parser = require("nvim-treesitter.parsers").get_parser(0)
+  -- local node = ts_utils.get_node_at_cursor()
+  --
+  -- print(line:match("^#+"))
+  --
+  -- testing node
+  -- if node then
+  --   if node:type() == "heading" then -- check lewat command passer dahulu
+  --     return "1"
+  --   elseif node:type() == "comment" then
+  --     return "0"
+  --   end
+  -- end
 
--- local function markdown_sugar()
---   local augroup = vim.api.nvim_create_augroup("markdown", {})
---   vim.api.nvim_create_autocmd("BufEnter", {
---     pattern = "*.md",
---     group = augroup,
---     callback = function()
---       vim.api.nvim_set_hl(0, "Conceal", { bg = "NONE", fg = "#00cf37" })
---       vim.api.nvim_set_hl(0, "todoCheckbox", { link = "Todo" })
---       -- vim.bo.conceallevel = 1
---
---       vim.cmd [[
---         syn match todoCheckbox '\v(\s+)?(-|\*)\s\[\s\]'hs=e-4 conceal cchar=
---         syn match todoCheckbox '\v(\s+)?(-|\*)\s\[x\]'hs=e-4 conceal cchar=
---         syn match todoCheckbox '\v(\s+)?(-|\*)\s\[-\]'hs=e-4 conceal cchar=󰅘
---         syn match todoCheckbox '\v(\s+)?(-|\*)\s\[\.\]'hs=e-4 conceal cchar=⊡
---         syn match todoCheckbox '\v(\s+)?(-|\*)\s\[o\]'hs=e-4 conceal cchar=⬕
---       ]]
---     end,
---   })
--- end
+  -- Fold headers (#) dan pastikan ada fence marks?
+  if line:match "^#+ " and not has_surrounding_fencemarks2(vim.v.lnum) then
+    return ">" .. line:find " "
+  end
 
--- markdown_sugar()
+  -- Fold underlined headers
+  local nextline = vim.fn.getline(vim.v.lnum + 1)
+  if line:match "^.+$" and nextline:match "^=+$" and not has_surrounding_fencemarks2(vim.v.lnum) then
+    return ">2"
+  end
+
+  return "="
+end
+
+vim.opt_local.foldexpr = "v:lua.Markdown_fold()"

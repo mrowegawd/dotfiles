@@ -1,28 +1,26 @@
-local Highlight = require "r.settings.highlights"
-
 return {
   -- QUICKER
   { -- bisa menggunakan range -> %s/, jangan lupa di 'write' setelah delete range
     "stevearc/quicker.nvim",
     event = "FileType qf",
-    opts = function()
-      Highlight.plugin("Quickerui", {
-        { QuickFixLineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
-      })
-      return {
-        borders = {
-          vert = "│",
-        },
-      }
-    end,
+    opts = { borders = { vert = "│" } },
   },
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
     event = "FileType qf",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "MunifTanjim/nui.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
+    keys = {
+      {
+        "<Leader>oq",
+        "<CMD>SaveQf<CR>",
+        desc = "Qf: save qf [qfsilet]",
+      },
+      {
+        "<Leader>oQ",
+        "<CMD>LoadQf<CR>",
+        desc = "Qf: load qf [qfsilet]",
+      },
     },
     opts = {
       save_dir = RUtils.config.path.wiki_path .. "/orgmode/project-todo",
@@ -33,6 +31,7 @@ return {
       popup = {
         title_local = "TODO LIST",
         title_global = "MESSAGE BOX",
+        winhighlight = "Normal:NormalBoxComment,FloatBorder:FloatBoxComment,EndOfBuffer:NormalBoxComment,Visual:VisualBoxComment",
         higroup_title = "FzfLuaPreviewTitle",
       },
       theme_list = { enabled = false },

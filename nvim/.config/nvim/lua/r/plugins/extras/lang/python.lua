@@ -100,21 +100,20 @@ return {
   {
     "linux-cultist/venv-selector.nvim",
     branch = "regexp", -- Use this branch for the new version
+    ft = "python", --  Call config for python files and load the cached venv automatically
     cmd = "VenvSelect",
     enabled = function()
       return RUtils.has "telescope.nvim"
     end,
+    keys = {
+      { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Action: select virtualenv [venv-selector]", ft = "python" },
+    },
     opts = {
       settings = {
         options = {
           notify_user_on_venv_activation = true,
         },
       },
-    },
-    --  Call config for python files and load the cached venv automatically
-    ft = "python",
-    keys = {
-      { "<Leader>cv", "<cmd>:VenvSelect<cr>", desc = "Action: select virtualenv [venv-selector]", ft = "python" },
     },
   },
   {

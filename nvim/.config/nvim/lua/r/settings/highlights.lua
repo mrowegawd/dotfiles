@@ -1,5 +1,3 @@
-local fmt, notify, api, L = string.format, vim.notify, vim.api, vim.log.levels
-
 local M = {}
 
 local autocmd_keys = {
@@ -39,7 +37,7 @@ local function validate_autocmd(name, command)
     vim.schedule(function()
       local msg = "Incorrect keys: " .. table.concat(incorrect, ", ")
       ---@diagnostic disable-next-line: param-type-mismatch
-      vim.notify(msg, "error", { title = fmt("Autocmd: %s", name) })
+      vim.notify(msg, "error", { title = string.format("Autocmd: %s", name) })
     end)
   end
 end
@@ -47,12 +45,12 @@ end
 local function augroup(name, ...)
   local commands = { ... }
   assert(name ~= "User", "The name of an augroup CANNOT be User")
-  assert(#commands > 0, fmt("You must specify at least one autocommand for %s", name))
-  local id = api.nvim_create_augroup(name, { clear = true })
+  assert(#commands > 0, string.format("You must specify at least one autocommand for %s", name))
+  local id = vim.api.nvim_create_augroup(name, { clear = true })
   for _, autocmd in ipairs(commands) do
     validate_autocmd(name, autocmd)
     local is_callback = type(autocmd.command) == "function"
-    api.nvim_create_autocmd(autocmd.event, {
+    vim.api.nvim_create_autocmd(autocmd.event, {
       group = name,
       pattern = autocmd.pattern,
       desc = autocmd.desc,
@@ -66,13 +64,14 @@ local function augroup(name, ...)
   return id
 end
 local function pcall(msg, func, ...)
+  local L = vim.log.levels
   local args = { ... }
   if type(msg) == "function" then
     local arg = func
     args, func, msg = { arg, unpack(args) }, msg, nil
   end
   return xpcall(func, function(err)
-    msg = debug.traceback(msg and fmt("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
+    msg = debug.traceback(msg and string.format("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
     vim.schedule(function()
       vim.notify(msg, L.ERROR, { title = "ERROR" })
     end)
@@ -101,7 +100,7 @@ local attrs = {
 local function get_hl_as_hex(opts, ns)
   ns, opts = ns or 0, opts or {}
   opts.link = opts.link ~= nil and opts.link or false
-  local hl = api.nvim_get_hl(ns, opts)
+  local hl = vim.api.nvim_get_hl(ns, opts)
   hl.fg = hl.fg and ("#%06x"):format(hl.fg)
   hl.bg = hl.bg and ("#%06x"):format(hl.bg)
   return hl
@@ -123,7 +122,7 @@ function M.tint(color, percent)
     component = math.floor(component * (1 + percent))
     return math.min(math.max(component, 0), 255)
   end
-  return fmt("#%02x%02x%02x", blend(r), blend(g), blend(b))
+  return string.format("#%02x%02x%02x", blend(r), blend(g), blend(b))
 end
 
 ---@param hex_str string hexadecimal value of a color
@@ -223,9 +222,13 @@ function M.increase_saturation(hex, percentage)
 end
 
 local err_warn = vim.schedule_wrap(function(group, attribute)
-  notify(fmt("failed to get highlight [%s] for attribute %s\n%s", group, attribute, debug.traceback()), "ERROR", {
-    title = fmt("Highlight - get(%s)", group),
-  }) -- stylua: ignore
+  vim.notify(
+    string.format("failed to get highlight [%s] for attribute %s\n%s", group, attribute, debug.traceback()),
+    "ERROR",
+    {
+      title = string.format("Highlight - get(%s)", group),
+    }
+  ) -- stylua: ignore
 end)
 
 ---Get the value a highlight group whilst handling errors, fallbacks as well as returning a gui value
@@ -242,7 +245,7 @@ function M.get(group, attribute, fallback)
   local color = data[attribute] or fallback
   if not color then
     if vim.v.vim_did_enter == 0 then
-      api.nvim_create_autocmd("User", {
+      vim.api.nvim_create_autocmd("User", {
         pattern = "LazyDone",
         once = true,
         callback = function()
@@ -296,7 +299,7 @@ function M.set(ns, name, opts)
     end
   end
 
-  pcall(fmt('setting highlight "%s"', name), api.nvim_set_hl, ns, name, hl)
+  pcall(string.format('setting highlight "%s"', name), vim.api.nvim_set_hl, ns, name, hl)
 end
 
 ---Apply a list of highlights
@@ -307,9 +310,9 @@ function M.all(hls, namespace)
 end
 
 function M.set_winhl(name, win_id, hls)
-  local namespace = api.nvim_create_namespace(name)
+  local namespace = vim.api.nvim_create_namespace(name)
   M.all(hls, namespace)
-  api.nvim_win_set_hl_ns(win_id, namespace)
+  vim.api.nvim_win_set_hl_ns(win_id, namespace)
 end
 
 -------------------------------------------------------------------------------
@@ -344,7 +347,7 @@ function M.plugin(name, opts)
   vim.schedule(function()
     M.all(opts)
   end)
-  augroup(fmt("%sHighlightOverrides", name:gsub("^%l", string.upper)), {
+  augroup(string.format("%sHighlightOverrides", name:gsub("^%l", string.upper)), {
     event = "ColorScheme",
     command = function()
       vim.schedule(function()
@@ -353,14 +356,5 @@ function M.plugin(name, opts)
     end,
   })
 end
-
--- M.highlight = {
---   get = get,
---   set = set,
---   all = all,
---   tint = tint,
---   plugin = plugin,
---   set_winhl = set_winhl,
--- }
 
 return M

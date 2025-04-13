@@ -1,18 +1,13 @@
-local fn = vim.fn
-local Highlight = require "r.settings.highlights"
-
 return {
   -- HELPVIEW.NVIM
   {
     "OXY2DEV/helpview.nvim",
-    ft = "help",
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    event = { "BufReadPost" },
   },
   -- VIM-MATCHUP (disabled)
   {
     "andymass/vim-matchup",
     enabled = false,
-    event = { "BufReadPost" },
     config = function()
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
@@ -20,13 +15,13 @@ return {
   -- NOICE
   {
     "folke/noice.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     dependencies = { "MunifTanjim/nui.nvim" },
     keys = {
       {
         "<S-CR>",
         function()
-          require("noice").redirect(fn.getcmdline())
+          require("noice").redirect(vim.fn.getcmdline())
         end,
         mode = "c",
         desc = "Noice: redirect cmdline",
@@ -61,67 +56,69 @@ return {
       },
     },
     opts = function()
-      Highlight.plugin("noicehi", {
-        { NoiceMini = { inherit = "MsgArea", bg = { from = "Normal" } } },
-        { NoicePopupBaseGroup = { inherit = "Pmenu", fg = { from = "DiagnosticSignInfo" } } },
-        { NoicePopupWarnBaseGroup = { inherit = "Pmenu", fg = { from = "Float" } } },
-        { NoicePopupInfoBaseGroup = { inherit = "Pmenu", fg = { from = "Conditional" } } },
-        -- { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
-        { NoiceCmdlinePopupBorder = { link = "FloatBorder" } },
-        { NoiceCmdlinePopupTitleCmdline = { inherit = "NoicePopupBaseGroup", reverse = true } },
-        { NoiceCmdlinePopupBorderCmdline = { link = "NoicePopupBaseGroup" } },
-        { NoiceCmdlinePopupBorderSearch = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlinePopupTitleSearch = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
-        { NoiceCmdlinePopupBorderFilter = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlinePopupTitleFilter = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
-        { NoiceCmdlinePopupBorderHelp = { link = "NoicePopupInfoBaseGroup" } },
-        { NoiceCmdlinePopupTitleHelp = { inherit = "NoicePopupInfoBaseGroup", reverse = true } },
-        { NoiceCmdlinePopupBorderSubstitute = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlinePopupTitleSubstitute = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
-        { NoiceCmdlinePopupBorderIncRename = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlinePopupTitleIncRename = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
-        { NoiceCmdlinePopupBorderInput = { link = "NoicePopupBaseGroup" } },
-        { NoiceCmdlinePopupBorderLua = { link = "NoicePopupBaseGroup" } },
-        {
-          NoiceCmdlineIconCmdline = {
-            fg = { from = "NoicePopupBaseGroup", attr = "fg" },
-            bg = { from = "NoiceCmdline", attr = "bg" },
-          },
-        },
-        {
-          NoiceCmdlineIconSearch = {
-            inherit = "NoicePopupWarnBaseGroup",
-            bg = { from = "NoiceCmdline", attr = "bg" },
-          },
-        },
-        {
-          NoiceCmdlineIconFilter = {
-            inherit = "NoicePopupWarnBaseGroup",
-            bg = { from = "NoiceCmdline", attr = "bg" },
-          },
-        },
-        {
-          NoiceCmdlineIconHelp = {
-            inherit = "NoicePopupInfoBaseGroup",
-            bg = { from = "NoiceCmdline", attr = "bg" },
-          },
-        },
-        {
-          NoiceCmdlineIconIncRename = {
-            inherit = "NoicePopupWarnBaseGroup",
-            bg = { from = "NoiceCmdline", attr = "bg" },
-          },
-        },
-        { NoiceCmdlineIconSubstitute = { link = "NoicePopupWarnBaseGroup" } },
-        { NoiceCmdlineIconInput = { link = "NoicePopupBaseGroup" } },
-        { NoiceCmdlineIconLua = { link = "NoicePopupBaseGroup" } },
-        { NoiceConfirm = { bg = { from = "Pmenu" } } },
-        { NoiceConfirmBorder = { link = "NoicePopupBaseGroup" } },
-
-        -- NOTE: this line contains color markup modified by Noice,
-        -- so it needs to be manually re-colored
-        { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
-      })
+      -- local Highlight = require "r.settings.highlights"
+      --
+      -- Highlight.plugin("noicehi", {
+      --   { NoiceMini = { inherit = "MsgArea", bg = { from = "Normal" } } },
+      --   { NoicePopupBaseGroup = { inherit = "FloatBorder", fg = { from = "DiagnosticSignInfo" } } },
+      --   { NoicePopupWarnBaseGroup = { inherit = "Pmenu", fg = { from = "Float" } } },
+      --   { NoicePopupInfoBaseGroup = { inherit = "Pmenu", fg = { from = "Conditional" } } },
+      --   -- { NoiceCmdlinePopup = { bg = { from = "Pmenu" } } },
+      --   { NoiceCmdlinePopupBorder = { link = "FloatBorder" } },
+      --   { NoiceCmdlinePopupTitleCmdline = { inherit = "NoicePopupBaseGroup", reverse = true } },
+      --   { NoiceCmdlinePopupBorderCmdline = { link = "NoicePopupBaseGroup" } },
+      --   { NoiceCmdlinePopupBorderSearch = { link = "NoicePopupWarnBaseGroup" } },
+      --   { NoiceCmdlinePopupTitleSearch = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+      --   { NoiceCmdlinePopupBorderFilter = { link = "NoicePopupWarnBaseGroup" } },
+      --   { NoiceCmdlinePopupTitleFilter = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+      --   { NoiceCmdlinePopupBorderHelp = { link = "NoicePopupInfoBaseGroup" } },
+      --   { NoiceCmdlinePopupTitleHelp = { inherit = "NoicePopupInfoBaseGroup", reverse = true } },
+      --   { NoiceCmdlinePopupBorderSubstitute = { link = "NoicePopupWarnBaseGroup" } },
+      --   { NoiceCmdlinePopupTitleSubstitute = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+      --   { NoiceCmdlinePopupBorderIncRename = { link = "NoicePopupWarnBaseGroup" } },
+      --   { NoiceCmdlinePopupTitleIncRename = { inherit = "NoicePopupWarnBaseGroup", reverse = true } },
+      --   { NoiceCmdlinePopupBorderInput = { link = "NoicePopupBaseGroup" } },
+      --   { NoiceCmdlinePopupBorderLua = { link = "NoicePopupBaseGroup" } },
+      --   {
+      --     NoiceCmdlineIconCmdline = {
+      --       fg = { from = "NoicePopupBaseGroup", attr = "fg" },
+      --       bg = { from = "NoiceCmdline", attr = "bg" },
+      --     },
+      --   },
+      --   {
+      --     NoiceCmdlineIconSearch = {
+      --       inherit = "NoicePopupWarnBaseGroup",
+      --       bg = { from = "NoiceCmdline", attr = "bg" },
+      --     },
+      --   },
+      --   {
+      --     NoiceCmdlineIconFilter = {
+      --       inherit = "NoicePopupWarnBaseGroup",
+      --       bg = { from = "NoiceCmdline", attr = "bg" },
+      --     },
+      --   },
+      --   {
+      --     NoiceCmdlineIconHelp = {
+      --       inherit = "NoicePopupInfoBaseGroup",
+      --       bg = { from = "NoiceCmdline", attr = "bg" },
+      --     },
+      --   },
+      --   {
+      --     NoiceCmdlineIconIncRename = {
+      --       inherit = "NoicePopupWarnBaseGroup",
+      --       bg = { from = "NoiceCmdline", attr = "bg" },
+      --     },
+      --   },
+      --   { NoiceCmdlineIconSubstitute = { link = "NoicePopupWarnBaseGroup" } },
+      --   { NoiceCmdlineIconInput = { link = "NoicePopupBaseGroup" } },
+      --   { NoiceCmdlineIconLua = { link = "NoicePopupBaseGroup" } },
+      --   { NoiceConfirm = { bg = { from = "Pmenu" } } },
+      --   { NoiceConfirmBorder = { link = "NoicePopupBaseGroup" } },
+      --
+      --   -- NOTE: this line contains color markup modified by Noice,
+      --   -- so it needs to be manually re-colored
+      --   { ["@markup.raw.markdown_inline"] = { bg = "NONE" } },
+      -- })
 
       return {
         -- debug = true,
@@ -208,7 +205,6 @@ return {
   -- FOLD CYCLE
   {
     "jghauser/fold-cycle.nvim",
-    opts = true,
     keys = {
       {
         "zu",
@@ -219,6 +215,7 @@ return {
         mode = { "v", "n" },
       },
     },
+    opts = true,
   },
   -- SMEAR-CURSOR (disabled)
   {
@@ -244,28 +241,33 @@ return {
     event = "LazyFile",
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = function()
+      local Highlight = require "r.settings.highlights"
       Highlight.plugin("beaconHiC", {
         theme = {
           ["*"] = { { ["BeaconDefault"] = { bg = "red" } } },
-          ["neomodern"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
-          ["onedark"] = { { ["BeaconDefault"] = { bg = "#c678dd" } } },
           ["horizon"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
+          ["base46-aylin"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
+          ["base46-chocolate"] = { { ["BeaconDefault"] = { bg = "#c8bAA4" } } },
+          ["base46-default-dark"] = { { ["BeaconDefault"] = { bg = "#9e0e06" } } },
+          ["base46-doomchad"] = { { ["BeaconDefault"] = { bg = "#81A1C1" } } },
+          ["base46-material-darker"] = { { ["BeaconDefault"] = { bg = "#16afca" } } },
+          ["base46-jabuti"] = { { ["BeaconDefault"] = { bg = "#c0cbe3" } } },
+          ["base46-onenord"] = { { ["BeaconDefault"] = { bg = "#3879C5" } } },
+          ["base46-seoul256_dark"] = { { ["BeaconDefault"] = { bg = "#d75f87" } } },
+          ["base46-kanagawa"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
+          ["base46-zenburn"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
+          ["base46-jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
+          ["darkearth"] = { { ["BeaconDefault"] = { bg = "#990000" } } },
           ["ashen"] = { { ["BeaconDefault"] = { bg = "#b4b4b4" } } },
-          ["jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },
           ["oxocarbon"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
           ["rose-pine"] = { { ["BeaconDefault"] = { bg = "#ffffff" } } },
-          ["seoul256"] = { { ["BeaconDefault"] = { bg = "#d8d8d8" } } },
-          ["ef-melissa-dark"] = { { ["BeaconDefault"] = { bg = "#e8e4b1" } } },
           ["nord"] = { { ["BeaconDefault"] = { bg = "#eceff4" } } },
           ["lackluster"] = { { ["BeaconDefault"] = { bg = "#deeeed" } } },
-          ["zenburned"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
-          ["sunburn"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["tokyonight-storm"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
         },
       })
 
       return {
-        minimal_jump = 50,
         ignore_buffers = { "terminal", "nofile", "neorg://Quick Actions" },
         ignore_filetypes = {
           "qf",
@@ -284,84 +286,36 @@ return {
   -- BUFDELETE
   {
     "famiu/bufdelete.nvim",
-    lazy = true,
+    event = "BufReadPost",
   },
   -- TABBY
   {
     "nanozuki/tabby.nvim",
-    event = "VeryLazy",
+    event = "BufReadPost",
     config = function()
-      local tab_fg_tint = -0.16
-      local tab_bg_tint = -0.17
-
-      if vim.tbl_contains({ "darkforest" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.22
-        tab_bg_tint = -0.22
+      local function get_hl_as_hex(opts, ns)
+        ns, opts = ns or 0, opts or {}
+        opts.link = opts.link ~= nil and opts.link or false
+        local hl = vim.api.nvim_get_hl(ns, opts)
+        hl.fg = hl.fg and ("#%06x"):format(hl.fg)
+        hl.bg = hl.bg and ("#%06x"):format(hl.bg)
+        return hl
       end
 
-      if vim.tbl_contains({ "zenburned", "ef-eagle" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.3
-        tab_bg_tint = 0
-      end
-
-      if vim.tbl_contains({ "catppuccin-mocha", "chocolatier", "lackluster" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.25
-        tab_bg_tint = -0.05
-      end
-
-      if vim.tbl_contains({ "rose-pine-dawn" }, RUtils.config.colorscheme) then
-        tab_bg_tint = 0.03
-      end
-
-      if
-        vim.tbl_contains({
-          "ashen",
-          "coffeecat",
-          "ef-melissa-dark",
-          "horizon",
-          "jellybeans",
-          "seoul256",
-          "nord",
-          "onedark",
-          "rose-pine-main",
-        }, RUtils.config.colorscheme)
-      then
-        tab_fg_tint = -0.3
-        tab_bg_tint = -0.04
-      end
-
-      if vim.tbl_contains({ "vscode_modern", "tokyonight-storm" }, RUtils.config.colorscheme) then
-        tab_fg_tint = -0.25
-        tab_bg_tint = -0.04
-      end
-
-      if
-        vim.tbl_contains({
-          "sunburn",
-          "tokyonight-night",
-          "oxocarbon",
-        }, RUtils.config.colorscheme)
-      then
-        tab_fg_tint = -0.22
-        tab_bg_tint = -0.05
+      local function h(name)
+        return get_hl_as_hex { name = name }
       end
 
       local theme = {
-        fill = "Normal",
-        -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
+        fill = "Normal", -- Also you can do this: fill = { fg='#f2e9de', bg='#907aa9', style='italic' }
         head = "Normal",
         separator = "Normal",
-        current_tab = { fg = Highlight.get("KeywordNC", "fg"), bg = Highlight.get("TabLine", "bg") },
-        tab = {
-          fg = Highlight.tint(Highlight.get("TabLine", "fg"), tab_fg_tint),
-          bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
-        },
-        win = {
-          fg = Highlight.tint(Highlight.get("TabLine", "fg"), tab_fg_tint),
-          bg = Highlight.tint(Highlight.get("TabLine", "bg"), tab_bg_tint),
-        },
+        current_tab = { fg = h("KeywordNC").fg, bg = h("TabLine").bg },
+        tab = { fg = h("TabLine").fg, bg = h("TabLine").bg },
+        win = { fg = h("TabLine").fg, bg = h("TabLine").bg },
         tail = "TabLine",
       }
+
       require("tabby").setup {
         line = function(line)
           return {
@@ -399,27 +353,6 @@ return {
           }
         end,
       }
-    end,
-  },
-  -- MINI.ICONS
-  {
-    "echasnovski/mini.icons",
-    lazy = true,
-    opts = {
-      file = {
-        [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
-        ["CODEOWNERS"] = { glyph = "", hl = "MiniIconsGreen" },
-        ["devcontainer.json"] = { glyph = "", hl = "MiniIconsAzure" },
-      },
-      filetype = {
-        dotenv = { glyph = "", hl = "MiniIconsYellow" },
-      },
-    },
-    init = function()
-      package.preload["nvim-web-devicons"] = function()
-        require("mini.icons").mock_nvim_web_devicons()
-        return package.loaded["nvim-web-devicons"]
-      end
     end,
   },
 }

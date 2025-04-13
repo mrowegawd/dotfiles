@@ -39,9 +39,20 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 -- RUtils.map.nnoremap("<BS>", "zazz", { desc = "Fold: toggle focus current fold/unfold" })
 RUtils.map.nnoremap("zm", "zM", { desc = "Fold: close all" })
 RUtils.map.nnoremap("zk", "zMzvzz", { desc = "Fold: close all folds except the current one" })
+-- RUtils.map.nnoremap("za", function()
+--   if vim.fn.foldclosed(vim.fn.line ".") == -1 then
+--     vim.cmd "normal! za"
+--   else
+--     vim.cmd "normal! zo"
+--   end
+-- end, { desc = "Fold: toggle fold on current line" })
 
--- RUtils.map.nnoremap("zj", "zcjzOzz", { desc = "Fold: close current fold when open. Always open next fold." })
--- RUtils.map.nnoremap("zk", "zckzOzz", { desc = "Fold: close current fold when open. Always open previous fold." })
+RUtils.map.nnoremap("zn", function()
+  return RUtils.fold.go_next_prev_fold(false, true)
+end, { desc = "Fold: close current fold when open. Always open next fold." })
+RUtils.map.nnoremap("zp", function()
+  return RUtils.fold.go_next_prev_fold(true, true)
+end, { desc = "Fold: close current fold when open. Always open previous fold." })
 
 RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
@@ -82,8 +93,6 @@ end, { desc = "Terminal: new term" })
 -- Edit window state
 RUtils.map.nnoremap("<Leader>wL", "<C-W>t <C-W>H", { desc = "Window: force buffers to vertical split" })
 RUtils.map.nnoremap("<Leader>wJ", "<C-W>t <C-W>K", { desc = "Window: force buffers to horizontal split" })
-Snacks.toggle.zoom():map "<Leader>wm"
-Snacks.toggle.zen():map "<Leader>uz"
 
 if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") then
   RUtils.map.nnoremap("<a-K>", "<cmd>resize +4<cr>", { desc = "View: incease window height" })
@@ -115,8 +124,8 @@ RUtils.map.nnoremap(
 -- Scroll step sideways
 RUtils.map.nnoremap("zl", "z4l")
 RUtils.map.nnoremap("zh", "z4h")
-RUtils.map.nnoremap("zL", "z60l")
-RUtils.map.nnoremap("zH", "z60h")
+RUtils.map.nnoremap("zL", "z150l")
+RUtils.map.nnoremap("zH", "z150h")
 
 -- Scroll Up/Down
 RUtils.map.nnoremap("<C-b>", [[max([winheight(0) - 2, 1]) ."<C-u>".(line('w0') <= 1 ? "H" : "M")]], { expr = true })
@@ -147,6 +156,10 @@ RUtils.map.nnoremap("gl", function()
 end, { desc = "Buffer/Qf: magic gl" })
 RUtils.map.nnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit" })
 RUtils.map.vnoremap("<Leader><TAB>", RUtils.buf.magic_quit, { desc = "Buffer: magic exit (visual)" })
+RUtils.map.nnoremap("<Leader>b?", RUtils.map.show_help_buf_keymap, {
+  desc = "Buffer: show keymaps curbuf",
+  silent = true,
+})
 
 -- }}}
 -- {{{ Commandline
@@ -186,29 +199,6 @@ RUtils.map.cabbrev("w;", "update!")
 RUtils.map.vmap("K", "<Nop>")
 RUtils.map.nmap("K", "<Nop>")
 RUtils.map.nmap("q", "<Nop>")
--- }}}
--- {{{ Toggle
-Snacks.toggle.option("background", { off = "light", on = "dark", name = "Dark Background" }):map "<Leader>ub"
-Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
-Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
-Snacks.toggle.line_number():map "<leader>ul"
---stylua: ignore
--- Snacks.toggle .option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
---stylua: ignore
-Snacks.toggle .option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
-
-Snacks.toggle.diagnostics():map "<Leader>ud"
-Snacks.toggle.option("spell", { name = "Spelling" }):map "<Leader>us"
-Snacks.toggle.scroll():map "<Leader>uS"
-Snacks.toggle.animate():map "<Leader>ua"
-Snacks.toggle.treesitter():map "<Leader>uT"
-
-Snacks.toggle.profiler():map "<Localleader>spp"
-Snacks.toggle.profiler_highlights():map "<Localleader>sph"
-
-if vim.lsp.inlay_hint then
-  Snacks.toggle.inlay_hints():map "<Leader>uh"
-end
 -- }}}
 -- {{{ Diff
 -- Create a new scratch buffer
@@ -257,7 +247,28 @@ RUtils.map.vnoremap(
   "<esc><cmd>CompareClipboardSelection<cr>",
   { desc = "Git: compare diff with selection clipboard (visual)" }
 )
-
+if vim.fn.executable "lazygit" == 1 then
+  RUtils.map.nnoremap("<Leader>gg", function()
+    ---@diagnostic disable-next-line: missing-fields
+    Snacks.lazygit { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit (root dir) [snacks]" })
+  RUtils.map.nnoremap("<c-space>g", function()
+    ---@diagnostic disable-next-line: missing-fields
+    Snacks.lazygit { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit (root dir) without tmux [snacks]" })
+  RUtils.map.nnoremap("<Leader>gG", function()
+    Snacks.lazygit()
+  end, { desc = "Git: lazygit (cwd) [snacks]" })
+  -- RUtils.map.nnoremap("<Leader>gf", function()
+  --   Snacks.lazygit.log_file()
+  -- end, { desc = "Git: lazygit current file history" })
+  -- RUtils.map.nnoremap("<Leader>gL", function()
+  --   Snacks.lazygit.log { cwd = RUtils.root.git() }
+  -- end, { desc = "Git: lazygit log" })
+  -- RUtils.map.nnoremap("<Leader>gLL", function()
+  --   Snacks.lazygit.log()
+  -- end, { desc = "Git: lazygit log (cwd)" })
+end
 -- }}}
 -- {{{ Misc
 RUtils.map.nnoremap("<Esc>", function()
@@ -273,7 +284,7 @@ end, { desc = "Misc: escape and clear hlsearch", expr = true, silent = true })
 RUtils.map.nnoremap(
   "<Leader>ur",
   "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-  { desc = "Misc: redraw / clear hlsearch / diff update" }
+  { desc = "Toggle: redraw / clear hlsearch / diff update" }
 )
 RUtils.map.nnoremap("dd", function()
   if vim.fn.getline "." == "" then
@@ -343,10 +354,6 @@ end, { desc = "Open: browse under cursor/follow link note" })
 RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(true)
 end, { desc = "Open: browse under cursor/follow link note (visual)" })
-RUtils.map.nnoremap("<F1>", RUtils.map.show_help_buf_keymap, {
-  desc = "Misc: show keymaps curbuf",
-  silent = true,
-})
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
@@ -366,38 +373,43 @@ RUtils.map.vnoremap("k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr 
 -- Visual
 -- RUtils.map.xnoremap("il", "<Esc>^vg_", { desc = "View: dont mistake (x)" })
 -- RUtils.map.onoremap("il", "<CMD><C-U>normal! ^vg_<CR>", { desc = "View: dont mistake (o)" })
-
 -- RUtils.map.xnoremap("al", "$o0", { desc = "View: jump in (x)" })
 -- RUtils.map.onoremap("al", "<CMD><C-u>normal val<CR>", { desc = "View: jump out (o)" })
+-- }}}
+-- {{{ Toggle
+Snacks.toggle.option("wrap", { name = "Wrap" }):map "<Leader>uw"
+-- Snacks.toggle.option("background", { off = "light", on = "dark", name = "Toggle: dark background" }):map "<Leader>ub"
+-- Snacks.toggle.option("spell", { name = "Spelling" }):map "<Leader>us"
+-- Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map "<Leader>uL"
+-- Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }) :map "<Leader>uc"
+-- Snacks.toggle.option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }) :map "<Leader>uA"
+Snacks.toggle.zoom():map "<Leader>wm"
+Snacks.toggle.zen():map "<Leader>uz"
+Snacks.toggle.diagnostics():map "<Leader>ud"
+Snacks.toggle.treesitter():map "<Leader>uT"
+-- Snacks.toggle.scroll():map "<Leader>uS"
+-- Snacks.toggle.animate():map "<Leader>ua"
+-- Snacks.toggle.line_number():map "<leader>ul"
+-- Snacks.toggle.profiler():map "<Localleader>spp"
+-- Snacks.toggle.profiler_highlights():map "<Localleader>sph"
 
-if vim.fn.executable "lazygit" == 1 then
-  RUtils.map.nnoremap("<Leader>gg", function()
-    ---@diagnostic disable-next-line: missing-fields
-    Snacks.lazygit { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit (root dir) [snacks]" })
-  RUtils.map.nnoremap("<c-space>g", function()
-    ---@diagnostic disable-next-line: missing-fields
-    Snacks.lazygit { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit (root dir) without tmux [snacks]" })
-  RUtils.map.nnoremap("<Leader>gG", function()
-    Snacks.lazygit()
-  end, { desc = "Git: lazygit (cwd) [snacks]" })
-  -- RUtils.map.nnoremap("<Leader>gf", function()
-  --   Snacks.lazygit.log_file()
-  -- end, { desc = "Git: lazygit current file history" })
-  -- RUtils.map.nnoremap("<Leader>gL", function()
-  --   Snacks.lazygit.log { cwd = RUtils.root.git() }
-  -- end, { desc = "Git: lazygit log" })
-  -- RUtils.map.nnoremap("<Leader>gLL", function()
-  --   Snacks.lazygit.log()
-  -- end, { desc = "Git: lazygit log (cwd)" })
+if vim.lsp.inlay_hint then
+  Snacks.toggle.inlay_hints():map "<Leader>uh"
 end
+
+-- RUtils.map.nnoremap("<space><F9>", function()
+--   Snacks.notify.error("This is error", {})
+--   Snacks.notify.warn("This is warn", {})
+--   Snacks.notify.info("This is info", {})
+-- end, {
+--   desc = "Misc: check color Snacks Notify",
+--   silent = true,
 -- }}}
 -- {{{ Commands
-RUtils.map.nnoremap("<Leader>uI", function()
+RUtils.map.nnoremap("<Leader>oI", function()
   vim.treesitter.inspect_tree()
   vim.api.nvim_input "I"
-end, { desc = "Misc: inspect tree" })
+end, { desc = "Open: inspect tree" })
 RUtils.cmd.create_command("Snippets", RUtils.cmd.EditSnippet, { desc = "Misc: edit snippet file" })
 RUtils.cmd.create_command("ChangeMasterTheme", RUtils.cmd.change_colors, { desc = "Misc: set theme bspwm" })
 RUtils.cmd.create_command("InfoOption", RUtils.cmd.infoFoldPreview, { desc = "Misc: echo options" })
@@ -452,7 +464,7 @@ RUtils.map.nnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.tnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 RUtils.map.vnoremap("<a-o>", func_cmds, { desc = "Misc: list commands" })
 
-RUtils.map.nnoremap("<Leader>uf", function()
+RUtils.map.nnoremap("<Leader>of", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds({
     oprhans_check_plugins_last_update = function()
@@ -546,8 +558,8 @@ RUtils.map.nnoremap("<Leader>uf", function()
       RUtils.info "no session cwd to save or no plugin session actived. abort it"
     end,
   }, { winopts = { title = "Misc commands", row = row, col = col } })
-end, { desc = "Misc: list commands of misc" })
-RUtils.map.nnoremap("<Leader>gff", function()
+end, { desc = "Open: list commands of misc" })
+RUtils.map.nnoremap("<Leader>gof", function()
   local col, row = RUtils.fzflua.rectangle_win_pojokan()
   RUtils.fzflua.send_cmds(
     vim.tbl_deep_extend("force", {
@@ -603,7 +615,7 @@ RUtils.map.nnoremap("<Leader>gff", function()
     }, {}),
     { winopts = { title = RUtils.config.icons.git.branch .. "Git ", row = row, col = col } }
   )
-end, { desc = "Git: commands of git" })
+end, { desc = "Open: list commands of git" })
 
 -- }}}
 -- {{{ Tmux integration
@@ -670,25 +682,31 @@ RUtils.map.nnoremap("<a-E>", function()
         vim.cmd "Neotree focus reveal"
       end
     end
-    local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
-    if pane_left_id then
-      vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+
+    -- local pane_left_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+    -- if pane_left_id then
+    --   vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_left_id)
+    -- end
+
+    local pane_right_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction right"))
+    if pane_right_id then
+      vim.fn.system("wezterm cli kill-pane --pane-id " .. pane_right_id)
     end
 
-    vim.fn.system "wezterm cli split-pane --left --percent 20"
-    vim.fn.system "wezterm cli activate-pane-direction Right"
+    vim.fn.system "wezterm cli split-pane --right --percent 22"
+    vim.fn.system "wezterm cli activate-pane-direction left"
 
-    local pane_left_id2 = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction Left"))
+    pane_right_id = tonumber(normalize_return(vim.fn.system "wezterm cli get-pane-direction right"))
     vim.fn.system(
-      string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_left_id2)
+      string.format("wezterm cli send-text --no-paste '%s %s\r' --pane-id %s", fm_manager, dirname, pane_right_id)
     )
 
-    vim.fn.system "wezterm cli activate-pane-direction Left"
+    vim.fn.system "wezterm cli activate-pane-direction right"
   else
     -- local get_total_active_panes = normalize_return(vim.fn.system [[ tmux display-message -p '#{window_panes}']])
     local main_pane_id = get_current_pane_id()
     local cmd_open_filemanager =
-      fmt("tmux split-window -hb -p 30 -l 30 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
+      fmt("tmux split-window -h -p 30 -l 45 -c '#{pane_current_path}' '%s %s'", fm_manager, dirname)
 
     go_left()
 

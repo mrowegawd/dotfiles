@@ -44,6 +44,13 @@ return {
 			end
 		end),
 	},
+	{ -- alternate session
+		key = "B",
+		mods = mod_key,
+		action = wezterm.action_callback(function(window, pane)
+			window:perform_action({ SendKey = { key = "b", mods = mod_key } }, pane)
+		end),
+	},
 	{ -- scroll pane down
 		key = "PageDown",
 		mods = mod_key,
@@ -325,12 +332,12 @@ return {
 				end
 
 				-- Handle jika cursor masih berada di nvim tetapi yazi sudah terbuka
-				if KeymapUtil.is_left_pane_exists(pane) then
-					window:perform_action({ ActivatePaneDirection = "Left" }, pane)
+				if KeymapUtil.is_right_pane_exists(pane) then
+					window:perform_action({ ActivatePaneDirection = "Right" }, pane)
 					return
 				end
 
-				KeymapUtil.spawn_file_manager(window, pane, 15, "yazi")
+				KeymapUtil.spawn_file_manager(window, pane, 22, "yazi")
 			end
 		end),
 	},

@@ -7,7 +7,7 @@ local prios = {
   ["r.plugins.extras.coding.nvim-cmp"] = 2,
   ["r.plugins.extras.ui.edgy"] = 2,
   ["r.plugins.extras.lang.typescript"] = 5,
-  ["r.plugins.extras.coding.blink"] = 5,
+  -- ["r.plugins.extras.coding.blink"] = 5,
   ["r.plugins.extras.formatting.prettier"] = 10,
   -- default priority is 50
   ["r.plugins.extras.editor.aerial"] = 100,

@@ -1,6 +1,5 @@
 return {
   "tpope/vim-projectionist",
-  event = "VeryLazy",
   cmd = { "A", "AV", "AS", "AT" },
   config = function()
     vim.g.projectionist_heuristics = {

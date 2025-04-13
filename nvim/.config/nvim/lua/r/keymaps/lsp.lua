@@ -1,7 +1,5 @@
 local M = {}
 
-local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
-
 M._keys = nil
 
 local diagnostic_goto = function(next, severity)
@@ -13,6 +11,8 @@ local diagnostic_goto = function(next, severity)
 end
 
 function M.get()
+  local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
+
   if M._keys then
     return M._keys
   end
@@ -54,7 +54,9 @@ function M.get()
     {
       "<a-q>",
       function()
-        Snacks.words.jump(-vim.v.count1)
+        if RUtils.has "snacks.nvim" then
+          Snacks.words.jump(-vim.v.count1)
+        end
       end,
       has = "documentHighlight",
       cond = function()
@@ -65,7 +67,9 @@ function M.get()
     {
       "<a-Q>",
       function()
-        Snacks.words.jump(vim.v.count1)
+        if RUtils.has "snacks.nvim" then
+          Snacks.words.jump(vim.v.count1)
+        end
       end,
       has = "documentHighlight",
       cond = function()
@@ -73,6 +77,7 @@ function M.get()
       end,
       desc = "LSP: prev word reference",
     },
+
     { "<Leader>cA", RUtils.lsp.action.source, desc = "Action: source action", has = "codeAction" },
     {
       "<Leader>cR",
@@ -139,7 +144,7 @@ function M.get()
         vim.diagnostic.config { virtual_lines = new_value }
         return new_value
       end,
-      desc = "Diagnostic: toggle virtual_lines",
+      desc = "Toggle: virtual lines [diagnostic]",
     },
     {
       "dP",
@@ -255,7 +260,6 @@ function M.get()
     M._keys[#M._keys + 1] = {
       "grr",
       function()
-        -- fzf_lua.lsp_finder() -- <-- ini error
         fzf_lua.lsp_references()
       end,
       has = "references",

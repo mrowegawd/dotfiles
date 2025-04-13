@@ -106,13 +106,13 @@ return {
       { "<Leader>fF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
 
       -- Buffers
-      { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Snackspicker: buffer lines", },
-      { "<Leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Snackspicker: grep open buffers", },
-      { "<Leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Snackspicker: buffers", },
-      { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Snackspicker: buffers (all)", },
+      { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Buffer: buffer lines [snackspicker]", },
+      { "<Leader>bG", function() Snacks.picker.grep_buffers() end, desc = "Buffer: grep open buffers [snackspicker]", },
+      { "<Leader>bf", function() Snacks.picker.buffers { layout = "select" } end, desc = "Buffer: buffers [snackspicker]", },
+      { "<Leader>bF", function() Snacks.picker.buffers { hidden = true, nofile = true } end, desc = "Buffer: buffers (all) [snackspicker]", },
       { "<Leader>fO", RUtils.pick.config_files(), desc = "Snackspicker: find config File" },
       { "<Leader>fo", function() Snacks.picker.recent { filter = { cwd = false } } end, desc = "Snackspicker: recent (cwd)", },
-      { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Snackspicker: projects", },
+      { "<Leader>fp", function() Snacks.picker.projects() end, desc = "Picker: projects [snackspicker]", },
       -- Git
       { "<Leader>gc", function() Snacks.picker.git_log() end, desc = "Git: git log [snackspicker]", },
       { "<Leader>gd", function() Snacks.picker.git_diff() end, desc = "Git: git diff (hunks) [snackspicker]", },
@@ -122,7 +122,7 @@ return {
       { "<leader>fg", RUtils.pick "grep", desc = "Snackspicker: grep (root dir)" },
       -- { "<Leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Snackspicker: grep open buffers", },
       { "<Leader>fw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
-      { "<Leader>fW", RUtils.pick("grep_word", { root = false }), desc = "Snackspicker: visual selection or word (cwd)", mode = { "n", "x" }, },
+      { "<Leader>fW", RUtils.pick("grep_word", { root = false }), desc = "Picker: visual selection or word (cwd) [snackspicker]", mode = { "n", "x" }, },
       -- Search
       -- { '<Leader>s"', function() Snacks.picker.registers() end, desc = "Snackspicker: registers", },
       -- { "<Leader>sa", function() Snacks.picker.autocmds() end, desc = "Snackspicker: autocmds", },
@@ -134,7 +134,7 @@ return {
       -- { "<Leader>fd", function() Snacks.picker.diagnostics() end, desc = "Snackspicker: diagnostics", },
       { "<Leader>fH", function() Snacks.picker.help() end, desc = "Snackspicker: help pages", },
       -- { "<Leader>sH", function() Snacks.picker.highlights() end, desc = "Snackspicker: highlights", },
-      { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Snackspicker: icons", },
+      { "<Leader>fi", function() Snacks.picker.icons() end, desc = "Picker: icons [snackspicker]", },
       -- { "<Leader>sj", function() Snacks.picker.jumps() end, desc = "Snackspicker: jumps", },
       {
         "<Leader>fk",
@@ -166,9 +166,9 @@ return {
       -- { "<Leader>sm", function() Snacks.picker.marks() end, desc = "Snackspicker: marks", },
       -- { "<Leader>sR", function() Snacks.picker.resume() end, desc = "Snackspicker: resume", },
       -- { "<Leader>sq", function() Snacks.picker.qflist() end, desc = "Snackspicker: Quickfix List", },
-      { "<Leader>uu", function() Snacks.picker.undo() end, desc = "Snackspicker: undotree", },
+      { "<Leader>uu", function() Snacks.picker.undo() end, desc = "Toggle: undotree [snackspicker]", },
       -- ui
-      { "<Leader>uC", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes", },
+      { "<Leader>uC", function() Snacks.picker.colorschemes() end, desc = "Toggle: colorschemes [snackspicker]", },
 
       -- LSP
       { "gs", function() Snacks.picker.lsp_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Symbols" },

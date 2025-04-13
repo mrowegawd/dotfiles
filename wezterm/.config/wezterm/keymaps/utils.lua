@@ -92,11 +92,11 @@ end
 
 function M.spawn_file_manager(window, pane, percent_size, cmd_file_manager)
 	cmd_file_manager = cmd_file_manager or "yazi" -- nnn, yazi, ranger
-	percent_size = percent_size or 15
+	percent_size = percent_size or 20
 
 	window:perform_action(
 		act.SplitPane({
-			direction = "Left",
+			direction = "Right",
 			command = {
 				args = {
 					os.getenv("SHELL"), -- tanpa di add `SHELL` ini, $PATH nya hilang. Check https://github.com/wez/wezterm/issues/3950
@@ -141,6 +141,14 @@ end
 
 function M.is_left_pane_exists(pane)
 	local pane_id = pane:tab():get_pane_direction("Left")
+	if pane_id == nil then
+		return false
+	end
+	return true
+end
+
+function M.is_right_pane_exists(pane)
+	local pane_id = pane:tab():get_pane_direction("Right")
 	if pane_id == nil then
 		return false
 	end

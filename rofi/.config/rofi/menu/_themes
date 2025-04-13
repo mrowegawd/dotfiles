@@ -100,6 +100,8 @@ if [[ -f "$MASTER_THEME_FILE" ]]; then
   GET_COL_48=$(grep -i color48 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_49=$(grep -i color49 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
   GET_COL_50=$(grep -i color50 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
+
+  GET_COL_51=$(grep -i color51 <"$MASTER_THEME_FILE" | cut -d':' -f2 | head -1 | xargs)
 fi
 
 lighten_color() {
@@ -222,7 +224,7 @@ set_tmux() {
 
     ACTIVE_FG="$GET_COL_16"
     ACTIVE_BG="$GET_COL_17"
-    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ] || [ "$1" == "ef-eagle" ]; then
+    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
       ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
     fi
     sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
@@ -345,41 +347,46 @@ set_terminal() {
 }
 set_btop() {
   _BTOP_PATH="$DOTFILES_PATH/btop/.config/btop"
+  _BTOP_CONFIG_THEME_PATH="$_BTOP_PATH/themes/_theme.theme"
+  _BTOP_THEME_PATH="$_BTOP_PATH/themes/guard.theme"
 
-  if [ ! -d "$_BTOP_PATH" ]; then
-    dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!" && exit 1
+  if [ -d "$_BTOP_PATH" ]; then
+    RED_LIGHT_1=$(lighten_color "$GET_RED" 40) # Misalnya, menambahkan 50 untuk mencerahkan
+    RED_LIGHT_2=$(lighten_color "$GET_RED" 80)
+
+    GREEN_LIGHT_1=$(lighten_color "$GET_GREEN_ALT" 40)
+    GREEN_LIGHT_2=$(lighten_color "$GET_GREEN_ALT" 80)
+
+    cat "$_BTOP_CONFIG_THEME_PATH" >"$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%background%%/$GET_BG/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%red_alt%%/$GET_YELLOW_ALT/g" "$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%cursorline_fg%%/$GET_BG/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%cursorline_bg%%/$GET_COL_17/g" "$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%title_fg%%/$GET_CYAN/g" "$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%border_fg%%/$GET_COL_18/g" "$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%keyword%%/$GET_COL_17/g" "$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%green_alt%%/$GET_GREEN_ALT/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_THEME_PATH"
+
+    sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_THEME_PATH"
+
+    FOREGROUND_DARKEN_1=$(lighten_color "$GET_BG" 10) # Misalnya, mengurangi 50 untuk menggelapkan
+    BACKGROUND_DARKEN_1=$(lighten_color "$GET_FG" 5)
+    sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_THEME_PATH"
+    sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_THEME_PATH"
+  else
+    dunstify "$ERROR_MSG" "Path $_BTOP_PATH do not exists!"
   fi
-
-  # theme[main_bg]="%%background%%"
-
-  RED_LIGHT_1=$(lighten_color "$GET_RED" 40) # Misalnya, menambahkan 50 untuk mencerahkan
-  RED_LIGHT_2=$(lighten_color "$GET_RED" 80)
-
-  GREEN_LIGHT_1=$(lighten_color "$GET_GREEN_ALT" 40)
-  GREEN_LIGHT_2=$(lighten_color "$GET_GREEN_ALT" 80)
-
-  FOREGROUND_DARKEN_1=$(darken_color "$GET_FG" 100) # Misalnya, mengurangi 50 untuk menggelapkan
-  BACKGROUND_DARKEN_1=$(darken_color "$GET_FG" 100)
-
-  cat "$_BTOP_PATH/themes/_theme.theme" >"$_BTOP_PATH/themes/guard_theme.theme"
-
-  sed -i -e "s/%%background%%/$GET_BG/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%foreground%%/$GET_FG/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%red%%/$GET_RED/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%red_alt%%/$GET_YELLOW_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
-
-  sed -i -e "s/%%cyan%%/$GET_CYAN/g" "$_BTOP_PATH/themes/guard_theme.theme"
-
-  sed -i -e "s/%%green_alt%%/$GET_GREEN_ALT/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%green_light_1%%/$GREEN_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%green_light_2%%/$GREEN_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
-
-  sed -i -e "s/%%red_light_1%%/$RED_LIGHT_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%red_light_2%%/$RED_LIGHT_2/g" "$_BTOP_PATH/themes/guard_theme.theme"
-
-  sed -i -e "s/%%foreground_darken_1%%/$FOREGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-  sed -i -e "s/%%background_darken_2%%/$BACKGROUND_DARKEN_1/g" "$_BTOP_PATH/themes/guard_theme.theme"
-
 }
 set_yazi() {
   YAZI_FLAVORS_THEME_FOLDER="$HOME/.config/yazi/flavors"
@@ -393,10 +400,10 @@ set_yazi() {
 
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
-  HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
-  if [ "$1" == "lackluster" ] || [ "$1" == "ef-eagle" ] || [ "$1" == "rose-pine-dawn" ]; then
-    HOVERED_BG=$(darken_color "$GET_COL_39" 4)
-  fi
+  HOVERED_BG=$(lighten_color "$GET_COL_39" 10)
+  # if [ "$1" == "lackluster" ] || [ "$1" == "rose-pine-dawn" ]; then
+  #   HOVERED_BG=$(lighten_color "$GET_COL_39" 10)
+  # fi
   sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
 
@@ -438,7 +445,9 @@ set_fzf() {
 
   sed -i -e "s/%%color_border%%/$GET_COL_28/g" "$FZF_PATH_CONFIG/fzf.config"
   sed -i -e "s/%%color_gutter%%/$GET_COL_22/g" "$FZF_PATH_CONFIG/fzf.config"
-  sed -i -e "s/%%color_pointer%%/$GET_RED/g" "$FZF_PATH_CONFIG/fzf.config"
+  sed -i -e "s/%%color_pointer%%/$GET_COL_17/g" "$FZF_PATH_CONFIG/fzf.config"
+
+  sed -i -e "s/%%color_header%%/$GET_COL_51/g" "$FZF_PATH_CONFIG/fzf.config"
 
 }
 set_zsh_p10k() {
@@ -462,8 +471,17 @@ set_zshrc() {
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
   fi
 
+  colorline="$GET_COL_32" # $GET_COL_19
+  if [ "$1" == "zenburned" ]; then
+    colorline="$GET_COL_46"
+  fi
+
+  # if [ "$1" == "tokyonight-storm" ] || [ "$1" == "base46-chocolate" ] || [ "$1" == "base46-default-dark" ]; then
+  #   colorline="$GET_COL_32"
+  # fi
+
   sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$GET_COL_37\"/g" "$ZSHRC_PATH"
-  sed -i -e "s/^colorline=.*/colorline=\"$GET_COL_19\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorline=.*/colorline=\"$colorline\"/g" "$ZSHRC_PATH"
 }
 set_lazygit() {
   LAZYGIT_THEME_PATH="$HOME/.config/lazygit/theme"
@@ -547,6 +565,28 @@ set_ncmpcpp() {
   fi
 
 }
+set_polybar() {
+  _POLYBAR_PATH="$DOTFILES_PATH/polybar/.config/polybar"
+  _POLYBAR_CONFIG_MODULE_PATH="$_POLYBAR_PATH/bar/newback/modules.ini"
+
+  if [ -f "$_POLYBAR_CONFIG_MODULE_PATH" ]; then
+
+    statusline_fg=$GET_COL_45
+    statusline=$GET_COL_46
+    keyword_alt=$GET_COL_16
+    if [ "$1" == "tokyonight-day" ] || [ "$1" == "rose-pine-dawn" ]; then
+      statusline_fg=$GET_COL_46
+      statusline=$GET_COL_16
+      keyword_alt=$GET_COL_45
+    fi
+
+    sed -i -e "s/^keyword\s=.*$/keyword = $GET_COL_17/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+    sed -i -e "s/^keyword_alt\s=.*$/keyword_alt = $keyword_alt/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+
+    sed -i -e "s/^statusline_fg\s=.*$/statusline_fg = $statusline_fg/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+    sed -i -e "s/^statusline\s=.*$/statusline = $statusline/g" "$_POLYBAR_CONFIG_MODULE_PATH"
+  fi
+}
 
 wm_bspwm() {
   ~/.config/bspwm/bspwmrc &>/dev/null
@@ -595,7 +635,8 @@ setup() {
   set_lazygit
   set_zsh_p10k "$1"
   set_delta
-  set_zshrc
+  set_zshrc "$1"
+  set_polybar "$1"
 
   # case "$DEKSTOP_SESSION" in
   # # "bspwm") wm_bspwm ;;
@@ -604,7 +645,7 @@ setup() {
 
   bspc wm -r && sleep 2 && dunstify "Reload BSPWM" "Reload config.."
 
-  dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $_NAMETHEME" \
+  dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $1" \
     "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
 }
 

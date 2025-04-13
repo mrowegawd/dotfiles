@@ -67,53 +67,122 @@ local function toggle_diffview(cmd)
 end
 
 function M.magic_quit()
+  local notif_msg = "Cannot close the only window"
   local buf_fts = {
     ["fugitive"] = "bd",
     ["Trouble"] = "bd",
     ["help"] = "bd",
-    ["octo"] = "bd",
+    ["octo"] = "q!",
     ["log"] = "bd",
     ["git"] = function()
-      vim.cmd "close"
+      local j = function()
+        return vim.cmd "close"
+      end
+      return nil, j
     end,
     ["Outline"] = function()
-      vim.cmd "OutlineClose"
+      local j = function()
+        return vim.cmd "OutlineClose"
+      end
+      return true, j
     end,
     ["DiffviewFileHistory"] = function()
-      if vim.t.diffview_view_initialized then
-        toggle_diffview "DiffviewClose"
+      local j = function()
+        return toggle_diffview "DiffviewClose"
       end
+      if vim.t.diffview_view_initialized then
+        return true, j
+      end
+      return nil, nil
     end,
     ["DiffviewFiles"] = function()
-      if vim.t.diffview_view_initialized then
-        toggle_diffview "DiffviewClose"
+      local j = function()
+        return toggle_diffview "DiffviewClose"
       end
+      if vim.t.diffview_view_initialized then
+        return true, j
+      end
+      return nil, nil
     end,
     ["grug-far"] = function()
-      return RUtils.warn([[To close gruf-far, use "q"]], { title = "Gruf-far" })
+      local j = function()
+        return RUtils.warn([[To close gruf-far, use "q"]], { title = "Gruf-far" })
+      end
+      return true, j
     end,
   }
 
   if buf_fts[vim.bo[0].filetype] then
-    if type(buf_fts[vim.bo[0].filetype]) == "function" then
-      buf_fts[vim.bo[0].filetype]()
-      return
+    local is_closed = false
+    local win_count = RUtils.cmd.get_total_wins()
+    if #win_count > 1 then
+      is_closed = true
     end
 
-    vim.cmd(buf_fts[vim.bo[0].filetype])
+    if vim.bo.filetype == "qf" then
+      is_closed = true
+    end
+
+    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
+    if not is_qf_opened.found then
+      is_closed = true
+    end
+
+    if is_closed and type(buf_fts[vim.bo[0].filetype]) == "function" then
+      local is_ok_cmd, call_cmd = buf_fts[vim.bo[0].filetype]()
+      if is_ok_cmd and call_cmd then
+        call_cmd()
+        return
+      end
+
+      local win_count = RUtils.cmd.get_total_wins()
+      if #win_count == 1 then
+        M.smart_quit()
+        return
+      end
+
+      if vim.bo.filetype == "git" then
+        notif_msg = "[!] use manual quit"
+      end
+
+      is_closed = false
+    end
+
+    if is_closed then
+      return vim.cmd(buf_fts[vim.bo[0].filetype])
+    end
+
+    return RUtils.info(notif_msg, { title = "Smart Quit" })
   else
+    local win_count = RUtils.cmd.get_total_wins()
+    if #win_count > 1 then
+      return M.smart_quit()
+    end
+
+    local is_qf_opened = RUtils.cmd.windows_is_opened { "qf" }
+    if not is_qf_opened.found then
+      return M.smart_quit()
+    end
+
+    if vim.bo.filetype == "qf" then
+      return M.smart_quit()
+    end
+
     local bufname = vim.fn.bufname(vim.api.nvim_get_current_buf())
     if bufname and bufname:match "diffview://" then
       toggle_diffview "DiffviewClose"
       return
     end
 
+    -- if bufname and bufname:match "gitsigns://" then
+    --   return vim.cmd "close"
+    -- end
+
     if bufname and bufname:match "gitsigns://" then
-      vim.cmd "close"
-      return
+      return vim.cmd "close"
     end
 
-    M.smart_quit()
+    return RUtils.info(notif_msg, { title = "Smart Quit" })
   end
 end
 

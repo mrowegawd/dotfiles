@@ -133,6 +133,7 @@ autocmds.winhi_filetype = {
   ["md"] = true,
   ["orgagenda"] = true,
   ["org"] = true,
+  ["git"] = true,
 }
 
 autocmds.cursorline_blacklist = {

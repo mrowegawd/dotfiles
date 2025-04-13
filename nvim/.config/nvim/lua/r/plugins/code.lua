@@ -1,10 +1,22 @@
-local Highlight = require "r.settings.highlights"
-
 return {
   -- MINI.PAIRS
   {
     "echasnovski/mini.pairs",
-    event = "VeryLazy",
+    event = "InsertEnter",
+    keys = {
+      {
+        "<Leader>up",
+        function()
+          vim.g.minipairs_disable = not vim.g.minipairs_disable
+          if vim.g.minipairs_disable then
+            RUtils.warn("Disabled auto pairs", { title = "Option" })
+          else
+            RUtils.info("Enabled auto pairs", { title = "Option" })
+          end
+        end,
+        desc = "Toggle: auto pairs [mini.pairs]",
+      },
+    },
     opts = {
       modes = { insert = true, command = true, terminal = false },
       -- Skip `autopair` when next character is one of these
@@ -20,20 +32,6 @@ return {
     config = function(_, opts)
       RUtils.mini.pairs(opts)
     end,
-    keys = {
-      {
-        "<Leader>up",
-        function()
-          vim.g.minipairs_disable = not vim.g.minipairs_disable
-          if vim.g.minipairs_disable then
-            RUtils.warn("Disabled auto pairs", { title = "Option" })
-          else
-            RUtils.info("Enabled auto pairs", { title = "Option" })
-          end
-        end,
-        desc = "Toggle: auto pairs [mini.pairs]",
-      },
-    },
   },
   -- LAZYDEV
   {
@@ -48,35 +46,16 @@ return {
       },
     },
   },
-  -- COMMENTS-TS-CONTEXT
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = true,
-    opts = {
-      enable_autocmd = false,
-    },
-    init = function()
-      if vim.fn.has "nvim-0.10" == 1 then
-        vim.schedule(function()
-          local get_option = vim.filetype.get_option
-          vim.filetype.get_option = function(filetype, option)
-            return option == "commentstring" and require("ts_context_commentstring.internal").calculate_commentstring()
-              or get_option(filetype, option)
-          end
-        end)
-      end
-    end,
-  },
   -- TS-COMMENTS
   {
     "folke/ts-comments.nvim",
-    event = "VeryLazy",
+    event = "LazyFile",
     opts = true,
   },
   -- MINI.AI
   {
     "echasnovski/mini.ai",
-    event = "VeryLazy",
+    event = "LazyFile",
     opts = function()
       local ai = require "mini.ai"
       return {
@@ -112,7 +91,6 @@ return {
   -- SCRATCH
   {
     "LintaoAmons/scratch.nvim",
-    event = "VeryLazy",
     cmd = { "Scratch", "ScratchOpen" },
     opts = {
       scratch_file_dir = vim.fn.stdpath "cache" .. "/scratch.nvim", -- where your scratch files will be put
@@ -135,7 +113,7 @@ return {
   {
     -- how to use it: `ysiw`, `yc<brackets>`, `yd<brackets>`
     "kylechui/nvim-surround",
-    event = "VeryLazy",
+    event = "InsertEnter",
     version = "*",
     config = function()
       local input = require("nvim-surround.input").get_input
@@ -231,13 +209,6 @@ return {
           uncovered = { fg = "red" },
         },
       }
-
-      Highlight.plugin("coverage_hi", {
-        { CoverageCovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoveragePartial = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoverageUncovered = { bg = { from = "ColorColumn", attr = "bg" } } },
-        { CoverageSummaryFail = { bg = { from = "ColorColumn", attr = "bg" } } },
-      })
     end,
   },
   -- OVERSEER.NVIM
@@ -352,12 +323,7 @@ return {
       },
     },
     config = function(_, opts)
-      Highlight.plugin("overseernvim", {
-        { OverseerTaskBorder = { fg = { from = "WinSeparator", attr = "fg" }, bg = "NONE" } },
-      })
-
       require("overseer").setup(opts)
-
       vim.api.nvim_create_user_command("OverseerDebugParser", 'lua require("overseer").debug_parser()', {})
     end,
   },
@@ -365,10 +331,7 @@ return {
   {
     -- "mrowegawd/runmux",
     dir = "~/.local/src/nvim_plugins/rmux",
-    cmd = { "RmuxEDITConfig" },
-    dependencies = {
-      "stevearc/overseer.nvim",
-    },
+    dependencies = { "stevearc/overseer.nvim" },
     keys = {
       { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
 
@@ -399,11 +362,6 @@ return {
   -- REFACTORING
   {
     "ThePrimeagen/refactoring.nvim",
-    event = "LazyFile",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
     keys = {
       {
         "<Localleader>rs",
@@ -525,41 +483,8 @@ return {
   -- GITIGNORE.NVIM
   {
     "wintermute-cell/gitignore.nvim",
-    cmd = "Gitignore",
+    ft = "gitignore",
     keys = {
-      -- {
-      --   "<Leader>rf",
-      --   function()
-      --     local gitignore = require "gitignore"
-      --
-      --     local fzf = require "fzf-lua"
-      --     gitignore.generate = function(opts)
-      --       local picker_opts = {
-      --         -- the content of opts.args may also be displayed here for example.
-      --         prompt = "Select templates for gitignore file> ",
-      --         winopts = {
-      --           width = 0.4,
-      --           height = 0.3,
-      --         },
-      --         actions = {
-      --           default = function(selected, _)
-      --             -- as stated in point (3) of the contract above, opts.args and
-      --             -- a list of selected templateNames are passed.
-      --             gitignore.createGitignoreBuffer(opts.args, selected)
-      --           end,
-      --         },
-      --       }
-      --       fzf.fzf_exec(function(fzf_cb)
-      --         for _, prefix in ipairs(gitignore.templateNames) do
-      --           fzf_cb(prefix)
-      --         end
-      --         fzf_cb()
-      --       end, picker_opts)
-      --     end
-      --   end,
-      --   ft = "gitignore",
-      --   desc = "Task: select gitignore generate",
-      -- },
       {
         "<Leader>rf",
         "<CMD>Gitignore<CR>",

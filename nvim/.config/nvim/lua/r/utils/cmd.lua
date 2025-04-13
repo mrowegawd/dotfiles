@@ -1,7 +1,3 @@
-local api, fmt, L = vim.api, string.format, vim.log.levels
-
-local Highlight = require "r.settings.highlights"
-
 ---@class r.utils.cmd
 local M = {}
 
@@ -80,13 +76,14 @@ function M.foreach(callback, list)
 end
 
 function M.pcall(msg, func, ...)
+  local L = vim.log.levels
   local args = { ... }
   if type(msg) == "function" then
     local arg = func
     args, func, msg = { arg, unpack(args) }, msg, nil
   end
   return xpcall(func, function(err)
-    msg = debug.traceback(msg and fmt("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
+    msg = debug.traceback(msg and string.format("%s:\n%s\n%s", msg, vim.inspect(args), err) or err)
     vim.schedule(function()
       vim.notify(msg, L.ERROR, { title = "ERROR" })
     end)
@@ -255,7 +252,7 @@ end
 
 function M.create_command(name, rhs, opts)
   opts = opts or {}
-  api.nvim_create_user_command(name, rhs, opts)
+  vim.api.nvim_create_user_command(name, rhs, opts)
 end
 
 local autocmd_keys = {
@@ -281,7 +278,7 @@ local function validate_autocmd(name, command)
     vim.schedule(function()
       local msg = "Incorrect keys: " .. table.concat(incorrect, ", ")
       ---@diagnostic disable-next-line: param-type-mismatch
-      vim.notify(msg, "error", { title = fmt("Autocmd: %s", name) })
+      vim.notify(msg, "error", { title = string.format("Autocmd: %s", name) })
     end)
   end
 end
@@ -289,12 +286,12 @@ end
 function M.augroup(name, ...)
   local commands = { ... }
   assert(name ~= "User", "The name of an augroup CANNOT be User")
-  assert(#commands > 0, fmt("You must specify at least one autocommand for %s", name))
-  local id = api.nvim_create_augroup(name, { clear = true })
+  assert(#commands > 0, string.format("You must specify at least one autocommand for %s", name))
+  local id = vim.api.nvim_create_augroup(name, { clear = true })
   for _, autocmd in ipairs(commands) do
     validate_autocmd(name, autocmd)
     local is_callback = type(autocmd.command) == "function"
-    api.nvim_create_autocmd(autocmd.event, {
+    vim.api.nvim_create_autocmd(autocmd.event, {
       group = name,
       pattern = autocmd.pattern,
       desc = autocmd.desc,
@@ -498,6 +495,7 @@ function M.open_in_browser(url)
 end
 
 function M.EditSnippet()
+  local L = vim.log.levels
   local scan = require "plenary.scandir"
 
   local base_snippets = { "package", "global" }
@@ -564,6 +562,8 @@ function M.EditSnippet()
 end
 
 function M.change_colors()
+  local Highlight = require "r.settings.highlights"
+
   local KeywordNC_bg = Highlight.get("KeywordNC", "bg") -- 16
   local KeywordNC_fg = Highlight.get("Keyword", "fg") -- 17
 
@@ -603,6 +603,8 @@ function M.change_colors()
 
   local zsh_background_bg = Highlight.get("StatusLineNC", "bg")
 
+  local fzf_header = Highlight.get("FzfLuaHeaderText", "fg")
+
   if vim.tbl_contains(vim.g.lightthemes, vim.g.colorscheme) then
     tmux_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
     statusline_fg = Highlight.tint(Highlight.get("Comment", "fg"), 0)
@@ -619,12 +621,8 @@ function M.change_colors()
     sugest_highlight = Highlight.tint(Highlight.get("Tabline", "bg"), -0.2)
   end
 
-  if vim.g.colorscheme == "ef-eagle" then
-    yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -1)
-  end
-
   if vim.g.colorscheme == "rose-pine-dawn" then
-    yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -0.2)
+    yazi_filename_fg = Highlight.tint(Highlight.get("LineNr", "fg"), -0.5)
   end
 
   local master_colors = string.format(
@@ -692,6 +690,8 @@ function M.change_colors()
 
 %s
 *color50: %s
+
+*color51: %s
 ]],
     string.format "! vim: foldmethod=marker foldlevel=0 ft=xdefaults",
 
@@ -754,7 +754,9 @@ function M.change_colors()
     yazi_filename_fg, -- 49
 
     string.format "! zsh: zsh_background_bg",
-    zsh_background_bg -- 50
+    zsh_background_bg, -- 50
+
+    fzf_header -- 51
   )
 
   local master_color_path = "/tmp/master-colors-themes"

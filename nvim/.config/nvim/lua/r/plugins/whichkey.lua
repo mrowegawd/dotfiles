@@ -15,32 +15,7 @@ return {
     opts = {
       preset = "helix",
       defaults = {},
-      -- icons = {
-      --   breadcrumb = " ", -- symbol used in the command line area that shows your active key combo
-      --   separator = " ", -- symbol used between a key and it's label
-      --   mappings = false,
-      -- },
-      -- keys = {
-      --   scroll_down = "<c-d>", -- binding to scroll down inside the popup
-      --   scroll_up = "<c-u>", -- binding to scroll up inside the popup
-      -- },
-      -- plugins = {
-      --   marks = true,
-      --   registers = true,
-      --   spelling = {
-      --     enabled = true,
-      --     suggestions = 20,
-      --   },
-      --   presets = {
-      --     operators = false,
-      --     motions = false,
-      --     text_objects = false,
-      --     windows = false,
-      --     nav = false,
-      --     z = false,
-      --     g = false,
-      --   },
-      -- },
+      plugins = { registers = false }, -- registers disabled
       spec = {
         {
           mode = { "n", "v" },
@@ -53,15 +28,18 @@ return {
           { "<Leader>g", group = "git" },
           { "<Leader>gh", group = "hunks" },
           { "<Leader>gu", group = "toggle" },
-          { "<Leader>gf", group = "commands" },
+          { "<Leader>go", group = "open" },
 
           { "<Leader>o", group = "open/linking" },
           { "<Leader>r", group = "run/tasks" },
+
           { "<Leader>t", group = "testing" },
+          { "<Leader>tc", group = "coverage" },
+
           { "<Leader>u", group = "toggle" },
           { "<Leader>s", group = "session" },
           -- { "<Leader>z", group = "fold" },
-          { "<Leader>x", group = "diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
+          { "<Leader>x", group = "exec:diagnostics/quickfix/trouble", icon = { icon = "󱖫 ", color = "green" } },
 
           {
             "<leader>w",
