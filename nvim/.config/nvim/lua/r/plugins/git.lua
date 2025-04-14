@@ -309,11 +309,19 @@ return {
           -- Hunk
           map("n", "<Leader>ghs", gs.stage_hunk, "Hunk: stage [gitsigns]")
           map("v", "<Leader>ghs", function()
-            gs.stage_hunk { vim.fn.line ".", vim.fn.line "v" }
+            local from, to = vim.fn.line ".", vim.fn.line "v"
+            if from > to then
+              from, to = to, from
+            end
+            gs.stage_hunk { from, to }
           end, "Hunk: stage (visual) [gitsigns]")
           map("n", "<Leader>ghr", gs.reset_hunk, "Hunk: reset [gitsigns]")
           map("v", "<Leader>ghr", function()
-            gs.reset_hunk { vim.fn.line ".", vim.fn.line "v" }
+            local from, to = vim.fn.line ".", vim.fn.line "v"
+            if from > to then
+              from, to = to, from
+            end
+            gs.reset_hunk { from, to }
           end, "Hunk: reset (visual) [gitsigns]")
           map("n", "<Leader>ghu", gs.undo_stage_hunk, "Hunk: undo [gitsigns]")
           map("n", "<Leader>ghS", gs.stage_buffer, "Hunk: stage buffer [gitsigns]")
