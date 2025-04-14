@@ -92,15 +92,25 @@ open_tree_cwd() {
   if [ "$GET_TOTAL_ACTIVE_PANES" == 1 ]; then
     _open_file_manager_window
   else
-    clean_tree
-    _go_right
-    _open_file_manager_window
+    is_pane_is_right=$(tmux display -p '#{pane_at_right}')
+    if [ "$is_pane_is_right" == 0 ]; then
+      if _check_pane_is_yazi; then
+        dunstify "fasd"
+        clean_tree
+      else
+        _go_right
+      fi
+    else
+      clean_tree
+      _go_right
+      _open_file_manager_window
+    fi
   fi
 }
 
 open_tree_wiki() {
-  is_pane_is_left=$(tmux display -p '#{pane_at_left}')
-  if ! _check_pane_is_yazi && [[ $is_pane_is_left == "1" ]]; then
+  is_pane_is_right=$(tmux display -p '#{pane_at_right}')
+  if ! _check_pane_is_yazi && [[ $is_pane_is_right == "1" ]]; then
     _open_wiki_file_manager_window
   else
     clean_tree
