@@ -284,21 +284,21 @@ RUtils.cmd.augroup("GetErrorMessageNvimWhenQuit", {
   end,
 })
 
-RUtils.cmd.augroup("OpenMediaImagePngGifNvim", {
+RUtils.cmd.augroup("OpenFileImages", {
   event = "BufEnter",
-  pattern = { "*.png", "*.jpg", "*.gif" },
+  pattern = { "*.png", "*.jpg" },
   command = function()
     local file_path = vim.fn.expand "%"
     vim.fn.system("bspc rule -a \\* -o state=tiled focus=true && sxiv -a " .. file_path)
-    vim.cmd "bw"
+    vim.cmd [[bw | vnew]]
   end,
 }, {
   event = "BufEnter",
-  pattern = "*.mp4",
+  pattern = { "*.mp4", "*.gif" },
   command = function()
     local file_path = vim.fn.expand "%"
     vim.fn.system("bspc rule -a \\* -o state=tiled focus=true && mpv " .. file_path)
-    vim.cmd "bw"
+    vim.cmd [[bw | vnew]]
   end,
 })
 
