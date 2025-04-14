@@ -1,22 +1,22 @@
-ACTIVE_BG="#569cd6"
-ACTIVE_FG="#2b4e6b"
+ACTIVE_BG="#1f1f1f"
+ACTIVE_FG="#727272"
 
-STATUSLINE_BG_MESSAGE="#dcdcaa"
-STATUSLINE_FG="#4b4b4b"
+STATUSLINE_BG_MESSAGE="#E49A44"
+STATUSLINE_FG="#383838"
 
-SESSION_BG="#d4d4d4"
-SESSION_FG="#1f1f1f"
+SESSION_BG="#d5d5d5"
+SESSION_FG="#121212"
 
-TMUX_BG="#1f1f1f"
-TMUX_FG="#555555"
+TMUX_BG="#121212"
+TMUX_FG="#424242"
 
-BORDER_FG_ACTIVE="#569cd6"
-BORDER_FG_NC="#2c2c2c"
+BORDER_FG_ACTIVE="#e5e5e5"
+BORDER_FG_NC="#222222"
 
-RED="#f44747"
-BLUE="#569cd6"
-WHITE="#d4d4d4"
-GREEN="#608b4e"
+RED="#B14242"
+BLUE="#4A8B8B"
+WHITE="#d5d5d5"
+GREEN="#D87C4A"
 
 setw -g window-style bg=$TMUX_BG
 setw -g window-active-style bg=$TMUX_BG
@@ -28,7 +28,7 @@ setw -g pane-border-status top # bottom, top
 
 setw -g pane-border-format "\
 #{?pane_active,#[fg=$RED]$left_slant_separator,}\
-#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$ACTIVE_BG],}#{pane_index}.#{pane_id} \
+#[fg=$STATUSLINE_FG,bold]#{?pane_active,#[bg=$TMUX_BG],} #{?pane_active,#[fg=$RED] ,}#{?pane_active,#[fg=$BORDER_FG_ACTIVE],}#{pane_index}.#{pane_id} \
 #{?pane_active,#{pane_current_command} ,}\
 #{?pane_active,#[fg=$TMUX_BG]$left_slant_separator,}"
 
@@ -55,7 +55,7 @@ set -g status-right-length 80
 set -g status-right "#{?#{e|<:#{window_width},130},\
 #[fg=$GREEN]#{pomodoro_status}  #[fg=$RED] #(date +\"%H:%M\") ,\
 #[fg=$GREEN]#{pomodoro_status} \
-#[fg=$ACTIVE_BG,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
+#[fg=$BORDER_FG_ACTIVE,bold] %A, %d %b  #[fg=$RED] #(date +\"%H:%M\")  #[fg=$TMUX_FG,bg=$TMUX_BG,bold]#{?client_prefix,#[fg=$GREEN]#[bold]#{prefix},#{prefix}}#[fg=$TMUX_FG,bg=$TMUX_BG,bold]  👨 #(whoami) \
 #[fg=$SESSION_BG]#[bg=$TMUX_BG]#[nobold]\
 #[fg=$SESSION_FG]#[bg=$SESSION_BG,bold] ❐ #S }"
 
@@ -66,7 +66,7 @@ set -g status-right "#{?#{e|<:#{window_width},130},\
 
 set-option -g window-status-current-format "\
 #{?#{==:#I,1},#[fg=$ACTIVE_BG]#[bg=$ACTIVE_BG],#[fg=$TMUX_BG]#[bg=$ACTIVE_BG]}\
-#[fg=$ACTIVE_FG,bg=$ACTIVE_BG,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$TMUX_BG]#[bold] 󰁌,} \
+#[fg=$BORDER_FG_ACTIVE,bg=$ACTIVE_BG,bold] #I:#{=30:#{b:pane_current_path}}#{?window_zoomed_flag,#[fg=$BORDER_FG_ACTIVE]#[bold] 󰁌,} \
 #[fg=$ACTIVE_FG,bg=$ACTIVE_BG,noreverse,bold]#{?#{==:#{pane_mode},copy-mode},\
 #[bg=$ACTIVE_FG]#[fg=$ACTIVE_BG] COPY \
 #{?#{e|>:#{search_count},0},#[bg=$RED]#[fg=$ACTIVE_FG] #[fg=$TMUX_BG]Found #{search_count} #[bg=$WHITE]#[fg=$RED],#[fg=$ACTIVE_FG]#[bg=$WHITE]}\

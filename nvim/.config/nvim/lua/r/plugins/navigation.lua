@@ -611,61 +611,8 @@ return {
       },
     },
     opts = function()
-      local rose_pine = {
-        ["rose-pine-dawn"] = {
-          { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = 0.05 }, bg = "NONE" } },
-          { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-          { OutlineGuides = { link = "IndentGuides" } },
-          {
-            OutlineCurrent = {
-              fg = { from = "Keyword", attr = "fg", alter = 5 },
-              bg = { from = "Keyword", attr = "fg", alter = 1 },
-              bold = true,
-            },
-          },
-        },
-        ["rose-pine-main"] = {
-          { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.05 }, bg = "NONE" } },
-          { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-          { OutlineGuides = { link = "IndentGuides" } },
-          {
-            OutlineCurrent = {
-              fg = { from = "Keyword", attr = "fg", alter = 0.5 },
-              bg = { from = "Keyword", attr = "fg", alter = -0.5 },
-              bold = true,
-            },
-          },
-        },
-      }
-
       RUtils.disable_ctrl_i_and_o("NoOutline", { "Outline" })
-      -- Highlight.plugin("OutlineAuHi", {
-      --   theme = {
-      --     ["*"] = {
-      --     },
-      --     ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-      --     ["ashen"] = {
-      --       { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-      --       { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-      --       { OutlineGuides = { link = "IndentGuides" } },
-      --     },
-      --     ["lackluster"] = {
-      --       {
-      --         OutlineCurrent = {
-      --           fg = { from = "Directory", attr = "fg", alter = 0.5 },
-      --           bg = { from = "Directory", attr = "fg", alter = -0.5 },
-      --           bold = true,
-      --         },
-      --       },
-      --       { OutlineDetails = { fg = { from = "Comment", attr = "fg", alter = -0.1 }, bg = "NONE" } },
-      --       { OutlineFoldMarker = { link = "IndentGuidesFolded" } },
-      --       { OutlineGuides = { link = "IndentGuides" } },
-      --     },
-      --   },
-      -- })
-
       local kind = RUtils.config.icons.kinds
-
       return {
         outline_window = {
           position = "right",
@@ -674,7 +621,6 @@ return {
         },
         symbols = {
           filter = nil,
-          -- icons = RUtils.config.icons.kinds,
           icons = {
             File = { icon = kind.File, hl = "Identifier" },
             Module = { icon = kind.Module, hl = "Include" },

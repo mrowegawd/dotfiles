@@ -4,7 +4,7 @@
 !
 *.foreground:  #eeffff
 *.background:  #212121
-*.cursorColor: ##16afca
+*.cursorColor: #16afca
 !
 ! Black
 *.color0:      #303030
@@ -44,4 +44,4 @@
 *.colorUL:     #596181
 
 ! Keyword color
-*.color16:#c792ea
+*.color16:     #c792ea

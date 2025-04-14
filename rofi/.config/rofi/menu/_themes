@@ -228,7 +228,7 @@ set_tmux() {
       ACTIVE_FG=$(lighten_color "$GET_COL_16" 150)
     fi
     sed -i -e "s/^ACTIVE_FG=.*$/ACTIVE_FG=\"$ACTIVE_FG\"/g" "$_PATH_TMUX_THEMES"
-    sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$ACTIVE_BG\"/g" "$_PATH_TMUX_THEMES"
+    sed -i -e "s/^ACTIVE_BG=.*$/ACTIVE_BG=\"$GET_COL_44\"/g" "$_PATH_TMUX_THEMES"
 
     sed -i -e "s/^BORDER_FG_ACTIVE=.*$/BORDER_FG_ACTIVE=\"$GET_COL_17\"/g" "$_PATH_TMUX_THEMES"
     sed -i -e "s/^BORDER_FG_NC=.*$/BORDER_FG_NC=\"$GET_COL_18\"/g" "$_PATH_TMUX_THEMES"

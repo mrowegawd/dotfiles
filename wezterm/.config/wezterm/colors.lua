@@ -43,7 +43,7 @@ end
 local MASTER_THEME_FILE = "/tmp/master-colors-themes"
 if Util.is_file_exists(MASTER_THEME_FILE) then
 	active_fg = Util.cmd_call("grep -i color17 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
-	active_bg = Util.cmd_call("grep -i color16 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
+	active_bg = Util.cmd_call("grep -i color44 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
 	separator_fg = Util.cmd_call("grep -i color18 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
 	statusline_fg = Util.cmd_call("grep -i color21 <" .. MASTER_THEME_FILE .. " | cut -d':' -f2 | head -1 | xargs")
 
