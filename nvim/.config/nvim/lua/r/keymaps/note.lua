@@ -23,8 +23,9 @@ function M.neorg_mappings_ft(bufnr)
         end,
         desc = "Note: find backlinks (like references)",
       },
-      ["l<cr>"] = {
+      ["<Leader>fl"] = {
         function()
+          RUtils.info("Find links current buffer", { title = "Notes" })
           RUtils.markdown.find_local_sitelink()
           vim.cmd "normal! zRzz"
         end,

@@ -122,7 +122,7 @@ return {
       { "<Leader>fC", function() require("fzf-lua").commands() end, desc = "Picker: commands [fzflua]" },
       { "<Leader>fa", function() require("fzf-lua").autocmds() end, desc = "Picker: automcds [fzflua]" },
       { "<Leader>fO", function() require("fzf-lua").oldfiles() end, desc = "Picker: recent files (history buffer) [fzflua]" },
-      { "<Leader>fl", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
+      { "<Leader>fL", function() require("fzf-lua").resume() end, desc = "Picker: resume (last search) [fzfua]" },
       { "<Leader>fj", function() require("fzf-lua").jumps() end, desc = "Picker: jumps [fzflua]" },
       { "<Leader>fm", function() require("fzf-lua").marks() end, desc = "Picker: marks [fzflua]" },
       { "<Leader>fM", function() require("fzf-lua").man_pages() end, desc = "Picker: man pages [fzflua]" },

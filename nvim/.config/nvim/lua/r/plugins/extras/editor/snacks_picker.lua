@@ -103,7 +103,7 @@ return {
       -- { "<Leader>ff", LazyVim.pick("files"), desc = "Snackspicker: find files (root dir)" },
       -- { "<Leader>fF", LazyVim.pick("files", { root = false }), desc = "Snackspicker: find files (cwd)" },
       { "<Localleader>sf", function() Snacks.picker.smart() end, desc = "Snackspicker: smart", },
-      { "<Leader>fF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
+      { "<Localleader>sF", RUtils.pick "files", desc = "Snackspicker: find files (root Dir)" },
 
       -- Buffers
       { "<Leader>bg", function() Snacks.picker.lines() end, desc = "Buffer: buffer lines [snackspicker]", },
@@ -121,8 +121,8 @@ return {
       -- { "<Leader>fg", function() Snacks.picker.grep { hidden = true, layout = "ivy" } end, desc = "Snackspicker: grep open buffers", },
       { "<leader>fg", RUtils.pick "grep", desc = "Snackspicker: grep (root dir)" },
       -- { "<Leader>fg", function() Snacks.picker.live_grep({ hidden = true, }) end, desc = "Snackspicker: grep open buffers", },
-      { "<Leader>fw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
-      { "<Leader>fW", RUtils.pick("grep_word", { root = false }), desc = "Picker: visual selection or word (cwd) [snackspicker]", mode = { "n", "x" }, },
+      { "<Localleader>sw", RUtils.pick "grep_word", desc = "Snackspicker: visual selection or word (root dir)", mode = { "n", "x" }, },
+      { "<Localleader>sW", RUtils.pick("grep_word", { root = false }), desc = "Snackspicker: visual selection or word (cwd) [snackspicker]", mode = { "n", "x" }, },
       -- Search
       -- { '<Leader>s"', function() Snacks.picker.registers() end, desc = "Snackspicker: registers", },
       -- { "<Leader>sa", function() Snacks.picker.autocmds() end, desc = "Snackspicker: autocmds", },
@@ -164,11 +164,11 @@ return {
       -- { "<Leader>sl", function() Snacks.picker.loclist() end, desc = "Snackspicker: location list", },
       -- { "<Leader>sM", function() Snacks.picker.man() end, desc = "Snackspicker: man pages", },
       -- { "<Leader>sm", function() Snacks.picker.marks() end, desc = "Snackspicker: marks", },
-      -- { "<Leader>sR", function() Snacks.picker.resume() end, desc = "Snackspicker: resume", },
+      { "<Localleader>sL", function() Snacks.picker.resume() end, desc = "Snackspicker: resume", },
       -- { "<Leader>sq", function() Snacks.picker.qflist() end, desc = "Snackspicker: Quickfix List", },
-      { "<Leader>uu", function() Snacks.picker.undo() end, desc = "Toggle: undotree [snackspicker]", },
+      { "<Localleader>su", function() Snacks.picker.undo() end, desc = "Snackspicker: undotree [snackspicker]", },
       -- ui
-      { "<Leader>uC", function() Snacks.picker.colorschemes() end, desc = "Toggle: colorschemes [snackspicker]", },
+      { "<Localleader>sc", function() Snacks.picker.colorschemes() end, desc = "Snackspicker: colorschemes [snackspicker]", },
 
       -- LSP
       { "gs", function() Snacks.picker.lsp_symbols({ filter=RUtils.config.icons.kinds }) end, desc = "LSP Symbols" },

@@ -177,8 +177,8 @@ return {
       -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
       -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
       -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
-      { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snacks: notification history" },
-      { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snacks: dismiss all notifications" },
+      { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snackspicker: notification history" },
+      { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snackspicker: dismiss all notifications" },
       ---@diagnostic disable-next-line: missing-fields
     },
     config = function(_, opts)
