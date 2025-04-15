@@ -39,6 +39,7 @@ return {
     version = false,
     cmd = "FzfLua",
     dependencies = {
+      "tpope/vim-fugitive",
       {
         "mangelozzi/nvim-rgflow.lua",
         opts = {
@@ -388,14 +389,14 @@ return {
           winopts = { title = RUtils.fzflua.format_title("Files", "") },
           fzf_opts = {
             -- check define header (cara lain): https://github.com/ibhagwan/fzf-lua/issues/1351
-            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-H:toggle-hidden]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-Y:copy/yank-path  ALT-G:toggle-ignore  ALT-U:toggle-hidden]],
           },
           fd_opts = fd_opts,
           git_icons = false,
           formatter = "path.filename_first",
           actions = {
             ["alt-g"] = actions.toggle_ignore,
-            ["alt-h"] = actions.toggle_hidden,
+            ["alt-u"] = actions.toggle_hidden,
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
@@ -488,7 +489,7 @@ return {
             preview_pager = "delta --width=$FZF_PREVIEW_COLUMNS",
             winopts = { title = RUtils.fzflua.format_title("Commits", ""), title_pos = "left" },
             fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit  CTRL-G:grep-string]],
+              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-U:history-commit  CTRL-G:grep-string]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -516,7 +517,7 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["alt-h"] = function(selected, _)
+              ["alt-u"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
 
@@ -558,7 +559,7 @@ return {
               title_pos = "left",
             },
             fzf_opts = {
-              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-H:history-commit  CTRL-G:grep-string]],
+              ["--header"] = [[CTRL-O:browser  CTRL-Y:copy-hash  ALT-D:compare-commit  ALT-U:history-commit  CTRL-G:grep-string]],
             },
             actions = {
               ["default"] = actions.git_buf_edit,
@@ -587,7 +588,7 @@ return {
 
                 require("fzf-lua").actions.resume()
               end,
-              ["alt-h"] = function(selected, _)
+              ["alt-u"] = function(selected, _)
                 local selection = selected[1]
                 local commit_hash = RUtils.fzf_diffview.split_string(selection, " ")[1]
                 local filename = RUtils.fzf_diffview.git_relative_path(vim.api.nvim_get_current_buf())
@@ -671,7 +672,7 @@ return {
           no_header = true, -- disable default header
           rg_opts = rg_opts,
           fzf_opts = {
-            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-H:toggle-hidden  ALT-J:grep-on-cwd]],
+            ["--header"] = [[CTRL-R:rgflow  CTRL-G:lgrep  ALT-G:toggle-ignore  ALT-U:toggle-hidden  ALT-V:grep-on-cwd]],
           },
           -- NOTE: multiline requires fzf >= v0.53 and is ignored otherwise
           -- multiline = 1, -- Display as: PATH:LINE:COL\nTEXT
@@ -694,8 +695,8 @@ return {
           },
           actions = {
             ["alt-g"] = actions.toggle_ignore,
-            ["alt-h"] = actions.toggle_hidden,
-            ["alt-j"] = function()
+            ["alt-u"] = actions.toggle_hidden,
+            ["alt-v"] = function()
               require("fzf-lua").files {
                 fd_opts = [[--color=never --type d --type l --exclude .git]],
                 winopts = {

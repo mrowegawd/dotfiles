@@ -8,9 +8,12 @@ return {
   -- QFSILET
   {
     dir = "~/.local/src/nvim_plugins/qfsilet",
-    event = "FileType qf",
+    event = "LazyFile", -- use `LazyFile` agar sign mark bisa di load dgn benar
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
+      { "mm" },
+      { "<Leader>wn" },
+      { "<Leader>wp" },
       {
         "<Leader>oq",
         "<CMD>SaveQf<CR>",

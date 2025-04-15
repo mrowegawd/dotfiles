@@ -3330,7 +3330,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
           bg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
@@ -4452,7 +4452,7 @@ local function colorscheme_overrides()
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.9 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
-      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.65 } } },
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.2 } } },
     },
     ["catppuccin-mocha"] = {

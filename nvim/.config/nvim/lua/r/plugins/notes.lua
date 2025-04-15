@@ -250,8 +250,8 @@ return {
             org_do_demote = ">",
             org_promote_subtree = "<a-<>",
             org_demote_subtree = "<a->>",
-            org_move_subtree_up = "<a-k>",
-            org_move_subtree_down = "<a-j>",
+            org_move_subtree_up = "<a-p>",
+            org_move_subtree_down = "<a-n>",
 
             org_refile = "<prefix>r",
             org_add_note = "<prefix>a",
