@@ -139,7 +139,7 @@ return {
   -- SMART-SPLITS
   {
     "mrjones2014/smart-splits.nvim",
-    event = "BufReadPre",
+    event = "LazyFile",
     -- enabled = vim.tbl_contains({ "ghostty", "wezterm" }, os.getenv "TERMINAL"),
     opts = {
       ignored_filetypes = { "nofile", "quickfix", "prompt" },
