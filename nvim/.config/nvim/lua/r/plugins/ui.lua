@@ -254,6 +254,7 @@ return {
           ["base46-jabuti"] = { { ["BeaconDefault"] = { bg = "#c0cbe3" } } },
           ["base46-onenord"] = { { ["BeaconDefault"] = { bg = "#3879C5" } } },
           ["base46-seoul256_dark"] = { { ["BeaconDefault"] = { bg = "#d75f87" } } },
+          ["base46-solarized_dark"] = { { ["BeaconDefault"] = { bg = "#708284" } } },
           ["base46-kanagawa"] = { { ["BeaconDefault"] = { bg = "#b3276f" } } },
           ["base46-zenburn"] = { { ["BeaconDefault"] = { bg = "#f3eadb" } } },
           ["base46-jellybeans"] = { { ["BeaconDefault"] = { bg = "#ffa560" } } },

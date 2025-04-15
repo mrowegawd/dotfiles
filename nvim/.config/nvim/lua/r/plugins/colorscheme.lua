@@ -17,15 +17,16 @@ return {
         "base46-aylin",
         "base46-ayu_dark",
         "base46-chocolate",
+        "base46-default-dark",
         "base46-doomchad",
         "base46-jabuti",
+        "base46-jellybeans",
         "base46-kanagawa",
         "base46-material-darker",
         "base46-onenord",
         "base46-seoul256_dark",
+        "base46-solarized_dark",
         "base46-zenburn",
-        "base46-default-dark",
-        "base46-jellybeans",
       }
       if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
         return true
