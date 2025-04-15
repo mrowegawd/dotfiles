@@ -1,5 +1,8 @@
 cab Wq wq
 cab Q! q!!
+cab Qal q!
+cab qal q!
+cab qla q!
 cab Q!! q!!
 cab q!! q!!
 cab WQ wq

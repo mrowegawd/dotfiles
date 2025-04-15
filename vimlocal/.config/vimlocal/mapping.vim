@@ -218,46 +218,46 @@ imap <left> <nop>
 imap <right> <nop>
 
 " Navigate the window
-nnoremap sj                     <C-W>j
-nnoremap sk                     <C-W>k
-nnoremap sh                     <C-W>h
-nnoremap sl                     <C-W>l
+" nnoremap sj                     <C-W>j
+" nnoremap sk                     <C-W>k
+" nnoremap sh                     <C-W>h
+" nnoremap sl                     <C-W>l
 
-nnoremap <c-j>                  <C-W>j
-nnoremap <c-k>                  <C-W>k
-nnoremap <c-h>                  <C-W>h
-nnoremap <c-l>                  <C-W>l
+nnoremap <C-j>                  <C-W>j
+nnoremap <C-k>                  <C-W>k
+nnoremap <C-h>                  <C-W>h
+nnoremap <C-l>                  <C-W>l
 
 " Resize the window
-" nnoremap <silent> <S-Up>        :resize -2<CR>
-" nnoremap <silent> <S-Down>      :resize +2<CR>
-" nnoremap <silent> <S-Right>     :vertical resize -2<CR>
-" nnoremap <silent> <S-Left>      :vertical resize +2<CR>
+nnoremap <silent> <S-Up>        :resize -2<CR>
+nnoremap <silent> <S-Down>      :resize +2<CR>
+nnoremap <silent> <S-Right>     :vertical resize -2<CR>
+nnoremap <silent> <S-Left>      :vertical resize +2<CR>
 
-" nnoremap <silent> <C-K>         :resize -2<CR>
-" nnoremap <silent> <C-J>         :resize +2<CR>
-" nnoremap <silent> <C-H>         :vertical resize -2<CR>
-" nnoremap <silent> <C-L>         :vertical resize +2<CR>
+" nnoremap <silent> <C-S-K>         :resize -2<CR>
+" nnoremap <silent> <C-S-J>         :resize +2<CR>
+" nnoremap <silent> <C-S-H>         :vertical resize -2<CR>
+" nnoremap <silent> <C-S-L>         :vertical resize +2<CR>
 
-nnoremap <silent> sv            :vsplit!<cr>
-nnoremap <silent> ss            :split!<cr>
-nnoremap <silent> sJ            <C-W>t<C-W>K
-nnoremap <silent> sL            <C-W>t<C-W>H
+nnoremap <silent> <Leader>wv    :vsplit!<cr>
+nnoremap <silent> <Leader>ws    :split!<cr>
+nnoremap <silent> <C-w>J        <C-W>t<C-W>K
+nnoremap <silent> <C-w>L        <C-W>t<C-W>H
 
 " buffer: alternate file
-nnoremap sbb                    <c-^>
+nnoremap <Leader>bb             <c-^>
 
 " buffer: kill all buffers but not the current
-nnoremap <silent> sO            :BufOnly!<cr>
+nnoremap <silent> <Leader>bO    :BufOnly!<cr>
 
 nnoremap <silent> gl            :bnext<cr>zz
 nnoremap <silent> gh            :bprev<cr>zz
 
 " keymap: [window] size balance
-nnoremap <silent> sw            :wincmd =<cr>
+nnoremap <silent> <Leader>bw    :wincmd =<cr>
 
-" keymap: [tab][window] convert window to new tab
-nnoremap <silent> sT            <C-w><S-t>
+" keymap: [window] convert window to new tab
+nnoremap <silent> <Leader>bT    <C-w><S-t>
 
 " keymap: [tab][window] create new and close
 nnoremap <silent> tn            :<C-U>tabnew<Space><CR>
