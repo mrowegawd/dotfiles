@@ -14,12 +14,15 @@
        :halign "center"
        :valign "end"
        ; :spacing 20
-  ;(network)
-  (cpu)
-  (memory)
-   ;(gpu)
-  (disk)
-  (audio)
-   (time)
-   ; (date)
-   (power)))
+
+       ;(network)
+       (cpu)
+       (memory)
+       ;(gpu)
+       (disk)
+       (audio)
+       (time)
+       ; (date)
+       (power)
+  )
+)

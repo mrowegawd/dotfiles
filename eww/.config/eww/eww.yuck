@@ -17,10 +17,8 @@
                        :height "98%"
                        :anchor "left center")
   :monitor 0
-  :windowtype "dock"
-  ;:stacking "bg"
+  :windowtype "desktop" ; --> use 'desktop' untuk membuat sidebar agar di hide ketika fullscreen
   :wm-ignore false
-  ; :reserve (struts :side "left" :distance "4%")
   :reserve (struts :side "left" :distance "70px")
   (bar))
 
