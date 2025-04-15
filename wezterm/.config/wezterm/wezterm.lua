@@ -189,7 +189,7 @@ config.colors = {
 -- Make wezterm more fast
 -- https://www.youtube.com/watch?v=VMdSJ8d5Aos
 config.max_fps = 120
-config.webgpu_power_preference = "HighPerformance" -- HighPerformance | LowPower
+config.webgpu_power_preference = "LowPower" -- HighPerformance | LowPower
 
 -- ├┤ HYPERLINKS-RULES ├────────────────────────────────────────────────┤
 config.hyperlink_rules = Hyperlinks

@@ -14,12 +14,12 @@ return {
       {
         "<Leader>oq",
         "<CMD>SaveQf<CR>",
-        desc = "Qf: save qf [qfsilet]",
+        desc = "OPEN: save qf [qfsilet]",
       },
       {
         "<Leader>oQ",
         "<CMD>LoadQf<CR>",
-        desc = "Qf: load qf [qfsilet]",
+        desc = "OPEN: load qf [qfsilet]",
       },
     },
     opts = {

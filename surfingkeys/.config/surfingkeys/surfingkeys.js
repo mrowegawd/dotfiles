@@ -82,9 +82,9 @@ mapkey("K", "#2Scroll up of line", () => {
 //   scrollBySmooth(window.innerHeight / 10, 3);
 // });
 
-// mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
-//   scrollBySmooth(window.innerHeight * 10, 3);
-// });
+mapkey("<Ctrl-f>", "#2Scroll down of page", () => {
+  scrollBySmooth(window.innerHeight * 10, 3);
+});
 mapkey("<Ctrl-b>", "#2Scroll up of page", () => {
   scrollBySmooth(window.innerHeight * 10, -3);
 });
@@ -112,10 +112,23 @@ map("<Ctrl-g>", "/");
 // │ OPEN LINKS                                              │
 // ╰─────────────────────────────────────────────────────────╯
 
-map("mf", "cf");
+// map("mf", "cf");
 map("F", "gf");
 
+// Edit current link
 map("C", ";u");
+
+mapkey("gf", "Open Links With simulates Zen's Glance", () => {
+  Hints.create("*[href]", (element) => {
+    const event = new MouseEvent("click", {
+      altKey: true,
+      bubbles: true,
+      cancelable: true,
+      view: window,
+    });
+    element.dispatchEvent(event);
+  });
+});
 
 // mapkey("s", "Search in google in current tab", function () {
 //   Front.openOmnibar({ type: "SearchEngine", extra: "g", tabbed: false });
@@ -128,7 +141,7 @@ map("C", ";u");
 // Forcing keymap H to remap arrowLeft?
 // map("H", "<ArrowLeft>");
 
-// Try to <esc> from insert mode, but this failed
+// Attempted to exit with hh -> <esc>, but it failed."
 // imap("hh", "<Esc>");
 //
 // mapkey(";dv", "#1Download video", function () {
@@ -156,33 +169,37 @@ cmap("<Ctrl-k>", "<Shift-Tab>");
 // │ TAB                                                     │
 // ╰─────────────────────────────────────────────────────────╯
 
-// Move tab left/right
+// Move TAB to the left/right
 mapkey("<Alt-ArrowLeft>", "#3Move current tab to left", function () {
-  RUNTIME("moveTab", {
-    step: -1,
-  });
+  RUNTIME("moveTab", { step: -1 });
 });
 mapkey("<Alt-ArrowRight>", "#3Move current tab to right", function () {
-  RUNTIME("moveTab", {
-    step: 1,
-  });
+  RUNTIME("moveTab", { step: 1 });
+});
+mapkey("<Alt-ArrowUp>", "#3Move current tab to up", function () {
+  RUNTIME("moveTab", { step: -1 });
+});
+mapkey("<Alt-ArrowDown>", "#3Move current tab to down", function () {
+  RUNTIME("moveTab", { step: 1 });
 });
 
-mapkey("<Alt-t>", "Choose a tab with omnibar", function () {
-  Front.openOmnibar({ type: "Tabs" });
+mapkey("<Space>bO", "#3Close all tabs except current one", function () {
+  RUNTIME("tabOnly");
 });
-
+mapkey("<Alt-b>", "#3Close alternate the tabs or go to last tab", function () {
+  RUNTIME("goToLastTab");
+});
 mapkey("M", "Mute/unmute current tab", function () {
   RUNTIME("muteTab");
 });
 
 map("<Space>ff", "T");
 
-map("<Alt-L>", "R");
-map("<Alt-H>", "E");
+map("<Ctrl-l>", "R");
+map("<Ctrl-h>", "E");
 
-map("<Alt-N>", "R");
-map("<Alt-P>", "E");
+map("<Ctrl-j>", "R");
+map("<Ctrl-k>", "E");
 
 // Side tabbar zen-browser is left side sometimes make confuse
 // map("<Ctrl-Alt-j>", "R");
@@ -224,10 +241,7 @@ mapkey("<Space>fO", "#8Open History", () => {
 // ╰─────────────────────────────────────────────────────────╯
 
 // Open bookmark
-mapkey("b", "#8Open a bookmark", function () {
-  Front.openOmnibar({ type: "Bookmarks" });
-});
-mapkey("B", "#8Open a bookmark", function () {
+mapkey("<Alt-B>", "#8Open a bookmark", function () {
   Front.openOmnibar({ type: "Bookmarks" });
 });
 
@@ -325,7 +339,11 @@ addSearchAlias(
   },
 );
 
-addSearchAlias("y", "YouTube", "https://www.youtube.com/results?search_query=");
+addSearchAlias(
+  "y",
+  "YouTube LOL",
+  "https://www.youtube.com/results?search_query=",
+);
 
 // ╭─────────────────────────────────────────────────────────╮
 // │ THEMES                                                  │
@@ -433,7 +451,7 @@ settings.theme = `
 	margin-top: 1.5rem;
     border: solid 1px #282828;
     border-radius: 15px;
-    background-color: #282828; 
+    background-color: #282828;
     padding-top: 10px;
     padding-bottom: 10px;
 
@@ -446,12 +464,12 @@ settings.theme = `
     background: #282828;
     //background: #181818 !important;
 
-	margin: 0px; 
-	box-shadow: 0px 0px 0px 0px rgba(245, 245, 0, 0.3); 
-	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.8) !important; 
+	margin: 0px;
+	box-shadow: 0px 0px 0px 0px rgba(245, 245, 0, 0.3);
+	box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.8) !important;
 
 	/* padding-top: 2px; */
-	border-top: solid 0px black; 
+	border-top: solid 0px black;
 	margin-block: 0rem;
 }
 

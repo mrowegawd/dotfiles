@@ -36,10 +36,10 @@ nohup mpv --ontop --no-border --force-window \
 '
 """, desc = "Play playlist on mpv" },
   { on = [
-    "B",
+    "<a-b>",
   ], run = "plugin bookmark-alternate -- toggle", desc = "Bookmark toggle or alternate the file" },
   { on = [
-    "<a-b>",
+    "B",
   ], run = "plugin bookmark-alternate -- save", desc = "Bookmark save" },
 ]
 

@@ -8,9 +8,11 @@ set -uo pipefail
 
 GET_BG=$(xrdb -query | grep -i background | cut -d':' -f2 | xargs)
 GET_FG=$(xrdb -query | grep -i .color7 | cut -d':' -f2 | head -1 | xargs)
+RED="red"
 TMUX_SNAPSHOT_PATH="$HOME/.config/tmuxconfig/themes/tmux-snapshot"
 if [ -f "$TMUX_SNAPSHOT_PATH" ]; then
   GET_FG=$(grep -i BORDER_FG_NC <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
+  RED=$(grep -i ACTIVE_BG <"$TMUX_SNAPSHOT_PATH" | head -1 | cut -d"=" -f2 | sed s/\"//g)
 fi
 
 not_in_tmux() {
@@ -122,7 +124,7 @@ open_url() {
       done <<<"$chosen"
     fi
   else
-    tmux display-message "#[fill=red bg=red  fg=white bold align=centre]Searching URL Not Found"
+    tmux display-message "#[fill=$RED bg=$RED  fg=red bold align=centre]Searching URL Not Found"
   fi
 }
 
