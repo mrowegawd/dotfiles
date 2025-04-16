@@ -342,7 +342,7 @@ reset_base_alter({ "vscode_modern" }, {
   search_fg_alter = 0.2,
   search_bg_alter = 0.8,
   quickfixline_alter = 0.35,
-  winseparator_alter = 0.45,
+  winseparator_alter = 0.6,
 })
 
 local general_overrides = function()
@@ -3397,13 +3397,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.1 },
+          fg = { from = "LineNr", attr = "fg", alter = 0.08 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "LineNr", attr = "fg", alter = 0.3 },
+          fg = { from = "LineNr", attr = "fg", alter = 0.5 },
           bg = "NONE",
         },
       },
@@ -3459,7 +3459,7 @@ local function colorscheme_overrides()
       {
         TroubleFsPos = {
           inherit = "TroubleIndent",
-          fg = { from = "TroubleIndent", attr = "fg", alter = -0.1 },
+          fg = { from = "TroubleIndent", attr = "fg", alter = -0.05 },
         },
       },
 
@@ -5862,10 +5862,10 @@ local function colorscheme_overrides()
       {
         TroubleIndent = {
           inherit = "TroubleIndent",
-          fg = { from = "TroubleIndent", attr = "fg", alter = 0.15 },
+          fg = { from = "TroubleIndent", attr = "fg", alter = 0.2 },
         },
       },
-      { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = -0.2 } } },
+      { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = -0.05 } } },
 
       -- MARKDOWN
       {
@@ -5912,7 +5912,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.3 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
 
       -- STATUSLINE
       {
