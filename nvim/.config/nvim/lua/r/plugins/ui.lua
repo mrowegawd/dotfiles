@@ -207,7 +207,7 @@ return {
     "jghauser/fold-cycle.nvim",
     keys = {
       {
-        "zu",
+        "<a-u>",
         function()
           require("fold-cycle").open()
         end,

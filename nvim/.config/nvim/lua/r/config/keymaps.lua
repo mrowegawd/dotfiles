@@ -56,10 +56,10 @@ end, { desc = "Fold: close current fold when open. Always open previous fold." }
 
 RUtils.map.nnoremap("<c-n>", function()
   return RUtils.fold.magic_jump_qf_or_fold()
-end, { desc = "Fold: magic next closed" })
+end, { desc = "Fold: magic jump next fold/qf" })
 RUtils.map.nnoremap("<c-p>", function()
   return RUtils.fold.magic_jump_qf_or_fold(true)
-end, { desc = "Fold: magic prev closed" })
+end, { desc = "Fold: magic jump prev fold/qf" })
 -- }}}
 -- {{{ Terminal
 -- RUtils.map.nnoremap("<a-CR>", RUtils.terminal.smart_split, { desc = "Terminal: open smart-split" })
@@ -353,6 +353,9 @@ RUtils.map.nnoremap("<Leader>oo", function()
 end, { desc = "Open: browse under cursor/follow link note" })
 RUtils.map.vnoremap("<Leader>oo", function()
   return RUtils.markdown.follow_link(true)
+end, { desc = "Open: browse under cursor/follow link note (visual)" })
+RUtils.map.vnoremap("<Leader>oy", function()
+  return RUtils.cmd.browse_this_error(true)
 end, { desc = "Open: browse under cursor/follow link note (visual)" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
