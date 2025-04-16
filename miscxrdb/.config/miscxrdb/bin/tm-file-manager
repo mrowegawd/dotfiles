@@ -26,7 +26,6 @@ _check_pane_is_yazi() {
 _check_pane_is_nvim() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nvim" { print $2; exit }')" == "nvim" ]
 }
-
 _check_pane_is_zsh() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
 }
@@ -95,10 +94,12 @@ open_tree_cwd() {
     is_pane_is_right=$(tmux display -p '#{pane_at_right}')
     if [ "$is_pane_is_right" == 0 ]; then
       if _check_pane_is_yazi; then
-        dunstify "fasd"
         clean_tree
       else
         _go_right
+        if ! _check_pane_is_yazi; then
+          tmux kill-pane
+        fi
       fi
     else
       clean_tree

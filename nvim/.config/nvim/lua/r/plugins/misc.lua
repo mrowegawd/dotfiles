@@ -103,20 +103,61 @@ return {
     enabled = false,
     opts = {},
   },
-  -- FEED (disabled)
+  -- FEED
   {
     "neo451/feed.nvim",
-    enabled = false,
     cmd = "Feed",
-    config = function()
-      require("feed").setup {
-        feeds = {
-          "neo451/feed.nvim/releases",
-          "folke/snacks.nvim", -- defaults to subscribing to commits
-          "https://dev.to/feed/tag/git",
-        },
-        search = { backend = { "fzf-lua" } },
-      }
-    end,
+    keys = {
+      {
+        "<Leader>oE",
+        "<CMD>Feed<CR>",
+        desc = "Open: feed [feed.nvim]",
+      },
+    },
+    opts = {
+      search = { backend = { "fzf-lua" } },
+      -- zen = { enabled = true, width = 120 },
+      feeds = {
+        "neo451/feed.nvim/releases",
+        "folke/snacks.nvim", -- defaults to subscribing to commits
+        "https://dev.to/feed/tag/git",
+        "https://dev.to/feed/tag/vim",
+        "https://dev.to/feed/tag/rust",
+        "https://dev.to/feed",
+        "https://dev.to/feed/tag/python",
+        "https://news.ycombinator.com/rss",
+      },
+      -- keys = {
+      --   index = {
+      --     -- { "q", "<cmd>Feed quit<cr>" },
+      --     -- { "?", "<cmd>Feed hints<cr>" },
+      --     { ".", "<cmd>Feed dot<cr>" },
+      --     -- { "u", "<cmd>Feed undo<cr>" },
+      --     -- { "<C-r>", "<cmd>Feed redo<cr>" },
+      --     -- { "<M-CR>", "<cmd>Feed split<cr>" },
+      --     -- { "b", "<cmd>Feed browser<cr>" },
+      --     -- { "r", "<cmd>Feed refresh<cr>" },
+      --     -- { "R", "<cmd>Feed update<cr>" },
+      --     -- { "/", "<cmd>Feed search<cr>" },
+      --     -- { "Y", "<cmd>Feed yank_url<cr>" },
+      --     -- { "-", "<cmd>Feed untag<cr>" },
+      --     -- { "+", "<cmd>Feed tag<cr>" },
+      --     -- { "<cr>", "<cmd>Feed entry<cr>" },
+      --   },
+      --   -- entry = {
+      --   --   { "q", "<cmd>Feed quit<cr>" },
+      --   --   { "?", "<cmd>Feed hints<cr>" },
+      --   --   { "Y", "<cmd>Feed yank_url<cr>" },
+      --   --   { "b", "<cmd>Feed browser<cr>" },
+      --   --   { "}", "<cmd>Feed next<cr>" },
+      --   --   { "{", "<cmd>Feed prev<cr>" },
+      --   --   { "/", "<cmd>Feed search<cr>" },
+      --   --   { "-", "<cmd>Feed untag<cr>" },
+      --   --   { "+", "<cmd>Feed tag<cr>" },
+      --   --   { "f", "<cmd>Feed full<cr>" },
+      --   --   { "r", "<cmd>Feed urlview<cr>" },
+      --   -- },
+      -- },
+    },
   },
 }

@@ -55,6 +55,12 @@ _check_pane_is_nvim() {
 _check_pane_is_nnn() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "nnn" { print $2; exit }')" == "nnn" ]
 }
+_check_pane_is_yazi() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "yazi" { print $2; exit }')" == "yazi" ]
+}
+_check_pane_is_tclock() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tclock" { print $2; exit }')" == "tclock" ]
+}
 
 session_exists() {
   tmux has-session -t "=$1"
@@ -334,12 +340,30 @@ tmux_clock_mode() {
   else
     _go_right
 
+    # cs=$(tmux display-message -p "#{pane_current_command}")
+    # dunstify "$cs"
+
     if _check_pane_is_nvim; then
       tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
     fi
+
     if _check_pane_is_nnn; then
       _go_right
       tmux split-pane -h -p 25 -l 55 -c '#{pane_current_path}'
+    fi
+
+    if _check_pane_is_yazi; then
+      tmux split-pane -v -p 25 -l 10 -c '#{pane_current_path}'
+
+      if command -v tclock &>/dev/null; then
+        CURRENT_PANE=$(tmux list-panes | grep "active" | cut -d':' -f1)
+        tmux send -t "$CURRENT_PANE" 'tclock clock -S' Enter
+      else
+        tmux clock-mode
+      fi
+
+      _go_left
+      exit
     fi
 
     if _check_pane_is_zsh; then

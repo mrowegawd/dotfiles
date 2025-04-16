@@ -14,6 +14,9 @@ _check_pane_is_yazi() {
 _check_pane_is_zsh() {
   [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "zsh" { print $2; exit }')" == "zsh" ]
 }
+_check_pane_is_tclock() {
+  [ "$(tmux display-message -p "#{pane_id} #{pane_current_command}" | awk '$2 == "tclock" { print $2; exit }')" == "tclock" ]
+}
 
 current_session=$(tmux display-message -p '#S')
 PATH_PANE_COLLECT_JSON="/tmp/tmux-toggle-pane-$current_session.json"
@@ -211,11 +214,10 @@ __adjust_pane_height() {
 
 }
 
-__prevent_cursor_in_non_main_pane() {
-  # is_pane_at_left=$(tmux display -p '#{pane_at_left}')
+__toggle_the_pane() {
   is_pane_at_right=$(tmux display -p '#{pane_at_right}')
   if [[ $is_pane_at_right == 1 ]]; then
-    if _check_pane_is_yazi; then
+    if _check_pane_is_yazi || _check_pane_is_tclock; then
       is_pane_at_bottom=$(tmux display -p '#{pane_at_bottom}')
       if [[ $is_pane_at_bottom == 1 ]]; then
         tmux select-pane -R
@@ -278,8 +280,8 @@ split_term() {
       tmux resize-pane -Z
       tmux last-pane
 
-      # To avoid the 'last-pane' being the yazi pane
-      __prevent_cursor_in_non_main_pane
+      # Open and toggle the pane
+      __toggle_the_pane
 
       __adjust_pane_height
 
