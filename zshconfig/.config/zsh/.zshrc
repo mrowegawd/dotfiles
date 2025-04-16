@@ -76,7 +76,7 @@ setopt HIST_REDUCE_BLANKS
 setopt HIST_VERIFY
 setopt PROMPT_CR
 setopt PROMPT_SP
-setopt RM_STAR_WAIT
+setopt RM_STAR_WAIT           #  notify me, ketika use "rm -rf .."
 setopt INC_APPEND_HISTORY     #  Write to the history file immediately, not when the shell exits
 setopt PUSHD_IGNORE_DUPS      #  Do not store duplicates in the stack.
 setopt PUSHD_SILENT           #  Do not print the directory stack after pushd or popd.

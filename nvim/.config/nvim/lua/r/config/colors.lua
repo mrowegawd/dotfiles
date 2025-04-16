@@ -5957,7 +5957,6 @@ local function colorscheme_overrides()
           bg = { from = "Normal", attr = "bg", alter = 0.35 },
         },
       },
-
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.3 } } },
       { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.8 } } },

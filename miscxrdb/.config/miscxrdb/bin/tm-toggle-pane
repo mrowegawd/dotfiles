@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXTRA_SIZE=19
+EXTRA_SIZE=12
 
 session_exists() {
   tmux has-session -t "=$1"
@@ -305,7 +305,6 @@ split_term() {
   __split_term_cleanup_update_and_remove_data_json
 
   rm -rf "$TEMP_FILES"
-
 }
 
 "$@"
