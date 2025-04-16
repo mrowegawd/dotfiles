@@ -528,7 +528,7 @@ return {
     },
     keys = {
       {
-        "<Leader>rr",
+        "<Leader>rC",
         "<Plug>SnipClose",
         ft = { "markdown", "neorg", "org" },
         desc = "Misc: close [sniprun]",

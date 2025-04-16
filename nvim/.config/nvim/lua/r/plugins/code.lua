@@ -338,7 +338,7 @@ return {
       { "<Leader>rl", "<Cmd> RmuxSendline <CR>", desc = "Task: send line" },
       { "<Leader>rl", "<Cmd> RmuxSendVisualSelection <CR>", desc = "Task: send selection", mode = { "v" } },
 
-      { "<Leader>rr", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
+      { "<Leader>rC", "<Cmd> RmuxKillAllPanes <CR>", desc = "Task: kill all panes" },
       { "<Leader>rg", "<Cmd> RmuxGrepErr <CR>", desc = "Task: grep errors" },
       { "<Leader>rp", "<Cmd> RmuxSelectTargetPane <CR>", desc = "Task: select pane" },
 
