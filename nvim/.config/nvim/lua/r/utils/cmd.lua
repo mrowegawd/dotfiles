@@ -1,6 +1,14 @@
 ---@class r.utils.cmd
 local M = {}
 
+function M.remove_alias(link)
+  local split_index = string.find(link, "%s*|")
+  if split_index ~= nil and type(split_index) == "number" then
+    return string.sub(link, 0, split_index - 1)
+  end
+  return link
+end
+
 function M.quit_return()
   vim.cmd "wincmd p"
   local win_id = vim.api.nvim_get_current_win()
@@ -114,6 +122,94 @@ function M.get_term_id()
   -- local t_idx = vim.fn.termopen(term_idx)
   return term_idx
   -- vim.fn.chansend(--[[  ]]t_idx, { "echo 'hello world'", "" })
+end
+
+function M.browse_this_error(is_selection)
+  is_selection = is_selection or false
+
+  vim.cmd "normal yy"
+  local str_sel = vim.fn.getreg '"0'
+  str_sel = str_sel:gsub("^(%[)(.+)(%])$", "%2")
+  str_sel = M.remove_alias(str_sel)
+
+  local open_search = {
+    ["Search for This Error?"] = {
+      google = "https://google.com/search?q=",
+      github_issue = "https://github.com/search?q=",
+      stackoverflow = "https://stackoverflow.com/search?q=",
+    },
+    ["Search Error with Google Footprint?"] = {
+      google = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Astackoverflow.com",
+        match = false,
+      },
+      google_matching = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Astackoverflow.com",
+        match = true,
+      },
+      github_matching = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Agithub.com",
+        match = true,
+      },
+    },
+  }
+
+  local call_exec_cmds = function(sel_str, str_error)
+    vim.validate { sel_str = { sel_str, "string" }, str_error = { str_error, "string" } }
+    local browser = os.getenv "NUBROWSER"
+
+    local cmd_sel = open_search[sel_str]
+
+    for _, x in pairs(cmd_sel) do
+      local c
+      if type(x) == "table" then
+        local parts = vim.split(str_error, " ")
+        local str = table.concat(parts, "+")
+        if x.match then
+          c = string.format("%s%s%s", x.url, '"' .. str .. '"' .. "+", x.on_site)
+        else
+          c = string.format("%s%s%s", x.url, str .. "+", x.on_site)
+        end
+      else
+        c = string.format("%s%s", x, str_error)
+      end
+
+      local cmds = { browser, c }
+      vim.fn.jobstart(cmds, { detach = true })
+      RUtils.info(vim.inspect(cmds))
+    end
+  end
+
+  local fzfopts = {
+    prompt = "  ",
+    cwd_prompt = false,
+    cwd_header = false,
+    no_header = true,
+    no_header_i = true,
+    winopts = {
+      title = RUtils.fzflua.format_title("What do you want?", "󱥽"),
+      border = "rounded",
+      height = 0.15,
+      width = 0.30,
+      row = 1.05,
+      relative = "cursor",
+    },
+    actions = {
+      ["default"] = function(selected, _)
+        call_exec_cmds(selected[1], str_sel)
+      end,
+    },
+  }
+
+  local selection_str = {}
+  for idx, _ in pairs(open_search) do
+    selection_str[#selection_str + 1] = idx
+  end
+
+  require("fzf-lua").fzf_exec(selection_str, fzfopts)
 end
 
 function M.falsy(item)

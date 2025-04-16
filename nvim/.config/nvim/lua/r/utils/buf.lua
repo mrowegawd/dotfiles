@@ -104,6 +104,12 @@ function M.magic_quit()
       end
       return nil, nil
     end,
+    ["feed"] = function()
+      local j = function()
+        return require("feed").quit()
+      end
+      return true, j
+    end,
     ["grug-far"] = function()
       local j = function()
         return RUtils.warn([[To close gruf-far, use "q"]], { title = "Gruf-far" })

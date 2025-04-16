@@ -5,14 +5,6 @@ local title, kind
 
 local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
 
-local function remove_alias(link)
-  local split_index = string.find(link, "%s*|")
-  if split_index ~= nil and type(split_index) == "number" then
-    return string.sub(link, 0, split_index - 1)
-  end
-  return link
-end
-
 local function is_tag_or_link_at(line, col, opts)
   opts = opts or {}
   local initial_col = col
@@ -106,7 +98,7 @@ function M.follow_link(is_selection)
     vim.cmd "normal yi]"
     title = vim.fn.getreg '"0'
     title = title:gsub("^(%[)(.+)(%])$", "%2")
-    title = remove_alias(title)
+    title = RUtils.cmd.remove_alias(title)
   end
 
   if kind ~= nil then
@@ -155,7 +147,7 @@ function M.follow_link(is_selection)
       vim.cmd "normal yy"
       title = vim.fn.getreg '"0'
       title = title:gsub("^(%[)(.+)(%])$", "%2")
-      title = remove_alias(title)
+      title = RUtils.cmd.remove_alias(title)
 
       local parts = vim.split(title, "#")
       if #parts > 0 then
@@ -166,13 +158,11 @@ function M.follow_link(is_selection)
     -- vim.fn.jobstart({ vim.fn.has "macunix" ~= 0 and "open" or "xdg-open", url }, { detach = true })
     local browser = os.getenv "NUBROWSER"
     local notif_msg = "Open with browser: "
-    local cmds = {}
+    local cmds = { browser, url }
     if vim.bo.filetype == "octo" then
       notif_msg = "Open with mpv: "
       cmds =
         { "tsp", "mpv", "--ontop", "--no-border", "--force-window", "--autofit=1000x500", "--geometry=-20-60", url }
-    else
-      cmds = { browser, url }
     end
 
     vim.fn.jobstart(cmds, { detach = true })
