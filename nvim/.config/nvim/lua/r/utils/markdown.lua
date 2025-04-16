@@ -143,11 +143,10 @@ function M.follow_link(is_selection)
     if uri ~= "" then
       if vim.bo.filetype == "markdown" then
         if require("obsidian").util.cursor_on_markdown_link(nil, nil, true) then
-          vim.cmd "ObsidianFollowLink"
+          return vim.cmd "ObsidianFollowLink"
         end
-      else
-        url = url
       end
+      url = uri
     else
       if not is_selection then
         url = string.format("https://google.com/search?q=%s", url)
@@ -177,7 +176,7 @@ function M.follow_link(is_selection)
     end
 
     vim.fn.jobstart(cmds, { detach = true })
-    RUtils.info(notif_msg .. url, { title = "Tasks" })
+    RUtils.info(notif_msg .. url, { title = "Open With" })
   end
 end
 
