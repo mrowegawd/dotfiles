@@ -118,7 +118,7 @@ map("F", "gf");
 // Edit current link
 map("C", ";u");
 
-mapkey("gf", "Open Links With simulates Zen's Glance", () => {
+mapkey("<Alt-f>", "Open Links With simulates Zen's Glance", () => {
   Hints.create("*[href]", (element) => {
     const event = new MouseEvent("click", {
       altKey: true,
