@@ -396,7 +396,7 @@ return {
     cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
     keys = {
       {
-        "<Leader>gn",
+        "<Leader>gN",
         "<Cmd>botright Git<CR><Cmd>wincmd J<bar>20 wincmd _<CR>4j",
         desc = "Git: open fugitive [fugitive]",
       },
@@ -772,9 +772,10 @@ return {
       }
     end,
   },
-  -- NEOGIT
+  -- NEOGIT (disabled)
   {
     "NeogitOrg/neogit",
+    enabled = false,
     dependencies = {
       "nvim-lua/plenary.nvim",
       "sindrets/diffview.nvim", -- optional - Diff integration
