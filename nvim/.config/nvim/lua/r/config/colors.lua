@@ -108,7 +108,7 @@ reset_base_alter({ "ashen" }, {
   fzfluasel_bg_alter = -0.08,
   pmenu_bg_alter = 1,
   pmenusel_bg_alter = 2,
-  quickfixline_alter = 0.2,
+  quickfixline_alter = 0.25,
   winseparator_alter = 0.9,
 })
 reset_base_alter({ "base46-aylin" }, {
@@ -165,7 +165,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.2,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.7,
+  winseparator_alter = 0.9,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -256,15 +256,6 @@ reset_base_alter({ "horizon" }, {
   quickfixline_alter = 0.3,
   winseparator_alter = 0.6,
 })
-reset_base_alter({ "jellybeans" }, {
-  cursor_fg = "#ffa560",
-  cursorline_alter = 0.06,
-  fzfluasel_bg_alter = -0.1,
-  pmenu_bg_alter = 1,
-  pmenusel_bg_alter = 1.8,
-  quickfixline_alter = -0.7,
-  winseparator_alter = 0.8,
-})
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
   cursorline_alter = 0.15,
@@ -289,6 +280,8 @@ reset_base_alter({ "oxocarbon" }, {
   winseparator_alter = 0.8,
 })
 reset_base_alter({ "rose-pine-dawn" }, {
+  cmpdocnormal_fg_alter = -0.5,
+  cursor_fg = "#575279",
   cursorline_alter = 0.1,
   fzflua_bg_cursorline_alter = 0.04,
   fzfluasel_bg_alter = 0.05,
@@ -306,6 +299,7 @@ reset_base_alter({ "rose-pine-main" }, {
   fzfluasel_bg_alter = -0.05,
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 0.9,
+  quickfixline_alter = 0.25,
   winseparator_alter = 0.7,
 })
 reset_base_alter({ "tokyonight-night" }, {
@@ -434,7 +428,7 @@ local general_overrides = function()
     },
     {
       FloatBorder = {
-        fg = { from = "Pmenu", attr = "bg" },
+        fg = { from = "WinSeparator", attr = "fg", alter = 0.2 },
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
@@ -447,7 +441,7 @@ local general_overrides = function()
     },
     {
       FloatBoxComment = {
-        fg = { from = "NormalBoxComment", attr = "bg", alter = 0.5 },
+        fg = { from = "FloatBorder", attr = "fg", alter = 5 },
         bg = { from = "NormalBoxComment", attr = "bg" },
       },
     },
@@ -1737,13 +1731,17 @@ local rose_pine = {
     { LineNrAbove = { link = "LineNr" } },
     { LineNrBelow = { link = "LineNr" } },
 
-    { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-    { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
-
     { Visual = { bg = { from = "Visual", attr = "bg", alter = -0.1 } } },
 
     { Comment = { fg = { from = "Normal", attr = "bg", alter = -0.35 }, italic = true } },
     { ["@comment"] = { inherit = "Comment" } },
+
+    {
+      FloatBorder = {
+        fg = { from = "WinSeparator", attr = "fg", alter = -0.1 },
+        bg = { from = "NormalFloat", attr = "bg" },
+      },
+    },
 
     {
       Folded = {
@@ -1820,6 +1818,9 @@ local rose_pine = {
     { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
     { FzfLuaDirPart = { fg = { from = "Normal", attr = "bg", alter = -0.35 } } },
     { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = -0.03 } } },
+
+    { FzfLuaBorder = { inherit = "FloatBorder" } },
+    { FzfLuaPreviewBorder = { inherit = "FzfLuaBorder" } },
 
     {
       TelescopeResultsNormal = {
@@ -2079,6 +2080,9 @@ local rose_pine = {
       },
     },
     { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.08 }, bg = "NONE" } },
+
+    { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+    { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
     {
       QuickFixLine = {
         fg = "NONE",
@@ -2246,7 +2250,7 @@ local rose_pine = {
     { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
     { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.2 } } },
     { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.2 } } },
-    { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+    { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
     { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.5 } } },
   },
 }
@@ -2491,7 +2495,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.5 } } },
     },
     ["base46-aylin"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.05 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -2571,7 +2575,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2610,11 +2614,11 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.18, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.15, Highlight.get("Normal", "bg")),
             -0.2
           ),
           reverse = false,
@@ -2657,18 +2661,15 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.7 } } },
+      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.8 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.9 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
-      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
+      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.5 } } },
     },
     ["base46-chocolate"] = {
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.05 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
 
       {
         Visual = {
@@ -2786,6 +2787,36 @@ local function colorscheme_overrides()
       { TroubleFsPos = { inherit = "TroubleIndent", fg = { from = "TroubleIndent", attr = "fg", alter = 0.05 } } },
 
       -- STATUSLINE
+      {
+        StatusLine = {
+          fg = Highlight.tint(
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
+            -0.1
+          ),
+          bg = Highlight.tint(
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.15, Highlight.get("Normal", "bg")),
+            -0.2
+          ),
+          reverse = false,
+        },
+      },
+      {
+        NoiceCmdline = {
+          fg = { from = "StatusLine", attr = "fg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+      {
+        QuickFixLine = {
+          fg = "NONE",
+          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
+          underline = false,
+          reverse = false,
+        },
+      },
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -2939,7 +2970,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
@@ -3293,11 +3324,11 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.65, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.48, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.25, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
             -0.2
           ),
           reverse = false,
@@ -3337,10 +3368,10 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.9 } } },
-      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.2 } } },
+      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1 } } },
+      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
-      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1 } } },
+      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
     },
     ["base46-jellybeans"] = {
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.2 }, bold = true } },
@@ -3478,11 +3509,11 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.18, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.12, Highlight.get("Normal", "bg")),
             -0.2
           ),
           reverse = false,
@@ -3567,7 +3598,7 @@ local function colorscheme_overrides()
       },
       {
         FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.3 },
+          fg = { from = "WinSeparator", attr = "fg", alter = 0.5 },
           bg = { from = "NormalBoxComment", attr = "bg" },
         },
       },
@@ -3640,7 +3671,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.65, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
@@ -3690,7 +3721,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 3.5 } } },
     },
     ["base46-material-darker"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = 0.1 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -4309,12 +4340,9 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
     },
     ["base46-zenburn"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.18 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
-
-      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
-      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
 
       {
         Visual = {
@@ -4430,6 +4458,39 @@ local function colorscheme_overrides()
       },
 
       -- STATUSLINE
+      {
+        StatusLine = {
+          fg = Highlight.tint(
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.45, Highlight.get("Normal", "bg")),
+            -0.1
+          ),
+          bg = Highlight.tint(
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
+            -0.2
+          ),
+          reverse = false,
+        },
+      },
+      {
+        NoiceCmdline = {
+          fg = { from = "StatusLine", attr = "fg", alter = 1 },
+          bg = { from = "StatusLine", attr = "bg" },
+        },
+      },
+      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
+      { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 2.5 } } },
+      {
+        QuickFixLine = {
+          fg = "NONE",
+          bg = { from = "StatusLine", attr = "bg", alter = quickfixline_alter },
+          underline = false,
+          reverse = false,
+        },
+      },
+      { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
+      { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
+
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 2.7 },
@@ -4574,11 +4635,11 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.53, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.45, Highlight.get("Normal", "bg")),
             -0.1
           ),
           bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.25, Highlight.get("Normal", "bg")),
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.15, Highlight.get("Normal", "bg")),
             -0.2
           ),
           reverse = false,
@@ -4621,7 +4682,7 @@ local function colorscheme_overrides()
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
+      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.7 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.1 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 3.5 } } },
@@ -5912,7 +5973,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.2 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
 
       -- STATUSLINE
       {

@@ -189,6 +189,12 @@ build-install() {
     asdf reshim golang
   fi
 
+  if ! asdf which gowall >/dev/null; then
+    echo "Installing: gowall - Convert wallpaper theme (just like pywall)"
+    go install github.com/Achno/gowall@latest
+    asdf reshim golang
+  fi
+
   if ! command -v lazygit >/dev/null; then
     echo "Installing: lazygit - Git TUI"
     # go install github.com/jesseduffield/lazygit@latest

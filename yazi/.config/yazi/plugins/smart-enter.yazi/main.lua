@@ -254,7 +254,6 @@ return {
 			local fpath_ext = check_file_extension(fpath)
 
 			if action == "open" and fpath_ext == "jpg" then
-				fail("fasdf")
 				os.execute("feh --bg-scale " .. fpath)
 				return
 			end

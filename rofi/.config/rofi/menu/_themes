@@ -320,7 +320,7 @@ set_terminal() {
     GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
 
     sed -i -e "s/^theme.=.*/theme = $1/g" "$GHOSTTY_CONFIG"
-    dunstify "theme ghostty [+]"
+    # dunstify "theme ghostty [+]"
   else
     dunstify "theme ghostty [-]"
   fi
@@ -331,19 +331,19 @@ set_terminal() {
     KITTY_CONFIG="$HOME/.config/kitty/kitty.conf"
 
     sed -i -e "s/^include\s~\\/.config\\/kitty\\/colors.*/include ~\\/.config\\/kitty\\/colors\\/$1.conf/g" "$KITTY_CONFIG"
-    dunstify "theme kitty [+]"
+    # dunstify "theme kitty [+]"
   else
     dunstify "theme kitty [-]"
   fi
 
-  # # ALACRITTY
-  if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
-    cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
-    cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
-    dunstify "theme alacritty [+]"
-  else
-    dunstify "theme alacritty [-]"
-  fi
+  # ALACRITTY
+  # if [ -f "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" ]; then
+  #   cat "$DOTFILES_PATH/alacritty/.config/alacritty/_alacritty.cfg" >"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
+  #   cat "$DOTFILES_PATH/alacritty/.config/alacritty/themes/$1" >>"$DOTFILES_PATH/alacritty/.config/alacritty/alacritty.toml"
+  #   # dunstify "theme alacritty [+]"
+  # else
+  #   dunstify "theme alacritty [-]"
+  # fi
 }
 set_btop() {
   _BTOP_PATH="$DOTFILES_PATH/btop/.config/btop"
@@ -401,9 +401,9 @@ set_yazi() {
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
   HOVERED_BG=$(lighten_color "$GET_COL_39" 10)
-  # if [ "$1" == "lackluster" ] || [ "$1" == "rose-pine-dawn" ]; then
-  #   HOVERED_BG=$(lighten_color "$GET_COL_39" 10)
-  # fi
+  if [ "$1" == "lackluster" ] || [ "$1" == "rose-pine-dawn" ]; then
+    HOVERED_BG=$(darken_color "$GET_COL_39" 10)
+  fi
   sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
 
@@ -645,6 +645,8 @@ setup() {
 
   bspc wm -r && sleep 2 && dunstify "Reload BSPWM" "Reload config.."
 
+  "$HOME/.config/miscxrdb/exbin/fehbg" "$1"
+
   dunstify -i ~/.config/miscxrdb/icons/todo-list.png "Load theme: $1" \
     "\n$_NOTIF_ROFI\n$_NOTIF_DUNST\n$_NOTIF_TMUX\n$_NOTIF_ZATHURA\n$_NOTIF_TERMINAL\n$_NOTIF_VIM\n$_NOTIF_BTOP\n$_NOTIF_FIREFOX\n$_NOTIF_EWW"
 }
@@ -678,6 +680,7 @@ main() {
   fi
 
   setup "$_NAMETHEME"
+
 }
 
 "$@"

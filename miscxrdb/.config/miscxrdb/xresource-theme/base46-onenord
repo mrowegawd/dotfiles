@@ -36,3 +36,6 @@
 ! white
 *color7:         #E5E9F0
 *color15:        #ECEFF4
+
+! Keyword
+*color16:        #c792ea
