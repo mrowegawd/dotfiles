@@ -133,7 +133,7 @@ function M.browse_this_error(is_selection)
   str_sel = M.remove_alias(str_sel)
 
   local open_search = {
-    ["Search for This Error?"] = {
+    ["Search Error For General Purpose?"] = {
       google = "https://google.com/search?q=",
       github_issue = "https://github.com/search?q=",
       stackoverflow = "https://stackoverflow.com/search?q=",
@@ -152,6 +152,52 @@ function M.browse_this_error(is_selection)
       github_matching = {
         url = "https://google.com/search?q=",
         on_site = "site%3Agithub.com",
+        match = true,
+      },
+    },
+    ["Search Error For Nvim Footprint?"] = {
+      google_stackoverflow = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Astackoverflow.com",
+        match = false,
+      },
+      google_stackexchange = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Astackexchange.com",
+        match = false,
+      },
+      google_matching = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Avi.stackexchange.com",
+        match = true,
+      },
+    },
+    ["Search Error For Emacs Footprint?"] = {
+      google_matching = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Aemacs.stackexchange.com",
+        match = true,
+      },
+    },
+    -- ["Search Error For VSCODE Footprint?"] = {
+    --   google_matching = {
+    --     url = "https://google.com/search?q=",
+    --     on_site = "site%3Aemacs.stackexchange.com",
+    --     match = true,
+    --   },
+    -- },
+    -- ["Search Error For Helix Footprint?"] = {
+    --   google_matching = {
+    --     url = "https://google.com/search?q=",
+    --     on_site = "site%3Aemacs.stackexchange.com",
+    --     match = true,
+    --   },
+    -- },
+
+    ["Search For Reverse Engineering?"] = {
+      google_matching = {
+        url = "https://google.com/search?q=",
+        on_site = "site%3Areverseengineering.stackexchange.com",
         match = true,
       },
     },

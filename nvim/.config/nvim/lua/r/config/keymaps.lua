@@ -356,7 +356,7 @@ RUtils.map.vnoremap("<Leader>oo", function()
 end, { desc = "Open: browse under cursor/follow link note (visual)" })
 RUtils.map.vnoremap("<Leader>oy", function()
   return RUtils.cmd.browse_this_error(true)
-end, { desc = "Open: browse under cursor/follow link note (visual)" })
+end, { desc = "Open: search error text in browser (visual)" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 RUtils.map.nnoremap("n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Misc: next search result" })
