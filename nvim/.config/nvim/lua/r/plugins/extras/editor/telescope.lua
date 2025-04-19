@@ -39,11 +39,16 @@
 ---  return {}
 ---end
 
-local have_make = vim.fn.executable "make" == 1
-local have_cmake = vim.fn.executable "cmake" == 1
-
 local telescope_toggle_fullscreen = true
 local telescope_layout_strategy_height = 0
+
+local build_cmd ---@type string?
+for _, cmd in ipairs { "make", "cmake", "gmake" } do
+  if vim.fn.executable(cmd) == 1 then
+    build_cmd = cmd
+    break
+  end
+end
 
 return {
   -- TELESCOPE
@@ -51,6 +56,36 @@ return {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
+    dependencies = {
+      { "jmacadie/telescope-hierarchy.nvim" },
+      { "trevarj/telescope-tmux.nvim" },
+      {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        build = (build_cmd ~= "cmake") and "make"
+          or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        enabled = build_cmd ~= nil,
+        config = function(plugin)
+          RUtils.on_load("telescope.nvim", function()
+            local ok, err = pcall(require("telescope").load_extension, "fzf")
+            if not ok then
+              local lib = plugin.dir .. "/build/libfzf." .. (RUtils.is_win() and "dll" or "so")
+              if not vim.uv.fs_stat(lib) then
+                RUtils.warn "`telescope-fzf-native.nvim` not built. Rebuilding..."
+                require("lazy").build({ plugins = { plugin }, show = false }):wait(function()
+                  RUtils.info "Rebuilding `telescope-fzf-native.nvim` done.\nPlease restart Neovim."
+                end)
+              else
+                RUtils.error("Failed to load `telescope-fzf-native.nvim`:\n" .. err)
+              end
+            end
+          end)
+        end,
+      },
+      "nvim-telescope/telescope-symbols.nvim",
+      "nvim-telescope/telescope-live-grep-args.nvim",
+      "benfowler/telescope-luasnip.nvim",
+      "fdschmidt93/telescope-corrode.nvim",
+    },
     keys = {
       -- { "<Leader>ff", "<cmd>Telescope corrode<cr>", desc = "Telescope: find files", mode = { "n", "v" } },
       -- { "df", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Diagnostic: document diagnostics [telescope]" },
@@ -183,36 +218,6 @@ return {
       --             "<CMD>Telescope conduct projects theme=ivy<CR>",
       --             desc = "Telescope-conductt: projects",
       --         },
-    },
-    dependencies = {
-      { "jmacadie/telescope-hierarchy.nvim" },
-      { "trevarj/telescope-tmux.nvim" },
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = have_make and "make"
-          or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-        enabled = have_make or have_cmake,
-        config = function(plugin)
-          RUtils.on_load("telescope.nvim", function()
-            local ok, err = pcall(require("telescope").load_extension, "fzf")
-            if not ok then
-              local lib = plugin.dir .. "/build/libfzf." .. (RUtils.is_win() and "dll" or "so")
-              if not vim.uv.fs_stat(lib) then
-                RUtils.warn "`telescope-fzf-native.nvim` not built. Rebuilding..."
-                require("lazy").build({ plugins = { plugin }, show = false }):wait(function()
-                  RUtils.info "Rebuilding `telescope-fzf-native.nvim` done.\nPlease restart Neovim."
-                end)
-              else
-                RUtils.error("Failed to load `telescope-fzf-native.nvim`:\n" .. err)
-              end
-            end
-          end)
-        end,
-      },
-      "nvim-telescope/telescope-symbols.nvim",
-      "nvim-telescope/telescope-live-grep-args.nvim",
-      "benfowler/telescope-luasnip.nvim",
-      "fdschmidt93/telescope-corrode.nvim",
     },
     opts = function()
       -- local trouble = require "trouble.providers.telescope"
