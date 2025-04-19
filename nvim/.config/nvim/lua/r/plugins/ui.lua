@@ -217,16 +217,12 @@ return {
     },
     opts = true,
   },
-  -- SMEAR-CURSOR (disabled)
+  -- SMEAR-CURSOR
   {
     "sphamba/smear-cursor.nvim",
     event = "LazyFile",
-    enabled = false,
-    cond = vim.g.neovide == nil,
-    opts = {
-      cursor_color = "#fa1919",
-      smear_between_neighbor_lines = false,
-    },
+    cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
+    opts = true,
   },
   -- BLOCK.NVIM
   {
@@ -234,11 +230,12 @@ return {
     cmd = { "BlockOn", "BlockOff", "Block" },
     opts = true,
   },
-  -- BEACON
+  -- BEACON (disabled)
   {
     -- flash cursor when jumps or moves between windows.
     "rainbowhxch/beacon.nvim",
     event = "LazyFile",
+    enabled = false,
     cond = vim.g.neovide == nil and (os.getenv "TERMINAL" ~= "kitty"),
     opts = function()
       local Highlight = require "r.settings.highlights"

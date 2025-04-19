@@ -52,9 +52,10 @@ return {
     event = "LazyFile",
     opts = true,
   },
-  -- MINI.AI
+  -- MINI.AI (disabled)
   {
     "echasnovski/mini.ai",
+    enabled = false,
     event = "LazyFile",
     opts = function()
       local ai = require "mini.ai"
