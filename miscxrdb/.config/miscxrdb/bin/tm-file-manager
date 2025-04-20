@@ -38,7 +38,7 @@ _open_wiki_file_manager_window() {
   WIKI_DIR="$HOME/Dropbox/neorg/"
 
   if [[ -d "$WIKI_DIR" ]]; then
-    tmux split-window -hb -p 30 -l 30 -c "$HOME/Dropbox/neorg" "$file_manager"
+    tmux split-window -h -l 45 -c "$HOME/Dropbox/neorg" "$file_manager"
   else
     dunstify "path not found"
   fi
