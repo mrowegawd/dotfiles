@@ -213,6 +213,7 @@ return {
           zk = "fold_toggle",
           ["<c-n>"] = "next",
           ["<c-p>"] = "prev",
+          ["<TAB>"] = "fold_toggle",
         },
       }
     end,

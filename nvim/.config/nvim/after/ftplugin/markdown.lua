@@ -58,7 +58,7 @@ keymap.set("n", "<Leader>rf", function()
       end
 
       if sel == "Sniprun" then
-        RUtils.map.feedkey("<Plug>SnipRun", "n")
+        vim.cmd [[SnipRun]]
       end
     end,
   }, {})
@@ -69,24 +69,15 @@ end, { buffer = true, desc = "Tasks: runner" })
 opt.wrap = false
 opt.list = false
 
-local function has_surrounding_fencemarks2(lnum)
+local function has_surrounding_fencemarks(lnum)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local inside_fence = false
 
-  -- local start_fence = [[\%```\|\n\zs```]]
-  -- local end_fence = [[```\n^$]]
-  -- -- local strip = [[- %s*]]
-  -- local fence_end_position = vim.fn.searchpairpos(start_fence, "", end_fence, "nW")
-
-  -- Lewat cara loop?
   for i = 1, lnum - 1 do
     if lines[i]:match "^```" then
       inside_fence = not inside_fence
     end
   end
-
-  -- Lewat cara cursor?
-
   return inside_fence
 end
 
@@ -98,29 +89,15 @@ end
 -- Dengan alasan inilah `Markdown_fold()` ini dibuat:
 function _G.Markdown_fold()
   local line = vim.fn.getline(vim.v.lnum)
-  -- local ts_utils = require "nvim-treesitter.ts_utils"
-  -- local parser = require("nvim-treesitter.parsers").get_parser(0)
-  -- local node = ts_utils.get_node_at_cursor()
-  --
-  -- print(line:match("^#+"))
-  --
-  -- testing node
-  -- if node then
-  --   if node:type() == "heading" then -- check lewat command passer dahulu
-  --     return "1"
-  --   elseif node:type() == "comment" then
-  --     return "0"
-  --   end
-  -- end
 
   -- Fold headers (#) dan pastikan ada fence marks?
-  if line:match "^#+ " and not has_surrounding_fencemarks2(vim.v.lnum) then
+  if line:match "^#+ " and not has_surrounding_fencemarks(vim.v.lnum) then
     return ">" .. line:find " "
   end
 
   -- Fold underlined headers
   local nextline = vim.fn.getline(vim.v.lnum + 1)
-  if line:match "^.+$" and nextline:match "^=+$" and not has_surrounding_fencemarks2(vim.v.lnum) then
+  if line:match "^.+$" and nextline:match "^=+$" and not has_surrounding_fencemarks(vim.v.lnum) then
     return ">2"
   end
 
