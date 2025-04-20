@@ -21,6 +21,15 @@ WALLI3IMG="$HOME/moxconf/media_and_tuts/walli3"
 numberPath="$HOME/.cache/wallpaper"
 numberFile="imgWall"
 
+set_wallpaper_with_gowall() {
+  if asdf which gowall >/dev/null; then
+    gowall convert "$1" -t "$2" --output /tmp/newName.jpg >/dev/null
+    feh --bg-scale /tmp/newName.jpg
+  else
+    feh --bg-scale "$1"
+  fi
+}
+
 main() {
   local set_theme="general"
   if [[ -n "$1" ]]; then
@@ -58,14 +67,17 @@ main() {
   for i in "${!array[@]}"; do
     if [ "$i" == "$nextImg" ]; then
       if [[ $set_theme == "general" ]]; then
-        feh --bg-scale "${array[$i]}"
-      else
-        if asdf which gowall >/dev/null; then
-          gowall convert "${array[$i]}" -t "$set_theme" --output /tmp/newName.jpg >/dev/null
-          feh --bg-scale /tmp/newName.jpg
+        path_nvim="$HOME/.config/nvim/lua/r/config/init.lua"
+        if [[ -f $path_nvim ]]; then
+          colorscheme=$(grep -i "local colorscheme" <"$path_nvim" | cut -d'=' -f2 | xargs)
+          if [[ -n "$colorscheme" ]]; then
+            set_wallpaper_with_gowall "${array[$i]}" "$colorscheme"
+          fi
         else
           feh --bg-scale "${array[$i]}"
         fi
+      else
+        set_wallpaper_with_gowall "${array[$i]}" "$set_theme"
       fi
       echo "${array[$i]}" >/tmp/bg-windows
     fi
