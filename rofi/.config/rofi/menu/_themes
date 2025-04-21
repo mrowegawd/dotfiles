@@ -401,9 +401,13 @@ set_yazi() {
   cat "$YAZI_FLAVORS_THEMES_PATH/flavor" >"$TARGET_YAZI_THEME"
 
   HOVERED_BG=$(lighten_color "$GET_COL_39" 10)
-  if [ "$1" == "lackluster" ] || [ "$1" == "rose-pine-dawn" ]; then
+  if [ "$1" == "rose-pine-dawn" ]; then
     HOVERED_BG=$(darken_color "$GET_COL_39" 10)
   fi
+  if [ "$1" == "lackluster" ]; then
+    HOVERED_BG=$(lighten_color "$GET_COL_39" 30)
+  fi
+
   sed -i -e "s/%%col_hovered%%/$HOVERED_BG/g" "$TARGET_YAZI_THEME"
   sed -i -e "s/%%col_cwd%%/$GET_COL_38/g" "$TARGET_YAZI_THEME"
 
@@ -471,16 +475,18 @@ set_zshrc() {
     dunstify "$ERROR_MSG" "Path $ZSHRC_PATH do not exists!" && exit 1
   fi
 
-  colorline="$GET_COL_32" # $GET_COL_19
-  if [ "$1" == "zenburned" ]; then
-    colorline="$GET_COL_46"
+  colorline="$GET_COL_32"
+  colorsugest="$GET_COL_37"
+  if [ "$1" == "zenburned" ] || [ "$1" == "base46-seoul256_dark" ]; then
+    colorline="$GET_COL_18"
+    colorsugest="$GET_COL_31"
   fi
 
   # if [ "$1" == "tokyonight-storm" ] || [ "$1" == "base46-chocolate" ] || [ "$1" == "base46-default-dark" ]; then
   #   colorline="$GET_COL_32"
   # fi
 
-  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$GET_COL_37\"/g" "$ZSHRC_PATH"
+  sed -i -e "s/^colorsuggest=.*/colorsuggest=\"fg=$colorsugest\"/g" "$ZSHRC_PATH"
   sed -i -e "s/^colorline=.*/colorline=\"$colorline\"/g" "$ZSHRC_PATH"
 }
 set_lazygit() {

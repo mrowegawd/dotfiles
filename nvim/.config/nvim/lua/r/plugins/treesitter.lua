@@ -361,30 +361,6 @@ return {
             },
           },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
-          ["seoul256"] = {
-            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
-            {
-              TreesitterContextSeparator = {
-                -- fg = { from = "TabLine", attr = "bg", alter = 0.25 },
-                fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.6 },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
-                underline = false,
-                undercurl = false,
-                sp = "NONE",
-              },
-            },
-          },
           ["tokyonight-night"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {
@@ -444,37 +420,13 @@ return {
             },
             {
               TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
+                fg = { from = "LineNr", attr = "fg", alter = 0.6 },
                 bg = { from = "TreesitterContext" },
               },
             },
             {
               TreesitterContextLineNumberBottom = {
                 fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
-                underline = false,
-                undercurl = false,
-                sp = "NONE",
-              },
-            },
-          },
-          ["zenburned"] = {
-            { TreesitterContext = { bg = { from = "Tabline", attr = "bg" } } },
-            {
-              TreesitterContextSeparator = {
-                fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
-                bg = { from = "TreesitterContextLineNumber", attr = "bg" },
                 underline = false,
                 undercurl = false,
                 sp = "NONE",

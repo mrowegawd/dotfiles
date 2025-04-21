@@ -36,3 +36,5 @@
 ! white
 *.color7:       #c8c093
 *.color15:      #c5c9c5
+
+*.color16:      #9c86bf
