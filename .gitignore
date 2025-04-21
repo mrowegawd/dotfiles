@@ -5,6 +5,8 @@ home/.newsboat/history*
 .mind/
 vv
 
+.repro
+
 git.yazi
 
 helix/.config/helix/runtime
