@@ -262,133 +262,133 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "LazyFile",
-    opts = function()
-      return {
-        signs_staged_enable = false,
-        attach_to_untracked = true,
-        signs_staged = {
-          add = { text = "▌" }, --  "▎" "▌" "┆"
-          change = { text = "▌" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
-          changedelete = { text = "~" },
-        },
-        signs = {
-          add = { text = "▌" },
-          change = { text = "▌" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
-          changedelete = { text = "~" },
-          untracked = { text = "┆" },
-        },
-        preview_config = {
-          -- Options passed to nvim_open_win
-          border = "rounded",
-          style = "minimal",
-          relative = "cursor",
-          row = 0,
-          col = 1,
-        },
-        on_attach = function()
-          local gs = package.loaded.gitsigns
+    -- enabled = false,
+    opts = {
+      -- signs_staged_enable = false,
+      -- debug_mode = true,
+      attach_to_untracked = true,
+      signs_staged = {
+        add = { text = "▌" }, --  "▎" "▌" "┆"
+        change = { text = "▌" },
+        delete = { text = "_" },
+        topdelete = { text = "‾" },
+        changedelete = { text = "~" },
+      },
+      signs = {
+        add = { text = "▌" },
+        change = { text = "▌" },
+        delete = { text = "_" },
+        topdelete = { text = "‾" },
+        changedelete = { text = "~" },
+        untracked = { text = "┆" },
+      },
+      preview_config = {
+        -- Options passed to nvim_open_win
+        border = "rounded",
+        style = "minimal",
+        relative = "cursor",
+        row = 0,
+        col = 1,
+      },
+      on_attach = function()
+        local gs = package.loaded.gitsigns
 
-          local function map(mode, l, r, desc)
-            vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+        local function map(mode, l, r, desc)
+          vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+        end
+
+        -- local function visual_operation(operator)
+        --   local visual_range = { start_pos = vim.fn.line "v", end_pos = vim.fn.line "." }
+        --   if visual_range.start_pos > visual_range.end_pos then
+        --     local tmp = visual_range.start_pos
+        --     visual_range.start_pos = visual_range.end_pos
+        --     visual_range.end_pos = tmp
+        --     gs[operator] { visual_range.start_pos, visual_range.end_pos }
+        --   end
+        -- end
+
+        -- Hunk
+        map("n", "<Leader>ghs", gs.stage_hunk, "Hunk: stage [gitsigns]")
+        map("v", "<Leader>ghs", function()
+          local from, to = vim.fn.line ".", vim.fn.line "v"
+          if from > to then
+            from, to = to, from
           end
+          gs.stage_hunk { from, to }
+        end, "Hunk: stage (visual) [gitsigns]")
+        map("n", "<Leader>ghr", gs.reset_hunk, "Hunk: reset [gitsigns]")
+        map("v", "<Leader>ghr", function()
+          local from, to = vim.fn.line ".", vim.fn.line "v"
+          if from > to then
+            from, to = to, from
+          end
+          gs.reset_hunk { from, to }
+        end, "Hunk: reset (visual) [gitsigns]")
+        map("n", "<Leader>ghu", gs.undo_stage_hunk, "Hunk: undo [gitsigns]")
+        map("n", "<Leader>ghS", gs.stage_buffer, "Hunk: stage buffer [gitsigns]")
+        map("n", "<Leader>ghR", gs.reset_buffer, "Hunk: reset buffer [gitsigns]")
+        map("n", "<Leader>ghi", gs.preview_hunk_inline, "Hunk: preview hunk inline [gitsigns]")
 
-          -- local function visual_operation(operator)
-          --   local visual_range = { start_pos = vim.fn.line "v", end_pos = vim.fn.line "." }
-          --   if visual_range.start_pos > visual_range.end_pos then
-          --     local tmp = visual_range.start_pos
-          --     visual_range.start_pos = visual_range.end_pos
-          --     visual_range.end_pos = tmp
-          --     gs[operator] { visual_range.start_pos, visual_range.end_pos }
-          --   end
-          -- end
+        -- Hunk preview
+        map("n", "<Leader>ghp", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
+        map("n", "<Leader>ghP", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
 
-          -- Hunk
-          map("n", "<Leader>ghs", gs.stage_hunk, "Hunk: stage [gitsigns]")
-          map("v", "<Leader>ghs", function()
-            local from, to = vim.fn.line ".", vim.fn.line "v"
-            if from > to then
-              from, to = to, from
+        -- Toggle
+        map("n", "<Leader>gub", function()
+          gs.blame()
+        end, "Toggle: git blame [gitsigns]")
+        map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: git deleted [gitsigns]")
+        map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
+
+        -- Sending to qf
+        map("n", "<Leader>xG", function()
+          gs.setqflist "all"
+          local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
+          vim.schedule(function()
+            if is_qf_trouble.found then
+              vim.api.nvim_set_current_win(is_qf_trouble.winid)
             end
-            gs.stage_hunk { from, to }
-          end, "Hunk: stage (visual) [gitsigns]")
-          map("n", "<Leader>ghr", gs.reset_hunk, "Hunk: reset [gitsigns]")
-          map("v", "<Leader>ghr", function()
-            local from, to = vim.fn.line ".", vim.fn.line "v"
-            if from > to then
-              from, to = to, from
-            end
-            gs.reset_hunk { from, to }
-          end, "Hunk: reset (visual) [gitsigns]")
-          map("n", "<Leader>ghu", gs.undo_stage_hunk, "Hunk: undo [gitsigns]")
-          map("n", "<Leader>ghS", gs.stage_buffer, "Hunk: stage buffer [gitsigns]")
-          map("n", "<Leader>ghR", gs.reset_buffer, "Hunk: reset buffer [gitsigns]")
-          map("n", "<Leader>ghi", gs.preview_hunk_inline, "Hunk: preview hunk inline [gitsigns]")
-
-          -- Hunk preview
-          map("n", "<Leader>ghp", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
-          map("n", "<Leader>ghP", gs.preview_hunk, "Hunk: preview hunk [gitsigns]")
-
-          -- Toggle
-          map("n", "<Leader>gub", function()
-            gs.blame()
-          end, "Toggle: git blame [gitsigns]")
-          map("n", "<Leader>gud", gs.toggle_deleted, "Toggle: git deleted [gitsigns]")
-          map("n", "<Leader>guw", gs.toggle_word_diff, "Toggle: word diff [gitsigns]")
-
-          -- Sending to qf
-          map("n", "<Leader>xG", function()
-            gs.setqflist "all"
+          end)
+        end, "Exec: git hunks all quickfix [gitsigns] [trouble]")
+        map("n", "<Leader>xg", function()
+          gs.setqflist()
+          vim.schedule(function()
             local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
-            vim.schedule(function()
-              if is_qf_trouble.found then
-                vim.api.nvim_set_current_win(is_qf_trouble.winid)
-              end
-            end)
-          end, "Exec: git hunks all quickfix [gitsigns] [trouble]")
-          map("n", "<Leader>xg", function()
-            gs.setqflist()
-            vim.schedule(function()
-              local is_qf_trouble = RUtils.cmd.windows_is_opened { "trouble" }
-              if is_qf_trouble.found then
-                vim.api.nvim_set_current_win(is_qf_trouble.winid)
-              end
-            end)
-          end, "Exec: git hunks quickfix (qf) [gitsigns] [trouble]")
+            if is_qf_trouble.found then
+              vim.api.nvim_set_current_win(is_qf_trouble.winid)
+            end
+          end)
+        end, "Exec: git hunks quickfix (qf) [gitsigns] [trouble]")
 
-          -- Jump next/prev between hunks
-          map("n", "gn", function()
-            if vim.wo.diff then
-              vim.cmd.normal { "]c", bang = true }
-            else
-              vim.schedule(function()
-                gs.nav_hunk(
-                  "next",
-                  { navigation_message = false, foldopen = true }
-                  -- function() vim.fn.feedkeys("zz", "n") end
-                )
-              end)
-            end
-          end, "Git: next hunk [gitsigns]")
-          map("n", "gp", function()
-            if vim.wo.diff then
-              vim.cmd.normal { "[c", bang = true }
-            else
-              vim.schedule(function()
-                gs.nav_hunk(
-                  "prev",
-                  { navigation_message = false, foldopen = true }
-                  -- function() vim.fn.feedkeys("zz", "n") end
-                )
-              end)
-            end
-          end, "Git: last hunk [gitsigns]")
-        end,
-      }
-    end,
+        -- Jump next/prev between hunks
+        map("n", "gn", function()
+          if vim.wo.diff then
+            vim.cmd.normal { "]c", bang = true }
+          else
+            vim.schedule(function()
+              gs.nav_hunk(
+                "next",
+                { navigation_message = false, foldopen = true }
+                -- function() vim.fn.feedkeys("zz", "n") end
+              )
+            end)
+          end
+        end, "Git: next hunk [gitsigns]")
+        map("n", "gp", function()
+          if vim.wo.diff then
+            vim.cmd.normal { "[c", bang = true }
+          else
+            vim.schedule(function()
+              gs.nav_hunk(
+                "prev",
+                { navigation_message = false, foldopen = true }
+                -- function() vim.fn.feedkeys("zz", "n") end
+              )
+            end)
+          end
+        end, "Git: last hunk [gitsigns]")
+      end,
+    },
   },
   -- FUGITIVE
   {
@@ -849,7 +849,7 @@ return {
       local diff = require "mini.diff"
       diff.setup {
         -- Disabled by default
-        source = diff.gen_source.none(),
+        -- source = diff.gen_source.none(),
 
         -- Module mappings. Use `''` (empty string) to disable one.
         mappings = {
