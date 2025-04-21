@@ -165,6 +165,7 @@ opt.hidden = true -- do not unload buffer when abandoned
 -- }}}
 -- {{{ Timings
 opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
+opt.updatetime = 200 -- Save swap file and trigger CursorHold
 opt.undodir = vim.fn.stdpath "data" .. "/undodir" -- Chooses where to store the undodir
 opt.history = 1000 -- Number of commands to remember in a history table (per buffer).
 opt.swapfile = false -- Ask what state to recover when opening a file that was not saved.

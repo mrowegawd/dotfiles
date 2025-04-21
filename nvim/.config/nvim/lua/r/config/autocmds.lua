@@ -177,46 +177,6 @@ RUtils.cmd.augroup("WrapFiletype", {
   end,
 })
 
-RUtils.cmd.augroup("LargeFileSettings", {
-  event = "BufRead",
-  desc = "Set settings for large files.",
-  command = function(ctx)
-    local buf = ctx.buf
-
-    if RUtils.buf.is_big_file(ctx.buf) then
-      vim.b[buf].is_big_file = true
-      vim.b[buf].copilot_enabled = false
-      vim.b[buf].autoformat_disable = true
-      vim.b[buf].minicursorword_disable = true
-      vim.b[buf].diagnostic_disable = true
-      vim.b[buf].lsp_disable = true
-
-      vim.opt_local.spell = false
-      vim.opt_local.swapfile = false
-      vim.opt_local.undofile = false
-      vim.opt_local.breakindent = false
-      vim.opt_local.colorcolumn = ""
-      vim.opt_local.statuscolumn = ""
-      vim.opt_local.signcolumn = "no"
-      vim.opt_local.foldcolumn = "0"
-      vim.opt_local.winbar = ""
-
-      vim.api.nvim_create_augroup("disable_syntax_on_buf_" .. buf, { clear = true })
-      vim.api.nvim_create_autocmd("BufReadPost", {
-        group = "disable_syntax_on_buf_" .. buf,
-        buffer = buf,
-        once = true,
-        callback = vim.schedule_wrap(function()
-          local current_buf = vim.api.nvim_get_current_buf()
-          if current_buf == buf then
-            vim.bo[buf].syntax = ""
-          end
-        end),
-      })
-    end
-  end,
-})
-
 RUtils.cmd.augroup("DisableJsonConceal", {
   event = { "FileType" },
   pattern = { "json", "jsonc" },
