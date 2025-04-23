@@ -38,7 +38,7 @@ local function check_file_extension(filename)
 	elseif string.match(filename, pattern_jpeg) then
 		return "jpg"
 	else
-		return "none"
+		return "open"
 	end
 end
 
@@ -279,6 +279,11 @@ return {
 						.. fpath
 						.. '" >/dev/null 2>&1 &'
 				)
+				return
+			end
+
+			if fpath_ext == "open" then
+				os.execute('open "' .. fpath .. '" >/dev/null 2>&1 &')
 				return
 			end
 
