@@ -292,6 +292,7 @@ RUtils.map.nnoremap("dd", function()
   end
   return "dd"
 end, { expr = true })
+RUtils.map.xnoremap("<C-g>", "<Esc>/\\%V") --search within visual selection - this is magic
 RUtils.map.nnoremap("<C-g>", "/", nosilent)
 RUtils.map.nnoremap("~", "%", { desc = "Misc: go to.. matching tag" })
 RUtils.map.nnoremap("g,", "g,zvzz", silent) -- go last edit
