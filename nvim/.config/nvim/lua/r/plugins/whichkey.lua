@@ -62,6 +62,7 @@ return {
           { "<Localleader>f", group = "telescope" },
           { "<Localleader>d", group = "database" },
           { "<Localleader>a", group = "note" },
+          { "<Localleader>af", group = "find" },
           { "<Localleader>o", group = "open/misc" },
           { "<Localleader>r", group = "refactoring" },
           { "<Localleader>s", group = "snacks" },

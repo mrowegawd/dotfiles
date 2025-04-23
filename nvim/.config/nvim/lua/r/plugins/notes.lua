@@ -286,7 +286,7 @@ return {
     ft = "markdown",
     keys = {
       {
-        "<Localleader>ag",
+        "<Localleader>afg",
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.live_grep_glob {
@@ -304,7 +304,7 @@ return {
         desc = "Note: live grep notes [obsidian]",
       },
       {
-        "<Localleader>ag",
+        "<Localleader>afg",
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           local viz = RUtils.cmd.get_visual_selection { strict = true }
@@ -329,7 +329,7 @@ return {
         mode = "v",
       },
       {
-        "<Localleader>af",
+        "<Localleader>aff",
         function()
           local fzf_lua = RUtils.cmd.reqcall "fzf-lua"
           return fzf_lua.files {
@@ -365,6 +365,26 @@ return {
           RUtils.markdown.find_note_by_tag()
         end,
         desc = "Note: find note by tags [obsidian]",
+      },
+      {
+        "<Localleader>aft",
+        function()
+          if vim.bo.filetype ~= "markdown" then
+            RUtils.warn("Cannot continue..\nThis not wiki or markdown file!", { title = "Obsidian" })
+            return
+          end
+          RUtils.markdown.find_local_titles()
+          vim.cmd "normal! zRzz"
+        end,
+        desc = "Note: search local titles [obsidian]",
+      },
+      {
+        "<Localleader>afT",
+        function()
+          RUtils.markdown.find_global_titles()
+          vim.cmd "normal! zRzz"
+        end,
+        desc = "Note: search global titles [obsidian]",
       },
     },
     dependencies = {
