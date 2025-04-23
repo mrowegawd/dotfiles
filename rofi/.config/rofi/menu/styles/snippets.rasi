@@ -45,16 +45,16 @@ prompt {
     border: 					              0;
     padding: 						            1.5% 0 1% 1.5%;
     text-color: 					          @background;
-    background-color: 				      @background-alt;
+    background-color: 				      @border;
 }
 
 
- entry {
-     spacing:    				            0;
-     text-color: 				            @foreground;
-     background-color:              @background-alt;
-     padding: 						          1.5% 1.5% 1.5% 1%;
- }
+entry {
+    spacing:    				            0;
+    text-color: 				            @foreground;
+    background-color:               @border;
+    padding: 						            1.5% 1.5% 1.5% 1%;
+}
 
 // case-indicator {
 //     spacing:    					          0;
@@ -63,9 +63,9 @@ prompt {
 
 inputbar {
     spacing:    				            0px;
+    background-color:               @background-alt;
     text-color: 				            @border;
     padding:    				            1px;
-    background-color:               @background-alt;
     children: 					            [ prompt, entry ];
 }
 

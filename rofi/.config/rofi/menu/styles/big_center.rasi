@@ -53,7 +53,7 @@ window {
 prompt {
     enabled: 						          true;
     padding: 						          2% 0.8% 2% 0.8%;
-    background-color: 				    @background-alt;
+    background-color: 				    @border;
     text-color: 					        @foreground;
 }
 
@@ -66,7 +66,7 @@ textbox-prompt-colon {
 }
 
 entry {
-    background-color:             @background-alt;
+    background-color:             @border;
     text-color:                   @foreground;
     placeholder-color:            @foreground;
     expand:                       true;
