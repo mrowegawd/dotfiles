@@ -27,10 +27,22 @@ return {
         win = {
           input = {
             keys = {
-              ["<a-c>"] = {
-                "toggle_cwd",
-                mode = { "n", "i" },
-              },
+              ["<a-c>"] = { "toggle_cwd", mode = { "n", "i" } },
+              ["<a-u>"] = { "toggle_hidden", mode = { "i", "n" } },
+              ["<F5>"] = { "toggle_preview", mode = { "i", "n" } },
+              ["<F4>"] = { "cycle_win", mode = { "i", "n" } },
+              ["<F3>"] = { "toggle_maximize", mode = { "i", "n" } },
+            },
+          },
+          list = {
+            keys = {
+              ["<F4>"] = "cycle_win",
+              ["<F3>"] = "toggle_maximize",
+            },
+          },
+          preview = {
+            keys = {
+              ["<F4>"] = "cycle_win",
             },
           },
         },

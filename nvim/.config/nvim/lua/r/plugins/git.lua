@@ -76,10 +76,8 @@ return {
     cmd = "Octo",
     event = { { event = "BufReadCmd", pattern = "octo://*" } },
     opts = function()
-      vim.treesitter.language.register("markdown", "octo")
-
       return {
-        picker = "telescope",
+        picker = "snacks",
         -- picker = "fzf-lua",
         picker_config = {
           mappings = {
@@ -231,7 +229,8 @@ return {
     "pwntester/octo.nvim",
     optional = true,
     opts = function(_, opts)
-      if RUtils.has_extra "editor.snacks_picker" then
+      vim.treesitter.language.register("markdown", "octo")
+      if RUtils.has "snacks.nvim" then
         opts.picker = "snacks"
       elseif RUtils.has "telescope.nvim" then
         opts.picker = "telescope"
