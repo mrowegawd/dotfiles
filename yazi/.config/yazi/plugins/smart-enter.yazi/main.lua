@@ -14,6 +14,7 @@ local function check_file_extension(filename)
 	local pattern_webp = "%.webp$"
 	local pattern_mkv = "%.mkv$"
 	local pattern_avi = "%.avi$"
+	local pattern_microsoft = "%.xlsx$"
 
 	if string.match(filename, pattern_mp3) then
 		return "mp3"
@@ -37,6 +38,8 @@ local function check_file_extension(filename)
 		return "jpg"
 	elseif string.match(filename, pattern_jpeg) then
 		return "jpg"
+	elseif string.match(filename, pattern_microsoft) then
+		return "excel"
 	else
 		return "open"
 	end
@@ -253,11 +256,6 @@ return {
 			local fpath = tostring(get_hovered_item_path())
 			local fpath_ext = check_file_extension(fpath)
 
-			if action == "open" and fpath_ext == "jpg" then
-				os.execute("feh --bg-scale " .. fpath)
-				return
-			end
-
 			if fpath_ext == "jpg" then
 				os.execute('nohup sxiv "' .. fpath .. '" >/dev/null 2>&1 &')
 				return
@@ -265,11 +263,6 @@ return {
 
 			if fpath_ext == "mp3" then
 				os.execute('mpv --profile=pseudo-gui --really-quiet "' .. fpath .. '"  >/dev/null 2>&1 &')
-				return
-			end
-
-			if action == "open" and fpath_ext == "pdf" then
-				os.execute('nohup zathura "' .. fpath .. '" >/dev/null 2>&1 &')
 				return
 			end
 
@@ -282,8 +275,18 @@ return {
 				return
 			end
 
-			if fpath_ext == "open" then
+			if fpath_ext == "excel" then
 				os.execute('open "' .. fpath .. '" >/dev/null 2>&1 &')
+				return
+			end
+
+			if action == "open" and fpath_ext == "jpg" then
+				os.execute("feh --bg-scale " .. fpath)
+				return
+			end
+
+			if action == "open" and fpath_ext == "pdf" then
+				os.execute('nohup zathura "' .. fpath .. '" >/dev/null 2>&1 &')
 				return
 			end
 
