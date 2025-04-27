@@ -108,15 +108,6 @@ if vim.g.colorscheme == "nord" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.3)
 end
 
-if vim.g.colorscheme == "oxocarbon" then
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.3)
-end
-
-if vim.g.colorscheme == "horizon" then
-  filepath = Highlight.tint(Highlight.get("StatusLine", "fg"), 0.8)
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.1)
-end
-
 if vim.g.colorscheme == "rose-pine-main" then
   modenc_bg = Highlight.tint(Highlight.get("KeywordBlur", "bg"), 0.05)
   modenc_bg_blur = Highlight.tint(modenc_bg, -0.15)

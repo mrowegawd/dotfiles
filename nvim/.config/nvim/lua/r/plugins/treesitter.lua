@@ -241,30 +241,6 @@ return {
               },
             },
           },
-          ["horizon"] = {
-            { TreesitterContext = { bg = { from = "TabLine", attr = "bg", alter = -0.02 } } },
-            {
-              TreesitterContextSeparator = {
-                -- fg = { from = "TabLine", attr = "bg", alter = 0.15 },
-                fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
-                underline = false,
-                undercurl = false,
-                sp = "NONE",
-              },
-            },
-          },
           ["jellybeans"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
             {
@@ -307,29 +283,6 @@ return {
             {
               TreesitterContextLineNumberBottom = {
                 fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
-                underline = false,
-                undercurl = false,
-                sp = "NONE",
-              },
-            },
-          },
-          ["oxocarbon"] = {
-            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
-            {
-              TreesitterContextSeparator = {
-                fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.5 },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
                 underline = false,
                 undercurl = false,
                 sp = "NONE",

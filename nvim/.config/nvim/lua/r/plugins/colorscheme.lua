@@ -29,6 +29,7 @@ return {
         "base46-zenburn",
         "base46-catppuccin",
         "base46-horizon",
+        "base46-oxocarbon",
       }
       if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
         return true
@@ -84,19 +85,6 @@ return {
     enabled = function()
       local rosepine_theme = { "rose-pine-dawn", "rose-pine-main", "rose-pine" }
       if vim.tbl_contains(rosepine_theme, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- OXOCARBON
-  {
-    "nyoom-engineering/oxocarbon.nvim",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local oxocarbon_theme = { "oxocarbon" }
-      if vim.tbl_contains(oxocarbon_theme, vim.g.colorscheme) then
         return true
       end
       return false
