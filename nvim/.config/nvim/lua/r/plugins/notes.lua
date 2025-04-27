@@ -65,7 +65,10 @@ return {
           -- fmt("%s/orgmode/gym/*", RUtils.config.path.wiki_path),
           -- fmt("%s/orgmode/habit/*", RUtils.config.path.wiki_path),
 
-          -- PC / Laptop
+          -- Notes
+          -- string.format("%s/**/*", RUtils.config.path.wiki_path),
+
+          -- Todo/Task
           string.format("%s/orgmode/gtd/*", RUtils.config.path.wiki_path),
           string.format("%s/orgmode/bookmarks/*", RUtils.config.path.wiki_path),
           string.format("%s/orgmode/day-to-remember/*", RUtils.config.path.wiki_path),
@@ -209,7 +212,7 @@ return {
             org_archive_subtree = "<F9>",
             org_toggle_archive_tag = "<Leader><F9>",
 
-            org_meta_return = "<Leader><CR>", -- Add heading, item or row (context-dependent)
+            org_meta_return = "<Leader><C-CR>", -- Add heading, item or row (context-dependent)
             org_return = "<F11>",
 
             org_insert_heading_respect_content = "<CR>", -- Add new headling after current heading block with same level
@@ -277,6 +280,14 @@ return {
           },
         },
       }
+
+      RUtils.cmd.augroup("ManageNoteMappingOrg", {
+        event = { "FileType" },
+        pattern = { "org" },
+        command = function()
+          require("r.keymaps.note").neorg_mappings_ft(vim.api.nvim_get_current_buf())
+        end,
+      })
     end,
   },
   -- OBSIDIAN.NVIM
