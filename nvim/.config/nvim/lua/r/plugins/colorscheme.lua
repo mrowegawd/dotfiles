@@ -27,6 +27,7 @@ return {
         "base46-seoul256_dark",
         "base46-solarized_dark",
         "base46-zenburn",
+        "base46-catppuccin",
       }
       if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
         return true
@@ -146,25 +147,6 @@ return {
         nvim_tree_darker = true,
       }
     end,
-  },
-  -- CATPPUCCIN
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    priority = 1000,
-    enabled = function()
-      local catppuccintheme = { "catppuccin-mocha" }
-      if vim.tbl_contains(catppuccintheme, vim.g.colorscheme) then
-        return true
-      end
-    end,
-    opts = {
-      flavour = "latte", -- latte, frappe, macchiato, mocha
-      background = { -- :h background
-        light = "latte",
-        dark = "mocha",
-      },
-    },
   },
   -- TOKYONIGHT
   {

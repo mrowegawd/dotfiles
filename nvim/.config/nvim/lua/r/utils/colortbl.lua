@@ -143,10 +143,6 @@ if vim.g.colorscheme == "vscode_modern" then
   filepath = Highlight.tint(Highlight.get("StatusLine", "fg"), 1)
 end
 
-if vim.g.colorscheme == "catppuccin-mocha" then
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.2)
-end
-
 ---@class r.utils.colortbl
 local M = {
   statusline_fg = fg,

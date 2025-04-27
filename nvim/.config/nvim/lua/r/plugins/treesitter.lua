@@ -241,30 +241,6 @@ return {
               },
             },
           },
-          ["catppuccin-mocha"] = {
-            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
-            {
-              TreesitterContextSeparator = {
-                -- fg = { from = "TabLine", attr = "bg", alter = 0.2 },
-                fg = { from = "TreesitterContext", attr = "bg" },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumber = {
-                fg = { from = "LineNr", attr = "fg", alter = 0.6 },
-                bg = { from = "TreesitterContext" },
-              },
-            },
-            {
-              TreesitterContextLineNumberBottom = {
-                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.5 },
-                underline = false,
-                undercurl = false,
-                sp = "NONE",
-              },
-            },
-          },
           ["horizon"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg", alter = -0.02 } } },
             {
