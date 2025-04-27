@@ -28,6 +28,7 @@ return {
         "base46-solarized_dark",
         "base46-zenburn",
         "base46-catppuccin",
+        "base46-horizon",
       }
       if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
         return true
@@ -109,20 +110,6 @@ return {
     enabled = function()
       local lackluster_theme = { "lackluster", "lackluster-mint", "lackluster-hack", "lackluster-dark" }
       if vim.tbl_contains(lackluster_theme, vim.g.colorscheme) then
-        return true
-      end
-      return false
-    end,
-  },
-  -- HORIZON
-  {
-    "akinsho/horizon.nvim",
-    version = "*",
-    lazy = false,
-    priority = 1000,
-    enabled = function()
-      local horizon_theme = { "horizon" }
-      if vim.tbl_contains(horizon_theme, vim.g.colorscheme) then
         return true
       end
       return false
