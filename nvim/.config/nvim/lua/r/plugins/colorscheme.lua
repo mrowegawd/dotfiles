@@ -16,20 +16,21 @@ return {
       local base46_theme = {
         "base46-aylin",
         "base46-ayu_dark",
+        "base46-catppuccin",
         "base46-chocolate",
         "base46-default-dark",
         "base46-doomchad",
+        "base46-horizon",
         "base46-jabuti",
         "base46-jellybeans",
         "base46-kanagawa",
         "base46-material-darker",
         "base46-onenord",
+        "base46-oxocarbon",
+        "base46-rosepine",
         "base46-seoul256_dark",
         "base46-solarized_dark",
         "base46-zenburn",
-        "base46-catppuccin",
-        "base46-horizon",
-        "base46-oxocarbon",
       }
       if vim.tbl_contains(base46_theme, vim.g.colorscheme) then
         return true
@@ -83,7 +84,7 @@ return {
     priority = 1000,
     name = "rose-pine",
     enabled = function()
-      local rosepine_theme = { "rose-pine-dawn", "rose-pine-main", "rose-pine" }
+      local rosepine_theme = { "rose-pine-dawn", "rose-pine" }
       if vim.tbl_contains(rosepine_theme, vim.g.colorscheme) then
         return true
       end

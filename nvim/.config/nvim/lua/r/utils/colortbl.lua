@@ -108,12 +108,6 @@ if vim.g.colorscheme == "nord" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.3)
 end
 
-if vim.g.colorscheme == "rose-pine-main" then
-  modenc_bg = Highlight.tint(Highlight.get("KeywordBlur", "bg"), 0.05)
-  modenc_bg_blur = Highlight.tint(modenc_bg, -0.15)
-  session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.1)
-end
-
 if vim.g.colorscheme == "tokyonight-night" then
   session = Highlight.tint(Highlight.get("DiagnosticSignWarn", "fg"), 0.1)
   modenc_bg = Highlight.tint(Highlight.get("KeywordBlur", "bg"), 0.05)

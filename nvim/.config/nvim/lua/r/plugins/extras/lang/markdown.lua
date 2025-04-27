@@ -174,9 +174,6 @@ return {
     --     },
     --     { ["@markup.raw.markdown_inline"] = { link = "RenderMarkdownCodeInline" } },
     --   },
-    --   ["rose-pine-main"] = {
-    --     { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.25 } } },
-    --   },
     -- }
     --
     -- Highlight.plugin("rendermarkdownHi", {
@@ -192,7 +189,6 @@ return {
     --         },
     --       },
     --     },
-    --     ["oxocarbon"] = { { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } } },
     --     ["tokyonight-storm"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
     --     ["vscode_modern"] = { { ["@markup.raw.markdown_inline"] = { bg = "NONE" } } },
     --     ["lackluster"] = {
