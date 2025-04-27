@@ -43,7 +43,9 @@ return {
           if vim.bo[buf].filetype == "toggleterm" then
             return nil
           end
-          if vim.tbl_contains({ "Outline", "aerial", "trouble", "git", "octo" }, vim.bo[buf].filetype) then
+          if
+            vim.tbl_contains({ "Outline", "aerial", "trouble", "git", "octo", "codecompanion" }, vim.bo[buf].filetype)
+          then
             return "filetype"
           end
           return require("stickybuf").should_auto_pin(buf)
