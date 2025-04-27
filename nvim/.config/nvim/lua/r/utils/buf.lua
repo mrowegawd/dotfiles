@@ -141,7 +141,7 @@ function M.magic_quit()
         return
       end
 
-      local win_count = RUtils.cmd.get_total_wins()
+      win_count = RUtils.cmd.get_total_wins()
       if #win_count == 1 then
         M.smart_quit()
         return
@@ -160,6 +160,13 @@ function M.magic_quit()
 
     return RUtils.info(notif_msg, { title = "Smart Quit" })
   else
+    if vim.bo.buftype == "terminal" and vim.bo.filetype == "" then
+      if tonumber(require("sniprun.display").term.buffer) > 0 then
+        vim.cmd "SnipClose"
+        return
+      end
+    end
+
     local win_count = RUtils.cmd.get_total_wins()
     if #win_count > 1 then
       return M.smart_quit()

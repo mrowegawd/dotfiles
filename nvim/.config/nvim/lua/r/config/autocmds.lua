@@ -17,6 +17,14 @@ RUtils.cmd.augroup("LSPUserBehaviour", {
     end
     client:stop()
   end,
+}, {
+  event = "LspAttach", -- remove copilot client, I dont use it atm
+  command = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client and client.name == "copilot" then
+      client:stop()
+    end
+  end,
 })
 
 ---------------------------------

@@ -663,6 +663,7 @@ local function list_tags_async(all_tags, is_set)
 end
 
 local regex_title = [[^#{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
+local regex_title_org = [[^\*{1,}\s[\w<`].*$]] -- [[^#{1,}\s\w.*$]]
 
 function M.find_note_by_tag(data, is_set)
   is_set = is_set or false
@@ -705,10 +706,10 @@ function M.find_global_titles()
   fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
     cwd = RUtils.config.path.wiki_path,
-    search = regex_title,
+    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
     rg_glob = false,
     no_esc = true,
-    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
+    file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
     -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
     winopts = {
       title = RUtils.fzflua.format_title("Global titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
@@ -747,10 +748,18 @@ function M.find_local_titles()
     previewer = Tagpreviewer,
     no_esc = true,
     rg_glob = false,
-    search = regex_title,
+    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
     rg_opts = [[--column --line-number --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 ]]
       .. fullname
       .. " -e ",
+    fzf_opts = {
+      ["--delimiter"] = "[:\t]",
+      -- Separated by tab and ':', 1: file icon+name, 2: file path 3: line number, it is dependes on rg_opts whether column or line number is enabled or not.
+      -- ["--with-nth"] = "3..",
+      ["--with-nth"] = "2..",
+      -- Search fileds
+      ["--nth"] = "1..",
+    },
     winopts = {
       -- fullscreen = true,
       title = RUtils.fzflua.format_title("Local titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
@@ -913,7 +922,7 @@ function M.insert_global_titles()
     },
     rg_glob = false,
     no_esc = true,
-    search = regex_title,
+    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
     cwd = RUtils.config.path.wiki_path,
     file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     actions = {

@@ -9,8 +9,8 @@ build-nvim() {
   # git pull upstream master
   git fetch --tags -f
   git pull --rebase --prune
-  git checkout nightly
-  # git checkout stable
+  # git checkout nightly
+  git checkout stable
   [ -d "$neovim_dir/build/" ] && rm -r ./build/ # clear the CMake cache
   rm -rf $HOME/neovim/*
   make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
@@ -90,6 +90,12 @@ build-install() {
   if ! asdf which bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     cargo install bat
+    asdf reshim rust
+  fi
+
+  if ! asdf which viu >/dev/null; then
+    echo "Installing: viu - Terminal image viewer with native support for iTerm and Kitty (fzflua dependencies)"
+    cargo install viu
     asdf reshim rust
   fi
 

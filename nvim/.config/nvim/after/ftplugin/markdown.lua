@@ -68,6 +68,17 @@ end, { buffer = true, desc = "Tasks: runner" })
 
 opt.wrap = false
 opt.list = false
+opt.foldlevel = 0 -- using ufo provider need a large value, feel free to decrease the value
+
+RUtils.cmd.augroup("ManageFoldMarkdown", {
+  event = { "BufEnter", "BufRead" },
+  pattern = "*",
+  command = function(ctx)
+    if vim.bo[ctx.buf].filetype == "markdown" then
+      vim.cmd [[normal! zMzvzz]]
+    end
+  end,
+})
 
 local function has_surrounding_fencemarks(lnum)
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
