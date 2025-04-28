@@ -129,7 +129,7 @@ reset_base_alter({ "base46-catppuccin" }, {
   fzfluasel_bg_alter = -0.45,
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.5,
-  quickfixline_alter = 0.28,
+  quickfixline_alter = 0.25,
   winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-chocolate" }, {
@@ -209,12 +209,13 @@ reset_base_alter({ "base46-material-darker" }, {
   winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-onenord" }, {
+  cmpdocnormal_fg_alter = 0.3,
   cursor_fg = "#3879C5",
-  cursorline_alter = 0.1,
-  fzfluasel_bg_alter = -0.25,
+  cursorline_alter = 0.07,
+  fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.4,
+  pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.2,
-  pmenusel_bg_alter = 0.55,
   winseparator_alter = 0.4,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
@@ -235,7 +236,7 @@ reset_base_alter({ "base46-rosepine" }, {
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.7,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
   cursor_fg = "#d75f87",
@@ -245,7 +246,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = 0.08,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.25,
 })
 reset_base_alter({ "base46-solarized_dark" }, {
   cursor_fg = "#708284",
@@ -255,7 +256,7 @@ reset_base_alter({ "base46-solarized_dark" }, {
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.65,
   quickfixline_alter = 0.2,
-  winseparator_alter = 0.7,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-zenburn" }, {
   cursor_fg = "#f3eadb",
@@ -2215,9 +2216,6 @@ local function colorscheme_overrides()
       { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.51 } } },
       { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.58 } } },
 
-      -- BLINK
-      { BlinkCmpGhostText = { fg = { from = "LineNr", attr = "fg", alter = 0.6 } } },
-
       -- DIFFIVIEW
       { DiffviewFilePanelCounter = { fg = { from = "GitSignsAdd", attr = "fg", alter = -0.5 } } },
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.25 } } },
@@ -2342,6 +2340,8 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
+      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg", alter = 0.4 }, bg = "NONE" } },
       { QuickFixLineNr = { fg = { from = "Normal", attr = "bg", alter = 4 } } },
@@ -2378,7 +2378,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.5 } } },
     },
     ["base46-aylin"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.2 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -2400,8 +2400,8 @@ local function colorscheme_overrides()
       {
         Folded = {
           inherit = "Folded",
-          fg = { from = "Keyword", attr = "fg", alter = -0.6 },
-          bg = { from = "Keyword", attr = "fg", alter = -0.75 },
+          fg = { from = "Keyword", attr = "fg", alter = -0.65 },
+          bg = { from = "Keyword", attr = "fg", alter = -0.76 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -2458,7 +2458,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.35 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -2599,7 +2599,7 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.48 },
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
           bg = "NONE",
         },
       },
@@ -2714,7 +2714,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.1 },
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
           bg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
@@ -2775,13 +2775,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 0.8 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.3 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.2 },
           bg = "NONE",
         },
       },
@@ -2835,7 +2835,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
 
       -- TROUBLE
       {
@@ -2866,7 +2866,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.35 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.55 }, bg = "NONE" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -2892,7 +2892,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          fg = { from = "Normal", attr = "bg", alter = 1.4 },
           bg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
@@ -2953,13 +2953,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.85 },
+          fg = { from = "Normal", attr = "bg", alter = 1 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.3 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.2 },
           bg = "NONE",
         },
       },
@@ -3023,7 +3023,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.4 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.28 } } },
 
       -- DIFFVIEW
       { DiffviewFilePanelPath = { fg = { from = "StatusLine", attr = "fg", alter = -0.5 } } },
@@ -3033,7 +3033,7 @@ local function colorscheme_overrides()
         StatusLine = {
           fg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
-            -0.1
+            -0.15
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.15, Highlight.get("Normal", "bg")),
@@ -3087,7 +3087,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.8 } } },
     },
     ["base46-doomchad"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.26 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.25 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -3100,7 +3100,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.3 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.4 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
       {
@@ -3135,13 +3135,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.5 },
+          fg = { from = "Normal", attr = "bg", alter = 0.75 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.15 },
           bg = "NONE",
         },
       },
@@ -3249,14 +3249,14 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
-          bg = { from = "Normal", attr = "bg", alter = 0.15 },
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
+          bg = { from = "Normal", attr = "bg", alter = 0.2 },
         },
       },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.5 } } },
+      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 0.9 } } },
       { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 3 } } },
@@ -3309,20 +3309,20 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.48 },
+          fg = { from = "Normal", attr = "bg", alter = 0.75 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
           bg = "NONE",
         },
       },
       {
         OutlineDetails = {
           inherit = "OutlineDetails",
-          fg = { from = "OutlineDetails", attr = "fg", alter = 0.05 },
+          fg = { from = "OutlineDetails", attr = "fg", alter = -0.05 },
         },
       },
 
@@ -3424,8 +3424,8 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.1 },
-          bg = { from = "Normal", attr = "bg", alter = 0.25 },
+          fg = { from = "Normal", attr = "bg", alter = 1.3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.28 },
         },
       },
 
@@ -3437,7 +3437,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
     },
     ["base46-jabuti"] = {
-      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.32 }, bold = true } },
+      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.34 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -3450,7 +3450,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.3 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.4 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
       {
@@ -3485,13 +3485,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.48 },
+          fg = { from = "Normal", attr = "bg", alter = 0.7 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.22 },
           bg = "NONE",
         },
       },
@@ -3514,7 +3514,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3553,7 +3553,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.15 } } },
 
       -- STATUSLINE
       {
@@ -3575,7 +3575,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.4 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -3613,7 +3613,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
     },
     ["base46-jellybeans"] = {
-      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.1 }, bold = true } },
+      { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.05 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -3667,13 +3667,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 1.3 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
           bg = "NONE",
         },
       },
@@ -3704,7 +3704,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.48 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.75 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3853,13 +3853,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = { from = "Normal", attr = "bg", alter = 0.85 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.18 },
           bg = "NONE",
         },
       },
@@ -3896,7 +3896,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -3920,7 +3920,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
 
       -- STATUSLINE
       {
@@ -4029,13 +4029,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.7 },
+          fg = { from = "Normal", attr = "bg", alter = 0.83 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.3 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.2 },
           bg = "NONE",
         },
       },
@@ -4058,7 +4058,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.15 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4091,7 +4091,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = 0.35 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.18 } } },
 
       -- STATUSLINE
       {
@@ -4137,7 +4137,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.2 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
         },
       },
 
@@ -4183,7 +4183,7 @@ local function colorscheme_overrides()
       },
       {
         FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.3 },
+          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.4 },
           bg = { from = "NormalBoxComment", attr = "bg" },
         },
       },
@@ -4197,13 +4197,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.45 },
+          fg = { from = "Normal", attr = "bg", alter = 0.7 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
+          fg = { from = "IndentGuides", attr = "fg", alter = -0.05 },
           bg = "NONE",
         },
       },
@@ -4226,7 +4226,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.12 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -4363,13 +4363,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
           bg = "NONE",
         },
       },
@@ -4478,8 +4478,8 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 1.6 },
+          bg = { from = "Normal", attr = "bg", alter = 0.45 },
         },
       },
 
@@ -4491,7 +4491,7 @@ local function colorscheme_overrides()
       { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-rosepine"] = {
-      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.7 }, bold = true } },
+      { LineNr = { fg = { from = "Normal", attr = "bg", alter = 0.55 }, bold = true } },
       { LineNrAbove = { link = "LineNr" } },
       { LineNrBelow = { link = "LineNr" } },
 
@@ -4546,13 +4546,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.8 },
+          fg = { from = "Normal", attr = "bg", alter = 1 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.23 },
           bg = "NONE",
         },
       },
@@ -4620,7 +4620,7 @@ local function colorscheme_overrides()
       {
         StatusLine = {
           fg = { from = "Normal", attr = "bg", alter = 1.3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.35 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
           reverse = false,
         },
       },
@@ -4655,17 +4655,17 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.5 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 1.7 },
+          bg = { from = "Normal", attr = "bg", alter = 0.35 },
         },
       },
 
       -- CREATED HIGHLIGHTS
       { MyCodeUsage = { bg = { from = "TabLine", attr = "bg", alter = 0.2 } } },
-      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.4 } } },
-      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.5 } } },
+      { StatusLineFilepath = { fg = { from = "StatusLine", attr = "fg", alter = 1.5 } } },
+      { StatusLineFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2.6 } } },
       { WinbarFilepath = { fg = { from = "LineNr", attr = "fg", alter = 1.2 } } },
-      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 1.8 } } },
+      { WinbarFontWhite = { fg = { from = "StatusLine", attr = "fg", alter = 2 } } },
     },
     ["base46-seoul256_dark"] = {
       { LineNr = { fg = { from = "LineNr", attr = "fg", alter = -0.3 }, bold = true } },
@@ -4726,13 +4726,13 @@ local function colorscheme_overrides()
       },
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.3 },
+          fg = { from = "Normal", attr = "bg", alter = 0.4 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.25 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.1 },
           bg = "NONE",
         },
       },
@@ -4876,13 +4876,13 @@ local function colorscheme_overrides()
       },
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.65 },
+          fg = { from = "Normal", attr = "bg", alter = 0.7 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.12 },
           bg = "NONE",
         },
       },
@@ -4905,7 +4905,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.05 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.1 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.2 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5005,7 +5005,7 @@ local function colorscheme_overrides()
         },
       },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.3 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.35 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
       {
@@ -5026,7 +5026,7 @@ local function colorscheme_overrides()
       },
       {
         FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.3 },
+          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.35 },
           bg = { from = "NormalBoxComment", attr = "bg" },
         },
       },
@@ -5040,13 +5040,13 @@ local function colorscheme_overrides()
       -- OUTLINE
       {
         IndentGuides = {
-          fg = { from = "Normal", attr = "bg", alter = 0.4 },
+          fg = { from = "Normal", attr = "bg", alter = 0.5 },
           bg = "NONE",
         },
       },
       {
         IndentGuidesFolded = {
-          fg = { from = "IndentGuides", attr = "fg", alter = 0.28 },
+          fg = { from = "IndentGuides", attr = "fg", alter = 0.2 },
           bg = "NONE",
         },
       },
@@ -5077,7 +5077,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.2 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.05 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.15 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5129,7 +5129,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.52 }, bg = "NONE" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -6050,7 +6050,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.3 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.35 } } },
       { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = fzflua_bg_cursorline_alter } } },
       {
         FzfLuaCursorLineNr = {
