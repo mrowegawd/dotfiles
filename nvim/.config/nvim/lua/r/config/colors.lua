@@ -2585,7 +2585,7 @@ local function colorscheme_overrides()
       },
       {
         FloatBoxComment = {
-          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.3 },
+          fg = { from = "NormalBoxComment", attr = "bg", alter = 0.5 },
           bg = { from = "NormalBoxComment", attr = "bg" },
         },
       },
@@ -2714,7 +2714,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
+          fg = { from = "Normal", attr = "bg", alter = 1.35 },
           bg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },

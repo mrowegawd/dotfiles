@@ -73,7 +73,7 @@ RUtils.cmd.augroup("SmartClose", {
 -- WINDOW
 ---------------------------------
 RUtils.cmd.augroup("WindowBehaviour", {
-  event = { "FileType" },
+  event = "FileType",
   pattern = {
     "orgagenda",
     "capture",
@@ -91,7 +91,7 @@ RUtils.cmd.augroup("WindowBehaviour", {
     end
   end,
 }, {
-  event = { "FileType" },
+  event = "FileType",
   pattern = { "gitcommit", "NeogitCommitMessage" },
   command = function()
     vim.opt_local.spell = true
@@ -100,6 +100,15 @@ RUtils.cmd.augroup("WindowBehaviour", {
     vim.opt_local.conceallevel = 2
     vim.opt_local.relativenumber = false
     vim.opt_local.number = false
+  end,
+}, {
+  event = "BufEnter",
+  pattern = "*",
+  command = function()
+    if vim.bo.filetype == "codecompanion" then
+      vim.opt_local.relativenumber = false
+      vim.opt_local.number = false
+    end
   end,
 }, {
   -- Untuk handle color `cursorline` dan `signcolumn`  pada `toggleterm.nvim`

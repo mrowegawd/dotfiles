@@ -96,7 +96,7 @@ return {
   -- RENDER-MARKDOWN
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ft = { "markdown", "norg", "rmd", "org" },
+    ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
     keys = {
       {
         "<Localleader>nr",

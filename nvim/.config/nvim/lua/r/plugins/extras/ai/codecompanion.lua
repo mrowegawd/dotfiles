@@ -12,6 +12,16 @@ return {
       },
     },
     opts = {
+      -- display = {
+      --   chat = {
+      --     window = {
+      --       opts = {
+      --         -- cursorline = true,
+      --         numberwidth = 4,
+      --       },
+      --     },
+      --   },
+      -- },
       -- prompt_library = { -- TEST BAHASA
       --   ["Tolongin gue generate commit dong"] = {
       --     strategy = "chat",
@@ -52,5 +62,12 @@ return {
       "nvim-treesitter/nvim-treesitter",
       { "zbirenbaum/copilot.lua", opts = { suggestion = { enabled = false } } },
     },
+  },
+  -- RENDER-MARKDOWN
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    optional = true,
+    ft = { "markdown", "codecompanion" },
+    opts = { file_types = { "markdown", "codecompanion" } },
   },
 }
