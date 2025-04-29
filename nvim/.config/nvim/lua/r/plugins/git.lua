@@ -31,7 +31,14 @@ return {
       "GitConflictListQf",
     },
     keys = {
-      { "<Leader>gr", "<CMD>GitConflictRefresh<CR>", desc = "Git: start/refresh git conflict [gitconflict]" },
+      {
+        "<Leader>gr",
+        function()
+          vim.cmd [[GitConflictRefresh]]
+          RUtils.info("Start or refresh git conflict..", { title = "Git-conflict" })
+        end,
+        desc = "Git: start/refresh git conflict [gitconflict]",
+      },
       {
         "<g-down>",
         "<CMD>GitConflictNextConflict<CR>",
@@ -55,12 +62,12 @@ return {
         "<Leader>goo",
         "<CMD>lua require'gitlinker'.get_buf_range_url('n', {action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
         mode = { "n", "v" },
-        desc = "Open: git link on browser [gitlinker]",
+        desc = "Open: gitlink on browser (normal or visual) [gitlinker]",
       },
       {
         "<Leader>goO",
         "<CMD>lua require'gitlinker'.get_repo_url({action_callback = require'gitlinker.actions'.open_in_browser})<CR>",
-        desc = "Open: git link on browser [gitlinker]",
+        desc = "Open: gitlink on browser [gitlinker]",
       },
       {
         "<Leader>gy",
