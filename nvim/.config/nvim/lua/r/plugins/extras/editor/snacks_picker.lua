@@ -32,12 +32,18 @@ return {
               ["<F5>"] = { "toggle_preview", mode = { "i", "n" } },
               ["<F4>"] = { "cycle_win", mode = { "i", "n" } },
               ["<F3>"] = { "toggle_maximize", mode = { "i", "n" } },
+
+              ["<c-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
+              ["<c-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
             },
           },
           list = {
             keys = {
               ["<F4>"] = "cycle_win",
               ["<F3>"] = "toggle_maximize",
+
+              ["<c-d>"] = { "preview_scroll_down", mode = { "i", "n" } },
+              ["<c-u>"] = { "preview_scroll_up", mode = { "i", "n" } },
             },
           },
           preview = {
