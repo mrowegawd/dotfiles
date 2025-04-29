@@ -25,7 +25,7 @@ local base_cl = {
   fzfluasel_bg_alter = 0.05,
 
   quickfixline_alter = 0.6,
-  winseparator_alter = 0.35,
+  winseparator_alter = 0.65,
 
   search_fg_alter = 0.1,
   search_bg_alter = 0.8,
@@ -109,7 +109,7 @@ reset_base_alter({ "ashen" }, {
   pmenu_bg_alter = 1,
   pmenusel_bg_alter = 2,
   quickfixline_alter = 0.3,
-  winseparator_alter = 0.8,
+  winseparator_alter = 1.35,
 })
 reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -120,7 +120,7 @@ reset_base_alter({ "base46-aylin" }, {
   pmenu_bg_alter = 0.45,
   pmenusel_bg_alter = 0.85,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.4,
+  winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
@@ -130,7 +130,7 @@ reset_base_alter({ "base46-catppuccin" }, {
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.55,
+  -- winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
@@ -148,7 +148,7 @@ reset_base_alter({ "base46-default-dark" }, {
   pmenu_bg_alter = 0.6,
   pmenusel_bg_alter = 1.3,
   quickfixline_alter = 0.3,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.75,
 })
 reset_base_alter({ "base46-doomchad" }, {
   cursor_fg = "#81A1C1",
@@ -157,7 +157,7 @@ reset_base_alter({ "base46-doomchad" }, {
   pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.8,
   quickfixline_alter = 0.2,
-  winseparator_alter = 0.4,
+  winseparator_alter = 0.45,
 })
 reset_base_alter({ "base46-horizon" }, {
   cursor_fg = "#b3276f",
@@ -167,7 +167,6 @@ reset_base_alter({ "base46-horizon" }, {
   pmenu_bg_alter = 0.6,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.3,
-  winseparator_alter = 0.4,
 })
 reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
@@ -176,7 +175,7 @@ reset_base_alter({ "base46-jabuti" }, {
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.15,
-  winseparator_alter = 0.3,
+  winseparator_alter = 0.48,
 })
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
@@ -185,7 +184,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.2,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.82,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -197,7 +196,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.35,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
@@ -206,7 +205,6 @@ reset_base_alter({ "base46-material-darker" }, {
   pmenu_bg_alter = 0.52,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.5,
 })
 reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
@@ -216,7 +214,7 @@ reset_base_alter({ "base46-onenord" }, {
   pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.2,
-  winseparator_alter = 0.4,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "base46-oxocarbon" }, {
   cursor_fg = "#ffffff",
@@ -226,7 +224,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.3,
-  winseparator_alter = 0.65,
+  winseparator_alter = 0.7,
 })
 reset_base_alter({ "base46-rosepine" }, {
   cursor_fg = "#e0def4",
@@ -236,7 +234,7 @@ reset_base_alter({ "base46-rosepine" }, {
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.68,
 })
 reset_base_alter({ "base46-seoul256_dark" }, {
   cursor_fg = "#d75f87",
@@ -246,7 +244,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = 0.08,
-  winseparator_alter = 0.25,
+  winseparator_alter = 0.35,
 })
 reset_base_alter({ "base46-solarized_dark" }, {
   cursor_fg = "#708284",
@@ -254,9 +252,9 @@ reset_base_alter({ "base46-solarized_dark" }, {
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.3,
-  pmenusel_bg_alter = 0.65,
+  pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.2,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-zenburn" }, {
   cursor_fg = "#f3eadb",
@@ -266,17 +264,18 @@ reset_base_alter({ "base46-zenburn" }, {
   pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
   quickfixline_alter = 0.09,
-  winseparator_alter = 0.25,
+  winseparator_alter = 0.4,
 })
 reset_base_alter({ "darkearth" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.09,
-  fzfluasel_bg_alter = -0.32,
+  fzfluasel_bg_alter = -0.38,
   normalfloat_bg_alter = -0.1,
   pmenu_bg_alter = 0.45,
+  pmenusel_bg_alter = 1,
   quickfixline_alter = 0.2,
-  pmenusel_bg_alter = 0.8,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
@@ -289,7 +288,7 @@ reset_base_alter({ "lackluster" }, {
   pmenu_fg_alter = 2,
   pmenusel_bg_alter = 2.5,
   quickfixline_alter = 0.3,
-  winseparator_alter = 1,
+  winseparator_alter = 1.5,
 })
 reset_base_alter({ "rose-pine-dawn" }, {
   cmpdocnormal_fg_alter = -0.5,
@@ -302,7 +301,7 @@ reset_base_alter({ "rose-pine-dawn" }, {
   pmenu_fg_alter = -0.4,
   pmenusel_bg_alter = -0.02,
   quickfixline_alter = 0.05,
-  winseparator_alter = -0.08,
+  winseparator_alter = -0.09,
 })
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
@@ -312,7 +311,7 @@ reset_base_alter({ "tokyonight-night" }, {
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.5,
-  winseparator_alter = 0.45,
+  winseparator_alter = 0.6,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -324,7 +323,7 @@ reset_base_alter({ "tokyonight-storm" }, {
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.8,
   quickfixline_alter = 0.2,
-  winseparator_alter = 0.45,
+  winseparator_alter = 0.5,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -338,7 +337,7 @@ reset_base_alter({ "vscode_modern" }, {
   search_fg_alter = 0.2,
   search_bg_alter = 0.8,
   quickfixline_alter = 0.35,
-  winseparator_alter = 0.4,
+  winseparator_alter = 0.55,
 })
 
 local general_overrides = function()
@@ -434,7 +433,7 @@ local general_overrides = function()
         bg = { from = "NormalFloat", attr = "bg" },
       },
     },
-    { PmenuThumb = { bg = { from = "FloatBorder", attr = "fg", alter = 0.1 } } },
+    { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = 1 } } },
 
     {
       FloatTitle = {
@@ -1302,21 +1301,21 @@ local general_overrides = function()
       },
     },
     { ["@org.timestamp.active"] = { inherit = "PreProc" } },
-    { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
     { ["@org.bullet"] = { inherit = "Identifier" } },
-    { ["@org.checkbox"] = { fg = "green" } },
     { ["@org.checkbox.halfchecked"] = { inherit = "PreProc" } },
-    { ["@org.checkbox.checked"] = { inherit = "Comment" } },
     { ["@org.properties"] = { inherit = "Constant" } },
     { ["@org.drawer"] = { inherit = "Constant" } },
-    -- { ["@org.tag"] = { inherit = "Function" } }, -- <-----------
     { ["@org.plan"] = { inherit = "Constant" } },
-    { ["@org.comment"] = { inherit = "Comment" } },
-    { ["@org.directive"] = { inherit = "Comment" } },
-    { ["@org.block"] = { inherit = "Comment" } },
     { ["@org.latex"] = { inherit = "Statement" } },
     { ["@org.hyperlinks"] = { inherit = "Underlined" } },
     { ["@org.code"] = { inherit = "String" } },
+
+    { ["@org.block"] = { inherit = "Comment" } },
+    { ["@org.checkbox"] = { inherit = "Comment" } },
+    { ["@org.checkbox.checked"] = { inherit = "Comment" } },
+    { ["@org.comment"] = { inherit = "Comment" } },
+    { ["@org.directive"] = { inherit = "Comment" } },
+    { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
     --  ─────────────────────────────[ FUGITIVE ]──────────────────────────
     { fugitiveStagedModifier = { inherit = "GitSignsAdd" } },
@@ -1334,7 +1333,7 @@ local general_overrides = function()
     { DiffviewStatusUntracked = { link = "DiffAddedChar" } },
     { DiffviewStatusDeleted = { link = "DiffDeletedChar" } },
 
-    { DiffviewReference = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.2 } } },
+    { DiffviewReference = { fg = { from = "GitSignsDelete", attr = "fg", alter = -0.2 }, bold = true } },
 
     -- { DiffviewHash = { fg = { from = "Directory", attr = "fg", alter = -0.5 } } },
     { DiffviewHash = { fg = "lightmagenta" } },
@@ -1758,6 +1757,14 @@ local rose_pine = {
 
     { BlinkCmpLabelMatch = { fg = { from = "KeywordMatch", attr = "fg" } } },
     { CmpItemAbbrMatchFuzzy = { inherit = "BlinkCmpLabelMatch" } },
+
+    -- ORGMODE
+    { ["@org.block"] = { inherit = "Comment" } },
+    { ["@org.checkbox"] = { inherit = "Comment" } },
+    { ["@org.checkbox.checked"] = { inherit = "Comment" } },
+    { ["@org.comment"] = { inherit = "Comment" } },
+    { ["@org.directive"] = { inherit = "Comment" } },
+    { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
     -- OUTLINE
     {
@@ -2208,6 +2215,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -2447,6 +2457,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -2617,6 +2630,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -2793,6 +2809,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -2979,6 +2998,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -3161,6 +3183,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -3327,6 +3352,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -3503,6 +3531,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -3632,14 +3663,8 @@ local function colorscheme_overrides()
       {
         Folded = {
           inherit = "Folded",
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.6, Highlight.get("Normal", "bg")),
-            -0.52
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
-            -0.62
-          ),
+          fg = { from = "Normal", attr = "bg", alter = 1.5 },
+          bg = { from = "Normal", attr = "bg", alter = 0.7 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -3693,6 +3718,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -3790,7 +3818,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 2.5 },
+          fg = { from = "Normal", attr = "bg", alter = 2.3 },
           bg = { from = "Normal", attr = "bg", alter = 0.5 },
         },
       },
@@ -3885,6 +3913,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -3989,7 +4020,7 @@ local function colorscheme_overrides()
         Visual = {
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.1
+            -0.2
           ),
         },
       },
@@ -4047,6 +4078,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -4215,6 +4249,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -4381,6 +4418,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -4499,7 +4539,7 @@ local function colorscheme_overrides()
         Visual = {
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.3, Highlight.get("Normal", "bg")),
-            -0.2
+            -0.3
           ),
         },
       },
@@ -4509,16 +4549,8 @@ local function colorscheme_overrides()
 
       {
         Folded = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
-          -- bg = { from = "Normal", attr = "bg", alter = 0.4 },
-          -- fg = Highlight.tint(
-          --   Highlight.darken(Highlight.get("Keyword", "fg"), 0.4, Highlight.get("Normal", "bg")),
-          --   -0.45
-          -- ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Normal", "bg"), 0.88, Highlight.get("Keyword", "fg")),
-            -0.2
-          ),
+          fg = { from = "Normal", attr = "bg", alter = 1 },
+          bg = { from = "Normal", attr = "bg", alter = 0.35 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -4564,6 +4596,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -4752,13 +4787,16 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       -- SNACKS
-      { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.23 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.2 } } },
+      { SnacksIndent = { fg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")) } },
+      { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.2, Highlight.get("Normal", "bg")) } },
 
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
@@ -4894,6 +4932,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -4979,7 +5020,7 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 1.2 },
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
         },
       },
@@ -5066,6 +5107,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -5190,16 +5234,12 @@ local function colorscheme_overrides()
       { Comment = { fg = { from = "Comment", attr = "fg", alter = 0.6 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
+      { PmenuThumb = { bg = { from = "Pmenu", attr = "bg", alter = 0.7 } } },
+
       {
         Folded = {
-          fg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.5, Highlight.get("Normal", "bg")),
-            -0.12
-          ),
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.27, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = { from = "Normal", attr = "bg", alter = 0.75 },
+          bg = { from = "Normal", attr = "bg", alter = 0.3 },
         },
       },
       { FoldedSign = { fg = { from = "Folded", attr = "fg", alter = -0.4 }, bg = "NONE" } },
@@ -5245,6 +5285,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -5334,11 +5377,8 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.1 },
-          bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
-            -0.2
-          ),
+          fg = { from = "Normal", attr = "bg", alter = 0.9 },
+          bg = { from = "Normal", attr = "bg", alter = 0.25 },
         },
       },
 
@@ -5407,7 +5447,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.65 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.7 } } },
       { FzfLuaScrollBorderFull = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollBorderEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollFloatEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
@@ -5460,14 +5500,17 @@ local function colorscheme_overrides()
       { AerialGuide = { fg = { from = "Normal", attr = "bg", alter = 1 } } },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
-      { ["@org.checkbox.checked.org"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
 
       -- SNACKS
-      { SnacksIndent = { fg = { from = "SnacksIndent", attr = "fg", alter = -0.18 } } },
-      { SnacksIndentScope = { fg = { from = "SnacksIndentScope", attr = "fg", alter = -0.3 } } },
+      { SnacksIndent = { fg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")) } },
+      { SnacksIndentScope = { fg = Highlight.darken(dark_yellow, 0.2, Highlight.get("Normal", "bg")) } },
+
       -- error
       {
         SnacksNotifierError = {
@@ -5688,6 +5731,9 @@ local function colorscheme_overrides()
       },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -5942,7 +5988,7 @@ local function colorscheme_overrides()
       { KeywordBlur = { bg = { from = "StatusLineNC", attr = "bg", alter = 0.2 } } },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1 },
+          fg = { from = "Normal", attr = "bg", alter = 1.1 },
           bg = { from = "Normal", attr = "bg", alter = 0.2 },
         },
       },
@@ -6027,6 +6073,9 @@ local function colorscheme_overrides()
       { WhichKeyGroup = { inherit = "WhichKeyGroup", fg = { from = "DiagnosticWarn", attr = "fg", alter = -0.1 } } },
 
       -- ORGMODE
+      { ["@org.block"] = { inherit = "Comment" } },
+      { ["@org.checkbox"] = { inherit = "Comment" } },
+      { ["@org.checkbox.checked"] = { inherit = "Comment" } },
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
@@ -6050,7 +6099,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.45 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.35 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.45 } } },
       { FzfLuaCursorLine = { bg = { from = "CursorLine", attr = "bg", alter = fzflua_bg_cursorline_alter } } },
       {
         FzfLuaCursorLineNr = {
@@ -6166,13 +6215,13 @@ local function colorscheme_overrides()
       {
         StatusLineNC = {
           fg = { from = "Normal", attr = "bg", alter = 3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.3 },
+          bg = { from = "Normal", attr = "bg", alter = 0.4 },
         },
       },
       { KeywordBlur = { bg = { from = "StatusLineNC", attr = "bg", alter = 0.4 } } },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 1.2 },
+          fg = { from = "Normal", attr = "bg", alter = 1.35 },
           bg = { from = "Normal", attr = "bg", alter = 0.3 },
         },
       },
