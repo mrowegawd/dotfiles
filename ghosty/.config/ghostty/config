@@ -2,7 +2,9 @@
 # | FONTS                                                     |
 # +-----------------------------------------------------------+
 # font-family    = "CommitMono"
-font-family = "SFMono"
+# font-family = "SFMono"
+font-family = "JetBrainsMono NF"
+# font-family = "JetBrainsMono NF"
 # font-family-bold = "SF Mono"
 # font-family-italic = "Maple Mono Italic"
 # font-family-bold-italic = "Maple Mono Bold Italic"
