@@ -134,6 +134,7 @@ return {
           if type == ":" or type == "@" then
             return { "cmdline" }
           end
+          return {}
         end,
         keymap = {
           preset = "none",
@@ -144,10 +145,10 @@ return {
               if not cmp.is_visible() then
                 local type = vim.fn.getcmdtype()
                 if type == "/" or type == "?" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                  return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
                 end
                 if type == ":" or type == "@" then
-                  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                  return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
                 end
               else
                 cmp.select_next()
@@ -156,9 +157,7 @@ return {
           },
           ["<C-p>"] = {
             function(cmp)
-              if cmp.is_visible() then
-                cmp.select_prev()
-              else
+              if not cmp.is_visible() then
                 local type = vim.fn.getcmdtype()
                 if type == "/" or type == "?" then
                   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
@@ -166,6 +165,8 @@ return {
                 if type == ":" or type == "@" then
                   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Up>", true, true, true), "n", true)
                 end
+              else
+                cmp.select_prev()
               end
             end,
           },
@@ -246,11 +247,13 @@ return {
             if not cmp.is_visible() then
               local type = vim.fn.getcmdtype()
               if type == "/" or type == "?" then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
               end
               if type == ":" or type == "@" then
-                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
+                return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<c-Down>", true, true, true), "n", true)
               end
+
+              cmp.show {}
             else
               cmp.select_next()
             end
