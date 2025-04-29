@@ -53,6 +53,7 @@ RUtils.cmd.augroup("SmartClose", {
     "spectre_panel",
     "startuptime",
     "tsplayground",
+    "org",
   },
   command = function(event)
     vim.bo[event.buf].buflisted = false
@@ -102,12 +103,13 @@ RUtils.cmd.augroup("WindowBehaviour", {
     vim.opt_local.number = false
   end,
 }, {
-  event = "BufEnter",
+  event = { "BufRead", "BufEnter" },
   pattern = "*",
   command = function()
     if vim.bo.filetype == "codecompanion" then
       vim.opt_local.relativenumber = false
       vim.opt_local.number = false
+      -- vim.wo.winhighlight = "Normal:Pmenu,FloatBorder:CmpDocFloatBorder,CursorLine:CursorLine,Search:None"
     end
   end,
 }, {
@@ -127,11 +129,21 @@ RUtils.cmd.augroup("WindowBehaviour", {
   end,
 })
 
+RUtils.cmd.augroup("ManageFoldMarkdownAndOrg", {
+  event = { "BufEnter", "BufRead" },
+  pattern = "*",
+  command = function(ctx)
+    if vim.tbl_contains({ "markdown", "org" }, vim.bo[ctx.buf].filetype) then
+      vim.cmd [[normal! zMzvzz]]
+    end
+  end,
+})
+
 RUtils.cmd.augroup("WindowDim", {
   event = { "BufRead" },
   pattern = { "*" },
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
       return
     end
     RUtils.windowdim.buf_enter()
