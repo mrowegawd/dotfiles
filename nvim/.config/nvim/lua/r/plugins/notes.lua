@@ -181,13 +181,13 @@ return {
             org_agenda_show_help = "?",
           },
           capture = {
-            org_capture_finalize = "<C-c>",
+            org_capture_finalize = { "<C-c>", "<C-s>" },
             org_capture_refile = "<Leader>or",
             org_capture_kill = { "q", "<ESC>" },
             org_capture_show_help = "?",
           },
           note = {
-            org_note_finalize = "<C-c>",
+            org_note_finalize = { "<C-c>", "<C-s>" },
             org_note_kill = { "q", "<ESC>" },
           },
           org = {
@@ -203,10 +203,10 @@ return {
             org_toggle_heading = "<prefix>*",
 
             org_open_at_point = "<Leader>oo",
-            org_edit_special = [[<prefix>']],
+            org_edit_special = "<prefix>'",
 
+            -- fold/unfold
             org_cycle = "<TAB>",
-
             org_global_cycle = "<S-TAB>",
 
             org_archive_subtree = "<F9>",

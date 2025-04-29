@@ -106,7 +106,7 @@ function M.load_ses_dashboard(last)
       require("resession").load()
     end
 
-    require("qfsilet.note").get_todo()
+    -- require("qfsilet.note").get_todo()
   else
     RUtils.warn(
       "Cannot load session. Maybe the plugins are not installed or something went wrong..",
