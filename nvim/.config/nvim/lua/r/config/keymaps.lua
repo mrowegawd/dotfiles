@@ -252,22 +252,18 @@ if vim.fn.executable "lazygit" == 1 then
     ---@diagnostic disable-next-line: missing-fields
     Snacks.lazygit { cwd = RUtils.root.git() }
   end, { desc = "Git: lazygit (root dir) [snacks]" })
-  RUtils.map.nnoremap("<c-space>g", function()
-    ---@diagnostic disable-next-line: missing-fields
-    Snacks.lazygit { cwd = RUtils.root.git() }
-  end, { desc = "Git: lazygit (root dir) without tmux [snacks]" })
   RUtils.map.nnoremap("<Leader>gG", function()
     Snacks.lazygit()
   end, { desc = "Git: lazygit (cwd) [snacks]" })
-  -- RUtils.map.nnoremap("<Leader>gf", function()
-  --   Snacks.lazygit.log_file()
-  -- end, { desc = "Git: lazygit current file history" })
-  -- RUtils.map.nnoremap("<Leader>gL", function()
-  --   Snacks.lazygit.log { cwd = RUtils.root.git() }
-  -- end, { desc = "Git: lazygit log" })
-  -- RUtils.map.nnoremap("<Leader>gLL", function()
-  --   Snacks.lazygit.log()
-  -- end, { desc = "Git: lazygit log (cwd)" })
+  RUtils.map.nnoremap("<Leader>gf", function()
+    Snacks.lazygit.log_file()
+  end, { desc = "Git: lazygit current file history" })
+  RUtils.map.nnoremap("<Leader>gLL", function()
+    Snacks.lazygit.log { cwd = RUtils.root.git() }
+  end, { desc = "Git: lazygit log" })
+  RUtils.map.nnoremap("<Leader>gLO", function()
+    Snacks.lazygit.log()
+  end, { desc = "Git: lazygit log (cwd)" })
 end
 -- }}}
 -- {{{ Misc
