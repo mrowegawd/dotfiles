@@ -398,7 +398,7 @@ return {
   -- FUGITIVE
   {
     "tpope/vim-fugitive",
-    cmd = { "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
+    cmd = { "G", "GitHistory", "Git", "Gedit", "GBrowse", "Gwrite", "GitEditDiff", "GitEditChanged", "Gclog", "GcLog" },
     keys = {
       {
         "<Leader>gN",
@@ -496,10 +496,12 @@ return {
           vim.opt_local.winfixheight = true
           vim.opt_local.winfixbuf = true
           -- Mappings
-          -- vim.keymap.set("n", "q", RUtils.cmd.quit_return, { buffer = e.buf })
-          vim.keymap.set("n", "<c-n>", "j", { buffer = e.buf, remap = true })
-          vim.keymap.set("n", "<c-p>", "k", { buffer = e.buf, remap = true })
-          vim.keymap.set("n", "<tab>", "=", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<c-n>", "]m", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<c-p>", "[m", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<a-n>", "]m=zt", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<a-p>", "[m=zt", { buffer = e.buf, remap = true })
+          vim.keymap.set("n", "<tab>", "=zt", { buffer = e.buf, remap = true })
+
           -- vim.keymap.set("n", "ci", "<Cmd>Git commit -n<CR>", { buffer = true })
           vim.keymap.set("n", "<Leader>gp", "<Cmd>Git push<CR>", { buffer = true })
           vim.keymap.set("n", "<Leader>gF", "<Cmd>Git push --force-with-lease<CR>", { buffer = true })
@@ -507,6 +509,16 @@ return {
           vim.keymap.set("n", "<Leader>gl", function()
             vim.cmd "Git log --oneline"
           end, { buffer = e.buf })
+        end,
+      }, {
+        event = "BufWinEnter",
+        pattern = "*.git/COMMIT_EDITMSG",
+        command = function()
+          -- If it's a new commit, start in insert mode, otherwise start in normal mode
+          if vim.fn.getline(1) == "" then
+            vim.cmd "startinsert!"
+            vim.cmd "0"
+          end
         end,
       })
 
