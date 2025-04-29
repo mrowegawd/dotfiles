@@ -36,6 +36,10 @@ return {
         title_global = "MESSAGE BOX",
         winhighlight = "Normal:NormalBoxComment,FloatBorder:FloatBoxComment,EndOfBuffer:NormalBoxComment,Visual:VisualBoxComment",
         higroup_title = "FzfLuaPreviewTitle",
+        todo = {
+          local_use = "orgmode", -- orgmode or custom
+          global_use = "default",
+        },
       },
       theme_list = { enabled = false },
       marks = {

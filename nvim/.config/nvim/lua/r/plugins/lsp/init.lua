@@ -128,6 +128,8 @@ return {
         vim.keymap.del("n", bind)
       end
 
+      vim.keymap.del("s", "<C-s>")
+
       -- setup keymaps
       RUtils.lsp.on_attach(function(client, bufnr)
         require("r.keymaps.lsp").on_attach(client, bufnr)
