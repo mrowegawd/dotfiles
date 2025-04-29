@@ -261,9 +261,8 @@ return {
   {
     "lewis6991/gitsigns.nvim",
     event = "LazyFile",
-    -- enabled = false,
     opts = {
-      -- signs_staged_enable = false,
+      signs_staged_enable = false,
       -- debug_mode = true,
       attach_to_untracked = true,
       signs_staged = {
