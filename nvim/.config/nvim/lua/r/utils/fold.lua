@@ -84,7 +84,11 @@ function M.magic_jump_qf_or_fold(is_jump_prev)
   is_jump_prev = is_jump_prev or false
 
   if vim.tbl_contains(ft_disabled, vim.bo[0].filetype) then
-    return RUtils.map.feedkey("<c-p>", "n")
+    if is_jump_prev then
+      return RUtils.map.feedkey("<c-p>", "n")
+    else
+      return RUtils.map.feedkey("<c-n>", "n")
+    end
   end
 
   if vim.wo.diff then
