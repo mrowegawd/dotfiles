@@ -331,11 +331,11 @@ function M.memoize(fn)
   end
 end
 
----@return "nvim-cmp" | "blink.cmp" | "torch"
+---@return "nvimcmp" | "blink.cmp" | "torch"
 function M.cmp_engine()
   vim.g.lazyvim_cmp = vim.g.lazyvim_cmp or "auto"
   if vim.g.lazyvim_cmp == "auto" then
-    return RUtils.has_extra "coding.nvim-cmp" and "nvim-cmp" or "blink.cmp"
+    return RUtils.has_extra "coding.nvimcmp" and "nvimcmp" or "blink.cmp"
   end
   return vim.g.lazyvim_cmp
 end

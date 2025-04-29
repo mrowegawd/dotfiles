@@ -9,7 +9,7 @@ g.os = loop.os_uname().sysname
 vim.g.deprecation_warnings = false
 
 -- LazyVim completion engine to use.
--- Can be one of: nvim-cmp, blink.cmp
+-- Can be one of: nvimcmp, blink.cmp
 -- Leave it to "auto" to automatically use the completion engine
 -- enabled with `:LazyExtras`
 vim.g.lazyvim_cmp = "auto"
