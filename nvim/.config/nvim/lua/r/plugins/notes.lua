@@ -257,7 +257,7 @@ return {
             org_move_subtree_down = "<a-n>",
 
             org_refile = "<prefix>r",
-            org_add_note = "<prefix>a",
+            org_add_note = "<prefix>k",
 
             org_show_help = "?",
             org_babel_tangle = "<prefix>bt",
