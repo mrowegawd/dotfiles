@@ -175,14 +175,6 @@ super + shift + F12
 super + shift + Home
         $HOME/.config/miscxrdb/exbin/fehbg
 
-# misc: call firefox (side by side)
-super + F8
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
-
-# misc: call zathura (side by side)
-super + F9
-        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
-
 # misc: open poweroff
 super + shift + q
         $HOME/.config/rofi/powermenu/poweroff
@@ -191,13 +183,29 @@ super + shift + q
 super + shift + y
         dunstify "Running vid on tsp" "$(xclip -o -sel clip)" && tsp mpv -ontop -no-border -force-window --autofit=800x500 --geometry=-15-60 "$3" $(xclip -o -sel clip)
 
-# misc: open link video with proxychains
-super + y
-        dunstify "Running vid with proxychains" "$(xclip -o -sel clip)" && tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
+# misc: open translate with nvim
+super + shift + o
+        bspc rule -a \* -o state=floating center=false rectangle=700x500+1100+480 && kitty -e bash -c "~/.local/bin/nvim -c 'lua require(\"codecompanion\").prompt_library(require(\"codecompanion.config\").prompt_library[\"Translate indo xclip\"], \{ display = \{ chat = \{ window = \{ layout = \"buffer\" \} \} \} \} ) vim.cmd[[only]] vim.cmd[[nmap <space>q :qal!<cr>]]'"
+
+        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'CodeCompanion /translate_in_bahasa'"
+        #
+        # bspc rule -a \* -o state=floating center=true rectangle=800x500+0+0 && kitty -e bash -c "~/.local/bin/nvim -c 'lua require(\"orgmode\").action(\"capture.prompt\") vim.cmd[[nmap <c-c> :exit<cr>]]'"
 
 # misc: open neovide
 super + shift + Return
         zsh -c "cd $HOME/moxconf/development/dotfiles && $HOME/.local/bin/vv"
+
+# misc: call firefox (side by side)
+super + F8
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin firefox 2
+
+# misc: call zathura (side by side)
+super + F9
+        $HOME/.config/miscxrdb/bpswm/scripts/bspc-callwin zathura 4
+
+# misc: open link video with proxychains
+super + y
+        dunstify "Running vid with proxychains" "$(xclip -o -sel clip)" && tsp proxychains -q mpv -ontop -no-border -force-window --autofit=853x500 --geometry=-15-60 --ytdl-raw-options="yes-playlist=,format=best" $(xclip -o -sel clip)
 
 # misc: run clipmenu
 # super + shift + c

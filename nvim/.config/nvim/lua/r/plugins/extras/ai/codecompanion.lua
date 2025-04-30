@@ -22,6 +22,14 @@ return {
         strategies = {
           chat = {
             keymaps = {
+              options = {
+                modes = { n = "?" },
+                callback = function()
+                  require("which-key").show { global = false }
+                end,
+                description = "Codecompanion Keymaps",
+                hide = true,
+              },
               regenerate = {
                 modes = {
                   n = "gr",
@@ -143,38 +151,39 @@ return {
               },
             },
           },
-          --   ["Tolongin gue generate commit dong"] = {
-          --     strategy = "chat",
-          --     description = "aku sayang kamu",
-          --     opts = {
-          --       index = 10,
-          --       is_default = true,
-          --       is_slash_cmd = true,
-          --       short_name = "commit_in_bahasa_indonesia", --->> ini short name nya
-          --       auto_submit = true,
-          --     },
-          --     prompts = {
-          --       {
-          --         role = constants.USER_ROLE,
-          --         content = function()
-          --           -- NOTE: nah klo ini tinggal tambahain aja "in bahasa" atau pake
-          --           -- bahasa indonesia langsung
-          --           return string.format(
-          --             [[You are an expert at following the Conventional Commit specification. Given the git diff listed below, please generate a commit message for me in bahasa:
-          --
-          --  ```diff
-          --  %s
-          --  ```
-          --  ]],
-          --             vim.fn.system "git diff --no-ext-diff --staged"
-          --           )
-          --         end,
-          --         opts = {
-          --           contains_code = true,
-          --         },
-          --       },
-          --     },
-          --   },
+          ["Translate indo xclip"] = {
+            strategy = "chat",
+            description = "Translate this from xclip",
+            opts = {
+              index = 10,
+              is_default = true,
+              is_slash_cmd = true,
+              short_name = "translate_in_bahasa", --->> ini short name nya
+              auto_submit = true,
+              display = { chat = { window = { layout = "buffer" } } },
+            },
+            prompts = {
+              {
+                role = constants.USER_ROLE,
+                content = function()
+                  -- NOTE: nah klo ini tinggal tambahain aja "in bahasa" atau pake
+                  -- bahasa indonesia langsung
+                  return string.format(
+                    [[Tolong translate ini ke bahasa indonesia, perbaiki maksud jika kalimat nya kurang baku, tanda baca dan juga jelaskan secara singkat tapi mudah dimengerti:
+
+            ```diff
+            %s
+            ```
+            ]],
+                    vim.fn.system "xclip -o -sel clip"
+                  )
+                end,
+                opts = {
+                  contains_code = true,
+                },
+              },
+            },
+          },
         },
       }
     end,
