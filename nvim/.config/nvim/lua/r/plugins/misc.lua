@@ -115,7 +115,7 @@ return {
       },
     },
     opts = {
-      search = { backend = { "fzf-lua" } },
+      search = { backend = { "snacks.pick" } },
       -- zen = { enabled = true, width = 120 },
       feeds = {
         "neo451/feed.nvim/releases",
