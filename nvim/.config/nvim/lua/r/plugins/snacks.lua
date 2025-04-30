@@ -7,8 +7,13 @@ return {
       bigfile = { enabled = true },
       notifier = { enabled = true },
       quickfile = { enabled = true },
-      -- picker = {}, NOTE: jika di enable, vim.input akan terdampak behaviour nya (orgagenda juga berpengaruh)
       -- scroll = { enabled = false },
+      input = {
+        -- https://github.com/folke/snacks.nvim/blob/bc0630e43be5699bb94dadc302c0d21615421d93/lua/snacks/input.lua#L53
+        enabled = true,
+        icon = " ",
+        win = { style = { row = -20 } },
+      },
       indent = {
         enabled = true,
         char = "▏", --  │, ┊, │, ▏, ┆, ┊, , ┊, "│"
@@ -21,7 +26,7 @@ return {
           enabled = true,
           hl = "SnacksIndentScope",
           char = {
-            horizontal = "─", -- the icons is taken from hlchunks.nvim
+            horizontal = "─", -- the icon is taken from hlchunks.nvim
             vertical = "│",
             corner_top = "╭",
             corner_bottom = "╰",
