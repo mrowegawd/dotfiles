@@ -29,7 +29,30 @@ return {
         },
       }
     end,
-    dependencies = { { "zbirenbaum/copilot.lua", config = true } },
+    dependencies = {
+      {
+        "zbirenbaum/copilot.lua",
+        opts = {
+          suggestion = { enabled = false },
+          panel = { enabled = false },
+          should_attach = function(_, _)
+            if vim.tbl_contains({ "copilot-chat" }, vim.bo.filetype) then
+              return true
+            end
+
+            if not vim.bo.buflisted then
+              return false
+            end
+
+            if vim.bo.buftype ~= "" then
+              return false
+            end
+
+            return true
+          end,
+        },
+      },
+    },
     keys = {
       { "<leader>a", "", desc = "+ai", mode = { "n", "v" } },
       { "<c-s>", "<CR>", ft = "copilot-chat", desc = "Submit Prompt", remap = true },
