@@ -1,4 +1,9 @@
 return {
+  -- BLOAT
+  {
+    "dundalek/bloat.nvim",
+    cmd = "Bloat",
+  },
   -- STARTUPTIME
   {
     "dstein64/vim-startuptime",
