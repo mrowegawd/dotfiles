@@ -19,8 +19,23 @@ return {
     opts = function()
       local constants = require("codecompanion.config").config.constants
       return {
+        adapters = {
+          ollama = function()
+            return require("codecompanion.adapters").extend("ollama", {
+              schema = { model = { default = "qwen2.5" } },
+              env = {
+                url = "http://localhost:11434", -- local endpoint
+                api_key = "AAAAC3NzaC1lZDI1NTE5AAAAIHUD+2nwD/5psRUsVuo0YThAZ9EG9pv+JNY/l87l9x54",
+              },
+              headers = { ["Content-Type"] = "application/json" },
+              parameters = { sync = true },
+            })
+          end,
+        },
         strategies = {
+          inline = { adapter = "ollama" },
           chat = {
+            adapter = "ollama",
             keymaps = {
               options = {
                 modes = { n = "?" },
@@ -190,7 +205,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "nvim-treesitter/nvim-treesitter",
-      { "zbirenbaum/copilot.lua", opts = { suggestion = { enabled = false } } },
+      -- { "zbirenbaum/copilot.lua", opts = { suggestion = { enabled = false } } },
     },
   },
   -- RENDER-MARKDOWN
