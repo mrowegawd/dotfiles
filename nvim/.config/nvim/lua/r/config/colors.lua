@@ -1646,7 +1646,7 @@ end
 
 local function set_sidebar_highlight()
   Highlight.all {
-    { PanelDarkBackground = { bg = { from = "Normal", alter = -0.05 } } },
+    { PanelDarkBackground = { bg = { from = "Normal", alter = -0.1 } } },
     { PanelDarkHeading = { inherit = "PanelDarkBackground", bold = true } },
     { PanelBackground = { bg = { from = "Normal" } } },
     { PanelHeading = { inherit = "PanelBackground", bold = true } },
