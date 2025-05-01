@@ -6,7 +6,7 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_fg_alter, pmenu_bg_alter, pmenusel_bg_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, fzfluasel_bg_alter, cursor_fg, search_fg_alter, search_bg_alter, cursearch_bg_alter, cursearch_fg_alter
+local pmenu_fg_alter, pmenu_bg_alter, pmenusel_bg_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, fzfluasel_bg_alter, cursor_fg, search_fg_alter, search_bg_alter, cursearch_bg_alter, cursearch_fg_alter, fzfluaborder_fg_alter
 
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
@@ -16,6 +16,8 @@ local base_cl = {
 
   normalfloat_bg_alter = -0.12,
   normalfloat_fg_alter = -0.01,
+
+  fzfluaborder_fg_alter = 0.1,
 
   pmenu_bg_alter = 0.1,
   pmenu_fg_alter = -0.1,
@@ -78,6 +80,9 @@ local function reset_base_alter(themes, alter_base)
     if i == "normalfloat_bg_alter" then
       normalfloat_bg_alter = x
     end
+    if i == "fzfluaborder_fg_alter" then
+      fzfluaborder_fg_alter = x
+    end
     if i == "fzfluasel_bg_alter" then
       fzfluasel_bg_alter = x
     end
@@ -105,6 +110,7 @@ reset_base_alter({ "ashen" }, {
   cursor_fg = "#b4b4b4",
   cursorline_alter = 0.05,
   fzflua_bg_cursorline_alter = 0.1,
+  fzfluaborder_fg_alter = 0.4,
   fzfluasel_bg_alter = -0.15,
   pmenu_bg_alter = 1,
   pmenusel_bg_alter = 2,
@@ -115,6 +121,7 @@ reset_base_alter({ "base46-aylin" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
+  fzfluaborder_fg_alter = 0.08,
   fzfluasel_bg_alter = -0.25,
   normalfloat_bg_alter = -0.1,
   pmenu_bg_alter = 0.45,
@@ -130,7 +137,6 @@ reset_base_alter({ "base46-catppuccin" }, {
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.25,
-  -- winseparator_alter = 0.55,
 })
 reset_base_alter({ "base46-chocolate" }, {
   cursor_fg = "#c8bAA4",
@@ -144,6 +150,7 @@ reset_base_alter({ "base46-chocolate" }, {
 reset_base_alter({ "base46-default-dark" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.07,
+  fzfluaborder_fg_alter = 0.25,
   fzfluasel_bg_alter = -0.28,
   pmenu_bg_alter = 0.6,
   pmenusel_bg_alter = 1.3,
@@ -172,6 +179,7 @@ reset_base_alter({ "base46-jabuti" }, {
   cursor_fg = "#c0cbe3",
   cursorline_alter = 0.07,
   fzfluasel_bg_alter = -0.32,
+  fzfluaborder_fg_alter = 0.2,
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.15,
@@ -179,8 +187,9 @@ reset_base_alter({ "base46-jabuti" }, {
 })
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
-  cursorline_alter = 0.08,
+  cursorline_alter = 0.07,
   fzfluasel_bg_alter = -0.2,
+  fzfluaborder_fg_alter = 0.4,
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.2,
   quickfixline_alter = 0.25,
@@ -192,6 +201,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.3,
+  fzfluaborder_fg_alter = 0.1,
   pmenu_bg_alter = 0.6,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
@@ -221,6 +231,7 @@ reset_base_alter({ "base46-oxocarbon" }, {
   cursorline_alter = 0.04,
   fzflua_bg_cursorline_alter = 0.05,
   fzfluasel_bg_alter = -0.3,
+  fzfluaborder_fg_alter = 0.3,
   pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.3,
@@ -231,6 +242,7 @@ reset_base_alter({ "base46-rosepine" }, {
   cursorline_alter = 0.05,
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_bg_alter = -0.2,
+  fzfluaborder_fg_alter = 0.28,
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.25,
@@ -241,6 +253,7 @@ reset_base_alter({ "base46-seoul256_dark" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = -0.34,
+  fzfluaborder_fg_alter = 0.1,
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = 0.08,
@@ -251,6 +264,7 @@ reset_base_alter({ "base46-solarized_dark" }, {
   cursorline_alter = 0.07,
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = -0.3,
+  fzfluaborder_fg_alter = 0.25,
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.2,
@@ -260,6 +274,7 @@ reset_base_alter({ "base46-zenburn" }, {
   cursor_fg = "#f3eadb",
   cursorline_alter = 0.08,
   fzflua_bg_cursorline_alter = -0.08,
+  fzfluaborder_fg_alter = 0.08,
   fzfluasel_bg_alter = -0.37,
   pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
@@ -270,6 +285,7 @@ reset_base_alter({ "darkearth" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.09,
+  fzfluaborder_fg_alter = 0.13,
   fzfluasel_bg_alter = -0.38,
   normalfloat_bg_alter = -0.1,
   pmenu_bg_alter = 0.45,
@@ -280,6 +296,7 @@ reset_base_alter({ "darkearth" }, {
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
   cursorline_alter = 0.15,
+  fzfluaborder_fg_alter = 0.18,
   fzflua_bg_cursorline_alter = 0.3,
   fzfluasel_bg_alter = -0.28,
   normalfloat_bg_alter = 0.5,
@@ -306,24 +323,26 @@ reset_base_alter({ "rose-pine-dawn" }, {
 reset_base_alter({ "tokyonight-night" }, {
   cursor_fg = "#9e0e06",
   cursorline_alter = 0.05,
+  fzfluaborder_fg_alter = 0.25,
   fzflua_bg_cursorline_alter = -0.01,
   fzfluasel_bg_alter = -0.28,
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 1,
   quickfixline_alter = 0.5,
-  winseparator_alter = 0.6,
+  winseparator_alter = 0.52,
 })
 reset_base_alter({ "tokyonight-storm" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.05,
+  fzfluaborder_fg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.02,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.45,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 0.8,
   quickfixline_alter = 0.2,
-  winseparator_alter = 0.5,
+  winseparator_alter = 0.4,
 })
 reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -1081,7 +1100,12 @@ local general_overrides = function()
     -- │ PRPOMPT │
     -- ╰─────────╯
     { FzfLuaNormal = { bg = { from = "NormalFloat", attr = "bg" } } },
-    { FzfLuaBorder = { inherit = "FloatBorder" } },
+    {
+      FzfLuaBorder = {
+        inherit = "FloatBorder",
+        fg = { from = "FloatBorder", attr = "fg", alter = fzfluaborder_fg_alter },
+      },
+    },
     { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.4 } } },
 
     { FzfLuaTitle = { inherit = "FloatTitle" } },
@@ -1121,8 +1145,8 @@ local general_overrides = function()
     { TelescopePromptNormal = { inherit = "FzfLuaNormal" } },
     { TelescopePromptTitle = { inherit = "FzfLuaPreviewTitle" } },
     { TelescopePromptBorder = { inherit = "FzfLuaBorder" } },
-    { TelescopePromptPrefix = { fg = { from = "FloatBorder", attr = "fg" }, bg = "NONE" } },
-    { TelescopePromptCounter = { fg = { from = "FloatBorder", attr = "fg" } } },
+    { TelescopePromptPrefix = { fg = { from = "FzfLuaBorder", attr = "fg" }, bg = "NONE" } },
+    { TelescopePromptCounter = { fg = { from = "FzfLuaBorder", attr = "fg" } } },
 
     -- ╭─────────╮
     -- │ Preview │
@@ -1155,7 +1179,7 @@ local general_overrides = function()
     { SnacksPickerCursorLine = { link = "FzfLuaCursorLine" } },
     { SnacksPickerPreviewCursorLine = { link = "FzfLuaCursorLine" } },
     { SnacksPickerListCursorLine = { link = "FzfLuaSel" } },
-    { SnacksPickerBorder = { link = "FloatBorder" } },
+    { SnacksPickerBorder = { link = "FzfLuaBorder" } },
 
     -- ╭──────────────────╮
     -- │ SNACKS DASHBOARD │
@@ -1535,7 +1559,7 @@ local general_overrides = function()
     -- { WhichKeyNormal = { inherit = "NormalFloat", fg = { from = "Function", attr = "fg", alter = 0.1 } } }, -- <----
     { WhichKeyGroup = { inherit = "NormalFloat", fg = { from = "Keyword", attr = "fg", alter = 0.1 } } },
     { WhichKeyDesc = { inherit = "NormalFloat", fg = { from = "Boolean", attr = "fg", alter = 0.1 } } },
-    { WhichKeyBorder = { inherit = "FloatBorder" } },
+    { WhichKeyBorder = { inherit = "FzfLuaBorder" } },
 
     --  ──────────────────────────────[ TROUBLE ]──────────────────────────────
     { TroubleNormal = { inherit = "Normal" } },
