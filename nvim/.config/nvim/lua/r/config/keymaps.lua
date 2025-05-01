@@ -102,7 +102,12 @@ if not RUtils.has "smart-splits.nvim" and not (os.getenv "TERMINAL" == "kitty") 
 end
 
 -- Tab
-RUtils.map.nnoremap("tn", "<CMD>tabedit %<CR>", { desc = "Tab: new tab", silent = true })
+RUtils.map.nnoremap("tn", function()
+  if vim.bo.filetype == "neo-tree" then
+    return
+  end
+  vim.cmd "tabedit %"
+end, { desc = "Tab: new tab", silent = true })
 RUtils.map.nnoremap("tc", "<CMD>tabclose<CR>", { desc = "Tab: close tab", silent = true })
 RUtils.map.nnoremap("tH", "<CMD>tabfirst<CR>", { desc = "Tab: first tab", silent = true })
 RUtils.map.nnoremap("tL", "<CMD>tablast<CR>", { desc = "Tab: last tab", silent = true })
