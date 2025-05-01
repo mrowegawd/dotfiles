@@ -62,9 +62,21 @@ return {
             { NeoTreeRootName = { fg = { from = "Comment", attr = "fg" } } },
             { NeoTreeStatusLine = { link = "PanelStusLine" } },
             { NeoTreeWinSeparator = { link = "WinSeparator" } },
-            { NeoTreeTabActive = { bg = { from = "PanelBackground" }, bold = true } },
+            {
+              NeoTreeTabActive = {
+                bg = { from = "PanelBackground" },
+                fg = { from = "Keyword", attr = "fg" },
+                bold = true,
+              },
+            },
+            {
+              NeoTreeTabInactive = {
+                bg = { from = "PanelDarkBackground", alter = -0.3, attr = "bg" },
+                fg = { from = "Comment" },
+              },
+            },
+
             { NeoTreeIndentMarker = { fg = { from = "Normal", attr = "bg", alter = 1 }, bold = false } },
-            { NeoTreeTabInactive = { bg = { from = "PanelDarkBackground", alter = 0.15 }, fg = { from = "Comment" } } },
             { NeoTreeTabSeparatorActive = { inherit = "PanelBackground", fg = { from = "Comment" } } },
 
             { NeoTreeGitAdded = { link = "GitSignsAdd" } },
@@ -80,13 +92,14 @@ return {
       })
 
       return {
-        sources = { "filesystem", "git_status" },
+        sources = { "filesystem", "git_status", "buffers" },
         source_selector = {
-          -- winbar = true,
+          winbar = true,
           separator_active = "",
           sources = {
             { source = "filesystem" },
             { source = "git_status" },
+            { source = "buffers" },
             { source = "document_symbols" },
           },
         },
@@ -116,6 +129,14 @@ return {
             end,
           },
         },
+        buffers = {
+          leave_dirs_open = true,
+          follow_current_file = {
+            enabled = true,
+            leave_dirs_open = true,
+          },
+          -- bind_to_cwd = false,
+        },
         filesystem = {
           hijack_netrw_behavior = "open_default",
           use_libuv_file_watcher = true,
@@ -133,8 +154,8 @@ return {
               -- ["<Leader>ff"] = "filter_on_submit",
               -- ["gd"] = "fuzzy_finder_directory",
               -- ["<C-x>"] = "clear_filter",
-              ["<c-p>"] = "prev_git_modified",
-              ["<c-n>"] = "next_git_modified",
+              ["gp"] = "prev_git_modified",
+              ["gn"] = "next_git_modified",
               --["/"] = "filter_as_you_type", -- this was the default until v1.28
               -- ["D"] = "fuzzy_sorter_directory",
               -- ["/"] = "noop",
@@ -355,8 +376,7 @@ return {
               ["<Leader>ghu"] = "git_unstage_file",
               ["<Leader>ghr"] = "git_revert_file",
               ["w"] = "noop",
-              ["gp"] = "prev_git_modified",
-              ["gn"] = "next_git_modified",
+
               ["gg"] = "noop",
               ["i"] = "show_file_details",
               ["e"] = "child_or_open",
@@ -364,6 +384,7 @@ return {
             },
           },
         },
+
         window = {
           mappings = {
             ["<c-o>"] = "fzmark",
@@ -378,11 +399,12 @@ return {
             },
             ["o"] = "child_or_open",
             ["e"] = "child_or_open",
-            ["s"] = "filter_on_submit",
-            ["S"] = "fuzzy_finder_directory",
+            -- ["s"] = "filter_on_submit",
+            -- ["S"] = "fuzzy_finder_directory",
             ["t"] = "", -- disabled open tab
             ["P"] = "",
             ["z"] = "",
+            ["tn"] = "noop",
             ["<Tab>"] = "toggle_node",
             ["<S-Tab>"] = "close_all_nodes",
             ["<c-s>"] = "open_split",
@@ -393,10 +415,8 @@ return {
             ["w"] = "noop",
             ["zM"] = "close_all_nodes",
             ["zO"] = "expand_all_nodes",
-            ["gh"] = "prev_source",
-            ["gl"] = "next_source",
-            ["gp"] = "prev_git_modified",
-            ["gn"] = "next_git_modified",
+            ["th"] = "prev_source",
+            ["tl"] = "next_source",
             [",c"] = { "order_by_created", nowait = false },
             [",d"] = { "order_by_diagnostics", nowait = false },
             [",m"] = { "order_by_modified", nowait = false },
