@@ -706,10 +706,12 @@ function M.find_global_titles()
   fzf_lua.grep {
     prompt = RUtils.fzflua.default_title_prompt(),
     cwd = RUtils.config.path.wiki_path,
-    search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    -- search = vim.bo.filetype == "markdown" and regex_title or regex_title_org,
+    search = regex_title,
     rg_glob = false,
     no_esc = true,
-    file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
+    -- file_ignore_patterns = { "%.norg$", "%.json$", vim.bo.filetype == "markdown" and "%.org$" or "%.md$" },
+    file_ignore_patterns = { "%.norg$", "%.json$", "%.org$" },
     -- rg_opts = [[--column --hidden --no-heading --ignore-case --smart-case --color=always --max-columns=4096 -g "*.md" ]],
     winopts = {
       title = RUtils.fzflua.format_title("Global titles", RUtils.cmd.strip_whitespace(RUtils.config.icons.misc.code)),
