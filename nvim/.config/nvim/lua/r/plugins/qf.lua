@@ -12,6 +12,8 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "MunifTanjim/nui.nvim" },
     keys = {
       { "mm" },
+      { "mt" },
+      { "mf" },
       { "<Leader>wn" },
       { "<Leader>wp" },
       {
