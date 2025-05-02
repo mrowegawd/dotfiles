@@ -29,6 +29,10 @@ return {
         opts = {},
         version = not vim.g.lazyvim_blink_main and "*",
       },
+      -- {
+      --   "Kaiser-Yang/blink-cmp-git",
+      --   dependencies = { "nvim-lua/plenary.nvim" },
+      -- },
     },
     opts = {
       -- custom props to disable blink in certain filetypes
@@ -170,6 +174,11 @@ return {
               end
             end,
           },
+          ["<C-e>"] = {
+            "hide",
+            "cancel",
+            "show",
+          },
           ["<C-c>"] = {
             "hide",
             "cancel",
@@ -208,6 +217,13 @@ return {
               end,
             },
           },
+          -- git = {
+          --   module = "blink-cmp-git",
+          --   name = "Git",
+          --   enabled = function()
+          --     return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
+          --   end,
+          -- },
         },
       },
       signature = {
