@@ -1,4 +1,11 @@
 return {
+  -- CRONEX
+  {
+    -- ex: (gunakan tanda kurung ya!) -> "* * * * *" bukan * * * * *
+    "fabridamicelli/cronex.nvim",
+    fg = { "yaml", "yml", "tf", "cfg", "config", "conf", "crontab" },
+    opts = {},
+  },
   -- BLOAT
   {
     "dundalek/bloat.nvim",
