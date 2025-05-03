@@ -174,7 +174,7 @@ return {
               end
             end,
           },
-          ["<C-e>"] = {
+          ["<C-r>"] = {
             "hide",
             "cancel",
             "show",

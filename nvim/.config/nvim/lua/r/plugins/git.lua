@@ -1,3 +1,7 @@
+-- Since <c-r> is used for blink and <c-r>.. is used for fugitive,
+-- to avoid conflicts, it is temporarily disabled.
+vim.g.fugitive_no_maps = 1
+
 return {
   -- GH.NVIM
   {
