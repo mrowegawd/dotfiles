@@ -8,34 +8,111 @@ return {
       {
         "<Leader>aa",
         "<CMD>CodeCompanionChat<CR>",
-        desc = "Codecompanion: toggle",
+        desc = "Codecompanion: toggle open",
+      },
+      {
+        "<Leader>aF",
+        "<CMD>CodeCompanionActions<CR>",
+        desc = "Codecompanion: select actions",
       },
       {
         "<Leader>af",
-        "<CMD>CodeCompanionActions<CR>",
-        desc = "Codecompanion: select actions",
+        function()
+          local git_ft_stuff = { "fugitive" }
+          local prompt_cmds = {
+            translate_id = { cmd = "CodeCompanion /translate_in_bahasa", ft = {} },
+            git_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            exract_func = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            exract_variable = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            suggest_readble_variable = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            explain_to_me = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            generate_boilerplate_test_code = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            generate_docs = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            git_check_or_rewrote_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            help_me_to_find_this = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            sugest_or_fix_the_code = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+          }
+
+          local function is_tables_are_equal(t1, t2)
+            if type(t1) ~= "table" or type(t2) ~= "table" then
+              return t1 == t2
+            end
+
+            -- Periksa jumlah elemen
+            local t1Length, t2Length = 0, 0
+            for _ in pairs(t1) do
+              t1Length = t1Length + 1
+            end
+            for _ in pairs(t2) do
+              t2Length = t2Length + 1
+            end
+            if t1Length ~= t2Length then
+              return false
+            end
+
+            -- Bandingkan setiap elemen
+            for key, value in pairs(t1) do
+              if not is_tables_are_equal(value, t2[key]) then
+                return false
+              end
+            end
+
+            return true
+          end
+
+          local sel_prompts = function()
+            local sel_prompts = {}
+            for i, x in pairs(prompt_cmds) do
+              if vim.tbl_contains(git_ft_stuff, vim.bo.filetype) then
+                if is_tables_are_equal(git_ft_stuff, x.ft) then
+                  sel_prompts[#sel_prompts + 1] = i
+                end
+              else
+                sel_prompts[#sel_prompts + 1] = i
+              end
+            end
+
+            return sel_prompts
+          end
+
+          local function is_get_lines()
+            local line = RUtils.cmd.get_visual_selection()
+            if line and line.selection then
+              vim.fn.setreg("+", line.selection)
+            end
+          end
+
+          local opts = {
+            winopts = {
+              title = RUtils.fzflua.format_title("Select Custom Prompt Ai [Avante]", RUtils.config.icons.misc.ai),
+              relative = "cursor",
+              width = 0.25,
+              height = 0.30,
+              row = 1,
+              col = 2,
+            },
+
+            actions = {
+              ["default"] = function(selected)
+                local sel = selected[1]
+                local prompt = prompt_cmds[sel]
+
+                is_get_lines()
+                vim.cmd(prompt.cmd)
+              end,
+            },
+          }
+          require("fzf-lua").fzf_exec(sel_prompts(), opts)
+        end,
+        mode = { "n", "v" },
+        desc = "Codecompanion: select custome prompt",
       },
     },
     opts = function()
       local constants = require("codecompanion.config").config.constants
       return {
-        -- adapters = {
-        --   ollama = function()
-        --     return require("codecompanion.adapters").extend("ollama", {
-        --       schema = { model = { default = "qwen2.5" } },
-        --       env = {
-        --         url = "http://localhost:11434", -- local endpoint
-        --         api_key = "AAAAC3NzaC1lZDI1NTE5AAAAIHUD+2nwD/5psRUsVuo0YThAZ9EG9pv+JNY/l87l9x54",
-        --       },
-        --       headers = { ["Content-Type"] = "application/json" },
-        --       parameters = { sync = true },
-        --     })
-        --   end,
-        -- },
         strategies = {
-          -- inline = { adapter = "ollama" },
           chat = {
-            -- adapter = "ollama",
             keymaps = {
               options = {
                 modes = { n = "?" },

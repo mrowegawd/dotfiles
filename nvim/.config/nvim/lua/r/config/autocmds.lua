@@ -153,7 +153,7 @@ RUtils.cmd.augroup("WindowDim", {
   event = { "BufEnter" },
   pattern = { "*" },
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
       return
     end
     RUtils.windowdim.buf_enter()
@@ -162,7 +162,7 @@ RUtils.cmd.augroup("WindowDim", {
   event = { "VimEnter", "FocusGained", "WinEnter" },
   pattern = "*",
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
       return
     end
     RUtils.windowdim.focus_gained()
@@ -171,7 +171,7 @@ RUtils.cmd.augroup("WindowDim", {
   event = { "VimLeave", "FocusLost" },
   pattern = "*",
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
       return
     end
     RUtils.windowdim.focus_lost()
@@ -180,7 +180,7 @@ RUtils.cmd.augroup("WindowDim", {
   event = { "WinLeave" },
   pattern = "*",
   command = function()
-    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles" }, vim.bo.filetype) then
+    if vim.tbl_contains({ "Avante", "AvanteInput", "AvanteSelectedFiles", "codecompanion" }, vim.bo.filetype) then
       return
     end
     RUtils.windowdim.win_leave()

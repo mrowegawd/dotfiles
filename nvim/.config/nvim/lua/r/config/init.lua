@@ -14,7 +14,7 @@ if RUtils.platform.is_wsl then
 end
 local snippet_path = dropbox_path .. "/snippets-for-all"
 
-local colorscheme = "vscode_modern"
+local colorscheme = "lackluster"
 
 _G.base = {}
 
@@ -89,6 +89,7 @@ local defaults = {
       line = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
     },
     misc = {
+      ai = " ",
       dots = "󰇘",
       arrow_right = " ",
       block = "▌ ",

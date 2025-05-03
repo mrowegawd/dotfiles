@@ -482,6 +482,15 @@ set_zshrc() {
     colorsugest="$GET_COL_31"
   fi
 
+  if [ "$1" == "base46-jellybeans" ]; then
+    colorline="$GET_COL_28"
+    colorsugest="$GET_COL_19"
+  fi
+
+  if [ "$1" == "lackluster" ]; then
+    colorsugest="$GET_COL_19"
+  fi
+
   # if [ "$1" == "tokyonight-storm" ] || [ "$1" == "base46-chocolate" ] || [ "$1" == "base46-default-dark" ]; then
   #   colorline="$GET_COL_32"
   # fi
