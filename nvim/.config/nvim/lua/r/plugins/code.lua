@@ -365,87 +365,41 @@ return {
     "ThePrimeagen/refactoring.nvim",
     keys = {
       {
-        "<Localleader>rs",
+        "<Leader>rs",
         function()
           require("telescope").extensions.refactoring.refactors()
         end,
         mode = "v",
-        desc = "Reactoring: select (visual) [refactoring]",
+        desc = "Task: select (visual) [refactoring]",
       },
+      -- {
+      --   "<Localleader>rP",
+      --   function()
+      --     require("refactoring").debug.printf { below = false }
+      --   end,
+      --   desc = "Reactoring: debug print [refactoring]",
+      -- },
+      -- {
+      --   "<Localleader>rp",
+      --   function()
+      --     require("refactoring").debug.print_var { normal = true }
+      --   end,
+      --   desc = "Reactoring: debug print variable [refactoring]",
+      -- },
       {
-        "<Localleader>ri",
-        function()
-          require("refactoring").refactor "Inline Variable"
-        end,
-        mode = { "n", "v" },
-        desc = "Reactoring: inline variable [refactoring]",
-      },
-      {
-        "<Localleader>rb",
-        function()
-          require("refactoring").refactor "Extract Block"
-        end,
-        desc = "Reactoring: extract block [refactoring]",
-      },
-      {
-        "<Localleader>rf",
-        function()
-          require("refactoring").refactor "Extract Block To File"
-        end,
-        desc = "Reactoring: extract block to file [refactoring]",
-      },
-      {
-        "<Localleader>rP",
-        function()
-          require("refactoring").debug.printf { below = false }
-        end,
-        desc = "Reactoring: debug print [refactoring]",
-      },
-      {
-        "<Localleader>rp",
-        function()
-          require("refactoring").debug.print_var { normal = true }
-        end,
-        desc = "Reactoring: debug print variable [refactoring]",
-      },
-      {
-        "<Localleader>rc",
+        "<Leader>rc",
         function()
           require("refactoring").debug.cleanup {}
         end,
-        desc = "Reactoring: debug cleanup [refactoring]",
+        desc = "Task: debug cleanup [refactoring]",
       },
       {
-        "<Localleader>rf",
-        function()
-          require("refactoring").refactor "Extract Function"
-        end,
-        mode = "v",
-        desc = "Reactoring: extract function [refactoring]",
-      },
-      {
-        "<Localleader>rF",
-        function()
-          require("refactoring").refactor "Extract Function To File"
-        end,
-        mode = "v",
-        desc = "Reactoring: extract function to file (visual) [refactoring]",
-      },
-      {
-        "<Localleader>rx",
-        function()
-          require("refactoring").refactor "Extract Variable"
-        end,
-        mode = "v",
-        desc = "Reactoring: extract variable (visual) [refactoring]",
-      },
-      {
-        "<Localleader>rp",
+        "<Leader>rp",
         function()
           require("refactoring").debug.print_var {}
         end,
         mode = "v",
-        desc = "Reactoring: debug print variable [refactoring]",
+        desc = "Task: debug print variable [refactoring]",
       },
     },
     opts = {
