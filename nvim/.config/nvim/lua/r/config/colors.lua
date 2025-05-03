@@ -194,7 +194,7 @@ reset_base_alter({ "base46-jellybeans" }, {
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.2,
   quickfixline_alter = 0.25,
-  winseparator_alter = 0.85,
+  winseparator_alter = 0.9,
 })
 reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
@@ -3863,8 +3863,16 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 2.3 },
-          bg = { from = "Normal", attr = "bg", alter = 0.85 },
+          -- fg = { from = "Normal", attr = "bg", alter = 2 },
+          -- bg = { from = "Normal", attr = "bg", alter = 0.65 },
+          fg = Highlight.tint(
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.45, Highlight.get("Normal", "bg")),
+            -0.08
+          ),
+          bg = Highlight.tint(
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
+            -0.35
+          ),
         },
       },
 
@@ -5460,7 +5468,7 @@ local function colorscheme_overrides()
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
 
-      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.2 }, italic = true } },
+      { Comment = { fg = { from = "Comment", attr = "fg", alter = 1.4 }, italic = true } },
       { ["@comment"] = { inherit = "Comment" } },
 
       {
@@ -5496,7 +5504,7 @@ local function colorscheme_overrides()
       -- FZFLUA
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = 0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.8 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 1 } } },
       { FzfLuaScrollBorderFull = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollBorderEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
       { FzfLuaScrollFloatEmpty = { fg = { from = "FzfLuaPreviewBorder", attr = "fg", alter = 1 } } },
@@ -5555,6 +5563,7 @@ local function colorscheme_overrides()
       { ["@org.comment"] = { inherit = "Comment" } },
       { ["@org.directive"] = { inherit = "Comment" } },
       { ["@org.timestamp.inactive"] = { inherit = "Comment" } },
+      { ["@markup.link.url"] = { inherit = "@markup.link.label.markdown_inline" } },
 
       -- SNACKS
       { SnacksIndent = { fg = Highlight.darken(dark_yellow, 0.1, Highlight.get("Normal", "bg")) } },
@@ -5721,8 +5730,8 @@ local function colorscheme_overrides()
       },
       {
         TabLine = {
-          fg = { from = "Normal", attr = "bg", alter = 2.8 },
-          bg = { from = "Normal", attr = "bg", alter = 1.2 },
+          fg = { from = "Normal", attr = "bg", alter = 3 },
+          bg = { from = "Normal", attr = "bg", alter = 1.15 },
         },
       },
 
@@ -5814,7 +5823,7 @@ local function colorscheme_overrides()
       -- FZF
       { FzfLuaFilePart = { fg = { from = "Directory", attr = "fg", alter = -0.1 }, reverse = false } },
       { FzfLuaDirPart = { fg = { from = "Directory", attr = "fg", alter = -0.4 } } },
-      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.5 } } },
+      { FzfLuaHeaderText = { fg = { from = "LineNr", attr = "fg", alter = 0.65 } } },
       {
         TelescopeResultsNormal = {
           fg = { from = "FzfLuaFilePart", attr = "fg" },
@@ -5885,11 +5894,11 @@ local function colorscheme_overrides()
         TabLine = {
           fg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.45, Highlight.get("Normal", "bg")),
-            -0.1
+            -0.11
           ),
           bg = Highlight.tint(
             Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
-            -0.28
+            -0.34
           ),
         },
       },
