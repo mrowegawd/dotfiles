@@ -330,8 +330,7 @@ return {
   },
   -- RUNMUX
   {
-    -- "mrowegawd/runmux",
-    dir = "~/.local/src/nvim_plugins/rmux",
+    "mrowegawd/rmux",
     dependencies = { "stevearc/overseer.nvim" },
     keys = {
       { "<Leader>rf", "<Cmd> RmuxRunFile <CR>", desc = "Task: run task" },
