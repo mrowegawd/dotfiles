@@ -22,15 +22,18 @@ return {
           local prompt_cmds = {
             translate_id = { cmd = "CodeCompanion /translate_in_bahasa", ft = {} },
             git_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            exract_func = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            exract_variable = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            suggest_readble_variable = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            explain_to_me = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            generate_boilerplate_test_code = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            generate_docs = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            git_check_or_rewrote_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            help_me_to_find_this = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
-            sugest_or_fix_the_code = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            exract_func = { cmd = "CodeCompanion /commit", ft = {} },
+            exract_variable = { cmd = "CodeCompanion /commit", ft = {} },
+            suggest_readable_variable = { cmd = "CodeCompanion /commit", ft = {} },
+            explain_to_me_like_baby = { cmd = "CodeCompanion /jelaskan_dgn_bahasa_bayi", ft = {} },
+            generate_boilerplate_test_code = { cmd = "CodeCompanion /commit", ft = {} },
+            generate_docs = { cmd = "CodeCompanion /commit", ft = {} },
+            git_check_or_rewrote_commit = { cmd = "CodeCompanion /commit", ft = {} },
+            help_me_to_find_this = { cmd = "CodeCompanion /commit", ft = {} },
+            sugest_or_fix_the_code = { cmd = "CodeCompanion /commit", ft = {} },
+            format_todo_text = { cmd = "CodeCompanion /commit", ft = {} },
+            fix_this_string = { cmd = "CodeCompanion /commit", ft = {} },
+            generate_some_funcs = { cmd = "CodeCompanion /commit", ft = {} },
           }
 
           local function is_tables_are_equal(t1, t2)
@@ -84,7 +87,10 @@ return {
 
           local opts = {
             winopts = {
-              title = RUtils.fzflua.format_title("Select Custom Prompt Ai [Avante]", RUtils.config.icons.misc.ai),
+              title = RUtils.fzflua.format_title(
+                "Select Custom Prompt Ai [CodeCompanion]",
+                RUtils.config.icons.misc.ai
+              ),
               relative = "cursor",
               width = 0.25,
               height = 0.30,
@@ -206,9 +212,9 @@ return {
           },
         },
         prompt_library = {
-          ["Easy explain"] = {
+          ["Easy explain to me like baby"] = {
             strategy = "chat",
-            description = "Explain how code in a buffer works, like you're talking to a baby.",
+            description = "Jelaskan code yang di copy ini bekerja, jelaskan seperti sedang berbicara dengan anak kecil",
             opts = {
               index = 6,
               is_default = true,
@@ -222,19 +228,17 @@ return {
             prompts = {
               {
                 role = constants.USER_ROLE,
-                content = function(context)
-                  local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
+                content = function()
+                  -- local code = require("codecompanion.helpers.actions").get_code(context.start_line, context.end_line)
 
                   return string.format(
-                    [[Jelaskan dengan bahasa bayi, agar mudah dipahami pada buffer %d:
+                    [[Jelaskan code yang di copy ini bekerja, jelaskan seperti sedang berbicara dengan anak kecil:
 
-```%s
+```diff
 %s
 ```
 ]],
-                    context.bufnr,
-                    context.filetype,
-                    code
+                    vim.fn.system "xclip -o -sel clip"
                   )
                 end,
                 opts = {

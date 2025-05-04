@@ -38,7 +38,7 @@ exists() { (( $+commands[$1] )); }
 
 
 # NOTE: `asdf` harus di source sebelum line `compinit`
-source "$HOME/.asdf/asdf.sh"
+# source "$HOME/.asdf/asdf.sh"
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of $HOME/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -85,6 +85,9 @@ unsetopt HIST_SAVE_NO_DUPS    #  Write a duplicate event to the history file
 
 fpath=($ZDOTDIR/funcs $fpath)
 fpath=(${ASDF_DIR}/completions $fpath)
+
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+fpath=(${ASDF_DATA_DIR:-$HOME/.asdf}/completions $fpath)
 
 # NOTE: autoloaded functions wrap the contents of these files in a function
 # block with the same name as the file. This means that the function is NOT
@@ -711,6 +714,7 @@ if [ -d $(asdf where golang) ]; then
   export GOPATH=$(asdf where golang)/packages
   export GOROOT=$(asdf where golang)/go
   export PATH="${PATH}:$(go env GOPATH)/bin"
+  export PATH="${PATH}:$(go env GOBIN)"
 fi
 
 if exists zoxide; then

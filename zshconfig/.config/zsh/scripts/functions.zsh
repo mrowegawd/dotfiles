@@ -58,12 +58,22 @@ build-install() {
     sudo apt install proxychains4
   fi
 
+  # if ! command -v btop >/dev/null; then
+  #   echo "Installing: btop - A monitor of resources"
+  #   wget https://github.com/aristocratos/btop/releases/download/v1.4.2/btop-x86_64-linux-musl.tbz
+  # fi
+
   if ! command -v ueberzugpp >/dev/null; then
     echo "Installing: ueberzugpp - Drop in replacement for ueberzug written in C++"
     echo 'deb http://download.opensuse.org/repositories/home:/justkidding/Debian_12/ /' | sudo tee /etc/apt/sources.list.d/home:justkidding.list
     curl -fsSL https://download.opensuse.org/repositories/home:justkidding/Debian_12/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_justkidding.gpg > /dev/null
     sudo apt update
     sudo apt install ueberzugpp
+  fi
+
+  if ! command -v toilet >/dev/null; then
+    echo "Installing: play - Funny color command"
+    sudo apt install toilet
   fi
 
   # TODO: install pomodoro, from youtube https://www.youtube.com/watch?v=GfQjJBtO-8Y

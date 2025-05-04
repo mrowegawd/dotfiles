@@ -83,5 +83,10 @@ export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SO
 # export _JAVA_AWT_WM_NONREPARENTING=1
 #
 # }}}
+# CARGO: ------------------------------------------------------------------ {{{
+#
+export PATH=$PATH:~/.cargo/bin/
+#
+# }}}
 
 # vim: ft=sh sw=2 ts=2 et foldmethod=marker foldlevel=0
