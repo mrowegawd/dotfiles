@@ -32,7 +32,7 @@ return {
             help_me_to_find_this = { cmd = "CodeCompanion /commit", ft = {} },
             sugest_or_fix_the_code = { cmd = "CodeCompanion /commit", ft = {} },
             format_todo_text = { cmd = "CodeCompanion /commit", ft = {} },
-            fix_this_string = { cmd = "CodeCompanion /commit", ft = {} },
+            note_fix_this_string = { cmd = "CodeCompanion /fix_this_line_notes", ft = {} },
             generate_some_funcs = { cmd = "CodeCompanion /commit", ft = {} },
           }
 
@@ -238,6 +238,37 @@ return {
 %s
 ```
 ]],
+                    vim.fn.system "xclip -o -sel clip"
+                  )
+                end,
+                opts = {
+                  contains_code = true,
+                },
+              },
+            },
+          },
+          ["Fix this string notes"] = {
+            strategy = "chat",
+            description = "Fix this string notes",
+            opts = {
+              index = 10,
+              is_default = true,
+              is_slash_cmd = true,
+              short_name = "fix_this_line_notes", --->> ini short name nya
+              auto_submit = true,
+              display = { chat = { window = { layout = "buffer" } } },
+            },
+            prompts = {
+              {
+                role = constants.USER_ROLE,
+                content = function()
+                  return string.format(
+                    [[Tolong perbaiki kalimat nya agar mudah dimengerti
+
+            ```diff
+            %s
+            ```
+            ]],
                     vim.fn.system "xclip -o -sel clip"
                   )
                 end,
