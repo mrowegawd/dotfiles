@@ -6,34 +6,25 @@ local dark_green = Highlight.tint(UIPallette.palette.green, 0.3)
 local dark_yellow = Highlight.tint(UIPallette.palette.bright_yellow, 0.3)
 local dark_red = Highlight.tint(UIPallette.palette.dark_red, 0.3)
 
-local pmenu_fg_alter, pmenu_bg_alter, pmenusel_bg_alter, quickfixline_alter, fzflua_bg_cursorline_alter, cursorline_alter, normalfloat_bg_alter, normalfloat_fg_alter, cmpdocnormal_fg_alter, winseparator_alter, fzfluasel_bg_alter, cursor_fg, search_fg_alter, search_bg_alter, cursearch_bg_alter, cursearch_fg_alter, fzfluaborder_fg_alter
-
 local base_cl = {
   cmpdocnormal_fg_alter = 0.3,
+  cursearch_bg_alter = 0.8,
+  cursearch_fg_alter = 0.1,
   cursor_fg = "#c7063c",
   cursorline_alter = 0.04,
+  dapstopped_bg_alter = 0.25,
   fzflua_bg_cursorline_alter = 0.05,
-
+  fzfluaborder_fg_alter = 0.1,
+  fzfluasel_bg_alter = 0.05,
   normalfloat_bg_alter = -0.12,
   normalfloat_fg_alter = -0.01,
-
-  fzfluaborder_fg_alter = 0.1,
-
   pmenu_bg_alter = 0.1,
   pmenu_fg_alter = -0.1,
-
   pmenusel_bg_alter = 0.15,
-
-  fzfluasel_bg_alter = 0.05,
-
   quickfixline_alter = 0.6,
-  winseparator_alter = 0.65,
-
-  search_fg_alter = 0.1,
   search_bg_alter = 0.8,
-
-  cursearch_fg_alter = 0.1,
-  cursearch_bg_alter = 0.8,
+  search_fg_alter = 0.1,
+  winseparator_alter = 0.65,
 }
 
 local function reset_base_alter(themes, alter_base)
@@ -49,60 +40,29 @@ local function reset_base_alter(themes, alter_base)
     end
   end
 
-  for i, x in pairs(base_cl) do
-    if i == "cmpdocnormal_fg" then
-      cmpdocnormal_fg_alter = x
-    end
-    if i == "pmenu_fg_alter" then
-      pmenu_fg_alter = x
-    end
-    if i == "pmenu_bg_alter" then
-      pmenu_bg_alter = x
-    end
-    if i == "pmenusel_bg_alter" then
-      pmenusel_bg_alter = x
-    end
-    if i == "fzflua_bg_cursorline_alter" then
-      fzflua_bg_cursorline_alter = x
-    end
-    if i == "cursor_fg" then
-      cursor_fg = x
-    end
-    if i == "quickfixline_alter" then
-      quickfixline_alter = x
-    end
-    if i == "cursorline_alter" then
-      cursorline_alter = x
-    end
-    if i == "normalfloat_fg_alter" then
-      normalfloat_fg_alter = x
-    end
-    if i == "normalfloat_bg_alter" then
-      normalfloat_bg_alter = x
-    end
-    if i == "fzfluaborder_fg_alter" then
-      fzfluaborder_fg_alter = x
-    end
-    if i == "fzfluasel_bg_alter" then
-      fzfluasel_bg_alter = x
-    end
-    if i == "winseparator_alter" then
-      winseparator_alter = x
-    end
+  local variable_map = {
+    cmpdocnormal_fg_alter = "cmpdocnormal_fg_alter",
+    cursearch_bg_alter = "cursearch_bg_alter",
+    cursearch_fg_alter = "cursearch_fg_alter",
+    cursor_fg = "cursor_fg",
+    cursorline_alter = "cursorline_alter",
+    dapstopped_bg_alter = "dapstopped_bg_alter",
+    fzflua_bg_cursorline_alter = "fzflua_bg_cursorline_alter",
+    fzfluaborder_fg_alter = "fzfluaborder_fg_alter",
+    fzfluasel_bg_alter = "fzfluasel_bg_alter",
+    normalfloat_bg_alter = "normalfloat_bg_alter",
+    normalfloat_fg_alter = "normalfloat_fg_alter",
+    pmenu_bg_alter = "pmenu_bg_alter",
+    pmenu_fg_alter = "pmenu_fg_alter",
+    pmenusel_bg_alter = "pmenusel_bg_alter",
+    quickfixline_alter = "quickfixline_alter",
+    search_bg_alter = "search_bg_alter",
+    search_fg_alter = "search_fg_alter",
+    winseparator_alter = "winseparator_alter",
+  }
 
-    if i == "search_fg_alter" then
-      search_fg_alter = x
-    end
-    if i == "search_bg_alter" then
-      search_bg_alter = x
-    end
-
-    if i == "cursearch_fg_alter" then
-      cursearch_fg_alter = x
-    end
-    if i == "cursearch_bg_alter" then
-      cursearch_bg_alter = x
-    end
+  for key, var_name in pairs(variable_map) do
+    _G[var_name] = base_cl[key]
   end
 end
 
@@ -132,6 +92,7 @@ reset_base_alter({ "base46-aylin" }, {
 reset_base_alter({ "base46-catppuccin" }, {
   cursor_fg = "#c7063c",
   cursorline_alter = 0.06,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.1,
   fzfluasel_bg_alter = -0.45,
   pmenu_bg_alter = 0.65,
@@ -160,6 +121,7 @@ reset_base_alter({ "base46-default-dark" }, {
 reset_base_alter({ "base46-doomchad" }, {
   cursor_fg = "#81A1C1",
   cursorline_alter = 0.08,
+  dapstopped_bg_alter = 0.2,
   fzfluaborder_fg_alter = 0.4,
   fzfluasel_bg_alter = -0.35,
   pmenu_bg_alter = 0.4,
@@ -170,6 +132,7 @@ reset_base_alter({ "base46-doomchad" }, {
 reset_base_alter({ "base46-horizon" }, {
   cursor_fg = "#b3276f",
   cursorline_alter = 0.06,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
   fzfluasel_bg_alter = -0.2,
   pmenu_bg_alter = 0.6,
@@ -189,8 +152,9 @@ reset_base_alter({ "base46-jabuti" }, {
 reset_base_alter({ "base46-jellybeans" }, {
   cursor_fg = "#ffa560",
   cursorline_alter = 0.07,
-  fzfluasel_bg_alter = -0.2,
+  dapstopped_bg_alter = 0.2,
   fzfluaborder_fg_alter = 0.4,
+  fzfluasel_bg_alter = -0.2,
   pmenu_bg_alter = 0.65,
   pmenusel_bg_alter = 1.2,
   quickfixline_alter = 0.25,
@@ -200,6 +164,7 @@ reset_base_alter({ "base46-kanagawa" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.08,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluasel_bg_alter = -0.3,
   fzfluaborder_fg_alter = 0.1,
@@ -212,6 +177,7 @@ reset_base_alter({ "base46-kanagawa" }, {
 reset_base_alter({ "base46-material-darker" }, {
   cursor_fg = "#16afca",
   cursorline_alter = 0.07,
+  dapstopped_bg_alter = 0.2,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.52,
   pmenusel_bg_alter = 1,
@@ -221,6 +187,7 @@ reset_base_alter({ "base46-onenord" }, {
   cmpdocnormal_fg_alter = 0.3,
   cursor_fg = "#3879C5",
   cursorline_alter = 0.07,
+  dapstopped_bg_alter = 0.2,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.4,
   pmenusel_bg_alter = 0.75,
@@ -230,9 +197,10 @@ reset_base_alter({ "base46-onenord" }, {
 reset_base_alter({ "base46-oxocarbon" }, {
   cursor_fg = "#ffffff",
   cursorline_alter = 0.04,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.05,
-  fzfluasel_bg_alter = -0.3,
   fzfluaborder_fg_alter = 0.3,
+  fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.8,
   pmenusel_bg_alter = 1.5,
   quickfixline_alter = 0.3,
@@ -241,9 +209,10 @@ reset_base_alter({ "base46-oxocarbon" }, {
 reset_base_alter({ "base46-rosepine" }, {
   cursor_fg = "#e0def4",
   cursorline_alter = 0.05,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.1,
-  fzfluasel_bg_alter = -0.2,
   fzfluaborder_fg_alter = 0.28,
+  fzfluasel_bg_alter = -0.2,
   pmenu_bg_alter = 0.5,
   pmenusel_bg_alter = 0.9,
   quickfixline_alter = 0.25,
@@ -252,9 +221,10 @@ reset_base_alter({ "base46-rosepine" }, {
 reset_base_alter({ "base46-seoul256_dark" }, {
   cursor_fg = "#d75f87",
   cursorline_alter = 0.07,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
-  fzfluasel_bg_alter = -0.34,
   fzfluaborder_fg_alter = 0.1,
+  fzfluasel_bg_alter = -0.34,
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.6,
   quickfixline_alter = 0.08,
@@ -263,9 +233,10 @@ reset_base_alter({ "base46-seoul256_dark" }, {
 reset_base_alter({ "base46-solarized_dark" }, {
   cursor_fg = "#708284",
   cursorline_alter = 0.07,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.05,
-  fzfluasel_bg_alter = -0.3,
   fzfluaborder_fg_alter = 0.25,
+  fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.3,
   pmenusel_bg_alter = 0.7,
   quickfixline_alter = 0.2,
@@ -274,6 +245,7 @@ reset_base_alter({ "base46-solarized_dark" }, {
 reset_base_alter({ "base46-zenburn" }, {
   cursor_fg = "#f3eadb",
   cursorline_alter = 0.08,
+  dapstopped_bg_alter = 0.15,
   fzflua_bg_cursorline_alter = -0.08,
   fzfluaborder_fg_alter = 0.08,
   fzfluasel_bg_alter = -0.37,
@@ -286,6 +258,7 @@ reset_base_alter({ "darkearth" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.09,
+  dapstopped_bg_alter = 0.2,
   fzfluaborder_fg_alter = 0.13,
   fzfluasel_bg_alter = -0.38,
   normalfloat_bg_alter = -0.1,
@@ -297,8 +270,8 @@ reset_base_alter({ "darkearth" }, {
 reset_base_alter({ "lackluster" }, {
   cursor_fg = "#deeeed",
   cursorline_alter = 0.15,
-  fzfluaborder_fg_alter = 0.18,
   fzflua_bg_cursorline_alter = 0.3,
+  fzfluaborder_fg_alter = 0.18,
   fzfluasel_bg_alter = -0.28,
   normalfloat_bg_alter = 0.5,
   normalfloat_fg_alter = -0.01,
@@ -336,8 +309,9 @@ reset_base_alter({ "tokyonight-storm" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#b3276f",
   cursorline_alter = 0.05,
-  fzfluaborder_fg_alter = 0.18,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = -0.02,
+  fzfluaborder_fg_alter = 0.18,
   fzfluasel_bg_alter = -0.3,
   pmenu_bg_alter = 0.45,
   pmenu_fg_alter = 0.1,
@@ -349,14 +323,15 @@ reset_base_alter({ "vscode_modern" }, {
   cmpdocnormal_fg_alter = 0.1,
   cursor_fg = "#fa1919",
   cursorline_alter = 0.1,
+  dapstopped_bg_alter = 0.2,
   fzflua_bg_cursorline_alter = 0.05,
   fzfluasel_bg_alter = -0.35,
   pmenu_bg_alter = 0.5,
   pmenu_fg_alter = 0.1,
   pmenusel_bg_alter = 1,
-  search_fg_alter = 0.2,
-  search_bg_alter = 0.8,
   quickfixline_alter = 0.35,
+  search_bg_alter = 0.8,
+  search_fg_alter = 0.2,
   winseparator_alter = 0.55,
 })
 
@@ -1532,11 +1507,21 @@ local general_overrides = function()
     { LazyDimmed = { bg = "NONE" } },
 
     --  ─────────────────────────────[ DEBUG:DAP ]─────────────────────────────
-    { DapBreakpoint = { fg = { from = "Error", attr = "fg" }, bg = "NONE" } },
-    { DapStopped = { bg = { from = "GitSignsChange", attr = "fg", alter = -0.6 }, fg = "NONE" } },
+    {
+      DapBreakpoint = {
+        fg = Highlight.tint(Highlight.darken(dark_red, 0.7, Highlight.get("Normal", "bg")), -0.1),
+        bg = "NONE",
+      },
+    },
+    {
+      DapStopped = {
+        bg = Highlight.tint(Highlight.darken(dark_yellow, dapstopped_bg_alter, Highlight.get("Normal", "bg")), -0.1),
+        fg = "NONE",
+      },
+    },
     {
       DapStoppedIcon = {
-        bg = { from = "GitSignsChange", attr = "fg", alter = -0.6 },
+        bg = Highlight.tint(Highlight.darken(dark_yellow, dapstopped_bg_alter, Highlight.get("Normal", "bg")), -0.1),
         fg = { from = "GitSignsChange", attr = "fg", alter = 0.6 },
       },
     },
@@ -2730,7 +2715,7 @@ local function colorscheme_overrides()
           bg = { from = "StatusLine", attr = "bg" },
         },
       },
-      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.52 }, bg = "NONE" } },
+      { BlinkCmpGhostText = { fg = { from = "NoiceCmdline", attr = "fg", alter = -0.5 }, bg = "NONE" } },
 
       { qfFileName = { fg = { from = "Directory", attr = "fg", alter = 0.3 }, bg = "NONE" } },
       { QuickFixFileName = { fg = { from = "Directory", attr = "fg" }, bg = "NONE" } },
@@ -2762,8 +2747,8 @@ local function colorscheme_overrides()
             -0.1
           ),
           bg = Highlight.tint(
-            Highlight.darken(Highlight.get("Keyword", "fg"), 0.1, Highlight.get("Normal", "bg")),
-            0.05
+            Highlight.darken(Highlight.get("Keyword", "fg"), 0.2, Highlight.get("Normal", "bg")),
+            -0.15
           ),
         },
       },
