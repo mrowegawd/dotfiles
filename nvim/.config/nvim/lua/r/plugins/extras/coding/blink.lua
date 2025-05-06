@@ -29,10 +29,10 @@ return {
         opts = {},
         version = not vim.g.lazyvim_blink_main and "*",
       },
-      -- {
-      --   "Kaiser-Yang/blink-cmp-git",
-      --   dependencies = { "nvim-lua/plenary.nvim" },
-      -- },
+      {
+        "Kaiser-Yang/blink-cmp-git",
+        dependencies = { "nvim-lua/plenary.nvim" },
+      },
     },
     opts = {
       -- custom props to disable blink in certain filetypes
@@ -192,7 +192,7 @@ return {
       },
       sources = {
         compat = {},
-        default = { "lsp", "path", "snippets", "buffer" },
+        default = { "lsp", "path", "snippets", "buffer", "git" },
 
         providers = {
           snippets = { opts = { search_paths = { RUtils.config.path.dropbox_path .. "/snippets-for-all" } } },
@@ -217,13 +217,13 @@ return {
               end,
             },
           },
-          -- git = {
-          --   module = "blink-cmp-git",
-          --   name = "Git",
-          --   enabled = function()
-          --     return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
-          --   end,
-          -- },
+          git = {
+            module = "blink-cmp-git",
+            name = "Git",
+            enabled = function()
+              return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
+            end,
+          },
         },
       },
       signature = {
