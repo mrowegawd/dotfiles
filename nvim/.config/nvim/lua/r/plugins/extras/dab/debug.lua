@@ -34,33 +34,64 @@ return {
     keys = {
       { "<Leader>dB", function() require("dap").set_breakpoint(vim.fn.input "Breakpoint condition: ") end, desc = "Debug: breakpoint with condition" },
       { "<Leader>db", function() require("dap").toggle_breakpoint() end, desc = "Debug: toggle breakpoint" },
-      -- { "<Leader>dB", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
+      { "<Leader>dC", function() require("dap").clear_breakpoints() end, desc = "Debug: clear all breakpoints" },
+
       { "<Leader>dd", function() require("dap").continue() end, desc = "Debug: run/continue [dd]" },
       { "<Leader>da", function() require("dap").continue({ before = get_args }) end, desc = "Debug: run with args" },
+
       { "<Leader>dg", function() require("dap").goto_() end, desc = "Debug: go to line (no execute)" },
-      { "<Leader>dC", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
+      { "<Leader>rd", function() require("dap").run_to_cursor() end, desc = "Debug: run to cursor" },
       { "<Leader>dl", function() require("dap").run_last() end, desc = "Debug: run last" },
 
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Debug: toggle REPL" },
       { "<Leader>ds", function() require("dap").session() end, desc = "Debug: session" },
       { "<Leader>dc", function() require("dap").terminate() end, desc = "Debug: terminate" },
-      { "<Leader>dw", function() require("dap.ui.widgets").hover() end, desc = "Debug: widgets" },
+      { "<Leader>dK", function() require("dap.ui.widgets").hover() end, desc = "Debug: widgets" },
 
       -- +----------------------------------------------------------+
       -- Step-in, step-out, step-over | Stack-up Stack-down
       -- For definition of these, check: https://stackoverflow.com/questions/3580715/what-is-the-difference-between-step-into-and-step-over-in-a-debugger
       -- +----------------------------------------------------------+
-      -- { "<Leader>di", function() require("dap").step_into() end, desc = "Debug: step into" },
-      -- { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
-      -- { "<Leader>dk", function() require("dap").up() end, desc = "Debug: setup up" },
-      -- { "<Leader>do", function() require("dap").step_out() end, desc = "Debug: step out" },
-      -- { "<Leader>dO", function() require("dap").step_over() end, desc = "Debug: step over" },
-
       { "<Leader>dj", function() require("dap").down() end, desc = "Debug: step down" },
       { "<S-Up>", function() require("dap").up() end, desc = "Debug: setup up" },
-      { "<S-Right>", function() require("dap").step_into() end, desc = "Debug: step into" },
-      { "<S-Left>", function() require("dap").step_out() end, desc = "Debug: step out" },
-      { "<S-Down>", function() require("dap").step_over() end, desc = "Debug: step over" },
+
+      { "H", function()
+        local function status_dap(req)
+          return req.status()
+        end
+
+        if #status_dap(require "dap") > 0 then
+          require("dap").step_out()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("H", true, true, true), "n", true)
+        end
+      end, desc = "Debug: step out" },
+
+      { "L", function()
+        local function status_dap(req)
+          return req.status()
+        end
+
+        if #status_dap(require "dap") > 0 then
+          require("dap").step_into()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("L", true, true, true), "n", true)
+        end
+      end, desc = "Debug: step into" },
+
+
+      { "J", function()
+        local function status_dap(req)
+          return req.status()
+        end
+
+        if #status_dap(require "dap") > 0 then
+          require("dap").step_over()
+        else
+          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("J", true, true, true), "n", true)
+        end
+      end, desc = "Debug: step over" },
+
       -- +----------------------------------------------------------+
       -- Run and close the debug
       -- +----------------------------------------------------------+
@@ -87,7 +118,8 @@ return {
             return require("dap").disconnect()
           else
             if RUtils.has "one-small-step-for-vimkind" and vim.bo.filetype == "lua" then
-              return require("osv").run_this()
+              -- return require("osv").run_this()
+              return require"osv".launch({port = 8086})
             end
             -- if RUtils.has "mrcjkb/rustaceanvim" and vim.bo.filetype == "rust" then
             --   return vim.cmd.RustLsp "debuggables"
