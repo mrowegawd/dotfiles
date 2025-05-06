@@ -3,7 +3,7 @@ return {
   {
     -- ex: (gunakan tanda kurung ya!) -> "* * * * *" bukan * * * * *
     "fabridamicelli/cronex.nvim",
-    fg = { "yaml", "yml", "tf", "cfg", "config", "conf", "crontab" },
+    ft = { "yaml", "yml", "tf", "cfg", "config", "conf", "crontab" },
     opts = {},
   },
   -- BLOAT
