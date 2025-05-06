@@ -22,17 +22,19 @@ return {
           local prompt_cmds = {
             translate_id = { cmd = "CodeCompanion /translate_in_bahasa", ft = {} },
             git_commit = { cmd = "CodeCompanion /commit", ft = git_ft_stuff },
+            note_fix_this_string = { cmd = "CodeCompanion /fix_this_line_notes", ft = {} },
+            explain_to_me_like_baby = { cmd = "CodeCompanion /jelaskan_dgn_bahasa_bayi", ft = {} },
+            note_fix_this_todo = { cmd = "CodeCompanion /fix_this_line_todo", ft = {} },
+            explain_to_me = { cmd = "CodeCompanion /jelaskan_dgn_bahasa_bayi", ft = {} },
+
             exract_func = { cmd = "CodeCompanion /commit", ft = {} },
             exract_variable = { cmd = "CodeCompanion /commit", ft = {} },
             suggest_readable_variable = { cmd = "CodeCompanion /commit", ft = {} },
-            explain_to_me_like_baby = { cmd = "CodeCompanion /jelaskan_dgn_bahasa_bayi", ft = {} },
             generate_boilerplate_test_code = { cmd = "CodeCompanion /commit", ft = {} },
             generate_docs = { cmd = "CodeCompanion /commit", ft = {} },
             git_check_or_rewrote_commit = { cmd = "CodeCompanion /commit", ft = {} },
-            help_me_to_find_this = { cmd = "CodeCompanion /commit", ft = {} },
             sugest_or_fix_the_code = { cmd = "CodeCompanion /commit", ft = {} },
             format_todo_text = { cmd = "CodeCompanion /commit", ft = {} },
-            note_fix_this_string = { cmd = "CodeCompanion /fix_this_line_notes", ft = {} },
             generate_some_funcs = { cmd = "CodeCompanion /commit", ft = {} },
           }
 
@@ -264,6 +266,37 @@ return {
                 content = function()
                   return string.format(
                     [[Tolong perbaiki kalimat nya agar mudah dimengerti
+
+            ```diff
+            %s
+            ```
+            ]],
+                    vim.fn.system "xclip -o -sel clip"
+                  )
+                end,
+                opts = {
+                  contains_code = true,
+                },
+              },
+            },
+          },
+          ["Fix this todo string"] = {
+            strategy = "chat",
+            description = "Fix this todo string",
+            opts = {
+              index = 10,
+              is_default = true,
+              is_slash_cmd = true,
+              short_name = "fix_this_line_todo", --->> ini short name nya
+              auto_submit = true,
+              display = { chat = { window = { layout = "buffer" } } },
+            },
+            prompts = {
+              {
+                role = constants.USER_ROLE,
+                content = function()
+                  return string.format(
+                    [[Tolong perbaiki kalimat dan juga format todo ini
 
             ```diff
             %s
