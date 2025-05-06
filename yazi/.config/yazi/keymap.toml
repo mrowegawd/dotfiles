@@ -185,6 +185,7 @@ keymap = [
   { on = [ "g", "d", ], run = "cd ~/Downloads", desc = "Go to the downloads directory" },
   { on = [ "g", "s", ], run = "cd ~/Downloads/screenshot", desc = "Go to the screenshot directory" },
   { on = [ "g", "t", ], run = "cd /tmp", desc = "Go to the temporary directory" },
+  { on = [ "g", "T", ], run = "cd ~/moxconf/media_and_tuts/torrents", desc = "Go to torrent directory" },
   { on = [ "g", "v", ], run = "cd ~/Downloads/Video", desc = "Go to the temporary directory" },
   { on = [ "g", "<Space>", ], run = "cd --interactive", desc = "Go to a directory interactively" },
 
