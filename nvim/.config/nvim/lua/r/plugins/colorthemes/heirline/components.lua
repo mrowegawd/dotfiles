@@ -590,7 +590,7 @@ M.Dap = {
     return session ~= nil
   end,
   provider = function()
-    return " " .. require("dap").status() .. " "
+    return " " .. require("dap").status() .. "  "
   end,
   hl = { fg = colors.diagnostic_err, bg = colors.statusline_bg, bold = true },
 }
@@ -1136,7 +1136,7 @@ M.status_active_left = {
 
   M.LazyStatus,
   M.Tasks,
-  -- M.Dap,
+  M.Dap,
   M.RmuxTargetPane,
   M.LSPActive,
   M.Diagnostics,
