@@ -14,7 +14,7 @@ return {
   end,
   -- Add packages(linting, debug adapter)
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = { ensure_installed = { "ktlint" } },
   },
 
@@ -40,7 +40,7 @@ return {
   {
     "mfussenegger/nvim-lint",
     optional = true,
-    dependencies = "williamboman/mason.nvim",
+    dependencies = "mason-org/mason.nvim",
     opts = {
       linters_by_ft = { kotlin = { "ktlint" } },
     },
@@ -57,7 +57,7 @@ return {
   {
     "mfussenegger/nvim-dap",
     optional = true,
-    dependencies = "williamboman/mason.nvim",
+    dependencies = "mason-org/mason.nvim",
     opts = function()
       local dap = require "dap"
       if not dap.adapters.kotlin then

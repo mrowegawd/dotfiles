@@ -58,7 +58,7 @@ M.has_parser = RUtils.memoize(M.has_parser)
 
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = { ensure_installed = { "prettier" } },
   },
 

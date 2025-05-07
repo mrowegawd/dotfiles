@@ -12,8 +12,7 @@ return {
   -- BLINK
   {
     "saghen/blink.cmp",
-    version = not vim.g.lazyvim_blink_main and "*",
-    build = vim.g.lazyvim_blink_main and "cargo build --release",
+    version = "1.*",
     event = "InsertEnter",
     opts_extend = {
       "sources.completion.enabled_providers",
