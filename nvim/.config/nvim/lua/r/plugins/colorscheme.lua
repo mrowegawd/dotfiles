@@ -7,6 +7,19 @@
 -- https://base2t.one
 
 return {
+  -- Using Lazy
+  {
+    "webhooked/kanso.nvim",
+    lazy = false,
+    priority = 1000,
+    enabled = function()
+      local kanso_theme = { "kanso-ink", "kanso-zen", "kanso-pearl" }
+      if vim.tbl_contains(kanso_theme, vim.g.colorscheme) then
+        return true
+      end
+      return false
+    end,
+  },
   -- NVIM-BASE46
   {
     "yardnsm/nvim-base46",

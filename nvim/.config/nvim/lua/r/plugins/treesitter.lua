@@ -379,6 +379,29 @@ return {
               },
             },
           },
+          ["kanso"] = {
+            { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
+            {
+              TreesitterContextSeparator = {
+                fg = { from = "TreesitterContext", attr = "bg" },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumber = {
+                fg = { from = "TreesitterContext", attr = "bg", alter = 0.8 },
+                bg = { from = "TreesitterContext" },
+              },
+            },
+            {
+              TreesitterContextLineNumberBottom = {
+                fg = { from = "TreesitterContextLineNumber", attr = "fg", alter = 1.8 },
+                underline = false,
+                undercurl = false,
+                sp = "NONE",
+              },
+            },
+          },
           ["rose-pine"] = rose_pine[RUtils.config.colorscheme],
           ["tokyonight-night"] = {
             { TreesitterContext = { bg = { from = "TabLine", attr = "bg" } } },
