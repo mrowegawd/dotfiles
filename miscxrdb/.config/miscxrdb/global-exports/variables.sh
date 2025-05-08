@@ -85,7 +85,7 @@ export NNN_FCOLORS="$BLK$CHR$DIR$EXE$REG$HARDLINK$SYMLINK$MISSING$ORPHAN$FIFO$SO
 # }}}
 # CARGO: ------------------------------------------------------------------ {{{
 #
-export PATH=$PATH:~/.cargo/bin/
+export PATH=$HOME/.cargo/bin:$PATH
 #
 # }}}
 

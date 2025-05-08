@@ -8,8 +8,8 @@ ICON_PATH="$HOME/.config/miscxrdb/icons/checklist.png"
 ICON_LEARNING_PATH="$HOME/.config/miscxrdb/icons/knowledge.png"
 
 # find 'inprogress' tasks
-TASK="$("rg" -i "\*\sPROGRES" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
-LEARNING="$("rg" -i "\*\sLEARNING" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
+TASK="$("$HOME/.cargo/bin/rg" -i "\*\sPROGRES" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* PROGRESS " '{print $2}')"
+LEARNING="$("$HOME/.cargo/bin/rg" -i "\*\sLEARNING" "$NORG_PATH" | awk -F ':' '{print $2}' | awk -F "* LEARNING " '{print $2}')"
 GREEN="$(xrdb -query | grep 'color2:' | awk '{print $NF}' | head -1)"
 
 if [[ -z $TASK ]] && [[ -z $LEARNING ]]; then

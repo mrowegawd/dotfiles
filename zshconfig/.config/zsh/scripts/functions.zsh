@@ -97,19 +97,19 @@ build-install() {
   # ──────────────────────────────────────────────────────────────────────
   # RUST, cargo
   # ──────────────────────────────────────────────────────────────────────
-  if ! asdf which bat >/dev/null; then
+  if ! command -v bat >/dev/null; then
     echo "Installing: bat - we cat before bat"
     cargo install bat
     asdf reshim rust
   fi
 
-  if ! asdf which viu >/dev/null; then
+  if ! command -v viu >/dev/null; then
     echo "Installing: viu - Terminal image viewer with native support for iTerm and Kitty (fzflua dependencies)"
     cargo install viu
     asdf reshim rust
   fi
 
-  if ! asdf which gifski >/dev/null; then
+  if ! command -v gifski >/dev/null; then
     # Install: gifski
     # gihtub: https://github.com/sindresorhus/Gifski
     # install binary langsung dari link https://gif.ski/
@@ -119,57 +119,57 @@ build-install() {
   fi
 
 
-  if ! asdf which dua >/dev/null; then
+  if ! command -v dua >/dev/null; then
     echo "Installing: dua-cli - Similiar with tool 'du' to check disk usage"
     cargo install dua-cli
     asdf reshim rust
   fi
 
-  if ! asdf which procs >/dev/null; then
+  if ! command -v procs >/dev/null; then
     echo "Installing: procs - Better than use 'ps' command"
     cargo install procs
     asdf reshim rust
   fi
 
 
-  if ! asdf which eza >/dev/null; then
+  if ! command -v eza >/dev/null; then
     echo "Installing: eza - ls colors"
     cargo install eza
     asdf reshim rust
   fi
 
-  if ! asdf which zoxide >/dev/null; then
+  if ! command -v zoxide >/dev/null; then
     echo "Installing: zoxide - A smarter cd commands"
     cargo install zoxide --locked
     asdf reshim rust
   fi
 
-  if ! asdf which delta >/dev/null; then
+  if ! command -v delta >/dev/null; then
     echo "Installing: delta - Color for git hunk/chommits"
     cargo install git-delta
     asdf reshim rust
   fi
 
-  if ! asdf which rg >/dev/null; then
+  if ! command -v rg >/dev/null; then
     echo "Installing: rg - Grep drugs"
     cargo install ripgrep
     asdf reshim rust
   fi
 
   # https://github.com/race604/clock-tui
-  if ! asdf which tclock >/dev/null; then
+  if ! command -v tclock >/dev/null; then
     echo "Installing: tclock - Clock tui"
     cargo install clock-tui
     asdf reshim rust
   fi
 
-  if ! asdf which tree-sitter >/dev/null; then
+  if ! command -v tree-sitter >/dev/null; then
     echo "Installing: tree-sitter-cli - Treesitter passer cli for nvim"
     cargo install tree-sitter-cli
     asdf reshim rust
   fi
 
-  if ! asdf which yazi >/dev/null; then
+  if ! command -v yazi >/dev/null; then
     echo "Installing: yazi - File manager tui"
     cargo install --locked --git https://github.com/sxyazi/yazi.git yazi-fm yazi-cli
     asdf reshim rust
@@ -177,8 +177,7 @@ build-install() {
     # ya pack -a yazi-rs/plugins:git
   fi
 
-
-  if ! asdf which rust-analyzer >/dev/null; then
+  if ! command -v rust-analyzer >/dev/null; then
     echo "Installing: rust-analyzer - Manual install for LSP analyzer rust"
     rustup component add rust-analyzer
     asdf reshim rust
@@ -187,25 +186,25 @@ build-install() {
   # ──────────────────────────────────────────────────────────────────────
   # GO install
   # ──────────────────────────────────────────────────────────────────────
-  if ! asdf which dive >/dev/null; then
+  if ! command -v dive >/dev/null; then
     echo "Installing: dive - Explore docker layer"
     go install github.com/wagoodman/dive@latest
     asdf reshim golang
   fi
 
-  if ! asdf which sesh >/dev/null; then
+  if ! command -v sesh >/dev/null; then
     echo "Installing: sesh - Handle tmux session"
     go install github.com/joshmedeski/sesh@latest
     asdf reshim golang
   fi
 
-  if ! asdf which lazydocker >/dev/null; then
+  if ! command -v lazydocker >/dev/null; then
     echo "Installing: lazydocker - Docker TUI"
     go install github.com/jesseduffield/lazydocker@latest
     asdf reshim golang
   fi
 
-  if ! asdf which gowall >/dev/null; then
+  if ! command -v gowall >/dev/null; then
     echo "Installing: gowall - Convert wallpaper theme (just like pywall)"
     go install github.com/Achno/gowall@latest
     asdf reshim golang
@@ -256,6 +255,12 @@ build-install() {
   if ! command -v mmdc >/dev/null; then
     echo "Installing: mmdc - A tool for the mermaid library nvim"
     npm install -g @mermaid-js/mermaid-cli
+    asdf reshim nodejs
+  fi
+
+  if ! command -v cronstrue >/dev/null; then
+    echo "Installing: cronstrue - parses a cron expression and outputs a human readable"
+    npm install -g cronstrue
     asdf reshim nodejs
   fi
 }
