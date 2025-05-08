@@ -273,7 +273,7 @@ reset_base_alter({ "kanso-ink" }, {
   cursorline_alter = 0.09,
   dapstopped_bg_alter = 0.2,
   fzfluaborder_fg_alter = 0.13,
-  fzfluasel_bg_alter = -0.38,
+  fzfluasel_bg_alter = -0.25,
   normalfloat_bg_alter = 0.2,
   pmenu_bg_alter = 0.85,
   pmenusel_bg_alter = 1.5,
@@ -5616,7 +5616,7 @@ local function colorscheme_overrides()
       {
         TabLine = {
           fg = { from = "Normal", attr = "bg", alter = 2.2 },
-          bg = { from = "Normal", attr = "bg", alter = 0.55 },
+          bg = { from = "Normal", attr = "bg", alter = 0.65 },
         },
       },
 
