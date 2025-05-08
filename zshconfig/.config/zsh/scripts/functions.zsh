@@ -225,6 +225,12 @@ build-install() {
   # ──────────────────────────────────────────────────────────────────────
   # Pip, pipx
   # ──────────────────────────────────────────────────────────────────────
+  if ! command -v pipx >/dev/null; then
+    echo "Installing: pipx"
+    pip install pipx
+    asdf reshim python
+  fi
+
   if ! command -v calcure >/dev/null; then
     echo "Installing: calcure - Calendar TUI"
     pipx install calcure
