@@ -9,7 +9,7 @@
 !
 
 ! themes
-#include ".config/miscxrdb/xresource-theme/tokyonight-storm"
+#include ".config/miscxrdb/xresource-theme/base46-catppuccin"
 
 ! --------------
 ! XFT SETTINGS
