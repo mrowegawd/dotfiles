@@ -263,6 +263,12 @@ build-install() {
     npm install -g cronstrue
     asdf reshim nodejs
   fi
+
+  if ! command -v yarn >/dev/null; then
+    echo "Installing: yarn - another package managers for JavaScript"
+    npm install -g yarn
+    asdf reshim nodejs
+  fi
 }
 
 Green=$(tput setaf 2)  # Green
