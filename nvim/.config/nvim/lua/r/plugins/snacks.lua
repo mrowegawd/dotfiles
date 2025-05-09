@@ -76,7 +76,7 @@ return {
         },
       },
       words = { enabled = true },
-      image = { enabled = true },
+      image = { enabled = false },
       dashboard = {
         pane_gap = 5, -- empty columns between vertical panes
         row = nil,
@@ -181,6 +181,7 @@ return {
       -- { "<Localleader>sS", function() Snacks.scratch.select() end, desc = "Snacks: select scratch buffer" },
       -- { "<Localleader>sps", function() Snacks.profiler.scratch() end, desc = "Snacks: profiler scratch buffer" },
       -- { "gs", function() Snacks.picker.lsp_symbols() end, desc = "Snacks: profiler scratch buffer" },
+      { "gK", function() Snacks.image.hover() end, desc = "Snackspicker: hover image" },
       { "<Localleader>sh", function() Snacks.notifier.show_history() end, desc = "Snackspicker: notification history" },
       { "<Localleader>sn", function() Snacks.notifier.hide() end, desc = "Snackspicker: dismiss all notifications" },
       ---@diagnostic disable-next-line: missing-fields
