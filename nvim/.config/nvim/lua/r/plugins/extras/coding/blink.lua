@@ -61,7 +61,7 @@ return {
           draw = {
             treesitter = { "lsp" },
             -- columns = { { "kind_icon" }, { "label", "kind", "source_name", gap = 1 } },
-            columns = { { "kind_icon" }, { "label", "kind", gap = 1 } },
+            columns = { { "kind_icon" }, { "label", "kind", gap = 0 } },
             components = {
               kind_icon = {
                 text = function(item)

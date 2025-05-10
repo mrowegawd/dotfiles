@@ -22,7 +22,7 @@ return {
           -- },
           virtual_text = false,
           severity_sort = true,
-          virtual_lines = true,
+          virtual_lines = false,
           signs = {
             text = {
               -- [vim.diagnostic.severity.ERROR] = RUtils.config.icons.diagnostics.Error,

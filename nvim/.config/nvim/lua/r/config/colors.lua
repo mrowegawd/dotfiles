@@ -2706,7 +2706,7 @@ local function colorscheme_overrides()
       },
 
       -- MARKDOWN
-      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.1 } } },
+      { RenderMarkdownCode = { bg = { from = "Normal", attr = "bg", alter = -0.2 } } },
 
       -- STATUSLINE
       {
