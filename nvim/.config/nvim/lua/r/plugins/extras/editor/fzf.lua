@@ -396,7 +396,11 @@ return {
           formatter = "path.filename_first",
           actions = {
             ["alt-g"] = actions.toggle_ignore,
-            ["alt-u"] = actions.toggle_hidden,
+            -- ["alt-u"] = actions.toggle_hidden,
+            ["alt-u"] = function(_, opts)
+              actions.toggle_opt(opts, "hidden")
+              actions.toggle_opt(opts, "no_ignore")
+            end,
             ["ctrl-q"] = actions.file_sel_to_qf,
             ["default"] = function(selected, opts)
               local path = require "fzf-lua.path"
@@ -695,7 +699,10 @@ return {
           },
           actions = {
             ["alt-g"] = actions.toggle_ignore,
-            ["alt-u"] = actions.toggle_hidden,
+            ["alt-u"] = function(_, opts)
+              actions.toggle_opt(opts, "hidden")
+              actions.toggle_opt(opts, "no_ignore")
+            end,
             ["alt-v"] = function()
               require("fzf-lua").files {
                 fd_opts = [[--color=never --type d --type l --exclude .git]],

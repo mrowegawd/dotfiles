@@ -6,5 +6,8 @@ tags
 .gitignore
 
 # folder
+node_modules
+dist
 .venv
+
 #.vim

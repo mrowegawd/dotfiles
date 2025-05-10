@@ -10,7 +10,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 # alias grep="grep --color=auto"
-alias rg="rg --hidden"
+# alias rg="rg --hidden"
 
 alias v="nvim"
 alias pvim="poetry run nvim"
